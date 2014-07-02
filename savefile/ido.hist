@@ -1,0 +1,40 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/jay/.emacs.d/" . "personal/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/jay/.emacs.d/"
+ "/Users/jay/Dropbox/emacs/prelude/personal/"
+ "/Users/jay/"
+ "/Users/jay/.emacs.d/personal/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "init.el"
+ "init.elc"
+ "gnu-emacs-startup.el"
+ ".profile"
+ "shared-functions.el"
+ "custom.el"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/jay/.emacs.d/" (21416 37730 0 0) "vendor/" "var/" "utils/" "url/" "tramp" "tmp/" "themes/" "savefile/" "sample/" "recent-addresses" "README.md" "projectile-bookmarks.eld" "prelude-modules.elc" "prelude-modules.el" "personal/" "packs/" "orgcard.txt" "org-clock-save.elc" "org-clock-save.el.~1~" "org-clock-save.el" "oauth2.plstore" "modules/" "init.el" "frame-restore-parameters" "flycheck_org-clock-save.elc" "flycheck_org-clock-save.el" "elpa/" "core/" "CONTRIBUTING.md" "bookmarks" "auto-save-list/" "auto-install/" "ac-comphist.dat" ".saved-places" ".projectile" ".places" ".org-id-locations" ".gitignore" ".git/" ".DS_Store" "../" "./")
+
+ ("/Users/jay/Dropbox/emacs/prelude/personal/" (21361 46861 0 0) "writegood-jay.elc" "writegood-jay.el" "tabula-rasa-mode.elc" "tabula-rasa-mode.el" "shared-functions.elc" "shared-functions.el" "savefile/" "reveal-in-finder.elc" "reveal-in-finder.el" "recent-addresses-0.1/" "preload/" "owr-helper.elc" "owr-helper.el" "org-writers-room.elc" "org-writers-room.el" "org-serenity-mode.elc" "org-serenity-mode.el" "jay-custom-color-themes/" "gnugol.elc" "gnugol.el" "gnu-emacs-startup.elc" "gnu-emacs-startup.el" "flycheck_clean-modeline.elc" "dired-filter-20140228.946.elc" "dired-filter-20140228.946.el" "custom.elc" "custom.el" "clean-modeline.elc" "clean-modeline.el" "book-functions.elc" "book-functions.el" ".DS_Store" "../" "./")
+
+ ("/Users/jay/" (21349 16119 0 0) "writing/" "wedding/" "websites/" "unfancy-jdiffs/" "uncategorized audio/" "teaching-writing" "taxes/" "src/" "sounds/" "slidy/" "Sites/" "saved-calls-2013-and-beyond/" "public_html/" "Public/" "proposal/" "prayers/" "Pictures/" "Pics/" "parallax/" "pandoc/" "org-tocify/" "org-mobile/" "nd/" "Music/" "Movies-temp/" "Movies/" "mia/" "mexico/" "Library/" "jdiffs-project/" "jdiffs/" "iBooks/" "gnulisp/" "expansion - clean/" "emacs-live-packs/" "elisp/" "Dropbox/" "Downloads/" "Documents/" "digitalrecorder/" "Desktop/" "dark and stormy night/" "conversation camp/" "christmas/" "Calibre Library/" "books-source/" "books/" "book/" "blog-test/" "bin/" "bash/" "b/" "Applications/" "apartment-search/" ".zprofile" ".zcompdump" ".wgetrc" ".vimrc" ".vimperator/" ".viminfo" ".vim/" ".useful-git-commands" ".urlview" ".Trash/" ".tramp_history" ".terminal-dot-emacs~" ".term-emacs-prelude/" ".swt/" ".swfinfo" ".surfraw.conf~" ".surfraw.conf" ".subversion/" ".ssh/" ".spumux" ".smex-items" ".slidy-syntax" ".slideshow/" ".shell-useful-commands" ".sh_history" ".screenrc" ".saves/" ".rvm/" ".rnd" ".recentf.~5~" ".recentf.~4~" ".recentf.~2~" ".recentf.~1~" ".recentf" ".python-eggs/" ".profile~" ".profile.macports-saved_2013-10-06_at_02:51:08" ".profile.macports-saved_2013-10-06_at_01:42:55" ".profile-removed" ".profile" ".pip/" ".pinerc" ".pine-debug4" ".pine-debug3" ".pine-debug2" ".pine-debug1" ".picasa.ini" ".pentadactyl/" ".pandoc/" ".osx" ".orgtoopml.py" ".org-timestamps/" ".org-annotate-file.org" ".old-pandoc/" ".npm/" ".notes" ".newsrc-dribble" ".netrc" ".nchsoftware/" ".muttrc~" ".muttrc" ".mutt/" ".mplayer/" ".mcabber/" ".macports/" ".MacOSX/" ".local/" ".live-packs/" ".jabber_global_message_log" ".jabber-avatars/" ".inputrc" ".ido.last~" ".ido.last" ".hushlogin" ".htaccess" ".history" ".hgignore_global" ".gvimrc" ".gv.conf" ".gnupg/" ".gitlogger" ".gitk" ".gitignore_global" ".gitignore" ".gitconfig~" ".gitconfig" ".gitattributes" ".gem/" ".functions" ".freemind/" ".floorc" ".flickr/" ".filebot/" ".exports~" ".exports" ".eshell/" ".erc/" ".emacs~" ".emacs.d/" ".emacs-starter-kit/" ".emacs-sandbox/" ".emacs-packages.sh~" ".emacs-packages.sh" ".emacs-live.el" ".emacs-live-packs/" ".emacs-live-jay" ".emacs-live/" ".DS_Store" ".dropbox-master/" ".dropbox/" ".doingrc" ".distlib/" ".dictionary-scripts.sh" ".DBUserDefaults/" ".cvspass" ".cups/" ".cpan/" ".config/" ".cmus/" ".CFUserTextEncoding" ".bbdb" ".bashrc" ".bash_profile" ".bash_history" ".backup-of-emacs-prelude/" ".backup-of-emacs-live/" ".autojump/" ".authinfo" ".aspell.en.pws" ".aspell.en.prepl" ".adobe/" ".abook/" ".abbrev_defs" ".#.recentf" "../" "./")
+
+ ("/Users/jay/Desktop/" (21349 28207 0 0) "today.org" "Desktop/" ".localized" ".DS_Store" "../" "./")
+
+ ("/Users/jay/.emacs.d/personal/" (21349 23510 0 0) "writegood-jay.elc" "writegood-jay.el" "tabula-rasa-mode.elc" "tabula-rasa-mode.el" "shared-functions.elc" "shared-functions.el" "savefile/" "reveal-in-finder.elc" "reveal-in-finder.el" "recent-addresses-0.1/" "preload/" "owr-helper.elc" "owr-helper.el" "org-writers-room.elc" "org-writers-room.el" "org-serenity-mode.elc" "org-serenity-mode.el" "jay-custom-color-themes/" "gnugol.elc" "gnugol.el" "gnu-emacs-startup.elc" "gnu-emacs-startup.el" "flycheck_clean-modeline.elc" "dired-filter-20140228.946.elc" "dired-filter-20140228.946.el" "custom.elc" "custom.el" "clean-modeline.elc" "clean-modeline.el" "book-functions.elc" "book-functions.el" ".DS_Store" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
