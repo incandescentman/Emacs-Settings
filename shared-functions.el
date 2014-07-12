@@ -1,5 +1,3 @@
-;;;; PACKAGES
-
 ;; define packages
 (require 'package)
 (add-to-list 'package-archives
@@ -84,7 +82,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun lucida-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Ludida Sans Typewriter" :height 160))
+  (set-face-attribute 'default nil :font "Ludida Sans Typewriter" :height 200))
 
 (defun monaco-font ()
   (interactive)
@@ -196,7 +194,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (org2blog/wp-login)
   )
 
-(defun copy-full-path-to-clipboard ()
+(defun path-copy-full-path-to-clipboard ()
   "Copy the full current filename and path to the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
@@ -265,7 +263,7 @@ Subject: %^{Subject}
 	("v" "Vegas journal" entry (file "vegas-journal-capture.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-	("f" "funny" entry (file "funny.txt")
+	("f" "flowy" entry (file "flowy.org")
 	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 
@@ -411,12 +409,6 @@ Subject: %^{Subject}
 
 
 
-
-
-
-
-
-
 (define-skeleton my-orgfootnote "Docstring." nil
   "[fn:: " _ "] ")
 
@@ -522,6 +514,8 @@ Including indent-buffer, which should not be called automatically on save."
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
 
+
+
 ;; org-mode function to check checkbox and move to next in list?
                                         ; http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#
 (defun zin/org-checkbox-next ()
@@ -613,7 +607,7 @@ next potential sentence end"
 
 
 
-(defun serenity ()
+(defun transparent-serenity ()
   (interactive)
   (set-frame-parameter (selected-frame) 'alpha '(80 80))
   (add-to-list 'default-frame-alist '(alpha 80 80))
@@ -830,7 +824,7 @@ next potential sentence end"
 (setq org-alphabetical-lists t)
 
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-(add-hook 'message-mode-hook 'orgstruct++-mode 'append)
+(add-hook 'message-mode-hook 'orgstruct-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
@@ -894,8 +888,6 @@ next potential sentence end"
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
- '(org-ascii-underline (quote ((ascii 61 45 45) (latin1 61 45 45) (utf-8 9552 9472 9548 9476 9480))))
- '(org-bullets-bullet-list (quote (" ")))
  '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
@@ -1004,17 +996,6 @@ next potential sentence end"
   ;;  (unless (get-buffer-window buf)
   ;;    (org-agenda-goto-calendar)))
   )
-
-(run-with-idle-timer 300 t 'jump-to-org-agenda)
-
-(defun kiwon/org-agenda-redo-in-other-window ()
-  "Call org-agenda-redo function even in the non-agenda buffer."
-  (interactive)
-  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
-    (when agenda-window
-      (with-selected-window agenda-window (org-agenda-redo)))))
-(run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
-
 
 
 ;; Mark heading done when all checkboxes are checked.
@@ -1338,7 +1319,6 @@ next potential sentence end"
 ;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
 
 
-(define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 
 (global-set-key (kbd "C-c h") 'helm-mini)
@@ -1737,9 +1717,6 @@ next potential sentence end"
 
 
 
-(add-to-list 'load-path "/Users/jay/gnulisp/emacs-pastebin-master/")
-(require 'pastebin)
-
 
 
 (require 'helm-swoop)
@@ -1771,31 +1748,6 @@ next potential sentence end"
 
 
 
-
-
-
-;; Isolate Emacs kill ring from OS X system pasteboard.
-(setq interprogram-cut-function nil)
-  (setq interprogram-paste-function nil)
-
-(defun pasteboard-copy()
-  "Copy region to OS X system pasteboard."
-  (interactive)
-  (shell-command-on-region
-   (region-beginning) (region-end) "pbcopy"))
-
-(defun pasteboard-paste()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
-  (interactive)
-
-  (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste" nil t))
-
-(defun pasteboard-cut()
-  "Cut region and put on OS X system pasteboard."
-  (interactive)
-  (pasteboard-copy)
-  (delete-region (region-beginning) (region-end)))
 
 
 
@@ -1855,3 +1807,104 @@ next potential sentence end"
  
   
 (helm-mode t)
+
+(lucida-font)
+
+
+;; MARKED!!!
+(defun markdown-preview-file ()
+  "run Marked on the current file and revert the buffer"
+  (interactive)
+  (shell-command
+   (format "open -a /Applications/Marked.app %s"
+	   (shell-quote-argument (buffer-file-name)))))
+
+(setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+
+(require 'wc-mode)
+
+
+
+
+
+
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)  
+(org-bullets-mode)
+(org-bullets-mode)
+(boss-mode)
+   (define-key org-mode-map (kbd "DEL") 
+     'new-org-delete-backward-char)
+(define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+ (insert "\n* "))
+
+(require 'org-serenity-mode)
+(defun serenity-mode ()
+  "serenity"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("  ")))
+  (org-serenity-mode)  
+(org-bullets-mode)
+(org-bullets-mode)
+)
+
+
+
+
+
+;;; Isolate Emacs kill ring from OS X system pasteboard.
+(setq interprogram-cut-function nil)
+(setq interprogram-paste-function nil)
+
+;; handle emacs utf-8 input
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
+
+(defun pasteboard-copy()
+  "Copy region to OS X system pasteboard."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning) (region-end) "pbcopy"))
+
+(defun pasteboard-paste()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (shell-command-on-region
+   (point) (if mark-active (mark) (point)) "pbpaste" nil t))
+
+(defun pasteboard-cut()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end)))
+
+
+(require 'ls-lisp)
+(setq ls-lisp-ignore-case 't)
+
+
+
+(defun new-org-delete-backward-char (N)
+  (interactive "p")
+  (cond ((region-active-p)
+         (delete-region
+          (region-beginning)
+          (region-end)))
+        ((looking-back "[*]+ ")
+         (previous-line)
+         (end-of-line))
+        (t
+         (org-delete-backward-char N))))
+
+(add-hook 
+ 'org-mode-hook
+ (lambda ()
+   (define-key org-mode-map (kbd "DEL") 
+     'new-org-delete-backward-char)))
+
+

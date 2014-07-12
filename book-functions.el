@@ -9,6 +9,10 @@
 (setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/Music/iTunes/iTunes Media/Books"))
 (setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "~/iBooks/Books"))
 
+(setq jays-library-public (helm-cmd-t-get-create-source-dir "~/Dropbox/Public/library"))
+
+
+
 
 (setq helm-ff-lynx-style-map nil helm-input-idle-delay 0.1 helm-idle-delay 0.1)
 
