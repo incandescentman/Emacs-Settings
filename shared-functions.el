@@ -10,6 +10,11 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (package-initialize)
 
+
+(load "~/Dropbox/elisp/eshell-autojump.el")
+(load "~/Dropbox/elisp/play-sound.el")
+
+
 ;;;; UI
 
 
@@ -124,6 +129,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (org-bullets-mode 1)
   (incarnadine-cursor)
   (turn-on-auto-capitalize-mode)
+(boss-mode)
   )
 
 (defun cyberpunk-jay ()
@@ -389,6 +395,8 @@ Subject: %^{Subject}
   "Send the current region in an email"
   (interactive "r\nsRecipient: \nsSubject: ")
   (let ((orig-buffer (current-buffer)))
+
+    
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
@@ -414,7 +422,7 @@ Subject: %^{Subject}
 
 
 (define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
 
 (define-skeleton fwh "Docstring." nil
   "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
@@ -560,16 +568,10 @@ Including indent-buffer, which should not be called automatically on save."
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
-					;; (global-hl-line-mode t) ; turn it on for all modes by default
+;; (global-hl-line-mode t) ; turn it on for all modes by default
 ;; (global-hl-line-mode)
-(make-variable-buffer-local 'global-hl-line-mode)
+ (make-variable-buffer-local 'global-hl-line-mode)
 (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
-
-(add-hook 'org-mode-hook
-          (lambda()
-            (hl-line-mode 1)
-            (global-hl-line-mode t))
-          't)
 
 
 
@@ -580,7 +582,7 @@ Including indent-buffer, which should not be called automatically on save."
      (frame-char-height)))
 
 ; (add-to-list 'default-frame-alist '(width . 140))
-(add-to-list 'default-frame-alist (cons 'height (get-default-height)))
+;; (add-to-list 'default-frame-alist (cons 'height (get-default-height)))
 
 
 
@@ -670,7 +672,6 @@ next potential sentence end"
      (ac-ispell-setup)))
 
 
-(require 'help-fns+)
 
 
 
@@ -845,7 +846,7 @@ next potential sentence end"
   '(abbrev-all-caps nil)
  '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
  '(blink-cursor-mode nil)
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*")))
+ '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*")))
  '(calendar-latitude 40.7)
  '(case-fold-search t)
  '(cua-highlight-region-shift-only t)
@@ -860,10 +861,12 @@ next potential sentence end"
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+
  '(flyspell-abbrev-p t)
  '(flyspell-use-global-abbrev-table-p t)
  '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
- '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*")))
+ '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
  '(grep-highlight-matches (quote always))
  '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/savefile/ido.hist")
  '(ido-use-faces t)
@@ -1061,33 +1064,6 @@ next potential sentence end"
 
 
 
-;; You can use org-clock-in-prepare-hook to add an effort estimate. This way you can easily have a "tea-timer" for your tasks when they don't already have an effort estimate.
-(add-hook 'org-clock-in-prepare-hook
-          'my-org-mode-ask-effort)
-
-(defun my-org-mode-ask-effort ()
-  "Ask for an effort estimate when clocking in."
-  (unless (org-entry-get (point) "Effort")
-    (let ((effort
-           (completing-read
-            "Effort: "
-            (org-entry-get-multivalued-property (point) "Effort"))))
-      (unless (equal effort "")
-        (org-set-property "Effort" effort)))))
-
-                                        ; Or you can use a default effort for such a timer:
-
-(add-hook 'org-clock-in-prepare-hook
-          'my-org-mode-add-default-effort)
-
-(defvar org-clock-default-effort "1:00")
-
-(defun my-org-mode-add-default-effort ()
-  "Add a default effort estimation."
-  (unless (org-entry-get (point) "Effort")
-    (org-set-property "Effort" org-clock-default-effort)))
-
-
 ;; Reschedule agenda items to today with a single command
 (defun org-agenda-reschedule-to-today ()
   (interactive)
@@ -1124,6 +1100,7 @@ next potential sentence end"
 (add-to-list 'recentf-exclude "usr")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
+(add-to-list 'recentf-exclude "750words")
 
 
 
@@ -1296,6 +1273,9 @@ next potential sentence end"
 
 
 (defun  boss-mode ()
+
+
+  
   (interactive)
 (global-hl-line-mode -1)
 (hl-line-mode -1)
@@ -1423,9 +1403,9 @@ next potential sentence end"
 
 
 
-(require 'org-gcal)
+;; (require 'org-gcal)
 
-(require 'org-mac-iCal)
+;; (require 'org-mac-iCal)
 
 ;; (require 'org-import-icalendar)
 
@@ -1808,7 +1788,8 @@ next potential sentence end"
   
 (helm-mode t)
 
-(lucida-font)
+;; (lucida-font)
+
 
 
 ;; MARKED!!!
@@ -1836,6 +1817,7 @@ next potential sentence end"
 (org-bullets-mode)
 (org-bullets-mode)
 (boss-mode)
+(incarnadine-cursor)
    (define-key org-mode-map (kbd "DEL") 
      'new-org-delete-backward-char)
 (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
@@ -1908,3 +1890,20 @@ next potential sentence end"
      'new-org-delete-backward-char)))
 
 
+
+
+(defun shut-the-fuck-up()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+(boss-mode)
+(flyspell-mode-off)
+(turn-off-auto-capitalize-mode)
+(writegood-mode -1)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end)))
+
+
+
+
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))

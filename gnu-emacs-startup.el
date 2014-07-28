@@ -1034,7 +1034,7 @@ searches all buffers."
 
 (add-to-list 'completion-styles 'initials t)
 
-; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 160)
+ (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
 ; (set-face-attribute 'default nil :font "Courier"  :height 200)
 
 
