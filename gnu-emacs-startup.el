@@ -27,11 +27,6 @@
 
 (global-visual-line-mode)
 
-(set-cursor-color "red")
-(setq default-frame-alist
-      '((cursor-color . "red")))
-(add-to-list 'default-frame-alist '(cursor-color . "red"))
-
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
@@ -186,6 +181,9 @@
 
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
+
+
+
 (define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
 (define-key key-minor-mode-map (kbd "s-B") 'clone-indirect-buffer-other-window)
 
@@ -200,6 +198,12 @@
 (define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
 (define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
 (define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
+
+(define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
+
+;; (define-key key-minor-mode-map (kbd "s-<backspace>") 'delete-char)
+
+
 (define-key key-minor-mode-map (kbd "s-F") 'locate)
 (define-key key-minor-mode-map (kbd "s-(") 'org-velocity)
 (define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
@@ -234,10 +238,13 @@
 
 
 ;; shortcuts for my own functions
-(define-key key-minor-mode-map (kbd "s-m cy") 'cyberpunk-large) 
+(define-key key-minor-mode-map (kbd "s-m cy") 'cyberpunk-jay) 
+(define-key key-minor-mode-map (kbd "s-m cl") 'cyberpunk-large) 
 (define-key key-minor-mode-map (kbd "s-m sl") 'solarized-light)
 (define-key key-minor-mode-map (kbd "s-m sd") 'solarized-dark) 
 (define-key key-minor-mode-map (kbd "s-m ri") 'ritchie) 
+(define-key key-minor-mode-map (kbd "s-m wr") 'writeroom-mode) 
+(define-key key-minor-mode-map (kbd "s-m wf") 'workflowy-mode) 
 
 
 
@@ -343,6 +350,8 @@
 (load "~/Dropbox/elisp/signal-flare.el")
 (load "~/Dropbox/elisp/signal-flare-wide.el")
 (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
+(load "~/Dropbox/elisp/jay-dixit-latex.el")
+
 
 ;; (setq aquamacs-scratch-file "~/Dropbox/writing/notationaldata/playful.org")
 
@@ -1034,7 +1043,7 @@ searches all buffers."
 
 (add-to-list 'completion-styles 'initials t)
 
- (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
+;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
 ; (set-face-attribute 'default nil :font "Courier"  :height 200)
 
 
@@ -1110,7 +1119,7 @@ searches all buffers."
 
 
 
-(load "~/Dropbox/emacs/prelude/personal/tabula-rasa-mode.el")
+;; (load "~/Dropbox/emacs/prelude/personal/tabula-rasa-mode.el")
 
 
 ;; open files in an existing frame instead of a new frame
@@ -1368,7 +1377,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
 
 
-(run-with-idle-timer 300 t 'jump-to-org-agenda)
+;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
 
 (defun kiwon/org-agenda-redo-in-other-window ()
   "Call org-agenda-redo function even in the non-agenda buffer."
@@ -1378,4 +1387,13 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (with-selected-window agenda-window (org-agenda-redo)))))
 (run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
 
+(defun medium-type ()
+  (interactive)
+  (set-face-attribute 'default nil  :height 260)
+  (set-frame-width (selected-frame) 89)
+  )
 
+
+ (medium-type)
+;; (transparent-serenity)
+(toggle-maxframe)

@@ -67,31 +67,46 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun courier-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Courier" :height 215)
+  (set-face-attribute 'default nil :font "Courier")
     (set-frame-width (selected-frame) 97)
 )
 
+
+(defun tiny-type ()
+  (interactive)
+  (set-face-attribute 'default nil  :height 170)
+  (set-frame-width (selected-frame) 89)
+  )
+
+
+(defun small-type ()
+  (interactive)
+  (set-face-attribute 'default nil  :height 200)
+  (set-frame-width (selected-frame) 89)
+  )
+
+
 (defun medium-type ()
   (interactive)
-  (set-face-attribute 'default nil :font "Courier" :height 260)
+  (set-face-attribute 'default nil  :height 260)
   (set-frame-width (selected-frame) 89)
   )
 
 
 (defun large-type ()
   (interactive)
-  (set-face-attribute 'default nil :font "Courier" :height 350)
+  (set-face-attribute 'default nil  :height 350)
   (set-frame-width (selected-frame) 68)
   )
 
 
 (defun lucida-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Ludida Sans Typewriter" :height 200))
+  (set-face-attribute 'default nil :font "Ludida Sans Typewriter"))
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco" :height 160))
+  (set-face-attribute 'default nil :font "Monaco" ))
 
 (defun inconsolata-font ()
   (interactive)
@@ -240,8 +255,10 @@ Subject: %^{Subject}
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
 
-	("l" "Later" checkitem (file+headline "playful.org" "later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "playful.org" "later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
+	("l" "learnings" entry (file "../learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
 	("n" "note" entry (file org-default-notes-file)
 	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
@@ -576,16 +593,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 
-;;; Nice size for the default window
-(defun get-default-height ()
-  (/ (- (display-pixel-height) 40)
-     (frame-char-height)))
-
-; (add-to-list 'default-frame-alist '(width . 140))
-;; (add-to-list 'default-frame-alist (cons 'height (get-default-height)))
-
-
-
 
 (setq sentence-end-double-space nil)
 (defun my-next-sentence ()
@@ -609,12 +616,6 @@ next potential sentence end"
 
 
 
-(defun transparent-serenity ()
-  (interactive)
-  (set-frame-parameter (selected-frame) 'alpha '(80 80))
-  (add-to-list 'default-frame-alist '(alpha 80 80))
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
-  )
 
 (defun opaque ()
   (interactive)
@@ -804,15 +805,6 @@ next potential sentence end"
 
 
 
-;; Use System Settings For File-Application Selection
-;; To get consistent applications for opening tasks I set the org-file-apps variable as follows:
-(setq org-file-apps (quote ((auto-mode . emacs)
-                            ("\\.mm\\'" . system)
-                            ("\\.x?html?\\'" . system)
-
-                            ("\\.pdf\\'" . open)
-)))
-
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
 
@@ -898,7 +890,6 @@ next potential sentence end"
  '(org-clock-in-resume t)
  '(org-clock-persist-query-resume nil)
  '(org-clock-report-include-clocking-task t)
- '(org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
  '(org-closed-string "COMPLETED:")
  '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
@@ -912,7 +903,7 @@ next potential sentence end"
  '(org-export-allow-bind-keywords t)
 
  '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm")))
+ '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(org-export-blocks-witheld (quote (hidden)))
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
  '(org-export-html-style "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
@@ -966,7 +957,7 @@ next potential sentence end"
 (setq org-todo-keywords
       '(
         (sequence "TODO" "STARTED" "|" "DONE!")
-        (sequence "DELEGATE" "WAITING" "|" "DONE!")
+        (sequence "DELEGATE" "DELEGATED" "|" "DONE!")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "SOMEDAY/MAYBE" "|" "DONE")
         (sequence "STRATEGY" "|")
@@ -1396,9 +1387,6 @@ next potential sentence end"
 
 
 
-(require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
 
 
 
@@ -1603,9 +1591,11 @@ next potential sentence end"
 
 
 
+
 ;; Add an effort estimate on the fly when clocking in
 ;;
 ;; You can use org-clock-in-prepare-hook to add an effort estimate. This way you can easily have a "tea-timer" for your tasks when they don't already have an effort estimate.
+;; leave blank for no effort line
 (add-hook 'org-clock-in-prepare-hook
           'my-org-mode-ask-effort)
 
@@ -1621,13 +1611,6 @@ next potential sentence end"
 
 
 
-(defun kiwon/org-agenda-redo-in-other-window ()
-  "Refresh the agenda view regularly."
-  (interactive)
-  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
-    (when agenda-window
-      (with-selected-window agenda-window (org-agenda-redo)))))
-(run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
 
 
 
@@ -1776,9 +1759,9 @@ next potential sentence end"
 
 
 (cl-dolist (map '(message-mode-map orgstruct-mode-map))
-  (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
-                    "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+  (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
     (define-key (eval map) (kbd key) nil)))
+
 
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
@@ -1892,18 +1875,47 @@ next potential sentence end"
 
 
 
+(defun transparent-serenity ()
+  (interactive)
+  (set-frame-parameter (selected-frame) 'alpha '(80 80))
+  (add-to-list 'default-frame-alist '(alpha 80 80))
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  )
+
+
+(defun rainy-highway-mode ()
+  (interactive)
+  (set-frame-parameter (selected-frame) 'alpha '(65 65))
+  (add-to-list 'default-frame-alist '(alpha 65 65))
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  (toggle-fullscreen)
+  (shut-the-fuck-up)
+)
+
+
 (defun shut-the-fuck-up()
-  "Cut region and put on OS X system pasteboard."
+  "disable all inline notifications"
   (interactive)
 (boss-mode)
 (flyspell-mode-off)
 (turn-off-auto-capitalize-mode)
-(writegood-mode -1)
-  (pasteboard-copy)
-  (delete-region (region-beginning) (region-end)))
+(writegood-mode 0)
+(writeroom-mode 1)
+(recenter-top-bottom))
 
+(defun morning-pages()
+  "distraction-free"
+(interactive)
+(org-capture)
+(rainy-highway-mode)
+)
 
 
 
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
+
+
+(require 'openwith)
+'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+(openwith-mode t)

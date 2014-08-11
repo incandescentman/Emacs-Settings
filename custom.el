@@ -5,10 +5,10 @@
 ;; from live
 
 (load "~/gnulisp/writegood-jay.el")
- (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
- (load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
- (load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
+;; (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
+(load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
+(load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
 
 ;; I've been wanting to do this for so long. :-)
 (eval-after-load "org"
@@ -44,8 +44,8 @@
      (define-key orgstruct-mode-map (kbd "<S-right>") nil)
  (define-key orgstruct-mode-map (kbd "<M-return>") nil)
      ))
-    
-        
+
+
 
      (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
      (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
@@ -122,7 +122,7 @@
 (setq prelude-guru nil)
 
 
-                                        ; projectile-find-dir
+;; projectile-find-dir
 
 
 
@@ -138,7 +138,7 @@
  '(ac-candidate-menu-min 3)
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
+ '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*")))
  '(calendar-latitude 40.7)
  '(case-fold-search t)
  '(ccm-recenter-at-end-of-file t)
@@ -162,12 +162,12 @@
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(flyspell-abbrev-p t)
- '(flyspell-mark-duplications-exceptions (quote ((nil "that" "had" "ha") ("\\`francais" "nous" "vous"))))
+ '(flyspell-mark-duplications-exceptions (quote ((nil "that" "had" "ha" "something" "blah") ("\\`francais" "nous" "vous"))))
  '(flyspell-use-global-abbrev-table-p t)
  '(global-flyspell-mode t)
  '(gmm/auto-mode-list (quote ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
  '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
- '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
+ '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
  '(grep-highlight-matches (quote always))
  '(helm-mini-default-sources (quote (helm-source-buffers-list helm-source-recentf)))
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
@@ -199,7 +199,7 @@
  '(org-ascii-underline (quote ((ascii 61 45 45) (latin1 61 45 45) (utf-8 9552 9472 9548 9476 9480))))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-bullets-bullet-list (quote (" ")))
- '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+ '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
@@ -318,14 +318,14 @@
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
  '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm")))
+ '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
  '(safe-local-variable-values (quote ((eval when (fboundp (quote rainbow-mode)) (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
  '(smartparens-global-mode nil)
- '(smex-prompt-string "I love you.  ")
+ '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
@@ -355,9 +355,9 @@
                                         ; (set-face-attribute 'default nil :font "Courier" :height 220)
 
 
-(require 'google-contacts)
-(require 'google-contacts-message)
-(require 'google-weather)
+;; (require 'google-contacts)
+;; (require 'google-contacts-message)
+;; (require 'google-weather)
 
 
 
@@ -369,9 +369,3 @@
   (interactive)
   (scroll-bar-mode -1)
   )
-
-
-
-
-
-

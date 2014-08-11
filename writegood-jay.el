@@ -85,7 +85,7 @@
   :group 'writegood)
 
 (defcustom writegood-weasel-words
-  '("very" "fairly" "several" "extremely" 
+  '( "fairly" "several" 
     "exceedingly" "quite" "great" 
       "are a number" "is a number" 
       "relatively" "many" "awesome"
