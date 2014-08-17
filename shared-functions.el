@@ -134,6 +134,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   )
 
+(defun spolsky ()
+  "Open my own customized version of the Solarized color theme."
+  (interactive)
+  (load-file "/Users/jay/gnulisp/jay-custom-color-themes/spolsky-jay.el")
+  (incarnadine-cursor)
+  )
 
 
 (defun big-cyberpunk ()
@@ -190,6 +196,30 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
   (set-face-attribute 'default nil :background "black"
                       :foreground "lime" :font "Courier" :height 180))
+
+
+
+
+;; Global counter to ensure every new buffer will be unique
+(defvar new-buffer-count 0)
+(defun new-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+(org-mode)
+  )
+(global-set-key (kbd "s-T") 'new-buffer)
+
+                                        ;(define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+
+(setq org-indirect-buffer-display 'current-window)
+(defun org-new-scratch-buffer ()
+  (interactive)
+  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
+  (org-tree-to-indirect-buffer 'current-window)
+  )
+
 
 
 
@@ -269,6 +299,10 @@ Subject: %^{Subject}
 	("s" "Signal flare" entry (file "../signal-flare-assets/signal-flare-capture.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
+	("v" "visual action" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
@@ -283,7 +317,7 @@ Subject: %^{Subject}
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 
-	("v" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 	("f" "flowy" entry (file "flowy.org")
@@ -1908,6 +1942,7 @@ next potential sentence end"
 (interactive)
 (org-capture)
 (rainy-highway-mode)
+(org-clock-in)
 )
 
 
@@ -1919,3 +1954,39 @@ next potential sentence end"
 (require 'openwith)
 '(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 (openwith-mode t)
+
+
+(defvar org-refile-region-format "\n%s\n")
+
+(defvar org-refile-region-position 'top
+  "Where to refile a region. Use 'bottom to refile at the
+end of the subtree. ")
+
+(defun org-refile-region (beg end &optional copy)
+  "Refile the active region.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instad of killing it."
+  (interactive "r\nP")
+  ;; mark paragraph if no region is set
+  (unless (use-region-p)
+    (setq beg (save-excursion
+                (backward-paragraph)
+                (skip-chars-forward "\n\t ")
+                (point))
+          end (save-excursion
+                (forward-paragraph)
+                (skip-chars-backward "\n\t ")
+                (point))))
+  (let* ((target (save-excursion (org-refile-get-location)))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (text (buffer-substring-no-properties beg end)))
+    (unless copy (kill-region beg end))
+    (deactivate-mark)
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (goto-char pos)
+        (if (eql org-refile-region-position 'bottom)
+            (org-end-of-subtree)
+          (org-end-of-meta-data-and-drawers))
+        (insert (format org-refile-region-format text))))))

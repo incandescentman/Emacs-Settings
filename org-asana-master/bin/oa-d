@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+
+# https://github.com/mengwong/org-asana/
+
+use strict;
+use Org::Asana;
+use Org::Asana::Sync;
+
+use Getopt::Long;
+my %opt;
+GetOptions(\%opt,
+		   "rc=s",
+		   "v",
+		   "sensitive",
+		   "workspaces=s",
+		   "test",
+	);
+
+select STDERR; $|++;
+select STDOUT; $|++;
+
+if ($opt{test}) {
+	$opt{workspaces} = qr(Test Workspace);
+	$opt{dir} = "$ENV{HOME}/org-asana-test";
+}
+
+my $oa = Org::Asana->new($opt{rc} ? (       rc=>$opt{rc}) : (),
+						 $opt{v}  ? (verbosity=>$opt{v} ) : (),
+						 sensitive => $opt{sensitive},
+						 $opt{workspaces}  ? (match_workspaces=>$opt{workspaces} ) : (),
+						 $opt{dir}         ? (dir=>$opt{dir} ) : (),
+	);
+
+select STDERR; $|++; select STDOUT; $|++;
+
+while (1) {
+	$oa->manage_caches;
+	$oa->sync;
+	$oa->sleep;
+}

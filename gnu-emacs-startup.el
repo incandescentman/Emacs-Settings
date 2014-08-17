@@ -132,6 +132,9 @@
 
 (define-key key-minor-mode-map (kbd "s-r") 'helm-mini)
 
+(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
+(define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
+
 
 
 ;; (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
@@ -243,6 +246,7 @@
 (define-key key-minor-mode-map (kbd "s-m sl") 'solarized-light)
 (define-key key-minor-mode-map (kbd "s-m sd") 'solarized-dark) 
 (define-key key-minor-mode-map (kbd "s-m ri") 'ritchie) 
+(define-key key-minor-mode-map (kbd "s-m sp") 'spolsky) 
 (define-key key-minor-mode-map (kbd "s-m wr") 'writeroom-mode) 
 (define-key key-minor-mode-map (kbd "s-m wf") 'workflowy-mode) 
 
@@ -1028,6 +1032,7 @@ searches all buffers."
 ;; make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
+(add-hook 'org-capture-mode-hook 'rainy-highway-mode)
 
 
 
@@ -1068,27 +1073,6 @@ searches all buffers."
 
 (delete-selection-mode 1) ; make typing override text selection
 
-
-
-;; Global counter to ensure every new buffer will be unique
-(defvar new-buffer-count 0)
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-(org-mode)
-  )
-(global-set-key (kbd "s-T") 'new-buffer)
-
-                                        ;(define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
-
-
-(setq org-indirect-buffer-display 'current-window)
-(defun org-new-scratch-buffer ()
-  (interactive)
-  (insert "* scratch " (format-time-string "%F %l:%M%P\n\n"))
-  (org-tree-to-indirect-buffer 'current-window)
-  )
 
 
 

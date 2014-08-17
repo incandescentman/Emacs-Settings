@@ -1,0 +1,51 @@
+-*- mode: text; mode: visual-line -*-
+
+:PROPERTIES:
+:asana_workspace_id: 314
+:asana_user_id: 314159
+:name: Allan Smithee
+:email: allan_smithee@example.com
+:last_synced_from_asana_to_org: 2013-01-06T10:16:27
+:last_synced_from_org_to_asana: 2013-01-06T10:16:44
+:END:
+
+* My First Project                                                  :project:
+:PROPERTIES:
+:archived:	 false
+:created_at:	 2012-02-22T02:06:58.147Z
+:followers:	 { id: 1123, name: "Mittens" }, ...
+:modified_at:	 2012-02-22T02:06:58.147Z
+:workspace:	 14916
+
+A description of the Project, which appears immediately under the title in Asana.
+** My First Section Heading:                                       :section:
+*** TODO My First Task [0/1]                                         :task:
+:PROPERTIES:
+:task_id: 35345
+:asana_created_at:2013-01-06T10:16:27
+:assignee_status: inbox
+:assignee_id: 44414
+:parent_task_id: 35345 # in case this task is really a subtask belonging to some other task under some other project
+:END:
+
+A description of the Task, which appears in the Notes field.
+
+**** TODO My First Subtask                                       :subtask:
+:PROPERTIES:
+:task_id: 35346
+:asana_created_at:2013-01-06T10:16:27
+:assignee_status: inbox
+:assignee_id: 44414
+:parent_task_id: 35345 # in case this task is really a subtask belonging to some other task under some other project
+:END:
+
+***** Activity Feed                                                :feed:
+
+****** Yes, subtasks also get their own activity feed.         :comment:
+
+**** Activity Feed                                                  :feed:
+***** Somebody created task. Date.                              :comment:
+***** Somebody added to PROJECT. Date.                          :comment:
+***** Some other comment.                                       :comment:
+***** You will observe that if a task has subtasks, its title will include a [/] progress field. :comment:
+*** TODO My Second Task                                              :task:

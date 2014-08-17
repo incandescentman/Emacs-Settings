@@ -1,0 +1,44 @@
+#+TITLE: Org-Asana Index
+#+AUTHOR: User Name <email>
+
+This file is READ-ONLY and its permissions are set accordingly.
+
+Edits to this file will not be picked up by Org-Asana.
+
+Org-Asana simply rewrites this file each time it synchronizes.
+
+Use it to go to links (C-c C-o) but do not edit it.
+
+Use it to view organization-wide todos (C-c / t).
+
+We advise that you do not add this to your org-agenda-files list.
+
+* Workspaces
+** My First Workspace -- a link to my agenda file for that workspace
+*** Projects
+A list of all projects. Projects which involve me are links to that heading in my org file.
+**** My First Project
+**** My Second Project
+***** My First Task (assignee name)
+A list of all tasks associated with that project. Each task links to its heading in the appropriate assignee's org file, unless that assignee is ignored by the asana_userlist configuration in .org-asana-rc. Tasks assigned to me appear at the top of the list. The rest of the tasks are sorted alphabetically.
+
+Tasks are prefixed with their TODO status.
+*** Users
+Sorted alphabetically by name.
+**** User 1 - a link to that user's org file in the workspace
+**** User 2 - a link to that user's org file in the workspace
+**** User 3 - a link to that user's org file in the workspace
+*** Tags
+**** Tag 1
+Note
+***** Followers
+***** Tasks
+a list of all tasks with that tag. Tasks are sorted by date created. Each task links to its heading in the appropriate assignee's user_email.org file, etc as above.
+- Task 1 (assignee name)
+- Task 2 (assignee name)
+- Task 3 (assignee name)
+
+Under the Tags sectory, Tasks are not prefixed with their TODO status, to avoid duplication in agenda view.
+**** Tag 2
+**** Tag 3
+** My Second Workspace -- a link to my agenda file for that workspace

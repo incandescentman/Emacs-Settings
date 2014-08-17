@@ -1,0 +1,498 @@
+#+TITLE: About Org-Asana
+#+AUTHOR: Wong Meng Weng <mengwong@pobox.com>
+
+* Introduction
+
+You use org-mode for personal task management.
+
+But your organization uses Asana for enterprise task management.
+
+Org-Asana synchronizes Org to Asana and Asana to Org.
+
+- You can manage all your Asana tasks in Org.
+- You can manage all your Org tasks in Asana.
+- Any changes to Org tasks will automatically propagate to Asana.
+- Any changes to Asana tasks will automatically propagate to Org.
+
+* Org-Asana Howto
+
+** Assumptions
+
+- You are already familiar with Org and Emacs.
+- You are already familiar with Asana and have an account.
+- You have a number of private Org agenda files, held locally.
+- You have a number of Asana workspaces, projects, tasks, and subtasks, kept in Asana.
+- You have mastery of Unix enough to open a terminal and invoke a daemon. Having done so, you should be able to control it without fear.
+- You are able to install CPAN modules.
+- You do not need to know elisp.
+- You do not need to know Perl.
+
+** Prerequisites
+
+- cpan install Moose
+- cpan install WWW::Asana
+- cpan install Org::Parser
+- cpan install YAML
+- Obtain your Asana API key from https://app.asana.com/-/account_api
+
+** Configuration
+
+~/.org-asana-rc is a YAML config file which specifies:
+- api_key :: your Asana API key
+- dir :: root directory for Org-Asana. By default, ~/org-asana/
+
+*** for a future release
+
+- exclude_users :: (optional) a list of email addresses of users that you don't care about. any users     listed will be ignored.
+- include_users :: (optional) a list of email addresses of users that you       care about. any users not listed will be ignored.
+
+You can only have one or the other of exclude_users / include_users.
+
+** Directory Structure
+
+- asana_dir/index.org is a human-readable index, linking to all workspaces, projects, users, tags, and recent tasks. Use C-c C-o to open the links.
+- asana_dir/cache contains various caches which are not for end-user consumption.
+- asana_dir/workspaces contains one subdirectory for each workspace -- /workspace_name/
+- asana_dir/workspaces/workspace_name/ contains one org file for each workspace -- /user_email.org/
+- asana_dir/workspaces/workspace_name/.id contains the workspace ID
+- asana_dir/workspaces/workspace_name/user_email.org contains all the projects and tasks for that user.
+- asana_dir/workspaces/workspace_name/data/ contains Org attachments. These are automatically replicated also.
+
+** Org File Structure
+
+Within each user_email.org file, you will find projects, tasks, and subtasks, arranged thus:
+
+*** Example Project Title                                         :project:
+**** Example Section Title:                                      :section:
+***** TODO Example Task Title [/]                                  :task:
+****** DONE Example Subtask Title                              :subtask:
+****** Activity Feed                                              :feed:
+
+** Task and Subtask Structure
+
+Any task which does not belong to a project will sit at the top level of the org file, at the beginning.
+
+A task belongs to exactly one workspace.
+
+A task may belong to zero or more projects. If a task belongs to more than one project, it will appear in full under one project, and as a link under the other projects.
+
+Every task contains a :PROPERTIES: drawer. That drawer contains all the Asana metadata for that task, including Assignee, Followers, Tags, Due Date, and Attachments. It also contains some Org-Asana metadata used for replication.
+
+If a task's title ends with a colon, Asana recognizes it as a Priority Heading. In Org, we call it a Section heading, so as not to conflict with Org's existing prioritization elements.
+
+** Usage Notes
+
+- After you make changes to your org-file, you have to hit save for Org-Asana to see those changes. Get in the habit of hitting C-x C-s.
+
+- If you have multiple workspaces, you will find your tasks spread across multiple files. You will probably want to add each of those files to your agenda-file-list by pressing C-c [.
+
+- You probably don't want to add other people's org files to your agenda-file-list. They are only there for you to browse.
+
+*** If you already have an Org agenda file which you want to import into Asana
+
+1. Run oa-d at least once. Let it create the workspace directory structure.
+
+2. Tag up your Org file as follows:
+   - tag project headings with :project:
+   - tag task headings with :task:
+   - tag subtask headings with :subtask:
+
+   See etc/sample.org for an example.
+
+3. Then move it, or append it, a file named your_email.org under the appropriate workspace.
+
+*** If you want to reassign a task in Org
+
+1. figure out the assignee_id of the target user by looking inside the index.org file.
+2. open the PROPERTIES drawer of the task in question.
+3. update the /assignee_id/ property. you can leave the /assignee_email/ and /assignee_user/ fields unchanged. Org-Asana will do the right thing.
+
+*** Do Not
+
+If you try to do crazy things, there is no telling what Org-Asana will do. Its behaviour is undefined if you perform an action in Org which Asana does not support. For example, do not:
+
+- promote a subtask to a full task within Org by retagging it
+- move a project or task hierarchy from one workspace to another
+- move a project or task hierarchy from one user_email.org file to another (but see [[If you want to reassign a task in Org]])
+
+* For Developers
+
+** Reading
+
+*** http://developers.asana.com/documentation/
+*** http://www.ysaito.com/survey.pdf                               :ATTACH:
+:PROPERTIES:
+:Attachments: optimistic-data-rep.pdf
+:ID:       BEEB2234-84A1-4ADB-BD50-D330C412B6E3
+:END:
+  Optimistic Replication, Yasushi Saito and Marc Shapiro, ACM Computing Surveys Vol 37 No 1 March 2005 pp 42--81
+
+** Software Architecture
+
+*** Org-Asana Replication Model                                    :ATTACH:
+:PROPERTIES:
+:Attachments: derivation-simple.ps
+:ID:       6CEC65D2-8883-4168-9A36-663A6A0EC9A1
+:END:
+
+Please see [[id:BEEB2234-84A1-4ADB-BD50-D330C412B6E3][Optimistic Replication]] for foundational theory.
+
+In summary, Org-Asana involves:
+- multimaster hub-and-spoke replication with optional slaves :: Asana is the master hub. Each Org hierarchy running oa-d is a master spoke. The Org hierarchies may themselves be further replicated across multiple sites using filesystem synchronization; we consider any such sites to be optional slaves and do not deal with them further. In the common case there is one hub and one spoke.
+- state-transfer rather than operation-transfer :: We replicate entire objects (tasks, projects, stories).
+- syntactic scheduling :: We rely on timestamps (created_at and modified_at on the Asana side, and file last-modified times on the Org side).
+- two-timestamp algorithm :: Each object possesses two timestamps, latest and previous. This is an extension to Thomas's write rule.
+- one-sided intelligence :: Efficiency optimizations such as transaction logs, hash histories, and version clock queries are possible with two cooperating agents on either side, as with rsync(1). Asana's API is relatively basic and does not support such optimizations. It is therefore necessary to perform an exhaustive traversal of Asana to detect new and changed objects.
+- Metadata Caches :: We maintain a local snapshot of full Asana state and we decorate that snapshot with computed version data so we can track update times. We also maintain a metadata cache of Org state, which likewise contains computed version data of objects within Org files. We use these local caches to compute commits. The main job of these caches is to tell us which objects have changed on which side; we use them to detect and log user-originated update operations. The two timestamps live in the metadata cache.
+- fast and slow synchronization :: A complete traversal of an Asana account containing 360 objects took approximately 30 minutes due to network latency. We attempt to speed up the process by running, in parallel, a fast scan of a handful of most recently updated objects.
+- invariant assertions :: it is useful, following Lamport (Derivation of a Simple Synchronization Algorithm, 1987) to think in terms of invariances. Any process should be killable at any time, and the system should recover "statelessly" and proceed to establish consistency.
+
+**** The Asana Local Cache
+
+We maintain one or more Asana caches -- YAML representations of all the data available to a given Asana API key, or some subset thereof.
+
+One or more Asana Caches are created by the oa-build-asana-cache process. A Full Cache contains everything. A Part Cache contains only some portions.
+
+**** The Org Local Cache
+
+We maintain a metadata cache of Org: a YAML representation of the entire Org hierarchy. We detect changes by comparing the Org hierarchy on disk with the cached version in YAML. This is a Full Cache.
+
+**** Local Caches are an Intermediate Replica
+
+The local caches of Asana and Org themselves constitute intermediate replicas. They are slaves against their respective masters.
+
+Consider the addition of a Story to a Task. It is slow to find all the stories on all the tasks: no bulk GET is available. So it is expensive to retrieve all the stories on all the tasks. We know that the addition of a Story to a Task causes the Task's modified_at to change. We can therefore maintain a valid slave by grabbing all Tasks, examining their modified_at stamps, and redownloading in full only those Tasks which have changed since the last time the local cache was built.
+
+**** Per-Object Metadata in Cache
+
+Each object has the following attributes in each cache:
+
+- modified_at :: the last modified time -- this corresponds to ts in Fig 11 of Saito&Shapiro.
+- previously_modified_at :: the previous last modified time -- this corresponds to prevTs
+- hash :: a hash of the current contents of the object, used for researching other ways of change tracking.
+- hashlog :: a hash version history of recent changes.
+
+The two-timestamp algorithm represents a primitive form of branch merging.
+
+**** Cache Globals
+
+The Tombstone list keeps track of objects that have been deleted. We garbage-collect Tombstones when both sides have deleted the objects in question.
+
+*** Executables
+
+**** oa-build-org-cache
+
+Traverses Org and refreshes the local YAML cache.
+
+- org-scan-time    :: the last time at which we initiated a subsequently successful comprehensive scan of all Org objects.
+
+The org cache knows when each Org object was last updated.
+
+We keep the cache on disk because we use it to diff against the latest org files to find only the changed Org objects.
+
+Save a bunch of work by testing file modification timestamps against /org-scan-time/. If none of the files have changed since /org-scan-time/, we can consider the cache to be fresh, and take no action.
+
+But if the Org cache is more than /build-org-cache-interval/ seconds old, force a rebuild irregardless.
+
+A fresh cache rebuild updates /org-scan-time/.
+
+**** oa-build-asana-cache
+
+Traverses Asana and refreshes the local YAML cache -- a comprehensive local representation of the Asana account.
+
+- full-asana-scan-time    :: the last time at which we initiated a subsequently successful comprehensive scan of all Asana objects.
+
+Responsible for error retries, etc.
+
+Exit if a previous job is still running.
+
+The asana-cache-builder process runs as a parent with multiple child slots.
+
+Once an asana-cache-builder child process completes, the parent oa-d reads its YAML output and updates /full-asana-scan-time/ or /likely-asana-scan-time/ depending on what got run.
+
+If a child slot exits unsuccessfully, relaunch it. If the child slot encountered throttling, tell it to sleep between queries, or sleep at start.
+
+***** The full slot
+
+Runs a full Asana scan, then sleeps for half the amount of time it took to run the scan, or an hour, whichever is lesser, then repeats.
+
+***** The fast slot
+
+Runs a part Asana scan on the /most-likely-objects/.
+
+In future, once the Asana API supports this query functionality, search by modified_at timestamp so we retrieve most recently changed.
+
+**** oa-d (OrgAsanaD)
+
+A background process which continually syncs your local org files with Asana, and vice versa.
+
+You can run this in a terminal window.
+
+***** Variables
+
+oa-d tracks the above cache variables, plus the following essential variables:
+
+- org-to-asana-time :: the last time at which we successfully pushed all changes from Org to Asana
+- asana-to-org-time :: the last time at which we successfully pulled all changes from Asana to Org
+- last-sync-time :: the earliest of push-time, fast-pull-time, and slow-pull-time.
+
+The following variables are used for the fast-sync optimization:
+
+- most-likely-objects  :: a list of the objects which we guess are most likely to change, or which we care about especially. Some combination of objects which changed most recently, and are therefore likely to change again, or objects that I own or created.
+- likely-asana-scan-time    :: the last time at which we initiated a subsequently successful scan of the most likely objects at Asana.
+- fast-pull-time  :: the last time at which we started a fast scan of the most likely objects on Asana, and updated Org accordingly.
+
+The following variables configure the behaviour of Org-Asana.
+
+- build-org-cache-interval :: number of seconds that the org cache is allowed to age before being considered too old. default 600.
+- build-full-asana-cache-interval :: number of seconds that the full Asana cache is allowed to age before being considered too old. default 7200.
+- build-fast-asana-cache-interval :: number of seconds that the fast Asana cache is allowed to age before being considered too old. default 1800.
+
+***** At any moment, oa-d is in one of the following states:
+
+****** initialization
+
+- if ~/.org-asana-rc is not found, it will initialize its configuration by asking you for
+  - your Asana API key
+  - your preferred asana_dir location
+
+****** sleeping
+If we're freshly launched, don't sleep.
+
+Otherwise, sleep for $idle_time.
+****** managing caches
+
+******* load or build the Asana cache.
+
+If the cache exists, reload it.
+
+If the cache doesn't exist, launch oa-build-asana-cache.
+
+If the Asana cache is more than /build-asana-cache-interval/ seconds old, launch oa-build-asana-cache.
+
+******* load or build the Org cache.
+
+If the cache exists, reload it.
+
+If the cache doesn't exist, launch oa-build-org-cache.
+
+If the Org cache is more than /build-org-cache-interval/ seconds old, launch oa-build-org-cache.
+
+****** syncing
+
+If the world has changed since our last sync -- if a new Org or Asana cache has been built since the last /sync-time/, start a sync.
+
+We record our /sync-start-time/.
+
+******* push sync
+
+We push Org objects that have changed since the /last-sync-time/, to Asana.
+
+******** enqueue push deltas.
+
+Scan the org cache for any objects that have been updated since /last-sync-time/. If any are found, enqueue deltas for pushing to Asana.
+
+******** dequeue push deltas to Asana.
+Have any push deltas been queued? If so, query the Asana cache and also the live Asana for conflicts.
+********* If there are no conflicts, write them to Asana.
+********* If there are conflicts, apply the /last-modified wins/ strategy.
+********** If the object supports stories, log a story describing the conflict.
+********** If not, log to the local errorlog.
+******** update push metadata
+
+******* fast pull sync
+
+We pull Asana objects that have changed since the /last-sync-time/, to Org.
+
+A fast pull session examines the /most-likely-objects/ in the fast Asana cache, and writes any changes out to Org.
+
+The pull session relies on the asana-cache-builder having completed a fast slot. If there is no YAML cache of /most-likely-objects/, return.
+
+******** enqueue pull deltas
+Scan the fast Asana cache for any objects that have been updated since /last-sync-time/.
+
+As changes are found, group them by workspace-assignee. At the end of each group, attempt to write changes to Org.
+
+******** attempt pull delta writes
+if the target Org file is being edited, don't clobber it -- leave it alone. return.
+
+******** execute pull delta writes
+If the target Org file is not being edited, then we're free to rewrite it.
+
+With an update in mind, query the local objects for conflicts.
+********* If there are no conflicts, write them to Org.
+********* If there are conflicts, apply the /last-modified wins/ strategy.
+********** If the object supports stories, log a story describing the conflict.
+********** If not, log to the local errorlog.
+
+******* slow pull sync
+A full pull session is exactly the same as a [[fast pull sync]] except it loads the full Asana cache instead of the most-likely-objects.
+****** pull session conflict
+
+What if both oa-build-asana-cache slots finish at the same time, and report the same changes? we need to keep track of these writes to Org, so that we don't imagine conflicts where there are none. Let us approach this problem by starting with the slow sync as canonical, and using the fast sync as a degenerate version.
+
+****** saving metadata
+
+Rewrite the cache files with timestamp updates. The cache builders will pick up those timestamps the next time it runs.
+
+Update both the Org and the Asana caches.
+
+****** cleanup
+
+Set /last-sync-time/ to /sync-start-time/.
+Set /org-to-asana-time/ to /org-scan-time/.
+Set /asana-to-org-time/ to /asana-scan-time/.
+*** Libraries
+**** Org::Asana
+The $oa object does most of the work. The oa-d just puts it through its paces.
+**** Org::Asana::Cache
+
+Knows how to read a cache YAML file.
+
+Knows how to write a cache YAML file.
+
+Each object in the cache must have an asana_id attribute. That is canonical between Org and Asana.
+
+Labels each object in the cache with the two last_modified timestamps.
+
+Knows how to update a given object.
+
+**** Org::Asana::Cache::Org
+
+Deals with the Org cache.
+
+Knows how to traverse the Org hierarchies and update the Org YAML cache.
+
+**** Org::Asana::Cache::Asana
+
+Deals with the Asana cache(s).
+
+Knows how to traverse Asana and update the Asana YAML cache.
+
+**** Org::Asana::Cache::Asana::Full
+
+Performs a full traversal of Asana.
+
+**** Org::Asana::Cache::Asana::Part
+
+Limits its Asana traversal to just those objects which deserve special attention.
+
+**** Org::Asana::Sync
+
+Given two sets of Cache objects, compute a synchronized head, and compute the commit deltas between the Cache objects and the head.
+
+Commit those deltas to the respective sites -- Org and Asana.
+
+Write a transaction log so that subsequent runs do not repeat changes unnecessarily.
+
+Invariant: subsequent to the commits, the caches will reload. The new caches should be completely in sync and the diff detector should not trigger.
+
+**** Org::Asana::Sync::Org
+Knows how to write the latest synchronized head to the Org files on disk.
+**** Org::Asana::Sync::Asana
+Knows how to write the latest synchronized head to Asana via the web API.
+*** Common Updates
+
+| Event at Asana | Event at Org | Update at Org      | Update at Asana    | Development Status | Comments |
+|----------------+--------------+--------------------+--------------------+--------------------+----------|
+| new task       |              | create new task    |                    | test not written   |          |
+|                | new task     |                    | create new task    | test not written   |          |
+| new project    |              | create new project |                    | test not written   |          |
+|                | new project  |                    | create new project | test not written   |          |
+| edit task      |              | update task        |                    | test not written   |          |
+|                | edit task    |                    | update task        | test not written   |          |
+| edit project   |              | update project     |                    | test not written   |          |
+|                | edit project |                    | update project     | test not written   |          |
+|                |              |                    |                    | test not written   |          |
+|                |              |                    |                    | test not written   |          |
+|                |              |                    |                    | test not written   |          |
+  
+
+*** Uncommon Updates
+
+**** A user changes their email address at Asana
+
+- that user's user_email.org will automatically rename.
+- that user's entry in the .org-asana-rc asana_userlist will automatically update.
+
+Org-Asana reads the canonical user ID from the :PROPERTIES: drawer in each user_email.org.
+
+**** A workspace gets renamed
+
+- directories should all get renamed appropriately.
+
+**** A project's tasks get re-ordered
+
+Asana does not allow reordering of tasks via the API.
+
+Therefore we ignore the order of tasks in projects.
+
+In the future, if we want to, we can impose Asana ordering on Org.
+
+**** A project gets archived, at Asana
+
+It simply gets deleted from Org, unless you've updated something in that project recently.
+
+**** A task gets archived
+
+It simply gets deleted from Org, unless you've updated that task in Org since it was deleted in Asana, in which case we back out the archival.
+
+**** Your tasks are already tagged with a reserved word
+
+Usually, tags from Asana turn into Org tags, and vice versa.
+
+But Org-Asana treats the following tags as special:
+- project
+- task
+- subtask
+- feed
+- comment
+
+So, if your Asana tags happen to match those tags, Org-Asana will automatically prepend a single underscore to your Asana tags.
+
+* Prior Art
+
+- http://orgmode.org/cgit.cgi/org-sync.git/
+- https://github.com/christopherjwhite/org-toodledo
+- http://search.cpan.org/~getty/WWW-Asana-0.003/lib/WWW/Asana.pm
+- http://search.cpan.org/~sharyanto/Org-Parser-0.29/lib/Org/Parser.pm
+
+
+* Future Directions
+
+** handle cache-building errors more gracefully -- if Asana barfs a network or other error, pick up where we left off and keep rebuilding the cache.
+
+* Other Notes
+
+Note that auto-revert-mode is automatically defined by default. This allows a2o to update your orgfile in the background, and lets emacs pick up the changes without needing to reload.
+
+* TASKS
+** TODO build out parent/subtask relationships based on individual task entries.
+** DONE fast: redownload all the tasks. if any tasks have been updated at the server since the last run, redownload their stories. optimize the local Asana cache.
+** DONE find some way of integrating the Org perl libraries with the WWW::Asana perl libraries so the same object is dually represented. probably some sort of clever mixin hierarchy. this is actually the sync.
+** DONE figure out sensible file structure.
+- State "DONE"       from ""           [2013-02-02 Sat 21:11]
+** DONE record all available asana properties into the :PROPERTIES: drawer.
+- in particular, asana_id needs to be saved
+** DONE handle section categories that end in colon. give them their own headline level
+** TODO add robust error handling:
+   malformed JSON string, neither array, object, number, string or atom, at character offset 0 (before "<!DOCTYPE html>\n<ht...") at /Library/Perl/5.12/WWW/Asana/Response.pm line 100.
+** DONE optimize syncing.
+- maybe do this by test last-update times? we could update changed files but honour timestamping -- use "latest wins" strategy.
+- consider also the hashing strategy described in toodledo
+** DONE add support to WWW::Asana for Stories
+** DONE add support to WWW::Asana for Subtasks
+** TODO buffer up a queue of remote->local changes and apply them only when the relevant .org buffers are not under active editing -- test by looking for the .#filename -> symlink.
+** TODO roundtrip from org to asana
+** DONE does updating a story on a task cause the task's modified_at to change?
+yes
+** TODO do the right thing for object archiving / deletion
+have a special section which requires review and an opinion into PROPERTIES.
+** TODO do the right thing for subtask dissociation from parent, or relocation into a different project.
+** TODO link the headings directly to the asana URLs
+** TODO if a task has subtasks, give it a [1/1] heading
+*** DONE may need to add subtask support to WWW::Asana, i think subtasks only showed up since the last WWW::Asana update.
+- State "TODO"       from ""           [2013-02-02 Sat 21:12]
+** TODO add attachment support
+
+* that's all!
