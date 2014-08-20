@@ -17,8 +17,7 @@
 
 ;;;; UI
 
-
-(require 'auto-complete)
+(require 'auto-complete) ;; but only for elisp mode
 (require 'org-bullets)
 
 ;; ;; This customization with the big blocky boxy red cursor makes me so happy.
@@ -35,36 +34,7 @@
 	'((cursor-color . "red")))
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 
-
-;; take notes from the web and attribute it properly
-(defun web-research ()
-  (interactive)
-  (insert "#+BEGIN_QUOTE\n")
-  (let ((p (point)))
-    (insert "\n\n#+END_QUOTE\n")
-    (org-mac-chrome-insert-frontmost-url)
-    (goto-char p))
-  )
-
-
-(defun zenburn ()
-  "Open my favorite file:  ~.emacs.
-The function is poorly named, didn't really want to 'load' it, just open it."
-  (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
-  (org-mode)
-  (set-cursor-color "violet")
-  )
-
-(defun ritchie ()
-  (interactive)
-  (load-theme 'ritchie)
-  (incarnadine-cursor)
-  (org-mode)
-  )
-
-
-
+;;; fonts 
 (defun courier-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Courier")
@@ -115,6 +85,28 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun last-words ()
   (interactive)
   (set-face-attribute 'default nil :font "Last Words" :height 200))
+
+
+
+;;; themes
+
+(defun zenburn ()
+  "Open my favorite file:  ~.emacs.
+The function is poorly named, didn't really want to 'load' it, just open it."
+  (interactive)
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
+  (org-mode)
+  (set-cursor-color "violet")
+  )
+
+(defun ritchie ()
+  (interactive)
+  (load-theme 'ritchie)
+  (incarnadine-cursor)
+  (org-mode)
+  )
+
+
 
 
 
@@ -178,20 +170,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
 
 
-(require 'color-theme)
-
-
-(defun lion ()
-  "Open my own customized version of the Cyberpunk color theme."
-  (interactive)
-(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/MGM/Unknown Album/MGM Logo 3 Roar 2008 Restoration.mp3"))
-
-
-(add-hook 'org-after-todo-state-change-hook
-	  'lion)
-
-
-
 (defun matrix ()
   (interactive)
   (set-face-attribute 'default nil :background "black"
@@ -199,6 +177,17 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 
 
+;; (require 'color-theme)
+
+;; don't remember what this is 
+(defun lion ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/MGM/Unknown Album/MGM Logo 3 Roar 2008 Restoration.mp3"))
+
+
+
+;;; useful functions
 
 ;; Global counter to ensure every new buffer will be unique
 (defvar new-buffer-count 0)
@@ -219,9 +208,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
   (org-tree-to-indirect-buffer 'current-window)
   )
-
-
-
 
 
 
@@ -262,6 +248,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 
 
+;;; org-mode
+
+(add-hook 'org-after-todo-state-change-hook
+	  'lion)
+
+
+
+
 ;; some favorite org settings
 (setq org-indent-mode t)
 (setq org-indent-indentation-per-level 2)
@@ -296,12 +290,8 @@ Subject: %^{Subject}
 	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-	("s" "Signal flare" entry (file "../signal-flare-assets/signal-flare-capture.txt")
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-	("v" "visual action" entry (file "visual-actions.txt")
-	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
 
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -312,8 +302,7 @@ Subject: %^{Subject}
 	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-
-	("w" "writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 
@@ -1922,7 +1911,6 @@ next potential sentence end"
   (set-frame-parameter (selected-frame) 'alpha '(65 65))
   (add-to-list 'default-frame-alist '(alpha 65 65))
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
-  (toggle-fullscreen)
   (shut-the-fuck-up)
 )
 
@@ -1956,13 +1944,15 @@ next potential sentence end"
 (openwith-mode t)
 
 
+
+
 (defvar org-refile-region-format "\n%s\n")
 
 (defvar org-refile-region-position 'top
   "Where to refile a region. Use 'bottom to refile at the
 end of the subtree. ")
 
-(defun org-refile-region (beg end &optional copy)
+(defun org-refile-region (beg end copy)
   "Refile the active region.
 If no region is active, refile the current paragraph.
 With prefix arg C-u, copy region instad of killing it."
@@ -1990,3 +1980,27 @@ With prefix arg C-u, copy region instad of killing it."
             (org-end-of-subtree)
           (org-end-of-meta-data-and-drawers))
         (insert (format org-refile-region-format text))))))
+
+
+(defun my-org-files-list ()
+  (mapcar (lambda (buffer)
+            (buffer-file-name buffer))
+          (org-buffer-list 'files t)))
+
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
+;; http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538
+
+
+
+
+;; take notes from the web and attribute it properly
+(defun web-research ()
+  (interactive)
+  (insert "#+BEGIN_QUOTE\n")
+  (let ((p (point)))
+    (insert "\n\n#+END_QUOTE\n")
+    (org-mac-chrome-insert-frontmost-url)
+    (goto-char p))
+  )

@@ -337,7 +337,7 @@
  '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
- '(writeroom-global-effects (quote (writeroom-toggle-fullscreen writeroom-toggle-menu-bar-lines writeroom-toggle-tool-bar-lines writeroom-toggle-vertical-scroll-bars))))
+ '(writeroom-global-effects (quote (writeroom-toggle-menu-bar-lines writeroom-toggle-tool-bar-lines writeroom-toggle-vertical-scroll-bars))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -250,6 +250,7 @@
 (define-key key-minor-mode-map (kbd "s-m wr") 'writeroom-mode) 
 (define-key key-minor-mode-map (kbd "s-m wf") 'workflowy-mode) 
 
+(define-key key-minor-mode-map (kbd "s-m mp") 'morning-pages) 
 
 
 
@@ -1322,6 +1323,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (unless (fboundp 'toggle-frame-fullscreen)
   (global-set-key (kbd "<f11>") 'toggle-fullscreen))
+(unless (fboundp 'toggle-frame-fullscreen)
+  (global-set-key (kbd "<f13>") 'toggle-fullscreen))
+
+
 
 ;; make block quotes appear nicely in buffer http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
   (font-lock-add-keywords
