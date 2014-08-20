@@ -1,4 +1,7 @@
-;; define packages
+
+
+
+;;;; define packages
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" .
@@ -13,6 +16,31 @@
 
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
+
+
+;;;; learn these functions! #zeitgeist
+
+
+
+(setq sentence-end-double-space nil)
+(defun my-next-sentence ()
+  "Move point forward to the next sentence.
+Start by moving to the next period, question mark or exclamation.
+If this punctuation is followed by one or more whitespace
+characters followed by a capital letter, or a '\', stop there. If
+not, assume we're at an abbreviation of some sort and move to the
+next potential sentence end"
+  (interactive)
+  (re-search-forward "[.?!]")
+  (if (looking-at "[    \n]+[A-Z]\\|\\\\")
+      nil
+    (my-next-sentence)))
+
+(defun my-last-sentence ()
+  (interactive)
+  (re-search-backward "[.?!][   \n]+[A-Z]\\|\\.\\\\" nil t)
+  (forward-char))
+
 
 
 ;;;; UI
@@ -34,7 +62,7 @@
 	'((cursor-color . "red")))
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 
-;;; fonts 
+;;;; fonts 
 (defun courier-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Courier")
@@ -88,7 +116,16 @@
 
 
 
-;;; themes
+(defun opaque ()
+  (interactive)
+  (set-frame-parameter (selected-frame) 'alpha '(100 100))
+  (add-to-list 'default-frame-alist '(alpha 100 100))
+  )
+
+
+
+
+;;;; themes
 
 (defun zenburn ()
   "Open my favorite file:  ~.emacs.
@@ -187,7 +224,112 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 
 
-;;; useful functions
+;;;; useful functions
+
+
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
+
+
+;; Set transparency of emacs
+(defun transparency-set-value (value)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (incarnadine-cursor)
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+
+
+
+;; search in Spotlight
+(setq locate-command "mdfind")
+
+
+(defun org-day ()
+  "foo"
+  (interactive)
+  (insert (format-time-string "[%H:%M]"))
+  )
+
+
+
+
+;; need to add "cleanup buffer safe" here from whattheemacsd.com
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-region (point-min) (point-max)))
+
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+
+
+
+(defun transpose-windows (arg)
+  "Transpose the buffers shown in two windows."
+  (interactive "p")
+  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+    (while (/= arg 0)
+      (let ((this-win (window-buffer))
+	    (next-win (window-buffer (funcall selector))))
+	(set-window-buffer (selected-window) next-win)
+	(set-window-buffer (funcall selector) this-win)
+	(select-window (funcall selector)))
+      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+
+
+
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
+
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
+
+
+
+
+(defun my-isearch-word-at-point ()
+  (interactive)
+  (call-interactively 'isearch-forward-regexp))
+
+(defun my-isearch-yank-word-hook ()
+  (when (equal this-command 'my-isearch-word-at-point)
+    (let ((string (concat "\\<"
+			  (buffer-substring-no-properties
+			   (progn (skip-syntax-backward "w_") (point))
+			   (progn (skip-syntax-forward "w_") (point)))
+			  "\\>")))
+      (if (and isearch-case-fold-search
+	       (eq 'not-yanks search-upper-case))
+	  (setq string (downcase string)))
+      (setq isearch-string string
+	    isearch-message
+	    (concat isearch-message
+		    (mapconcat 'isearch-text-char-description
+			       string ""))
+	    isearch-yank-flag t)
+      (isearch-search-and-update))))
+
+(add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
+
+					; (global-set-key "\C-cw" 'my-isearch-word-at-point)
+
+
 
 ;; Global counter to ensure every new buffer will be unique
 (defvar new-buffer-count 0)
@@ -247,72 +389,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (delete-selection-mode 1) ; make typing override text selection
 
 
-
-;;; org-mode
-
-(add-hook 'org-after-todo-state-change-hook
-	  'lion)
-
-
-
-
-;; some favorite org settings
-(setq org-indent-mode t)
-(setq org-indent-indentation-per-level 2)
-(setq org-use-property-inheritance t)
-(setq org-ctrl-k-protect-subtree t)
-
-
-
-;; org-capture Setup ==================================================================================
-(setq org-capture-templates
-      (quote
-       (
-        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
-From: Jay Dixit <dixit@aya.yale.edu>
-To: %^{Send mail to}
-Subject: %^{Subject}
---text follows this line--
-%?")
-
-	("g" "gratitude" entry (file "gratitude.txt")
-	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
-
-
-	("L" "Later" checkitem (file+headline "playful.org" "later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
-
-	("l" "learnings" entry (file "../learnings.org" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-	("n" "note" entry (file org-default-notes-file)
-	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
-
-	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-	("v" "visualness and visual actions" entry (file "visual-actions.txt")
-	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-	("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-	("h" "historical interest" entry (file "historical-lifestream.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-
-	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-	("f" "flowy" entry (file "flowy.org")
-	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
-
-
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
@@ -363,8 +439,20 @@ Subject: %^{Subject}
 
 
 
-(global-set-key "\C-ce" 'eval-buffer)
-(global-set-key "\C-cr" 'eval-region)
+
+;;;; org-mode settings
+
+(add-hook 'org-after-todo-state-change-hook
+	  'lion)
+
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+;; some favorite org settings
+(setq org-indent-mode t)
+(setq org-indent-indentation-per-level 2)
+(setq org-use-property-inheritance t)
+(setq org-ctrl-k-protect-subtree t)
 
 
 
@@ -374,32 +462,33 @@ Subject: %^{Subject}
 
 
 
+(setq org-export-with-smart-quotes t)
 
-(defun my-isearch-word-at-point ()
+
+;;;; org-mode functions
+
+;; make org-mode temporarily emulate traditional outlining keybindings?
+(define-minor-mode zin/org-outline-mode
+  "" nil
+  :lighter " OOut"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<tab>") 'org-metaright)
+            (define-key map (kbd "S-<tab>") 'org-metaleft)
+            (define-key map (kbd "<M-return>") 'org-return)
+            map))
+(global-set-key "\C-co" 'zin/org-outline-mode)
+
+
+
+;; org-mode function to check checkbox and move to next in list?
+                                        ; http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#
+(defun zin/org-checkbox-next ()
   (interactive)
-  (call-interactively 'isearch-forward-regexp))
+  (when (org-at-item-checkbox-p)
+    (org-toggle-checkbox))
+  (org-next-item))
 
-(defun my-isearch-yank-word-hook ()
-  (when (equal this-command 'my-isearch-word-at-point)
-    (let ((string (concat "\\<"
-			  (buffer-substring-no-properties
-			   (progn (skip-syntax-backward "w_") (point))
-			   (progn (skip-syntax-forward "w_") (point)))
-			  "\\>")))
-      (if (and isearch-case-fold-search
-	       (eq 'not-yanks search-upper-case))
-	  (setq string (downcase string)))
-      (setq isearch-string string
-	    isearch-message
-	    (concat isearch-message
-		    (mapconcat 'isearch-text-char-description
-			       string ""))
-	    isearch-yank-flag t)
-      (isearch-search-and-update))))
-
-(add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
-
-					; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 
 
 
@@ -416,6 +505,84 @@ Subject: %^{Subject}
 
 
 
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+	(org-back-to-heading)
+	(org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+
+
+
+
+;;; org-capture Setup ==================================================================================
+(setq org-capture-templates
+      (quote
+       (
+        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
+From: Jay Dixit <dixit@aya.yale.edu>
+To: %^{Send mail to}
+Subject: %^{Subject}
+--text follows this line--
+%?")
+
+	("g" "gratitude" entry (file "gratitude.txt")
+	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+
+
+	("L" "Later" checkitem (file+headline "playful.org" "later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+
+	("l" "learnings" entry (file "../learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
+	("n" "note" entry (file org-default-notes-file)
+	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+
+	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+	("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+	("h" "historical interest" entry (file "historical-lifestream.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+	("f" "flowy" entry (file "flowy.org")
+	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+
+
+
+
+;;;; key bindings
+
+(global-set-key "\C-ce" 'eval-buffer)
+(global-set-key "\C-cr" 'eval-region)
+
+
+
+
+
+;;;; settings (not functions)
 
 (add-hook 'ido-setup-hook
 	  (lambda ()
@@ -487,110 +654,9 @@ Subject: %^{Subject}
 </DIV>")
 
 
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'"))
-                          nil beg end))
-
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
 
 
 
-
-
-(defun myorg-update-parent-cookie ()
-  (when (equal major-mode 'org-mode)
-    (save-excursion
-      (ignore-errors
-	(org-back-to-heading)
-	(org-update-parent-todo-statistics)))))
-
-(defadvice org-kill-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-
-(defadvice kill-whole-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-
-
-
-;; need to add "cleanup buffer safe" here from whattheemacsd.com
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
-
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-
-
-
-(setq org-export-with-smart-quotes t)
-
-
-(defun transpose-windows (arg)
-  "Transpose the buffers shown in two windows."
-  (interactive "p")
-  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-    (while (/= arg 0)
-      (let ((this-win (window-buffer))
-	    (next-win (window-buffer (funcall selector))))
-	(set-window-buffer (selected-window) next-win)
-	(set-window-buffer (funcall selector) this-win)
-	(select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
-
-
-
-;; make org-mode temporarily emulate traditional outlining keybindings?
-(define-minor-mode zin/org-outline-mode
-  "" nil
-  :lighter " OOut"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
-            (define-key map (kbd "<tab>") 'org-metaright)
-            (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
-            map))
-(global-set-key "\C-co" 'zin/org-outline-mode)
-
-
-
-;; org-mode function to check checkbox and move to next in list?
-                                        ; http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#
-(defun zin/org-checkbox-next ()
-  (interactive)
-  (when (org-at-item-checkbox-p)
-    (org-toggle-checkbox))
-  (org-next-item))
-
-
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-
-
-;; search in Spotlight
-(setq locate-command "mdfind")
-
-
-;; Set transparency of emacs
-(defun transparency-set-value (value)
-  "Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (incarnadine-cursor)
-  (interactive "nTransparency Value 0 - 100 opaque:")
-  (set-frame-parameter (selected-frame) 'alpha value))
 
 
 
@@ -598,14 +664,7 @@ Including indent-buffer, which should not be called automatically on save."
 (setq locate-command "mdfind")
 
 
-(defun org-day ()
-  "foo"
-  (interactive)
-  (insert (format-time-string "[%H:%M]"))
-  )
 
-
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
 ;; (global-hl-line-mode t) ; turn it on for all modes by default
@@ -616,35 +675,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 
-
-(setq sentence-end-double-space nil)
-(defun my-next-sentence ()
-  "Move point forward to the next sentence.
-Start by moving to the next period, question mark or exclamation.
-If this punctuation is followed by one or more whitespace
-characters followed by a capital letter, or a '\', stop there. If
-not, assume we're at an abbreviation of some sort and move to the
-next potential sentence end"
-  (interactive)
-  (re-search-forward "[.?!]")
-  (if (looking-at "[    \n]+[A-Z]\\|\\\\")
-      nil
-    (my-next-sentence)))
-
-(defun my-last-sentence ()
-  (interactive)
-  (re-search-backward "[.?!][   \n]+[A-Z]\\|\\.\\\\" nil t)
-  (forward-char))
-
-
-
-
-
-(defun opaque ()
-  (interactive)
-  (set-frame-parameter (selected-frame) 'alpha '(100 100))
-  (add-to-list 'default-frame-alist '(alpha 100 100))
-  )
 
 
 
