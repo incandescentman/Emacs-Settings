@@ -18,6 +18,15 @@
 (load "~/Dropbox/elisp/play-sound.el")
 
 
+;;;; guess this has to go before org-mode
+
+;; make block quotes appear nicely in buffer 
+;; http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
+  (font-lock-add-keywords
+       'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+
+
+
 ;;;; learn these functions! #zeitgeist
 
 
@@ -161,6 +170,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
   (load-theme 'solarized-light)
   (incarnadine-cursor)
+  )
+
+(defun whiteboard ()
+  "Open my own customized version of the Solarized color theme."
+  (interactive)
+  (load-theme 'whiteboard)
   )
 
 (defun spolsky ()
@@ -1302,7 +1317,7 @@ Subject: %^{Subject}
 (auto-fill-mode -1)
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
+;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
@@ -1590,9 +1605,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                                         ; or any key you see fit
 
 
-;; make block quotes appear nicely in buffer http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
-  (font-lock-add-keywords
-       'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
 
 
 (setq org-fontify-quote-and-verse-blocks t)
@@ -3065,3 +3077,22 @@ searches all buffers."
 ;; Turn off alarms completely
 ;; Now some people find the flashing annoying. To turn the alarm totally off, you can use this:
 ;; (setq ring-bell-function 'ignore)
+
+
+(global-auto-revert-mode 1)
+
+
+
+(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
+(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
+
+(defun define-hyper-key (key fun)
+  (cond
+   (aquamacs-flag
+    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
+   (gnuemacs-flag
+    (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
+
+;; The aquamacs/gnuemacs keybindings:
+(define-hyper-key "h" 'replace-string)
+

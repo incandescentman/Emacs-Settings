@@ -1,4 +1,4 @@
-;; (setq inhibit-startup-message t)
+; (setq inhibit-startup-message t)
 ; (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/")
 
 
@@ -177,6 +177,7 @@
 ;; shortcuts for my own functions
 (define-key key-minor-mode-map (kbd "s-m cy") 'cyberpunk-jay) 
 (define-key key-minor-mode-map (kbd "s-m cl") 'cyberpunk-large) 
+(define-key key-minor-mode-map (kbd "s-m wb") 'whiteboard) 
 (define-key key-minor-mode-map (kbd "s-m sl") 'solarized-light)
 (define-key key-minor-mode-map (kbd "s-m sd") 'solarized-dark) 
 (define-key key-minor-mode-map (kbd "s-m ri") 'ritchie) 
@@ -185,6 +186,10 @@
 (define-key key-minor-mode-map (kbd "s-m wf") 'workflowy-mode) 
 
 (define-key key-minor-mode-map (kbd "s-m mp") 'morning-pages) 
+
+(define-key key-minor-mode-map (kbd "s-m rf") 'prelude-rename-file-and-buffer) 
+
+
 
 
 

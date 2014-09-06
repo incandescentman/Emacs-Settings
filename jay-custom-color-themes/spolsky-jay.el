@@ -66,6 +66,10 @@
    `(region ((t (:background, *visual-selection*))))
    `(underline ((nil (:underline t))))
 
+;; org-mode
+   `(org-hide ((t (:foreground, *background* ))))
+
+
    ;; font-lock
    `(font-lock-builtin-face ((t (:foreground, *operators*))))
    `(font-lock-comment-delimiter-face ((t (:foreground, *comments*))))
@@ -92,7 +96,7 @@
    `(minibuffer-prompt ((t (:foreground, *variable*))))
    `(mode-line ((t (:background, *mode-line-bg* :foreground, *mode-line-fg*))))
    `(mode-line-inactive ((t (:background, *mode-inactive-bg* :foreground, *mode-inactive-fg*))))
-   `(cursor ((t (:background, *cursor-underscore*))))
+   `(cursor ((t (:background "red"))))
    `(text-cursor ((t (:background, *cursor-underscore*))))
    `(vertical-border ((t (:foreground, *background*)))) ;; between splits
 
