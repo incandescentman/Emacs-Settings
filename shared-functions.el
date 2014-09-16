@@ -3096,7 +3096,40 @@ searches all buffers."
 ;; The aquamacs/gnuemacs keybindings:
 (define-hyper-key "h" 'replace-string)
 
+(define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 
+;; (define-key key-minor-mode-map (kbd "s-i") 'org-mac-chrome-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-\\") 'visit-most-recent-file)
+(define-key key-minor-mode-map (kbd "s-f") 'isearch-forward)
+;; (define-key key-minor-mode-map (kbd "s-r") 'xsteve-ido-choose-from-recentf)
+
+(define-key key-minor-mode-map (kbd "s-r") 'helm-mini)
+
+(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
+(define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
+(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
+(define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
+(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
+(define-key key-minor-mode-map (kbd "s-k") 'ido-kill-buffer)
+(define-key key-minor-mode-map (kbd "s-K") 'zin/org-checkbox-next)
+(define-key key-minor-mode-map (kbd "s-d") 'org-todo)
+(define-key key-minor-mode-map (kbd "s-4") 'clone-indirect-buffer-other-window)
+(define-key key-minor-mode-map (kbd "s-5") 'point-stack-push)
+(define-key key-minor-mode-map (kbd "s-6") 'point-stack-pop)
+(define-key key-minor-mode-map (kbd "s-7") 'point-stack-forward-stack-pop)
+(define-key key-minor-mode-map (kbd "s-8") 'search-open-buffers)
+(define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-S") 'org-mac-skim-insert-page)
+(define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
+(define-key key-minor-mode-map (kbd "s-B") 'clone-indirect-buffer-other-window)
+
+(define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer)
+(define-key key-minor-mode-map (kbd "s-o") 'eval-buffer)
+(define-key key-minor-mode-map (kbd "s-w") 'delete-window)
+(define-key key-minor-mode-map (kbd "s-F") 'locate)
+(define-key key-minor-mode-map (kbd "s-(") 'org-velocity)
+(define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
 
 
    

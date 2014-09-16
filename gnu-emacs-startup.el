@@ -53,15 +53,6 @@
 
 ;; mk - mykeybindings
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
-(define-key key-minor-mode-map (kbd "s-i") 'org-mac-chrome-insert-frontmost-url)
-(define-key key-minor-mode-map (kbd "s-\\") 'visit-most-recent-file)
-(define-key key-minor-mode-map (kbd "s-f") 'isearch-forward)
-;; (define-key key-minor-mode-map (kbd "s-r") 'xsteve-ido-choose-from-recentf)
-
-(define-key key-minor-mode-map (kbd "s-r") 'helm-mini)
-
-(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
-(define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'org-refile-region)
 
@@ -69,24 +60,11 @@
 ;; (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
 
 
-(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
-(define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
-(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
-(define-key key-minor-mode-map (kbd "s-k") 'ido-kill-buffer)
-(define-key key-minor-mode-map (kbd "s-K") 'zin/org-checkbox-next)
 
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
-(define-key key-minor-mode-map (kbd "s-d") 'org-todo)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change)
-(define-key key-minor-mode-map (kbd "s-4") 'clone-indirect-buffer-other-window)
-(define-key key-minor-mode-map (kbd "s-5") 'point-stack-push)
-(define-key key-minor-mode-map (kbd "s-6") 'point-stack-pop)
-(define-key key-minor-mode-map (kbd "s-7") 'point-stack-forward-stack-pop)
-(define-key key-minor-mode-map (kbd "s-8") 'search-open-buffers)
-(define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
-(define-key key-minor-mode-map (kbd "s-S") 'org-mac-skim-insert-page)
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word)
 ; (define-key key-minor-mode-map (kbd "=") 'smex)
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x)
@@ -116,16 +94,10 @@
 
 
 
-(define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
-(define-key key-minor-mode-map (kbd "s-B") 'clone-indirect-buffer-other-window)
-
-(define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer)
-(define-key key-minor-mode-map (kbd "s-o") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
 (define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
 (define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
-(define-key key-minor-mode-map (kbd "s-w") 'delete-window)
 (define-key key-minor-mode-map (kbd "M-h") 'help-command)
 (define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
 (define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
@@ -136,10 +108,6 @@
 ;; (define-key key-minor-mode-map (kbd "s-<backspace>") 'delete-char)
 
 
-(define-key key-minor-mode-map (kbd "s-F") 'locate)
-(define-key key-minor-mode-map (kbd "s-(") 'org-velocity)
-(define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
 ;; (global-set-key (kbd "C-c s") 'org-copy-subtree)
 ;; (define-key (kbd "C-v s") 'org-paste-subtree)
 ;; (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
