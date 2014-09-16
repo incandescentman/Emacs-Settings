@@ -3099,5 +3099,6 @@ searches all buffers."
 
 
 
+    (setq org-list-demote-modify-bullet
+          '(("-" . "-") ("-" . "-") ("-" . "-")))
    
-

@@ -20,10 +20,8 @@
 
 
 
-;; STICKY WINDOWS
-
+;;;; STICKY WINDOWS
 (global-set-key [(control x) (?0)] 'delete-other-windows)
-
 (global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-0") 'delete-window)
 (global-set-key  (kbd "s-1") 'delete-other-windows)
@@ -31,7 +29,7 @@
 (global-set-key  (kbd "s-2") 'split-window-vertically)
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
-
+;;; ABBREVIATIONS
 ;; ===== Automatically load abbreviations table =====
 ;; Note that emacs chooses, by default, the filename
 ;; "~/.abbrev_defs", so don't try to be too clever
@@ -41,18 +39,15 @@
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 
-
-
-
-
-
-
-
-
+;;;; APPEARANCE
 ;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
 
 
 (setq prelude-whitespace nil)
+
+
+;;;; KEYBINDINGS
+
 
 
 
@@ -233,7 +228,6 @@
 
 
 
-
 ;; here's stuff from emacs starter kit
 (tooltip-mode -1)
 (tool-bar-mode -1)
@@ -398,3 +392,5 @@
 
 
 (toggle-maxframe)
+
+;(whiteboard)
