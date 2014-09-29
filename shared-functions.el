@@ -16,6 +16,7 @@
 
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
+;; (load "~/Dropbox/elisp/invoice-latex.el")
 
 
 ;;;; guess this has to go before org-mode
@@ -206,7 +207,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
 ;;  (hl-line-mode 1)
   (turn-on-auto-capitalize-mode)
-  (toggle-maxframe)
+
 (play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
 
 (defun cyberpunk-large ()
@@ -218,7 +219,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   (turn-on-auto-capitalize-mode)
 (large-type)
-  (toggle-maxframe)
+
 (play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
 
 
@@ -557,6 +558,10 @@ Subject: %^{Subject}
 
 	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+
+	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
 
 	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
@@ -1750,7 +1755,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (setq org-alphabetical-lists t)
 
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-(add-hook 'message-mode-hook 'orgstruct-mode 'append)
+;; (add-hook 'message-mode-hook 'orgstruct-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
@@ -1894,6 +1899,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "SOMEDAY/MAYBE" "|" "DONE")
         (sequence "MAYBE" "|" "DONE")
+        (sequence "NEXT" "|" "DONE")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE!")
@@ -2267,10 +2273,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (require 'helm-config)
 
 
-
+;;;; SMEX
 ;; smex-describe-function
 ;; smex-find-function
 ;; smex-where-is
+
+
 
 
 
@@ -3098,39 +3106,70 @@ searches all buffers."
 
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 
-;; (define-key key-minor-mode-map (kbd "s-i") 'org-mac-chrome-insert-frontmost-url)
-(define-key key-minor-mode-map (kbd "s-\\") 'visit-most-recent-file)
-(define-key key-minor-mode-map (kbd "s-f") 'isearch-forward)
-;; (define-key key-minor-mode-map (kbd "s-r") 'xsteve-ido-choose-from-recentf)
+(define-hyper-key "\\" 'visit-most-recent-file)
+(define-hyper-key "f" 'isearch-forward)
+;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 
-(define-key key-minor-mode-map (kbd "s-r") 'helm-mini)
+(define-hyper-key "r" 'helm-mini)
 
-(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
-(define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
-(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
-(define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
-(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
-(define-key key-minor-mode-map (kbd "s-k") 'ido-kill-buffer)
-(define-key key-minor-mode-map (kbd "s-K") 'zin/org-checkbox-next)
-(define-key key-minor-mode-map (kbd "s-d") 'org-todo)
-(define-key key-minor-mode-map (kbd "s-4") 'clone-indirect-buffer-other-window)
-(define-key key-minor-mode-map (kbd "s-5") 'point-stack-push)
-(define-key key-minor-mode-map (kbd "s-6") 'point-stack-pop)
-(define-key key-minor-mode-map (kbd "s-7") 'point-stack-forward-stack-pop)
-(define-key key-minor-mode-map (kbd "s-8") 'search-open-buffers)
-(define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
-(define-key key-minor-mode-map (kbd "s-S") 'org-mac-skim-insert-page)
-(define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
-(define-key key-minor-mode-map (kbd "s-B") 'clone-indirect-buffer-other-window)
+(define-hyper-key "t" 'new-buffer)
+(define-hyper-key "T" 'org-new-scratch-buffer)
+(define-hyper-key "t" 'new-buffer)
+(define-hyper-key "g" 'isearch-repeat-forward)
+(define-hyper-key "h" 'replace-string)
+(define-hyper-key "k" 'ido-kill-buffer)
+(define-hyper-key "K" 'zin/org-checkbox-next)
+(define-hyper-key "d" 'org-todo)
+(define-hyper-key "4" 'clone-indirect-buffer-other-window)
+(define-hyper-key "5" 'point-stack-push)
+(define-hyper-key "6" 'point-stack-pop)
+(define-hyper-key "7" 'point-stack-forward-stack-pop)
+(define-hyper-key "8" 'search-open-buffers)
+(define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
+(define-hyper-key "S" 'org-mac-skim-insert-page)
+(define-hyper-key "b" 'org-narrow-to-subtree)
+(define-hyper-key "B" 'clone-indirect-buffer-other-window)
 
-(define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer)
-(define-key key-minor-mode-map (kbd "s-o") 'eval-buffer)
-(define-key key-minor-mode-map (kbd "s-w") 'delete-window)
-(define-key key-minor-mode-map (kbd "s-F") 'locate)
-(define-key key-minor-mode-map (kbd "s-(") 'org-velocity)
-(define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
+(define-hyper-key "a" 'mark-whole-buffer)
+(define-hyper-key "o" 'eval-buffer)
+(define-hyper-key "w" 'delete-window)
+(define-hyper-key "F" 'locate)
+(define-hyper-key "(" 'org-velocity)
+(define-hyper-key "[" 'org-backward-heading-same-level)
+(define-hyper-key "]" 'org-forward-heading-same-level)
 
+(define-hyper-key "`" 'other-window)
+(define-hyper-key "s" 'save-some-buffers)
+
+
+
+
+;; shortcuts for my own functions
+(define-hyper-key "m cy" 'cyberpunk-jay) 
+(define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m wb" 'whiteboard) 
+(define-hyper-key "m sl" 'solarized-light)
+(define-hyper-key "m sd" 'solarized-dark) 
+(define-hyper-key "m ri" 'ritchie) 
+(define-hyper-key "m sp" 'spolsky) 
+(define-hyper-key "m wr" 'writeroom-mode) 
+(define-hyper-key "m wf" 'workflowy-mode) 
+
+(define-hyper-key "m mp" 'morning-pages) 
+
+(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
+
+(define-hyper-key "m lt" 'large-type) 
+(define-hyper-key "m mt" 'medium-type) 
+(define-hyper-key "m df" 'delete-file-and-buffer) 
+(define-hyper-key "m rf" 'rename-file-and-buffer) 
+(define-hyper-key "m a" 'org-agenda) 
+(define-hyper-key "m j" 'helm-imenu-anywhere) 
+;; (define-hyper-key "f" 'helm-swoop)
+(define-hyper-key ";" 'ido-goto-symbol)
+(define-hyper-key "D" 'diredp-dired-recent-dirs)
 
    
 
+
+ (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")

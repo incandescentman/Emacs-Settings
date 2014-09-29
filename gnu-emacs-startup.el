@@ -66,7 +66,6 @@
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change)
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word)
-; (define-key key-minor-mode-map (kbd "=") 'smex)
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x)
 (define-key key-minor-mode-map (kbd "=") 'smex)
 
@@ -77,6 +76,7 @@
 (define-key key-minor-mode-map (kbd "M-b j") 'read-jd) 
 (define-key key-minor-mode-map (kbd "M-b M-b") 'book-helm-strict)
 
+(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs)
 
 
  (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
@@ -114,13 +114,11 @@
 ;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
 ;; (define-key key-minor-mode-map (kbd "s-y") 'redo)
 ;; (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
-(define-key key-minor-mode-map (kbd "s-`") 'other-window)
 ;; (define-key key-minor-mode-map (kbd "s-/") 'visit-most-recent-file)
 ;; available key mappings
 ;; ; (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
 ;; (define-key key-minor-mode-map (kbd "s-d") 'org-todo)
 ;; (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
-(define-key key-minor-mode-map (kbd "s-s") 'save-some-buffers)
 ;; ; (define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
 ;; (define-key key-minor-mode-map (kbd "s-b") 'org-tree-to-indirect-buffer)
 ;; (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
@@ -137,38 +135,16 @@
 ;; (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
 
 
-;; shortcuts for my own functions
-(define-key key-minor-mode-map (kbd "s-m cy") 'cyberpunk-jay) 
-(define-key key-minor-mode-map (kbd "s-m cl") 'cyberpunk-large) 
-(define-key key-minor-mode-map (kbd "s-m wb") 'whiteboard) 
-(define-key key-minor-mode-map (kbd "s-m sl") 'solarized-light)
-(define-key key-minor-mode-map (kbd "s-m sd") 'solarized-dark) 
-(define-key key-minor-mode-map (kbd "s-m ri") 'ritchie) 
-(define-key key-minor-mode-map (kbd "s-m sp") 'spolsky) 
-(define-key key-minor-mode-map (kbd "s-m wr") 'writeroom-mode) 
-(define-key key-minor-mode-map (kbd "s-m wf") 'workflowy-mode) 
-
-(define-key key-minor-mode-map (kbd "s-m mp") 'morning-pages) 
-
-(define-key key-minor-mode-map (kbd "s-m rf") 'prelude-rename-file-and-buffer) 
-
 
 
 
 
 
 (define-key key-minor-mode-map (kbd "C-c C-o") 'helm-org-headlines) ; learn this!
-(define-key key-minor-mode-map (kbd "s-m lt") 'large-type) 
-(define-key key-minor-mode-map (kbd "s-m mt") 'medium-type) 
-(define-key key-minor-mode-map (kbd "s-m df") 'delete-file-and-buffer) 
-(define-key key-minor-mode-map (kbd "s-m rf") 'rename-file-and-buffer) 
-(define-key key-minor-mode-map (kbd "s-m a") 'org-agenda) 
-(define-key key-minor-mode-map (kbd "s-m j") 'helm-imenu-anywhere) 
 
 
 (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files) 
 
-(define-key key-minor-mode-map (kbd "s-f") 'helm-swoop)
 
 ;; (global-set-key "\C-s" 'delete-char)
 
@@ -181,7 +157,6 @@
 
 
 
-(define-key key-minor-mode-map (kbd "s-;") 'ido-goto-symbol)
 
 
 

@@ -7,7 +7,6 @@
 
 ;; ----- ido-work-directory-list -----
 (
- "/Users/jay/Dropbox/writing/notationaldata/tutoring/"
  "/Users/jay/.emacs.d/"
  "/Users/jay/Dropbox/emacs/prelude/personal/"
  "/Users/jay/"
@@ -16,7 +15,6 @@
 
 ;; ----- ido-work-file-list -----
 (
- "zoren-final.txt"
  "init.el"
  "init.elc"
  "gnu-emacs-startup.el"
@@ -27,9 +25,7 @@
 
 ;; ----- ido-dir-file-cache -----
 (
- ("/Users/jay/Library/Application Support/Aquamacs Emacs/elpa/zenburn-theme-20140811.754/" (21528 26189 0 0) "zenburn-theme.el" "zenburn-theme-pkg.elc" "zenburn-theme-pkg.el" "zenburn-theme-autoloads.el" "../" "./")
-
- ("/Users/jay/Dropbox/writing/notationaldata/tutoring/" (21527 14696 0 0) "zoren.txt" "zoren-outline.txt" "zoren-outline.html" "zoren-outline-new.txt" "zoren-outline-new.html" "zoren-highlights.txt" "tutoring-invoice.org" "taylor.org" "rayna-outline.org" "rayna-1.org" "paul-gammal.org" "paul-gammal.html" "paul-gammal-final.txt" "paul-gammal-final.html" "noah-turk.tex" "noah-turk.pdf" "noah-turk.org" "noah-turk.html" "noah-extra.org" "maria-fontana.org" "maria-fontana.html" "maria-fontana-draft.txt" "maria-fontana-draft.html" "jessica.org" "jessica.html" "haley.txt" "ground-rules.txt" "dora-v3.txt" "dora-v3.html" "dora-interview.txt" "dora-interview.html" "dina.org" "did-serena-v5.org" "archive/" ".git/" ".DS_Store" "../" "./")
+ ("/Users/jay/gnulisp/" (21538 4640 0 0) "writegood-jay.elc" "writegood-jay.el" "shared-functions.elc" "shared-functions.el" "savefile/" "reveal-in-finder.elc" "reveal-in-finder.el" "recent-addresses-0.1/" "preload/" "owr-helper.elc" "org-writers-room.elc" "org-serenity-mode.elc" "org-serenity-mode.el" "org-asana-master/" "jay-custom-color-themes/" "gnugol.elc" "gnugol.el" "gnu-emacs-startup.elc" "gnu-emacs-startup.el" "gnu-emacs-only.elc" "gnu-emacs-only.el" "flycheck_org-serenity-mode.elc" "flycheck_org-serenity-mode.el" "flycheck_clean-modeline.elc" "emacs-pastebin-master/" "dired-filter-20140228.946.elc" "dired-filter-20140228.946.el" "custom.elc" "custom.el" "custom (Infinity's conflicted copy 2014-07-01).elc" "clean-modeline.elc" "clean-modeline.el" "book-functions.elc" "book-functions.el" ".git/" ".DS_Store" "#shared-functions.el#" "../" "./")
 
  ("/Users/jay/.emacs.d/" (21416 37730 0 0) "vendor/" "var/" "utils/" "url/" "tramp" "tmp/" "themes/" "savefile/" "sample/" "recent-addresses" "README.md" "projectile-bookmarks.eld" "prelude-modules.elc" "prelude-modules.el" "personal/" "packs/" "orgcard.txt" "org-clock-save.elc" "org-clock-save.el.~1~" "org-clock-save.el" "oauth2.plstore" "modules/" "init.el" "frame-restore-parameters" "flycheck_org-clock-save.elc" "flycheck_org-clock-save.el" "elpa/" "core/" "CONTRIBUTING.md" "bookmarks" "auto-save-list/" "auto-install/" "ac-comphist.dat" ".saved-places" ".projectile" ".places" ".org-id-locations" ".gitignore" ".git/" ".DS_Store" "../" "./")
 

@@ -379,6 +379,8 @@
   (scroll-bar-mode -1)
   )
 
+(small-type)
+
 (toggle-maxframe)
 (toggle-maxframe)
 
