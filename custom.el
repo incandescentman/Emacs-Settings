@@ -150,7 +150,7 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cursor-type (quote box) t)
- '(custom-safe-themes (quote ("0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
+ '(custom-safe-themes (quote ("0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
@@ -324,7 +324,7 @@
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
- '(safe-local-variable-values (quote ((eval when (fboundp (quote rainbow-mode)) (rainbow-mode 1)))))
+ '(safe-local-variable-values (quote ((buffer-file-coding-system . utf-8-unix) (org-export-html-style-include-scripts) (eval when (fboundp (quote rainbow-mode)) (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
  '(smartparens-global-mode nil)
  '(smex-prompt-string "I love you. ")
@@ -386,3 +386,4 @@
 
 
 
+(set-face-attribute 'default nil :font "Monaco" :height 170)

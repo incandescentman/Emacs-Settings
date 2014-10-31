@@ -87,6 +87,7 @@
  (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
  (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
+ (define-key key-minor-mode-map (kbd "s-W") 'web-research)
 
 
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
@@ -268,6 +269,7 @@
 (unless (fboundp 'toggle-frame-fullscreen)
   (global-set-key (kbd "<f13>") 'toggle-fullscreen))
 
+  (global-set-key (kbd "<f13>") 'toggle-fullscreen)
 
 
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)

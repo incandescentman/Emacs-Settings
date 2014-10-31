@@ -1307,7 +1307,7 @@ Subject: %^{Subject}
 
 (add-to-list 'completion-styles 'initials t)
 
-;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
+; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
 ; (set-face-attribute 'default nil :font "Courier"  :height 200)
 
 
@@ -1894,7 +1894,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "STARTED" "|" "DONE!")
+        (sequence "TODO" "|" "DONE!! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE!")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "SOMEDAY/MAYBE" "|" "DONE")
@@ -2883,9 +2883,15 @@ With prefix arg C-u, copy region instad of killing it."
   (interactive)
   (insert "#+BEGIN_QUOTE\n")
   (let ((p (point)))
-    (insert "\n\n#+END_QUOTE\n")
+    (insert "\n#+END_QUOTE\nSource: ")
     (org-mac-chrome-insert-frontmost-url)
     (goto-char p))
+  (pasteboard-paste)
+  (next-line)
+  (next-line)
+  (next-line)
+    (insert "\n")
+
   )
 
 
@@ -3154,6 +3160,7 @@ searches all buffers."
 (define-hyper-key "m sp" 'spolsky) 
 (define-hyper-key "m wr" 'writeroom-mode) 
 (define-hyper-key "m wf" 'workflowy-mode) 
+(define-hyper-key "m st" 'small-type) 
 
 (define-hyper-key "m mp" 'morning-pages) 
 
@@ -3173,3 +3180,11 @@ searches all buffers."
 
 
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+
+ (set-face-attribute 'default nil :font "Monaco" :height 190)
+
+
+;; http://stackoverflow.com/questions/22430229/how-to-instruct-emacs-auto-capitalize-mode-to-automatically-lowercase-any-word-t/26590746?iemail=1&noredirect=1#26590746
+(setq auto-capitalize-predicate
+      (lambda () (not (looking-back
+           "\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
