@@ -381,9 +381,9 @@
 
 (small-type)
 
-(toggle-maxframe)
-(toggle-maxframe)
 
 
 
 (set-face-attribute 'default nil :font "Monaco" :height 170)
+
+(toggle-frame-fullscreen)
