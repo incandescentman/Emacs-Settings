@@ -136,24 +136,31 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
- '(ansi-color-names-vector ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*")))
+ '(buffer-stack-untracked
+   (quote
+    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*")))
  '(calendar-latitude 40.7)
  '(case-fold-search t)
  '(ccm-recenter-at-end-of-file t)
  '(clean-buffer-list-delay-general 1)
  '(column-number-mode nil)
- '(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
+ '(completion-ignored-extensions
+   (quote
+    (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
  '(compose-mail-user-agent-warnings nil)
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
- '(cursor-type (quote box) t)
- '(custom-safe-themes (quote ("0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
+ '(cursor-type (quote box))
+ '(custom-safe-themes
+   (quote
+    ("0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
+ '(delete-window-preserve-buffer
+   (quote
+    ("*scratch*" "current-book-research.txt" "accountability.txt")))
  '(dired-clean-up-buffers-too nil)
  '(dired-details-hidden-string "")
  '(dired-kept-versions 8)
@@ -162,23 +169,34 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
- '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
- '(flyspell-mark-duplications-exceptions (quote ((nil "that" "had" "ha" "something" "blah") ("\\`francais" "nous" "vous"))))
+ '(flyspell-mark-duplications-exceptions
+   (quote
+    ((nil "that" "had" "ha" "something" "blah")
+     ("\\`francais" "nous" "vous"))))
  '(flyspell-use-global-abbrev-table-p t)
  '(global-flyspell-mode t)
- '(gmm/auto-mode-list (quote ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
- '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
- '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
+ '(gmm/auto-mode-list
+   (quote
+    ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
+ '(grep-find-ignored-directories
+   (quote
+    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
+ '(grep-find-ignored-files
+   (quote
+    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
  '(grep-highlight-matches (quote always))
  '(helm-mini-default-sources (quote (helm-source-buffers-list helm-source-recentf)))
- '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
+ '(ido-ignore-files
+   (quote
+    ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
  '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
- '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
  '(make-backup-files t)
  '(message-draft-headers (quote (From References Date)))
@@ -186,19 +204,33 @@
  '(message-required-headers (quote (From (optional . References))))
  '(message-send-hook (quote (recent-addresses-add-headers)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mml-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(only-global-abbrevs t)
- '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+ '(openwith-associations
+   (quote
+    (("\\.pdf\\'" "open"
+      (file))
+     ("\\.mp3\\'" "xmms"
+      (file))
+     ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer"
+      ("-idx" file))
+     ("\\.\\(?:jp?g\\|png\\)\\'" "display"
+      (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-files (quote ("~/Dropbox/writing/notationaldata/playful.org" "~/Dropbox/writing/notationaldata/prolific.org")))
+ '(org-agenda-files (quote ("~/Dropbox/writing/notationaldata/acct-erika.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
- '(org-ascii-underline (quote ((ascii 61 45 45) (latin1 61 45 45) (utf-8 9552 9472 9548 9476 9480))))
+ '(org-ascii-underline
+   (quote
+    ((ascii 61 45 45)
+     (latin1 61 45 45)
+     (utf-8 9552 9472 9548 9476 9480))))
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-bullets-bullet-list (quote (" ")))
  '(org-bullets-face-name (quote \"Courier\"))
@@ -208,7 +240,9 @@
  '(org-clock-in-resume t)
  '(org-clock-persist-query-resume nil)
  '(org-clock-report-include-clocking-task t)
- '(org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+ '(org-clocktable-defaults
+   (quote
+    (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
  '(org-closed-string "COMPLETED:")
  '(org-confirm-babel-evaluate nil)
  '(org-ctrl-k-protect-subtree t)
@@ -225,11 +259,20 @@
  '(org-export-blocks-witheld (quote (hidden)))
  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- '(org-export-html-style "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
- '(org-export-html-style-extra "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
+ '(org-export-html-style
+   "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
+ '(org-export-html-style-extra
+   "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
  '(org-export-html-style-include-default t)
  '(org-export-latex-date-format "%d %B %Y.")
- '(org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+ '(org-export-latex-emphasis-alist
+   (quote
+    (("*" "\\emph{%s}" nil)
+     ("/" "\\textit{%s}" nil)
+     ("_" "\\underline{%s}" nil)
+     ("+" "\\st{%s}" nil)
+     ("=" "\\verb" t)
+     ("~" "\\verb" t))))
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
  '(org-export-preserve-breaks t)
@@ -237,6 +280,7 @@
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
+ '(org-export-with-timestamps (quote active))
  '(org-export-with-toc nil)
  '(org-extend-today-until 8)
  '(org-fontify-done-headline t)
@@ -250,7 +294,8 @@
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")
- '(org-html-footnotes-section "<div id=\"footnotes\">
+ '(org-html-footnotes-section
+   "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
 <div id=\"footnote\">
 %s
@@ -259,14 +304,35 @@
  '(org-html-head-include-default-style nil)
  '(org-html-head-include-scripts nil)
  '(org-html-html5-fancy t)
+ '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
  '(org-html-postamble nil)
- '(org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
+ '(org-html-text-markup-alist
+   (quote
+    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
  '(org-html-toplevel-hlevel 2)
+ '(org-icalendar-alarm-time 15)
+ '(org-icalendar-categories (quote (local-tags todo-state)))
+ '(org-icalendar-exclude-tags (quote ("noexport" "ARCHIVE")))
+ '(org-icalendar-store-UID t)
+ '(org-icalendar-use-deadline (quote (todo-due)))
+ '(org-icalendar-use-scheduled (quote (event-if-todo)))
  '(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-insert-mode-line-in-empty-file t)
- '(org-latex-text-markup-alist (quote ((bold . "\\textbf{%s}") (code . verb) (italic . "\\textit{%s}") (strike-through . "\\sout{%s}") (underline . "\\uline{%s}") (verbatim . protectedtext))))
+ '(org-latex-text-markup-alist
+   (quote
+    ((bold . "\\textbf{%s}")
+     (code . verb)
+     (italic . "\\textit{%s}")
+     (strike-through . "\\sout{%s}")
+     (underline . "\\uline{%s}")
+     (verbatim . protectedtext))))
  '(org-latex-toc-command "\\tableofcontents
 \\newpage
 ")
@@ -281,7 +347,9 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-modules (quote (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -293,7 +361,8 @@
  '(org-pomodoro-short-break-format "Short Break: %s")
  '(org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
  '(org-pomodoro-sound "~/sounds/large-applause.mp3")
- '(org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a")
+ '(org-pomodoro-ticking-sound
+   "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a")
  '(org-priority-faces nil)
  '(org-provide-checkbox-statistics t)
  '(org-replace-disputed-keys nil)
@@ -320,11 +389,18 @@
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
  '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
+ '(recentf-exclude
+   (quote
+    (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
- '(safe-local-variable-values (quote ((buffer-file-coding-system . utf-8-unix) (org-export-html-style-include-scripts) (eval when (fboundp (quote rainbow-mode)) (rainbow-mode 1)))))
+ '(safe-local-variable-values
+   (quote
+    ((eval when
+           (fboundp
+            (quote rainbow-mode))
+           (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
  '(smartparens-global-mode nil)
  '(smex-prompt-string "I love you. ")
@@ -335,26 +411,39 @@
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
  '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map (quote ((20 . "#BC8383") (40 . "#CC9393") (60 . "#DFAF8F") (80 . "#D0BF8F") (100 . "#E0CF9F") (120 . "#F0DFAF") (140 . "#5F7F5F") (160 . "#7F9F7F") (180 . "#8FB28F") (200 . "#9FC59F") (220 . "#AFD8AF") (240 . "#BFEBBF") (260 . "#93E0E3") (280 . "#6CA0A3") (300 . "#7CB8BB") (320 . "#8CD0D3") (340 . "#94BFF3") (360 . "#DC8CC3"))))
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
  '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
- '(writeroom-global-effects (quote (writeroom-toggle-menu-bar-lines writeroom-toggle-tool-bar-lines writeroom-toggle-vertical-scroll-bars))))
+ '(writeroom-global-effects
+   (quote
+    (writeroom-toggle-menu-bar-lines writeroom-toggle-tool-bar-lines writeroom-toggle-vertical-scroll-bars))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(hl-line ((t (:inherit highlight))))
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
  '(org-headline-done ((t (:strike-through t))))
- '(org-link ((t (:inherit link :underline nil))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
- '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
+ '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t))
 
 
 

@@ -16,7 +16,7 @@
 
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
-;; (load "~/Dropbox/elisp/invoice-latex.el")
+; (load "~/Dropbox/elisp/invoice-latex.el")
 
 
 ;;;; guess this has to go before org-mode
@@ -236,7 +236,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun lion ()
   "Open my own customized version of the Cyberpunk color theme."
   (interactive)
-(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/MGM/Unknown Album/MGM Logo 3 Roar 2008 Restoration.mp3"))
+(play-sound-file "~/sounds/mgm-lion-roar-short.mp3"))
 
 
 
@@ -479,7 +479,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; org-mode function to check checkbox and move to next in list?
                                         ; http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#
-(defun zin/org-checkbox-next ()
+(defun org-checkbox-next ()
   (interactive)
   (when (org-at-item-checkbox-p)
     (org-toggle-checkbox))
@@ -616,7 +616,7 @@ Subject: %^{Subject}
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
-                                        ; (add-hook 'message-mode-hook 'turn-on-orgstruct)
+(add-hook 'message-mode-hook 'turn-on-orgstruct)
 
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
@@ -780,6 +780,8 @@ Subject: %^{Subject}
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
+(add-to-list 'recentf-exclude "archive")
+(add-to-list 'recentf-exclude "ics")
 
 
 
@@ -832,7 +834,7 @@ Subject: %^{Subject}
 
 (defun pomodoro-start ()
   (interactive)
-  (play-sound-file "~/sounds/mgm-lion-roar.mp3")
+  (play-sound-file "~/sounds/mgm-lion-roar-short.mp3")
   (org-pomodoro)
   )
 
@@ -1894,7 +1896,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "|" "DONE!! :-)")
+        (sequence "DID NOT DO" "TODO" "|" "DONE! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE!")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "SOMEDAY/MAYBE" "|" "DONE")
@@ -2271,6 +2273,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 (require 'helm-config)
+(helm-mode t)
+(helm-adaptative-mode t)
+
 
 
 ;;;; SMEX
@@ -2576,13 +2581,13 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; Make Buffer-stack ignore uninteresting buffers
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 ;; ido-ignore
 (setq
- ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist")))
+ ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics")))
 
 
 
@@ -2793,7 +2798,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (interactive)
   (set-frame-parameter (selected-frame) 'alpha '(65 65))
   (add-to-list 'default-frame-alist '(alpha 65 65))
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (shut-the-fuck-up)
 )
 
@@ -3124,7 +3129,7 @@ searches all buffers."
 (define-hyper-key "g" 'isearch-repeat-forward)
 (define-hyper-key "h" 'replace-string)
 (define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'zin/org-checkbox-next)
+(define-hyper-key "K" 'org-checkbox-next)
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "4" 'clone-indirect-buffer-other-window)
 (define-hyper-key "5" 'point-stack-push)
@@ -3188,3 +3193,95 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back
            "\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+
+
+
+
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc 2)
+    (plist-put plist :section-numbers t)))
+  plist)
+
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+
+
+
+    ;; Custom move region to other window 
+(defun move-region-to-other-window (start end)
+  "Move selected text to other window"
+  (interactive "r")
+  (if (use-region-p) 
+      (let ((count (count-words-region start end)))
+        (save-excursion
+          (kill-region start end)
+          (other-window 1)   
+          (yank)
+          (newline))
+        (other-window -1)     
+        (message "Moved %s words" count))
+    (message "No region selected")))
+
+
+(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
+
+(setq helm-ff-transformer-show-only-basename nil
+      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
+      helm-yank-symbol-first                 t
+      helm-move-to-line-cycle-in-source      t
+      helm-buffers-fuzzy-matching            t
+      helm-ff-auto-update-initial-value      t)
+
+(autoload 'helm-descbinds      "helm-descbinds" t)
+(autoload 'helm-eshell-history "helm-eshell"    t)
+(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+(global-set-key (kbd "M-h a")    #'helm-apropos)
+(global-set-key (kbd "M-h i")    #'helm-info-emacs)
+(global-set-key (kbd "M-h b")    #'helm-descbinds)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
+              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
+
+
+(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
+(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
+(define-key helm-map (kbd "M-o") #'helm-previous-source)
+
+(global-set-key (kbd "M-s s")   #'helm-ag)
+
+(require 'helm-projectile)
+(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
+                                         (remove 'helm-source-projectile-files-list 
+                                              helm-projectile-sources-list)))
+(helm-projectile-on)
+
+(define-key projectile-mode-map (kbd "C-c p /")
+  #'(lambda ()
+      (interactive)
+      (helm-ag (projectile-project-root))))
+
+
+
+
+(setq org-export-with-drawers t)
+
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+
+(setq org-icalendar-include-todo t)
+
+

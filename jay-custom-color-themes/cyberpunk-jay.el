@@ -119,7 +119,7 @@
    `(buffers-tab ((,class (:background ,cyberpunk-black-2 :foreground ,cyberpunk-white-2))))
 
    ;; basic coloring
-   `(default ((,class (:foreground ,jay-gray :background ,cyberpunk-black))))
+   `(default ((,class (:foreground ,cyberpunk-gray-4 :background ,cyberpunk-black))))
    `(cursor ((,class (:foreground ,cyberpunk-fg))))
    `(escape-glyph-face ((,class (:foreground ,cyberpunk-red))))
    ;; `(fringe ((,class (:foreground ,cyberpunk-fg :background ,cyberpunk-bg+1))))
@@ -525,6 +525,9 @@
 ;;   `(org-done ((,class (:bold t :weight bold :foreground ,cyberpunk-blue-4                              ))))
 `(org-done ((,class (:bold t :weight bold :foreground ,cyberpunk-green                              ))))
 
+
+
+
 ;   `(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-pink :weight bold  ))))
 ;`(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-light-violetred1 :weight bold  ))))
 `(org-todo ((,class (:bold t :foreground ,cyberpunk-blue-5 :weight bold  ))))
@@ -547,7 +550,7 @@
     `(org-scheduled ((,class (:foreground ,cyberpunk-green+4))))
     `(org-scheduled-previously ((,class (:foreground ,cyberpunk-red-4))))
     `(org-scheduled-today ((,class (:foreground ,cyberpunk-blue+1))))
-    `(org-special-keyword ((,class (:foreground ,cyberpunk-yellow-1))))
+    `(org-special-keyword ((,class (:foreground ,cyberpunk-bg-05))))
     `(org-table ((,class (:foreground ,cyberpunk-green+2))))
     `(org-time-grid ((,class (:foreground ,cyberpunk-orange))))
     `(org-upcoming-deadline ((,class (:inherit font-lock-keyword-face))))
