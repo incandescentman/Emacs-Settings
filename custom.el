@@ -136,11 +136,13 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
-    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*")))
+    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar")))
  '(calendar-latitude 40.7)
  '(case-fold-search t)
  '(ccm-recenter-at-end-of-file t)
@@ -169,6 +171,7 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -250,6 +253,7 @@
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
+ '(org-drill-optimal-factor-matrix nil)
  '(org-edit-src-content-indentation 4)
  '(org-ellipsis (quote org-warning))
  '(org-enable-fixed-width-editor nil)
@@ -442,8 +446,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(hl-line ((t (:inherit highlight))))
+ '(message-header-cc ((t (:foreground "CornflowerBlue"))))
+ '(message-header-name ((t (:foreground "green2"))))
+ '(message-header-subject ((t (:foreground "pink" :weight bold))))
+ '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
+ '(message-separator ((t (:foreground "LightSkyBlue1"))))
  '(org-headline-done ((t (:strike-through t))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t))
+ '(org-link ((t (:inherit link :underline nil))))
+ '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
+ '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 
 
 

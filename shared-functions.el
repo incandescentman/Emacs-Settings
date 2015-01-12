@@ -1,6 +1,7 @@
 
 
 
+
 ;;;; define packages
 (require 'package)
 (add-to-list 'package-archives
@@ -161,7 +162,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   "Open my own customized version of the Solarized color theme."
   (interactive)
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
-  (load-theme 'solarized-dark)
+  (org-mode)
   (incarnadine-cursor)
   )
 
@@ -170,20 +171,23 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
   (load-theme 'solarized-light)
+  (org-mode)
   (incarnadine-cursor)
   )
 
 (defun whiteboard ()
   "Open my own customized version of the Solarized color theme."
   (interactive)
-  (load-theme 'whiteboard)
-  )
+    (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/whiteboard-jay.el")
+  (org-mode)
+    )
 
 (defun spolsky ()
   "Open my own customized version of the Solarized color theme."
   (interactive)
   (load-file "/Users/jay/gnulisp/jay-custom-color-themes/spolsky-jay.el")
   (incarnadine-cursor)
+    (org-mode)
   )
 
 
@@ -533,7 +537,7 @@ Subject: %^{Subject}
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
 
-	("L" "Later" checkitem (file+headline "playful.org" "later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
 	("l" "learnings" entry (file "../learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -1244,7 +1248,7 @@ Subject: %^{Subject}
  '(reb-re-syntax (quote string))
  '(recentf-exclude
    (quote
-    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm")))
+    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(safe-local-variable-values
@@ -1293,7 +1297,7 @@ Subject: %^{Subject}
 ;; make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
-(add-hook 'org-capture-mode-hook 'rainy-highway-mode)
+(add-hook 'org-capture-mode-hook 'writeroom-mode)
 
 
 
@@ -1778,7 +1782,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   '(abbrev-all-caps nil)
  '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
  '(blink-cursor-mode nil)
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*")))
+ '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
  '(calendar-latitude 40.7)
  '(case-fold-search t)
  '(cua-highlight-region-shift-only t)
@@ -1896,15 +1900,16 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq org-todo-keywords
       '(
-        (sequence "DID NOT DO" "TODO" "|" "DONE! :-)")
-        (sequence "DELEGATE" "DELEGATED" "|" "DONE!")
+        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
         (sequence "QUESTION" "|" "ANSWERED")
-        (sequence "SOMEDAY/MAYBE" "|" "DONE")
-        (sequence "MAYBE" "|" "DONE")
-        (sequence "NEXT" "|" "DONE")
+        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
+        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
+        (sequence "NEXT" "|" "DONE! :-)")
+        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE!")
+        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
 
 (add-hook 'after-init-hook 'org-agenda-list)
@@ -2034,6 +2039,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
+(add-to-list 'recentf-exclude "Calendar")
 
 
 
@@ -2507,11 +2513,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;;
 ;; You can use org-clock-in-prepare-hook to add an effort estimate. This way you can easily have a "tea-timer" for your tasks when they don't already have an effort estimate.
 ;; leave blank for no effort line
-(add-hook 'org-clock-in-prepare-hook
-          'my-org-mode-ask-effort)
+;; (add-hook 'org-clock-in-prepare-hook
+;;       'my-org-mode-ask-effort)
 
 (defun my-org-mode-ask-effort ()
-  "Ask for an effort estimate when clocking in."
+  "Ask for"
   (unless (org-entry-get (point) "Effort")
     (let ((effort
            (completing-read
@@ -2581,7 +2587,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; Make Buffer-stack ignore uninteresting buffers
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*\\|*tags*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -2751,7 +2757,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste" nil t))
+   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t))
 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
@@ -2806,7 +2812,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (defun shut-the-fuck-up()
   "disable all inline notifications"
   (interactive)
-(boss-mode)
+(org-mode)
+  (boss-mode)
 (flyspell-mode-off)
 (turn-off-auto-capitalize-mode)
 (writegood-mode 0)
@@ -3121,7 +3128,9 @@ searches all buffers."
 (define-hyper-key "f" 'isearch-forward)
 ;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 
+(define-hyper-key "R" 'helm-projectile-recentf)
 (define-hyper-key "r" 'helm-mini)
+
 
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
@@ -3284,4 +3293,25 @@ searches all buffers."
 
 (setq org-icalendar-include-todo t)
 
+
+(defun kill-sentence-to-period ()
+"Leave the fucking period in there mofo."
+(interactive)
+(kill-sentence)
+(push-mark)
+ (insert ".")
+ (backward-char))
+
+(global-set-key (kbd "M-k") 'kill-sentence-to-period)
+
+
+
+
+(defun today-clock-in ()
+"insert a new heading with today's date, and then clock in"
+(interactive)
+(org-insert-subheading ())
+(org-insert-time-stamp (current-time))
+(org-clock-in)
+)
 

@@ -85,6 +85,7 @@
    `(outline-3 ((,class (:foreground "SteelBlue"))))
    
    `(org-special-keyword ((,class (:foreground "gray89"))))
+   `(org-tag ((,class (:bold t  :foreground "Green4"))))
    
    `(outline-4 ((,class (:foreground "RoyalBlue"))))
    `(outline-5 ((,class (:foreground "DeepSkyBlue"))))

@@ -338,7 +338,7 @@
 
 (toggle-maxframe)
 
-;(whiteboard)
+;; (whiteboard)
 
 
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window)

@@ -528,9 +528,9 @@
 
 
 
-;   `(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-pink :weight bold  ))))
-;`(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-light-violetred1 :weight bold  ))))
-`(org-todo ((,class (:bold t :foreground ,cyberpunk-blue-5 :weight bold  ))))
+   `(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-pink :weight bold  ))))
+;; `(org-todo ((,class (:bold t :foreground ,cyberpunk-jay-light-violetred1 :weight bold  ))))
+;; `(org-todo ((,class (:bold t :foreground ,cyberpunk-blue-5 :weight bold  ))))
 
 
                                         ; to enable difference sizes, change the heights to 1.3, 1.2, and 1.1
@@ -543,7 +543,9 @@
    `(org-level-7 ((,class (:foreground ,cyberpunk-green+3))))
    `(org-level-8 ((,class (:foreground ,cyberpunk-orange))))
    `(org-link ((,class (:foreground ,cyberpunk-blue-6 :underline t))))
-   `(org-tag ((,class (:bold t  :foreground ,jay-gray))))
+   ;; `(org-tag ((,class (:bold t  :foreground ,jay-gray))))
+   `(org-tag ((,class (:bold t  :foreground ,cyberpunk-green))))
+
    `(org-column ((,class (:background ,cyberpunk-yellow-3 :foreground ,cyberpunk-black))))
    `(org-column-title ((,class (:background ,cyberpunk-bg-1 :underline t :weight bold))))
     `(org-deadline-announce ((,class (:foreground ,cyberpunk-red-1))))
