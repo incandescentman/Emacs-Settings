@@ -3469,7 +3469,3 @@ Also converts full stops to commas."
                 ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
  :bind "M-s")
 
-
-
-(require 'discover)
-(global-discover-mode 1)

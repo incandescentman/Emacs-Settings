@@ -178,6 +178,7 @@
     ((nil "that" "had" "ha" "something" "blah")
      ("\\`francais" "nous" "vous"))))
  '(flyspell-use-global-abbrev-table-p t)
+ '(fringe-mode 0 nil (fringe))
  '(global-flyspell-mode t)
  '(gmm/auto-mode-list
    (quote
@@ -209,6 +210,7 @@
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mouse-highlight nil)
  '(only-global-abbrevs t)
  '(openwith-associations
    (quote
@@ -222,6 +224,8 @@
       (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
+ '(org-agenda-export-html-style
+   "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files (quote ("~/Dropbox/writing/notationaldata/acct-erika.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-skip-scheduled-if-done t)
@@ -253,7 +257,13 @@
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
- '(org-drill-optimal-factor-matrix nil)
+ '(org-drill-optimal-factor-matrix
+   (quote
+    ((1
+      (2.5 . 4.0)
+      (1.7000000000000002 . 3.44)
+      (1.96 . 3.58)
+      (2.6 . 4.14)))))
  '(org-edit-src-content-indentation 4)
  '(org-ellipsis (quote org-warning))
  '(org-enable-fixed-width-editor nil)
@@ -263,10 +273,6 @@
  '(org-export-blocks-witheld (quote (hidden)))
  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- '(org-export-html-style
-   "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
- '(org-export-html-style-extra
-   "<link rel='stylesheet' type='text/css' href='~/Dropbox/web-design/custom-css/gmail.css' /> <link rel='stylesheet' type='text/css' href='http://jaydixit.github.io/custom-css/gmail.css' />")
  '(org-export-html-style-include-default t)
  '(org-export-latex-date-format "%d %B %Y.")
  '(org-export-latex-emphasis-alist
@@ -305,6 +311,8 @@
 %s
 </div>
 </div>")
+ '(org-html-head
+   "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css' />")
  '(org-html-head-include-default-style nil)
  '(org-html-head-include-scripts nil)
  '(org-html-html5-fancy t)
@@ -406,9 +414,11 @@
             (quote rainbow-mode))
            (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
+ '(size-indication-mode t)
  '(smartparens-global-mode nil)
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
+ '(tool-bar-mode nil)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
  '(undo-limit 800000)

@@ -115,6 +115,8 @@
    `(blue ((,class (:foreground ,cyberpunk-blue))))
    `(bold ((,class (:bold t :foreground ,cyberpunk-yellow-1))))
    `(bold-italic ((,class (:bold t))))
+   `(italic ((,class (:foreground ,cyberpunk-green))))
+
    `(border-glyph ((,class (nil))))
    `(buffers-tab ((,class (:background ,cyberpunk-black-2 :foreground ,cyberpunk-white-2))))
 
@@ -155,7 +157,6 @@
    `(lazy-highlight ((,class (:foreground ,cyberpunk-black :background ,cyberpunk-yellow))))
    `(query-replace ((,class (:background ,cyberpunk-gray-5))))
    `(Highline-face ((,class (:background ,cyberpunk-green-1))))
-   `(italic ((,class (nil) )))
    `(left-margin ((,class (nil))))
    `(toolbar ((,class (nil))))
    `(underline ((,class (:underline nil))))

@@ -109,6 +109,7 @@
    `(blue ((,class (:foreground ,cyberpunk-blue))))
    `(bold ((,class (:bold t :foreground ,cyberpunk-yellow-1))))
    `(bold-italic ((,class (:bold t))))
+   `(italic ((,class (:bold t :foreground ,cyberpunk-green))))
    `(border-glyph ((,class (nil))))
    `(buffers-tab ((,class (:background ,cyberpunk-black-2 :foreground ,cyberpunk-white-2))))
 
