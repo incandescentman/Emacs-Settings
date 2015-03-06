@@ -65,7 +65,7 @@
    `(highlight ((,class (:background "SkyBlue1"))))
    `(ido-first-match ((,class (:weight normal :foreground "DarkOrange3"))))
    `(ido-only-match ((,class (:foreground "SeaGreen4"))))
-   `(ido-subdir ((,class (:foreground nil :inherit font-lock-keyword-face))))
+;;   `(ido-subdir ((,class (:foreground nil :inherit font-lock-keyword-face))))
    `(info-header-node ((,class (:foreground "DeepSkyBlue1"))))
    `(info-header-xref ((,class (:foreground "SeaGreen2"))))
    `(info-menu-header ((,class (:family "helv" :weight bold))))

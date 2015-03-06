@@ -32,6 +32,9 @@
    `(Info-title-3-face ((,class (:family "helv" :weight bold :height 1.2))))
    `(Info-title-4-face ((,class (:family "helv" :weight bold))))
    `(bold ((,class (:bold t :foreground "DarkRed"))))
+`(org-code ((,class (:bold t :foreground "DarkRed"))))
+
+   
    `(compilation-column-number ((,class (:foreground "DarkGreen"))))
    `(compilation-error ((,class (:foreground "Red1"))))
    `(compilation-info ((,class (:weight normal :foreground "DeepSkyBlue4"))))

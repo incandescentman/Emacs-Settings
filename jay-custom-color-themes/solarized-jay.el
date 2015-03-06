@@ -139,6 +139,8 @@
                                          :background ,solarized-hl
                                          :box (:line-width -1 :style released-button)))))
      `(highlight ((,class (:background ,solarized-hl))))
+   `(bold ((,class (:bold t :foreground ,solarized-fg-lc))))
+
      `(link ((,class (:foreground ,yellow :underline t :weight bold))))
      `(link-visited ((,class (:foreground ,yellow :underline t :weight normal))))
      `(success ((,class (:foreground ,green ))))

@@ -162,6 +162,8 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   "Open my own customized version of the Solarized color theme."
   (interactive)
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
+ (load-theme 'solarized-dark)
+ 
   (org-mode)
   (incarnadine-cursor)
   )
@@ -1686,6 +1688,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 ; '(ido-first-match ((t (:foreground "red"))))
+'(bold ((t (:bold t :foreground "red"))))
+
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
 ; '(message-header-other ((t (:foreground "VioletRed1"))))
@@ -1693,6 +1697,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
  '(message-separator ((t (:foreground "LightSkyBlue1"))))
  '(hl-line ((t (:inherit highlight))))
+
  '(org-headline-done ((t (:strike-through t))))
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
@@ -2590,7 +2595,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; Make Buffer-stack ignore uninteresting buffers
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*\\|*tags*\\|*gnugol*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -3215,11 +3220,13 @@ searches all buffers."
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-    (plist-put plist :with-toc 2)
+    (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers t)))
   plist)
 
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+
 
 
 
@@ -3238,6 +3245,12 @@ searches all buffers."
         (other-window -1)     
         (message "Moved %s words" count))
     (message "No region selected")))
+
+
+
+
+
+
 
 
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
@@ -3449,7 +3462,7 @@ Also converts full stops to commas."
 
 
 ;;; [[https://github.com/mickeynp/discover.el][mickeynp/discover.el]]
-
+(load "makey") 
 (discover-add-context-menu
  :context-menu '(isearch
               (description "Isearch, occur and highlighting")
@@ -3470,6 +3483,70 @@ Also converts full stops to commas."
  :bind "M-s")
 
 
-
+(define-key undo-tree-map (kbd "C-x r") nil)
 (require 'discover)
+
+(discover-add-context-menu
+:context-menu (assq 'isearch discover-context-menus)
+:mode nil
+:mode-hook nil
+:bind "C-c s")
 (global-discover-mode 1)
+
+;;; [[https://github.com/kai2nenobu/guide-key][kai2nenobu/guide-key]]
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence '("C-x"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+(defun guide-key/my-hook-function-for-org-mode ()
+  (guide-key/add-local-guide-key-sequence "C-c")
+  (guide-key/add-local-guide-key-sequence "C-c C-x")
+  (guide-key/add-local-highlight-command-regexp "org-"))
+(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+
+
+(require 'engine-mode)
+(engine-mode t)
+
+
+
+(defengine google
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  "g")
+
+;;; (setq browse-url-browser-function 'eww-browse-url)
+
+
+(eval-after-load 'helm-grep
+  '(setq helm-grep-default-command helm-grep-default-recurse-command))
+
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode)))
+
+
+
+;;; fix '\emsp' bug in clocktable
+(defun my-org-clocktable-indent-string (level)
+  (if (= level 1)
+      ""
+    (let ((str "^"))
+      (while (> level 2)
+        (setq level (1- level)
+              str (concat str "--")))
+      (concat str "-> "))))
+
+(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
+
+
+
+;;; 
+(eval-after-load 'helm-grep
+  '(setq helm-grep-default-command helm-grep-default-recurse-command))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((lisp . t)))
