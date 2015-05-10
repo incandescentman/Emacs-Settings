@@ -543,7 +543,9 @@
    `(org-level-6 ((,class (:foreground ,cyberpunk-pink))))
    `(org-level-7 ((,class (:foreground ,cyberpunk-green+3))))
    `(org-level-8 ((,class (:foreground ,cyberpunk-orange))))
-   `(org-link ((,class (:foreground ,cyberpunk-blue-6 :underline t))))
+ ;;  `(org-link ((,class (:foreground ,cyberpunk-blue-6 :underline t))))
+  `(org-link ((,class (:foreground ,cyberpunk-blue-6 :underline nil))))
+ 
    ;; `(org-tag ((,class (:bold t  :foreground ,jay-gray))))
    `(org-tag ((,class (:bold t  :foreground ,cyberpunk-green))))
 

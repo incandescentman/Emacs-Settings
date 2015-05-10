@@ -66,8 +66,11 @@
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change)
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word)
+(define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x)
 (define-key key-minor-mode-map (kbd "=") 'smex)
+(define-key key-minor-mode-map (kbd "\|") 'deft)
+
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines)
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; this looks cool
@@ -84,10 +87,15 @@
  (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
  (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
- (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
- (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+ (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
+ (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
+
+ (define-key minibuffer-local-map (kbd "s-V") 'kdm/html2org-clipboard)
+
 
  (define-key key-minor-mode-map (kbd "s-W") 'web-research)
+ (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
+
 
 
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
@@ -342,3 +350,47 @@
 
 
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window)
+
+
+;;; Isolate Emacs kill ring from OS X system pasteboard.
+(setq interprogram-cut-function nil)
+(setq interprogram-paste-function nil)
+
+;; handle emacs utf-8 input
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
+
+(defun pasteboard-copy()
+  "Copy region to OS X system pasteboard."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning) (region-end) "pbcopy"))
+
+(defun pasteboard-paste()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (shell-command-on-region
+   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t))
+
+(defun pasteboard-cut()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end)))
+
+
+(define-key undo-tree-map (kbd "C-x r") nil)
+
+
+(defun kill-sentence-to-period ()
+"Leave the fucking period in there mofo."
+(interactive)
+(kill-sentence)
+(push-mark)
+ (insert ".")
+ (backward-char))
+
+(global-set-key (kbd "M-k") 'kill-sentence-to-period)
+

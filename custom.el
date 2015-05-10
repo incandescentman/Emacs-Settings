@@ -159,7 +159,7 @@
    (quote
     ("0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
  '(debug-on-error t)
- '(deft-directory "/Users/jay/Dropbox/nvALT22/")
+ '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(deft-text-mode (quote org-mode))
  '(delete-window-preserve-buffer
    (quote
@@ -200,6 +200,7 @@
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
+ '(ispell-program-name "aspell")
  '(mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
@@ -338,6 +339,15 @@
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-insert-mode-line-in-empty-file t)
+ '(org-koma-letter-author "Jay Dixit")
+ '(org-koma-letter-closing "Best,")
+ '(org-koma-letter-email "jay@jaydixit.com")
+ '(org-koma-letter-from-address "22 Saint Marks Place Apt. C, New York NY 10003")
+ '(org-koma-letter-phone-number "(646) 355-8001")
+ '(org-koma-letter-use-backaddress t)
+ '(org-koma-letter-use-phone t)
+ '(org-latex-active-timestamp-format "\\textrm{%s}")
+ '(org-latex-inactive-timestamp-format "\\textrm{%s}")
  '(org-latex-text-markup-alist
    (quote
     ((bold . "\\textbf{%s}")
@@ -345,7 +355,8 @@
      (italic . "\\textit{%s}")
      (strike-through . "\\sout{%s}")
      (underline . "\\uline{%s}")
-     (verbatim . protectedtext))))
+     ;; (verbatim . protectedtext)
+     )))
  '(org-latex-toc-command "\\tableofcontents
 \\newpage
 ")
@@ -362,7 +373,7 @@
  '(org-mac-grab-Together-app-p nil)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -386,6 +397,9 @@
  '(org-startup-folded nil)
  '(org-startup-indented t)
  '(org-support-shift-select (quote always))
+ '(org-time-clocksum-format
+   (quote
+    (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
  '(org-time-clocksum-use-effort-durations t)
  '(org-time-stamp-custom-formats (quote ("<%a %b %d>" . "<%m/%d %a %I:%M%p>")))
  '(org-use-speed-commands t)
@@ -457,6 +471,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))

@@ -1,6 +1,4 @@
-
-
-
+;;;;
 
 ;;;; define packages
 (require 'package)
@@ -213,8 +211,21 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
 ;;  (hl-line-mode 1)
   (turn-on-auto-capitalize-mode)
-
 (play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
+
+(defun cyberpunk-writeroom ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
+  (org-mode)
+  (org-bullets-mode 1)
+  (incarnadine-cursor)
+;;  (hl-line-mode 1)
+  (turn-on-auto-capitalize-mode)
+  (writeroom-mode 1)
+(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
+
+
 
 (defun cyberpunk-large ()
   "Open my own customized version of the Cyberpunk color theme."
@@ -541,14 +552,14 @@ Subject: %^{Subject}
 
 	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-	("l" "learnings" entry (file "../learnings.org" :prepend t :kill-buffer t)
+	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
 	("n" "note" entry (file org-default-notes-file)
 	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
 	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
@@ -630,7 +641,7 @@ Subject: %^{Subject}
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
+ (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook 'message-mode-hook 'turn-on-orgstruct)
 
 
@@ -1191,7 +1202,9 @@ Subject: %^{Subject}
      (italic . "\\textit{%s}")
      (strike-through . "\\sout{%s}")
      (underline . "\\uline{%s}")
-     (verbatim . protectedtext))))
+     ;; (verbatim . protectedtext)
+     )))
+
  '(org-latex-toc-command "\\tableofcontents
 \\newpage
 ")
@@ -1277,7 +1290,7 @@ Subject: %^{Subject}
 
 
 
-(require 'auto-capitalize)
+ (require 'auto-capitalize)
 
 
 ;; byte compile config file if changed
@@ -1302,7 +1315,7 @@ Subject: %^{Subject}
 
 
 ;; make org-capture open in full window! :-)
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
+ (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 
@@ -1311,7 +1324,7 @@ Subject: %^{Subject}
 
 (global-set-key (kbd "M-]") 'outline-next-visible-heading)
 (global-set-key (kbd "M-[") 'outline-previous-visible-heading)
-(global-set-key (kbd "M-1") 'auto-capitalize-mode)
+ (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 (tooltip-mode -1)
 
 
@@ -1922,29 +1935,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-hook 'after-init-hook 'org-agenda-list)
 
-
-(defun jump-to-org-agenda ()
-  (interactive)
-  (let ((buf (get-buffer "*Org Agenda*"))
-        wind)
-    (if buf
-        (if (setq wind (get-buffer-window buf))
-            (select-window wind)
-          (if (called-interactively-p)
-              (progn
-                (select-window (display-buffer buf t t))
-                (org-fit-window-to-buffer)
-                ;; (org-agenda-redo)
-                )
-            (with-selected-window (display-buffer buf)
-              (org-fit-window-to-buffer)
-              ;; (org-agenda-redo)
-              )))
-      (call-interactively 'org-agenda-list)))
-  ;;(let ((buf (get-buffer "*Calendar*")))
-  ;;  (unless (get-buffer-window buf)
-  ;;    (org-agenda-goto-calendar)))
-  )
 
 
 ;; Mark heading done when all checkboxes are checked.
@@ -2595,7 +2585,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; Make Buffer-stack ignore uninteresting buffers
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*scratch*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -2745,34 +2735,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 
-;;; Isolate Emacs kill ring from OS X system pasteboard.
-(setq interprogram-cut-function nil)
-(setq interprogram-paste-function nil)
-
-;; handle emacs utf-8 input
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(setenv "LANG" "en_US.UTF-8")
-
-(defun pasteboard-copy()
-  "Copy region to OS X system pasteboard."
-  (interactive)
-  (shell-command-on-region
-   (region-beginning) (region-end) "pbcopy"))
-
-(defun pasteboard-paste()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
-  (interactive)
-  (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t))
-
-(defun pasteboard-cut()
-  "Cut region and put on OS X system pasteboard."
-  (interactive)
-  (pasteboard-copy)
-  (delete-region (region-beginning) (region-end)))
-
 
 (require 'ls-lisp)
 (setq ls-lisp-ignore-case 't)
@@ -2914,6 +2876,13 @@ With prefix arg C-u, copy region instad of killing it."
 
   )
 
+;; take notes from the web and attribute it properly
+(defun web-research-quotes ()
+  (interactive)
+  (insert "\"")
+    (org-mac-chrome-insert-frontmost-url)
+       (insert "\,\" ")
+  )
 
 
 
@@ -3074,15 +3043,6 @@ searches all buffers."
 
 ;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
 
-(defun kiwon/org-agenda-redo-in-other-window ()
-  "Call org-agenda-redo function even in the non-agenda buffer."
-  (interactive)
-  (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
-    (when agenda-window
-      (with-selected-window agenda-window (org-agenda-redo)))))
-(run-at-time nil 300 'kiwon/org-agenda-redo-in-other-window)
-
-
 
 
 
@@ -3175,6 +3135,7 @@ searches all buffers."
 ;; shortcuts for my own functions
 (define-hyper-key "m cy" 'cyberpunk-jay) 
 (define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m cw" 'cyberpunk-writeroom) 
 (define-hyper-key "m wb" 'whiteboard) 
 (define-hyper-key "m sl" 'solarized-light)
 (define-hyper-key "m sd" 'solarized-dark) 
@@ -3204,14 +3165,6 @@ searches all buffers."
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
  (set-face-attribute 'default nil :font "Monaco" :height 190)
-
-
-;; http://stackoverflow.com/questions/22430229/how-to-instruct-emacs-auto-capitalize-mode-to-automatically-lowercase-any-word-t/26590746?iemail=1&noredirect=1#26590746
-(setq auto-capitalize-predicate
-      (lambda () (not (looking-back
-           "\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-
-
 
 
 (defun my-org-export-change-options (plist backend)
@@ -3310,16 +3263,6 @@ searches all buffers."
 (setq org-icalendar-include-todo t)
 
 
-(defun kill-sentence-to-period ()
-"Leave the fucking period in there mofo."
-(interactive)
-(kill-sentence)
-(push-mark)
- (insert ".")
- (backward-char))
-
-(global-set-key (kbd "M-k") 'kill-sentence-to-period)
-
 
 
 
@@ -3330,41 +3273,19 @@ searches all buffers."
      (setq user-full-name "Jay Dixit")
 
 
-(require 'newsticker)
-
-; W3M HTML renderer isn't essential, but it's pretty useful.
-;; (require 'w3m)
-;; (setq newsticker-html-renderer 'w3m-region)
-
-; We want our feeds pulled every 10 minutes.
-(setq newsticker-retrieval-interval 600)
-
-; Setup the feeds. We'll have a look at these in just a second.
-(setq newsticker-url-list-defaults nil)
-(setq newsticker-url-list
-'(
-  ("ScienceNews.org" "https://www.sciencenews.org/feeds/headlines.rss" nil nil nil))
-)
-
-; Optionally bind a shortcut for your new RSS reader.
-;(global-set-key (kbd "C-c r") 'newsticker-treeview)
-
-; Don't forget to start it!
-;; (newsticker-start)
-
-
 
 
 (defun jd-org-today ()
 "insert a new heading with today's date"
 (interactive)
 (org-insert-subheading ())
+(insert "accountability ")
 (org-insert-time-stamp (current-time))
 (insert " [0%]\n")
 )
 
 
-(defun jd-org-today-and-clock-in ()
+(defun jd-clock-in ()
 "insert a new heading with today's date, and then clock in"
 (interactive)
 (org-insert-subheading ())
@@ -3410,57 +3331,6 @@ searches all buffers."
 
 
 
-;;; [[http://endlessparentheses.com/super-smart-capitalization.html][Super Smart Capitalization · Endless Parentheses]]
-(global-set-key "\M-c" 'endless/capitalize)
-(global-set-key "\M-l" 'endless/downcase)
-(global-set-key "\M-u" 'endless/upcase)
-
-(defun endless/convert-punctuation (rg rp)
-  "Look for regexp RG around point, and replace with RP.
-Only applies to text-mode."
-  (let ((f "\\(%s\\)\\(%s\\)")
-        (space "?:[[:blank:]\n\r]*"))
-    ;; We obviously don't want to do this in prog-mode.
-    (if (and (derived-mode-p 'text-mode)
-             (or (looking-at (format f space rg))
-                 (looking-back (format f rg space))))
-        (replace-match rp nil nil nil 1))))
-
-(defun endless/capitalize ()
-  "Capitalize region or word.
-Also converts commas to full stops, and kills
-extraneous space at beginning of line."
-  (interactive)
-  (endless/convert-punctuation "," ".")
-  (if (use-region-p)
-      (call-interactively 'capitalize-region)
-    ;; A single space at the start of a line:
-    (when (looking-at "^\\s-\\b")
-      ;; get rid of it!
-      (delete-char 1))
-    (call-interactively 'capitalize-word)))
-
-(defun endless/downcase ()
-  "Downcase region or word.
-Also converts full stops to commas."
-  (interactive)
-  (endless/convert-punctuation "\\." ",")
-  (if (use-region-p)
-      (call-interactively 'downcase-region)
-    (call-interactively 'downcase-word)))
-
-(defun endless/upcase ()
-  "Upcase region or word."
-  (interactive)
-  (if (use-region-p)
-      (call-interactively 'upcase-region)
-    (call-interactively 'upcase-word)))
-
-
-
-
-
-
 ;;; [[https://github.com/mickeynp/discover.el][mickeynp/discover.el]]
 (load "makey") 
 (discover-add-context-menu
@@ -3483,7 +3353,6 @@ Also converts full stops to commas."
  :bind "M-s")
 
 
-(define-key undo-tree-map (kbd "C-x r") nil)
 (require 'discover)
 
 (discover-add-context-menu
@@ -3550,3 +3419,178 @@ Also converts full stops to commas."
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((lisp . t)))
+
+(electric-pair-mode 1)
+
+
+                     
+(defun remove-link ()
+    "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((remove (list (match-beginning 0) (match-end 0)))
+        (description (if (match-end 3) 
+                 (org-match-string-no-properties 3)
+                 (org-match-string-no-properties 1))))
+    (apply 'delete-region remove)
+    (insert description))))
+
+
+;; (setq org-ellipsis "\ ➘")
+;; (setq org-ellipsis "\ ↘")
+;; (setq org-ellipsis "…")
+
+
+
+(defun endless/convert-punctuation (rg rp)
+  "Look for regexp RG around point, and replace with RP.
+Only applies to text-mode."
+  (let ((f "\\(%s\\)\\(%s\\)")
+        (space "?:[[:blank:]\n\r]*"))
+    ;; We obviously don't want to do this in prog-mode.
+    (if (and (derived-mode-p 'text-mode)
+             (or (looking-at (format f space rg))
+                 (looking-back (format f rg space))))
+        (replace-match rp nil nil nil 1))))
+
+(defun endless/capitalize ()
+  "Capitalize region or word.
+Also converts commas to full stops, and kills
+extraneous space at beginning of line."
+  (interactive)
+  (endless/convert-punctuation "," ".")
+  (if (use-region-p)
+      (call-interactively 'capitalize-region)
+    ;; A single space at the start of a line:
+    (when (looking-at "^\\s-\\b")
+      ;; get rid of it!
+      (delete-char 1))
+    (call-interactively 'capitalize-word)))
+
+(defun endless/downcase ()
+  "Downcase region or word.
+Also converts full stops to commas."
+  (interactive)
+  (endless/convert-punctuation "\\." ",")
+  (if (use-region-p)
+      (call-interactively 'downcase-region)
+    (call-interactively 'downcase-word)))
+
+(defun endless/upcase ()
+  "Upcase region or word."
+  (interactive)
+  (if (use-region-p)
+      (call-interactively 'upcase-region)
+    (call-interactively 'upcase-word)))
+
+;;; [[http://endlessparentheses.com/super-smart-capitalization.html][Super Smart Capitalization · Endless Parentheses]]
+(global-set-key "\M-c" 'endless/capitalize)
+(global-set-key "\M-l" 'endless/downcase)
+(global-set-key "\M-u" 'endless/upcase)
+
+
+
+;; find aspell and hunspell automatically
+(cond
+ ((executable-find "aspell")
+  (setq ispell-program-name "aspell")
+  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
+ ((executable-find "hunspell")
+  (setq ispell-program-name "hunspell")
+  (setq ispell-extra-args '("-d en_US")))
+ )
+
+
+;; http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting
+(defun kdm/html2org-clipboard ()
+  "Convert clipboard contents from HTML to Org and then paste (yank)."
+  (interactive)
+  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+  (kill-new (shell-command-to-string cmd))
+  (yank))
+
+
+
+(defvar lawlist-movement-syntax-table
+  (let ((st (make-syntax-table)))
+    ;; ` default = punctuation
+    ;; ' default = punctuation
+    ;; , default = punctuation
+    ;; ; default = punctuation
+    (modify-syntax-entry ?{ "." st)  ;; { = punctuation
+    (modify-syntax-entry ?} "." st)  ;; } = punctuation
+    (modify-syntax-entry ?\" "." st) ;; " = punctuation
+    (modify-syntax-entry ?\\ "_" st) ;; \ = symbol
+    (modify-syntax-entry ?\$ "_" st) ;; $ = symbol
+    (modify-syntax-entry ?\% "_" st) ;; % = symbol
+    st)
+  "Syntax table used while executing custom movement functions.")
+
+(defun lawlist-forward-entity ()
+"http://stackoverflow.com/q/18675201/2112489"
+(interactive "^")
+  (with-syntax-table lawlist-movement-syntax-table
+    (cond
+      ((eolp)
+        (forward-char))
+      ((and
+          (save-excursion (< 0 (skip-chars-forward " \t")))
+          (not (region-active-p)))
+        (skip-chars-forward " \t"))
+      ((and
+          (save-excursion (< 0 (skip-chars-forward " \t")))
+          (region-active-p))
+        (skip-chars-forward " \t")
+        (cond
+          ((save-excursion (< 0 (skip-syntax-forward "w")))
+            (skip-syntax-forward "w"))
+          ((save-excursion (< 0 (skip-syntax-forward ".")))
+            (skip-syntax-forward "."))
+          ((save-excursion (< 0 (skip-syntax-forward "_()")))
+            (skip-syntax-forward "_()"))))
+      ((save-excursion (< 0 (skip-syntax-forward "w")))
+        (skip-syntax-forward "w")
+        (if (and
+              (not (region-active-p))
+              (save-excursion (< 0 (skip-chars-forward " \t"))))
+          (skip-chars-forward " \t")))
+      ((save-excursion (< 0 (skip-syntax-forward ".")))
+        (skip-syntax-forward ".")
+        (if (and
+              (not (region-active-p))
+              (save-excursion (< 0 (skip-chars-forward " \t"))))
+          (skip-chars-forward " \t")))
+      ((save-excursion (< 0 (skip-syntax-forward "_()")))
+        (skip-syntax-forward "_()")
+        (if (and
+              (not (region-active-p))
+              (save-excursion (< 0 (skip-chars-forward " \t"))))
+          (skip-chars-forward " \t"))))))
+
+(defun lawlist-backward-entity ()
+"http://stackoverflow.com/q/18675201/2112489"
+(interactive "^")
+  (with-syntax-table lawlist-movement-syntax-table
+    (cond
+      ((bolp)
+        (backward-char))
+      ((save-excursion (> 0 (skip-chars-backward " \t")) (bolp))
+        (skip-chars-backward " \t"))
+      ((save-excursion (> 0 (skip-chars-backward " \t")) (> 0 (skip-syntax-backward "w")))
+        (skip-chars-backward " \t")
+        (skip-syntax-backward "w"))
+      ((save-excursion (> 0 (skip-syntax-backward "w")))
+        (skip-syntax-backward "w"))
+      ((save-excursion (> 0 (skip-syntax-backward ".")))
+        (skip-syntax-backward "."))
+      ((save-excursion (> 0 (skip-chars-backward " \t")) (> 0 (skip-syntax-backward ".")))
+        (skip-chars-backward " \t")
+        (skip-syntax-backward "."))
+      ((save-excursion (> 0 (skip-syntax-backward "_()")))
+        (skip-syntax-backward "_()"))
+      ((save-excursion (> 0 (skip-chars-backward " \t")) (> 0 (skip-syntax-backward "_()")))
+        (skip-chars-backward " \t")
+        (skip-syntax-backward "_()")))))
+
+(define-key global-map [M-s-right] 'lawlist-forward-entity)
+ (define-key global-map [M-s-left] 'lawlist-backward-entity)
