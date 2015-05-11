@@ -23,9 +23,6 @@
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
 
 
-
-
-
 ;; require some packages
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org-bullets)
@@ -65,6 +62,20 @@
 
 ;; Ask before exiting Emacs
 (setq confirm-kill-emacs 'yes-or-no-p) 
+
+
+;; reduce the number of system alarms
+;; In some cases, you d like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit  C-g  in the minibuffer or during an  isearch .
+
+(setq ring-bell-function
+      (lambda ()
+	(unless (memq this-command
+		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+	  (ding))))
+
+;; also, change the alert sound
+;; Instead of beeping or flashing, Emacs could play a cool sound file, whenever an error occurs
+(setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
 
 ;; This customization with the big blocky boxy red cursor makes me so happy.
@@ -141,36 +152,6 @@
     ad-do-it))
 
 
-'(initial-major-mode (quote org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
-
-(delete-selection-mode 1) ; make typing override text selection
-
-'(cua-enable-cua-keys (quote shift))
-'(cua-highlight-region-shift-only t)
-'(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
-
-'(org-replace-disputed-keys t)
-'(org-use-extra-keys nil)
-
-'(send-mail-function (quote sendmail-send-it))
-'(shift-select-mode nil)
-'(transient-mark-mode t)
-'(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
-'(initial-major-mode (quote org-mode))
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(org-adapt-indentation nil)
-'(org-edit-src-content-indentation 4)
-'(org-ellipsis (quote org-warning))
-'(org-enforce-todo-checkbox-dependencies t)
-'(org-enforce-todo-dependencies t)
-'(org-html-postamble nil)
-'(org-fontify-emphasized-text t)
-(setq mail-user-agent 'message-user-agent)
-(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
 
 
 ;; split windows correctly
@@ -332,74 +313,71 @@ Including indent-buffer, which should not be called automatically on save."
 
 					; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 
-;; useful for working with files and references
-(defun path-copy-full-path-to-clipboard ()
-  "Copy the full current filename and path to the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
-
-
-
-;; rename file and buffer
-;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
-(defun rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-	(filename (buffer-file-name)))
-    (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-	  (message "A buffer named '%s' already exists!" new-name)
-	(progn
-	  (rename-file name new-name 1)
-	  (rename-buffer new-name)
-	  (set-visited-file-name new-name)
-	  (set-buffer-modified-p nil))))))
-
-
-
-;; enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) =============================================
-;; xsteve-ido-choose-from-recentf allows me to switch to any recently opened file.
-;; The nice thing, using that function is, that it does not matter, if I have the buffer already opened, or if the file must be opened now. With that function I have a persistent buffer list available.
-(defun xsteve-ido-choose-from-recentf ()
-  "Use ido to select a recently opened file from the 'recentf-list'"
-  (interactive)
-  (let ((home (expand-file-name (getenv "HOME"))))
-    (find-file
-     (ido-completing-read ""
-			  (mapcar (lambda (path)
-				    (replace-regexp-in-string home "~" path))
-				  recentf-list)
-			  nil t))))
-
-
-;; enable recent files without using Ido mode via C-x C-r 
-(recentf-mode 1) ; recentf
-(defun recentf-open-files-compl ()
-  (interactive)
-  (let* ((all-files recentf-list)
-	 (tocpl (mapcar (function
-			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-	 (prompt (append '("File name: ") tocpl))
-	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
-    (find-file (cdr (assoc-string fname tocpl)))))
-(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
-
 
 
 ;;;; some org-mode settings
 ;; hide org-mode stars for a cleaner look
+
+'(initial-major-mode (quote org-mode))
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+
+(delete-selection-mode 1) ; make typing override text selection
+
+'(cua-enable-cua-keys (quote shift))
+'(cua-highlight-region-shift-only t)
+'(cua-mode nil nil (cua-base))
+'(cursor-type (quote box))
+
+'(org-replace-disputed-keys t)
+'(org-use-extra-keys nil)
+
+'(send-mail-function (quote sendmail-send-it))
+'(shift-select-mode nil)
+'(transient-mark-mode t)
+'(user-mail-address "dixit@aya.yale.edu")
+'(global-flyspell-mode t)
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
+'(mail-send-mail-function (quote message-send-mail-with-sendmail))
+'(org-adapt-indentation nil)
+'(org-edit-src-content-indentation 4)
+'(org-ellipsis (quote org-warning))
+'(org-enforce-todo-checkbox-dependencies t)
+'(org-enforce-todo-dependencies t)
+'(org-html-postamble nil)
+'(org-fontify-emphasized-text t)
+(setq mail-user-agent 'message-user-agent)
+(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
+
+'(ns-right-command-modifier (quote meta))
+'(ns-tool-bar-display-mode (quote both) t)
+'(ns-tool-bar-size-mode nil t)
+'(org-src-preserve-indentation t)
+'(org-startup-align-all-tables t)
+'(org-startup-folded showeverything)
+'(org-startup-indented nil)
+'(standard-indent 3)
+'(ns-function-modifier (quote meta))
+
+'(org-hide-leading-stars t)
+'(org-indent-mode-turns-off-org-adapt-indentation nil)
+'(org-indent-mode-turns-on-hiding-stars nil)
+'(org-insert-mode-line-in-empty-file t)
+'(org-list-indent-offset 3)
+'(org-log-done (quote time))
+'(org-log-refile (quote time))
+
+'(org-n-level-faces 9)
+'(org-odd-levels-only nil)
+'(org-priority-faces nil)
+'(org-provide-checkbox-statistics t)
+
+
+
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-;; other settings
+
+
+;; some other settings
 (transient-mark-mode t)
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -427,6 +405,34 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;;;; some org-mode custom functions
+
+;; can't get this to work on my iPhone
+ (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+
+;; (set-face-attribute 'default nil :font "Monaco" :height 190)
+ (set-face-attribute 'default nil :font "Inconsolata" :height 170)
+
+;;;; Export settings
+;; Change section numbering depending on what export format I use
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+(setq org-icalendar-include-todo t)
+
 
 ;; Refile settings
 ;; Exclude DONE state tasks from refile targets
@@ -483,6 +489,138 @@ Including indent-buffer, which should not be called automatically on save."
 
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
+
+
+
+
+(defvar org-refile-region-format "\n%s\n")
+
+(defvar org-refile-region-position 'top
+  "Where to refile a region. Use 'bottom to refile at the
+end of the subtree. ")
+
+(defun org-refile-region (beg end copy)
+  "Refile the active region.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instad of killing it."
+  (interactive "r\nP")
+  ;; mark paragraph if no region is set
+  (unless (use-region-p)
+    (setq beg (save-excursion
+                (backward-paragraph)
+                (skip-chars-forward "\n\t ")
+                (point))
+          end (save-excursion
+                (forward-paragraph)
+                (skip-chars-backward "\n\t ")
+                (point))))
+  (let* ((target (save-excursion (org-refile-get-location)))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (text (buffer-substring-no-properties beg end)))
+    (unless copy (kill-region beg end))
+    (deactivate-mark)
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (goto-char pos)
+        (if (eql org-refile-region-position 'bottom)
+            (org-end-of-subtree)
+          (org-end-of-meta-data-and-drawers))
+        (insert (format org-refile-region-format text))))))
+
+
+(defun my-org-files-list ()
+  (mapcar (lambda (buffer)
+            (buffer-file-name buffer))
+          (org-buffer-list 'files t)))
+
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
+;; http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538
+
+
+;; fix '\emsp' bug in clocktable
+;; doesn't work though
+(defun my-org-clocktable-indent-string (level)
+  (if (= level 1)
+      ""
+    (let ((str "^"))
+      (while (> level 2)
+        (setq level (1- level)
+              str (concat str "--")))
+      (concat str "-> "))))
+(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
+
+
+;; refile highlighted to a particular heading
+(defvar org-refile-region-format "\n%s\n")
+(defvar org-refile-region-position 'top
+  "Where to refile a region. Use 'bottom to refile at the
+end of the subtree. ")
+
+(defun org-refile-region (beg end copy)
+  "Refile the active region.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instad of killing it."
+  (interactive "r\nP")
+  ;; mark paragraph if no region is set
+  (unless (use-region-p)
+    (setq beg (save-excursion
+                (backward-paragraph)
+                (skip-chars-forward "\n\t ")
+                (point))
+          end (save-excursion
+                (forward-paragraph)
+                (skip-chars-backward "\n\t ")
+                (point))))
+  (let* ((target (save-excursion (org-refile-get-location)))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (text (buffer-substring-no-properties beg end)))
+    (unless copy (kill-region beg end))
+    (deactivate-mark)
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (goto-char pos)
+        (if (eql org-refile-region-position 'bottom)
+            (org-end-of-subtree)
+          (org-end-of-meta-data-and-drawers))
+        (insert (format org-refile-region-format text))))))
+
+
+(defun my-org-files-list ()
+  (mapcar (lambda (buffer)
+            (buffer-file-name buffer))
+          (org-buffer-list 'files t)))
+
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
+;; http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538
+
+
+;; fix '\emsp' bug in clocktable
+;; doesn't work though
+(defun my-org-clocktable-indent-string (level)
+  (if (= level 1)
+      ""
+    (let ((str "^"))
+      (while (> level 2)
+        (setq level (1- level)
+              str (concat str "--")))
+      (concat str "-> "))))
+(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
+
+
+
+
+
+
+
+
+
+
 
 ;;;; org-capture setup
 ;; this is working correctly
@@ -620,15 +758,26 @@ Subject: %^{Subject}
 
 
 
-
-
-
-;; ---------- MESSAGE MODE ---------------------------------------
+;;;;  ---------- MESSAGE MODE ---------------------------------------
 ;; report problems with the smtp server
 (setq smtpmail-debug-info t)
 ;; add Cc and Bcc headers to the message buffer
 (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq mail-user-agent 'message-user-agent)
+
+
+;; Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' lines:
+(defun mail-region (b e to subject)
+  "Send the current region in an email"
+  (interactive "r\nsRecipient: \nsSubject: ")
+  (let ((orig-buffer (current-buffer)))
+    (message-mail to subject)
+    (message-goto-body)
+    (insert (save-excursion (set-buffer orig-buffer)
+			    (buffer-substring-no-properties b e)))
+    (message-send-and-exit)))
+
+
 
 
 
@@ -707,56 +856,9 @@ Subject: %^{Subject}
       (edit-server-start)))
 
 
-(require 'xml-rpc)
-(setq org2blog/wp-blog-alist
-      '(
-        ("prolific"
-         :url "http://prolific.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("random")
-         :tags-as-categories t)
 
 
-
-        ("gf"
-         :url "http://greenfield.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-
-        ("jd"
-         :url "http://jaydixit.com/wordpress/xmlrpc.php"
-         :username "admin"
-	 :password "ca9e011jd"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-
-	("newyorkwritersintensive"
-         :url "http://www.newyorkwritersintensive.com/xmlrpc.php"
-         :username "admin"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Readings")
-         :tags-as-categories t)
-
-
-        ("prolific"
-         :url "http://prolific.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-	))
-
-
-
-;; Save all
+;; ⌘-s to Save all
 (add-hook 'org-mode-hook (lambda () (setq buffer-save-without-query t)))
 (add-hook 'markdown-mode-hook (lambda () (setq buffer-save-without-query t)))
 (add-hook 'emacs-lisp-mode-hook (lambda () (setq buffer-save-without-query t)))
@@ -768,49 +870,6 @@ Subject: %^{Subject}
 
 
 
-'(cua-enable-cua-keys (quote shift))
-'(cua-highlight-region-shift-only t)
-'(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
-'(ns-right-command-modifier (quote meta))
-'(ns-tool-bar-display-mode (quote both) t)
-'(ns-tool-bar-size-mode nil t)
-'(org-replace-disputed-keys t)
-'(org-src-preserve-indentation t)
-'(org-startup-align-all-tables t)
-'(org-startup-folded showeverything)
-'(org-startup-indented nil)
-'(org-use-extra-keys nil)
-'(send-mail-function (quote sendmail-send-it))
-'(shift-select-mode nil)
-'(standard-indent 3)
-'(transient-mark-mode t)
-'(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
-'(initial-major-mode (quote org-mode))
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(ns-function-modifier (quote meta))
-'(org-adapt-indentation nil)
-'(org-edit-src-content-indentation 4)
-'(org-ellipsis (quote org-warning))
-'(org-enforce-todo-checkbox-dependencies t)
-'(org-enforce-todo-dependencies t)
-'(org-html-postamble nil)
-
-'(org-fontify-emphasized-text t)
-'(org-hide-leading-stars t)
-'(org-indent-mode-turns-off-org-adapt-indentation nil)
-'(org-indent-mode-turns-on-hiding-stars nil)
-'(org-insert-mode-line-in-empty-file t)
-'(org-list-indent-offset 3)
-'(org-log-done (quote time))
-'(org-log-refile (quote time))
-
-'(org-n-level-faces 9)
-'(org-odd-levels-only nil)
-'(org-priority-faces nil)
-'(org-provide-checkbox-statistics t)
 
 
 
@@ -1145,7 +1204,6 @@ Subject: %^{Subject}
 (setq ns-function-modifier 'hyper)
 
 
-(delete-selection-mode 1) ; make typing override text selection
 
 
 
@@ -1178,8 +1236,6 @@ Subject: %^{Subject}
 
 
 
-
-;; (load "~/Dropbox/emacs/prelude/personal/tabula-rasa-mode.el")
 
 
 ;; open files in an existing frame instead of a new frame
@@ -2546,76 +2602,14 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 
-
+;; load shell environment correctly 
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-
+;; open PDFs in Skim
 (require 'openwith)
 '(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 (openwith-mode t)
-
-
-
-
-(defvar org-refile-region-format "\n%s\n")
-
-(defvar org-refile-region-position 'top
-  "Where to refile a region. Use 'bottom to refile at the
-end of the subtree. ")
-
-(defun org-refile-region (beg end copy)
-  "Refile the active region.
-If no region is active, refile the current paragraph.
-With prefix arg C-u, copy region instad of killing it."
-  (interactive "r\nP")
-  ;; mark paragraph if no region is set
-  (unless (use-region-p)
-    (setq beg (save-excursion
-                (backward-paragraph)
-                (skip-chars-forward "\n\t ")
-                (point))
-          end (save-excursion
-                (forward-paragraph)
-                (skip-chars-backward "\n\t ")
-                (point))))
-  (let* ((target (save-excursion (org-refile-get-location)))
-         (file (nth 1 target))
-         (pos (nth 3 target))
-         (text (buffer-substring-no-properties beg end)))
-    (unless copy (kill-region beg end))
-    (deactivate-mark)
-    (with-current-buffer (find-file-noselect file)
-      (save-excursion
-        (goto-char pos)
-        (if (eql org-refile-region-position 'bottom)
-            (org-end-of-subtree)
-          (org-end-of-meta-data-and-drawers))
-        (insert (format org-refile-region-format text))))))
-
-
-(defun my-org-files-list ()
-  (mapcar (lambda (buffer)
-            (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
-
-
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
-
-;; http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538
-
-
-;; fix '\emsp' bug in clocktable
-;; doesn't work though
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
 
 
 
@@ -2725,71 +2719,6 @@ searches all buffers."
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-
-
-
-;; ---------- MESSAGE MODE ---------------------------------------
-;; report problems with the smtp server
-(setq smtpmail-debug-info t)
-;; add Cc and Bcc headers to the message buffer
-(setq message-default-mail-headers "Cc: \nBcc: \n")
-
-
-;; Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' lines:
-(defun mail-region (b e to subject)
-  "Send the current region in an email"
-  (interactive "r\nsRecipient: \nsSubject: ")
-  (let ((orig-buffer (current-buffer)))
-    (message-mail to subject)
-    (message-goto-body)
-    (insert (save-excursion (set-buffer orig-buffer)
-			    (buffer-substring-no-properties b e)))
-    (message-send-and-exit)))
-
-
-
-;; reduce the number of system alarms
-(setq ring-bell-function
-      (lambda ()
-	(unless (memq this-command
-		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-	  (ding))))
-
-
-
-(defun visit-most-recent-file ()
-  "Visits the most recently open file in `recentf-list' that is not already being visited."
-  (interactive)
-  (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-	most-recent-filename)
-    (dolist (filename recentf-list)
-      (unless (memq filename buffer-file-name-list)
-	(setq most-recent-filename filename)
-	(return)))
-    (find-file most-recent-filename)))
-
-
-
-;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
-
-
-
-
-;; Reduce the number of warnings
-;; In some cases, you d like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit  C-g  in the minibuffer or during an  isearch .
-
-(setq ring-bell-function
-      (lambda ()
-	(unless (memq this-command
-		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-	  (ding))))
-
-
-;; change the alert sound
-;; Instead of beeping or flashing, Emacs could play a cool sound file, whenever an error occurs
-(setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
-
-
 
 
 
@@ -3206,72 +3135,6 @@ Also converts full stops to commas."
 
 					; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 
-;; useful for working with files and references
-(defun path-copy-full-path-to-clipboard ()
-  "Copy the full current filename and path to the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
-
-
-
-;; rename file and buffer
-;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
-(defun rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-	(filename (buffer-file-name)))
-    (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-	  (message "A buffer named '%s' already exists!" new-name)
-	(progn
-	  (rename-file name new-name 1)
-	  (rename-buffer new-name)
-	  (set-visited-file-name new-name)
-	  (set-buffer-modified-p nil))))))
-
-
-
-;; enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) =============================================
-;; xsteve-ido-choose-from-recentf allows me to switch to any recently opened file.
-;; The nice thing, using that function is, that it does not matter, if I have the buffer already opened, or if the file must be opened now. With that function I have a persistent buffer list available.
-(defun xsteve-ido-choose-from-recentf ()
-  "Use ido to select a recently opened file from the 'recentf-list'"
-  (interactive)
-  (let ((home (expand-file-name (getenv "HOME"))))
-    (find-file
-     (ido-completing-read ""
-			  (mapcar (lambda (path)
-				    (replace-regexp-in-string home "~" path))
-				  recentf-list)
-			  nil t))))
-
-
-;; enable recent files without using Ido mode via C-x C-r 
-(recentf-mode 1) ; recentf
-(defun recentf-open-files-compl ()
-  (interactive)
-  (let* ((all-files recentf-list)
-	 (tocpl (mapcar (function
-			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-	 (prompt (append '("File name: ") tocpl))
-	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
-    (find-file (cdr (assoc-string fname tocpl)))))
-(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
-
-
-
-;;;; some org-mode settings
-;; hide org-mode stars for a cleaner look
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
 
@@ -3557,7 +3420,6 @@ Subject: %^{Subject}
 
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
-(setq org-ctrl-k-protect-subtree t)
 
 (setq org-use-property-inheritance t)
 
@@ -3588,6 +3450,18 @@ Subject: %^{Subject}
 ;; add Cc and Bcc headers to the message buffer
 (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq mail-user-agent 'message-user-agent)
+
+;; Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' lines:
+(defun mail-region (b e to subject)
+  "Send the current region in an email"
+  (interactive "r\nsRecipient: \nsSubject: ")
+  (let ((orig-buffer (current-buffer)))
+    (message-mail to subject)
+    (message-goto-body)
+    (insert (save-excursion (set-buffer orig-buffer)
+			    (buffer-substring-no-properties b e)))
+    (message-send-and-exit)))
+
 
 
 
@@ -3666,53 +3540,6 @@ Subject: %^{Subject}
       (edit-server-start)))
 
 
-(require 'xml-rpc)
-(setq org2blog/wp-blog-alist
-      '(
-        ("prolific"
-         :url "http://prolific.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("random")
-         :tags-as-categories t)
-
-
-
-        ("gf"
-         :url "http://greenfield.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-
-        ("jd"
-         :url "http://jaydixit.com/wordpress/xmlrpc.php"
-         :username "admin"
-	 :password "ca9e011jd"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-
-	("newyorkwritersintensive"
-         :url "http://www.newyorkwritersintensive.com/xmlrpc.php"
-         :username "admin"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Readings")
-         :tags-as-categories t)
-
-
-        ("prolific"
-         :url "http://prolific.dixit.ca/xmlrpc.php"
-         :username "jay"
-	 :password "resistance/1942/"
-         :default-title "Hello World"
-         :default-categories ("Found")
-         :tags-as-categories t)
-	))
-
 
 
 ;; Save all
@@ -3726,50 +3553,6 @@ Subject: %^{Subject}
 
 
 
-
-'(cua-enable-cua-keys (quote shift))
-'(cua-highlight-region-shift-only t)
-'(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
-'(ns-right-command-modifier (quote meta))
-'(ns-tool-bar-display-mode (quote both) t)
-'(ns-tool-bar-size-mode nil t)
-'(org-replace-disputed-keys t)
-'(org-src-preserve-indentation t)
-'(org-startup-align-all-tables t)
-'(org-startup-folded showeverything)
-'(org-startup-indented nil)
-'(org-use-extra-keys nil)
-'(send-mail-function (quote sendmail-send-it))
-'(shift-select-mode nil)
-'(standard-indent 3)
-'(transient-mark-mode t)
-'(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
-'(initial-major-mode (quote org-mode))
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(ns-function-modifier (quote meta))
-'(org-adapt-indentation nil)
-'(org-edit-src-content-indentation 4)
-'(org-ellipsis (quote org-warning))
-'(org-enforce-todo-checkbox-dependencies t)
-'(org-enforce-todo-dependencies t)
-'(org-html-postamble nil)
-
-'(org-fontify-emphasized-text t)
-'(org-hide-leading-stars t)
-'(org-indent-mode-turns-off-org-adapt-indentation nil)
-'(org-indent-mode-turns-on-hiding-stars nil)
-'(org-insert-mode-line-in-empty-file t)
-'(org-list-indent-offset 3)
-'(org-log-done (quote time))
-'(org-log-refile (quote time))
-
-'(org-n-level-faces 9)
-'(org-odd-levels-only nil)
-'(org-priority-faces nil)
-'(org-provide-checkbox-statistics t)
 
 
 
@@ -4134,11 +3917,6 @@ Subject: %^{Subject}
 ;; use key chords invoke commands
 (require 'key-chord)
 (key-chord-mode 1)
-
-
-
-
-;; (load "~/Dropbox/emacs/prelude/personal/tabula-rasa-mode.el")
 
 
 ;; open files in an existing frame instead of a new frame
@@ -5559,67 +5337,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 
-(defvar org-refile-region-format "\n%s\n")
-
-(defvar org-refile-region-position 'top
-  "Where to refile a region. Use 'bottom to refile at the
-end of the subtree. ")
-
-(defun org-refile-region (beg end copy)
-  "Refile the active region.
-If no region is active, refile the current paragraph.
-With prefix arg C-u, copy region instad of killing it."
-  (interactive "r\nP")
-  ;; mark paragraph if no region is set
-  (unless (use-region-p)
-    (setq beg (save-excursion
-                (backward-paragraph)
-                (skip-chars-forward "\n\t ")
-                (point))
-          end (save-excursion
-                (forward-paragraph)
-                (skip-chars-backward "\n\t ")
-                (point))))
-  (let* ((target (save-excursion (org-refile-get-location)))
-         (file (nth 1 target))
-         (pos (nth 3 target))
-         (text (buffer-substring-no-properties beg end)))
-    (unless copy (kill-region beg end))
-    (deactivate-mark)
-    (with-current-buffer (find-file-noselect file)
-      (save-excursion
-        (goto-char pos)
-        (if (eql org-refile-region-position 'bottom)
-            (org-end-of-subtree)
-          (org-end-of-meta-data-and-drawers))
-        (insert (format org-refile-region-format text))))))
-
-
-(defun my-org-files-list ()
-  (mapcar (lambda (buffer)
-            (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
-
-
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
-
-;; http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538
-
-
-;; fix '\emsp' bug in clocktable
-;; doesn't work though
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-
-
-
 
 
 
@@ -5675,8 +5392,8 @@ With prefix arg C-u, copy region instad of killing it."
 (autoload 'ibuffer "ibuffer" "List buffers." t)
 
 
-
-;; I know that string is in my Emacs somewhere!
+;;;; finding stuff
+;; search open buffers, i.e. "I know that string is around here somewhere!"
 (require 'cl)
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
@@ -5729,199 +5446,6 @@ searches all buffers."
 
 
 
-;; ---------- MESSAGE MODE ---------------------------------------
-;; report problems with the smtp server
-(setq smtpmail-debug-info t)
-;; add Cc and Bcc headers to the message buffer
-(setq message-default-mail-headers "Cc: \nBcc: \n")
-
-
-;; Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' lines:
-(defun mail-region (b e to subject)
-  "Send the current region in an email"
-  (interactive "r\nsRecipient: \nsSubject: ")
-  (let ((orig-buffer (current-buffer)))
-    (message-mail to subject)
-    (message-goto-body)
-    (insert (save-excursion (set-buffer orig-buffer)
-			    (buffer-substring-no-properties b e)))
-    (message-send-and-exit)))
-
-
-
-;; reduce the number of system alarms
-(setq ring-bell-function
-      (lambda ()
-	(unless (memq this-command
-		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-	  (ding))))
-
-
-
-(defun visit-most-recent-file ()
-  "Visits the most recently open file in `recentf-list' that is not already being visited."
-  (interactive)
-  (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-	most-recent-filename)
-    (dolist (filename recentf-list)
-      (unless (memq filename buffer-file-name-list)
-	(setq most-recent-filename filename)
-	(return)))
-    (find-file most-recent-filename)))
-
-
-
-;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
-
-
-
-
-;; Reduce the number of warnings
-;; In some cases, you d like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit  C-g  in the minibuffer or during an  isearch .
-
-(setq ring-bell-function
-      (lambda ()
-	(unless (memq this-command
-		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-	  (ding))))
-
-
-;; change the alert sound
-;; Instead of beeping or flashing, Emacs could play a cool sound file, whenever an error occurs
-(setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
-
-
-
-
-
-;;;; OSX ⌘ key bindings
-;; recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key
-(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
-(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
-
-
-(defun define-hyper-key (key fun)
-  (cond
-   (aquamacs-flag
-    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
-   (gnuemacs-flag
-    (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
-
-;; Shared Aquamacs/ GNU Emacs keybindings:
-(define-hyper-key "h" 'replace-string)
-(define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
-(define-hyper-key "\\" 'visit-most-recent-file)
-(define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
-(define-hyper-key "R" 'helm-projectile-recentf)
-(define-hyper-key "r" 'helm-mini)
-(define-hyper-key "t" 'new-buffer)
-(define-hyper-key "T" 'org-new-scratch-buffer)
-(define-hyper-key "g" 'isearch-repeat-forward)
-(define-hyper-key "h" 'replace-string)
-(define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'org-mac-chrome-insert-frontmost-url-with-quotes)
-(define-hyper-key "d" 'org-todo)
-(define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
-(define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "b" 'org-narrow-to-subtree)
-(define-hyper-key "a" 'mark-whole-buffer) ; select all
-(define-hyper-key "w" 'delete-window) ; close
-(define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'save-some-buffers) ; save all
-
-
-;; key bindings I don't use much and should remember to learn:
-(define-hyper-key "4" 'clone-indirect-buffer-other-window)
-(define-hyper-key "5" 'point-stack-push)
-(define-hyper-key "6" 'point-stack-pop)
-(define-hyper-key "7" 'point-stack-forward-stack-pop)
-(define-hyper-key "8" 'search-open-buffers)
-(define-hyper-key "B" 'clone-indirect-buffer-other-window)
-(define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'locate)
-(define-hyper-key "(" 'org-velocity)
-(define-hyper-key "[" 'org-backward-heading-same-level)
-(define-hyper-key "]" 'org-forward-heading-same-level)
-
-(define-hyper-key "m a" 'org-agenda) 
-(define-hyper-key "m j" 'helm-imenu-anywhere) 
-(define-hyper-key ";" 'ido-goto-symbol)
-(define-hyper-key "D" 'diredp-dired-recent-dirs)
-
-
-
-
-;; key bindings for my own custom functions, using ⌘-m as a prefix
-(define-hyper-key "m cy" 'cyberpunk-jay) 
-(define-hyper-key "m cl" 'cyberpunk-large) 
-(define-hyper-key "m cw" 'cyberpunk-writeroom) 
-(define-hyper-key "m wb" 'whiteboard) 
-(define-hyper-key "m sl" 'solarized-light)
-(define-hyper-key "m sd" 'solarized-dark) 
-(define-hyper-key "m ri" 'ritchie) 
-(define-hyper-key "m sp" 'spolsky) 
-(define-hyper-key "m wr" 'writeroom-mode) 
-(define-hyper-key "m wf" 'workflowy-mode) 
-(define-hyper-key "m st" 'small-type) 
-(define-hyper-key "m mp" 'morning-pages) 
-(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
-(define-hyper-key "m lt" 'large-type) 
-(define-hyper-key "m mt" 'medium-type) 
-(define-hyper-key "m df" 'delete-file-and-buffer) 
-(define-hyper-key "m rf" 'rename-file-and-buffer) 
-
-
-   
-
-;; can't get this to work on my iPhone
- (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
-
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
- (set-face-attribute 'default nil :font "Inconsolata" :height 170)
-
-;;;; Export settings
-;; Change section numbering depending on what export format I use
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
-
-
-
-
-
-
 
 
 
@@ -5952,16 +5476,6 @@ searches all buffers."
 (next-line)
 (next-line)
 )
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6179,6 +5693,85 @@ Also converts full stops to commas."
 
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
+
+
+
+;;;; working with files
+;; reopen last closed file, very useful 
+
+(defun visit-most-recent-file ()
+  "Visits the most recently open file in `recentf-list' that is not already being visited."
+  (interactive)
+  (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
+	most-recent-filename)
+    (dolist (filename recentf-list)
+      (unless (memq filename buffer-file-name-list)
+	(setq most-recent-filename filename)
+	(return)))
+    (find-file most-recent-filename)))
+
+;; useful for working with files and references
+(defun path-copy-full-path-to-clipboard ()
+  "Copy the full current filename and path to the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+
+
+
+;; rename file and buffer
+;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+	(filename (buffer-file-name)))
+    (if (not filename)
+	(message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+	  (message "A buffer named '%s' already exists!" new-name)
+	(progn
+	  (rename-file name new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil))))))
+
+
+
+;;;; recent files
+
+;; enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) =============================================
+;; xsteve-ido-choose-from-recentf allows me to switch to any recently opened file.
+;; The nice thing, using that function is, that it does not matter, if I have the buffer already opened, or if the file must be opened now. With that function I have a persistent buffer list available.
+(defun xsteve-ido-choose-from-recentf ()
+  "Use ido to select a recently opened file from the 'recentf-list'"
+  (interactive)
+  (let ((home (expand-file-name (getenv "HOME"))))
+    (find-file
+     (ido-completing-read ""
+			  (mapcar (lambda (path)
+				    (replace-regexp-in-string home "~" path))
+				  recentf-list)
+			  nil t))))
+
+
+;; enable recent files without using Ido mode via C-x C-r 
+(recentf-mode 1) ; recentf
+(defun recentf-open-files-compl ()
+  (interactive)
+  (let* ((all-files recentf-list)
+	 (tocpl (mapcar (function
+			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+	 (prompt (append '("File name: ") tocpl))
+	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+    (find-file (cdr (assoc-string fname tocpl)))))
+(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
 
 
