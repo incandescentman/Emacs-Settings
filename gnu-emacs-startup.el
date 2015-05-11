@@ -1,4 +1,3 @@
-
 ;; load org-mode
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/lisp" load-path)
@@ -14,8 +13,13 @@
 ;; (require 'ox-slidy)
 ;; (load "~/Dropbox/elisp/org/contrib/lisp/ox-s5.el")
 
-;; wrap text
-(global-visual-line-mode)
+
+;; handle emacs utf-8 input
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
+
 
 ;;;; STICKY WINDOWS
 (global-set-key [(control x) (?0)] 'delete-other-windows)
@@ -26,22 +30,39 @@
 (global-set-key  (kbd "s-2") 'split-window-vertically)
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
-;; ABBREVIATIONS (autocorrect)
+;;;; ABBREVIATIONS (autocorrect)
 ;; ===== Automatically load abbreviations table =====
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 
+
+
+
 ;;;; UI/APPEARANCE
+
 ;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
 (setq prelude-whitespace nil)
+
+;; wrap text
+(global-visual-line-mode)
+
 
 
 ;;;; KEYBINDINGS
 ;; mk - mykeybindings
 ;; create a custom minor mode to override other keybindings and use mine instead
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+(define-minor-mode key-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " key" 'key-minor-mode-map)
+(key-minor-mode 1)
+(defun my-minibuffer-setup-hook ()
+  (key-minor-mode 0))
+(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+
+
 
 ;;;; unbind some existing keybindings 
 (define-key undo-tree-map (kbd "C-x r") nil)
@@ -71,74 +92,48 @@
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
 (define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
 
-(define-key minibuffer-local-map (kbd "s-V") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
 
-(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window)
-
-
+;; for extracting content from my browser
  (define-key key-minor-mode-map (kbd "s-W") 'web-research)
  (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
+(define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
-
-
-(define-key key-minor-mode-map [s-down] 'end-of-buffer)
+;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
+(define-key key-minor-mode-map [s-down] 'end-of-buffer)
 
-
-
+;; use OSX standard keybinding for "Redo"
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
-(define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
+
+;; use OSX standard keybinding to increase or decrease font size 
 (define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
 (define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
+
+;; rebind global help command so that I can use C-h for backspace
 (define-key key-minor-mode-map (kbd "M-h") 'help-command)
+
+;; very useful when encountering names and other unfamiliar words
 (define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
+
+;; navigate between buffers, including uninteresting ones that are hidden by default
 (define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
 (define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
 
+;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
 
-;; (define-key key-minor-mode-map (kbd "s-<backspace>") 'delete-char)
 
 
-;; (global-set-key (kbd "C-c s") 'org-copy-subtree)
-;; (define-key (kbd "C-v s") 'org-paste-subtree)
-;; (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
-;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
-;; (define-key key-minor-mode-map (kbd "s-y") 'redo)
-;; (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
-;; (define-key key-minor-mode-map (kbd "s-/") 'visit-most-recent-file)
-;; available key mappings
-;; ; (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
-;; (define-key key-minor-mode-map (kbd "s-d") 'org-todo)
-;; (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
-;; ; (define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
-;; (define-key key-minor-mode-map (kbd "s-b") 'org-tree-to-indirect-buffer)
-;; (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
-;; (define-key key-minor-mode-map (kbd "H-w") 'widen)
-;; (define-key key-minor-mode-map (kbd "H-g") 'prelude-google)
-;; (define-key key-minor-mode-map (kbd "s-j") 'org2blog/wp-post-subtree)
-;; (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
-;; (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
-;; (define-key key-minor-mode-map (kbd "s-;") 'google-define-word-or-phrase)
+
+
+
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
 (define-key key-minor-mode-map (kbd "C-c C-x po") 'pomodoro-stop)
-;; (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
-;; (define-key key-minor-mode-map (kbd "s-R") 'web-research)
-;; (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
 
-
-
-
-
-
-
-(define-key key-minor-mode-map (kbd "C-c C-o") 'helm-org-headlines) ; learn this!
-
-
+;; find files using helm
 (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files) 
 
-
-;; (global-set-key "\C-s" 'delete-char)
 
 
 (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
@@ -152,14 +147,26 @@
 
 
 
+;;;; keybindings not currently in use 
+;; (global-set-key (kbd "C-c s") 'org-copy-subtree)
+;; (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
+;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+;; (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
 
-(define-minor-mode key-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " key" 'key-minor-mode-map)
-(key-minor-mode 1)
-(defun my-minibuffer-setup-hook ()
-  (key-minor-mode 0))
-(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+;; available key mappings
+;; ; (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+;; (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
+;; (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
+;; (define-key key-minor-mode-map (kbd "H-w") 'widen)
+;; (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
+;; (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
+;; (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+;; (define-key key-minor-mode-map (kbd "s-;") 'google-define-word-or-phrase)
+;; (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
+;; (define-key key-minor-mode-map (kbd "s-R") 'web-research)
+;; (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
+
+
 
 
 
@@ -245,6 +252,7 @@
         (t (restore-frame))))
 (define-key global-map [(s-return)] 'toggle-maxframe)
 
+;; make it easy to go fullscreen
 (defun toggle-fullscreen ()
   "Toggle full screen"
   (interactive)
@@ -252,8 +260,7 @@
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-
-
+;; and the keybinding 
 (unless (fboundp 'toggle-frame-fullscreen)
   (global-set-key (kbd "<f11>") 'toggle-fullscreen))
 (unless (fboundp 'toggle-frame-fullscreen)
@@ -261,11 +268,11 @@
 
   (global-set-key (kbd "<f13>") 'toggle-fullscreen)
 
-
+;; edit Emacs preferences using standard OSX keybinding for preferences
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
+
+;; grep, using current folder as default
 (define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
-
-
 
 
 ;;;; directory settings
@@ -306,9 +313,6 @@
 ;; omit the following uninteresting file types from dired displays 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store\\|\\.doc$\\|\\.docx$\\|\\.xlsx$\\|\\.ini$\\|\\.fsLockFile$\\|Icon")
 
-;; Load Dired X when Dired is loaded.
-(add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
-
 ;; Enable toggling of uninteresting files.
 (setq dired-omit-mode t)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
@@ -316,23 +320,39 @@
 (defun enable-dired-omit-mode () (dired-omit-mode 1))
 (add-hook 'dired-mode-hook 'enable-dired-omit-mode)
 
+
+;; Load Dired X when Dired is loaded.
+(add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
+
+;; so that I can hide details on dired
+(require 'dired-details+)
+
+
+
+;;;; other functions
+
+;; forgot what this does, I think it's in case Emacs crashes maybe to recover autosaves?
 (defadvice recover-session (around disable-dired-omit-for-recover activate)
   (let ((dired-mode-hook dired-mode-hook))
     (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
     ad-do-it))
 
-;; maybe I don't need this anymore?
-;; (require 'dired-details+)
+;; make kill-sentence work in a more intuitive way
+(defun kill-sentence-to-period ()
+"Leave the fucking period in there mofo."
+(interactive)
+(kill-sentence)
+(push-mark)
+ (insert ".")
+ (backward-char))
+
+;; and the keybinding
+(global-set-key (kbd "M-k") 'kill-sentence-to-period)
 
 
 
 
 
-;; handle emacs utf-8 input
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(setenv "LANG" "en_US.UTF-8")
 
 
 
@@ -372,17 +392,6 @@
 
 
 
-
-
-(defun kill-sentence-to-period ()
-"Leave the fucking period in there mofo."
-(interactive)
-(kill-sentence)
-(push-mark)
- (insert ".")
- (backward-char))
-
-(global-set-key (kbd "M-k") 'kill-sentence-to-period)
 
 
 
