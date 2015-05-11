@@ -1,76 +1,30 @@
 (require 'org)
- (disable-theme 'zenburn)
+(disable-theme 'zenburn)
 
+;; globally turn off fucking piece of shit guru mode
+(setq prelude-guru nil)
+
+
+;; load my init files
 (load "~/gnulisp/writegood-jay.el")
-;; (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
-
 (load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
 (load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
 (load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
-;; I've been wanting to do this for so long. :-)
-(eval-after-load "org"
-  '(progn
-     (define-key org-mode-map (kbd "<M-S-left>") nil)
-     (define-key org-mode-map (kbd "<M-S-right>") nil)
-     (define-key org-mode-map (kbd "<M-S-up>") nil)
-     (define-key org-mode-map (kbd "<M-S-down>") nil)
-     (define-key org-mode-map (kbd "<M-left>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map [C-S-right] 'org-shiftmetaright)
-     (define-key org-mode-map [C-S-left] 'org-shiftmetaleft)
-     (define-key org-mode-map [C-right] 'org-metaright)
-     (define-key org-mode-map [C-left] 'org-metaleft)
-     (define-key org-mode-map [C-up] 'org-metaup)
-     (define-key org-mode-map [C-down] 'org-metadown)
-     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
-     ))
 
-
-(eval-after-load "orgstruct"
-  '(progn
-     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<S-right>") nil)
- (define-key orgstruct-mode-map (kbd "<M-return>") nil)
-     ))
+;;;; never got these working
+;; (require 'google-contacts)
+;; (require 'google-contacts-message)
+;; (require 'google-weather)
 
 
 
-     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
-
-     (define-key orgstruct-mode-map [C-S-right] 'org-shiftmetaright)
-     (define-key orgstruct-mode-map [C-S-left] 'org-shiftmetaleft)
-     (define-key orgstruct-mode-map [C-right] 'org-metaright)
-     (define-key orgstruct-mode-map [C-left] 'org-metaleft)
-     (define-key orgstruct-mode-map [C-up] 'org-metaup)
-     (define-key orgstruct-mode-map [C-down] 'org-metadown)
-     (define-key orgstruct-mode-map [C-S-return] 'org-insert-todo-heading)
-
-
-
-
-
-
-;; mypackages list the packages you want
+;;;; packages
+;; automatically install my favorite packages 
 (setq package-list '(magit ack-and-a-half expand-region gist  helm helm-projectile magit magithub markdown-mode paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme dired+ twittering-mode dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
 
-;; list the repositories containing them
+;; the repositories containing them
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
 
@@ -91,39 +45,28 @@
     (package-install package)))
 
 
-
-
-
-; (define-key my-keys-minor-mode-map (kbd "<S-down>") nil)
-; (define-key my-keys-minor-mode-map (kbd "<S-up>") nil)
-
-
-
-;;auto-complete mode
+;;;; autocomplete
+;; I don't know what I'm doing here but it seems to work
+;; auto-complete mode
 (require 'auto-complete)
 (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
                                     sass-mode  csv-mode
                                     html-mode sh-mode
                                     lisp-mode  markdown-mode emacs-lisp-mode ))
   (add-to-list 'ac-modes mode))
-;;;;Key triggers
+
+;; tab completion 
+(ac-set-trigger-key "TAB")
+
+;; haven't used these, not sure how to 
 (define-key ac-completing-map (kbd "C-M-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
-(ac-set-trigger-key "TAB")
 
 
-
-;; find out how to globally turn off fucking piece of shit guru mode.
-(setq prelude-guru nil)
-
-
-;; projectile-find-dir
-
-
-
+;;;; I believe these are the settings that GNU Emacs saved automatically when I changed things using the Options menu. I'm sure there is a lot of redundancy here that doesn't need to be here since it's already defined in my init files.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -340,9 +283,9 @@
  '(org-koma-letter-author "Jay Dixit")
  '(org-koma-letter-closing "Best,")
  '(org-koma-letter-email "jay@jaydixit.com")
- '(org-koma-letter-from-address "22 Saint Marks Place Apt. C, New York NY 10003")
+ '(org-koma-letter-from-address "22 Saint Marks Place Apt. D, New York NY 10003")
  '(org-koma-letter-phone-number "(646) 355-8001")
- '(org-koma-letter-use-backaddress t)
+ '(org-koma-letter-use-backaddress nil)
  '(org-koma-letter-use-phone t)
  '(org-latex-active-timestamp-format "\\textrm{%s}")
  '(org-latex-inactive-timestamp-format "\\textrm{%s}")
@@ -355,7 +298,7 @@
      (underline . "\\uline{%s}"))))
  '(org-latex-toc-command "\\tableofcontents
 \\newpage
-")
+") ; add a page break after the Table of Contents 
  '(org-list-allow-alphabetical t)
  '(org-list-indent-offset 3)
  '(org-log-done nil)
@@ -369,7 +312,7 @@
  '(org-mac-grab-Together-app-p nil)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -480,44 +423,77 @@
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 
 
-
-
-
-;; (set-face-attribute 'default nil :font "Inconsolata")
-;; (set-face-attribute 'default nil :font "Courier" :height 220)
-
-
-;; (require 'google-contacts)
-;; (require 'google-contacts-message)
-;; (require 'google-weather)
-
-
-
-
-
-(scroll-bar-mode -1)
-
-(defun scrollbar-init ()
-  (interactive)
-  (scroll-bar-mode -1)
-  )
-
-;; (small-type)
-
-
-
-
-;; (set-face-attribute 'default nil :font "Monaco" :height 170)
-
-(toggle-frame-fullscreen)
-
-
 ;;; Ignore / Exclude Uninteresting Things
 ;; 
 ;; Make Buffer-stack ignore uninteresting buffers
+;; in GNU Emacs, ignore scratch buffer as well
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
+
+
+;;;; keybindings
+
+;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
+;; I've been wanting to do this for so long. :-)
+;; this works correctly.
+(eval-after-load "org"
+  '(progn
+     (define-key org-mode-map (kbd "<M-S-left>") nil)
+     (define-key org-mode-map (kbd "<M-S-right>") nil)
+     (define-key org-mode-map (kbd "<M-S-up>") nil)
+     (define-key org-mode-map (kbd "<M-S-down>") nil)
+     (define-key org-mode-map (kbd "<M-left>") nil)
+     (define-key org-mode-map (kbd "<M-right>") nil)
+     (define-key org-mode-map (kbd "<M-right>") nil)
+     (define-key org-mode-map [C-S-right] 'org-shiftmetaright)
+     (define-key org-mode-map [C-S-left] 'org-shiftmetaleft)
+     (define-key org-mode-map [C-right] 'org-metaright)
+     (define-key org-mode-map [C-left] 'org-metaleft)
+     (define-key org-mode-map [C-up] 'org-metaup)
+     (define-key org-mode-map [C-down] 'org-metadown)
+     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
+     ))
+
+
+(eval-after-load "orgstruct"
+  '(progn
+     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
+     (define-key orgstruct-mode-map (kbd "<S-right>") nil)
+ (define-key orgstruct-mode-map (kbd "<M-return>") nil)
+     ))
+
+;; I think there's some redundancy here, not sure if I need both
+     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
+     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
+
+     (define-key orgstruct-mode-map [C-S-right] 'org-shiftmetaright)
+     (define-key orgstruct-mode-map [C-S-left] 'org-shiftmetaleft)
+     (define-key orgstruct-mode-map [C-right] 'org-metaright)
+     (define-key orgstruct-mode-map [C-left] 'org-metaleft)
+     (define-key orgstruct-mode-map [C-up] 'org-metaup)
+     (define-key orgstruct-mode-map [C-down] 'org-metadown)
+     (define-key orgstruct-mode-map [C-S-return] 'org-insert-todo-heading)
+
+
+
+
+
+;;;; startup
+(toggle-frame-fullscreen)

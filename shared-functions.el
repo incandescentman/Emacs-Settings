@@ -9354,7 +9354,7 @@ searches all buffers."
 
 
 
-;; key bindings for my own custom functions, using ⌘-m as a prefix
+;;;; key bindings for my own custom functions, using ⌘-m as a prefix
 (define-hyper-key "m cy" 'cyberpunk-jay) 
 (define-hyper-key "m cl" 'cyberpunk-large) 
 (define-hyper-key "m cw" 'cyberpunk-writeroom) 
