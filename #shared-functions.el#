@@ -2139,7 +2139,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (setq org-stuck-projects
       '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
-(require 'auto-compile)
+
 
 
 

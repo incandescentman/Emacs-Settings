@@ -47,19 +47,12 @@
 
 
 ;;;; KEYBINDINGS
-
-
-
-
 ;; mk - mykeybindings
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'org-refile-region)
 
-
 ;; (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-
-
 
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
@@ -163,8 +156,8 @@
 (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 (global-set-key (kbd "M-i") 'helm-multi-swoop-all)
 
-
-
+(global-set-key (kbd "C-8") nil) 
+(define-key key-minor-mode-map (kbd "C-8") 'xah-cycle-hyphen-underscore-space) 
 
 
 
@@ -323,6 +316,8 @@
 
 (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
+
+;; omit the following uninteresting file types from dired displays 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store\\|\\.doc$\\|\\.docx$\\|\\.xlsx$\\|\\.ini$\\|\\.fsLockFile$\\|Icon")
 
 ;; Load Dired X when Dired is loaded.
