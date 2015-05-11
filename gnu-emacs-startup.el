@@ -1,22 +1,21 @@
 
-
+;; load org-mode
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/lisp" load-path)
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib" load-path)
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib/lisp" load-path)
 
+;; export formats I'm not currently using 
 ;; (require 'ox-md)
 ;; (require 'ox-ascii)
 ;; (require 'ox-html)
 ;; (require 'ox-publish)
 ;; (require 'ox-s5)
 ;; (require 'ox-slidy)
-
 ;; (load "~/Dropbox/elisp/org/contrib/lisp/ox-s5.el")
 
+;; wrap text
 (global-visual-line-mode)
-
-
 
 ;;;; STICKY WINDOWS
 (global-set-key [(control x) (?0)] 'delete-other-windows)
@@ -27,26 +26,25 @@
 (global-set-key  (kbd "s-2") 'split-window-vertically)
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
-;;; ABBREVIATIONS
+;; ABBREVIATIONS (autocorrect)
 ;; ===== Automatically load abbreviations table =====
-;; Note that emacs chooses, by default, the filename
-;; "~/.abbrev_defs", so don't try to be too clever
-;; by changing its name
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 
-;;;; APPEARANCE
+;;;; UI/APPEARANCE
 ;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
-
-
 (setq prelude-whitespace nil)
 
 
 ;;;; KEYBINDINGS
 ;; mk - mykeybindings
+;; create a custom minor mode to override other keybindings and use mine instead
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+
+;;;; unbind some existing keybindings 
+(define-key undo-tree-map (kbd "C-x r") nil)
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'org-refile-region)
 
@@ -55,33 +53,27 @@
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
-(define-key key-minor-mode-map (kbd "C--") 'goto-last-change)
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
-(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x)
-(define-key key-minor-mode-map (kbd "=") 'smex)
+(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
 
-
-(define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines)
-(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; this looks cool
-(define-key key-minor-mode-map (kbd "M-b d") 'book-dired)
-(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book)
-(define-key key-minor-mode-map (kbd "M-b j") 'read-jd) 
-(define-key key-minor-mode-map (kbd "M-b M-b") 'book-helm-strict)
-
-(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs)
+(define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
+(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
+(define-key key-minor-mode-map (kbd "M-b d") 'book-dired) ; show directory of my book folder
+(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books 
+(define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
+(define-key key-minor-mode-map (kbd "M-b M-b") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
 
- (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
- (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
- (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
+(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
 
- (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
- (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
- (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
+(define-key minibuffer-local-map (kbd "s-V") 'kdm/html2org-clipboard)
 
- (define-key minibuffer-local-map (kbd "s-V") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window)
 
 
  (define-key key-minor-mode-map (kbd "s-W") 'web-research)
@@ -275,13 +267,10 @@
 
 
 
-(toggle-maxframe)
-
-
 
 ;;;; directory settings
-
 ;; -- DIRECTORY SETTINGS --
+;; there is probably a lot of redundancy here, I don't understand this stuff too well
 (defun mydired-sort ()
   "Sort dired listings with directories first."
   (save-excursion
@@ -332,27 +321,26 @@
     (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
     ad-do-it))
 
-(require 'dired-details+)
+;; maybe I don't need this anymore?
+;; (require 'dired-details+)
 
 
 
-(toggle-maxframe)
 
-;; (whiteboard)
-
-
-(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window)
-
-
-;;; Isolate Emacs kill ring from OS X system pasteboard.
-(setq interprogram-cut-function nil)
-(setq interprogram-paste-function nil)
 
 ;; handle emacs utf-8 input
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
+
+
+
+;;;; Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+;; these are custom functions to separate the OSX clipboard from Emacs' kill ring, effectively giving me two separate clipboards to work from. The below are the traditional OSX keybindings for cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
+
+(setq interprogram-cut-function nil)
+(setq interprogram-paste-function nil)
 
 (defun pasteboard-copy()
   "Copy region to OS X system pasteboard."
@@ -372,8 +360,18 @@
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end)))
 
+;; and the keybindings 
+(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
-(define-key undo-tree-map (kbd "C-x r") nil)
+;; and make it work in the minibuffer too
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
+(define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
+
+
+
 
 
 (defun kill-sentence-to-period ()
@@ -386,3 +384,8 @@
 
 (global-set-key (kbd "M-k") 'kill-sentence-to-period)
 
+
+
+
+;;;; startup
+(toggle-maxframe)
