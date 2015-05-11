@@ -4,8 +4,7 @@
 (defun courier-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Courier")
-    (set-frame-width (selected-frame) 97)
-)
+    (set-frame-width (selected-frame) 97))
 
 (defun lucida-font ()
   (interactive)
@@ -199,3 +198,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (rainy-highway-mode)
 (org-clock-in)
 )
+
+(defun medium-type ()
+  (interactive)
+  (set-face-attribute 'default nil  :height 260)
+  (set-frame-width (selected-frame) 89)
+  )
+
+
+;; (medium-type)
+;; (transparent-serenity)
+

@@ -1,5 +1,0 @@
-This is a fork of the emacs pastebin.com plugin avaialble via elpa.
-
-pastebin.com appear to have changed their API, so I have pathced the pastebin.com file to reflect the new API.
-
-Also new, you'll need your own API key. Create an account on pastebin.com then go to http://www.pastebin.com/api to see what your key is. It needs to replace the string GET_YOUR_OWN_API_KEY in pastebin.el. I know that is ugly but it scratches my need. Feel free to fork and fix that. :)

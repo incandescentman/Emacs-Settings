@@ -1,14 +1,13 @@
 (require 'org)
-(disable-theme 'zenburn)
-
-
-;; from live
+ (disable-theme 'zenburn)
 
 (load "~/gnulisp/writegood-jay.el")
 ;; (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
 (load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
 (load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
+(load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
+
 
 ;; I've been wanting to do this for so long. :-)
 (eval-after-load "org"
@@ -40,7 +39,6 @@
      (define-key orgstruct-mode-map (kbd "<M-right>") nil)
      (define-key orgstruct-mode-map (kbd "<M-up>") nil)
      (define-key orgstruct-mode-map (kbd "<M-down>") nil)
-
      (define-key orgstruct-mode-map (kbd "<S-right>") nil)
  (define-key orgstruct-mode-map (kbd "<M-return>") nil)
      ))
@@ -106,7 +104,7 @@
 (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
                                     sass-mode  csv-mode
                                     html-mode sh-mode
-                                    lisp-mode  markdown-mode  ))
+                                    lisp-mode  markdown-mode emacs-lisp-mode ))
   (add-to-list 'ac-modes mode))
 ;;;;Key triggers
 (define-key ac-completing-map (kbd "C-M-n") 'ac-next)
@@ -157,7 +155,7 @@
  '(cursor-type (quote box))
  '(custom-safe-themes
    (quote
-    ("0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
+    ("4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(deft-text-mode (quote org-mode))
@@ -354,9 +352,7 @@
      (code . verb)
      (italic . "\\textit{%s}")
      (strike-through . "\\sout{%s}")
-     (underline . "\\uline{%s}")
-     ;; (verbatim . protectedtext)
-     )))
+     (underline . "\\uline{%s}"))))
  '(org-latex-toc-command "\\tableofcontents
 \\newpage
 ")
@@ -373,7 +369,7 @@
  '(org-mac-grab-Together-app-p nil)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -487,8 +483,8 @@
 
 
 
-                                        ; (set-face-attribute 'default nil :font "Inconsolata")
-                                        ; (set-face-attribute 'default nil :font "Courier" :height 220)
+;; (set-face-attribute 'default nil :font "Inconsolata")
+;; (set-face-attribute 'default nil :font "Courier" :height 220)
 
 
 ;; (require 'google-contacts)
@@ -506,12 +502,12 @@
   (scroll-bar-mode -1)
   )
 
-(small-type)
+;; (small-type)
 
 
 
 
-(set-face-attribute 'default nil :font "Monaco" :height 170)
+;; (set-face-attribute 'default nil :font "Monaco" :height 170)
 
 (toggle-frame-fullscreen)
 

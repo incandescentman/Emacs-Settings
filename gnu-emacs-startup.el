@@ -1,5 +1,3 @@
-; (setq inhibit-startup-message t)
-; (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/")
 
 
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
@@ -7,14 +5,14 @@
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib" load-path)
 (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib/lisp" load-path)
 
-					; (require 'ox-md)
-					; (require 'ox-ascii)
-                                        ;(require 'ox-html)
-                                        ;(require 'ox-publish)
-					; (require 'ox-s5)
-					; (require 'ox-slidy)
+;; (require 'ox-md)
+;; (require 'ox-ascii)
+;; (require 'ox-html)
+;; (require 'ox-publish)
+;; (require 'ox-s5)
+;; (require 'ox-slidy)
 
-					; (load "~/Dropbox/elisp/org/contrib/lisp/ox-s5.el")
+;; (load "~/Dropbox/elisp/org/contrib/lisp/ox-s5.el")
 
 (global-visual-line-mode)
 
@@ -198,7 +196,6 @@
           )
 
 
-;; (setq aquamacs-scratch-file "~/Dropbox/writing/notationaldata/playful.org")
 
 
 

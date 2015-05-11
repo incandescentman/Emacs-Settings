@@ -409,9 +409,6 @@ Including indent-buffer, which should not be called automatically on save."
 ;; can't get this to work on my iPhone
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
- (set-face-attribute 'default nil :font "Inconsolata" :height 170)
-
 ;;;; Export settings
 ;; Change section numbering depending on what export format I use
 (defun my-org-export-change-options (plist backend)
@@ -1181,8 +1178,8 @@ Subject: %^{Subject}
 
 (add-to-list 'completion-styles 'initials t)
 
-; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
-; (set-face-attribute 'default nil :font "Courier"  :height 200)
+;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
+;; (set-face-attribute 'default nil :font "Courier"  :height 200)
 
 
 
@@ -1484,17 +1481,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 (setq org-fontify-quote-and-verse-blocks t)
-
-
-(defun medium-type ()
-  (interactive)
-  (set-face-attribute 'default nil  :height 260)
-  (set-frame-width (selected-frame) 89)
-  )
-
-
- (medium-type)
-;; (transparent-serenity)
 
 
 
@@ -2005,10 +1991,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 
-                                        ;(set-cursor-color "yellow")
+;; (set-cursor-color "yellow")
 
-                                        ; (color-theme-gandalf)
-                                        ; (set-cursor-color "red")
+;; (set-cursor-color "red")
 
 (setq split-width-threshold 75)
 
@@ -2806,7 +2791,7 @@ searches all buffers."
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
 ;; (set-face-attribute 'default nil :font "Monaco" :height 190)
- (set-face-attribute 'default nil :font "Inconsolata" :height 170)
+;; (set-face-attribute 'default nil :font "Inconsolata" :height 170)
 
 ;;;; Export settings
 ;; Change section numbering depending on what export format I use
@@ -3869,12 +3854,6 @@ Subject: %^{Subject}
 
 
 
-
-;; turn on flyspell-mode for org-mode
-
-
-
-
 ;; turn off fill mode, which adds random line breaks in my text files
 (auto-fill-mode -1)
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
@@ -4161,21 +4140,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
               (add-to-list 'name-and-pos (cons name position))))))))
                                         ; or any key you see fit
 
-
-
-
-(setq org-fontify-quote-and-verse-blocks t)
-
-
-(defun medium-type ()
-  (interactive)
-  (set-face-attribute 'default nil  :height 260)
-  (set-frame-width (selected-frame) 89)
-  )
-
-
- (medium-type)
-;; (transparent-serenity)
 
 
 
@@ -4848,23 +4812,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
-
-
-
-(make-face 'hard-to-read-font)
-(set-face-attribute 'hard-to-read-font nil :background "darkgrey" :foreground "grey")
-
-(define-minor-mode hard-to-read-mode
-  "This mode might be useful when you don't like certain text to be seen over your shoulders."
-  :init-value nil :lighter " hard-to-read" :keymap nil
-  (if hard-to-read-mode
-      (progn
-        (font-lock-mode nil)
-        (buffer-face-mode t)
-        (buffer-face-set 'hard-to-read-font))
-    (progn
-      (font-lock-mode t)
-      (buffer-face-mode nil))))
 
 
 
