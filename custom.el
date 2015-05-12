@@ -6,9 +6,8 @@
 
 
 ;; load my init files
-(load "~/gnulisp/writegood-jay.el")
-(load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
 (load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
+(load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
 (load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
