@@ -5417,7 +5417,7 @@ searches all buffers."
 (defun jd-clock-in ()
 "insert a new heading with today's date, and then clock in"
 (interactive)
-(org-insert-subheading ())
+(org-insert-heading ())
 (org-insert-time-stamp (current-time))
 (org-clock-in)
 (next-line)
