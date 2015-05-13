@@ -65,6 +65,16 @@
 
 (defun book-dired()
   (interactive)
-;; (cyberpunk-jay)
+ (cyberpunk-jay)
 ;; (toggle-fullscreen)
   (dired "~/b/"))
+
+
+
+(defun work-on-book ()
+"Work on my book! :-)"
+(interactive)
+(find-file "/Users/jay/b/booktime.org")
+(end-of-buffer)
+(jd-clock-in)
+(book-dired))

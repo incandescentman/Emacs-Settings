@@ -278,6 +278,8 @@
 (define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
 (define-key key-minor-mode-map (kbd "M-b M-b") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
+(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ; this is a smart function, show recent files in my book folder
+
 
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
 (define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
@@ -397,3 +399,5 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
+
+
