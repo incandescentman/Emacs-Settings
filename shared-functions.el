@@ -3,6 +3,12 @@
 ;; system: Mac OSX Yosemite
 ;; Emacs: I use these with both GNU Emacs for OSX and for Aquamacs
 
+(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
+(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/lisp" load-path)
+(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib" load-path)
+(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib/lisp" load-path)
+
+
 
 ;;;; set up packages
 ;; load the proper repositories

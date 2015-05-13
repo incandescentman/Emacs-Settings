@@ -1,13 +1,15 @@
 (require 'org)
-(disable-theme 'zenburn)
+;; (disable-theme 'zenburn)
 
 ;; globally turn off fucking piece of shit guru mode
 (setq prelude-guru nil)
 
 
 ;; load my init files
-(load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
 (load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
+
+(load "~/Dropbox/emacs/prelude/personal/shared-functions.el")
+
 (load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
