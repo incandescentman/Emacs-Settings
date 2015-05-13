@@ -4294,7 +4294,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(ido-use-faces t)
 
  '(display-time-mode t)
@@ -5953,7 +5953,7 @@ Subject: %^{Subject}
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
 ;; (set-face-attribute 'default nil :font "Monaco" :height 190)
- (set-face-attribute 'default nil :font "Inconsolata" :height 170)
+;; (set-face-attribute 'default nil :font "Inconsolata" :height 170)
 
 ;;;; Export settings
 ;; Change section numbering depending on what export format I use
@@ -7704,7 +7704,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-jsinfo org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(ido-use-faces t)
 
  '(display-time-mode t)

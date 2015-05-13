@@ -205,7 +205,3 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (set-frame-width (selected-frame) 89)
   )
 
-
-;; (medium-type)
-;; (transparent-serenity)
-

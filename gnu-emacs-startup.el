@@ -273,18 +273,31 @@
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
-(define-key key-minor-mode-map (kbd "M-b d") 'book-dired) ; show directory of my book folder
+(define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
 (define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books 
 (define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
-(define-key key-minor-mode-map (kbd "M-b M-b") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
+(define-key key-minor-mode-map (kbd "M-b M-b") 'work-on-book) ; 
 
-(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ; this is a smart function, show recent files in my book folder
+(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ; 
+
+
+
+;; book bindings
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) ; go to my book folder
+
+(define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
+
+
 
 
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
 (define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
 
+
+;; own structure editing
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
+
+;; (define-key key-minor-mode-map (kbd "C-c C-w") 'org-refile) ; very useful when working with a split frame
 
 ;; for extracting content from my browser
  (define-key key-minor-mode-map (kbd "s-W") 'web-research)
@@ -333,6 +346,11 @@
 
 ;; grep, using current folder as default
 (define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
+
+
+;; some custom functions
+
+(define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 
 
 ;;;; keybindings not currently in use 
@@ -401,3 +419,4 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
 
 
+(monaco-font)

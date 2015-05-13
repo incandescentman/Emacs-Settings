@@ -78,3 +78,12 @@
 (end-of-buffer)
 (jd-clock-in)
 (book-dired))
+
+
+
+
+(defun book-proposal-directory()
+  (interactive)
+ (cyberpunk-jay)
+;; (toggle-fullscreen)
+  (dired "~/b/writing-in-progress/proposal"))
