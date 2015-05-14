@@ -191,7 +191,7 @@
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 
 
-;; don't think I need this 
+;; don't think I need this
 ;; (require 'yaml-mode)
 ;; (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 
@@ -351,8 +351,8 @@ Including indent-buffer, which should not be called automatically on save."
 '(org-enforce-todo-dependencies t)
 '(org-html-postamble nil)
 '(org-fontify-emphasized-text t)
-(setq mail-user-agent 'message-user-agent)
-(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
+'(setq mail-user-agent 'message-user-agent)
+'(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
 
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
@@ -379,7 +379,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+'(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
 
@@ -711,7 +711,7 @@ Subject: %^{Subject}
 
 ;; autocapitalization 
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'message-mode-hook 'turn-on-orgstruct)
+;; (add-hook message-mode-hook turn-on-orgstruct)
 
 ;; spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
@@ -1052,7 +1052,7 @@ Subject: %^{Subject}
  '(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
- ; '(org-indirect-buffer-display (quote other-window))
+ ; (org-indirect-buffer-display (quote other-window))
  '(org-insert-mode-line-in-empty-file t)
  '(org-latex-text-markup-alist
    (quote
@@ -1103,13 +1103,13 @@ Subject: %^{Subject}
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
   '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- ;; '(org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
-                                        ; '(org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
- ;; '(org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
- ;; '(org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
+ ;; (org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
+                                        ; (org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
+ ;; (org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
+ ;; (org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
                                         ;'(org-time-stamp-custom-formats (quote ("<%b %e %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates with day of the week
- ;; '(org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
- ;; '(org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
+ ;; (org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
+ ;; (org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
 
 
  '(org-use-speed-commands t)
@@ -1331,10 +1331,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 (define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
 
 (define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
 
 
 
@@ -2505,7 +2505,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (replace-string "" "`" nil (point-min) (point-max))  ; \221
   (replace-string "" "'" nil (point-min) (point-max))  ; \222
   (replace-string "" "``" nil (point-min) (point-max))
-  (replace-string "" "''" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
   (replace-string "" "*" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
@@ -3774,13 +3774,13 @@ Subject: %^{Subject}
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
   '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- ;; '(org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
-                                        ; '(org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
- ;; '(org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
- ;; '(org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
+ ;; (org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
+                                        ; (org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
+ ;; (org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
+ ;; (org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
                                         ;'(org-time-stamp-custom-formats (quote ("<%b %e %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates with day of the week
- ;; '(org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
- ;; '(org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
+ ;; (org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
+ ;; (org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
 
 
  '(org-use-speed-commands t)
@@ -3994,10 +3994,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 (define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
 
 (define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
 
 
 
@@ -4196,12 +4196,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
+; (ido-first-match ((t (:foreground "red"))))
 '(bold ((t (:bold t :foreground "red"))))
 
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
+; (message-header-other ((t (:foreground "VioletRed1"))))
  '(message-header-subject ((t (:foreground "pink" :weight bold))))
  '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
  '(message-separator ((t (:foreground "LightSkyBlue1"))))
@@ -5190,7 +5190,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (replace-string "" "`" nil (point-min) (point-max))  ; \221
   (replace-string "" "'" nil (point-min) (point-max))  ; \222
   (replace-string "" "``" nil (point-min) (point-max))
-  (replace-string "" "''" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
   (replace-string "" "*" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
@@ -5423,7 +5423,7 @@ searches all buffers."
 (defun jd-clock-in ()
 "insert a new heading with today's date, and then clock in"
 (interactive)
-(org-insert-heading ())
+(org-insert-subheading ())
 (org-insert-time-stamp (current-time))
 (org-clock-in)
 (next-line)
@@ -5553,7 +5553,7 @@ Also converts full stops to commas."
 (defvar lawlist-movement-syntax-table
   (let ((st (make-syntax-table)))
     ;; ` default = punctuation
-    ;; ' default = punctuation
+    ;;  default = punctuation
     ;; , default = punctuation
     ;; ; default = punctuation
     (modify-syntax-entry ?{ "." st)  ;; { = punctuation
@@ -5953,7 +5953,7 @@ Subject: %^{Subject}
  (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
 ;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-;; (set-face-attribute 'default nil :font "Inconsolata" :height 170)
+ (set-face-attribute 'default nil :font "Inconsolata" :height 170)
 
 ;;;; Export settings
 ;; Change section numbering depending on what export format I use
@@ -6301,7 +6301,7 @@ Also converts full stops to commas."
 (defvar lawlist-movement-syntax-table
   (let ((st (make-syntax-table)))
     ;; ` default = punctuation
-    ;; ' default = punctuation
+    ;;  default = punctuation
     ;; , default = punctuation
     ;; ; default = punctuation
     (modify-syntax-entry ?{ "." st)  ;; { = punctuation
@@ -6423,7 +6423,7 @@ Also converts full stops to commas."
   (replace-string "" "`" nil (point-min) (point-max))  ; \221
   (replace-string "" "'" nil (point-min) (point-max))  ; \222
   (replace-string "" "``" nil (point-min) (point-max))
-  (replace-string "" "''" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
   (replace-string "" "*" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
@@ -7112,7 +7112,7 @@ searches all buffers."
  '(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
- ; '(org-indirect-buffer-display (quote other-window))
+ ; (org-indirect-buffer-display (quote other-window))
  '(org-insert-mode-line-in-empty-file t)
  '(org-latex-text-markup-alist
    (quote
@@ -7163,13 +7163,13 @@ searches all buffers."
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
   '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- ;; '(org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
-                                        ; '(org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
- ;; '(org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
- ;; '(org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
+ ;; (org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
+                                        ; (org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
+ ;; (org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
+ ;; (org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
                                         ;'(org-time-stamp-custom-formats (quote ("<%b %e %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates with day of the week
- ;; '(org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
- ;; '(org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
+ ;; (org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
+ ;; (org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
 
 
  '(org-use-speed-commands t)
@@ -7389,10 +7389,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 
 (define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
 
 (define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding='' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
 
 
 
@@ -7606,12 +7606,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
+; (ido-first-match ((t (:foreground "red"))))
 '(bold ((t (:bold t :foreground "red"))))
 
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
+; (message-header-other ((t (:foreground "VioletRed1"))))
  '(message-header-subject ((t (:foreground "pink" :weight bold))))
  '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
  '(message-separator ((t (:foreground "LightSkyBlue1"))))
@@ -9095,7 +9095,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (replace-string "" "`" nil (point-min) (point-max))  ; \221
   (replace-string "" "'" nil (point-min) (point-max))  ; \222
   (replace-string "" "``" nil (point-min) (point-max))
-  (replace-string "" "''" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
   (replace-string "" "*" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
   (replace-string "" "--" nil (point-min) (point-max))
