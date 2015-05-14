@@ -265,7 +265,7 @@
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
-(define-key key-minor-mode-map (kbd "C-d") 'kill-word)
+(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
@@ -325,8 +325,13 @@
 (define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
 (define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
 
+;; deleting things
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+ 
 
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
@@ -420,3 +425,77 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 (monaco-font)
+
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+(eval-after-load 'ox '(require 'ox-koma-letter))
+
+
+(eval-after-load 'ox-koma-letter
+  '(progn
+     (add-to-list 'org-latex-classes
+                  '("my-letter"
+                    "\\documentclass\{scrlttr2\}
+     \\usepackage[english]{babel}
+     \\setkomavar{frombank}{(1234)\\,567\\,890}
+     \[DEFAULT-PACKAGES]
+     \[PACKAGES]
+     \[EXTRA]"))
+
+     (setq org-koma-letter-default-class "my-letter")))
+
+ 
+
+(add-to-list 'load-path "~/gnulisp/emacs-pastebin-master/")
+(require 'neopastebin)
+(pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
+                       :username "petersalazar")
+
+
+
+(defun my/fix-space ()
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line."
+  (interactive)
+  (just-one-space)
+  (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
+
+
+(defun kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (kill-word 1)
+  (my/fix-space))
+
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (backward-kill-word 1)
+  (my/fix-space))
+
+
+
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace."
+  (interactive)
+  (when (use-region-p)
+    (delete-region (region-beginning) (region-end))
+    (my/fix-space)))  
+ 
+;; Same as above, but using (interactive "r") to get the bounds of the region    
+(defun my/delete-backward-2 (beg end)
+  (interactive "r")
+  (when (use-region-p)
+    (delete-region beg end)
+    (my/fix-space)))
+ 
+;; Variant that deletes backward one char unless the region is active:
+;;
+ 
+(defun my/delete-backward ()
+  (interactive)
+  (if (use-region-p)                  ; IF
+    (progn                            ; THEN
+      (delete-region (region-beginning) (region-end))
+      (my/fix-space)) 
+    (delete-backward-char 1)))        ; ELSE
+

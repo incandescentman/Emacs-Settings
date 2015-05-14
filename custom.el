@@ -289,7 +289,10 @@
  '(org-koma-letter-email "jay@jaydixit.com")
  '(org-koma-letter-from-address "22 Saint Marks Place Apt. D, New York NY 10003")
  '(org-koma-letter-phone-number "(646) 355-8001")
- '(org-koma-letter-use-backaddress nil)
+ '(org-koma-letter-place "New York City")
+ '(org-koma-letter-use-backaddress t)
+ '(org-koma-letter-use-email t)
+ '(org-koma-letter-use-foldmarks "nil")
  '(org-koma-letter-use-phone t)
  '(org-latex-active-timestamp-format "\\textrm{%s}")
  '(org-latex-inactive-timestamp-format "\\textrm{%s}")
@@ -368,6 +371,11 @@
  '(safe-local-variable-values
    (quote
     ((eval when
+           (require
+            (quote rainbow-mode)
+            nil t)
+           (rainbow-mode 1))
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -506,7 +514,7 @@
 ;; Make Buffer-stack ignore uninteresting buffers
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|booktime\\|*scratch*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|booktime\\|*scratch*\\|koma" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 

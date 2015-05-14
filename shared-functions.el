@@ -2436,6 +2436,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
+(add-to-list 'recentf-exclude "PDF")
+(add-to-list 'recentf-exclude "koma")
+(add-to-list 'recentf-exclude "LaTeX")
 
 
 
@@ -4530,7 +4533,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "html")
 (add-to-list 'recentf-exclude "gz")
 (add-to-list 'recentf-exclude "System")
-(add-to-list 'recentf-exclude "usr")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
@@ -7940,7 +7942,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "html")
 (add-to-list 'recentf-exclude "gz")
 (add-to-list 'recentf-exclude "System")
-(add-to-list 'recentf-exclude "usr")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
@@ -9579,3 +9580,5 @@ searches all buffers."
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 
+
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
