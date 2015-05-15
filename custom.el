@@ -89,13 +89,11 @@
  '(case-fold-search t)
  '(ccm-recenter-at-end-of-file t)
  '(clean-buffer-list-delay-general 1)
- '(column-number-mode nil)
  '(completion-ignored-extensions
    (quote
     (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
  '(compose-mail-user-agent-warnings nil)
  '(cua-highlight-region-shift-only t)
- '(cua-mode nil nil (cua-base))
  '(cursor-type (quote box))
  '(custom-safe-themes
    (quote
@@ -371,11 +369,6 @@
  '(safe-local-variable-values
    (quote
     ((eval when
-           (require
-            (quote rainbow-mode)
-            nil t)
-           (rainbow-mode 1))
-     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
