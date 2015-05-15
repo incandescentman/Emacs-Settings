@@ -23,7 +23,7 @@
 
 ;;;; packages
 ;; automatically install my favorite packages 
-(setq package-list '(magit ack-and-a-half expand-region gist  helm helm-projectile magit magithub markdown-mode paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme dired+ twittering-mode dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
+ (setq package-list '(magit expand-region gist  helm helm-projectile magit magithub markdown-mode paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme twittering-mode dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
 
 ;; the repositories containing them
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")

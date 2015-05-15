@@ -2996,9 +2996,7 @@ searches all buffers."
 (require 'engine-mode)
 (engine-mode t)
 
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  "g")
+;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
 ;; don't save org-agenda
 ;; doesn't work though, I get all kinds of org-agenda autosaves in my ~ home directory
@@ -5485,10 +5483,6 @@ searches all buffers."
 (require 'engine-mode)
 (engine-mode t)
 
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  "g")
-
 ;;;; functions for prose editing
 
 ;; a useful function: remove a hyperlink but leave the link description.                     
@@ -5922,10 +5916,6 @@ Subject: %^{Subject}
 (require 'engine-mode)
 (engine-mode t)
 
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  "g")
-
 ;; don't save org-agenda
 ;; doesn't work though, I get all kinds of org-agenda autosaves in my ~ home directory
 (add-hook 'org-agenda-mode-hook
@@ -6232,10 +6222,6 @@ With prefix arg C-u, copy region instad of killing it."
 ;; enable Google search 
 (require 'engine-mode)
 (engine-mode t)
-
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  "g")
 
 ;;;; functions for prose editing
 
