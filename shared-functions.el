@@ -9560,3 +9560,6 @@ searches all buffers."
 
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+
+
