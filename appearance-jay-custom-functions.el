@@ -1,4 +1,3 @@
-
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()
@@ -12,11 +11,11 @@
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco" ))
+  (set-face-attribute 'default nil :font "Monaco" :height 170))
 
 (defun inconsolata-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Inconsolata" :height 160))
+  (set-face-attribute 'default nil :font "Inconsolata" :height 170))
 
 (defun last-words ()
   (interactive)

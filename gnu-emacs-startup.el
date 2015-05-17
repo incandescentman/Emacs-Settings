@@ -255,6 +255,9 @@
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
+;; projectile
+(define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
@@ -499,3 +502,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (my/fix-space)) 
     (delete-backward-char 1)))        ; ELSE
 
+
+
+
+(defun timesvr ()
+"Task request to my virtual assistant."
+(interactive)
+  (message-mail)
+  (message-goto-subject) (insert "task request: " (format-time-string "%F %l:%M%P"))
+(message-goto-body) (insert "\n")
+  )
+(global-set-key (kbd "C-c t") 'timesvr)
+(global-set-key (kbd "C-c m") 'compose-mail)

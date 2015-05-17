@@ -2432,7 +2432,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
 (add-to-list 'recentf-exclude "archive")
-(add-to-list 'recentf-exclude "ics")
+(add-to-list 'recentf-exclude "ics\\")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
 (add-to-list 'recentf-exclude "PDF")
@@ -2444,7 +2444,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; in dired, omit certain filetypes 
 ;; ido-ignore
 (setq
- ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics")))
+ ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics\\")))
 
 
 
@@ -5075,7 +5075,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
 (add-to-list 'recentf-exclude "archive")
-(add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
 
@@ -6765,7 +6764,6 @@ searches all buffers."
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
 (add-to-list 'recentf-exclude "archive")
-(add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
 
@@ -9009,16 +9007,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
 (add-to-list 'recentf-exclude "archive")
-(add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
 
 
 
-;; in dired, omit certain filetypes 
-;; ido-ignore
-(setq
- ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics")))
 
 
 
