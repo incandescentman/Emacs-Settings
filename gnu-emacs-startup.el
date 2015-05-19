@@ -299,6 +299,11 @@
 (define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
 
 
+
+;; recent directories... but how to populate it?
+(define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs) 
+
+
 ;; own structure editing
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
 
@@ -516,3 +521,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   )
 (global-set-key (kbd "C-c t") 'timesvr)
 (global-set-key (kbd "C-c m") 'compose-mail)
+
+
+;; save directories in a recent directories list
+(defun dired-recent (buffer)
+  "Open Dired in BUFFER, showing the recently used directories."
+  (interactive "BDired buffer name: ")
+  (let ((dirs  (delete-dups
+                (mapcar (lambda (f/d)
+                          (if (file-directory-p f/d)
+                              f/d
+                            (file-name-directory f/d)))
+                        recentf-list))))
+    (dired (cons (generate-new-buffer-name buffer) dirs))))

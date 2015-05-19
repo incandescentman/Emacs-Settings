@@ -28,7 +28,6 @@
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
 
-
 ;; require some packages
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org-bullets)
@@ -740,8 +739,9 @@ Subject: %^{Subject}
 ;; (load "~/Dropbox/elisp/latex.el")
 (load "~/Dropbox/elisp/signal-flare.el")
 (load "~/Dropbox/elisp/signal-flare-wide.el")
-(load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
+;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
 (load "~/Dropbox/elisp/jay-dixit-latex.el")
+(load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
 
 
 
@@ -5953,7 +5953,7 @@ Subject: %^{Subject}
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-    (plist-put plist :with-toc nil)
+    (plist-put plist :with-toc t)
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
