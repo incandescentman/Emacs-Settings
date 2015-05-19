@@ -1,5 +1,5 @@
 ;;;; About 
-;; Jay Dixit's Emacs setup
+;; Jay Dixit's Emacs setup - May 19, 2015.
 ;; system: Mac OSX Yosemite
 ;; Emacs: I use these with both GNU Emacs for OSX and for Aquamacs
 
