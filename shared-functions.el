@@ -3,12 +3,6 @@
 ;; system: Mac OSX Yosemite
 ;; Emacs: I use these with both GNU Emacs for OSX and for Aquamacs
 
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/lisp" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib/lisp" load-path)
-
-
 
 ;;;; set up packages
 ;; load the proper repositories
@@ -21,6 +15,10 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
 (package-initialize)
 
 ;; manually load some of my packages
@@ -9563,3 +9561,56 @@ searches all buffers."
 
 
 
+
+
+;; new stuff
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+ (require 'dired-x)
+    (setq-default dired-omit-files-p t) ; Buffer-local variable
+
+(setq-default dired-omit-mode t)
+(define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
+
+(setq delete-by-moving-to-trash t
+      trash-directory "~/.Trash/emacs")
+
+;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
+
+(defun tmtxt/dired-do-shell-mac-open ()
+	(interactive)
+	(save-window-excursion
+	  (let ((files (dired-get-marked-files nil current-prefix-arg))
+			command)
+		;; the open command
+		(setq command "open ")
+		(dolist (file files)
+		  (setq command (concat command (shell-quote-argument file) " ")))
+		(message command)
+		;; execute the command
+		(async-shell-command command))))
+(define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
+
+(defun dired-open-current-directory-in-finder ()
+	"Open the current directory in Finder"
+	(interactive)
+	(save-window-excursion
+	  (dired-do-async-shell-command
+	   "open .")))
+(define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
+
+
+;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
+
+
+;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
+
+
+
+(defun endless/upgrade ()
+  "Upgrade all packages, no questions asked."
+  (interactive)
+  (save-window-excursion
+    (list-packages)
+    (package-menu-mark-upgrades)
+    (package-menu-execute 'no-query)))

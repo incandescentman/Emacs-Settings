@@ -437,21 +437,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (monaco-font)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-(eval-after-load 'ox '(require 'ox-koma-letter))
-
-
-(eval-after-load 'ox-koma-letter
-  '(progn
-     (add-to-list 'org-latex-classes
-                  '("my-letter"
-                    "\\documentclass\{scrlttr2\}
-     \\usepackage[english]{babel}
-     \\setkomavar{frombank}{(1234)\\,567\\,890}
-     \[DEFAULT-PACKAGES]
-     \[PACKAGES]
-     \[EXTRA]"))
-
-     (setq org-koma-letter-default-class "my-letter")))
 
  
 
