@@ -18,9 +18,11 @@
 
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+(require 'auto-complete)
+
 (require 'org-bullets)
 (require 'ox-latex)
-(require 'auto-complete)
+(require 'org-fstree)
 
 (require 'point-stack)
 
@@ -67,13 +69,24 @@
         '((cursor-color . "red")))
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 
-(setq sentence-end-double-space nil)
-(global-auto-revert-mode 1)
-(delete-selection-mode 1) ; make typing override text selection
-
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
 (setq split-width-threshold 75)
+
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'message-mode-hook 'turn-on-visual-line-mode)
+(visual-line-mode t)
+(global-visual-line-mode t)
+
+;; (global-hl-line-mode t) ; turn it on for all modes by default
+;; (global-hl-line-mode)
+(make-variable-buffer-local 'global-hl-line-mode)
+(add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
+
+(setq sentence-end-double-space nil)
+(global-auto-revert-mode 1)
+(delete-selection-mode 1) ; make typing override text selection
 
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
@@ -82,21 +95,6 @@
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
-
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-
-(setq org-indent-mode t)
-(setq org-indent-indentation-per-level 2)
-(setq org-use-property-inheritance t)
-(setq org-ctrl-k-protect-subtree t)
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-clock-persist t)
-(setq org-export-with-smart-quotes t)
-(setq org-fontify-quote-and-verse-blocks t)
-
-'(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
@@ -118,38 +116,25 @@
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit")
+
+(setq org-indent-mode t)
+(setq org-indent-indentation-per-level 2)
+(setq org-use-property-inheritance t)
+(setq org-ctrl-k-protect-subtree t)
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-clock-persist t)
+(setq org-export-with-smart-quotes t)
+(setq org-fontify-quote-and-verse-blocks t)
+
+'(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
+
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-
-(require 'buffer-stack)
-
-(global-set-key [(s-right)] 'buffer-stack-down)
-(global-set-key [(s-left)] 'buffer-stack-up)
-
-(global-set-key [(A-right)] 'buffer-stack-down)
-(global-set-key [(A-left)] 'buffer-stack-up)
-
-(defvar new-buffer-count 0)
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (org-mode))
-(global-set-key (kbd "s-T") 'new-buffer)
-;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
-
-(defun org-new-scratch-buffer ()
-  (interactive)
-  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-  (org-tree-to-indirect-buffer 'current-window)
-  )
-
-(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
-(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
-(add-hook 'minibuffer-setup-hook (lambda ()
-                                   (abbrev-mode -1)))
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -263,6 +248,34 @@ searches all buffers."
 
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
+(require 'buffer-stack)
+
+(global-set-key [(s-right)] 'buffer-stack-down)
+(global-set-key [(s-left)] 'buffer-stack-up)
+
+(global-set-key [(A-right)] 'buffer-stack-down)
+(global-set-key [(A-left)] 'buffer-stack-up)
+
+(defvar new-buffer-count 0)
+(defun new-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (org-mode))
+(global-set-key (kbd "s-T") 'new-buffer)
+;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+(defun org-new-scratch-buffer ()
+  (interactive)
+  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
+  (org-tree-to-indirect-buffer 'current-window)
+  )
+
+(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
+(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
+(add-hook 'minibuffer-setup-hook (lambda ()
+                                   (abbrev-mode -1)))
+
 (setq org-src-fontify-natively t)
 
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
@@ -359,12 +372,6 @@ searches all buffers."
 (setq ns-function-modifier 'hyper)
 ;; open files in an existing frame instead of a new frame
 (setq ns-pop-up-frames nil)
-
-(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'message-mode-hook 'turn-on-visual-line-mode)
-(visual-line-mode t)
-(global-visual-line-mode t)
 
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
@@ -529,50 +536,6 @@ searches all buffers."
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
 
-(defvar org-refile-region-format "\n%s\n")
-
-(defvar org-refile-region-position 'top
-  "Where to refile a region. Use 'bottom to refile at the
-end of the subtree. ")
-
-(defun org-refile-region (beg end copy)
-  "Refile the active region.
-If no region is active, refile the current paragraph.
-With prefix arg C-u, copy region instad of killing it."
-  (interactive "r\nP")
-  ;; mark paragraph if no region is set
-  (unless (use-region-p)
-    (setq beg (save-excursion
-                (backward-paragraph)
-                (skip-chars-forward "\n\t ")
-                (point))
-          end (save-excursion
-                (forward-paragraph)
-                (skip-chars-backward "\n\t ")
-                (point))))
-  (let* ((target (save-excursion (org-refile-get-location)))
-         (file (nth 1 target))
-         (pos (nth 3 target))
-         (text (buffer-substring-no-properties beg end)))
-    (unless copy (kill-region beg end))
-    (deactivate-mark)
-    (with-current-buffer (find-file-noselect file)
-      (save-excursion
-        (goto-char pos)
-        (if (eql org-refile-region-position 'bottom)
-            (org-end-of-subtree)
-          (org-end-of-meta-data-and-drawers))
-        (insert (format org-refile-region-format text))))))
-
-
-(defun my-org-files-list ()
-  (mapcar (lambda (buffer)
-            (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
-
-
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
-
 (defun my-org-clocktable-indent-string (level)
   (if (= level 1)
       ""
@@ -719,8 +682,6 @@ Subject: %^{Subject}
   )
 
 (require 'reveal-in-finder)
-
-(require 'org-fstree)
 
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 (require 'eshell-autojump)
@@ -1525,7 +1486,6 @@ Subject: %^{Subject}
 ;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
 ;; (set-face-attribute 'default nil :font "Courier"  :height 200)
 ;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-(set-face-attribute 'default nil :font "Inconsolata" :height 170)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -1563,9 +1523,6 @@ Subject: %^{Subject}
 
 (require 'key-chord)
 (key-chord-mode 1)
-
-;; (require 'icicles)
-;; (icy-mode 1)
 
 (defvar yank-indent-modes
   '(LaTeX-mode TeX-mode)
@@ -1610,15 +1567,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "<DIV CLASS='shaded'>
 "_"
 </DIV>")
-
-;; (global-hl-line-mode t) ; turn it on for all modes by default
-;; (global-hl-line-mode)
-(make-variable-buffer-local 'global-hl-line-mode)
-(add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
-
-(require 'goto-chg)
-(global-set-key [(control ?.)] 'goto-last-change)
-(global-set-key [(control ?,)] 'goto-last-change-reverse)
 
 (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
@@ -1867,9 +1815,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
 (defun my-org-after-todo ()
   (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
-
-(require 'palimpsest)
-(palimpsest-mode t)
 
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
@@ -2258,11 +2203,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (guide-key/add-local-highlight-command-regexp "org-"))
 (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 
-(require 'engine-mode)
-(engine-mode t)
-
-;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
-
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2273,17 +2213,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
-
-(defun remove-link ()
-    "Replace an org link by its description or if empty its address"
-  (interactive)
-  (if (org-in-regexp org-bracket-link-regexp 1)
-      (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3) 
-                 (org-match-string-no-properties 3)
-                 (org-match-string-no-properties 1))))
-    (apply 'delete-region remove)
-    (insert description))))
 
 (defun endless/convert-punctuation (rg rp)
   "Look for regexp RG around point, and replace with RP.
@@ -2422,6 +2351,94 @@ Also converts full stops to commas."
 (define-key global-map [M-s-right] 'lawlist-forward-entity)
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 
+(require 'palimpsest)
+(palimpsest-mode t)
+
+(defun transpose-windows (arg)
+  "Transpose the buffers shown in two windows."
+  (interactive "p")
+  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+    (while (/= arg 0)
+      (let ((this-win (window-buffer))
+            (next-win (window-buffer (funcall selector))))
+        (set-window-buffer (selected-window) next-win)
+        (set-window-buffer (funcall selector) this-win)
+        (select-window (funcall selector)))
+      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+
+(defun move-region-to-other-window (start end)
+  "Move selected text to other window"
+  (interactive "r")
+  (if (use-region-p) 
+      (let ((count (count-words-region start end)))
+        (save-excursion
+          (kill-region start end)
+          (other-window 1)   
+          (yank)
+          (newline))
+        (other-window -1)     
+        (message "Moved %s words" count))
+    (message "No region selected")))
+
+(require 'goto-chg)
+(global-set-key [(control ?.)] 'goto-last-change)
+(global-set-key [(control ?,)] 'goto-last-change-reverse)
+
+(defun remove-link ()
+    "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((remove (list (match-beginning 0) (match-end 0)))
+        (description (if (match-end 3) 
+                 (org-match-string-no-properties 3)
+                 (org-match-string-no-properties 1))))
+    (apply 'delete-region remove)
+    (insert description))))
+
+(defvar org-refile-region-format "\n%s\n")
+
+(defvar org-refile-region-position 'top
+  "Where to refile a region. Use 'bottom to refile at the
+end of the subtree. ")
+
+(defun org-refile-region (beg end copy)
+  "Refile the active region.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instad of killing it."
+  (interactive "r\nP")
+  ;; mark paragraph if no region is set
+  (unless (use-region-p)
+    (setq beg (save-excursion
+                (backward-paragraph)
+                (skip-chars-forward "\n\t ")
+                (point))
+          end (save-excursion
+                (forward-paragraph)
+                (skip-chars-backward "\n\t ")
+                (point))))
+  (let* ((target (save-excursion (org-refile-get-location)))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (text (buffer-substring-no-properties beg end)))
+    (unless copy (kill-region beg end))
+    (deactivate-mark)
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (goto-char pos)
+        (if (eql org-refile-region-position 'bottom)
+            (org-end-of-subtree)
+          (org-end-of-meta-data-and-drawers))
+        (insert (format org-refile-region-format text))))))
+
+
+(defun my-org-files-list ()
+  (mapcar (lambda (buffer)
+            (buffer-file-name buffer))
+          (org-buffer-list 'files t)))
+
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
@@ -2484,36 +2501,12 @@ Also converts full stops to commas."
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
-(defun medium-type ()
-  (interactive)
-  (set-face-attribute 'default nil  :height 260)
-  (set-frame-width (selected-frame) 89)
-  )
+(set-face-attribute 'default nil :font "Inconsolata" :height 170)
+(medium-type)
 
-(defun transpose-windows (arg)
-  "Transpose the buffers shown in two windows."
-  (interactive "p")
-  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-    (while (/= arg 0)
-      (let ((this-win (window-buffer))
-            (next-win (window-buffer (funcall selector))))
-        (set-window-buffer (selected-window) next-win)
-        (set-window-buffer (funcall selector) this-win)
-        (select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+(require 'engine-mode)
+(engine-mode t)
 
-(defun move-region-to-other-window (start end)
-  "Move selected text to other window"
-  (interactive "r")
-  (if (use-region-p) 
-      (let ((count (count-words-region start end)))
-        (save-excursion
-          (kill-region start end)
-          (other-window 1)   
-          (yank)
-          (newline))
-        (other-window -1)     
-        (message "Moved %s words" count))
-    (message "No region selected")))
+;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
 ;; (require 'gnugol)
