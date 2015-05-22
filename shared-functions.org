@@ -31,9 +31,14 @@ Load the proper repositories:
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+(require 'auto-complete)
+#+END_SRC
+
+* Require some org packages
+#+BEGIN_SRC emacs-lisp
 (require 'org-bullets)
 (require 'ox-latex)
-(require 'auto-complete)
+(require 'org-fstree)
 #+END_SRC
 
 * To learn
@@ -119,6 +124,30 @@ it:
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 #+END_SRC
 
+** Split windows correctly
+#+BEGIN_SRC emacs-lisp
+(setq org-indirect-buffer-display 'current-window)
+(setq undo-limit 100000)
+(setq split-width-threshold 75)
+#+END_SRC
+** Use visual line mode whenever possible:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'message-mode-hook 'turn-on-visual-line-mode)
+(visual-line-mode t)
+(global-visual-line-mode t)
+#+END_SRC
+
+** Highlight current line
+
+#+BEGIN_SRC emacs-lisp
+;; (global-hl-line-mode t) ; turn it on for all modes by default
+;; (global-hl-line-mode)
+(make-variable-buffer-local 'global-hl-line-mode)
+(add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
+#+END_SRC
+
 * Set some default settings
 
 #+BEGIN_SRC emacs-lisp
@@ -127,12 +156,6 @@ it:
 (delete-selection-mode 1) ; make typing override text selection
 #+END_SRC
 
-* Split windows correctly
-#+BEGIN_SRC emacs-lisp
-(setq org-indirect-buffer-display 'current-window)
-(setq undo-limit 100000)
-(setq split-width-threshold 75)
-#+END_SRC
 * Helm
 Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders. 
 
@@ -151,6 +174,29 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** Search in Spotlight
 #+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
+#+END_SRC
+
+** Automatically open files in their correct modes:
+#+BEGIN_SRC emacs-lisp
+(setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("README$" . org-mode))
+(add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 #+END_SRC
 
 * GNUS
@@ -188,29 +234,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 	   org-archive-location)))
     ad-do-it))
 #+END_SRC
-* Automatically open files in their correct modes:
-#+BEGIN_SRC emacs-lisp
-(setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("README$" . org-mode))
-(add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
-(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-#+END_SRC
-
 * Org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-cc" 'org-capture)
@@ -218,57 +241,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
-* Functions
-** Buffers
-*** Buffer-stack
-I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
-#+BEGIN_SRC emacs-lisp
-(require 'buffer-stack)
-#+END_SRC
-
-GNU Emacs:
-#+BEGIN_SRC emacs-lisp
-(global-set-key [(s-right)] 'buffer-stack-down)
-(global-set-key [(s-left)] 'buffer-stack-up)
-#+END_SRC
-
-Aquamacs:
-#+BEGIN_SRC emacs-lisp
-(global-set-key [(A-right)] 'buffer-stack-down)
-(global-set-key [(A-left)] 'buffer-stack-up)
-#+END_SRC
-
-*** Uniqify buffers
-Open new buffers without prompting me for a filename global counter to ensure
-every new buffer will be unique:
-#+BEGIN_SRC emacs-lisp
-(defvar new-buffer-count 0)
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (org-mode))
-(global-set-key (kbd "s-T") 'new-buffer)
-;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
-#+END_SRC
-
-*** Create new buffer as org-mode subtree in current file
-#+BEGIN_SRC emacs-lisp
-(defun org-new-scratch-buffer ()
-  (interactive)
-  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-  (org-tree-to-indirect-buffer 'current-window)
-  )
-#+END_SRC
-
-*** Don't autocorrect in minibuffer
-#+BEGIN_SRC emacs-lisp
-(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
-(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
-(add-hook 'minibuffer-setup-hook (lambda ()
-                                   (abbrev-mode -1)))
-#+END_SRC
-
 * Things to learn
 ** Need to add "cleanup buffer safe" here from whattheemacsd.com
 #+BEGIN_SRC emacs-lisp
@@ -414,7 +386,58 @@ Can't get this to work on my iPhone:
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 #+END_SRC
 
-* Other stuff 
+* Functions
+** Buffers
+*** Buffer-stack
+I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
+#+BEGIN_SRC emacs-lisp
+(require 'buffer-stack)
+#+END_SRC
+
+GNU Emacs:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(s-right)] 'buffer-stack-down)
+(global-set-key [(s-left)] 'buffer-stack-up)
+#+END_SRC
+
+Aquamacs:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(A-right)] 'buffer-stack-down)
+(global-set-key [(A-left)] 'buffer-stack-up)
+#+END_SRC
+
+*** Uniqify buffers
+Open new buffers without prompting me for a filename global counter to ensure
+every new buffer will be unique:
+#+BEGIN_SRC emacs-lisp
+(defvar new-buffer-count 0)
+(defun new-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (org-mode))
+(global-set-key (kbd "s-T") 'new-buffer)
+;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+#+END_SRC
+
+*** Create new buffer as org-mode subtree in current file
+#+BEGIN_SRC emacs-lisp
+(defun org-new-scratch-buffer ()
+  (interactive)
+  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
+  (org-tree-to-indirect-buffer 'current-window)
+  )
+#+END_SRC
+
+*** Don't autocorrect in minibuffer
+#+BEGIN_SRC emacs-lisp
+(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
+(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
+(add-hook 'minibuffer-setup-hook (lambda ()
+                                   (abbrev-mode -1)))
+#+END_SRC
+
+* Other settings
 #+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t)
 
@@ -553,16 +576,6 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq ns-pop-up-frames nil)
 #+END_SRC
 
-* Use visual line mode whenever possible:
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'message-mode-hook 'turn-on-visual-line-mode)
-(visual-line-mode t)
-(global-visual-line-mode t)
-#+END_SRC
-
-* 
 * Some ~org-mode~ custom functions
 
 ** checkbox-list-complete
@@ -678,7 +691,6 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
     (apply 'completing-read args)))
 #+END_SRC
 
-
 * Org settings
 ** Protect org headings from accidental demotion
 Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
@@ -727,9 +739,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (setq org-icalendar-include-todo t)
 #+END_SRC
 
-
 * Org refile settings
-
 ** Exclude ~DONE~ state tasks from refile targets:
 #+BEGIN_SRC emacs-lisp
 (defun bh/verify-refile-target ()
@@ -795,55 +805,6 @@ e.g. nvALT
 
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-#+END_SRC
-
-* Prose editing
-** refile region
-Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
-#+BEGIN_SRC emacs-lisp
-(defvar org-refile-region-format "\n%s\n")
-
-(defvar org-refile-region-position 'top
-  "Where to refile a region. Use 'bottom to refile at the
-end of the subtree. ")
-
-(defun org-refile-region (beg end copy)
-  "Refile the active region.
-If no region is active, refile the current paragraph.
-With prefix arg C-u, copy region instad of killing it."
-  (interactive "r\nP")
-  ;; mark paragraph if no region is set
-  (unless (use-region-p)
-    (setq beg (save-excursion
-                (backward-paragraph)
-                (skip-chars-forward "\n\t ")
-                (point))
-          end (save-excursion
-                (forward-paragraph)
-                (skip-chars-backward "\n\t ")
-                (point))))
-  (let* ((target (save-excursion (org-refile-get-location)))
-         (file (nth 1 target))
-         (pos (nth 3 target))
-         (text (buffer-substring-no-properties beg end)))
-    (unless copy (kill-region beg end))
-    (deactivate-mark)
-    (with-current-buffer (find-file-noselect file)
-      (save-excursion
-        (goto-char pos)
-        (if (eql org-refile-region-position 'bottom)
-            (org-end-of-subtree)
-          (org-end-of-meta-data-and-drawers))
-        (insert (format org-refile-region-format text))))))
-
-
-(defun my-org-files-list ()
-  (mapcar (lambda (buffer)
-            (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
-
-
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
 #+END_SRC
 
 * Org settings
@@ -1065,12 +1026,6 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
 #+END_SRC
 
 * org-settings
-* ~org-fstree~
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-fstree)
-#+END_SRC
-
 * ~eshell~
 
 #+BEGIN_SRC emacs-lisp
@@ -1140,7 +1095,6 @@ To enable Edit with Emacs in Chrome:
       (setq edit-server-new-frame nil)
       (edit-server-start)))
 #+END_SRC
-
 
 * Setting variables
 I should probably eventually break these out of custom-set-variables and organize them according to their function.
@@ -1938,7 +1892,6 @@ Key bindings for my own custom functions, using ⌘-m as a prefix:
 ;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
 ;; (set-face-attribute 'default nil :font "Courier"  :height 200)
 ;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-(set-face-attribute 'default nil :font "Inconsolata" :height 170)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -1995,13 +1948,6 @@ Use key chords invoke commands:
 (key-chord-mode 1)
 #+END_SRC
 
-* ~icicles~
-
-#+BEGIN_SRC emacs-lisp
-;; (require 'icicles)
-;; (icy-mode 1)
-#+END_SRC
-
 * Indentation
 
 Automatically indenting yanked text if in programming-modes:
@@ -2053,23 +1999,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "<DIV CLASS='shaded'>
 "_"
 </DIV>")
-#+END_SRC
-
-* Highlight current line
-
-#+BEGIN_SRC emacs-lisp
-;; (global-hl-line-mode t) ; turn it on for all modes by default
-;; (global-hl-line-mode)
-(make-variable-buffer-local 'global-hl-line-mode)
-(add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
-#+END_SRC
-
-* Goto last change
-
-#+BEGIN_SRC emacs-lisp
-(require 'goto-chg)
-(global-set-key [(control ?.)] 'goto-last-change)
-(global-set-key [(control ?,)] 'goto-last-change-reverse)
 #+END_SRC
 
 * Themes
@@ -2362,9 +2291,8 @@ Disable IDO faces to see flx highlights:
             (local-set-key "\C-c\M-o" 'org-mime-subtree)))
 #+END_SRC
 
-
 * Set mark command
-
+# forgot what this is 
 (maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?) 
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
@@ -2394,7 +2322,6 @@ Show calendar after start:
 #+END_SRC
 
 * Bookmarks
-
 #+BEGIN_SRC emacs-lisp
 (setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
 #+END_SRC
@@ -2424,15 +2351,6 @@ Show calendar after start:
 (defun my-org-after-todo ()
   (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 #+END_SRC
-
-* Palimpsest
-
-#+BEGIN_SRC emacs-lisp
-(require 'palimpsest)
-(palimpsest-mode t)
-#+END_SRC
-
-C-C C-R to move text to the bottom of the buffer
 
 * imenu
 
@@ -2955,16 +2873,7 @@ I think this is something similar ([[https://github.com/kai2nenobu/guide-key][so
 (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 #+END_SRC
 
-* Google search
-Enable Google search:
-#+BEGIN_SRC emacs-lisp
-(require 'engine-mode)
-(engine-mode t)
-
-;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
-#+END_SRC
-
-* Prose editing
+* Prose editing settings
 ** Tab Completion for Prose
 # haven't tried this yet
 
@@ -2981,23 +2890,6 @@ Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]]
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
 #+END_SRC
-
-* Prose editing
-** Remove hyperlink
-A useful function: remove a hyperlink but leave the link description:
-#+BEGIN_SRC emacs-lisp
-(defun remove-link ()
-    "Replace an org link by its description or if empty its address"
-  (interactive)
-  (if (org-in-regexp org-bracket-link-regexp 1)
-      (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3) 
-                 (org-match-string-no-properties 3)
-                 (org-match-string-no-properties 1))))
-    (apply 'delete-region remove)
-    (insert description))))
-#+END_SRC
-
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
 ([[http://endlessparentheses.com/super-smart-capitalization.html][source]]):
@@ -3145,8 +3037,119 @@ traditional word processors, highlighting whole words at a time:
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 #+END_SRC
 
-* Working with files
+** Palimpsest - best ever
+#+BEGIN_SRC emacs-lisp
+(require 'palimpsest)
+(palimpsest-mode t)
+#+END_SRC
 
+C-C C-R to move text to the bottom of the buffer
+
+* Prose editing functions 
+** Working with windows
+Transpose windows, useful:
+#+BEGIN_SRC emacs-lisp
+(defun transpose-windows (arg)
+  "Transpose the buffers shown in two windows."
+  (interactive "p")
+  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+    (while (/= arg 0)
+      (let ((this-win (window-buffer))
+	    (next-win (window-buffer (funcall selector))))
+	(set-window-buffer (selected-window) next-win)
+	(set-window-buffer (funcall selector) this-win)
+	(select-window (funcall selector)))
+      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+#+END_SRC
+
+** Move region to other window, very useful:
+#+BEGIN_SRC emacs-lisp
+(defun move-region-to-other-window (start end)
+  "Move selected text to other window"
+  (interactive "r")
+  (if (use-region-p) 
+      (let ((count (count-words-region start end)))
+        (save-excursion
+          (kill-region start end)
+          (other-window 1)   
+          (yank)
+          (newline))
+        (other-window -1)     
+        (message "Moved %s words" count))
+    (message "No region selected")))
+#+END_SRC
+
+** Goto last change - sooo useful 
+#+BEGIN_SRC emacs-lisp
+(require 'goto-chg)
+(global-set-key [(control ?.)] 'goto-last-change)
+(global-set-key [(control ?,)] 'goto-last-change-reverse)
+#+END_SRC
+
+** Remove hyperlink
+A useful function: remove a hyperlink but leave the link description:
+#+BEGIN_SRC emacs-lisp
+(defun remove-link ()
+    "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((remove (list (match-beginning 0) (match-end 0)))
+        (description (if (match-end 3) 
+                 (org-match-string-no-properties 3)
+                 (org-match-string-no-properties 1))))
+    (apply 'delete-region remove)
+    (insert description))))
+#+END_SRC
+
+** Refile region
+Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
+#+BEGIN_SRC emacs-lisp
+(defvar org-refile-region-format "\n%s\n")
+
+(defvar org-refile-region-position 'top
+  "Where to refile a region. Use 'bottom to refile at the
+end of the subtree. ")
+
+(defun org-refile-region (beg end copy)
+  "Refile the active region.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instad of killing it."
+  (interactive "r\nP")
+  ;; mark paragraph if no region is set
+  (unless (use-region-p)
+    (setq beg (save-excursion
+                (backward-paragraph)
+                (skip-chars-forward "\n\t ")
+                (point))
+          end (save-excursion
+                (forward-paragraph)
+                (skip-chars-backward "\n\t ")
+                (point))))
+  (let* ((target (save-excursion (org-refile-get-location)))
+         (file (nth 1 target))
+         (pos (nth 3 target))
+         (text (buffer-substring-no-properties beg end)))
+    (unless copy (kill-region beg end))
+    (deactivate-mark)
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (goto-char pos)
+        (if (eql org-refile-region-position 'bottom)
+            (org-end-of-subtree)
+          (org-end-of-meta-data-and-drawers))
+        (insert (format org-refile-region-format text))))))
+
+
+(defun my-org-files-list ()
+  (mapcar (lambda (buffer)
+            (buffer-file-name buffer))
+          (org-buffer-list 'files t)))
+
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+#+END_SRC
+
+* Working with files
 ** Reopen last closed file, very useful:
 #+BEGIN_SRC emacs-lisp
 (defun visit-most-recent-file ()
@@ -3196,15 +3199,14 @@ Source: [[http://steve.yegge.googlepages.com/my-dot-emacs-file][source]]
 	  (set-buffer-modified-p nil))))))
 #+END_SRC
 
-* Recent files
-
+** Recent files
 Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse)
 ~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened
 file.  The nice thing, using that function is, that it does not matter, if I
 have the buffer already opened, or if the file must be opened now.  With that
 function I have a persistent buffer list available.
 
-** Ido recent files
+*** Ido recent files
 #+BEGIN_SRC emacs-lisp
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
@@ -3218,7 +3220,7 @@ function I have a persistent buffer list available.
 			  nil t))))
 #+END_SRC
 
-** Enable recent files without using Ido mode via C-x C-r:
+*** Enable recent files without using Ido mode via C-x C-r:
 #+BEGIN_SRC emacs-lisp
 (recentf-mode 1) ; recentf
 
@@ -3237,48 +3239,20 @@ function I have a persistent buffer list available.
 * Startup
 ** Set font size to medium type
 #+BEGIN_SRC emacs-lisp
-(defun medium-type ()
-  (interactive)
-  (set-face-attribute 'default nil  :height 260)
-  (set-frame-width (selected-frame) 89)
-  )
-#+END_SRC
-
-* Prose editing
-** Working with windows
-Transpose windows, useful:
-#+BEGIN_SRC emacs-lisp
-(defun transpose-windows (arg)
-  "Transpose the buffers shown in two windows."
-  (interactive "p")
-  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-    (while (/= arg 0)
-      (let ((this-win (window-buffer))
-	    (next-win (window-buffer (funcall selector))))
-	(set-window-buffer (selected-window) next-win)
-	(set-window-buffer (funcall selector) this-win)
-	(select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
-#+END_SRC
-
-** Move region to other window, very useful:
-#+BEGIN_SRC emacs-lisp
-(defun move-region-to-other-window (start end)
-  "Move selected text to other window"
-  (interactive "r")
-  (if (use-region-p) 
-      (let ((count (count-words-region start end)))
-        (save-excursion
-          (kill-region start end)
-          (other-window 1)   
-          (yank)
-          (newline))
-        (other-window -1)     
-        (message "Moved %s words" count))
-    (message "No region selected")))
+(set-face-attribute 'default nil :font "Inconsolata" :height 170)
+(medium-type)
 #+END_SRC
 
 * Extra functionality 
+** Google search
+Enable Google search:
+#+BEGIN_SRC emacs-lisp
+(require 'engine-mode)
+(engine-mode t)
+
+;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
+#+END_SRC
+
 ** Google search through Gnugol
 #+BEGIN_SRC emacs-lisp
 ;; (require 'gnugol)

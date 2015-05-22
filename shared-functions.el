@@ -11,6 +11,7 @@
 
 (package-initialize)
 
+(add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
@@ -416,55 +417,6 @@ searches all buffers."
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 
-(defun my-org-agenda-restrict-files-by-filetag (&optional tag)
-  "Restrict org agenda files only to those containing filetag."
-  (interactive)
-  (let* ((tagslist (my-org-get-all-filetags))
-         (ftag (or tag
-                   (completing-read "Tag: "
-                                    (mapcar 'car tagslist)))))
-    (org-agenda-remove-restriction-lock 'noupdate)
-    (put 'org-agenda-files 'org-restrict (cdr (assoc ftag tagslist)))
-    (setq org-agenda-overriding-restriction 'files)))
-
-(defun my-org-get-all-filetags ()
-  "Get list of filetags from all default org-files."
-  (let ((files org-agenda-files)
-        tagslist x)
-    (save-window-excursion
-      (while (setq x (pop files))
-        (set-buffer (find-file-noselect x))
-        (mapc
-         (lambda (y)
-           (let ((tagfiles (assoc y tagslist)))
-             (if tagfiles
-                 (setcdr tagfiles (cons x (cdr tagfiles)))
-               (add-to-list 'tagslist (list y x)))))
-         (my-org-get-filetags)))
-      tagslist)))
-
-(defun my-org-get-filetags ()
-  "Get list of filetags for current buffer"
-  (let ((ftags org-file-tags)
-        x)
-    (mapcar
-     (lambda (x)
-       (org-substring-no-properties x))
-     ftags)))
-
-;; (add-hook 'org-clock-in-prepare-hook
-;;       'my-org-mode-ask-effort)
-
-(defun my-org-mode-ask-effort ()
-  "Ask for"
-  (unless (org-entry-get (point) "Effort")
-    (let ((effort
-           (completing-read
-            "Effort: "
-            (org-entry-get-multivalued-property (point) "Effort"))))
-      (unless (equal effort "")
-        (org-set-property "Effort" effort)))))
-
 (defun my-org-insert-sub-task ()
   (interactive)
   (let ((parent-deadline (org-get-deadline-time nil)))
@@ -473,24 +425,24 @@ searches all buffers."
     (when parent-deadline
       (org-deadline nil parent-deadline))))
 
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
            (call-interactively 'org-agenda-schedule)))
+
+(defun my-org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries 'org-archive-subtree "/DONE" 'file))
+
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
   (if (and ido-mode (listp (second args)))
       (apply 'ido-completing-read args)
     (apply 'completing-read args)))
-
-(defun my-org-archive-done-tasks ()
-  (interactive)
-  (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
 (defun new-org-delete-backward-char (N)
   (interactive "p")
@@ -2177,13 +2129,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
     ))
 
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-
 (require 'wc-mode)
 
-(add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
-
 (require 'org-serenity-mode)
-
 (defun serenity-mode ()
   "serenity"
   (interactive)
@@ -2541,10 +2489,6 @@ Also converts full stops to commas."
   (set-face-attribute 'default nil  :height 260)
   (set-frame-width (selected-frame) 89)
   )
-
-
-(medium-type)
-;; (transparent-serenity)
 
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
