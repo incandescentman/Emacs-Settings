@@ -24,8 +24,6 @@
 (require 'ox-latex)
 (require 'org-fstree)
 
-(require 'point-stack)
-
 (cond
  ((executable-find "aspell")
   (setq ispell-program-name "aspell")
@@ -84,12 +82,51 @@
 (make-variable-buffer-local 'global-hl-line-mode)
 (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 
+;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
+;; (set-face-attribute 'default nil :font "Courier"  :height 200)
+;; (set-face-attribute 'default nil :font "Monaco" :height 190)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+; '(ido-first-match ((t (:foreground "red"))))
+'(bold ((t (:bold t :foreground "red"))))
+
+ '(message-header-cc ((t (:foreground "CornflowerBlue"))))
+ '(message-header-name ((t (:foreground "green2"))))
+; '(message-header-other ((t (:foreground "VioletRed1"))))
+ '(message-header-subject ((t (:foreground "pink" :weight bold))))
+ '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
+ '(message-separator ((t (:foreground "LightSkyBlue1"))))
+ '(hl-line ((t (:inherit highlight))))
+
+ '(org-headline-done ((t (:strike-through t))))
+ '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
+ '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
+                      '(ido-first-match ((t (:inherit error :weight normal))))
+ t))
+
+(auto-fill-mode -1)
+(add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
+;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
+(add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
+(add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
+
+(unless (and (fboundp 'play-sound-internal)
+             (subrp (symbol-function 'play-sound-internal)))
+  (require 'play-sound))
+
+
+(add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
+(defun my-org-after-todo ()
+  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
+
 (setq sentence-end-double-space nil)
 (global-auto-revert-mode 1)
 (delete-selection-mode 1) ; make typing override text selection
-
-(eval-after-load 'helm-grep
-  '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
 (electric-pair-mode 1)
 (setq buffer-save-without-query nil)
@@ -131,19 +168,178 @@
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
+(setq org-use-speed-commands t)
+(setq org-speed-commands-user (quote (
+                                      ("k" . org-kill-note-or-show-branches)
+                                      ("q" . bh/show-org-agenda)
+                                      ("h" . org-agenda-schedule)
+                                      ("d" . org-deadline)
+                                      ("w" . org-refile)
+                                      ("z" . org-add-note)
+                                      ("A" . org-archive-subtree-default-with-confirmation)
+                                      ("J" . org-clock-goto)
+                                      ("Z" . ignore))))
+
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode)))
 
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
+(add-hook 'after-init-hook 'org-agenda-list)
+
+;; Overwrite the current window with the agenda
+(setq org-agenda-window-setup 'current-window)
+
+;; Delete IDs When Cloning
+(setq org-clone-delete-id t)
+
+;; start org in folded mode
+(setq org-startup-folded t)
+
+;; allow alphabetical list entries, i.e. "a. this b. that c. another"
+(setq org-alphabetical-lists t)
+
+;; fast TODO selection
+(setq org-use-fast-todo-selection t)
+
+;; more org settings
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+(setq org-todo-keywords
+      '(
+        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
+        (sequence "QUESTION" "|" "ANSWERED")
+        (sequence "QUESTIONS" "|" "ANSWERS")
+        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
+        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
+        (sequence "NEXT" "|" "DONE! :-)")
+        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
+        (sequence "STRATEGY" "|")
+        (sequence "IF" "THEN" "|")
+        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
+        ))
+
+(setq org-stuck-projects
+      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+
+(defun new-org-delete-backward-char (N)
+  (interactive "p")
+  (cond ((region-active-p)
+         (delete-region
+          (region-beginning)
+          (region-end)))
+        ((looking-back "[*]+ ")
+         (previous-line)
+         (end-of-line))
+        (t
+         (org-delete-backward-char N))))
+(add-hook 
+ 'org-mode-hook
+ (lambda ()
+   (define-key org-mode-map (kbd "DEL") 
+     'new-org-delete-backward-char)))
+
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc t)
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+(setq org-icalendar-include-todo t)
+
+(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+
+(defun my-org-clocktable-indent-string (level)
+  (if (= level 1)
+      ""
+    (let ((str "^"))
+      (while (> level 2)
+        (setq level (1- level)
+              str (concat str "--")))
+      (concat str "-> "))))
+(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
+
+(setq org-capture-templates
+      (quote
+       (
+        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
+From: Jay Dixit <dixit@aya.yale.edu>
+To: %^{Send mail to}
+Subject: %^{Subject}
+--text follows this line--
+%?")
+
+        ("g" "gratitude" entry (file "gratitude.txt")
+         "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+
+        ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+
+        ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+         "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
+        ("n" "note" entry (file org-default-notes-file)
+         "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+
+        ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+         "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+
+        ("v" "visualness and visual actions" entry (file "visual-actions.txt")
+         "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+        ("e" "expression" entry (file "expression.txt")
+         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+        ("h" "historical interest" entry (file "historical-lifestream.txt")
+         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+        ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+        ("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+        ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+         "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+
+        ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+("M" "Memorize" entry
+               (file+headline (concat org-directory "org-drill-jays-decks.org")
+                              "Vocabulary")
+               "* Word :drill:\n%^ \n** Answer \n%^")
+
+;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
+
+        ("f" "flowy" entry (file "flowy.org")
+         "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -159,6 +355,50 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (clipboard-yank)
   (replace-smart-quotes (mark) (point)))
+
+(define-minor-mode zin/org-outline-mode
+  "" nil
+  :lighter " OOut"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<tab>") 'org-metaright)
+            (define-key map (kbd "S-<tab>") 'org-metaleft)
+            (define-key map (kbd "<M-return>") 'org-return)
+            map))
+(global-set-key "\C-co" 'zin/org-outline-mode)
+
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)  
+  (org-bullets-mode)
+  (org-bullets-mode)
+  (boss-mode)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL") 
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
+
+(defun org-checkbox-next ()
+  (interactive)
+  (when (org-at-item-checkbox-p)
+    (org-toggle-checkbox))
+  (org-next-item))
+
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+        (org-back-to-heading)
+        (org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
 
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -211,6 +451,93 @@ searches all buffers."
 
    regexp))
 
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+
+(defun my-goto-match-beginning ()
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defadvice isearch-exit (after my-goto-match-beginning activate)
+  "Go to beginning of match."
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defun isearch-from-buffer-start ()
+  (interactive)
+  (push-mark)
+  (goto-char (point-min))
+  (isearch-forward))
+
+(require 'helm-config)
+(helm-mode t)
+(helm-adaptative-mode t)
+
+(require 'helm-swoop)
+; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
+
+(setq helm-swoop-pre-input-function
+      (lambda () nil))
+
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
+
+(setq helm-multi-swoop-edit-save t)
+
+(setq helm-swoop-split-with-multiple-windows nil)
+
+(setq helm-swoop-split-direction 'split-window-vertically)
+
+(setq helm-swoop-speed-or-color nil)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
+
+(setq helm-ff-transformer-show-only-basename nil
+      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
+      helm-yank-symbol-first                 t
+      helm-move-to-line-cycle-in-source      t
+      helm-buffers-fuzzy-matching            t
+      helm-ff-auto-update-initial-value      t)
+
+(autoload 'helm-descbinds      "helm-descbinds" t)
+(autoload 'helm-eshell-history "helm-eshell"    t)
+(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+(global-set-key (kbd "M-h a")    #'helm-apropos)
+(global-set-key (kbd "M-h i")    #'helm-info-emacs)
+(global-set-key (kbd "M-h b")    #'helm-descbinds)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
+              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
+
+
+(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
+(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
+(define-key helm-map (kbd "M-o") #'helm-previous-source)
+
+(global-set-key (kbd "M-s s")   #'helm-ag)
+
+(require 'helm-projectile)
+(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
+                                         (remove 'helm-source-projectile-files-list 
+                                              helm-projectile-sources-list)))
+(helm-projectile-on)
+
+(define-key projectile-mode-map (kbd "C-c p /")
+  #'(lambda ()
+      (interactive)
+      (helm-ag (projectile-project-root))))
+
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 '(org-replace-disputed-keys t)
@@ -241,12 +568,9 @@ searches all buffers."
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
-
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+(add-hook 'org-capture-mode-hook 'writeroom-mode)
 
 (require 'buffer-stack)
 
@@ -289,65 +613,6 @@ searches all buffers."
 
 ;; spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-
-(define-key org-mode-map
-  (kbd "RET")
-  (lambda()
-    (interactive)
-    (if (region-active-p)
-        (delete-region (region-beginning)
-                       (region-end))
-      (call-interactively 'org-return))))
-
-(setq org-use-speed-commands t)
-(setq org-speed-commands-user (quote (
-                                      ("k" . org-kill-note-or-show-branches)
-                                      ("q" . bh/show-org-agenda)
-                                      ("h" . org-agenda-schedule)
-                                      ("d" . org-deadline)
-                                      ("w" . org-refile)
-                                      ("z" . org-add-note)
-                                      ("A" . org-archive-subtree-default-with-confirmation)
-                                      ("J" . org-clock-goto)
-                                      ("Z" . ignore))))
-
-;; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
-
-;; Delete IDs When Cloning
-(setq org-clone-delete-id t)
-
-;; start org in folded mode
-(setq org-startup-folded t)
-
-;; allow alphabetical list entries, i.e. "a. this b. that c. another"
-(setq org-alphabetical-lists t)
-
-;; fast TODO selection
-(setq org-use-fast-todo-selection t)
-
-;; more org settings
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
-
-(setq org-todo-keywords
-      '(
-        (sequence "TODO" "|" "DONE! :-)")
-        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
-        (sequence "QUESTION" "|" "ANSWERED")
-        (sequence "QUESTIONS" "|" "ANSWERS")
-        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
-        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
-        (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
-        (sequence "STRATEGY" "|")
-        (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
-        ))
-
-(add-hook 'after-init-hook 'org-agenda-list)
-
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
@@ -441,166 +706,11 @@ searches all buffers."
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
   (if (and ido-mode (listp (second args)))
       (apply 'ido-completing-read args)
     (apply 'completing-read args)))
-
-(defun new-org-delete-backward-char (N)
-  (interactive "p")
-  (cond ((region-active-p)
-         (delete-region
-          (region-beginning)
-          (region-end)))
-        ((looking-back "[*]+ ")
-         (previous-line)
-         (end-of-line))
-        (t
-         (org-delete-backward-char N))))
-(add-hook 
- 'org-mode-hook
- (lambda ()
-   (define-key org-mode-map (kbd "DEL") 
-     'new-org-delete-backward-char)))
-
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc t)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
-
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
-
-(define-minor-mode zin/org-outline-mode
-  "" nil
-  :lighter " OOut"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
-            (define-key map (kbd "<tab>") 'org-metaright)
-            (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
-            map))
-(global-set-key "\C-co" 'zin/org-outline-mode)
-
-(defun workflowy-mode ()
-  "workflowy"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
-  (boss-mode)
-  (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
-    'new-org-delete-backward-char)
-  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-  (insert "\n* "))
-
-(defun org-checkbox-next ()
-  (interactive)
-  (when (org-at-item-checkbox-p)
-    (org-toggle-checkbox))
-  (org-next-item))
-
-(defun myorg-update-parent-cookie ()
-  (when (equal major-mode 'org-mode)
-    (save-excursion
-      (ignore-errors
-        (org-back-to-heading)
-        (org-update-parent-todo-statistics)))))
-
-(defadvice org-kill-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-
-(defadvice kill-whole-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-
-(setq org-capture-templates
-      (quote
-       (
-        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
-From: Jay Dixit <dixit@aya.yale.edu>
-To: %^{Send mail to}
-Subject: %^{Subject}
---text follows this line--
-%?")
-
-        ("g" "gratitude" entry (file "gratitude.txt")
-         "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
-
-        ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
-
-        ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-        ("n" "note" entry (file org-default-notes-file)
-         "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
-
-        ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
-
-        ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-         "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-        ("e" "expression" entry (file "expression.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-        ("h" "historical interest" entry (file "historical-lifestream.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-        ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-        ("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-        ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-         "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
-
-        ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-("M" "Memorize" entry
-               (file+headline (concat org-directory "org-drill-jays-decks.org")
-                              "Vocabulary")
-               "* Word :drill:\n%^ \n** Answer \n%^")
-
-;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
-
-        ("f" "flowy" entry (file "flowy.org")
-         "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
@@ -1372,10 +1482,6 @@ Subject: %^{Subject}
 ;;  '(visual-line-mode nil t)
 ;;  '(cua-mode nil))
 
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-capture-mode-hook 'delete-other-windows)
-(add-hook 'org-capture-mode-hook 'writeroom-mode)
-
 (global-set-key (kbd "M-]") 'outline-next-visible-heading)
 (global-set-key (kbd "M-[") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
@@ -1483,44 +1589,6 @@ Subject: %^{Subject}
 (define-hyper-key "m df" 'delete-file-and-buffer) 
 (define-hyper-key "m rf" 'rename-file-and-buffer)
 
-;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
-;; (set-face-attribute 'default nil :font "Courier"  :height 200)
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
-'(bold ((t (:bold t :foreground "red"))))
-
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
- '(hl-line ((t (:inherit highlight))))
-
- '(org-headline-done ((t (:strike-through t))))
- '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
-                      '(ido-first-match ((t (:inherit error :weight normal))))
- t))
-
-(auto-fill-mode -1)
-(add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
-;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
-(add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
-
-;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
-;; (require 'bbdb) ;; (3)
-;; (bbdb-initialize 'gnus 'message)   ;; (4)
-;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
-
 (require 'key-chord)
 (key-chord-mode 1)
 
@@ -1540,33 +1608,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "Do indentation, as long as the region isn't too large."
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
-
-(define-skeleton my-orgfootnote "Docstring." nil
-  "[fn:: " _ "] ")
-
-
-(define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
-
-(define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ " :slide:")
-
-
-(define-skeleton slidy-image "Docstring." nil
-  "<figure >
-<img src='"_"'>
-<figcaption></figcaption>
-</figure>")
-
-
-(define-skeleton shaded "Docstring." nil
-  "<DIV CLASS='shaded'>
-"_"
-</DIV>")
 
 (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
@@ -1792,13 +1833,26 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq set-mark-command-repeat-pop t)
 
+(define-key org-mode-map
+  (kbd "RET")
+  (lambda()
+    (interactive)
+    (if (region-active-p)
+        (delete-region (region-beginning)
+                       (region-end))
+      (call-interactively 'org-return))))
+
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
+
+(add-hook 'desktop-after-read-hook 'calendar)
 
 (require 'server)
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
 
-(add-hook 'desktop-after-read-hook 'calendar)
+(require 'openwith)
+'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+(openwith-mode t)
 
 (setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
 
@@ -1806,15 +1860,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (interactive)
   (global-hl-line-mode -1)
   (hl-line-mode -1))
-
-(unless (and (fboundp 'play-sound-internal)
-             (subrp (symbol-function 'play-sound-internal)))
-  (require 'play-sound))
-
-
-(add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
-(defun my-org-after-todo ()
-  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
@@ -1831,6 +1876,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+(eval-after-load 'helm-grep
+  '(setq helm-grep-default-command helm-grep-default-recurse-command))
+
 (make-face 'hard-to-read-font)
 (set-face-attribute 'hard-to-read-font nil :background "darkgrey" :foreground "grey")
 
@@ -1845,23 +1893,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
     (progn
       (font-lock-mode t)
       (buffer-face-mode nil))))
-
-(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-
-(defun my-goto-match-beginning ()
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defadvice isearch-exit (after my-goto-match-beginning activate)
-  "Go to beginning of match."
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defun isearch-from-buffer-start ()
-  (interactive)
-  (push-mark)
-  (goto-char (point-min))
-  (isearch-forward))
 
 (add-hook 'dired-mode-hook 'hl-line-mode)
 
@@ -1905,32 +1936,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
-;; Source: http://blog.danieljanus.pl/blog/2008/12/18/fighting-procrastination
-;;; Written by Daniel Janus, 2008/12/18.
-;;; This snippet is placed into the public domain.  Feel free
-;;; to use it in any way you wish.  I am not responsible for
-;;; any damage resulting from its usage.
-
-(defvar store-last-modification-time t)
-(defvar last-modification-time nil)
-(defun mark-last-modification-time (beg end len)
-  (let ((b1 (substring (buffer-name (current-buffer)) 0 1)))
-    (when (and store-last-modification-time
-               (not (string= b1 " "))
-               (not (string= b1 "*")))
-      (setq last-modification-time (current-time)))))
-(add-hook 'after-change-functions 'mark-last-modification-time)
-(defun write-lmt ()
-  (setq store-last-modification-time nil)
-  (when last-modification-time
-    (with-temp-file "/tmp/emacs-lmt"
-      (multiple-value-bind (a b c) last-modification-time
-        (princ a (current-buffer))
-        (terpri (current-buffer))
-        (princ b (current-buffer)))))
-  (setq store-last-modification-time t))
-(run-at-time nil 1 'write-lmt)
-
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
@@ -1961,76 +1966,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "PDF")
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
-
-(require 'helm-config)
-(helm-mode t)
-(helm-adaptative-mode t)
-
-(require 'helm-swoop)
-; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
-
-(setq helm-swoop-pre-input-function
-      (lambda () nil))
-
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-
-(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-
-;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
-
-(setq helm-multi-swoop-edit-save t)
-
-(setq helm-swoop-split-with-multiple-windows nil)
-
-(setq helm-swoop-split-direction 'split-window-vertically)
-
-(setq helm-swoop-speed-or-color nil)
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
-(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
-(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
-
-(setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
-      helm-yank-symbol-first                 t
-      helm-move-to-line-cycle-in-source      t
-      helm-buffers-fuzzy-matching            t
-      helm-ff-auto-update-initial-value      t)
-
-(autoload 'helm-descbinds      "helm-descbinds" t)
-(autoload 'helm-eshell-history "helm-eshell"    t)
-(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-(global-set-key (kbd "M-h a")    #'helm-apropos)
-(global-set-key (kbd "M-h i")    #'helm-info-emacs)
-(global-set-key (kbd "M-h b")    #'helm-descbinds)
-
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
-              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
-
-
-(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
-(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
-(define-key helm-map (kbd "M-o") #'helm-previous-source)
-
-(global-set-key (kbd "M-s s")   #'helm-ag)
-
-(require 'helm-projectile)
-(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-                                         (remove 'helm-source-projectile-files-list 
-                                              helm-projectile-sources-list)))
-(helm-projectile-on)
-
-(define-key projectile-mode-map (kbd "C-c p /")
-  #'(lambda ()
-      (interactive)
-      (helm-ag (projectile-project-root))))
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -2092,10 +2027,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-(require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
-
 (defun org-mac-chrome-insert-frontmost-url-with-quotes ()
   "with quotes"
   (interactive)
@@ -2134,6 +2065,33 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   ""
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
+
+(define-skeleton my-orgfootnote "Docstring." nil
+  "[fn:: " _ "] ")
+
+
+(define-skeleton fws "Docstring." nil
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
+
+(define-skeleton fwh "Docstring." nil
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+
+
+(define-skeleton my-org-slide "Docstring." nil
+  "* " _ " :slide:")
+
+
+(define-skeleton slidy-image "Docstring." nil
+  "<figure >
+<img src='"_"'>
+<figcaption></figcaption>
+</figure>")
+
+
+(define-skeleton shaded "Docstring." nil
+  "<DIV CLASS='shaded'>
+"_"
+</DIV>")
 
 (defun org-day ()
   "foo"
@@ -2190,18 +2148,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                ("More"
                 ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
  :bind "M-s")
-
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence '("C-x"))
-(setq guide-key/recursive-key-sequence-flag t)
-
-(defun guide-key/my-hook-function-for-org-mode ()
-  (guide-key/add-local-guide-key-sequence "C-c")
-  (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-highlight-command-regexp "org-"))
-(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
@@ -2510,3 +2456,31 @@ With prefix arg C-u, copy region instad of killing it."
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
 ;; (require 'gnugol)
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-region (point-min) (point-max)))
+
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+(require 'point-stack)
+
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence '("C-x"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+(defun guide-key/my-hook-function-for-org-mode ()
+  (guide-key/add-local-guide-key-sequence "C-c")
+  (guide-key/add-local-guide-key-sequence "C-c C-x")
+  (guide-key/add-local-highlight-command-regexp "org-"))
+(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+
+;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
+;; (require 'bbdb) ;; (3)
+;; (bbdb-initialize 'gnus 'message)   ;; (4)
+;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
