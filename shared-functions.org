@@ -1,7 +1,8 @@
-#+TITLE: Jay Dixit's Emacs setup - May 19, 2015.
+#+TITLE: Jay Dixit's Emacs setup - May 22, 2015.
 * About
-  - System: Mac OSX Yosemite.
-  - Emacs: I use these with both GNU Emacs for OSX and for Aquamacs.
+  - System: Mac OSX Yosemite
+  - Emacs version: 24.5.1
+  - Use case: I use this file with both GNU Emacs for OSX and for Aquamacs.
 
 * Set up packages
 Load the proper repositories:
@@ -39,13 +40,6 @@ Load the proper repositories:
 (require 'org-bullets)
 (require 'ox-latex)
 (require 'org-fstree)
-#+END_SRC
-
-* To learn
-** Point stack
-For popping around the buffer. I need to review how this works again.
-#+BEGIN_SRC emacs-lisp
-(require 'point-stack)
 #+END_SRC
 
 * Set up spellcheck
@@ -148,20 +142,67 @@ it:
 (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 #+END_SRC
 
+** Faces
+
+#+BEGIN_SRC emacs-lisp
+;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
+;; (set-face-attribute 'default nil :font "Courier"  :height 200)
+;; (set-face-attribute 'default nil :font "Monaco" :height 190)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+; '(ido-first-match ((t (:foreground "red"))))
+'(bold ((t (:bold t :foreground "red"))))
+
+ '(message-header-cc ((t (:foreground "CornflowerBlue"))))
+ '(message-header-name ((t (:foreground "green2"))))
+; '(message-header-other ((t (:foreground "VioletRed1"))))
+ '(message-header-subject ((t (:foreground "pink" :weight bold))))
+ '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
+ '(message-separator ((t (:foreground "LightSkyBlue1"))))
+ '(hl-line ((t (:inherit highlight))))
+
+ '(org-headline-done ((t (:strike-through t))))
+ '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
+ '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
+                      '(ido-first-match ((t (:inherit error :weight normal))))
+ t))
+#+END_SRC
+
+** Autofill mode
+
+Turn off fill mode, which adds random line breaks in my text files:
+#+BEGIN_SRC emacs-lisp
+(auto-fill-mode -1)
+(add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
+;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
+(add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
+(add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
+#+END_SRC
+
+** Sounds
+
+#+BEGIN_SRC emacs-lisp
+(unless (and (fboundp 'play-sound-internal)
+	     (subrp (symbol-function 'play-sound-internal)))
+  (require 'play-sound))
+
+
+(add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
+(defun my-org-after-todo ()
+  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
+#+END_SRC
+
 * Set some default settings
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
 (global-auto-revert-mode 1)
 (delete-selection-mode 1) ; make typing override text selection
-#+END_SRC
-
-* Helm
-Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders. 
-
-#+BEGIN_SRC emacs-lisp
-(eval-after-load 'helm-grep
-  '(setq helm-grep-default-command helm-grep-default-recurse-command))
 #+END_SRC
 
 * Editing / environment settings
@@ -206,7 +247,8 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+END_SRC
 
 * Org-mode
-** Some favorite ~org~ settings:
+** Org setup
+*** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
 (setq org-indent-mode t)
 (setq org-indent-indentation-per-level 2)
@@ -219,11 +261,12 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (setq org-fontify-quote-and-verse-blocks t)
 #+END_SRC
 
-** Load org modules
+*** Load my org modules
 #+BEGIN_SRC emacs-lisp
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 #+END_SRC
-** Archiving
+** Org custom functions
+*** Archiving
 (defadvice org-archive-subtree (around my-org-archive-subtree activate)
   (let ((org-archive-location
 	 (if (save-excursion (org-back-to-heading)
@@ -234,27 +277,250 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 	   org-archive-location)))
     ad-do-it))
 #+END_SRC
-* Org-mode key bindings:
+*** org-mode speed commands
+#+BEGIN_SRC emacs-lisp
+(setq org-use-speed-commands t)
+(setq org-speed-commands-user (quote (
+                                      ("k" . org-kill-note-or-show-branches)
+                                      ("q" . bh/show-org-agenda)
+                                      ("h" . org-agenda-schedule)
+                                      ("d" . org-deadline)
+                                      ("w" . org-refile)
+                                      ("z" . org-add-note)
+                                      ("A" . org-archive-subtree-default-with-confirmation)
+                                      ("J" . org-clock-goto)
+                                      ("Z" . ignore))))
+#+END_SRC
+
+** Org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
-* Things to learn
-** Need to add "cleanup buffer safe" here from whattheemacsd.com
+* Org agenda
+** Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
+autosaves in my ~ home directory):
 #+BEGIN_SRC emacs-lisp
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
-
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode)))
 #+END_SRC
 
-* My functions
+* more org settings
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 'org-agenda-list)
+#+END_SRC
+
+(require 'org-inlinetask)
+
+#+END_SRC
+
+* more org settings 
+#+BEGIN_SRC emacs-lisp
+
+;; Overwrite the current window with the agenda
+(setq org-agenda-window-setup 'current-window)
+
+;; Delete IDs When Cloning
+(setq org-clone-delete-id t)
+
+;; start org in folded mode
+(setq org-startup-folded t)
+
+;; allow alphabetical list entries, i.e. "a. this b. that c. another"
+(setq org-alphabetical-lists t)
+
+;; fast TODO selection
+(setq org-use-fast-todo-selection t)
+
+;; more org settings
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+#+END_SRC
+
+* org keywords
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      '(
+        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
+        (sequence "QUESTION" "|" "ANSWERED")
+        (sequence "QUESTIONS" "|" "ANSWERS")
+        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
+        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
+        (sequence "NEXT" "|" "DONE! :-)")
+        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
+        (sequence "STRATEGY" "|")
+        (sequence "IF" "THEN" "|")
+        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
+        ))
+#+END_SRC
+
+* org stuck projects (?)
+Defining stuck projects as todos that do not contain "scheduled" or
+"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
+#+BEGIN_SRC emacs-lisp
+(setq org-stuck-projects
+      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+#+END_SRC
+
+* org show agenda
+(defun bh/show-org-agenda ()
+  (interactive)
+  (if org-agenda-sticky
+      (org-agenda-list)
+    (org-agenda-list))
+  (delete-other-windows))
+
+* Org settings
+** Protect org headings from accidental demotion
+Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
+#+BEGIN_SRC emacs-lisp
+(defun new-org-delete-backward-char (N)
+  (interactive "p")
+  (cond ((region-active-p)
+         (delete-region
+          (region-beginning)
+          (region-end)))
+        ((looking-back "[*]+ ")
+         (previous-line)
+         (end-of-line))
+        (t
+         (org-delete-backward-char N))))
+(add-hook 
+ 'org-mode-hook
+ (lambda ()
+   (define-key org-mode-map (kbd "DEL") 
+     'new-org-delete-backward-char)))
+#+END_SRC
+
+** Org export 
+*** Change section numbering depending on what export format I use
+#+BEGIN_SRC emacs-lisp
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc t)
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+#+END_SRC
+
+*** export with drawers 
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+(setq org-icalendar-include-todo t)
+#+END_SRC
+
+* Mobile org 
+Can't get this to work on my iPhone:
+#+BEGIN_SRC emacs-lisp
+(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+#+END_SRC
+
+* Org refile settings
+** Exclude ~DONE~ state tasks from refile targets:
+#+BEGIN_SRC emacs-lisp
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+#+END_SRC
+
+* Org-agenda settings
+** stop mouse cursor from highlighting lines in org-agenda
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+#+END_SRC
+
+* Org settings
+** Fix '\emsp' bug in clocktable (doesn't work though):
+#+BEGIN_SRC emacs-lisp
+(defun my-org-clocktable-indent-string (level)
+  (if (= level 1)
+      ""
+    (let ((str "^"))
+      (while (> level 2)
+        (setq level (1- level)
+              str (concat str "--")))
+      (concat str "-> "))))
+(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
+#+END_SRC
+
+** org-capture setup
+
+This is working correctly:
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+      (quote
+       (
+        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
+From: Jay Dixit <dixit@aya.yale.edu>
+To: %^{Send mail to}
+Subject: %^{Subject}
+--text follows this line--
+%?")
+
+	("g" "gratitude" entry (file "gratitude.txt")
+	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+
+	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+
+	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
+	("n" "note" entry (file org-default-notes-file)
+	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+
+	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+	("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+	("h" "historical interest" entry (file "historical-lifestream.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+("M" "Memorize" entry
+               (file+headline (concat org-directory "org-drill-jays-decks.org")
+                              "Vocabulary")
+               "* Word :drill:\n%^ \n** Answer \n%^")
+
+;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
+
+	("f" "flowy" entry (file "flowy.org")
+	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+#+END_SRC
+
+* Typography
 ** Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
@@ -278,8 +544,69 @@ Haven't used this next one:
   (replace-smart-quotes (mark) (point)))
 #+END_SRC
 
+* Org custom functions
+** Workflowy mode
+Make ~org-mode~ temporarily emulate traditional outlining keybindings
+e.g. nvALT
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode zin/org-outline-mode
+  "" nil
+  :lighter " OOut"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<tab>") 'org-metaright)
+            (define-key map (kbd "S-<tab>") 'org-metaleft)
+            (define-key map (kbd "<M-return>") 'org-return)
+            map))
+(global-set-key "\C-co" 'zin/org-outline-mode)
+
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)  
+  (org-bullets-mode)
+  (org-bullets-mode)
+  (boss-mode)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL") 
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
+
+#+END_SRC
+
+
+** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+#+BEGIN_SRC emacs-lisp
+(defun org-checkbox-next ()
+  (interactive)
+  (when (org-at-item-checkbox-p)
+    (org-toggle-checkbox))
+  (org-next-item))
+#+END_SRC
+
+** Update parent cookie
+** I think this is to make parent ~DONE~ states automatically update:
+#+BEGIN_SRC emacs-lisp
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+	(org-back-to-heading)
+	(org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+#+END_SRC
+
+* org-settings
 * Searching for things
-** isearch settings
+** isearch
+*** isearch settings
 #+BEGIN_SRC emacs-lisp
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -308,7 +635,7 @@ Haven't used this next one:
 ;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 #+END_SRC
 
-** search all open buffers
+*** search all open buffers
 I know that string is in my Emacs somewhere!
 #+BEGIN_SRC emacs-lisp
 (require 'cl)
@@ -335,6 +662,138 @@ searches all buffers."
       (remove-if-not 'buffer-file-name (buffer-list))))
 
    regexp))
+#+END_SRC
+
+*** Position of the Cursor after Searching
+
+Note that when you type ‘C-r’, isearch goes backwards. When you search
+backwards, find something, and then end the search, for example by hitting
+‘RET’, point is at the beginning of the string you searched. When you search
+forwards, point is not necessarily at the end of the string you were searching
+for, but only after the last character that you typed – bad usability! That
+means that you cannot predict point based on the string you are searching for
+(and thinking about). You must predict point based on the numbers of characters
+you typed. Here is how to change that in your InitFile, courtesy of
+AdrianKubala:
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+
+(defun my-goto-match-beginning ()
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defadvice isearch-exit (after my-goto-match-beginning activate)
+  "Go to beginning of match."
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defun isearch-from-buffer-start ()
+  (interactive)
+  (push-mark)
+  (goto-char (point-min))
+  (isearch-forward))
+#+END_SRC
+
+** Helm
+
+#+BEGIN_SRC emacs-lisp
+(require 'helm-config)
+(helm-mode t)
+(helm-adaptative-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'helm-swoop)
+; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
+
+(setq helm-swoop-pre-input-function
+      (lambda () nil))
+#+END_SRC
+
+When doing isearch, hand the word over to ~helm-swoop~:
+#+BEGIN_SRC emacs-lisp
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+#+END_SRC
+
+From ~helm-swoop~ to ~helm-multi-swoop-all~:
+#+BEGIN_SRC emacs-lisp
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+#+END_SRC
+
+When doing evil-search, hand the word over to ~helm-swoop~:
+#+BEGIN_SRC emacs-lisp
+;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
+#+END_SRC
+
+Save buffer when ~helm-multi-swoop-edit~ completes:
+#+BEGIN_SRC emacs-lisp
+(setq helm-multi-swoop-edit-save t)
+#+END_SRC
+
+If this value is ~t~, split window inside the current window:
+#+BEGIN_SRC emacs-lisp
+(setq helm-swoop-split-with-multiple-windows nil)
+#+END_SRC
+
+Split direcion. ~split-window-vertically~ or ~split-window-horizontally~:
+#+BEGIN_SRC emacs-lisp
+(setq helm-swoop-split-direction 'split-window-vertically)
+#+END_SRC
+
+If ~nil~, you can slightly boost invoke speed in exchange for text color:
+#+BEGIN_SRC emacs-lisp
+(setq helm-swoop-speed-or-color nil)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
+
+(setq helm-ff-transformer-show-only-basename nil
+      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
+      helm-yank-symbol-first                 t
+      helm-move-to-line-cycle-in-source      t
+      helm-buffers-fuzzy-matching            t
+      helm-ff-auto-update-initial-value      t)
+
+(autoload 'helm-descbinds      "helm-descbinds" t)
+(autoload 'helm-eshell-history "helm-eshell"    t)
+(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+(global-set-key (kbd "M-h a")    #'helm-apropos)
+(global-set-key (kbd "M-h i")    #'helm-info-emacs)
+(global-set-key (kbd "M-h b")    #'helm-descbinds)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
+              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
+
+
+(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
+(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
+(define-key helm-map (kbd "M-o") #'helm-previous-source)
+
+(global-set-key (kbd "M-s s")   #'helm-ag)
+
+(require 'helm-projectile)
+(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
+                                         (remove 'helm-source-projectile-files-list 
+                                              helm-projectile-sources-list)))
+(helm-projectile-on)
+
+(define-key projectile-mode-map (kbd "C-c p /")
+  #'(lambda ()
+      (interactive)
+      (helm-ag (projectile-project-root))))
 #+END_SRC
 
 * Some more org-mode settings
@@ -370,23 +829,15 @@ searches all buffers."
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
 
-* Org agenda
-** Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
-autosaves in my ~ home directory):
+* Org capture
+Make org-capture open in full window! :-)
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
+(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+(add-hook 'org-capture-mode-hook 'writeroom-mode)
 #+END_SRC
 
-* Mobile org 
-Can't get this to work on my iPhone:
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
-#+END_SRC
-
-* Functions
+* My custom functions/settings
 ** Buffers
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
@@ -454,98 +905,6 @@ every new buffer will be unique:
 
 ;; spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-#+END_SRC
-
-* I forgot what this is but it looks important 
-#+BEGIN_SRC emacs-lisp
-(define-key org-mode-map
-  (kbd "RET")
-  (lambda()
-    (interactive)
-    (if (region-active-p)
-        (delete-region (region-beginning)
-                       (region-end))
-      (call-interactively 'org-return))))
-#+END_SRC
-
-* org-mode speed commands
-#+BEGIN_SRC emacs-lisp
-(setq org-use-speed-commands t)
-(setq org-speed-commands-user (quote (
-                                      ("k" . org-kill-note-or-show-branches)
-                                      ("q" . bh/show-org-agenda)
-                                      ("h" . org-agenda-schedule)
-                                      ("d" . org-deadline)
-                                      ("w" . org-refile)
-                                      ("z" . org-add-note)
-                                      ("A" . org-archive-subtree-default-with-confirmation)
-                                      ("J" . org-clock-goto)
-                                      ("Z" . ignore))))
-#+END_SRC
-
-* org show agenda
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (org-agenda-list)
-    (org-agenda-list))
-  (delete-other-windows))
-
-* more org settings 
-#+BEGIN_SRC emacs-lisp
-
-;; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
-
-;; Delete IDs When Cloning
-(setq org-clone-delete-id t)
-
-;; start org in folded mode
-(setq org-startup-folded t)
-
-;; allow alphabetical list entries, i.e. "a. this b. that c. another"
-(setq org-alphabetical-lists t)
-
-;; fast TODO selection
-(setq org-use-fast-todo-selection t)
-
-;; more org settings
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
-#+END_SRC
-
-* org keywords
-#+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
-      '(
-        (sequence "TODO" "|" "DONE! :-)")
-        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
-        (sequence "QUESTION" "|" "ANSWERED")
-        (sequence "QUESTIONS" "|" "ANSWERS")
-        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
-        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
-        (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
-        (sequence "STRATEGY" "|")
-        (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
-        ))
-#+END_SRC
-
-* more org settings
-#+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 'org-agenda-list)
-#+END_SRC
-
-(require 'org-inlinetask)
-
-#+END_SRC
-
-* org stuck projects (?)
-Defining stuck projects as todos that do not contain "scheduled" or
-"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
-#+BEGIN_SRC emacs-lisp
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 #+END_SRC
 
 * Some other settings
@@ -674,14 +1033,6 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 #+END_SRC
 
-* org-agenda settings
-** stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-#+END_SRC
-
 * Another org-setting, not sure what this one does exactly
 #+BEGIN_SRC emacs-lisp
 (defun org-ido-completing-read (&rest args)
@@ -689,197 +1040,6 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
   (if (and ido-mode (listp (second args)))
       (apply 'ido-completing-read args)
     (apply 'completing-read args)))
-#+END_SRC
-
-* Org settings
-** Protect org headings from accidental demotion
-Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
-#+BEGIN_SRC emacs-lisp
-(defun new-org-delete-backward-char (N)
-  (interactive "p")
-  (cond ((region-active-p)
-         (delete-region
-          (region-beginning)
-          (region-end)))
-        ((looking-back "[*]+ ")
-         (previous-line)
-         (end-of-line))
-        (t
-         (org-delete-backward-char N))))
-(add-hook 
- 'org-mode-hook
- (lambda ()
-   (define-key org-mode-map (kbd "DEL") 
-     'new-org-delete-backward-char)))
-#+END_SRC
-
-** Org export 
-*** Change section numbering depending on what export format I use
-#+BEGIN_SRC emacs-lisp
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc t)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_SRC
-
-*** export with drawers 
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
-#+END_SRC
-
-* Org refile settings
-** Exclude ~DONE~ state tasks from refile targets:
-#+BEGIN_SRC emacs-lisp
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
-#+END_SRC
-
-* Org custom functions
-** Workflowy mode
-Make ~org-mode~ temporarily emulate traditional outlining keybindings
-e.g. nvALT
-#+BEGIN_SRC emacs-lisp
-(define-minor-mode zin/org-outline-mode
-  "" nil
-  :lighter " OOut"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
-            (define-key map (kbd "<tab>") 'org-metaright)
-            (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
-            map))
-(global-set-key "\C-co" 'zin/org-outline-mode)
-
-(defun workflowy-mode ()
-  "workflowy"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
-  (boss-mode)
-  (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
-    'new-org-delete-backward-char)
-  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-  (insert "\n* "))
-
-#+END_SRC
-
-
-** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_SRC emacs-lisp
-(defun org-checkbox-next ()
-  (interactive)
-  (when (org-at-item-checkbox-p)
-    (org-toggle-checkbox))
-  (org-next-item))
-#+END_SRC
-
-** Update parent cookie
-** I think this is to make parent ~DONE~ states automatically update:
-#+BEGIN_SRC emacs-lisp
-(defun myorg-update-parent-cookie ()
-  (when (equal major-mode 'org-mode)
-    (save-excursion
-      (ignore-errors
-	(org-back-to-heading)
-	(org-update-parent-todo-statistics)))))
-
-(defadvice org-kill-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-
-(defadvice kill-whole-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-#+END_SRC
-
-* Org settings
-** Fix '\emsp' bug in clocktable (doesn't work though):
-#+BEGIN_SRC emacs-lisp
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-#+END_SRC
-
-** org-capture setup
-
-This is working correctly:
-#+BEGIN_SRC emacs-lisp
-(setq org-capture-templates
-      (quote
-       (
-        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
-From: Jay Dixit <dixit@aya.yale.edu>
-To: %^{Send mail to}
-Subject: %^{Subject}
---text follows this line--
-%?")
-
-	("g" "gratitude" entry (file "gratitude.txt")
-	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
-
-	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
-
-	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-	("n" "note" entry (file org-default-notes-file)
-	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
-
-	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
-
-	("v" "visualness and visual actions" entry (file "visual-actions.txt")
-	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-	("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-	("h" "historical interest" entry (file "historical-lifestream.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
-
-	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-("M" "Memorize" entry
-               (file+headline (concat org-directory "org-drill-jays-decks.org")
-                              "Vocabulary")
-               "* Word :drill:\n%^ \n** Answer \n%^")
-
-;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
-
-	("f" "flowy" entry (file "flowy.org")
-	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 #+END_SRC
 
 * Settings (not functions)
@@ -1025,14 +1185,11 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
 (require 'reveal-in-finder)
 #+END_SRC
 
-* org-settings
 * ~eshell~
-
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 (require 'eshell-autojump)
 #+END_SRC
-
 * ~ibuffer~
 
 #+BEGIN_SRC emacs-lisp
@@ -1736,14 +1893,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 +BEGIN_SRC emacs-lisp
 
-* Org capture
-Make org-capture open in full window! :-)
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-capture-mode-hook 'delete-other-windows)
-(add-hook 'org-capture-mode-hook 'writeroom-mode)
-#+END_SRC
-
 * Keybindings
 
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
@@ -1886,57 +2035,6 @@ Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m rf" 'rename-file-and-buffer)
 #+END_SRC
 
-* Faces
-
-#+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
-;; (set-face-attribute 'default nil :font "Courier"  :height 200)
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
-'(bold ((t (:bold t :foreground "red"))))
-
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
- '(hl-line ((t (:inherit highlight))))
-
- '(org-headline-done ((t (:strike-through t))))
- '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
-                      '(ido-first-match ((t (:inherit error :weight normal))))
- t))
-#+END_SRC
-
-* Auto fill mode
-
-Turn off fill mode, which adds random line breaks in my text files:
-#+BEGIN_SRC emacs-lisp
-(auto-fill-mode -1)
-(add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
-;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
-(add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
-#+END_SRC
-
-* ~bbdb~
-
-#+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
-;; (require 'bbdb) ;; (3)
-;; (bbdb-initialize 'gnus 'message)   ;; (4)
-;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
-#+END_SRC
-
 * Miscellaneous 
 (setq vc-handled-backends ())
 
@@ -1970,38 +2068,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (indent-region beg end nil)))
 #+END_SRC
 
-* Skeletons
-
-#+BEGIN_SRC emacs-lisp
-(define-skeleton my-orgfootnote "Docstring." nil
-  "[fn:: " _ "] ")
-
-
-(define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
-
-(define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ " :slide:")
-
-
-(define-skeleton slidy-image "Docstring." nil
-  "<figure >
-<img src='"_"'>
-<figcaption></figcaption>
-</figure>")
-
-
-(define-skeleton shaded "Docstring." nil
-  "<DIV CLASS='shaded'>
-"_"
-</DIV>")
-#+END_SRC
-
-* Themes
+* Color themes
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
@@ -2016,7 +2083,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; (set-cursor-color "red")
 #+END_SRC
 
-* Auto-complete
+* Autocomplete
 
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete)
@@ -2291,22 +2358,43 @@ Disable IDO faces to see flx highlights:
             (local-set-key "\C-c\M-o" 'org-mime-subtree)))
 #+END_SRC
 
-* Set mark command
+* Things that I don't know what they're for 
+** Set mark command
 # forgot what this is 
 (maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?) 
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
 #+END_SRC
 
-* Hippie expand
+** I forgot what this is but it looks important 
+#+BEGIN_SRC emacs-lisp
+(define-key org-mode-map
+  (kbd "RET")
+  (lambda()
+    (interactive)
+    (if (region-active-p)
+        (delete-region (region-beginning)
+                       (region-end))
+      (call-interactively 'org-return))))
+#+END_SRC
+
+* Things that I'm not sure if I need 
+** Hippie expand
 
 [[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
 #+BEGIN_SRC emacs-lisp
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
 #+END_SRC
 
-* Emacs Server
+** Calendar
+Show calendar after start:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'desktop-after-read-hook 'calendar)
+#+END_SRC
 
+* Integration with other apps
+** Chrome
+*** Emacs Server
 Don't start the server unless we can verify that it isn't running.
 #+BEGIN_SRC emacs-lisp
 (require 'server)
@@ -2314,11 +2402,16 @@ Don't start the server unless we can verify that it isn't running.
   (server-start))
 #+END_SRC
 
-* Calendar
+*** ~osx-browse~
 
-Show calendar after start:
+(require 'osx-browse)
+
+** PDFs
+*** Open PDFs in Skim
 #+BEGIN_SRC emacs-lisp
-(add-hook 'desktop-after-read-hook 'calendar)
+(require 'openwith)
+'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+(openwith-mode t)
 #+END_SRC
 
 * Bookmarks
@@ -2326,11 +2419,8 @@ Show calendar after start:
 (setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
 #+END_SRC
 
-* ~osx-browse~
-
-(require 'osx-browse)
-
-* Boss mode
+* Custom UI modes
+** Boss mode
 
 #+BEGIN_SRC emacs-lisp
 (defun  boss-mode ()
@@ -2339,20 +2429,8 @@ Show calendar after start:
   (hl-line-mode -1))
 #+END_SRC
 
-* Sounds
-
-#+BEGIN_SRC emacs-lisp
-(unless (and (fboundp 'play-sound-internal)
-	     (subrp (symbol-function 'play-sound-internal)))
-  (require 'play-sound))
-
-
-(add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
-(defun my-org-after-todo ()
-  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
-#+END_SRC
-
-* imenu
+* Fuzzy matching
+** imenu
 
 [[http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong/][link]]
 
@@ -2376,11 +2454,13 @@ Jump to a definition in the current file. (This is awesome.)
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 #+END_SRC
 
-* SMEX
+** Helm
+Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders. 
 
-- ~smex-describe-function~
-- ~smex-find-function~
-- ~smex-where-is~
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'helm-grep
+  '(setq helm-grep-default-command helm-grep-default-recurse-command))
+#+END_SRC
 
 * Hard to read mode
 
@@ -2399,37 +2479,6 @@ Jump to a definition in the current file. (This is awesome.)
     (progn
       (font-lock-mode t)
       (buffer-face-mode nil))))
-#+END_SRC
-
-* Position of the Cursor after Searching
-
-Note that when you type ‘C-r’, isearch goes backwards. When you search
-backwards, find something, and then end the search, for example by hitting
-‘RET’, point is at the beginning of the string you searched. When you search
-forwards, point is not necessarily at the end of the string you were searching
-for, but only after the last character that you typed – bad usability! That
-means that you cannot predict point based on the string you are searching for
-(and thinking about). You must predict point based on the numbers of characters
-you typed. Here is how to change that in your InitFile, courtesy of
-AdrianKubala:
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-
-(defun my-goto-match-beginning ()
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defadvice isearch-exit (after my-goto-match-beginning activate)
-  "Go to beginning of match."
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defun isearch-from-buffer-start ()
-  (interactive)
-  (push-mark)
-  (goto-char (point-min))
-  (isearch-forward))
 #+END_SRC
 
 * Dired
@@ -2478,36 +2527,6 @@ AdrianKubala:
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 #+END_SRC
 
-* Last modification
-
-#+BEGIN_SRC emacs-lisp
-;; Source: http://blog.danieljanus.pl/blog/2008/12/18/fighting-procrastination
-;;; Written by Daniel Janus, 2008/12/18.
-;;; This snippet is placed into the public domain.  Feel free
-;;; to use it in any way you wish.  I am not responsible for
-;;; any damage resulting from its usage.
-
-(defvar store-last-modification-time t)
-(defvar last-modification-time nil)
-(defun mark-last-modification-time (beg end len)
-  (let ((b1 (substring (buffer-name (current-buffer)) 0 1)))
-    (when (and store-last-modification-time
-               (not (string= b1 " "))
-               (not (string= b1 "*")))
-      (setq last-modification-time (current-time)))))
-(add-hook 'after-change-functions 'mark-last-modification-time)
-(defun write-lmt ()
-  (setq store-last-modification-time nil)
-  (when last-modification-time
-    (with-temp-file "/tmp/emacs-lmt"
-      (multiple-value-bind (a b c) last-modification-time
-        (princ a (current-buffer))
-        (terpri (current-buffer))
-        (princ b (current-buffer)))))
-  (setq store-last-modification-time t))
-(run-at-time nil 1 'write-lmt)
-#+END_SRC
-
 * Ignore / Exclude Uninteresting Things
 
 Make Buffer-stack ignore uninteresting buffers
@@ -2547,109 +2566,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "LaTeX")
 #+END_SRC
 
-* helm
-
-#+BEGIN_SRC emacs-lisp
-(require 'helm-config)
-(helm-mode t)
-(helm-adaptative-mode t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(require 'helm-swoop)
-; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
-
-(setq helm-swoop-pre-input-function
-      (lambda () nil))
-#+END_SRC
-
-When doing isearch, hand the word over to ~helm-swoop~:
-#+BEGIN_SRC emacs-lisp
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-#+END_SRC
-
-From ~helm-swoop~ to ~helm-multi-swoop-all~:
-#+BEGIN_SRC emacs-lisp
-(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-#+END_SRC
-
-When doing evil-search, hand the word over to ~helm-swoop~:
-#+BEGIN_SRC emacs-lisp
-;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
-#+END_SRC
-
-Save buffer when ~helm-multi-swoop-edit~ completes:
-#+BEGIN_SRC emacs-lisp
-(setq helm-multi-swoop-edit-save t)
-#+END_SRC
-
-If this value is ~t~, split window inside the current window:
-#+BEGIN_SRC emacs-lisp
-(setq helm-swoop-split-with-multiple-windows nil)
-#+END_SRC
-
-Split direcion. ~split-window-vertically~ or ~split-window-horizontally~:
-#+BEGIN_SRC emacs-lisp
-(setq helm-swoop-split-direction 'split-window-vertically)
-#+END_SRC
-
-If ~nil~, you can slightly boost invoke speed in exchange for text color:
-#+BEGIN_SRC emacs-lisp
-(setq helm-swoop-speed-or-color nil)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
-(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
-(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
-
-(setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
-      helm-yank-symbol-first                 t
-      helm-move-to-line-cycle-in-source      t
-      helm-buffers-fuzzy-matching            t
-      helm-ff-auto-update-initial-value      t)
-
-(autoload 'helm-descbinds      "helm-descbinds" t)
-(autoload 'helm-eshell-history "helm-eshell"    t)
-(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-(global-set-key (kbd "M-h a")    #'helm-apropos)
-(global-set-key (kbd "M-h i")    #'helm-info-emacs)
-(global-set-key (kbd "M-h b")    #'helm-descbinds)
-
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
-              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
-
-
-(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
-(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
-(define-key helm-map (kbd "M-o") #'helm-previous-source)
-
-(global-set-key (kbd "M-s s")   #'helm-ag)
-
-(require 'helm-projectile)
-(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-                                         (remove 'helm-source-projectile-files-list 
-                                              helm-projectile-sources-list)))
-(helm-projectile-on)
-
-(define-key projectile-mode-map (kbd "C-c p /")
-  #'(lambda ()
-      (interactive)
-      (helm-ag (projectile-project-root))))
-#+END_SRC
-
 * Garbage characters
-
 #+BEGIN_SRC emacs-lisp
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -2700,7 +2617,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_SRC
 
 * Distraction-free editing
-
 #+BEGIN_SRC emacs-lisp
 (require 'org-serenity-mode)
 (defun serenity-mode ()
@@ -2727,14 +2643,7 @@ I think this is correct:
 (setq exec-path (append exec-path '("/usr/local/bin")))
 #+END_SRC
 
-* Open PDFs in Skim
-#+BEGIN_SRC emacs-lisp
-(require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
-#+END_SRC
-
-* Web research
+* Web research functions
 ** Sourcing / Citing / Attributing
 *** Copy link from Chrome
 #+BEGIN_SRC emacs-lisp
@@ -2793,7 +2702,38 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
       (abbrev-mode -1)))
 #+END_SRC
 
-* Custom functions for working with dates and times
+** Skeletons
+
+#+BEGIN_SRC emacs-lisp
+(define-skeleton my-orgfootnote "Docstring." nil
+  "[fn:: " _ "] ")
+
+
+(define-skeleton fws "Docstring." nil
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
+
+(define-skeleton fwh "Docstring." nil
+  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
+
+
+(define-skeleton my-org-slide "Docstring." nil
+  "* " _ " :slide:")
+
+
+(define-skeleton slidy-image "Docstring." nil
+  "<figure >
+<img src='"_"'>
+<figcaption></figcaption>
+</figure>")
+
+
+(define-skeleton shaded "Docstring." nil
+  "<DIV CLASS='shaded'>
+"_"
+</DIV>")
+#+END_SRC
+
+* My custom functions for working with dates and times
 
 #+BEGIN_SRC emacs-lisp
 (defun org-day ()
@@ -2855,22 +2795,6 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
                ("More"
                 ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
  :bind "M-s")
-#+END_SRC
-
-* Guide key 
-I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
-#+BEGIN_SRC emacs-lisp
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence '("C-x"))
-(setq guide-key/recursive-key-sequence-flag t)
-
-(defun guide-key/my-hook-function-for-org-mode ()
-  (guide-key/add-local-guide-key-sequence "C-c")
-  (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-highlight-command-regexp "org-"))
-(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 #+END_SRC
 
 * Prose editing settings
@@ -3257,3 +3181,51 @@ Enable Google search:
 #+BEGIN_SRC emacs-lisp
 ;; (require 'gnugol)
 #+END_SRC
+* Things I want to learn
+** Need to add "cleanup buffer safe" here from whattheemacsd.com
+#+BEGIN_SRC emacs-lisp
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-region (point-min) (point-max)))
+
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+#+END_SRC
+
+** Point stack
+For popping around the buffer. I need to review how this works again.
+#+BEGIN_SRC emacs-lisp
+(require 'point-stack)
+#+END_SRC
+
+** Guide key 
+I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
+#+BEGIN_SRC emacs-lisp
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence '("C-x"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+(defun guide-key/my-hook-function-for-org-mode ()
+  (guide-key/add-local-guide-key-sequence "C-c")
+  (guide-key/add-local-guide-key-sequence "C-c C-x")
+  (guide-key/add-local-highlight-command-regexp "org-"))
+(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+#+END_SRC
+
+** SMEX
+- ~smex-describe-function~
+- ~smex-find-function~
+- ~smex-where-is~
+** ~bbdb~
+
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
+;; (require 'bbdb) ;; (3)
+;; (bbdb-initialize 'gnus 'message)   ;; (4)
+;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
+#+END_SRC
+
