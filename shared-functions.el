@@ -22,6 +22,13 @@
 
 (require 'point-stack)
 
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
 (cond
  ((executable-find "aspell")
   (setq ispell-program-name "aspell")
@@ -85,6 +92,8 @@
 (setq org-export-with-smart-quotes t)
 (setq org-fontify-quote-and-verse-blocks t)
 
+'(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
+
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -138,13 +147,6 @@
 (add-hook 'minibuffer-setup-hook (lambda ()
                                    (abbrev-mode -1)))
 
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
@@ -197,6 +199,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (require 'cl)
 
+
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
   :type 'editable-list)
@@ -241,14 +244,11 @@ searches all buffers."
 '(org-list-indent-offset 3)
 '(org-log-done (quote time))
 '(org-log-refile (quote time))
-
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-
 '(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
@@ -270,8 +270,10 @@ searches all buffers."
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
 
+;; Make URLs in comments/strings clickable:
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
 
+;; spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
 (define-key org-mode-map
@@ -295,27 +297,22 @@ searches all buffers."
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 
-
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (org-agenda-list)
-    (org-agenda-list))
-  (delete-other-windows))
-
-
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
 
+;; start org in folded mode
 (setq org-startup-folded t)
 
 ;; allow alphabetical list entries, i.e. "a. this b. that c. another"
 (setq org-alphabetical-lists t)
 
+;; fast TODO selection
 (setq org-use-fast-todo-selection t)
+
+;; more org settings
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
 (setq org-todo-keywords
@@ -335,20 +332,6 @@ searches all buffers."
 
 (add-hook 'after-init-hook 'org-agenda-list)
 
-;; (require 'org-devonthink)
-
-;; (org-drill)
-
-;; (require 'org-writers-room)
-
-(require 'org-inlinetask)
-
-;; (require 'org-gcal)
-
-;; (require 'org-mac-iCal)
-
-;; (require 'org-import-icalendar)
-
 (setq org-stuck-projects
       '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
@@ -356,7 +339,6 @@ searches all buffers."
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
 '(cursor-type (quote box))
-
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
@@ -366,7 +348,6 @@ searches all buffers."
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
 '(setq mail-user-agent 'message-user-agent)
 '(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
-
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
 '(ns-tool-bar-size-mode nil t)
@@ -407,28 +388,9 @@ searches all buffers."
                 (org-todo 'done)
               (org-todo 'todo)))))))
 
-(defun org-check-misformatted-subtree ()
-  "If you think you might have subtrees with misplaced SCHEDULED and DEADLINE cookies, this command lets you check the current buffer: for misformatted entries."
-  (interactive)
-  (show-all)
-  (org-map-entries
-   (lambda ()
-     (when (and (move-beginning-of-line 2)
-                (not (looking-at org-heading-regexp)))
-       (if (or (and (org-get-scheduled-time (point))
-                    (not (looking-at (concat "^.*" org-scheduled-regexp))))
-               (and (org-get-deadline-time (point))
-                    (not (looking-at (concat "^.*" org-deadline-regexp)))))
-           (when (y-or-n-p "Fix this subtree? ")
-             (message "Call the function again when you're done fixing this subtree.")
-             (recursive-edit))
-         (message "All subtrees checked."))))))
-
-
 (defun my-align-all-tables ()
   (interactive)
   (org-table-map-tables 'org-table-align 'quietly))
-
 
 (defun my-org-extract-link ()
   "Extract the link location at point and put it on the killring."
@@ -504,8 +466,6 @@ searches all buffers."
             (org-entry-get-multivalued-property (point) "Effort"))))
       (unless (equal effort "")
         (org-set-property "Effort" effort)))))
-
-(require 'org-drill)
 
 (defun my-org-insert-sub-task ()
   (interactive)
@@ -585,6 +545,20 @@ searches all buffers."
             (define-key map (kbd "<M-return>") 'org-return)
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
+
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)  
+  (org-bullets-mode)
+  (org-bullets-mode)
+  (boss-mode)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL") 
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
 
 (defun org-checkbox-next ()
   (interactive)
@@ -725,8 +699,6 @@ Subject: %^{Subject}
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
-
-(setq browse-url-browser-function 'browse-default-macosx-browser)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
@@ -1072,16 +1044,7 @@ Subject: %^{Subject}
  '(org-startup-indented t)
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
-  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- ;; (org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
-                                        ; (org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
- ;; (org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
- ;; (org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
-                                        ;'(org-time-stamp-custom-formats (quote ("<%b %e %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates with day of the week
- ;; (org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
- ;; (org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
-
-
+ '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  '(org-use-speed-commands t)
  '(org-yank-adjusted-subtrees t)
  '(org2blog/wp-confirm-post nil)
@@ -1115,10 +1078,7 @@ Subject: %^{Subject}
  '(user-mail-address "dixit@aya.yale.edu")
  '(visual-line-mode nil t)
  '(cua-mode nil)
- )
-
-(custom-set-variables
- '(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
+'(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
 
  '(org-modules
    (quote
@@ -2230,22 +2190,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (require 'wc-mode)
 
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
-
-(require 'org-serenity-mode)
-
-(defun workflowy-mode ()
-  "workflowy"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
-  (boss-mode)
-  (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
-    'new-org-delete-backward-char)
-  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-  (insert "\n* "))
 
 (require 'org-serenity-mode)
 

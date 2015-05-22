@@ -4,7 +4,6 @@
   - Emacs: I use these with both GNU Emacs for OSX and for Aquamacs.
 
 * Set up packages
-
 Load the proper repositories:
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -41,6 +40,18 @@ For popping around the buffer. I need to review how this works again.
 #+END_SRC
 
 * Set up spellcheck
+
+
+
+* Spellcheck add word 
+#+BEGIN_SRC emacs-lisp
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+#+END_SRC
 
 Find aspell and hunspell automatically:
 
@@ -166,7 +177,8 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** Load org modules
 #+BEGIN_SRC emacs-lisp
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
-** Archiving 
+#+END_SRC
+** Archiving
 (defadvice org-archive-subtree (around my-org-archive-subtree activate)
   (let ((org-archive-location
 	 (if (save-excursion (org-back-to-heading)
@@ -177,8 +189,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 	   org-archive-location)))
     ad-do-it))
 #+END_SRC
-
-
 * Automatically open files in their correct modes:
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
@@ -202,25 +212,16 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 #+END_SRC
 
-
-# don't think I need this
-# (require 'yaml-mode)
-# (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
-
-
-Org-mode key bindings:
-
+* Org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
-
 * Functions
-
 ** Buffers
-
+*** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
 (require 'buffer-stack)
@@ -238,6 +239,7 @@ Aquamacs:
 (global-set-key [(A-left)] 'buffer-stack-up)
 #+END_SRC
 
+*** Uniqify buffers
 Open new buffers without prompting me for a filename global counter to ensure
 every new buffer will be unique:
 #+BEGIN_SRC emacs-lisp
@@ -251,7 +253,7 @@ every new buffer will be unique:
 ;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
 #+END_SRC
 
-Create new buffer as org-mode subtree in current file
+*** Create new buffer as org-mode subtree in current file
 #+BEGIN_SRC emacs-lisp
 (defun org-new-scratch-buffer ()
   (interactive)
@@ -260,8 +262,7 @@ Create new buffer as org-mode subtree in current file
   )
 #+END_SRC
 
-Don't autocorrect in minibuffer:
-
+*** Don't autocorrect in minibuffer:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
 (add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
@@ -269,17 +270,8 @@ Don't autocorrect in minibuffer:
                                    (abbrev-mode -1)))
 #+END_SRC
 
-Spellcheck:
-#+BEGIN_SRC emacs-lisp
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-#+END_SRC
-
-Need to add "cleanup buffer safe" here from whattheemacsd.com
+* Things to learn
+** Need to add "cleanup buffer safe" here from whattheemacsd.com
 #+BEGIN_SRC emacs-lisp
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -291,9 +283,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 #+END_SRC
 
-Replace smart quotes with straight quotes so that spell check can recognize
-words with contractions like "don't" and "can't." For when I paste text in that
-I've copied from the web.
+* Replace smart quotes with straight quotes
+Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -305,6 +296,7 @@ I've copied from the web.
                           nil beg end))
 #+END_SRC
 
+* Paste and replace quotes
 Haven't used this next one:
 #+BEGIN_SRC emacs-lisp
 (defun paste-and-replace-quotes ()
@@ -314,6 +306,8 @@ Haven't used this next one:
   (replace-smart-quotes (mark) (point)))
 #+END_SRC
 
+* Searching for things
+** isearch settings
 #+BEGIN_SRC emacs-lisp
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -342,9 +336,11 @@ Haven't used this next one:
 ;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 #+END_SRC
 
+** search all open buffers
 I know that string is in my Emacs somewhere!
 #+BEGIN_SRC emacs-lisp
 (require 'cl)
+
 
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
@@ -369,9 +365,7 @@ searches all buffers."
    regexp))
 #+END_SRC
 
-* Some org-mode settings
-
-Hide org-mode stars for a cleaner look:
+* Some more org-mode settings
 #+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
@@ -395,19 +389,16 @@ Hide org-mode stars for a cleaner look:
 '(org-list-indent-offset 3)
 '(org-log-done (quote time))
 '(org-log-refile (quote time))
-
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-
 '(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
 
-Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
+** Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
 autosaves in my ~ home directory):
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-agenda-mode-hook
@@ -416,11 +407,13 @@ autosaves in my ~ home directory):
             (auto-save-mode)))
 #+END_SRC
 
+** Mobile org 
 Can't get this to work on my iPhone:
 #+BEGIN_SRC emacs-lisp
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 #+END_SRC
 
+* Other stuff 
 #+BEGIN_SRC emacs-lisp
 (setq org-src-fontify-natively t)
 
@@ -434,18 +427,15 @@ Can't get this to work on my iPhone:
 #+BEGIN_SRC emacs-lisp
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
-#+END_SRC
 
-Make URLs in comments/strings clickable:
-#+BEGIN_SRC emacs-lisp
+;; Make URLs in comments/strings clickable:
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
-#+END_SRC
 
-Spellcheck:
-#+BEGIN_SRC emacs-lisp
+;; spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 #+END_SRC
 
+* I forgot what this is but it looks important 
 #+BEGIN_SRC emacs-lisp
 (define-key org-mode-map
   (kbd "RET")
@@ -457,6 +447,7 @@ Spellcheck:
       (call-interactively 'org-return))))
 #+END_SRC
 
+* org-mode speed commands
 #+BEGIN_SRC emacs-lisp
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (
@@ -469,8 +460,9 @@ Spellcheck:
                                       ("A" . org-archive-subtree-default-with-confirmation)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
+#+END_SRC
 
-
+* org show agenda
 (defun bh/show-org-agenda ()
   (interactive)
   (if org-agenda-sticky
@@ -478,6 +470,8 @@ Spellcheck:
     (org-agenda-list))
   (delete-other-windows))
 
+* more org settings 
+#+BEGIN_SRC emacs-lisp
 
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
@@ -485,17 +479,20 @@ Spellcheck:
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
 
+;; start org in folded mode
 (setq org-startup-folded t)
 
 ;; allow alphabetical list entries, i.e. "a. this b. that c. another"
 (setq org-alphabetical-lists t)
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+;; fast TODO selection
 (setq org-use-fast-todo-selection t)
+
+;; more org settings
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 #+END_SRC
 
+* org keywords
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
@@ -513,28 +510,16 @@ Spellcheck:
         ))
 #+END_SRC
 
+* more org settings
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'org-agenda-list)
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; (require 'org-devonthink)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;; (org-drill)
-
-;; (require 'org-writers-room)
-
 (require 'org-inlinetask)
 
-;; (require 'org-gcal)
-
-;; (require 'org-mac-iCal)
-
-;; (require 'org-import-icalendar)
 #+END_SRC
 
+* org stuck projects (?)
 Defining stuck projects as todos that do not contain "scheduled" or
 "deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
 #+BEGIN_SRC emacs-lisp
@@ -549,7 +534,6 @@ Defining stuck projects as todos that do not contain "scheduled" or
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
 '(cursor-type (quote box))
-
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
@@ -559,7 +543,6 @@ Defining stuck projects as todos that do not contain "scheduled" or
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
 '(setq mail-user-agent 'message-user-agent)
 '(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
-
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
 '(ns-tool-bar-size-mode nil t)
@@ -572,7 +555,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq ns-pop-up-frames nil)
 #+END_SRC
 
-Use visual line mode whenever possible:
+* Use visual line mode whenever possible:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
@@ -581,23 +564,15 @@ Use visual line mode whenever possible:
 (global-visual-line-mode t)
 #+END_SRC
 
+* for splitting windows properly 
 #+BEGIN_SRC emacs-lisp
 (setq split-width-threshold 75)
 #+END_SRC
 
 * Some ~org-mode~ custom functions
 
-Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists
-of a list with checkboxes. When all of the checkboxes are checked, the item
-should be considered complete and its ~TODO~ state should be automatically
-changed to ~DONE~. The code below does that. This version is slightly enhanced
-over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a
-checkbox is unchecked. Note that the code requires that a checkbox statistics
-cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in
-the manual) be present in order for it to work. Note also that it is too dumb
-to figure out whether the item has a ~TODO~ state in the first place: if there
-is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any
-time that the statistics cookie is changed.
+** checkbox-list-complete
+Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
 
 #+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-list
@@ -622,30 +597,16 @@ time that the statistics cookie is changed.
               (org-todo 'todo)))))))
 #+END_SRC
 
+* align tables
 #+BEGIN_SRC emacs-lisp
-(defun org-check-misformatted-subtree ()
-  "If you think you might have subtrees with misplaced SCHEDULED and DEADLINE cookies, this command lets you check the current buffer: for misformatted entries."
-  (interactive)
-  (show-all)
-  (org-map-entries
-   (lambda ()
-     (when (and (move-beginning-of-line 2)
-                (not (looking-at org-heading-regexp)))
-       (if (or (and (org-get-scheduled-time (point))
-                    (not (looking-at (concat "^.*" org-scheduled-regexp))))
-               (and (org-get-deadline-time (point))
-                    (not (looking-at (concat "^.*" org-deadline-regexp)))))
-           (when (y-or-n-p "Fix this subtree? ")
-             (message "Call the function again when you're done fixing this subtree.")
-             (recursive-edit))
-         (message "All subtrees checked."))))))
-
 
 (defun my-align-all-tables ()
   (interactive)
   (org-table-map-tables 'org-table-align 'quietly))
+#+END_SRC
 
-
+* org extract link 
+#+BEGIN_SRC emacs-lisp
 (defun my-org-extract-link ()
   "Extract the link location at point and put it on the killring."
   (interactive)
@@ -653,6 +614,7 @@ time that the statistics cookie is changed.
     (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
 #+END_SRC
 
+* org insert link
 Insert link with HTML title as default description. When using `org-insert-link'
 (`C-c C-l') it might be useful to extract contents from HTML <title> tag and use
 it as a default link description. Here is a way to accomplish this:
@@ -756,9 +718,8 @@ estimate. leave blank for no effort line
         (org-set-property "Effort" effort)))))
 #+END_SRC
 
+* org insert subtask
 #+BEGIN_SRC emacs-lisp
-(require 'org-drill)
-
 (defun my-org-insert-sub-task ()
   (interactive)
   (let ((parent-deadline (org-get-deadline-time nil)))
@@ -768,14 +729,15 @@ estimate. leave blank for no effort line
       (org-deadline nil parent-deadline))))
 #+END_SRC
 
-How can I stop the mouse cursor from highlighting lines in the agenda?
+* org-agenda
+** stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
                       (point-min) (point-max) '(mouse-face t))))
 #+END_SRC
 
-Reschedule agenda items to today with a single command:
+** Reschedule agenda items to today with a single command:
 #+BEGIN_SRC emacs-lisp
 (defun org-agenda-reschedule-to-today ()
   (interactive)
@@ -792,15 +754,17 @@ Reschedule agenda items to today with a single command:
 
 #+END_SRC
 
-~org~ archive done ([[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]):
+
+* ~org~ archive done
+Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
 #+BEGIN_SRC emacs-lisp
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 #+END_SRC
 
-Don't delete headings unless I specifically say so. So i.e. when I hit delete,
-don't delete stars, only content:
+* Protect org headings from accidental demotion
+Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
 #+BEGIN_SRC emacs-lisp
 (defun new-org-delete-backward-char (N)
   (interactive "p")
@@ -820,9 +784,8 @@ don't delete stars, only content:
      'new-org-delete-backward-char)))
 #+END_SRC
 
-** Export settings
-
-Change section numbering depending on what export format I use:
+* Org export settings
+** Change section numbering depending on what export format I use:
 #+BEGIN_SRC emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
@@ -834,7 +797,10 @@ Change section numbering depending on what export format I use:
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+#+END_SRC
 
+** export with drawers 
+#+BEGIN_SRC emacs-lisp
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
@@ -843,10 +809,9 @@ Change section numbering depending on what export format I use:
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
 (setq org-icalendar-include-todo t)
 #+END_SRC
+*** Org refile settings
 
-** Refile settings
-
-Exclude ~DONE~ state tasks from refile targets:
+*** Exclude ~DONE~ state tasks from refile targets:
 #+BEGIN_SRC emacs-lisp
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
@@ -854,8 +819,9 @@ Exclude ~DONE~ state tasks from refile targets:
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 
-Make ~org-mode~ temporarily emulate traditional outlining keybindings,
-e.g. nvALT:
+* Workflowy mode
+Make ~org-mode~ temporarily emulate traditional outlining keybindings
+e.g. nvALT
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode zin/org-outline-mode
   "" nil
@@ -867,9 +833,25 @@ e.g. nvALT:
             (define-key map (kbd "<M-return>") 'org-return)
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
+
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)  
+  (org-bullets-mode)
+  (org-bullets-mode)
+  (boss-mode)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL") 
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
+
 #+END_SRC
 
-Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+
+* Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
 #+BEGIN_SRC emacs-lisp
 (defun org-checkbox-next ()
   (interactive)
@@ -878,7 +860,7 @@ Check checkbox then automatically move to next item in list ([[http://superuser.
   (org-next-item))
 #+END_SRC
 
-I think this is to make parent ~DONE~ states automatically update:
+* I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
@@ -894,7 +876,7 @@ I think this is to make parent ~DONE~ states automatically update:
   (myorg-update-parent-cookie))
 #+END_SRC
 
-
+* Org refile region
 Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
 #+BEGIN_SRC emacs-lisp
 (defvar org-refile-region-format "\n%s\n")
@@ -942,7 +924,7 @@ With prefix arg C-u, copy region instad of killing it."
 (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
 #+END_SRC
 
-Fix '\emsp' bug in clocktable (doesn't work though):
+* Fix '\emsp' bug in clocktable (doesn't work though):
 #+BEGIN_SRC emacs-lisp
 (defun my-org-clocktable-indent-string (level)
   (if (= level 1)
@@ -955,7 +937,7 @@ Fix '\emsp' bug in clocktable (doesn't work though):
 (advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
 #+END_SRC
 
-** ~org-capture~ setup
+*** ~org-capture~ setup
 
 This is working correctly:
 #+BEGIN_SRC emacs-lisp
@@ -1017,7 +999,6 @@ Subject: %^{Subject}
 #+END_SRC
 
 * Settings (not functions)
-
 Open everything in its right mode; use ~org-mode~ whenever possible:
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
@@ -1038,30 +1019,26 @@ Autocapitalization:
 ;; (add-hook message-mode-hook turn-on-orgstruct)
 #+END_SRC
 
-Set the default browser:
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-default-macosx-browser)
-#+END_SRC
-
+Set the default browser
 # ATTENTION: the following line was further down the file. Please, check which
 # is the correct one. -- Rúdi Araújo, 2015/05/17.
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 #+END_SRC
 
-Define my default directory:
+* Define my default directory:
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/Dropbox/writing/" )
 #+END_SRC
 * LaTeX
-
+** find LaTeX on my system
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2013/bin/universal-darwin")
   )
 #+END_SRC
 
-Load my Latex files:
+** Load my LaTeX files
 #+BEGIN_SRC emacs-lisp
 ;; (load "~/Dropbox/elisp/latex.el")
 (load "~/Dropbox/elisp/signal-flare.el")
@@ -1084,7 +1061,6 @@ Load my Latex files:
 #+END_SRC
 
 * Backups
-
 Make backups:
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -1128,10 +1104,12 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
     (message-send-and-exit)))
 #+END_SRC
 
+** forgot what this is 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'completion-styles 'initials t)
 #+END_SRC
 
+** orgstruct mode
 #+BEGIN_SRC emacs-lisp
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
 ;; (add-hook 'message-mode-hook 'orgstruct-mode 'append)
@@ -1139,7 +1117,7 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 #+END_SRC
 
-Remember recent email addresses:
+** Remember recent email addresses:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/Dropbox/elisp/recent-addresses-0.1")
 (require 'recent-addresses)
@@ -1148,7 +1126,6 @@ Remember recent email addresses:
 #+END_SRC
 
 * Pomodoro
-
 #+BEGIN_SRC emacs-lisp
 (require 'org-pomodoro)
 
@@ -1158,13 +1135,13 @@ Remember recent email addresses:
   (org-pomodoro)
   )
 #+END_SRC
-
-* Reveal in finder
-
+* Useful functions
+** Reveal in finder
 #+BEGIN_SRC emacs-lisp
 (require 'reveal-in-finder)
 #+END_SRC
 
+* org-settings
 * ~org-fstree~
 
 #+BEGIN_SRC emacs-lisp
@@ -1242,7 +1219,6 @@ To enable Edit with Emacs in Chrome:
 #+END_SRC
 
 * Save all
-
 ⌘-s to Save all:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook (lambda () (setq buffer-save-without-query t)))
@@ -1253,8 +1229,8 @@ To enable Edit with Emacs in Chrome:
 (add-hook 'css-mode-hook (lambda () (setq buffer-save-without-query t)))
 #+END_SRC
 
-* Setting variables#
-
+* Setting variables
+I should probably break these out of custom-set-variables and organize them according to their function
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1467,16 +1443,7 @@ To enable Edit with Emacs in Chrome:
  '(org-startup-indented t)
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
-  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- ;; (org-html-metadata-timestamp-format "%Y%m%d %a %l:%M%p")
-                                        ; (org-time-stamp-custom-formats (quote ("<%m/%d/%Y %a>" . "<%m/%d/%Y %a %l:%M%p>"))) ; full dates
- ;; (org-time-stamp-custom-formats (quote ("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>"))) ; precise dates
- ;; (org-time-stamp-custom-formats (quote ("<%m/%d %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand numeric dates
-                                        ;'(org-time-stamp-custom-formats (quote ("<%b %e %a>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates with day of the week
- ;; (org-time-stamp-custom-formats (quote ("<%b %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates no day of the week, abbreviated month
- ;; (org-time-stamp-custom-formats (quote ("<%a %B %e>" . "<%m/%d %a %I:%M%p>"))) ; shorthand word dates full month
-
-
+ '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  '(org-use-speed-commands t)
  '(org-yank-adjusted-subtrees t)
  '(org2blog/wp-confirm-post nil)
@@ -1510,10 +1477,7 @@ To enable Edit with Emacs in Chrome:
  '(user-mail-address "dixit@aya.yale.edu")
  '(visual-line-mode nil t)
  '(cua-mode nil)
- )
-
-(custom-set-variables
- '(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
+'(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
 
  '(org-modules
    (quote
@@ -2912,22 +2876,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
-
-(require 'org-serenity-mode)
-
-(defun workflowy-mode ()
-  "workflowy"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
-  (boss-mode)
-  (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
-    'new-org-delete-backward-char)
-  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-  (insert "\n* "))
 
 (require 'org-serenity-mode)
 
