@@ -19,19 +19,20 @@ Load the proper repositories:
 (package-initialize)
 #+END_SRC
 
-Manually load some of my packages:
+** Manually load some of my packages:
 #+BEGIN_SRC emacs-lisp
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
 #+END_SRC
 
-Require some packages:
+** Require some packages
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
 (require 'org-bullets)
 (require 'ox-latex)
+(require 'auto-complete)
 #+END_SRC
 
 For popping around the buffer. I need to review how this works again.
@@ -40,21 +41,7 @@ For popping around the buffer. I need to review how this works again.
 #+END_SRC
 
 * Set up spellcheck
-
-
-
-* Spellcheck add word 
-#+BEGIN_SRC emacs-lisp
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-#+END_SRC
-
-Find aspell and hunspell automatically:
-
+** Find aspell and hunspell
 #+BEGIN_SRC emacs-lisp
 (cond
  ((executable-find "aspell")
@@ -66,20 +53,30 @@ Find aspell and hunspell automatically:
  )
 #+END_SRC
 
+** Spellcheck add word 
+#+BEGIN_SRC emacs-lisp
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+#+END_SRC
+
 * UI / customization of appearance and editing environment
 ** Stop accidentally highlighting org-mode links all the time:
 #+BEGIN_SRC emacs-lisp
 '(mouse-highlight nil)
 #+END_SRC
 
-** Make block quotes appear nicely in buffer, displaying a > instead of a :
+** Make block quotes appear nicely in buffer, displaying > instead of :
 http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+BEGIN_SRC emacs-lisp
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
 #+END_SRC
 
-** Ask before exiting Emacs:
+** Ask before exiting Emacs
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p) 
 #+END_SRC
@@ -119,7 +116,7 @@ it:
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 #+END_SRC
 
-** Set some default settings
+* Set some default settings
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
@@ -127,10 +124,11 @@ it:
 (delete-selection-mode 1) ; make typing override text selection
 #+END_SRC
 
-** Split windows correctly:
+* Split windows correctly
 #+BEGIN_SRC emacs-lisp
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
+(setq split-width-threshold 75)
 #+END_SRC
 * Helm
 Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders. 
@@ -141,20 +139,17 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+END_SRC
 
 * Editing / environment settings
-** Automatically pair parentheses:
-
+** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)
 #+END_SRC
 
-** Search in Spotlight:
-
+** Search in Spotlight
 #+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
 #+END_SRC
 
 * GNUS
-
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq user-full-name "Jay Dixit")
@@ -262,7 +257,7 @@ every new buffer will be unique:
   )
 #+END_SRC
 
-*** Don't autocorrect in minibuffer:
+*** Don't autocorrect in minibuffer
 #+BEGIN_SRC emacs-lisp
 (add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
 (add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
@@ -283,7 +278,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 #+END_SRC
 
-* Replace smart quotes with straight quotes
+* My functions
+** Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
 (defun replace-smart-quotes (beg end)
@@ -296,7 +292,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                           nil beg end))
 #+END_SRC
 
-* Paste and replace quotes
+** Paste and replace quotes
 Haven't used this next one:
 #+BEGIN_SRC emacs-lisp
 (defun paste-and-replace-quotes ()
@@ -398,6 +394,7 @@ searches all buffers."
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
 
+* Org agenda
 ** Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
 autosaves in my ~ home directory):
 #+BEGIN_SRC emacs-lisp
@@ -407,7 +404,7 @@ autosaves in my ~ home directory):
             (auto-save-mode)))
 #+END_SRC
 
-** Mobile org 
+* Mobile org 
 Can't get this to work on my iPhone:
 #+BEGIN_SRC emacs-lisp
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
@@ -419,9 +416,6 @@ Can't get this to work on my iPhone:
 
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
-
-(require 'auto-complete)
-(org-mode)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -564,11 +558,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (global-visual-line-mode t)
 #+END_SRC
 
-* for splitting windows properly 
-#+BEGIN_SRC emacs-lisp
-(setq split-width-threshold 75)
-#+END_SRC
-
+* 
 * Some ~org-mode~ custom functions
 
 ** checkbox-list-complete
