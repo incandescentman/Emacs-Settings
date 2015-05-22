@@ -400,144 +400,6 @@ Subject: %^{Subject}
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
 
-(defun my-isearch-word-at-point ()
-  (interactive)
-  (call-interactively 'isearch-forward-regexp))
-
-(defun my-isearch-yank-word-hook ()
-  (when (equal this-command 'my-isearch-word-at-point)
-    (let ((string (concat "\\<"
-                          (buffer-substring-no-properties
-                           (progn (skip-syntax-backward "w_") (point))
-                           (progn (skip-syntax-forward "w_") (point)))
-                          "\\>")))
-      (if (and isearch-case-fold-search
-               (eq 'not-yanks search-upper-case))
-          (setq string (downcase string)))
-      (setq isearch-string string
-            isearch-message
-            (concat isearch-message
-                    (mapconcat 'isearch-text-char-description
-                               string ""))
-            isearch-yank-flag t)
-      (isearch-search-and-update))))
-
-(add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
-
-;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
-
-(require 'cl)
-
-
-(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
-  "Files to ignore when searching buffers via \\[search-open-buffers]."
-  :type 'editable-list)
-
-(require 'grep)
-
-(defun search-open-buffers (regexp prefix)
-  "Searches file-visiting buffers for occurence of REGEXP. With
-prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
-searches all buffers."
-  (interactive (list (grep-read-regexp)
-                     current-prefix-arg))
-  (message "Regexp is %s; prefix is %s" regexp prefix)
-  (multi-occur
-   (if (member prefix '(4 (4)))
-       (buffer-list)
-     (remove-if
-      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
-      (remove-if-not 'buffer-file-name (buffer-list))))
-
-   regexp))
-
-(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-
-(defun my-goto-match-beginning ()
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defadvice isearch-exit (after my-goto-match-beginning activate)
-  "Go to beginning of match."
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
-
-(defun isearch-from-buffer-start ()
-  (interactive)
-  (push-mark)
-  (goto-char (point-min))
-  (isearch-forward))
-
-(require 'helm-config)
-(helm-mode t)
-(helm-adaptative-mode t)
-
-(require 'helm-swoop)
-; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
-
-(setq helm-swoop-pre-input-function
-      (lambda () nil))
-
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-
-(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-
-;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
-
-(setq helm-multi-swoop-edit-save t)
-
-(setq helm-swoop-split-with-multiple-windows nil)
-
-(setq helm-swoop-split-direction 'split-window-vertically)
-
-(setq helm-swoop-speed-or-color nil)
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
-(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
-(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
-
-(setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
-      helm-yank-symbol-first                 t
-      helm-move-to-line-cycle-in-source      t
-      helm-buffers-fuzzy-matching            t
-      helm-ff-auto-update-initial-value      t)
-
-(autoload 'helm-descbinds      "helm-descbinds" t)
-(autoload 'helm-eshell-history "helm-eshell"    t)
-(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-(global-set-key (kbd "M-h a")    #'helm-apropos)
-(global-set-key (kbd "M-h i")    #'helm-info-emacs)
-(global-set-key (kbd "M-h b")    #'helm-descbinds)
-
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
-              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
-
-
-(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
-(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
-(define-key helm-map (kbd "M-o") #'helm-previous-source)
-
-(global-set-key (kbd "M-s s")   #'helm-ag)
-
-(require 'helm-projectile)
-(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-                                         (remove 'helm-source-projectile-files-list 
-                                              helm-projectile-sources-list)))
-(helm-projectile-on)
-
-(define-key projectile-mode-map (kbd "C-c p /")
-  #'(lambda ()
-      (interactive)
-      (helm-ag (projectile-project-root))))
-
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 '(org-replace-disputed-keys t)
@@ -1125,7 +987,7 @@ searches all buffers."
  '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
  '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
  '(grep-highlight-matches (quote always))
- '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/savefile/ido.hist")
+ '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
@@ -1204,7 +1066,7 @@ searches all buffers."
  '(org-html-postamble nil)
  '(org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
 
- '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
+ '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(org-time-stamp-custom-formats (quote ("<%a %b %d>" . "<%m/%d %a %I:%M%p>"))) ; like this: "Apr 18 Fri"
  '(smex-prompt-string "I love you. "))
 
@@ -1220,7 +1082,7 @@ searches all buffers."
 ;; (custom-set-variables
 ;;  '(org-time-stamp-custom-formats
 ;;    '("<%a %b %d>" . "<%m/%d %a %I:%M%p>"))
-;;  '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
+;;  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
 ;;  '(org-headline-done
 ;;    ((t
 ;;      (:strike-through t))))
@@ -1233,7 +1095,7 @@ searches all buffers."
 ;;    '(recent-addresses-add-headers))
 ;;  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
 ;;  '(ido-use-url-at-point t)
-;;  '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/savefile/ido.hist")
+;;  '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
 ;;  '(web-mode-load-hook
 ;;    '((lambda nil
 ;;        (abbrev-mode -1))))
@@ -1481,113 +1343,6 @@ searches all buffers."
 ;;  '(user-mail-address "dixit@aya.yale.edu")
 ;;  '(visual-line-mode nil t)
 ;;  '(cua-mode nil))
-
-(global-set-key (kbd "M-]") 'outline-next-visible-heading)
-(global-set-key (kbd "M-[") 'outline-previous-visible-heading)
-(global-set-key (kbd "M-1") 'auto-capitalize-mode)
-;; (global-set-key (kbd "s-u") 'dired-single)
-
-
-(define-key global-map (kbd "<C-wheel-up>") (lambda ()
-                                              (interactive)
-                                              (scroll-up-command)))
-(define-key global-map (kbd "<C-wheel-down>") (lambda ()
-                                               (interactive)
-                                               (scroll-down-command)))
-
-(global-set-key "\C-f" 'forward-word)
-(global-set-key "\C-b" 'backward-word)
-
-(global-set-key '[(f5)] 'point-stack-push)
-(global-set-key '[(f6)] 'point-stack-pop)
-(global-set-key '[(f7)] 'point-stack-forward-stack-pop)
-(global-set-key '[(f8)] 'search-open-buffers)
-
-(global-set-key (kbd "C-h") 'delete-backward-char)
-
-(global-set-key (kbd "M-h") 'help-command)
-
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
-
-(global-set-key (kbd "C-c h") 'helm-mini)
-
-(cl-dolist (map '(message-mode-map orgstruct-mode-map))
-  (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-    (define-key (eval map) (kbd key) nil)))
-
-(global-set-key "\C-ce" 'eval-buffer)
-(global-set-key "\C-cr" 'eval-region)
-(global-set-key (kbd "`") 'flyspell-auto-correct-word)
-(global-set-key (kbd "M-`") 'other-frame)
-(global-set-key (kbd "s-z") 'undo)
-(global-set-key (kbd "s-y") 'redo)
-
-(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
-(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
-
-(defun define-hyper-key (key fun)
-  (cond
-   (aquamacs-flag
-    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
-   (gnuemacs-flag
-    (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
-
-(define-hyper-key "h" 'replace-string)
-(define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
-(define-hyper-key "\\" 'visit-most-recent-file)
-(define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
-(define-hyper-key "R" 'helm-projectile-recentf)
-(define-hyper-key "r" 'helm-mini)
-(define-hyper-key "t" 'new-buffer)
-(define-hyper-key "T" 'org-new-scratch-buffer)
-(define-hyper-key "g" 'isearch-repeat-forward)
-(define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'org-mac-chrome-insert-frontmost-url-with-quotes)
-(define-hyper-key "d" 'org-todo)
-(define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
-(define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "b" 'org-narrow-to-subtree)
-(define-hyper-key "a" 'mark-whole-buffer) ; select all
-(define-hyper-key "w" 'delete-window) ; close
-(define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'org-save-all-org-buffers) ; save all
-
-(define-hyper-key "4" 'clone-indirect-buffer-other-window)
-(define-hyper-key "5" 'point-stack-push)
-(define-hyper-key "6" 'point-stack-pop)
-(define-hyper-key "7" 'point-stack-forward-stack-pop)
-(define-hyper-key "8" 'search-open-buffers)
-(define-hyper-key "B" 'clone-indirect-buffer-other-window)
-(define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'locate)
-(define-hyper-key "(" 'org-velocity)
-(define-hyper-key "[" 'org-backward-heading-same-level)
-(define-hyper-key "]" 'org-forward-heading-same-level)
-
-(define-hyper-key "m a" 'org-agenda) 
-(define-hyper-key "m j" 'helm-imenu-anywhere) 
-(define-hyper-key ";" 'ido-goto-symbol)
-(define-hyper-key "D" 'diredp-dired-recent-dirs)
-
-(define-hyper-key "m cy" 'cyberpunk-jay) 
-(define-hyper-key "m cl" 'cyberpunk-large) 
-(define-hyper-key "m cw" 'cyberpunk-writeroom) 
-(define-hyper-key "m wb" 'whiteboard) 
-(define-hyper-key "m sl" 'solarized-light)
-(define-hyper-key "m sd" 'solarized-dark) 
-(define-hyper-key "m ri" 'ritchie) 
-(define-hyper-key "m sp" 'spolsky) 
-(define-hyper-key "m wr" 'writeroom-mode) 
-(define-hyper-key "m wf" 'workflowy-mode) 
-(define-hyper-key "m st" 'small-type) 
-(define-hyper-key "m mp" 'morning-pages) 
-(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
-(define-hyper-key "m lt" 'large-type) 
-(define-hyper-key "m mt" 'medium-type) 
-(define-hyper-key "m df" 'delete-file-and-buffer) 
-(define-hyper-key "m rf" 'rename-file-and-buffer)
 
 (require 'key-chord)
 (key-chord-mode 1)
@@ -2484,3 +2239,248 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (require 'bbdb) ;; (3)
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
+
+(global-set-key (kbd "M-]") 'outline-next-visible-heading)
+(global-set-key (kbd "M-[") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-1") 'auto-capitalize-mode)
+;; (global-set-key (kbd "s-u") 'dired-single)
+
+
+(define-key global-map (kbd "<C-wheel-up>") (lambda ()
+                                              (interactive)
+                                              (scroll-up-command)))
+(define-key global-map (kbd "<C-wheel-down>") (lambda ()
+                                               (interactive)
+                                               (scroll-down-command)))
+
+(global-set-key "\C-f" 'forward-word)
+(global-set-key "\C-b" 'backward-word)
+
+(global-set-key '[(f5)] 'point-stack-push)
+(global-set-key '[(f6)] 'point-stack-pop)
+(global-set-key '[(f7)] 'point-stack-forward-stack-pop)
+(global-set-key '[(f8)] 'search-open-buffers)
+
+(global-set-key (kbd "C-h") 'delete-backward-char)
+
+(global-set-key (kbd "M-h") 'help-command)
+
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
+
+(global-set-key (kbd "C-c h") 'helm-mini)
+
+(cl-dolist (map '(message-mode-map orgstruct-mode-map))
+  (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+    (define-key (eval map) (kbd key) nil)))
+
+(global-set-key "\C-ce" 'eval-buffer)
+(global-set-key "\C-cr" 'eval-region)
+(global-set-key (kbd "`") 'flyspell-auto-correct-word)
+(global-set-key (kbd "M-`") 'other-frame)
+(global-set-key (kbd "s-z") 'undo)
+(global-set-key (kbd "s-y") 'redo)
+
+(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
+(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
+
+(defun define-hyper-key (key fun)
+  (cond
+   (aquamacs-flag
+    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
+   (gnuemacs-flag
+    (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
+
+(define-hyper-key "h" 'replace-string)
+(define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
+(define-hyper-key "\\" 'visit-most-recent-file)
+(define-hyper-key "f" 'isearch-forward)
+;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
+(define-hyper-key "R" 'helm-projectile-recentf)
+(define-hyper-key "r" 'helm-mini)
+(define-hyper-key "t" 'new-buffer)
+(define-hyper-key "T" 'org-new-scratch-buffer)
+(define-hyper-key "g" 'isearch-repeat-forward)
+(define-hyper-key "k" 'ido-kill-buffer)
+(define-hyper-key "K" 'org-mac-chrome-insert-frontmost-url-with-quotes)
+(define-hyper-key "d" 'org-todo)
+(define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
+(define-hyper-key "S" 'org-mac-skim-insert-page)
+(define-hyper-key "b" 'org-narrow-to-subtree)
+(define-hyper-key "a" 'mark-whole-buffer) ; select all
+(define-hyper-key "w" 'delete-window) ; close
+(define-hyper-key "`" 'other-window)
+(define-hyper-key "s" 'org-save-all-org-buffers) ; save all
+
+(define-hyper-key "4" 'clone-indirect-buffer-other-window)
+(define-hyper-key "5" 'point-stack-push)
+(define-hyper-key "6" 'point-stack-pop)
+(define-hyper-key "7" 'point-stack-forward-stack-pop)
+(define-hyper-key "8" 'search-open-buffers)
+(define-hyper-key "B" 'clone-indirect-buffer-other-window)
+(define-hyper-key "o" 'eval-buffer)
+(define-hyper-key "F" 'locate)
+(define-hyper-key "(" 'org-velocity)
+(define-hyper-key "[" 'org-backward-heading-same-level)
+(define-hyper-key "]" 'org-forward-heading-same-level)
+
+(define-hyper-key "m a" 'org-agenda) 
+(define-hyper-key "m j" 'helm-imenu-anywhere) 
+(define-hyper-key ";" 'ido-goto-symbol)
+(define-hyper-key "D" 'diredp-dired-recent-dirs)
+
+(define-hyper-key "m cy" 'cyberpunk-jay) 
+(define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m cw" 'cyberpunk-writeroom) 
+(define-hyper-key "m wb" 'whiteboard) 
+(define-hyper-key "m sl" 'solarized-light)
+(define-hyper-key "m sd" 'solarized-dark) 
+(define-hyper-key "m ri" 'ritchie) 
+(define-hyper-key "m sp" 'spolsky) 
+(define-hyper-key "m wr" 'writeroom-mode) 
+(define-hyper-key "m wf" 'workflowy-mode) 
+(define-hyper-key "m st" 'small-type) 
+(define-hyper-key "m mp" 'morning-pages) 
+(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
+(define-hyper-key "m lt" 'large-type) 
+(define-hyper-key "m mt" 'medium-type) 
+(define-hyper-key "m df" 'delete-file-and-buffer) 
+(define-hyper-key "m rf" 'rename-file-and-buffer)
+
+(defun my-isearch-word-at-point ()
+  (interactive)
+  (call-interactively 'isearch-forward-regexp))
+
+(defun my-isearch-yank-word-hook ()
+  (when (equal this-command 'my-isearch-word-at-point)
+    (let ((string (concat "\\<"
+                          (buffer-substring-no-properties
+                           (progn (skip-syntax-backward "w_") (point))
+                           (progn (skip-syntax-forward "w_") (point)))
+                          "\\>")))
+      (if (and isearch-case-fold-search
+               (eq 'not-yanks search-upper-case))
+          (setq string (downcase string)))
+      (setq isearch-string string
+            isearch-message
+            (concat isearch-message
+                    (mapconcat 'isearch-text-char-description
+                               string ""))
+            isearch-yank-flag t)
+      (isearch-search-and-update))))
+
+(add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
+
+;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
+
+(require 'cl)
+
+
+(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
+  "Files to ignore when searching buffers via \\[search-open-buffers]."
+  :type 'editable-list)
+
+(require 'grep)
+
+(defun search-open-buffers (regexp prefix)
+  "Searches file-visiting buffers for occurence of REGEXP. With
+prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
+searches all buffers."
+  (interactive (list (grep-read-regexp)
+                     current-prefix-arg))
+  (message "Regexp is %s; prefix is %s" regexp prefix)
+  (multi-occur
+   (if (member prefix '(4 (4)))
+       (buffer-list)
+     (remove-if
+      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
+      (remove-if-not 'buffer-file-name (buffer-list))))
+
+   regexp))
+
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+
+(defun my-goto-match-beginning ()
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defadvice isearch-exit (after my-goto-match-beginning activate)
+  "Go to beginning of match."
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)))
+
+(defun isearch-from-buffer-start ()
+  (interactive)
+  (push-mark)
+  (goto-char (point-min))
+  (isearch-forward))
+
+(require 'helm-config)
+(helm-mode t)
+(helm-adaptative-mode t)
+
+(require 'helm-swoop)
+; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
+
+(setq helm-swoop-pre-input-function
+      (lambda () nil))
+
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+
+;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
+
+(setq helm-multi-swoop-edit-save t)
+
+(setq helm-swoop-split-with-multiple-windows nil)
+
+(setq helm-swoop-split-direction 'split-window-vertically)
+
+(setq helm-swoop-speed-or-color nil)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
+
+(setq helm-ff-transformer-show-only-basename nil
+      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
+      helm-yank-symbol-first                 t
+      helm-move-to-line-cycle-in-source      t
+      helm-buffers-fuzzy-matching            t
+      helm-ff-auto-update-initial-value      t)
+
+(autoload 'helm-descbinds      "helm-descbinds" t)
+(autoload 'helm-eshell-history "helm-eshell"    t)
+(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+(global-set-key (kbd "M-h a")    #'helm-apropos)
+(global-set-key (kbd "M-h i")    #'helm-info-emacs)
+(global-set-key (kbd "M-h b")    #'helm-descbinds)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
+              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
+
+
+(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
+(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
+(define-key helm-map (kbd "M-o") #'helm-previous-source)
+
+(global-set-key (kbd "M-s s")   #'helm-ag)
+
+(require 'helm-projectile)
+(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
+                                         (remove 'helm-source-projectile-files-list 
+                                              helm-projectile-sources-list)))
+(helm-projectile-on)
+
+(define-key projectile-mode-map (kbd "C-c p /")
+  #'(lambda ()
+      (interactive)
+      (helm-ag (projectile-project-root))))

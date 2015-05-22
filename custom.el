@@ -139,7 +139,7 @@
  '(ido-ignore-files
    (quote
     ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
- '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/savefile/ido.hist")
+ '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
@@ -366,7 +366,7 @@
     (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
- '(recentf-save-file "~/Dropbox/emacs/savefile/recentf")
+ '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(safe-local-variable-values
    (quote
     ((org-export-allow-bind-keywords . t)
