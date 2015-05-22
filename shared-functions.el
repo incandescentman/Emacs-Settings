@@ -19,15 +19,9 @@
 (require 'org)
 (require 'org-bullets)
 (require 'ox-latex)
+(require 'auto-complete)
 
 (require 'point-stack)
-
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
 (cond
  ((executable-find "aspell")
@@ -37,6 +31,13 @@
   (setq ispell-program-name "hunspell")
   (setq ispell-extra-args '("-d en_US")))
  )
+
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
 '(mouse-highlight nil)
 
@@ -71,11 +72,13 @@
 
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
+(setq split-width-threshold 75)
 
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
 (electric-pair-mode 1)
+(setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
 
@@ -264,9 +267,6 @@ searches all buffers."
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 
-(require 'auto-complete)
-(org-mode)
-
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
 
@@ -364,8 +364,6 @@ searches all buffers."
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
 (visual-line-mode t)
 (global-visual-line-mode t)
-
-(setq split-width-threshold 75)
 
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
@@ -825,13 +823,6 @@ Subject: %^{Subject}
       (require 'edit-server)
       (setq edit-server-new-frame nil)
       (edit-server-start)))
-
-(add-hook 'org-mode-hook (lambda () (setq buffer-save-without-query t)))
-(add-hook 'org-mode-hook (lambda () (setq palimpsest-mode t)))
-(add-hook 'markdown-mode-hook (lambda () (setq buffer-save-without-query t)))
-(add-hook 'emacs-lisp-mode-hook (lambda () (setq buffer-save-without-query t)))
-(add-hook 'text-mode-hook (lambda () (setq buffer-save-without-query t)))
-(add-hook 'css-mode-hook (lambda () (setq buffer-save-without-query t)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1542,7 +1533,7 @@ Subject: %^{Subject}
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'save-some-buffers) ; save all
+(define-hyper-key "s" 'org-save-all-org-buffers) ; save all
 
 (define-hyper-key "4" 'clone-indirect-buffer-other-window)
 (define-hyper-key "5" 'point-stack-push)
