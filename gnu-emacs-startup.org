@@ -56,7 +56,6 @@ Don't highlight lines:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
 (setq prelude-whitespace nil)
 #+END_SRC
 
@@ -131,11 +130,15 @@ well.
   "*Hide dired details on entry to dired buffers."
   :group 'dired-details
   :type 'boolean)
+#+END_SRC
+
+ omit certain specific uninteresting file types from dired
+#+BEGIN_SRC emacs-lisp
 
 (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
 
-;; omit certain specific uninteresting file types from dired
+
 ;; (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store\\|\\.doc$\\|\\.docx$\\|\\.xlsx$\\|\\.ini$\\|\\.fsLockFile$\\|Icon")
 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon$")
@@ -169,7 +172,6 @@ Manually remove the scrollbar if default setting fails when creating a new frame
 
 Forgot what this does, I think it's in case Emacs crashes maybe to recover
 autosaves?
-
 #+BEGIN_SRC emacs-lisp
 (defadvice recover-session (around disable-dired-omit-for-recover activate)
   (let ((dired-mode-hook dired-mode-hook))
@@ -353,32 +355,32 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
-
-;;;; keybindings not currently in use 
-;; (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-;; (global-set-key (kbd "C-c s") 'org-copy-subtree)
-;; (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
-;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
-;; (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
-;; (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
-;; (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
-;; (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
-;; (define-key key-minor-mode-map (kbd "H-w") 'widen)
-;; (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
-;; (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
-;; (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
-;; (define-key key-minor-mode-map (kbd "s-;") 'google-define-word-or-phrase)
-;; (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
-;; (define-key key-minor-mode-map (kbd "s-R") 'web-research)
-;; (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
 #+END_SRC
+
+** keybindings not currently in use 
+ (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+ (global-set-key (kbd "C-c s") 'org-copy-subtree)
+ (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
+ (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+ (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
+ (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+ (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
+ (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
+ (define-key key-minor-mode-map (kbd "H-w") 'widen)
+ (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
+ (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
+ (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+ (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
+ (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
+ (define-key key-minor-mode-map (kbd "s-R") 'web-research)
+ (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
 
 * Sentences
 
 Make ~kill-sentence~ work in a more intuitive way:
 #+BEGIN_SRC emacs-lisp
 (defun kill-sentence-to-period ()
-  "Leave the fucking period in there mofo."
+  "Leave the period in there."
   (interactive)
   (kill-sentence)
   (push-mark)
