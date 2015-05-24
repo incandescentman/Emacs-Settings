@@ -5,7 +5,7 @@
 (setq prelude-guru nil)
 
 ;; load my init files
-(load "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.el")
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
 
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/shared-functions.org")
 

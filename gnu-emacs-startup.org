@@ -1,0 +1,516 @@
+#+TITLE: Jay Dixit's GNU Emacs setup
+* About
+  - System: Mac OSX Yosemite
+  - Emacs version: 24.5.1
+  - Use case: GNU Emacs specific settings.
+
+* Handle Emacs UTF-8 input
+
+#+BEGIN_SRC emacs-lisp
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
+#+END_SRC
+
+* Sticky windows
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(control x) (?0)] 'delete-other-windows)
+(global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
+(global-set-key  (kbd "s-0") 'delete-window)
+(global-set-key  (kbd "s-1") 'delete-other-windows)
+(global-set-key  (kbd "s-9") 'sticky-window-keep-window-visible)
+(global-set-key  (kbd "s-2") 'split-window-vertically)
+(global-set-key  (kbd "s-3") 'split-window-horizontally)
+#+END_SRC
+
+* Abbreviations (autocorrect)
+
+Automatically load abbreviations table:
+#+BEGIN_SRC emacs-lisp
+(setq-default abbrev-mode t)
+(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
+(setq save-abbrevs t)
+#+END_SRC
+
+* UI/Appearance
+
+Clean UI:
+#+BEGIN_SRC emacs-lisp
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode 1)
+#+END_SRC
+
+Don't highlight lines:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook
+          (lambda()
+            (hl-line-mode -1)
+            (global-hl-line-mode -1))
+          't
+          )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
+(setq prelude-whitespace nil)
+#+END_SRC
+
+Wrap text:
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode)
+#+END_SRC
+
+* Fullscreen settings
+
+[[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
+
+(defun toggle-maxframe ()
+  "Toggle maximized frame"
+  (interactive)
+  (setq maxframe-maximized-p (not maxframe-maximized-p))
+  (cond (maxframe-maximized-p (maximize-frame))
+        (t (restore-frame))))
+
+(define-key global-map [(s-return)] 'toggle-maxframe)
+;; make it easy to go fullscreen
+(defun toggle-fullscreen ()
+  "Toggle full screen"
+  (interactive)
+  (set-frame-parameter
+   nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+;; and the keybinding 
+(unless (fboundp 'toggle-frame-fullscreen)
+  (global-set-key (kbd "<f11>") 'toggle-fullscreen))
+(unless (fboundp 'toggle-frame-fullscreen)
+  (global-set-key (kbd "<f13>") 'toggle-fullscreen))
+
+  (global-set-key (kbd "<f13>") 'toggle-fullscreen)
+#+END_SRC
+
+* Directory settings
+
+There is probably a lot of redundancy here, I don't understand this stuff too
+well.
+
+#+BEGIN_SRC emacs-lisp
+(defun mydired-sort ()
+  "Sort dired listings with directories first."
+  (save-excursion
+    (let (buffer-read-only)
+      (forward-line 2) ;; beyond dir. header
+      (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+    (set-buffer-modified-p nil)))
+
+(defadvice dired-readin
+  (after dired-after-updating-hook first () activate)
+  "Sort dired listings with directories first before adding marks."
+  (mydired-sort)
+  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
+
+(add-hook 'dired-load-hook
+	  (lambda ()
+(require 'dired-sort-menu)))
+
+
+(defcustom dired-details-hidden-string ""
+  "*This string will be shown in place of file details and symbolic links."
+  :group 'dired-details
+  :type 'string)
+
+(defcustom dired-details-initially-hide t
+  "*Hide dired details on entry to dired buffers."
+  :group 'dired-details
+  :type 'boolean)
+
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable
+
+;; omit certain specific uninteresting file types from dired
+;; (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store\\|\\.doc$\\|\\.docx$\\|\\.xlsx$\\|\\.ini$\\|\\.fsLockFile$\\|Icon")
+
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon$")
+
+;; Enable toggling of uninteresting files.
+(setq dired-omit-mode t)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable
+
+(defun enable-dired-omit-mode () (dired-omit-mode 1))
+(add-hook 'dired-mode-hook 'enable-dired-omit-mode)
+
+
+;; Load Dired X when Dired is loaded.
+(add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
+
+;; so that I can hide details on dired
+(require 'dired-details+)
+#+END_SRC
+
+* Other functions
+
+Manually remove the scrollbar if default setting fails when creating a new frame:
+
+#+BEGIN_SRC emacs-lisp
+(defun scrollbar-init ()
+  (interactive)
+  (scroll-bar-mode -1)
+  )
+#+END_SRC
+
+
+Forgot what this does, I think it's in case Emacs crashes maybe to recover
+autosaves?
+
+#+BEGIN_SRC emacs-lisp
+(defadvice recover-session (around disable-dired-omit-for-recover activate)
+  (let ((dired-mode-hook dired-mode-hook))
+    (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
+    ad-do-it))
+#+END_SRC
+
+* Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+
+Very important, I use this all the time.  These are custom functions to separate
+the OSX clipboard from Emacs' kill ring, effectively giving me two separate
+clipboards to work from. The below are the traditional OSX keybindings for
+cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop
+functions still work, and use the Emacs kill ring instead.
+
+#+BEGIN_SRC emacs-lisp
+(setq interprogram-cut-function nil)
+(setq interprogram-paste-function nil)
+
+(defun pasteboard-copy()
+  "Copy region to OS X system pasteboard."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning) (region-end) "pbcopy"))
+
+(defun pasteboard-paste()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (shell-command-on-region
+   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t))
+
+(defun pasteboard-cut()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end)))
+#+END_SRC
+
+* Keybindings
+
+** Create custom keybinding prefix 
+
+[[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][Source]]
+#+BEGIN_QUOTE
+I have an unconventional approach to this that I recommend highly. I have
+redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my
+favorite commands. This key is very easy to type and it is bound to a function
+('recenter) that isn't used that much. Well, I don't use 'recenter much, but
+even if you did, it can be assigned to C-l C-l which is almost as easy to type,
+and a small price to pay for the possibilities opened up by the
+Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the
+place of honor.)
+#+END_QUOTE
+
+Use ⌘-m as prefix for my own custom keybindings:
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "s-m"))
+(defvar s-m-map (make-keymap)
+  "Keymap for local bindings and functions, prefixed by (Command-M)")
+(define-key global-map (kbd "s-m") 's-m-prefix)
+(fset 's-m-prefix s-m-map)
+#+END_SRC
+
+** Custom keybindings
+
+#+BEGIN_SRC emacs-lisp
+;; create a custom minor mode to override other keybindings and use mine instead
+(defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+(define-minor-mode key-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " key" 'key-minor-mode-map)
+(key-minor-mode 1)
+(defun my-minibuffer-setup-hook ()
+  (key-minor-mode 0))
+(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+
+;; unbind some existing keybindings 
+(define-key undo-tree-map (kbd "C-x r") nil)
+
+;; and the keybindings 
+;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+
+;; projectile
+(define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+
+;; and make it work in the minibuffer too
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
+(define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
+
+(define-key key-minor-mode-map (kbd "C-c C-v") 'org-refile-region)
+(define-key key-minor-mode-map (kbd "H-w") 'widen)
+(define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
+(define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly)
+(define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
+(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
+(define-key key-minor-mode-map (kbd "\|") 'deft)
+
+(define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
+(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
+(define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
+(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books 
+(define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
+(define-key key-minor-mode-map (kbd "M-b M-b") 'work-on-book) ; 
+
+(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ; 
+
+;; book bindings
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) ; go to my book folder
+(define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
+
+;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
+(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
+
+;; recent directories... but how to populate it?
+(define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs) 
+
+;; own structure editing
+(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
+
+;; (define-key key-minor-mode-map (kbd "C-c C-w") 'org-refile) ; very useful when working with a split frame
+
+;; for extracting content from my browser
+(define-key key-minor-mode-map (kbd "s-W") 'web-research)
+(define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
+(define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
+
+;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
+(define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
+(define-key key-minor-mode-map [s-down] 'end-of-buffer)
+
+;; use OSX standard keybinding for "Redo"
+(define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
+
+;; use OSX standard keybinding to increase or decrease font size 
+(define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
+(define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
+
+;; rebind global help command so that I can use C-h for backspace
+(define-key key-minor-mode-map (kbd "M-h") 'help-command)
+
+;; very useful when encountering names and other unfamiliar words
+(define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
+
+;; navigate between buffers, including uninteresting ones that are hidden by default
+(define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
+(define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
+
+;; deleting things
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+
+;; a keybinding for "delete" in addition to "backspace"
+(define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+ 
+;; pomodoro
+(define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
+(define-key key-minor-mode-map (kbd "C-c C-x po") 'pomodoro-stop)
+
+;; find files using helm
+(define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files) 
+
+;; search using helm-swoop
+(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+(global-set-key (kbd "M-i") 'helm-multi-swoop-all)
+
+;; edit Emacs preferences using standard OSX keybinding for preferences
+(define-key key-minor-mode-map (kbd "s-,") 'customize-group)
+
+;; grep, using current folder as default
+(define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
+
+;; some custom functions
+(define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
+
+;;;; keybindings not currently in use 
+;; (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+;; (global-set-key (kbd "C-c s") 'org-copy-subtree)
+;; (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
+;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+;; (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
+;; (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+;; (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
+;; (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
+;; (define-key key-minor-mode-map (kbd "H-w") 'widen)
+;; (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
+;; (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
+;; (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+;; (define-key key-minor-mode-map (kbd "s-;") 'google-define-word-or-phrase)
+;; (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
+;; (define-key key-minor-mode-map (kbd "s-R") 'web-research)
+;; (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
+#+END_SRC
+
+* Sentences
+
+Make ~kill-sentence~ work in a more intuitive way:
+#+BEGIN_SRC emacs-lisp
+(defun kill-sentence-to-period ()
+  "Leave the fucking period in there mofo."
+  (interactive)
+  (kill-sentence)
+  (push-mark)
+  (insert ".")
+  (backward-char))
+#+END_SRC
+
+[[http://emacs.stackexchange.com/questions/12266/how-change-behavior-of-kill-sentence-based-on-position-in-sentence/12321?iemail=1&noredirect=1#12321][Source]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my/forward-to-sentence-end ()
+  "Move point to just before the end of the current sentence."
+  (forward-sentence)
+  (backward-char)
+  (unless (looking-back "[[:alnum:]]")
+    (backward-char)))
+
+(defun my/beginning-of-sentence-p ()
+  "Return  t if point is at the beginning of a sentence."
+  (let ((start (point))
+        (beg (save-excursion (forward-sentence) (forward-sentence -1))))
+    (eq start beg)))
+
+(defun my/kill-sentence-dwim ()
+  "Kill the current sentence up to and possibly including the punctuation.
+When point is at the beginning of a sentence, kill the entire
+sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
+  (interactive)
+  (if (my/beginning-of-sentence-p)
+      (progn
+        (kill-sentence)
+        (just-one-space)
+        (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
+      (kill-region (point) (progn (my/forward-to-sentence-end) (point)))
+      (just-one-space 0)))
+
+;; and the keybinding
+(global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
+#+END_SRC
+
+* Browsing
+
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+#+END_SRC
+
+* Pastebin
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/gnulisp/emacs-pastebin-master/")
+(require 'neopastebin)
+(pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
+                       :username "petersalazar")
+#+END_SRC
+
+* Custom functions
+
+#+BEGIN_SRC emacs-lisp
+(defun my/fix-space ()
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line."
+  (interactive)
+  (just-one-space)
+  (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
+
+
+(defun kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (kill-word 1)
+  (my/fix-space))
+
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (backward-kill-word 1)
+  (my/fix-space))
+
+
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace."
+  (interactive)
+  (when (use-region-p)
+    (delete-region (region-beginning) (region-end))
+    (my/fix-space)))  
+
+ 
+;; Same as above, but using (interactive "r") to get the bounds of the region:    
+(defun my/delete-backward-2 (beg end)
+  (interactive "r")
+  (when (use-region-p)
+    (delete-region beg end)
+    (my/fix-space)))
+ 
+;; Variant that deletes backward one char unless the region is active: 
+(defun my/delete-backward ()
+  (interactive)
+  (if (use-region-p)                  ; IF
+    (progn                            ; THEN
+      (delete-region (region-beginning) (region-end))
+      (my/fix-space)) 
+    (delete-backward-char 1)))        ; ELSE
+
+
+(defun timesvr ()
+  "Task request to my virtual assistant."
+  (interactive)
+  (message-mail)
+  (message-goto-subject) (insert "task request: " (format-time-string "%F %l:%M%P"))
+  (message-goto-body) (insert "\n")
+  )
+(global-set-key (kbd "C-c t") 'timesvr)
+(global-set-key (kbd "C-c m") 'compose-mail)
+#+END_SRC
+
+* Miscellaneous
+
+# ATTENTION: Don't know what to do with this. -- Rúdi Araújo @ 2015/05/24
+#+BEGIN_SRC emacs-lisp
+;; add stuff for eshell
+;; http://eschulte.github.io/emacs24-starter-kit/starter-kit-eshell.html
+;; gmail http://eschulte.github.io/emacs24-starter-kit/starter-kit-gnus.html
+;; google docs http://eschulte.github.io/emacs24-starter-kit/starter-kit-g-client.html
+;; javascript http://eschulte.github.io/emacs24-starter-kit/starter-kit-js.html
+;; elisp http://eschulte.github.io/emacs24-starter-kit/starter-kit-lisp.html
+
+;; (setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+* Startup
+
+#+BEGIN_SRC emacs-lisp
+(toggle-maxframe)
+(monaco-font)
+#+END_SRC
