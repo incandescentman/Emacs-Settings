@@ -1,18 +1,3 @@
-;; load org-mode
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/lisp" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib" load-path)
-(add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/org/contrib/lisp" load-path)
-
-;; export formats I'm not currently using 
-;; (require 'ox-md)
-;; (require 'ox-ascii)
-;; (require 'ox-html)
-;; (require 'ox-publish)
-;; (require 'ox-s5)
-;; (require 'ox-slidy)
-;; (load "~/Dropbox/elisp/org/contrib/lisp/ox-s5.el")
-
 
 ;; handle emacs utf-8 input
 (set-terminal-coding-system 'utf-8)
@@ -70,26 +55,6 @@
 ;; javascript http://eschulte.github.io/emacs24-starter-kit/starter-kit-js.html
 ;; elisp http://eschulte.github.io/emacs24-starter-kit/starter-kit-lisp.html
 
-
-
-;; load org-babel
-(org-babel-lob-ingest
- (expand-file-name
-  "library-of-babel.org"
-  (expand-file-name
-   "babel"
-   (expand-file-name
-    "contrib"
-    (expand-file-name
-     "org")))))
-
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (sh . t)
-   (js . t)))
-
 ;; (setq org-confirm-babel-evaluate nil)
 
 
@@ -97,7 +62,9 @@
 ;; Source: http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737
 ;; "I have an unconventional approach to this that I recommend highly. I have redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my favorite commands. This key is very easy to type and it is bound to a function ('recenter) that isn't used that much. Well, I don't use 'recenter much, but even if you did, it can be assigned to C-l C-l which is almost as easy to type, and a small price to pay for the possibilities opened up by the Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the place of honor.)"
 
-;; use ⌘-m as prefix for my own custom keybindings
+
+
+;;;; use ⌘-m as prefix for my own custom keybindings
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
@@ -211,6 +178,7 @@
 
 
 ;;;; Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+;; very important, I use this all the time.
 ;; these are custom functions to separate the OSX clipboard from Emacs' kill ring, effectively giving me two separate clipboards to work from. The below are the traditional OSX keybindings for cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
 
 (setq interprogram-cut-function nil)
@@ -389,9 +357,6 @@
 
 
 
-;;;; startup
-(toggle-maxframe)
-
 ;; make kill-sentence work in a more intuitive way
 (defun kill-sentence-to-period ()
 "Leave the fucking period in there mofo."
@@ -434,7 +399,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
 
 
-(monaco-font)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
@@ -519,3 +483,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                             (file-name-directory f/d)))
                         recentf-list))))
     (dired (cons (generate-new-buffer-name buffer) dirs))))
+
+
+
+;;;; startup
+(toggle-maxframe)
+(monaco-font)
+
