@@ -2484,3 +2484,17 @@ searches all buffers."
 
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+
+(defun replace-word (tosearch toreplace)
+  (interactive "sSearch for word: \nsReplace with: ")
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search nil)
+          (count 0))
+      (while (re-search-forward (concat "\\b" tosearch "\\b") nil t)
+        (setq count (1+ count))
+        (replace-match toreplace 'fixedcase 'literal))
+      (message "Replaced %s match(es)" count))))
+
+(setq auto-capitalize-predicate
+      (lambda () (not (looking-back "\\([Uu]\\.S\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
