@@ -42,9 +42,6 @@
 
 '(mouse-highlight nil)
 
-(font-lock-add-keywords
- 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
-
 (setq confirm-kill-emacs 'yes-or-no-p)
 
 (setq ring-bell-function
@@ -2052,9 +2049,6 @@ Also converts full stops to commas."
 (define-key global-map [M-s-right] 'lawlist-forward-entity)
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 
-(require 'palimpsest)
-(palimpsest-mode t)
-
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
   (interactive "p")
@@ -2202,7 +2196,7 @@ With prefix arg C-u, copy region instad of killing it."
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
-(set-face-attribute 'default nil :font "Inconsolata" :height 170)
+(set-face-attribute 'default nil :font "Inconsolata" :height 180)
 (medium-type)
 
 (require 'engine-mode)
@@ -2484,3 +2478,9 @@ searches all buffers."
   #'(lambda ()
       (interactive)
       (helm-ag (projectile-project-root))))
+
+(require 'palimpsest)
+(palimpsest-mode t)
+
+(font-lock-add-keywords
+ 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))

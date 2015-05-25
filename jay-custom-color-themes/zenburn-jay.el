@@ -97,7 +97,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    '(button ((t (:underline t))))
 
    `(bold ((,class (:bold t :foreground ,zenburn-magenta))))
+   `(italic ((t (:foreground ,zenburn-cyan ))))
 
+   
    
    `(link ((t (:foreground ,zenburn-yellow :underline t :weight bold))))
    `(link-visited ((t (:foreground ,zenburn-yellow-2 :underline t :weight normal))))

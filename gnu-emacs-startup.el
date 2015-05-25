@@ -29,7 +29,6 @@
           't
           )
 
-;; (set-face-attribute 'default nil :family "Inconsolata" :weight 'normal)
 (setq prelude-whitespace nil)
 
 (global-visual-line-mode)

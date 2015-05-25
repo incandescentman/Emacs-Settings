@@ -29,13 +29,13 @@
 
 (defun small-type ()
   (interactive)
-  (set-face-attribute 'default nil  :height 200)
+  (set-face-attribute 'default nil  :height 190)
   (set-frame-width (selected-frame) 89)
   )
 
 (defun medium-type ()
   (interactive)
-  (set-face-attribute 'default nil  :height 260)
+  (set-face-attribute 'default nil  :height 215)
   (set-frame-width (selected-frame) 89)
   )
 

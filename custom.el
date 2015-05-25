@@ -369,7 +369,11 @@
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(safe-local-variable-values
    (quote
-    ((org-export-allow-bind-keywords . t)
+    ((eval when
+           (require
+            (quote rainbow-mode)
+            nil t)
+           (rainbow-mode 1))
      (eval when
            (fboundp
             (quote rainbow-mode))

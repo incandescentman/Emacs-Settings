@@ -71,13 +71,6 @@ Load the proper repositories:
 '(mouse-highlight nil)
 #+END_SRC
 
-** Make block quotes appear nicely in buffer, displaying > instead of :
-http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
-#+BEGIN_SRC emacs-lisp
-(font-lock-add-keywords
- 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
-#+END_SRC
-
 ** Ask before exiting Emacs
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p) 
@@ -2627,14 +2620,6 @@ traditional word processors, highlighting whole words at a time:
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 #+END_SRC
 
-** Palimpsest - best ever
-#+BEGIN_SRC emacs-lisp
-(require 'palimpsest)
-(palimpsest-mode t)
-#+END_SRC
-
-C-C C-R to move text to the bottom of the buffer
-
 * Prose editing functions 
 ** Working with windows
 Transpose windows, useful:
@@ -2830,7 +2815,7 @@ function I have a persistent buffer list available.
 ** Set font size to medium type
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :font "Inconsolata" :height 180)
-;; (medium-type)
+(medium-type)
 #+END_SRC
 
 * Extra functionality 
@@ -3229,3 +3214,44 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
       (helm-ag (projectile-project-root))))
 #+END_SRC
 
+* these seem to need to go at the end
+
+
+** Palimpsest - best ever
+#+BEGIN_SRC emacs-lisp
+(require 'palimpsest)
+(palimpsest-mode t)
+#+END_SRC
+
+C-C C-R to move text to the bottom of the buffer
+
+
+** Make block quotes appear nicely in buffer, displaying > instead of :
+http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
+#+BEGIN_SRC emacs-lisp
+(font-lock-add-keywords
+ 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+#+END_SRC
+
+
+* replace word
+#+BEGIN_SRC emacs-lisp
+(defun replace-word (tosearch toreplace)
+  (interactive "sSearch for word: \nsReplace with: ")
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search nil)
+          (count 0))
+      (while (re-search-forward (concat "\\b" tosearch "\\b") nil t)
+        (setq count (1+ count))
+        (replace-match toreplace 'fixedcase 'literal))
+      (message "Replaced %s match(es)" count))))
+#+END_SRC
+
+
+* experimenting
+#+BEGIN_SRC emacs-lisp
+(setq auto-capitalize-predicate
+      (lambda () (not (looking-back "\\([Uu]\\.S\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+
+#+END_SRC

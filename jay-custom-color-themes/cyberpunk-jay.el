@@ -114,6 +114,9 @@
    `(link-visited ((,class (:foreground ,cyberpunk-yellow-2 :underline nil :weight normal))))
    `(blue ((,class (:foreground ,cyberpunk-blue))))
    `(bold ((,class (:bold t :foreground ,cyberpunk-yellow-1))))
+  `(bold ((,class (:bold t :foreground ,cyberpunk-yellow-1))))
+    
+
    `(bold-italic ((,class (:bold t))))
    `(italic ((,class (:foreground ,cyberpunk-green))))
 

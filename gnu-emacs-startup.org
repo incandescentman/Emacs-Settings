@@ -459,24 +459,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (backward-kill-word 1)
   (my/fix-space))
 
-
+;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()
-  "When there is an active region, delete it and then fix up the whitespace."
-  (interactive)
-  (when (use-region-p)
-    (delete-region (region-beginning) (region-end))
-    (my/fix-space)))  
-
- 
-;; Same as above, but using (interactive "r") to get the bounds of the region:    
-(defun my/delete-backward-2 (beg end)
-  (interactive "r")
-  (when (use-region-p)
-    (delete-region beg end)
-    (my/fix-space)))
- 
-;; Variant that deletes backward one char unless the region is active: 
-(defun my/delete-backward ()
+"When there is an active region, delete it and then fix up the whitespace"
   (interactive)
   (if (use-region-p)                  ; IF
     (progn                            ; THEN
