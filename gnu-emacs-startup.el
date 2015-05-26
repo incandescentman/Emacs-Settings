@@ -133,7 +133,9 @@
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t))
+   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+(my/fix-space)
+)
 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
@@ -330,7 +332,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 ))
 
-
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -345,7 +346,20 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (progn                            ; THEN
       (delete-region (region-beginning) (region-end))
       (my/fix-space)) 
-    (delete-backward-char 1)))        ; ELSE
+(progn ; ELSE 
+    (delete-backward-char 1)
+(just-one-space) 
+  (when (looking-back "^[[:space:]]+")
+(progn 
+(delete-horizontal-space)
+(right-char)
+)
+)
+ 
+(left-char)
+)
+)
+) 
 
 
 (defun timesvr ()

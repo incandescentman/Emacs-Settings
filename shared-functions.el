@@ -2480,7 +2480,7 @@ searches all buffers."
       (helm-ag (projectile-project-root))))
 
 (require 'palimpsest)
-(palimpsest-mode t)
+(palimpsest-mode 1)
 
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))

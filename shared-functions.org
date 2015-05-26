@@ -3226,6 +3226,12 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 C-C C-R to move text to the bottom of the buffer
 
 
+*** TODO make the below work:
+
+(add-hook 'org-mode-hook '(palimpsest-mode 1))
+
+
+
 ** Make block quotes appear nicely in buffer, displaying > instead of :
 
 This doesn't seem to be working.
