@@ -475,7 +475,7 @@ Tried this, it doesn't work. I don't really know what I'm doing.
 )
 
 
-
+** forward kill word correctly
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
   "Kill word."
@@ -489,14 +489,31 @@ Tried this, it doesn't work. I don't really know what I'm doing.
 (my/fix-space) ; and delete the space as well
 )
 ))
+#+END_SRC
 
-
+** backward kill word correctly
+#+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
   (backward-kill-word 1)
   (my/fix-space))
+#+END_SRC
+*** TODO count punctuation such as , . ; ? ! as a word. 
+Example:
+: The quick brown, fox ^ fox jumped.
 
+Goal: 
+Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-word-correctly, twice, such that...
+
+...first invocation should result in this:
+: The quick brown, fox jumped.
+
+...and second invocation should result in this:
+: The quick brown fox jumped.
+
+*** my delete backward
+#+BEGIN_SRC emacs-lisp
 ;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()
 "When there is an active region, delete it and then fix up the whitespace"

@@ -139,7 +139,9 @@
   "Cut region and put on OS X system pasteboard."
   (interactive)
   (pasteboard-copy)
-  (delete-region (region-beginning) (region-end)))
+  (delete-region (region-beginning) (region-end))
+(my/fix-space)
+)
 
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)
@@ -322,7 +324,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (progn                            ; THEN
   (kill-word 1) ; kill word
   (my/fix-space)) ; and fix space
-(delete-forward-char 1) ; else, just delete the punctuation mark
+(progn ; else 
+(delete-forward-char 1) ; just delete the punctuation mark
+(my/fix-space) ; and delete the space as well
+)
 ))
 
 
@@ -364,3 +369,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (toggle-maxframe)
 (monaco-font)
+
+(defun jay/insert-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(expand-abbrev)
+  (insert "\ ")
+  (just-one-space)
+)
+ 
+(define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
