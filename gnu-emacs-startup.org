@@ -539,3 +539,17 @@ Tried this, it doesn't work. I don't really know what I'm doing.
 (toggle-maxframe)
 (monaco-font)
 #+END_SRC
+
+* experiments
+#+BEGIN_SRC emacs-lisp
+(defun jay/insert-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(expand-abbrev)
+  (insert "\ ")
+  (just-one-space)
+)
+ 
+(define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
+
+#+END_SRC
