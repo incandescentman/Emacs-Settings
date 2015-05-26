@@ -526,7 +526,14 @@ Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-
       (my/fix-space)) 
 (progn ; ELSE 
     (delete-backward-char 1)
-(my/fix-space) 
+(just-one-space) 
+  (when (looking-back "^[[:space:]]+")
+(progn 
+(delete-horizontal-space)
+(right-char)
+)
+) 
+(left-char)
 )
 )) 
 
