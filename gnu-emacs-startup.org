@@ -532,10 +532,12 @@ Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-
 (delete-horizontal-space)
 (right-char)
 )
-) 
+)
+ 
 (left-char)
 )
-)) 
+)
+) 
 
 
 (defun timesvr ()
