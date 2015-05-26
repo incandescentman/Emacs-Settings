@@ -3227,6 +3227,9 @@ C-C C-R to move text to the bottom of the buffer
 
 
 ** Make block quotes appear nicely in buffer, displaying > instead of :
+
+This doesn't seem to be working.
+
 http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+BEGIN_SRC emacs-lisp
 (font-lock-add-keywords
