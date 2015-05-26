@@ -513,7 +513,10 @@
    `(mumamo-background-chunk-submode4 ((,class (:background ,cyberpunk-bg+1))))
 
    ;; org-mode
-`(org-code ((,class (:foreground ,cyberpunk-green-2))))
+;; `(org-code ((,class (:foreground ,cyberpunk-green-2))))
+ `(org-code ((,class (:foreground ,cyberpunk-jay-pink :height 0.8))))
+;;   `(org-quote ((,class (:foreground ,cyberpunk-jay-pink))))
+`(org-quote ((,class (:height 0.8))))
 
    `(org-document-title ((,class (:foreground ,cyberpunk-blue-3 :background ,cyberpunk-black :weight bold :height 1.0))))
    `(org-document-info ((,class (:foreground ,cyberpunk-blue-3 :background ,cyberpunk-black :weight bold))))
