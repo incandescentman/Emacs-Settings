@@ -2497,4 +2497,4 @@ searches all buffers."
       (message "Replaced %s match(es)" count))))
 
 (setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Uu]\\.S\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
