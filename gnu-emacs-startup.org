@@ -208,7 +208,9 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   "Cut region and put on OS X system pasteboard."
   (interactive)
   (pasteboard-copy)
-  (delete-region (region-beginning) (region-end)))
+  (delete-region (region-beginning) (region-end))
+(my/fix-space)
+)
 #+END_SRC
 ** TODO modify pasteboard-paste above so that it will remove extra whitespace BEFORE pasted word 
 
