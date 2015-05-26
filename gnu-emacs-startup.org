@@ -445,7 +445,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
 
+#+END_SRC
 
+tried this, it doesn't work: 
+
+(defun my/fix-space ()
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line."
+  (interactive)
+  (just-one-space)
+  (when (looking-back "^[[:space:]]+") (delete-horizontal-space))
+  (when (looking-back "[[:space:]]+[[:punct:]]")(delete-horizontal-space))
+  (when (looking-at "[[:space:]]+[[:punct:]]")(delete-horizontal-space))
+)
+
+
+
+#+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
