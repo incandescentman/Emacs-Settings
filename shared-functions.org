@@ -3220,7 +3220,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
 (require 'palimpsest)
-(palimpsest-mode t)
+(palimpsest-mode 1) 
 #+END_SRC
 
 C-C C-R to move text to the bottom of the buffer
