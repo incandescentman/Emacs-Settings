@@ -3252,6 +3252,5 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * experimenting
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Uu]\\.S\\([Ee]\\.g\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-
+      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
 #+END_SRC

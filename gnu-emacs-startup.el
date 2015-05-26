@@ -315,12 +315,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
 
-
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
-  (kill-word 1)
-  (my/fix-space))
+  (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
+    (progn                            ; THEN
+  (kill-word 1) ; kill word
+  (my/fix-space)) ; and fix space
+(delete-forward-char 1) ; else, just delete the punctuation mark
+))
 
 
 (defun backward-kill-word-correctly ()
