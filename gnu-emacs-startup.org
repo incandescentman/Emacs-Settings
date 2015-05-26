@@ -524,7 +524,11 @@ Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-
     (progn                            ; THEN
       (delete-region (region-beginning) (region-end))
       (my/fix-space)) 
-    (delete-backward-char 1)))        ; ELSE
+(progn ; ELSE 
+    (delete-backward-char 1)
+(my/fix-space) 
+)
+)) 
 
 
 (defun timesvr ()
