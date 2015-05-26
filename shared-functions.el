@@ -216,7 +216,7 @@
         (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
         (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
         (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO" "STARTED""|" "DONE! :-)") 
+        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)") 
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")

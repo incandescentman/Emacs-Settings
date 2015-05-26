@@ -184,8 +184,9 @@ autosaves?
 Very important, I use this all the time.  These are custom functions to separate
 the OSX clipboard from Emacs' kill ring, effectively giving me two separate
 clipboards to work from. The below are the traditional OSX keybindings for
-cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop
-functions still work, and use the Emacs kill ring instead.
+cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
+
+
 
 #+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
@@ -209,6 +210,7 @@ functions still work, and use the Emacs kill ring instead.
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end)))
 #+END_SRC
+** TODO modify pasteboard-paste above so that it will remove extra whitespace BEFORE pasted word 
 
 * Keybindings
 
