@@ -20,7 +20,7 @@
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
 (load "~/Dropbox/github/koma3/ox-koma-letter.el")
-(load "~/Dropbox/github/koma3/fiverr-koma.el")
+(load "~/Dropbox/github/koma3/fiverr-koma.el") 
 
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
@@ -48,13 +48,13 @@
 
 '(mouse-highlight nil)
 
-(setq confirm-kill-emacs 'yes-or-no-p)
+(setq confirm-kill-emacs 'yes-or-no-p) 
 
 (setq ring-bell-function
       (lambda ()
-        (unless (memq this-command
-                      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-          (ding))))
+	(unless (memq this-command
+		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+	  (ding))))
 
 (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
@@ -67,7 +67,7 @@
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-        '((cursor-color . "red")))
+	'((cursor-color . "red")))
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 
 (setq org-indirect-buffer-display 'current-window)
@@ -119,7 +119,7 @@
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
 (unless (and (fboundp 'play-sound-internal)
-             (subrp (symbol-function 'play-sound-internal)))
+	     (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
 
@@ -298,40 +298,40 @@ Subject: %^{Subject}
 --text follows this line--
 %?")
 
-        ("g" "gratitude" entry (file "gratitude.txt")
-         "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+	("g" "gratitude" entry (file "gratitude.txt")
+	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-        ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-        ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-        ("n" "note" entry (file org-default-notes-file)
-         "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+	("n" "note" entry (file org-default-notes-file)
+	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-        ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
-        ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-         "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
-        ("e" "expression" entry (file "expression.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-        ("h" "historical interest" entry (file "historical-lifestream.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("h" "historical interest" entry (file "historical-lifestream.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-        ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-        ("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-        ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-         "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-        ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
@@ -341,8 +341,8 @@ Subject: %^{Subject}
 ;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
 ;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
 
-        ("f" "flowy" entry (file "flowy.org")
-         "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+	("f" "flowy" entry (file "flowy.org")
+	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -394,8 +394,8 @@ Subject: %^{Subject}
   (when (equal major-mode 'org-mode)
     (save-excursion
       (ignore-errors
-        (org-back-to-heading)
-        (org-update-parent-todo-statistics)))))
+	(org-back-to-heading)
+	(org-update-parent-todo-statistics)))))
 
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
@@ -565,7 +565,7 @@ Subject: %^{Subject}
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
-           (call-interactively 'org-agenda-schedule)))
+	   (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -626,7 +626,7 @@ Subject: %^{Subject}
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
-                            (buffer-substring-no-properties b e)))
+			    (buffer-substring-no-properties b e)))
     (message-send-and-exit)))
 
 (add-to-list 'completion-styles 'initials t)
@@ -686,9 +686,9 @@ Subject: %^{Subject}
   (edit-server-start))
 
 (add-hook 'edit-server-start-hook
-          (lambda ()
-            (when (string-match "github.com" (buffer-name))
-              (org-mode))))
+	  (lambda ()
+	    (when (string-match "github.com" (buffer-name))
+	      (org-mode))))
 
 (when (and (daemonp) (locate-library "edit-server"))
   (require 'edit-server)
@@ -938,9 +938,9 @@ Subject: %^{Subject}
  '(safe-local-variable-values
    (quote
     ((eval when
-           (fboundp
-            (quote rainbow-mode))
-           (rainbow-mode 1)))))
+	   (fboundp
+	    (quote rainbow-mode))
+	   (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
  '(standard-indent 3)
  '(tooltip-mode nil)
@@ -1414,15 +1414,15 @@ Only modes that don't derive from `prog-mode' should be listed here.")
      (ac-ispell-setup)))
 
 (add-hook 'ido-setup-hook
-          (lambda ()
-            ;; Go straight home
-            (define-key ido-file-completion-map
-              (kbd "~")
-              (lambda ()
-                (interactive)
-                (if (looking-back "/")
-                    (insert "~/")
-                  (call-interactively 'self-insert-command))))))
+	  (lambda ()
+	    ;; Go straight home
+	    (define-key ido-file-completion-map
+	      (kbd "~")
+	      (lambda ()
+		(interactive)
+		(if (looking-back "/")
+		    (insert "~/")
+		  (call-interactively 'self-insert-command))))))
 
 (require 'ido)
 
@@ -1645,52 +1645,52 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (font-lock-mode t)
       (buffer-face-mode nil))))
 
-(add-hook 'dired-mode-hook 'hl-line-mode)
+  (add-hook 'dired-mode-hook 'hl-line-mode)
 
-(require 'dired-x)
+  (require 'dired-x)
 
-(setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
 
-(setq-default dired-omit-mode t)
+  (setq-default dired-omit-mode t)
 
-(define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
+  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
 
-(setq delete-by-moving-to-trash t
-      trash-directory "~/.Trash/emacs")
+  (setq delete-by-moving-to-trash t
+        trash-directory "~/.Trash/emacs")
 
-;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
+  ;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
 
-(defun tmtxt/dired-do-shell-mac-open ()
-  (interactive)
-  (save-window-excursion
-    (let ((files (dired-get-marked-files nil current-prefix-arg))
-          command)
-      ;; the open command
-      (setq command "open ")
-      (dolist (file files)
-        (setq command (concat command (shell-quote-argument file) " ")))
-      (message command)
-      ;; execute the command
-      (async-shell-command command))))
-(define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
+  (defun tmtxt/dired-do-shell-mac-open ()
+    (interactive)
+    (save-window-excursion
+      (let ((files (dired-get-marked-files nil current-prefix-arg))
+            command)
+        ;; the open command
+        (setq command "open ")
+        (dolist (file files)
+          (setq command (concat command (shell-quote-argument file) " ")))
+        (message command)
+        ;; execute the command
+        (async-shell-command command))))
+  (define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
 
-(defun dired-open-current-directory-in-finder ()
-  "Open the current directory in Finder"
-  (interactive)
-  (save-window-excursion
-    (dired-do-async-shell-command
-     "open .")))
+  (defun dired-open-current-directory-in-finder ()
+    "Open the current directory in Finder"
+    (interactive)
+    (save-window-excursion
+      (dired-do-async-shell-command
+       "open .")))
 
-(define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
+  (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
 
-;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
+  ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
-;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
+  ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
-           (member buffer buffer-stack-untracked))))
+	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
@@ -2054,10 +2054,10 @@ Also converts full stops to commas."
   (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
     (while (/= arg 0)
       (let ((this-win (window-buffer))
-            (next-win (window-buffer (funcall selector))))
-        (set-window-buffer (selected-window) next-win)
-        (set-window-buffer (funcall selector) this-win)
-        (select-window (funcall selector)))
+	    (next-win (window-buffer (funcall selector))))
+	(set-window-buffer (selected-window) next-win)
+	(set-window-buffer (funcall selector) this-win)
+	(select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (defun move-region-to-other-window (start end)
@@ -2137,11 +2137,11 @@ With prefix arg C-u, copy region instad of killing it."
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-        most-recent-filename)
+	most-recent-filename)
     (dolist (filename recentf-list)
       (unless (memq filename buffer-file-name-list)
-        (setq most-recent-filename filename)
-        (return)))
+	(setq most-recent-filename filename)
+	(return)))
     (find-file most-recent-filename)))
 
 (defun path-copy-full-path-to-clipboard ()
@@ -2160,16 +2160,16 @@ With prefix arg C-u, copy region instad of killing it."
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
-        (filename (buffer-file-name)))
+	(filename (buffer-file-name)))
     (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
+	(message "Buffer '%s' is not visiting a file!" name)
       (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file name new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
+	  (message "A buffer named '%s' already exists!" new-name)
+	(progn
+	  (rename-file name new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil))))))
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
@@ -2177,20 +2177,20 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-                          (mapcar (lambda (path)
-                                    (replace-regexp-in-string home "~" path))
-                                  recentf-list)
-                          nil t))))
+			  (mapcar (lambda (path)
+				    (replace-regexp-in-string home "~" path))
+				  recentf-list)
+			  nil t))))
 
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-         (tocpl (mapcar (function
-                         (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-         (prompt (append '("File name: ") tocpl))
-         (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+	 (tocpl (mapcar (function
+			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+	 (prompt (append '("File name: ") tocpl))
+	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
@@ -2347,19 +2347,19 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my-isearch-yank-word-hook ()
   (when (equal this-command 'my-isearch-word-at-point)
     (let ((string (concat "\\<"
-                          (buffer-substring-no-properties
-                           (progn (skip-syntax-backward "w_") (point))
-                           (progn (skip-syntax-forward "w_") (point)))
-                          "\\>")))
+			  (buffer-substring-no-properties
+			   (progn (skip-syntax-backward "w_") (point))
+			   (progn (skip-syntax-forward "w_") (point)))
+			  "\\>")))
       (if (and isearch-case-fold-search
-               (eq 'not-yanks search-upper-case))
-          (setq string (downcase string)))
+	       (eq 'not-yanks search-upper-case))
+	  (setq string (downcase string)))
       (setq isearch-string string
-            isearch-message
-            (concat isearch-message
-                    (mapconcat 'isearch-text-char-description
-                               string ""))
-            isearch-yank-flag t)
+	    isearch-message
+	    (concat isearch-message
+		    (mapconcat 'isearch-text-char-description
+			       string ""))
+	    isearch-yank-flag t)
       (isearch-search-and-update))))
 
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
@@ -2479,7 +2479,7 @@ searches all buffers."
       (helm-ag (projectile-project-root))))
 
 (require 'palimpsest)
-(palimpsest-mode 1)
+(palimpsest-mode 1) 
 
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
@@ -2508,4 +2508,4 @@ searches all buffers."
               (setq sentence-end-base
                       (replace-match "--\\|[,;/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!][]\"'”)}]*")))
+(setq sentence-end-base "[.?!][]\"'”)}]*"))) 

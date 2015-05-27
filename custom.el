@@ -517,3 +517,5 @@
 (toggle-fullscreen)
 (palimpsest-mode 1)
  
+;;; Treat all themes as safe
+(setq custom-safe-themes t) 
