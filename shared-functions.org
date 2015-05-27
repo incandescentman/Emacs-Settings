@@ -26,6 +26,8 @@ Load the proper repositories:
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
+(load "~/Dropbox/github/koma3/ox-koma-letter.el")
+(load "~/Dropbox/github/koma3/fiverr-koma.el") 
 #+END_SRC
 
 ** Require some packages

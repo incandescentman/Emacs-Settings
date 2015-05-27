@@ -15,6 +15,8 @@
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
 (load-file "~/gnulisp/appearance-jay-custom-functions.el")
+(load "~/Dropbox/github/koma3/ox-koma-letter.el")
+(load "~/Dropbox/github/koma3/fiverr-koma.el")
 
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
