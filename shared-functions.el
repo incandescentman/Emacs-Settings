@@ -11,6 +11,10 @@
 
 (package-initialize)
 
+(setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org" load-path))
+
+(setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/lisp" load-path))
+(setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/contrib/lisp" load-path))
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 (load "~/Dropbox/elisp/eshell-autojump.el")
 (load "~/Dropbox/elisp/play-sound.el")
@@ -589,15 +593,8 @@ Subject: %^{Subject}
 (setq default-directory "~/Dropbox/writing/" )
 
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2013/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2014/bin/universal-darwin")
   )
-
-;; (load "~/Dropbox/elisp/latex.el")
-(load "~/Dropbox/elisp/signal-flare.el")
-(load "~/Dropbox/elisp/signal-flare-wide.el")
-;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
-(load "~/Dropbox/elisp/jay-dixit-latex.el")
-(load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
 
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
  org-latex-pdf-process               ; for regular export
