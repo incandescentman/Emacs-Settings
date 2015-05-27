@@ -142,6 +142,7 @@
  '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
+ '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
  '(ispell-program-name "aspell")
@@ -369,11 +370,7 @@
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(safe-local-variable-values
    (quote
-    ((eval when
-	   (require
-	    (quote rainbow-mode)
-	    nil t)
-	   (rainbow-mode 1))
+    ((org-export-allow-bind-keywords . t)
      (eval when
            (fboundp
             (quote rainbow-mode))
@@ -518,3 +515,5 @@
 
 (monaco-font)
 (toggle-fullscreen)
+(palimpsest-mode 1)
+ 

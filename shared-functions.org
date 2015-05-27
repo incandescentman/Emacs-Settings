@@ -2978,7 +2978,7 @@ Shared Aquamacs / GNU Emacs keybindings:
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'org-save-all-org-buffers) ; save all
+(define-hyper-key "s" 'jay/save-some-buffers ) ; save all
 #+END_SRC
 
 Key bindings I don't use much and should remember to learn:

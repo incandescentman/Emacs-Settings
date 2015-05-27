@@ -2304,7 +2304,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'org-save-all-org-buffers) ; save all
+(define-hyper-key "s" 'jay/save-some-buffers ) ; save all
 
 (define-hyper-key "4" 'clone-indirect-buffer-other-window)
 (define-hyper-key "5" 'point-stack-push)

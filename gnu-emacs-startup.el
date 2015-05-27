@@ -393,3 +393,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
  
 (define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
+
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
