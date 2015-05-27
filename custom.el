@@ -1,15 +1,8 @@
 (require 'org)
-;; (disable-theme 'zenburn)
+(disable-theme 'zenburn)
 
 ;; globally turn off fucking piece of shit guru mode
 (setq prelude-guru nil)
-
-;; load my init files
-(org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
-
-(org-babel-load-file "~/Dropbox/emacs/prelude/personal/shared-functions.org")
-
-(load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
 
@@ -111,6 +104,7 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -277,7 +271,7 @@
  '(org-icalendar-store-UID t)
  '(org-icalendar-use-deadline (quote (todo-due)))
  '(org-icalendar-use-scheduled (quote (event-if-todo)))
- '(org-indent-indentation-per-level 2 t)
+ '(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-insert-mode-line-in-empty-file t)
@@ -367,7 +361,8 @@
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(safe-local-variable-values
    (quote
-    ((eval when
+    ((org-export-allow-bind-keywords . t)
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -435,6 +430,15 @@
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
+
+
+
+;; load my init files
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
+
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/shared-functions.org")
+
+(load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
 
