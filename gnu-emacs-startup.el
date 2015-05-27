@@ -190,6 +190,9 @@
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
 
+(define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
+
+
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
 (define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
@@ -402,3 +405,40 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       ((and buffer-file-name (eq major-mode 'latex-mode)))
       ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+
+(defgroup helm-org-wiki nil
+  "Simple jump-to-org-file package."
+  :group 'org
+  :prefix "helm-org-wiki-")
+(defcustom helm-org-wiki-directory "~/nd/"
+  "Directory where files for `helm-org-wiki' are stored."
+  :group 'helm-org-wiki
+  :type 'directory)
+(defun helm-org-wiki-files ()
+  "Return .org files in `helm-org-wiki-directory'."
+  (let ((default-directory helm-org-wiki-directory))
+    (mapcar #'file-name-sans-extension
+            (file-expand-wildcards "*.txt"))))
+(defvar helm-source-org-wiki
+  `((name . "Projects")
+    (candidates . helm-org-wiki-files)
+    (action . ,(lambda (x)
+                  (find-file (expand-file-name
+                              (format "%s.txt" x)
+                              helm-org-wiki-directory))))))
+(defvar helm-source-org-wiki-not-found
+  `((name . "Create org-wiki")
+    (dummy)
+    (action . (lambda (x)
+                (helm-switch-to-buffer
+                 (find-file
+                  (format "%s/%s.org"
+                          helm-org-wiki-directory x)))))))
+;;;###autoload
+(defun helm-org-wiki ()
+  "Select an org-file to jump to."
+  (interactive)
+  (helm :sources
+        '(helm-source-org-wiki
+          helm-source-org-wiki-not-found)))
+(provide 'helm-org-wiki)

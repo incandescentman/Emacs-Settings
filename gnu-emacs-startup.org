@@ -283,6 +283,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
 
+(define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
+
+
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
 (define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
@@ -592,7 +595,93 @@ Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-
       ((and buffer-file-name (eq major-mode 'latex-mode)))
       ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+#+END_SRC
 
 
+
+
+* Helm Org Wiki
+
+I'm using an extremely simplistic approach: just dump all the org
+files into one directory.  The name of each org file should be concise
+but descriptive, e.g. Makefile.org describes Makefiles, and git.org
+describes git.
+
+This simplicity completely alleviates organization effort: there's
+nothing to organize, since there's only one directory to put the files in.
+At the same time, it's very accessible by means of two `helm` wrappers:
+
+- globally, "C-0" runs the command helm-org-wiki (the code is below)
+- in org-mode, "g" runs the command wspecial-worf-goto (the code is at
+https://github.com/abo-abo/worf)
+
+It's like a two-stage personal Google: the first stage is to find an org-file,
+the second stage is to search within an org-file.
+
+For example, here's the sequence of key bindings when I want to look
+up how git bisect works, assuming that I'm in some random buffer, like
+`ansi-term`:
+
+        C-0 gi RET g bis RET
+
+Done. Note that "gi" was enough to match "git.org", since all my other
+pages don't contain "gi".  Same thing for "bis" being able to match
+uniquely the heading "git bisect".  I think that it's quite optimal
+that I'm able to find the topic "git bisect" by using only 10 key
+presses, which is the same as the amount of characters in "git
+bisect".  Compare this to `helm-google-suggest` (bound to "C-p g"):
+
+        C-p g git bi RET TAB RET
+
+That's 12 key presses (10 in Emacs, 2 in Firefox).
+
+New wiki pages can be created with "C-0" as well, just type in the
+name of the new file and hit RET.
+
+That's it, the code is below. It's very similar to `org-switchb`,
+except that the files need not be opened to appear in the completion
+list, and new files are created if there's no match.
+
+regards,
+Oleh
+(Source: http://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg01134.html) 
+
+#+BEGIN_SRC emacs-lisp 
+    (defgroup helm-org-wiki nil
+      "Simple jump-to-org-file package."
+      :group 'org
+      :prefix "helm-org-wiki-")
+    (defcustom helm-org-wiki-directory "~/nd/"
+      "Directory where files for `helm-org-wiki' are stored."
+      :group 'helm-org-wiki
+      :type 'directory)
+    (defun helm-org-wiki-files ()
+      "Return .org files in `helm-org-wiki-directory'."
+      (let ((default-directory helm-org-wiki-directory))
+        (mapcar #'file-name-sans-extension
+                (file-expand-wildcards "*.txt"))))
+    (defvar helm-source-org-wiki
+      `((name . "Projects")
+        (candidates . helm-org-wiki-files)
+        (action . ,(lambda (x)
+                      (find-file (expand-file-name
+                                  (format "%s.txt" x)
+                                  helm-org-wiki-directory))))))
+    (defvar helm-source-org-wiki-not-found
+      `((name . "Create org-wiki")
+        (dummy)
+        (action . (lambda (x)
+                    (helm-switch-to-buffer
+                     (find-file
+                      (format "%s/%s.org"
+                              helm-org-wiki-directory x)))))))
+    ;;;###autoload
+    (defun helm-org-wiki ()
+      "Select an org-file to jump to."
+      (interactive)
+      (helm :sources
+            '(helm-source-org-wiki
+              helm-source-org-wiki-not-found)))
+    (provide 'helm-org-wiki)
 
 #+END_SRC

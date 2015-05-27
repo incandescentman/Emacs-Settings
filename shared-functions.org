@@ -3271,3 +3271,24 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 (load "~/Dropbox/elisp/jay-dixit-latex.el")
 (load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
 
+
+* startup
+#+BEGIN_SRC emacs-lisp
+(turn-on-olivetti-mode)
+(load-theme 'leuven)
+#+END_SRC
+
+* kill clause
+
+I want to use this to create a function to kill-clause (not kill sentence)
+
+#+BEGIN_SRC emacs-lisp
+(defun kill-clause ()
+  (interactive) 
+              (when (string-match "^\\[" sentence-end-base)
+    (progn 
+              (setq sentence-end-base
+                      (replace-match "--\\|[,;/" t t sentence-end-base)))
+(my/kill-sentence-dwim)
+(setq sentence-end-base "[.?!][]\"'”)}]*"))) 
+#+END_SRC

@@ -2497,3 +2497,15 @@ searches all buffers."
 
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+
+(turn-on-olivetti-mode)
+(load-theme 'leuven)
+
+(defun kill-clause ()
+  (interactive) 
+              (when (string-match "^\\[" sentence-end-base)
+    (progn 
+              (setq sentence-end-base
+                      (replace-match "--\\|[,;/" t t sentence-end-base)))
+(my/kill-sentence-dwim)
+(setq sentence-end-base "[.?!][]\"'”)}]*")))
