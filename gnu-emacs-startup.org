@@ -201,6 +201,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (defun pasteboard-paste()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
+(my/fix-space)
   (shell-command-on-region
    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
 (my/fix-space)
