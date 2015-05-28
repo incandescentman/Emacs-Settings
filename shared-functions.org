@@ -307,7 +307,25 @@ autosaves in my ~ home directory):
             (auto-save-mode)))
 #+END_SRC
 
-* more org settings
+* org stuck projects (?)
+Defining stuck projects as todos that do not contain "scheduled" or
+"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
+#+BEGIN_SRC emacs-lisp
+(setq org-stuck-projects
+      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+#+END_SRC
+
+* org show agenda
+# ATTENTION: This is not enclosed in #+BEGIN_SRC/#+END_SRC block.  Is it
+# intentional?
+(defun bh/show-org-agenda ()
+  (interactive)
+  (if org-agenda-sticky
+      (org-agenda-list)
+    (org-agenda-list))
+  (delete-other-windows))
+
+* Org settings
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'org-agenda-list)
 #+END_SRC
@@ -316,9 +334,7 @@ autosaves in my ~ home directory):
 
 #+END_SRC
 
-* more org settings 
 #+BEGIN_SRC emacs-lisp
-
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
 
@@ -338,7 +354,7 @@ autosaves in my ~ home directory):
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 #+END_SRC
 
-* org keywords
+** org keywords
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
@@ -356,23 +372,6 @@ autosaves in my ~ home directory):
         ))
 #+END_SRC
 
-* org stuck projects (?)
-Defining stuck projects as todos that do not contain "scheduled" or
-"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
-#+BEGIN_SRC emacs-lisp
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
-#+END_SRC
-
-* org show agenda
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (org-agenda-list)
-    (org-agenda-list))
-  (delete-other-windows))
-
-* Org settings
 ** Protect org headings from accidental demotion
 Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
 #+BEGIN_SRC emacs-lisp
@@ -394,7 +393,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
      'new-org-delete-backward-char)))
 #+END_SRC
 
-** Org export 
+** Org export
 *** Change section numbering depending on what export format I use
 #+BEGIN_SRC emacs-lisp
 (defun my-org-export-change-options (plist backend)
@@ -420,14 +419,41 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (setq org-icalendar-include-todo t)
 #+END_SRC
 
-* Mobile org 
-Can't get this to work on my iPhone:
+** Some more settings
 #+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+'(initial-major-mode (quote org-mode))
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+'(org-replace-disputed-keys t)
+'(org-use-extra-keys nil)
+'(org-adapt-indentation nil)
+'(org-edit-src-content-indentation 4)
+'(org-ellipsis (quote org-warning))
+'(org-enforce-todo-checkbox-dependencies t)
+'(org-enforce-todo-dependencies t)
+'(org-html-postamble nil)
+'(org-fontify-emphasized-text t)
+'(org-src-preserve-indentation t)
+'(org-startup-align-all-tables t)
+'(org-startup-folded showeverything)
+'(org-startup-indented nil)
+'(org-hide-leading-stars t)
+'(org-indent-mode-turns-off-org-adapt-indentation nil)
+'(org-indent-mode-turns-on-hiding-stars nil)
+'(org-insert-mode-line-in-empty-file t)
+'(org-list-indent-offset 3)
+'(org-log-done (quote time))
+'(org-log-refile (quote time))
+'(org-n-level-faces 9)
+'(org-odd-levels-only nil)
+'(org-priority-faces nil)
+'(org-provide-checkbox-statistics t)
+'(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq org-directory "~/Dropbox/writing/notationaldata/")
+(setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
 
-* Org refile settings
-** Exclude ~DONE~ state tasks from refile targets:
+** Org refile settings
+*** Exclude ~DONE~ state tasks from refile targets:
 #+BEGIN_SRC emacs-lisp
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
@@ -435,15 +461,6 @@ Can't get this to work on my iPhone:
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_SRC
 
-* Org-agenda settings
-** stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-#+END_SRC
-
-* Org settings
 ** Fix '\emsp' bug in clocktable (doesn't work though):
 #+BEGIN_SRC emacs-lisp
 (defun my-org-clocktable-indent-string (level)
@@ -518,6 +535,29 @@ Subject: %^{Subject}
 	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 #+END_SRC
 
+** Another org-setting, not sure what this one does exactly
+#+BEGIN_SRC emacs-lisp
+(defun org-ido-completing-read (&rest args)
+  "Completing-read using `ido-mode' speedups if available"
+  (if (and ido-mode (listp (second args)))
+      (apply 'ido-completing-read args)
+    (apply 'completing-read args)))
+#+END_SRC
+
+* Mobile org
+Can't get this to work on my iPhone:
+#+BEGIN_SRC emacs-lisp
+(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+#+END_SRC
+
+* Org-agenda settings
+** stop mouse cursor from highlighting lines in org-agenda
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+#+END_SRC
+
 * Typography
 ** Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
@@ -574,7 +614,6 @@ e.g. nvALT
 
 #+END_SRC
 
-
 ** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
 #+BEGIN_SRC emacs-lisp
 (defun org-checkbox-next ()
@@ -585,6 +624,7 @@ e.g. nvALT
 #+END_SRC
 
 ** Update parent cookie
+# ATTENTION: Empty heading.  Intentional?
 ** I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
@@ -599,40 +639,6 @@ e.g. nvALT
 
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-#+END_SRC
-
-* org-settings
-* Some more org-mode settings
-#+BEGIN_SRC emacs-lisp
-'(initial-major-mode (quote org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
-'(org-replace-disputed-keys t)
-'(org-use-extra-keys nil)
-'(org-adapt-indentation nil)
-'(org-edit-src-content-indentation 4)
-'(org-ellipsis (quote org-warning))
-'(org-enforce-todo-checkbox-dependencies t)
-'(org-enforce-todo-dependencies t)
-'(org-html-postamble nil)
-'(org-fontify-emphasized-text t)
-'(org-src-preserve-indentation t)
-'(org-startup-align-all-tables t)
-'(org-startup-folded showeverything)
-'(org-startup-indented nil)
-'(org-hide-leading-stars t)
-'(org-indent-mode-turns-off-org-adapt-indentation nil)
-'(org-indent-mode-turns-on-hiding-stars nil)
-'(org-insert-mode-line-in-empty-file t)
-'(org-list-indent-offset 3)
-'(org-log-done (quote time))
-'(org-log-refile (quote time))
-'(org-n-level-faces 9)
-'(org-odd-levels-only nil)
-'(org-priority-faces nil)
-'(org-provide-checkbox-statistics t)
-'(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-(setq org-directory "~/Dropbox/writing/notationaldata/")
-(setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
 
 * Org capture
@@ -837,15 +843,6 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
-#+END_SRC
-
-* Another org-setting, not sure what this one does exactly
-#+BEGIN_SRC emacs-lisp
-(defun org-ido-completing-read (&rest args)
-  "Completing-read using `ido-mode' speedups if available"
-  (if (and ido-mode (listp (second args)))
-      (apply 'ido-completing-read args)
-    (apply 'completing-read args)))
 #+END_SRC
 
 * Settings (not functions)
@@ -2012,7 +2009,7 @@ Disable IDO faces to see flx highlights:
             (local-set-key "\C-c\M-o" 'org-mime-subtree)))
 #+END_SRC
 
-* Things that I don't know what they're for 
+* Things that I don't know what they're for
 ** Set mark command
 # forgot what this is 
 (maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?) 
@@ -2032,7 +2029,7 @@ Disable IDO faces to see flx highlights:
       (call-interactively 'org-return))))
 #+END_SRC
 
-* Things that I'm not sure if I need 
+* Things that I'm not sure if I need
 ** Hippie expand
 
 [[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
@@ -3213,7 +3210,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 * these seem to need to go at the end
 
-
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
 (require 'palimpsest)
@@ -3222,12 +3218,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 C-C C-R to move text to the bottom of the buffer
 
-
 *** TODO make the below work:
 
 (add-hook 'org-mode-hook '(palimpsest-mode 1))
-
-
 
 ** Make block quotes appear nicely in buffer, displaying > instead of :
 
@@ -3238,7 +3231,6 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
 #+END_SRC
-
 
 * replace word
 #+BEGIN_SRC emacs-lisp
@@ -3253,7 +3245,6 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 #+END_SRC
-
 
 * experimenting
 #+BEGIN_SRC emacs-lisp
