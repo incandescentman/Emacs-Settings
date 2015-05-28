@@ -15,7 +15,7 @@
 
 ;;;; packages
 ;; automatically install my favorite packages 
- (setq package-list '(magit expand-region gist  helm helm-projectile magit magithub markdown-mode paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme twittering-mode dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
+ (setq package-list '(magit expand-region gist  helm helm-projectile magit markdown-mode auto-complete dired-details+ paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme frame-restore frame-cmds org-fstree buffer-stack auto-capitalize org-pomodoro edit-server key-chord ido-hacks openwith wc-mode discover engine-mode point-stack palimpsest olivetti smex dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
 
 ;; the repositories containing them
 (setq package-archives '(("elpa" . "http://tromey.com/elpa/")

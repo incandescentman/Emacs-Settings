@@ -12,7 +12,6 @@
 (package-initialize)
 
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org" load-path))
-
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/lisp" load-path))
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/contrib/lisp" load-path))
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")

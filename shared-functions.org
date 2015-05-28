@@ -23,7 +23,6 @@ Load the proper repositories:
 ** Load some of my packages:
 #+BEGIN_SRC emacs-lisp
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org" load-path))
-
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/lisp" load-path))
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/contrib/lisp" load-path))
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
@@ -2961,7 +2960,7 @@ Shared Aquamacs / GNU Emacs keybindings:
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
 (define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
+(define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 (define-hyper-key "r" 'helm-mini)
 (define-hyper-key "t" 'new-buffer)
