@@ -192,6 +192,9 @@
             (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
             (auto-save-mode)))
 
+(setq org-stuck-projects
+      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+
 (add-hook 'after-init-hook 'org-agenda-list)
 
 ;; Overwrite the current window with the agenda
@@ -226,9 +229,6 @@
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
-
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
 (defun new-org-delete-backward-char (N)
   (interactive "p")
@@ -266,16 +266,40 @@
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
 (setq org-icalendar-include-todo t)
 
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+'(initial-major-mode (quote org-mode))
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+'(org-replace-disputed-keys t)
+'(org-use-extra-keys nil)
+'(org-adapt-indentation nil)
+'(org-edit-src-content-indentation 4)
+'(org-ellipsis (quote org-warning))
+'(org-enforce-todo-checkbox-dependencies t)
+'(org-enforce-todo-dependencies t)
+'(org-html-postamble nil)
+'(org-fontify-emphasized-text t)
+'(org-src-preserve-indentation t)
+'(org-startup-align-all-tables t)
+'(org-startup-folded showeverything)
+'(org-startup-indented nil)
+'(org-hide-leading-stars t)
+'(org-indent-mode-turns-off-org-adapt-indentation nil)
+'(org-indent-mode-turns-on-hiding-stars nil)
+'(org-insert-mode-line-in-empty-file t)
+'(org-list-indent-offset 3)
+'(org-log-done (quote time))
+'(org-log-refile (quote time))
+'(org-n-level-faces 9)
+'(org-odd-levels-only nil)
+'(org-priority-faces nil)
+'(org-provide-checkbox-statistics t)
+'(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq org-directory "~/Dropbox/writing/notationaldata/")
+(setq org-default-notes-file (concat org-directory "notes.txt"))
 
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
-
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
 
 (defun my-org-clocktable-indent-string (level)
   (if (= level 1)
@@ -343,6 +367,18 @@ Subject: %^{Subject}
 	("f" "flowy" entry (file "flowy.org")
 	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
+(defun org-ido-completing-read (&rest args)
+  "Completing-read using `ido-mode' speedups if available"
+  (if (and ido-mode (listp (second args)))
+      (apply 'ido-completing-read args)
+    (apply 'completing-read args)))
+
+(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
+
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
@@ -401,36 +437,6 @@ Subject: %^{Subject}
 
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-
-'(initial-major-mode (quote org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
-'(org-replace-disputed-keys t)
-'(org-use-extra-keys nil)
-'(org-adapt-indentation nil)
-'(org-edit-src-content-indentation 4)
-'(org-ellipsis (quote org-warning))
-'(org-enforce-todo-checkbox-dependencies t)
-'(org-enforce-todo-dependencies t)
-'(org-html-postamble nil)
-'(org-fontify-emphasized-text t)
-'(org-src-preserve-indentation t)
-'(org-startup-align-all-tables t)
-'(org-startup-folded showeverything)
-'(org-startup-indented nil)
-'(org-hide-leading-stars t)
-'(org-indent-mode-turns-off-org-adapt-indentation nil)
-'(org-indent-mode-turns-on-hiding-stars nil)
-'(org-insert-mode-line-in-empty-file t)
-'(org-list-indent-offset 3)
-'(org-log-done (quote time))
-'(org-log-refile (quote time))
-'(org-n-level-faces 9)
-'(org-odd-levels-only nil)
-'(org-priority-faces nil)
-'(org-provide-checkbox-statistics t)
-'(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-(setq org-directory "~/Dropbox/writing/notationaldata/")
-(setq org-default-notes-file (concat org-directory "notes.txt"))
 
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
@@ -569,12 +575,6 @@ Subject: %^{Subject}
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
-
-(defun org-ido-completing-read (&rest args)
-  "Completing-read using `ido-mode' speedups if available"
-  (if (and ido-mode (listp (second args)))
-      (apply 'ido-completing-read args)
-    (apply 'completing-read args)))
 
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
@@ -2288,7 +2288,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
 (define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
+(define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 (define-hyper-key "r" 'helm-mini)
 (define-hyper-key "t" 'new-buffer)
