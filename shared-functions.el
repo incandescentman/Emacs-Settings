@@ -2546,3 +2546,6 @@ searches all buffers."
             #'endless/replace-quote) 
 
  (run-with-idle-timer 60 t 'recentf-save-list) 
+
+(advice-add #'org-remove-angle-brackets :before-until
+            (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
