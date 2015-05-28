@@ -135,6 +135,7 @@
   (shell-command-on-region
    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
 (my/fix-space)
+;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
 )
 
 (defun pasteboard-cut()

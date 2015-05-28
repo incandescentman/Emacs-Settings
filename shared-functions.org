@@ -3343,3 +3343,22 @@ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and 
  (run-with-idle-timer 60 t 'recentf-save-list) 
 #+END_SRC
  
+
+* new stuff
+** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? 
+#+BEGIN_SRC emacs-lisp
+(advice-add #'org-remove-angle-brackets :before-until
+            (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
+#+END_SRC
+source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert-link-to-accept-mail-addresses-like-name-namesome-addr][org mode - How to allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? - Emacs Stack Exchange]]
+
+
+* possible to enable autocomplete in org-babel source code blocks?
+
+yes - just use
+: C-c '
+
+to open source code block in indirect buffer
+
+
+
