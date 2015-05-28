@@ -419,7 +419,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (setq org-icalendar-include-todo t)
 #+END_SRC
 
-** Some more settings
+** Org-mode hooks and other org settings
 #+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
@@ -864,6 +864,7 @@ Autocapitalization:
 #+BEGIN_SRC emacs-lisp
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
 #+END_SRC
 
