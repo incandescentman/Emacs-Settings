@@ -2219,6 +2219,8 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "PDF")
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
+(add-to-list 'recentf-exclude "recentf")
+
 #+END_SRC
 
 * Garbage characters
