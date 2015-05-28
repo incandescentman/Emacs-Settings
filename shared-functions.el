@@ -2544,3 +2544,5 @@ searches all buffers."
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
             #'endless/replace-quote) 
+
+ (run-with-idle-timer 60 t 'recentf-save-list) 

@@ -3346,3 +3346,8 @@ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and 
 #+END_SRC
  
 
+* Save recentf automatically so recent files are stored even in the case of abnormal exit
+#+BEGIN_SRC emacs-lisp 
+ (run-with-idle-timer 60 t 'recentf-save-list) 
+#+END_SRC
+ 

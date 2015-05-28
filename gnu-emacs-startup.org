@@ -447,37 +447,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 * Custom functions
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp 
 (defun my/fix-space ()
-  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line."
-  (interactive)
-  (just-one-space)
-  (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
-
+"Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+(interactive)
+(just-one-space)
+(when (or (looking-back "^[[:space:]]+") 
+(looking-at "[[:punct:]]"))
+(delete-horizontal-space))) 
 #+END_SRC
 
-Currently, my/fix-space will (1) leave only one space; (2) do not leave an extra space at the beginning of the line. 
-
-Goal: to make it so that that my/fix-space also (3) makes sure not to leave a space between a word and a punctuation mark. 
-
-Examples: 
-
-Lorem ipsum delete delete , consectetur adipiscing elit.  
-  
-Ut enim ad minim veniam, delete delete .  
-  
-Ut enim ad minim veniam, delete delete ?  
-  
-Tried this, it doesn't work. I don't really know what I'm doing. 
-
-(defun my/fix-space ()
-  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line."
-  (interactive)
-  (just-one-space)
-  (when (looking-back "^[[:space:]]+") (delete-horizontal-space))
-  (when (looking-back "[[:space:]]+[[:punct:]]")(delete-horizontal-space))
-  (when (looking-at "[[:space:]]+[[:punct:]]")(delete-horizontal-space))
-)
 
 
 ** forward kill word correctly
