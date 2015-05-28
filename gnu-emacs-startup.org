@@ -204,6 +204,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (shell-command-on-region
    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
 (my/fix-space)
+;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
 )
 
 (defun pasteboard-cut()
@@ -214,7 +215,22 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (my/fix-space)
 )
 #+END_SRC
-** TODO modify pasteboard-paste above so that it will remove extra whitespace BEFORE pasted word 
+
+** TODO in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
+
+: Lorem ipsum. 
+
+e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
+
+...this:
+: Lorem dolor sit amet ipsum. 
+
+...NOT this:
+
+: Lorem  dolor sit amet ipsum. 
+
+
+
 
 * Keybindings
 
@@ -475,7 +491,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ))
 #+END_SRC
 
-** backward kill word correctly
+** BACKWARD kill word correctly
 #+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly ()
   "Kill word."
@@ -483,17 +499,26 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (backward-kill-word 1)
   (my/fix-space))
 #+END_SRC
-*** TODO count punctuation such as , . ; ? ! as a word. 
-Example:
+*** TODO can you help me fix this function?                          :rudi:
+
+Take a look at the function kill-word-correctly above. I made it so that kill-word-correctly counts punctuation such as , . ; ? ! as a word. 
+
+: The quick brown brown, fox jumped.
+
+In the example above, f I place the point on the "b" in the second instance of "brown", and then do kill-word-correctly TWICE, it first deletes the word brown, and THEN deletes the unwanted comma.
+
+I want to do the same for backward-kill-word-correctly.
+
+Now take this example:
 : The quick brown, fox ^ fox jumped.
 
 Goal: 
-Suppose If point is at ^ caret above. I want to be able to invoke backward-kill-word-correctly, twice, such that...
+Suppose the point is at the ^ caret above. I want to be able to invoke backward-kill-word-correctly, TWICE, such that...
 
-...first invocation should result in this:
+...the first invocation should result in this:
 : The quick brown, fox jumped.
 
-...and second invocation should result in this:
+...and second invocation should then delete the comma and fix the space so the result is this:
 : The quick brown fox jumped.
 
 *** my delete backward

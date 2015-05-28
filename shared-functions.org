@@ -3309,7 +3309,7 @@ Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Be
 #+END_SRC
  
 
-* tell isearch that curly apostrophes are the same as straight ones
+* Tell isearch that curly apostrophes are the same as straight ones
 Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
 
 #+BEGIN_SRC emacs-lisp
