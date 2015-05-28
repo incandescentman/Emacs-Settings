@@ -1717,6 +1717,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "PDF")
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
+(add-to-list 'recentf-exclude "recentf")
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."

@@ -667,3 +667,6 @@ Oleh
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
 #+END_SRC
  
+* Reference for cleaning up whitespace around sentences:
+[[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
+
