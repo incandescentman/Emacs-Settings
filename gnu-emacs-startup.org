@@ -480,6 +480,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
+  (expand-abbrev)
   (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
     (progn                            ; THEN
   (kill-word 1) ; kill word
