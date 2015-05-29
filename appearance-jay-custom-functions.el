@@ -9,6 +9,15 @@
   (interactive)
   (set-face-attribute 'default nil :font "Ludida Sans Typewriter"))
 
+(defun georgia-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Georgia"))
+
+(defun garamond-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Garamond Premier Pro"))
+
+
 (defun monaco-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Monaco" :height 170))
