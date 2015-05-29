@@ -723,3 +723,33 @@ Conversely, given this:
 : The best kind of software is open source^ software.
 
 Thanks!
+
+* TODO org-clone-subtree-no-time-shift                                 :rudi:
+
+There is the function org-clone-subtree-with-time-shift, which prompts me for the number of clones to produce. 
+
+However, most of the time, I wish to clone exactly 1 subtree, with no time shift. 
+
+So I'd like a function that will clone an org-mode subtree with no arguments and no prompt, and add insert text in the heading of the cloned subtree. 
+
+Given this:
+
+#+BEGIN_QUOTE
+*** Heading 1
+Foo.
+#+END_QUOTE
+
+... invoking org-clone-subtree-no-time-shift will produce this:
+
+
+#+BEGIN_QUOTE
+*** Heading 1
+Foo.
+
+*** Heading 1 - clone
+Foo.
+#+END_QUOTE
+
+Thanks! 
+
+
