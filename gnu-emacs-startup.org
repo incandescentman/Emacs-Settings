@@ -540,6 +540,12 @@ Suppose the point is at the ^ caret above. I want to be able to invoke backward-
 ...and second invocation should then delete the comma and fix the space so the result is this:
 : The quick brown fox jumped.
 
+**** TODO In the example above, is the caret part of the string, or just there to mark point? :followup:
+
+     The point of this question is that, in case it is part of the string, the
+     first invocation deletes it, so it is not entirely a "backward" kill.  I
+     think the semantics can get a bit convoluted here.
+
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
 ;; delete backward one char unless the region is active: 
