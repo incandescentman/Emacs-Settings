@@ -697,3 +697,29 @@ Oleh
 * Reference for cleaning up whitespace around sentences:
 [[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
 
+* TODO cycle-hyphenation                                               :rudi:
+I'd like a function that will:
+1. Convert the space between words into a hyphen
+2. Go to the end of the second word
+
+Supposing the point is at the carat, given this:
+
+: The best kind of software is ^open source software.
+
+...or this: 
+
+: The best kind of software is^ open source software.
+
+..,invoking cycle-hyphenation should produce this: 
+
+> The best kind of software is open-source^ software. 
+
+Conversely, given this:
+
+: The best kind of software is^ open-source software. 
+
+...invoking cycle-hyphenation should convert the hyphen into a space, producing this: 
+
+: The best kind of software is open source^ software.
+
+Thanks!

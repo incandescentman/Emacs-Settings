@@ -3366,3 +3366,5 @@ to open source code block in indirect buffer
 
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade) 
+
+

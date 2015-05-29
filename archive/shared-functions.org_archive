@@ -1,0 +1,30 @@
+
+Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org
+
+
+* Isearch case
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-05-29 Fri 12:57
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/shared-functions.org
+  :ARCHIVE_CATEGORY: shared-functions
+  :END:
+** toggle case-sensitivity in isearch
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'isearch-mode-hook
+            (function
+             (lambda ()
+               (define-key isearch-mode-map "\C-h" 'isearch-mode-help)
+               (define-key isearch-mode-map "\C-t" 'isearch-toggle-regexp)
+               (define-key isearch-mode-map "\C-c" 'isearch-toggle-case-fold)
+               (define-key isearch-mode-map "\C-j" 'isearch-edit-string)))) 
+#+END_SRC
+Source: [[http://emacswiki.org/emacs/CaseFoldSearch][EmacsWiki: Case Fold Search]]
+
+Actually, it also adds some other ‘C-s’ bindings:
+
+isearch-mode-help – Provides help on incremental searching. Defined in library Lisp:isearch+.el.
+isearch-toggle-regexp – Toggles regexp searching on and off.
+isearch-edit-string – Edit the search string in the MiniBuffer. This also provides other isearch options, including word searches (C-w). 
+
+
