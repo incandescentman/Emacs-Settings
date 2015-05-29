@@ -268,6 +268,7 @@
 
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
+(add-hook 'org-mode-hook ' turn-on-olivetti-mode)
 '(org-replace-disputed-keys t)
 '(org-use-extra-keys nil)
 '(org-adapt-indentation nil)
@@ -585,6 +586,7 @@ Subject: %^{Subject}
 
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
@@ -1688,7 +1690,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 

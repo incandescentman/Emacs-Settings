@@ -132,6 +132,7 @@
 (defun pasteboard-paste()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
+(my/fix-space)
   (shell-command-on-region
    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
 (my/fix-space)
@@ -328,6 +329,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
+  (expand-abbrev)
   (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
     (progn                            ; THEN
   (kill-word 1) ; kill word
