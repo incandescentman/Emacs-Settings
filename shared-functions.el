@@ -23,6 +23,7 @@
 
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+;; ATTENTION: repeated.  Intentional?
 (require 'auto-complete)
 
 (require 'org-bullets)
@@ -44,6 +45,8 @@
         (word (flyspell-get-word)))
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
+(add-hook 'org-mode-hook 'turn-on-flyspell)
 
 '(mouse-highlight nil)
 
@@ -127,8 +130,10 @@
   (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 
 (setq sentence-end-double-space nil)
+
 (global-auto-revert-mode 1)
-(delete-selection-mode 1) ; make typing override text selection
+
+(delete-selection-mode 1)
 
 (electric-pair-mode 1)
 (setq buffer-save-without-query nil)
@@ -192,6 +197,10 @@
             (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
             (auto-save-mode)))
 
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+
 (setq org-stuck-projects
       '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
@@ -214,6 +223,12 @@
 
 ;; more org settings
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+(setq org-src-fontify-natively t)
+
+;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
+
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 
 (setq org-todo-keywords
       '(
@@ -376,25 +391,6 @@ Subject: %^{Subject}
 
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'"))
-                          nil beg end))
-
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
-
 (define-minor-mode zin/org-outline-mode
   "" nil
   :lighter " OOut"
@@ -438,76 +434,6 @@ Subject: %^{Subject}
 
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
-
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-capture-mode-hook 'delete-other-windows)
-(add-hook 'org-capture-mode-hook 'writeroom-mode)
-
-(require 'buffer-stack)
-
-(global-set-key [(s-right)] 'buffer-stack-down)
-(global-set-key [(s-left)] 'buffer-stack-up)
-
-(global-set-key [(A-right)] 'buffer-stack-down)
-(global-set-key [(A-left)] 'buffer-stack-up)
-
-(defvar new-buffer-count 0)
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (org-mode))
-(global-set-key (kbd "s-T") 'new-buffer)
-;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
-
-(defun org-new-scratch-buffer ()
-  (interactive)
-  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-  (org-tree-to-indirect-buffer 'current-window)
-  )
-
-(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
-(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
-(add-hook 'minibuffer-setup-hook (lambda ()
-                                   (abbrev-mode -1)))
-
-(setq org-src-fontify-natively t)
-
-;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
-
-(setq read-buffer-completion-ignore-case t)
-(setq read-file-name-completion-ignore-case t)
-
-;; Make URLs in comments/strings clickable:
-(add-hook 'find-file-hooks 'goto-address-prog-mode)
-
-;; spellcheck
-(add-hook 'org-mode-hook 'turn-on-flyspell)
-
-'(cua-enable-cua-keys (quote shift))
-'(cua-highlight-region-shift-only t)
-'(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
-'(send-mail-function (quote sendmail-send-it))
-'(shift-select-mode nil)
-'(transient-mark-mode t)
-'(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(setq mail-user-agent 'message-user-agent)
-'(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
-'(ns-right-command-modifier (quote meta))
-'(ns-tool-bar-display-mode (quote both) t)
-'(ns-tool-bar-size-mode nil t)
-'(standard-indent 3)
-'(ns-function-modifier (quote meta))
-(transient-mark-mode t)
-(tooltip-mode -1)
-(setq ns-function-modifier 'hyper)
-;; open files in an existing frame instead of a new frame
-(setq ns-pop-up-frames nil)
 
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
@@ -577,6 +503,84 @@ Subject: %^{Subject}
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
+(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+(add-hook 'org-capture-mode-hook 'writeroom-mode)
+
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
+
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
+
+(require 'buffer-stack)
+
+(global-set-key [(s-right)] 'buffer-stack-down)
+(global-set-key [(s-left)] 'buffer-stack-up)
+
+(global-set-key [(A-right)] 'buffer-stack-down)
+(global-set-key [(A-left)] 'buffer-stack-up)
+
+(defvar new-buffer-count 0)
+(defun new-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (org-mode))
+(global-set-key (kbd "s-T") 'new-buffer)
+;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+(defun org-new-scratch-buffer ()
+  (interactive)
+  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
+  (org-tree-to-indirect-buffer 'current-window)
+  )
+
+(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
+(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
+(add-hook 'minibuffer-setup-hook (lambda ()
+                                   (abbrev-mode -1)))
+
+(setq read-buffer-completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+
+(add-hook 'find-file-hooks 'goto-address-prog-mode)
+
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+'(cua-enable-cua-keys (quote shift))
+'(cua-highlight-region-shift-only t)
+'(cua-mode nil nil (cua-base))
+'(cursor-type (quote box))
+'(send-mail-function (quote sendmail-send-it))
+'(shift-select-mode nil)
+'(transient-mark-mode t)
+'(user-mail-address "dixit@aya.yale.edu")
+'(global-flyspell-mode t)
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
+'(mail-send-mail-function (quote message-send-mail-with-sendmail))
+'(setq mail-user-agent 'message-user-agent)
+'(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
+'(ns-right-command-modifier (quote meta))
+'(ns-tool-bar-display-mode (quote both) t)
+'(ns-tool-bar-size-mode nil t)
+'(standard-indent 3)
+'(ns-function-modifier (quote meta))
+(transient-mark-mode t)
+(tooltip-mode -1)
+(setq ns-function-modifier 'hyper)
+;; open files in an existing frame instead of a new frame
+(setq ns-pop-up-frames nil)
+
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
 ;; is this the best mode for editing HTML? 
@@ -588,8 +592,6 @@ Subject: %^{Subject}
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
-
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
 (setq default-directory "~/Dropbox/writing/" )
 

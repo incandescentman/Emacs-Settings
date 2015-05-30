@@ -66,7 +66,7 @@ Wrap text:
 
 * Fullscreen settings
 
-[[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][Source]]
+[[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
 #+BEGIN_SRC emacs-lisp
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -233,22 +233,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (my/fix-space)
 )
 #+END_SRC
-
-** DONE in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
-
-: Lorem ipsum. 
-
-e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
-
-...this:
-: Lorem dolor sit amet ipsum. 
-
-...NOT this:
-
-: Lorem  dolor sit amet ipsum. 
-
-
-
 
 * Keybindings
 
@@ -545,6 +529,21 @@ Suppose the point is at the ^ caret above. I want to be able to invoke backward-
      The point of this question is that, in case it is part of the string, the
      first invocation deletes it, so it is not entirely a "backward" kill.  I
      think the semantics can get a bit convoluted here.
+**** TODO Clarification: The caret is NOT part of the string. 
+
+Sorry, maybe a better way to phrase it would be as follows: 
+
+Take the example below...
+
+: The quick brown, fox fox jumped.
+
+...and suppose the point is on the space between the first "fox" and the second one, or on the "f" in the second "fox". 
+
+I want to be able to invoke backward-kill-word-correctly, TWICE, such that it first deletes the word, then deletes the comma (but leaves one space) such that the result is this: 
+
+: The quick brown fox jumped.
+
+Thanks!!
 
 *** my delete backward
 #+BEGIN_SRC emacs-lisp

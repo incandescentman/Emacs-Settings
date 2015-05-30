@@ -129,15 +129,32 @@
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
 
-(defun pasteboard-paste()
+;;; old version; remove after testing new one (see below)
+;; (defun pasteboard-paste()
+;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+;;   (interactive)
+;; (my/fix-space)
+;;   (shell-command-on-region
+;;    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+;; (my/fix-space)
+;; ;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
+;; )
+
+;;; new version; not thoroughly tested
+(defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
-(my/fix-space)
-  (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-(my/fix-space)
-;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
-)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point))))
+    (shell-command-on-region start end
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space))))
 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
@@ -445,11 +462,3 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil) 
-
-
-;; Move files to trash when deleting
-(setq delete-by-moving-to-trash t)

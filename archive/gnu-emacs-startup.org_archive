@@ -1,0 +1,105 @@
+
+Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+
+
+* DONE in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-05-29 Fri 23:23
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_OLPATH: Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :END:
+
+
+
+: Lorem ipsum. 
+
+e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
+
+...this:
+: Lorem dolor sit amet ipsum. 
+
+...NOT this:
+
+: Lorem  dolor sit amet ipsum. 
+
+;;; old version; remove after testing new one (see below)
+;; (defun pasteboard-paste()
+;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+;;   (interactive)
+;; (my/fix-space)
+;;   (shell-command-on-region
+;;    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+;; (my/fix-space)
+;; ;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
+;; )
+
+;;; new version; not thoroughly tested
+(defun pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point))))
+    (shell-command-on-region start end
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space))))
+
+
+
+
+* DONE in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-05-29 Fri 23:23
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_OLPATH: Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :END:
+
+
+
+: Lorem ipsum. 
+
+e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
+
+...this:
+: Lorem dolor sit amet ipsum. 
+
+...NOT this:
+
+: Lorem  dolor sit amet ipsum. 
+
+;;; old version; remove after testing new one (see below)
+;; (defun pasteboard-paste()
+;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+;;   (interactive)
+;; (my/fix-space)
+;;   (shell-command-on-region
+;;    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+;; (my/fix-space)
+;; ;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
+;; )
+
+;;; new version; not thoroughly tested
+(defun pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point))))
+    (shell-command-on-region start end
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space))))
+
+
+
