@@ -3277,8 +3277,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 I want to use this to create a function to kill-clause (not kill sentence).
 
 
-
-** TODO There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again.
+** TODO There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again. :rudi:
 
 #+BEGIN_SRC emacs-lisp
 (defun kill-clause ()
@@ -3290,7 +3289,6 @@ I want to use this to create a function to kill-clause (not kill sentence).
 (my/kill-sentence-dwim)
 (setq sentence-end-base "[.?!][]\"'”)}]*"))) 
 #+END_SRC
-
 
 
 * Better backspace during isearch 

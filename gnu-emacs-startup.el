@@ -445,3 +445,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil) 
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
