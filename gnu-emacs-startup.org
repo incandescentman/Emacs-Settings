@@ -198,15 +198,32 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
 
-(defun pasteboard-paste()
+;;; old version; remove after testing new one (see below)
+;; (defun pasteboard-paste()
+;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+;;   (interactive)
+;; (my/fix-space)
+;;   (shell-command-on-region
+;;    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+;; (my/fix-space)
+;; ;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
+;; )
+
+;;; new version; not thoroughly tested
+(defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
-(my/fix-space)
-  (shell-command-on-region
-   (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-(my/fix-space)
-;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
-)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point))))
+    (shell-command-on-region start end
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space))))
 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
@@ -217,7 +234,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 )
 #+END_SRC
 
-** TODO in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
+** DONE in pasteboard-paste above, modify so that it will remove extra whitespace BEFORE pasted word :rudi:
 
 : Lorem ipsum. 
 
@@ -522,6 +539,12 @@ Suppose the point is at the ^ caret above. I want to be able to invoke backward-
 
 ...and second invocation should then delete the comma and fix the space so the result is this:
 : The quick brown fox jumped.
+
+**** TODO In the example above, is the caret part of the string, or just there to mark point? :followup:
+
+     The point of this question is that, in case it is part of the string, the
+     first invocation deletes it, so it is not entirely a "backward" kill.  I
+     think the semantics can get a bit convoluted here.
 
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
