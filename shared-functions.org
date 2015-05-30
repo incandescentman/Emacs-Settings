@@ -5,7 +5,8 @@
   - Use case: I use this file with both GNU Emacs for OSX and for Aquamacs.
 
 * Set up packages
-Load the proper repositories:
+** Load the proper repositories
+
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 
@@ -37,6 +38,7 @@ Load the proper repositories:
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+;; ATTENTION: repeated.  Intentional?
 (require 'auto-complete)
 #+END_SRC
 
@@ -60,7 +62,7 @@ Load the proper repositories:
  )
 #+END_SRC
 
-** Spellcheck add word 
+** Spellcheck add word
 #+BEGIN_SRC emacs-lisp
 (defun add-word-to-personal-dictionary ()
   (interactive)
@@ -70,18 +72,27 @@ Load the proper repositories:
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 #+END_SRC
 
+** Turn on on-the-fly spellcheck for org-mode
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-flyspell)
+#+END_SRC
+
 * UI / customization of appearance and editing environment
 ** Stop accidentally highlighting org-mode links all the time:
+
 #+BEGIN_SRC emacs-lisp
 '(mouse-highlight nil)
 #+END_SRC
 
 ** Ask before exiting Emacs
+
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p) 
 #+END_SRC
 
 ** System alarms
+
 In some cases, you'd like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit C-g in the minibuffer or during an isearch:
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function
@@ -97,6 +108,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 #+END_SRC
 
 ** Red cursor mode
+
 This customization with the big blocky boxy red cursor makes me so happy.
 #+BEGIN_SRC emacs-lisp
 (set-cursor-color "red")
@@ -117,12 +129,15 @@ it:
 #+END_SRC
 
 ** Split windows correctly
+
 #+BEGIN_SRC emacs-lisp
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
 (setq split-width-threshold 75)
 #+END_SRC
-** Use visual line mode whenever possible:
+
+** Use visual line mode whenever possible
+
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
@@ -195,15 +210,25 @@ Turn off fill mode, which adds random line breaks in my text files:
   (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 #+END_SRC
 
-* Set some default settings
+* Editing / environment settings
+** Disable double spacing between sentences
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
-(global-auto-revert-mode 1)
-(delete-selection-mode 1) ; make typing override text selection
 #+END_SRC
 
-* Editing / environment settings
+** Enable auto-revert
+
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode 1)
+#+END_SRC
+
+** Make typing override text selection
+
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1)
+#+END_SRC
+
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
 (electric-pair-mode 1)
@@ -215,7 +240,8 @@ Turn off fill mode, which adds random line breaks in my text files:
 (setq locate-command "mdfind")
 #+END_SRC
 
-** Automatically open files in their correct modes:
+** Automatically open files in their correct modes
+
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
@@ -297,25 +323,8 @@ Turn off fill mode, which adds random line breaks in my text files:
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
-* Org agenda
-** Don't save org-agenda (doesn't work though, I get all kinds of org-agenda
-autosaves in my ~ home directory):
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
-#+END_SRC
-
-* org stuck projects (?)
-Defining stuck projects as todos that do not contain "scheduled" or
-"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
-#+BEGIN_SRC emacs-lisp
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
-#+END_SRC
-
-* org show agenda
+** Org agenda
+*** Show org-agenda
 # ATTENTION: This is not enclosed in #+BEGIN_SRC/#+END_SRC block.  Is it
 # intentional?
 (defun bh/show-org-agenda ()
@@ -325,10 +334,39 @@ Defining stuck projects as todos that do not contain "scheduled" or
     (org-agenda-list))
   (delete-other-windows))
 
-* Org settings
+*** Don't save org-agenda
+
+(It doesn't work though, I get all kinds of org-agenda autosaves in my
+~ home directory)
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode)))
+#+END_SRC
+
+*** Stop mouse cursor from highlighting lines in org-agenda
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-finalize-agenda-hook
+          (lambda () (remove-text-properties
+                      (point-min) (point-max) '(mouse-face t))))
+#+END_SRC
+
+** org stuck projects (?)
+Defining stuck projects as todos that do not contain "scheduled" or
+"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
+#+BEGIN_SRC emacs-lisp
+(setq org-stuck-projects
+      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+#+END_SRC
+
+** Org settings
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'org-agenda-list)
 #+END_SRC
+
+# ATTENTION: there appears to be a #+BEGIN_SRC missing.
 
 (require 'org-inlinetask)
 
@@ -352,9 +390,19 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 ;; more org settings
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+(setq org-src-fontify-natively t)
+
+;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 #+END_SRC
 
-** org keywords
+*** Activate org-mode automatically
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
+#+END_SRC
+
+** Org keywords
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
@@ -545,46 +593,14 @@ Subject: %^{Subject}
     (apply 'completing-read args)))
 #+END_SRC
 
-* Mobile org
+** Mobile org
 Can't get this to work on my iPhone:
 #+BEGIN_SRC emacs-lisp
 (setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 #+END_SRC
 
-* Org-agenda settings
-** stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-#+END_SRC
-
-* Typography
-** Replace smart quotes with straight quotes
-Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
-#+BEGIN_SRC emacs-lisp
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'"))
-                          nil beg end))
-#+END_SRC
-
-** Paste and replace quotes
-Haven't used this next one:
-#+BEGIN_SRC emacs-lisp
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
-#+END_SRC
-
-* Org custom functions
-** Workflowy mode
+** Org custom functions
+*** Workflowy mode
 Make ~org-mode~ temporarily emulate traditional outlining keybindings
 e.g. nvALT
 #+BEGIN_SRC emacs-lisp
@@ -615,7 +631,7 @@ e.g. nvALT
 
 #+END_SRC
 
-** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+*** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
 #+BEGIN_SRC emacs-lisp
 (defun org-checkbox-next ()
   (interactive)
@@ -624,9 +640,9 @@ e.g. nvALT
   (org-next-item))
 #+END_SRC
 
-** Update parent cookie
+*** Update parent cookie
 # ATTENTION: Empty heading.  Intentional?
-** I think this is to make parent ~DONE~ states automatically update:
+*** I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
@@ -642,12 +658,139 @@ e.g. nvALT
   (myorg-update-parent-cookie))
 #+END_SRC
 
-* Org capture
+*** checkbox-list-complete
+
+Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'org-list
+  '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
+
+(defun ndk/checkbox-list-complete ()
+  (save-excursion
+    (org-back-to-heading t)
+    (let ((beg (point)) end)
+      (end-of-line)
+      (setq end (point))
+      (goto-char beg)
+      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
+          (if (match-end 1)
+              (if (equal (match-string 1) "100%")
+                  ;; all done - do the state change
+                  (org-todo 'done)
+                (org-todo 'todo))
+            (if (and (> (match-end 2) (match-beginning 2))
+                     (equal (match-string 2) (match-string 3)))
+                (org-todo 'done)
+              (org-todo 'todo)))))))
+#+END_SRC
+
+*** Org align tables
+
+#+BEGIN_SRC emacs-lisp
+(defun my-align-all-tables ()
+  (interactive)
+  (org-table-map-tables 'org-table-align 'quietly))
+#+END_SRC
+
+*** Org extract link 
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-extract-link ()
+  "Extract the link location at point and put it on the killring."
+  (interactive)
+  (when (org-in-regexp org-bracket-link-regexp 1)
+    (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
+#+END_SRC
+
+*** Org insert link
+
+Insert link with HTML title as default description. When using `org-insert-link'
+(`C-c C-l') it might be useful to extract contents from HTML <title> tag and use
+it as a default link description. Here is a way to accomplish this:
+
+#+BEGIN_SRC emacs-lisp
+(require 'mm-url) ; to include mm-url-decode-entities-string
+
+(defun my-org-insert-link ()
+  "Insert org link where default description is set to html title."
+  (interactive)
+  (let* ((url (read-string "URL: "))
+         (title (get-html-title-from-url url)))
+    (org-insert-link nil url title)))
+
+(defun get-html-title-from-url (url)
+  "Return content in <title> tag."
+  (let (x1 x2 (download-buffer (url-retrieve-synchronously url)))
+    (save-excursion
+      (set-buffer download-buffer)
+      (beginning-of-buffer)
+      (setq x1 (search-forward "<title>"))
+      (search-forward "</title>")
+      (setq x2 (search-backward "<"))
+      (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
+#+END_SRC
+
+*** Org insert subtask
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-insert-sub-task ()
+  (interactive)
+  (let ((parent-deadline (org-get-deadline-time nil)))
+    (org-goto-sibling)
+    (org-insert-todo-subheading t)
+    (when parent-deadline
+      (org-deadline nil parent-deadline))))
+#+END_SRC
+
+*** Reschedule agenda items to today with a single command
+
+#+BEGIN_SRC emacs-lisp
+(defun org-agenda-reschedule-to-today ()
+  (interactive)
+  (cl-flet ((org-read-date (&rest rest) (current-time)))
+	   (call-interactively 'org-agenda-schedule)))
+#+END_SRC
+
+*** Org archive done
+
+Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
+#+BEGIN_SRC emacs-lisp
+(defun my-org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries 'org-archive-subtree "/DONE" 'file))
+#+END_SRC
+
+** Org capture
 Make org-capture open in full window! :-)
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
+#+END_SRC
+
+* Typography
+** Replace smart quotes with straight quotes
+Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
+#+BEGIN_SRC emacs-lisp
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
+#+END_SRC
+
+** Paste and replace quotes
+Haven't used this next one:
+#+BEGIN_SRC emacs-lisp
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
 #+END_SRC
 
 * My custom functions/settings
@@ -701,26 +844,27 @@ every new buffer will be unique:
                                    (abbrev-mode -1)))
 #+END_SRC
 
-* Other settings
-#+BEGIN_SRC emacs-lisp
-(setq org-src-fontify-natively t)
-
-;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
-#+END_SRC
-
+*** Ignore case when reading buffer and file names
 #+BEGIN_SRC emacs-lisp
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
-
-;; Make URLs in comments/strings clickable:
-(add-hook 'find-file-hooks 'goto-address-prog-mode)
-
-;; spellcheck
-(add-hook 'org-mode-hook 'turn-on-flyspell)
 #+END_SRC
 
-* Some other settings
+* Browsing
+** Make URLs in comments/strings clickable
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'find-file-hooks 'goto-address-prog-mode)
+#+END_SRC
+
+** Set the default browser
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+#+END_SRC
+
+* Miscellaneous/unsorted settings
+
+** TODO The following settings should be sorted
 
 #+BEGIN_SRC emacs-lisp
 '(cua-enable-cua-keys (quote shift))
@@ -748,106 +892,8 @@ every new buffer will be unique:
 (setq ns-pop-up-frames nil)
 #+END_SRC
 
-* Some ~org-mode~ custom functions
+** Open everything in its right mode; use ~org-mode~ whenever possible
 
-** checkbox-list-complete
-Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
-
-#+BEGIN_SRC emacs-lisp
-(eval-after-load 'org-list
-  '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
-
-(defun ndk/checkbox-list-complete ()
-  (save-excursion
-    (org-back-to-heading t)
-    (let ((beg (point)) end)
-      (end-of-line)
-      (setq end (point))
-      (goto-char beg)
-      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
-          (if (match-end 1)
-              (if (equal (match-string 1) "100%")
-                  ;; all done - do the state change
-                  (org-todo 'done)
-                (org-todo 'todo))
-            (if (and (> (match-end 2) (match-beginning 2))
-                     (equal (match-string 2) (match-string 3)))
-                (org-todo 'done)
-              (org-todo 'todo)))))))
-#+END_SRC
-
-** Org align tables
-#+BEGIN_SRC emacs-lisp
-(defun my-align-all-tables ()
-  (interactive)
-  (org-table-map-tables 'org-table-align 'quietly))
-#+END_SRC
-
-** Org extract link 
-#+BEGIN_SRC emacs-lisp
-(defun my-org-extract-link ()
-  "Extract the link location at point and put it on the killring."
-  (interactive)
-  (when (org-in-regexp org-bracket-link-regexp 1)
-    (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
-#+END_SRC
-
-** Org insert link
-Insert link with HTML title as default description. When using `org-insert-link'
-(`C-c C-l') it might be useful to extract contents from HTML <title> tag and use
-it as a default link description. Here is a way to accomplish this:
-
-#+BEGIN_SRC emacs-lisp
-(require 'mm-url) ; to include mm-url-decode-entities-string
-
-(defun my-org-insert-link ()
-  "Insert org link where default description is set to html title."
-  (interactive)
-  (let* ((url (read-string "URL: "))
-         (title (get-html-title-from-url url)))
-    (org-insert-link nil url title)))
-
-(defun get-html-title-from-url (url)
-  "Return content in <title> tag."
-  (let (x1 x2 (download-buffer (url-retrieve-synchronously url)))
-    (save-excursion
-      (set-buffer download-buffer)
-      (beginning-of-buffer)
-      (setq x1 (search-forward "<title>"))
-      (search-forward "</title>")
-      (setq x2 (search-backward "<"))
-      (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
-#+END_SRC
-
-** org insert subtask
-#+BEGIN_SRC emacs-lisp
-(defun my-org-insert-sub-task ()
-  (interactive)
-  (let ((parent-deadline (org-get-deadline-time nil)))
-    (org-goto-sibling)
-    (org-insert-todo-subheading t)
-    (when parent-deadline
-      (org-deadline nil parent-deadline))))
-#+END_SRC
-
-** Reschedule agenda items to today with a single command
-#+BEGIN_SRC emacs-lisp
-(defun org-agenda-reschedule-to-today ()
-  (interactive)
-  (cl-flet ((org-read-date (&rest rest) (current-time)))
-	   (call-interactively 'org-agenda-schedule)))
-#+END_SRC
-
-** org archive done
-Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
-#+BEGIN_SRC emacs-lisp
-(defun my-org-archive-done-tasks ()
-  (interactive)
-  (org-map-entries 'org-archive-subtree "/DONE" 'file))
-#+END_SRC
-
-* Settings (not functions)
-Open everything in its right mode; use ~org-mode~ whenever possible:
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
@@ -855,12 +901,14 @@ Open everything in its right mode; use ~org-mode~ whenever possible:
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 #+END_SRC
 
-Enable highlighting of text similar to standard word processors:
+** Enable highlighting of text similar to standard word processors
+
 #+BEGIN_SRC emacs-lisp
 '(org-support-shift-select (quote always))
 #+END_SRC
 
-Autocapitalization:
+** Autocapitalization
+
 #+BEGIN_SRC emacs-lisp
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
@@ -868,19 +916,15 @@ Autocapitalization:
 ;; (add-hook message-mode-hook turn-on-orgstruct)
 #+END_SRC
 
-Set the default browser
-# ATTENTION: the following line was further down the file. Please, check which
-# is the correct one. -- Rúdi Araújo, 2015/05/17.
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-#+END_SRC
-
 ** Define my default directory:
+
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/Dropbox/writing/" )
 #+END_SRC
+
 * LaTeX
-** find LaTeX on my system
+** Find LaTeX on my system
+
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2014/bin/universal-darwin")
@@ -918,19 +962,22 @@ Make backups of files, even when they're in version control:
 
 * Message mode
 
-Report problems with the SMTP server:
+** Report problems with the SMTP server
+
 #+BEGIN_SRC emacs-lisp
 (setq smtpmail-debug-info t)
 #+END_SRC
 
-Add Cc and Bcc headers to the message buffer:
+** Add Cc and Bcc headers to the message buffer
+
 #+BEGIN_SRC emacs-lisp
 (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 #+END_SRC
 
-Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' lines:
+** Wrapper for ~message-mail~ that prompts for the 'to' and 'subject' lines
+
 #+BEGIN_SRC emacs-lisp
 (defun mail-region (b e to subject)
   "Send the current region in an email"
@@ -943,7 +990,8 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
     (message-send-and-exit)))
 #+END_SRC
 
-** forgot what this is 
+** Forgot what this is 
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'completion-styles 'initials t)
 #+END_SRC
@@ -956,7 +1004,8 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 #+END_SRC
 
-** Remember recent email addresses:
+** Remember recent email addresses
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/Dropbox/elisp/recent-addresses-0.1")
 (require 'recent-addresses)
@@ -965,6 +1014,7 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
 #+END_SRC
 
 * Pomodoro
+
 #+BEGIN_SRC emacs-lisp
 (require 'org-pomodoro)
 
@@ -974,17 +1024,20 @@ Here's a wrapper for message-mail that prompts you for the 'to' and 'subject' li
   (org-pomodoro)
   )
 #+END_SRC
-* Useful functions
-** Reveal in finder
+
+* Reveal in finder
+
 #+BEGIN_SRC emacs-lisp
 (require 'reveal-in-finder)
 #+END_SRC
 
 * ~eshell~
+
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 (require 'eshell-autojump)
 #+END_SRC
+
 * ~ibuffer~
 
 #+BEGIN_SRC emacs-lisp
