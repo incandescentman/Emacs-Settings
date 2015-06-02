@@ -746,6 +746,29 @@ Conversely, given this:
 
 Thanks!
 
+** TODO Please check if this implementation meets the requirements
+
+#+BEGIN_SRC emacs-lisp
+(defun cycle-hyphenation ()
+  (interactive)
+  (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
+         (save-excursion (replace-match " " t t nil 1)))
+        ((re-search-forward "\\=\\W*\\w+\\( \\)\\w+" nil t)
+         (save-excursion (replace-match "-" t t nil 1)))))
+#+END_SRC
+
+Note: there are unspecified edge cases.  For example, what should happen with
+the following case?
+
+: The best kind of software is^ open  source software. 
+
+With this implementation, nothing happens.  Conversely, the following is also
+ignored:
+
+: The best kind of software is^ open--source software. 
+: The best kind of software is^ open -source software. 
+: The best kind of software is^ open- source software. 
+
 * TODO org-clone-subtree-no-time-shift                                 :rudi:
 
 There is the function org-clone-subtree-with-time-shift, which prompts me for the number of clones to produce. 
