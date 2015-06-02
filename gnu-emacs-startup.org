@@ -797,4 +797,24 @@ Foo.
 
 Thanks! 
 
+** TODO I think this should meet the requirements; please test it
 
+#+BEGIN_SRC emacs-lisp
+(defun org-clone-subtree-no-time-shift ()
+  (interactive)
+  (org-clone-subtree-with-time-shift 1)
+  (save-excursion
+    (org-goto-sibling)
+    ;; This part was lifted partly and adapted from
+    ;; http://orgmode.org/worg/org-hacks.html#orgheadline10.
+    ;; There should be a better way to change the contents of an org heading
+    ;; though...
+    (when (org-at-heading-p)
+      (let ((hl-text (nth 4 (org-heading-components)))
+            (buffer-undo-list))
+        (when hl-text
+          (beginning-of-line)
+          (search-forward hl-text (point-at-eol))
+          (replace-match (format "%s - clone" hl-text) nil t)
+          (org-align-tags-here org-tags-column))))))
+#+END_SRC
