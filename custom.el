@@ -70,6 +70,8 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
@@ -87,9 +89,6 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cursor-type (quote box))
- '(custom-safe-themes
-   (quote
-    ("146cc293f18ea1e17d29833b495193d0455bf1e2b30ecc0f2551a77027338576" "4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "0c29db826418061b40564e3351194a3d4a125d182c6ee5178c237a7364f0ff12" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "442a0fe27702c0633ac2699ddc5f67a4315be6714804c8e77d0d325940f65f64" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(deft-text-mode (quote org-mode))
@@ -281,7 +280,7 @@
  '(org-koma-letter-from-address "22 Saint Marks Place Apt. D, New York NY 10003")
  '(org-koma-letter-phone-number "(646) 355-8001")
  '(org-koma-letter-place "New York City")
- '(org-koma-letter-use-backaddress t)
+ '(org-koma-letter-use-backaddress nil)
  '(org-koma-letter-use-email t)
  '(org-koma-letter-use-foldmarks "nil")
  '(org-koma-letter-use-phone t)
@@ -519,3 +518,4 @@
  
 ;;; Treat all themes as safe
 (setq custom-safe-themes t) 
+

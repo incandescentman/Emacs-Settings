@@ -49,6 +49,31 @@
 (require 'org-fstree)
 #+END_SRC
 
+Koma letter
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'ox '(require 'ox-koma-letter))
+(eval-after-load 'ox-latex '(add-to-list 'org-latex-packages-alist '("english" "babel" t) t))
+
+(eval-after-load 'ox-koma-letter
+'(progn
+(add-to-list 'org-latex-classes
+'("my-letter"
+"\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=12pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
+\\usepackage[english]{babel}
+\\usepackage{utopia}
+\\setkomavar{frombank}{(1234)\\,567\\,890}
+\\nonfrenchspacing
+\\setkomafont{backaddress}{\\normalsize \\usekomafont{fromaddress}}
+\[DEFAULT-PACKAGES]
+\[PACKAGES]
+\[EXTRA]
+\\KOMAoption{backaddress}{false}"))
+
+(setq org-koma-letter-default-class "my-letter"))) 
+#+END_SRC
+
+
 * Set up spellcheck
 ** Find aspell and hunspell
 #+BEGIN_SRC emacs-lisp
@@ -2239,7 +2264,7 @@ Make Buffer-stack ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 #+END_SRC
@@ -3322,7 +3347,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * startup
 #+BEGIN_SRC emacs-lisp
 (turn-on-olivetti-mode)
-(load-theme 'leuven)
+;; (load-theme 'leuven)
 #+END_SRC
 
 * kill clause
