@@ -462,3 +462,28 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
+
+(defun cycle-hyphenation ()
+  (interactive)
+  (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
+         (save-excursion (replace-match " " t t nil 1)))
+        ((re-search-forward "\\=\\W*\\w+\\( \\)\\w+" nil t)
+         (save-excursion (replace-match "-" t t nil 1)))))
+
+(defun org-clone-subtree-no-time-shift ()
+  (interactive)
+  (org-clone-subtree-with-time-shift 1)
+  (save-excursion
+    (org-goto-sibling)
+    ;; This part was lifted partly and adapted from
+    ;; http://orgmode.org/worg/org-hacks.html#orgheadline10.
+    ;; There should be a better way to change the contents of an org heading
+    ;; though...
+    (when (org-at-heading-p)
+      (let ((hl-text (nth 4 (org-heading-components)))
+            (buffer-undo-list))
+        (when hl-text
+          (beginning-of-line)
+          (search-forward hl-text (point-at-eol))
+          (replace-match (format "%s - clone" hl-text) nil t)
+          (org-align-tags-here org-tags-column))))))
