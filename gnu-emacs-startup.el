@@ -211,6 +211,7 @@
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
+(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
