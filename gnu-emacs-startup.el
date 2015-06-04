@@ -211,6 +211,9 @@
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
+(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+
+
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
@@ -241,6 +244,11 @@
 (define-key key-minor-mode-map (kbd "s-W") 'web-research)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
+
+
+;; and the keybinding
+(define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
+
 
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
@@ -318,6 +326,7 @@
 When point is at the beginning of a sentence, kill the entire
 sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
   (interactive)
+(expand-abbrev)
   (if (my/beginning-of-sentence-p)
       (progn
         (kill-sentence)
@@ -328,6 +337,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
+
+;; Rúdi: I added this, I think it works. Can you make it so that in org-mode, 
+
+(defun my/kill-line-dwim ()
+  "Kill the current line."
+  (interactive)
+(expand-abbrev)
+(org-kill-line)
+(my/fix-space))
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 

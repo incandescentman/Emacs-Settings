@@ -2526,10 +2526,11 @@ searches all buffers."
 
 (defun kill-clause ()
   (interactive) 
+(expand-abbrev)
               (when (string-match "^\\[" sentence-end-base)
     (progn 
               (setq sentence-end-base
-                      (replace-match "--\\|[,;/" t t sentence-end-base)))
+                      (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
 (setq sentence-end-base "[.?!…][]\"'”)}]*"))) 
 

@@ -62,14 +62,6 @@
   (add-to-list 'default-frame-alist '(alpha 100 100))
   )
 
-;; Set transparency of emacs
-(defun transparency-set-value (value)
-  "Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (incarnadine-cursor)
-  (interactive "nTransparency Value 0 - 100 opaque:")
-  (set-frame-parameter (selected-frame) 'alpha value))
-
-
 
 
 ;;;; functions to automatically load color-themes
@@ -173,11 +165,21 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 ;;;; functions to change the appearance of Emacs to various beautiful defaults automatically load 
 
-(defun transparent-serenity ()
-  (interactive)
-  (set-frame-parameter (selected-frame) 'alpha '(80 80))
-  (add-to-list 'default-frame-alist '(alpha 80 80))
+;; Set transparency of emacs
+(defun transparency-set-value (value)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (incarnadine-cursor)
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+
+
+(defun transparent-serenity (value)
+"Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value) 
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  (toggle-frame-fullscreen)
+  (toggle-frame-maximized)
   )
 
 (defun rainy-highway-mode ()
