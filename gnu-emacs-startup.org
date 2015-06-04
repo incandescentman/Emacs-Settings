@@ -754,7 +754,7 @@ Thanks!
   (interactive)
   (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
          (save-excursion (replace-match " " t t nil 1)))
-        ((re-search-forward "\\=\\W*\\w+\\( \\)\\w+" nil t)
+        ((re-search-forward "\\=\\W*\\w+\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
 #+END_SRC
 
@@ -765,12 +765,8 @@ the following case?
 
 # In the above case, ideally it should remove the extra space and cycle hyphenation. The cases below are rare enough that I'm not worried about them. ---Jay 
 
-With this implementation, nothing happens.  Conversely, the following is also
-ignored:
-
-: The best kind of software is^ open--source software. 
-: The best kind of software is^ open -source software. 
-: The best kind of software is^ open- source software. 
+# ^ OK, I have implemented that use case.  It now removes every whitespaces
+# inbetween.  Please test.
 
 * DONE! :-) org-clone-subtree-no-time-shift                            :rudi:
 
