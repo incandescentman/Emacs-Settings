@@ -446,6 +446,7 @@ Make ~kill-sentence~ work in a more intuitive way:
 When point is at the beginning of a sentence, kill the entire
 sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
   (interactive)
+(expand-abbrev)
   (if (my/beginning-of-sentence-p)
       (progn
         (kill-sentence)

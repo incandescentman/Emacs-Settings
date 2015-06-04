@@ -367,7 +367,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         ;; to kill-ring
         (kill-region old-point (point))
       (backward-kill-word 1)))
-  (my/fix-space))
+  (my/fix-space)
+  (jay/insert-space) ; I added this line, I think it works.
+) 
 
 ;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()
