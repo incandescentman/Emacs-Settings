@@ -505,9 +505,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** BACKWARD kill word correctly
-#+BEGIN_SRC emacs-lisp
+** TODO BACKWARD kill word correctly                                  :rudi:
+I added a line at the bottom.
 
+#+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -517,7 +518,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         ;; to kill-ring
         (kill-region old-point (point))
       (backward-kill-word 1)))
-  (my/fix-space))
+  (my/fix-space)
+  (jay/insert-space) ; I added this line, I think it works.
+) 
 #+END_SRC
 *** TODO can you help me fix this function?                          :rudi:
 

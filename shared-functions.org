@@ -3338,7 +3338,7 @@ I want to use this to create a function to kill-clause (not kill sentence).
               (setq sentence-end-base
                       (replace-match "--\\|[,;/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!][]\"'”)}]*"))) 
+(setq sentence-end-base "[.?!…][]\"'”)}]*"))) 
 #+END_SRC
 
 
@@ -3447,7 +3447,9 @@ So in this case,
     (cond
       ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
       ((and buffer-file-name (eq major-mode 'latex-mode)))
-      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
+((and buffer-file-name (eq major-mode 'fundamental-mode))) 
+      ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
  

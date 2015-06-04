@@ -14,7 +14,7 @@
 
 
 ;;;; packages
-;; automatically install my favorite packages 
+;; automatically install my favorite packages
  (setq package-list '(magit expand-region gist  helm helm-projectile magit markdown-mode auto-complete dired-details+ paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme frame-restore frame-cmds org-fstree buffer-stack auto-capitalize org-pomodoro edit-server key-chord ido-hacks openwith wc-mode discover engine-mode point-stack palimpsest olivetti smex dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
 
 ;; the repositories containing them
@@ -48,10 +48,10 @@
                                     lisp-mode  markdown-mode emacs-lisp-mode ))
   (add-to-list 'ac-modes mode))
 
-;; tab completion 
+;; tab completion
 (ac-set-trigger-key "TAB")
 
-;; haven't used these, not sure how to 
+;; haven't used these, not sure how to
 (define-key ac-completing-map (kbd "C-M-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
 (define-key ac-completing-map "\t" 'ac-complete)
@@ -89,6 +89,9 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cursor-type (quote box))
+ '(custom-safe-themes
+   (quote
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(deft-text-mode (quote org-mode))
@@ -407,6 +410,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
  '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
@@ -421,7 +425,7 @@
 
 
 ;;; Ignore / Exclude Uninteresting Things
-;; 
+;;
 ;; Make Buffer-stack ignore uninteresting buffers
 ;; in GNU Emacs, ignore scratch buffer as well
 (defun buffer-stack-filter-regexp (buffer)
@@ -515,7 +519,6 @@
 (monaco-font)
 (toggle-fullscreen)
 (palimpsest-mode 1)
- 
-;;; Treat all themes as safe
-(setq custom-safe-themes t) 
 
+;;; Treat all themes as safe
+(setq custom-safe-themes t)

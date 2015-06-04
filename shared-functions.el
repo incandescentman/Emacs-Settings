@@ -2579,5 +2579,7 @@ searches all buffers."
     (cond
       ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
       ((and buffer-file-name (eq major-mode 'latex-mode)))
-      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
+((and buffer-file-name (eq major-mode 'fundamental-mode))) 
+      ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
