@@ -334,6 +334,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
+
+;; and the keybinding
+(define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
+
+
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
@@ -457,6 +462,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
+
+# Rúdi: I added this, I think it works. Can you make it so that in org-mode, 
+
+(defun my/kill-line-dwim ()
+  "Kill the current line."
+  (interactive)
+(expand-abbrev)
+(org-kill-line)
+(my/fix-space))
+
+
+
 #+END_SRC
 
 * Browsing
@@ -778,3 +795,5 @@ Oleh
 #+END_SRC
 
  
+* Request                                                              :rudi:
+For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
