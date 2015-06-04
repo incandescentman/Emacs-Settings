@@ -3422,7 +3422,7 @@ WHEN A REGION IS HIGHLIGHTED:
 
 Emacs default behavior: Left-arrow moves the point one character to the left, right-arrow moves the point one character to the right, up-arrow moves it one line up, down-arrow moves it one line down.
 
-Desired behavior: Left arrow should move the point to the point immediately BEFORE the region, right arrow should move the point to the point immediately AFTER the region. 
+Desired behavior: Left-arrow should move the point to the point immediately BEFORE the region, right-arrow should move the point to the point immediately AFTER the region, up-arrow should move to the line above the region, down-arrow should move to the line below the region. 
 
 Consider the paragraph below.
 
@@ -3450,4 +3450,71 @@ So in this case,
       ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
+ 
+
+* Aquamacs
+
+
+(defun aquamacs-left-char ()
+  "Move point to the left or the beginning of the region.
+ Like `backward-char', but moves point to the beginning of the region
+provided `cua-mode' and the mark are active."
+  (interactive)
+  (let ((this-command 'left-char)) ;; maintain compatibility
+    (let ((left (min (point) (or (mark t) 0))))
+      (if (and cua-mode
+	       (consp transient-mark-mode) ;; used to be cua--explicit-region-start
+	       mark-active
+	       (not this-command-keys-shift-translated))
+	  (progn
+	    (goto-char left)
+	    (setq deactivate-mark t))
+	(call-interactively 'left-char)))))
+
+
+
+(defun aquamacs-right-char ()
+  "Move point to the right or the end of the region.
+ Like `right-char', but moves point to the end of the region
+provided `cua-mode' and the mark are active."
+  (interactive)
+  (let ((this-command 'right-char)) ;; maintain compatibility
+    (let ((right (max (point) (or (mark t) 0))))
+      (if (and cua-mode
+	       (consp transient-mark-mode) ;; used to be cua--explicit-region-start
+	       mark-active
+	       (not this-command-keys-shift-translated))
+	  (progn (goto-char right)
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
+
+(dolist (cmd
+	 '(aquamacs-left-char 
+	   aquamacs-right-char
+	   aquamacs-next-line
+	   aquamacs-previous-line))
+  (put cmd 'CUA 'move))
+
+(defun aquamacs-previous-line (&optional arg try-vscroll)
+  "Move cursor vertically up ARG buffer lines.
+Like `previous-line', but move by logical buffer lines
+if `visual-line-mode' is off and `line-move-visual' is set to `arrow-keys-only'."
+  (interactive "^p\np")
+  (setq this-command 'previous-line)  ; ensure last-command will be set
+  ;; visual-line-mode sets line-move-visual to t (unconditionally)
+  (let ((line-move-visual (and line-move-visual
+			       (not (eq line-move-visual 'arrow-keys-only)))))
+    (previous-line arg try-vscroll)))
+
+(defun aquamacs-next-line (&optional arg try-vscroll)
+  "Move cursor vertically down ARG buffer lines.
+Like `next-line', but move by logical buffer lines
+if `visual-line-mode' is off and `line-move-visual' is set to `arrow-keys-only'."
+  (interactive "^p\np")
+  (setq this-command 'next-line)  ; ensure last-command will be set
+  ;; visual-line-mode sets line-move-visual to t (unconditionally)
+  (let ((line-move-visual (and line-move-visual
+			       (not (eq line-move-visual 'arrow-keys-only)))))
+    (next-line arg try-vscroll)))
+
  

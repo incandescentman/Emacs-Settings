@@ -403,6 +403,15 @@ Use ⌘-m as prefix for my own custom keybindings:
  (define-key key-minor-mode-map (kbd "s-R") 'web-research)
  (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
 
+
+;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
+
+
+
+
 * Sentences
 
 Make ~kill-sentence~ work in a more intuitive way:
