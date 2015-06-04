@@ -3417,6 +3417,22 @@ to open source code block in indirect buffer
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade) 
 
+
+* save some buffers
+#+BEGIN_SRC emacs-lisp
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
+((and buffer-file-name (eq major-mode 'fundamental-mode))) 
+      ((and buffer-file-name (eq major-mode 'shell-script-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+#+END_SRC
+
+
 * TODO behavior of arrow keys when there is a highlighted region       :rudi:
 
 WHEN A REGION IS HIGHLIGHTED:
@@ -3431,32 +3447,15 @@ Consider the paragraph below.
 Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it. And what is the use of a book, thought Alice, without pictures or conversation? 
 #+END_QUOTE
 
-Let's say the entire region is highlighted, and the point is on the question mark at the end of the paragraph. Then let's say I hit left arrow. 
+Let's say the entire region is highlighted from the A in Alice to the question mark ? after "conversation". And let's say the point is on the question mark at the end of the paragraph. Then let's say I hit left-arrow. I want it so the point would then go on the A in Alice.
 
+Or let's say the entire region is highlighted, and the point is on the A in Alice. Then let's say I hit down-arrow. The point should then go to the # in #+END_QUOTE. 
 
+To put it another way, when a region is highlighted, it should be treated as a single character, with the point on it. Does that make sense? 
 
+Below is some code I found that might help do this. It doesn't seem to work currently though. There's more context here: https://searchcode.com/codesearch/view/2173409/ 
 
-landing on the final "n" in "conversation". 
-
-So in this case, 
-
-* save some buffer
-#+BEGIN_SRC emacs-lisp
-(defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
-((and buffer-file-name (eq major-mode 'fundamental-mode))) 
-      ((and buffer-file-name (eq major-mode 'shell-script-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
-#+END_SRC
- 
-
-* Aquamacs
-
+Thanks!
 
 (defun aquamacs-left-char ()
   "Move point to the left or the beginning of the region.
@@ -3498,26 +3497,3 @@ provided `cua-mode' and the mark are active."
 	   aquamacs-previous-line))
   (put cmd 'CUA 'move))
 
-(defun aquamacs-previous-line (&optional arg try-vscroll)
-  "Move cursor vertically up ARG buffer lines.
-Like `previous-line', but move by logical buffer lines
-if `visual-line-mode' is off and `line-move-visual' is set to `arrow-keys-only'."
-  (interactive "^p\np")
-  (setq this-command 'previous-line)  ; ensure last-command will be set
-  ;; visual-line-mode sets line-move-visual to t (unconditionally)
-  (let ((line-move-visual (and line-move-visual
-			       (not (eq line-move-visual 'arrow-keys-only)))))
-    (previous-line arg try-vscroll)))
-
-(defun aquamacs-next-line (&optional arg try-vscroll)
-  "Move cursor vertically down ARG buffer lines.
-Like `next-line', but move by logical buffer lines
-if `visual-line-mode' is off and `line-move-visual' is set to `arrow-keys-only'."
-  (interactive "^p\np")
-  (setq this-command 'next-line)  ; ensure last-command will be set
-  ;; visual-line-mode sets line-move-visual to t (unconditionally)
-  (let ((line-move-visual (and line-move-visual
-			       (not (eq line-move-visual 'arrow-keys-only)))))
-    (next-line arg try-vscroll)))
-
- 
