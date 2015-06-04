@@ -495,16 +495,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ))
 #+END_SRC
 
+
 ** BACKWARD kill word correctly
 #+BEGIN_SRC emacs-lisp
-;;; old version
-;; (defun backward-kill-word-correctly ()
-;;   "Kill word."
-;;   (interactive)
-;;   (backward-kill-word 1)
-;;   (my/fix-space))
 
-;;; new version; please remove old one above after testing.
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -559,23 +553,31 @@ I want to be able to invoke backward-kill-word-correctly, TWICE, such that it fi
 
 Thanks!!
 
-**** TODO More follow-up questions                                 :followup:
+**** TODO More follow-up questions                                 :answer:rudi:
 
      - When you say that you want to invoke the command twice and have that
-       behaviour, are you expecting it to keep some sort of memory?  Or, on the
-       contrary, should the second invocation in your example kill *just* the
-       comma regardless of the first invocation?  I will implement it like that
-       (no memory) since not only it is the more logical to me, but also it
-       should be easily adaptable if you originally intended a different
-       semantics.
+       behaviour, are you expecting it to keep some sort of memory? 
 
-     - ~backward-kill-word~ affects the kill-ring, adding or appending the
-       killed text to it.  Do you want to keep the same semantics?  In your
-       example above, after invoking ~backward-kill-word-correctly~ twice, the
-       kill-ring's last entry would have the string ", fox ".  I'm asking since
-       your implementation of ~kill-word-correctly~ does indeed lose this
-       semantics, since ~delete-forward-char~ does not affect the kill-ring
-       (neither does ~my/fix-space~, by the way).
+: No. No memory. 
+
+ Or, on the contrary, should the second invocation in your example kill *just* the comma regardless of the first invocation?
+
+: Yes. Basically I just want punctuation (,.:;!?) to be considered a word when I do backward-kill-word-correctly.
+
+I will implement it like that (no memory) since not only it is the more logical to me, but also it should be easily adaptable if you originally intended a different semantics.
+
+: Great! It appears to be working as I intended.
+
+
+        - ~backward-kill-word~ affects the kill-ring, adding or appending the
+          killed text to it.  Do you want to keep the same semantics?  In your
+          example above, after invoking ~backward-kill-word-correctly~ twice, the
+          kill-ring's last entry would have the string ", fox ".  I'm asking since
+          your implementation of ~kill-word-correctly~ does indeed lose this
+          semantics, since ~delete-forward-char~ does not affect the kill-ring
+          (neither does ~my/fix-space~, by the way).
+
+: No need to keep the comma once it is out of its context. The kill ring could have just "fox" if this is easy to implement. If it's time consuming then don't worry about it. 
 
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
@@ -608,20 +610,6 @@ Thanks!!
 (global-set-key (kbd "C-c m") 'compose-mail)
 #+END_SRC
 
-* Miscellaneous
-
-# ATTENTION: Don't know what to do with this. -- Rúdi Araújo @ 2015/05/24
-#+BEGIN_SRC emacs-lisp
-;; add stuff for eshell
-;; http://eschulte.github.io/emacs24-starter-kit/starter-kit-eshell.html
-;; gmail http://eschulte.github.io/emacs24-starter-kit/starter-kit-gnus.html
-;; google docs http://eschulte.github.io/emacs24-starter-kit/starter-kit-g-client.html
-;; javascript http://eschulte.github.io/emacs24-starter-kit/starter-kit-js.html
-;; elisp http://eschulte.github.io/emacs24-starter-kit/starter-kit-lisp.html
-
-;; (setq org-confirm-babel-evaluate nil)
-#+END_SRC
-
 * Startup
 
 #+BEGIN_SRC emacs-lisp
@@ -641,14 +629,6 @@ Thanks!!
  
 (define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
 
-(defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
 
 
@@ -751,34 +731,7 @@ Oleh
 * Reference for cleaning up whitespace around sentences:
 [[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
 
-* DONE! :-) cycle-hyphenation 
-I'd like a function that will:
-1. Convert the space between words into a hyphen
-2. Go to the end of the second word
-
-Supposing the point is at the carat, given this:
-
-: The best kind of software is ^open source software.
-
-...or this: 
-
-: The best kind of software is^ open source software.
-
-..,invoking cycle-hyphenation should produce this: 
-
-> The best kind of software is open-source^ software. 
-
-Conversely, given this:
-
-: The best kind of software is^ open-source software. 
-
-...invoking cycle-hyphenation should convert the hyphen into a space, producing this: 
-
-: The best kind of software is open source^ software.
-
-Thanks!
-
-** DONE! :-) Please check if this implementation meets the requirements
+* cycle-hyphenation 
 
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation ()
@@ -789,48 +742,10 @@ Thanks!
          (save-excursion (replace-match "-" t t nil 1)))))
 #+END_SRC
 
-Note: there are unspecified edge cases.  For example, what should happen with
-the following case?
-
-: The best kind of software is^ open  source software. 
-
-# In the above case, ideally it should remove the extra space and cycle hyphenation. The cases below are rare enough that I'm not worried about them. ---Jay 
-
-# ^ OK, I have implemented that use case.  It now removes every whitespaces
-# inbetween.  Please test.
-
-* DONE! :-) org-clone-subtree-no-time-shift                            :rudi:
-
-There is the function org-clone-subtree-with-time-shift, which prompts me for the number of clones to produce. 
-
-However, most of the time, I wish to clone exactly 1 subtree, with no time shift. 
-
-So I'd like a function that will clone an org-mode subtree with no arguments and no prompt, and add insert text in the heading of the cloned subtree. 
-
-Given this:
-
-#+BEGIN_QUOTE
-*** Heading 1
-Foo.
-#+END_QUOTE
-
-... invoking org-clone-subtree-no-time-shift will produce this:
-
-
-#+BEGIN_QUOTE
-*** Heading 1
-Foo.
-
-*** Heading 1 - clone
-Foo.
-#+END_QUOTE
-
-Thanks! 
-
-** DONE! :-) I think this should meet the requirements; please test it
+* Org clone subtree
 
 #+BEGIN_SRC emacs-lisp
-(defun org-clone-subtree-no-time-shift ()
+(defun org-clone-subtree ()
   (interactive)
   (org-clone-subtree-with-time-shift 1)
   (save-excursion
@@ -848,3 +763,5 @@ Thanks!
           (replace-match (format "%s - clone" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
 #+END_SRC
+
+ 

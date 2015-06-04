@@ -361,7 +361,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
-  (backward-kill-word 1)
+  (let ((old-point (point)))
+    (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
+        ;; old-point should be > (point); this makes it prefix append
+        ;; to kill-ring
+        (kill-region old-point (point))
+      (backward-kill-word 1)))
   (my/fix-space))
 
 ;; delete backward one char unless the region is active: 
@@ -392,15 +397,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c t") 'timesvr)
 (global-set-key (kbd "C-c m") 'compose-mail)
 
-;; add stuff for eshell
-;; http://eschulte.github.io/emacs24-starter-kit/starter-kit-eshell.html
-;; gmail http://eschulte.github.io/emacs24-starter-kit/starter-kit-gnus.html
-;; google docs http://eschulte.github.io/emacs24-starter-kit/starter-kit-g-client.html
-;; javascript http://eschulte.github.io/emacs24-starter-kit/starter-kit-js.html
-;; elisp http://eschulte.github.io/emacs24-starter-kit/starter-kit-lisp.html
-
-;; (setq org-confirm-babel-evaluate nil)
-
 (toggle-maxframe)
 (monaco-font)
 
@@ -413,15 +409,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
  
 (define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
-
-(defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
@@ -468,10 +455,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
          (save-excursion (replace-match " " t t nil 1)))
-        ((re-search-forward "\\=\\W*\\w+\\( \\)\\w+" nil t)
+        ((re-search-forward "\\=\\W*\\w+\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
 
-(defun org-clone-subtree-no-time-shift ()
+(defun org-clone-subtree ()
   (interactive)
   (org-clone-subtree-with-time-shift 1)
   (save-excursion

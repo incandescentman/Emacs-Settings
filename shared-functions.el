@@ -23,7 +23,11 @@
 
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+
 ;; ATTENTION: repeated.  Intentional?
+
+;; ANSWER: No. Not intentional! Eliminate repetition where possible.
+
 (require 'auto-complete)
 
 (require 'org-bullets)
@@ -212,11 +216,6 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
-
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
                       (point-min) (point-max) '(mouse-face t))))
@@ -225,7 +224,7 @@
       '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
 (add-hook 'after-init-hook 'org-agenda-list)
-
+(require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
 
@@ -2573,3 +2572,12 @@ searches all buffers."
 
 (advice-add #'org-remove-angle-brackets :before-until
             (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
+
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))

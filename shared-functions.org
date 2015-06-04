@@ -34,11 +34,15 @@
 (load "~/Dropbox/github/koma3/fiverr-koma.el") 
 #+END_SRC
 
-** Require some packages
+** Require some packages                                              :rudi:
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
+
 ;; ATTENTION: repeated.  Intentional?
+
+;; ANSWER: No. Not intentional! Eliminate repetition where possible.
+
 (require 'auto-complete)
 #+END_SRC
 
@@ -349,28 +353,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
 ** Org agenda
-*** Show org-agenda
-# ATTENTION: This is not enclosed in #+BEGIN_SRC/#+END_SRC block.  Is it
-# intentional?
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (org-agenda-list)
-    (org-agenda-list))
-  (delete-other-windows))
-
-*** Don't save org-agenda
-
-(It doesn't work though, I get all kinds of org-agenda autosaves in my
-~ home directory)
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-            (auto-save-mode)))
-#+END_SRC
-
 *** Stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-finalize-agenda-hook
@@ -389,15 +371,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** Org settings
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'org-agenda-list)
-#+END_SRC
-
-# ATTENTION: there appears to be a #+BEGIN_SRC missing.
-
 (require 'org-inlinetask)
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 ;; Overwrite the current window with the agenda
 (setq org-agenda-window-setup 'current-window)
 
@@ -666,8 +640,7 @@ e.g. nvALT
 #+END_SRC
 
 *** Update parent cookie
-# ATTENTION: Empty heading.  Intentional?
-*** I think this is to make parent ~DONE~ states automatically update:
+I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
@@ -3443,5 +3416,38 @@ to open source code block in indirect buffer
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade) 
 
+* TODO behavior of arrow keys when there is a highlighted region       :rudi:
 
-* 
+WHEN A REGION IS HIGHLIGHTED:
+
+Emacs default behavior: Left-arrow moves the point one character to the left, right-arrow moves the point one character to the right, up-arrow moves it one line up, down-arrow moves it one line down.
+
+Desired behavior: Left arrow should move the point to the point immediately BEFORE the region, right arrow should move the point to the point immediately AFTER the region. 
+
+Consider the paragraph below.
+
+#+BEGIN_QUOTE
+Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it. And what is the use of a book, thought Alice, without pictures or conversation? 
+#+END_QUOTE
+
+Let's say the entire region is highlighted, and the point is on the question mark at the end of the paragraph. Then let's say I hit left arrow. 
+
+
+
+
+landing on the final "n" in "conversation". 
+
+So in this case, 
+
+* save some buffer
+#+BEGIN_SRC emacs-lisp
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+      ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+#+END_SRC
+ 
