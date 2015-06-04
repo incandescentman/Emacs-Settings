@@ -3337,7 +3337,7 @@ I want to use this to create a function to kill-clause (not kill sentence).
               (when (string-match "^\\[" sentence-end-base)
     (progn 
               (setq sentence-end-base
-                      (replace-match "--\\|[,;/" t t sentence-end-base)))
+                      (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
 (setq sentence-end-base "[.?!…][]\"'”)}]*"))) 
 #+END_SRC
