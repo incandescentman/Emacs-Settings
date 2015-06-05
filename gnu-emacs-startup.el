@@ -198,7 +198,7 @@
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
-(define-key key-minor-mode-map (kbd "C-c C-v") 'org-refile-region)
+(define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)

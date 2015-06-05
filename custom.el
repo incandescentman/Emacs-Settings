@@ -13,31 +13,6 @@
 
 
 
-;;;; packages
-;; automatically install my favorite packages
- (setq package-list '(magit expand-region gist  helm helm-projectile magit markdown-mode auto-complete dired-details+ paredit projectile rainbow-mode scss-mode solarized-theme volatile-highlights yasnippet zenburn-theme frame-restore frame-cmds org-fstree buffer-stack auto-capitalize org-pomodoro edit-server key-chord ido-hacks openwith wc-mode discover engine-mode point-stack palimpsest olivetti smex dired-hacks-utils dired-single sublime-themes cyberpunk-theme popup yasnippet xml-rpc))
-
-;; the repositories containing them
-(setq package-archives '(("elpa" . "http://tromey.com/elpa/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
-
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-
-;; activate all the packages (in particular autoloads)
-(package-initialize)
-
-;; fetch the list of packages available
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
-
-
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
 ;; auto-complete mode
@@ -280,7 +255,7 @@
  '(org-koma-letter-author "Jay Dixit")
  '(org-koma-letter-closing "Best,")
  '(org-koma-letter-email "jay@jaydixit.com")
- '(org-koma-letter-from-address "22 Saint Marks Place Apt. D, New York NY 10003")
+ '(org-koma-letter-from-address "22 Saint Marks Place Apt. D \\ New York NY 10003-8076")
  '(org-koma-letter-phone-number "(646) 355-8001")
  '(org-koma-letter-place "New York City")
  '(org-koma-letter-use-backaddress nil)
@@ -363,8 +338,7 @@
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
  '(safe-local-variable-values
    (quote
-    ((org-export-allow-bind-keywords . t)
-     (eval when
+    ((eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -413,6 +387,7 @@
  '(default ((t (:background nil))))
  '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
+ '(ido-first-match ((t (:foreground "purple" :weight bold))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
  '(message-header-subject ((t (:foreground "pink" :weight bold))))

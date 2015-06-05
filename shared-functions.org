@@ -2732,10 +2732,10 @@ With prefix arg C-u, copy region instad of killing it."
     (with-current-buffer (find-file-noselect file)
       (save-excursion
         (goto-char pos)
-        (if (eql org-refile-region-position 'bottom)
+        (if (eql refile-region-position 'bottom)
             (org-end-of-subtree)
           (org-end-of-meta-data-and-drawers))
-        (insert (format org-refile-region-format text))))))
+        (insert (format refile-region-format text))))))
 
 
 (defun my-org-files-list ()
