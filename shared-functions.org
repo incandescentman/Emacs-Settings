@@ -3247,10 +3247,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 C-C C-R to move text to the bottom of the buffer
 
-*** TODO make the below work:
-
-(add-hook 'org-mode-hook '(palimpsest-mode 1))
-
 ** Make block quotes appear nicely in buffer, displaying > instead of :
 
 This doesn't seem to be working.
@@ -3473,3 +3469,37 @@ provided `cua-mode' and the mark are active."
 	   aquamacs-previous-line))
   (put cmd 'CUA 'move))
 
+
+* stuff that I moved from custom.el
+#+BEGIN_SRC emacs-lisp
+
+;;;; autocomplete
+;; I don't know what I'm doing here but it seems to work
+;; auto-complete mode
+(require 'auto-complete)
+(dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
+                                    sass-mode  csv-mode
+                                    html-mode sh-mode
+                                    lisp-mode  markdown-mode emacs-lisp-mode ))
+  (add-to-list 'ac-modes mode))
+
+
+;; tab completion
+(ac-set-trigger-key "TAB")
+
+;; haven't used these, not sure how to
+(define-key ac-completing-map (kbd "C-M-n") 'ac-next)
+(define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
+(define-key ac-completing-map "\t" 'ac-complete)
+(define-key ac-completing-map (kbd "M-RET") 'ac-help)
+(define-key ac-completing-map "\r" 'nil)
+
+
+#+END_SRC
+* TODO can we globally enable palimpsest-mode, especially in org-mode? :rudi:
+I tried adding this, but it didn't work
+
+(palimpsest-mode 1)
+
+This doesn't work either:
+(add-hook 'org-mode-hook '(palimpsest-mode 1))

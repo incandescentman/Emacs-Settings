@@ -13,27 +13,6 @@
 
 
 
-;;;; autocomplete
-;; I don't know what I'm doing here but it seems to work
-;; auto-complete mode
-(require 'auto-complete)
-(dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
-                                    sass-mode  csv-mode
-                                    html-mode sh-mode
-                                    lisp-mode  markdown-mode emacs-lisp-mode ))
-  (add-to-list 'ac-modes mode))
-
-;; tab completion
-(ac-set-trigger-key "TAB")
-
-;; haven't used these, not sure how to
-(define-key ac-completing-map (kbd "C-M-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
-(define-key ac-completing-map "\t" 'ac-complete)
-(define-key ac-completing-map (kbd "M-RET") 'ac-help)
-(define-key ac-completing-map "\r" 'nil)
-
-
 ;;;; I believe these are the settings that GNU Emacs saved automatically when I changed things using the Options menu. I'm sure there is a lot of redundancy here that doesn't need to be here since it's already defined in my init files.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -424,7 +403,7 @@
 
 ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
 ;; I've been wanting to do this for so long. :-)
-;; this works correctly.
+;; this works correctly!!
 (eval-after-load "org"
   '(progn
      (define-key org-mode-map (kbd "<M-S-left>") nil)
@@ -440,10 +419,10 @@
      (define-key org-mode-map [C-left] 'org-metaleft)
      (define-key org-mode-map [C-up] 'org-metaup)
      (define-key org-mode-map [C-down] 'org-metadown)
-     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
+     (define-key org-mode-map [C-S-return] 'org-insert-todo-Heading)
      ))
 
-
+;; this doesn't work though :-(
 (eval-after-load "orgstruct"
   '(progn
      (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
@@ -458,7 +437,8 @@
  (define-key orgstruct-mode-map (kbd "<M-return>") nil)
      ))
 
-;; I think there's some redundancy here, not sure if I need both
+;; I think there's some redundancy here, not sure if I need both. either way it doesn't work.
+
      (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
      (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
      (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
@@ -493,7 +473,6 @@
 
 (monaco-font)
 (toggle-fullscreen)
-(palimpsest-mode 1)
 
 ;;; Treat all themes as safe
 (setq custom-safe-themes t)
