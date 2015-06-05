@@ -34,26 +34,6 @@
 (require 'ox-latex)
 (require 'org-fstree)
 
-(eval-after-load 'ox '(require 'ox-koma-letter))
-(eval-after-load 'ox-latex '(add-to-list 'org-latex-packages-alist '("english" "babel" t) t))
-
-(eval-after-load 'ox-koma-letter
-'(progn
-(add-to-list 'org-latex-classes
-'("my-letter"
-"\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=12pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
-\\usepackage[english]{babel}
-\\usepackage{utopia}
-\\setkomavar{frombank}{(1234)\\,567\\,890}
-\\nonfrenchspacing
-\\setkomafont{backaddress}{\\normalsize \\usekomafont{fromaddress}}
-\[DEFAULT-PACKAGES]
-\[PACKAGES]
-\[EXTRA]
-\\KOMAoption{backaddress}{false}"))
-
-(setq org-koma-letter-default-class "my-letter"))) 
-
 (cond
  ((executable-find "aspell")
   (setq ispell-program-name "aspell")
@@ -732,6 +712,7 @@ Subject: %^{Subject}
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t)))) 
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
