@@ -139,7 +139,7 @@
 
 (delete-selection-mode 1)
 
-(electric-pair-mode 1)
+(smartparens-mode 1)
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
@@ -2565,3 +2565,24 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'fundamental-mode))) 
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+
+;;;; autocomplete
+;; I don't know what I'm doing here but it seems to work
+;; auto-complete mode
+(require 'auto-complete)
+(dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
+                                    sass-mode  csv-mode
+                                    html-mode sh-mode
+                                    lisp-mode  markdown-mode emacs-lisp-mode ))
+  (add-to-list 'ac-modes mode))
+
+
+;; tab completion
+(ac-set-trigger-key "TAB")
+
+;; haven't used these, not sure how to
+(define-key ac-completing-map (kbd "C-M-n") 'ac-next)
+(define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
+(define-key ac-completing-map "\t" 'ac-complete)
+(define-key ac-completing-map (kbd "M-RET") 'ac-help)
+(define-key ac-completing-map "\r" 'nil)

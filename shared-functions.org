@@ -3503,3 +3503,14 @@ I tried adding this, but it didn't work
 
 This doesn't work either:
 (add-hook 'org-mode-hook '(palimpsest-mode 1))
+
+
+
+
+* Pop to mark
+
+Handy way of getting back to previous places.
+
+#+BEGIN_SRC emacs-lisp
+(setq set-mark-command-repeat-pop t)
+#+END_SRC 
