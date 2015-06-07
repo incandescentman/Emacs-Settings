@@ -3311,9 +3311,16 @@ I want to use this to create a function to kill-clause (not kill sentence).
               (setq sentence-end-base
                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!…][]\"'”)}]*"))) 
+(setq sentence-end-base "[.?!…][]\"'”)}]*")))
 #+END_SRC
 
+*** TODO Request for clarification                                 :followup:
+
+    Please clarify what you intend to do with this command.  From what I gather,
+    you intend this function to do exactly what ~my/kill-sentence-dwim~, as if
+    "--", "," and ";" also marked the end of a sentence.  If that is the case,
+    then why do you also add the characters "?!…" to ~sentence-end-base~, given
+    that they (presumably) were already there?
 
 * Better backspace during isearch 
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
@@ -3468,6 +3475,26 @@ provided `cua-mode' and the mark are active."
 	   aquamacs-next-line
 	   aquamacs-previous-line))
   (put cmd 'CUA 'move))
+
+** TODO Request for clarification
+
+   I have some questions regarding this request:
+
+   - The functions you pasted are expecting CUA mode to be enabled.  Is this the
+     case for you?  Do you *always* wish to have this behaviour, or only if CUA
+     is enabled?
+
+   - After hitting the left arrow to move point to the A in Alice, what happens
+     to the region?  The function you pasted deactivates mark, so the region
+     disappears.  I would find it nice that the region would be kept (such as
+     what ~exchange-mark-and-point~ does), but I'm probably too addicted to the
+     way Emacs works by default.
+
+   - In your example, suppose you have the entire quote highlighted, you hit the
+     left-arrow to move point to the A in Alice, supposing the region is kept
+     like I suggested in the previous point (otherwise you can forget this
+     question), and you then hit the left arrow *again*.  What should happen to
+     point?  And what about the region?
 
 
 * stuff that I moved from custom.el
