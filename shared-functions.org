@@ -1718,7 +1718,7 @@ Use key chords invoke commands:
 #+BEGIN_SRC emacs-lisp
 (require 'key-chord)
 (key-chord-mode 1)
-#+END_SRC
+#+END_SRC
 
 * Indentation
 
@@ -3297,15 +3297,16 @@ I want to use this to create a function to kill-clause (not kill sentence).
 ** TODO There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again. :rudi:
 
 #+BEGIN_SRC emacs-lisp
-(defun kill-clause ()
-  (interactive) 
-(expand-abbrev)
-              (when (string-match "^\\[" sentence-end-base)
-    (progn 
-              (setq sentence-end-base
-                      (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
-(my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!…][]\"'”)}]*")))
+;;; old version; try the one below and replace it if it is working as intended.
+;; (defun kill-clause ()
+;;   (interactive) 
+;; (expand-abbrev)
+;;               (when (string-match "^\\[" sentence-end-base)
+;;     (progn 
+;;               (setq sentence-end-base
+;;                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
+;; (my/kill-sentence-dwim)
+;; (setq sentence-end-base "[.?!…][]\"'”)}]*")))
 #+END_SRC
 
 *** DONE Request for clarification                                 :followup:
@@ -3318,6 +3319,22 @@ I may have made a mistake. My intention is that:
 2. my/kill-sentence-dwim should kill text up to ! ? ... or .
 
 Otherwise, yes, it should work exactly like my/kill-sentence-dwim. Thank you! 
+
+*** TODO Try this
+
+    Well, it is a pretty clever way of doing it... you're thinking like a true hacker. :) However, ~setq~'ing like in the Wild West is dangerous. ~let~ will be your friend here.
+
+#+BEGIN_SRC emacs-lisp
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[.?!…][]\"'”)}]*")
+
+;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
+(defun kill-clause ()
+  (interactive) 
+  (expand-abbrev)
+  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”)}]*"))
+    (my/kill-sentence-dwim)))
+#+END_SRC
 
 * Better backspace during isearch 
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
