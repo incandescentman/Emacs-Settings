@@ -431,7 +431,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
 )
  
-(define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
@@ -498,3 +498,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
           (search-forward hl-text (point-at-eol))
           (replace-match (format "%s - clone" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
+
+(defun smart-period ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+(insert ".")
+)

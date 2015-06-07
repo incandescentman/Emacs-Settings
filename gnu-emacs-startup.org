@@ -663,7 +663,7 @@ I will implement it like that (no memory) since not only it is the more logical 
   (just-one-space)
 )
  
-(define-key key-minor-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 #+END_SRC
 
@@ -803,3 +803,16 @@ Oleh
  
 * Request                                                              :rudi:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
+
+
+
+* smart-period
+#+BEGIN_SRC emacs-lisp 
+(defun smart-period ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+(insert ".")
+)
+(define-key org-mode-map (kbd ".") 'smart-period)
+#+END_SRC
