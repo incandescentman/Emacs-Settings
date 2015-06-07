@@ -477,10 +477,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (expand-abbrev)
 (org-kill-line)
 (my/fix-space))
-
-
-
 #+END_SRC
+
+** TODO Er... so that...? :)
 
 * Browsing
 
@@ -803,3 +802,7 @@ Oleh
  
 * Request                                                              :rudi:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
+
+** TODO Request for clarification                                  :followup:
+
+   Not sure which functions you mean. The ones in the "Sentences" heading?
