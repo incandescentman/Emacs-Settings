@@ -2586,3 +2586,5 @@ searches all buffers."
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
+
+(setq set-mark-command-repeat-pop t)

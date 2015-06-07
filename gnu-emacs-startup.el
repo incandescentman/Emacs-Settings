@@ -190,6 +190,9 @@
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
+;; pop mark
+(define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
+
 ;; projectile
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
