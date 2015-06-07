@@ -3308,7 +3308,7 @@ I want to use this to create a function to kill-clause (not kill sentence).
 (setq sentence-end-base "[.?!…][]\"'”)}]*")))
 #+END_SRC
 
-*** TODO Request for clarification                                 :followup:
+*** DONE Request for clarification                                 :followup:
 
 : Please clarify what you intend to do with this command.  From what I gather, you intend this function to do exactly what my/kill-sentence-dwim, as if "--", "," and ";" also marked the end of a sentence. If that is the case, then why do you also add the characters "?!…" to sentence-end-base, given that they (presumably) were already there?
 

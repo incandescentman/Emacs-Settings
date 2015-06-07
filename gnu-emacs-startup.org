@@ -588,7 +588,7 @@ I want to be able to invoke backward-kill-word-correctly, TWICE, such that it fi
 
 Thanks!!
 
-**** TODO More follow-up questions                                 :answer:rudi:
+**** DONE More follow-up questions                              :answer:rudi:
 
      - When you say that you want to invoke the command twice and have that
        behaviour, are you expecting it to keep some sort of memory? 
