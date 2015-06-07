@@ -24,12 +24,6 @@
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
 
-;; ATTENTION: repeated.  Intentional?
-
-;; ANSWER: No. Not intentional! Eliminate repetition where possible.
-
-(require 'auto-complete)
-
 (require 'org-bullets)
 (require 'ox-latex)
 (require 'org-fstree)
@@ -2513,7 +2507,7 @@ searches all buffers."
               (setq sentence-end-base
                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
 (my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!…][]\"'”)}]*"))) 
+(setq sentence-end-base "[.?!…][]\"'”)}]*")))
 
 (defun my-isearch-delete ()
   "Delete the failed portion of the search string, or the last char if successful."
