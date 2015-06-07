@@ -3490,19 +3490,54 @@ provided `cua-mode' and the mark are active."
 	   aquamacs-previous-line))
   (put cmd 'CUA 'move))
 
-** TODO Request for clarification                                     :Rúdi:
+** TODO Try this
 
-: The functions you pasted are expecting CUA mode to be enabled.  Is this the case for you? Do you *always* wish to have this behaviour, or only if CUA is enabled?
+   You might want to change the name of the functions though? Since this is the shared functions file, I suppose this is loaded by both GNU Emacs and Aquamacs, so prefixing with ~aquamacs~ should be confusing.
 
-From what I can tell, my init files ensure that CUA mode is always DISABLED for me. So I think I want to have this behavior always. 
+#+BEGIN_SRC emacs-lisp
+(defun aquamacs-left-char ()
+  "Move point to the left or the beginning of the region.
+ Like `backward-char', but moves point to the beginning of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'left-char)) ;; maintain compatibility
+    (let ((left (min (point)
+                     ;; `mark' returning nil is ok; we'll only use this
+                     ;; if `mark-active'
+                     (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn
+            (goto-char left)
+            (setq deactivate-mark t))
+        (call-interactively 'left-char)))))
 
-: After hitting the left arrow to move point to the A in Alice, what happens to the region? The function you pasted deactivates mark, so the region disappears. I would find it nice that the region would be kept (such as what ~exchange-mark-and-point~ does), but I'm probably too addicted to the way Emacs works by default.
 
-My intention is to emulate the way text editors work in Mac OSX / Windows. So with an arrow key, I'd like, yes, the region to disappear. 
+(defun aquamacs-right-char ()
+  "Move point to the right or the end of the region.
+ Like `right-char', but moves point to the end of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'right-char)) ;; maintain compatibility
+    (let ((right (max (point)
+                      ;; `mark' returning nil is ok; we'll only use this
+                      ;; if `mark-active'
+                      (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn (goto-char right)
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
+#+END_SRC
 
-: In your example, suppose you have the entire quote highlighted, you hit the left-arrow to move point to the A in Alice, supposing the region is kept like I suggested in the previous point (otherwise you can forget this question), and you then hit the left arrow *again*. What should happen to point? And what about the region?
+   Plus, I suppose you will want to do something like this:
 
-This question is moot now right?
+#+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<left>") #'aquamacs-left-char)
+(global-set-key (kbd "<right>") #'aquamacs-right-char)
+#+END_SRC
+#+END_EXAMPLE
+
+   But I'll leave it commented since I'm not sure this is what you want.
 
 * stuff that I moved from custom.el
 #+BEGIN_SRC emacs-lisp
