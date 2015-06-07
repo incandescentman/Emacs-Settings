@@ -34,16 +34,10 @@
 (load "~/Dropbox/github/koma3/fiverr-koma.el") 
 #+END_SRC
 
-** Require some packages                                              :rudi:
+** Require some packages
 #+BEGIN_SRC emacs-lisp
 (require 'auto-complete) ;; but only for elisp mode
 (require 'org)
-
-;; ATTENTION: repeated.  Intentional?
-
-;; ANSWER: No. Not intentional! Eliminate repetition where possible.
-
-(require 'auto-complete)
 #+END_SRC
 
 * Require some org packages
