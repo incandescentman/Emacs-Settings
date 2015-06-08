@@ -469,17 +469,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
 
-;; Rúdi: I added this, I think it works. Can you make it so that in org-mode, 
-
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
 (expand-abbrev)
 (org-kill-line)
 (my/fix-space))
-
-
-
 #+END_SRC
 
 * Browsing
@@ -529,8 +524,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** TODO BACKWARD kill word correctly                                  :rudi:
-I added a line at the bottom.
+** BACKWARD kill word correctly 
 
 #+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly ()
@@ -546,75 +540,6 @@ I added a line at the bottom.
   (jay/insert-space) ; I added this line, I think it works.
 ) 
 #+END_SRC
-*** TODO can you help me fix this function?                          :rudi:
-
-Take a look at the function kill-word-correctly above. I made it so that kill-word-correctly counts punctuation such as , . ; ? ! as a word. 
-
-: The quick brown brown, fox jumped.
-
-In the example above, f I place the point on the "b" in the second instance of "brown", and then do kill-word-correctly TWICE, it first deletes the word brown, and THEN deletes the unwanted comma.
-
-I want to do the same for backward-kill-word-correctly.
-
-Now take this example:
-: The quick brown, fox ^ fox jumped.
-
-Goal: 
-Suppose the point is at the ^ caret above. I want to be able to invoke backward-kill-word-correctly, TWICE, such that...
-
-...the first invocation should result in this:
-: The quick brown, fox jumped.
-
-...and second invocation should then delete the comma and fix the space so the result is this:
-: The quick brown fox jumped.
-
-**** DONE In the example above, is the caret part of the string, or just there to mark point? :followup:
-
-     The point of this question is that, in case it is part of the string, the
-     first invocation deletes it, so it is not entirely a "backward" kill.  I
-     think the semantics can get a bit convoluted here.
-**** DONE Clarification: The caret is NOT part of the string. 
-
-Sorry, maybe a better way to phrase it would be as follows: 
-
-Take the example below...
-
-: The quick brown, fox fox jumped.
-
-...and suppose the point is on the space between the first "fox" and the second one, or on the "f" in the second "fox". 
-
-I want to be able to invoke backward-kill-word-correctly, TWICE, such that it first deletes the word, then deletes the comma (but leaves one space) such that the result is this: 
-
-: The quick brown fox jumped.
-
-Thanks!!
-
-**** TODO More follow-up questions                                 :answer:rudi:
-
-     - When you say that you want to invoke the command twice and have that
-       behaviour, are you expecting it to keep some sort of memory? 
-
-: No. No memory. 
-
- Or, on the contrary, should the second invocation in your example kill *just* the comma regardless of the first invocation?
-
-: Yes. Basically I just want punctuation (,.:;!?) to be considered a word when I do backward-kill-word-correctly.
-
-I will implement it like that (no memory) since not only it is the more logical to me, but also it should be easily adaptable if you originally intended a different semantics.
-
-: Great! It appears to be working as I intended.
-
-
-        - ~backward-kill-word~ affects the kill-ring, adding or appending the
-          killed text to it.  Do you want to keep the same semantics?  In your
-          example above, after invoking ~backward-kill-word-correctly~ twice, the
-          kill-ring's last entry would have the string ", fox ".  I'm asking since
-          your implementation of ~kill-word-correctly~ does indeed lose this
-          semantics, since ~delete-forward-char~ does not affect the kill-ring
-          (neither does ~my/fix-space~, by the way).
-
-: No need to keep the comma once it is out of its context. The kill ring could have just "fox" if this is easy to implement. If it's time consuming then don't worry about it. 
-
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
 ;; delete backward one char unless the region is active: 
@@ -800,10 +725,6 @@ Oleh
           (org-align-tags-here org-tags-column))))))
 #+END_SRC
 
- 
-* Request                                                              :rudi:
-For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
-
 
 
 * smart-period
@@ -816,3 +737,37 @@ For the above whitespace and sentence functions, can we make it so that Emacs wi
 )
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
+
+* Request                                                              :rudi:
+For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
+
+** TODO Request for clarification                                  :followup:
+
+   Not sure which functions you mean. The ones in the "Sentences" Heading?
+** TODO Answer                                                        :rudi:
+- my/fix-space
+- kill-clause
+- my-delete-backward
+- kill-word-correctly
+- backward-kill-word-correctly
+
+Basically I'd like to make it so that org-mode treats --- as a singles punctuation mark in any function that looks for :punct: 
+
+*** Example                                                          :rudi:
+Take a look at the function kill-word-correctly. I want it so that kill-word-correctly counts --- as a word. 
+
+Take this sentence below:
+
+: The quick brown fox jumped---jumped high.
+
+In the sentence above, if I place the point on the "h" in "high" and then do kill-word-correctly TWICE, it should first delete the word jumped and fix the space, and THEN on the second invocation, it should deletes the unwanted --- and fix the space.
+
+So the first invocation should result in this:
+
+: The quick brown fox jumped---high. 
+
+...and second invocation should then delete the --- and fix the space so the result is this:
+
+: The quick brown fox jumped high. 
+
+Thanks!

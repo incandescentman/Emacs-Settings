@@ -1337,9 +1337,6 @@ Subject: %^{Subject}
 ;;  '(visual-line-mode nil t)
 ;;  '(cua-mode nil))
 
-(require 'key-chord)
-(key-chord-mode 1)
-
 (defvar yank-indent-modes
   '(LaTeX-mode TeX-mode)
   "Modes in which to indent regions that are yanked (or yank-popped).
@@ -2499,15 +2496,26 @@ searches all buffers."
 (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 
+;;; old version; try the one below and replace it if it is working as intended.
+;; (defun kill-clause ()
+;;   (interactive) 
+;; (expand-abbrev)
+;;               (when (string-match "^\\[" sentence-end-base)
+;;     (progn 
+;;               (setq sentence-end-base
+;;                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
+;; (my/kill-sentence-dwim)
+;; (setq sentence-end-base "[.?!…][]\"'”)}]*")))
+
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[.?!…][]\"'”)}]*")
+
+;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
 (defun kill-clause ()
   (interactive) 
-(expand-abbrev)
-              (when (string-match "^\\[" sentence-end-base)
-    (progn 
-              (setq sentence-end-base
-                      (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
-(my/kill-sentence-dwim)
-(setq sentence-end-base "[.?!…][]\"'”)}]*")))
+  (expand-abbrev)
+  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”)}]*"))
+    (my/kill-sentence-dwim)))
 
 (defun my-isearch-delete ()
   "Delete the failed portion of the search string, or the last char if successful."
@@ -2560,6 +2568,38 @@ searches all buffers."
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
+(defun aquamacs-left-char ()
+  "Move point to the left or the beginning of the region.
+ Like `backward-char', but moves point to the beginning of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'left-char)) ;; maintain compatibility
+    (let ((left (min (point)
+                     ;; `mark' returning nil is ok; we'll only use this
+                     ;; if `mark-active'
+                     (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn
+            (goto-char left)
+            (setq deactivate-mark t))
+        (call-interactively 'left-char)))))
+
+
+(defun aquamacs-right-char ()
+  "Move point to the right or the end of the region.
+ Like `right-char', but moves point to the end of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'right-char)) ;; maintain compatibility
+    (let ((right (max (point)
+                      ;; `mark' returning nil is ok; we'll only use this
+                      ;; if `mark-active'
+                      (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn (goto-char right)
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
+
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
 ;; auto-complete mode
@@ -2580,5 +2620,7 @@ searches all buffers."
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
+
+(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 
 (setq set-mark-command-repeat-pop t)

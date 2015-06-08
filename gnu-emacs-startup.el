@@ -505,3 +505,4 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (looking-back "[[:space:]]+") (delete-horizontal-space))
 (insert ".")
 )
+(define-key org-mode-map (kbd ".") 'smart-period)

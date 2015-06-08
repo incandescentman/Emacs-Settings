@@ -120,7 +120,9 @@
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-agenda-export-html-style
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
- '(org-agenda-files (quote ("~/Dropbox/writing/notationaldata/acct-erika.org")))
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)

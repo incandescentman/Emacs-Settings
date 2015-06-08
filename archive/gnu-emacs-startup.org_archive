@@ -103,3 +103,92 @@ e.g. in the example above, if I place the point on the "i" in "ipsum" and then p
 
 
 
+
+* TODO can you help me fix this function?                              :rudi:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-07 Sun 22:17
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_OLPATH: Custom functions/BACKWARD kill word correctly
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :ARCHIVE_TODO: TODO
+  :END:
+
+Take a look at the function kill-word-correctly above. I made it so that kill-word-correctly counts punctuation such as , . ; ? ! as a word. 
+
+: The quick brown brown, fox jumped.
+
+In the example above, f I place the point on the "b" in the second instance of "brown", and then do kill-word-correctly TWICE, it first deletes the word brown, and THEN deletes the unwanted comma.
+
+I want to do the same for backward-kill-word-correctly.
+
+Now take this example:
+: The quick brown, fox ^ fox jumped.
+
+Goal: 
+Suppose the point is at the ^ caret above. I want to be able to invoke backward-kill-word-correctly, TWICE, such that...
+
+...the first invocation should result in this:
+: The quick brown, fox jumped.
+
+...and second invocation should then delete the comma and fix the space so the result is this:
+: The quick brown fox jumped.
+
+*** DONE In the example above, is the caret part of the string, or just there to mark point? :followup:
+
+    The point of this question is that, in case it is part of the string, the
+    first invocation deletes it, so it is not entirely a "backward" kill.  I
+    think the semantics can get a bit convoluted here.
+*** DONE Clarification: The caret is NOT part of the string. 
+
+Sorry, maybe a better way to phrase it would be as follows: 
+
+Take the example below...
+
+: The quick brown, fox fox jumped.
+
+...and suppose the point is on the space between the first "fox" and the second one, or on the "f" in the second "fox". 
+
+I want to be able to invoke backward-kill-word-correctly, TWICE, such that it first deletes the word, then deletes the comma (but leaves one space) such that the result is this: 
+
+: The quick brown fox jumped.
+
+Thanks!!
+
+*** DONE More follow-up questions                             :answer:rudi:
+
+     - When you say that you want to invoke the command twice and have that
+       behaviour, are you expecting it to keep some sort of memory? 
+
+: No. No memory. 
+
+ Or, on the contrary, should the second invocation in your example kill *just* the comma regardless of the first invocation?
+
+: Yes. Basically I just want punctuation (,.:;!?) to be considered a word when I do backward-kill-word-correctly.
+
+I will implement it like that (no memory) since not only it is the more logical to me, but also it should be easily adaptable if you originally intended a different semantics.
+
+: Great! It appears to be working as I intended.
+
+
+        - ~backward-kill-word~ affects the kill-ring, adding or appending the
+          killed text to it.  Do you want to keep the same semantics?  In your
+          example above, after invoking ~backward-kill-word-correctly~ twice, the
+          kill-ring's last entry would have the string ", fox ".  I'm asking since
+          your implementation of ~kill-word-correctly~ does indeed lose this
+          semantics, since ~delete-forward-char~ does not affect the kill-ring
+          (neither does ~my/fix-space~, by the way).
+
+: No need to keep the comma once it is out of its context. The kill ring could have just "fox" if this is easy to implement. If it's time consuming then don't worry about it. 
+
+**** TODO Reply
+
+      Well, it does complicate things a bit, and the semantics anyway seem clearer to me if the kill-ring contains all the killed text, including punctuation. Take your example:
+
+: The quick brown, fox fox^ jumped.
+
+      If I kill everything consecutively down to the comma, the kill-ring would keep "fox fox". However, if I would kill everything down to "brown", we'd probably want "brown, fox fox" to end up in the kill-ring - and that includes the comma. This behaviour is non-trivial.
+
+      I will thus leave it as it is (include the killed punctuation in the kill-ring).
+
+: 
+
