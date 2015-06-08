@@ -170,6 +170,10 @@
 (setq org-clock-persist t)
 (setq org-export-with-smart-quotes t)
 (setq org-fontify-quote-and-verse-blocks t)
+;; blank lines before new headings
+(setq org-blank-before-new-entry
+      '((heading . t)
+       (plain-list-item . nil))) 
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 

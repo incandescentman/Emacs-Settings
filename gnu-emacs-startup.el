@@ -341,8 +341,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
 
-;; Rúdi: I added this, I think it works. Can you make it so that in org-mode, 
-
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)

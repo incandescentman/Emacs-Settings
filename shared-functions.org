@@ -281,6 +281,10 @@ Turn off fill mode, which adds random line breaks in my text files:
 (setq org-clock-persist t)
 (setq org-export-with-smart-quotes t)
 (setq org-fontify-quote-and-verse-blocks t)
+;; blank lines before new headings
+(setq org-blank-before-new-entry
+      '((heading . t)
+       (plain-list-item . nil))) 
 #+END_SRC
 
 *** Load my org modules
