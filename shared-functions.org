@@ -3410,7 +3410,6 @@ source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert
 
 yes - just use
 : C-c '
-
 to open source code block in indirect buffer
 
 
@@ -3432,37 +3431,6 @@ to open source code block in indirect buffer
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
-
-
-* DONE! :-) behavior of arrow keys when there is a highlighted region  :rudi:
-
-WHEN A REGION IS HIGHLIGHTED:
-
-Emacs default behavior: Left-arrow moves the point one character to the left, right-arrow moves the point one character to the right, up-arrow moves it one line up, down-arrow moves it one line down.
-
-Desired behavior: Left-arrow should move the point to the point immediately BEFORE the region, right-arrow should move the point to the point immediately AFTER the region, up-arrow should move to the line above the region, down-arrow should move to the line below the region. 
-
-Consider the paragraph below.
-
-#+BEGIN_QUOTE
-Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it. And what is the use of a book, thought Alice, without pictures or conversation? 
-#+END_QUOTE
-
-Let's say the entire region is highlighted from the A in Alice to the question mark ? after "conversation". And let's say the point is on the question mark at the end of the paragraph. Then let's say I hit left-arrow. I want it so the point would then go on the A in Alice.
-
-Or let's say the entire region is highlighted, and the point is on the A in Alice. Then let's say I hit down-arrow. The point should then go to the # in #+END_QUOTE. 
-
-To put it another way, when a region is highlighted, it should be treated as a single character, with the point on it. Does that make sense? 
-
-Below is some code I found that might help do this. It doesn't seem to work currently though. There's more context here: https://searchcode.com/codesearch/view/2173409/ 
-
-Thanks!
-
-** DONE! :-) Try this
-
-   You might want to change the name of the functions though? Since this is the shared functions file, I suppose this is loaded by both GNU Emacs and Aquamacs, so prefixing with ~aquamacs~ should be confusing.
-
-: Works! Perfect, thank you. 
 
 * stuff that I moved from custom.el
 #+BEGIN_SRC emacs-lisp
@@ -3487,19 +3455,9 @@ Thanks!
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
-
-
 #+END_SRC
-* DONE! :-) can we globally enable palimpsest-mode, especially in org-mode? 
-I tried adding this, but it didn't work
-
-(palimpsest-mode 1)
-
-This doesn't work either:
-(add-hook 'org-mode-hook '(palimpsest-mode 1))
-
-** DONE! :-) Try this
-
+* 
+* globally enable palimpsest-mode 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
