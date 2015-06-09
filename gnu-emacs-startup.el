@@ -482,9 +482,9 @@ provided the (transient) mark is active."
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(expand-abbrev)
-  (insert "\ ")
+(insert "\ ")
   (just-one-space)
+(expand-abbrev)
 )
  
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
