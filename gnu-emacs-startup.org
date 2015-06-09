@@ -578,6 +578,47 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (monaco-font)
 #+END_SRC
 
+* character movement
+#+BEGIN_SRC emacs-lisp
+
+(defun jay/left-char ()
+  "Move point to the left or the beginning of the region.
+ Like `backward-char', but moves point to the beginning of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'left-char)) ;; maintain compatibility
+    (let ((left (min (point)
+                     ;; `mark' returning nil is ok; we'll only use this
+                     ;; if `mark-active'
+                     (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn
+            (goto-char left)
+            (setq deactivate-mark t))
+        (call-interactively 'left-char)))))
+
+
+(defun jay/right-char ()
+  "Move point to the right or the end of the region.
+ Like `right-char', but moves point to the end of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'right-char)) ;; maintain compatibility
+    (let ((right (max (point)
+                      ;; `mark' returning nil is ok; we'll only use this
+                      ;; if `mark-active'
+                      (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn (goto-char right)
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
+
+(define-key org-mode-map (kbd "<left>") 'jay/left-char)
+(define-key org-mode-map (kbd "<right>") 'jay/right-char)
+
+#+END_SRC
+
+
 * experiments
 #+BEGIN_SRC emacs-lisp
 (defun jay/insert-space ()
@@ -590,8 +631,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
-#+END_SRC
 
+#+END_SRC
 
 
 
@@ -772,8 +813,15 @@ So the first invocation should result in this:
 
 Thanks!
 
-*** TODO Note & question
+*** TODO Note & question                                             :rudi:
 
     OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- is a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
 
-    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? If that is the case, then would killing all *consecutive* punctuation marks cover this case? What about "--", "?!", "...?" (and possibly other consecutive punctuation marks, like "--," - some authors like that style)? They would also be killed completely. Is that according to your requirements?
+    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? 
+
+: Yes it is. 
+
+    If that is the case, then would killing all *consecutive* punctuation marks cover this case? What about "--", "?!", "...?" (and possibly other consecutive punctuation marks, like "--," - some authors like that style)? They would also be killed completely. Is that according to your requirements?
+
+: Yes, automatically killing all consecutive punctuation in cases like "---" "--", "?!", and "...?" would certainly be according to my requirements. So yes, I think that solves the problem! Thank you!
+

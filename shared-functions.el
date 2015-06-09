@@ -2572,38 +2572,6 @@ searches all buffers."
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
-(defun aquamacs-left-char ()
-  "Move point to the left or the beginning of the region.
- Like `backward-char', but moves point to the beginning of the region
-provided the (transient) mark is active."
-  (interactive)
-  (let ((this-command 'left-char)) ;; maintain compatibility
-    (let ((left (min (point)
-                     ;; `mark' returning nil is ok; we'll only use this
-                     ;; if `mark-active'
-                     (or (mark t) 0))))
-      (if (and transient-mark-mode mark-active)
-          (progn
-            (goto-char left)
-            (setq deactivate-mark t))
-        (call-interactively 'left-char)))))
-
-
-(defun aquamacs-right-char ()
-  "Move point to the right or the end of the region.
- Like `right-char', but moves point to the end of the region
-provided the (transient) mark is active."
-  (interactive)
-  (let ((this-command 'right-char)) ;; maintain compatibility
-    (let ((right (max (point)
-                      ;; `mark' returning nil is ok; we'll only use this
-                      ;; if `mark-active'
-                      (or (mark t) 0))))
-      (if (and transient-mark-mode mark-active)
-          (progn (goto-char right)
-		 (setq deactivate-mark t))
-	(call-interactively 'right-char)))))
-
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
 ;; auto-complete mode

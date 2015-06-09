@@ -835,8 +835,6 @@ every new buffer will be unique:
 
 * Miscellaneous/unsorted settings
 
-** TODO The following settings should be sorted
-
 #+BEGIN_SRC emacs-lisp
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
@@ -3298,7 +3296,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 I want to use this to create a function to kill-clause (not kill sentence).
 
 
-** TODO There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again. :rudi:
+** DONE! :-) There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again. :rudi:
 
 #+BEGIN_SRC emacs-lisp
 ;;; old version; try the one below and replace it if it is working as intended.
@@ -3313,7 +3311,7 @@ I want to use this to create a function to kill-clause (not kill sentence).
 ;; (setq sentence-end-base "[.?!…][]\"'”)}]*")))
 #+END_SRC
 
-*** DONE Request for clarification                                 :followup:
+*** DONE! :-) DONE Request for clarification                     :followup:
 
 : Please clarify what you intend to do with this command.  From what I gather, you intend this function to do exactly what my/kill-sentence-dwim, as if "--", "," and ";" also marked the end of a sentence. If that is the case, then why do you also add the characters "?!…" to sentence-end-base, given that they (presumably) were already there?
 
@@ -3324,9 +3322,13 @@ I may have made a mistake. My intention is that:
 
 Otherwise, yes, it should work exactly like my/kill-sentence-dwim. Thank you! 
 
-*** TODO Try this
+*** DONE! :-) Try this
 
-    Well, it is a pretty clever way of doing it... you're thinking like a true hacker. :) However, ~setq~'ing like in the Wild West is dangerous. ~let~ will be your friend here.
+    Well, it is a pretty clever way of doing it... you're thinking like a true hacker. :) However, ~setq~'ing like in the Wild West is dangerous.
+
+: Haha! Thank you!
+
+    ~let~ will be your friend here.
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
@@ -3339,6 +3341,8 @@ Otherwise, yes, it should work exactly like my/kill-sentence-dwim. Thank you!
   (let ((sentence-end-base "--\\|[,;.?!…][]\"'”)}]*"))
     (my/kill-sentence-dwim)))
 #+END_SRC
+
+: Perfect!
 
 * Better backspace during isearch 
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
@@ -3430,7 +3434,7 @@ to open source code block in indirect buffer
 #+END_SRC
 
 
-* TODO behavior of arrow keys when there is a highlighted region       :rudi:
+* DONE! :-) behavior of arrow keys when there is a highlighted region  :rudi:
 
 WHEN A REGION IS HIGHLIGHTED:
 
@@ -3454,94 +3458,11 @@ Below is some code I found that might help do this. It doesn't seem to work curr
 
 Thanks!
 
-(defun aquamacs-left-char ()
-  "Move point to the left or the beginning of the region.
- Like `backward-char', but moves point to the beginning of the region
-provided `cua-mode' and the mark are active."
-  (interactive)
-  (let ((this-command 'left-char)) ;; maintain compatibility
-    (let ((left (min (point) (or (mark t) 0))))
-      (if (and cua-mode
-	       (consp transient-mark-mode) ;; used to be cua--explicit-region-start
-	       mark-active
-	       (not this-command-keys-shift-translated))
-	  (progn
-	    (goto-char left)
-	    (setq deactivate-mark t))
-	(call-interactively 'left-char)))))
-
-
-
-(defun aquamacs-right-char ()
-  "Move point to the right or the end of the region.
- Like `right-char', but moves point to the end of the region
-provided `cua-mode' and the mark are active."
-  (interactive)
-  (let ((this-command 'right-char)) ;; maintain compatibility
-    (let ((right (max (point) (or (mark t) 0))))
-      (if (and cua-mode
-	       (consp transient-mark-mode) ;; used to be cua--explicit-region-start
-	       mark-active
-	       (not this-command-keys-shift-translated))
-	  (progn (goto-char right)
-		 (setq deactivate-mark t))
-	(call-interactively 'right-char)))))
-
-(dolist (cmd
-	 '(aquamacs-left-char 
-	   aquamacs-right-char
-	   aquamacs-next-line
-	   aquamacs-previous-line))
-  (put cmd 'CUA 'move))
-
-** TODO Try this
+** DONE! :-) Try this
 
    You might want to change the name of the functions though? Since this is the shared functions file, I suppose this is loaded by both GNU Emacs and Aquamacs, so prefixing with ~aquamacs~ should be confusing.
 
-#+BEGIN_SRC emacs-lisp
-(defun aquamacs-left-char ()
-  "Move point to the left or the beginning of the region.
- Like `backward-char', but moves point to the beginning of the region
-provided the (transient) mark is active."
-  (interactive)
-  (let ((this-command 'left-char)) ;; maintain compatibility
-    (let ((left (min (point)
-                     ;; `mark' returning nil is ok; we'll only use this
-                     ;; if `mark-active'
-                     (or (mark t) 0))))
-      (if (and transient-mark-mode mark-active)
-          (progn
-            (goto-char left)
-            (setq deactivate-mark t))
-        (call-interactively 'left-char)))))
-
-
-(defun aquamacs-right-char ()
-  "Move point to the right or the end of the region.
- Like `right-char', but moves point to the end of the region
-provided the (transient) mark is active."
-  (interactive)
-  (let ((this-command 'right-char)) ;; maintain compatibility
-    (let ((right (max (point)
-                      ;; `mark' returning nil is ok; we'll only use this
-                      ;; if `mark-active'
-                      (or (mark t) 0))))
-      (if (and transient-mark-mode mark-active)
-          (progn (goto-char right)
-		 (setq deactivate-mark t))
-	(call-interactively 'right-char)))))
-#+END_SRC
-
-   Plus, I suppose you will want to do something like this:
-
-#+BEGIN_EXAMPLE
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<left>") #'aquamacs-left-char)
-(global-set-key (kbd "<right>") #'aquamacs-right-char)
-#+END_SRC
-#+END_EXAMPLE
-
-   But I'll leave it commented since I'm not sure this is what you want.
+: Works! Perfect, thank you. 
 
 * stuff that I moved from custom.el
 #+BEGIN_SRC emacs-lisp
@@ -3569,7 +3490,7 @@ provided the (transient) mark is active."
 
 
 #+END_SRC
-* TODO can we globally enable palimpsest-mode, especially in org-mode? :rudi:
+* DONE! :-) can we globally enable palimpsest-mode, especially in org-mode? 
 I tried adding this, but it didn't work
 
 (palimpsest-mode 1)
@@ -3577,7 +3498,7 @@ I tried adding this, but it didn't work
 This doesn't work either:
 (add-hook 'org-mode-hook '(palimpsest-mode 1))
 
-** TODO Try this
+** DONE! :-) Try this
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))

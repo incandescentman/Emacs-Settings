@@ -26,6 +26,7 @@
  '(ac-candidate-menu-min 3)
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(autopair-global-mode t)
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
@@ -122,7 +123,7 @@
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files
    (quote
-    ("~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
+    ("~/Dropbox/emacs/prelude/personal/shared-functions.org" "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)
@@ -324,7 +325,6 @@
             (quote rainbow-mode))
            (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
- '(autopair-global-mode t)
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)
  '(standard-indent 3)

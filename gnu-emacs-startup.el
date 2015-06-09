@@ -421,6 +421,41 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (toggle-maxframe)
 (monaco-font)
 
+(defun jay/left-char ()
+  "Move point to the left or the beginning of the region.
+ Like `backward-char', but moves point to the beginning of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'left-char)) ;; maintain compatibility
+    (let ((left (min (point)
+                     ;; `mark' returning nil is ok; we'll only use this
+                     ;; if `mark-active'
+                     (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn
+            (goto-char left)
+            (setq deactivate-mark t))
+        (call-interactively 'left-char)))))
+
+
+(defun jay/right-char ()
+  "Move point to the right or the end of the region.
+ Like `right-char', but moves point to the end of the region
+provided the (transient) mark is active."
+  (interactive)
+  (let ((this-command 'right-char)) ;; maintain compatibility
+    (let ((right (max (point)
+                      ;; `mark' returning nil is ok; we'll only use this
+                      ;; if `mark-active'
+                      (or (mark t) 0))))
+      (if (and transient-mark-mode mark-active)
+          (progn (goto-char right)
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
+
+(define-key org-mode-map (kbd "<left>") 'jay/left-char)
+(define-key org-mode-map (kbd "<right>") 'jay/right-char)
+
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
