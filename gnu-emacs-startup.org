@@ -508,38 +508,62 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ** forward kill word correctly
 #+BEGIN_SRC emacs-lisp
+;;; old version; remove after testing new one below
+;; (defun kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (expand-abbrev)
+;;   (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
+;;     (progn                            ; THEN
+;;   (kill-word 1) ; kill word
+;;   (my/fix-space)) ; and fix space
+;; (progn ; else 
+;; (delete-forward-char 1) ; just delete the punctuation mark
+;; (my/fix-space) ; and delete the space as well
+;; )
+;; ))
+
+;;; new version
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (expand-abbrev)
-  (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
-    (progn                            ; THEN
-  (kill-word 1) ; kill word
-  (my/fix-space)) ; and fix space
-(progn ; else 
-(delete-forward-char 1) ; just delete the punctuation mark
-(my/fix-space) ; and delete the space as well
-)
-))
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)) ; and finally fix space
 #+END_SRC
 
 
 ** BACKWARD kill word correctly 
 
 #+BEGIN_SRC emacs-lisp
+;;; old version; remove after testing new one below
+;; (defun backward-kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (let ((old-point (point)))
+;;     (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
+;;         ;; old-point should be > (point); this makes it prefix append
+;;         ;; to kill-ring
+;;         (kill-region old-point (point))
+;;       (backward-kill-word 1)))
+;;   (my/fix-space)
+;;   (jay/insert-space) ; I added this line, I think it works.
+;; ) 
+
+;;; new version
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
-  (let ((old-point (point)))
-    (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
-        ;; old-point should be > (point); this makes it prefix append
-        ;; to kill-ring
-        (kill-region old-point (point))
-      (backward-kill-word 1)))
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
   (my/fix-space)
   (jay/insert-space) ; I added this line, I think it works.
-) 
+  )
 #+END_SRC
+
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
 ;; delete backward one char unless the region is active: 
@@ -813,7 +837,7 @@ So the first invocation should result in this:
 
 Thanks!
 
-*** TODO Note & question                                             :rudi:
+*** DONE Note & question                                               :rudi:
 
     OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- is a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
 
@@ -825,3 +849,24 @@ Thanks!
 
 : Yes, automatically killing all consecutive punctuation in cases like "---" "--", "?!", and "...?" would certainly be according to my requirements. So yes, I think that solves the problem! Thank you!
 
+** TODO More questions                                             :followup:
+
+   - ~my/fix-space~
+     - What should be the difference here?
+
+   - ~kill-clause~
+     - Since this is already sensitive to --, it should also be sensitive to ---. It should also be sensitive to other sequences of punctuation marks. Let me know otherwise.
+
+   - ~my/delete-backward~
+     - Again, I don't think this requires any change. It deletes all spaces when it is looking at a punctuation mark. Since - is a punctuation mark, any space before --- will also be deleted.
+
+   - ~kill-word-correctly~ & ~backward-kill-word-correctly~
+     - Regarding these two functions, I have added new versions of them. Note however that they tend to fsck up the kill-ring, because of their calls to ~my/fix-space~. This already occurred in the old versions. Consider the following example:
+
+: Kill them all!
+
+   If you place the point at 'K', and call ~kill-word-correctly~ four times, all of the text will be killed. After killing each word, two consecutive spaces are left, and ~my/fix-space~ will get rid of one. However, ~my/fix-space~ is not a kill command, so it does not affect the kill-ring. Consequently, if you yank after killing all the words, you'll get:
+
+: Killthemall!
+
+   Would you like me to try to fix this or is the kill ring really not your concern?
