@@ -229,7 +229,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
-(smartparens-mode 1)
+(autopair-mode 1)
 (setq buffer-save-without-query nil)
 #+END_SRC
 

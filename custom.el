@@ -24,6 +24,8 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
@@ -58,6 +60,7 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -131,7 +134,7 @@
     ((ascii 61 45 45)
      (latin1 61 45 45)
      (utf-8 9552 9472 9548 9476 9480))))
- '(org-blank-before-new-entry (quote ((heading . t) (plain-list-item))))
+ '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-bullets-bullet-list (quote (" ")))
  '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
@@ -321,8 +324,9 @@
             (quote rainbow-mode))
            (rainbow-mode 1)))))
  '(send-mail-function (quote sendmail-send-it))
- '(smartparens-global-mode t)
+ '(autopair-global-mode t)
  '(smex-prompt-string "I love you. ")
+ '(sp-base-key-bindings nil)
  '(standard-indent 3)
  '(tool-bar-mode nil)
  '(tooltip-mode nil)
@@ -362,8 +366,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:bold t :foreground "red"))))
+ '(hl-line ((t (:inherit highlight))))
+ '(message-header-cc ((t (:foreground "CornflowerBlue"))))
+ '(message-header-name ((t (:foreground "green2"))))
+ '(message-header-subject ((t (:foreground "pink" :weight bold))))
+ '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
+ '(message-separator ((t (:foreground "LightSkyBlue1"))))
  '(org-headline-done ((t (:strike-through t))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t))
+ '(org-link ((t (:inherit link :underline nil))))
+ '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
+ '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 
 
 ;;; Ignore / Exclude Uninteresting Things
@@ -388,6 +401,10 @@
 
 
 ;;;; keybindings
+
+
+(define-key smartparens-mode-map (kbd "H-<right>") 'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "H-<left>") 'sp-forward-barf-sexp) 
 
 ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
 ;; I've been wanting to do this for so long. :-)
@@ -464,3 +481,4 @@
 
 ;;; Treat all themes as safe
 (setq custom-safe-themes t)
+

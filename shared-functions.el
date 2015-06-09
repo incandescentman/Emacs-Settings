@@ -133,7 +133,7 @@
 
 (delete-selection-mode 1)
 
-(smartparens-mode 1)
+(autopair-mode 1)
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
