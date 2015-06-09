@@ -741,10 +741,10 @@ Oleh
 * Request                                                              :rudi:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
 
-** TODO Request for clarification                                  :followup:
+** DONE Request for clarification                                  :followup:
 
    Not sure which functions you mean. The ones in the "Sentences" Heading?
-** TODO Answer                                                        :rudi:
+** DONE Answer                                                         :rudi:
 - my/fix-space
 - kill-clause
 - my-delete-backward
@@ -771,3 +771,9 @@ So the first invocation should result in this:
 : The quick brown fox jumped high. 
 
 Thanks!
+
+*** TODO Note & question
+
+    OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- is a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
+
+    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? If that is the case, then would killing all *consecutive* punctuation marks cover this case? What about "--", "?!", "...?" (and possibly other consecutive punctuation marks, like "--," - some authors like that style)? They would also be killed completely. Is that according to your requirements?
