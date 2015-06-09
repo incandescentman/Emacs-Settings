@@ -363,32 +363,55 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (looking-at "[[:punct:]]"))
 (delete-horizontal-space))) 
 
+;;; old version; remove after testing new one below
+;; (defun kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (expand-abbrev)
+;;   (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
+;;     (progn                            ; THEN
+;;   (kill-word 1) ; kill word
+;;   (my/fix-space)) ; and fix space
+;; (progn ; else 
+;; (delete-forward-char 1) ; just delete the punctuation mark
+;; (my/fix-space) ; and delete the space as well
+;; )
+;; ))
+
+;;; new version
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (expand-abbrev)
-  (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
-    (progn                            ; THEN
-  (kill-word 1) ; kill word
-  (my/fix-space)) ; and fix space
-(progn ; else 
-(delete-forward-char 1) ; just delete the punctuation mark
-(my/fix-space) ; and delete the space as well
-)
-))
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)) ; and finally fix space
 
+;;; old version; remove after testing new one below
+;; (defun backward-kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (let ((old-point (point)))
+;;     (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
+;;         ;; old-point should be > (point); this makes it prefix append
+;;         ;; to kill-ring
+;;         (kill-region old-point (point))
+;;       (backward-kill-word 1)))
+;;   (my/fix-space)
+;;   (jay/insert-space) ; I added this line, I think it works.
+;; ) 
+
+;;; new version
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
-  (let ((old-point (point)))
-    (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
-        ;; old-point should be > (point); this makes it prefix append
-        ;; to kill-ring
-        (kill-region old-point (point))
-      (backward-kill-word 1)))
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
   (my/fix-space)
   (jay/insert-space) ; I added this line, I think it works.
-) 
+  )
 
 ;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()

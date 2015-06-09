@@ -803,7 +803,7 @@ Oleh
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
-* Request                                                              :rudi:
+* TODO Request                                                         :rudi:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
 
 ** DONE Request for clarification                                  :followup:
@@ -839,7 +839,7 @@ Thanks!
 
 *** DONE Note & question                                               :rudi:
 
-    OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- is a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
+    OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
 
     However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? 
 
@@ -854,11 +854,17 @@ Thanks!
    - ~my/fix-space~
      - What should be the difference here?
 
+: The difference is that there should be a space after ; : , ? ! or . but no space after ---
+
    - ~kill-clause~
      - Since this is already sensitive to --, it should also be sensitive to ---. It should also be sensitive to other sequences of punctuation marks. Let me know otherwise.
 
+: Excellent.
+
    - ~my/delete-backward~
      - Again, I don't think this requires any change. It deletes all spaces when it is looking at a punctuation mark. Since - is a punctuation mark, any space before --- will also be deleted.
+
+: Correct. I think the difference is the space following ---
 
    - ~kill-word-correctly~ & ~backward-kill-word-correctly~
      - Regarding these two functions, I have added new versions of them. Note however that they tend to fsck up the kill-ring, because of their calls to ~my/fix-space~. This already occurred in the old versions. Consider the following example:
@@ -870,3 +876,5 @@ Thanks!
 : Killthemall!
 
    Would you like me to try to fix this or is the kill ring really not your concern?
+
+: Haha, no, this is not a problem! Thank you! 
