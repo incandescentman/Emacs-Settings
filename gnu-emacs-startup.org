@@ -791,18 +791,6 @@ Oleh
 #+END_SRC
 
 
-
-* smart-period
-#+BEGIN_SRC emacs-lisp 
-(defun smart-period ()
-  (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-(insert ".")
-)
-(define-key org-mode-map (kbd ".") 'smart-period)
-#+END_SRC
-
 * TODO Request                                                         :rudi:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
 
@@ -878,3 +866,84 @@ Thanks!
    Would you like me to try to fix this or is the kill ring really not your concern?
 
 : Haha, no, this is not a problem! Thank you! 
+
+* TODO request: smart punctuation insertion                             :rudi:
+Rúdi, can you add a line to the functions below that will automatically delete existing punctuation when one of these smart-punctuation functions gets called?
+
+I'll give you an example of what I mean. Consider this sentence:
+
+: The rain in Spain falls mainly on the plains! 
+
+Let's say the point is on the space after the ! at the end of the sentence.
+
+If I then hit ? (which calls smart-question-mark), Emacs should DELETE the existing ! and then replace it with a ? (and then put a space after it).
+
+The logic of this is that I will NEVER be trying to type anything like:
+
+- Hello!?
+- Hello.!
+- Hello?.
+- Hello,.
+- Hello.,
+
+In other words, if the point is after a ; : , ! ? or . and then I hit a punctuation mark, it's almost certain that I am doing this because I wish to CHANGE the punctuation and not ADD one punctuation mark after another. 
+
+** Exceptions
+1. I will often want to type three dots like so:
+: To be continued...
+2. or occasionally a question mark followed by an exclamation point like so:
+: What the hell?!
+3. I still need to be able to indicate em dashes---that is, three hyphens in a row.
+
+Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones.
+
+** smart-period
+#+BEGIN_SRC emacs-lisp 
+(defun smart-period ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert ".")
+)
+(define-key org-mode-map (kbd ".") 'smart-period)
+#+END_SRC
+
+** smart-comma
+#+BEGIN_SRC emacs-lisp 
+(defun smart-comma ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert ",")
+)
+(define-key org-mode-map (kbd ",") 'smart-comma)
+#+END_SRC
+
+** smart-question-mark
+#+BEGIN_SRC emacs-lisp 
+(defun smart-question-mark ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "?")
+)
+(define-key org-mode-map (kbd "?") 'smart-question-mark)
+#+END_SRC
+
+** smart-exclamation-point
+#+BEGIN_SRC emacs-lisp 
+(defun smart-exclamation-point ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "!")
+)
+(define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+#+END_SRC
+
+
+
