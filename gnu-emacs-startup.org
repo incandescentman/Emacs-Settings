@@ -945,7 +945,9 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
-If you think this whole approach of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
+* TODO cycle punctuation                                               :rudi:
+
+If you think this whole approach above of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
 : The rain in Spain falls mainly on the plains. 
 
@@ -955,4 +957,9 @@ If you think this whole approach of deleting existing punctuation is too convolu
 : The rain in Spain falls mainly on the plains? 
 : The rain in Spain falls mainly on the plains! 
 
-In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Thanks!!
+In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Here's some code that might help. 
+http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html 
+
+Thanks!!
+
+(define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
