@@ -559,6 +559,34 @@ provided the (transient) mark is active."
   (interactive)
 (expand-abbrev)
 (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
 (insert ".")
 )
 (define-key org-mode-map (kbd ".") 'smart-period)
+
+(defun smart-comma ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert ",")
+)
+(define-key org-mode-map (kbd ",") 'smart-comma)
+
+(defun smart-question-mark ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "?")
+)
+(define-key org-mode-map (kbd "?") 'smart-question-mark)
+
+(defun smart-exclamation-point ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "!")
+)
+(define-key org-mode-map (kbd "!") 'smart-exclamation-point)

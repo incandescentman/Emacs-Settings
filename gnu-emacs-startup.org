@@ -945,5 +945,14 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
+If you think this whole approach of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
+: The rain in Spain falls mainly on the plains. 
 
+...and assuming the point was on the "T" or the "." or anywhere in between, invoking cycle-punctuation would leave the point wherever it was and cycle between these three states:
+
+: The rain in Spain falls mainly on the plains. 
+: The rain in Spain falls mainly on the plains? 
+: The rain in Spain falls mainly on the plains! 
+
+In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Thanks!!
