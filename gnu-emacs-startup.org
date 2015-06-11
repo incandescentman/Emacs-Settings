@@ -33,6 +33,7 @@ Automatically load abbreviations table:
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
+(setq only-global-abbrevs t)
 #+END_SRC
 
 * UI/Appearance
@@ -579,11 +580,25 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (or (looking-back "^[[:space:]]+") 
 (looking-at "[[:punct:]]"))
 (delete-horizontal-space)) 
-)
-)
-) 
+))) 
+
+;; delete backward one char unless the region is active: 
+(defun my/delete-backward ()
+"When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)                  ; IF
+    (progn                            ; THEN
+      (delete-region (region-beginning) (region-end))
+      (my/fix-space)) 
+(progn ; ELSE 
+    (delete-backward-char 1)
+))) 
 
 
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp 
 (defun timesvr ()
   "Task request to my virtual assistant."
   (interactive)

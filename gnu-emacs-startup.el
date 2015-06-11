@@ -426,10 +426,19 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (or (looking-back "^[[:space:]]+") 
 (looking-at "[[:punct:]]"))
 (delete-horizontal-space)) 
-)
-)
-) 
+))) 
 
+;; delete backward one char unless the region is active: 
+(defun my/delete-backward ()
+"When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)                  ; IF
+    (progn                            ; THEN
+      (delete-region (region-beginning) (region-end))
+      (my/fix-space)) 
+(progn ; ELSE 
+    (delete-backward-char 1)
+))) 
 
 (defun timesvr ()
   "Task request to my virtual assistant."

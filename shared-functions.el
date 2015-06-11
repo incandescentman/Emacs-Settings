@@ -724,15 +724,14 @@ Subject: %^{Subject}
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(message-kill-buffer-on-exit t)
                        '(abbrev-all-caps nil)
-                       '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
-                       '(flyspell-abbrev-p t)
+'(flyspell-abbrev-p t)
                        '(flyspell-use-global-abbrev-table-p t)
                        '(global-flyspell-mode t)
                        '(ac-auto-show-menu 2.0)
                        '(ac-auto-start 4)
                        '(ac-candidate-menu-min 3)
                        '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
-                       '(only-global-abbrevs t)
+
                        '(mail-kill-buffer-on-exit t)
 
 '(message-kill-buffer-on-exit t)
@@ -785,14 +784,13 @@ Subject: %^{Subject}
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(only-global-abbrevs t)
+
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
- '(org-ascii-table-use-ascii-art t)
- '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
- '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+ '(org-ascii-table-use-ascii-art to)
+'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
@@ -960,7 +958,7 @@ Subject: %^{Subject}
 
  '(display-time-mode t)
   '(abbrev-all-caps nil)
- '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+
  '(blink-cursor-mode nil)
  '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
  '(calendar-latitude 40.7)
@@ -998,7 +996,7 @@ Subject: %^{Subject}
  '(message-send-hook (quote (recent-addresses-add-headers)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(only-global-abbrevs t)
+
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-agenda-jump-prefer-future t)
@@ -1125,7 +1123,6 @@ Subject: %^{Subject}
 ;;  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 ;;  '(message-kill-buffer-on-exit t)
 ;;  '(abbrev-all-caps nil)
-;;  '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
 ;;  '(flyspell-abbrev-p t)
 ;;  '(flyspell-use-global-abbrev-table-p t)
 ;;  '(global-flyspell-mode t)
@@ -1134,7 +1131,6 @@ Subject: %^{Subject}
 ;;  '(ac-candidate-menu-min 3)
 ;;  '(buffer-stack-untracked
 ;;    '("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*"))
-;;  '(only-global-abbrevs t)
 ;;  '(mail-kill-buffer-on-exit t)
 ;;  '(message-kill-buffer-on-exit t)
 ;;  '(mail-kill-buffer-on-exit t)
@@ -1181,7 +1177,6 @@ Subject: %^{Subject}
 ;;      (optional . References)))
 ;;  '(message-send-mail-function 'message-send-mail-with-sendmail)
 ;;  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-;;  '(only-global-abbrevs t)
 ;;  '(org-M-RET-may-split-line
 ;;    '((item . t)))
 ;;  '(org-activate-links
@@ -1189,10 +1184,7 @@ Subject: %^{Subject}
 ;;  '(org-archive-location "archive/%s_archive::")
 ;;  '(org-ascii-headline-spacing
 ;;    '(1 . 1))
-;;  '(org-ascii-table-use-ascii-art t)
-;;  '(org-blank-before-new-entry
-;;    '((heading)
-;;      (plain-list-item . auto)))
+;;  '(org-ascii-table-use-ascii-art to)
 ;;  '(org-bullets-face-name '\"Lucida\ Sans\ Typeriter\")
 ;;  '(org-catch-invisible-edits 'error)
 ;;  '(org-clock-auto-clock-resolution t)

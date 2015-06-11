@@ -1092,15 +1092,14 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(message-kill-buffer-on-exit t)
                        '(abbrev-all-caps nil)
-                       '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
-                       '(flyspell-abbrev-p t)
+'(flyspell-abbrev-p t)
                        '(flyspell-use-global-abbrev-table-p t)
                        '(global-flyspell-mode t)
                        '(ac-auto-show-menu 2.0)
                        '(ac-auto-start 4)
                        '(ac-candidate-menu-min 3)
                        '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
-                       '(only-global-abbrevs t)
+
                        '(mail-kill-buffer-on-exit t)
 
 '(message-kill-buffer-on-exit t)
@@ -1153,7 +1152,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(only-global-abbrevs t)
+
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-archive-location "archive/%s_archive::")
@@ -1327,7 +1326,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
  '(display-time-mode t)
   '(abbrev-all-caps nil)
- '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+
  '(blink-cursor-mode nil)
  '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
  '(calendar-latitude 40.7)
@@ -1365,7 +1364,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(message-send-hook (quote (recent-addresses-add-headers)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(only-global-abbrevs t)
+
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-agenda-jump-prefer-future t)
@@ -1492,7 +1491,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;;  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 ;;  '(message-kill-buffer-on-exit t)
 ;;  '(abbrev-all-caps nil)
-;;  '(abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
 ;;  '(flyspell-abbrev-p t)
 ;;  '(flyspell-use-global-abbrev-table-p t)
 ;;  '(global-flyspell-mode t)
@@ -1501,7 +1499,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;;  '(ac-candidate-menu-min 3)
 ;;  '(buffer-stack-untracked
 ;;    '("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*"))
-;;  '(only-global-abbrevs t)
 ;;  '(mail-kill-buffer-on-exit t)
 ;;  '(message-kill-buffer-on-exit t)
 ;;  '(mail-kill-buffer-on-exit t)
@@ -1548,7 +1545,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;;      (optional . References)))
 ;;  '(message-send-mail-function 'message-send-mail-with-sendmail)
 ;;  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-;;  '(only-global-abbrevs t)
 ;;  '(org-M-RET-may-split-line
 ;;    '((item . t)))
 ;;  '(org-activate-links
