@@ -1097,3 +1097,10 @@ This task involves programmatically converting an abbrevs file, which looks some
 #+END_QUOTE
 
 Let me know if this interests you, and if so, I'll send you my abbrev file. Again, if not, no worries. Thanks!
+** TODO Request for clarification                                  :followup:
+
+   Sure, I'll handle it. It sure is just hacking elisp...
+
+   Here's my proposal: a new function, say ~abbrev-table-export-to-text-expander~, which prompts you for the abbrev table name, and creates a new buffer with the result of converting to TextExpander, which you then can save in the location you desire. Does that look good?
+
+   Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no avail.
