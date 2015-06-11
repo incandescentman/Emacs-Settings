@@ -496,13 +496,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 * Custom functions
 
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun my/fix-space ()
+;; "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+;; (interactive)
+;; (just-one-space)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space))) 
+
+;;; new version
 (defun my/fix-space ()
-"Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
-(interactive)
-(just-one-space)
-(when (or (looking-back "^[[:space:]]+") 
-(looking-at "[[:punct:]]"))
-(delete-horizontal-space))) 
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+  (interactive)
+  (just-one-space)
+  (when (or (looking-back "^[[:space:]]+")
+            (looking-back "---[[:space:]]+")
+            (looking-at "[[:punct:]]"))
+    (delete-horizontal-space)))
 #+END_SRC
 
 
