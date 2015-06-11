@@ -578,34 +578,46 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 *** my delete backward
 #+BEGIN_SRC emacs-lisp
+;;; old versions; remove after testing new one
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space)) 
+;; ))) 
+;; 
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; ))) 
+
+;;; new version
 ;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()
-"When there is an active region, delete it and then fix up the whitespace"
+  "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-  (if (use-region-p)                  ; IF
-    (progn                            ; THEN
+  (if (use-region-p)
       (delete-region (region-beginning) (region-end))
-      (my/fix-space)) 
-(progn ; ELSE 
-    (delete-backward-char 1)
-(when (or (looking-back "^[[:space:]]+") 
-(looking-at "[[:punct:]]"))
-(delete-horizontal-space)) 
-))) 
-
-;; delete backward one char unless the region is active: 
-(defun my/delete-backward ()
-"When there is an active region, delete it and then fix up the whitespace"
-  (interactive)
-  (if (use-region-p)                  ; IF
-    (progn                            ; THEN
-      (delete-region (region-beginning) (region-end))
-      (my/fix-space)) 
-(progn ; ELSE 
-    (delete-backward-char 1)
-))) 
-
-
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space))))
 #+END_SRC
 
 
@@ -879,6 +891,8 @@ Thanks!
      - Again, I don't think this requires any change. It deletes all spaces when it is looking at a punctuation mark. Since - is a punctuation mark, any space before --- will also be deleted.
 
 : Correct. I think the difference is the space following ---
+
+     - Note: there were two versions of ~my/delete-backward~; I assumed the first one was a failed attempt to give it some ability to get rid of extra whitespaces, so I took the liberty of adding that functionality. So, what it does is the following: after deleting the region or character, checks if immediately before or after the point there is a space, and if that is the case, uses ~my/fix-space~. Does this behaviour make sense to you?
 
    - ~kill-word-correctly~ & ~backward-kill-word-correctly~
      - Regarding these two functions, I have added new versions of them. Note however that they tend to fsck up the kill-ring, because of their calls to ~my/fix-space~. This already occurred in the old versions. Consider the following example:
