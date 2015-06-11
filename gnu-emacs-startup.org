@@ -963,3 +963,97 @@ http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html
 Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
+
+* TODO [#A] a different kind of request                                :rudi:
+Hi Rúdi, 
+
+Here's a different kind of request. If you're interested, maybe we could make it the top priority. However, it's not strictly speaking hacking in elisp, so feel free to turn it down if it doesn't interest you and we can just proceed with the Emacs functions.
+
+I'd like to make some of my many Emacs abbrevs shortcuts available in other applications. On my Mac OSX, I use an app called TextExpander to expand text. So I'd like to convert my abbrevs file to TextExpander format.
+
+This task involves programmatically converting an abbrevs file, which looks something like this:
+
+#+BEGIN_QUOTE
+(define-abbrev-table 'global-abbrev-table '(
+ ("qo" "without" nil 1)
+ ("ty" "they" nil 3)
+ ("tyr" "they're" nil 5)
+)) 
+#+END_QUOTE
+
+...into a TextExpander file, which looks something like this:
+
+#+BEGIN_QUOTE
+<dict>
+			<key>abbreviation</key>
+			<string>qo</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:04:09Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>lastUsed</key>
+			<date>2015-06-11T01:05:05Z</date>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:04:14Z</date>
+			<key>plainText</key>
+			<string>without</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>12D393EE-F929-4F9B-AFF6-F43D718E8048</string>
+		</dict>
+		<dict>
+			<key>abbreviation</key>
+			<string>ty</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:03:06Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:03:06Z</date>
+			<key>plainText</key>
+			<string>they</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>6341B244-BC48-48B9-8E1E-ABAF34C44BC3</string>
+		</dict>
+		<dict>
+			<key>abbreviation</key>
+			<string>tyr</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:03:02Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>lastUsed</key>
+			<date>2015-06-11T01:03:31Z</date>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:03:02Z</date>
+			<key>plainText</key>
+			<string>they're</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>A1A1B41E-B8BF-4562-B977-143419E30695</string>
+		</dict>
+#+END_QUOTE
+
+Let me know if this interests you, and if so, I'll send you my abbrev file. Again, if not, no worries. Thanks!

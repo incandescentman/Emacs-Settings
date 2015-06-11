@@ -1158,9 +1158,8 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
- '(org-ascii-table-use-ascii-art t)
- '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
- '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+ '(org-ascii-table-use-ascii-art to)
+'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
@@ -1557,10 +1556,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;;  '(org-archive-location "archive/%s_archive::")
 ;;  '(org-ascii-headline-spacing
 ;;    '(1 . 1))
-;;  '(org-ascii-table-use-ascii-art t)
-;;  '(org-blank-before-new-entry
-;;    '((heading)
-;;      (plain-list-item . auto)))
+;;  '(org-ascii-table-use-ascii-art to)
 ;;  '(org-bullets-face-name '\"Lucida\ Sans\ Typeriter\")
 ;;  '(org-catch-invisible-edits 'error)
 ;;  '(org-clock-auto-clock-resolution t)
