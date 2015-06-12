@@ -309,6 +309,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
 
+(define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
 

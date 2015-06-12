@@ -16,6 +16,7 @@
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
+(setq only-global-abbrevs t)
 
 (tooltip-mode -1)
 (tool-bar-mode -1)
@@ -216,6 +217,7 @@
 
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
 
+(define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
 
