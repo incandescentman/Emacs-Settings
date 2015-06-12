@@ -357,13 +357,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
                        :username "petersalazar")
 
+;;; old version; remove after testing new one
+;; (defun my/fix-space ()
+;; "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+;; (interactive)
+;; (just-one-space)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space))) 
+
+;;; new version
 (defun my/fix-space ()
-"Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
-(interactive)
-(just-one-space)
-(when (or (looking-back "^[[:space:]]+") 
-(looking-at "[[:punct:]]"))
-(delete-horizontal-space))) 
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+  (interactive)
+  (just-one-space)
+  (when (or (looking-back "^[[:space:]]+")
+            (looking-back "---[[:space:]]+")
+            (looking-at "[[:punct:]]"))
+    (delete-horizontal-space)))
 
 ;;; old version; remove after testing new one below
 ;; (defun kill-word-correctly ()
@@ -415,32 +426,46 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (jay/insert-space) ; I added this line, I think it works.
   )
 
-;; delete backward one char unless the region is active: 
-(defun my/delete-backward ()
-"When there is an active region, delete it and then fix up the whitespace"
-  (interactive)
-  (if (use-region-p)                  ; IF
-    (progn                            ; THEN
-      (delete-region (region-beginning) (region-end))
-      (my/fix-space)) 
-(progn ; ELSE 
-    (delete-backward-char 1)
-(when (or (looking-back "^[[:space:]]+") 
-(looking-at "[[:punct:]]"))
-(delete-horizontal-space)) 
-))) 
+;;; old versions; remove after testing new one
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space)) 
+;; ))) 
+;; 
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; ))) 
 
+;;; new version
 ;; delete backward one char unless the region is active: 
 (defun my/delete-backward ()
-"When there is an active region, delete it and then fix up the whitespace"
+  "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-  (if (use-region-p)                  ; IF
-    (progn                            ; THEN
+  (if (use-region-p)
       (delete-region (region-beginning) (region-end))
-      (my/fix-space)) 
-(progn ; ELSE 
-    (delete-backward-char 1)
-))) 
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space))))
 
 (defun timesvr ()
   "Task request to my virtual assistant."

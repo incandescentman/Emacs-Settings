@@ -1102,6 +1102,30 @@ Let me know if this interests you, and if so, I'll send you my abbrev file. Agai
 
    Sure, I'll handle it. It sure is just hacking elisp...
 
+: Excellent. :-) 
+
    Here's my proposal: a new function, say ~abbrev-table-export-to-text-expander~, which prompts you for the abbrev table name, and creates a new buffer with the result of converting to TextExpander, which you then can save in the location you desire. Does that look good?
 
-   Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no avail.
+: It would be cool if I could just export all my existing abbrevs. Here's what I would like to do: export all my abbrevs where the abbrev is 4 characters or less. No confirmation, no prompt. 
+: e.g. ehrs → behaviors 
+: anything longer than that, I don't need to export to TextExpander.
+: Is this feasible?
+
+   Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no available.
+
+: Good question. The format is called TextExpander for OSX. 
+
+http://smilesoftware.com/help/TextExpander/creating.html 
+
+http://brettterpstra.com/2013/01/04/mass-creating-textexpander-snippets/ 
+
+http://smilesoftware.com/help/TextExpander%204%20Help.pdf 
+
+http://smilesoftware.com/help/TextExpander/groups.html 
+
+Take a look and let me know whether that's helpful. If not you may ask a question on StackExchange? Or if not I can contact Smile support.
+
+Thank you! Let me know. 
+
+Thanks,
+Jay
