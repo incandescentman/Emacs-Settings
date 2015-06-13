@@ -573,8 +573,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
   (my/fix-space)
-  (jay/insert-space) ; I added this line, I think it works.
-  )
+(when (not (looking-back "---") ; I added this 
+(jay/insert-space) 
+)) 
+)
 #+END_SRC
 
 *** my delete backward
@@ -1129,3 +1131,8 @@ Thank you! Let me know.
 
 Thanks,
 Jay
+
+** results of testing backward-kill-word-correctly.
+
+: The quick brown fox jumped---jumped high.
+
