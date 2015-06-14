@@ -165,23 +165,6 @@
 (my/fix-space)
 )
 
-
-;;; new version; not thoroughly tested
-(defun minibuffer-pasteboard-paste ()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
-  (interactive)
-  (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point))))
-    (shell-command-on-region start end
-                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-                             nil t)
-    
-    (save-excursion
-      
-      ))) 
-
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
@@ -215,7 +198,7 @@
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 

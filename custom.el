@@ -20,6 +20,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(abbrev-all-caps nil)
+ '(abbrev-file-name "/Users/jay/elisp/.abbrev_defs")
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
