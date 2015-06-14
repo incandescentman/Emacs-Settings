@@ -15,7 +15,7 @@
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs t)
+(setq save-abbrevs nil)
 (setq only-global-abbrevs t)
 
 (tooltip-mode -1)
@@ -157,8 +157,6 @@
       (goto-char start)
       (my/fix-space))))
 
-
-;;; new version; not thoroughly tested
 (defun minibuffer-pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -173,7 +171,6 @@
     (save-excursion
 
       )))
-
 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
@@ -332,7 +329,8 @@
   (kill-sentence)
   (push-mark)
   (insert ".")
-  (backward-char))
+  (backward-char)
+)
 
 (defun my/forward-to-sentence-end ()
   "Move point to just before the end of the current sentence."
@@ -359,7 +357,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         (just-one-space)
         (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
       (kill-region (point) (progn (my/forward-to-sentence-end) (point)))
-      (just-one-space 0)))
+      (just-one-space 0))
+(when (looking-at ".. ")
+(delete-forward-char 1)) 
+)
 
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
@@ -378,15 +379,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
                        :username "petersalazar")
 
-;;; old version; remove after testing new one
-;; (defun my/fix-space ()
-;; "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
-;; (interactive)
-;; (just-one-space)
-;; (when (or (looking-back "^[[:space:]]+") 
-;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space))) 
-
 ;;; new version
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -395,6 +387,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "---[[:space:]]+")
             (looking-at "[[:punct:]]"))
+(looking-back "\"") 
+(looking-at "\"") 
     (delete-horizontal-space)))
 
 ;;; old version; remove after testing new one below
@@ -436,17 +430,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;;   (jay/insert-space) ; I added this line, I think it works.
 ;; ) 
 
-;;; new version
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
-  (my/fix-space)
-(when (not (looking-back "---") ; I added this 
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
 (jay/insert-space) 
-)) 
+) 
 )
 
 ;;; old versions; remove after testing new one
@@ -649,3 +648,12 @@ provided the (transient) mark is active."
 (insert "!")
 )
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+
+(defun smart-hyphen ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "-")
+)
+(define-key org-mode-map (kbd "-") 'smart-hyphen)
