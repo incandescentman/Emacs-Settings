@@ -32,7 +32,7 @@ Automatically load abbreviations table:
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs t)
+(setq save-abbrevs nil)
 (setq only-global-abbrevs t)
 #+END_SRC
 
@@ -187,18 +187,22 @@ the OSX clipboard from Emacs' kill ring, effectively giving me two separate
 clipboards to work from. The below are the traditional OSX keybindings for
 cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
 
-
-
+** Setup
 #+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
+#+END_SRC
 
+** pasteboard-copy 
 (defun pasteboard-copy()
   "Copy region to OS X system pasteboard."
   (interactive)
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
+#+END_SRC
 
+** pasteboard-paste
+#+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one (see below)
 ;; (defun pasteboard-paste()
 ;;   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -221,7 +225,9 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (shell-command-on-region start end
                              "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
                              nil t)
-    (my/fix-space)
+(when (not(looking-back "\"")) ; just added this 
+(my/fix-space)) 
+
     (save-excursion
       (goto-char start)
       (my/fix-space))))
@@ -233,6 +239,23 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (delete-region (region-beginning) (region-end))
 (my/fix-space)
 )
+
+
+;;; new version; not thoroughly tested
+(defun minibuffer-pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point))))
+    (shell-command-on-region start end
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
+    
+    (save-excursion
+      
+      ))) 
 #+END_SRC
 
 * Keybindings
@@ -290,7 +313,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
@@ -494,8 +517,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                        :username "petersalazar")
 #+END_SRC
 
-* Custom functions
-
+* Custom functions 
+** my/fix-space
 #+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one
 ;; (defun my/fix-space ()
