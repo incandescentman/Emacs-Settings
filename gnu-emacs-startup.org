@@ -30,7 +30,8 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
+;; (set (make-local-variable 'abbrev-file-name) '("~/Dropbox/elisp/own-ab brevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs nil)
 (setq only-global-abbrevs t)
@@ -270,17 +271,10 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** Create custom keybinding prefix 
 
-[[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][Source]]
 #+BEGIN_QUOTE
-I have an unconventional approach to this that I recommend highly. I have
-redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my
-favorite commands. This key is very easy to type and it is bound to a function
-('recenter) that isn't used that much. Well, I don't use 'recenter much, but
-even if you did, it can be assigned to C-l C-l which is almost as easy to type,
-and a small price to pay for the possibilities opened up by the
-Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the
-place of honor.)
+I have an unconventional approach to this that I recommend highly. I have redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my favorite commands. This key is very easy to type and it is bound to a function ('recenter) that isn't used that much. Well, I don't use 'recenter much, but even if you did, it can be assigned to C-l C-l which is almost as easy to type, and a small price to pay for the possibilities opened up by the Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the place of honor.)
 #+END_QUOTE
+Source: [[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][ LenW's answer on keyboard - What are good custom keybindings in emacs? - Stack Overflow]]
 
 Use ⌘-m as prefix for my own custom keybindings:
 #+BEGIN_SRC emacs-lisp

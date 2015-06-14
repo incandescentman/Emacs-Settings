@@ -13,7 +13,8 @@
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
+;; (set (make-local-variable 'abbrev-file-name) '("~/Dropbox/elisp/own-ab brevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs nil)
 (setq only-global-abbrevs t)
@@ -386,9 +387,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "---[[:space:]]+")
-            (looking-at "[[:punct:]]"))
-(looking-back "\"") 
-(looking-at "\"") 
+            (looking-at "[[:punct:]]") 
+            (looking-back "\" ") 
+            (looking-at " \"")
+            ) 
     (delete-horizontal-space)))
 
 ;;; old version; remove after testing new one below
