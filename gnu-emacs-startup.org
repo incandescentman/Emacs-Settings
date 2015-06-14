@@ -585,7 +585,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** BACKWARD kill word correctly 
+** very old BACKWARD kill word correctly 
 
 #+BEGIN_SRC emacs-lisp
 ;;; old version; remove after testing new one below
@@ -601,16 +601,29 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;;   (my/fix-space)
 ;;   (jay/insert-space) ; I added this line, I think it works.
 ;; ) 
+#+END_SRC
 
-;;; new version
+
+** TODO new BACKWARD kill word correctly                              :rudi: 
+Rúdi: desired behavior is that backward-kill-word-correctly should leave a space after the remaining word left of the point, UNLESS point is at the beginning of the line or after "---"
+
+My implementation below seems to work, but it seems very slow. Is it possible to make it faster? Thanks! 
+
+#+BEGIN_SRC emacs-lisp 
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
-  (my/fix-space)
-(when (not (looking-back "---")); I added this 
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
 (jay/insert-space) 
 ) 
 )
