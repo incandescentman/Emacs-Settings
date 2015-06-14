@@ -1186,3 +1186,38 @@ Jay
 
 : The quick brown fox jumped---jumped high.
 
+
+* TODO New note about the abbrevs file :rudi:
+Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrevs:
+
+1. Typographical error corrections
+
+Ghandi → Gandhi 
+
+#+BEGIN_EXAMPLE 
+("Ghandi" "Gandhi" nil 0) 
+#+END_EXAMPLE
+
+These get created automatically through some code I found here:
+[[http://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html][Emacs, Ispell and Abbrev, the Perfect Auto-Correct]]
+
+2. Expansion of text shortcuts
+
+bc → because 
+
+#+BEGIN_EXAMPLE 
+("bc" "because" nil 455) 
+#+END_EXAMPLE
+
+These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word.
+
+For ONLY the #2 "expansion of text shortcuts", I would like to:
+- [ ] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
+- [ ] also convert them to TextExpander format, which I can also open-source share with other people.
+
+Basically I want to offer these expansions in two formats. 
+
+That's my goal for this latest task. Does that make sense? 
+
+Thanks,
+Jay
