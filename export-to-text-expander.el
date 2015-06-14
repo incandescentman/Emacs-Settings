@@ -30,11 +30,14 @@
         collect `(dict (key "abbreviation")
                        (string ,abbrev)
                        (key "abbreviationMode")
-                       (integer 2) ; I think this is case sensitivity. 2 is adapt snippet?
+                       (integer ,(if (and (= (length abbrev) 1)
+                                          (string= abbrev (downcase abbrev)))
+                                     0
+                                   2))
                        (key "creationDate")
                        (date ,(format-time-string "%FT%T%z"))
                        (key "flags")
-                       (integer 0) ; TODO No idea what this is...
+                       (integer 0)      ; TODO No idea what this is...
                        (key "label")
                        (string "")
                        (key "lastUsed")
@@ -44,7 +47,7 @@
                        (key "plainText")
                        (string ,expansion)
                        (key "snippetType")
-                       (integer 0) ; TODO No idea what this is...
+                       (integer 0)      ; TODO No idea what this is...
                        (key "useCount")
                        (integer ,count)
                        (key "uuidString")
