@@ -157,6 +157,24 @@
       (goto-char start)
       (my/fix-space))))
 
+
+;;; new version; not thoroughly tested
+(defun minibuffer-pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+	(end (if mark-active
+		 (mark)
+	       (point))))
+    (shell-command-on-region start end
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
+
+    (save-excursion
+
+      )))
+
+
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
   (interactive)
@@ -190,6 +208,9 @@
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+
 
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)

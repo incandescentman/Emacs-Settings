@@ -188,17 +188,25 @@ clipboards to work from. The below are the traditional OSX keybindings for
 cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
 
 
-
+** Setup
 #+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
+#+END_SRC
+ 
+** pasteboard-copy
+#+BEGIN_SRC emacs-lisp
 
 (defun pasteboard-copy()
   "Copy region to OS X system pasteboard."
   (interactive)
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
+#+END_SRC
 
+** pasteboard-paste
+
+#+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one (see below)
 ;; (defun pasteboard-paste()
 ;;   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -225,9 +233,11 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (save-excursion
       (goto-char start)
       (my/fix-space))))
+#+END_SRC
 
+** minibuffer-pasteboard-paste
 
-;;; new version; not thoroughly tested
+#+BEGIN_SRC emacs-lisp 
 (defun minibuffer-pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -242,8 +252,11 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (save-excursion
 
       )))
+#+END_SRC
 
+** pasteboard-cut
 
+#+BEGIN_SRC emacs-lisp 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
   (interactive)
@@ -517,7 +530,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 * Custom functions
 
-#+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one
 ;; (defun my/fix-space ()
 ;; "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -527,6 +539,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; (looking-at "[[:punct:]]"))
 ;; (delete-horizontal-space))) 
 
+
+** my/fix-space
+
+#+BEGIN_SRC emacs-lisp 
 ;;; new version
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -594,9 +610,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
   (my/fix-space)
-(when (not (looking-back "---") ; I added this 
+(when (not (looking-back "---")); I added this 
 (jay/insert-space) 
-)) 
+) 
 )
 #+END_SRC
 
