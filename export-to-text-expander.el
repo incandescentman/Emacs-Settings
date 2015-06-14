@@ -27,6 +27,7 @@
 
 (defun translate-abbrev-table-definitions (defs)
   (loop for (abbrev expansion count) in defs
+        unless (string= abbrev expansion)
         collect `(dict (key "abbreviation")
                        (string ,abbrev)
                        (key "abbreviationMode")
