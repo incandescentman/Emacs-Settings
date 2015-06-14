@@ -30,9 +30,10 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
+(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs t)
+(setq save-abbrevs nil)
 (setq only-global-abbrevs t)
 #+END_SRC
 
@@ -188,17 +189,25 @@ clipboards to work from. The below are the traditional OSX keybindings for
 cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
 
 
-
+** Setup
 #+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
+#+END_SRC
+ 
+** pasteboard-copy
+#+BEGIN_SRC emacs-lisp
 
 (defun pasteboard-copy()
   "Copy region to OS X system pasteboard."
   (interactive)
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
+#+END_SRC
 
+** pasteboard-paste
+
+#+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one (see below)
 ;; (defun pasteboard-paste()
 ;;   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -225,7 +234,30 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (save-excursion
       (goto-char start)
       (my/fix-space))))
+#+END_SRC
 
+** minibuffer-pasteboard-paste
+
+#+BEGIN_SRC emacs-lisp 
+(defun minibuffer-pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+	(end (if mark-active
+		 (mark)
+	       (point))))
+    (shell-command-on-region start end
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
+
+    (save-excursion
+
+      )))
+#+END_SRC
+
+** pasteboard-cut
+
+#+BEGIN_SRC emacs-lisp 
 (defun pasteboard-cut()
   "Cut region and put on OS X system pasteboard."
   (interactive)
@@ -239,17 +271,10 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** Create custom keybinding prefix 
 
-[[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][Source]]
 #+BEGIN_QUOTE
-I have an unconventional approach to this that I recommend highly. I have
-redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my
-favorite commands. This key is very easy to type and it is bound to a function
-('recenter) that isn't used that much. Well, I don't use 'recenter much, but
-even if you did, it can be assigned to C-l C-l which is almost as easy to type,
-and a small price to pay for the possibilities opened up by the
-Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the
-place of honor.)
+I have an unconventional approach to this that I recommend highly. I have redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my favorite commands. This key is very easy to type and it is bound to a function ('recenter) that isn't used that much. Well, I don't use 'recenter much, but even if you did, it can be assigned to C-l C-l which is almost as easy to type, and a small price to pay for the possibilities opened up by the Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the place of honor.)
 #+END_QUOTE
+Source: [[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][ LenW's answer on keyboard - What are good custom keybindings in emacs? - Stack Overflow]]
 
 Use ⌘-m as prefix for my own custom keybindings:
 #+BEGIN_SRC emacs-lisp
@@ -276,12 +301,17 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; unbind some existing keybindings 
 (define-key undo-tree-map (kbd "C-x r") nil)
 
-;; and the keybindings 
+;; and the keybindings
 ;; mk - mykeybindings
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+
+(define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
+
 
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
@@ -435,7 +465,8 @@ Make ~kill-sentence~ work in a more intuitive way:
   (kill-sentence)
   (push-mark)
   (insert ".")
-  (backward-char))
+  (backward-char)
+)
 #+END_SRC
 
 [[http://emacs.stackexchange.com/questions/12266/how-change-behavior-of-kill-sentence-based-on-position-in-sentence/12321?iemail=1&noredirect=1#12321][Source]]
@@ -466,7 +497,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         (just-one-space)
         (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
       (kill-region (point) (progn (my/forward-to-sentence-end) (point)))
-      (just-one-space 0)))
+      (just-one-space 0))
+(when (looking-at ".. ")
+(delete-forward-char 1)) 
+)
 
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
@@ -496,7 +530,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 * Custom functions
 
-#+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one
 ;; (defun my/fix-space ()
 ;; "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -506,6 +539,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; (looking-at "[[:punct:]]"))
 ;; (delete-horizontal-space))) 
 
+
+** my/fix-space
+
+#+BEGIN_SRC emacs-lisp 
 ;;; new version
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -513,7 +550,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "---[[:space:]]+")
-            (looking-at "[[:punct:]]"))
+            (looking-at "[[:punct:]]") 
+            (looking-back "\" ") 
+            (looking-at " \"")
+            ) 
     (delete-horizontal-space)))
 #+END_SRC
 
@@ -548,7 +588,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** BACKWARD kill word correctly 
+** very old BACKWARD kill word correctly 
 
 #+BEGIN_SRC emacs-lisp
 ;;; old version; remove after testing new one below
@@ -564,17 +604,32 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;;   (my/fix-space)
 ;;   (jay/insert-space) ; I added this line, I think it works.
 ;; ) 
+#+END_SRC
 
-;;; new version
+
+** TODO new BACKWARD kill word correctly                              :rudi: 
+Rúdi: desired behavior is that backward-kill-word-correctly should leave a space after the remaining word left of the point, UNLESS point is at the beginning of the line or after "---"
+
+My implementation below seems to work, but it seems very slow. Is it possible to make it faster? Thanks! 
+
+#+BEGIN_SRC emacs-lisp 
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
-  (my/fix-space)
-  (jay/insert-space) ; I added this line, I think it works.
-  )
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
+(jay/insert-space) 
+) 
+)
 #+END_SRC
 
 *** my delete backward
@@ -986,6 +1041,19 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
+** smart-hyphen
+#+BEGIN_SRC emacs-lisp 
+(defun smart-hyphen ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "-")
+)
+(define-key org-mode-map (kbd "-") 'smart-hyphen)
+#+END_SRC
+
+
 * TODO cycle punctuation                                               :rudi:
 
 If you think this whole approach above of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
@@ -1126,6 +1194,46 @@ http://smilesoftware.com/help/TextExpander/groups.html
 Take a look and let me know whether that's helpful. If not you may ask a question on StackExchange? Or if not I can contact Smile support.
 
 Thank you! Let me know. 
+
+Thanks,
+Jay
+
+** results of testing backward-kill-word-correctly.
+
+: The quick brown fox jumped---jumped high.
+
+
+* TODO New note about the abbrevs file :rudi:
+Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrevs:
+
+1. Typographical error corrections
+
+Ghandi → Gandhi 
+
+#+BEGIN_EXAMPLE 
+("Ghandi" "Gandhi" nil 0) 
+#+END_EXAMPLE
+
+These get created automatically through some code I found here:
+[[http://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html][Emacs, Ispell and Abbrev, the Perfect Auto-Correct]]
+
+2. Expansion of text shortcuts
+
+bc → because 
+
+#+BEGIN_EXAMPLE 
+("bc" "because" nil 455) 
+#+END_EXAMPLE
+
+These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
+
+For ONLY the #2 "expansion of text shortcuts", I would like to:
+- [ ] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
+- [ ] also convert them to TextExpander format, which I can also open-source share with other people.
+
+Basically I want to offer these expansions in two formats. 
+
+That's my goal for this latest task. Does that make sense? 
 
 Thanks,
 Jay
