@@ -1,27 +1,30 @@
 (require 'xmlgen)
 (require 'uuidgen)
 (require 'cl)
+(require 'pp)
 
 
 ;;; Returns plist:
 ;;;   (<table symbol> ({(<abbrev> <expansion> <count>)}*))
-(defun all-abbrevs ()
+(cl-defun all-abbrevs (&key where)
   (mapcan (lambda (table-symbol)
-            (let ((table (symbol-value table-symbol)))
+            (let ((table (symbol-value table-symbol))
+                  defs)
               ;; HACK! We're shamefully breaking the abstraction
               ;; barrier, but the abbrevs-table inteface is too opaque
               ;; for our purposes.
-              (list table-symbol
-                    (let (defs)
-                      (mapatoms (lambda (abbrev-symbol)
-                                  (let ((expansion (symbol-value abbrev-symbol)))
-                                    (when expansion
-                                      (push (list (symbol-name abbrev-symbol) ; abbrev
-                                                  expansion
-                                                  (abbrev-get abbrev-symbol :count))
-                                            defs)))) ;count
-                                table)
-                      defs))))
+              (mapatoms (lambda (abbrev-symbol)
+                          (let ((expansion (symbol-value abbrev-symbol)))
+                            (when (and expansion
+                                       (or (null where)
+                                           (funcall where abbrev-symbol)))
+                              (push (list (symbol-name abbrev-symbol) ; abbrev
+                                          expansion
+                                          (abbrev-get abbrev-symbol :count))
+                                    defs)))) ;count
+                        table)
+              (when defs
+                (list table-symbol defs))))
           abbrev-table-name-list))
 
 
@@ -62,19 +65,56 @@
     (terpri (current-buffer))))
 
 
+(defun insert-abbrev-defs-as-table-definitions (table defs)
+  (insert
+   (pp-to-string
+    `(define-abbrev-table ',table
+       '(,@(mapcar (lambda (def)
+                     `(,(first def)
+                       ,(second def)
+                       nil
+                       ,(third def)))
+                   defs))))))
+
+
 (defvar *max-exported-abbrev-length* 4)
+
+
+(defun all-exportable-abbrevs ()
+  (apply 'all-abbrevs
+         (when *max-exported-abbrev-length*
+           (list :where (lambda (abbrev-symbol)
+                          (<= (length (symbol-name abbrev-symbol))
+                              *max-exported-abbrev-length*))))))
+
+
+(defun export-abbrevs-to-emacs (abbrevs)
+  (let ((buffer (generate-new-buffer "exported.abbrev_defs")))
+    (switch-to-buffer buffer)
+    (loop for (table defs) on abbrevs by #'cddr
+          do (insert-abbrev-defs-as-table-definitions table defs)
+             (terpri (current-buffer)))))
+
+
+(defun export-abbrevs-to-text-expander (abbrevs)
+  (let ((buffer (generate-new-buffer "snippets.xml")))
+    (switch-to-buffer buffer)
+    (loop for (table defs) on abbrevs by #'cddr
+          do (insert-abbrev-defs-converted-to-text-expander defs))))
+
+
+(defun export-abbrevs ()
+  "Exports all abbrevs, with length lesser or equal to
+  `*max-exported-abbrev-length*', to:
+  - a new buffer containing only `define-abbrev-table' forms;
+  - a different new buffer, containing TextExpander snippets."
+  (interactive)
+  (let ((abbrevs (all-exportable-abbrevs)))
+    (export-abbrevs-to-emacs abbrevs)
+    (export-abbrevs-to-text-expander abbrevs)))
 
 
 (defun export-all-abbrevs-to-text-expander ()
   (interactive)
-  (let ((buffer (generate-new-buffer "snippets.xml")))
-    (switch-to-buffer buffer)
-    (loop for (table defs) on (all-abbrevs) by #'cddr
-          do (insert-abbrev-defs-converted-to-text-expander
-              (if *max-exported-abbrev-length*
-                  (remove-if (lambda (def)
-                               (> (length (first def))
-                                  *max-exported-abbrev-length*))
-                             defs)
-                defs)))))
+  (export-abbrevs-to-text-expander (all-exportable-abbrevs)))
 
