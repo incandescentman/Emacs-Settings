@@ -32,7 +32,7 @@ Automatically load abbreviations table:
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs t)
+(setq save-abbrevs nil)
 (setq only-global-abbrevs t)
 #+END_SRC
 
@@ -1038,6 +1038,19 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
+** smart-hyphen
+#+BEGIN_SRC emacs-lisp 
+(defun smart-hyphen ()
+  (interactive)
+(expand-abbrev)
+(when (looking-back "[[:space:]]+") (delete-horizontal-space))
+; TODO also delete existing punctuation 
+(insert "-")
+)
+(define-key org-mode-map (kbd "-") 'smart-hyphen)
+#+END_SRC
+
+
 * TODO cycle punctuation                                               :rudi:
 
 If you think this whole approach above of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
@@ -1209,7 +1222,7 @@ bc → because
 ("bc" "because" nil 455) 
 #+END_EXAMPLE
 
-These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word.
+These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
 
 For ONLY the #2 "expansion of text shortcuts", I would like to:
 - [ ] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
