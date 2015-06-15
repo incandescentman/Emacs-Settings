@@ -691,7 +691,7 @@ My implementation below seems to work, but it seems very slow. Is it possible to
 )
 #+END_SRC
 
-*** my delete backward
+*** TODO my delete backward                                          :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active: 
@@ -735,6 +735,17 @@ My implementation below seems to work, but it seems very slow. Is it possible to
       (my/fix-space))))
 #+END_SRC
 
+Rúdi: Can we something like this the below to my/delete-backward, so that if I delete the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+
+#+BEGIN_QUOTE
+(if (my/beginning-of-sentence-p)
+(progn
+(capitalize-word)
+ (left-word)
+))) 
+#+END_QUOTE 
+
+*** timesvr
 
 #+BEGIN_SRC emacs-lisp 
 (defun timesvr ()
@@ -806,14 +817,13 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
 
-(defun org-indent-reflash ()
+(defun reflash- ()
 "One sentence summary of what this command do."
   (interactive)
-(org-indent
-
-) 
+  (org-indent-mode 1)
+  ) 
 
 #+END_SRC
 
