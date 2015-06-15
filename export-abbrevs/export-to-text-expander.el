@@ -39,15 +39,15 @@
                                      0
                                    2))
                        (key "creationDate")
-                       (date ,(format-time-string "%FT%T%z"))
+                       (date ,(format-time-string "%FT%TZ" (current-time) t))
                        (key "flags")
                        (integer 0)      ; TODO No idea what this is...
                        (key "label")
                        (string "")
                        (key "lastUsed")
-                       (date ,(format-time-string "%FT%T%z"))
+                       (date ,(format-time-string "%FT%TZ" (current-time) t))
                        (key "modificationDate")
-                       (date ,(format-time-string "%FT%T%z"))
+                       (date ,(format-time-string "%FT%TZ" (current-time) t))
                        (key "plainText")
                        (string ,expansion)
                        (key "snippetType")
