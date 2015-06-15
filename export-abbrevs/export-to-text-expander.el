@@ -55,7 +55,7 @@
                        (key "useCount")
                        (integer ,count)
                        (key "uuidString")
-                       (string ,(uuidgen-1))
+                       (string ,(upcase (uuidgen-1)))
                        )))
 
 
