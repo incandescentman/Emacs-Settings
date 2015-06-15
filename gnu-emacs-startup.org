@@ -331,6 +331,12 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
+
+
+(define-key key-minor-mode-map (kbd "C-S-l") 'reflash-indentation)
+(define-key key-minor-mode-map (kbd "C-l") 'recenter-top-bottom)
+
+
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
@@ -691,7 +697,7 @@ My implementation below seems to work, but it seems very slow. Is it possible to
 )
 #+END_SRC
 
-*** TODO my delete backward                                          :rudi:
+** TODO my delete backward                                            :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active: 
@@ -745,7 +751,7 @@ Rúdi: Can we something like this the below to my/delete-backward, so that if I 
 ))) 
 #+END_QUOTE 
 
-*** timesvr
+** timesvr
 
 #+BEGIN_SRC emacs-lisp 
 (defun timesvr ()
@@ -819,7 +825,7 @@ provided the (transient) mark is active."
  
 (define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
 
-(defun reflash- ()
+(defun reflash-indentation ()
 "One sentence summary of what this command do."
   (interactive)
   (org-indent-mode 1)
