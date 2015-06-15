@@ -14,7 +14,7 @@
 
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
-;; (set (make-local-variable 'abbrev-file-name) '("~/Dropbox/elisp/own-ab brevs.abbrev_defs")) 
+(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs nil)
 (setq only-global-abbrevs t)
@@ -200,7 +200,7 @@
 ;; unbind some existing keybindings 
 (define-key undo-tree-map (kbd "C-x r") nil)
 
-;; and the keybindings 
+;; and the keybindings
 ;; mk - mykeybindings
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
@@ -208,6 +208,8 @@
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+
+(define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
 
 ;; pop mark
