@@ -645,8 +645,7 @@ I didn't hurt myself.
 I still remember that day.
 #+END_QUOTE
 
-Is it possible to fix this, or does the invocation of left-word mess things up? Thanks! 
-
+Your implementation of kill-word-correctly works properly in both the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
 
 ** very old BACKWARD kill word correctly 
 
