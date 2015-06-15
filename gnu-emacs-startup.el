@@ -16,7 +16,7 @@
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs nil)
+(setq save-abbrevs t)
 (setq only-global-abbrevs t)
 
 (tooltip-mode -1)
@@ -228,7 +228,7 @@
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
-(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly)
+(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
@@ -421,6 +421,27 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space)) ; and finally fix space
+
+(defun kill-word-correctly-and-capitalize ()
+  "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(if (my/beginning-of-sentence-p)
+      (progn
+(expand-abbrev)
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)
+(endless/capitalize) 
+) 
+(progn
+(expand-abbrev)
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)) ; and finally fix space 
+) 
+)
 
 ;;; old version; remove after testing new one below
 ;; (defun backward-kill-word-correctly ()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+	<key>groupInfo</key>
+	<dict>
+	    <key>expandAfterMode</key>
+	    <integer>0</integer>
+	    <key>groupName</key>
+	    <string>emacs-abbrevs</string>
+	</dict>
+	<key>snippetsTE2</key>
+	<array> 
+<dict>
+  <key>abbreviation</key>
+  <string>r</string>
+  <key>abbreviationMode</key>
+  <integer>0</integer>
+  <key>creationDate</key>
+  <date>2015-06-15T19:20:37Z</date>
+  <key>flags</key>
+  <integer>0</integer>
+  <key>label</key>
+  <string></string>
+  <key>lastUsed</key>
+  <date>2015-06-15T19:20:37Z</date>
+  <key>modificationDate</key>
+  <date>2015-06-15T19:20:37Z</date>
+  <key>plainText</key>
+  <string>are</string>
+  <key>snippetType</key>
+  <integer>0</integer>
+  <key>useCount</key>
+  <integer>1302</integer>
+  <key>uuidString</key>
+  <string>9A1619E4-1393-11E5-B233-14109FE34F3D</string>
+</dict> 
+        </array>
+    </dict>
+</plist>

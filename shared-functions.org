@@ -3016,6 +3016,10 @@ Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
 (define-hyper-key "m cy" 'cyberpunk-jay) 
 (define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m zb" 'zenburn) 
+(define-hyper-key "m lv" 'leuven) 
+;; (define-hyper-key "m cl" 'cyberpunk-large) 
+
 (define-hyper-key "m cw" 'cyberpunk-writeroom) 
 (define-hyper-key "m wb" 'whiteboard) 
 (define-hyper-key "m sl" 'solarized-light)
