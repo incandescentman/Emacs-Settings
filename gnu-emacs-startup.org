@@ -619,7 +619,7 @@ Rúdi,
 
 Note that I added capitalize-word and left-word to the above. My goal is to instruct Emacs to check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly.
 
-What I did above works, but it breaks when it deals with punctuation. Example:
+What I did above works, but it breaks when it deals with punctuation. Example #1:
 
 : My fascination began when I was four years old. For some reason, I was immediately intrigued. 
 
@@ -627,7 +627,26 @@ Let's say the point is on the F in For, and my goal is to invoke kill-word-corre
 
 : My fascination began when I was four years old. I was immediately intrigued. 
 
-As you can see, the comma handling gets messed up. Is it possible to fix this, or does the invocation of left-word mess things up? Thanks! 
+As you can see, the comma handling gets messed up. 
+
+Example #2:
+
+#+BEGIN_QUOTE
+I didn't hurt myself. Meanwhile, 
+
+I still remember that day.
+#+END_QUOTE
+
+Let's say the point is on the M in Meanwhile, and my goal is to invoke kill-word-correctly-and-capitalize twice, deleting the word plus the comma to wind up with this: 
+
+#+BEGIN_QUOTE
+I didn't hurt myself. 
+
+I still remember that day.
+#+END_QUOTE
+
+Is it possible to fix this, or does the invocation of left-word mess things up? Thanks! 
+
 
 ** very old BACKWARD kill word correctly 
 
@@ -790,6 +809,12 @@ provided the (transient) mark is active."
  
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
+(defun org-indent-reflash ()
+"One sentence summary of what this command do."
+  (interactive)
+(org-indent
+
+) 
 
 #+END_SRC
 
@@ -1278,3 +1303,4 @@ That's my goal for this latest task. Does that make sense?
 
 Thanks,
 Jay
+
