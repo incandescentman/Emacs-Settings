@@ -392,6 +392,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
             (looking-at "[[:punct:]]") 
             (looking-back "\" ") 
             (looking-at " \"")
+(looking-back"( ")
+(looking-at " )") 
             ) 
     (delete-horizontal-space)))
 
