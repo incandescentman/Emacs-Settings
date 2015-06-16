@@ -10,4 +10,4 @@ I believe it's the bookmarklet labeled "Text"
 javascript:window.location='x-devonthink://createText?location='+encodeURIComponent(window.location)+'&text='+encodeURIComponent(getSelection()); 
 #+END_SRC
 
-It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks!
+It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
