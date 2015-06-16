@@ -192,3 +192,174 @@ I will implement it like that (no memory) since not only it is the more logical 
 
 : 
 
+
+* DONE New note about the abbrevs file                                 :rudi:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-16 Tue 14:06
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :END:
+Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrevs:
+
+1. Typographical error corrections
+
+Ghandi → Gandhi 
+
+#+BEGIN_EXAMPLE 
+("Ghandi" "Gandhi" nil 0) 
+#+END_EXAMPLE
+
+These get created automatically through some code I found here:
+[[http://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html][Emacs, Ispell and Abbrev, the Perfect Auto-Correct]]
+
+2. Expansion of text shortcuts
+
+bc → because 
+
+#+BEGIN_EXAMPLE 
+("bc" "because" nil 455) 
+#+END_EXAMPLE
+
+These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
+
+For ONLY the #2 "expansion of text shortcuts", I would like to:
+- [X] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
+- [X] also convert them to TextExpander format, which I can also open-source share with other people.
+
+Basically I want to offer these expansions in two formats. 
+
+That's my goal for this latest task. Does that make sense? 
+
+Thanks,
+Jay
+
+
+* DONE [#A] a different kind of request 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-16 Tue 14:06
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :END:
+Hi Rúdi, 
+
+Here's a different kind of request. If you're interested, maybe we could make it the top priority. However, it's not strictly speaking hacking in elisp, so feel free to turn it down if it doesn't interest you and we can just proceed with the Emacs functions.
+
+I'd like to make some of my many Emacs abbrevs shortcuts available in other applications. On my Mac OSX, I use an app called TextExpander to expand text. So I'd like to convert my abbrevs file to TextExpander format.
+
+This task involves programmatically converting an abbrevs file, which looks something like this:
+
+#+BEGIN_QUOTE
+(define-abbrev-table 'global-abbrev-table '(
+ ("qo" "without" nil 1)
+ ("ty" "they" nil 3)
+ ("tyr" "they're" nil 5)
+)) 
+#+END_QUOTE
+
+...into a TextExpander file, which looks something like this:
+
+#+BEGIN_QUOTE
+<dict>
+			<key>abbreviation</key>
+			<string>qo</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:04:09Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>lastUsed</key>
+			<date>2015-06-11T01:05:05Z</date>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:04:14Z</date>
+			<key>plainText</key>
+			<string>without</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>12D393EE-F929-4F9B-AFF6-F43D718E8048</string>
+		</dict>
+		<dict>
+			<key>abbreviation</key>
+			<string>ty</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:03:06Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:03:06Z</date>
+			<key>plainText</key>
+			<string>they</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>6341B244-BC48-48B9-8E1E-ABAF34C44BC3</string>
+		</dict>
+		<dict>
+			<key>abbreviation</key>
+			<string>tyr</string>
+			<key>abbreviationMode</key>
+			<integer>2</integer>
+			<key>creationDate</key>
+			<date>2015-06-11T01:03:02Z</date>
+			<key>flags</key>
+			<integer>0</integer>
+			<key>label</key>
+			<string></string>
+			<key>lastUsed</key>
+			<date>2015-06-11T01:03:31Z</date>
+			<key>modificationDate</key>
+			<date>2015-06-11T01:03:02Z</date>
+			<key>plainText</key>
+			<string>they're</string>
+			<key>snippetType</key>
+			<integer>0</integer>
+			<key>useCount</key>
+			<integer>0</integer>
+			<key>uuidString</key>
+			<string>A1A1B41E-B8BF-4562-B977-143419E30695</string>
+		</dict>
+#+END_QUOTE
+
+Let me know if this interests you, and if so, I'll send you my abbrev file. Again, if not, no worries. Thanks!
+** DONE Request for clarification                            :followup:
+
+   Sure, I'll handle it. It sure is just hacking elisp...
+
+: Excellent. :-) 
+
+   Here's my proposal: a new function, say ~abbrev-table-export-to-text-expander~, which prompts you for the abbrev table name, and creates a new buffer with the result of converting to TextExpander, which you then can save in the location you desire. Does that look good?
+
+: It would be cool if I could just export all my existing abbrevs. Here's what I would like to do: export all my abbrevs where the abbrev is 4 characters or less. No confirmation, no prompt. 
+: e.g. ehrs → behaviors 
+: anything longer than that, I don't need to export to TextExpander.
+: Is this feasible?
+
+   Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no available.
+
+: Good question. The format is called TextExpander for OSX. 
+
+http://smilesoftware.com/help/TextExpander/creating.html 
+
+http://brettterpstra.com/2013/01/04/mass-creating-textexpander-snippets/ 
+
+http://smilesoftware.com/help/TextExpander%204%20Help.pdf 
+
+http://smilesoftware.com/help/TextExpander/groups.html 
+
+Take a look and let me know whether that's helpful. If not you may ask a question on StackExchange? Or if not I can contact Smile support.
+
+Thank you! Let me know. 
+
+Thanks,
+Jay

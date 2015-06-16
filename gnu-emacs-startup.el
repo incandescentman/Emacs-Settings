@@ -653,47 +653,103 @@ provided the (transient) mark is active."
           (replace-match (format "%s - clone" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
 
+(defvar *smart-punctuation-exceptions*
+  (list "?!" "..." "---"))
+
+(defun smart-punctuation (new-punct)
+  (expand-abbrev)
+  (let (exception)
+    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[[:space:]]*\\="
+                                    nil t))
+           (insert new-punct))
+          ((setf exception
+                 (let ((potential-new-punct
+                        (concat (match-string 1) new-punct)))
+                   (find-if (lambda (exception)
+                              (search potential-new-punct exception))
+                            *smart-punctuation-exceptions*)))
+           (replace-match exception)
+           (my/fix-space))
+          (t
+           (replace-match new-punct)
+           (my/fix-space)))))
+
+;;; old version; remove after testing new one
+;; (defun smart-period ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert ".")
+;; )
+
+;;; new version
 (defun smart-period ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert ".")
-)
+  (smart-punctuation "."))
+
 (define-key org-mode-map (kbd ".") 'smart-period)
 
+;;; old version; remove after testing new one
+;; (defun smart-comma ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert ",")
+;; )
+
+;;; new version
 (defun smart-comma ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert ",")
-)
+  (smart-punctuation ","))
+
 (define-key org-mode-map (kbd ",") 'smart-comma)
 
+;;; old version; remove after testing new one
+;; (defun smart-question-mark ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "?")
+;; )
+
+;;; new version
 (defun smart-question-mark ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "?")
-)
+  (smart-punctuation "?"))
+
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 
+;;; old version; remove after testing new one
+;; (defun smart-exclamation-point ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "!")
+;; )
+
+;;; new version
 (defun smart-exclamation-point ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "!")
-)
+  (smart-punctuation "!"))
+
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 
+;;; old version; remove after testing new one
+;; (defun smart-hyphen ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "-")
+;; )
+
+;;; new version
 (defun smart-hyphen ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "-")
-)
+  (smart-punctuation "-"))
+
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
