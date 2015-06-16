@@ -1094,6 +1094,21 @@ so it doesn't invoke when it's at the beginning of a line. I need to be able to 
 ...and ellipses at the beginning of lines like this.
 
 #+END_EXAMPLE
+* TODO no space between end of word and punctuation mark :rudi:
+Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
 
+#+BEGIN_EXAMPLE
+The night is dark But the day is bright. 
+#+END_EXAMPLE
+* 
+Such that, for instance, if the point is on the B in But, and I hit "." Emacs will automatically remove the unwanted space, so that I get this: 
 
-The rain - the rain-storm of the century---this is what we live for! 
+: The night is dark. But the day is bright. 
+
+...instead of this:
+
+: The night is dark .But the day is bright. 
+
+I presume that changing this will have the same effect on , ; : ! and ?
+
+Thanks!

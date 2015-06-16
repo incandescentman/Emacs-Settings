@@ -674,82 +674,26 @@ provided the (transient) mark is active."
            (replace-match new-punct)
            (my/fix-space)))))
 
-;;; old version; remove after testing new one
-;; (defun smart-period ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ".")
-;; )
-
-;;; new version
 (defun smart-period ()
   (interactive)
   (smart-punctuation "."))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 
-;;; old version; remove after testing new one
-;; (defun smart-comma ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ",")
-;; )
-
-;;; new version
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ","))
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
 
-;;; old version; remove after testing new one
-;; (defun smart-question-mark ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "?")
-;; )
-
-;;; new version
 (defun smart-question-mark ()
   (interactive)
   (smart-punctuation "?"))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 
-;;; old version; remove after testing new one
-;; (defun smart-exclamation-point ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "!")
-;; )
-
-;;; new version
 (defun smart-exclamation-point ()
   (interactive)
   (smart-punctuation "!"))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
-
-;;; old version; remove after testing new one
-;; (defun smart-hyphen ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "-")
-;; )
-
-;;; new version
-(defun smart-hyphen ()
-  (interactive)
-  (smart-punctuation "-"))
-
-(define-key org-mode-map (kbd "-") 'smart-hyphen)
