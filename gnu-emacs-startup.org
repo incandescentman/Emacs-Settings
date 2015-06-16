@@ -1082,7 +1082,7 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (defun smart-punctuation (new-punct)
   (expand-abbrev)
   (let (exception)
-    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[[:space:]]*\\="
+    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[ 	]*\\="
                                     nil t))
            (insert new-punct))
           ((setf exception
