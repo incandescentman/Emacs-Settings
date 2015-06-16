@@ -33,7 +33,7 @@ Automatically load abbreviations table:
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs")) 
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
-(setq save-abbrevs nil)
+(setq save-abbrevs t)
 (setq only-global-abbrevs t)
 #+END_SRC
 
@@ -329,8 +329,14 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
-(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly)
+(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
+
+
+(define-key key-minor-mode-map (kbd "C-S-l") 'reflash-indentation)
+(define-key key-minor-mode-map (kbd "C-l") 'recenter-top-bottom)
+
+
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
@@ -561,7 +567,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-** forward kill word correctly
+** kill word correctly
 #+BEGIN_SRC emacs-lisp
 ;;; old version; remove after testing new one below
 ;; (defun kill-word-correctly ()
@@ -589,6 +595,63 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (my/fix-space)) ; and finally fix space
 #+END_SRC
 
+** 
+** TODO kill word correctly and capitalize                            :rudi:
+#+BEGIN_SRC emacs-lisp 
+(defun kill-word-correctly-and-capitalize ()
+  "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(if (my/beginning-of-sentence-p)
+      (progn
+(expand-abbrev)
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)
+(capitalize-word 1) 
+(left-word)
+) 
+(progn
+(expand-abbrev)
+  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+    (kill-word 1))                                    ; ELSE kill word
+  (my/fix-space)) ; and finally fix space 
+) 
+)
+#+END_SRC
+
+Rúdi,
+
+Note that I added capitalize-word and left-word to the above. My goal is to instruct Emacs to check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly.
+
+What I did above works, but it breaks when it deals with punctuation. Example #1:
+
+: My fascination began when I was four years old. For some reason, I was immediately intrigued. 
+
+Let's say the point is on the F in For, and my goal is to invoke kill-word-correctly-and-capitalize 4 times, deleting those 3 words plus the comma to wind up with this:
+
+: My fascination began when I was four years old. I was immediately intrigued. 
+
+As you can see, the comma handling gets messed up. 
+
+Example #2:
+
+#+BEGIN_QUOTE
+I didn't hurt myself. Meanwhile, 
+
+I still remember that day.
+#+END_QUOTE
+
+Let's say the point is on the M in Meanwhile, and my goal is to invoke kill-word-correctly-and-capitalize twice, deleting the word plus the comma to wind up with this: 
+
+#+BEGIN_QUOTE
+I didn't hurt myself. 
+
+I still remember that day.
+#+END_QUOTE
+
+Your implementation of kill-word-correctly works properly in both the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
 
 ** very old BACKWARD kill word correctly 
 
@@ -634,7 +697,7 @@ My implementation below seems to work, but it seems very slow. Is it possible to
 )
 #+END_SRC
 
-*** my delete backward
+** TODO my delete backward                                            :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active: 
@@ -678,6 +741,17 @@ My implementation below seems to work, but it seems very slow. Is it possible to
       (my/fix-space))))
 #+END_SRC
 
+Rúdi: Can we something like this the below to my/delete-backward, so that if I delete the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+
+#+BEGIN_QUOTE
+(if (my/beginning-of-sentence-p)
+(progn
+(capitalize-word)
+ (left-word)
+))) 
+#+END_QUOTE 
+
+** timesvr
 
 #+BEGIN_SRC emacs-lisp 
 (defun timesvr ()
@@ -749,8 +823,13 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
 
+(defun reflash-indentation ()
+"One sentence summary of what this command do."
+  (interactive)
+  (org-indent-mode 1)
+  ) 
 
 #+END_SRC
 
@@ -1239,3 +1318,4 @@ That's my goal for this latest task. Does that make sense?
 
 Thanks,
 Jay
+

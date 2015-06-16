@@ -320,6 +320,11 @@
  '(safe-local-variable-values
    (quote
     ((eval when
+           (require
+            (quote rainbow-mode)
+            nil t)
+           (rainbow-mode 1))
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))

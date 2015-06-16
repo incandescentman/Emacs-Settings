@@ -215,3 +215,11 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (set-frame-width (selected-frame) 89)
   )
 
+
+
+(defun leuven ()
+  (interactive)
+  (load-theme 'leuven)
+  (incarnadine-cursor)
+  (org-mode)
+  )
