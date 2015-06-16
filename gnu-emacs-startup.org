@@ -1075,63 +1075,123 @@ In other words, if the point is after a ; : , ! ? or . and then I hit a punctuat
 
 Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones.
 
+** smart-punctuation (auxiliary)
+
+#+BEGIN_SRC emacs-lisp 
+(defvar *smart-punctuation-exceptions*
+  (list "?!" "..." "---"))
+
+(defun smart-punctuation (new-punct)
+  (expand-abbrev)
+  (let (exception)
+    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[[:space:]]*\\="
+                                    nil t))
+           (insert new-punct))
+          ((setf exception
+                 (let ((potential-new-punct
+                        (concat (match-string 1) new-punct)))
+                   (find-if (lambda (exception)
+                              (search potential-new-punct exception))
+                            *smart-punctuation-exceptions*)))
+           (replace-match exception)
+           (my/fix-space))
+          (t
+           (replace-match new-punct)
+           (my/fix-space)))))
+#+END_SRC
+
 ** smart-period
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun smart-period ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert ".")
+;; )
+
+;;; new version
 (defun smart-period ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert ".")
-)
+  (smart-punctuation "."))
+
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
 ** smart-comma
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun smart-comma ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert ",")
+;; )
+
+;;; new version
 (defun smart-comma ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert ",")
-)
+  (smart-punctuation ","))
+
 (define-key org-mode-map (kbd ",") 'smart-comma)
 #+END_SRC
 
 ** smart-question-mark
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun smart-question-mark ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "?")
+;; )
+
+;;; new version
 (defun smart-question-mark ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "?")
-)
+  (smart-punctuation "?"))
+
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
 ** smart-exclamation-point
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun smart-exclamation-point ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "!")
+;; )
+
+;;; new version
 (defun smart-exclamation-point ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "!")
-)
+  (smart-punctuation "!"))
+
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
 ** smart-hyphen
 #+BEGIN_SRC emacs-lisp 
+;;; old version; remove after testing new one
+;; (defun smart-hyphen ()
+;;   (interactive)
+;; (expand-abbrev)
+;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
+;; ; TODO also delete existing punctuation 
+;; (insert "-")
+;; )
+
+;;; new version
 (defun smart-hyphen ()
   (interactive)
-(expand-abbrev)
-(when (looking-back "[[:space:]]+") (delete-horizontal-space))
-; TODO also delete existing punctuation 
-(insert "-")
-)
+  (smart-punctuation "-"))
+
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
