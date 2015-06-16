@@ -317,14 +317,12 @@
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
+ '(rm-blacklist
+   (quote
+    (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
     ((eval when
-           (require
-            (quote rainbow-mode)
-            nil t)
-           (rainbow-mode 1))
-     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -428,7 +426,7 @@
      (define-key org-mode-map [C-left] 'org-metaleft)
      (define-key org-mode-map [C-up] 'org-metaup)
      (define-key org-mode-map [C-down] 'org-metadown)
-     (define-key org-mode-map [C-S-return] 'org-insert-todo-Heading)
+     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
      ))
 
 ;; this doesn't work though :-(

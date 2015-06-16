@@ -172,7 +172,7 @@
 (setq org-fontify-quote-and-verse-blocks t)
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
-      '((heading . t)
+      '((Heading . auto)
        (plain-list-item . nil))) 
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
@@ -760,10 +760,7 @@ Subject: %^{Subject}
  '(flyspell-abbrev-p t)
  '(flyspell-use-global-abbrev-table-p t)
  '(global-flyspell-mode t)
- '(gmm/auto-mode-list
-   (quote
-    ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
- '(grep-find-ignored-directories
+'(grep-find-ignored-directories
    (quote
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
  '(grep-find-ignored-files

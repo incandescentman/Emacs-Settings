@@ -831,6 +831,7 @@ provided the (transient) mark is active."
   (org-indent-mode 1)
   ) 
 
+
 #+END_SRC
 
 
@@ -966,13 +967,13 @@ Oleh
 #+END_SRC
 
 
-* TODO Request                                                         :rudi:
+* DONE Request 
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
 
-** DONE Request for clarification                                  :followup:
+** DONE Request for clarification 
 
    Not sure which functions you mean. The ones in the "Sentences" Heading?
-** DONE Answer                                                         :rudi:
+** DONE Answer 
 - my/fix-space
 - kill-clause
 - my-delete-backward
@@ -981,7 +982,7 @@ For the above whitespace and sentence functions, can we make it so that Emacs wi
 
 Basically I'd like to make it so that org-mode treats --- as a singles punctuation mark in any function that looks for :punct: 
 
-*** Example                                                          :rudi:
+*** Example 
 Take a look at the function kill-word-correctly. I want it so that kill-word-correctly counts --- as a word. 
 
 Take this sentence below:
@@ -1000,7 +1001,7 @@ So the first invocation should result in this:
 
 Thanks!
 
-*** DONE Note & question                                               :rudi:
+*** DONE Note & question 
 
     OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
 
@@ -1012,7 +1013,7 @@ Thanks!
 
 : Yes, automatically killing all consecutive punctuation in cases like "---" "--", "?!", and "...?" would certainly be according to my requirements. So yes, I think that solves the problem! Thank you!
 
-** TODO More questions                                             :followup:
+** DONE More questions 
 
    - ~my/fix-space~
      - What should be the difference here?
@@ -1154,7 +1155,7 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
-* TODO [#A] a different kind of request                                :rudi:
+* DONE [#A] a different kind of request 
 Hi Rúdi, 
 
 Here's a different kind of request. If you're interested, maybe we could make it the top priority. However, it's not strictly speaking hacking in elisp, so feel free to turn it down if it doesn't interest you and we can just proceed with the Emacs functions.
@@ -1247,7 +1248,7 @@ This task involves programmatically converting an abbrevs file, which looks some
 #+END_QUOTE
 
 Let me know if this interests you, and if so, I'll send you my abbrev file. Again, if not, no worries. Thanks!
-** TODO Request for clarification                                  :followup:
+** DONE Request for clarification                            :followup:
 
    Sure, I'll handle it. It sure is just hacking elisp...
 
@@ -1284,7 +1285,7 @@ Jay
 : The quick brown fox jumped---jumped high.
 
 
-* TODO New note about the abbrevs file :rudi:
+* DONE New note about the abbrevs file                                 :rudi:
 Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrevs:
 
 1. Typographical error corrections
@@ -1309,8 +1310,8 @@ bc → because
 These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
 
 For ONLY the #2 "expansion of text shortcuts", I would like to:
-- [ ] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
-- [ ] also convert them to TextExpander format, which I can also open-source share with other people.
+- [X] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
+- [X] also convert them to TextExpander format, which I can also open-source share with other people.
 
 Basically I want to offer these expansions in two formats. 
 

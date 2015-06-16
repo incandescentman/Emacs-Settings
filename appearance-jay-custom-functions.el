@@ -20,7 +20,7 @@
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco" :height 170))
+  (set-face-attribute 'default nil :font "Monaco" :height 160))
 
 (defun inconsolata-font ()
   (interactive)
@@ -35,6 +35,15 @@
   (set-face-attribute 'default nil  :height 170)
   (set-frame-width (selected-frame) 89)
   )
+
+(defun set-font-size (value)
+  "Set font size"
+  (interactive "nfont size bra? ")
+(set-face-attribute 'default nil  :height value)
+)
+
+
+
 
 (defun small-type ()
   (interactive)
