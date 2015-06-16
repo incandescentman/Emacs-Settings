@@ -24,6 +24,8 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(autopair-global-mode t)
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
@@ -59,6 +61,7 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -118,7 +121,9 @@
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
  '(org-agenda-export-html-style
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
- '(org-agenda-files (quote ("~/Dropbox/writing/notationaldata/acct-erika.org")))
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org" "~/Dropbox/writing/notationaldata/acct-erika.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)
@@ -331,6 +336,28 @@
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(writeroom-global-effects
@@ -341,6 +368,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:bold t :foreground "red"))))
+ '(hl-line ((t (:inherit highlight))))
+ '(message-header-cc ((t (:foreground "CornflowerBlue"))))
+ '(message-header-name ((t (:foreground "green2"))))
+ '(message-header-subject ((t (:foreground "pink" :weight bold))))
+ '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
+ '(message-separator ((t (:foreground "LightSkyBlue1"))))
+ '(org-headline-done ((t (:strike-through t))))
+ '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 

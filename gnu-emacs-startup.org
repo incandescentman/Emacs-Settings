@@ -1019,13 +1019,13 @@ In other words, if the point is after a ; : , ! ? or . and then I hit a punctuat
 : What the hell?!
 3. I still need to be able to indicate em dashes---that is, three hyphens in a row.
 
-Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones.
+Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones. 
 
 ** smart-punctuation (auxiliary)
 
 #+BEGIN_SRC emacs-lisp 
 (defvar *smart-punctuation-exceptions*
-  (list "?!" "..." "---"))
+  (list "?!" "..." "---" "\)."))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -1046,7 +1046,8 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
            (replace-match exception))
           (t
            (replace-match new-punct))))
-  (my/fix-space))
+;; (my/fix-space)
+)
 #+END_SRC
 
 ** smart-period
@@ -1114,7 +1115,7 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 #+END_SRC
 
 
-* TODO cycle punctuation                                               :rudi:
+* TODO [#C] cycle punctuation                                          :rudi:
 
 create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
@@ -1133,7 +1134,7 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
-* TODO Create an exception to smart-punctuation                        :rudi:
+* TODO [#B] Create an exception to smart-punctuation                   :rudi:
 so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
 
 #+BEGIN_EXAMPLE
@@ -1163,16 +1164,25 @@ I presume that changing this will have the same effect on , ; : ! and ?
 
 Thanks! 
 
-*** TODO Try it
+*** DONE Try it
 
     I have added the functionality you requested, but I'm not sure about the semicolon and colon; I added a ~smart-~ function for them too, but one that is not so smart: i.e. does not replace the previous punctuation mark; it only tries to fix the spaces around). However, it does not seem reasonable to write ".:", ".;", ":.", etc. If you wish the semi-colon and colon to have the same behaviour as the other punctuation marks (remove the previous mark), you can just remove the "t" in the call to ~smart-punctuation~. 
+*** TODO [#A] a few higher-priority requests
+Looks great! Yes, I think I'd like ; and : to work the same way. What's the argument against this? Is there some reason it might be helpful for them to operate differently? 
 
-#+BEGIN_QUOTE
-OK, looks great. I think I'd like it to work in same way for 
-#+END_QUOTE
+Here's a request. When I'm typing a sentence and I put a punctuation mark like . at the end of it, I now automatically get a space after the . This isn't a problem per see, except that I am used to hitting the space key after a punctuation mark (and will have to keep doing so in all other applications). So I'd like Emacs to /not/ insert the space automatically when I'm typing sentences. To do this, I commented out the my/fix-space at the end of smart-punctuation. Let me know if this causes any other problems. 
 
+Also: I will sometimes need to write a parenthesis followed by a period, like this: 
 
-** TODO request: backspace after expand-abbrev 
+#+BEGIN_EXAMPLE
+I am used to hitting the space key after a punctuation mark (and will have to keep doing so in all other applications). ^
+#+END_EXAMPLE
+
+To enable this, I tried adding ). to smart-punctuation-exceptions, which seems to work... but now if I go to point ^ above and hit ? it clobbers the parenthesis. Can we fix this? 
+
+Finally, can we change the behavior of smart-period such that if I forget about the cycling between period and ellipses, and I just type a word followed by hitting period 3 times, it successfully inserts an ellipsis? Maybe the best way to do this would be to just turn off the cycling between period and ellipsis for now. It's a good idea, but I want to be able to type <KB>words... </KB>
+and get an ellipsis. Thanks! 
+** TODO [#C] request: backspace after expand-abbrev 
 Hi Rúdi,
 
 To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos. 
@@ -1196,7 +1206,7 @@ beginning ^
 Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
 
 Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
-** TODO self insert space
+** TODO [#B] self insert space                                        :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
 

@@ -677,7 +677,7 @@ provided the (transient) mark is active."
           (org-align-tags-here org-tags-column))))))
 
 (defvar *smart-punctuation-exceptions*
-  (list "?!" "..." "---"))
+  (list "?!" "..." "---" "\)."))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -698,7 +698,8 @@ provided the (transient) mark is active."
            (replace-match exception))
           (t
            (replace-match new-punct))))
-  (my/fix-space))
+(my/fix-space)
+)
 
 (defun smart-period ()
   (interactive)
