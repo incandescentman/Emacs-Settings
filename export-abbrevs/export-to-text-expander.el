@@ -60,11 +60,9 @@
 
 
 (defun insert-abbrev-defs-converted-to-text-expander (defs)
-  (let ((xmlgen-escape-attribute-vals nil)
-        (xmlgen-escape-elm-vals nil))
-    (dolist (form (translate-abbrev-table-definitions defs))
-      (insert (xmlgen form nil 0 t))
-      (terpri (current-buffer)))))
+  (dolist (form (translate-abbrev-table-definitions defs))
+    (insert (xmlgen form nil 0 t))
+    (terpri (current-buffer))))
 
 
 (defun insert-abbrev-defs-as-table-definitions (table defs)
