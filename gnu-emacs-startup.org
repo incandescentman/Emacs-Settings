@@ -1161,11 +1161,16 @@ Such that, for instance, if the point is on the B in But, and I hit "." Emacs wi
 
 I presume that changing this will have the same effect on , ; : ! and ?
 
-Thanks!
+Thanks! 
 
 *** TODO Try it
 
     I have added the functionality you requested, but I'm not sure about the semicolon and colon; I added a ~smart-~ function for them too, but one that is not so smart: i.e. does not replace the previous punctuation mark; it only tries to fix the spaces around). However, it does not seem reasonable to write ".:", ".;", ":.", etc. If you wish the semi-colon and colon to have the same behaviour as the other punctuation marks (remove the previous mark), you can just remove the "t" in the call to ~smart-punctuation~. 
+
+#+BEGIN_QUOTE
+OK, looks great. I think I'd like it to work in same way for 
+#+END_QUOTE
+
 
 ** TODO request: backspace after expand-abbrev 
 Hi Rúdi,
@@ -1193,3 +1198,5 @@ Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end
 Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
 ** TODO self insert space
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
+
+

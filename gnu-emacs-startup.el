@@ -587,6 +587,29 @@ provided the (transient) mark is active."
   (org-indent-mode 1)
   ) 
 
+(defun org-insert-src-block (src-code-type)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+          '("emacs-lisp" "css"
+"dot"
+
+"latex")))
+     (list (ido-completing-read "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+END_SRC\n")
+    (previous-line 2)
+    (org-edit-src-code)))
+
+(local-set-key (kbd "C-c v e")
+               'org-edit-src-code)
+;; keybinding for inserting code blocks
+(local-set-key (kbd "C-c v i")
+               'org-insert-src-block)
+
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
       :group 'org
@@ -656,11 +679,15 @@ provided the (transient) mark is active."
 (defvar *smart-punctuation-exceptions*
   (list "?!" "..." "---"))
 
-(defun smart-punctuation (new-punct)
+(defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
+  (when (re-search-backward "[^ 	][ 	]+\\="
+                            nil t)
+    (forward-char 1))
   (let (exception)
-    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[[:space:]]*\\="
-                                    nil t))
+    (cond ((or not-so-smart
+               (not (re-search-backward "\\>\\([[:punct:]]+\\)\\="
+                                        nil t)))
            (insert new-punct))
           ((setf exception
                  (let ((potential-new-punct
@@ -668,11 +695,10 @@ provided the (transient) mark is active."
                    (find-if (lambda (exception)
                               (search potential-new-punct exception))
                             *smart-punctuation-exceptions*)))
-           (replace-match exception)
-           (my/fix-space))
+           (replace-match exception))
           (t
-           (replace-match new-punct)
-           (my/fix-space)))))
+           (replace-match new-punct))))
+  (my/fix-space))
 
 (defun smart-period ()
   (interactive)
@@ -697,3 +723,15 @@ provided the (transient) mark is active."
   (smart-punctuation "!"))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+
+(defun smart-semicolon ()
+  (interactive)
+  (smart-punctuation ";" t))
+
+(define-key org-mode-map (kbd ";") 'smart-semicolon)
+
+(defun smart-colon ()
+  (interactive)
+  (smart-punctuation ":" t))
+
+(define-key org-mode-map (kbd ":") 'smart-colon)
