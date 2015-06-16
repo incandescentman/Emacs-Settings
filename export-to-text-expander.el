@@ -68,9 +68,9 @@
                          (dict (key "expandAfterMode")
                                (integer 0)
                                (key "groupName")
-                               (string "emacs-abbrevs")))
-                   (key "snippetsTE2")
-                   (array ,@(translate-abbrev-table-definitions defs)))
+                               (string "emacs-abbrevs"))
+                         (key "snippetsTE2")
+                         (array ,@(translate-abbrev-table-definitions defs))))
            nil 0 t)))
 
 
