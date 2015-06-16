@@ -2565,6 +2565,9 @@ searches all buffers."
       ((and buffer-file-name (eq major-mode 'latex-mode)))
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
 ((and buffer-file-name (eq major-mode 'fundamental-mode))) 
+((and buffer-file-name (eq major-mode 'markdown-mode))) 
+((and buffer-file-name (eq major-mode 'nmxml-mode))) 
+((and buffer-file-name (eq major-mode 'gitignore-mode))) 
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 

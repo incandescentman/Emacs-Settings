@@ -106,7 +106,7 @@
 
 
 (defun export-abbrevs-to-text-expander (abbrevs)
-  (let ((buffer (generate-new-buffer "snippets.xml")))
+  (let ((buffer (generate-new-buffer "emacs-abbrevs.textexpander")))
     (switch-to-buffer buffer)
     (loop for (table defs) on abbrevs by #'cddr
           do (insert-abbrev-defs-converted-to-text-expander defs))))

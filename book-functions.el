@@ -66,7 +66,8 @@
 (defun book-dired()
   (interactive)
  (cyberpunk-jay)
-;; (toggle-fullscreen)
+ ;; (toggle-fullscreen)
+ (org-mode)
   (dired "~/b/"))
 
 
