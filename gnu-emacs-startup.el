@@ -394,7 +394,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (just-one-space)
   (when (or (looking-back "^[[:space:]]+")
-            (looking-back "---[[:space:]]+")
+            (looking-back "-[[:space:]]+")
             (looking-at "[[:punct:]]") 
             (looking-back "\" ") 
             (looking-at " \"")

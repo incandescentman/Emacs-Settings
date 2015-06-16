@@ -1101,16 +1101,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-period
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-period ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ".")
-;; )
-
-;;; new version
 (defun smart-period ()
   (interactive)
   (smart-punctuation "."))
@@ -1120,16 +1110,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-comma
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-comma ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ",")
-;; )
-
-;;; new version
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ","))
@@ -1139,16 +1119,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-question-mark
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-question-mark ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "?")
-;; )
-
-;;; new version
 (defun smart-question-mark ()
   (interactive)
   (smart-punctuation "?"))
@@ -1158,16 +1128,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-exclamation-point
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-exclamation-point ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "!")
-;; )
-
-;;; new version
 (defun smart-exclamation-point ()
   (interactive)
   (smart-punctuation "!"))
@@ -1176,17 +1136,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 #+END_SRC
 
 ** smart-hyphen
-#+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-hyphen ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "-")
-;; )
-
-;;; new version
 (defun smart-hyphen ()
   (interactive)
   (smart-punctuation "-"))
@@ -1197,7 +1146,7 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 * TODO cycle punctuation                                               :rudi:
 
-If you think this whole approach above of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
+create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
 : The rain in Spain falls mainly on the plains. 
 
@@ -1214,6 +1163,17 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
-* testing
-The rain falls---it falls in Spain. 
+* TODO Create an exception to smart-punctuation                        :rudi:
+so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
 
+#+BEGIN_EXAMPLE
+
+- bullet points like this 
+- or this 
+
+...and ellipses at the beginning of lines like this.
+
+#+END_EXAMPLE
+
+
+The rain - the rain-storm of the century---this is what we live for! 
