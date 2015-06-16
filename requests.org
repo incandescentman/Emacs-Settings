@@ -1,0 +1,7 @@
+
+
+#+BEGIN_SRC javascript
+javascript:window.location='x-devonthink://createText?location='+encodeURIComponent(window.location)+'&text='+encodeURIComponent(getSelection()); 
+#+END_SRC
+
+

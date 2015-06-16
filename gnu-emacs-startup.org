@@ -811,7 +811,7 @@ provided the (transient) mark is active."
 #+END_SRC
 
 
-* experiments
+* approved
 #+BEGIN_SRC emacs-lisp
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
@@ -828,10 +828,37 @@ provided the (transient) mark is active."
   (interactive)
   (org-indent-mode 1)
   ) 
+#+END_SRC
+* new experiments 
+** source code blocks
+[[http://wenshanren.org/?p%3D334][Emacs：insert source code block in org-mode | 肉山博客 (Wenshan's Blog)]]
 
+
+#+BEGIN_SRC emacs-lisp
+(defun org-insert-src-block (src-code-type)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+          '("emacs-lisp" "css"
+"dot"
+
+"latex")))
+     (list (ido-completing-read "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+END_SRC\n")
+    (previous-line 2)
+    (org-edit-src-code)))
+
+(local-set-key (kbd "C-c v e")
+               'org-edit-src-code)
+;; keybinding for inserting code blocks
+(local-set-key (kbd "C-c v i")
+               'org-insert-src-block)
 
 #+END_SRC
-
 
 
 * Helm Org Wiki
