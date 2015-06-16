@@ -1112,3 +1112,31 @@ Such that, for instance, if the point is on the B in But, and I hit "." Emacs wi
 I presume that changing this will have the same effect on , ; : ! and ?
 
 Thanks!
+
+
+** TODO request: backspace after expand-abbrev 
+Hi Rúdi,
+
+To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos. 
+
+The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it. 
+
+See below. 
+
+<KB>bc </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+because ^
+#+END_EXAMPLE:
+
+<KB>bg </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+beginning ^
+#+END_EXAMPLE:
+
+Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
+
+Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
+** TODO self insert space
+Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
