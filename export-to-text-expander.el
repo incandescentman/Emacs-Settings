@@ -60,9 +60,18 @@
 
 
 (defun insert-abbrev-defs-converted-to-text-expander (defs)
-  (dolist (form (translate-abbrev-table-definitions defs))
-    (insert (xmlgen form nil 0 t))
-    (terpri (current-buffer))))
+  (insert "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+  (insert "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n")
+  (insert
+   (xmlgen `(plist :version "1.0"
+                   (dict (key "groupInfo")
+                         (dict (key "expandAfterMode")
+                               (integer 0)
+                               (key "groupName")
+                               (string "emacs-abbrevs")))
+                   (key "snippetsTE2")
+                   (array ,@(translate-abbrev-table-definitions defs)))
+           nil 0 t)))
 
 
 (defun insert-abbrev-defs-as-table-definitions (table defs)
