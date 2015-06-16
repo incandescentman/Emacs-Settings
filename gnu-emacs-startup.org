@@ -1027,11 +1027,15 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 (defvar *smart-punctuation-exceptions*
   (list "?!" "..." "---"))
 
-(defun smart-punctuation (new-punct)
+(defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
+  (when (re-search-backward "[^ 	][ 	]+\\="
+                            nil t)
+    (forward-char 1))
   (let (exception)
-    (cond ((not (re-search-backward "\\>\\([[:punct:]]+\\)[[:space:]]*\\="
-                                    nil t))
+    (cond ((or not-so-smart
+               (not (re-search-backward "\\>\\([[:punct:]]+\\)\\="
+                                        nil t)))
            (insert new-punct))
           ((setf exception
                  (let ((potential-new-punct
@@ -1039,11 +1043,10 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
                    (find-if (lambda (exception)
                               (search potential-new-punct exception))
                             *smart-punctuation-exceptions*)))
-           (replace-match exception)
-           (my/fix-space))
+           (replace-match exception))
           (t
-           (replace-match new-punct)
-           (my/fix-space)))))
+           (replace-match new-punct))))
+  (my/fix-space))
 #+END_SRC
 
 ** smart-period
@@ -1088,6 +1091,26 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
   (smart-punctuation "-"))
 
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
+#+END_SRC
+
+** smart-semicolon
+
+#+BEGIN_SRC emacs-lisp 
+(defun smart-semicolon ()
+  (interactive)
+  (smart-punctuation ";" t))
+
+(define-key org-mode-map (kbd ";") 'smart-semicolon)
+#+END_SRC
+
+** smart-colon
+
+#+BEGIN_SRC emacs-lisp 
+(defun smart-colon ()
+  (interactive)
+  (smart-punctuation ":" t))
+
+(define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
 
@@ -1140,6 +1163,9 @@ I presume that changing this will have the same effect on , ; : ! and ?
 
 Thanks!
 
+*** TODO Try it
+
+    I have added the functionality you requested, but I'm not sure about the semicolon and colon; I added a ~smart-~ function for them too, but one that is not so smart: i.e. does not replace the previous punctuation mark; it only tries to fix the spaces around). However, it does not seem reasonable to write ".:", ".;", ":.", etc. If you wish the semi-colon and colon to have the same behaviour as the other punctuation marks (remove the previous mark), you can just remove the "t" in the call to ~smart-punctuation~. 
 
 ** TODO request: backspace after expand-abbrev 
 Hi Rúdi,
