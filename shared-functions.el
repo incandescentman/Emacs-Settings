@@ -1679,7 +1679,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
