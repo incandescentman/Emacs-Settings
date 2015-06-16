@@ -739,7 +739,7 @@ My implementation below seems to work, but it seems very slow. Is it possible to
       (my/fix-space))))
 #+END_SRC
 
-Rúdi: Can we something like this the below to my/delete-backward, so that if I delete the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+Rúdi: Can we something like the below to my/delete-backward, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
 
 #+BEGIN_QUOTE
 (if (my/beginning-of-sentence-p)
@@ -942,8 +942,7 @@ Oleh
          (save-excursion (replace-match "-" t t nil 1)))))
 #+END_SRC
 
-* Org clone subtree
-
+* clone subtree 
 #+BEGIN_SRC emacs-lisp
 (defun org-clone-subtree ()
   (interactive)
@@ -965,85 +964,7 @@ Oleh
 #+END_SRC
 
 
-* DONE Request 
-For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
-
-** DONE Request for clarification 
-
-   Not sure which functions you mean. The ones in the "Sentences" Heading?
-** DONE Answer 
-- my/fix-space
-- kill-clause
-- my-delete-backward
-- kill-word-correctly
-- backward-kill-word-correctly
-
-Basically I'd like to make it so that org-mode treats --- as a singles punctuation mark in any function that looks for :punct: 
-
-*** Example 
-Take a look at the function kill-word-correctly. I want it so that kill-word-correctly counts --- as a word. 
-
-Take this sentence below:
-
-: The quick brown fox jumped---jumped high.
-
-In the sentence above, if I place the point on the "h" in "high" and then do kill-word-correctly TWICE, it should first delete the word jumped and fix the space, and THEN on the second invocation, it should deletes the unwanted --- and fix the space.
-
-So the first invocation should result in this:
-
-: The quick brown fox jumped---high. 
-
-...and second invocation should then delete the --- and fix the space so the result is this:
-
-: The quick brown fox jumped high. 
-
-Thanks!
-
-*** DONE Note & question 
-
-    OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
-
-    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? 
-
-: Yes it is. 
-
-    If that is the case, then would killing all *consecutive* punctuation marks cover this case? What about "--", "?!", "...?" (and possibly other consecutive punctuation marks, like "--," - some authors like that style)? They would also be killed completely. Is that according to your requirements?
-
-: Yes, automatically killing all consecutive punctuation in cases like "---" "--", "?!", and "...?" would certainly be according to my requirements. So yes, I think that solves the problem! Thank you!
-
-** DONE More questions 
-
-   - ~my/fix-space~
-     - What should be the difference here?
-
-: The difference is that there should be a space after ; : , ? ! or . but no space after ---
-
-   - ~kill-clause~
-     - Since this is already sensitive to --, it should also be sensitive to ---. It should also be sensitive to other sequences of punctuation marks. Let me know otherwise.
-
-: Excellent.
-
-   - ~my/delete-backward~
-     - Again, I don't think this requires any change. It deletes all spaces when it is looking at a punctuation mark. Since - is a punctuation mark, any space before --- will also be deleted.
-
-: Correct. I think the difference is the space following ---
-
-     - Note: there were two versions of ~my/delete-backward~; I assumed the first one was a failed attempt to give it some ability to get rid of extra whitespaces, so I took the liberty of adding that functionality. So, what it does is the following: after deleting the region or character, checks if immediately before or after the point there is a space, and if that is the case, uses ~my/fix-space~. Does this behaviour make sense to you?
-
-   - ~kill-word-correctly~ & ~backward-kill-word-correctly~
-     - Regarding these two functions, I have added new versions of them. Note however that they tend to fsck up the kill-ring, because of their calls to ~my/fix-space~. This already occurred in the old versions. Consider the following example:
-
-: Kill them all!
-
-   If you place the point at 'K', and call ~kill-word-correctly~ four times, all of the text will be killed. After killing each word, two consecutive spaces are left, and ~my/fix-space~ will get rid of one. However, ~my/fix-space~ is not a kill command, so it does not affect the kill-ring. Consequently, if you yank after killing all the words, you'll get:
-
-: Killthemall!
-
-   Would you like me to try to fix this or is the kill ring really not your concern?
-
-: Haha, no, this is not a problem! Thank you! 
-
-* TODO request: smart punctuation insertion                             :rudi:
+* DONE request: smart punctuation insertion 
 Rúdi, can you add a line to the functions below that will automatically delete existing punctuation when one of these smart-punctuation functions gets called?
 
 I'll give you an example of what I mean. Consider this sentence:
@@ -1100,16 +1021,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-period
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-period ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ".")
-;; )
-
-;;; new version
 (defun smart-period ()
   (interactive)
   (smart-punctuation "."))
@@ -1119,16 +1030,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-comma
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-comma ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert ",")
-;; )
-
-;;; new version
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ","))
@@ -1138,16 +1039,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-question-mark
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-question-mark ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "?")
-;; )
-
-;;; new version
 (defun smart-question-mark ()
   (interactive)
   (smart-punctuation "?"))
@@ -1157,16 +1048,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 ** smart-exclamation-point
 #+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-exclamation-point ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "!")
-;; )
-
-;;; new version
 (defun smart-exclamation-point ()
   (interactive)
   (smart-punctuation "!"))
@@ -1175,17 +1056,6 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 #+END_SRC
 
 ** smart-hyphen
-#+BEGIN_SRC emacs-lisp 
-;;; old version; remove after testing new one
-;; (defun smart-hyphen ()
-;;   (interactive)
-;; (expand-abbrev)
-;; (when (looking-back "[[:space:]]+") (delete-horizontal-space))
-;; ; TODO also delete existing punctuation 
-;; (insert "-")
-;; )
-
-;;; new version
 (defun smart-hyphen ()
   (interactive)
   (smart-punctuation "-"))
@@ -1196,7 +1066,7 @@ Is this straightforward to implement, or do the exceptions create a lot of compl
 
 * TODO cycle punctuation                                               :rudi:
 
-If you think this whole approach above of deleting existing punctuation is too convoluted, I guess another approach would be to create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
+create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
 : The rain in Spain falls mainly on the plains. 
 
@@ -1213,168 +1083,60 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
-* DONE [#A] a different kind of request 
-Hi Rúdi, 
+* TODO Create an exception to smart-punctuation                        :rudi:
+so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
 
-Here's a different kind of request. If you're interested, maybe we could make it the top priority. However, it's not strictly speaking hacking in elisp, so feel free to turn it down if it doesn't interest you and we can just proceed with the Emacs functions.
+#+BEGIN_EXAMPLE
 
-I'd like to make some of my many Emacs abbrevs shortcuts available in other applications. On my Mac OSX, I use an app called TextExpander to expand text. So I'd like to convert my abbrevs file to TextExpander format.
+- bullet points like this 
+- or this 
 
-This task involves programmatically converting an abbrevs file, which looks something like this:
+...and ellipses at the beginning of lines like this.
 
-#+BEGIN_QUOTE
-(define-abbrev-table 'global-abbrev-table '(
- ("qo" "without" nil 1)
- ("ty" "they" nil 3)
- ("tyr" "they're" nil 5)
-)) 
-#+END_QUOTE
-
-...into a TextExpander file, which looks something like this:
-
-#+BEGIN_QUOTE
-<dict>
-			<key>abbreviation</key>
-			<string>qo</string>
-			<key>abbreviationMode</key>
-			<integer>2</integer>
-			<key>creationDate</key>
-			<date>2015-06-11T01:04:09Z</date>
-			<key>flags</key>
-			<integer>0</integer>
-			<key>label</key>
-			<string></string>
-			<key>lastUsed</key>
-			<date>2015-06-11T01:05:05Z</date>
-			<key>modificationDate</key>
-			<date>2015-06-11T01:04:14Z</date>
-			<key>plainText</key>
-			<string>without</string>
-			<key>snippetType</key>
-			<integer>0</integer>
-			<key>useCount</key>
-			<integer>0</integer>
-			<key>uuidString</key>
-			<string>12D393EE-F929-4F9B-AFF6-F43D718E8048</string>
-		</dict>
-		<dict>
-			<key>abbreviation</key>
-			<string>ty</string>
-			<key>abbreviationMode</key>
-			<integer>2</integer>
-			<key>creationDate</key>
-			<date>2015-06-11T01:03:06Z</date>
-			<key>flags</key>
-			<integer>0</integer>
-			<key>label</key>
-			<string></string>
-			<key>modificationDate</key>
-			<date>2015-06-11T01:03:06Z</date>
-			<key>plainText</key>
-			<string>they</string>
-			<key>snippetType</key>
-			<integer>0</integer>
-			<key>useCount</key>
-			<integer>0</integer>
-			<key>uuidString</key>
-			<string>6341B244-BC48-48B9-8E1E-ABAF34C44BC3</string>
-		</dict>
-		<dict>
-			<key>abbreviation</key>
-			<string>tyr</string>
-			<key>abbreviationMode</key>
-			<integer>2</integer>
-			<key>creationDate</key>
-			<date>2015-06-11T01:03:02Z</date>
-			<key>flags</key>
-			<integer>0</integer>
-			<key>label</key>
-			<string></string>
-			<key>lastUsed</key>
-			<date>2015-06-11T01:03:31Z</date>
-			<key>modificationDate</key>
-			<date>2015-06-11T01:03:02Z</date>
-			<key>plainText</key>
-			<string>they're</string>
-			<key>snippetType</key>
-			<integer>0</integer>
-			<key>useCount</key>
-			<integer>0</integer>
-			<key>uuidString</key>
-			<string>A1A1B41E-B8BF-4562-B977-143419E30695</string>
-		</dict>
-#+END_QUOTE
-
-Let me know if this interests you, and if so, I'll send you my abbrev file. Again, if not, no worries. Thanks!
-** DONE Request for clarification                            :followup:
-
-   Sure, I'll handle it. It sure is just hacking elisp...
-
-: Excellent. :-) 
-
-   Here's my proposal: a new function, say ~abbrev-table-export-to-text-expander~, which prompts you for the abbrev table name, and creates a new buffer with the result of converting to TextExpander, which you then can save in the location you desire. Does that look good?
-
-: It would be cool if I could just export all my existing abbrevs. Here's what I would like to do: export all my abbrevs where the abbrev is 4 characters or less. No confirmation, no prompt. 
-: e.g. ehrs → behaviors 
-: anything longer than that, I don't need to export to TextExpander.
-: Is this feasible?
-
-   Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no available.
-
-: Good question. The format is called TextExpander for OSX. 
-
-http://smilesoftware.com/help/TextExpander/creating.html 
-
-http://brettterpstra.com/2013/01/04/mass-creating-textexpander-snippets/ 
-
-http://smilesoftware.com/help/TextExpander%204%20Help.pdf 
-
-http://smilesoftware.com/help/TextExpander/groups.html 
-
-Take a look and let me know whether that's helpful. If not you may ask a question on StackExchange? Or if not I can contact Smile support.
-
-Thank you! Let me know. 
-
-Thanks,
-Jay
-
-** results of testing backward-kill-word-correctly.
-
-: The quick brown fox jumped---jumped high.
-
-
-* DONE New note about the abbrevs file                                 :rudi:
-Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrevs:
-
-1. Typographical error corrections
-
-Ghandi → Gandhi 
-
-#+BEGIN_EXAMPLE 
-("Ghandi" "Gandhi" nil 0) 
 #+END_EXAMPLE
+* TODO no space between end of word and punctuation mark :rudi:
+Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
 
-These get created automatically through some code I found here:
-[[http://endlessparentheses.com/ispell-and-abbrev-the-perfect-auto-correct.html][Emacs, Ispell and Abbrev, the Perfect Auto-Correct]]
-
-2. Expansion of text shortcuts
-
-bc → because 
-
-#+BEGIN_EXAMPLE 
-("bc" "because" nil 455) 
+#+BEGIN_EXAMPLE
+The night is dark But the day is bright. 
 #+END_EXAMPLE
+* 
+Such that, for instance, if the point is on the B in But, and I hit "." Emacs will automatically remove the unwanted space, so that I get this: 
 
-These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
+: The night is dark. But the day is bright. 
 
-For ONLY the #2 "expansion of text shortcuts", I would like to:
-- [X] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
-- [X] also convert them to TextExpander format, which I can also open-source share with other people.
+...instead of this:
 
-Basically I want to offer these expansions in two formats. 
+: The night is dark .But the day is bright. 
 
-That's my goal for this latest task. Does that make sense? 
+I presume that changing this will have the same effect on , ; : ! and ?
 
-Thanks,
-Jay
+Thanks!
 
+
+** TODO request: backspace after expand-abbrev 
+Hi Rúdi,
+
+To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos. 
+
+The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it. 
+
+See below. 
+
+<KB>bc </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+because ^
+#+END_EXAMPLE:
+
+<KB>bg </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+beginning ^
+#+END_EXAMPLE:
+
+Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
+
+Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
+** TODO self insert space
+Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
