@@ -9547,30 +9547,6 @@
 </dict>
 <dict>
   <key>abbreviation</key>
-  <string>RD</string>
-  <key>abbreviationMode</key>
-  <integer>2</integer>
-  <key>creationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>flags</key>
-  <integer>0</integer>
-  <key>label</key>
-  <string></string>
-  <key>lastUsed</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>modificationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>plainText</key>
-  <string>R&D</string>
-  <key>snippetType</key>
-  <integer>0</integer>
-  <key>useCount</key>
-  <integer>7</integer>
-  <key>uuidString</key>
-  <string>9A0D83EC-1393-11E5-B850-14109FE34F3D</string>
-</dict>
-<dict>
-  <key>abbreviation</key>
   <string>bei</string>
   <key>abbreviationMode</key>
   <integer>2</integer>
@@ -12791,30 +12767,6 @@ Source:</string>
 </dict>
 <dict>
   <key>abbreviation</key>
-  <string>br</string>
-  <key>abbreviationMode</key>
-  <integer>2</integer>
-  <key>creationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>flags</key>
-  <integer>0</integer>
-  <key>label</key>
-  <string></string>
-  <key>lastUsed</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>modificationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>plainText</key>
-  <string>#+HTML: <BR></string>
-  <key>snippetType</key>
-  <integer>0</integer>
-  <key>useCount</key>
-  <integer>4</integer>
-  <key>uuidString</key>
-  <string>9A0FAC12-1393-11E5-A73D-14109FE34F3D</string>
-</dict>
-<dict>
-  <key>abbreviation</key>
   <string>ms</string>
   <key>abbreviationMode</key>
   <integer>2</integer>
@@ -14396,30 +14348,6 @@ Source:</string>
   <integer>0</integer>
   <key>uuidString</key>
   <string>9A10BCA6-1393-11E5-83DC-14109FE34F3D</string>
-</dict>
-<dict>
-  <key>abbreviation</key>
-  <string>DD</string>
-  <key>abbreviationMode</key>
-  <integer>2</integer>
-  <key>creationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>flags</key>
-  <integer>0</integer>
-  <key>label</key>
-  <string></string>
-  <key>lastUsed</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>modificationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>plainText</key>
-  <string>D&D</string>
-  <key>snippetType</key>
-  <integer>0</integer>
-  <key>useCount</key>
-  <integer>0</integer>
-  <key>uuidString</key>
-  <string>9A10C0C0-1393-11E5-B686-14109FE34F3D</string>
 </dict>
 <dict>
   <key>abbreviation</key>
@@ -22007,30 +21935,6 @@ Source:</string>
   <integer>0</integer>
   <key>uuidString</key>
   <string>9A15CFCA-1393-11E5-A4A3-14109FE34F3D</string>
-</dict>
-<dict>
-  <key>abbreviation</key>
-  <string>nbsp</string>
-  <key>abbreviationMode</key>
-  <integer>2</integer>
-  <key>creationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>flags</key>
-  <integer>0</integer>
-  <key>label</key>
-  <string></string>
-  <key>lastUsed</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>modificationDate</key>
-  <date>2015-06-15T19:20:37Z</date>
-  <key>plainText</key>
-  <string>&nbsp;</string>
-  <key>snippetType</key>
-  <integer>0</integer>
-  <key>useCount</key>
-  <integer>0</integer>
-  <key>uuidString</key>
-  <string>9A15D3DA-1393-11E5-9AB3-14109FE34F3D</string>
 </dict>
 <dict>
   <key>abbreviation</key>

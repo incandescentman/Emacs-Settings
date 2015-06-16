@@ -230,6 +230,12 @@
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
+
+
+(define-key key-minor-mode-map (kbd "C-S-l") 'reflash-indentation)
+(define-key key-minor-mode-map (kbd "C-l") 'recenter-top-bottom)
+
+
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 (define-key key-minor-mode-map (kbd "\|") 'deft)
@@ -432,7 +438,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space)
-(endless/capitalize) 
+(capitalize-word 1) 
+(left-word)
 ) 
 (progn
 (expand-abbrev)
@@ -572,7 +579,13 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
+
+(defun reflash-indentation ()
+"One sentence summary of what this command do."
+  (interactive)
+  (org-indent-mode 1)
+  ) 
 
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
