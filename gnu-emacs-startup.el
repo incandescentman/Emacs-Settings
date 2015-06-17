@@ -695,30 +695,52 @@ provided the (transient) mark is active."
           (replace-match (format "%s - clone" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
 
-(defvar *smart-punctuation-exceptions*
-  (list "?!" "..." "---" "\)."))
+(defvar *smart-punctuation-marks*
+  ".,;:!?-")
+
+(setq *smart-punctuation-exceptions*
+  (list "?!" ".." "..." "---"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
-  (when (re-search-backward "[^ 	][ 	]+\\="
-                            nil t)
-    (forward-char 1))
-  (let (exception)
-    (cond ((or not-so-smart
-               (not (re-search-backward "\\>\\([[:punct:]]+\\)\\="
-                                        nil t)))
-           (insert new-punct))
-          ((setf exception
-                 (let ((potential-new-punct
-                        (concat (match-string 1) new-punct)))
-                   (find-if (lambda (exception)
-                              (search potential-new-punct exception))
-                            *smart-punctuation-exceptions*)))
-           (replace-match exception))
-          (t
-           (replace-match new-punct))))
-;; (my/fix-space)
-)
+  (let ((old-point (point)))
+    ;; 1. go back until there are no more spaces/tabs
+    (when (re-search-backward "[^ 	][ 	]+\\="
+                              nil t)
+      (forward-char 1))
+    (flet ((replace (text)
+             (let ((nr-new-chars (- (length text) (length (match-string 1)))))
+               (replace-match text t t nil 1)
+               (goto-char old-point)
+               (forward-char nr-new-chars))))
+      (let (exception)
+        (cond ((or not-so-smart
+                   (not (re-search-backward (format "[^%s]\\([%s]+\\)\\="
+                                                    *smart-punctuation-marks*
+                                                    *smart-punctuation-marks*)
+                                            nil t)))
+               ;; 2.1. if there's not a series of punctuation marks, or if we
+               ;; don't want to replace (`not-so-smart'), just insert the
+               ;; `new-punct', and move to the `old-point' + the length of
+               ;; `new-punct'.
+               (insert new-punct)
+               (goto-char old-point)
+               (forward-char (length new-punct)))
+              ((setf exception
+                     (let ((potential-new-punct
+                            (concat (match-string 1) new-punct)))
+                       (find-if (lambda (exception)
+                                  (search potential-new-punct exception))
+                                *smart-punctuation-exceptions*)))
+               ;; 2.2. if the series of punctuation marks concatenated with
+               ;; `new-punct' form (even if partially) an exception, then replace
+               ;; it with that exception and fix the spaces.
+               (replace exception))
+              (t
+               ;; 2.3. if there is a series of punctuation marks and there is no
+               ;; matching exception, replace by the `new-punct' and fix the
+               ;; spaces.
+               (replace new-punct)))))))
 
 (defun smart-period ()
   (interactive)

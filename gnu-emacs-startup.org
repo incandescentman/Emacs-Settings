@@ -594,7 +594,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 ** 
-** TODO kill word correctly and capitalize                            :rudi:
+** TODO [#A] kill word correctly and capitalize                       :rudi:
 #+BEGIN_SRC emacs-lisp 
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
@@ -649,7 +649,12 @@ I didn't hurt myself.
 I still remember that day.
 #+END_QUOTE
 
-Your implementation of kill-word-correctly works properly in both the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
+Example #3:
+: This above all, to thine own self be true. 
+
+Say the point is on the T in This and my goal is to invoke kill-word-correctly-and-capitalize 4 times so that the first word is "To."
+
+Your implementation of kill-word-correctly works properly in all the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
 
 ** very old BACKWARD kill word correctly 
 
@@ -1189,7 +1194,7 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
-* TODO [#B] Create an exception to smart-punctuation                   :rudi:
+* DONE [#B] Create an exception to smart-punctuation 
 so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
 
 #+BEGIN_EXAMPLE
@@ -1200,7 +1205,7 @@ so it doesn't invoke when it's at the beginning of a line. I need to be able to 
 ...and ellipses at the beginning of lines like this.
 
 #+END_EXAMPLE
-* DONE no space between end of word and punctuation mark               :rudi:
+* DONE no space between end of word and punctuation mark 
 Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
 
 #+BEGIN_EXAMPLE
@@ -1225,7 +1230,7 @@ Thanks!
 
 : Looks great! Yes, I think I'd like ; and : to work the same way. What's the argument against this? Is there some reason it might be helpful for them to operate differently? 
 
-*** TODO [#A] a few requests re the above
+*** DONE [#A] a few requests re the above
 1. When I'm typing a sentence and I put a punctuation mark like "." at the end of it, I now automatically get a SPACE after the "."
 
 I am used to hitting the space key after a punctuation mark (and I will need to keep doing so in all other applications, so I'd like Emacs to /not/ insert the space automatically when I'm typing sentences. To do this, I commented out the my/fix-space at the end of smart-punctuation. But now when there's something like this: 
@@ -1272,6 +1277,7 @@ beginning ^
 Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
 
 Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
+
 ** TODO [#B] self insert space                                        :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
