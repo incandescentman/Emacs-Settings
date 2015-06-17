@@ -93,7 +93,6 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
-;; '(ispell-program-name "aspell")
  '(mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
@@ -136,7 +135,7 @@
      (latin1 61 45 45)
      (utf-8 9552 9472 9548 9476 9480))))
  '(org-bullets-bullet-list (quote (" ")))
- '(org-bullets-face-name (quote \"Monaco\"))
+ '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
@@ -323,6 +322,11 @@
  '(safe-local-variable-values
    (quote
     ((eval when
+           (require
+            (quote rainbow-mode)
+            nil t)
+           (rainbow-mode 1))
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -368,7 +372,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))

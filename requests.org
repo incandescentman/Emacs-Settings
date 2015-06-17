@@ -1,4 +1,5 @@
-* TODO [#C] JavaScript?
+* Current
+** TODO [#C] JavaScript?
 Hi Rúdi,
 
 Do you know JavaScript? If you're interested, I might have some very quick JavaScript questions. for example the below, which comes from here:
@@ -11,3 +12,42 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 #+END_SRC
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
+
+* Archive
+** DONE [#A] kill word correctly and capitalize 
+Rúdi,
+
+Note that I added capitalize-word and left-word to the above. My goal is to instruct Emacs to check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly.
+
+What I did above works, but it breaks when it deals with punctuation. Example #1:
+
+: My fascination began when I was four years old. For some reason, I was immediately intrigued. 
+
+Let's say the point is on the F in For, and my goal is to invoke kill-word-correctly-and-capitalize 4 times, deleting those 3 words plus the comma to wind up with this:
+
+: My fascination began when I was four years old. I was immediately intrigued. 
+
+As you can see, the comma handling gets messed up. 
+
+Example #2:
+
+#+BEGIN_QUOTE
+I didn't hurt myself. Meanwhile, 
+
+I still remember that day.
+#+END_QUOTE
+
+Let's say the point is on the M in Meanwhile, and my goal is to invoke kill-word-correctly-and-capitalize twice, deleting the word plus the comma to wind up with this: 
+
+#+BEGIN_QUOTE
+I didn't hurt myself. 
+
+I still remember that day.
+#+END_QUOTE
+
+Example #3:
+: This above all, to thine own self be true. 
+
+Say the point is on the T in This and my goal is to invoke kill-word-correctly-and-capitalize 4 times so that the first word is "To."
+
+Your implementation of kill-word-correctly works properly in all the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 

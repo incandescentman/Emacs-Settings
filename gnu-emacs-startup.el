@@ -428,27 +428,41 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space)) ; and finally fix space
 
+;;; old version; remove after testing new one
+;; (defun kill-word-correctly-and-capitalize ()
+;;   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+;;   (interactive)
+;; (if (my/beginning-of-sentence-p)
+;;       (progn
+;; (expand-abbrev)
+;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;     (kill-word 1))                                    ; ELSE kill word
+;;   (my/fix-space)
+;; (capitalize-word 1) 
+;; (left-word)
+;; ) 
+;; (progn
+;; (expand-abbrev)
+;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;     (kill-word 1))                                    ; ELSE kill word
+;;   (my/fix-space)) ; and finally fix space 
+;; ) 
+;; )
+
+;;; new version
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
-(if (my/beginning-of-sentence-p)
-      (progn
-(expand-abbrev)
-  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
-      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-    (kill-word 1))                                    ; ELSE kill word
-  (my/fix-space)
-(capitalize-word 1) 
-(left-word)
-) 
-(progn
-(expand-abbrev)
-  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
-      (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-    (kill-word 1))                                    ; ELSE kill word
-  (my/fix-space)) ; and finally fix space 
-) 
-)
+  (let ((fix-capitalization (my/beginning-of-sentence-p)))
+    (expand-abbrev)
+    (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
+        (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+      (kill-word 1))                                    ; ELSE kill word
+    (my/fix-space)
+    (when fix-capitalization
+      (save-excursion (capitalize-word 1)))))
 
 ;;; old version; remove after testing new one below
 ;; (defun backward-kill-word-correctly ()

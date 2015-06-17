@@ -1929,8 +1929,8 @@ Also converts full stops to commas."
 (global-set-key "\M-l" 'endless/downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
-(defun endless/upgrade ()
-  "Upgrade all packages, no questions asked."
+(defun endless/update ()
+  "Update all packages, no questions asked."
   (interactive)
   (save-window-excursion
     (list-packages)
