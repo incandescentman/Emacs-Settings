@@ -988,35 +988,6 @@ Oleh
 #+END_SRC
 
 
-* DONE request: smart punctuation insertion 
-Rúdi, can you add a line to the functions below that will automatically delete existing punctuation when one of these smart-punctuation functions gets called?
-
-I'll give you an example of what I mean. Consider this sentence:
-
-: The rain in Spain falls mainly on the plains! 
-
-Let's say the point is on the space after the ! at the end of the sentence.
-
-If I then hit ? (which calls smart-question-mark), Emacs should DELETE the existing ! and then replace it with a ? (and then put a space after it).
-
-The logic of this is that I will NEVER be trying to type anything like:
-
-- Hello!?
-- Hello.!
-- Hello?.
-- Hello,.
-- Hello.,
-
-In other words, if the point is after a ; : , ! ? or . and then I hit a punctuation mark, it's almost certain that I am doing this because I wish to CHANGE the punctuation and not ADD one punctuation mark after another. 
-
-** Exceptions
-1. I will often want to type three dots like so:
-: To be continued...
-2. or occasionally a question mark followed by an exclamation point like so:
-: What the hell?!
-3. I still need to be able to indicate em dashes---that is, three hyphens in a row.
-
-Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones. 
 
 ** smart-punctuation (auxiliary)
 
@@ -1182,4 +1153,34 @@ Is it possible (and not too difficult) to make it so that if I invoke my/delete-
 ** TODO [#B] self insert space                                        :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
+** TODO [#A] make kill-word-correctly-and-capitalize count a line break as a word 
+Rúdi, 
 
+Before I asked you to make kill-word-correctly kill not only words one at a time, but also punctuation one at a time, such that given this... 
+
+#+BEGIN_QUOTE
+The sea. Ocean. 
+
+I still remember that day.
+#+END_QUOTE 
+
+...and supposing the mark was on the T in The, invoking kill-word-correctly twice would kill "The" and "sea" but leave in period, and invoking it a third time would kind the period as well. And you implemented this perfectly. 
+
+Now I’d like to make kill-word-correctly and kill-word-correctly-and-capitalize recognize line breaks in the same way, counting each line break as a word. 
+
+In the above, let's say the point is on the "O" in "Ocean". And let's say I invoke kill-word-correctly-and-capitalize 3 times. 
+
+Current output: 
+
+#+BEGIN_QUOTE
+The sea. still remember that day.
+#+END_QUOTE 
+
+Desired output: 
+
+#+BEGIN_QUOTE
+The sea. 
+I still remember that day.
+#+END_QUOTE 
+
+Thanks!

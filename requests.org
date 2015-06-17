@@ -1,4 +1,4 @@
-* Current
+* open requests
 ** TODO [#C] JavaScript?
 Hi Rúdi,
 
@@ -13,7 +13,7 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
 
-* Completed
+* completed requests 
 ** DONE [#A] kill word correctly and capitalize 
 Rúdi,
 
@@ -52,7 +52,7 @@ Say the point is on the T in This and my goal is to invoke kill-word-correctly-a
 
 Your implementation of kill-word-correctly works properly in all the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
 
-* DONE [#B] Create an exception to smart-punctuation 
+** DONE [#B] Create an exception to smart-punctuation 
 so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
 
 #+BEGIN_EXAMPLE
@@ -63,7 +63,7 @@ so it doesn't invoke when it's at the beginning of a line. I need to be able to 
 ...and ellipses at the beginning of lines like this.
 
 #+END_EXAMPLE
-* DONE no space between end of word and punctuation mark 
+** DONE no space between end of word and punctuation mark 
 Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
 
 #+BEGIN_EXAMPLE
@@ -110,3 +110,33 @@ To enable this, I tried adding ")." to smart-punctuation-exceptions, which seems
 3. Finally, can we change the behavior of smart-period such that if I forget about the cycling between period and ellipses, and I just type a word followed by hitting period 3 times, it successfully inserts an ellipsis? Maybe the best way to do this would be to just turn off the cycling between period and ellipsis for now. It's a good idea, but I want to be able to type:
 <KB>words... </KB>
 and get an ellipsis. Thanks! 
+
+** DONE request: smart punctuation insertion 
+Rúdi, can you add a line to the functions below that will automatically delete existing punctuation when one of these smart-punctuation functions gets called?
+
+I'll give you an example of what I mean. Consider this sentence:
+
+: The rain in Spain falls mainly on the plains! 
+
+Let's say the point is on the space after the ! at the end of the sentence.
+
+If I then hit ? (which calls smart-question-mark), Emacs should DELETE the existing ! and then replace it with a ? (and then put a space after it).
+
+The logic of this is that I will NEVER be trying to type anything like:
+
+- Hello!?
+- Hello.!
+- Hello?.
+- Hello,.
+- Hello.,
+
+In other words, if the point is after a ; : , ! ? or . and then I hit a punctuation mark, it's almost certain that I am doing this because I wish to CHANGE the punctuation and not ADD one punctuation mark after another. 
+
+*** Exceptions
+1. I will often want to type three dots like so:
+: To be continued...
+2. or occasionally a question mark followed by an exclamation point like so:
+: What the hell?!
+3. I still need to be able to indicate em dashes---that is, three hyphens in a row.
+
+Is this straightforward to implement, or do the exceptions create a lot of complications? Exception #2 is very rare, so if it creates problems we can forget about it. Really #1 and #3 are the important ones. 
