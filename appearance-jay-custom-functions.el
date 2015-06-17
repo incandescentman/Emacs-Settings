@@ -24,8 +24,7 @@
 
 (defun inconsolata-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Inconsolata"))
-
+  (set-face-attribute 'default nil :font "Inconsolata":height 160))
 (defun last-words ()
   (interactive)
   (set-face-attribute 'default nil :font "Last Words" :height 200))

@@ -405,8 +405,6 @@
 ;;;; keybindings
 
 
-(define-key smartparens-mode-map (kbd "H-<right>") 'sp-forward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "H-<left>") 'sp-forward-barf-sexp) 
 
 ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
 ;; I've been wanting to do this for so long. :-)
