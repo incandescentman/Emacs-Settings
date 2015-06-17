@@ -608,7 +608,22 @@ provided the (transient) mark is active."
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
 (local-set-key (kbd "C-c v i")
-               'org-insert-src-block)
+               'org-insert-src-block) 
+
+(when (executable-find "hunspell")
+  (setq-default ispell-program-name "hunspell")
+  (setq ispell-really-hunspell t)) 
+(setq flyspell-default-dictionary "en_US")
+
+(setq ispell-dictionary "en_US")
+(setq ispell-program-name "/usr/local/bin/hunspell") 
+(setenv "DICTIONARY" "en_US") 
+(if (file-exists-p "/usr/bin/hunspell")
+    (progn
+      (setq ispell-program-name "hunspell")
+      (eval-after-load "ispell"
+        '(progn (defun ispell-get-coding-system () 'utf-8))))) 
+(flyspell-mode-on) 
 
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."

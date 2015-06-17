@@ -93,7 +93,7 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
- '(ispell-program-name "aspell")
+;; '(ispell-program-name "aspell")
  '(mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
