@@ -1,4 +1,4 @@
-* TODO JavaScript?
+* TODO [#C] JavaScript?
 Hi Rúdi,
 
 Do you know JavaScript? If you're interested, I might have some very quick JavaScript questions. for example the below, which comes from here:

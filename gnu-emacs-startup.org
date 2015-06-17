@@ -1145,7 +1145,7 @@ so it doesn't invoke when it's at the beginning of a line. I need to be able to 
 ...and ellipses at the beginning of lines like this.
 
 #+END_EXAMPLE
-* TODO no space between end of word and punctuation mark :rudi:
+* DONE no space between end of word and punctuation mark               :rudi:
 Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
 
 #+BEGIN_EXAMPLE
@@ -1167,21 +1167,32 @@ Thanks!
 *** DONE Try it
 
     I have added the functionality you requested, but I'm not sure about the semicolon and colon; I added a ~smart-~ function for them too, but one that is not so smart: i.e. does not replace the previous punctuation mark; it only tries to fix the spaces around). However, it does not seem reasonable to write ".:", ".;", ":.", etc. If you wish the semi-colon and colon to have the same behaviour as the other punctuation marks (remove the previous mark), you can just remove the "t" in the call to ~smart-punctuation~. 
-*** TODO [#A] a few higher-priority requests
-Looks great! Yes, I think I'd like ; and : to work the same way. What's the argument against this? Is there some reason it might be helpful for them to operate differently? 
 
-Here's a request. When I'm typing a sentence and I put a punctuation mark like . at the end of it, I now automatically get a space after the . This isn't a problem per see, except that I am used to hitting the space key after a punctuation mark (and will have to keep doing so in all other applications). So I'd like Emacs to /not/ insert the space automatically when I'm typing sentences. To do this, I commented out the my/fix-space at the end of smart-punctuation. Let me know if this causes any other problems. 
+: Looks great! Yes, I think I'd like ; and : to work the same way. What's the argument against this? Is there some reason it might be helpful for them to operate differently? 
 
-Also: I will sometimes need to write a parenthesis followed by a period, like this: 
+*** TODO [#A] a few requests re the above
+1. When I'm typing a sentence and I put a punctuation mark like "." at the end of it, I now automatically get a SPACE after the "."
+
+I am used to hitting the space key after a punctuation mark (and I will need to keep doing so in all other applications, so I'd like Emacs to /not/ insert the space automatically when I'm typing sentences. To do this, I commented out the my/fix-space at the end of smart-punctuation. But now when there's something like this: 
+
+: This. ^
+
+...and if the point is on the ^ above, and I hit "?" Emacs then removes the existing space after cycling to a question mark. 
+
+I'd like smart-punctuation to behave differently based on whether I'm inserting punctuation after a word (no automatic insertion of space) or after an existing punctuation mark in order to cycle it (in which case I’d like to call my/fix-space to make sure there's a space after the punctuation mark).
+
+2. I will sometimes need to write a parenthesis followed by a period, like this: 
 
 #+BEGIN_EXAMPLE
-I am used to hitting the space key after a punctuation mark (and will have to keep doing so in all other applications). ^
+Alice had nothing to do (once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it). ^
 #+END_EXAMPLE
 
-To enable this, I tried adding ). to smart-punctuation-exceptions, which seems to work... but now if I go to point ^ above and hit ? it clobbers the parenthesis. Can we fix this? 
+To enable this, I tried adding ")." to smart-punctuation-exceptions, which seems to work... but now if I go to point ^ above and hit "?" Emacs then clobbers the parenthesis (not desired) in addition to cycling the period. Can we fix this? 
 
-Finally, can we change the behavior of smart-period such that if I forget about the cycling between period and ellipses, and I just type a word followed by hitting period 3 times, it successfully inserts an ellipsis? Maybe the best way to do this would be to just turn off the cycling between period and ellipsis for now. It's a good idea, but I want to be able to type <KB>words... </KB>
+3. Finally, can we change the behavior of smart-period such that if I forget about the cycling between period and ellipses, and I just type a word followed by hitting period 3 times, it successfully inserts an ellipsis? Maybe the best way to do this would be to just turn off the cycling between period and ellipsis for now. It's a good idea, but I want to be able to type:
+<KB>words... </KB>
 and get an ellipsis. Thanks! 
+
 ** TODO [#C] request: backspace after expand-abbrev 
 Hi Rúdi,
 

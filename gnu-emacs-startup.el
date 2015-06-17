@@ -698,7 +698,7 @@ provided the (transient) mark is active."
            (replace-match exception))
           (t
            (replace-match new-punct))))
-(my/fix-space)
+;; (my/fix-space)
 )
 
 (defun smart-period ()
