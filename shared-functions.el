@@ -49,11 +49,6 @@
 
 (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
-(set-cursor-color "red")
-(setq default-frame-alist
-      '((cursor-color . "red")))
-(add-to-list 'default-frame-alist '(cursor-color . "red"))
-
 (defun  incarnadine-cursor ()
   (interactive)
   (set-cursor-color "red")
