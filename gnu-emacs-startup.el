@@ -464,20 +464,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
 
-;;; old version; remove after testing new one below
-;; (defun backward-kill-word-correctly ()
-;;   "Kill word."
-;;   (interactive)
-;;   (let ((old-point (point)))
-;;     (if (re-search-backward "[[:punct:]]+\\W*\\=" nil t)
-;;         ;; old-point should be > (point); this makes it prefix append
-;;         ;; to kill-ring
-;;         (kill-region old-point (point))
-;;       (backward-kill-word 1)))
-;;   (my/fix-space)
-;;   (jay/insert-space) ; I added this line, I think it works.
-;; ) 
-
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -549,6 +535,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ;; (toggle-maxframe)
 ;; (monaco-font)
+(zenburn)
+(recenter-top-bottom)
 
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.

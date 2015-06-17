@@ -733,6 +733,8 @@ First delete region, and then:
 #+BEGIN_SRC emacs-lisp
 ;; (toggle-maxframe)
 ;; (monaco-font)
+(zenburn)
+(recenter-top-bottom)
 #+END_SRC
 
 * character movement

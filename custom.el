@@ -480,8 +480,9 @@
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
-(toggle-fullscreen)
+;; (toggle-fullscreen)
 
 ;;; Treat all themes as safe
 (setq custom-safe-themes t)
 
+(recenter-top-bottom)
