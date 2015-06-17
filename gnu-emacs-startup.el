@@ -533,8 +533,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c t") 'timesvr)
 (global-set-key (kbd "C-c m") 'compose-mail)
 
-(toggle-maxframe)
-; (monaco-font)
+;; (toggle-maxframe)
+;; (monaco-font)
 
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.

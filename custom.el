@@ -1,5 +1,5 @@
 (require 'org)
-(disable-theme 'zenburn)
+;; (disable-theme 'zenburn)
 
 ;; globally turn off fucking piece of shit guru mode
 (setq prelude-guru nil)
@@ -136,7 +136,7 @@
      (latin1 61 45 45)
      (utf-8 9552 9472 9548 9476 9480))))
  '(org-bullets-bullet-list (quote (" ")))
- '(org-bullets-face-name (quote \"Courier\"))
+ '(org-bullets-face-name (quote \"Monaco\"))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)

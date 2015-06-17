@@ -766,8 +766,8 @@ Rúdi: Can we something like the below to my/delete-backward, so that if I delet
 * Startup
 
 #+BEGIN_SRC emacs-lisp
-(toggle-maxframe)
-; (monaco-font)
+;; (toggle-maxframe)
+;; (monaco-font)
 #+END_SRC
 
 * character movement
