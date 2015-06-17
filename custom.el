@@ -105,6 +105,7 @@
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mouse-highlight nil)
+ '(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
    (quote

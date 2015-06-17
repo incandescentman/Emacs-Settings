@@ -13,7 +13,7 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
 
-* Archive
+* Completed
 ** DONE [#A] kill word correctly and capitalize 
 Rúdi,
 
@@ -51,3 +51,62 @@ Example #3:
 Say the point is on the T in This and my goal is to invoke kill-word-correctly-and-capitalize 4 times so that the first word is "To."
 
 Your implementation of kill-word-correctly works properly in all the examples above. My goal is to get kill-word-correctly-and-capitalize to deal with such cases correctly also. Is it possible to do this, or does the invocation of left-word mess things up? Thanks! 
+
+* DONE [#B] Create an exception to smart-punctuation 
+so it doesn't invoke when it's at the beginning of a line. I need to be able to write sentences like this:
+
+#+BEGIN_EXAMPLE
+
+- bullet points like this 
+- or this 
+
+...and ellipses at the beginning of lines like this.
+
+#+END_EXAMPLE
+* DONE no space between end of word and punctuation mark 
+Can make it so that when I invoke punctuation, it removes any space between the word and the punctuation?
+
+#+BEGIN_EXAMPLE
+The night is dark But the day is bright. 
+#+END_EXAMPLE
+* 
+Such that, for instance, if the point is on the B in But, and I hit "." Emacs will automatically remove the unwanted space, so that I get this: 
+
+: The night is dark. But the day is bright. 
+
+...instead of this:
+
+: The night is dark .But the day is bright. 
+
+I presume that changing this will have the same effect on , ; : ! and ?
+
+Thanks! 
+
+*** DONE Try it
+
+    I have added the functionality you requested, but I'm not sure about the semicolon and colon; I added a ~smart-~ function for them too, but one that is not so smart: i.e. does not replace the previous punctuation mark; it only tries to fix the spaces around). However, it does not seem reasonable to write ".:", ".;", ":.", etc. If you wish the semi-colon and colon to have the same behaviour as the other punctuation marks (remove the previous mark), you can just remove the "t" in the call to ~smart-punctuation~. 
+
+: Looks great! Yes, I think I'd like ; and : to work the same way. What's the argument against this? Is there some reason it might be helpful for them to operate differently? 
+
+*** DONE [#A] a few requests re the above
+1. When I'm typing a sentence and I put a punctuation mark like "." at the end of it, I now automatically get a SPACE after the "."
+
+I am used to hitting the space key after a punctuation mark (and I will need to keep doing so in all other applications, so I'd like Emacs to /not/ insert the space automatically when I'm typing sentences. To do this, I commented out the my/fix-space at the end of smart-punctuation. But now when there's something like this: 
+
+: This. ^
+
+...and if the point is on the ^ above, and I hit "?" Emacs then removes the existing space after cycling to a question mark. 
+
+I'd like smart-punctuation to behave differently based on whether I'm inserting punctuation after a word (no automatic insertion of space) or after an existing punctuation mark in order to cycle it (in which case I’d like to call my/fix-space to make sure there's a space after the punctuation mark).
+
+2. I will sometimes need to write a parenthesis followed by a period, like this: 
+
+#+BEGIN_EXAMPLE
+Alice had nothing to do (once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it). ^
+#+END_EXAMPLE
+
+To enable this, I tried adding ")." to smart-punctuation-exceptions, which seems to work... but now if I go to point ^ above and hit "?" Emacs then clobbers the parenthesis (not desired) in addition to cycling the period. Can we fix this? 
+
+3. Finally, can we change the behavior of smart-period such that if I forget about the cycling between period and ellipses, and I just type a word followed by hitting period 3 times, it successfully inserts an ellipsis? Maybe the best way to do this would be to just turn off the cycling between period and ellipsis for now. It's a good idea, but I want to be able to type:
+<KB>words... </KB>
+and get an ellipsis. Thanks! 

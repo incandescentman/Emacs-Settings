@@ -386,6 +386,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "NEXT" "|" "DONE! :-)")
         (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)") 
         (sequence "STRATEGY" "|")
+(sequence "DONE" "|") 
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
