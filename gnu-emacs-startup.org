@@ -634,10 +634,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** TODO [#B] new BACKWARD kill word correctly                         :rudi:
+** TODO [#A] new BACKWARD kill word correctly                         :rudi:
 Rúdi: desired behavior is that backward-kill-word-correctly should leave a space after the remaining word left of the point, UNLESS point is at the beginning of the line or after "---"
 
-My implementation below seems to work, but it seems very slow. Is it possible to make it faster? Thanks! 
+My modification below seems to work, but it seems very slow. Is it possible to make it faster? Thanks! 
 
 #+BEGIN_SRC emacs-lisp 
 (defun backward-kill-word-correctly ()
@@ -659,7 +659,7 @@ My implementation below seems to work, but it seems very slow. Is it possible to
 )
 #+END_SRC
 
-** TODO [#B] my delete backward                                       :rudi:
+** my-delete-backward                                       :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active: 
@@ -702,10 +702,11 @@ My implementation below seems to work, but it seems very slow. Is it possible to
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 #+END_SRC
-
-Rúdi: Can we something like the below to my/delete-backward, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence 
+Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
 
 #+BEGIN_QUOTE
+First delete region, and then: 
 (if (my/beginning-of-sentence-p)
 (progn
 (capitalize-word)
