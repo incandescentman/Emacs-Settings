@@ -478,7 +478,6 @@
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
-(monaco-font)
 (toggle-fullscreen)
 
 ;;; Treat all themes as safe

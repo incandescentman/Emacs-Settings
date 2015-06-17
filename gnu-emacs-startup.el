@@ -534,7 +534,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c m") 'compose-mail)
 
 (toggle-maxframe)
-(monaco-font)
+; (monaco-font)
 
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
@@ -623,6 +623,10 @@ provided the (transient) mark is active."
       (setq ispell-program-name "hunspell")
       (eval-after-load "ispell"
         '(progn (defun ispell-get-coding-system () 'utf-8))))) 
+
+(executable-find "hunspell")
+;;  (setq ispell-program-name "hunspell")
+;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US") 
 (flyspell-mode-on) 
 
     (defgroup helm-org-wiki nil

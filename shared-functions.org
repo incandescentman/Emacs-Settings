@@ -44,7 +44,7 @@
 #+BEGIN_SRC emacs-lisp
 (require 'org-bullets)
 (require 'ox-latex)
-(require 'org-fstree)
+; (require 'org-fstree)
 #+END_SRC
 
 * Set up spellcheck
@@ -2822,8 +2822,8 @@ function I have a persistent buffer list available.
 * Startup
 ** Set font size to medium type
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :font "Inconsolata" :height 180)
-(medium-type)
+;; (set-face-attribute 'default nil :font "Inconsolata" :height 180)
+;; (medium-type)
 #+END_SRC
 
 * Extra functionality 

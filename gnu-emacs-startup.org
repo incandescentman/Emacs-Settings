@@ -767,7 +767,7 @@ Rúdi: Can we something like the below to my/delete-backward, so that if I delet
 
 #+BEGIN_SRC emacs-lisp
 (toggle-maxframe)
-(monaco-font)
+; (monaco-font)
 #+END_SRC
 
 * character movement
@@ -879,8 +879,7 @@ provided the (transient) mark is active."
 
 (executable-find "hunspell")
 ;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
-  (setq ispell-extra-args '("-d en_US") 
+;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US") 
 (flyspell-mode-on) 
    #+END_SRC
 

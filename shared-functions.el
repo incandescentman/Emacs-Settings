@@ -26,7 +26,7 @@
 
 (require 'org-bullets)
 (require 'ox-latex)
-(require 'org-fstree)
+; (require 'org-fstree)
 
 (cond
  ((executable-find "aspell")
@@ -2183,8 +2183,8 @@ With prefix arg C-u, copy region instad of killing it."
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
-(set-face-attribute 'default nil :font "Inconsolata" :height 180)
-(medium-type)
+;; (set-face-attribute 'default nil :font "Inconsolata" :height 180)
+;; (medium-type)
 
 (require 'engine-mode)
 (engine-mode t)

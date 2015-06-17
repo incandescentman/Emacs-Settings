@@ -20,11 +20,11 @@
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco" :height 160))
+  (set-face-attribute 'default nil :font "Monaco"))
 
 (defun inconsolata-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Inconsolata" :height 170))
+  (set-face-attribute 'default nil :font "Inconsolata"))
 
 (defun last-words ()
   (interactive)
