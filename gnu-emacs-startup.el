@@ -211,6 +211,10 @@
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
+(global-unset-key (kbd "C-S-r")) 
+(define-key key-minor-mode-map (kbd "C-S-r") nil)
+(define-key org-mode-map (kbd "C-S-r") nil)
+
 
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
