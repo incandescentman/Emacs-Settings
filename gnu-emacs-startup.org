@@ -1,6 +1,8 @@
+* file settings                                                     :ARCHIVE:
+#+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING | DONE 
 #+TODO: NOTE-TO-JAY NOTE-TO-RUDY
-#+TITLE: 
+#+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
   - System: Mac OSX Yosemite

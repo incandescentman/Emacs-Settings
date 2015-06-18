@@ -1,7 +1,10 @@
-* completed requests                                     :ARCHIVE:
+* file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
+#+TODO: TODO PLEASE-TEST TESTING | DONE 
+#+TODO: NOTE-TO-JAY NOTE-TO-RUDY
+#+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 
-
+* completed requests                                     :ARCHIVE:
 ** DONE [#A] make kill-word-correctly-and-capitalize count a line break as a word 
 Rúdi, 
 
@@ -57,7 +60,7 @@ Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? T
     The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
 
 
-* kill clause
+** kill clause
 
 I want to use this to create a function to kill-clause (not kill sentence).
 
@@ -250,4 +253,3 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 #+END_SRC
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
-
