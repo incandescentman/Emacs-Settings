@@ -736,8 +736,8 @@ First delete region, and then:
 
 #+BEGIN_SRC emacs-lisp
 ;; (toggle-maxframe)
-;; (monaco-font)
 (zenburn)
+(monaco-font) 
 (recenter-top-bottom)
 #+END_SRC
 
@@ -994,16 +994,20 @@ Oleh
           (org-align-tags-here org-tags-column))))))
 #+END_SRC
 
+** smart-punctuation exceptions
+
+   #+BEGIN_SRC emacs-lisp
+(defvar *smart-punctuation-marks*
+  ".,;:!?-")
+
+(setq *smart-punctuation-exceptions*
+  (list "?!" ".." "..." "---" "!:")) 
+   #+END_SRC
 
 
 ** smart-punctuation (auxiliary)
 
 #+BEGIN_SRC emacs-lisp 
-(defvar *smart-punctuation-marks*
-  ".,;:!?-")
-
-(setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -1192,7 +1196,7 @@ I still remember that day.
 
 Thanks!
 
-** TODO [#A] an edge case for kill-word-correctly-and-capitalize
+** DONE [#A] an edge case for kill-word-correctly-and-capitalize
 
 #+BEGIN_QUOTE
 He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
@@ -1210,6 +1214,30 @@ Note that the same output is created if I highlight the phrase "specializing in 
 
 Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? Thanks!
 
-*** TODO Try it now
+*** DONE Try it now
 
     The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
+
+* TODO [#B] cycle-hyphenation for multiple words
+Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
+
+: He is the editor in chief of the magazine. 
+
+Suppose the point is on the "e" in "editor" and I invoke cycle-hyphenation 2 times in a row. 
+
+Current output:
+: He is the editor-in chief-of the magazine. 
+
+Desired output:
+: He is the editor-in-chief of the magazine. 
+
+Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
+
+* TODO [#B] smart-colon exception for smiley emoticon 
+I'd like to make it easy for me to type something like the above:
+: Thanks! :-) 
+
+Currently if I type it the way it looks, I wind up with this:
+: Thanks!: -)
+
+Should we somehow make an exception for the above, or should I just disable smart-punctuation for colon?
