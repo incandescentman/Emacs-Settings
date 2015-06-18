@@ -538,8 +538,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c m") 'compose-mail)
 
 ;; (toggle-maxframe)
-;; (monaco-font)
 (zenburn)
+(monaco-font) 
 (recenter-top-bottom)
 
 (defun jay/left-char ()
@@ -705,7 +705,7 @@ provided the (transient) mark is active."
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---"))
+  (list "?!" ".." "..." "---" "!:")) 
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)

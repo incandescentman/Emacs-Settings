@@ -1218,6 +1218,21 @@ Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? T
 
     The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
 
+* TODO [#A] yet another edge case for kill-word-correctly-and-capitalize 
+It works! Here's another edge case. 
+
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?" 
+
+Suppose the point is on the "t" in the first "thought" and I invoke kill-word-correctly-and-capitalize. 
+
+Current output: 
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book,"thought Alice, "without pictures or conversations?"
+
+Desired output:
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought Alice, "without pictures or conversations?" 
+
+This function is becoming more and more useful!
+
 * TODO [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
