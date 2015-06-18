@@ -560,11 +560,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "-[[:space:]]+")
-            (looking-at "[[:punct:]]") 
+            (looking-at "[.,:;!?»)-]") 
             (looking-back "\" ") 
             (looking-at " \"")
-(looking-back"( ")
-(looking-at " )") 
+            (looking-back"( ")
+            (looking-at " )") 
             ) 
     (delete-horizontal-space)))
 #+END_SRC
@@ -1209,3 +1209,7 @@ He's a science writer specializing in psychology (NYT, Wired, Psychology Today).
 Note that the same output is created if I highlight the phrase "specializing in psychology" and hit my/delete-backward.
 
 Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? Thanks!
+
+*** TODO Try it now
+
+    The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
