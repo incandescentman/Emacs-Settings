@@ -1,3 +1,6 @@
+#+TODO: TODO PLEASE-TEST TESTING | DONE 
+#+TODO: NOTE-TO-JAY NOTE-TO-RUDY
+#+TITLE: 
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
   - System: Mac OSX Yosemite
@@ -342,8 +345,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
-(define-key key-minor-mode-map (kbd "\|") 'deft)
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
+;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
@@ -657,10 +660,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** TODO [#A] new BACKWARD kill word correctly                         :rudi:
-Rúdi: desired behavior is that backward-kill-word-correctly should leave a space after the remaining word left of the point, UNLESS point is at the beginning of the line or after "---"
+** TODO [#A] check my changes to backward kill word correctly? :rudi:
+Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
-My modification below seems to work, but it seems very slow. Is it possible to make it faster? Thanks! 
+I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
 
 #+BEGIN_SRC emacs-lisp 
 (defun backward-kill-word-correctly ()
@@ -811,7 +814,7 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<M-SPC>") 'jay/insert-space)
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -1145,9 +1148,9 @@ Oleh
 #+BEGIN_SRC emacs-lisp 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" to))
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
+;; (define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
 
@@ -1196,84 +1199,26 @@ Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end
 
 Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
 
-** TODO [#B] self insert space                                        :rudi:
+** TESTING [#B] self insert space                                     :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
-*** TODO Try this
+*** NOTE-TO-JAY Try this
 
     Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
 
-#+BEGIN_EXAMPLE
 #+BEGIN_SRC emacs-lisp
 (define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
 (define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
-#+END_SRC
-#+END_EXAMPLE
+#+END_SRC 
 
     If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
 
-    I'll leave it commented, since I don't know if this is really what you want.
+    I'll leave it commented, since I don't know if this is really what you want. 
 
-** TODO [#A] make kill-word-correctly-and-capitalize count a line break as a word 
-Rúdi, 
-
-Before I asked you to make kill-word-correctly kill not only words one at a time, but also punctuation one at a time, such that given this... 
-
-#+BEGIN_QUOTE
-The sea. Ocean. 
-
-I still remember that day.
-#+END_QUOTE 
-
-...and supposing the mark was on the T in The, invoking kill-word-correctly twice would kill "The" and "sea" but leave in period, and invoking it a third time would kind the period as well. And you implemented this perfectly. 
-
-Now I’d like to make kill-word-correctly and kill-word-correctly-and-capitalize recognize line breaks in the same way, counting each line break as a word. 
-
-In the above, let's say the point is on the "O" in "Ocean". And let's say I invoke kill-word-correctly-and-capitalize 3 times. 
-
-Current output: 
-
-#+BEGIN_QUOTE
-The sea. still remember that day.
-#+END_QUOTE 
-
-Desired output: 
-
-#+BEGIN_QUOTE
-The sea. 
-I still remember that day.
-#+END_QUOTE 
-
-Thanks!
-
-
-** DONE [#A] an edge case for kill-word-correctly-and-capitalize
-*** TODO Try it
-
-** TODO [#A] an edge case for kill-word-correctly-and-capitalize
-
-#+BEGIN_QUOTE
-He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
-#+END_QUOTE
-
-Suppose the point is on the "is" in "specializing" and my goal is to invoke kill-word-correctly-and-capitalize 3 times in order to kill the phrase "specializing in psychology".
-
-Current output: 
-He's a science writer(NYT, Wired, Psychology Today). 
-
-Desired output: 
-He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
-
-Note that the same output is created if I highlight the phrase "specializing in psychology" and hit my/delete-backward.
-
-Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? Thanks!
-
-*** DONE Try it now
-
-    The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
+: seems to work! thank you!
 
 * TODO [#A] yet another edge case for kill-word-correctly-and-capitalize 
-It works! Here's another edge case. 
+Here's another edge case. 
 
 : Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?" 
 
@@ -1302,14 +1247,6 @@ Desired output:
 
 Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
 
-* TODO [#B] smart-colon exception for smiley emoticon 
-I'd like to make it easy for me to type something like the above:
-: Thanks! :-) 
-
-Currently if I type it the way it looks, I wind up with this:
-: Thanks!: -)
-
-Should we somehow make an exception for the above, or should I just disable smart-punctuation for colon?
 * TODO [#B] an edge case for kill-clause
 Can we make kill-clause count "(" as punctuation? 
 
@@ -1325,4 +1262,4 @@ Current output:
 Desired output: 
 : (as well as she could, for the hot day made her feel very sleepy and stupid).
 
-I tried adding "(" to (let ((sentence-end-base in kill-clause, but it doesn't seem to have worked. Thanks!
+I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't seem to have worked. Thanks!

@@ -1,6 +1,62 @@
 * completed requests                                     :ARCHIVE:
 #+OPTIONS: f:t 
 
+
+** DONE [#A] make kill-word-correctly-and-capitalize count a line break as a word 
+Rúdi, 
+
+Before I asked you to make kill-word-correctly kill not only words one at a time, but also punctuation one at a time, such that given this... 
+
+#+BEGIN_QUOTE
+The sea. Ocean. 
+
+I still remember that day.
+#+END_QUOTE 
+
+...and supposing the mark was on the T in The, invoking kill-word-correctly twice would kill "The" and "sea" but leave in period, and invoking it a third time would kind the period as well. And you implemented this perfectly. 
+
+Now I’d like to make kill-word-correctly and kill-word-correctly-and-capitalize recognize line breaks in the same way, counting each line break as a word. 
+
+In the above, let's say the point is on the "O" in "Ocean". And let's say I invoke kill-word-correctly-and-capitalize 3 times. 
+
+Current output: 
+
+#+BEGIN_QUOTE
+The sea. still remember that day.
+#+END_QUOTE 
+
+Desired output: 
+
+#+BEGIN_QUOTE
+The sea. 
+I still remember that day.
+#+END_QUOTE 
+
+Thanks!
+
+** DONE [#A] an edge case for kill-word-correctly-and-capitalize
+
+#+BEGIN_QUOTE
+He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
+#+END_QUOTE
+
+Suppose the point is on the "is" in "specializing" and my goal is to invoke kill-word-correctly-and-capitalize 3 times in order to kill the phrase "specializing in psychology".
+
+Current output: 
+He's a science writer(NYT, Wired, Psychology Today). 
+
+Desired output: 
+He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
+
+Note that the same output is created if I highlight the phrase "specializing in psychology" and hit my/delete-backward.
+
+Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? Thanks!
+
+*** DONE Try it now
+
+    The problem was with ~my/fix-space~, which was deleting spaces before punctuation indiscriminately. Now it only deletes spaces before the characters: .,:;!?»)-. Note that this will affect many other functions, sice ~my/fix-space~ is called in a number of places. I think the result will nonetheless be the desired one.
+
+
 * kill clause
 
 I want to use this to create a function to kill-clause (not kill sentence).

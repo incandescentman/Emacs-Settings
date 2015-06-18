@@ -448,3 +448,19 @@ Thanks!
 
 : Haha, no, this is not a problem! Thank you! 
 
+
+* TODO [#B] smart-colon exception for smiley emoticon 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-18 Thu 15:56
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :ARCHIVE_TODO: TODO
+  :END:
+I'd like to make it easy for me to type something like the above:
+: Thanks! :-) 
+
+Currently if I type it the way it looks, I wind up with this:
+: Thanks!: -)
+
+Should we somehow make an exception for the above, or should I just disable smart-punctuation for colon?
+

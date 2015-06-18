@@ -241,8 +241,8 @@
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
-(define-key key-minor-mode-map (kbd "\|") 'deft)
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
+;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
@@ -605,7 +605,7 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd"<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<M-SPC>") 'jay/insert-space)
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -810,6 +810,9 @@ provided the (transient) mark is active."
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" to))
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
+;; (define-key org-mode-map (kbd ":") 'smart-colon)
+
+(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
+(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
