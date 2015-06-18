@@ -3283,58 +3283,6 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 ;; (load-theme 'leuven)
 #+END_SRC
 
-* kill clause
-
-I want to use this to create a function to kill-clause (not kill sentence).
-
-
-** DONE! :-) There's no doubt a better way to do this than the way I did it, which is to redefine sentence-end-base, kill the "sentence," then redefining sentence-end-base back again. :rudi:
-
-#+BEGIN_SRC emacs-lisp
-;;; old version; try the one below and replace it if it is working as intended.
-;; (defun kill-clause ()
-;;   (interactive) 
-;; (expand-abbrev)
-;;               (when (string-match "^\\[" sentence-end-base)
-;;     (progn 
-;;               (setq sentence-end-base
-;;                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
-;; (my/kill-sentence-dwim)
-;; (setq sentence-end-base "[.?!…][]\"'”)}]*")))
-#+END_SRC
-
-*** DONE! :-) DONE Request for clarification                     :followup:
-
-: Please clarify what you intend to do with this command.  From what I gather, you intend this function to do exactly what my/kill-sentence-dwim, as if "--", "," and ";" also marked the end of a sentence. If that is the case, then why do you also add the characters "?!…" to sentence-end-base, given that they (presumably) were already there?
-
-I may have made a mistake. My intention is that: 
-
-1. kill-clause should kill text up to -- --- , ; ! ? ... or . 
-2. my/kill-sentence-dwim should kill text up to ! ? ... or .
-
-Otherwise, yes, it should work exactly like my/kill-sentence-dwim. Thank you! 
-
-*** DONE! :-) Try this
-
-    Well, it is a pretty clever way of doing it... you're thinking like a true hacker. :) However, ~setq~'ing like in the Wild West is dangerous.
-
-: Haha! Thank you!
-
-    ~let~ will be your friend here.
-
-#+BEGIN_SRC emacs-lisp
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[.?!…][]\"'”)}]*")
-
-;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
-(defun kill-clause ()
-  (interactive) 
-  (expand-abbrev)
-  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”)}]*"))
-    (my/kill-sentence-dwim)))
-#+END_SRC
-
-: Perfect!
 
 * Better backspace during isearch 
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]

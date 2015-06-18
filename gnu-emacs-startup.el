@@ -701,6 +701,16 @@ provided the (transient) mark is active."
           (replace-match (format "%s - clone" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
 
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[.?!…][]\"'”)}]*")
+
+;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
+(defun kill-clause ()
+  (interactive) 
+  (expand-abbrev)
+  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”()}]*"))
+    (my/kill-sentence-dwim)))
+
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 

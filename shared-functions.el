@@ -2479,27 +2479,6 @@ searches all buffers."
 (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 
-;;; old version; try the one below and replace it if it is working as intended.
-;; (defun kill-clause ()
-;;   (interactive) 
-;; (expand-abbrev)
-;;               (when (string-match "^\\[" sentence-end-base)
-;;     (progn 
-;;               (setq sentence-end-base
-;;                       (replace-match "--\\|[,;.?!…/" t t sentence-end-base)))
-;; (my/kill-sentence-dwim)
-;; (setq sentence-end-base "[.?!…][]\"'”)}]*")))
-
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[.?!…][]\"'”)}]*")
-
-;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
-(defun kill-clause ()
-  (interactive) 
-  (expand-abbrev)
-  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”)}]*"))
-    (my/kill-sentence-dwim)))
-
 (defun my-isearch-delete ()
   "Delete the failed portion of the search string, or the last char if successful."
   (interactive)
