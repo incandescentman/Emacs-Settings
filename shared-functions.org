@@ -3275,6 +3275,12 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 ;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
 (load "~/Dropbox/elisp/jay-dixit-latex.el")
 (load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
+* 
+magit
+
+#+BEGIN_SRC emacs-lisp
+(setq magit-last-seen-setup-instructions "1.4.0") 
+#+END_SRC
 
 
 * startup

@@ -2476,6 +2476,8 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
 
+(setq magit-last-seen-setup-instructions "1.4.0") 
+
 (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 

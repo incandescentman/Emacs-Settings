@@ -587,17 +587,27 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; ))
 
 ;;; new version
+;; (defun kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (expand-abbrev)
+;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;     (kill-word 1))                                    ; ELSE kill word
+;;   (my/fix-space)) ; and finally fix space
+
+;;; newer version
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (expand-abbrev)
-  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+  (if (or (re-search-forward "\\=[ 	]*\n" nil t)
+          (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
-  (my/fix-space)) ; and finally fix space
+  (my/fix-space))
 #+END_SRC
 
-** 
 ** DONE [#A] kill word correctly and capitalize 
 #+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one
@@ -624,15 +634,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; )
 
 ;;; new version
+;; (defun kill-word-correctly-and-capitalize ()
+;;   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+;;   (interactive)
+;;   (let ((fix-capitalization (my/beginning-of-sentence-p)))
+;;     (expand-abbrev)
+;;     (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
+;;         (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;       (kill-word 1))                                    ; ELSE kill word
+;;     (my/fix-space)
+;;     (when fix-capitalization
+;;       (save-excursion (capitalize-word 1)))))
+
+;;; newer version
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
-    (expand-abbrev)
-    (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
-        (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-      (kill-word 1))                                    ; ELSE kill word
-    (my/fix-space)
+    (call-interactively 'kill-word-correctly)
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
 #+END_SRC
@@ -1180,6 +1199,21 @@ Is it possible (and not too difficult) to make it so that if I invoke my/delete-
 ** TODO [#B] self insert space                                        :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
+*** TODO Try this
+
+    Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
+
+#+BEGIN_EXAMPLE
+#+BEGIN_SRC emacs-lisp
+(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
+(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
+#+END_SRC
+#+END_EXAMPLE
+
+    If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
+
+    I'll leave it commented, since I don't know if this is really what you want.
+
 ** TODO [#A] make kill-word-correctly-and-capitalize count a line break as a word 
 Rúdi, 
 
@@ -1212,7 +1246,11 @@ I still remember that day.
 
 Thanks!
 
+
 ** DONE [#A] an edge case for kill-word-correctly-and-capitalize
+*** TODO Try it
+
+** TODO [#A] an edge case for kill-word-correctly-and-capitalize
 
 #+BEGIN_QUOTE
 He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
