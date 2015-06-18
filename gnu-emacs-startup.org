@@ -1191,3 +1191,21 @@ I still remember that day.
 #+END_QUOTE 
 
 Thanks!
+
+** TODO [#A] an edge case for kill-word-correctly-and-capitalize
+
+#+BEGIN_QUOTE
+He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
+#+END_QUOTE
+
+Suppose the point is on the "is" in "specializing" and my goal is to invoke kill-word-correctly-and-capitalize 3 times in order to kill the phrase "specializing in psychology".
+
+Current output: 
+He's a science writer(NYT, Wired, Psychology Today). 
+
+Desired output: 
+He's a science writer specializing in psychology (NYT, Wired, Psychology Today). 
+
+Note that the same output is created if I highlight the phrase "specializing in psychology" and hit my/delete-backward.
+
+Can we fix for both kill-word-correctly-and-capitalize and my/delete-backward? Thanks!
