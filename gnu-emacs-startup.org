@@ -587,17 +587,27 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; ))
 
 ;;; new version
+;; (defun kill-word-correctly ()
+;;   "Kill word."
+;;   (interactive)
+;;   (expand-abbrev)
+;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;     (kill-word 1))                                    ; ELSE kill word
+;;   (my/fix-space)) ; and finally fix space
+
+;;; newer version
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (expand-abbrev)
-  (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
+  (if (or (re-search-forward "\\=[ 	]*\n" nil t)
+          (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
-  (my/fix-space)) ; and finally fix space
+  (my/fix-space))
 #+END_SRC
 
-** 
 ** DONE [#A] kill word correctly and capitalize 
 #+BEGIN_SRC emacs-lisp 
 ;;; old version; remove after testing new one
@@ -624,15 +634,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; )
 
 ;;; new version
+;; (defun kill-word-correctly-and-capitalize ()
+;;   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+;;   (interactive)
+;;   (let ((fix-capitalization (my/beginning-of-sentence-p)))
+;;     (expand-abbrev)
+;;     (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
+;;         (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
+;;       (kill-word 1))                                    ; ELSE kill word
+;;     (my/fix-space)
+;;     (when fix-capitalization
+;;       (save-excursion (capitalize-word 1)))))
+
+;;; newer version
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
-    (expand-abbrev)
-    (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
-        (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-      (kill-word 1))                                    ; ELSE kill word
-    (my/fix-space)
+    (call-interactively 'kill-word-correctly)
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
 #+END_SRC
@@ -1191,6 +1210,8 @@ I still remember that day.
 #+END_QUOTE 
 
 Thanks!
+
+*** TODO Try it
 
 ** TODO [#A] an edge case for kill-word-correctly-and-capitalize
 
