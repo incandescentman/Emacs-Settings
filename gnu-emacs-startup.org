@@ -1,7 +1,7 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
-#+TODO: TODO PLEASE-TEST TESTING | DONE 
-#+TODO: NOTE-TO-JAY NOTE-TO-RUDY
+#+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE 
+#+TODO: NOTE-TO-JAY NOTE-TO-RUDI |
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
@@ -101,6 +101,7 @@ Wrap text:
   (global-set-key (kbd "<f13>") 'toggle-fullscreen))
 
   (global-set-key (kbd "<f13>") 'toggle-fullscreen)
+
 #+END_SRC
 
 * Directory settings
@@ -253,8 +254,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 	       (point))))
     (shell-command-on-region start end
 			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t)
-
+			     nil t) 
     (save-excursion
 
       )))
@@ -308,6 +308,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
@@ -760,8 +762,14 @@ First delete region, and then:
 
 #+BEGIN_SRC emacs-lisp
 ;; (toggle-maxframe)
+(setq default-frame-alist
+      '(
+        (width . 160) ; character
+        (height . 42) ; lines
+        )) 
 (zenburn)
 (monaco-font) 
+;; (minuscule-type)
 (recenter-top-bottom)
 #+END_SRC
 
@@ -1201,7 +1209,7 @@ Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end
 
 Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks! 
 
-** TESTING [#B] self insert space                                     :rudi:
+** PLEASE-DEBUG [#B] self insert space                                :rudi:
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
 *** NOTE-TO-JAY Try this
@@ -1216,8 +1224,20 @@ Can we create a command to self-insert space? Which I'll bind to M-SPC in case I
     If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
 
     I'll leave it commented, since I don't know if this is really what you want. 
+*** NOTE-TO-RUDI dealing with the minibuffer 
+seems to work! thank you!
 
-: seems to work! thank you!
+Update: I ran into problems in the minibuffer. Seems like the key translation switcheroo doesn't work in the minibuffer? When I call ~helm-M-x~ and then enter a word followed by a space (e.g. "org agenda") it reads the space as M-SPC and I get an error. 
+
+I tried this... 
+
+(define-key minibuffer-local-map (kbd "<M-SPC>") 'jay/insert-space) 
+(global-set-key (kbd "<M-SPC>") 'jay/insert-space) 
+
+...but it didn't fix the problem.
+
+Thanks!
+
 
 * TODO [#A] yet another edge case for kill-word-correctly-and-capitalize 
 Here's another edge case. 

@@ -167,8 +167,7 @@
 	       (point))))
     (shell-command-on-region start end
 			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t)
-
+			     nil t) 
     (save-excursion
 
       )))
@@ -202,6 +201,8 @@
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
@@ -558,8 +559,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c m") 'compose-mail)
 
 ;; (toggle-maxframe)
+(setq default-frame-alist
+      '(
+        (width . 160) ; character
+        (height . 42) ; lines
+        )) 
 (zenburn)
 (monaco-font) 
+;; (minuscule-type)
 (recenter-top-bottom)
 
 (defun jay/left-char ()

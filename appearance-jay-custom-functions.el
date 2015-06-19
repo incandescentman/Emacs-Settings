@@ -31,9 +31,16 @@
 
 (defun tiny-type ()
   (interactive)
-  (set-face-attribute 'default nil  :height 170)
-  (set-frame-width (selected-frame) 89)
+  (set-face-attribute 'default nil  :height 150)
+  
   )
+
+(defun miniscule-type ()
+  (interactive)
+  (set-face-attribute 'default nil  :height 140)
+  
+  )
+
 
 (defun set-font-size (value)
   "Set font size"

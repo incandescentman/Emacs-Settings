@@ -16,7 +16,7 @@ The sea. Ocean.
 I still remember that day.
 #+END_QUOTE 
 
-...and supposing the mark was on the T in The, invoking kill-word-correctly twice would kill "The" and "sea" but leave in period, and invoking it a third time would kind the period as well. And you implemented this perfectly. 
+...and supposing the point was on the T in The, invoking kill-word-correctly twice would kill "The" and "sea" but leave in period, and invoking it a third time would kind the period as well. And you implemented this perfectly. 
 
 Now I’d like to make kill-word-correctly and kill-word-correctly-and-capitalize recognize line breaks in the same way, counting each line break as a word. 
 
