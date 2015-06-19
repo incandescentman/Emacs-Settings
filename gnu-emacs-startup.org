@@ -324,6 +324,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key org-mode-map (kbd "C-S-r") nil)
 
 
+(define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
+
+
+
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
@@ -1342,3 +1346,14 @@ can we add a function to search within the current buffer, using the contents of
 i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
 * TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
 can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0
+* TODO [#C] bold-next-word 
+function I can call BEFORE I enter a word that will place * on either side of a word. let's say my keybinding for bold-next-word is M-S-b.
+
+Example:
+<KBD><M-S-b>important<SPC)point<SPC>to<SPC>remember</KBD> 
+
+desired output: 
+
+: *important* point to remember
+
+or upcase.

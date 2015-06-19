@@ -217,6 +217,10 @@
 (define-key org-mode-map (kbd "C-S-r") nil)
 
 
+(define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
+
+
+
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
