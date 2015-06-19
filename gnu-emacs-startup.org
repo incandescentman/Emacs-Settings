@@ -1261,6 +1261,16 @@ Desired output:
 
 This function is becoming more and more useful!
 
+** NOTE-TO-JAY Question
+
+   The culprit here seems to be again ~my/fix-space~. I see you added the following clause:
+
+: (looking-back "\" ") 
+
+   This means that after fixing the spaces, if you look back from point to '" ', you should delete the space. I suppose that's only true if: (1) the quotation marks are starting a quote, or (2) there is a punctuation mark ahead (which is handled by another clause).
+
+   So, what was the intention here?
+
 * TODO [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
