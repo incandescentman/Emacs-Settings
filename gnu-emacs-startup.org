@@ -1,7 +1,7 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE 
-#+TODO: NOTE-TO-JAY NOTE-TO-RUDI |
+#+TODO: NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI |
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
@@ -1290,6 +1290,16 @@ This function is becoming more and more useful!
    This means that after fixing the spaces, if you look back from point to '" ', you should delete the space. I suppose that's only true if: (1) the quotation marks are starting a quote, or (2) there is a punctuation mark ahead (which is handled by another clause).
 
    So, what was the intention here?
+*** NOTE-TO-RÚDI Answer
+Hmm, I'm not sure I remember what I intended there. I must have been trying to address an edge case I found myself. If it makes sense to remove that clause again, let's do so, and if I find another edge case, we can address it at that point.
+
+In general, I will use quotation marks and punctuation in the style/sequence reflected below: 
+
+#+BEGIN_QUOTE
+Alice was beginning to get very tired of sitting by her sister on the bank (and of having nothing to do). Once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought Alice, "without pictures or conversations."
+#+END_QUOTE
+
+Thanks!
 
 * TODO [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
