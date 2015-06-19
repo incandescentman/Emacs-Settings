@@ -1357,3 +1357,5 @@ desired output:
 : *important* point to remember
 
 or upcase.
+* TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
+
