@@ -253,3 +253,16 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 #+END_SRC
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
+** TODO sense when I'm in a plain text list 
+RET (translated from <return>) 
+
+RET (translated from <return>) runs the command (lambda nil
+(interactive) (if (region-active-p) (delete-region (region-beginning)
+(region-end)) (call-interactively (quote org-return)))), which is an
+interactive Lisp function.
+
+It is bound to RET. 
+
+- item 1<RET>
+
+* TODO line of periods

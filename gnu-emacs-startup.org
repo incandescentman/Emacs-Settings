@@ -1334,3 +1334,11 @@ I tried this...
 ...but it didn't fix the problem.
 
 Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary number of spaces, ignoring the my/fix-space constraints we've created.
+
+
+* TODO [#A] isearch contents of pasteboard
+can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
+
+i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
+* TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
+can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0

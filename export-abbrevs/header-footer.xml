@@ -12,6 +12,30 @@
 	<key>snippetsTE2</key>
 	<array> 
 
+<dict>
+        <key>abbreviation</key>
+        <string>u</string>
+        <key>abbreviationMode</key>
+        <integer>0</integer>
+        <key>creationDate</key>
+        <date>2015-06-19T18:19:32Z</date>
+        <key>flags</key>
+        <integer>0</integer>
+        <key>label</key>
+        <string></string>
+        <key>lastUsed</key>
+        <date>2015-06-19T18:19:32Z</date>
+        <key>modificationDate</key>
+        <date>2015-06-19T18:19:32Z</date>
+        <key>plainText</key>
+        <string>you</string>
+        <key>snippetType</key>
+        <integer>0</integer>
+        <key>useCount</key>
+        <integer>3148</integer>
+        <key>uuidString</key>
+        <string>BB9237B4-16AF-11E5-A74B-14109FE34F3D</string>
+      </dict>
 
 
 </array>
