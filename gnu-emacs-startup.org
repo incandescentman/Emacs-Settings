@@ -1163,113 +1163,6 @@ Oleh
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
-
-* TODO [#C] cycle punctuation                                          :rudi:
-
-create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
-
-: The rain in Spain falls mainly on the plains. 
-
-...and assuming the point was on the "T" or the "." or anywhere in between, invoking cycle-punctuation would leave the point wherever it was and cycle between these three states:
-
-: The rain in Spain falls mainly on the plains. 
-: The rain in Spain falls mainly on the plains? 
-: The rain in Spain falls mainly on the plains! 
-
-In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Here's some code that might help. 
-http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html 
-
-Thanks!!
-
-(define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
-
-
-** TODO [#C] request: backspace after expand-abbrev 
-Hi Rúdi,
-
-To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos. 
-
-The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it. 
-
-See below. 
-
-<KB>bc </KB> 
-output: 
-#+BEGIN_EXAMPLE: 
-because ^
-#+END_EXAMPLE:
-
-<KB>bg </KB> 
-output: 
-#+BEGIN_EXAMPLE: 
-beginning ^
-#+END_EXAMPLE:
-
-Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
-
-Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks!
-
-*** NOTE-TO-JAY Question
-
-    The question here is: what do you mean by "within a few keystrokes"?
-
-    So, suppose you define a parameter that determines the maximum amount of keystrokes before Emacs "forgets" about ~expand-abbrev~. Let's say its value is 5 and let's take your example:
-
-<KB>bg </KB> 
-output: 
-#+BEGIN_EXAMPLE: 
-beginning ^
-#+END_EXAMPLE:
-
-Suppose you now type "oops" (four keystrokes). You get:
-
-#+BEGIN_EXAMPLE: 
-beginning oops^
-#+END_EXAMPLE:
-
-What should happen when you ~my/delete-backward~? I can imagine two scenarios:
-
-1. Delete the 's'. Further ~my/delete-backward~ invocations would delete each individual character downto the first 'o', then on the *fifth*, 'beginning' would be unexpanded.
-2. Unexpand 'beginning'. Further invocations would delete the characters (starting in 's', etc).
-
-My personal opinion: 2, albeit easier to implement, would be messy. Suppose you really did mean to write 'beginning', but not 'oops'. You'd have to type some more, or perhaps make inocuous keystrokes just to get Emacs to forget about unexpanding, and *only* then you could ~my/delete-backward~.
-
-3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
-
-*** NOTE-TO-RÚDI Answer
-Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a lowest-priority request.
-
-
-** PLEASE-DEBUG [#B] self insert space                                :rudi:
-Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
-
-*** NOTE-TO-JAY Try this
-
-    Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
-
-#+BEGIN_SRC emacs-lisp
-(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
-(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
-#+END_SRC 
-
-    If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
-
-    I'll leave it commented, since I don't know if this is really what you want. 
-*** NOTE-TO-RUDI dealing with the minibuffer 
-seems to work! thank you!
-
-Update: I ran into problems in the minibuffer. Seems like the key translation switcheroo doesn't work in the minibuffer? When I call ~helm-M-x~ and then enter a word followed by a space (e.g. "org agenda") it reads the space as M-SPC and I get an error. 
-
-I tried this... 
-
-(define-key minibuffer-local-map (kbd "<M-SPC>") 'jay/insert-space) 
-(global-set-key (kbd "<M-SPC>") 'jay/insert-space) 
-
-...but it didn't fix the problem.
-
-Thanks!
-
-
 * TODO [#A] yet another edge case for kill-word-correctly-and-capitalize 
 Here's another edge case. 
 
@@ -1305,21 +1198,6 @@ Alice was beginning to get very tired of sitting by her sister on the bank (and 
 
 Thanks!
 
-* TODO [#B] cycle-hyphenation for multiple words
-Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
-
-: He is the editor in chief of the magazine. 
-
-Suppose the point is on the "e" in "editor" and I invoke cycle-hyphenation 2 times in a row. 
-
-Current output:
-: He is the editor-in chief-of the magazine. 
-
-Desired output:
-: He is the editor-in-chief of the magazine. 
-
-Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
-
 * TODO [#B] an edge case for kill-clause
 Can we make kill-clause count "(" as punctuation? 
 
@@ -1336,3 +1214,123 @@ Desired output:
 : (as well as she could, for the hot day made her feel very sleepy and stupid).
 
 I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't seem to have worked. Thanks!
+* TODO [#B] cycle-hyphenation for multiple words
+Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
+
+: He is the editor in chief of the magazine. 
+
+Suppose the point is on the "e" in "editor" and I invoke cycle-hyphenation 2 times in a row. 
+
+Current output:
+: He is the editor-in chief-of the magazine. 
+
+Desired output:
+: He is the editor-in-chief of the magazine. 
+
+Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
+
+* TODO [#C] cycle punctuation 
+
+create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
+
+: The rain in Spain falls mainly on the plains. 
+
+...and assuming the point was on the "T" or the "." or anywhere in between, invoking cycle-punctuation would leave the point wherever it was and cycle between these three states:
+
+: The rain in Spain falls mainly on the plains. 
+: The rain in Spain falls mainly on the plains? 
+: The rain in Spain falls mainly on the plains! 
+
+In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Here's some code that might help. 
+http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html 
+
+Thanks!!
+
+(define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
+
+
+* TODO [#C] request: backspace after expand-abbrev 
+Hi Rúdi,
+
+To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos. 
+
+The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it. 
+
+See below. 
+
+<KB>bc </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+because ^
+#+END_EXAMPLE:
+
+<KB>bg </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+beginning ^
+#+END_EXAMPLE:
+
+Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
+
+Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks!
+
+** NOTE-TO-JAY Question
+
+    The question here is: what do you mean by "within a few keystrokes"?
+
+    So, suppose you define a parameter that determines the maximum amount of keystrokes before Emacs "forgets" about ~expand-abbrev~. Let's say its value is 5 and let's take your example:
+
+<KB>bg </KB> 
+output: 
+#+BEGIN_EXAMPLE: 
+beginning ^
+#+END_EXAMPLE:
+
+Suppose you now type "oops" (four keystrokes). You get:
+
+#+BEGIN_EXAMPLE: 
+beginning oops^
+#+END_EXAMPLE:
+
+What should happen when you ~my/delete-backward~? I can imagine two scenarios:
+
+1. Delete the 's'. Further ~my/delete-backward~ invocations would delete each individual character downto the first 'o', then on the *fifth*, 'beginning' would be unexpanded.
+2. Unexpand 'beginning'. Further invocations would delete the characters (starting in 's', etc).
+
+My personal opinion: 2, albeit easier to implement, would be messy. Suppose you really did mean to write 'beginning', but not 'oops'. You'd have to type some more, or perhaps make inocuous keystrokes just to get Emacs to forget about unexpanding, and *only* then you could ~my/delete-backward~.
+
+3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
+
+** NOTE-TO-RÚDI Answer
+Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a lowest-priority request.
+
+
+* PLEASE-DEBUG [#B] self insert space 
+
+Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
+
+** NOTE-TO-JAY Try this
+
+    Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
+
+#+BEGIN_SRC emacs-lisp
+(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
+(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
+#+END_SRC 
+
+    If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
+
+    I'll leave it commented, since I don't know if this is really what you want. 
+** NOTE-TO-RUDI dealing with the minibuffer 
+seems to work! thank you!
+
+Update: I ran into problems in the minibuffer. Seems like the key translation switcheroo doesn't work in the minibuffer? When I call ~helm-M-x~ and then enter a word followed by a space (e.g. "org agenda") it reads the space as M-SPC and I get an error. 
+
+I tried this... 
+
+(define-key minibuffer-local-map (kbd "<M-SPC>") 'jay/insert-space) 
+(global-set-key (kbd "<M-SPC>") 'jay/insert-space) 
+
+...but it didn't fix the problem.
+
+Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary number of spaces, ignoring the my/fix-space constraints we've created.
