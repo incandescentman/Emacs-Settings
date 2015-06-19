@@ -1237,7 +1237,7 @@ My personal opinion: 2, albeit easier to implement, would be messy. Suppose you 
 3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
 
 *** NOTE-TO-RÚDI Answer
-Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated.
+Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a lowest-priority request.
 
 
 ** PLEASE-DEBUG [#B] self insert space                                :rudi:
