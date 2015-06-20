@@ -837,3 +837,5 @@ provided the (transient) mark is active."
            (pasteboard-paste)
            (buffer-string))))
     (search-forward search-term)))
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
