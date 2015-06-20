@@ -729,7 +729,7 @@ provided the (transient) mark is active."
         (when hl-text
           (beginning-of-line)
           (search-forward hl-text (point-at-eol))
-          (replace-match (format "%s - clone" hl-text) nil t)
+          (replace-match (format "%s - original" hl-text) nil t)
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
