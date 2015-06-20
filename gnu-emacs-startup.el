@@ -405,8 +405,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "-[[:space:]]+")
             (looking-at "[.,:;!?»)-]") 
-            (looking-back "\" ") 
-            (looking-at " \"")
             (looking-back"( ")
             (looking-at " )") 
             ) 
@@ -616,7 +614,7 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd "<M-SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -825,5 +823,17 @@ provided the (transient) mark is active."
 
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 
-(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
-(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command)))
+
+(global-set-key (kbd "M-SPC") 'insert-space)
+
+(defun pasteboard-search-in-current-buffer ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste)
+           (buffer-string))))
+    (search-forward search-term)))

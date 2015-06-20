@@ -1,7 +1,7 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE 
-#+TODO: NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI |
+#+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
@@ -826,7 +826,7 @@ provided the (transient) mark is active."
   (just-one-space)
 )
  
-(define-key org-mode-map (kbd "<M-SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -1165,7 +1165,7 @@ Oleh
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
-* TODO [#A] yet another edge case for kill-word-correctly-and-capitalize 
+* DONE [#A] yet another edge case for kill-word-correctly-and-capitalize 
 Here's another edge case. 
 
 : Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?" 
@@ -1311,7 +1311,7 @@ My personal opinion: 2, albeit easier to implement, would be messy. Suppose you 
 Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a lowest-priority request.
 
 
-* PLEASE-DEBUG [#B] self insert space 
+* DONE [#B] self insert space 
 
 Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
 
@@ -1319,10 +1319,10 @@ Can we create a command to self-insert space? Which I'll bind to M-SPC in case I
 
     Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
 
-#+BEGIN_SRC emacs-lisp
+# #+BEGIN_SRC emacs-lisp
 (define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
 (define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
-#+END_SRC 
+# #+END_SRC 
 
     If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
 
@@ -1356,7 +1356,7 @@ Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary num
 (global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC 
 
-* TODO [#A] isearch contents of pasteboard
+* DONE [#A] isearch contents of pasteboard
 can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
 
 i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
@@ -1371,7 +1371,11 @@ i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-pas
            (pasteboard-paste)
            (buffer-string))))
     (search-forward search-term)))
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
 #+END_SRC
+
+** NOTE-TO-RÚDI Seems to work. Thank you! 
 
 * TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
 can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0
@@ -1387,4 +1391,3 @@ desired output:
 
 or upcase.
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
-
