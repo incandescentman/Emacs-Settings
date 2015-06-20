@@ -572,8 +572,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "-[[:space:]]+")
             (looking-at "[.,:;!?»)-]") 
-            (looking-back "\" ") 
-            (looking-at " \"")
             (looking-back"( ")
             (looking-at " )") 
             ) 
@@ -1202,6 +1200,10 @@ Alice was beginning to get very tired of sitting by her sister on the bank (and 
 
 Thanks!
 
+*** NOTE-TO-JAY About the quotation marks
+
+OK, I removed the clauses pertaining to the quotation marks. Indeed, it is hard to determine, when you are looking at a single quotation mark, if it is starting or ending the quote. You must pair it with the previous or next; in the limit you have to take into account the whole buffer. There is probably code out there that does it (note that ~emacs-lisp-mode~, for example, colourises strings -- therefore, it must know when a string starts or ends). I can search for it if you want.
+
 * TODO [#B] an edge case for kill-clause
 Can we make kill-clause count "(" as punctuation? 
 
@@ -1339,11 +1341,38 @@ I tried this...
 
 Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary number of spaces, ignoring the my/fix-space constraints we've created.
 
+*** NOTE-TO-JAY 
+
+    I see. Well, that's the kind of "undesired consequences" I imagined could happen indeed.
+
+    Forget about the switcheroo. Here, try this:
+
+#+BEGIN_SRC emacs-lisp
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command)))
+
+(global-set-key (kbd "M-SPC") 'insert-space)
+#+END_SRC 
 
 * TODO [#A] isearch contents of pasteboard
 can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
 
 i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
+
+** NOTE-TO-JAY Try this
+
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-search-in-current-buffer ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste)
+           (buffer-string))))
+    (search-forward search-term)))
+#+END_SRC
+
 * TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
 can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0
 * TODO [#C] bold-next-word 
