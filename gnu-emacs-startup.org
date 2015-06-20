@@ -1360,6 +1360,19 @@ Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary num
 can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
 
 i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
+
+** NOTE-TO-JAY Try this
+
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-search-in-current-buffer ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste)
+           (buffer-string))))
+    (search-forward search-term)))
+#+END_SRC
+
 * TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
 can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0
 * TODO [#C] bold-next-word 
