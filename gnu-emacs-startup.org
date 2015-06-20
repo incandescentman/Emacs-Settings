@@ -1339,6 +1339,20 @@ I tried this...
 
 Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary number of spaces, ignoring the my/fix-space constraints we've created.
 
+*** NOTE-TO-JAY 
+
+    I see. Well, that's the kind of "undesired consequences" I imagined could happen indeed.
+
+    Forget about the switcheroo. Here, try this:
+
+#+BEGIN_SRC emacs-lisp
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command)))
+
+(global-set-key (kbd "M-SPC") 'insert-space)
+#+END_SRC 
 
 * TODO [#A] isearch contents of pasteboard
 can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
