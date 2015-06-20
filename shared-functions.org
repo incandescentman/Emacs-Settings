@@ -3293,7 +3293,7 @@ magit
 * Better backspace during isearch 
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_EXAMPLE emacs-lisp 
 (defun my-isearch-delete ()
   "Delete the failed portion of the search string, or the last char if successful."
   (interactive)
@@ -3305,7 +3305,7 @@ Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Be
             (mapconcat 'isearch-text-char-description isearch-new-string ""))))
 
 (define-key isearch-mode-map (kbd "<backspace>") 'my-isearch-delete) 
-#+END_SRC
+#+END_EXAMPLE
  
 
 * Tell isearch that curly apostrophes are the same as straight ones

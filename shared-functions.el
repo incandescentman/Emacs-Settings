@@ -2481,18 +2481,6 @@ searches all buffers."
 (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 
-(defun my-isearch-delete ()
-  "Delete the failed portion of the search string, or the last char if successful."
-  (interactive)
-  (with-isearch-suspended
-      (setq isearch-new-string
-            (substring
-             isearch-string 0 (or (isearch-fail-pos) (1- (length isearch-string))))
-            isearch-new-message
-            (mapconcat 'isearch-text-char-description isearch-new-string ""))))
-
-(define-key isearch-mode-map (kbd "<backspace>") 'my-isearch-delete) 
-
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"

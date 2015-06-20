@@ -1378,16 +1378,13 @@ i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-pas
 ** NOTE-TO-RÚDI Seems to work. Thank you! 
 
 * TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
-can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.be. abbrevationMode 0
-* TODO [#C] bold-next-word 
-function I can call BEFORE I enter a word that will place * on either side of a word. let's say my keybinding for bold-next-word is M-S-b.
+can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.e. abbrevationMode 0
 
-Example:
-<KBD><M-S-b>important<SPC)point<SPC>to<SPC>remember</KBD> 
+e.g. 
+(setq textexpander-export-as-case-sensitive-list 
+  ("id" "wed" "im" "sd" "uk" "US")) 
 
-desired output: 
-
-: *important* point to remember
-
-or upcase.
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
+
+
+
