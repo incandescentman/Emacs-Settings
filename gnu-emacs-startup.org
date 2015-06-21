@@ -1047,9 +1047,9 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation ()
   (interactive)
-  (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
+  (cond ((re-search-forward "\\=\\w*\\(-\\)\\w+" nil t)
          (save-excursion (replace-match " " t t nil 1)))
-        ((re-search-forward "\\=\\W*\\w+\\( +\\)\\w+" nil t)
+        ((re-search-forward "\\=\\w*\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
 #+END_SRC
 
@@ -1305,6 +1305,22 @@ Desired output:
 : He is the editor-in-chief of the magazine. 
 
 Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
+
+** NOTE-TO-JAY Answer
+
+   OK, but I changed the semantics of the command slightly. Take your example:
+
+: He is the editor in chief of the magazine. 
+
+   Suppose the point is NOT on the 'e', but on the SPACE just before it. With the previous version, you'd get:
+
+: He is the editor-in chief of the magazine. 
+
+   As desired. With the new version, you get:
+
+: He is the-editor in chief of the magazine. 
+
+   Which is not desired. So: always ~cycle-hyphenise~ when point is ON or AFTER the beginning of the word you wish to join with the following. Same goes with the cycling back from - to space.
 
 * TODO [#C] cycle punctuation 
 
