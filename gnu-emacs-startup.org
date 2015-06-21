@@ -1142,7 +1142,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!:")) 
+  (list "?!" ".." "..." "---" "!!" "!:")) 
    #+END_SRC
 
 
@@ -1256,7 +1256,7 @@ Oleh
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
-* DONE [#A] yet another edge case for kill-word-correctly-and-capitalize 
+* DONE [#B] yet another edge case for kill-word-correctly-and-capitalize 
 Here's another edge case. 
 
 : Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?" 
@@ -1294,6 +1294,8 @@ Thanks!
 *** NOTE-TO-JAY About the quotation marks
 
 OK, I removed the clauses pertaining to the quotation marks. Indeed, it is hard to determine, when you are looking at a single quotation mark, if it is starting or ending the quote. You must pair it with the previous or next; in the limit you have to take into account the whole buffer. There is probably code out there that does it (note that ~emacs-lisp-mode~, for example, colourises strings -- therefore, it must know when a string starts or ends). I can search for it if you want.
+*** NOTE-TO-RÚDI later
+Yes, that would be great, but let's deprioritize it. Thanks!
 
 * TODO [#A] an edge case for kill-clause
 Can we make kill-clause count "(" as punctuation? 
@@ -1322,7 +1324,10 @@ I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't 
 
    If you call ~kill-clause~ with point on 'K', it will kill until the ' in doesn't. If point is on 'w' from 'work', it will kill until the 'e' in 'e.g.'. I don't suppose this is desired behaviour. Do you confirm? Should I handle it?
 
-* TODO [#B] cycle-hyphenation for multiple words
+** NOTE-TO-RÚDI Yes please. 
+Yes, if you could handle this, that would be great. The two cases you mention above are frequent cases for me, so handling them is high-priority. 
+
+* TESTING [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
 : He is the editor in chief of the magazine. 
@@ -1352,6 +1357,9 @@ Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
 : He is the-editor in chief of the magazine. 
 
    Which is not desired. So: always ~cycle-hyphenise~ when point is ON or AFTER the beginning of the word you wish to join with the following. Same goes with the cycling back from - to space.
+
+** NOTE-TO-JAY Answer
+Got it. Thanks!! 
 
 * TODO [#C] cycle punctuation 
 
@@ -1495,7 +1503,7 @@ i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-pas
 
 ** NOTE-TO-RÚDI Seems to work. Thank you! 
 
-* TODO [#C] list of abbrevs to be expanded to TextExpander as case-sensitive 
+* TODO [#B] list of abbrevs to be expanded to TextExpander as case-sensitive 
 can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.e. abbrevationMode 0
 
 e.g. 
@@ -1503,6 +1511,3 @@ e.g.
   ("id" "wed" "im" "sd" "uk" "US" "OS")) 
 
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
-
-
-

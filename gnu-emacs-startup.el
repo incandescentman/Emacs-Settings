@@ -627,6 +627,32 @@ provided the (transient) mark is active."
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
+(define-minor-mode embolden-next-word
+    "Make the next word you type bold."
+  nil 
+  :lighter " EMBOLDEN"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion 
+                        (goto-char (get-register 'p))
+                        (insert "*"))
+                      (insert "* ")
+                      (embolden-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion 
+                      (goto-char (get-register 'p))
+                      (insert "*"))
+                    (insert "*. ")
+                    (embolden-next-word -1)))
+            map)
+  (if embolden-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-o" 'embolden-next-word) 
+
 (defun org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
@@ -712,9 +738,9 @@ provided the (transient) mark is active."
 
 (defun cycle-hyphenation ()
   (interactive)
-  (cond ((re-search-forward "\\=\\W*\\w+\\(-\\)\\w+" nil t)
+  (cond ((re-search-forward "\\=\\w*\\(-\\)\\w+" nil t)
          (save-excursion (replace-match " " t t nil 1)))
-        ((re-search-forward "\\=\\W*\\w+\\( +\\)\\w+" nil t)
+        ((re-search-forward "\\=\\w*\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
 
 (defun org-clone-subtree ()
@@ -736,20 +762,34 @@ provided the (transient) mark is active."
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[.?!…][]\"'”)}]*")
+(setq sentence-end-base "[][.?!…\"'”)}]+")
 
+;;; old version; remove after testing new one
 ;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
+;; (defun kill-clause ()
+;;   (interactive) 
+;;   (expand-abbrev)
+;;   (let ((sentence-end-base "--\\|[][,;.?!…\"'”()}]+"))
+;;     (my/kill-sentence-dwim)))
+
+;;; new version
 (defun kill-clause ()
   (interactive) 
   (expand-abbrev)
-  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”()}]*"))
-    (my/kill-sentence-dwim)))
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;.?!…\"'”()}]+" nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                       (match-beginning 0)))))
+  (my/fix-space))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!:")) 
+  (list "?!" ".." "..." "---" "!!" "!:")) 
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
