@@ -1080,14 +1080,28 @@ Oleh
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[.?!…][]\"'”)}]*")
+(setq sentence-end-base "[][.?!…\"'”)}]+")
 
+;;; old version; remove after testing new one
 ;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
+;; (defun kill-clause ()
+;;   (interactive) 
+;;   (expand-abbrev)
+;;   (let ((sentence-end-base "--\\|[][,;.?!…\"'”()}]+"))
+;;     (my/kill-sentence-dwim)))
+
+;;; new version
 (defun kill-clause ()
   (interactive) 
   (expand-abbrev)
-  (let ((sentence-end-base "--\\|[,;.?!…][]\"'”()}]*"))
-    (my/kill-sentence-dwim)))
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;.?!…\"'”()}]+" nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                       (match-beginning 0)))))
+  (my/fix-space))
 #+END_SRC
 
 ** smart-punctuation exceptions
@@ -1266,6 +1280,17 @@ Desired output:
 : (as well as she could, for the hot day made her feel very sleepy and stupid).
 
 I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't seem to have worked. Thanks!
+
+** NOTE-TO-JAY Answer
+
+   Hm, the hacking fell short. You see, ~my/kill-sentence-dwim~ always expects spaces between sentences, and since there is no space after '(', it could never catch it. We'll have to refactor it.
+
+   I added a new version, though I can already think of some edge cases.
+
+: Killing causes doesn't work e.g. on this sentence.
+
+   If you call ~kill-clause~ with point on 'K', it will kill until the ' in doesn't. If point is on 'w' from 'work', it will kill until the 'e' in 'e.g.'. I don't suppose this is desired behaviour. Do you confirm? Should I handle it?
+
 * TODO [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
