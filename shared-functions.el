@@ -9,7 +9,10 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
-(package-initialize)
+;; (package-initialize)
+
+(setq package-enable-at-startup nil)
+  (package-initialize 'noactivate)
 
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org" load-path))
 (setq load-path (cons "/Users/jay/Dropbox/emacs/prelude/elpa/org/lisp" load-path))

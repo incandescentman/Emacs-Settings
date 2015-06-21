@@ -835,6 +835,52 @@ provided the (transient) mark is active."
   ) 
 #+END_SRC
 * experiments - new/untested
+** saveplace
+;; Save point position between sessions
+
+#+BEGIN_SRC emacs-lisp
+;; Save point position between sessions
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+#+END_SRC
+The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
+
+The last line sets the path to where saveplace stores your position data. Change it at your peril! 
+
+
+** ideas
+C-d on an empty line in the shell terminates the process.
+
+(defun comint-delchar-or-eof-or-kill-buffer (arg)
+  (interactive "p")
+  (if (null (get-buffer-process (current-buffer)))
+      (kill-buffer)
+    (comint-delchar-or-maybe-eof arg)))
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (define-key shell-mode-map
+              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
+With this snippet, another press of C-d will kill the buffer.
+
+It's pretty nice, since you then just tap C-d twice to get rid of the shell and go on about your merry way. 
+
+
+
+Do you program any elisp, at all, ever?
+
+;; Elisp go-to-definition with M-. and back again with M-,
+(autoload 'elisp-slime-nav-mode "elisp-slime-nav")
+(add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
+(eval-after-load 'elisp-slime-nav '(diminish 'elisp-slime-nav-mode))
+Then you need to M-x package-install elisp-slime-nav-mode.
+
+It lets you jump to the definition of a function with M-., and back again afterwards with M-,.
+
+That last line says that we want elisp-slime-nav-mode to continue doing its work for us, but we no longer want to be reminded of it. 
+
+
 ** source code blocks
 [[http://wenshanren.org/?p%3D334][Emacs：insert source code block in org-mode | 肉山博客 (Wenshan's Blog)]]
 
@@ -1382,7 +1428,7 @@ can we implement a way for me to add words to a list of export-to-TextExpander e
 
 e.g. 
 (setq textexpander-export-as-case-sensitive-list 
-  ("id" "wed" "im" "sd" "uk" "US")) 
+  ("id" "wed" "im" "sd" "uk" "US" "OS")) 
 
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
 
