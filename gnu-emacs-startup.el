@@ -622,6 +622,11 @@ provided the (transient) mark is active."
   (org-indent-mode 1)
   ) 
 
+;; Save point position between sessions
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+
 (defun org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive

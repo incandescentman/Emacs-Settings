@@ -844,10 +844,41 @@ provided the (transient) mark is active."
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 #+END_SRC
+
 The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
 
 The last line sets the path to where saveplace stores your position data. Change it at your peril! 
 
+** embolden next word
+
+   #+BEGIN_SRC emacs-lisp
+
+(define-minor-mode embolden-next-word
+    "Make the next word you type bold."
+  nil 
+  :lighter " EMBOLDEN"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion 
+                        (goto-char (get-register 'p))
+                        (insert "*"))
+                      (insert "* ")
+                      (embolden-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion 
+                      (goto-char (get-register 'p))
+                      (insert "*"))
+                    (insert "*. ")
+                    (embolden-next-word -1)))
+            map)
+  (if embolden-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-o" 'embolden-next-word) 
+   #+END_SRC
 
 ** ideas
 C-d on an empty line in the shell terminates the process.
