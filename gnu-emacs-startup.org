@@ -1344,6 +1344,8 @@ The sentence commands assume that you follow the American typist’s convention 
 : on this sentence.
 
    The same happens if you ~kill-sentence~, BTW.
+** NOTE-TO-RÚDI Answer
+Got it. In that case, let's not worry about the case of "e.g." As long as the "don't" case works, which it seems to, I am satisfied. 
 
 * TESTING [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 

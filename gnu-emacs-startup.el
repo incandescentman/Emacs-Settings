@@ -778,7 +778,7 @@ provided the (transient) mark is active."
   (expand-abbrev)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;.?!…\"'”()}]+" nil t)
+    (when (re-search-forward "--\\|[][,;?!…\"”()}]+\\|\\.+ " nil t)
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
@@ -867,6 +867,23 @@ provided the (transient) mark is active."
   (smart-punctuation ":" to))
 
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
+
+(defvar *punctuation-markers-to-cycle-between*
+  ".!?")
+
+(defun cycle-punctuation ()
+  (interactive)
+  (save-excursion
+    (forward-sentence)
+    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
+                                      *punctuation-markers-to-cycle-between*)
+                              nil t)
+      (let ((next (elt *punctuation-markers-to-cycle-between*
+                       ;; circular string; should be abstracted
+                       (mod (1+ (position (elt (match-string 1) 0)
+                                          *punctuation-markers-to-cycle-between*))
+                            (length *punctuation-markers-to-cycle-between*)))))
+        (replace-match (format "%c" next) t t nil 1)))))
 
 (defun insert-space ()
   (interactive)
