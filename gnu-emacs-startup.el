@@ -188,8 +188,6 @@
            (buffer-string))))
     (search-forward search-term)))
 
-;; (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
-
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
@@ -219,6 +217,9 @@
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
+
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
