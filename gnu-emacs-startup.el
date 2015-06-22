@@ -180,6 +180,16 @@
 (my/fix-space)
 )
 
+(defun pasteboard-search-in-current-buffer ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste)
+           (buffer-string))))
+    (search-forward search-term)))
+
+;; (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
+
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
@@ -409,6 +419,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
             (looking-at " )") 
             ) 
     (delete-horizontal-space)))
+
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command)))
+ 
+(global-set-key (kbd "M-SPC") 'insert-space)
 
 ;;; old version; remove after testing new one below
 ;; (defun kill-word-correctly ()
@@ -868,8 +885,7 @@ provided the (transient) mark is active."
 
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 
-(defvar *punctuation-markers-to-cycle-between*
-  ".!?")
+(defvar *punctuation-markers-to-cycle-between*  ".?!")
 
 (defun cycle-punctuation ()
   (interactive)
@@ -885,19 +901,4 @@ provided the (transient) mark is active."
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
 
-(defun insert-space ()
-  (interactive)
-  (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command)))
-
-(global-set-key (kbd "M-SPC") 'insert-space)
-
-(defun pasteboard-search-in-current-buffer ()
-  (interactive)
-  (let ((search-term
-         (with-temp-buffer
-           (pasteboard-paste)
-           (buffer-string))))
-    (search-forward search-term)))
-
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
+(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation) 

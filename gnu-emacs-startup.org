@@ -271,6 +271,18 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (my/fix-space)
 )
 #+END_SRC
+* Searching
+** pasteboard-search-in-current buffer 
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-search-in-current-buffer ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste)
+           (buffer-string))))
+    (search-forward search-term)))
+
+#+END_SRC
 
 * Keybindings
 
@@ -316,6 +328,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
+
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
@@ -577,6 +592,17 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
             ) 
     (delete-horizontal-space)))
 #+END_SRC
+
+** self insert space 
+#+BEGIN_SRC emacs-lisp
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command)))
+ 
+(global-set-key (kbd "M-SPC") 'insert-space)
+#+END_SRC 
+
 
 ** kill word correctly
 #+BEGIN_SRC emacs-lisp
@@ -1347,41 +1373,8 @@ The sentence commands assume that you follow the American typist’s convention 
 ** NOTE-TO-RÚDI Answer
 Got it. In that case, let's not worry about the case of "e.g." As long as the "don't" case works, which it seems to, I am satisfied. 
 
-* TESTING [#B] cycle-hyphenation for multiple words
-Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
-: He is the editor in chief of the magazine. 
-
-Suppose the point is on the "e" in "editor" and I invoke cycle-hyphenation 2 times in a row. 
-
-Current output:
-: He is the editor-in chief-of the magazine. 
-
-Desired output:
-: He is the editor-in-chief of the magazine. 
-
-Can we modify cycle-hyphenation to deal with this special case? Thanks! :-)
-
-** NOTE-TO-JAY Answer
-
-   OK, but I changed the semantics of the command slightly. Take your example:
-
-: He is the editor in chief of the magazine. 
-
-   Suppose the point is NOT on the 'e', but on the SPACE just before it. With the previous version, you'd get:
-
-: He is the editor-in chief of the magazine. 
-
-   As desired. With the new version, you get:
-
-: He is the-editor in chief of the magazine. 
-
-   Which is not desired. So: always ~cycle-hyphenise~ when point is ON or AFTER the beginning of the word you wish to join with the following. Same goes with the cycling back from - to space.
-
-** NOTE-TO-JAY Answer
-Got it. Thanks!! 
-
-* TODO [#C] cycle punctuation 
+* DONE [#C] cycle punctuation 
 
 create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
 
@@ -1403,10 +1396,12 @@ Thanks!!
 ** NOTE-TO-JAY Implementation & question
 
    What should happen when the sentence doesn't end with any of these markers? My suggested implementation (below) does nothing.
+** 
+** NOTE-TO-RUDI Answer
+Perfect.
 
 #+BEGIN_SRC emacs-lisp
-(defvar *punctuation-markers-to-cycle-between*
-  ".!?")
+(defvar *punctuation-markers-to-cycle-between*  ".?!")
 
 (defun cycle-punctuation ()
   (interactive)
@@ -1421,6 +1416,8 @@ Thanks!!
                                           *punctuation-markers-to-cycle-between*))
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
+
+(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation) 
 #+END_SRC
 
 * TODO [#C] request: backspace after expand-abbrev 
@@ -1476,86 +1473,11 @@ My personal opinion: 2, albeit easier to implement, would be messy. Suppose you 
 3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
 
 ** NOTE-TO-RÚDI Answer
-Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a lowest-priority request.
+Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a low-priority request.
 
 
-* DONE [#B] self insert space 
 
-Can we create a command to self-insert space? Which I'll bind to M-SPC in case I ever need to insert a space the old-fashioned way without invoking all this fancy DWIM stuff. Thanks. :-)
-
-** NOTE-TO-JAY Try this
-
-    Not sure if this is what you want -- and it might have undesired consequences -- but this basically switches the SPC and M-SPC events:
-
-# #+BEGIN_SRC emacs-lisp
-(define-key key-translation-map (kbd "SPC") (kbd "M-SPC"))
-(define-key key-translation-map (kbd "M-SPC") (kbd "SPC"))
-# #+END_SRC 
-
-    If SPC is bound to ~self-insert-command~, and M-SPC to ~jay/insert-space~ or any other function, then this will switch the invoked commands; meaning, if you hit SPC, it will be like hitting M-SPC, and M-SPC will be like hitting SPC.
-
-    I'll leave it commented, since I don't know if this is really what you want. 
-** NOTE-TO-RUDI dealing with the minibuffer 
-seems to work! thank you!
-
-Update: I ran into problems in the minibuffer. Seems like the key translation switcheroo doesn't work in the minibuffer? When I call ~helm-M-x~ and then enter a word followed by a space (e.g. "org agenda") it reads the space as M-SPC and I get an error. 
-
-I tried this... 
-
-(define-key minibuffer-local-map (kbd "<M-SPC>") 'jay/insert-space) 
-(global-set-key (kbd "<M-SPC>") 'jay/insert-space) 
-
-...but it didn't fix the problem.
-
-Again, the goal is to have a way (ideally through M-SPC) to add an arbitrary number of spaces, ignoring the my/fix-space constraints we've created.
-
-*** NOTE-TO-JAY 
-
-    I see. Well, that's the kind of "undesired consequences" I imagined could happen indeed.
-
-    Forget about the switcheroo. Here, try this:
-
-#+BEGIN_SRC emacs-lisp
-(defun insert-space ()
-  (interactive)
-  (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command)))
-
-(global-set-key (kbd "M-SPC") 'insert-space)
-#+END_SRC 
-
-* DONE [#A] isearch contents of pasteboard
-can we add a function to search within the current buffer, using the contents of the OS X system pasteboard as the search term? See pasteboard-paste above.
-
-i.e. so this way I don't have to do isearch-forward and THEN also pasteboard-paste to paste in the search term I want. if for example I've already copied the search term from another buffer or from Chrome, I want to be able to search for it with one keystroke. Thanks!
-
-** NOTE-TO-JAY Try this
-
-#+BEGIN_SRC emacs-lisp
-(defun pasteboard-search-in-current-buffer ()
-  (interactive)
-  (let ((search-term
-         (with-temp-buffer
-           (pasteboard-paste)
-           (buffer-string))))
-    (search-forward search-term)))
-
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
-#+END_SRC
-
-** NOTE-TO-RÚDI Seems to work. Thank you! 
-
-* TODO [#B] list of abbrevs to be expanded to TextExpander as case-sensitive 
-can we implement a way for me to add words to a list of export-to-TextExpander exceptions i.e. words that are >1char that should be exported as case-sensitive, i.e. abbrevationMode 0
-
-e.g. 
-(setq textexpander-export-as-case-sensitive-list 
-  ("id" "wed" "im" "sd" "uk" "US" "OS" "CK")) 
-
-** NOTE-TO-JAY Try it
-
-   I added it to export-to-text-expander.el.
-
-* TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
-* TODO disable cycling between hyphen and ellipsis?
-Can you disable this? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Thanks!
+* TODO [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
+And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks! 
+* TODO [#A] disable cycling between hyphen and ellipsis?
+Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Thanks!
