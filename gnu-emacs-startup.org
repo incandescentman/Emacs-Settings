@@ -1476,7 +1476,24 @@ Definitely #1. if possible, #1 would be great. #3 could work also. it's just a b
 
 
 * TODO [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
-And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks! 
+And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks!
+
+** NOTE-TO-JAY Request for clarification
+
+   I'm not quite sure I understand the requests. You intend to actually *alter* the pasteboard contents? What is the purpose of that? By your request I imagine you'd want to copy from the web some snippet with smart quotes, like:
+
+: These are smart quotes: “ ” ‘ ’
+
+   Then run ~replace-smart-quotes~, and the next time you'd yank, you'd get:
+
+: These are smart quotes: " " ' '
+
+   But note that if you'd paste it onto another program, you'd get this latter string too.
+
+   I know there is an API to access pasteboard contents (~ns-get-pasteboard~, ~ns-set-pasteboard~), but since I'm not running an OS X, it is difficult for me to check that... but not impossible. 
+
+   Now, there is an alternative, which would be to ~pasteboard-paste~, and *then* ~replace-smart-quotes~ over the pasted text. I think this would be cleaner, since it wouldn't interfere with the pasteboard.
+
 * TODO [#A] disable cycling between hyphen and ellipsis?
 Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
 
