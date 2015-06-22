@@ -1127,7 +1127,7 @@ Oleh
   (expand-abbrev)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;.?!…\"'”()}]+" nil t)
+    (when (re-search-forward "--\\|[][,;?!…\"”()}]+\\|\\.+ " nil t)
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
@@ -1327,6 +1327,24 @@ I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't 
 ** NOTE-TO-RÚDI Yes please. 
 Yes, if you could handle this, that would be great. The two cases you mention above are frequent cases for me, so handling them is high-priority. 
 
+** NOTE-TO-JAY OK, but...
+
+   The last period in 'e.g.' is not so easy to handle, especially since you don't use double spaces after sentences. Emacs' sentence and fill functionalities (at least) use ~sentence-end-double-space~ to determine where sentences end -- if the variable is t, a double space is required after the punctuation mark, otherwise only one. This serves exactly the purpose of solving this problem. This is taken from the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Sentences.html][Emacs Manual]]:
+
+#+BEGIN_QUOTE
+The sentence commands assume that you follow the American typist’s convention of putting two spaces at the end of a sentence. That is, a sentence ends wherever there is a ‘.’, ‘?’ or ‘!’ followed by the end of a line or two spaces, with any number of ‘)’, ‘]’, ‘'’, or ‘"’ characters allowed in between. A sentence also begins or ends wherever a paragraph begins or ends. It is useful to follow this convention, because it allows the Emacs sentence commands to distinguish between periods that end a sentence and periods that indicate abbreviations.
+#+END_QUOTE
+
+   So, in the example I gave above:
+
+: Killing causes doesn't work e.g. on this sentence.
+
+   And if point in on 'K', and after fixing the problem with ', killing the clause would nonetheless yield:
+
+: on this sentence.
+
+   The same happens if you ~kill-sentence~, BTW.
+
 * TESTING [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
 
@@ -1380,6 +1398,28 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
+** NOTE-TO-JAY Implementation & question
+
+   What should happen when the sentence doesn't end with any of these markers? My suggested implementation (below) does nothing.
+
+#+BEGIN_SRC emacs-lisp
+(defvar *punctuation-markers-to-cycle-between*
+  ".!?")
+
+(defun cycle-punctuation ()
+  (interactive)
+  (save-excursion
+    (forward-sentence)
+    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
+                                      *punctuation-markers-to-cycle-between*)
+                              nil t)
+      (let ((next (elt *punctuation-markers-to-cycle-between*
+                       ;; circular string; should be abstracted
+                       (mod (1+ (position (elt (match-string 1) 0)
+                                          *punctuation-markers-to-cycle-between*))
+                            (length *punctuation-markers-to-cycle-between*)))))
+        (replace-match (format "%c" next) t t nil 1)))))
+#+END_SRC
 
 * TODO [#C] request: backspace after expand-abbrev 
 Hi Rúdi,
@@ -1509,6 +1549,10 @@ can we implement a way for me to add words to a list of export-to-TextExpander e
 e.g. 
 (setq textexpander-export-as-case-sensitive-list 
   ("id" "wed" "im" "sd" "uk" "US" "OS" "CK")) 
+
+** NOTE-TO-JAY Try it
+
+   I added it to export-to-text-expander.el.
 
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
 * TODO disable cycling between hyphen and ellipsis?

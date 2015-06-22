@@ -28,16 +28,25 @@
           abbrev-table-name-list))
 
 
+(defvar textexpander-export-as-case-sensitive-list 
+  (list "id" "wed" "im" "sd" "uk" "US" "OS" "CK"))
+
+
+(defun abbreviation-mode (abbrev)
+  (if (or (and (= (length abbrev) 1)
+               (string= abbrev (downcase abbrev)))
+          (member abbrev textexpander-export-as-case-sensitive-list))
+      0
+    2))
+
+
 (defun translate-abbrev-table-definitions (defs)
   (loop for (abbrev expansion count) in defs
         unless (string= abbrev expansion)
         collect `(dict (key "abbreviation")
                        (string ,abbrev)
                        (key "abbreviationMode")
-                       (integer ,(if (and (= (length abbrev) 1)
-                                          (string= abbrev (downcase abbrev)))
-                                     0
-                                   2))
+                       (integer ,(abbreviation-mode abbrev))
                        (key "creationDate")
                        (date ,(format-time-string "%FT%TZ" (current-time) t))
                        (key "flags")
