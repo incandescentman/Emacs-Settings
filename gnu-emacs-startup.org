@@ -1329,7 +1329,7 @@ Yes, if you could handle this, that would be great. The two cases you mention ab
 
 ** NOTE-TO-JAY OK, but...
 
-   The period (in 'e.g.') is not so easy to handle, especially since you don't use double spaces after sentences. Emacs' sentence and fill functionalities (at least) use ~sentence-end-double-space~ to determine where sentences end -- if the variable is t, a double space is required after the punctuation mark, otherwise only one. This serves exactly the purpose of solving this problem. This is taken from the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Sentences.html][Emacs Manual]]:
+   The last period in 'e.g.' is not so easy to handle, especially since you don't use double spaces after sentences. Emacs' sentence and fill functionalities (at least) use ~sentence-end-double-space~ to determine where sentences end -- if the variable is t, a double space is required after the punctuation mark, otherwise only one. This serves exactly the purpose of solving this problem. This is taken from the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Sentences.html][Emacs Manual]]:
 
 #+BEGIN_QUOTE
 The sentence commands assume that you follow the American typist’s convention of putting two spaces at the end of a sentence. That is, a sentence ends wherever there is a ‘.’, ‘?’ or ‘!’ followed by the end of a line or two spaces, with any number of ‘)’, ‘]’, ‘'’, or ‘"’ characters allowed in between. A sentence also begins or ends wherever a paragraph begins or ends. It is useful to follow this convention, because it allows the Emacs sentence commands to distinguish between periods that end a sentence and periods that indicate abbreviations.
@@ -1549,6 +1549,10 @@ can we implement a way for me to add words to a list of export-to-TextExpander e
 e.g. 
 (setq textexpander-export-as-case-sensitive-list 
   ("id" "wed" "im" "sd" "uk" "US" "OS" "CK")) 
+
+** NOTE-TO-JAY Try it
+
+   I added it to export-to-text-expander.el.
 
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
 * TODO disable cycling between hyphen and ellipsis?
