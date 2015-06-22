@@ -4,7 +4,87 @@
 #+TODO: NOTE-TO-JAY NOTE-TO-RUDY
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 
+
+
 * completed requests                                     :ARCHIVE:
+
+* DONE [#C] cycle punctuation 
+
+create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...
+
+: The rain in Spain falls mainly on the plains. 
+
+...and assuming the point was on the "T" or the "." or anywhere in between, invoking cycle-punctuation would leave the point wherever it was and cycle between these three states:
+
+: The rain in Spain falls mainly on the plains. 
+: The rain in Spain falls mainly on the plains? 
+: The rain in Spain falls mainly on the plains! 
+
+In fact, let's create a cycle-punctuation function also, even if the smart-punctuation functions above are also feasible. Here's some code that might help. 
+http://ergoemacs.org/emacs/elisp_change_space-hyphen_underscore.html 
+
+Thanks!!
+
+(define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
+
+** NOTE-TO-JAY Implementation & question
+
+   What should happen when the sentence doesn't end with any of these markers? My suggested implementation (below) does nothing.
+** 
+** NOTE-TO-RUDI Answer
+Perfect.
+
+
+* DONE [#A] an edge case for kill-clause
+Can we make kill-clause count "(" as punctuation? 
+
+Consider:
+
+: So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid).
+
+Suppose the point is on the "S" in "So" and I invoke kill-clause.
+
+Current output:
+:, for the hot day made her feel very sleepy and stupid).
+
+Desired output: 
+: (as well as she could, for the hot day made her feel very sleepy and stupid).
+
+I tried adding "(" to ~(let ((sentence-end-base~ in kill-clause, but it doesn't seem to have worked. Thanks!
+
+** NOTE-TO-JAY Answer
+
+   Hm, the hacking fell short. You see, ~my/kill-sentence-dwim~ always expects spaces between sentences, and since there is no space after '(', it could never catch it. We'll have to refactor it.
+
+   I added a new version, though I can already think of some edge cases.
+
+: Killing causes doesn't work e.g. on this sentence.
+
+   If you call ~kill-clause~ with point on 'K', it will kill until the ' in doesn't. If point is on 'w' from 'work', it will kill until the 'e' in 'e.g.'. I don't suppose this is desired behaviour. Do you confirm? Should I handle it?
+
+** NOTE-TO-RÚDI Yes please. 
+Yes, if you could handle this, that would be great. The two cases you mention above are frequent cases for me, so handling them is high-priority. 
+
+** NOTE-TO-JAY OK, but...
+
+   The last period in 'e.g.' is not so easy to handle, especially since you don't use double spaces after sentences. Emacs' sentence and fill functionalities (at least) use ~sentence-end-double-space~ to determine where sentences end -- if the variable is t, a double space is required after the punctuation mark, otherwise only one. This serves exactly the purpose of solving this problem. This is taken from the [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Sentences.html][Emacs Manual]]:
+
+#+BEGIN_QUOTE
+The sentence commands assume that you follow the American typist’s convention of putting two spaces at the end of a sentence. That is, a sentence ends wherever there is a ‘.’, ‘?’ or ‘!’ followed by the end of a line or two spaces, with any number of ‘)’, ‘]’, ‘'’, or ‘"’ characters allowed in between. A sentence also begins or ends wherever a paragraph begins or ends. It is useful to follow this convention, because it allows the Emacs sentence commands to distinguish between periods that end a sentence and periods that indicate abbreviations.
+#+END_QUOTE
+
+   So, in the example I gave above:
+
+: Killing causes doesn't work e.g. on this sentence.
+
+   And if point in on 'K', and after fixing the problem with ', killing the clause would nonetheless yield:
+
+: on this sentence.
+
+   The same happens if you ~kill-sentence~, BTW.
+** NOTE-TO-RÚDI Answer
+Got it. In that case, let's not worry about the case of "e.g." As long as the "don't" case works, which it seems to, I am satisfied. 
+
 
 * DONE [#B] cycle-hyphenation for multiple words
 Can we modify cycle-hyphenation so that it can successfully hyphenate more than 2 words? 
