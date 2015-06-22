@@ -1511,3 +1511,5 @@ e.g.
   ("id" "wed" "im" "sd" "uk" "US" "OS" "CK")) 
 
 * TODO [#C] in shared-functions.org, make smart-quotes operate on clipboard contents when there is no region set?
+* TODO disable cycling between hyphen and ellipsis?
+Can you disable this? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Thanks!
