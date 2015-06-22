@@ -796,7 +796,7 @@ provided the (transient) mark is active."
   (expand-abbrev)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;?!…\"”()}]+\\|\\.+ " nil t)
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
@@ -807,7 +807,7 @@ provided the (transient) mark is active."
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!!" "!:")) 
+  (list "?!" ".." "..." "---" "!!!" "!:")) 
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
