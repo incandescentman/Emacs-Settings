@@ -1133,7 +1133,7 @@ Oleh
 
 * smart punctuation 
 
-** kill clause
+** kill-clause
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
@@ -1153,7 +1153,7 @@ Oleh
   (expand-abbrev)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;?!…\"”()}]+\\|\\.+ " nil t)
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
@@ -1168,7 +1168,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!!" "!:")) 
+  (list "?!" ".." "..." "---" "!!!" "!:")) 
    #+END_SRC
 
 
@@ -1323,7 +1323,7 @@ OK, I removed the clauses pertaining to the quotation marks. Indeed, it is hard 
 *** NOTE-TO-RÚDI later
 Yes, that would be great, but let's deprioritize it. Thanks!
 
-* TODO [#A] an edge case for kill-clause
+* DONE [#A] an edge case for kill-clause
 Can we make kill-clause count "(" as punctuation? 
 
 Consider:
@@ -1372,7 +1372,6 @@ The sentence commands assume that you follow the American typist’s convention 
    The same happens if you ~kill-sentence~, BTW.
 ** NOTE-TO-RÚDI Answer
 Got it. In that case, let's not worry about the case of "e.g." As long as the "don't" case works, which it seems to, I am satisfied. 
-
 
 * DONE [#C] cycle punctuation 
 
@@ -1476,8 +1475,7 @@ My personal opinion: 2, albeit easier to implement, would be messy. Suppose you 
 Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a low-priority request.
 
 
-
 * TODO [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
 And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks! 
 * TODO [#A] disable cycling between hyphen and ellipsis?
-Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Thanks!
+Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
