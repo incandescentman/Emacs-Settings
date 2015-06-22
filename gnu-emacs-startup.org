@@ -1474,6 +1474,21 @@ My personal opinion: 2, albeit easier to implement, would be messy. Suppose you 
 ** NOTE-TO-RÚDI Answer
 Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a low-priority request.
 
+** NOTE-TO-JAY Clarification
+
+   I think I didn't make myself clear about what I meant with 3. My suggestion was to add a keybinding of C-BACKSPACE to ~unexpand-abbrev~, so you wouldn't have to BACKSPACE at all in order to unexpand. For example, you'd type:
+
+: bg^
+
+   But you had wanted to type 'bc'. When you hit space, Emacs expands it to 'beginning'. Unaware of the typo, you'd keep going:
+
+: beginning Emacs is great!^
+
+   When you'd finish typing, you'd realise the mistake and would hit C-BACKSPACE, which would ~unexpand-abbrev~, and leave point after the unexpanded text:
+
+: bg^ Emacs is great!
+
+   This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
 
 * TODO [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
 And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks!
