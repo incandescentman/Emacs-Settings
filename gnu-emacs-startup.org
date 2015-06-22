@@ -861,6 +861,15 @@ provided the (transient) mark is active."
   ) 
 #+END_SRC
 * experiments - new/untested
+** macro to create defuns?
+
+(defmacro make-my-function (name)
+  (list 'defun (intern (format "my-%s-function" name)) ()
+        (list 'interactive)
+        (list (intern (format "mark-%s" name)))
+        (list 'do-more-stuff)
+        (list (intern (format "modify-%s" name))))) 
+
 ** saveplace
 ;; Save point position between sessions
 
@@ -1492,4 +1501,3 @@ Desired output:
 Alice (who was very curious indeed) was beginning to get very tired. 
 
 Can we fix? Thanks! 
-
