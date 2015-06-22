@@ -1479,3 +1479,7 @@ Definitely #1. if possible, #1 would be great. #3 could work also. it's just a b
 And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks! 
 * TODO [#A] disable cycling between hyphen and ellipsis?
 Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
+
+** NOTE-TO-JAY Answer
+
+   Yes, adding that as an exception should work.
