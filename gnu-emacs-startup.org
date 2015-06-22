@@ -1146,7 +1146,7 @@ Oleh
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…\"'”)}]+")
+(setq sentence-end-base "[][.?!…}]+")
 
 ;;; old version; remove after testing new one
 ;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
@@ -1511,3 +1511,7 @@ Desired output:
 Alice (who was very curious indeed) was beginning to get very tired. 
 
 Can we fix? Thanks! 
+
+** NOTE-TO-JAY Try it now
+
+   ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
