@@ -1341,6 +1341,28 @@ Thanks!!
 
 (define-key org-mode-map (kbd "M-.") 'cycle-punctuation)
 
+** NOTE-TO-JAY Question
+
+   What should happen when the sentence doesn't end with any of these markers? My suggested implementation (below) does nothing.
+
+#+BEGIN_SRC emacs-lisp
+(defvar *punctuation-markers-to-cycle-between*
+  ".!?")
+
+(defun cycle-punctuation ()
+  (interactive)
+  (save-excursion
+    (forward-sentence)
+    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
+                                      *punctuation-markers-to-cycle-between*)
+                              nil t)
+      (let ((next (elt *punctuation-markers-to-cycle-between*
+                       ;; circular string; should be abstracted
+                       (mod (1+ (position (elt (match-string 1) 0)
+                                          *punctuation-markers-to-cycle-between*))
+                            (length *punctuation-markers-to-cycle-between*)))))
+        (replace-match (format "%c" next) t t nil 1)))))
+#+END_SRC
 
 * TODO [#C] request: backspace after expand-abbrev 
 Hi Rúdi,
