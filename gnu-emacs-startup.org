@@ -1552,7 +1552,7 @@ Yes! That is the desired output.
 
 
 ** NOTE-TO-RUDI Excellent!
-Excellent! Seems to be working perfectly. Now can we add one feature? I’d like to be able to "escape" the plain text list by invoking smart-return on a line with no text (besides "-"). When I invoke smart-return on a line with no text, it should enter a line break and no "-". 
+Excellent! Seems to be working perfectly. Now can we add one feature? I’d like to be able to "escape" the plain text list by invoking smart-return on a line with no text (other than "- "). When I invoke smart-return on a line with no text, it should enter a line break and no "-". 
 
 #+BEGIN_EXAMPLE
 - this
