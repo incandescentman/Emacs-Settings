@@ -613,6 +613,16 @@ it may cause the margin to be resized and line numbers to be recomputed.")
               (thing-at-point 'word)))
 )
 
+
+(defun poetry-mode-pretty ()
+"the space between"
+ (interactive)
+ (poetry-mode 1)
+ ;; (olivetti-mode 1)
+ (stripe-buffer-mode 1))
+ 
+
+
 ;; End rhyming stuff.
 
 (provide 'poetry)
