@@ -1146,7 +1146,7 @@ Oleh
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…\"'”)}]+")
+(setq sentence-end-base "[][.?!…}]+")
 
 ;;; old version; remove after testing new one
 ;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
@@ -1445,6 +1445,16 @@ And can we create a function pasteboard-paste-without-smart-quotes that does rep
 ** NOTE-TO-RÚDI answer 
 Yes, this second solution should work! 
 
+** NOTE-TO-JAY Try this
+
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-paste-without-smart-quotes ()
+  (interactive)
+  (let ((beg (point)))
+    (pasteboard-paste)
+    (replace-smart-quotes beg (point))))
+#+END_SRC
+
 * DONE [#A] disable cycling between hyphen and ellipsis?
 Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
 
@@ -1485,6 +1495,58 @@ Desired output:
 
 Does that make sense? Thanks!
 
+** NOTE-TO-JAY Answer
+
+   I just don't understand one thing in your example: why did org produce "* -"? Why not just:
+
+#+BEGIN_EXAMPLE
+- first item
+- second item 
+- ^
+#+END_EXAMPLE
+
+   At least that's what my org-mode does. Also, what should happen in the following example:
+
+#+BEGIN_EXAMPLE
+- this
+- that^ and the other
+#+END_EXAMPLE
+
+   If you invoke my suggested implementation of ~smart-return~, it will give this output:
+
+#+BEGIN_EXAMPLE
+- this
+- that
+- ^and the other
+#+END_EXAMPLE
+
+   But it would be reasonable to do:
+
+#+BEGIN_EXAMPLE
+- this
+- that and the other
+- ^
+#+END_EXAMPLE
+
+   Anyway, try it out:
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (newline))))
+#+END_SRC
+
 * TODO [#A] parentheses and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
@@ -1501,3 +1563,7 @@ Desired output:
 Alice (who was very curious indeed) was beginning to get very tired. 
 
 Can we fix? Thanks! 
+
+** NOTE-TO-JAY Try it now
+
+   ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
