@@ -1462,12 +1462,6 @@ I don't know if there is a more clever way to create these links. There are two 
 #+END_EXAMPLE
 
 *** Send email to a list of users
-  :PROPERTIES:
-  :categories: emacs, emacs-lisp
-  :date:     2014/01/13 18:41:55
-  :updated:  2014/01/13 18:42:59
-  :END:
-
 I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapcar to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
 
 #+BEGIN_SRC emacs-lisp
@@ -1486,7 +1480,7 @@ userid: %s
 password: %s" userid password))
   (mail-send-and-exit))
 
-(send-mail "jkitchin" "trustme99")
+;; (send-mail "jkitchin" "trustme99")
 #+END_SRC
 
 #+RESULTS:
