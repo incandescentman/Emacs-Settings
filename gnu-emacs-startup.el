@@ -643,11 +643,221 @@ provided the (transient) mark is active."
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-        (auto-capitalize-mode -1))
+	(auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
-(add-hook 'post-command-hook 'dwiw-auto-capitalize) 
+;; (add-hook 'post-command-hook dwiw-auto-capitalize)
+
+(defun email-region (start end)
+  "Send region as the body of an email."
+  (interactive "r")
+  (let ((content (buffer-substring start end)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+
+(defvar *email-heading-point* nil
+  "global variable to store point in for returning")
+
+(defvar *email-to-addresses* nil
+  "global variable to store to address in email")
+
+(defun email-heading-return ()
+  "after returning from compose do this"
+  (switch-to-buffer (marker-buffer  *email-heading-point*))
+  (goto-char (marker-position  *email-heading-point*))
+  (setq *email-heading-point* nil)
+  (org-set-property "SENT-ON" (current-time-string))
+  ;; reset this incase you added new ones
+  (org-set-property "TO" *email-to-addresses*)
+  )
+
+(defun email-send-action ()
+  "send action for compose-mail"
+  (setq *email-to-addresses* (mail-fetch-field "To")))
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+save when it was sent as s SENT property. this is overwritten on
+subsequent sends. could save them all in a logbook?
+"
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (org-mark-subtree)
+  (let ((content (buffer-substring (point) (mark)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
+    
+    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+    (message-goto-body)
+    (insert content)
+    (when CC
+      (message-goto-cc)
+      (insert CC))
+    (when BCC
+      (message-goto-bcc)
+      (insert BCC))
+    (if TO
+	(message-goto-body)
+      (message-goto-to))       
+    ))
+
+(defun words-dictionary ()
+  (interactive)
+  (browse-url
+   (format
+    "http://dictionary.reference.com/browse/%s?s=t"
+    (thing-at-point 'word))))
+
+(defun words-thesaurus ()
+  (interactive)
+  (browse-url
+   (format
+    "http://www.thesaurus.com/browse/%s"
+    (thing-at-point 'word))))
+
+(defun words-google ()
+  (interactive)  
+  (browse-url
+   (format
+    "http://www.google.com/search?q=%s"
+    (if (region-active-p)
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
+      (thing-at-point 'word)))))
+
+
+(defvar words-funcs '()
+ "functions to run in `words'. Each entry is a list of (key menu-name function).")
+
+(setq words-funcs
+  '(("d" "ictionary" words-dictionary)
+    ("t" "hesaurus" words-thesaurus)
+    ("g" "oogle" words-google)))
+ 
+
+(defun words ()
+  (interactive)
+   (message
+   (concat
+    (mapconcat
+     (lambda (tup)
+       (concat "[" (elt tup 0) "]"
+	       (elt tup 1) " "))
+     words-funcs "") ": "))
+   (let ((input (read-char-exclusive)))
+     (funcall
+      (elt 
+       (assoc
+	(char-to-string input) words-funcs)
+       2))))
+
+(defun words-twitter ()
+  (interactive)
+  (browse-url
+   (format
+    "https://twitter.com/search?q=%s"
+    (if (region-active-p)
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
+      (thing-at-point 'word)))))
+
+(add-to-list 'words-funcs
+  '("w" "twitter" words-twitter)
+  t) ; append
+  
+
+(defun words-atd ()
+  "Send paragraph at point to After the deadline for spell and grammar checking."
+  (interactive)
+  
+  (let* ((url-request-method "POST")
+	 (url-request-data (format
+			    "key=some-random-text-&data=%s"
+			    (url-hexify-string
+			     (thing-at-point 'paragraph))))
+	 (xml  (with-current-buffer
+		   (url-retrieve-synchronously
+		    "http://service.afterthedeadline.com/checkDocument")
+		 (xml-parse-region url-http-end-of-headers (point-max))))
+	 (results (car xml))
+	 (errors (xml-get-children results 'error)))
+    
+    (switch-to-buffer-other-frame "*ATD*")
+    (erase-buffer)
+    (dolist (err errors)
+      (let* ((children (xml-node-children err))
+	     ;; for some reason I could not get the string out, and had to do this.
+	     (s (car (last (nth 1 children))))
+	     ;; the last/car stuff doesn't seem right. there is probably
+	     ;; a more idiomatic way to get this
+	     (desc (last (car (xml-get-children children 'description))))
+	     (type (last (car (xml-get-children children 'type))))
+	     (suggestions (xml-get-children children 'suggestions))
+	     (options (xml-get-children (xml-node-name suggestions) 'option))
+	     (opt-string  (mapconcat
+			   (lambda (el)
+			     (when (listp el)
+			       (car (last el))))
+			   options
+			   " ")))
+
+	(insert (format "** %s ** %s
+Description: %s
+Suggestions: %s
+
+" s type desc opt-string))))))
+
+(add-to-list 'words-funcs
+  '("s" "spell/grammar" words-atd)
+  t) ; append
+
+(defun send-mail (userid password)
+  "send email to userid@andrew.cmu.edu containing their password"
+  (interactive)
+  (mail)
+  (mail-to)
+  (insert (format "%s@andrew.cmu.edu" userid))
+  (mail-subject)
+  (insert "[06-640] account information")
+  (mail-text)
+  (insert (format "
+An account has been created on gilgamesh.cheme.cmu.edu
+userid: %s
+password: %s" userid password))
+  (mail-send-and-exit))
+
+(send-mail "jkitchin" "trustme99")
+
+(let ((data (quote (("userid" "password") hline ("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
+;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
+
+;; (mapcar (lambda (x) (fun (car x) (cadr x))) data)
+)
+
+(let ((data (quote (("userid" "password") hline ("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
+;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
+
+;; (mapcar (lambda (x) (fun (nth 0 x) (nth 1 x))) data)
+)
 
 ;; Save point position between sessions
 (require 'saveplace)
