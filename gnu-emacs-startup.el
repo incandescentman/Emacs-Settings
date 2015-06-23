@@ -131,18 +131,6 @@
   (shell-command-on-region
    (region-beginning) (region-end) "pbcopy"))
 
-;;; old version; remove after testing new one (see below)
-;; (defun pasteboard-paste()
-;;   "Paste from OS X system pasteboard via `pbpaste' to point."
-;;   (interactive)
-;; (my/fix-space)
-;;   (shell-command-on-region
-;;    (point) (if mark-active (mark) (point)) "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-;; (my/fix-space)
-;; ;; (when (looking-back "^[[:space:]]+") (just-one-space)) ; this didn't work
-;; )
-
-;;; new version; not thoroughly tested
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -252,8 +240,8 @@
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 
-(define-key key-minor-mode-map (kbd "C-S-l") 'reflash-indentation)
-(define-key key-minor-mode-map (kbd "C-l") 'recenter-top-bottom)
+(define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
+;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
@@ -428,32 +416,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  
 (global-set-key (kbd "M-SPC") 'insert-space)
 
-;;; old version; remove after testing new one below
-;; (defun kill-word-correctly ()
-;;   "Kill word."
-;;   (interactive)
-;;   (expand-abbrev)
-;;   (if (not(looking-at "[[:punct:]]")) ; if character at point is NOT a punctuation mark
-;;     (progn                            ; THEN
-;;   (kill-word 1) ; kill word
-;;   (my/fix-space)) ; and fix space
-;; (progn ; else 
-;; (delete-forward-char 1) ; just delete the punctuation mark
-;; (my/fix-space) ; and delete the space as well
-;; )
-;; ))
-
-;;; new version
-;; (defun kill-word-correctly ()
-;;   "Kill word."
-;;   (interactive)
-;;   (expand-abbrev)
-;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
-;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-;;     (kill-word 1))                                    ; ELSE kill word
-;;   (my/fix-space)) ; and finally fix space
-
-;;; newer version
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -464,43 +426,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space))
 
-;;; old version; remove after testing new one
-;; (defun kill-word-correctly-and-capitalize ()
-;;   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
-;;   (interactive)
-;; (if (my/beginning-of-sentence-p)
-;;       (progn
-;; (expand-abbrev)
-;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
-;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-;;     (kill-word 1))                                    ; ELSE kill word
-;;   (my/fix-space)
-;; (capitalize-word 1) 
-;; (left-word)
-;; ) 
-;; (progn
-;; (expand-abbrev)
-;;   (if (re-search-forward "\\=\\W*[[:punct:]]+\\W*\\<" nil t) ; IF there's a sequence of punctuation marks at point
-;;       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-;;     (kill-word 1))                                    ; ELSE kill word
-;;   (my/fix-space)) ; and finally fix space 
-;; ) 
-;; )
-
-;;; new version
-;; (defun kill-word-correctly-and-capitalize ()
-;;   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
-;;   (interactive)
-;;   (let ((fix-capitalization (my/beginning-of-sentence-p)))
-;;     (expand-abbrev)
-;;     (if (re-search-forward "\\=\\W*[[:punct:]]+" nil t) ; IF there's a sequence of punctuation marks at point
-;;         (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
-;;       (kill-word 1))                                    ; ELSE kill word
-;;     (my/fix-space)
-;;     (when fix-capitalization
-;;       (save-excursion (capitalize-word 1)))))
-
-;;; newer version
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
@@ -508,65 +433,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
-
-(defun backward-kill-word-correctly ()
-  "Kill word."
-  (interactive)
-  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
-      (kill-region (match-end 0) (match-beginning 0))
-    (backward-kill-word 1))
-  (my/fix-space) 
-
-;; I added this ↓↓↓ #######################
-(when (and 
-(not (looking-back "---")) ; I added this 
-(not (looking-back "^"))) ; I added this 
-;; I added this ↑↑↑ #######################
- 
-(jay/insert-space) 
-) 
-)
-
-;;; old versions; remove after testing new one
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; (when (or (looking-back "^[[:space:]]+") 
-;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space)) 
-;; ))) 
-;; 
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; ))) 
-
-;;; new version
-;; delete backward one char unless the region is active: 
-(defun my/delete-backward ()
-  "When there is an active region, delete it and then fix up the whitespace"
-  (interactive)
-  (if (use-region-p)
-      (delete-region (region-beginning) (region-end))
-    (delete-backward-char 1))
-  (save-excursion
-    (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-      (my/fix-space))))
 
 (defun timesvr ()
   "Task request to my virtual assistant."
@@ -638,6 +504,7 @@ provided the (transient) mark is active."
 "One sentence summary of what this command do."
   (interactive)
   (org-indent-mode 1)
+(recenter-top-bottom)
   ) 
 
 (defun dwiw-auto-capitalize ()
@@ -999,17 +866,7 @@ password: %s" userid password))
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+")
-
-;;; old version; remove after testing new one
-;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
-;; (defun kill-clause ()
-;;   (interactive) 
-;;   (expand-abbrev)
-;;   (let ((sentence-end-base "--\\|[][,;.?!…\"'”()}]+"))
-;;     (my/kill-sentence-dwim)))
-
-;;; new version
+(setq sentence-end-base "[][.?!…}]+") 
 (defun kill-clause ()
   (interactive) 
   (expand-abbrev)
@@ -1146,3 +1003,62 @@ password: %s" userid password))
 
 ;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
 ;; (define-key org-mode-map (kbd "RET") 'smart-return) 
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
+(jay/insert-space) 
+) 
+)
+
+;;; old versions; remove after testing new one
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space)) 
+;; ))) 
+;; 
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; ))) 
+
+;;; new version
+;; delete backward one char unless the region is active: 
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space))))
