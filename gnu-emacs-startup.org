@@ -7,7 +7,7 @@
 * About
   - System: Mac OSX Yosemite
   - Emacs version: 24.5.1
-  - Use case: GNU Emacs specific settings.
+  - Use case: GNU Emacs-specific settings 
 
 * Handle Emacs UTF-8 input
 
@@ -734,13 +734,13 @@ It easy to add two sources. Here we define the sources as variables, and use the
 
 When you run this, if you run out of search candidates, all that will be left is the fallback option, and when you press enter, it will launch a browser pointing to the google search for your pattern. 
 
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][The Kitchin Research Group]]
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][ helm actions when there is no match]] 
 
 *** how to write helm functions
     [[http://wikemacs.org/wiki/How_to_write_helm_extensions][How to write helm extensions - WikEmacs]]
-    [[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][The Kitchin Research Group]]
-*** dwiw-auto-capitalize 
+    [[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][Anatomy of a helm source]] 
 
+*** dwiw-auto-capitalize 
 I have been using auto-capitalize.el for a short time to automatically capitalize the beginning of sentences. I mostly like what it does, but in org-mode I tend to write short code blocks while still in org-mode, and it is pretty irritating for auto-capitalize to "fix" the capitalization of your code. Of course, I can type C-c ' to edit the block in its native mode, but I do not always want to do that.
 
 Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
@@ -762,7 +762,7 @@ Here is that code:
 
 It works! Now the minor mode turns on and off depending on where the cursor is in my org document. 
 
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][The Kitchin Research Group]]
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][auto capitalization in org buffers]] 
 
 *** Better integration of org-mode and email
 I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
@@ -852,18 +852,15 @@ subsequent sends. could save them all in a logbook?
 
 This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy. 
 
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][The Kitchin Research Group]]
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][better integration of org-mode and email]] 
 
 *** pandoc
-    [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now ]]
-** words - some interesting utilities for text in emacs
-  CLOSED: [2014-11-03 Mon 11:31]
-  :PROPERTIES:
-  :categories: emacs
-  :date:     2014/11/03 11:31:45
-  :updated:  2014/11/04 09:20:15
-  :END:
-Recently I [[http://kitchingroup.cheme.cmu.edu/blog/2014/11/02/A-generalized-org-link-with-an-extendable-menu-of-actions/][posted]] about an org-link with a menu. Here I extend the idea to a command that will do approximately the same thing. The idea is a command called words that will be run interactively. It will grab the word at point, or operate on a selected region, and then offer a menu to lookup the definition, find it in a thesaurus, google it, etc... We structure the code so you can add functions to it later, without directly modifying this code. The only limitation of this code is that the functions must have a signature with no arguments. That does not seem terribly limiting, as we can check for a region, and use it if we want (see the words-google function).
+    [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
+
+** words - some interesting utilities for text in Emacs 
+The idea is a command called words that will be run interactively. It will grab the word at point, or operate on a selected region, and then offer a menu to lookup the definition, find it in a thesaurus, google it, etc.
+
+We structure the code so you can add functions to it later, without directly modifying this code. The only limitation of this code is that the functions must have a signature with no arguments. That does not seem terribly limiting, as we can check for a region, and use it if we want (see the words-google function).
 
 #+BEGIN_SRC emacs-lisp
 (defun words-dictionary ()
@@ -1051,8 +1048,10 @@ Suggestions:
 
 It might be nice to link back to those words, so you could click on them and fix them, but that is a beyond today's goal. In summary, today we looked at a framework to create a user-modifiable menu of commands that are launched from a single command. Here we called the command words, and then built up some different things we might want to do with the word or selection at point. While you can of course just remember the individual commands, remembering one command and then being prompted might have some advantages.
 
+Source: tk 
+
 *** invisible text in Emacs
-    [[http://kitchingroup.cheme.cmu.edu/blog/2014/02/06/Invisible-text-in-emacs/][The Kitchin Research Group]]
+Source:    [[http://kitchingroup.cheme.cmu.edu/blog/2014/02/06/Invisible-text-in-Emacs/][invisible text in Emacs]] 
 
 *** Making org-mode links to files in Emacs packages 
 #+BEGIN_EXAMPLE

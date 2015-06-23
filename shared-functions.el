@@ -161,7 +161,7 @@
 (setq org-fontify-quote-and-verse-blocks t)
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
-      '((heading . auto)
+      '((heading . always)
        (plain-list-item . nil))) 
 (setq org-return-follows-link t) 
 

@@ -1062,3 +1062,8 @@ password: %s" userid password))
     (when (or (looking-at "[[:space:]]")
               (looking-back "[[:space:]]"))
       (my/fix-space))))
+
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil))) 
+(setq org-return-follows-link t) 
