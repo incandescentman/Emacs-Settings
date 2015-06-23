@@ -30,8 +30,7 @@
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 #+END_SRC
 
-* Abbreviations (autocorrect)
-
+* Abbreviations 
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
@@ -70,6 +69,17 @@ Wrap text:
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode)
 #+END_SRC
+
+** reflash-indentation
+#+BEGIN_SRC emacs-lisp 
+(defun reflash-indentation ()
+"One sentence summary of what this command do."
+  (interactive)
+  (org-indent-mode 1)
+(recenter-top-bottom)
+  ) 
+#+END_SRC 
+
 
 * Fullscreen settings
 
@@ -195,7 +205,7 @@ clipboards to work from. The below are the traditional OSX keybindings for
 cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
 
 
-** Setup
+** pasteboard setup
 #+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
@@ -259,7 +269,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (my/fix-space)
 )
 #+END_SRC
-* Searching
+
 ** pasteboard-search-in-current buffer 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-search-in-current-buffer ()
@@ -289,6 +299,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key global-map (kbd "s-m") 's-m-prefix)
 (fset 's-m-prefix s-m-map)
 #+END_SRC
+
 
 ** Custom keybindings
 
@@ -452,33 +463,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 #+END_SRC
 
-*** keybindings not currently in use 
- (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
- (global-set-key (kbd "C-c s") 'org-copy-subtree)
- (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
- (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
- (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
- (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
- (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
- (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
- (define-key key-minor-mode-map (kbd "H-w") 'widen)
- (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
- (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
- (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
- (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
- (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
- (define-key key-minor-mode-map (kbd "s-R") 'web-research)
- (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
-
-
-;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
-
-
-
-
 * Sentences
 
 Make ~kill-sentence~ work in a more intuitive way:
@@ -552,7 +536,21 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                        :username "petersalazar")
 #+END_SRC
 
-* Custom functions 
+* spacecraft-mode - superior handling of whitespace for writing and editing prose
+
+** jay/insert-space
+#+BEGIN_SRC emacs-lisp
+(defun jay/insert-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(expand-abbrev)
+(insert "\ ")
+  (just-one-space)
+)
+ 
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space) 
+#+END_SRC
+ 
 ** my/fix-space
 
 #+BEGIN_SRC emacs-lisp 
@@ -569,6 +567,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
             ) 
     (delete-horizontal-space)))
 #+END_SRC
+
 
 ** self insert space 
 #+BEGIN_SRC emacs-lisp
@@ -677,186 +676,31 @@ provided the (transient) mark is active."
 
 #+END_SRC
 
+* code not currently in use 
+*** keybindings not currently in use 
+ (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+ (global-set-key (kbd "C-c s") 'org-copy-subtree)
+ (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
+ (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+ (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
+ (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+ (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
+ (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
+ (define-key key-minor-mode-map (kbd "H-w") 'widen)
+ (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
+ (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
+ (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+ (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
+ (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
+ (define-key key-minor-mode-map (kbd "s-R") 'web-research)
+ (define-key key-minor-mode-map (kbd "s-v") 'clipboard-yank) 
+
+;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line) 
 
 * experiments - tested
-#+BEGIN_SRC emacs-lisp
-(defun jay/insert-space ()
-  "Insert space and then clean up whitespace."
-  (interactive)
-(expand-abbrev)
-(insert "\ ")
-  (just-one-space)
-)
- 
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
-
-(defun reflash-indentation ()
-"One sentence summary of what this command do."
-  (interactive)
-  (org-indent-mode 1)
-(recenter-top-bottom)
-  ) 
-#+END_SRC
-* experiments - new/untested
-** lisp functions from John Kitchin 
-*** helm actions when there is no match
-
-Sometimes you run out of matches in a helm selection buffer, and all that is left is the pattern you have typed in. It turns out you can perform some action on that pattern! Why would you do that? Suppose you are searching your bibliography, and you do not find what you are looking for. Then, you may want to send the pattern to Google, or some other search engine to see what comes up.
-
-The key to handling this situation is to use /two/ sources in your helm session. One that works on the candidates and deals with actions on them, and one that has no candidates, and works on the pattern. The variable helm-pattern contains what you typed in. We call the second source the Fallback option. The second source has no candidates, and we use (dummy) in place of the candidates.
-
-It easy to add two sources. Here we define the sources as variables, and use the variables in the :sources list to the helm command.
-
-# #+BEGIN_SRC emacs-lisp
-(defun some-action (arg)
-  (message-box "%s\n%s"
-    (helm-get-selection)
-    (helm-marked-candidates)))
-
-(defun default-action (candidate)
-  (browse-url
-   (format
-    "http://www.google.com/search?q=%s" (url-hexify-string helm-pattern))))
-
-(defvar source1 '((name . "HELM")
-		  (candidates . (1 2 3 4))
-		  (action . (("open" . some-action)))))
-
-(defvar fallback-source '((name . "fallback")
-			  (dummy)
-			  (action . (("Google" . default-action)))))
-
-(helm :sources '(source1 fallback-source))
-# #+END_SRC
-
-#+RESULTS:
-: #<process open http://www.google.com/search?q=addtion%20pul>
-
-When you run this, if you run out of search candidates, all that will be left is the fallback option, and when you press enter, it will launch a browser pointing to the google search for your pattern. 
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][ helm actions when there is no match]] 
-
-*** how to write helm functions
-    [[http://wikemacs.org/wiki/How_to_write_helm_extensions][How to write helm extensions - WikEmacs]]
-    [[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][Anatomy of a helm source]] 
-
-*** dwiw-auto-capitalize 
-I have been using auto-capitalize.el for a short time to automatically capitalize the beginning of sentences. I mostly like what it does, but in org-mode I tend to write short code blocks while still in org-mode, and it is pretty irritating for auto-capitalize to "fix" the capitalization of your code. Of course, I can type C-c ' to edit the block in its native mode, but I do not always want to do that.
-
-Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
-
-Here is that code:
-#+BEGIN_SRC emacs-lisp
-(defun dwiw-auto-capitalize ()
-  (if (org-in-block-p '("src"))
-      (when auto-capitalize
-	(auto-capitalize-mode -1))
-    (unless auto-capitalize
-      (auto-capitalize-mode 1))))
-
-;; (add-hook 'post-command-hook dwiw-auto-capitalize)
-#+END_SRC
-
-#+RESULTS:
-| dwiw-auto-capitalize |
-
-It works! Now the minor mode turns on and off depending on where the cursor is in my org document. 
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][auto capitalization in org buffers]] 
-
-*** Better integration of org-mode and email
-I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
-
-#+BEGIN_SRC emacs-lisp
-(defun email-region (start end)
-  "Send region as the body of an email."
-  (interactive "r")
-  (let ((content (buffer-substring start end)))
-    (compose-mail)
-    (message-goto-body)
-    (insert content)
-    (message-goto-to)))
-#+END_SRC
-
-that function is not glamorous, and you still have to fill in the email fields, and unless you use gnus and org-contacts, the only record keeping is through the email provider. 
-
-What I would like is to send a whole heading in an email. The headline should be the subject, and if there are TO, CC or BCC properties, those should be used. If there is /no TO/, then I want to grab the TO from the email after you enter it and store it as a property. You should be able to set OTHER-HEADERS as a property (this is just for fun. There is no practical reason for this yet). After you send the email, it should record in the heading when it was sent.
-
-It turned out that is a relatively tall order. While it is easy to setup the email if you have everything in place, it is tricky to get the information on TO and the time sent /after/ the email is sent. Past lispers had a lot of ideas to make this possible, and a day of digging got me to the answer. You can specify some "action" functions that get called at various times, e.g. after sending, and a return action when the compose window is done. Unfortunately, I could not figure out any way to do things except to communicate through some global variables.
-
-So here is the code that lets me send org-headings, with the TO, CC, BCC properties, and that records when I sent the email after it is sent.
-
-#+BEGIN_SRC emacs-lisp
-(defvar *email-heading-point* nil
-  "global variable to store point in for returning")
-
-(defvar *email-to-addresses* nil
-  "global variable to store to address in email")
-
-(defun email-heading-return ()
-  "after returning from compose do this"
-  (switch-to-buffer (marker-buffer  *email-heading-point*))
-  (goto-char (marker-position  *email-heading-point*))
-  (setq *email-heading-point* nil)
-  (org-set-property "SENT-ON" (current-time-string))
-  ;; reset this incase you added new ones
-  (org-set-property "TO" *email-to-addresses*)
-  )
-
-(defun email-send-action ()
-  "send action for compose-mail"
-  (setq *email-to-addresses* (mail-fetch-field "To")))
-
-(defun email-heading ()
-  "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-OTHER-HEADERS is an alist specifying additional
-header fields.  Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-save when it was sent as s SENT property. this is overwritten on
-subsequent sends. could save them all in a logbook?
-"
-  (interactive)
-  ; store location.
-  (setq *email-heading-point* (set-marker (make-marker) (point)))
-  (org-mark-subtree)
-  (let ((content (buffer-substring (point) (mark)))
-	(TO (org-entry-get (point) "TO" t))
-	(CC (org-entry-get (point) "CC" t))
-	(BCC (org-entry-get (point) "BCC" t))
-	(SUBJECT (nth 4 (org-heading-components)))
-	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-	(continue nil)
-	(switch-function nil)
-	(yank-action nil)
-	(send-actions '((email-send-action . nil)))
-	(return-action '(email-heading-return)))
-    
-    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-    (message-goto-body)
-    (insert content)
-    (when CC
-      (message-goto-cc)
-      (insert CC))
-    (when BCC
-      (message-goto-bcc)
-      (insert BCC))
-    (if TO
-	(message-goto-body)
-      (message-goto-to))       
-    ))
-#+END_SRC
-
-This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy. 
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][better integration of org-mode and email]] 
-
-*** pandoc
-    [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
-
 ** words - some interesting utilities for text in Emacs 
 The idea is a command called words that will be run interactively. It will grab the word at point, or operate on a selected region, and then offer a menu to lookup the definition, find it in a thesaurus, google it, etc.
 
@@ -1525,7 +1369,169 @@ References:
 [[http://unix.stackexchange.com/questions/86554/make-hunspell-work-with-emacs-and-german-language][spell checking - Make hunspell work with emacs and german language - Unix & Linux Stack Exchange]]
 [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][What's the best spell check setup in emacs | Chen's blog]]
 [[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
- 
+
+* experiments - new/untested
+** lisp functions from John Kitchin 
+*** helm actions when there is no match
+
+Sometimes you run out of matches in a helm selection buffer, and all that is left is the pattern you have typed in. It turns out you can perform some action on that pattern! Why would you do that? Suppose you are searching your bibliography, and you do not find what you are looking for. Then, you may want to send the pattern to Google, or some other search engine to see what comes up.
+
+The key to handling this situation is to use /two/ sources in your helm session. One that works on the candidates and deals with actions on them, and one that has no candidates, and works on the pattern. The variable helm-pattern contains what you typed in. We call the second source the Fallback option. The second source has no candidates, and we use (dummy) in place of the candidates.
+
+It easy to add two sources. Here we define the sources as variables, and use the variables in the :sources list to the helm command.
+
+# #+BEGIN_SRC emacs-lisp
+(defun some-action (arg)
+  (message-box "%s\n%s"
+    (helm-get-selection)
+    (helm-marked-candidates)))
+
+(defun default-action (candidate)
+  (browse-url
+   (format
+    "http://www.google.com/search?q=%s" (url-hexify-string helm-pattern))))
+
+(defvar source1 '((name . "HELM")
+		  (candidates . (1 2 3 4))
+		  (action . (("open" . some-action)))))
+
+(defvar fallback-source '((name . "fallback")
+			  (dummy)
+			  (action . (("Google" . default-action)))))
+
+(helm :sources '(source1 fallback-source))
+# #+END_SRC
+
+#+RESULTS:
+: #<process open http://www.google.com/search?q=addtion%20pul>
+
+When you run this, if you run out of search candidates, all that will be left is the fallback option, and when you press enter, it will launch a browser pointing to the google search for your pattern. 
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][ helm actions when there is no match]] 
+
+*** how to write helm functions
+    [[http://wikemacs.org/wiki/How_to_write_helm_extensions][How to write helm extensions - WikEmacs]]
+    [[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][Anatomy of a helm source]] 
+
+
+*** dwiw-auto-capitalize 
+I have been using auto-capitalize.el for a short time to automatically capitalize the beginning of sentences. I mostly like what it does, but in org-mode I tend to write short code blocks while still in org-mode, and it is pretty irritating for auto-capitalize to "fix" the capitalization of your code. Of course, I can type C-c ' to edit the block in its native mode, but I do not always want to do that.
+
+Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
+
+Here is that code:
+#+BEGIN_SRC emacs-lisp
+(defun dwiw-auto-capitalize ()
+  (if (org-in-block-p '("src"))
+      (when auto-capitalize
+	(auto-capitalize-mode -1))
+    (unless auto-capitalize
+      (auto-capitalize-mode 1))))
+
+;; (add-hook 'post-command-hook dwiw-auto-capitalize)
+#+END_SRC
+
+#+RESULTS:
+| dwiw-auto-capitalize |
+
+It works! Now the minor mode turns on and off depending on where the cursor is in my org document. 
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][auto capitalization in org buffers]] 
+
+*** Better integration of org-mode and email
+I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
+
+#+BEGIN_SRC emacs-lisp
+(defun email-region (start end)
+  "Send region as the body of an email."
+  (interactive "r")
+  (let ((content (buffer-substring start end)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+#+END_SRC
+
+that function is not glamorous, and you still have to fill in the email fields, and unless you use gnus and org-contacts, the only record keeping is through the email provider. 
+
+What I would like is to send a whole heading in an email. The headline should be the subject, and if there are TO, CC or BCC properties, those should be used. If there is /no TO/, then I want to grab the TO from the email after you enter it and store it as a property. You should be able to set OTHER-HEADERS as a property (this is just for fun. There is no practical reason for this yet). After you send the email, it should record in the heading when it was sent.
+
+It turned out that is a relatively tall order. While it is easy to setup the email if you have everything in place, it is tricky to get the information on TO and the time sent /after/ the email is sent. Past lispers had a lot of ideas to make this possible, and a day of digging got me to the answer. You can specify some "action" functions that get called at various times, e.g. after sending, and a return action when the compose window is done. Unfortunately, I could not figure out any way to do things except to communicate through some global variables.
+
+So here is the code that lets me send org-headings, with the TO, CC, BCC properties, and that records when I sent the email after it is sent.
+
+#+BEGIN_SRC emacs-lisp
+(defvar *email-heading-point* nil
+  "global variable to store point in for returning")
+
+(defvar *email-to-addresses* nil
+  "global variable to store to address in email")
+
+(defun email-heading-return ()
+  "after returning from compose do this"
+  (switch-to-buffer (marker-buffer  *email-heading-point*))
+  (goto-char (marker-position  *email-heading-point*))
+  (setq *email-heading-point* nil)
+  (org-set-property "SENT-ON" (current-time-string))
+  ;; reset this incase you added new ones
+  (org-set-property "TO" *email-to-addresses*)
+  )
+
+(defun email-send-action ()
+  "send action for compose-mail"
+  (setq *email-to-addresses* (mail-fetch-field "To")))
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+save when it was sent as s SENT property. this is overwritten on
+subsequent sends. could save them all in a logbook?
+"
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (org-mark-subtree)
+  (let ((content (buffer-substring (point) (mark)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
+    
+    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+    (message-goto-body)
+    (insert content)
+    (when CC
+      (message-goto-cc)
+      (insert CC))
+    (when BCC
+      (message-goto-bcc)
+      (insert BCC))
+    (if TO
+	(message-goto-body)
+      (message-goto-to))       
+    ))
+#+END_SRC
+
+This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy. 
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][better integration of org-mode and email]] 
+
+
+*** pandoc
+    [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
+
 
 * Helm Org Wiki
 
