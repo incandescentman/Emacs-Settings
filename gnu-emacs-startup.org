@@ -1682,6 +1682,7 @@ Oleh
   (my/fix-space))
 #+END_SRC
 
+
 ** smart-punctuation exceptions
 
    #+BEGIN_SRC emacs-lisp
@@ -1689,7 +1690,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!!!" "!:")) 
+  (list "?!" ".." "..." "............................................." "---" "!!!" "!:")) 
    #+END_SRC
 
 
@@ -1826,7 +1827,7 @@ This function is becoming more and more useful!
    This means that after fixing the spaces, if you look back from point to '" ', you should delete the space. I suppose that's only true if: (1) the quotation marks are starting a quote, or (2) there is a punctuation mark ahead (which is handled by another clause).
 
    So, what was the intention here?
-*** NOTE-TO-RÚDI Answer
+** NOTE-TO-RÚDI Answer
 Hmm, I'm not sure I remember what I intended there. I must have been trying to address an edge case I found myself. If it makes sense to remove that clause again, let's do so, and if I find another edge case, we can address it at that point.
 
 In general, I will use quotation marks and punctuation in the style/sequence reflected below: 
@@ -1837,10 +1838,10 @@ Alice was beginning to get very tired of sitting by her sister on the bank (and 
 
 Thanks!
 
-*** NOTE-TO-JAY About the quotation marks
+** NOTE-TO-JAY About the quotation marks
 
 OK, I removed the clauses pertaining to the quotation marks. Indeed, it is hard to determine, when you are looking at a single quotation mark, if it is starting or ending the quote. You must pair it with the previous or next; in the limit you have to take into account the whole buffer. There is probably code out there that does it (note that ~emacs-lisp-mode~, for example, colourises strings -- therefore, it must know when a string starts or ends). I can search for it if you want.
-*** NOTE-TO-RÚDI later
+** NOTE-TO-RÚDI yes, later
 Yes, that would be great, but let's deprioritize it. Thanks!
 
 
@@ -1935,7 +1936,7 @@ Definitely #1. if possible, #1 would be great. #3 could work also. it's just a b
 
    This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
 
-* TODO [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
+* TESTING [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
 And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks!
 
 ** NOTE-TO-JAY Request for clarification
@@ -1966,14 +1967,117 @@ Yes, this second solution should work!
     (replace-smart-quotes beg (point))))
 #+END_SRC
 
-* DONE [#A] disable cycling between hyphen and ellipsis?
-Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
 
-** NOTE-TO-JAY Answer
+* TESTING [#A] parentheses and auto-capitalize mode
+OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
-   Yes, adding that as an exception should work. 
+Let's say I enter the text:
 
-* PLEASE-DEBUG [#B] smart-return
+: Alice (who was very curious indeed) was beginning to get very tired. 
+
+Now let's say I enter it with auto-capitalize-mode on. 
+
+Current output:
+Alice (who was very curious indeed) Was beginning to get very tired. 
+
+Desired output: 
+Alice (who was very curious indeed) was beginning to get very tired. 
+
+Can we fix? Thanks! 
+
+** NOTE-TO-JAY Try it now
+
+   ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
+
+** NOTE-TO-RÚDI Answer
+OK great. To answer your question, here are two ways a sentence might look:
+
+#+BEGIN_QUOTE 
+1. Alice was beginning to get very tired of sitting by her sister (on the bank). 
+2. Alice was tired. (She'd been running all day.) 
+#+END_QUOTE
+
+* TODO [#B] check my changes to backward kill word correctly?          :rudi:
+Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
+
+I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
+
+#+BEGIN_SRC emacs-lisp 
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
+(jay/insert-space) 
+) 
+)
+#+END_SRC
+
+** TODO my-delete-backward                                              :rudi:
+#+BEGIN_SRC emacs-lisp
+;;; old versions; remove after testing new one
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space)) 
+;; ))) 
+;; 
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; ))) 
+
+;;; new version
+;; delete backward one char unless the region is active: 
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space))))
+#+END_SRC
+*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence 
+Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+
+#+BEGIN_QUOTE
+First delete region, and then: 
+(if (my/beginning-of-sentence-p)
+(progn
+(capitalize-word)
+ (left-word)
+))) 
+#+END_QUOTE 
+
+* PLEASE-DEBUG [#A] smart-return
 Can we create a function smart-return? In org-mode, I will bind (kbd <RETURN>) to it. 
 
 A function that will:
@@ -2082,121 +2186,58 @@ Let's say the point is on the carat. Now if I do smart-return, I’d like this o
 
 Thanks! 
 ** TODO [#A] org-return-follows-link
-Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). Can we make it so this functionality is preserved with smart-return? Thanks! 
-
-* TESTING [#A] parentheses and auto-capitalize mode
-OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
-
-Let's say I enter the text:
-
-: Alice (who was very curious indeed) was beginning to get very tired. 
-
-Now let's say I enter it with auto-capitalize-mode on. 
-
-Current output:
-Alice (who was very curious indeed) Was beginning to get very tired. 
-
-Desired output: 
-Alice (who was very curious indeed) was beginning to get very tired. 
-
-Can we fix? Thanks! 
-
-** NOTE-TO-JAY Try it now
-
-   ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
-
-** NOTE-TO-RÚDI Answer
-OK great. To answer your question, here are two ways a sentence might look:
-
-#+BEGIN_QUOTE 
-1. Alice was beginning to get very tired of sitting by her sister (on the bank). 
-2. Alice was tired. (She'd been running all day.) 
-#+END_QUOTE
-* 
-
-* TODO [#A] check my changes to backward kill word correctly?          :rudi:
-Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
-
-I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
-
-#+BEGIN_SRC emacs-lisp 
-(defun backward-kill-word-correctly ()
-  "Kill word."
-  (interactive)
-  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
-      (kill-region (match-end 0) (match-beginning 0))
-    (backward-kill-word 1))
-  (my/fix-space) 
-
-;; I added this ↓↓↓ #######################
-(when (and 
-(not (looking-back "---")) ; I added this 
-(not (looking-back "^"))) ; I added this 
-;; I added this ↑↑↑ #######################
- 
-(jay/insert-space) 
-) 
-)
-#+END_SRC
-
-** TODO my-delete-backward                                              :rudi:
-#+BEGIN_SRC emacs-lisp
-;;; old versions; remove after testing new one
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; (when (or (looking-back "^[[:space:]]+") 
-;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space)) 
-;; ))) 
-;; 
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; ))) 
-
-;;; new version
-;; delete backward one char unless the region is active: 
-(defun my/delete-backward ()
-  "When there is an active region, delete it and then fix up the whitespace"
-  (interactive)
-  (if (use-region-p)
-      (delete-region (region-beginning) (region-end))
-    (delete-backward-char 1))
-  (save-excursion
-    (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-      (my/fix-space))))
-#+END_SRC
-*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence 
-Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
-
-#+BEGIN_QUOTE
-First delete region, and then: 
-(if (my/beginning-of-sentence-p)
-(progn
-(capitalize-word)
- (left-word)
-))) 
-#+END_QUOTE 
+Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). With smart-return, return no longer follows link. Can we make it so this functionality is preserved with smart-return? Thanks! 
 
 
 * TODO [#A] smart-org-meta-return-dwim
-I'm going to set org-blank-before-new-entry to this: 
+I use org-mode for two different things:  
+
+1. As a TODO list manager  
+2. As a text outliner  
+  
+I'd like org-meta-return to work differently based on context. 
+
+1. TODO list: no blank lines
+2. text outline: automatically insert 1 blank line when non-heading text precedes a heading  
+
+In other words, when I'm doing a TODO list when I have many headings in a row, I don't want stray line breaks between them.  
+  
+*** For TODO list mode, no blank lines: 
+#+BEGIN_EXAMPLE
+** Organize Party 
+** TODO Call people 
+*** TODO Peter
+*** DONE Sarah
+** TODO Buy food
+** DONE Talk to neighbor 
+#+END_EXAMPLE
+
+However, when I'm writing text, I want line breaks for the sake of visual whitespace / ease of reading.  
+   
+*** For outline mode, blank line before heading: 
+#+BEGIN_EXAMPLE
+* Heading
+This is a document that has a heading, and a body. The body will consist of two paragraphs with sub-headings.
+  
+* Body  
+This is an introduction to the body. The body has two sub-headings, each of which have their own paragraph.  
+  
+** The First Paragraph  
+This is the first of two paragraphs. 
+  
+** The Second Paragraph
+This is the second of two paragraphs. 
+#+END_EXAMPLE
+
+*** Anyway...
+I already tried setting org-blank-before-new-entry to auto:  
+
+     ((heading . auto)
+     (plain-list-item . auto))
+
+But I think org-blank-before-new-entry works by detecting other blank lines in the area. 
+
+So instead here's my idea. I'm going to set org-blank-before-new-entry to this: 
 
 #+BEGIN_SRC emacs-lisp
 (setq org-blank-before-new-entry
@@ -2205,8 +2246,7 @@ I'm going to set org-blank-before-new-entry to this:
 (setq org-return-follows-link t) 
 #+END_SRC
 
-
-I tried setting it to "heading . auto" but it was unable to detect when I wanted a blank and when I did not. So I think the easiest solution is to set "heading" to "always" and then handle the exceptions manually with an intelligent function. 
+In other words I think the easiest solution is to set "heading" to "always" and then handle the exceptions manually with an intelligent function. 
 
 The exception I'm referring to is this: whenever I'm on a line with an org heading. (In other words, whenever the current line begins with a "*".)
 
@@ -2218,4 +2258,4 @@ So smart-org-meta-return-dwim should do this:
 2. If yes: do org-meta-return, remove the blank line, and then put the point back where it was 
 3. Else just run org-meta-return
 
-Examples: 
+Thanks!

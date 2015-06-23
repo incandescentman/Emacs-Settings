@@ -8,6 +8,14 @@
 
 * completed requests                                     :ARCHIVE:
 
+* DONE [#A] disable cycling between hyphen and ellipsis?
+Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
+
+** NOTE-TO-JAY Answer
+
+   Yes, adding that as an exception should work. 
+
+
 * DONE [#C] cycle punctuation 
 
 create a function cycle-punctuation. Kind of like cycle-hyphenation, except that invoking cycle-punctuation would change the punctuation at the end of a sentence between "." "!" "?" and back again. Such that given the sentence...

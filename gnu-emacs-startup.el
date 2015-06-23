@@ -35,6 +35,13 @@
 
 (global-visual-line-mode)
 
+(defun reflash-indentation ()
+"One sentence summary of what this command do."
+  (interactive)
+  (org-indent-mode 1)
+(recenter-top-bottom)
+  ) 
+
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
 (defun toggle-maxframe ()
@@ -396,6 +403,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
                        :username "petersalazar")
 
+(defun jay/insert-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(expand-abbrev)
+(insert "\ ")
+  (just-one-space)
+)
+ 
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space) 
+
 ;;; new version
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -489,103 +506,6 @@ provided the (transient) mark is active."
 
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
-
-(defun jay/insert-space ()
-  "Insert space and then clean up whitespace."
-  (interactive)
-(expand-abbrev)
-(insert "\ ")
-  (just-one-space)
-)
- 
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
-
-(defun reflash-indentation ()
-"One sentence summary of what this command do."
-  (interactive)
-  (org-indent-mode 1)
-(recenter-top-bottom)
-  ) 
-
-(defun dwiw-auto-capitalize ()
-  (if (org-in-block-p '("src"))
-      (when auto-capitalize
-	(auto-capitalize-mode -1))
-    (unless auto-capitalize
-      (auto-capitalize-mode 1))))
-
-;; (add-hook 'post-command-hook dwiw-auto-capitalize)
-
-(defun email-region (start end)
-  "Send region as the body of an email."
-  (interactive "r")
-  (let ((content (buffer-substring start end)))
-    (compose-mail)
-    (message-goto-body)
-    (insert content)
-    (message-goto-to)))
-
-(defvar *email-heading-point* nil
-  "global variable to store point in for returning")
-
-(defvar *email-to-addresses* nil
-  "global variable to store to address in email")
-
-(defun email-heading-return ()
-  "after returning from compose do this"
-  (switch-to-buffer (marker-buffer  *email-heading-point*))
-  (goto-char (marker-position  *email-heading-point*))
-  (setq *email-heading-point* nil)
-  (org-set-property "SENT-ON" (current-time-string))
-  ;; reset this incase you added new ones
-  (org-set-property "TO" *email-to-addresses*)
-  )
-
-(defun email-send-action ()
-  "send action for compose-mail"
-  (setq *email-to-addresses* (mail-fetch-field "To")))
-
-(defun email-heading ()
-  "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-OTHER-HEADERS is an alist specifying additional
-header fields.  Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-save when it was sent as s SENT property. this is overwritten on
-subsequent sends. could save them all in a logbook?
-"
-  (interactive)
-  ; store location.
-  (setq *email-heading-point* (set-marker (make-marker) (point)))
-  (org-mark-subtree)
-  (let ((content (buffer-substring (point) (mark)))
-	(TO (org-entry-get (point) "TO" t))
-	(CC (org-entry-get (point) "CC" t))
-	(BCC (org-entry-get (point) "BCC" t))
-	(SUBJECT (nth 4 (org-heading-components)))
-	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-	(continue nil)
-	(switch-function nil)
-	(yank-action nil)
-	(send-actions '((email-send-action . nil)))
-	(return-action '(email-heading-return)))
-    
-    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-    (message-goto-body)
-    (insert content)
-    (when CC
-      (message-goto-cc)
-      (insert CC))
-    (when BCC
-      (message-goto-bcc)
-      (insert BCC))
-    (if TO
-	(message-goto-body)
-      (message-goto-to))       
-    ))
 
 (defun words-dictionary ()
   (interactive)
@@ -799,6 +719,86 @@ password: %s" userid password))
 ;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US") 
 (flyspell-mode-on) 
 
+(defun dwiw-auto-capitalize ()
+  (if (org-in-block-p '("src"))
+      (when auto-capitalize
+	(auto-capitalize-mode -1))
+    (unless auto-capitalize
+      (auto-capitalize-mode 1))))
+
+;; (add-hook 'post-command-hook dwiw-auto-capitalize)
+
+(defun email-region (start end)
+  "Send region as the body of an email."
+  (interactive "r")
+  (let ((content (buffer-substring start end)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+
+(defvar *email-heading-point* nil
+  "global variable to store point in for returning")
+
+(defvar *email-to-addresses* nil
+  "global variable to store to address in email")
+
+(defun email-heading-return ()
+  "after returning from compose do this"
+  (switch-to-buffer (marker-buffer  *email-heading-point*))
+  (goto-char (marker-position  *email-heading-point*))
+  (setq *email-heading-point* nil)
+  (org-set-property "SENT-ON" (current-time-string))
+  ;; reset this incase you added new ones
+  (org-set-property "TO" *email-to-addresses*)
+  )
+
+(defun email-send-action ()
+  "send action for compose-mail"
+  (setq *email-to-addresses* (mail-fetch-field "To")))
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+save when it was sent as s SENT property. this is overwritten on
+subsequent sends. could save them all in a logbook?
+"
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (org-mark-subtree)
+  (let ((content (buffer-substring (point) (mark)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
+    
+    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+    (message-goto-body)
+    (insert content)
+    (when CC
+      (message-goto-cc)
+      (insert CC))
+    (when BCC
+      (message-goto-bcc)
+      (insert BCC))
+    (if TO
+	(message-goto-body)
+      (message-goto-to))       
+    ))
+
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
       :group 'org
@@ -883,7 +883,7 @@ password: %s" userid password))
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "---" "!!!" "!:")) 
+  (list "?!" ".." "..." "............................................." "---" "!!!" "!:")) 
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -986,24 +986,6 @@ password: %s" userid password))
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 
-(defun smart-return ()
-  (interactive)
-  (cond (mark-active
-         (progn (delete-region (mark) (point))
-                (newline)))
-        ((and (eq major-mode 'org-mode)
-              (let ((el (org-element-at-point)))
-                (and el
-                     (or (member (first el) '(item plain-list))
-                         (let ((parent (getf (second el) :parent)))
-                           (and parent
-                                (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
-        (t (newline))))
-
-;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
-;; (define-key org-mode-map (kbd "RET") 'smart-return) 
-
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -1062,6 +1044,24 @@ password: %s" userid password))
     (when (or (looking-at "[[:space:]]")
               (looking-back "[[:space:]]"))
       (my/fix-space))))
+
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (newline))))
+
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
+;; (define-key org-mode-map (kbd "RET") 'smart-return) 
 
 (setq org-blank-before-new-entry
       '((heading . always)
