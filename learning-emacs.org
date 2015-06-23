@@ -1,0 +1,36 @@
+* org for academics 
+From: John Kitchin <jkitchin <at> andrew.cmu.edu>
+Subject: Re: Organizing and taming hectic Academia work (faculty	viewpoint)? Tips or a good guides sought after :)
+
+and
+https://www.youtube.com/watch?v=cRUCiF2MwP4
+
+See http://github.com/jkitchin/jmax for my Emacs setup for
+org-mode.
+
+My only other advice is start learning to program in emacs-lisp. It took
+me about four years to get proficient enough to write org-ref. I learned
+by solving lots of little problems, and building up to bigger
+problems. A lot of those are documented in my blog. Read the emacs and
+emacs-lisp manuals (read them in Emacs or in a browser). They take some
+time, so skip the stuff that doesn't make sense and come back to it
+later if you need to. 
+
+Consider getting the book at
+https://www.masteringemacs.org. It isn't about org-mode, but it will
+make you better at using Emacs. 
+
+Consider reading Land of Lisp. It isn't
+about Emacs or Emacs-lisp, but it might interest you in programming in a
+lispy language, and it is a fun read. 
+
+* word export
+With ox-pandoc you can export to .docx directly.  No need to go through
+LaTeX.  Ox-pandoc is pretty amazing.
+
+* where do you put content within a TODO list?
+For me the answer depends on the size of the text, and how you generate
+the final report. I would probably make a link like [[./big-report.org]]
+in the first section. That would make it pretty easy to have a
+standalone document with headlines at whatever level is appropriate that
+can be exported in the desired format.
