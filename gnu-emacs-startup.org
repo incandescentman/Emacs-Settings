@@ -1466,16 +1466,16 @@ I have a need to send a lot of emails to users in my class. I have to send each 
 
 #+BEGIN_SRC emacs-lisp
 (defun send-mail (userid password)
-  "send email to userid@andrew.cmu.edu containing their password"
+  "send email to sunjaydixit@gmail.com containing their password"
   (interactive)
   (mail)
   (mail-to)
-  (insert (format "%s@andrew.cmu.edu" userid))
+  (insert (format "%s@jaydixit.com" userid))
   (mail-subject)
   (insert "[06-640] account information")
   (mail-text)
   (insert (format "
-An account has been created on gilgamesh.cheme.cmu.edu
+An account has been created on jaydixit.com
 userid: %s
 password: %s" userid password))
   (mail-send-and-exit))

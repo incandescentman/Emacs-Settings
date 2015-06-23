@@ -831,21 +831,21 @@ Suggestions: %s
   t) ; append
 
 (defun send-mail (userid password)
-  "send email to userid@andrew.cmu.edu containing their password"
+  "send email to sunjaydixit@gmail.com containing their password"
   (interactive)
   (mail)
   (mail-to)
-  (insert (format "%s@andrew.cmu.edu" userid))
+  (insert (format "%s@jaydixit.com" userid))
   (mail-subject)
   (insert "[06-640] account information")
   (mail-text)
   (insert (format "
-An account has been created on gilgamesh.cheme.cmu.edu
+An account has been created on jaydixit.com
 userid: %s
 password: %s" userid password))
   (mail-send-and-exit))
 
-(send-mail "jkitchin" "trustme99")
+;; (send-mail "jkitchin" "trustme99")
 
 (let ((data (quote (("userid" "password") hline ("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
