@@ -2189,3 +2189,28 @@ First delete region, and then:
 ))) 
 #+END_QUOTE 
 
+
+* TODO [#A] smart-org-meta-return-dwim
+I'm going to set org-blank-before-new-entry to this: 
+
+#+BEGIN_SRC emacs-lisp
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil))) 
+(setq org-return-follows-link t) 
+#+END_SRC
+
+
+I tried setting it to "heading . auto" but it was unable to detect when I wanted a blank and when I did not. So I think the easiest solution is to set "heading" to "always" and then handle the exceptions manually with an intelligent function. 
+
+The exception I'm referring to is this: whenever I'm on a line with an org heading. (In other words, whenever the current line begins with a "*".)
+
+To handle this exception case, I'd like to create a function that will run org-meta-return and then remove the blank line. 
+
+So smart-org-meta-return-dwim should do this:
+
+1. Check if current line begins with a "*"
+2. If yes: do org-meta-return, remove the blank line, and then put the point back where it was 
+3. Else just run org-meta-return
+
+Examples: 
