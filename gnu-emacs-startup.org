@@ -351,8 +351,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 
-(define-key key-minor-mode-map (kbd "C-S-l") 'reflash-indentation)
-(define-key key-minor-mode-map (kbd "C-l") 'recenter-top-bottom)
+(define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
+;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
@@ -452,7 +452,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 #+END_SRC
 
-** keybindings not currently in use 
+*** keybindings not currently in use 
  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
  (global-set-key (kbd "C-c s") 'org-copy-subtree)
  (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
@@ -608,86 +608,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-** TODO [#A] check my changes to backward kill word correctly? :rudi:
-Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
-
-I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
-
-#+BEGIN_SRC emacs-lisp 
-(defun backward-kill-word-correctly ()
-  "Kill word."
-  (interactive)
-  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
-      (kill-region (match-end 0) (match-beginning 0))
-    (backward-kill-word 1))
-  (my/fix-space) 
-
-;; I added this ↓↓↓ #######################
-(when (and 
-(not (looking-back "---")) ; I added this 
-(not (looking-back "^"))) ; I added this 
-;; I added this ↑↑↑ #######################
- 
-(jay/insert-space) 
-) 
-)
-#+END_SRC
-
-** my-delete-backward                                       :rudi:
-#+BEGIN_SRC emacs-lisp
-;;; old versions; remove after testing new one
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; (when (or (looking-back "^[[:space:]]+") 
-;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space)) 
-;; ))) 
-;; 
-;; ;; delete backward one char unless the region is active: 
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
-;;     (delete-backward-char 1)
-;; ))) 
-
-;;; new version
-;; delete backward one char unless the region is active: 
-(defun my/delete-backward ()
-  "When there is an active region, delete it and then fix up the whitespace"
-  (interactive)
-  (if (use-region-p)
-      (delete-region (region-beginning) (region-end))
-    (delete-backward-char 1))
-  (save-excursion
-    (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-      (my/fix-space))))
-#+END_SRC
-*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence 
-Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
-
-#+BEGIN_QUOTE
-First delete region, and then: 
-(if (my/beginning-of-sentence-p)
-(progn
-(capitalize-word)
- (left-word)
-))) 
-#+END_QUOTE 
-
 ** timesvr
 
 #+BEGIN_SRC emacs-lisp 
@@ -774,6 +694,7 @@ provided the (transient) mark is active."
 "One sentence summary of what this command do."
   (interactive)
   (org-indent-mode 1)
+(recenter-top-bottom)
   ) 
 #+END_SRC
 * experiments - new/untested
@@ -2186,5 +2107,85 @@ OK great. To answer your question, here are two ways a sentence might look:
 1. Alice was beginning to get very tired of sitting by her sister (on the bank). 
 2. Alice was tired. (She'd been running all day.) 
 #+END_QUOTE
-* TODO smart-org-meta-return-dwim
-- remove line break if meta-return when in a heading (i.e. when there is a "*" at the beginning of the line)
+* 
+
+* TODO [#A] check my changes to backward kill word correctly?          :rudi:
+Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
+
+I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
+
+#+BEGIN_SRC emacs-lisp 
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space) 
+
+;; I added this ↓↓↓ #######################
+(when (and 
+(not (looking-back "---")) ; I added this 
+(not (looking-back "^"))) ; I added this 
+;; I added this ↑↑↑ #######################
+ 
+(jay/insert-space) 
+) 
+)
+#+END_SRC
+
+** TODO my-delete-backward                                              :rudi:
+#+BEGIN_SRC emacs-lisp
+;;; old versions; remove after testing new one
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; (when (or (looking-back "^[[:space:]]+") 
+;; (looking-at "[[:punct:]]"))
+;; (delete-horizontal-space)) 
+;; ))) 
+;; 
+;; ;; delete backward one char unless the region is active: 
+;; (defun my/delete-backward ()
+;; "When there is an active region, delete it and then fix up the whitespace"
+;;   (interactive)
+;;   (if (use-region-p)                  ; IF
+;;     (progn                            ; THEN
+;;       (delete-region (region-beginning) (region-end))
+;;       (my/fix-space)) 
+;; (progn ; ELSE 
+;;     (delete-backward-char 1)
+;; ))) 
+
+;;; new version
+;; delete backward one char unless the region is active: 
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space))))
+#+END_SRC
+*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence 
+Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
+
+#+BEGIN_QUOTE
+First delete region, and then: 
+(if (my/beginning-of-sentence-p)
+(progn
+(capitalize-word)
+ (left-word)
+))) 
+#+END_QUOTE 
+
