@@ -1495,6 +1495,58 @@ Desired output:
 
 Does that make sense? Thanks!
 
+** NOTE-TO-JAY Answer
+
+   I just don't understand one thing in your example: why did org produce "* -"? Why not just:
+
+#+BEGIN_EXAMPLE
+- first item
+- second item 
+- ^
+#+END_EXAMPLE
+
+   At least that's what my org-mode does. Also, what should happen in the following example:
+
+#+BEGIN_EXAMPLE
+- this
+- that^ and the other
+#+END_EXAMPLE
+
+   If you invoke my suggested implementation of ~smart-return~, it will give this output:
+
+#+BEGIN_EXAMPLE
+- this
+- that
+- ^and the other
+#+END_EXAMPLE
+
+   But it would be reasonable to do:
+
+#+BEGIN_EXAMPLE
+- this
+- that and the other
+- ^
+#+END_EXAMPLE
+
+   Anyway, try it out:
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (newline))))
+#+END_SRC
+
 * TODO [#A] parentheses and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
