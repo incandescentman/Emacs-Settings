@@ -780,7 +780,7 @@ provided the (transient) mark is active."
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…\"'”)}]+")
+(setq sentence-end-base "[][.?!…}]+")
 
 ;;; old version; remove after testing new one
 ;; Clauses are like sentences, but with some additional end markers. Rebind `sentence-end-base' locally to get that effect.
@@ -903,3 +903,27 @@ provided the (transient) mark is active."
         (replace-match (format "%c" next) t t nil 1)))))
 
 (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation) 
+
+(defun pasteboard-paste-without-smart-quotes ()
+  (interactive)
+  (let ((beg (point)))
+    (pasteboard-paste)
+    (replace-smart-quotes beg (point))))
+
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (newline))))
+
+(define-key key-minor-mode-map (kbd "RET") 'smart-return) 
+(define-key org-mode-map (kbd "RET") 'smart-return) 

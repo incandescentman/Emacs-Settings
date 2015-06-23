@@ -1462,7 +1462,7 @@ Can you disable cycling between hyphen and ellipsis? It's a great idea but I rea
 
    Yes, adding that as an exception should work. 
 
-* TODO [#B] smart-return
+* TESTING [#B] smart-return
 Can we create a function smart-return? In org-mode, I will bind (kbd <RETURN>) to it. 
 
 A function that will:
@@ -1490,7 +1490,7 @@ Desired output:
 #+BEGIN_EXAMPLE
 - first item
 - second item 
-* - ^
+- ^
 #+END_EXAMPLE
 
 Does that make sense? Thanks!
@@ -1505,7 +1505,12 @@ Does that make sense? Thanks!
 - ^
 #+END_EXAMPLE
 
-   At least that's what my org-mode does. Also, what should happen in the following example:
+** NOTE-TO-JAY Answer
+You are right. Apologies, that was a typographical error.
+
+
+** NOTE-TO-JAY Answer
+What should happen in the following example:
 
 #+BEGIN_EXAMPLE
 - this
@@ -1520,15 +1525,9 @@ Does that make sense? Thanks!
 - ^and the other
 #+END_EXAMPLE
 
-   But it would be reasonable to do:
+** NOTE-TO-JAY Answer
+Yes! That is the desired output.
 
-#+BEGIN_EXAMPLE
-- this
-- that and the other
-- ^
-#+END_EXAMPLE
-
-   Anyway, try it out:
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-return ()
@@ -1545,9 +1544,34 @@ Does that make sense? Thanks!
                                 (member (first parent) '(item plain-list))))))))
          (org-meta-return))
         (t (newline))))
+
+(define-key key-minor-mode-map (kbd "RET") 'smart-return) 
+(define-key org-mode-map (kbd "RET") 'smart-return) 
+
 #+END_SRC
 
-* TODO [#A] parentheses and auto-capitalize mode
+
+** NOTE-TO-RUDI Excellent!
+Excellent! Seems to be working perfectly. Now can we add one feature? I’d like to be able to "escape" the plain text list by invoking smart-return on a line with no text (besides "-"). When I invoke smart-return on a line with no text, it should enter a line break and no "-". 
+
+#+BEGIN_EXAMPLE
+- this
+- that
+- ^
+#+END_EXAMPLE
+
+Let's say the point is on the carat. Now if I do smart-return, I’d like this output:
+
+#+BEGIN_EXAMPLE
+- this
+- that
+
+^
+#+END_EXAMPLE
+
+Thanks! 
+
+* TESTING [#A] parentheses and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
 Let's say I enter the text:
@@ -1567,3 +1591,11 @@ Can we fix? Thanks!
 ** NOTE-TO-JAY Try it now
 
    ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
+
+** NOTE-TO-RÚDI Answer
+OK great. To answer your question, here are two ways a sentence might look:
+
+#+BEGIN_QUOTE 
+1. Alice was beginning to get very tired of sitting by her sister (on the bank). 
+2. Alice was tired. (She'd been running all day.) 
+#+END_QUOTE
