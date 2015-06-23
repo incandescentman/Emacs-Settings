@@ -1458,7 +1458,7 @@ Can we create a function smart-return? In org-mode, I will bind (kbd <RETURN>) t
 A function that will:
 1. Insert line break (obviously)
 2. When there is a region set, REPLACE region with a line break, the same way a highlighted region is already replaced if you had an alphanumeric key.
-3. Check to see if point is in a plain-text list, and if so, run org-meta-return instead of return
+3. Check to see if point is in a plain-text list, and if so, run org-meta-return instead of return.
 
 Example:
 
