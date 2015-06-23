@@ -1855,25 +1855,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 #+END_SRC
 
-* Hard to read mode
-
-#+BEGIN_SRC emacs-lisp
-(make-face 'hard-to-read-font)
-(set-face-attribute 'hard-to-read-font nil :background "darkgrey" :foreground "grey")
-
-(define-minor-mode hard-to-read-mode
-  "This mode might be useful when you don't like certain text to be seen over your shoulders."
-  :init-value nil :lighter " hard-to-read" :keymap nil
-  (if hard-to-read-mode
-      (progn
-        (font-lock-mode nil)
-        (buffer-face-mode t)
-        (buffer-face-set 'hard-to-read-font))
-    (progn
-      (font-lock-mode t)
-      (buffer-face-mode nil))))
-#+END_SRC
-
 * Dired
 
 #+BEGIN_SRC emacs-lisp
@@ -2546,13 +2527,6 @@ function I have a persistent buffer list available.
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 #+END_SRC
 
-* Startup
-** Set font size to medium type
-#+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'default nil :font "Inconsolata" :height 180)
-;; (medium-type)
-#+END_SRC
-
 * Extra functionality 
 ** Google search
 Enable Google search:
@@ -2606,7 +2580,8 @@ I think this is something similar ([[https://github.com/kai2nenobu/guide-key][so
 - ~smex-describe-function~
 - ~smex-find-function~
 - ~smex-where-is~
-** ~bbdb~
+
+** BBDB contacts database (not currently using this) 
 
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
@@ -2654,8 +2629,7 @@ Redefine help shortcut:
 
 #+BEGIN_SRC emacs-lisp
 ;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
-
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir) 
 (global-set-key (kbd "C-c h") 'helm-mini)
 #+END_SRC
 

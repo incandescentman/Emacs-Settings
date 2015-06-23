@@ -238,3 +238,20 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   (org-mode)
   )
+
+
+(make-face 'hard-to-read-font)
+(set-face-attribute 'hard-to-read-font nil :background "darkgrey" :foreground "grey")
+
+(define-minor-mode hard-to-read-mode
+  "This mode might be useful when you don't like certain text to be seen over your shoulders."
+  :init-value nil :lighter " hard-to-read" :keymap nil
+  (if hard-to-read-mode
+      (progn
+        (font-lock-mode nil)
+        (buffer-face-mode t)
+        (buffer-face-set 'hard-to-read-font))
+    (progn
+      (font-lock-mode t)
+      (buffer-face-mode nil))))
+
