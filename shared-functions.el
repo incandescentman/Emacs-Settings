@@ -1333,21 +1333,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
-(make-face 'hard-to-read-font)
-(set-face-attribute 'hard-to-read-font nil :background "darkgrey" :foreground "grey")
-
-(define-minor-mode hard-to-read-mode
-  "This mode might be useful when you don't like certain text to be seen over your shoulders."
-  :init-value nil :lighter " hard-to-read" :keymap nil
-  (if hard-to-read-mode
-      (progn
-        (font-lock-mode nil)
-        (buffer-face-mode t)
-        (buffer-face-set 'hard-to-read-font))
-    (progn
-      (font-lock-mode t)
-      (buffer-face-mode nil))))
-
   (add-hook 'dired-mode-hook 'hl-line-mode)
 
   (require 'dired-x)
@@ -1898,9 +1883,6 @@ With prefix arg C-u, copy region instad of killing it."
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
-;; (set-face-attribute 'default nil :font "Inconsolata" :height 180)
-;; (medium-type)
-
 (require 'engine-mode)
 (engine-mode t)
 
@@ -1962,8 +1944,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-h") 'help-command)
 
 ;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
-
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir) 
 (global-set-key (kbd "C-c h") 'helm-mini)
 
 (cl-dolist (map '(message-mode-map orgstruct-mode-map))
