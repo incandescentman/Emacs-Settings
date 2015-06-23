@@ -163,6 +163,7 @@
 (setq org-blank-before-new-entry
       '((Heading . auto)
        (plain-list-item . nil))) 
+(setq org-return-follows-link t) 
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 

@@ -861,6 +861,160 @@ provided the (transient) mark is active."
   ) 
 #+END_SRC
 * experiments - new/untested
+** helm actions when there is no match
+
+Posted February 02, 2015 at 04:31 PM | categories: uncategorized | tags: | 0 Comments
+
+Sometimes you run out of matches in a helm selection buffer, and all that is left is the pattern you have typed in. It turns out you can perform some action on that pattern! Why would you do that? Suppose you are searching your bibliography, and you do not find what you are looking for. Then, you may want to send the pattern to Google, or some other search engine to see what comes up.
+
+The key to handling this situation is to use two sources in your helm session. One that works on the candidates and deals with actions on them, and one that has no candidates, and works on the pattern. The variable helm-pattern contains what you typed in. We call the second source the Fallback option. The second source has no candidates, and we use (dummy) in place of the candidates.
+
+It easy to add two sources. Here we define the sources as variables, and use the variables in the :sources list to the helm command.
+
+(defun some-action (arg)
+  (message-box "%s\n%s"
+    (helm-get-selection)
+    (helm-marked-candidates)))
+
+(defun default-action (candidate)
+  (browse-url
+   (format
+    "http://www.google.com/search?q=%s" (url-hexify-string helm-pattern))))
+
+(defvar source1 '((name . "HELM")
+                  (candidates . (1 2 3 4))
+                  (action . (("open" . some-action)))))
+
+(defvar fallback-source '((name . "fallback")
+                          (dummy)
+                          (action . (("Google" . default-action)))))
+
+(helm :sources '(source1 fallback-source))
+#<process open http://www.google.com/search?q=addtion%20pul>
+When you run this, if you run out of search candidates, all that will be left is the fallback option, and when you press enter, it will launch a browser pointing to the google search for your pattern. 
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][The Kitchin Research Group]]
+
+
+** how to write helm functions
+[[http://wikemacs.org/wiki/How_to_write_helm_extensions][How to write helm extensions - WikEmacs]]
+[[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][The Kitchin Research Group]]
+** dwiw-auto-capitalize 
+I have been using auto-capitalize.el for a short time to automatically capitalize the beginning of sentences. I mostly like what it does, but in org-mode I tend to write short code blocks while still in org-mode, and it is pretty irritating for auto-capitalize to "fix" the capitalization of your code. Of course, I can type C-c ' to edit the block in its native mode, but I do not always want to do that.
+
+Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
+
+Here is that code:
+
+
+#+BEGIN_SRC emacs-lisp
+(defun dwiw-auto-capitalize ()
+  (if (org-in-block-p '("src"))
+      (when auto-capitalize
+        (auto-capitalize-mode -1))
+    (unless auto-capitalize
+      (auto-capitalize-mode 1))))
+
+(add-hook 'post-command-hook 'dwiw-auto-capitalize) 
+#+END_SRC
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][The Kitchin Research Group]]
+** Better integration of org-mode and email
+
+Posted June 08, 2014 at 08:57 PM | categories: org-mode, email | tags: | 0 Comments
+
+I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
+
+(defun email-region (start end)
+  "Send region as the body of an email."
+  (interactive "r")
+  (let ((content (buffer-substring start end)))
+    (compose-mail)
+    (message-goto-body)
+    (insert content)
+    (message-goto-to)))
+that function is not glamorous, and you still have to fill in the email fields, and unless you use gnus and org-contacts, the only record keeping is through the email provider.
+
+What I would like is to send a whole heading in an email. The headline should be the subject, and if there are TO, CC or BCC properties, those should be used. If there is no TO, then I want to grab the TO from the email after you enter it and store it as a property. You should be able to set OTHER-HEADERS as a property (this is just for fun. There is no practical reason for this yet). After you send the email, it should record in the heading when it was sent.
+
+It turned out that is a relatively tall order. While it is easy to setup the email if you have everything in place, it is tricky to get the information on TO and the time sent after the email is sent. Past lispers had a lot of ideas to make this possible, and a day of digging got me to the answer. You can specify some "action" functions that get called at various times, e.g. after sending, and a return action when the compose window is done. Unfortunately, I could not figure out any way to do things except to communicate through some global variables.
+
+So here is the code that lets me send org-headings, with the TO, CC, BCC properties, and that records when I sent the email after it is sent.
+
+(defvar *email-heading-point* nil
+  "global variable to store point in for returning")
+
+(defvar *email-to-addresses* nil
+  "global variable to store to address in email")
+
+(defun email-heading-return ()
+  "after returning from compose do this"
+  (switch-to-buffer (marker-buffer  *email-heading-point*))
+  (goto-char (marker-position  *email-heading-point*))
+  (setq *email-heading-point* nil)
+  (org-set-property "SENT-ON" (current-time-string))
+  ;; reset this incase you added new ones
+  (org-set-property "TO" *email-to-addresses*)
+  )
+
+(defun email-send-action ()
+  "send action for compose-mail"
+  (setq *email-to-addresses* (mail-fetch-field "To")))
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+save when it was sent as s SENT property. this is overwritten on
+subsequent sends. could save them all in a logbook?
+"
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (org-mark-subtree)
+  (let ((content (buffer-substring (point) (mark)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
+    
+    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+    (message-goto-body)
+    (insert content)
+    (when CC
+      (message-goto-cc)
+      (insert CC))
+    (when BCC
+      (message-goto-bcc)
+      (insert BCC))
+    (if TO
+	(message-goto-body)
+      (message-goto-to))       
+    ))
+This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy.
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][The Kitchin Research Group]]
+
+** pandoc
+[[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now ]]
+
+** videos
+- [[https://www.youtube.com/watch?v%3D6W82EdwQhxU][Hack Emacs - An Overview of Org Mode - YouTube]]
+- [[https://www.youtube.com/watch?v%3DoJTwQvgfgMM][Emacs Org-mode - a system for note-taking and project planning - YouTube]]
+- [[https://www.youtube.com/watch?v%3DnsGYet02bEk][Hack Emacs - Org Mode In Depth: Managing Structure - YouTube]]
+- [[https://www.youtube.com/watch?v%3DfgizHHd7nOo][Kitchin - org mode is awesome - YouTube]]
+
 ** macro to create defuns?
 
 (defmacro make-my-function (name)
@@ -1462,7 +1616,7 @@ Can you disable cycling between hyphen and ellipsis? It's a great idea but I rea
 
    Yes, adding that as an exception should work. 
 
-* TESTING [#B] smart-return
+* PLEASE-DEBUG [#B] smart-return
 Can we create a function smart-return? In org-mode, I will bind (kbd <RETURN>) to it. 
 
 A function that will:
@@ -1545,8 +1699,8 @@ Yes! That is the desired output.
          (org-meta-return))
         (t (newline))))
 
-(define-key key-minor-mode-map (kbd "RET") 'smart-return) 
-(define-key org-mode-map (kbd "RET") 'smart-return) 
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
+;; (define-key org-mode-map (kbd "RET") 'smart-return) 
 
 #+END_SRC
 
@@ -1570,6 +1724,8 @@ Let's say the point is on the carat. Now if I do smart-return, I’d like this o
 #+END_EXAMPLE
 
 Thanks! 
+** TODO [#A] org-return-follows-link
+Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). Can we make it so this functionality is preserved with smart-return? Thanks! 
 
 * TESTING [#A] parentheses and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
@@ -1599,3 +1755,4 @@ OK great. To answer your question, here are two ways a sentence might look:
 1. Alice was beginning to get very tired of sitting by her sister (on the bank). 
 2. Alice was tired. (She'd been running all day.) 
 #+END_QUOTE
+* TODO smart-org-meta-return

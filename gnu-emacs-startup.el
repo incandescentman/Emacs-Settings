@@ -640,6 +640,15 @@ provided the (transient) mark is active."
   (org-indent-mode 1)
   ) 
 
+(defun dwiw-auto-capitalize ()
+  (if (org-in-block-p '("src"))
+      (when auto-capitalize
+        (auto-capitalize-mode -1))
+    (unless auto-capitalize
+      (auto-capitalize-mode 1))))
+
+(add-hook 'post-command-hook 'dwiw-auto-capitalize) 
+
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
@@ -925,5 +934,5 @@ provided the (transient) mark is active."
          (org-meta-return))
         (t (newline))))
 
-(define-key key-minor-mode-map (kbd "RET") 'smart-return) 
-(define-key org-mode-map (kbd "RET") 'smart-return) 
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
+;; (define-key org-mode-map (kbd "RET") 'smart-return) 

@@ -288,6 +288,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 (setq org-blank-before-new-entry
       '((Heading . auto)
        (plain-list-item . nil))) 
+(setq org-return-follows-link t) 
 #+END_SRC
 
 *** Load my org modules
