@@ -13,8 +13,8 @@
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs") 
-(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs")) 
+(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
@@ -40,7 +40,7 @@
   (interactive)
   (org-indent-mode 1)
 (recenter-top-bottom)
-  ) 
+  )
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
@@ -60,7 +60,7 @@
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-;; and the keybinding 
+;; and the keybinding
 (unless (fboundp 'toggle-frame-fullscreen)
   (global-set-key (kbd "<f11>") 'toggle-fullscreen))
 (unless (fboundp 'toggle-frame-fullscreen)
@@ -162,7 +162,7 @@
 	       (point))))
     (shell-command-on-region start end
 			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t) 
+			     nil t)
     (save-excursion
 
       )))
@@ -199,13 +199,13 @@
   (key-minor-mode 0))
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
 
-;; unbind some existing keybindings 
+;; unbind some existing keybindings
 (define-key undo-tree-map (kbd "C-x r") nil)
 
 ;; and the keybindings
 ;; mk - mykeybindings
 
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
@@ -213,12 +213,12 @@
 
 (define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer) 
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
-(global-unset-key (kbd "C-S-r")) 
+(global-unset-key (kbd "C-S-r"))
 (define-key key-minor-mode-map (kbd "C-S-r") nil)
 (define-key org-mode-map (kbd "C-S-r") nil)
 
@@ -264,23 +264,23 @@
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
-(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r 
+(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r
 (define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
-(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books 
+(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books
 (define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
-(define-key key-minor-mode-map (kbd "M-b M-b") 'work-on-book) ; 
+(define-key key-minor-mode-map (kbd "M-b M-b") 'work-on-book) ;
 
-(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ; 
+(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ;
 
 ;; book bindings
 (define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) ; go to my book folder
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
-(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs) 
+(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs)
 
 ;; recent directories... but how to populate it?
-(define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs) 
+(define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs)
 
 ;; own structure editing
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
@@ -304,7 +304,7 @@
 ;; use OSX standard keybinding for "Redo"
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
 
-;; use OSX standard keybinding to increase or decrease font size 
+;; use OSX standard keybinding to increase or decrease font size
 (define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
 (define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
 
@@ -324,13 +324,13 @@
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
 (define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
- 
+
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
 (define-key key-minor-mode-map (kbd "C-c C-x po") 'pomodoro-stop)
 
 ;; find files using helm
-(define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files) 
+(define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
 
 ;; search using helm-swoop
 (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
@@ -383,7 +383,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (kill-region (point) (progn (my/forward-to-sentence-end) (point)))
       (just-one-space 0))
 (when (looking-at ".. ")
-(delete-forward-char 1)) 
+(delete-forward-char 1))
 )
 
 ;; and the keybinding
@@ -410,8 +410,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\ ")
   (just-one-space)
 )
- 
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space) 
+
+(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 ;;; new version
 (defun my/fix-space ()
@@ -420,17 +420,17 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (just-one-space)
   (when (or (looking-back "^[[:space:]]+")
             (looking-back "-[[:space:]]+")
-            (looking-at "[.,:;!?»)-]") 
+            (looking-at "[.,:;!?»)-]")
             (looking-back"( ")
-            (looking-at " )") 
-            ) 
+            (looking-at " )")
+            )
     (delete-horizontal-space)))
 
 (defun insert-space ()
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command)))
- 
+
 (global-set-key (kbd "M-SPC") 'insert-space)
 
 (defun kill-word-correctly ()
@@ -466,9 +466,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       '(
         (width . 160) ; character
         (height . 42) ; lines
-        )) 
+        ))
 (zenburn)
-(monaco-font) 
+(monaco-font)
 ;; (minuscule-type)
 (recenter-top-bottom)
 
@@ -522,7 +522,7 @@ provided the (transient) mark is active."
     (thing-at-point 'word))))
 
 (defun words-google ()
-  (interactive)  
+  (interactive)
   (browse-url
    (format
     "http://www.google.com/search?q=%s"
@@ -539,7 +539,7 @@ provided the (transient) mark is active."
   '(("d" "ictionary" words-dictionary)
     ("t" "hesaurus" words-thesaurus)
     ("g" "oogle" words-google)))
- 
+
 
 (defun words ()
   (interactive)
@@ -552,7 +552,7 @@ provided the (transient) mark is active."
      words-funcs "") ": "))
    (let ((input (read-char-exclusive)))
      (funcall
-      (elt 
+      (elt
        (assoc
 	(char-to-string input) words-funcs)
        2))))
@@ -570,12 +570,11 @@ provided the (transient) mark is active."
 (add-to-list 'words-funcs
   '("w" "twitter" words-twitter)
   t) ; append
-  
 
 (defun words-atd ()
   "Send paragraph at point to After the deadline for spell and grammar checking."
   (interactive)
-  
+
   (let* ((url-request-method "POST")
 	 (url-request-data (format
 			    "key=some-random-text-&data=%s"
@@ -587,7 +586,7 @@ provided the (transient) mark is active."
 		 (xml-parse-region url-http-end-of-headers (point-max))))
 	 (results (car xml))
 	 (errors (xml-get-children results 'error)))
-    
+
     (switch-to-buffer-other-frame "*ATD*")
     (erase-buffer)
     (dolist (err errors)
@@ -653,19 +652,19 @@ password: %s" userid password))
 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
-  nil 
+  nil
   :lighter " EMBOLDEN"
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "SPC") (lambda ()
                       (interactive)
-                      (save-excursion 
+                      (save-excursion
                         (goto-char (get-register 'p))
                         (insert "*"))
                       (insert "* ")
                       (embolden-next-word -1)))
         (define-key map (kbd ".") (lambda ()
                     (interactive)
-                    (save-excursion 
+                    (save-excursion
                       (goto-char (get-register 'p))
                       (insert "*"))
                     (insert "*. ")
@@ -675,7 +674,7 @@ password: %s" userid password))
       (set-register 'p (point))
     (set-register 'p nil)))
 
-(global-set-key "\C-o" 'embolden-next-word) 
+(global-set-key "\C-o" 'embolden-next-word)
 
 (defun org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
@@ -698,26 +697,26 @@ password: %s" userid password))
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
 (local-set-key (kbd "C-c v i")
-               'org-insert-src-block) 
+               'org-insert-src-block)
 
 (when (executable-find "hunspell")
   (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t)) 
+  (setq ispell-really-hunspell t))
 (setq flyspell-default-dictionary "en_US")
 
 (setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell") 
-(setenv "DICTIONARY" "en_US") 
+(setq ispell-program-name "/usr/local/bin/hunspell")
+(setenv "DICTIONARY" "en_US")
 (if (file-exists-p "/usr/bin/hunspell")
     (progn
       (setq ispell-program-name "hunspell")
       (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8))))) 
+        '(progn (defun ispell-get-coding-system () 'utf-8)))))
 
 (executable-find "hunspell")
 ;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US") 
-(flyspell-mode-on) 
+;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
+(flyspell-mode-on)
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
@@ -784,7 +783,7 @@ subsequent sends. could save them all in a logbook?
 	(yank-action nil)
 	(send-actions '((email-send-action . nil)))
 	(return-action '(email-heading-return)))
-    
+
     (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
     (message-goto-body)
     (insert content)
@@ -796,7 +795,7 @@ subsequent sends. could save them all in a logbook?
       (insert BCC))
     (if TO
 	(message-goto-body)
-      (message-goto-to))       
+      (message-goto-to))
     ))
 
     (defgroup helm-org-wiki nil
@@ -866,9 +865,9 @@ subsequent sends. could save them all in a logbook?
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+") 
+(setq sentence-end-base "[][.?!…}]+")
 (defun kill-clause ()
-  (interactive) 
+  (interactive)
   (expand-abbrev)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
@@ -883,7 +882,7 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!!" "!:")) 
+  (list "?!" ".." "..." "............................................." "---" "!!!" "!:"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -978,7 +977,7 @@ subsequent sends. could save them all in a logbook?
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
 
-(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation) 
+(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
@@ -992,48 +991,48 @@ subsequent sends. could save them all in a logbook?
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
-  (my/fix-space) 
+  (my/fix-space)
 
 ;; I added this ↓↓↓ #######################
-(when (and 
-(not (looking-back "---")) ; I added this 
-(not (looking-back "^"))) ; I added this 
+(when (and
+(not (looking-back "---")) ; I added this
+(not (looking-back "^"))) ; I added this
 ;; I added this ↑↑↑ #######################
- 
-(jay/insert-space) 
-) 
+
+(jay/insert-space)
+)
 )
 
 ;;; old versions; remove after testing new one
-;; ;; delete backward one char unless the region is active: 
+;; ;; delete backward one char unless the region is active:
 ;; (defun my/delete-backward ()
 ;; "When there is an active region, delete it and then fix up the whitespace"
 ;;   (interactive)
 ;;   (if (use-region-p)                  ; IF
 ;;     (progn                            ; THEN
 ;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
+;;       (my/fix-space))
+;; (progn ; ELSE
 ;;     (delete-backward-char 1)
-;; (when (or (looking-back "^[[:space:]]+") 
+;; (when (or (looking-back "^[[:space:]]+")
 ;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space)) 
-;; ))) 
-;; 
-;; ;; delete backward one char unless the region is active: 
+;; (delete-horizontal-space))
+;; )))
+;;
+;; ;; delete backward one char unless the region is active:
 ;; (defun my/delete-backward ()
 ;; "When there is an active region, delete it and then fix up the whitespace"
 ;;   (interactive)
 ;;   (if (use-region-p)                  ; IF
 ;;     (progn                            ; THEN
 ;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space)) 
-;; (progn ; ELSE 
+;;       (my/fix-space))
+;; (progn ; ELSE
 ;;     (delete-backward-char 1)
-;; ))) 
+;; )))
 
 ;;; new version
-;; delete backward one char unless the region is active: 
+;; delete backward one char unless the region is active:
 (defun my/delete-backward ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
@@ -1060,10 +1059,10 @@ subsequent sends. could save them all in a logbook?
          (org-meta-return))
         (t (newline))))
 
-;; (define-key key-minor-mode-map (kbd "RET") 'smart-return) 
-;; (define-key org-mode-map (kbd "RET") 'smart-return) 
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
+;; (define-key org-mode-map (kbd "RET") 'smart-return)
 
 (setq org-blank-before-new-entry
       '((heading . always)
-       (plain-list-item . nil))) 
-(setq org-return-follows-link t) 
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
