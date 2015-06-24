@@ -29,7 +29,7 @@
 
 
 (defvar textexpander-export-as-case-sensitive-list 
-  (list "id" "wed" "im" "sd" "uk" "US" "OS" "CK"))
+  (list "id" "wed" "im" "sd" "uk" "US" "OS" "CK" "PT" "pt" "ck"))
 
 
 (defun abbreviation-mode (abbrev)
