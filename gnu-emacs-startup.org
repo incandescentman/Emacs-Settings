@@ -2185,9 +2185,6 @@ Let's say the point is on the carat. Now if I do smart-return, I’d like this o
 #+END_EXAMPLE
 
 Thanks!
-** TODO [#A] org-return-follows-link
-Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). With smart-return, return no longer follows link. Can we make it so this functionality is preserved with smart-return? Thanks!
-
 
 * TODO [#A] smart-org-meta-return-dwim
 I use org-mode for two different things:

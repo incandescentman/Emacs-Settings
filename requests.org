@@ -8,6 +8,11 @@
 
 * completed requests                                     :ARCHIVE:
 
+** DONE [#A] org-return-follows-link
+Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). With smart-return, return no longer follows link. Can we make it so this functionality is preserved with smart-return? Thanks!
+
+
+
 * DONE [#A] disable cycling between hyphen and ellipsis?
 Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
 
