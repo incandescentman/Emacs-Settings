@@ -2088,7 +2088,9 @@ searches all buffers."
 (defadvice isearch-exit (after my-goto-match-beginning activate)
   "Go to beginning of match."
   (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
+    (goto-char isearch-other-end))
+(recenter-top-bottom)
+)
 
 (defun isearch-from-buffer-start ()
   (interactive)

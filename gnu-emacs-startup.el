@@ -680,7 +680,7 @@ password: %s" userid password))
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
    (let ((src-code-types
-          '("emacs-lisp" "css"
+          '("emacs-lisp" "sh" "css"
 "dot"
 
 "latex")))
