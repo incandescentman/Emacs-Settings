@@ -2124,6 +2124,9 @@ Perfect! Thank you. Can you extend it so that it does this same behavior with nu
 (define-key org-mode-map (kbd "RET") 'smart-return) 
 #+END_SRC
 
+** NOTE-TO-JAY Question
+
+   Could you give an example where it *doesn't* work? In my current setting, it works with bullet lists and numbered ones as well.
 
 * TODO [#A] smart-org-meta-return-dwim
 I use org-mode for two different things:
