@@ -153,6 +153,12 @@
       (goto-char start)
       (my/fix-space))))
 
+(defun pasteboard-paste-without-smart-quotes ()
+  (interactive)
+  (let ((beg (point)))
+    (pasteboard-paste)
+    (replace-smart-quotes beg (point))))
+
 (defun minibuffer-pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -207,7 +213,7 @@
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
-(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste)
+(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
@@ -979,12 +985,6 @@ subsequent sends. could save them all in a logbook?
 
 (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 
-(defun pasteboard-paste-without-smart-quotes ()
-  (interactive)
-  (let ((beg (point)))
-    (pasteboard-paste)
-    (replace-smart-quotes beg (point))))
-
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -1078,8 +1078,8 @@ subsequent sends. could save them all in a logbook?
          (org-meta-return))
         (t (org-return))))
 
-;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
-;; (define-key org-mode-map (kbd "RET") 'smart-return)
+(define-key key-minor-mode-map (kbd "RET") 'smart-return)
+(define-key org-mode-map (kbd "RET") 'smart-return) 
 
 (setq org-blank-before-new-entry
       '((heading . always)
