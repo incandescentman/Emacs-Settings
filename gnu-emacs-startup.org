@@ -1980,6 +1980,10 @@ OK great. To answer your question, here are a few ways a sentence might look:
 
 #1 is now working as desired. Is it possible/feasible/practical to make auto-capitalize mode work correctly in cases #2 and #3 above, auto-capitalizing the B in each one? 
 
+** NOTE-TO-JAY Question
+
+   My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~jay/insert-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
+
 * TODO [#B] check my changes to backward-kill-word-correctly?          :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
