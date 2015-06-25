@@ -1078,10 +1078,19 @@ subsequent sends. could save them all in a logbook?
          (org-meta-return))
         (t (org-return))))
 
-;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
-(define-key org-mode-map (kbd "RET") 'smart-return) 
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
 
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
 (setq org-return-follows-link t)
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively 'org-meta-return)))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 

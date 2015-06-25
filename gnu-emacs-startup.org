@@ -1984,6 +1984,11 @@ OK great. To answer your question, here are a few ways a sentence might look:
 
    My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~jay/insert-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
 
+** NOTE-TO-RÚDI Yes, #2 is working. 
+You're right, #2 works. Not sure why it wasn't working for me before... I must have done something when I was playing with autopair-mode. But yes, #2 works.
+
+#3 definitely still doesn't work. And yes, auto-capitalize seems to work correctly in most other cases. Thanks!
+
 * TODO [#B] check my changes to backward-kill-word-correctly?          :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
@@ -2082,7 +2087,7 @@ Desired output:
 
 Thanks!
 
-* TODO [#A] Extend smart-return for numbered lists
+* DONE [#A] Extend smart-return for numbered lists
 Perfect! Thank you. Can you extend it so that it does this same behavior with numbered lists? So that smart-return runs org-meta-return and takes you to the next line of the numbered list, UNLESS point is at the beginning of the line in which case it escapes the list, same as below? Thanks!
 
 #+BEGIN_SRC emacs-lisp
@@ -2120,13 +2125,15 @@ Perfect! Thank you. Can you extend it so that it does this same behavior with nu
          (org-meta-return))
         (t (org-return))))
 
-;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
-(define-key org-mode-map (kbd "RET") 'smart-return) 
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
 #+END_SRC
 
 ** NOTE-TO-JAY Question
 
    Could you give an example where it *doesn't* work? In my current setting, it works with bullet lists and numbered ones as well.
+
+** NOTE-TO-RÚDI It works!
+You're right, it works! The problem was actually with my smart-return keybinding above. I was using (kbd "RET"). Changing it to (kbd "<return>") fixed the issue. Solved! :-)
 
 * TODO [#A] smart-org-meta-return-dwim
 I use org-mode for two different things:
@@ -2199,7 +2206,7 @@ So smart-org-meta-return-dwim should do this:
 
 Thanks!
 
-*** NOTE-TO-JAY Try this
+** NOTE-TO-JAY Try this
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-org-meta-return-dwim ()
@@ -2209,9 +2216,14 @@ Thanks!
     (when (org-at-heading-p)
       (rplacd (assoc 'heading org-blank-before-new-entry) nil))
     (call-interactively 'org-meta-return)))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 #+END_SRC
 
-* make smart-punctuation work when point is ON the punctuation?
+** NOTE-TO-RÚDI it works!
+Can you do the same thing for org-insert-todo-heading? That way I can use <M-S-return> to insert TODO headings using the same spacing behavior. Thanks!
+
+* TODO [#B] make smart-punctuation work when point is ON the punctuation?
 Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
 
 : Alice was hungry,
