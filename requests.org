@@ -13,6 +13,172 @@ Another edge case: hitting return when on an org-mode link (see variable org-ret
 
 
 
+
+* TESTING [#B] in shared-functions.org, make the function replace-smart-quotes operate on pasteboard contents when there is no region set?
+And can we create a function pasteboard-paste-without-smart-quotes that does replace-smart-quotes on the OSX pasteboard contents, then runs pasteboard-paste? Thanks!
+
+** NOTE-TO-JAY Request for clarification
+
+   I'm not quite sure I understand the requests. You intend to actually *alter* the pasteboard contents? What is the purpose of that? By your request I imagine you'd want to copy from the web some snippet with smart quotes, like:
+
+: These are smart quotes: “ ” ‘ ’
+
+   Then run ~replace-smart-quotes~, and the next time you'd yank, you'd get:
+
+: These are smart quotes: " " ' '
+
+   But note that if you'd paste it onto another program, you'd get this latter string too.
+
+   I know there is an API to access pasteboard contents (~ns-get-pasteboard~, ~ns-set-pasteboard~), but since I'm not running an OS X, it is difficult for me to check that... but not impossible.
+
+   Now, there is an alternative, which would be to ~pasteboard-paste~, and *then* ~replace-smart-quotes~ over the pasted text. I think this would be cleaner, since it wouldn't interfere with the pasteboard.
+** NOTE-TO-RÚDI answer
+Yes, this second solution should work!
+
+** NOTE-TO-JAY Try this
+
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-paste-without-smart-quotes ()
+  (interactive)
+  (let ((beg (point)))
+    (pasteboard-paste)
+    (replace-smart-quotes beg (point))))
+#+END_SRC
+
+
+* PLEASE-DEBUG [#A] smart-return
+Can we create a function smart-return? In org-mode, I will bind (kbd <RETURN>) to it.
+
+A function that will:
+1. Insert line break (obviously)
+2. When there is a region set, REPLACE region with a line break, the same way a highlighted region is already replaced if you had an alphanumeric key.
+3. Check to see if point is in a plain-text list, and if so, run org-meta-return instead of return.
+
+Example:
+
+#+BEGIN_EXAMPLE
+- first item
+- second item^
+#+END_EXAMPLE
+
+Suppose the carat ^ represents where the point is, and I hit <RETURN>.
+
+Current output:
+#+BEGIN_EXAMPLE
+- first item
+- second item
+^
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+- first item
+- second item
+- ^
+#+END_EXAMPLE
+
+Does that make sense? Thanks!
+
+** NOTE-TO-JAY Answer
+
+   I just don't understand one thing in your example: why did org produce "* -"? Why not just:
+
+#+BEGIN_EXAMPLE
+- first item
+- second item
+- ^
+#+END_EXAMPLE
+
+** NOTE-TO-JAY Answer
+You are right. Apologies, that was a typographical error.
+
+
+** NOTE-TO-JAY Answer
+What should happen in the following example:
+
+#+BEGIN_EXAMPLE
+- this
+- that^ and the other
+#+END_EXAMPLE
+
+   If you invoke my suggested implementation of ~smart-return~, it will give this output:
+
+#+BEGIN_EXAMPLE
+- this
+- that
+- ^and the other
+#+END_EXAMPLE
+
+** NOTE-TO-JAY Answer
+Yes! That is the desired output.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ;; Shamefully lifted from `org-return'. Why isn't there an
+        ;; `org-at-link-p' function?!
+        ((and org-return-follows-link
+              (let ((tprop (get-text-property (point) 'face)))
+                (or (eq tprop 'org-link)
+                    (and (listp tprop) (memq 'org-link tprop)))))
+         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     ;; point is at an item
+                     (eq (first el) 'item)
+                     ;; item is empty
+                     (eql (getf (second el) :contents-begin)
+                          (getf (second el) :contents-end)))))
+         (beginning-of-line)
+         (let ((kill-whole-line nil))
+           (kill-line))
+         (newline))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (org-return))))
+
+(define-key key-minor-mode-map (kbd "RET") 'smart-return)
+(define-key org-mode-map (kbd "RET") 'smart-return)
+
+#+END_SRC
+
+
+** NOTE-TO-RÚDI Excellent!
+Excellent! Seems to be working perfectly. Now can we add one feature? I’d like to be able to "escape" the plain text list by invoking smart-return on a line with no text (other than "- "). When I invoke smart-return on a line with no text, it should enter a line break and no "-".
+
+#+BEGIN_EXAMPLE
+- this
+- that
+- ^
+#+END_EXAMPLE
+
+Let's say the point is on the carat. Now if I do smart-return, I’d like this output:
+
+#+BEGIN_EXAMPLE
+- this
+- that
+
+^
+#+END_EXAMPLE
+
+Thanks!
+*** NOTE-TO-JAY Try it now
+
+I think it covers the two requirements you added above.
+
+
+
 * DONE [#A] disable cycling between hyphen and ellipsis?
 Can you disable cycling between hyphen and ellipsis? It's a great idea but I realize there are times when I want to type a long line of 30 periods in a row (without using the number prefix). Should I just add ".........................." to smart-punctuation-exceptions? Thanks!
 

@@ -1049,6 +1049,25 @@ subsequent sends. could save them all in a logbook?
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline)))
+        ;; Shamefully lifted from `org-return'. Why isn't there an
+        ;; `org-at-link-p' function?!
+        ((and org-return-follows-link
+              (let ((tprop (get-text-property (point) 'face)))
+                (or (eq tprop 'org-link)
+                    (and (listp tprop) (memq 'org-link tprop)))))
+         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     ;; point is at an item
+                     (eq (first el) 'item)
+                     ;; item is empty
+                     (eql (getf (second el) :contents-begin)
+                          (getf (second el) :contents-end)))))
+         (beginning-of-line)
+         (let ((kill-whole-line nil))
+           (kill-line))
+         (newline))
         ((and (eq major-mode 'org-mode)
               (let ((el (org-element-at-point)))
                 (and el
@@ -1057,7 +1076,7 @@ subsequent sends. could save them all in a logbook?
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
          (org-meta-return))
-        (t (newline))))
+        (t (org-return))))
 
 ;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
 ;; (define-key org-mode-map (kbd "RET") 'smart-return)
