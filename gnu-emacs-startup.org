@@ -2191,3 +2191,25 @@ So smart-org-meta-return-dwim should do this:
 3. Else just run org-meta-return
 
 Thanks!
+
+* make smart-punctuation work when point is ON the punctuation?
+Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
+
+: Alice was hungry,
+
+Let's say the point is ON the comma.
+
+I enter "." 
+
+Current output:
+
+#+BEGIN_QUOTE
+Alice was hungry., 
+#+END_QUOTE
+
+Desired output:
+#+BEGIN_QUOTE
+Alice was hungry. 
+#+END_QUOTE
+
+Is this easy or will it mess everything else up? Thanks!
