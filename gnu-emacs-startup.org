@@ -2199,6 +2199,18 @@ So smart-org-meta-return-dwim should do this:
 
 Thanks!
 
+*** NOTE-TO-JAY Try this
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively 'org-meta-return)))
+#+END_SRC
+
 * make smart-punctuation work when point is ON the punctuation?
 Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
 
