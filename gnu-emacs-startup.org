@@ -1814,7 +1814,7 @@ Oleh
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
-* DONE [#B] yet another edge case for kill-word-correctly-and-capitalize
+* DONE [#C] yet another edge case for kill-word-correctly-and-capitalize
 Here's another edge case.
 
 : Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?"
@@ -1948,7 +1948,7 @@ Definitely #1. if possible, #1 would be great. #3 could work also. it's just a b
    This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
 
 
-* TESTING [#A] parentheses and auto-capitalize mode
+* PLEASE-DEBUG [#A] Parentheses, quotations, and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
 Let's say I enter the text:
@@ -1970,14 +1970,17 @@ Can we fix? Thanks!
    ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
 
 ** NOTE-TO-RÚDI Answer
-OK great. To answer your question, here are two ways a sentence might look:
+OK great. To answer your question, here are a few ways a sentence might look:
 
 #+BEGIN_QUOTE
-1. Alice was beginning to get very tired of sitting by her sister (on the bank).
-2. Alice was tired. (She'd been running all day.)
+1. Alice (who was very curious) was tired. 
+2. Alice was tired. (Because she'd been running all day.)
+3. Alice said: "This is the last time." But the next day it happened again. 
 #+END_QUOTE
 
-* TODO [#B] check my changes to backward kill word correctly?          :rudi:
+#1 is now working as desired. Is it possible/feasible/practical to make auto-capitalize mode work correctly in cases #2 and #3 above, auto-capitalizing the B in each one? 
+
+* TODO [#B] check my changes to backward-kill-word-correctly?          :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
 I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
@@ -2002,7 +2005,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 )
 #+END_SRC
 
-** TODO my-delete-backward                                              :rudi:
+* TODO [#B] my-delete-backward                                         :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active:
@@ -2045,7 +2048,8 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 #+END_SRC
-*** TODO [#B] enable my-delete-backward to delete region and capitalize new first letter in sentence
+** TODO [#B] my-delete-backward-and-capitalize? 
+enable my-delete-backward to delete region and capitalize new first letter in sentence
 Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
 
 #+BEGIN_QUOTE
@@ -2057,7 +2061,24 @@ First delete region, and then:
 )))
 #+END_QUOTE
 
-* TODO [#B] Extend smart-return for numbered lists
+** TODO [#C] my-delete-backward-and-downcase? 
+Also, when there's no region, and I'm instead using my-delete-backward to delete backward one character at a time, is it possible to make my-delete-backward detect when I'm deleting a "." and if so, run downcase-word? 
+
+Example: 
+: Alice was tired. Instinctively she approached.
+
+Let's say the point is on the blank space after the "." and then I invoke my-delete-backward)
+
+Current output:
+: Alice was tired Instinctively she approached. 
+
+
+Desired output:
+: Alice was tired instinctively she approached. 
+
+Thanks!
+
+* TODO [#A] Extend smart-return for numbered lists
 Perfect! Thank you. Can you extend it so that it does this same behavior with numbered lists? So that smart-return runs org-meta-return and takes you to the next line of the numbered list, UNLESS point is at the beginning of the line in which case it escapes the list, same as below? Thanks!
 
 #+BEGIN_SRC emacs-lisp
@@ -2095,7 +2116,7 @@ Perfect! Thank you. Can you extend it so that it does this same behavior with nu
          (org-meta-return))
         (t (org-return))))
 
-(define-key key-minor-mode-map (kbd "RET") 'smart-return)
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
 (define-key org-mode-map (kbd "RET") 'smart-return) 
 #+END_SRC
 

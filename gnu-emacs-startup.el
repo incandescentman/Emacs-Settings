@@ -1078,7 +1078,7 @@ subsequent sends. could save them all in a logbook?
          (org-meta-return))
         (t (org-return))))
 
-(define-key key-minor-mode-map (kbd "RET") 'smart-return)
+;; (define-key key-minor-mode-map (kbd "RET") 'smart-return)
 (define-key org-mode-map (kbd "RET") 'smart-return) 
 
 (setq org-blank-before-new-entry
