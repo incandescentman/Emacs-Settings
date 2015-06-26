@@ -853,6 +853,24 @@ subsequent sends. could save them all in a logbook?
         ((re-search-forward "\\=\\w*\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
 
+(defvar *punctuation-markers-to-cycle-between*  ".?!")
+
+(defun cycle-punctuation ()
+  (interactive)
+  (save-excursion
+    (forward-sentence)
+    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
+                                      *punctuation-markers-to-cycle-between*)
+                              nil t)
+      (let ((next (elt *punctuation-markers-to-cycle-between*
+                       ;; circular string; should be abstracted
+                       (mod (1+ (position (elt (match-string 1) 0)
+                                          *punctuation-markers-to-cycle-between*))
+                            (length *punctuation-markers-to-cycle-between*)))))
+        (replace-match (format "%c" next) t t nil 1)))))
+
+(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
+
 (defun org-clone-subtree ()
   (interactive)
   (org-clone-subtree-with-time-shift 1)
@@ -970,24 +988,6 @@ subsequent sends. could save them all in a logbook?
   (smart-punctuation ":" to))
 
 ;; (define-key org-mode-map (kbd ":") 'smart-colon)
-
-(defvar *punctuation-markers-to-cycle-between*  ".?!")
-
-(defun cycle-punctuation ()
-  (interactive)
-  (save-excursion
-    (forward-sentence)
-    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
-                                      *punctuation-markers-to-cycle-between*)
-                              nil t)
-      (let ((next (elt *punctuation-markers-to-cycle-between*
-                       ;; circular string; should be abstracted
-                       (mod (1+ (position (elt (match-string 1) 0)
-                                          *punctuation-markers-to-cycle-between*))
-                            (length *punctuation-markers-to-cycle-between*)))))
-        (replace-match (format "%c" next) t t nil 1)))))
-
-(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 
 (defun backward-kill-word-correctly ()
   "Kill word."

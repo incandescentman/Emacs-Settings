@@ -464,3 +464,72 @@ Currently if I type it the way it looks, I wind up with this:
 
 Should we somehow make an exception for the above, or should I just disable smart-punctuation for colon?
 
+
+* DONE [#C] yet another edge case for kill-word-correctly-and-capitalize
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-26 Fri 13:15
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+  :ARCHIVE_CATEGORY: gnu-emacs-startup
+  :ARCHIVE_TODO: DONE
+  :END:
+Here's another edge case.
+
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought thought Alice, "without pictures or conversations?"
+
+Suppose the point is on the "t" in the first "thought" and I invoke kill-word-correctly-and-capitalize.
+
+Current output:
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book,"thought Alice, "without pictures or conversations?"
+
+Desired output:
+: Into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought Alice, "without pictures or conversations?"
+
+This function is becoming more and more useful!
+
+** NOTE-TO-JAY Question
+
+   The culprit here seems to be again ~my/fix-space~. I see you added the following clause:
+
+: (looking-back "\" ")
+
+   This means that after fixing the spaces, if you look back from point to '" ', you should delete the space. I suppose that's only true if: (1) the quotation marks are starting a quote, or (2) there is a punctuation mark ahead (which is handled by another clause).
+
+   So, what was the intention here?
+** NOTE-TO-RÚDI Answer
+Hmm, I'm not sure I remember what I intended there. I must have been trying to address an edge case I found myself. If it makes sense to remove that clause again, let's do so, and if I find another edge case, we can address it at that point.
+
+In general, I will use quotation marks and punctuation in the style/sequence reflected below:
+
+#+BEGIN_QUOTE
+Alice was beginning to get very tired of sitting by her sister on the bank (and of having nothing to do). Once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it. "And what is the use of a book," thought Alice, "without pictures or conversations."
+#+END_QUOTE
+
+Thanks!
+
+** NOTE-TO-JAY About the quotation marks
+
+OK, I removed the clauses pertaining to the quotation marks. Indeed, it is hard to determine, when you are looking at a single quotation mark, if it is starting or ending the quote. You must pair it with the previous or next; in the limit you have to take into account the whole buffer. There is probably code out there that does it (note that ~emacs-lisp-mode~, for example, colourises strings -- therefore, it must know when a string starts or ends). I can search for it if you want.
+** NOTE-TO-RÚDI yes, later
+Yes, that would be great, but let's deprioritize it. Thanks!
+
+
+#+BEGIN_SRC emacs-lisp
+(defvar *punctuation-markers-to-cycle-between*  ".?!")
+
+(defun cycle-punctuation ()
+  (interactive)
+  (save-excursion
+    (forward-sentence)
+    (when (re-search-backward (format "\\>\\([%s]\\)[[:space:]]*\\="
+                                      *punctuation-markers-to-cycle-between*)
+                              nil t)
+      (let ((next (elt *punctuation-markers-to-cycle-between*
+                       ;; circular string; should be abstracted
+                       (mod (1+ (position (elt (match-string 1) 0)
+                                          *punctuation-markers-to-cycle-between*))
+                            (length *punctuation-markers-to-cycle-between*)))))
+        (replace-match (format "%c" next) t t nil 1)))))
+
+(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
+#+END_SRC
+
