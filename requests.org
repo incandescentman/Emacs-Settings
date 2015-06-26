@@ -8,7 +8,7 @@
 
 
 * archive of completed/approved requests                            :ARCHIVE:
-
+#+OPTIONS: f:t 
 ** DONE [#A] org-return-follows-link
 Another edge case: hitting return when on an org-mode link (see variable org-return-follows-link). With smart-return, return no longer follows link. Can we make it so this functionality is preserved with smart-return? Thanks!
 
@@ -668,7 +668,7 @@ So she was considering in her own mind (as well as she could, for the hot day ma
 There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, "Oh dear! Oh dear! I shall be late!" (When she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural.) But when the Rabbit actually took a watch out of its waistcoat-pocket, and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it. 
 
 * open requests
-** TODO [#C] JavaScript?
+** TODO [#B] JavaScript?                                        :javascript:
 Hi Rúdi,
 
 Do you know JavaScript? If you're interested, I might have some very quick JavaScript questions. for example the below, which comes from here:
@@ -681,3 +681,19 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 #+END_SRC
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
+
+** TODO [#A] speed up launch?                                        :emacs:
+Hi Rúdi,
+
+I'd like to make Emacs launch faster, so that I can launch and just start typing text in org-mode as fast as possible when I need to start typing quickly. (Say I get a phone call and I need to take down a number, etc.) Can we set it up so that as much as possible gets lazy-loaded or loads after launch? 
+
+Also in shared-functions.org, I have lines like this:
+
+#+BEGIN_SRC emacs-lisp
+(load "~/Dropbox/github/koma3/ox-koma-letter.el")
+(load "~/Dropbox/github/koma3/fiverr-koma.el") 
+#+END_SRC
+
+It's my own customized version of ox-koma letter, but it certainly doesn't need to launch right away. I use it rarely...
+
+Thanks!
