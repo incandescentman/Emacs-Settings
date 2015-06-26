@@ -2028,6 +2028,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m df" 'delete-file-and-buffer) 
 (define-hyper-key "m rf" 'rename-file-and-buffer)
 
+(define-hyper-key "m td" 'jd-org-today)
+
 (defun my-isearch-word-at-point ()
   (interactive)
   (call-interactively 'isearch-forward-regexp))

@@ -2733,6 +2733,9 @@ Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m mt" 'medium-type) 
 (define-hyper-key "m df" 'delete-file-and-buffer) 
 (define-hyper-key "m rf" 'rename-file-and-buffer)
+
+(define-hyper-key "m td" 'jd-org-today)
+
 #+END_SRC
 
 * Searching for things
