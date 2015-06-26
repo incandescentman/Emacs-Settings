@@ -1679,7 +1679,7 @@ Oleh
 
 #+BEGIN_SRC emacs-lisp
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+")
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
   (expand-abbrev)
@@ -1988,6 +1988,10 @@ OK great. To answer your question, here are a few ways a sentence might look:
 You're right, #2 works. Not sure why it wasn't working for me before... I must have done something when I was playing with autopair-mode. But yes, #2 works.
 
 #3 definitely still doesn't work. And yes, auto-capitalize seems to work correctly in most other cases. Thanks!
+
+** NOTE-TO-JAY I think it works now
+
+   Please also check if sentence commands (killing sentences, etc.) are working as you intend, since I changed the ~sentence-end-base~ variable.
 
 * TODO [#B] check my changes to backward-kill-word-correctly?          :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
