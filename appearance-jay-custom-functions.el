@@ -175,8 +175,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun matrix ()
   (interactive)
-  (set-face-attribute 'default nil :background "black"
-                      :foreground "lime" :font "Courier" :height 180))
+  (set-face-attribute 'default nil :background "black" :foreground "lime") 
+  ;; (set-face-attribute 'default nil :background "black" :foreground "lime" :font "Courier" :height 180)
+) 
 
 ;;;; functions to change the appearance of Emacs to various beautiful defaults automatically load 
 

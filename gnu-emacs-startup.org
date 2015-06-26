@@ -2165,6 +2165,28 @@ However, when I'm writing text, I want line breaks for the sake of visual whites
 * Heading
 This is a document that has a heading, and a body. The body will consist of two paragraphs with sub-headings.
 
+* TODO [#B] make smart-punctuation work when point is ON the punctuation?
+Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
+
+: Alice was hungry,
+
+Let's say the point is ON the comma.
+
+I enter "." 
+
+Current output:
+
+#+BEGIN_QUOTE
+Alice was hungry., 
+#+END_QUOTE
+
+Desired output:
+#+BEGIN_QUOTE
+Alice was hungry. 
+#+END_QUOTE
+
+Is this easy or will it mess everything else up? Thanks!
+
 * Body
 This is an introduction to the body. The body has two sub-headings, each of which have their own paragraph.
 
@@ -2222,25 +2244,3 @@ Thanks!
 
 ** NOTE-TO-RÚDI it works!
 Can you do the same thing for org-insert-todo-heading? That way I can use <M-S-return> to insert TODO headings using the same spacing behavior. Thanks!
-
-* TODO [#B] make smart-punctuation work when point is ON the punctuation?
-Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
-
-: Alice was hungry,
-
-Let's say the point is ON the comma.
-
-I enter "." 
-
-Current output:
-
-#+BEGIN_QUOTE
-Alice was hungry., 
-#+END_QUOTE
-
-Desired output:
-#+BEGIN_QUOTE
-Alice was hungry. 
-#+END_QUOTE
-
-Is this easy or will it mess everything else up? Thanks!
