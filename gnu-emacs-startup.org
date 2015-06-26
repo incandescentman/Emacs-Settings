@@ -1711,6 +1711,9 @@ Oleh
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
   (let ((old-point (point)))
+    ;; 0. forward smart punctuation marks right after point
+    (unless not-so-smart
+      (re-search-forward (format "\\=[%s]*" *smart-punctuation-marks*) nil t))
     ;; 1. go back until there are no more spaces/tabs
     (when (re-search-backward "[^ 	][ 	]+\\="
                               nil t)
@@ -2139,6 +2142,30 @@ Perfect! Thank you. Can you extend it so that it does this same behavior with nu
 ** NOTE-TO-RÚDI It works!
 You're right, it works! The problem was actually with my smart-return keybinding above. I was using (kbd "RET"). Changing it to (kbd "<return>") fixed the issue. Solved! :-)
 
+* TODO [#B] make smart-punctuation work when point is ON the punctuation?
+Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
+
+: Alice was hungry,
+
+Let's say the point is ON the comma.
+
+I enter "." 
+
+Current output:
+
+#+BEGIN_QUOTE
+Alice was hungry., 
+#+END_QUOTE
+
+Desired output:
+#+BEGIN_QUOTE
+Alice was hungry. 
+#+END_QUOTE
+
+Is this easy or will it mess everything else up? Thanks!
+
+** NOTE-TO-JAY Try it
+
 * TODO [#A] smart-org-meta-return-dwim
 I use org-mode for two different things:
 
@@ -2168,28 +2195,6 @@ However, when I'm writing text, I want line breaks for the sake of visual whites
 #+BEGIN_EXAMPLE
 * Heading
 This is a document that has a heading, and a body. The body will consist of two paragraphs with sub-headings.
-
-* TODO [#B] make smart-punctuation work when point is ON the punctuation?
-Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
-
-: Alice was hungry,
-
-Let's say the point is ON the comma.
-
-I enter "." 
-
-Current output:
-
-#+BEGIN_QUOTE
-Alice was hungry., 
-#+END_QUOTE
-
-Desired output:
-#+BEGIN_QUOTE
-Alice was hungry. 
-#+END_QUOTE
-
-Is this easy or will it mess everything else up? Thanks!
 
 * Body
 This is an introduction to the body. The body has two sub-headings, each of which have their own paragraph.
