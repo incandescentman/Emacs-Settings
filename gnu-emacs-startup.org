@@ -1952,7 +1952,7 @@ Definitely #1. if possible, #1 would be great. #3 could work also. it's just a b
    This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
 
 
-* PLEASE-DEBUG [#A] Parentheses, quotations, and auto-capitalize mode
+* TESTING [#A] Parentheses, quotations, and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
 
 Let's say I enter the text:
@@ -1997,6 +1997,9 @@ You're right, #2 works. Not sure why it wasn't working for me before... I must h
 
    Please also check if sentence commands (killing sentences, etc.) are working as you intend, since I changed the ~sentence-end-base~ variable.
 
+** NOTE-TO-RÚDI Great!
+Looks great! I will keep testing.
+
 * TODO [#B] check my changes to backward-kill-word-correctly?          :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
@@ -2026,7 +2029,23 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 
    Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~jay/insert-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
 
-* TODO [#B] my-delete-backward                                         :rudi:
+** NOTE-TO-RÚDI Answer
+Good question. The answer is that there should never be a space after "---"
+
+Example:
+: Alice was tired---tired as hell. ^
+
+Say the point is the carat, and I invoke backward-kill-word-correctly 4 times.
+
+Output if I remove the whole ~(when ...)~ block: 
+: Alice was tired--- ^
+Note the space after "---"
+
+Desired output:
+: Alice was tired---^
+No space. Does that make sense? Thanks! 
+
+* DONE [#B] my-delete-backward                                         :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
 ;; ;; delete backward one char unless the region is active:
@@ -2069,7 +2088,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 #+END_SRC
-** TODO [#B] my-delete-backward-and-capitalize? 
+** DONE [#B] my-delete-backward-and-capitalize? 
 enable my-delete-backward to delete region and capitalize new first letter in sentence
 Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
 
@@ -2295,4 +2314,4 @@ Can you do the same thing for org-insert-todo-heading? That way I can use <M-S-r
 
 ** NOTE-TO-JAY Try it again
 ** NOTE-TO-RÚDI Works perfectly!
-Working perfectly, thanks!
+Working perfectly, thank you!
