@@ -445,7 +445,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
 
 ;; deleting things
-(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize) 
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
@@ -2081,10 +2082,6 @@ First delete region, and then:
 )))
 #+END_QUOTE
 
-*** NOTE-TO-JAY Try this
-
-    Question, though: do you mean the capitalisation to occur *only* when a region is deleted? Don't you want it to occur also if you delete a single character? That's what my suggestion does:
-
 #+BEGIN_SRC emacs-lisp
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
@@ -2100,6 +2097,14 @@ First delete region, and then:
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
 #+END_SRC
+
+
+*** NOTE-TO-JAY Try this
+
+    Question, though: do you mean the capitalisation to occur *only* when a region is deleted? Don't you want it to occur also if you delete a single character? That's what my suggestion does:
+
+** NOTE-TO-RÚDI Absolutely.
+Ha! Yes, that was going to be my next request! Perfect!
 
 ** TODO [#C] my-delete-backward-and-downcase? 
 Also, when there's no region, and I'm instead using my-delete-backward to delete backward one character at a time, is it possible to make my-delete-backward detect when I'm deleting a "." and if so, run downcase-word? 
@@ -2166,7 +2171,7 @@ Perfect! Thank you. Can you extend it so that it does this same behavior with nu
 ** NOTE-TO-RÚDI It works!
 You're right, it works! The problem was actually with my smart-return keybinding above. I was using (kbd "RET"). Changing it to (kbd "<return>") fixed the issue. Solved! :-)
 
-* TODO [#B] make smart-punctuation work when point is ON the punctuation?
+* DONE [#B] make smart-punctuation work when point is ON the punctuation?
 Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
 
 : Alice was hungry,
@@ -2189,8 +2194,10 @@ Alice was hungry.
 Is this easy or will it mess everything else up? Thanks!
 
 ** NOTE-TO-JAY Try it
+** NOTE-TO-RÚDI Flawless!
 
-* TODO [#A] smart-org-meta-return-dwim
+
+* DONE [#A] smart-org-meta-return-dwim
 I use org-mode for two different things:
 
 1. As a TODO list manager
@@ -2287,3 +2294,5 @@ Thanks!
 Can you do the same thing for org-insert-todo-heading? That way I can use <M-S-return> to insert TODO headings using the same spacing behavior. Thanks!
 
 ** NOTE-TO-JAY Try it again
+** NOTE-TO-RÚDI Works perfectly!
+Working perfectly, thanks!

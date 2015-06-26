@@ -325,7 +325,8 @@
 (define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
 
 ;; deleting things
-(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize) 
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
@@ -871,7 +872,7 @@ subsequent sends. could save them all in a logbook?
           (org-align-tags-here org-tags-column))))))
 
 ;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+")
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
   (expand-abbrev)
@@ -893,6 +894,9 @@ subsequent sends. could save them all in a logbook?
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
   (let ((old-point (point)))
+    ;; 0. forward smart punctuation marks right after point
+    (unless not-so-smart
+      (re-search-forward (format "\\=[%s]*" *smart-punctuation-marks*) nil t))
     ;; 1. go back until there are no more spaces/tabs
     (when (re-search-backward "[^ 	][ 	]+\\="
                               nil t)
@@ -1044,6 +1048,20 @@ subsequent sends. could save them all in a logbook?
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 
+(defun my/delete-backward-and-capitalize ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space)))
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
+
 (defun smart-return ()
   (interactive)
   (cond (mark-active
@@ -1085,12 +1103,20 @@ subsequent sends. could save them all in a logbook?
        (plain-list-item . nil)))
 (setq org-return-follows-link t)
 
-(defun smart-org-meta-return-dwim ()
-  (interactive)
+(defun call-rebinding-org-blank-behaviour (fn)
   (let ((org-blank-before-new-entry
          (copy-tree org-blank-before-new-entry)))
     (when (org-at-heading-p)
       (rplacd (assoc 'heading org-blank-before-new-entry) nil))
-    (call-interactively 'org-meta-return)))
+    (call-interactively fn)))
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
+
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
