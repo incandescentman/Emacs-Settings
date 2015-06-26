@@ -2081,6 +2081,26 @@ First delete region, and then:
 )))
 #+END_QUOTE
 
+*** NOTE-TO-JAY Try this
+
+    Question, though: do you mean the capitalisation to occur *only* when a region is deleted? Don't you want it to occur also if you delete a single character? That's what my suggestion does:
+
+#+BEGIN_SRC emacs-lisp
+(defun my/delete-backward-and-capitalize ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+      (my/fix-space)))
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
+#+END_SRC
+
 ** TODO [#C] my-delete-backward-and-downcase? 
 Also, when there's no region, and I'm instead using my-delete-backward to delete backward one character at a time, is it possible to make my-delete-backward detect when I'm deleting a "." and if so, run downcase-word? 
 
