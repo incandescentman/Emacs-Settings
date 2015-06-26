@@ -2021,6 +2021,10 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 )
 #+END_SRC
 
+** NOTE-TO-JAY Question
+
+   Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~jay/insert-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
+
 * TODO [#B] my-delete-backward                                         :rudi:
 #+BEGIN_SRC emacs-lisp
 ;;; old versions; remove after testing new one
