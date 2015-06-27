@@ -6,7 +6,9 @@
                "http://marmalade-repo.org/packages/" ))
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 ;; (package-initialize)
@@ -1753,9 +1755,7 @@ Also converts full stops to commas."
         (message "Moved %s words" count))
     (message "No region selected")))
 
-(require 'goto-chg)
-(global-set-key [(control ?.)] 'goto-last-change)
-(global-set-key [(control ?,)] 'goto-last-change-reverse)
+
 
 (defun remove-link ()
     "Replace an org link by its description or if empty its address"

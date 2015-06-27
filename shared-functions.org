@@ -2365,9 +2365,6 @@ Transpose windows, useful:
 
 ** Goto last change - sooo useful 
 #+BEGIN_SRC emacs-lisp
-(require 'goto-chg)
-(global-set-key [(control ?.)] 'goto-last-change)
-(global-set-key [(control ?,)] 'goto-last-change-reverse)
 #+END_SRC
 
 ** Remove hyperlink
