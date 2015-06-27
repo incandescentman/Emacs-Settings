@@ -271,7 +271,6 @@
 
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
-(add-hook 'org-mode-hook ' turn-on-olivetti-mode)
 '(org-replace-disputed-keys t)
 '(org-use-extra-keys nil)
 '(org-adapt-indentation nil)
@@ -2192,7 +2191,7 @@ searches all buffers."
 
 (setq magit-last-seen-setup-instructions "1.4.0") 
 
-(turn-on-olivetti-mode)
+;; (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 
  ;;; Tell ispell.el that ’ can be part of a word.
@@ -2233,6 +2232,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'fundamental-mode))) 
 ((and buffer-file-name (eq major-mode 'markdown-mode))) 
 ((and buffer-file-name (eq major-mode 'nmxml-mode))) 
+((and buffer-file-name (eq major-mode 'gitconfig-mode))) 
 ((and buffer-file-name (eq major-mode 'gitignore-mode))) 
       ((and buffer-file-name (eq major-mode 'shell-script-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
