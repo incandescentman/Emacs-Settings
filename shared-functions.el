@@ -1755,8 +1755,6 @@ Also converts full stops to commas."
         (message "Moved %s words" count))
     (message "No region selected")))
 
-
-
 (defun remove-link ()
     "Replace an org link by its description or if empty its address"
   (interactive)
