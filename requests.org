@@ -697,3 +697,68 @@ Also in shared-functions.org, I have lines like this:
 It's my own customized version of ox-koma letter, but it certainly doesn't need to launch right away. I use it rarely...
 
 Thanks!
+** NOTE-TO-JAY backward-kill-word-correctly
+
+   Again, I'm sorry, but I'm confused. If I remove the ~when~ block (and note that *includes* the call to ~jay/insert-space~), I get exactly the behaviour you intend. So either I'm not making myself clear or our Emacs are behaving differently. So, in order to figure it out, I suggest you try evaluating first the following functions:
+
+#+BEGIN_SRC emacs-lisp
+(defun my/fix-space ()
+  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+  (interactive)
+  (just-one-space)
+  (when (or (looking-back "^[[:space:]]+")
+            (looking-back "-[[:space:]]+")
+            (looking-at "[.,:;!?»)-]")
+            (looking-back"( ")
+            (looking-at " )")
+            )
+    (delete-horizontal-space)))
+
+(defun jay/insert-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(expand-abbrev)
+(insert "\ ")
+  (just-one-space)
+)
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space)
+
+;; I added this ↓↓↓ #######################
+(when (and
+(not (looking-back "---")) ; I added this
+(not (looking-back "^"))) ; I added this
+;; I added this ↑↑↑ #######################
+
+(jay/insert-space)
+)
+)
+#+END_SRC
+
+   Try it on your example:
+
+: Alice was tired---tired as hell. ^
+
+   And then evaluate my suggestion:
+
+#+BEGIN_SRC emacs-lisp
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space))
+#+END_SRC
+
+   And try it again on your example:
+
+: Alice was tired---tired as hell. ^
+
+   On my settings, I get exactly the same result, which is no space after '---'.
