@@ -2070,8 +2070,7 @@ Desired output:
 : Alice was tired---^
 No space. Does that make sense? Thanks! 
 
-* DONE [#B] my-delete-backward                                         :rudi:
-
+* DONE [#B] my-delete-backward                                         :rudi: 
 #+BEGIN_SRC emacs-lisp
 (defun my/delete-backward ()
   "When there is an active region, delete it and then fix up the whitespace"
