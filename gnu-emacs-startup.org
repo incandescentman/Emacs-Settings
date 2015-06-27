@@ -80,6 +80,12 @@ Wrap text:
   )
 #+END_SRC
 
+* org-mode settings
+
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+  #+END_SRC
+
 
 * Fullscreen settings
 
@@ -710,6 +716,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (zenburn)
 (monaco-font)
 ;; (minuscule-type)
+
+(turn-on-olivetti-mode)
+
 (recenter-top-bottom)
 #+END_SRC
 
@@ -1448,6 +1457,86 @@ References:
 [[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
 
 * experiments - new/untested
+
+** defun syntax
+
+A Lisp function becomes a [[command]] when its body contains, at top
+level, a form that calls the special form `<code>(interactive...)</code>'.   This special form does nothing when executed, but
+its presence in the function definition indicates that interactive calling is
+permitted.  Its argument controls the reading of the function arguments in an
+interactive call.
+
+Here is a simple example defining a command that displays a message:
+
+
+#+BEGIN_SRC emacs-lisp
+(defun hello ()
+      "Hello World and you can call it via M-x hello."
+      (interactive)
+      (message "Hello World!"))
+
+#+END_SRC
+
+
+; `M-x hello' calls command `hello' interactively.
+
+Example of a command that reads a string argument:
+
+
+#+BEGIN_SRC emacs-lisp
+(defun hello (someone)
+      "Say hello to SOMEONE via M-x hello."
+      (interactive "sWho do you want to say hello to? ")
+      (message "Hello %s!" someone)) 
+#+END_SRC
+
+To use multiple arguments, separate their `interactive' entries with a newline:
+
+
+#+BEGIN_SRC emacs-lisp
+(defun multiple-hello (someone num)
+      "Say hello to SOMEONE via M-x hello, for NUM times."
+      (interactive "sWho do you want to say hello to? \nnHow many times? ")
+      (dotimes (i num)
+        (insert (format "Hello %s!\n" someone)))) 
+#+END_SRC
+
+
+Instead of passing a literal string argument to `interactive', you can pass it an EmacsLisp [[sexp]] that is evaluated when the [[command]] is called, to produce a list of the actual arguments.
+
+This is useful when you need to do more than is offered by the predefined `interactive' string constructs.
+
+To get the effect of the string constructs `P' and `p', respectively, use [[variable]] `current-prefix-arg' and function `prefix-numeric-value' applied to that variable.
+
+To get the effect of `interactive' string codes that read user input, use Lisp functions that read input, such as `read-buffer', `read-string', and `completing-read'.
+
+The following pairs of `interactive' specs are equivalent:
+
+  (defun bar (arg)
+    (interactive "p")
+    ...)
+
+  (defun bar (arg)
+    (interactive
+      (list (prefix-numeric-value current-prefix-arg))
+    ...)
+
+  (defun foo (arg buf)
+    (interactive "P\nbBuffer: ")
+    ...)
+
+  (defun foo (arg buf)
+    (interactive
+      (list current-prefix-arg
+            (read-buffer "Buffer: " (current-buffer) t)))
+    ...)
+
+
+
+*** org-mime
+
+
+
 ** lisp functions from John Kitchin
 *** helm actions when there is no match
 

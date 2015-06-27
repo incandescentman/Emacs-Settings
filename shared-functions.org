@@ -2978,7 +2978,6 @@ magit
 
 * startup
 #+BEGIN_SRC emacs-lisp
-;; (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 #+END_SRC
 

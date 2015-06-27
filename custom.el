@@ -27,7 +27,7 @@
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(autopair-blink t)
-'(autopair-global-mode t)
+ '(autopair-global-mode t)
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
@@ -267,6 +267,8 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
+ '(org-mime-default-header "
+")
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
@@ -369,7 +371,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
