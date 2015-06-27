@@ -2696,7 +2696,7 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
 #+END_SRC
 
-Key bindings for my own custom functions, using ⌘-m as a prefix:
+mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
 (define-hyper-key "m cy" 'cyberpunk-jay) 
 (define-hyper-key "m cl" 'cyberpunk-large) 
@@ -2721,6 +2721,16 @@ Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m rf" 'rename-file-and-buffer)
 
 (define-hyper-key "m td" 'jd-org-today)
+
+(defun keybinding-read-and-insert(key)
+  (interactive "kKey: ")
+(insert "(define-key key-minor-mode-map ") 
+        (insert (format "(kbd \"%s\")" (key-description key))) 
+        (insert " '")
+(save-excursion (insert ")") 
+                ))
+
+(define-hyper-key "m kb" 'keybinding-read-and-insert) 
 
 #+END_SRC
 

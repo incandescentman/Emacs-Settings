@@ -213,6 +213,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)

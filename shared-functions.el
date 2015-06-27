@@ -2019,6 +2019,16 @@ Including indent-buffer, which should not be called automatically on save."
 
 (define-hyper-key "m td" 'jd-org-today)
 
+(defun keybinding-read-and-insert(key)
+  (interactive "kKey: ")
+(insert "(define-key key-minor-mode-map ") 
+        (insert (format "(kbd \"%s\")" (key-description key))) 
+        (insert " '")
+(save-excursion (insert ")") 
+                ))
+
+(define-hyper-key "m kb" 'keybinding-read-and-insert) 
+
 (defun my-isearch-word-at-point ()
   (interactive)
   (call-interactively 'isearch-forward-regexp))

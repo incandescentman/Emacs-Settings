@@ -337,6 +337,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
@@ -2211,3 +2212,4 @@ First delete region, and then:
 
 *** NOTE-TO-RÚDI Absolutely.
 Ha! Yes, that was going to be my next request! Perfect!
+
