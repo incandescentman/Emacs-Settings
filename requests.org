@@ -1,7 +1,7 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
-#+TODO: TODO PLEASE-TEST TESTING | DONE 
-#+TODO: NOTE-TO-JAY NOTE-TO-RUDY
+#+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
+#+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 
 
@@ -672,7 +672,7 @@ So she was considering in her own mind (as well as she could, for the hot day ma
 
 There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, "Oh dear! Oh dear! I shall be late!" (When she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural.) But when the Rabbit actually took a watch out of its waistcoat-pocket, and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it. 
 
-* open requests
+* open requests 
 ** TODO [#B] JavaScript?                                        :javascript:
 Hi Rúdi,
 
@@ -718,7 +718,55 @@ Thanks!
 
     What do you find more appealing?
 
-** NOTE-TO-JAY backward-kill-word-correctly
+*** NOTE-TO-RÚDI Answer
+Definitely #1. For this particular functionality, I decided to just move those files into my load path. But anything else we can do to lazy-load other functionality or eval after launch of Emacs would be great! :-)
+
+** DONE [#A] check my changes to backward-kill-word-correctly?         :rudi:
+Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
+
+I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
+
+#+BEGIN_SRC emacs-lisp
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space)
+
+;; I added this ↓↓↓ #######################
+(when (and
+(not (looking-back "---")) ; I added this
+(not (looking-back "^"))) ; I added this
+;; I added this ↑↑↑ #######################
+
+(jay/insert-space)
+)
+)
+#+END_SRC
+
+*** NOTE-TO-JAY Question
+
+    Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~jay/insert-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
+
+*** NOTE-TO-RÚDI Answer
+Good question. The answer is that there should never be a space after "---"
+
+Example:
+: Alice was tired---tired as hell. ^
+
+Say the point is the carat, and I invoke backward-kill-word-correctly 4 times.
+
+Output if I remove the whole ~(when ...)~ block: 
+: Alice was tired--- ^
+Note the space after "---"
+
+Desired output:
+: Alice was tired---^
+No space. Does that make sense? Thanks! 
+
+*** NOTE-TO-JAY backward-kill-word-correctly
 
    Again, I'm sorry, but I'm confused. If I remove the ~when~ block (and note that *includes* the call to ~jay/insert-space~), I get exactly the behaviour you intend. So either I'm not making myself clear or our Emacs are behaving differently. So, in order to figure it out, I suggest you try evaluating first the following functions:
 
@@ -782,21 +830,7 @@ Thanks!
 
 : Alice was tired---tired as hell. ^
 
-   On my settings, I get exactly the same result, which is no space after '---'. 
-** TODO [#C] my-delete-backward-and-downcase? 
-Also, when there's no region, and I'm instead using my-delete-backward to delete backward one character at a time, is it possible to make my-delete-backward detect when I'm deleting a "." and if so, run downcase-word? 
+   On my settings, I get exactly the same result, which is no space after '---'.
 
-Example: 
-: Alice was tired. Instinctively she approached.
-
-Let's say the point is on the blank space after the "." and then I invoke my-delete-backward)
-
-Current output:
-: Alice was tired Instinctively she approached. 
-
-
-Desired output:
-: Alice was tired instinctively she approached. 
-
-Thanks!
-
+*** NOTE-TO-RÚDI You are right.
+I'm not sure what I was doing wrong before. I must have deleted the wrong section before evaluating. In any case, your version works as I intended. Thank you!! 
