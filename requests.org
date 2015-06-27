@@ -782,4 +782,21 @@ Thanks!
 
 : Alice was tired---tired as hell. ^
 
-   On my settings, I get exactly the same result, which is no space after '---'.
+   On my settings, I get exactly the same result, which is no space after '---'. 
+** TODO [#C] my-delete-backward-and-downcase? 
+Also, when there's no region, and I'm instead using my-delete-backward to delete backward one character at a time, is it possible to make my-delete-backward detect when I'm deleting a "." and if so, run downcase-word? 
+
+Example: 
+: Alice was tired. Instinctively she approached.
+
+Let's say the point is on the blank space after the "." and then I invoke my-delete-backward)
+
+Current output:
+: Alice was tired Instinctively she approached. 
+
+
+Desired output:
+: Alice was tired instinctively she approached. 
+
+Thanks!
+

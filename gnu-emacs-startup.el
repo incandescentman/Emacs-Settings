@@ -440,6 +440,65 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (global-set-key (kbd "M-SPC") 'insert-space)
 
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
+
+(defun call-rebinding-org-blank-behaviour (fn)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively fn)))
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
+
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ;; Shamefully lifted from `org-return'. Why isn't there an
+        ;; `org-at-link-p' function?!
+        ((and org-return-follows-link
+              (let ((tprop (get-text-property (point) 'face)))
+                (or (eq tprop 'org-link)
+                    (and (listp tprop) (memq 'org-link tprop)))))
+         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     ;; point is at an item
+                     (eq (first el) 'item)
+                     ;; item is empty
+                     (eql (getf (second el) :contents-begin)
+                          (getf (second el) :contents-end)))))
+         (beginning-of-line)
+         (let ((kill-whole-line nil))
+           (kill-line))
+         (newline))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (org-return))))
+
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
+
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -1061,62 +1120,3 @@ subsequent sends. could save them all in a logbook?
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
-
-(defun smart-return ()
-  (interactive)
-  (cond (mark-active
-         (progn (delete-region (mark) (point))
-                (newline)))
-        ;; Shamefully lifted from `org-return'. Why isn't there an
-        ;; `org-at-link-p' function?!
-        ((and org-return-follows-link
-              (let ((tprop (get-text-property (point) 'face)))
-                (or (eq tprop 'org-link)
-                    (and (listp tprop) (memq 'org-link tprop)))))
-         (call-interactively 'org-open-at-point))
-        ((and (eq major-mode 'org-mode)
-              (let ((el (org-element-at-point)))
-                (and el
-                     ;; point is at an item
-                     (eq (first el) 'item)
-                     ;; item is empty
-                     (eql (getf (second el) :contents-begin)
-                          (getf (second el) :contents-end)))))
-         (beginning-of-line)
-         (let ((kill-whole-line nil))
-           (kill-line))
-         (newline))
-        ((and (eq major-mode 'org-mode)
-              (let ((el (org-element-at-point)))
-                (and el
-                     (or (member (first el) '(item plain-list))
-                         (let ((parent (getf (second el) :parent)))
-                           (and parent
-                                (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
-        (t (org-return))))
-
-(define-key org-mode-map (kbd "<return>") 'smart-return) 
-
-(setq org-blank-before-new-entry
-      '((heading . always)
-       (plain-list-item . nil)))
-(setq org-return-follows-link t)
-
-(defun call-rebinding-org-blank-behaviour (fn)
-  (let ((org-blank-before-new-entry
-         (copy-tree org-blank-before-new-entry)))
-    (when (org-at-heading-p)
-      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
-    (call-interactively fn)))
-
-(defun smart-org-meta-return-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
-
-(defun smart-org-insert-todo-heading-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
-
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
