@@ -2181,7 +2181,6 @@ searches all buffers."
 
 (setq magit-last-seen-setup-instructions "1.4.0") 
 
-;; (turn-on-olivetti-mode)
 ;; (load-theme 'leuven)
 
  ;;; Tell ispell.el that ’ can be part of a word.

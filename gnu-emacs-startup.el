@@ -42,6 +42,8 @@
 (recenter-top-bottom)
   )
 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
 (defun toggle-maxframe ()
@@ -536,6 +538,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (zenburn)
 (monaco-font)
 ;; (minuscule-type)
+
+(turn-on-olivetti-mode)
+
 (recenter-top-bottom)
 
 (defun jay/left-char ()
@@ -783,6 +788,22 @@ password: %s" userid password))
 ;;  (setq ispell-program-name "hunspell")
 ;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
 (flyspell-mode-on)
+
+(defun hello ()
+      "Hello World and you can call it via M-x hello."
+      (interactive)
+      (message "Hello World!"))
+
+(defun hello (someone)
+      "Say hello to SOMEONE via M-x hello."
+      (interactive "sWho do you want to say hello to? ")
+      (message "Hello %s!" someone)) 
+
+(defun multiple-hello (someone num)
+      "Say hello to SOMEONE via M-x hello, for NUM times."
+      (interactive "sWho do you want to say hello to? \nnHow many times? ")
+      (dotimes (i num)
+        (insert (format "Hello %s!\n" someone)))) 
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
