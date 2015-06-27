@@ -1066,36 +1066,6 @@ subsequent sends. could save them all in a logbook?
 )
 )
 
-;;; old versions; remove after testing new one
-;; ;; delete backward one char unless the region is active:
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space))
-;; (progn ; ELSE
-;;     (delete-backward-char 1)
-;; (when (or (looking-back "^[[:space:]]+")
-;; (looking-at "[[:punct:]]"))
-;; (delete-horizontal-space))
-;; )))
-;;
-;; ;; delete backward one char unless the region is active:
-;; (defun my/delete-backward ()
-;; "When there is an active region, delete it and then fix up the whitespace"
-;;   (interactive)
-;;   (if (use-region-p)                  ; IF
-;;     (progn                            ; THEN
-;;       (delete-region (region-beginning) (region-end))
-;;       (my/fix-space))
-;; (progn ; ELSE
-;;     (delete-backward-char 1)
-;; )))
-
-;;; new version
-;; delete backward one char unless the region is active:
 (defun my/delete-backward ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)

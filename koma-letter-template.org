@@ -1,0 +1,36 @@
+# -*- org-export-allow-bind-keywords: t -*-
+* Preamble                                                         :noexport:
+#+TITLE:  Mis-shapen chaos of well-seeming forms!
+#+DATE: <2015-06-04 Wed>
+# Use variable `org-export-date-timestamp-format' for timestamp formatting.
+#+BIND: org-export-date-timestamp-format "%B %e, %Y."
+#+PLACE: New York City.
+#+FROM_ADDRESS: 22 Saint Marks Place Apt. D \\ New York NY 10003-8076 
+#+AUTHOR: Jay Dixit
+#+PLACE: New York City
+#+CLOSING: Best,
+#+PHONE_NUMBER: (555) 555-5555
+#+EMAIL: email@email.com 
+#+LCO: DINmtext
+#+OPTIONS: after-closing-order:(ps cc encl) ':t backaddress:nil phone:t email:t subject:t place:to
+* To-address of the lovely Juliet                                        :to:
+Juliet
+House of Capulet
+Verona
+
+* Dear Juliet,
+Then plainly know my heart's dear love is set
+On the fair daughter of rich Capulet:
+As mine on hers, so hers is set on mine;
+And all combin'd, save what thou must combine
+By holy marriage: when, and where, and how
+We met, we woo'd, and made exchange of vow,
+I'll tell thee as we pass; but this I pray,
+That thou consent to marry us to-day.
+
+* PS                                                                     :ps:
+P.S. "P.S." is not typeset automatically by KOMA-Script
+* some arbitrary LaTeX code 				       :after_letter:
+#+BEGIN_LaTeX
+% here we can place random LaTeX code, e.g. including PDFs via the pdfpages package.
+#+END_LaTeX
