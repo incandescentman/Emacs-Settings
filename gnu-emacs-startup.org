@@ -1458,30 +1458,19 @@ References:
 
 * experiments - new/untested
 
-** defun syntax
+** defun syntax 
+A Lisp function becomes a [[command]] when its body contains, at top level, a form that calls the special form `<code>(interactive...)</code>'. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
 
-A Lisp function becomes a [[command]] when its body contains, at top
-level, a form that calls the special form `<code>(interactive...)</code>'.   This special form does nothing when executed, but
-its presence in the function definition indicates that interactive calling is
-permitted.  Its argument controls the reading of the function arguments in an
-interactive call.
+*** Here is a simple example defining a command that displays a message: 
 
-Here is a simple example defining a command that displays a message:
-
-
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp 
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)
-      (message "Hello World!"))
-
+      (message "Hello World!")) 
 #+END_SRC
 
-
-; `M-x hello' calls command `hello' interactively.
-
-Example of a command that reads a string argument:
-
+*** Example of a command that reads a string argument: 
 
 #+BEGIN_SRC emacs-lisp
 (defun hello (someone)
@@ -1490,8 +1479,7 @@ Example of a command that reads a string argument:
       (message "Hello %s!" someone)) 
 #+END_SRC
 
-To use multiple arguments, separate their `interactive' entries with a newline:
-
+*** To use multiple arguments, separate their `interactive' entries with a newline: 
 
 #+BEGIN_SRC emacs-lisp
 (defun multiple-hello (someone num)
@@ -1500,7 +1488,6 @@ To use multiple arguments, separate their `interactive' entries with a newline:
       (dotimes (i num)
         (insert (format "Hello %s!\n" someone)))) 
 #+END_SRC
-
 
 Instead of passing a literal string argument to `interactive', you can pass it an EmacsLisp [[sexp]] that is evaluated when the [[command]] is called, to produce a list of the actual arguments.
 
@@ -1533,8 +1520,23 @@ The following pairs of `interactive' specs are equivalent:
 
 
 
-*** org-mime
+** org-mime
 
+#+BEGIN_SRC emacs-lisp 
+(defun mime-send-mail ()
+      "org-mime-subtree and HTMLize"
+      (interactive)
+      (org-mime-subtree)
+(insert "\nBest,\nS.\n 
+[[http://www.newyorkwritersintensive.com/][newyorkwritersintensive.com]]")
+      (org-mime-htmlize)
+) 
+#+END_SRC 
+
+
+#+BEGIN_SRC emacs-lisp 
+#+END_SRC
+ 
 
 
 ** lisp functions from John Kitchin

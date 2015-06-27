@@ -792,7 +792,7 @@ password: %s" userid password))
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)
-      (message "Hello World!"))
+      (message "Hello World!")) 
 
 (defun hello (someone)
       "Say hello to SOMEONE via M-x hello."
@@ -804,6 +804,17 @@ password: %s" userid password))
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
         (insert (format "Hello %s!\n" someone)))) 
+
+(defun mime-send-mail ()
+      "org-mime-subtree and HTMLize"
+      (interactive)
+      (org-mime-subtree)
+(insert "\nBest,\nS.\n 
+[[http://www.newyorkwritersintensive.com/][newyorkwritersintensive.com]]")
+      (org-mime-htmlize)
+) 
+
+
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
