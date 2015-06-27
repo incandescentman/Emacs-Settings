@@ -697,6 +697,22 @@ Also in shared-functions.org, I have lines like this:
 It's my own customized version of ox-koma letter, but it certainly doesn't need to launch right away. I use it rarely...
 
 Thanks!
+
+*** NOTE-TO-JAY Answer
+
+    Well, I can think of two ways to speed up launch:
+
+    1. Autoloading as much as possible. Here's [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Autoload.html][info]] on it. In the example you gave, you'd probably write something like: 
+    #+BEGIN_EXAMPLE
+    (autoload 'org-koma-letter-export-as-latex "~/Dropbox/github/koma3/ox-koma-letter.el" nil t)
+    ...
+    #+END_EXAMPLE
+    This registers the command ~org-koma-letter-export-as-latex~ as loadable from the latter path. This of course has the downside of having to specify all commands of a module discriminately so that the module gets loaded when one of those commands is invoked.
+
+    2. Having a separate "vanilla" configuration, which you could start Emacs with when you wanted to start typing fast. You could then have different icons on your desktop: one for your heavyweight Emacs, and another for your vanilla one.
+
+    What do you find more appealing?
+
 ** NOTE-TO-JAY backward-kill-word-correctly
 
    Again, I'm sorry, but I'm confused. If I remove the ~when~ block (and note that *includes* the call to ~jay/insert-space~), I get exactly the behaviour you intend. So either I'm not making myself clear or our Emacs are behaving differently. So, in order to figure it out, I suggest you try evaluating first the following functions:
