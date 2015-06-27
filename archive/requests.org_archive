@@ -1,0 +1,39 @@
+
+Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/requests.org
+
+
+* DONE [#A] smart-org-meta-return-dwim
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-06-27 Sat 16:52
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: archive of completed/approved requests
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: ARCHIVE
+  :END:
+I use org-mode for two different things:
+
+1. As a TODO list manager
+2. As a text outliner
+
+I'd like org-meta-return to work differently based on context.
+
+1. TODO list: no blank lines
+2. text outline: automatically insert 1 blank line when non-heading text precedes a heading
+
+In other words, when I'm doing a TODO list when I have many headings in a row, I don't want stray line breaks between them.
+
+*** For TODO list mode, no blank lines:
+#+BEGIN_EXAMPLE
+** Organize Party
+** TODO Call people
+*** TODO Peter
+*** DONE Sarah
+** TODO Buy food
+** DONE Talk to neighbor
+#+END_EXAMPLE
+
+However, when I'm writing text, I want line breaks for the sake of visual whitespace / ease of reading.
+
+*** For outline mode, blank line before heading:
+#+BEGIN_EXAMPLE

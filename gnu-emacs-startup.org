@@ -592,6 +592,71 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
+*** smart-org-meta-return-dwim
+
+#+BEGIN_SRC emacs-lisp
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
+
+(defun call-rebinding-org-blank-behaviour (fn)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively fn)))
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
+
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+#+END_SRC
+*** smart-return
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-return ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point))
+                (newline)))
+        ;; Shamefully lifted from `org-return'. Why isn't there an
+        ;; `org-at-link-p' function?!
+        ((and org-return-follows-link
+              (let ((tprop (get-text-property (point) 'face)))
+                (or (eq tprop 'org-link)
+                    (and (listp tprop) (memq 'org-link tprop)))))
+         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     ;; point is at an item
+                     (eq (first el) 'item)
+                     ;; item is empty
+                     (eql (getf (second el) :contents-begin)
+                          (getf (second el) :contents-end)))))
+         (beginning-of-line)
+         (let ((kill-whole-line nil))
+           (kill-line))
+         (newline))
+        ((and (eq major-mode 'org-mode)
+              (let ((el (org-element-at-point)))
+                (and el
+                     (or (member (first el) '(item plain-list))
+                         (let ((parent (getf (second el) :parent)))
+                           (and parent
+                                (member (first parent) '(item plain-list))))))))
+         (org-meta-return))
+        (t (org-return))))
+
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
+#+END_SRC
 ** kill word correctly
 
 #+BEGIN_SRC emacs-lisp
@@ -2048,7 +2113,8 @@ No space. Does that make sense? Thanks!
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 #+END_SRC
-** DONE [#B] my-delete-backward-and-capitalize? 
+
+** TESTING [#B] my-delete-backward-and-capitalize? 
 enable my-delete-backward to delete region and capitalize new first letter in sentence
 Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
 
@@ -2102,176 +2168,3 @@ Desired output:
 
 Thanks!
 
-* DONE [#A] Extend smart-return for numbered lists
-Perfect! Thank you. Can you extend it so that it does this same behavior with numbered lists? So that smart-return runs org-meta-return and takes you to the next line of the numbered list, UNLESS point is at the beginning of the line in which case it escapes the list, same as below? Thanks!
-
-#+BEGIN_SRC emacs-lisp
-(defun smart-return ()
-  (interactive)
-  (cond (mark-active
-         (progn (delete-region (mark) (point))
-                (newline)))
-        ;; Shamefully lifted from `org-return'. Why isn't there an
-        ;; `org-at-link-p' function?!
-        ((and org-return-follows-link
-              (let ((tprop (get-text-property (point) 'face)))
-                (or (eq tprop 'org-link)
-                    (and (listp tprop) (memq 'org-link tprop)))))
-         (call-interactively 'org-open-at-point))
-        ((and (eq major-mode 'org-mode)
-              (let ((el (org-element-at-point)))
-                (and el
-                     ;; point is at an item
-                     (eq (first el) 'item)
-                     ;; item is empty
-                     (eql (getf (second el) :contents-begin)
-                          (getf (second el) :contents-end)))))
-         (beginning-of-line)
-         (let ((kill-whole-line nil))
-           (kill-line))
-         (newline))
-        ((and (eq major-mode 'org-mode)
-              (let ((el (org-element-at-point)))
-                (and el
-                     (or (member (first el) '(item plain-list))
-                         (let ((parent (getf (second el) :parent)))
-                           (and parent
-                                (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
-        (t (org-return))))
-
-(define-key org-mode-map (kbd "<return>") 'smart-return) 
-#+END_SRC
-
-** NOTE-TO-JAY Question
-
-   Could you give an example where it *doesn't* work? In my current setting, it works with bullet lists and numbered ones as well.
-
-** NOTE-TO-RÚDI It works!
-You're right, it works! The problem was actually with my smart-return keybinding above. I was using (kbd "RET"). Changing it to (kbd "<return>") fixed the issue. Solved! :-)
-
-* DONE [#B] make smart-punctuation work when point is ON the punctuation?
-Is it fairly easy to make smart-punctuation operate when the point is ON the punctuation?
-
-: Alice was hungry,
-
-Let's say the point is ON the comma.
-
-I enter "." 
-
-Current output:
-
-#+BEGIN_QUOTE
-Alice was hungry., 
-#+END_QUOTE
-
-Desired output:
-#+BEGIN_QUOTE
-Alice was hungry. 
-#+END_QUOTE
-
-Is this easy or will it mess everything else up? Thanks!
-
-** NOTE-TO-JAY Try it
-** NOTE-TO-RÚDI Flawless!
-
-
-* DONE [#A] smart-org-meta-return-dwim
-I use org-mode for two different things:
-
-1. As a TODO list manager
-2. As a text outliner
-
-I'd like org-meta-return to work differently based on context.
-
-1. TODO list: no blank lines
-2. text outline: automatically insert 1 blank line when non-heading text precedes a heading
-
-In other words, when I'm doing a TODO list when I have many headings in a row, I don't want stray line breaks between them.
-
-*** For TODO list mode, no blank lines:
-#+BEGIN_EXAMPLE
-** Organize Party
-** TODO Call people
-*** TODO Peter
-*** DONE Sarah
-** TODO Buy food
-** DONE Talk to neighbor
-#+END_EXAMPLE
-
-However, when I'm writing text, I want line breaks for the sake of visual whitespace / ease of reading.
-
-*** For outline mode, blank line before heading:
-#+BEGIN_EXAMPLE
-* Heading
-This is a document that has a heading, and a body. The body will consist of two paragraphs with sub-headings.
-
-* Body
-This is an introduction to the body. The body has two sub-headings, each of which have their own paragraph.
-
-** The First Paragraph
-This is the first of two paragraphs.
-
-** The Second Paragraph
-This is the second of two paragraphs.
-#+END_EXAMPLE
-
-*** Anyway...
-I already tried setting org-blank-before-new-entry to auto:
-
-     ((heading . auto)
-     (plain-list-item . auto))
-
-But I think org-blank-before-new-entry works by detecting other blank lines in the area.
-
-So instead here's my idea. I'm going to set org-blank-before-new-entry to this:
-
-#+BEGIN_SRC emacs-lisp
-(setq org-blank-before-new-entry
-      '((heading . always)
-       (plain-list-item . nil)))
-(setq org-return-follows-link t)
-#+END_SRC
-
-In other words I think the easiest solution is to set "heading" to "always" and then handle the exceptions manually with an intelligent function.
-
-The exception I'm referring to is this: whenever I'm on a line with an org heading. (In other words, whenever the current line begins with a "*".)
-
-To handle this exception case, I'd like to create a function that will run org-meta-return and then remove the blank line.
-
-So smart-org-meta-return-dwim should do this:
-
-1. Check if current line begins with a "*"
-2. If yes: do org-meta-return, remove the blank line, and then put the point back where it was
-3. Else just run org-meta-return
-
-Thanks!
-
-** NOTE-TO-JAY Try this
-
-#+BEGIN_SRC emacs-lisp
-(defun call-rebinding-org-blank-behaviour (fn)
-  (let ((org-blank-before-new-entry
-         (copy-tree org-blank-before-new-entry)))
-    (when (org-at-heading-p)
-      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
-    (call-interactively fn)))
-
-(defun smart-org-meta-return-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
-
-(defun smart-org-insert-todo-heading-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
-
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-#+END_SRC
-
-** NOTE-TO-RÚDI it works!
-Can you do the same thing for org-insert-todo-heading? That way I can use <M-S-return> to insert TODO headings using the same spacing behavior. Thanks!
-
-** NOTE-TO-JAY Try it again
-** NOTE-TO-RÚDI Works perfectly!
-Working perfectly, thank you!
