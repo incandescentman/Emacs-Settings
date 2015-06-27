@@ -2363,10 +2363,6 @@ Transpose windows, useful:
     (message "No region selected")))
 #+END_SRC
 
-** Goto last change - sooo useful 
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 ** Remove hyperlink
 A useful function: remove a hyperlink but leave the link description:
 #+BEGIN_SRC emacs-lisp
