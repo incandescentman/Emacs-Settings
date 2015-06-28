@@ -721,6 +721,44 @@ Thanks!
 *** NOTE-TO-RÚDI Answer
 Definitely #1. For this particular functionality, I decided to just move those files into my load path. But anything else we can do to lazy-load other functionality or eval after launch of Emacs would be great! :-)
 
+*** NOTE-TO-JAY Answer
+
+    OK, I've been doing some research on autoloading (I didn't know much about it myself), and it turns out that Emacs pretty much handles it in a very straightforward way -- as long as you use the packages facility in a different way.
+
+    Currently, this is your setting:
+
+#+BEGIN_EXAMPLE
+(require 'package)
+
+(add-to-list 'package-archives
+             '("marmalade" .
+               "http://marmalade-repo.org/packages/" ))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+;; (package-initialize)
+
+(setq package-enable-at-startup nil)
+
+(package-initialize 'noactivate)
+#+END_EXAMPLE
+
+    By the look of it, I would assume you once had your installed packages initalised and loaded, and then for some reason you preferred to disable loading the packages upon initialisation. Do you remember why?
+
+    The reason I'm asking is that when you install packages and activate them at startup, Emacs automatically does the "autoload" trick; i.e. it defines only the commands, and defers loading of the actual code to when the commands are used. When you use ~require~, Emacs will force the load of all of the package's code.
+
+    So, two options now:
+
+    1. Revert back to activating packages upon ~package-initialize~ and remove ~require~ calls.
+
+    2. Replace ~require~ calls with ~package-activate~.
+
+    This still doesn't solve the cases where you explicitly ~load~ or ~load-file~; we will handle them later.
+
 ** DONE [#A] check my changes to backward-kill-word-correctly?         :rudi:
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
