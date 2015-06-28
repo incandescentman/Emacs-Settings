@@ -810,9 +810,8 @@ password: %s" userid password))
       "org-mime-subtree and HTMLize"
       (interactive)
       (org-mime-subtree)
-(insert "\nBest,\nS.\n 
-[[http://www.newyorkwritersintensive.com/][newyorkwritersintensive.com]]")
-      (org-mime-htmlize)
+(insert "\nBest,\nS.\n")
+      (org-mime-htmlize t)
 ) 
 
 
