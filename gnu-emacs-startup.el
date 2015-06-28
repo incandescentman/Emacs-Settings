@@ -809,6 +809,7 @@ password: %s" userid password))
 (defun mime-send-mail ()
       "org-mime-subtree and HTMLize"
       (interactive)
+(org-mark-subtree) 
       (org-mime-subtree)
 (insert "\nBest,\nS.\n")
       (org-mime-htmlize t)
