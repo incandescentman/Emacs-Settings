@@ -851,9 +851,14 @@ export that region, otherwise export the entire body."
 (defun mime-send-mail ()
       "org-mime-subtree and HTMLize"
       (interactive)
+(org-narrow-to-subtree)
+(end-of-buffer)
+(insert "\n\n---\nJay Dixit 
+[[http://jaydixit.com/][jaydixit.com]] 
+(646) 355-8001\n") 
+(widen)
 (org-mime-subtree)
-(insert "\nBest,\nS.\n")
-      (org-mime-htmlize)
+(org-mime-htmlize)
 ) 
 
 (defun dwiw-auto-capitalize ()
