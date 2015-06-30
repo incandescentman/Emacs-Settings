@@ -19,22 +19,6 @@
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 
-(tooltip-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode 1)
-
-(add-hook 'org-mode-hook
-          (lambda()
-            (hl-line-mode -1)
-            (global-hl-line-mode -1))
-          't
-          )
-
-(setq prelude-whitespace nil)
-
-(global-visual-line-mode)
-
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
   (interactive)

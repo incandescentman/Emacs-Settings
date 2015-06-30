@@ -1,6 +1,4 @@
 
-* appearance-jay-custom-functions.el 
-#+BEGIN_SRC emacs-lisp
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()
@@ -259,35 +257,18 @@ The function is poorly named, didn't really want to 'load' it, just open it."
       (font-lock-mode t)
       (buffer-face-mode nil))))
 
-
-#+END_SRC
-
-* moved from gnu-emacs-startup.org
-** UI/Appearance
-
-*** Clean UI:
-#+BEGIN_SRC emacs-lisp
 (tooltip-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode 1)
-#+END_SRC
 
-*** Don't highlight lines:
-#+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook
           (lambda()
             (hl-line-mode -1)
             (global-hl-line-mode -1))
           't
           )
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (setq prelude-whitespace nil)
-#+END_SRC
 
-*** Wrap text:
-#+BEGIN_SRC emacs-lisp
 (global-visual-line-mode)
-#+END_SRC
