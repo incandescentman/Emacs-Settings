@@ -790,6 +790,13 @@ password: %s" userid password))
 ;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
 (flyspell-mode-on)
 
+(defun play-mp3 ()
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (kill-buffer (current-buffer))
+    (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
+
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)

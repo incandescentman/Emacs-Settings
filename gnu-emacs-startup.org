@@ -1459,6 +1459,48 @@ References:
 
 * experiments - new/untested
 
+** play mp3
+
+   #+BEGIN_SRC emacs-lisp
+(defun play-mp3 ()
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (kill-buffer (current-buffer))
+    (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
+   #+END_SRC
+
+Source: [[http://emacs.stackexchange.com/questions/13561/whats-a-good-way-to-run-a-command-instead-of-opening-a-file][elisp - What's a good way to run a command instead of opening a file? - Emacs Stack Exchange]]
+
+
+shareeditflag
+answered 6 hours ago
+
+sds
+6258
+  	
+ 		
+Thanks, I already bound "r" in dired to do that years ago. My interest is in making it work everywhere, for example from a locate or a find-file completion session, or from a bookmark etc. –  abo-abo 5 hours ago 
+add a comment
+
+
+I stopped using openwith when I started using Helm, as I find typing C-c C-x from helm-find-files convenient enough. (Also nowadays, I only unconditionally open audio and video files outside of Emacs, so most of the time I like being able to either open a file in Emacs or in an external program.) 
+
+** openwith
+
+#+BEGIN_QUOTE
+(require 'openwith)
+(openwith-mode t)
+(setq openwith-associations '(("\\.pdf\\'" "evince" (file)))) 
+#+END_QUOTE
+Source: [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
+
+** PDF-tools
+
+[[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
+
+http://tuhdo.github.io/static/emacs-read-pdf.gif 
+
 ** defun syntax 
 A Lisp function becomes a [[command]] when its body contains, at top level, a form that calls the special form `<code>(interactive...)</code>'. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
 
