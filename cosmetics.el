@@ -272,3 +272,17 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (setq prelude-whitespace nil)
 
 (global-visual-line-mode)
+
+;; (toggle-maxframe)
+(setq default-frame-alist
+      '(
+        (width . 160) ; character
+        (height . 42) ; lines
+        ))
+(zenburn)
+(monaco-font)
+;; (minuscule-type)
+
+(turn-on-olivetti-mode)
+
+(recenter-top-bottom)

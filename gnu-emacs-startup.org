@@ -677,23 +677,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c m") 'compose-mail)
 #+END_SRC
 
-* Startup
-
-#+BEGIN_SRC emacs-lisp
-;; (toggle-maxframe)
-(setq default-frame-alist
-      '(
-        (width . 160) ; character
-        (height . 42) ; lines
-        ))
-(zenburn)
-(monaco-font)
-;; (minuscule-type)
-
-(turn-on-olivetti-mode)
-
-(recenter-top-bottom)
-#+END_SRC
 
 * character movement
 #+BEGIN_SRC emacs-lisp
@@ -1394,40 +1377,6 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
 (local-set-key (kbd "C-c v i")
                'org-insert-src-block)
 #+END_SRC
-
-***** hunspell
-
-   #+BEGIN_SRC emacs-lisp
-
-(when (executable-find "hunspell")
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t))
-(setq flyspell-default-dictionary "en_US")
-
-(setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US")
-(if (file-exists-p "/usr/bin/hunspell")
-    (progn
-      (setq ispell-program-name "hunspell")
-      (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8)))))
-
-(executable-find "hunspell")
-;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
-(flyspell-mode-on)
-   #+END_SRC
-
-References:
-[[http://emacswiki.org/emacs/InteractiveSpell#toc2][EmacsWiki: Interactive Spell]]
-[[https://lists.gnu.org/archive/html/help-gnu-emacs/2015-03/msg00153.html][Getting flyspell + hunspell to work on OS X 10.10]]
-[[https://joelkuiper.eu/spellcheck_emacs][Spell checking in Emacs]]
-[[http://stackoverflow.com/questions/25415070/hunspell-emacs-on-os-x-10-9][hunspell / emacs on OS X 10.9 - Stack Overflow]]
-[[http://stackoverflow.com/questions/3961119/working-setup-for-hunspell-in-emacs][Working setup for hunspell in Emacs - Stack Overflow]]
-[[http://unix.stackexchange.com/questions/86554/make-hunspell-work-with-emacs-and-german-language][spell checking - Make hunspell work with emacs and german language - Unix & Linux Stack Exchange]]
-[[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][What's the best spell check setup in emacs | Chen's blog]]
-[[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
 
 * experiments - new/untested
 
