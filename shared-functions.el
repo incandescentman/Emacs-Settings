@@ -1251,11 +1251,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
              "p" "font-family: Georgia; color:#000;")))
 
 
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "em" (format "color: %s;"
-                           "#fff"))))
 
 
 
@@ -1270,7 +1265,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (lambda ()
             (org-mime-change-element-style
              ".DONE"
-             "color:#859900;")))
+             "color:#859900;"))) 
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1336,7 +1331,7 @@ export that region, otherwise export the entire body."
 (end-of-buffer)
 (insert "\n\n---\nJay Dixit 
 [[http://jaydixit.com/][jaydixit.com]] 
-(646) 355-8001\n/Jay Dixit/") 
+(646) 355-8001\n") 
 (widen)
 (org-mime-subtree)
 (org-mime-htmlize)

@@ -325,7 +325,8 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((eval when
+    ((org-export-allow-bind-keywords . t)
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -371,6 +372,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
