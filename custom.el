@@ -398,12 +398,13 @@
 
 
 ;; load my init files
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/cosmetics.org")
+
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
 
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/shared-functions.org")
 
 ;; (load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
-(org-babel-load-file "~/Dropbox/emacs/prelude/personal/cosmetics.org")
 
 
 
