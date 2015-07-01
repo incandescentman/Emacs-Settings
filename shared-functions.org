@@ -269,8 +269,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 ** Org setup
 *** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
-(setq org-indent-mode t)
-(setq org-indent-indentation-per-level 2)
 (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)

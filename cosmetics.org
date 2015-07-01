@@ -262,6 +262,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 #+END_SRC
 
+** org-mode settings
+#+BEGIN_SRC emacs-lisp 
+(setq org-indent-mode t)
+(setq org-indent-indentation-per-level 2)
+
+#+END_SRC
+ 
+
 * moved from gnu-emacs-startup.org
 ** UI/Appearance
 
