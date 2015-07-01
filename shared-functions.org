@@ -3118,6 +3118,9 @@ to open source code block in indirect buffer
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
 ((and buffer-file-name (eq major-mode 'fundamental-mode))) 
 ((and buffer-file-name (eq major-mode 'markdown-mode))) 
+
+((and buffer-file-name (eq major-mode 'css-mode))) 
+
 ((and buffer-file-name (eq major-mode 'nmxml-mode))) 
 ((and buffer-file-name (eq major-mode 'gitconfig-mode))) 
 ((and buffer-file-name (eq major-mode 'gitignore-mode))) 
