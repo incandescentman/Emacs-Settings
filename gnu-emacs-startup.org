@@ -2158,3 +2158,5 @@ First delete region, and then:
 *** NOTE-TO-RÚDI Absolutely.
 Ha! Yes, that was going to be my next request! Perfect!
 
+*** NOTE-TO-RÚDI On second thought... 
+On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!

@@ -351,3 +351,20 @@ References:
 [[http://unix.stackexchange.com/questions/86554/make-hunspell-work-with-emacs-and-german-language][spell checking - Make hunspell work with emacs and german language - Unix & Linux Stack Exchange]]
 [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][What's the best spell check setup in emacs | Chen's blog]]
 [[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
+
+
+** Guide key 
+I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
+#+BEGIN_SRC emacs-lisp
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence '("C-x"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+(defun guide-key/my-hook-function-for-org-mode ()
+  (guide-key/add-local-guide-key-sequence "C-c")
+  (guide-key/add-local-guide-key-sequence "C-c C-x")
+  (guide-key/add-local-highlight-command-regexp "org-"))
+(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+#+END_SRC

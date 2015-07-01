@@ -106,4 +106,5 @@ Can you add something like this:
 
 to kill-word and kill-clause? Thanks! 
 
-
+*** TODO [#A] my/delete-backward-and-capitalize 
+See my note the end of gnu-emacs-startup.org. 

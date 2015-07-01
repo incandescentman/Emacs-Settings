@@ -2603,22 +2603,6 @@ For popping around the buffer. I need to review how this works again.
 (require 'point-stack)
 #+END_SRC
 
-** Guide key 
-I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
-#+BEGIN_SRC emacs-lisp
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence '("C-x"))
-(setq guide-key/recursive-key-sequence-flag t)
-
-(defun guide-key/my-hook-function-for-org-mode ()
-  (guide-key/add-local-guide-key-sequence "C-c")
-  (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-highlight-command-regexp "org-"))
-(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
-#+END_SRC
-
 ** SMEX
 - ~smex-describe-function~
 - ~smex-find-function~

@@ -1947,18 +1947,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 (require 'point-stack)
 
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence '("C-x"))
-(setq guide-key/recursive-key-sequence-flag t)
-
-(defun guide-key/my-hook-function-for-org-mode ()
-  (guide-key/add-local-guide-key-sequence "C-c")
-  (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-highlight-command-regexp "org-"))
-(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
-
 ;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
 ;; (require 'bbdb) ;; (3)
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
