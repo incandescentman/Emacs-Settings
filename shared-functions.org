@@ -1236,7 +1236,7 @@ I should probably eventually break these out of custom-set-variables and organiz
      (underline . "<span class=\"underline\">%s</span>")
      (verbatim . "<code>%s</code>"))))
  '(org-html-toplevel-hlevel 2)
- '(org-indent-indentation-per-level 2)
+'(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  ; (org-indirect-buffer-display (quote other-window))
