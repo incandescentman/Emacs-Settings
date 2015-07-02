@@ -257,6 +257,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
       (font-lock-mode t)
       (buffer-face-mode nil))))
 
+(setq org-indent-mode t)
+(setq org-indent-indentation-per-level 2)
+
 (tooltip-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -305,3 +308,15 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 ;;  (setq ispell-program-name "hunspell")
 ;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
 (flyspell-mode-on)
+
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence '("C-x"))
+(setq guide-key/recursive-key-sequence-flag t)
+
+(defun guide-key/my-hook-function-for-org-mode ()
+  (guide-key/add-local-guide-key-sequence "C-c")
+  (guide-key/add-local-guide-key-sequence "C-c C-x")
+  (guide-key/add-local-highlight-command-regexp "org-"))
+(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)

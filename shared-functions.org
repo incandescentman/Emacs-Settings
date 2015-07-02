@@ -972,10 +972,23 @@ Make backups of files, even when they're in version control:
 ** Remember recent email addresses
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/Dropbox/elisp/recent-addresses-0.1")
+(add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
 (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/personal/recent-addresses")
+(setq mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit t)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit t)
+(setq message-required-headers (quote (From (optional . References))))
+(setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+(setq mml-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages") 
 #+END_SRC
 
 * Pomodoro
@@ -1354,8 +1367,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
- '(message-send-hook (quote (recent-addresses-add-headers)))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
  '(org-M-RET-may-split-line (quote ((item . t))))
@@ -1385,8 +1397,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-bind-keywords t)
 
- '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
+'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(org-export-blocks-witheld (quote (hidden)))
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
  '(org-export-html-style-include-default t)
@@ -3166,19 +3177,4 @@ Handy way of getting back to previous places.
 (setq set-mark-command-repeat-pop t)
 #+END_SRC 
 
-* recent-addresses
-#+BEGIN_SRC emacs-lisp 
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
-(setq mail-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-(setq mail-kill-buffer-on-exit t)
-(setq make-backup-files t)
-(setq message-draft-headers (quote (From References Date)))
-(setq message-kill-buffer-on-exit t)
-(setq message-required-headers (quote (From (optional . References))))
-(setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-mail-function (quote message-send-mail-with-sendmail))
-(setq mml-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-#+END_SRC
- 
+* 
