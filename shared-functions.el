@@ -618,12 +618,12 @@ Subject: %^{Subject}
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/personal/recent-addresses") 
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
 (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/personal/recent-addresses")
 (setq mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 (setq mail-kill-buffer-on-exit t)
