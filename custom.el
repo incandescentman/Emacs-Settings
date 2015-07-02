@@ -94,18 +94,7 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
- '(mail-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(mail-kill-buffer-on-exit t)
- '(make-backup-files t)
- '(message-draft-headers (quote (From References Date)))
- '(message-kill-buffer-on-exit t)
- '(message-required-headers (quote (From (optional . References))))
- '(message-send-hook (quote (recent-addresses-add-headers)))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(mml-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(mouse-highlight nil)
+'(mouse-highlight nil)
  '(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
@@ -313,8 +302,7 @@
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
- '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude
+'(recentf-exclude
    (quote
     (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(recentf-max-menu-items 100)

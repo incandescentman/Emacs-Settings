@@ -3165,3 +3165,18 @@ Handy way of getting back to previous places.
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
 #+END_SRC 
+
+* recent-addresses
+
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
+'(mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit t)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit t)
+(setq message-required-headers (quote (From (optional . References))))
+(setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+(setq mml-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
