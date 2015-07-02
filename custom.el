@@ -256,9 +256,7 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-mime-default-header "
-")
- '(org-modules
+'(org-modules
    (quote
     (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)

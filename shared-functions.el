@@ -1243,14 +1243,14 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (add-to-list 'name-and-pos (cons name position))))))))
 
 (require 'org-mime)
+
+(setq org-mime-default-header "")
+
+
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
              "p" "font-family: Georgia; color:#000;")))
-
-
-
-
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -2308,3 +2308,16 @@ searches all buffers."
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 
 (setq set-mark-command-repeat-pop t)
+
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
+(setq mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit t)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit t)
+(setq message-required-headers (quote (From (optional . References))))
+(setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+(setq mml-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")

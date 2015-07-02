@@ -1708,14 +1708,14 @@ Disable IDO faces to see flx highlights:
 
 #+BEGIN_SRC emacs-lisp
 (require 'org-mime)
+
+(setq org-mime-default-header "")
+
+
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
              "p" "font-family: Georgia; color:#000;")))
-
-
-
-
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -3167,9 +3167,9 @@ Handy way of getting back to previous places.
 #+END_SRC 
 
 * recent-addresses
-
+#+BEGIN_SRC emacs-lisp 
 (setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
-'(mail-default-directory
+(setq mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 (setq mail-kill-buffer-on-exit t)
 (setq make-backup-files t)
@@ -3180,3 +3180,5 @@ Handy way of getting back to previous places.
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
 (setq mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+#+END_SRC
+ 
