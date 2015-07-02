@@ -618,7 +618,7 @@ Subject: %^{Subject}
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/personal/recent-addresses") 
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses") 
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
