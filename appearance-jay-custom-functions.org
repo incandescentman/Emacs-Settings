@@ -1,4 +1,5 @@
-
+* appearance-jay-custom-functions.el 
+#+BEGIN_SRC emacs-lisp
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()
@@ -256,3 +257,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
     (progn
       (font-lock-mode t)
       (buffer-face-mode nil))))
+
+
+#+END_SRC

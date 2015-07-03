@@ -385,6 +385,7 @@
 
 ;; load my init files
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/cosmetics.org")
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.org")
 
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
 
