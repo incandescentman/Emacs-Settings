@@ -317,7 +317,7 @@
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
-(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly-and-capitalize)
 
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
@@ -1070,3 +1070,11 @@ subsequent sends. could save them all in a logbook?
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
+
+(defun backward-kill-word-correctly-and-capitalize ()
+  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(call-interactively 'backward-kill-word-correctly) 
+  (let ((fix-capitalization (my/beginning-of-sentence-p))) 
+    (when fix-capitalization
+      (save-excursion (capitalize-word 1)))))

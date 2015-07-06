@@ -429,7 +429,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
-(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly-and-capitalize)
 
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
@@ -2160,3 +2160,17 @@ Ha! Yes, that was going to be my next request! Perfect!
 
 *** NOTE-TO-RÚDI On second thought... 
 On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
+
+
+* TODO backward-kill-word-correctly-and-capitalize 
+I created this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK.
+
+#+BEGIN_SRC emacs-lisp
+(defun backward-kill-word-correctly-and-capitalize ()
+  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(call-interactively 'backward-kill-word-correctly) 
+  (let ((fix-capitalization (my/beginning-of-sentence-p))) 
+    (when fix-capitalization
+      (save-excursion (capitalize-word 1)))))
+#+END_SRC

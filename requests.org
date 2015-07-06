@@ -22,7 +22,8 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
 
-** TODO [#A] speed up launch?                                        :emacs:
+** Emacs
+*** TODO [#A] speed up launch?                                      :emacs:
 Hi Rúdi,
 
 I'd like to make Emacs launch faster, so that I can launch and just start typing text in org-mode as fast as possible when I need to start typing quickly. (Say I get a phone call and I need to take down a number, etc.) Can we set it up so that as much as possible gets lazy-loaded or loads after launch? 
@@ -38,7 +39,7 @@ It's my own customized version of ox-koma letter, but it certainly doesn't need 
 
 Thanks!
 
-*** NOTE-TO-JAY Answer
+**** NOTE-TO-JAY Answer
 
     Well, I can think of two ways to speed up launch:
 
@@ -53,10 +54,10 @@ Thanks!
 
     What do you find more appealing?
 
-*** NOTE-TO-RÚDI Answer
+**** NOTE-TO-RÚDI Answer
 Definitely #1. For this particular functionality, I decided to just move those files into my load path. But anything else we can do to lazy-load other functionality or eval after launch of Emacs would be great! :-)
 
-*** NOTE-TO-JAY Answer
+**** NOTE-TO-JAY Answer
 
     OK, I've been doing some research on autoloading (I didn't know much about it myself), and it turns out that Emacs pretty much handles it in a very straightforward way -- as long as you use the packages facility in a different way.
 
@@ -94,7 +95,7 @@ Definitely #1. For this particular functionality, I decided to just move those f
 
     This still doesn't solve the cases where you explicitly ~load~ or ~load-file~; we will handle them later.
 
-*** NOTE-TO-RÚDI Answer
+**** NOTE-TO-RÚDI Answer
 OK great. I don't remember why I did that before. I'm not sure the difference between the two options you listed above, so I am fine with either one. It seems like #1 might be a little easier?
 
 *** TODO kill-line-and-capitalize
@@ -108,3 +109,4 @@ to kill-word and kill-clause? Thanks!
 
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
+
