@@ -519,9 +519,9 @@ Subject: %^{Subject}
 '(transient-mark-mode t)
 '(user-mail-address "dixit@aya.yale.edu")
 '(global-flyspell-mode to)
-;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
-;; '(mail-send-mail-function (quote message-send-mail-with-sendmail))
-;; '(setq mail-user-agent 'message-user-agent)
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
+'(mail-send-mail-function (quote message-send-mail-with-sendmail))
+'(setq mail-user-agent 'message-user-agent)
 '(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
@@ -571,7 +571,7 @@ Subject: %^{Subject}
 
 (setq smtpmail-debug-info t)
 
-(setq message-default-mail-headers "Cc: \nBcc: \not")
+;; (setq message-default-mail-headers "Cc: \nBcc: \n")
 ;; (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 
@@ -606,9 +606,6 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-;; (setq message-send-mail-function (quote message-send-mail-with-sendmail))
-(setq mml-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages") 
 
 (require 'org-pomodoro)
 
@@ -747,9 +744,7 @@ Subject: %^{Subject}
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
-;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(mml-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
 
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
@@ -906,7 +901,7 @@ Subject: %^{Subject}
 	   (fboundp
 	    (quote rainbow-mode))
 	   (rainbow-mode 1)))))
-;; '(send-mail-function (quote sendmail-send-it))
+'(send-mail-function (quote sendmail-send-it))
  '(standard-indent 3)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
@@ -2300,6 +2295,12 @@ searches all buffers."
 (nnimap-address "imap.gmail.com")
 (nnimap-server-port 993)
 (nnimap-stream ssl))) 
+
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
 
 
 (defun my-gnus-group-list-subscribed-groups ()

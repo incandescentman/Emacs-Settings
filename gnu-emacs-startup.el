@@ -28,7 +28,7 @@
 (recenter-top-bottom)
   )
 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
@@ -71,7 +71,7 @@
   (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
 
 (add-hook 'dired-load-hook
-    (lambda ()
+	  (lambda ()
 (require 'dired-sort-menu)))
 
 
@@ -151,12 +151,12 @@
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-  (end (if mark-active
-     (mark)
-         (point))))
+	(end (if mark-active
+		 (mark)
+	       (point))))
     (shell-command-on-region start end
-           "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-           nil t)
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
     (save-excursion
 
       )))
@@ -206,8 +206,6 @@
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
-
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 
@@ -229,7 +227,7 @@
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
@@ -450,7 +448,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim)
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 
 (defun smart-return ()
   (interactive)
@@ -486,13 +484,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (org-meta-return))
         (t (org-return))))
 
-(define-key org-mode-map (kbd "<return>") 'smart-return)
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
 
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (expand-abbrev)
-  (if (or (re-search-forward "\\=[  ]*\n" nil t)
+  (if (or (re-search-forward "\\=[ 	]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
@@ -545,8 +543,8 @@ provided the (transient) mark is active."
                       (or (mark t) 0))))
       (if (and transient-mark-mode mark-active)
           (progn (goto-char right)
-     (setq deactivate-mark t))
-  (call-interactively 'right-char)))))
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
 
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
@@ -571,8 +569,8 @@ provided the (transient) mark is active."
    (format
     "http://www.google.com/search?q=%s"
     (if (region-active-p)
-  (url-hexify-string (buffer-substring (region-beginning)
-               (region-end)))
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
       (thing-at-point 'word)))))
 
 
@@ -592,13 +590,13 @@ provided the (transient) mark is active."
     (mapconcat
      (lambda (tup)
        (concat "[" (elt tup 0) "]"
-         (elt tup 1) " "))
+	       (elt tup 1) " "))
      words-funcs "") ": "))
    (let ((input (read-char-exclusive)))
      (funcall
       (elt
        (assoc
-  (char-to-string input) words-funcs)
+	(char-to-string input) words-funcs)
        2))))
 
 (defun words-twitter ()
@@ -607,8 +605,8 @@ provided the (transient) mark is active."
    (format
     "https://twitter.com/search?q=%s"
     (if (region-active-p)
-  (url-hexify-string (buffer-substring (region-beginning)
-               (region-end)))
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
       (thing-at-point 'word)))))
 
 (add-to-list 'words-funcs
@@ -620,37 +618,37 @@ provided the (transient) mark is active."
   (interactive)
 
   (let* ((url-request-method "POST")
-   (url-request-data (format
-          "key=some-random-text-&data=%s"
-          (url-hexify-string
-           (thing-at-point 'paragraph))))
-   (xml  (with-current-buffer
-       (url-retrieve-synchronously
-        "http://service.afterthedeadline.com/checkDocument")
-     (xml-parse-region url-http-end-of-headers (point-max))))
-   (results (car xml))
-   (errors (xml-get-children results 'error)))
+	 (url-request-data (format
+			    "key=some-random-text-&data=%s"
+			    (url-hexify-string
+			     (thing-at-point 'paragraph))))
+	 (xml  (with-current-buffer
+		   (url-retrieve-synchronously
+		    "http://service.afterthedeadline.com/checkDocument")
+		 (xml-parse-region url-http-end-of-headers (point-max))))
+	 (results (car xml))
+	 (errors (xml-get-children results 'error)))
 
     (switch-to-buffer-other-frame "*ATD*")
     (erase-buffer)
     (dolist (err errors)
       (let* ((children (xml-node-children err))
-       ;; for some reason I could not get the string out, and had to do this.
-       (s (car (last (nth 1 children))))
-       ;; the last/car stuff doesn't seem right. there is probably
-       ;; a more idiomatic way to get this
-       (desc (last (car (xml-get-children children 'description))))
-       (type (last (car (xml-get-children children 'type))))
-       (suggestions (xml-get-children children 'suggestions))
-       (options (xml-get-children (xml-node-name suggestions) 'option))
-       (opt-string  (mapconcat
-         (lambda (el)
-           (when (listp el)
-             (car (last el))))
-         options
-         " ")))
+	     ;; for some reason I could not get the string out, and had to do this.
+	     (s (car (last (nth 1 children))))
+	     ;; the last/car stuff doesn't seem right. there is probably
+	     ;; a more idiomatic way to get this
+	     (desc (last (car (xml-get-children children 'description))))
+	     (type (last (car (xml-get-children children 'type))))
+	     (suggestions (xml-get-children children 'suggestions))
+	     (options (xml-get-children (xml-node-name suggestions) 'option))
+	     (opt-string  (mapconcat
+			   (lambda (el)
+			     (when (listp el)
+			       (car (last el))))
+			   options
+			   " ")))
 
-  (insert (format "** %s ** %s
+	(insert (format "** %s ** %s
 Description: %s
 Suggestions: %s
 
@@ -748,28 +746,28 @@ password: %s" userid password))
   (let ((file (buffer-file-name)))
     (kill-buffer (current-buffer))
     (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
-(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3))
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
 
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)
-      (message "Hello World!"))
+      (message "Hello World!")) 
 
 (defun hello (someone)
       "Say hello to SOMEONE via M-x hello."
       (interactive "sWho do you want to say hello to? ")
-      (message "Hello %s!" someone))
+      (message "Hello %s!" someone)) 
 
 (defun multiple-hello (someone num)
       "Say hello to SOMEONE via M-x hello, for NUM times."
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
-        (insert (format "Hello %s!\n" someone))))
+        (insert (format "Hello %s!\n" someone)))) 
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-  (auto-capitalize-mode -1))
+	(auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -821,16 +819,16 @@ subsequent sends. could save them all in a logbook?
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (org-mark-subtree)
   (let ((content (buffer-substring (point) (mark)))
-  (TO (org-entry-get (point) "TO" t))
-  (CC (org-entry-get (point) "CC" t))
-  (BCC (org-entry-get (point) "BCC" t))
-  (SUBJECT (nth 4 (org-heading-components)))
-  (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-  (continue nil)
-  (switch-function nil)
-  (yank-action nil)
-  (send-actions '((email-send-action . nil)))
-  (return-action '(email-heading-return)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
 
     (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
     (message-goto-body)
@@ -842,46 +840,46 @@ subsequent sends. could save them all in a logbook?
       (message-goto-bcc)
       (insert BCC))
     (if TO
-  (message-goto-body)
+	(message-goto-body)
       (message-goto-to))
     ))
 
-(defgroup helm-org-wiki nil
-  "Simple jump-to-org-file package."
-  :group 'org
-  :prefix "helm-org-wiki-")
-(defcustom helm-org-wiki-directory "~/nd/"
-  "Directory where files for `helm-org-wiki' are stored."
-  :group 'helm-org-wiki
-  :type 'directory)
-(defun helm-org-wiki-files ()
-  "Return .org files in `helm-org-wiki-directory'."
-  (let ((default-directory helm-org-wiki-directory))
-    (mapcar #'file-name-sans-extension
-            (file-expand-wildcards "*.txt"))))
-(defvar helm-source-org-wiki
-  `((name . "Projects")
-    (candidates . helm-org-wiki-files)
-    (action . ,(lambda (x)
-                  (find-file (expand-file-name
-                              (format "%s.txt" x)
-                              helm-org-wiki-directory))))))
-(defvar helm-source-org-wiki-not-found
-  `((name . "Create org-wiki")
-    (dummy)
-    (action . (lambda (x)
-                (helm-switch-to-buffer
-                 (find-file
-                  (format "%s/%s.org"
-                          helm-org-wiki-directory x)))))))
-;;;###autoload
-(defun helm-org-wiki ()
-  "Select an org-file to jump to."
-  (interactive)
-  (helm :sources
-        '(helm-source-org-wiki
-          helm-source-org-wiki-not-found)))
-(provide 'helm-org-wiki)
+    (defgroup helm-org-wiki nil
+      "Simple jump-to-org-file package."
+      :group 'org
+      :prefix "helm-org-wiki-")
+    (defcustom helm-org-wiki-directory "~/nd/"
+      "Directory where files for `helm-org-wiki' are stored."
+      :group 'helm-org-wiki
+      :type 'directory)
+    (defun helm-org-wiki-files ()
+      "Return .org files in `helm-org-wiki-directory'."
+      (let ((default-directory helm-org-wiki-directory))
+        (mapcar #'file-name-sans-extension
+                (file-expand-wildcards "*.txt"))))
+    (defvar helm-source-org-wiki
+      `((name . "Projects")
+        (candidates . helm-org-wiki-files)
+        (action . ,(lambda (x)
+                      (find-file (expand-file-name
+                                  (format "%s.txt" x)
+                                  helm-org-wiki-directory))))))
+    (defvar helm-source-org-wiki-not-found
+      `((name . "Create org-wiki")
+        (dummy)
+        (action . (lambda (x)
+                    (helm-switch-to-buffer
+                     (find-file
+                      (format "%s/%s.org"
+                              helm-org-wiki-directory x)))))))
+    ;;;###autoload
+    (defun helm-org-wiki ()
+      "Select an org-file to jump to."
+      (interactive)
+      (helm :sources
+            '(helm-source-org-wiki
+              helm-source-org-wiki-not-found)))
+    (provide 'helm-org-wiki)
 
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
@@ -957,7 +955,7 @@ subsequent sends. could save them all in a logbook?
     (unless not-so-smart
       (re-search-forward (format "\\=[%s]*" *smart-punctuation-marks*) nil t))
     ;; 1. go back until there are no more spaces/tabs
-    (when (re-search-backward "[^   ][  ]+\\="
+    (when (re-search-backward "[^ 	][ 	]+\\="
                               nil t)
       (forward-char 1))
     (flet ((replace (text)
