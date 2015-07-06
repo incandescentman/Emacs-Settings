@@ -14,6 +14,8 @@
 
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(setq abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)

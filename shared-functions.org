@@ -150,36 +150,6 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 #+END_SRC
 
-** Faces
-
-#+BEGIN_SRC emacs-lisp
-;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
-;; (set-face-attribute 'default nil :font "Courier"  :height 200)
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
-'(bold ((t (:bold t :foreground "red"))))
-
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
- '(hl-line ((t (:inherit highlight))))
-
- '(org-headline-done ((t (:strike-through t))))
- '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
-                      '(ido-first-match ((t (:inherit error :weight normal))))
- t))
-#+END_SRC
-
 ** Autofill mode
 
 Turn off fill mode, which adds random line breaks in my text files:
@@ -840,10 +810,10 @@ every new buffer will be unique:
 '(shift-select-mode nil)
 '(transient-mark-mode t)
 '(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(setq mail-user-agent 'message-user-agent)
+'(global-flyspell-mode to)
+;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
+;; '(mail-send-mail-function (quote message-send-mail-with-sendmail))
+;; '(setq mail-user-agent 'message-user-agent)
 '(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
@@ -936,8 +906,8 @@ Make backups of files, even when they're in version control:
 ** Add Cc and Bcc headers to the message buffer
 
 #+BEGIN_SRC emacs-lisp
-(setq message-default-mail-headers "Cc: \nBcc: \n")
-(setq mail-user-agent 'message-user-agent)
+(setq message-default-mail-headers "Cc: \nBcc: \not")
+;; (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 #+END_SRC
 
@@ -986,7 +956,7 @@ Make backups of files, even when they're in version control:
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+;; (setq message-send-mail-function (quote message-send-mail-with-sendmail))
 (setq mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages") 
 #+END_SRC
@@ -1155,7 +1125,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
+;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
@@ -1314,7 +1284,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 	   (fboundp
 	    (quote rainbow-mode))
 	   (rainbow-mode 1)))))
- '(send-mail-function (quote sendmail-send-it))
+;; '(send-mail-function (quote sendmail-send-it))
  '(standard-indent 3)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
@@ -1367,7 +1337,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
+;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
  '(org-M-RET-may-split-line (quote ((item . t))))
@@ -1968,7 +1938,7 @@ Make Buffer-stack ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|erika" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 #+END_SRC
@@ -3183,5 +3153,29 @@ Handy way of getting back to previous places.
 
 #+BEGIN_SRC emacs-lisp 
 (setq custom-safe-themes t) 
+#+END_SRC
+ 
+
+* gnus
+#+BEGIN_SRC emacs-lisp 
+(setq gnus-select-method '(nnimap "gmail"
+(nnimap-address "imap.gmail.com")
+(nnimap-server-port 993)
+(nnimap-stream ssl))) 
+
+
+(defun my-gnus-group-list-subscribed-groups ()
+  "List all subscribed groups with or without un-read messages"
+  (interactive)
+  (gnus-group-list-all-groups 5)
+  )
+ (add-hook 'gnus-group-mode-hook
+           ;; list all the subscribed groups even they contain zero un-read messages
+           (lambda () (local-set-key "o" 'my-gnus-group-list-subscribed-groups ))
+           ) 
+
+;; How to read HTML mail 
+(setq mm-text-html-renderer 'w3m) 
+
 #+END_SRC
  
