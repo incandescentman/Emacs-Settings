@@ -3178,3 +3178,10 @@ Handy way of getting back to previous places.
 #+END_SRC 
 
 * 
+
+* Treat all themes as safe
+
+#+BEGIN_SRC emacs-lisp 
+(setq custom-safe-themes t) 
+#+END_SRC
+ 
