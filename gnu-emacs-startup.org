@@ -133,7 +133,7 @@ well.
  omit certain specific uninteresting file types from dired
 #+BEGIN_SRC emacs-lisp
 
-(require 'dired-x)
+;; (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
 
 
@@ -153,7 +153,7 @@ well.
 (add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
 
 ;; so that I can hide details on dired
-(require 'dired-details+)
+;;(require 'dired-details+)
 #+END_SRC
 
 * Other functions
