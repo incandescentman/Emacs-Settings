@@ -2174,3 +2174,46 @@ I created this by imitating the format of kill-word-correctly-and-capitalize. I 
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
 #+END_SRC
+
+* new stuff / experimental
+#+BEGIN_SRC emacs-lisp
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil) 
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
+#+END_SRC
+ 
+
+* Is this a better way to org-modise my init file?                     :rudi:
+
+#+BEGIN_QUOTE
+;;; init.el
+(defvar endless/init.org-message-depth 3
+  "What depth of init.org headers to message at startup.")
+
+(with-temp-buffer
+  (insert-file "~/.emacs.d/init.org")
+  (goto-char (point-min))
+  (search-forward "\n* init.el")
+  (while (not (eobp))
+    (forward-line 1)
+    (cond
+     ;; Report Headers
+     ((looking-at
+       (format "\\*\\{2,%s\\} +.*$" 
+               endless/init.org-message-depth))
+      (message "%s" (match-string 0)))
+     ;; Evaluate Code Blocks
+     ((looking-at "^#\\+BEGIN_SRC +emacs-lisp.*$")
+      (let ((l (match-end 0)))
+        (search-forward "\n#+END_SRC")
+        (eval-region l (match-beginning 0))))
+     ;; Finish on the next level-1 header
+     ((looking-at "^\\* ")
+      (goto-char (point-max)))))) 
+#+END_QUOTE
+Source: [[http://endlessparentheses.com/init-org-Without-org-mode.html][init.org Without org-mode · Endless Parentheses]]

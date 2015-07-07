@@ -1078,3 +1078,11 @@ subsequent sends. could save them all in a logbook?
   (let ((fix-capitalization (my/beginning-of-sentence-p))) 
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil) 
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
