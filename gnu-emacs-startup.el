@@ -64,11 +64,11 @@
       (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
     (set-buffer-modified-p nil)))
 
-(defadvice dired-readin
-  (after dired-after-updating-hook first () activate)
-  "Sort dired listings with directories first before adding marks."
-  (mydired-sort)
-  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
+;;(defadvice dired-readin
+;;  (after dired-after-updating-hook first () activate)
+;;  "Sort dired listings with directories first before adding marks."
+;;  (mydired-sort)
+;;  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
 
 (add-hook 'dired-load-hook
 	  (lambda ()

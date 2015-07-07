@@ -1668,7 +1668,7 @@ Disable IDO faces to see flx highlights:
 * ~org-mime~
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'org-mime)
+(require 'org-mime)
 
 (setq org-mime-default-header "")
 
@@ -2001,8 +2001,8 @@ Make it so that recentf does not record the following uninteresting file types:
 
 * Word count
 #+BEGIN_SRC emacs-lisp
+(require 'wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-;; (require 'wc-mode)
 #+END_SRC
 
 * Distraction-free editing

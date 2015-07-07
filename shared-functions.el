@@ -1205,7 +1205,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (add-to-list 'symbol-names name)
           (add-to-list 'name-and-pos (cons name position))))))))
 
-;; (require 'org-mime)
+(require 'org-mime)
 
 (setq org-mime-default-header "")
 
@@ -1461,8 +1461,8 @@ export that region, otherwise export the entire body."
     (replace-string "Ñ" "---" nil (point-min) (point-max))
     ))
 
+(require 'wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-;; (require 'wc-mode)
 
 (require 'org-serenity-mode)
 (defun serenity-mode ()
