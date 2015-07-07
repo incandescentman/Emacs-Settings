@@ -1245,7 +1245,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
              "div"
              "font-family: Georgia,serif;"))) 
 
-
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
@@ -1316,14 +1315,15 @@ export that region, otherwise export the entire body."
 (org-mime-htmlize)
 ) 
 
-(defun kitchen-send-mail ()
+(defun kitchin-send-mail ()
       "email subtree and HTMLize"
       (interactive)
 (email-heading)
 (end-of-buffer)
-(insert "\n\n---\nJay Dixit 
+(insert "Warm regards,\nJay Dixit\n\n---\nJay Dixit 
+(646) 355-8001 
 [[http://jaydixit.com/][jaydixit.com]] 
-(646) 355-8001\n") 
+\n") 
 (org-mime-htmlize)
 ) 
 

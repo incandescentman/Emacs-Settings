@@ -124,8 +124,15 @@
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files
    (quote
-    ("~/Dropbox/writing/notationaldata/acct-erika.org" "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
+    ("~/Dropbox/writing/notationaldata/accountability.org" "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
  '(org-agenda-jump-prefer-future t)
+ '(org-agenda-prefix-format
+   (quote
+    ((agenda . " %-12:c%?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")

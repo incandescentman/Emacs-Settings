@@ -452,7 +452,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
+
 #+END_SRC
+
 
 * Sentences
 
@@ -1374,8 +1378,6 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
 (local-set-key (kbd "C-c v e")
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
-(local-set-key (kbd "C-c v i")
-               'org-insert-src-block)
 #+END_SRC
 
 * experiments - new/untested
