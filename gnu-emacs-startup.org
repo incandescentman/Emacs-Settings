@@ -100,6 +100,9 @@ There is probably a lot of redundancy here, I don't understand this stuff too
 well.
 
 #+BEGIN_SRC emacs-lisp
+
+(require 'dired-details+)
+
 (defun mydired-sort ()
   "Sort dired listings with directories first."
   (save-excursion
@@ -108,10 +111,11 @@ well.
       (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
     (set-buffer-modified-p nil)))
 
-(add-hook 'dired-load-hook
-	  (lambda ()
-(dired-hide-details-mode 1)))
-
+(defadvice dired-readin
+    (after dired-after-updating-hook first () activate)
+  "Sort dired listings with directories first before adding marks."
+  (mydired-sort)
+  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide))) 
 
 (defcustom dired-details-hidden-string ""
   "*This string will be shown in place of file details and symbolic links."

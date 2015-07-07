@@ -56,6 +56,8 @@
 
   (global-set-key (kbd "<f13>") 'toggle-fullscreen)
 
+(require 'dired-details+)
+
 (defun mydired-sort ()
   "Sort dired listings with directories first."
   (save-excursion
@@ -64,16 +66,11 @@
       (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
     (set-buffer-modified-p nil)))
 
-;;(defadvice dired-readin
-;;  (after dired-after-updating-hook first () activate)
-;;  "Sort dired listings with directories first before adding marks."
-;;  (mydired-sort)
-;;  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
-
-(add-hook 'dired-load-hook
-	  (lambda ()
-(require 'dired-sort-menu)))
-
+(defadvice dired-readin
+    (after dired-after-updating-hook first () activate)
+  "Sort dired listings with directories first before adding marks."
+  (mydired-sort)
+  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide))) 
 
 (defcustom dired-details-hidden-string ""
   "*This string will be shown in place of file details and symbolic links."
