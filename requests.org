@@ -114,14 +114,20 @@ Great, thanks for doing that! Seems like it is loading a bit faster. I did find 
 
 As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
 
-*** TODO [#C] kill-line-and-capitalize
+*** TODO [#A] kill-line-and-capitalize [0/3]
 Can you add something like this: 
 
 (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
 
-to kill-word and also to kill-clause? Thanks! 
+to:
+
+- [ ] pasteboard-cut
+- [ ] kill-line
+- [ ] kill-clause
+
+Thanks! 
 
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
