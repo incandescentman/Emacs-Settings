@@ -107,6 +107,14 @@ OK great. I don't remember why I did that before. I'm not sure the difference be
      For now, I'd like you to test if Emacs is working properly without these ~require~ statements, and check if there is any noticeable difference in startup performance.
 
      One more thing: I couldn't get my head around what all the code that loads ~edit-server~ is attempting to do. It seems awfully redundant and cumbersome. Do you have any info you could give me on that? Like where did you take it from and why?
+**** NOTE-TO-RÚDI Answer
+Hi Rúdi,
+
+Great, thanks for doing that! Seems like it is loading a bit faster. I did find that I got errors when I launched as it was: void function auto-capitalize mode, and the same for helm-swoop. I turned those require statements back on and the issue resolved. 
+
+As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. But this is all I need:
+
+
 
 *** TODO kill-line-and-capitalize
 Can you add something like this: 

@@ -85,7 +85,7 @@
   :group 'dired-details
   :type 'boolean)
 
-(require 'dired-x)
+;; (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
 
 
@@ -105,7 +105,7 @@
 (add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
 
 ;; so that I can hide details on dired
-(require 'dired-details+)
+;;(require 'dired-details+)
 
 (defun scrollbar-init ()
   (interactive)

@@ -11,17 +11,13 @@
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
-;; (package-initialize)
-
-(setq package-enable-at-startup nil)
-  (package-initialize 'noactivate)
+(package-initialize)
 
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 
-(require 'auto-complete) ;; but only for elisp mode
 (require 'org)
 
-(require 'org-bullets)
+;; (require 'org-bullets)
 (require 'ox-latex)
 ; (require 'org-fstree)
 
@@ -486,7 +482,7 @@ Subject: %^{Subject}
   (clipboard-yank)
   (replace-smart-quotes (mark) (point)))
 
-(require 'buffer-stack)
+;; (require 'buffer-stack)
 
 (global-set-key [(s-right)] 'buffer-stack-down)
 (global-set-key [(s-left)] 'buffer-stack-up)
@@ -618,7 +614,7 @@ Subject: %^{Subject}
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
 
-(require 'org-pomodoro)
+;; (require 'org-pomodoro)
 
 (defun pomodoro-start ()
   (interactive)
@@ -626,10 +622,10 @@ Subject: %^{Subject}
   (org-pomodoro)
   )
 
-(require 'reveal-in-finder)
+;; (require 'reveal-in-finder)
 
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
-(require 'eshell-autojump)
+;; (require 'eshell-autojump)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
@@ -653,7 +649,7 @@ Subject: %^{Subject}
           (replace-match to-str nil t))))
     t))
 
-(require 'edit-server)
+;; (require 'edit-server)
 (edit-server-start)
 (when (require 'edit-server nil t)
   (setq edit-server-new-frame nil)
@@ -1034,6 +1030,9 @@ Subject: %^{Subject}
  '(org-time-stamp-custom-formats (quote ("<%a %b %d>" . "<%m/%d %a %I:%M%p>"))) ; like this: "Apr 18 Fri"
  '(smex-prompt-string "I love you. "))
 
+;;(require 'key-chord)
+(key-chord-mode 1)
+
 (defvar yank-indent-modes
   '(LaTeX-mode TeX-mode)
   "Modes in which to indent regions that are yanked (or yank-popped).
@@ -1152,7 +1151,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (setq ido-default-file-method 'selected-window)
 (setq ido-default-buffer-method 'selected-window)
 
-(require 'ido-hacks)
+;; (require 'ido-hacks)
 
 (add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
 (add-hook 'ido-make-dir-list-hook 'ido-sort-mtime)
@@ -1168,7 +1167,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
               (lambda (x) (and (char-equal (string-to-char x) ?.) x))
               ido-temp-list))))
 
-(require 'flx-ido)
+;; (require 'flx-ido)
 (ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
@@ -1232,7 +1231,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (add-to-list 'symbol-names name)
           (add-to-list 'name-and-pos (cons name position))))))))
 
-(require 'org-mime)
+;; (require 'org-mime)
 
 (setq org-mime-default-header "")
 
@@ -1344,7 +1343,7 @@ export that region, otherwise export the entire body."
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
 
-(require 'openwith)
+;; (require 'openwith)
 '(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 (openwith-mode t)
 
@@ -1489,7 +1488,7 @@ export that region, otherwise export the entire body."
     ))
 
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-(require 'wc-mode)
+;; (require 'wc-mode)
 
 (require 'org-serenity-mode)
 (defun serenity-mode ()
@@ -1597,7 +1596,7 @@ export that region, otherwise export the entire body."
   (next-line)
   )
 
-(require 'discover)
+;; (require 'discover)
 
 (discover-add-context-menu
  :context-menu (assq 'isearch discover-context-menus)
@@ -1919,8 +1918,8 @@ With prefix arg C-u, copy region instad of killing it."
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
-(require 'engine-mode)
-(engine-mode t)
+;; (require 'engine-mode)
+;; (engine-mode t)
 
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
@@ -1935,7 +1934,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 
-(require 'point-stack)
+;; (require 'point-stack)
 
 ;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
 ;; (require 'bbdb) ;; (3)
@@ -2204,7 +2203,7 @@ searches all buffers."
       (interactive)
       (helm-ag (projectile-project-root))))
 
-(require 'palimpsest)
+;; (require 'palimpsest)
 (palimpsest-mode 1) 
 
 (font-lock-add-keywords

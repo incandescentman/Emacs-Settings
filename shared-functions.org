@@ -856,7 +856,7 @@ every new buffer will be unique:
 ** Autocapitalization
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'auto-capitalize)
+(require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
@@ -1423,7 +1423,8 @@ Use key chords invoke commands:
 #+BEGIN_SRC emacs-lisp
 ;;(require 'key-chord)
 (key-chord-mode 1)
-#+END_SRC
+#+END_SRC
+
 
 * Indentation
 
@@ -2563,7 +2564,7 @@ function I have a persistent buffer list available.
 Enable Google search:
 #+BEGIN_SRC emacs-lisp
 ;; (require 'engine-mode)
-(engine-mode t)
+;; (engine-mode t)
 
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 #+END_SRC
@@ -2865,7 +2866,7 @@ AdrianKubala:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'helm-swoop)
+(require 'helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
 (setq helm-swoop-pre-input-function
