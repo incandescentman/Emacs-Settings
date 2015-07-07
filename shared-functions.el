@@ -582,8 +582,8 @@ Subject: %^{Subject}
 
 (setq smtpmail-debug-info t)
 
-;; (setq message-default-mail-headers "Cc: \nBcc: \n")
-;; (setq mail-user-agent 'message-user-agent)
+(setq message-default-mail-headers "Cc: \nBcc: \n")
+(setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 
 (defun mail-region (b e to subject)
@@ -607,7 +607,7 @@ Subject: %^{Subject}
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
-;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+(add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
 (setq mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
@@ -616,7 +616,7 @@ Subject: %^{Subject}
 (setq message-draft-headers (quote (From References Date)))
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
-;; (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (recent-addresses-add-headers)))
 
 (require 'org-pomodoro)
 
@@ -965,8 +965,7 @@ Subject: %^{Subject}
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
-;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+'(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
@@ -2356,9 +2355,7 @@ HEADER and VALUE are strings.
 
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
-  (interactive)
-(require 'org-mime)
-
+  (interactive) 
   ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
@@ -2396,7 +2393,7 @@ subsequent sends."
 (646) 355-8001 
 [[http://jaydixit.com/][jaydixit.com]] 
 \n")) 
-(org-mime-htmlize nil)))
+(org-mime-htmlize)))
 
 
 
@@ -2414,9 +2411,7 @@ HEADER and VALUE are strings.
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
   (interactive)
-(require 'org-mime)
-
-  ; store location.
+; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
     (let ((content (progn
