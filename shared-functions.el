@@ -2400,4 +2400,4 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)))))
+        (message-goto-to))))) 
