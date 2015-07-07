@@ -112,9 +112,7 @@ Hi Rúdi,
 
 Great, thanks for doing that! Seems like it is loading a bit faster. I did find that I got errors when I launched as it was: void function auto-capitalize mode, and the same for helm-swoop. I turned those require statements back on and the issue resolved. 
 
-As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. But this is all I need:
-
-
+As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
 
 *** TODO kill-line-and-capitalize
 Can you add something like this: 
