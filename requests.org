@@ -110,3 +110,37 @@ to kill-word and kill-clause? Thanks!
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
 
+*** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
+Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
+
+Example:
+
+: You might have a conscious intention to eat healthier , but you forget.
+
+Say the point is on the comma. 
+
+Current behavior: no effect.
+
+Desired behavior: 
+: You might have a conscious intention to eat healthier, but you forget.
+
+*** TODO [#B] Create an auto-capitalization-exceptions-list?
+I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
+
+See this: 
+
+#+BEGIN_SRC emacs-lisp
+(setq auto-capitalize-predicate
+      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+#+END_SRC
+
+I'd like to be able to keep this list and add to it in a plain text format. I'm asking because I want to add the word "vs." to the list (e.g. good vs. evil) but I couldn't get the regexp correct with all the slash escaping. 
+
+It would be easier if I could have something like this: 
+
+#+BEGIN_SRC emacs-lisp
+(setq *auto-capitalize-exceptions*
+  (list "e.g." "i.e. " "vs.")) 
+#+END_SRC
+
+Thanks!
