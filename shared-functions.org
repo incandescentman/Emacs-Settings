@@ -962,7 +962,7 @@ Make backups of files, even when they're in version control:
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
-(add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
 (setq mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
@@ -971,7 +971,7 @@ Make backups of files, even when they're in version control:
 (setq message-draft-headers (quote (From References Date)))
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
-(setq message-send-hook (quote (recent-addresses-add-headers)))
+;; (setq message-send-hook (quote (recent-addresses-add-headers)))
 #+END_SRC
 
 * Pomodoro
@@ -1511,7 +1511,7 @@ Newer version of ~ac-define-source~ would provide us an
   (add-to-list 'ac-sources 'ac-source-ispell))
 (add-hook 'org-mode-hook 'my/enable-ac-ispell)
 (add-hook 'message-mode-hook 'my/enable-ac-ispell)
-(add-hook 'message-mode-hook 'buffer-background-black)
+;; (add-hook 'message-mode-hook 'buffer-background-black)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp

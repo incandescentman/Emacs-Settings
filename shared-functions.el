@@ -1092,7 +1092,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (add-to-list 'ac-sources 'ac-source-ispell))
 (add-hook 'org-mode-hook 'my/enable-ac-ispell)
 (add-hook 'message-mode-hook 'my/enable-ac-ispell)
-(add-hook 'message-mode-hook 'buffer-background-black)
+;; (add-hook 'message-mode-hook 'buffer-background-black)
 
 (eval-after-load "auto-complete"
   '(progn

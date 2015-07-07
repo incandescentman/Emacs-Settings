@@ -377,12 +377,7 @@
  ;; If there is more than one, they won't work right.
  '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
- '(org-headline-done ((t (:strike-through t))))
+'(org-headline-done ((t (:strike-through t))))
  '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
