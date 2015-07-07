@@ -23,7 +23,7 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
 
 ** Emacs
-*** TODO [#A] speed up launch?                                      :emacs:
+*** TODO [#C] speed up launch?                                      :emacs:
 Hi Rúdi,
 
 I'd like to make Emacs launch faster, so that I can launch and just start typing text in org-mode as fast as possible when I need to start typing quickly. (Say I get a phone call and I need to take down a number, etc.) Can we set it up so that as much as possible gets lazy-loaded or loads after launch? 
@@ -114,14 +114,14 @@ Great, thanks for doing that! Seems like it is loading a bit faster. I did find 
 
 As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
 
-*** TODO kill-line-and-capitalize
+*** TODO [#C] kill-line-and-capitalize
 Can you add something like this: 
 
 (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
 
-to kill-word and kill-clause? Thanks! 
+to kill-word and also to kill-clause? Thanks! 
 
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
