@@ -20,27 +20,22 @@
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
-;; (package-initialize)
-
-(setq package-enable-at-startup nil)
-  (package-initialize 'noactivate)
-
+(package-initialize)
 #+END_SRC
 
-** Load some of my packages:
+*** Load some of my packages:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 #+END_SRC
 
 ** Require some packages
 #+BEGIN_SRC emacs-lisp
-(require 'auto-complete) ;; but only for elisp mode
 (require 'org)
 #+END_SRC
 
 * Require some org packages
 #+BEGIN_SRC emacs-lisp
-(require 'org-bullets)
+;; (require 'org-bullets)
 (require 'ox-latex)
 ; (require 'org-fstree)
 #+END_SRC

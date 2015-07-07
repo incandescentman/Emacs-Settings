@@ -96,3 +96,9 @@ Definitely #1. For this particular functionality, I decided to just move those f
 
 *** NOTE-TO-RÚDI Answer
 OK great. I don't remember why I did that before. I'm not sure the difference between the two options you listed above, so I am fine with either one. It seems like #1 might be a little easier?
+
+*** NOTE-TO-JAY
+
+    neopastebin
+    saveplace
+    ox-latex
