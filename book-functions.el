@@ -1,4 +1,3 @@
-
 (push "~/.emacs.d/helm-cmd-t" load-path)
 (require 'helm-config)
 (require 'helm-cmd-t)
@@ -7,7 +6,7 @@
 (setq book-source (helm-cmd-t-get-create-source-dir "~/Dropbox/writing/book"))
 
 (setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/Music/iTunes/iTunes Media/Books"))
-(setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "~/iBooks/Books"))
+(setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "~/iBooks2"))
 
 (setq jays-library-public (helm-cmd-t-get-create-source-dir "~/Dropbox/Public/library"))
 
@@ -46,7 +45,7 @@
 
 
 
-(defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "~/iBooks/Books")
+(defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "~/iBooks2")
   "my permanent folders for helm-mini")
 
 (defun read-jd (&optional arg)
