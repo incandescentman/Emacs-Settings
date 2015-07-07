@@ -651,32 +651,6 @@ Subject: %^{Subject}
 
 ;; (require 'edit-server)
 (edit-server-start)
-(when (require 'edit-server nil t)
-  (setq edit-server-new-frame nil)
-  (edit-server-start))
-
-(when (and (require 'edit-server nil t) (daemonp))
-  (edit-server-start))
-
-(add-hook 'edit-server-start-hook
-	  (lambda ()
-	    (when (string-match "github.com" (buffer-name))
-	      (org-mode))))
-
-(when (and (daemonp) (locate-library "edit-server"))
-  (require 'edit-server)
-  (edit-server-start))
-
-(when (locate-library "edit-server")
-  (require 'edit-server)
-  (setq edit-server-new-frame nil)
-  (edit-server-start))
-
-(if (locate-library "edit-server")
-    (progn
-      (require 'edit-server)
-      (setq edit-server-new-frame nil)
-      (edit-server-start)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
