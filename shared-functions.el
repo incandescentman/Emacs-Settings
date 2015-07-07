@@ -1230,7 +1230,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "p" "font-family: Georgia; color:#000;")))
+             "p" "font-family: Georgia,serif; color:#000;")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1242,8 +1242,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             ".DONE"
-             "color:#859900;"))) 
+             "div"
+             "font-family: Georgia,serif;"))) 
+
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1312,6 +1313,17 @@ export that region, otherwise export the entire body."
 (646) 355-8001\n") 
 (widen)
 (org-mime-subtree)
+(org-mime-htmlize)
+) 
+
+(defun kitchen-send-mail ()
+      "email subtree and HTMLize"
+      (interactive)
+(email-heading)
+(end-of-buffer)
+(insert "\n\n---\nJay Dixit 
+[[http://jaydixit.com/][jaydixit.com]] 
+(646) 355-8001\n") 
 (org-mime-htmlize)
 ) 
 
