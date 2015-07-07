@@ -14,26 +14,12 @@
 
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(setq abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
-
-(tooltip-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode 1)
-
-(add-hook 'org-mode-hook
-          (lambda()
-            (hl-line-mode -1)
-            (global-hl-line-mode -1))
-          't
-          )
-
-(setq prelude-whitespace nil)
-
-(global-visual-line-mode)
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -220,8 +206,6 @@
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
-
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 
@@ -243,7 +227,7 @@
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
@@ -333,7 +317,7 @@
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
-(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly-and-capitalize)
 
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
@@ -356,6 +340,8 @@
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 (defun kill-sentence-to-period ()
   "Leave the period in there."
@@ -529,20 +515,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   )
 (global-set-key (kbd "C-c t") 'timesvr)
 (global-set-key (kbd "C-c m") 'compose-mail)
-
-;; (toggle-maxframe)
-(setq default-frame-alist
-      '(
-        (width . 160) ; character
-        (height . 42) ; lines
-        ))
-(zenburn)
-(monaco-font)
-;; (minuscule-type)
-
-(turn-on-olivetti-mode)
-
-(recenter-top-bottom)
 
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
@@ -768,27 +740,13 @@ password: %s" userid password))
 (local-set-key (kbd "C-c v e")
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
-(local-set-key (kbd "C-c v i")
-               'org-insert-src-block)
 
-(when (executable-find "hunspell")
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t))
-(setq flyspell-default-dictionary "en_US")
-
-(setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US")
-(if (file-exists-p "/usr/bin/hunspell")
-    (progn
-      (setq ispell-program-name "hunspell")
-      (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8)))))
-
-(executable-find "hunspell")
-;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
-(flyspell-mode-on)
+(defun play-mp3 ()
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (kill-buffer (current-buffer))
+    (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
 
 (defun hello ()
       "Hello World and you can call it via M-x hello."
@@ -805,17 +763,6 @@ password: %s" userid password))
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
         (insert (format "Hello %s!\n" someone)))) 
-
-(defun mime-send-mail ()
-      "org-mime-subtree and HTMLize"
-      (interactive)
-(org-mark-subtree) 
-      (org-mime-subtree)
-(insert "\nBest,\nS.\n")
-      (org-mime-htmlize t)
-) 
-
-
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
@@ -896,6 +843,14 @@ subsequent sends. could save them all in a logbook?
 	(message-goto-body)
       (message-goto-to))
     ))
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil) 
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
 
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
@@ -1123,3 +1078,11 @@ subsequent sends. could save them all in a logbook?
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
+
+(defun backward-kill-word-correctly-and-capitalize ()
+  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(call-interactively 'backward-kill-word-correctly) 
+  (let ((fix-capitalization (my/beginning-of-sentence-p))) 
+    (when fix-capitalization
+      (save-excursion (capitalize-word 1)))))

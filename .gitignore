@@ -1,0 +1,5 @@
+ .gitignore
+flycheck
+.savefile
+ido.hist
+recent-addresses

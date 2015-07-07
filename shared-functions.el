@@ -68,32 +68,6 @@
 (make-variable-buffer-local 'global-hl-line-mode)
 (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 
-;; (set-face-attribute 'default nil :font "Lucida Sans Typewriter" :height 180)
-;; (set-face-attribute 'default nil :font "Courier"  :height 200)
-;; (set-face-attribute 'default nil :font "Monaco" :height 190)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-; '(ido-first-match ((t (:foreground "red"))))
-'(bold ((t (:bold t :foreground "red"))))
-
- '(message-header-cc ((t (:foreground "CornflowerBlue"))))
- '(message-header-name ((t (:foreground "green2"))))
-; '(message-header-other ((t (:foreground "VioletRed1"))))
- '(message-header-subject ((t (:foreground "pink" :weight bold))))
- '(message-header-to ((t (:foreground "LightGoldenrod1" :weight bold))))
- '(message-separator ((t (:foreground "LightSkyBlue1"))))
- '(hl-line ((t (:inherit highlight))))
-
- '(org-headline-done ((t (:strike-through t))))
- '(writegood-weasels-face ((t (:underline (:color "orange" :style wave)))))
- '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t)))
-                      '(ido-first-match ((t (:inherit error :weight normal))))
- t))
-
 (auto-fill-mode -1)
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
@@ -144,8 +118,6 @@
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq user-full-name "Jay Dixit")
 
-(setq org-indent-mode t)
-(setq org-indent-indentation-per-level 2)
 (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)
@@ -158,6 +130,7 @@
       '((heading . always)
        (plain-list-item . nil))) 
 (setq org-return-follows-link t) 
+(setq org-export-with-planning t) 
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
@@ -177,6 +150,16 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
+
+(setq org-agenda-prefix-format
+   (quote
+    ((agenda . " %?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
+
+;; (setq org-agenda-prefix-format "%t %s") 
 
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
@@ -546,7 +529,7 @@ Subject: %^{Subject}
 '(shift-select-mode nil)
 '(transient-mark-mode t)
 '(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode t)
+'(global-flyspell-mode to)
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
 '(setq mail-user-agent 'message-user-agent)
@@ -599,8 +582,8 @@ Subject: %^{Subject}
 
 (setq smtpmail-debug-info t)
 
-(setq message-default-mail-headers "Cc: \nBcc: \n")
-(setq mail-user-agent 'message-user-agent)
+;; (setq message-default-mail-headers "Cc: \nBcc: \n")
+;; (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 
 (defun mail-region (b e to subject)
@@ -620,10 +603,20 @@ Subject: %^{Subject}
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
-(add-to-list 'load-path "~/Dropbox/elisp/recent-addresses-0.1")
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses") 
+(add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
 (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+
+(setq mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit t)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit t)
+(setq message-required-headers (quote (From (optional . References))))
+(setq message-send-hook (quote (recent-addresses-add-headers)))
 
 (require 'org-pomodoro)
 
@@ -762,9 +755,7 @@ Subject: %^{Subject}
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(mml-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
 
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
@@ -843,7 +834,7 @@ Subject: %^{Subject}
      (underline . "<span class=\"underline\">%s</span>")
      (verbatim . "<code>%s</code>"))))
  '(org-html-toplevel-hlevel 2)
- '(org-indent-indentation-per-level 2)
+'(org-indent-indentation-per-level 2)
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  ; (org-indirect-buffer-display (quote other-window))
@@ -921,7 +912,7 @@ Subject: %^{Subject}
 	   (fboundp
 	    (quote rainbow-mode))
 	   (rainbow-mode 1)))))
- '(send-mail-function (quote sendmail-send-it))
+'(send-mail-function (quote sendmail-send-it))
  '(standard-indent 3)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
@@ -974,8 +965,7 @@ Subject: %^{Subject}
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
- '(message-send-hook (quote (recent-addresses-add-headers)))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
+;; '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
  '(org-M-RET-may-split-line (quote ((item . t))))
@@ -1005,8 +995,7 @@ Subject: %^{Subject}
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-bind-keywords t)
 
- '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
- '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
+'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(org-export-blocks-witheld (quote (hidden)))
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
  '(org-export-html-style-include-default t)
@@ -1245,10 +1234,14 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (add-to-list 'name-and-pos (cons name position))))))))
 
 (require 'org-mime)
+
+(setq org-mime-default-header "")
+
+
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "p" "font-family: Georgia; color:#333;")))
+             "p" "font-family: Georgia,serif; color:#000;")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1260,8 +1253,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             ".DONE"
-             "color:#859900;")))
+             "div"
+             "font-family: Georgia,serif;"))) 
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1277,6 +1270,73 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-mode-hook
           (lambda ()
             (local-set-key "\C-c\M-o" 'org-mime-subtree)))
+
+(defun org-mime-htmlize (&optional arg) 
+"Export a portion of an email body composed using `mml-mode' to
+html using `org-mode'.  If called with an active region only
+export that region, otherwise export the entire body."
+  (interactive "P")
+  (require 'ox-org)
+  (require 'ox-html)
+  (let* ((region-p (org-region-active-p))
+         (html-start (or (and region-p (region-beginning))
+                         (save-excursion
+                           (goto-char (point-min))
+                           (search-forward mail-header-separator)
+                           (+ (point) 1))))
+         (html-end (or (and region-p (region-end))
+                       ;; TODO: should catch signature...
+                       (point-max)))
+         (raw-body (concat org-mime-default-header
+			   (buffer-substring html-start html-end)))
+         (tmp-file (make-temp-name (expand-file-name
+				    "mail" temporary-file-directory)))
+         (body (org-export-string-as raw-body 'org t))
+         ;; because we probably don't want to export a huge style file
+         (org-export-htmlize-output-type 'inline-css)
+         ;; makes the replies with ">"s look nicer
+         (org-export-preserve-breaks org-mime-preserve-breaks)
+	 ;; dvipng for inline latex because MathJax doesn't work in mail
+	 (org-html-with-latex 'dvipng)
+         ;; to hold attachments for inline html images
+         (html-and-images
+          (org-mime-replace-images
+	   (org-export-string-as raw-body 'html t) tmp-file))
+         (html-images (unless arg (cdr html-and-images)))
+         (html (org-mime-apply-html-hook
+                (if arg
+                    (format org-mime-fixedwith-wrap body)
+                  (car html-and-images)))))
+    (delete-region html-start html-end)
+    (save-excursion
+      (goto-char html-start)
+      (insert (org-mime-multipart
+	       body html (mapconcat 'identity html-images "\n"))))))
+
+(defun mime-send-mail ()
+      "org-mime-subtree and HTMLize"
+      (interactive)
+(org-narrow-to-subtree)
+(end-of-buffer)
+(insert "\n\n---\nJay Dixit 
+[[http://jaydixit.com/][jaydixit.com]] 
+(646) 355-8001\n") 
+(widen)
+(org-mime-subtree)
+(org-mime-htmlize)
+) 
+
+(defun kitchin-send-mail ()
+      "email subtree and HTMLize"
+      (interactive)
+(email-heading)
+(end-of-buffer)
+(insert "Warm regards,\nJay Dixit\n\n---\nJay Dixit 
+(646) 355-8001 
+[[http://jaydixit.com/][jaydixit.com]] 
+\n") 
+(org-mime-htmlize)
+) 
 
 (setq set-mark-command-repeat-pop t)
 
@@ -1370,7 +1430,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|erika\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -1890,18 +1950,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 (require 'point-stack)
 
-(require 'guide-key)
-(setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
-(guide-key-mode 1)  ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence '("C-x"))
-(setq guide-key/recursive-key-sequence-flag t)
-
-(defun guide-key/my-hook-function-for-org-mode ()
-  (guide-key/add-local-guide-key-sequence "C-c")
-  (guide-key/add-local-guide-key-sequence "C-c C-x")
-  (guide-key/add-local-highlight-command-regexp "org-"))
-(add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
-
 ;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
 ;; (require 'bbdb) ;; (3)
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
@@ -2230,6 +2278,9 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
 ((and buffer-file-name (eq major-mode 'fundamental-mode))) 
 ((and buffer-file-name (eq major-mode 'markdown-mode))) 
+
+((and buffer-file-name (eq major-mode 'css-mode))) 
+
 ((and buffer-file-name (eq major-mode 'nmxml-mode))) 
 ((and buffer-file-name (eq major-mode 'gitconfig-mode))) 
 ((and buffer-file-name (eq major-mode 'gitignore-mode))) 
@@ -2260,3 +2311,93 @@ searches all buffers."
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 
 (setq set-mark-command-repeat-pop t)
+
+(setq custom-safe-themes t) 
+
+(setq gnus-select-method '(nnml "")) 
+(setq gnus-select-method '(nnimap "gmail"
+(nnimap-address "imap.gmail.com")
+(nnimap-server-port 993)
+(nnimap-stream ssl))) 
+
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
+
+
+;; How to read HTML mail 
+(setq mm-text-html-renderer 'w3m) 
+(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\not") 
+
+
+;; More attractive Summary View 
+;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
+(when window-system
+  (setq gnus-sum-thread-tree-indent "  ")
+  (setq gnus-sum-thread-tree-root "") ;; "● ")
+  (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
+  (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
+  (setq gnus-sum-thread-tree-vertical        "│")
+  (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
+  (setq gnus-sum-thread-tree-single-leaf     "╰─► "))
+(setq gnus-summary-line-format
+      (concat
+       "%0{%U%R%z%}"
+       "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
+       "  "
+       "%4{%-20,20f%}"               ;; name
+       "  "
+       "%3{│%}"
+       " "
+       "%1{%B%}"
+       "%s\n"))
+(setq gnus-summary-display-arrow t) 
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (save-excursion
+    (let ((content (progn
+                     (unless (org-on-heading-p) (outline-previous-heading))
+                     (let ((headline (org-element-at-point)))
+                       (buffer-substring
+                        (org-element-property :contents-begin headline)
+                        (org-element-property :contents-end headline)))))
+          (TO (org-entry-get (point) "TO" t))
+          (CC (org-entry-get (point) "CC" t))
+          (BCC (org-entry-get (point) "BCC" t))
+          (SUBJECT (nth 4 (org-heading-components)))
+          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+          (continue nil)
+          (switch-function nil)
+          (yank-action nil)
+          (send-actions '((email-send-action . nil)))
+          (return-action '(email-heading-return)))
+
+      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+      (message-goto-body)
+      (insert content)
+      (when CC
+        (message-goto-cc)
+        (insert CC))
+      (when BCC
+        (message-goto-bcc)
+        (insert BCC))
+      (if TO
+          (message-goto-body)
+        (message-goto-to)))))

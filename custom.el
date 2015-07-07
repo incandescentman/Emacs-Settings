@@ -74,6 +74,7 @@
  '(gmm/auto-mode-list
    (quote
     ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
+ '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
  '(grep-find-ignored-directories
    (quote
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
@@ -96,12 +97,11 @@
  '(initial-major-mode (quote org-mode))
  '(mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(mail-kill-buffer-on-exit t)
+ '(mail-kill-buffer-on-exit t t)
  '(make-backup-files t)
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
- '(message-send-hook (quote (recent-addresses-add-headers)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mml-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
@@ -124,8 +124,15 @@
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files
    (quote
-    ("~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
+    ("~/Dropbox/writing/notationaldata/accountability.org" "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
  '(org-agenda-jump-prefer-future t)
+ '(org-agenda-prefix-format
+   (quote
+    ((agenda . " %-12:c%?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
@@ -267,8 +274,6 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-mime-default-header "
-")
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
@@ -313,7 +318,6 @@
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
- '(recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
  '(recentf-exclude
    (quote
     (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
@@ -371,6 +375,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
  '(message-header-cc ((t (:foreground "CornflowerBlue"))))
  '(message-header-name ((t (:foreground "green2"))))
@@ -396,11 +401,14 @@
 
 
 ;; load my init files
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/cosmetics.org")
+(org-babel-load-file "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.org")
+
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")
 
 (org-babel-load-file "~/Dropbox/emacs/prelude/personal/shared-functions.org")
 
-(load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
+;; (load "~/Dropbox/emacs/prelude/personal/appearance-jay-custom-functions.el")
 
 
 
@@ -484,3 +492,4 @@
 (setq custom-safe-themes t)
 
 (recenter-top-bottom)
+

@@ -35,42 +35,16 @@ Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
 (read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
+(setq abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
 (read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 #+END_SRC
 
-* UI/Appearance
-
-Clean UI:
-#+BEGIN_SRC emacs-lisp
-(tooltip-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode 1)
-#+END_SRC
-
-Don't highlight lines:
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook
-          (lambda()
-            (hl-line-mode -1)
-            (global-hl-line-mode -1))
-          't
-          )
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(setq prelude-whitespace nil)
-#+END_SRC
-
-Wrap text:
-#+BEGIN_SRC emacs-lisp
-(global-visual-line-mode)
-#+END_SRC
-
-** reflash-indentation
+* 
+* reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
@@ -344,8 +318,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
-
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 
@@ -367,7 +339,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
@@ -457,7 +429,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
-(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly-and-capitalize)
 
 ;; pomodoro
 (define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
@@ -480,7 +452,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
+
 #+END_SRC
+
 
 * Sentences
 
@@ -705,23 +681,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "C-c m") 'compose-mail)
 #+END_SRC
 
-* Startup
-
-#+BEGIN_SRC emacs-lisp
-;; (toggle-maxframe)
-(setq default-frame-alist
-      '(
-        (width . 160) ; character
-        (height . 42) ; lines
-        ))
-(zenburn)
-(monaco-font)
-;; (minuscule-type)
-
-(turn-on-olivetti-mode)
-
-(recenter-top-bottom)
-#+END_SRC
 
 * character movement
 #+BEGIN_SRC emacs-lisp
@@ -1419,45 +1378,51 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
 (local-set-key (kbd "C-c v e")
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
-(local-set-key (kbd "C-c v i")
-               'org-insert-src-block)
 #+END_SRC
 
-***** hunspell
+* experiments - new/untested
+
+** play mp3
 
    #+BEGIN_SRC emacs-lisp
-
-(when (executable-find "hunspell")
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t))
-(setq flyspell-default-dictionary "en_US")
-
-(setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US")
-(if (file-exists-p "/usr/bin/hunspell")
-    (progn
-      (setq ispell-program-name "hunspell")
-      (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8)))))
-
-(executable-find "hunspell")
-;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
-(flyspell-mode-on)
+(defun play-mp3 ()
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (kill-buffer (current-buffer))
+    (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
    #+END_SRC
 
-References:
-[[http://emacswiki.org/emacs/InteractiveSpell#toc2][EmacsWiki: Interactive Spell]]
-[[https://lists.gnu.org/archive/html/help-gnu-emacs/2015-03/msg00153.html][Getting flyspell + hunspell to work on OS X 10.10]]
-[[https://joelkuiper.eu/spellcheck_emacs][Spell checking in Emacs]]
-[[http://stackoverflow.com/questions/25415070/hunspell-emacs-on-os-x-10-9][hunspell / emacs on OS X 10.9 - Stack Overflow]]
-[[http://stackoverflow.com/questions/3961119/working-setup-for-hunspell-in-emacs][Working setup for hunspell in Emacs - Stack Overflow]]
-[[http://unix.stackexchange.com/questions/86554/make-hunspell-work-with-emacs-and-german-language][spell checking - Make hunspell work with emacs and german language - Unix & Linux Stack Exchange]]
-[[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][What's the best spell check setup in emacs | Chen's blog]]
-[[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
+Source: [[http://emacs.stackexchange.com/questions/13561/whats-a-good-way-to-run-a-command-instead-of-opening-a-file][elisp - What's a good way to run a command instead of opening a file? - Emacs Stack Exchange]]
 
-* experiments - new/untested
+
+shareeditflag
+answered 6 hours ago
+
+sds
+6258
+  	
+ 		
+Thanks, I already bound "r" in dired to do that years ago. My interest is in making it work everywhere, for example from a locate or a find-file completion session, or from a bookmark etc. –  abo-abo 5 hours ago 
+add a comment
+
+
+I stopped using openwith when I started using Helm, as I find typing C-c C-x from helm-find-files convenient enough. (Also nowadays, I only unconditionally open audio and video files outside of Emacs, so most of the time I like being able to either open a file in Emacs or in an external program.) 
+
+** openwith
+
+#+BEGIN_QUOTE
+(require 'openwith)
+(openwith-mode t)
+(setq openwith-associations '(("\\.pdf\\'" "evince" (file)))) 
+#+END_QUOTE
+Source: [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
+
+** PDF-tools
+
+[[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
+
+http://tuhdo.github.io/static/emacs-read-pdf.gif 
 
 ** defun syntax 
 A Lisp function becomes a [[command]] when its body contains, at top level, a form that calls the special form `<code>(interactive...)</code>'. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
@@ -1520,24 +1485,6 @@ The following pairs of `interactive' specs are equivalent:
     ...)
 
 
-
-** org-mime
-
-#+BEGIN_SRC emacs-lisp 
-(defun mime-send-mail ()
-      "org-mime-subtree and HTMLize"
-      (interactive)
-(org-mark-subtree) 
-      (org-mime-subtree)
-(insert "\nBest,\nS.\n")
-      (org-mime-htmlize t)
-) 
-#+END_SRC 
-
-
-#+BEGIN_SRC emacs-lisp 
-#+END_SRC
- 
 
 
 ** lisp functions from John Kitchin
@@ -1700,6 +1647,18 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-o
 
 *** pandoc
     [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
+
+* new stuff / experimental
+#+BEGIN_SRC emacs-lisp
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil) 
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
+#+END_SRC
 
 
 * Helm Org Wiki
@@ -2213,3 +2172,19 @@ First delete region, and then:
 *** NOTE-TO-RÚDI Absolutely.
 Ha! Yes, that was going to be my next request! Perfect!
 
+*** NOTE-TO-RÚDI On second thought... 
+On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
+
+
+* TODO backward-kill-word-correctly-and-capitalize 
+I created this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK.
+
+#+BEGIN_SRC emacs-lisp
+(defun backward-kill-word-correctly-and-capitalize ()
+  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(call-interactively 'backward-kill-word-correctly) 
+  (let ((fix-capitalization (my/beginning-of-sentence-p))) 
+    (when fix-capitalization
+      (save-excursion (capitalize-word 1)))))
+#+END_SRC
