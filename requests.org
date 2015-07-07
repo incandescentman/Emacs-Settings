@@ -98,11 +98,15 @@ Definitely #1. For this particular functionality, I decided to just move those f
 **** NOTE-TO-RÚDI Answer
 OK great. I don't remember why I did that before. I'm not sure the difference between the two options you listed above, so I am fine with either one. It seems like #1 might be a little easier?
 
-**** NOTE-TO-JAY
+**** NOTE-TO-JAY Progress
 
-     neopastebin
-     saveplace
-     ox-latex
+     So, this was my procedure:
+     1. I reverted to plain old ~package-initialize~ (without the ~noactivate~ param) and removed the statement that was setting ~package-enable-at-startup~ to ~nil~. This should make it so that all your installed packages are available to use when you start Emacs; however, their code isn't loaded until they're actually used (i.e. one of its commands is used). 
+     2. I reviewed all ~require~ statements. I used the same ~package-archives~ as you did, and checked whether each of the ~require~'d libraries were installable packages. I assumed you installed them through ~package-install~, and therefore removed the ~require~ statements. I left all the ones that I couldn't find as a package. I know some of them are in this repository, and I can later generate autoloads for them. As for the rest, I will track them down on the internet and do the same.
+
+     For now, I'd like you to test if Emacs is working properly without these ~require~ statements, and check if there is any noticeable difference in startup performance.
+
+     One more thing: I couldn't get my head around what all the code that loads ~edit-server~ is attempting to do. It seems awfully redundant and cumbersome. Do you have any info you could give me on that? Like where did you take it from and why?
 
 *** TODO kill-line-and-capitalize
 Can you add something like this: 

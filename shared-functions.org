@@ -746,7 +746,7 @@ Haven't used this next one:
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-(require 'buffer-stack)
+;; (require 'buffer-stack)
 #+END_SRC
 
 GNU Emacs:
@@ -856,7 +856,7 @@ every new buffer will be unique:
 ** Autocapitalization
 
 #+BEGIN_SRC emacs-lisp
-(require 'auto-capitalize)
+;; (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 ;; (add-hook message-mode-hook turn-on-orgstruct)
@@ -972,7 +972,7 @@ Make backups of files, even when they're in version control:
 * Pomodoro
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-pomodoro)
+;; (require 'org-pomodoro)
 
 (defun pomodoro-start ()
   (interactive)
@@ -984,14 +984,14 @@ Make backups of files, even when they're in version control:
 * Reveal in finder
 
 #+BEGIN_SRC emacs-lisp
-(require 'reveal-in-finder)
+;; (require 'reveal-in-finder)
 #+END_SRC
 
 * ~eshell~
 
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
-(require 'eshell-autojump)
+;; (require 'eshell-autojump)
 #+END_SRC
 
 * ~ibuffer~
@@ -1027,7 +1027,7 @@ Defines ~ibuffer-do-replace-string~:
 
 To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
-(require 'edit-server)
+;; (require 'edit-server)
 (edit-server-start)
 (when (require 'edit-server nil t)
   (setq edit-server-new-frame nil)
@@ -1422,7 +1422,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 Use key chords invoke commands:
 #+BEGIN_SRC emacs-lisp
-(require 'key-chord)
+;;(require 'key-chord)
 (key-chord-mode 1)
 #+END_SRC
 
@@ -1593,7 +1593,7 @@ Use the current window when visiting files and buffers with IDO:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(require 'ido-hacks)
+;; (require 'ido-hacks)
 #+END_SRC
 
 Sort ido filelist by mtime instead of alphabetically.  Why would anyone want an
@@ -1617,7 +1617,7 @@ modified files are at the front:
 
 Add superior flex matching to ~ido-mode~:
 #+BEGIN_SRC emacs-lisp
-(require 'flx-ido)
+;; (require 'flx-ido)
 (ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
@@ -1694,7 +1694,7 @@ Disable IDO faces to see flx highlights:
 * ~org-mime~
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-mime)
+;; (require 'org-mime)
 
 (setq org-mime-default-header "")
 
@@ -1852,7 +1852,7 @@ Don't start the server unless we can verify that it isn't running.
 ** PDFs
 *** Open PDFs in Skim
 #+BEGIN_SRC emacs-lisp
-(require 'openwith)
+;; (require 'openwith)
 '(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 (openwith-mode t)
 #+END_SRC
@@ -2039,7 +2039,7 @@ Make it so that recentf does not record the following uninteresting file types:
 * Word count
 #+BEGIN_SRC emacs-lisp
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-(require 'wc-mode)
+;; (require 'wc-mode)
 #+END_SRC
 
 * Distraction-free editing
@@ -2190,7 +2190,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 * Discover mode
 Show me what choices I have after I hit a prefix keybinding ([[https://github.com/mickeynp/discover.el][mickeynp/discover.el]]):
 #+BEGIN_SRC emacs-lisp
-(require 'discover)
+;; (require 'discover)
 
 (discover-add-context-menu
  :context-menu (assq 'isearch discover-context-menus)
@@ -2574,7 +2574,7 @@ function I have a persistent buffer list available.
 ** Google search
 Enable Google search:
 #+BEGIN_SRC emacs-lisp
-(require 'engine-mode)
+;; (require 'engine-mode)
 (engine-mode t)
 
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
@@ -2600,7 +2600,7 @@ Including indent-buffer, which should not be called automatically on save."
 ** Point stack
 For popping around the buffer. I need to review how this works again.
 #+BEGIN_SRC emacs-lisp
-(require 'point-stack)
+;; (require 'point-stack)
 #+END_SRC
 
 ** SMEX
@@ -2877,7 +2877,7 @@ AdrianKubala:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-swoop)
+;; (require 'helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
 (setq helm-swoop-pre-input-function
@@ -2973,7 +2973,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
-(require 'palimpsest)
+;; (require 'palimpsest)
 (palimpsest-mode 1) 
 #+END_SRC
 
