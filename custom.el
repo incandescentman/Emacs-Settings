@@ -74,6 +74,7 @@
  '(gmm/auto-mode-list
    (quote
     ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
+ '(gnus-article-sort-functions (quote (gnus-article-sort-by-date)))
  '(grep-find-ignored-directories
    (quote
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
@@ -94,7 +95,17 @@
  '(inhibit-startup-screen t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
-'(mouse-highlight nil)
+ '(mail-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mail-kill-buffer-on-exit t t)
+ '(make-backup-files t)
+ '(message-draft-headers (quote (From References Date)))
+ '(message-kill-buffer-on-exit t)
+ '(message-required-headers (quote (From (optional . References))))
+ '(message-send-mail-function (quote message-send-mail-with-sendmail))
+ '(mml-default-directory
+   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mouse-highlight nil)
  '(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
@@ -256,7 +267,7 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
-'(org-modules
+ '(org-modules
    (quote
     (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
@@ -300,7 +311,7 @@
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
-'(recentf-exclude
+ '(recentf-exclude
    (quote
     (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
  '(recentf-max-menu-items 100)
@@ -311,8 +322,7 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((org-export-allow-bind-keywords . t)
-     (eval when
+    ((eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
