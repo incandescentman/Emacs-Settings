@@ -341,6 +341,8 @@
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 
+(define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
+
 (defun kill-sentence-to-period ()
   "Leave the period in there."
   (interactive)
@@ -738,8 +740,6 @@ password: %s" userid password))
 (local-set-key (kbd "C-c v e")
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
-(local-set-key (kbd "C-c v i")
-               'org-insert-src-block)
 
 (defun play-mp3 ()
   (interactive)

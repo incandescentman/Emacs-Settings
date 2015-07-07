@@ -130,6 +130,7 @@
       '((heading . always)
        (plain-list-item . nil))) 
 (setq org-return-follows-link t) 
+(setq org-export-with-planning t) 
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
@@ -149,6 +150,16 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
+
+(setq org-agenda-prefix-format
+   (quote
+    ((agenda . " %?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
+
+;; (setq org-agenda-prefix-format "%t %s") 
 
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
@@ -1419,7 +1430,7 @@ export that region, otherwise export the entire body."
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|erika\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|erika\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -2343,3 +2354,50 @@ searches all buffers."
        "%1{%B%}"
        "%s\n"))
 (setq gnus-summary-display-arrow t) 
+
+(defun email-heading ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+  (interactive)
+  ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (save-excursion
+    (let ((content (progn
+                     (unless (org-on-heading-p) (outline-previous-heading))
+                     (let ((headline (org-element-at-point)))
+                       (buffer-substring
+                        (org-element-property :contents-begin headline)
+                        (org-element-property :contents-end headline)))))
+          (TO (org-entry-get (point) "TO" t))
+          (CC (org-entry-get (point) "CC" t))
+          (BCC (org-entry-get (point) "BCC" t))
+          (SUBJECT (nth 4 (org-heading-components)))
+          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+          (continue nil)
+          (switch-function nil)
+          (yank-action nil)
+          (send-actions '((email-send-action . nil)))
+          (return-action '(email-heading-return)))
+
+      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+      (message-goto-body)
+      (insert content)
+      (when CC
+        (message-goto-cc)
+        (insert CC))
+      (when BCC
+        (message-goto-bcc)
+        (insert BCC))
+      (if TO
+          (message-goto-body)
+        (message-goto-to)))))
