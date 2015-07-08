@@ -2443,7 +2443,7 @@ Useful for working with files and references:
 ** Rename file and buffer
 Source: [[http://steve.yegge.googlepages.com/my-dot-emacs-file][source]]
 #+BEGIN_SRC emacs-lisp
-(defun rename-file-and-buffer (new-name)
+(defun prelude-rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))

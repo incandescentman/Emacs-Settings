@@ -1816,7 +1816,7 @@ With prefix arg C-u, copy region instad of killing it."
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
 
-(defun rename-file-and-buffer (new-name)
+(defun prelude-rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
