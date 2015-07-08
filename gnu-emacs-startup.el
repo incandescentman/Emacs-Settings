@@ -212,6 +212,8 @@
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+(define-key key-minor-mode-map (kbd "s-V") 'minibuffer-pasteboard-paste)
+
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
@@ -290,7 +292,7 @@
 ;; for extracting content from my browser
 (define-key key-minor-mode-map (kbd "s-W") 'web-research)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
-(define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
+;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
 
 ;; and the keybinding
