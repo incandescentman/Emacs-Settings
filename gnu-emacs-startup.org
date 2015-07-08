@@ -250,13 +250,15 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ** pasteboard-cut
 
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-cut()
+(defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end))
-(my/fix-space)
-)
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 #+END_SRC
 
 ** pasteboard-search-in-current buffer
@@ -1830,8 +1832,11 @@ Oleh
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
-                       (match-beginning 0)))))
-  (my/fix-space))
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 #+END_SRC
 
 
@@ -2151,19 +2156,25 @@ First delete region, and then:
 #+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
+(defcustom capitalize-after-deleting-single-char nil
+  "Determines whether capitalization should occur after deleting a single character.")
+
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-  (if (use-region-p)
-      (delete-region (region-beginning) (region-end))
-    (delete-backward-char 1))
-  (save-excursion
-    (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-      (my/fix-space)))
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+  (let ((capitalize capitalize-after-deleting-single-char))
+    (if (use-region-p)
+        (progn
+          (delete-region (region-beginning) (region-end))
+          (setf capitalize t))
+      (delete-backward-char 1))
+    (save-excursion
+      (when (or (looking-at "[[:space:]]")
+                (looking-back "[[:space:]]"))
+        (my/fix-space)))
+    (when (and capitalize (my/beginning-of-sentence-p))
+      (save-excursion
+        (capitalize-word 1)))))
 #+END_SRC
 
 
@@ -2176,7 +2187,6 @@ Ha! Yes, that was going to be my next request! Perfect!
 
 *** NOTE-TO-RÚDI On second thought... 
 On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
-
 
 * TODO backward-kill-word-correctly-and-capitalize                     :rudi:
 I wrote this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK. Can you make sure? Thanks!
