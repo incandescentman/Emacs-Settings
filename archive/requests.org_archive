@@ -1850,3 +1850,95 @@ No space. Does that make sense? Thanks!
 *** NOTE-TO-RÚDI You are right.
 I'm not sure what I was doing wrong before. I must have deleted the wrong section before evaluating. In any case, your version works as I intended. Thank you!! 
 
+
+** TODO [#C] speed up launch?                                        :emacs:
+Hi Rúdi,
+
+I'd like to make Emacs launch faster, so that I can launch and just start typing text in org-mode as fast as possible when I need to start typing quickly. (Say I get a phone call and I need to take down a number, etc.) Can we set it up so that as much as possible gets lazy-loaded or loads after launch? 
+
+Also in shared-functions.org, I have lines like this:
+
+#+BEGIN_SRC emacs-lisp
+(load "~/Dropbox/github/koma3/ox-koma-letter.el")
+(load "~/Dropbox/github/koma3/fiverr-koma.el") 
+#+END_SRC
+
+It's my own customized version of ox-koma letter, but it certainly doesn't need to launch right away. I use it rarely...
+
+Thanks!
+
+*** NOTE-TO-JAY Answer
+
+    Well, I can think of two ways to speed up launch:
+
+    1. Autoloading as much as possible. Here's [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Autoload.html][info]] on it. In the example you gave, you'd probably write something like: 
+    #+BEGIN_EXAMPLE
+    (autoload 'org-koma-letter-export-as-latex "~/Dropbox/github/koma3/ox-koma-letter.el" nil t)
+    ...
+    #+END_EXAMPLE
+    This registers the command ~org-koma-letter-export-as-latex~ as loadable from the latter path. This of course has the downside of having to specify all commands of a module discriminately so that the module gets loaded when one of those commands is invoked.
+
+    2. Having a separate "vanilla" configuration, which you could start Emacs with when you wanted to start typing fast. You could then have different icons on your desktop: one for your heavyweight Emacs, and another for your vanilla one.
+
+    What do you find more appealing?
+
+**** NOTE-TO-RÚDI Answer
+Definitely #1. For this particular functionality, I decided to just move those files into my load path. But anything else we can do to lazy-load other functionality or eval after launch of Emacs would be great! :-)
+
+**** NOTE-TO-JAY Answer
+
+    OK, I've been doing some research on autoloading (I didn't know much about it myself), and it turns out that Emacs pretty much handles it in a very straightforward way -- as long as you use the packages facility in a different way.
+
+    Currently, this is your setting:
+
+#+BEGIN_EXAMPLE
+(require 'package)
+
+(add-to-list 'package-archives
+             '("marmalade" .
+               "http://marmalade-repo.org/packages/" ))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+;; (package-initialize)
+
+(setq package-enable-at-startup nil)
+
+(package-initialize 'noactivate)
+#+END_EXAMPLE
+
+    By the look of it, I would assume you once had your installed packages initalised and loaded, and then for some reason you preferred to disable loading the packages upon initialisation. Do you remember why?
+
+    The reason I'm asking is that when you install packages and activate them at startup, Emacs automatically does the "autoload" trick; i.e. it defines only the commands, and defers loading of the actual code to when the commands are used. When you use ~require~, Emacs will force the load of all of the package's code.
+
+    So, two options now:
+
+    1. Revert back to activating packages upon ~package-initialize~ and remove ~require~ calls.
+
+    2. Replace ~require~ calls with ~package-activate~.
+
+    This still doesn't solve the cases where you explicitly ~load~ or ~load-file~; we will handle them later.
+
+**** NOTE-TO-RÚDI Answer
+OK great. I don't remember why I did that before. I'm not sure the difference between the two options you listed above, so I am fine with either one. It seems like #1 might be a little easier?
+
+**** NOTE-TO-JAY Progress
+
+     So, this was my procedure:
+     1. I reverted to plain old ~package-initialize~ (without the ~noactivate~ param) and removed the statement that was setting ~package-enable-at-startup~ to ~nil~. This should make it so that all your installed packages are available to use when you start Emacs; however, their code isn't loaded until they're actually used (i.e. one of its commands is used). 
+     2. I reviewed all ~require~ statements. I used the same ~package-archives~ as you did, and checked whether each of the ~require~'d libraries were installable packages. I assumed you installed them through ~package-install~, and therefore removed the ~require~ statements. I left all the ones that I couldn't find as a package. I know some of them are in this repository, and I can later generate autoloads for them. As for the rest, I will track them down on the internet and do the same.
+
+     For now, I'd like you to test if Emacs is working properly without these ~require~ statements, and check if there is any noticeable difference in startup performance.
+
+     One more thing: I couldn't get my head around what all the code that loads ~edit-server~ is attempting to do. It seems awfully redundant and cumbersome. Do you have any info you could give me on that? Like where did you take it from and why?
+**** NOTE-TO-RÚDI Answer
+Hi Rúdi,
+
+Great, thanks for doing that! Seems like it is loading a bit faster. I did find that I got errors when I launched as it was: void function auto-capitalize mode, and the same for helm-swoop. I turned those require statements back on and the issue resolved. 
+
+As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
+

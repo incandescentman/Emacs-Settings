@@ -158,13 +158,23 @@
 
       )))
 
-(defun pasteboard-cut()
+(defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end))
-(my/fix-space)
-)
+  (my/fix-space)
+  ) 
+
+(defun pasteboard-cut-and-capitalize ()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 
 (defun pasteboard-search-in-current-buffer ()
   (interactive)
@@ -200,7 +210,7 @@
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
@@ -948,8 +958,11 @@ subsequent sends. could save them all in a logbook?
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
-                       (match-beginning 0)))))
-  (my/fix-space))
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
@@ -1066,19 +1079,25 @@ subsequent sends. could save them all in a logbook?
               (looking-back "[[:space:]]"))
       (my/fix-space))))
 
+(defcustom capitalize-after-deleting-single-char nil
+  "Determines whether capitalization should occur after deleting a single character.")
+
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-  (if (use-region-p)
-      (delete-region (region-beginning) (region-end))
-    (delete-backward-char 1))
-  (save-excursion
-    (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-      (my/fix-space)))
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+  (let ((capitalize capitalize-after-deleting-single-char))
+    (if (use-region-p)
+        (progn
+          (delete-region (region-beginning) (region-end))
+          (setf capitalize t))
+      (delete-backward-char 1))
+    (save-excursion
+      (when (or (looking-at "[[:space:]]")
+                (looking-back "[[:space:]]"))
+        (my/fix-space)))
+    (when (and capitalize (my/beginning-of-sentence-p))
+      (save-excursion
+        (capitalize-word 1)))))
 
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."

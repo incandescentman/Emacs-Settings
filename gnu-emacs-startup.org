@@ -256,6 +256,14 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end))
   (my/fix-space)
+  ) 
+
+(defun pasteboard-cut-and-capitalize ()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
@@ -315,7 +323,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut)
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)

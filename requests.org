@@ -8,7 +8,8 @@
 
 
 * open requests 
-** TODO [#B] JavaScript?                                        :javascript:
+** JavaScript 
+*** TODO [#B] Capture to PDF and return to Chrome
 Hi Rúdi,
 
 Do you know JavaScript? If you're interested, I might have some very quick JavaScript questions. for example the below, which comes from here:
@@ -22,99 +23,8 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
 
-** Emacs
-*** TODO [#C] speed up launch?                                      :emacs:
-Hi Rúdi,
-
-I'd like to make Emacs launch faster, so that I can launch and just start typing text in org-mode as fast as possible when I need to start typing quickly. (Say I get a phone call and I need to take down a number, etc.) Can we set it up so that as much as possible gets lazy-loaded or loads after launch? 
-
-Also in shared-functions.org, I have lines like this:
-
-#+BEGIN_SRC emacs-lisp
-(load "~/Dropbox/github/koma3/ox-koma-letter.el")
-(load "~/Dropbox/github/koma3/fiverr-koma.el") 
-#+END_SRC
-
-It's my own customized version of ox-koma letter, but it certainly doesn't need to launch right away. I use it rarely...
-
-Thanks!
-
-**** NOTE-TO-JAY Answer
-
-    Well, I can think of two ways to speed up launch:
-
-    1. Autoloading as much as possible. Here's [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Autoload.html][info]] on it. In the example you gave, you'd probably write something like: 
-    #+BEGIN_EXAMPLE
-    (autoload 'org-koma-letter-export-as-latex "~/Dropbox/github/koma3/ox-koma-letter.el" nil t)
-    ...
-    #+END_EXAMPLE
-    This registers the command ~org-koma-letter-export-as-latex~ as loadable from the latter path. This of course has the downside of having to specify all commands of a module discriminately so that the module gets loaded when one of those commands is invoked.
-
-    2. Having a separate "vanilla" configuration, which you could start Emacs with when you wanted to start typing fast. You could then have different icons on your desktop: one for your heavyweight Emacs, and another for your vanilla one.
-
-    What do you find more appealing?
-
-**** NOTE-TO-RÚDI Answer
-Definitely #1. For this particular functionality, I decided to just move those files into my load path. But anything else we can do to lazy-load other functionality or eval after launch of Emacs would be great! :-)
-
-**** NOTE-TO-JAY Answer
-
-    OK, I've been doing some research on autoloading (I didn't know much about it myself), and it turns out that Emacs pretty much handles it in a very straightforward way -- as long as you use the packages facility in a different way.
-
-    Currently, this is your setting:
-
-#+BEGIN_EXAMPLE
-(require 'package)
-
-(add-to-list 'package-archives
-             '("marmalade" .
-               "http://marmalade-repo.org/packages/" ))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-;; (package-initialize)
-
-(setq package-enable-at-startup nil)
-
-(package-initialize 'noactivate)
-#+END_EXAMPLE
-
-    By the look of it, I would assume you once had your installed packages initalised and loaded, and then for some reason you preferred to disable loading the packages upon initialisation. Do you remember why?
-
-    The reason I'm asking is that when you install packages and activate them at startup, Emacs automatically does the "autoload" trick; i.e. it defines only the commands, and defers loading of the actual code to when the commands are used. When you use ~require~, Emacs will force the load of all of the package's code.
-
-    So, two options now:
-
-    1. Revert back to activating packages upon ~package-initialize~ and remove ~require~ calls.
-
-    2. Replace ~require~ calls with ~package-activate~.
-
-    This still doesn't solve the cases where you explicitly ~load~ or ~load-file~; we will handle them later.
-
-**** NOTE-TO-RÚDI Answer
-OK great. I don't remember why I did that before. I'm not sure the difference between the two options you listed above, so I am fine with either one. It seems like #1 might be a little easier?
-
-**** NOTE-TO-JAY Progress
-
-     So, this was my procedure:
-     1. I reverted to plain old ~package-initialize~ (without the ~noactivate~ param) and removed the statement that was setting ~package-enable-at-startup~ to ~nil~. This should make it so that all your installed packages are available to use when you start Emacs; however, their code isn't loaded until they're actually used (i.e. one of its commands is used). 
-     2. I reviewed all ~require~ statements. I used the same ~package-archives~ as you did, and checked whether each of the ~require~'d libraries were installable packages. I assumed you installed them through ~package-install~, and therefore removed the ~require~ statements. I left all the ones that I couldn't find as a package. I know some of them are in this repository, and I can later generate autoloads for them. As for the rest, I will track them down on the internet and do the same.
-
-     For now, I'd like you to test if Emacs is working properly without these ~require~ statements, and check if there is any noticeable difference in startup performance.
-
-     One more thing: I couldn't get my head around what all the code that loads ~edit-server~ is attempting to do. It seems awfully redundant and cumbersome. Do you have any info you could give me on that? Like where did you take it from and why?
-**** NOTE-TO-RÚDI Answer
-Hi Rúdi,
-
-Great, thanks for doing that! Seems like it is loading a bit faster. I did find that I got errors when I launched as it was: void function auto-capitalize mode, and the same for helm-swoop. I turned those require statements back on and the issue resolved. 
-
-As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
-
-*** TODO [#A] kill-line-and-capitalize [0/3]
+** Emacs 
+*** TODO [#A] kill-line-and-capitalize [1/3]
 Can you add something like this: 
 
 (save-excursion
@@ -123,9 +33,9 @@ Can you add something like this:
 
 to:
 
-- [ ] pasteboard-cut
-- [ ] kill-line
-- [ ] kill-clause
+- [X] pasteboard-cut.
+- [ ] kill-line. EDIT: I should have said my/kill-line-dwim 
+- [ ] kill-clause.
 
 Thanks! 
 
@@ -169,12 +79,60 @@ Thanks!
 
      Correct?
 
-*** TODO [#A] my/delete-backward-and-capitalize 
+**** NOTE-TO-RÚDI Answers
+1. Confirming that pasteboard-cut works as requested! Since there may be times when I don't want the new behavior, I reverted pasteboard-cut itself to its original behavior and created a new function, using your new code, called pasteboard-cut-and-capitalize.
+2. Similarly, yes, let's add the capitalization functionality not to kill-line, but rather to my/kill-line-dwim. 
+3. Answers for kill-clause below.
+
+This is a test sentence^, nothing to see here. And then another.
+
+     Caret marks the point. In this case, calling ~kill-clause~ results in:
+
+This is a test sentence, ^nothing to see here. And then another.
+
+     I.e. it only moves point. Please confirm that it should yield:
+
+This is a test sentence^. And then another.
+
+: Yes! Confirmed, that is what it should yield. 
+
+     Now, going back to the current result of ~kill-clause~:
+
+This is a test sentence, ^nothing to see here. And then another.
+
+     If you now invoke ~kill-clause~, you'll have:
+
+This is a test sentence, . ^And then another.
+
+     This also seems silly. Again, it would seem reasonable to produce:
+
+This is a test sentence^. And then another.
+
+: Yes, exactly! That would be the desired behavior. However, the optimal point placement for that case would be this:
+This is a test sentence. ^And then another.
+
+
+     Finally, I found an edge case:
+
+This is a test sentence, nothing to see here. ^And then another.<EOB>
+
+     Where <EOB> marks the end of the buffer. In this case, nothing happens when you invoke ~kill-clause~. I suppose it should kill the entire sentence:
+
+This is a test sentence, nothing to see here.^<EOB>
+
+     Correct?
+
+: Correct! Thanks for thoroughly thinking through these cases, much appreciated! 
+
+*** DONE [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
 
 **** NOTE-TO-JAY Answer
 
      I added a customisable variable called ~capitalize-after-deleting-single-char~. Its default value is ~nil~, so it won't capitalise if you delete a single character. However, you can enable capitalization if you set it to ~t~.
+
+**** NOTE-TO-RÚDI Perfect!
+Great! Great to have that customizability. 
 
 *** TODO [#A] smart-punctuation behaviors 
 **** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
@@ -200,19 +158,17 @@ Say the point is on the comma and I hit comma. Current behavior is to do nothing
 
 Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
 
-*** TODO [#B] Create an auto-capitalization-exceptions-list?
+*** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
-See this: 
+See my existing code: 
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
 #+END_SRC
 
-I'd like to be able to keep this list and add to it in a plain text format. I'm asking because I want to add the word "vs." to the list (e.g. good vs. evil) but I couldn't get the regexp correct with all the slash escaping. 
-
-It would be easier if I could have something like this: 
+This works. However, I'd like to be able to keep this list in a plain text format and add to it. The reason I'm asking is because I wanted to add the word "vs." to the list (e.g. "good vs. evil") but I couldn't get the regexp correct with all the slash escaping. It would be easier if the list looked something like this: 
 
 #+BEGIN_SRC emacs-lisp
 (setq *auto-capitalize-exceptions*
