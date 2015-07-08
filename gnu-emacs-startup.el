@@ -436,7 +436,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun insert-space ()
   (interactive)
   (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command)))
+    (call-interactively 'self-insert-command))
+(unexpand-abbrev))
 
 (global-set-key (kbd "M-SPC") 'insert-space)
 

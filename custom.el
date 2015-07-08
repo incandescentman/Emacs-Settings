@@ -157,7 +157,7 @@
  '(org-closed-string "COMPLETED:")
  '(org-confirm-babel-evaluate nil)
  '(org-ctrl-k-protect-subtree t)
- '(org-custom-properties (quote (">")))
+ '(org-custom-properties (quote (">" "TO")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
@@ -377,7 +377,7 @@
  ;; If there is more than one, they won't work right.
  '(bold ((t (:bold t :foreground "red"))))
  '(hl-line ((t (:inherit highlight))))
-'(org-headline-done ((t (:strike-through t))))
+ '(org-headline-done ((t (:strike-through t))))
  '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
