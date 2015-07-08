@@ -129,6 +129,46 @@ to:
 
 Thanks! 
 
+**** NOTE-TO-JAY Questions
+
+     Regarding ~pasteboard-cut~, I think it's rather straightforward. Please give it a go.
+
+     As for ~kill-line~, there's something I should clarify: this is a builtin command (comes with Emacs), so it's not something I can easily change. Except that Emacs Lisp has a nice little functionality called "advicing", which allows dynamically adding behaviour to functions without having access to their code. I could do this to ~kill-line~. However, this is usually not recommended, since it could mess up other functionalities that might depend on the default ~kill-line~ implementation. Anyway, since you have the ~my/kill-line-dwim~ function, isn't that the one you use?
+
+     Finally, regarding ~kill-clause~, I added the requested functionality, but I realised the implementation has several probably undesired behaviours. For example:
+
+: This is a test sentence^, nothing to see here. And then another.
+
+     Caret marks the point. In this case, calling ~kill-clause~ results in:
+
+: This is a test sentence, ^nothing to see here. And then another.
+
+     I.e. it only moves point. Please confirm that it should yield:
+
+: This is a test sentence^. And then another.
+
+     Now, going back to the current result of ~kill-clause~:
+
+: This is a test sentence, ^nothing to see here. And then another.
+
+     If you now invoke ~kill-clause~, you'll have:
+
+: This is a test sentence, . ^And then another.
+
+     This also seems silly. Again, it would seem reasonable to produce:
+
+: This is a test sentence^. And then another.
+
+     Finally, I found an edge case:
+
+: This is a test sentence, nothing to see here. ^And then another.<EOB>
+
+     Where <EOB> marks the end of the buffer. In this case, nothing happens when you invoke ~kill-clause~. I suppose it should kill the entire sentence:
+
+: This is a test sentence, nothing to see here.^<EOB>
+
+     Correct?
+
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
 
