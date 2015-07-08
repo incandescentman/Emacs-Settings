@@ -250,13 +250,15 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ** pasteboard-cut
 
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-cut()
+(defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end))
-(my/fix-space)
-)
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 #+END_SRC
 
 ** pasteboard-search-in-current buffer
@@ -1830,8 +1832,11 @@ Oleh
       (kill-region old-point
                    (if kill-punct
                        (match-end 0)
-                       (match-beginning 0)))))
-  (my/fix-space))
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 #+END_SRC
 
 
