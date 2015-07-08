@@ -453,6 +453,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
+;; org-mime
+;; (define-key key-minor-mode-map (kbd "M-n") 'new-email-from-subtree)
+
+
 #+END_SRC
 
 

@@ -1240,6 +1240,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'message-mode-hook
           (lambda ()
             (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+;; (local-set-key "\M-p" 'org-mime-htmlize)))
 
 
 (add-hook 'org-mode-hook
@@ -2320,7 +2321,7 @@ export that region, otherwise export the entire body."
 	       body html (mapconcat 'identity html-images "\n"))))))
 
 
-(defun kitchin-send-mail ()
+(defun new-email-from-subtree ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
