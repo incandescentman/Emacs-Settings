@@ -172,6 +172,10 @@ Thanks!
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
 
+**** NOTE-TO-JAY Answer
+
+     I added a customisable variable called ~capitalize-after-deleting-single-char~. Its default value is ~nil~, so it won't capitalise if you delete a single character. However, you can enable capitalization if you set it to ~t~.
+
 *** TODO [#A] smart-punctuation behaviors 
 **** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
