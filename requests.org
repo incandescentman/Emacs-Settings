@@ -132,7 +132,8 @@ Thanks!
 *** TODO [#A] my/delete-backward-and-capitalize 
 See my note the end of gnu-emacs-startup.org. 
 
-*** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
+*** TODO [#A] smart-punctuation behaviors 
+**** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
 
 Example:
@@ -145,6 +146,15 @@ Current behavior: no effect.
 
 Desired behavior: 
 : You might have a conscious intention to eat healthier, but you forget.
+
+**** TODO [#A] smart-punctuation when there's already a correctly placed punctuation mark
+Example:
+
+: You might have a conscious intention to eat healthier, but you forget.
+
+Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma. I'd like to replicate this behavior---hitting comma gives consistent behavior regardless of whether there is an existing comma or not. 
+
+Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
 
 *** TODO [#B] Create an auto-capitalization-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
