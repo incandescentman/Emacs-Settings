@@ -342,6 +342,7 @@
 
 ;; org-mime
 (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree)
+(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree-no-signature)
 
 (defun kill-sentence-to-period ()
   "Leave the period in there."
@@ -690,7 +691,7 @@ password: %s" userid password))
 )
 
 ;; Save point position between sessions
-(require 'saveplace)
+;; (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 

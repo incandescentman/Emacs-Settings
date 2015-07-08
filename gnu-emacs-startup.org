@@ -455,7 +455,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; org-mime
 (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree)
-
+(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree-no-signature)
 
 #+END_SRC
 
@@ -1283,7 +1283,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
-(require 'saveplace)
+;; (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 #+END_SRC
