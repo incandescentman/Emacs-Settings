@@ -1517,10 +1517,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (defun jd-org-today ()
   "insert a new heading with today's date"
   (interactive)
-  (org-insert-subheading ())
-  (insert "accountability ")
+(insert "\n** daily: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
+(insert "*** TODO ") 
   )
 
 (defun jd-clock-in ()
