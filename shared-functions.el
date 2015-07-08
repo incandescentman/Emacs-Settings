@@ -1239,8 +1239,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-hook 'message-mode-hook
           (lambda ()
-            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-;; (local-set-key "\M-p" 'org-mime-htmlize)))
+;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+(local-set-key "\M-p" 'org-mime-htmlize)))
 
 
 (add-hook 'org-mode-hook
