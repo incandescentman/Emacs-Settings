@@ -581,7 +581,7 @@ Subject: %^{Subject}
 
 (setq smtpmail-debug-info t)
 
-(setq message-default-mail-headers "Cc: \nBcc: \n")
+;; (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 

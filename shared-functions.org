@@ -920,7 +920,7 @@ Make backups of files, even when they're in version control:
 ** Add Cc and Bcc headers to the message buffer
 
 #+BEGIN_SRC emacs-lisp
-(setq message-default-mail-headers "Cc: \nBcc: \n")
+;; (setq message-default-mail-headers "Cc: \nBcc: \n")
 (setq mail-user-agent 'message-user-agent)
 (setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
 #+END_SRC
