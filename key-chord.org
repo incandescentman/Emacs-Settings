@@ -1,0 +1,41 @@
+[[http://www.johndcook.com/blog/2015/02/01/rare-bigrams/comment-page-1/#comment-560186][Bigram frequencies for Emacs key chords]]
+
+Since Q is always followed by U in native English words, it's safe to combine Q with any other letter. (If you need to type Qatar, just pause a little after typing the Q.) It's also safe to use any consonant after J and most consonants after Z. (It's rare for a consonant to follow Z, but not quite rare enough to round to zero. ZH and ZL occur with 0.001% frequency, ZY 0.002% and ZZ 0.003%.)
+
+Double letters make especially convenient key chords since they're easy to type quickly. JJ, KK, QQ, VV, and YY all have frequency rounding to zero. HH and UU have frequency 0.001% and AA, XX, and ZZ have frequency 0.003%.
+
+Note that the discussion above does not distinguish upper and lower case letters in counting frequencies, but Emacs key chords are case-sensitive. You could make a key chord out of any pair of capital letters unless you like to shout in online discussions, use a lot of acronyms, or write old-school FORTRAN.
+
+Update (2 Feb 2015):
+
+This post only considered ordered bigrams. But Emacs key chords are unordered, combinations of keys pressed at or near the same time. This means, for example, that qe would not be a good keychord because although QE is a rare bigram, EQ is not (0.057%). The file unordered_bigram_frequencies.csv gives the combined frequencies of bigrams and their reverse (except for double letters, in which case it simply gives the frequency).
+
+Combinations of J and a consonant are still mostly good key chords except for JB (0.023%), JN (0.011%), and JD (0.005%).
+
+Combinations of Q and a consonant are also good key chords except for QS (0.007%), QN (0.006%), and QC (0.005%). And although O is a vowel, QO still makes a good key chord (0.001%). 
+
+
+;; John Cook's post http://www.johndcook.com/blog/2015/02/01/rare-bigrams/
+;; provides a list of rare bi-grams that would work great for key-chords.
+
+;; Below list is based off that after removing all the key-chord duplicates
+;; like `xs' and `sx'.
+
+;;      fb
+;;      gb gp
+;;  jj  jc jf jg jh jk jl jm jp jq js jt jv jw jx jy jz
+;;  kk
+;;  qq  qb qf qg qh qk ql qm qp qt qv qw qx qy qz
+;;  vv  vc vf vg vh vk vm vp vw vz
+;;  ww
+;;      xb xd xg xk xm xs xw
+;;  yy
+;;      zb zd zf zg zk zm zp zs zw zx 
+
+
+key-seq
+key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 
+
+(key-seq-define-global "qd" 'dired)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
+

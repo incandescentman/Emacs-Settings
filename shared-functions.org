@@ -1396,7 +1396,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 * Key chords
 
-Use key chords invoke commands:
+Use key chord 
 #+BEGIN_SRC emacs-lisp
 ;;(require 'key-chord)
 (key-chord-mode 1)
