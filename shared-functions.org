@@ -3310,7 +3310,7 @@ subsequent sends."
 #+END_SRC
  
 
-*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#C] erika-send-email           :rudi:
+*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#A] erika-send-email         :rudi:
 The search and replace code in the function ~erika-send-mail~ below isn't working. Not sure why---it works when I eval each line separately when I go to my message-mode buffer and run ~eval-expression~ one line at a time. 
 
 #+BEGIN_SRC emacs-lisp 

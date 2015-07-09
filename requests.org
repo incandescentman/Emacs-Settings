@@ -6,6 +6,16 @@
 
 
 
+* NOTE-TO-RÚDI priorities
+If you could tackle the requests in the following order, that would be amazing:
+
+1. requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+2. shared-functions.org: erika-send-email 
+3. requests.org: smart-punctuation when there's already a correctly placed punctuation mark
+4. requests.org: smart-punctuation when there's already a misplaced punctuation mark
+5. kill-clause etc.
+
+Thanks again!
 
 * open requests 
 ** JavaScript 
@@ -208,7 +218,7 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 Thanks!
 
-*** TODO [#B] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+*** TODO [#A] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
 When composing email in Emacs, I use org-mime, which is available through org-plus-contrib, to convert my email to HTML. After composing an email, I call a function called org-mime-htmlize, and the result is a message-mode buffer that looks something like this:
 
 #+BEGIN_EXAMPLE
