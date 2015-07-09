@@ -2129,17 +2129,6 @@ searches all buffers."
 
 (global-set-key (kbd "M-s s")   #'helm-again)
 
-;; (require 'helm-projectile)
-;; (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-;; (remove 'helm-source-projectile-files-list 
-;; helm-projectile-sources-list)))
-;; (helm-projectile-on)
-
-(define-key projectile-mode-map (kbd "C-c p /")
-  #'(lambda ()
-      (interactive)
-      (helm-ag (projectile-project-root))))
-
 ;; (require 'palimpsest)
 (palimpsest-mode 1) 
 

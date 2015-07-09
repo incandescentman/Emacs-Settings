@@ -176,3 +176,162 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 #+END_SRC
 
 Thanks!
+
+*** TODO [#A] a function to add two styling tags after calling org-mime-htmlize
+When composing email in Emacs, I use org-mime, which is available through org-plus-contrib, to convert my email to HTML. After composing an email, I call a function called org-mime-htmlize, and the result is a message-mode buffer that looks something like this:
+
+#+BEGIN_EXAMPLE
+To: Jay Dixit <sunjaydixit@gmail.com>
+Subject: test of org-mime
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+<#multipart type=alternative><#part type=text/plain>:PROPERTIES:
+:SENT-ON:  Thu Jul  9 01:51:18 2015
+:TO:       Jay Dixit <sunjaydixit@gmail.com>
+:END:
+Hello.
+
+There's this:
+
+- one
+- two
+- three
+
+And this:
+1. one
+2. two
+3. three
+
+Warm regards,
+Jay Dixit
+
+---
+Jay Dixit 
+(646) 355-8001 
+[[http://jaydixit.com/][jaydixit.com]] 
+<#multipart type=related><#part type=text/html><p>
+Hello.<br  />
+</p>
+
+<p>
+There&rsquo;s this:<br  />
+</p>
+
+<ul class="org-ul">
+<li>one<br  />
+</li>
+<li>two<br  />
+</li>
+<li>three<br  />
+</li>
+</ul>
+
+<p>
+And this:<br  />
+</p>
+<ol class="org-ol">
+<li>one<br  />
+</li>
+<li>two<br  />
+</li>
+<li>three<br  />
+</li>
+</ol>
+
+<p>
+Warm regards,<br  />
+Jay Dixit<br  />
+</p>
+
+<p>
+&#x2014;<br  />
+Jay Dixit<br  />
+(646) 355-8001<br  />
+<a href="http://jaydixit.com/">jaydixit.com</a> <br  />
+</p>
+<#/multipart>
+<#/multipart> 
+#+END_EXAMPLE
+
+I'd like a function I can call after I call org-mime-htmlize that will add HTML styling tags at the beginning and end of the HTML part of the message. Specifically, I'd like to: 
+1. add ~<div style="font-family:Georgia,serif">~ right after ~<#multipart type=related><#part type=text/html>~
+2. add a closing ~</div>~ right before ~<#/multipart><#/multipart>~
+
+So for the example above, the desired output would be: 
+#+BEGIN_EXAMPLE
+To: Jay Dixit <sunjaydixit@gmail.com>
+Subject: test of org-mime
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+<#multipart type=alternative><#part type=text/plain>:PROPERTIES:
+:SENT-ON:  Thu Jul  9 01:51:18 2015
+:TO:       Jay Dixit <sunjaydixit@gmail.com>
+:END:
+Hello.
+
+There's this:
+
+- one
+- two
+- three
+
+And this:
+1. one
+2. two
+3. three
+
+Warm regards,
+Jay Dixit
+
+---
+Jay Dixit 
+(646) 355-8001 
+[[http://jaydixit.com/][jaydixit.com]] 
+<#multipart type=related><#part type=text/html>
+<div style="font-family:Georgia,serif"> 
+<p>
+Hello.<br  />
+</p>
+
+<p>
+There&rsquo;s this:<br  />
+</p>
+
+<ul class="org-ul">
+<li>one<br  />
+</li>
+<li>two<br  />
+</li>
+<li>three<br  />
+</li>
+</ul>
+
+<p>
+And this:<br  />
+</p>
+<ol class="org-ol">
+<li>one<br  />
+</li>
+<li>two<br  />
+</li>
+<li>three<br  />
+</li>
+</ol>
+
+<p>
+Warm regards,<br  />
+Jay Dixit<br  />
+</p>
+
+<p>
+&#x2014;<br  />
+Jay Dixit<br  />
+(646) 355-8001<br  />
+<a href="http://jaydixit.com/">jaydixit.com</a> <br  />
+</p>
+</div>
+<#/multipart>
+<#/multipart> 
+#+END_EXAMPLE
+
+Does that make sense? Thanks!
