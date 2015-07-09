@@ -144,7 +144,7 @@
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 
-(defun minibuffer-pasteboard-paste ()
+(defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
@@ -209,12 +209,16 @@
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
-(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key message-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
-(define-key key-minor-mode-map (kbd "s-V") 'minibuffer-pasteboard-paste)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
+
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
@@ -235,7 +239,7 @@
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 

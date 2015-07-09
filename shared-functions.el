@@ -2467,3 +2467,7 @@ subsequent sends."
         (message-goto-to)) 
 ) 
 (org-mime-htmlize)))
+
+(require 'key-seq) 
+(key-seq-define-global "qd" 'dired)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
