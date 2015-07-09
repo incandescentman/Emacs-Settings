@@ -324,7 +324,13 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 ;; (define-key message-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+
+
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)

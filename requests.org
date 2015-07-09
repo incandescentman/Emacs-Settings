@@ -376,3 +376,6 @@ Jay Dixit<br  />
 #+END_EXAMPLE
 
 Does that make sense? Thanks! 
+
+** TODO [#C] a tweak to my/kill-sentence-dwim 
+I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
