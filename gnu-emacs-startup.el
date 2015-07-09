@@ -400,9 +400,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
-(expand-abbrev)
-(org-kill-line)
-(my/fix-space))
+  (expand-abbrev)
+  (org-kill-line)
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 

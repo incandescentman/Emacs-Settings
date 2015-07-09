@@ -124,15 +124,46 @@ This is a test sentence, nothing to see here.^<EOB>
 
 : Correct! Thanks for thoroughly thinking through these cases, much appreciated! 
 
-*** DONE [#A] my/delete-backward-and-capitalize 
-See my note the end of gnu-emacs-startup.org. 
+***** NOTE-TO-RÚDI Comments about my edits to kill-clause-test-file.el 
+What a brilliant approach, to create the test file! Here are some notes about my edits to the file.
 
-**** NOTE-TO-JAY Answer
+Kill-clause should only kill one clause, which I think means it should only ever kill one comma, not two. So for the example below, it should leave the second comma in. I edited the desired output in kill-clause-test-file.el.
 
-     I added a customisable variable called ~capitalize-after-deleting-single-char~. Its default value is ~nil~, so it won't capitalise if you delete a single character. However, you can enable capitalization if you set it to ~t~.
+Input: We should consider^, for completeness, comma separated clauses. 
+Your suggested output: We should consider^ comma separated clauses.
+My desired output: We should consider^, comma separated clauses. 
 
-**** NOTE-TO-RÚDI Perfect!
-Great! Great to have that customizability. 
+Same for this one:
+
+Input: We should consider,^ for completeness, comma separated clauses.
+Your suggested output: We should consider^ comma separated clauses.
+My desired output: We should consider,^ comma separated clauses. 
+
+And this one:
+
+Input: We should consider, ^for completeness, comma separated clauses.
+Your suggested output: We should consider^ comma separated clauses.
+My desired output: We should consider, ^comma separated clauses. 
+
+With the example below, it should kill the question mark and leave the period. And the point should be before the period.
+
+Input: And what about two consecutive sentences^? That's important too.
+Your suggested output: And what about two consecutive sentences?^
+My desired output: And what about two consecutive sentences^.
+
+With the example below, I probably would never have the input you mentioned. I changed the syntax of the input to match the case I'm more likely to encounter. 
+
+Your suggested input: ^Let's not forget parenthesis (those are extremely important!)
+My more likely input: ^Let's not forget parenthesis (those are extremely important)! 
+Output: (^Those are extremely important)! 
+
+Same for this one:
+
+Your suggested input: Let's not forget parenthesis ^(those are extremely important!) 
+My more likely input: Let's not forget parenthesis ^(those are extremely important)! 
+Output: Let's not forget parenthesis^! 
+
+Thanks! 
 
 *** TODO [#A] smart-punctuation behaviors 
 **** TODO [#B] smart-punctuation when there's already a misplaced punctuation mark?
@@ -334,4 +365,4 @@ Jay Dixit<br  />
 <#/multipart> 
 #+END_EXAMPLE
 
-Does that make sense? Thanks!
+Does that make sense? Thanks! 

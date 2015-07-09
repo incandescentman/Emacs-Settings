@@ -1942,3 +1942,129 @@ Great, thanks for doing that! Seems like it is loading a bit faster. I did find 
 
 As for the edit-server stuff, I'm not sure how I wound up with so much redundancy. I use it for a Chrome extension called [[https://github.com/stsquad/emacs_Chrome][Edit with Emacs]]. I removed all but (edit-server start) and it works, so good call! 
 
+
+* TODO [#A] kill-line-and-capitalize [1/3]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-07-09 Thu 10:24
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+Can you add something like this: 
+
+(save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
+
+to:
+
+- [X] pasteboard-cut.
+- [ ] kill-line. EDIT: I should have said my/kill-line-dwim 
+- [ ] kill-clause.
+
+Thanks! 
+
+** NOTE-TO-JAY Questions
+
+     Regarding ~pasteboard-cut~, I think it's rather straightforward. Please give it a go.
+
+     As for ~kill-line~, there's something I should clarify: this is a builtin command (comes with Emacs), so it's not something I can easily change. Except that Emacs Lisp has a nice little functionality called "advicing", which allows dynamically adding behaviour to functions without having access to their code. I could do this to ~kill-line~. However, this is usually not recommended, since it could mess up other functionalities that might depend on the default ~kill-line~ implementation. Anyway, since you have the ~my/kill-line-dwim~ function, isn't that the one you use?
+
+     Finally, regarding ~kill-clause~, I added the requested functionality, but I realised the implementation has several probably undesired behaviours. For example:
+
+: This is a test sentence^, nothing to see here. And then another.
+
+     Caret marks the point. In this case, calling ~kill-clause~ results in:
+
+: This is a test sentence, ^nothing to see here. And then another.
+
+     I.e. it only moves point. Please confirm that it should yield:
+
+: This is a test sentence^. And then another.
+
+     Now, going back to the current result of ~kill-clause~:
+
+: This is a test sentence, ^nothing to see here. And then another.
+
+     If you now invoke ~kill-clause~, you'll have:
+
+: This is a test sentence, . ^And then another.
+
+     This also seems silly. Again, it would seem reasonable to produce:
+
+: This is a test sentence^. And then another.
+
+     Finally, I found an edge case:
+
+: This is a test sentence, nothing to see here. ^And then another.<EOB>
+
+     Where <EOB> marks the end of the buffer. In this case, nothing happens when you invoke ~kill-clause~. I suppose it should kill the entire sentence:
+
+: This is a test sentence, nothing to see here.^<EOB>
+
+     Correct?
+
+** NOTE-TO-RÚDI Answers
+1. Confirming that pasteboard-cut works as requested! Since there may be times when I don't want the new behavior, I reverted pasteboard-cut itself to its original behavior and created a new function, using your new code, called pasteboard-cut-and-capitalize.
+2. Similarly, yes, let's add the capitalization functionality not to kill-line, but rather to my/kill-line-dwim. 
+3. Answers for kill-clause below.
+
+This is a test sentence^, nothing to see here. And then another.
+
+     Caret marks the point. In this case, calling ~kill-clause~ results in:
+
+This is a test sentence, ^nothing to see here. And then another.
+
+     I.e. it only moves point. Please confirm that it should yield:
+
+This is a test sentence^. And then another.
+
+: Yes! Confirmed, that is what it should yield. 
+
+     Now, going back to the current result of ~kill-clause~:
+
+This is a test sentence, ^nothing to see here. And then another.
+
+     If you now invoke ~kill-clause~, you'll have:
+
+This is a test sentence, . ^And then another.
+
+     This also seems silly. Again, it would seem reasonable to produce:
+
+This is a test sentence^. And then another.
+
+: Yes, exactly! That would be the desired behavior. However, the optimal point placement for that case would be this:
+This is a test sentence. ^And then another.
+
+
+     Finally, I found an edge case:
+
+This is a test sentence, nothing to see here. ^And then another.<EOB>
+
+     Where <EOB> marks the end of the buffer. In this case, nothing happens when you invoke ~kill-clause~. I suppose it should kill the entire sentence:
+
+This is a test sentence, nothing to see here.^<EOB>
+
+     Correct?
+
+: Correct! Thanks for thoroughly thinking through these cases, much appreciated! 
+
+
+* DONE [#A] my/delete-backward-and-capitalize 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-07-09 Thu 10:25
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :END:
+See my note the end of gnu-emacs-startup.org. 
+
+** NOTE-TO-JAY Answer
+
+   I added a customisable variable called ~capitalize-after-deleting-single-char~. Its default value is ~nil~, so it won't capitalise if you delete a single character. However, you can enable capitalization if you set it to ~t~.
+
+** NOTE-TO-RÚDI Perfect!
+Great! Great to have that customizability. 
+

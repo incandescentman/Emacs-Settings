@@ -17,13 +17,13 @@ Input: ^We should consider, for completeness, comma separated clauses.
 Output: ^For completeness, comma separated clauses.
 
 Input: We should consider^, for completeness, comma separated clauses.
-Output: We should consider^ comma separated clauses.
+Output: We should consider^, comma separated clauses. 
 
 Input: We should consider,^ for completeness, comma separated clauses.
-Output: We should consider^ comma separated clauses.
+Output: We should consider,^ comma separated clauses.
 
 Input: We should consider, ^for completeness, comma separated clauses.
-Output: We should consider^ comma separated clauses.
+Output: We should consider, ^comma separated clauses.
 
 Input: We should consider, for completeness^, comma separated clauses.
 Output: We should consider, for completeness^.
@@ -38,16 +38,16 @@ Input: ^And what about two consecutive sentences? That's important too.
 Output: ^That's important too.
 
 Input: And what about two consecutive sentences^? That's important too.
-Output: And what about two consecutive sentences?^
+Output: And what about two consecutive sentences^.
 
 Input: ^There's also the---mark.
 Output: ^Mark.
 
-Input: ^Let's not forget parenthesis (those are extremely important!)
-Output: ^(Those are extremely important!)
+Input: ^Let's not forget parenthesis (those are extremely important)!
+Output: (^Those are extremely important)!
 
-Input: Let's not forget parenthesis ^(those are extremely important!)
-Output: Let's not forget parenthesis^
+Input: Let's not forget parenthesis ^(those are extremely important)!
+Output: Let's not forget parenthesis^!
 
 Input: What happens if point is in the middle^ of a sentence?
 Output: What happens if point is in the middle^?
