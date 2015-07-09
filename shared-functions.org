@@ -2689,7 +2689,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-hyper-key "m td" 'jd-org-today)
 
-(defun keybinding-read-and-insert(key)
+(defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
 (insert "(define-key key-minor-mode-map ") 
         (insert (format "(kbd \"%s\")" (key-description key))) 
