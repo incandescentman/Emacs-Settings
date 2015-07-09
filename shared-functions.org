@@ -2881,19 +2881,22 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
 (define-key helm-map (kbd "M-o") #'helm-previous-source)
 
-(global-set-key (kbd "M-s s")   #'helm-ag)
+(global-set-key (kbd "M-s s")   #'helm-again)
+#+END_SRC
 
+** helm projectile
+
+   #+BEGIN_EXAMPLE emacs-lisp 
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-                                         (remove 'helm-source-projectile-files-list 
-                                              helm-projectile-sources-list)))
+(remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
 (helm-projectile-on)
 
 (define-key projectile-mode-map (kbd "C-c p /")
   #'(lambda ()
       (interactive)
-      (helm-ag (projectile-project-root))))
-#+END_SRC
+      (helm-ag (projectile-project-root)))) 
+   #+END_EXAMPLE
 
 * these seem to need to go at the end
 
