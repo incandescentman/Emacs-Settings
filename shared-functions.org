@@ -2,6 +2,7 @@
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
+#+TODO: PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
@@ -3309,7 +3310,7 @@ subsequent sends."
 #+END_SRC
  
 
-*** PLEASE-DEBUG [#C] erika-send-email                               :rudi:
+*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#C] erika-send-email           :rudi:
 The search and replace code in the function ~erika-send-mail~ below isn't working. Not sure why---it works when I eval each line separately when I go to my message-mode buffer and run ~eval-expression~ one line at a time. 
 
 #+BEGIN_SRC emacs-lisp 
