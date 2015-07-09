@@ -1396,7 +1396,11 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
 
 * experiments - new/untested
 
-** play mp3
+** include the output of a shell command in org-mode source code block?
+[[http://emacs.stackexchange.com/questions/3219/how-to-include-the-output-of-a-shell-command-in-org-mode-source-code-block?rq%3D1][org export - How to include the output of a shell command in org-mode source code block? - Emacs Stack Exchange]]
+
+
+*** play mp3
 
    #+BEGIN_SRC emacs-lisp
 (defun play-mp3 ()
@@ -1423,7 +1427,7 @@ add a comment
 
 I stopped using openwith when I started using Helm, as I find typing C-c C-x from helm-find-files convenient enough. (Also nowadays, I only unconditionally open audio and video files outside of Emacs, so most of the time I like being able to either open a file in Emacs or in an external program.) 
 
-** openwith
+*** openwith
 
 #+BEGIN_QUOTE
 (require 'openwith)
@@ -1432,16 +1436,16 @@ I stopped using openwith when I started using Helm, as I find typing C-c C-x fro
 #+END_QUOTE
 Source: [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
 
-** PDF-tools
+*** PDF-tools
 
 [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
 
 http://tuhdo.github.io/static/emacs-read-pdf.gif 
 
-** defun syntax 
+*** defun syntax 
 A Lisp function becomes a [[command]] when its body contains, at top level, a form that calls the special form `<code>(interactive...)</code>'. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
 
-*** Here is a simple example defining a command that displays a message: 
+**** Here is a simple example defining a command that displays a message: 
 
 #+BEGIN_SRC emacs-lisp 
 (defun hello ()
@@ -1450,7 +1454,7 @@ A Lisp function becomes a [[command]] when its body contains, at top level, a fo
       (message "Hello World!")) 
 #+END_SRC
 
-*** Example of a command that reads a string argument: 
+**** Example of a command that reads a string argument: 
 
 #+BEGIN_SRC emacs-lisp
 (defun hello (someone)
@@ -1459,7 +1463,7 @@ A Lisp function becomes a [[command]] when its body contains, at top level, a fo
       (message "Hello %s!" someone)) 
 #+END_SRC
 
-*** To use multiple arguments, separate their `interactive' entries with a newline: 
+**** To use multiple arguments, separate their `interactive' entries with a newline: 
 
 #+BEGIN_SRC emacs-lisp
 (defun multiple-hello (someone num)
@@ -1501,7 +1505,7 @@ The following pairs of `interactive' specs are equivalent:
 
 
 
-** lisp functions from John Kitchin
+*** lisp functions from John Kitchin
 *** helm actions when there is no match
 
 Sometimes you run out of matches in a helm selection buffer, and all that is left is the pattern you have typed in. It turns out you can perform some action on that pattern! Why would you do that? Suppose you are searching your bibliography, and you do not find what you are looking for. Then, you may want to send the pattern to Google, or some other search engine to see what comes up.
