@@ -1488,13 +1488,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "[fn:: " _ "] ")
 
 
-(define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
-
-(define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
-
-
 (define-skeleton my-org-slide "Docstring." nil
   "* " _ " :slide:")
 
@@ -1503,13 +1496,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "<figure >
 <img src='"_"'>
 <figcaption></figcaption>
-</figure>")
-
-
-(define-skeleton shaded "Docstring." nil
-  "<DIV CLASS='shaded'>
-"_"
-</DIV>")
+</figure>") 
 
 (defun org-day ()
   "foo"
