@@ -1545,7 +1545,8 @@ Source:")
 (insert "\n** daily: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
-(insert "*** TODO ") 
+(insert "*** TODO \n")
+(left-char)
   )
 
 (defun jd-clock-in ()
@@ -2518,3 +2519,10 @@ subsequent sends."
       (progn
         (org-toggle-heading) ; convert to heading
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
+
+(defun fix-recent-addresses-file ()
+"One sentence summary of what this command do."
+  (interactive)
+  ;; do something …
+  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 

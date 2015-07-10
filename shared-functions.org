@@ -2133,7 +2133,8 @@ Source:")
 (insert "\n** daily: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
-(insert "*** TODO ") 
+(insert "*** TODO \n")
+(left-char)
   )
 
 (defun jd-clock-in ()
@@ -3510,3 +3511,15 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 #+END_SRC
  
+* fix recent-addresses file
+
+
+  #+BEGIN_SRC emacs-lisp
+
+(defun fix-recent-addresses-file ()
+"One sentence summary of what this command do."
+  (interactive)
+  ;; do something …
+  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
+  #+END_SRC

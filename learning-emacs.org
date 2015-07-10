@@ -34,3 +34,46 @@ the final report. I would probably make a link like [[./big-report.org]]
 in the first section. That would make it pretty easy to have a
 standalone document with headlines at whatever level is appropriate that
 can be exported in the desired format.
+
+
+* shell
+Filtering text through a shell command in Emacs
+
+In vi[m] there is the ! command which lets me pipe text through a shell command -- like sort or indent -- and get the filtered text back into the buffer. Is there an equivalent in emacs?
+
+You can select a region and type `C-u M-| command RET', and it replaces the region with the command output in the same buffer due to the interactive prefix argument of shell-command-on-region. 
+
+I wrote this a few years back, it might help you:
+
+#+BEGIN_EXAMPLE emacs-lisp 
+(defun generalized-shell-command (command arg)
+  "Unifies `shell-command' and `shell-command-on-region'. If no region is
+selected, run a shell command just like M-x shell-command (M-!).  If
+no region is selected and an argument is a passed, run a shell command
+and place its output after the mark as in C-u M-x `shell-command' (C-u
+M-!).  If a region is selected pass the text of that region to the
+shell and replace the text in that region with the output of the shell
+command as in C-u M-x `shell-command-on-region' (C-u M-|). If a region
+is selected AND an argument is passed (via C-u) send output to another
+buffer instead of replacing the text in region."
+  (interactive (list (read-from-minibuffer "Shell command: " nil nil nil 'shell-command-history)
+                     current-prefix-arg))
+  (let ((p (if mark-active (region-beginning) 0))
+        (m (if mark-active (region-end) 0)))
+    (if (= p m)
+        ;; No active region
+        (if (eq arg nil)
+            (shell-command command)
+          (shell-command command t))
+      ;; Active region
+      (if (eq arg nil)
+          (shell-command-on-region p m command t t)
+        (shell-command-on-region p m command))))) 
+
+(global-set-key [f3] 'generalized-shell-command) 
+#+END_EXAMPLE
+
+I've found this function to be very helpful. If you find it useful as well, I suggest binding it to some function key for convenience, personally I use F3:
+
+
+
