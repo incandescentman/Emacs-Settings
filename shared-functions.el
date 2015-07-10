@@ -131,6 +131,9 @@
 (setq org-return-follows-link t) 
 (setq org-export-with-planning t) 
 
+;; leave an empty line between folded subtrees
+(setq org-cycle-separator-lines 1)
+
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
 (setq org-use-speed-commands t)
