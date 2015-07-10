@@ -256,6 +256,10 @@ Turn off fill mode, which adds random line breaks in my text files:
        (plain-list-item . nil))) 
 (setq org-return-follows-link t) 
 (setq org-export-with-planning t) 
+
+;; leave an empty line between folded subtrees
+(setq org-cycle-separator-lines 1)
+
 #+END_SRC
 
 *** Load my org modules

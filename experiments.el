@@ -1,8 +1,5 @@
 
 
-;; leave an empty line between folded subtrees
-(setq org-cycle-separator-lines 1)
-
 
 
 
