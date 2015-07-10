@@ -217,7 +217,7 @@
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 ;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 
-(define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
