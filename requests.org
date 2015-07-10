@@ -213,7 +213,7 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 #+BEGIN_SRC emacs-lisp
 (setq *auto-capitalize-exceptions*
-  (list "e.g." "i.e. " "vs." "...")) 
+  (list "e.g." "i.e. " "vs." "..." "- [ ] ")) 
 #+END_SRC
 
 Thanks!

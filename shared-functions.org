@@ -2720,7 +2720,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m lt" 'large-type) 
 (define-hyper-key "m mt" 'medium-type) 
 (define-hyper-key "m df" 'delete-file-and-buffer) 
-(define-hyper-key "m rf" 'rename-file-and-buffer)
+
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
