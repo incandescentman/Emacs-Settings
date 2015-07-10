@@ -3492,21 +3492,21 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * org-toggle-todo-heading 
 
-
   #+BEGIN_SRC emacs-lisp 
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
-  (org-toggle-heading)
   (let ((is-heading))
     (save-excursion
       (forward-line 0)
-      (when (looking-at "^\\*") ; heading was toggled on
+      (when (looking-at "^\\*") 
         (setq is-heading t)))
-    (if is-heading
-        (org-todo 'nextset) ; can also hard code this to (org-todo "TODO")
+    (if is-heading 
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
       (progn
-        (org-toggle-heading) ; temporarily convert to heading for `org-todo' to work
-        (org-todo 'none)
-        (org-toggle-heading))))) 
-  #+END_SRC
+        (org-toggle-heading) ; convert to heading
+        (org-todo 'nextset))))) ; add TODO  #+END_SRC
+#+END_SRC
+ 

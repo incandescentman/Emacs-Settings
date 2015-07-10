@@ -272,6 +272,8 @@
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
