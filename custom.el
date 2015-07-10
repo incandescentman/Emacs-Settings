@@ -157,7 +157,7 @@
  '(org-closed-string "COMPLETED:")
  '(org-confirm-babel-evaluate nil)
  '(org-ctrl-k-protect-subtree t)
- '(org-custom-properties (quote (">" "TO")))
+ '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
@@ -329,7 +329,10 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((eval when
+    ((buffer-file-coding-system . utf-8-unix)
+     (org-export-html-style-include-scripts)
+     (org-export-html-style-include-default)
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))

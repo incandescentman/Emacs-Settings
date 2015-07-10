@@ -2477,3 +2477,19 @@ subsequent sends."
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer) 
+
+(defun org-toggle-todo-heading ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (org-toggle-heading)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*") ; heading was toggled on
+        (setq is-heading t)))
+    (if is-heading
+        (org-todo 'nextset) ; can also hard code this to (org-todo "TODO")
+      (progn
+        (org-toggle-heading) ; temporarily convert to heading for `org-todo' to work
+        (org-todo 'none)
+        (org-toggle-heading))))) 
