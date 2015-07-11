@@ -988,7 +988,7 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!!" "!:"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "!:"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -1066,9 +1066,9 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" to))
+  (smart-punctuation ":" t))
 
-;; (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key org-mode-map (kbd ":") 'smart-colon)
 
 (defun backward-kill-word-correctly ()
   "Kill word."

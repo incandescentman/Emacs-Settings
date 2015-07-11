@@ -99,6 +99,8 @@
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("README$" . org-mode))
+(add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode)) 
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
@@ -2012,7 +2014,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m lt" 'large-type) 
 (define-hyper-key "m mt" 'medium-type) 
 (define-hyper-key "m df" 'delete-file-and-buffer) 
-(define-hyper-key "m rf" 'rename-file-and-buffer)
+
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)

@@ -1879,7 +1879,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!!" "!:"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "!:"))
    #+END_SRC
 
 
@@ -1990,9 +1990,9 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" to))
+  (smart-punctuation ":" t))
 
-;; (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key org-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
 * TODO [#C] request: backspace after expand-abbrev
