@@ -584,8 +584,7 @@ e.g. nvALT
   (interactive)
   (setq org-bullets-bullet-list (quote ("• ")))
   (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
+(org-bullets-mode)
   (boss-mode)
   (incarnadine-cursor)
   (define-key org-mode-map (kbd "DEL") 
@@ -1978,18 +1977,6 @@ Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (require 'wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-#+END_SRC
-
-* Distraction-free editing
-#+BEGIN_SRC emacs-lisp
-(require 'org-serenity-mode)
-(defun serenity-mode ()
-  "serenity"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("  ")))
-  (org-serenity-mode)  
-  (org-bullets-mode)
-)
 #+END_SRC
 
 * ~ls-lisp~
