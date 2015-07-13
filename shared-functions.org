@@ -3536,26 +3536,3 @@ k
 	    (remove 'yas-ido-prompt
 		    yas-prompt-functions))) 
 #+END_EXAMPLE
-
-
-* deft
-
-[[http://pragmaticemacs.com/emacs/tweaking-deft-improving-navigation/][Tweaking deft: improving navigation | Pragmatic Emacs]]
-In the deft buffer, each entry takes two lines so I have to hit the up/down arrow key twice to move between them. To simplify this, I tweaked the keybindings in deft-mode to make the arrow keys jump 2 lines instead of 1, but only when deft-mode is active: 
-  #+BEGIN_SRC emacs-lisp
-;;override normal settings to jump 2 lines as deft has time stamps on second line
-(define-key deft-mode-map (kbd "<down>")
-  (lambda () (interactive) (next-line 2)))
-(define-key deft-mode-map (kbd "<up>")
-  (lambda () (interactive) (next-line -2)))
-  #+END_SRC
-Commenter Kaushal Modi pointed out that I should not have been seeing the entries in the deft buffer taking up more than one line. It turns out the problem was that I had global-visual-line-mode switched on on my emacs config file which caused the problem.
-
-This means the above changes are redundant, but I'll leave them up as an example of adding keybindings to a specific mode. 
-
-
-#+BEGIN_SRC emacs-lisp
-(setq deft-use-filter-string-for-filename t)
-#+END_SRC
-
-
