@@ -381,3 +381,24 @@ Does that make sense? Thanks!
 
 ** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
+
+** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+
+Can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
+
+(save-excursion 
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))) 
+
+: This is an existing sentence. 
+
+Suppose the point is on the t in this and I type "Here's a new sentence. " 
+
+Current output: 
+: Here's a new sentence. this is an existing sentence. 
+
+Desired output: 
+: Here's a new sentence. This is an existing sentence. 
+
+Thanks!
+

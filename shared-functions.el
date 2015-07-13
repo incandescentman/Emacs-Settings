@@ -2565,3 +2565,13 @@ subsequent sends."
    oleh-ido-shortcuts))
 
 (add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+
+(defun delete-extra-whitespace-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " ")))))

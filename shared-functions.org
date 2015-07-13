@@ -3539,8 +3539,7 @@ k
 
 
 * find-file tricks
-[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]
-
+[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
 
 #+BEGIN_SRC emacs-lisp
 (defun oleh-ido-setup-hook ()
@@ -3581,3 +3580,18 @@ k
 (add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
 #+END_SRC
  
+
+* delete-extra-whitespace-region
+
+
+  #+BEGIN_SRC emacs-lisp
+(defun delete-extra-whitespace-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " ")))))
+  #+END_SRC

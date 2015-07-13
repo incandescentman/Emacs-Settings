@@ -1939,7 +1939,7 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
-  (smart-punctuation ".")
+(smart-punctuation ".") 
 )
 
 (define-key org-mode-map (kbd ".") 'smart-period)
@@ -2246,7 +2246,7 @@ and this too?
 (defadvice capitalize-word (after capitalize-word-advice activate)
   (unless 
 (or
-(looking-at " I")
+(looking-at " I\\b")
 (looking-at (sentence-end))
 (looking-at (user-full-name))
 )
@@ -2254,4 +2254,3 @@ and this too?
 
 #+END_SRC
 
-And should we then also add auto-capitalize after smart-period? 
