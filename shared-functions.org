@@ -2,7 +2,7 @@
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
-#+TODO: PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
@@ -3536,3 +3536,48 @@ k
 	    (remove 'yas-ido-prompt
 		    yas-prompt-functions))) 
 #+END_EXAMPLE
+
+
+* find-file tricks
+[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]
+
+
+#+BEGIN_SRC emacs-lisp
+(defun oleh-ido-setup-hook ()
+  (define-key ido-file-dir-completion-map "~"
+    (lambda ()
+      (interactive)
+      (ido-set-current-directory "~/")
+      (setq ido-exit 'refresh)
+      (exit-minibuffer))))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook) 
+
+(defun ido-find-file-jump (dir)
+  "Return a command that sends DIR to `ido-find-file'."
+  `(lambda ()
+     (interactive)
+     (ido-set-current-directory ,dir)
+     (setq ido-exit 'refresh)
+     (exit-minibuffer))) 
+
+
+
+(defvar oleh-ido-shortcuts
+  '(("~/" "~")
+    ("~/Dropbox/source/site-lisp/" "!")
+    ("~/git/lispy/" "@")))
+
+(mapc (lambda (x)
+        (setcar x (ido-find-file-jump (car x))))
+      oleh-ido-shortcuts)
+
+(defun oleh-ido-setup-hook ()
+  (mapc
+   (lambda (x)
+     (define-key ido-file-dir-completion-map (cadr x) (car x)))
+   oleh-ido-shortcuts))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+#+END_SRC
+ 

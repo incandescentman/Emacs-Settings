@@ -1,0 +1,277 @@
+* A hydra for org-mode time/clock/capture 
+
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-global-org (:color blue
+                            :hint nil)
+  "
+Timer^^        ^Clock^         ^Capture^
+--------------------------------------------------
+s_t_art        _w_ clock in    _c_apture
+ _s_top        _o_ clock out   _l_ast capture
+_r_eset        _j_ clock goto
+_p_rint
+"
+  ("t" org-timer-start)
+  ("s" org-timer-stop)
+  ;; Need to be at timer
+  ("r" org-timer-set-timer)
+  ;; Print timer value to buffer
+  ("p" org-timer)
+  ("w" (org-clock-in '(4)))
+  ("o" org-clock-out)
+  ;; Visit the clocked task from any buffer
+  ("j" org-clock-goto)
+  ("c" org-capture)
+  ("l" org-capture-goto-last-stored)) 
+#+END_SRC
+
+Source: [[http://oremacs.com/2015/04/14/hydra-org-mode/][Org-mode Hydras incoming!]]
+
+** A hydra for refile/archive
+Inspired by the previous one, I wanted to write a hydra of my own. As it happened, I was just about to clean up my git notes. So I wanted a nice refile hydra to speed up the process.
+
+Here's the hydra's code, which is now part of worf. Worf is a package for quickly navigating around an org-mode buffer, you can get it from MELPA. 
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-refile (:hint nil
+                        :color teal)
+  "
+Refile:^^   _k_eep: %`org-refile-keep
+----------------------------------
+_l_ast      _a_rchive
+_o_ther
+_t_his
+
+"
+  ("t" worf-refile-this)
+  ("o" worf-refile-other)
+  ("l" worf-refile-last)
+  ("k" (setq org-refile-keep (not org-refile-keep))
+       :exit nil)
+  ("a" (org-archive-subtree))
+  ("q" nil "quit"))
+#+END_SRC
+
+Some explanations:
+
+- worf-refile-this will give you a choice of this file's headings for refiling.
+- worf-refile-other will give you a choice of your org-refile-targets except the current file.
+- worf-refile-last will refile to the last refile location without prompting.
+- k will toggle org-refile-keep, which decides if refiling moves or copies the text.
+
+Source: [[http://oremacs.com/2015/04/14/hydra-org-mode/][Org-mode Hydras incoming! ]]
+
+** org-mode block templates in Hydra 
+
+
+   #+BEGIN_SRC emacs-lisp
+(defhydra hydra-org-template (:color blue :hint nil)
+  "
+_c_enter  _q_uote    _L_aTeX:
+_l_atex   _e_xample  _i_ndex:
+_a_scii   _v_erse    _I_NCLUDE:
+_s_rc     ^ ^        _H_TML:
+_h_tml    ^ ^        _A_SCII:
+"
+  ("s" (hot-expand "<s"))
+  ("e" (hot-expand "<e"))
+  ("q" (hot-expand "<q"))
+  ("v" (hot-expand "<v"))
+  ("c" (hot-expand "<c"))
+  ("l" (hot-expand "<l"))
+  ("h" (hot-expand "<h"))
+  ("a" (hot-expand "<a"))
+  ("L" (hot-expand "<L"))
+  ("i" (hot-expand "<i"))
+  ("I" (hot-expand "<I"))
+  ("H" (hot-expand "<H"))
+  ("A" (hot-expand "<A"))
+  ("<" self-insert-command "ins")
+  ("o" nil "quit"))
+
+(defun hot-expand (str)
+  "Expand org template."
+  (insert str)
+  (org-try-structure-completion))
+
+(define-key org-mode-map "<"
+  (lambda () (interactive)
+     (if (looking-back "^")
+         (hydra-org-template/body)
+       (self-insert-command 1)))) 
+   #+END_SRC
+
+
+This means that when I press < from the start of the line, a Hydra will
+be called instead of inserting =<=, otherwise =<= will be inserted.
+
+As the default insert method for =org-mode= blocks is already pretty
+convenient, this Hydra is more of an illustration than anything,
+especially of the new =:hint nil= feature.
+
+Just to remind you, each head has four placeholders:
+
+-  key binding
+-  body
+-  hint
+-  plist
+
+When a Hydra is active, it will show its doc in the echo area in the
+bottom of the frame. This doc is composed of two parts: the body doc and
+the heads' doc. The body doc you specify yourself, the heads' doc is
+built by concatenating the key binding and the hint for each head into a
+(single) line.
+
+If you don't specify a hint for a head, it's assumed to be =""=; this
+head's binding will still be in the heads' doc. If you don't want a
+head's binding to be in the heads' doc, set the hint to nil. This is
+commonly done because a head is already documented in the body doc. It
+can sometimes become tedious to set all the hints to nil, for instance
+in the Hydra above, I would need to do it 13 times. Hence
+the =:hint nil= shortcut.
+
+Here's how it looks like:
+
+[[http://oremacs.com/download/hydra-org-template.png]]
+
+
+** helm
+
+
+   #+BEGIN_SRC emacs-lisp
+(defhydra hydra-helm (:hint nil :color pink)
+        "
+                                                                          ╭──────┐
+   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
+  ╭───────────────────────────────────────────────────────────────────────┴──────╯
+        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
+        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+  --------------------------------------------------------------------------------
+        "
+        ("<tab>" helm-keyboard-quit "back" :exit t)
+        ("<escape>" nil "quit")
+        ("\\" (insert "\\") "\\" :color blue)
+        ("h" helm-beginning-of-buffer)
+        ("j" helm-next-line)
+        ("k" helm-previous-line)
+        ("l" helm-end-of-buffer)
+        ("g" helm-beginning-of-buffer)
+        ("G" helm-end-of-buffer)
+        ("n" helm-next-source)
+        ("p" helm-previous-source)
+        ("K" helm-scroll-other-window-down)
+        ("J" helm-scroll-other-window)
+        ("c" helm-recenter-top-bottom-other-window)
+        ("m" helm-toggle-visible-mark)
+        ("t" helm-toggle-all-marks)
+        ("u" helm-unmark-all)
+        ("H" helm-help)
+        ("s" helm-buffer-help)
+        ("v" helm-execute-persistent-action)
+        ("d" helm-persistent-delete-marked)
+        ("y" helm-yank-selection)
+        ("w" helm-toggle-resplit-and-swap-windows)
+        ("f" helm-follow-mode))
+   #+END_SRC
+
+** multiple cursors
+
+#+BEGIN_SRC emacs-lisp
+(defhydra multiple-cursors-hydra (:hint nil)
+  "
+     ^Up^            ^Down^        ^Miscellaneous^
+----------------------------------------------
+[_p_]   Next    [_n_]   Next    [_l_] Edit lines
+[_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+[_M-p_] Unmark  [_M-n_] Unmark  [_q_] Quit"
+  ("l" mc/edit-lines :exit t)
+  ("a" mc/mark-all-like-this :exit t)
+  ("n" mc/mark-next-like-this)
+  ("N" mc/skip-to-next-like-this)
+  ("M-n" mc/unmark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("P" mc/skip-to-previous-like-this)
+  ("M-p" mc/unmark-previous-like-this)
+  ("q" nil)) 
+#+END_SRC
+
+** projectile
+
+
+   #+BEGIN_SRC emacs-lisp
+(defhydra hydra-projectile-other-window (:color teal)
+  "projectile-other-window"
+  ("f"  projectile-find-file-other-window        "file")
+  ("g"  projectile-find-file-dwim-other-window   "file dwim")
+  ("d"  projectile-find-dir-other-window         "dir")
+  ("b"  projectile-switch-to-buffer-other-window "buffer")
+  ("q"  nil                                      "cancel" :color blue))
+
+(defhydra hydra-projectile (:color teal
+                            :hint nil)
+  "
+     PROJECTILE: %(projectile-project-root)
+
+     Find File            Search/Tags          Buffers                Cache
+------------------------------------------------------------------------------------------
+_s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+ _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
+ _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
+  _r_: recent file                                               ^^^^_z_: cache current
+  _d_: dir
+
+"
+  ("a"   projectile-ag)
+  ("b"   projectile-switch-to-buffer)
+  ("c"   projectile-invalidate-cache)
+  ("d"   projectile-find-dir)
+  ("s-f" projectile-find-file)
+  ("ff"  projectile-find-file-dwim)
+  ("fd"  projectile-find-file-in-directory)
+  ("g"   ggtags-update-tags)
+  ("s-g" ggtags-update-tags)
+  ("i"   projectile-ibuffer)
+  ("K"   projectile-kill-buffers)
+  ("s-k" projectile-kill-buffers)
+  ("m"   projectile-multi-occur)
+  ("o"   projectile-multi-occur)
+  ("s-p" projectile-switch-project "switch project")
+  ("p"   projectile-switch-project)
+  ("s"   projectile-switch-project)
+  ("r"   projectile-recentf)
+  ("x"   projectile-remove-known-project)
+  ("X"   projectile-cleanup-known-projects)
+  ("z"   projectile-cache-current-file)
+  ("`"   hydra-projectile-other-window/body "other window")
+  ("q"   nil "cancel" :color blue))
+   #+END_SRC
+
+** yasnippet
+
+   #+BEGIN_SRC emacs-lisp
+(defhydra hydra-yasnippet (:color blue :hint nil)
+  "
+              ^YASnippets^
+--------------------------------------------
+  Modes:    Load/Visit:    Actions:
+
+ _g_lobal  _d_irectory    _i_nsert
+ _m_inor   _f_ile         _t_ryout
+ _e_xtra   _l_ist         _n_ew
+         _a_ll
+"
+  ("d" yas-load-directory)
+  ("e" yas-activate-extra-mode)
+  ("i" yas-insert-snippet)
+  ("f" yas-visit-snippet-file :color blue)
+  ("n" yas-new-snippet)
+  ("t" yas-tryout-snippet)
+  ("l" yas-describe-tables)
+  ("g" yas/global-mode)
+  ("m" yas/minor-mode)
+  ("a" yas-reload-all))
+   #+END_SRC

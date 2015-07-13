@@ -2528,3 +2528,40 @@ subsequent sends."
   ;; do something …
   (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
   (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
+
+(defun oleh-ido-setup-hook ()
+  (define-key ido-file-dir-completion-map "~"
+    (lambda ()
+      (interactive)
+      (ido-set-current-directory "~/")
+      (setq ido-exit 'refresh)
+      (exit-minibuffer))))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook) 
+
+(defun ido-find-file-jump (dir)
+  "Return a command that sends DIR to `ido-find-file'."
+  `(lambda ()
+     (interactive)
+     (ido-set-current-directory ,dir)
+     (setq ido-exit 'refresh)
+     (exit-minibuffer))) 
+
+
+
+(defvar oleh-ido-shortcuts
+  '(("~/" "~")
+    ("~/Dropbox/source/site-lisp/" "!")
+    ("~/git/lispy/" "@")))
+
+(mapc (lambda (x)
+        (setcar x (ido-find-file-jump (car x))))
+      oleh-ido-shortcuts)
+
+(defun oleh-ido-setup-hook ()
+  (mapc
+   (lambda (x)
+     (define-key ido-file-dir-completion-map (cadr x) (car x)))
+   oleh-ido-shortcuts))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
