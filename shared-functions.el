@@ -741,7 +741,7 @@ Subject: %^{Subject}
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art to)
 '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
- '(org-catch-invisible-edits (quote error))
+ '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
  '(org-clock-in-resume t)

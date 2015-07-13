@@ -77,3 +77,47 @@ I've found this function to be very helpful. If you find it useful as well, I su
 
 
 
+* links to directories
+
+[[file+emacs:~/Downloads/]] 
+
+* Emacs allows you to build your own text editor
+[[http://mbork.pl/2014-07-25_What_is_Emacs%252c_really][Marcin Borkowski: 2014-07-25 What is Emacs, really]]
+
+This might be old news for more seasoned Emacs users, but as I have been using it for only a bit more than a decade, I feel like a, say, intermediate user.
+
+So, basically, some time ago I had a kind of revelation and I understood what Emacs really is. Many people think it's a text editor; that's not 100% true. There's also a joke that it is an operating system; this has some grain of truth in it, but it's also not the whole story.
+
+What is Emacs, then? It is a DIY kit for building Your Personal Text Editor™. It comes with a default one, which is decent (but not phenomenal, unless you tweak it a bit/a lot, depending on your preferences), but it's neither the only, nor necessarily the best one (there exists one other really good – maybe even better – editor, which we shall not name here). The real power of Emacs is that you can build your custom editor on top of it. And this is going to be the awesomest one, because, you know, it is the only one really suited to your needs.
+
+Pretty obvious, I know. But I guess it's important that you get that when you make the decision about which editor to choose, so maybe someone will find this post useful. 
+
+* org-one-to-many
+
+A few days ago I announced this on the Org-mode mailing list, and let me
+repeat it here. I started a small project,
+called [[https://github.com/mbork/org-one-to-many][org-one-to-many]],
+whose aim is to provide a way to split an Org file into subfiles.
+Currently, all sections at a given level are output to their own files,
+and the main file is transformed into a file with all those sections
+replaced by links to them. All the internal links in the source file are
+converted (as needed) to external links pointing to the newly created
+files.
+
+* dired filetypes
+
+(setq dired-guess-shell-alist-user
+      '(("\\.pdf\\'" "evince")
+	("\\.tex\\'" "pdflatex")
+	("\\.ods\\'\\|\\.xlsx?\\'\\|\\.docx?\\'\\|\\.csv\\'" "libreoffice"))) 
+
+
+* dired omit
+Another nice thing to know is the variable completion-ignored-extensions. It is a set of strings (not regexen!) which are "uninteresting" from completion point of view. (For example, it might be a good idea to put ".o" or ".aux" etc. there.) One might argue that this has little to do with Dired. Enter Dired-X, a built-in library enhancing Dired. One of the features of Dired-X is dired-omit-mode, which turns off displaying of "uninteresting" files. (Remember to set completion-ignored-extensions before you (require 'dired-x)!) You can turn it on and off with C-x M-o in Dired (assuming that you require 'dired-x in your init.el). (Notice: it used to be just M-o in older Emacsen.) 
+
+* define-word 
+Here is a version of the use-package expression that will load define-word only when necessary and not at emacs load time:
+
+(use-package define-word
+  :bind (("H-d" . define-word-at-point)
+         ("H-D" . define-word))) 

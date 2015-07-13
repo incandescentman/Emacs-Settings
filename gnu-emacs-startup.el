@@ -29,6 +29,7 @@
   )
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(setq org-hierarchical-todo-statistics nil) 
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
