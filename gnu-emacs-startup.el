@@ -990,7 +990,7 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "!:"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)

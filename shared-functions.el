@@ -1379,7 +1379,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
-(add-to-list 'recentf-exclude "archive")
+(add-to-list 'recentf-exclude "*archive")
 (add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
@@ -1648,7 +1648,7 @@ Also converts full stops to commas."
 (global-set-key "\M-l" 'endless/downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
-(defun endless/update ()
+(defun endless/upgrade ()
   "Update all packages, no questions asked."
   (interactive)
   (save-window-excursion

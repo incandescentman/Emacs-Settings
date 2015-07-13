@@ -1,4 +1,4 @@
-* file settings                                                     :ARCHIVE:
+* file settings                                                     :ARCimE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
@@ -637,6 +637,40 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 #+END_SRC
+
+*** TODO [#C] make a smart-org-meta-return for scheduled and deadline
+
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+#+END_EXAMPLE
+
+Say the point is at the carat and I hit smart-org-meta-return 
+
+Current output: 
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+
+* TODO
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
+* TODO
+#+END_EXAMPLE
+
+Same thing for scheduled:
+#+BEGIN_EXAMPLE 
+*** DONE send July priorities to Erika
+    DEADLINE: <2015-07-10 Fri> ^
+
+#+END_EXAMPLE
+
+Thanks!
+
 *** smart-return
 
 #+BEGIN_SRC emacs-lisp
@@ -1883,7 +1917,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "!:"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :"))
    #+END_SRC
 
 
