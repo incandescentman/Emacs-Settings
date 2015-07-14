@@ -29,6 +29,7 @@
   )
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(setq org-hierarchical-todo-statistics nil) 
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
@@ -144,7 +145,7 @@
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 
-(defun minibuffer-pasteboard-paste ()
+(defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
@@ -180,7 +181,7 @@
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste)
+           (pasteboard-paste-no-spaces)
            (buffer-string))))
     (search-forward search-term)))
 
@@ -209,12 +210,26 @@
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
-(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key message-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+
+;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+
+(define-key key-minor-mode-map (kbd "M-v") 'kdm/html2org-clipboard)
+
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
-(define-key key-minor-mode-map (kbd "s-V") 'minibuffer-pasteboard-paste)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
+
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
@@ -235,7 +250,7 @@
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'minibuffer-pasteboard-paste)
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
@@ -259,6 +274,8 @@
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
@@ -973,7 +990,7 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!!" "!:"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :"))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
@@ -1021,7 +1038,8 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-period ()
   (interactive)
-  (smart-punctuation "."))
+(smart-punctuation ".") 
+)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 
@@ -1051,9 +1069,9 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" to))
+  (smart-punctuation ":" t))
 
-;; (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key org-mode-map (kbd ":") 'smart-colon)
 
 (defun backward-kill-word-correctly ()
   "Kill word."
@@ -1111,3 +1129,14 @@ subsequent sends. could save them all in a logbook?
   (let ((fix-capitalization (my/beginning-of-sentence-p))) 
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
+
+  (defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
+    (unless 
+  (or
+  (looking-at " I\\b")
+  (looking-at (sentence-end))
+  ;; (looking at (line-end)); doesn't work 
+  ;; (looking-at (user-full-name))
+  )
+      (downcase-word 1)))

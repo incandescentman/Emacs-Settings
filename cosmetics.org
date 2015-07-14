@@ -106,3 +106,15 @@ I think this is something similar ([[https://github.com/kai2nenobu/guide-key][so
   (guide-key/add-local-highlight-command-regexp "org-"))
 (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 #+END_SRC
+
+* Distraction-free editing
+#+BEGIN_SRC emacs-lisp
+;; (require 'org-serenity-mode)
+(defun serenity-mode ()
+  "serenity"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("  ")))
+  (org-serenity-mode)  
+  (org-bullets-mode)
+)
+#+END_SRC

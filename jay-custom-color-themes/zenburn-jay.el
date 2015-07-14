@@ -701,7 +701,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    ;;(ol1 '(:height 1.3 :weight bold :overline "#A7A7A7" :foreground "#3C3C3C" :background "#F0F0F0"))
 
 ;; :background ,zenburn-bg-05 
-;;   `(org-level-1 ((t (:height 1.3 :weight bold :overline ,zenburn-bg-05 :foreground ,zenburn-orange))))
+;; `(org-level-1 ((t (:height 1.3 :weight bold :overline ,zenburn-bg-05 :foreground ,zenburn-orange))))
+   `(org-level-1 ((t (:foreground ,zenburn-orange :background ,zenburn-bg :overline nil))))
    `(org-level-2 ((t (:foreground ,zenburn-green+4))))
    `(org-level-3 ((t (:foreground ,zenburn-blue-1))))
    `(org-level-4 ((t (:foreground ,zenburn-yellow-2))))
@@ -718,7 +719,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-table ((t (:foreground ,zenburn-green+2))))
    `(org-tag ((t (:bold t :weight bold))))
    `(org-time-grid ((t (:foreground ,zenburn-orange))))
-   `(org-todo ((t (:bold t :foreground ,zenburn-red :weight bold))))
+   `(org-todo ((t (:bold t :foreground ,zenburn-red :weight bold :background ,zenburn-bg :box nil))))
    `(org-upcoming-deadline ((t (:inherit font-lock-keyword-face))))
    `(org-warning ((t (:bold t :foreground ,zenburn-red :weight bold :underline nil))))
    `(org-column ((t (:background ,zenburn-bg-1))))

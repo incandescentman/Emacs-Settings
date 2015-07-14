@@ -2,10 +2,22 @@
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
+#+TITLE: 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
 
 
 
+* NOTE-TO-RÚDI priorities
+If you could tackle the requests in the following order, that would be amazing:
+
+1. requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+2. shared-functions.org: erika-send-email 
+3. requests.org: smart-punctuation when there's already a correctly placed punctuation mark
+4. requests.org: smart-punctuation when there's already a misplaced punctuation mark
+5. kill-clause etc.
+
+Thanks again!
 
 * open requests 
 ** JavaScript 
@@ -203,12 +215,12 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 #+BEGIN_SRC emacs-lisp
 (setq *auto-capitalize-exceptions*
-  (list "e.g." "i.e. " "vs." "...")) 
+  (list "e.g." "i.e. " "vs." "..." "- [ ] ")) 
 #+END_SRC
 
 Thanks!
 
-*** TODO [#B] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+*** TODO [#A] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
 When composing email in Emacs, I use org-mime, which is available through org-plus-contrib, to convert my email to HTML. After composing an email, I call a function called org-mime-htmlize, and the result is a message-mode buffer that looks something like this:
 
 #+BEGIN_EXAMPLE
@@ -366,3 +378,51 @@ Jay Dixit<br  />
 #+END_EXAMPLE
 
 Does that make sense? Thanks! 
+
+** TODO [#C] a tweak to my/kill-sentence-dwim 
+I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
+
+** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
+
+Currently, auto-capitalize-mode does this only if I type a new sentence after the period. If the next sentence is already there, and the first word of the sentence is uncapitalized, auto-capitalize mode does nothing. 
+
+Therefore can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
+
+(save-excursion 
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))) 
+
+Example:
+: ^this is an existing sentence. 
+
+Suppose the point is on the t in this and I type "Here's a new sentence. " 
+
+Current output: 
+: Here's a new sentence. ^this is an existing sentence. 
+
+Desired output: 
+: Here's a new sentence. ^This is an existing sentence. 
+
+Thanks!
+
+
+** 
+** TODO [#B] a smart-space exception for org-mode tags
+
+Example:
+#+BEGIN_EXAMPLE
+* Is this a viable^                                                   :slide: 
+#+END_EXAMPLE
+
+Let's say the point is on the carat and I type "business?"
+
+Current output: 
+#+BEGIN_EXAMPLE
+* Is this a viable business ?slide: 
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+* Is this a viable business?^                                          :slide: 
+#+END_EXAMPLE

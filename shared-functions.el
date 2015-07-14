@@ -99,6 +99,8 @@
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("README$" . org-mode))
+(add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode)) 
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
@@ -130,6 +132,9 @@
        (plain-list-item . nil))) 
 (setq org-return-follows-link t) 
 (setq org-export-with-planning t) 
+
+;; leave an empty line between folded subtrees
+(setq org-cycle-separator-lines 1)
 
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 
@@ -195,7 +200,7 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "TODO" "MISSED" "|" "DONE! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
@@ -370,8 +375,7 @@ Subject: %^{Subject}
   (interactive)
   (setq org-bullets-bullet-list (quote ("• ")))
   (zin/org-outline-mode)  
-  (org-bullets-mode)
-  (org-bullets-mode)
+(org-bullets-mode)
   (boss-mode)
   (incarnadine-cursor)
   (define-key org-mode-map (kbd "DEL") 
@@ -665,8 +669,9 @@ Subject: %^{Subject}
  '(buffer-stack-untracked
    (quote
     ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(case-fold-search t)
- '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+ '(case-fold-search t) 
+'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+
 
  '(ccm-recenter-at-end-of-file t)
  '(clean-buffer-list-delay-general 1)
@@ -736,7 +741,7 @@ Subject: %^{Subject}
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art to)
 '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
- '(org-catch-invisible-edits (quote error))
+ '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
  '(org-clock-in-resume t)
@@ -1353,7 +1358,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|erika\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -1369,12 +1374,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
-(add-to-list 'recentf-exclude "Calendar")
-
+(add-to-list 'recentf-exclude "Calendar") 
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
-(add-to-list 'recentf-exclude "archive")
+(add-to-list 'recentf-exclude "*archive")
 (add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
@@ -1382,6 +1386,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "recentf")
+
+(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
+".png" ".gif" ".bmp" ".tif" ".jpeg" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -1426,15 +1436,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (require 'wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-
-(require 'org-serenity-mode)
-(defun serenity-mode ()
-  "serenity"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("  ")))
-  (org-serenity-mode)  
-  (org-bullets-mode)
-)
 
 (require 'ls-lisp)
 (setq ls-lisp-ignore-case 't)
@@ -1481,33 +1482,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
 
-(define-skeleton my-orgfootnote "Docstring." nil
-  "[fn:: " _ "] ")
-
-
-(define-skeleton fws "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding=' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n<BR>\n")
-
-(define-skeleton fwh "Docstring." nil
-  "# ###################################################################################\n#+HTML: [full_width_section bg_pos='Left Top' parallax_bg='true' bg_repeat='No-Repeat' text_color='Light' top_padding=' bottom_padding='200' background_color='#000' image_url='" _ "']\n\n#+HTML: <H1 class='fwh'></H1>\n\n#+HTML: [/full_width_section]\n# ####################################################################################\n\n")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ " :slide:")
-
-
-(define-skeleton slidy-image "Docstring." nil
-  "<figure >
-<img src='"_"'>
-<figcaption></figcaption>
-</figure>")
-
-
-(define-skeleton shaded "Docstring." nil
-  "<DIV CLASS='shaded'>
-"_"
-</DIV>")
-
 (defun org-day ()
   "foo"
   (interactive)
@@ -1520,7 +1494,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (insert "\n** daily: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
-(insert "*** TODO ") 
+(insert "*** TODO \n")
+(left-char)
   )
 
 (defun jd-clock-in ()
@@ -1620,7 +1595,7 @@ Also converts full stops to commas."
 (global-set-key "\M-l" 'endless/downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
-(defun endless/update ()
+(defun endless/upgrade ()
   "Update all packages, no questions asked."
   (interactive)
   (save-window-excursion
@@ -1956,7 +1931,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "8" 'search-open-buffers)
 (define-hyper-key "B" 'clone-indirect-buffer-other-window)
 (define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'locate)
+(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
 (define-hyper-key "(" 'org-velocity)
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
@@ -1986,11 +1961,13 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m lt" 'large-type) 
 (define-hyper-key "m mt" 'medium-type) 
 (define-hyper-key "m df" 'delete-file-and-buffer) 
-(define-hyper-key "m rf" 'rename-file-and-buffer)
 
+
+;; accountability
 (define-hyper-key "m td" 'jd-org-today)
+(define-hyper-key "m ek" 'erika-send-email) 
 
-(defun keybinding-read-and-insert(key)
+(defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
 (insert "(define-key key-minor-mode-map ") 
         (insert (format "(kbd \"%s\")" (key-description key))) 
@@ -2414,10 +2391,7 @@ subsequent sends."
 ) 
 (org-mime-htmlize)))
 
-
-
-
-(defun erika-send-mail ()
+(defun erika-send-email ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -2466,4 +2440,211 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to)) 
 ) 
-(org-mime-htmlize)))
+(org-mime-htmlize))
+) 
+
+(defun erika-send-email-styled ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+  (interactive)
+; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (save-excursion
+    (let ((content (progn
+                     (unless (org-on-heading-p) (outline-previous-heading))
+                     (let ((headline (org-element-at-point)))
+                       (buffer-substring
+                        (org-element-property :contents-begin headline)
+                        (org-element-property :contents-end headline)))))
+          (TO "Erika Casriel <erika.casriel@comcast.net>") 
+          (CC (org-entry-get (point) "CC" t))
+          (BCC (org-entry-get (point) "BCC" t))
+          (SUBJECT (nth 4 (org-heading-components)))
+          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+          (continue nil)
+          (switch-function nil)
+          (yank-action nil)
+          (send-actions '((email-send-action . nil)))
+          (return-action '(email-heading-return)))
+
+
+
+      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+      (message-goto-body)
+      (insert content)
+      (when CC
+        (message-goto-cc)
+        (insert CC))
+      (when BCC
+        (message-goto-bcc)
+        (insert BCC))
+      (if TO
+          (message-goto-body)
+        (message-goto-to)) 
+) 
+    (org-mime-htmlize)
+    (beginning-of-buffer)
+(mark-whole-buffer)
+(xah-replace-pairs-region begin end 
+'(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+
+                            ))
+))
+
+(require 'key-seq) 
+(key-seq-define-global "qd" 'dired)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
+
+(defun org-toggle-todo-heading ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*") 
+        (setq is-heading t)))
+    (if is-heading 
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+        (org-todo 'nextset))))) ; add TODO  #+END_SRC
+
+(defun fix-recent-addresses-file ()
+"One sentence summary of what this command do."
+  (interactive)
+  ;; do something …
+  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
+
+(defun oleh-ido-setup-hook ()
+  (define-key ido-file-dir-completion-map "~"
+    (lambda ()
+      (interactive)
+      (ido-set-current-directory "~/")
+      (setq ido-exit 'refresh)
+      (exit-minibuffer))))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook) 
+
+(defun ido-find-file-jump (dir)
+  "Return a command that sends DIR to `ido-find-file'."
+  `(lambda ()
+     (interactive)
+     (ido-set-current-directory ,dir)
+     (setq ido-exit 'refresh)
+     (exit-minibuffer))) 
+
+
+
+(defvar oleh-ido-shortcuts
+  '(("~/" "~")
+    ("~/Dropbox/source/site-lisp/" "!")
+    ("~/git/lispy/" "@")))
+
+(mapc (lambda (x)
+        (setcar x (ido-find-file-jump (car x))))
+      oleh-ido-shortcuts)
+
+(defun oleh-ido-setup-hook ()
+  (mapc
+   (lambda (x)
+     (define-key ido-file-dir-completion-map (cadr x) (car x)))
+   oleh-ido-shortcuts))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+
+(defun delete-extra-whitespace-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\s-+" nil t)
+        (replace-match "")))))
+
+(defun double-line-breaks-in-region (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["\r" "\n\n"]
+["\n" "\n\n"] 
+))) 
+
+(defun fixup-css-region (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+                          '(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+                            ))
+)
+
+(defun replace-html-chars-region (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["&" "&amp;"]
+ ["<" "&lt;"]
+ [">" "&gt;"]
+ ))) 
+
+(when (require 'openwith nil 'noerror)
+      (setq openwith-associations
+            (list
+             (list (openwith-make-extension-regexp
+                    '())
+                   "open"
+                   '(file))
+
+(list (openwith-make-extension-regexp
+                    '("mp3"))
+                   "open"
+                   '(file)) 
+
+(list (openwith-make-extension-regexp
+                    '("mp4" "mpg" "mpeg" 
+                      "avi" "wmv" "wav" "mov" "flv"
+                      "ogm" "ogg" "mkv"))
+                   "open -a vlc"
+                   '(file)) 
+
+             (list (openwith-make-extension-regexp
+                    '("xbm" "pbm" "pgm" "ppm" "pnm"
+                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+                   "open"
+                   '(file))
+             (list (openwith-make-extension-regexp
+                    '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+                   "open"
+                   '(file))
+             '("\\.lyx" "lyx" (file))
+             '("\\.chm" "kchmviewer" (file))
+             (list (openwith-make-extension-regexp
+                    '("pdf"))
+                   "open"
+                   '(file))
+             ))
+      (openwith-mode 1))
+
+(setq org-startup-with-inline-images nil) 
