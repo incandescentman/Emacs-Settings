@@ -229,7 +229,7 @@
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
-(Define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
