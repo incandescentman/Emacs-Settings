@@ -1488,7 +1488,7 @@ I stopped using openwith when I started using Helm, as I find typing C-c C-x fro
 #+BEGIN_QUOTE
 (require 'openwith)
 (openwith-mode t)
-(setq openwith-associations '(("\\.pdf\\'" "evince" (file)))) 
+(setq openwith-associations '(("\\.pdf\\'" "Skim.app" (file)))) 
 #+END_QUOTE
 Source: [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
 
