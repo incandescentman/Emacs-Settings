@@ -2593,3 +2593,12 @@ subsequent sends."
 ["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
                             ))
 )
+
+(defun replace-html-chars-region (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["&" "&amp;"]
+ ["<" "&lt;"]
+ [">" "&gt;"]
+ ))) 
