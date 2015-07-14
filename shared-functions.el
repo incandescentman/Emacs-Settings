@@ -35,13 +35,13 @@
 
 '(mouse-highlight nil)
 
-(setq confirm-kill-emacs 'yes-or-no-p)
+(setq confirm-kill-emacs 'yes-or-no-p) 
 
 (setq ring-bell-function
       (lambda ()
-  (unless (memq this-command
-          '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-    (ding))))
+	(unless (memq this-command
+		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+	  (ding))))
 
 (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
@@ -49,7 +49,7 @@
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-  '((cursor-color . "red")))
+	'((cursor-color . "red")))
   (add-to-list 'default-frame-alist '(cursor-color . "red")))
 
 (setq org-indirect-buffer-display 'current-window)
@@ -75,7 +75,7 @@
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
 (unless (and (fboundp 'play-sound-internal)
-       (subrp (symbol-function 'play-sound-internal)))
+	     (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
 
@@ -163,7 +163,7 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
 
-;; (setq org-agenda-prefix-format "%t %s")
+;; (setq org-agenda-prefix-format "%t %s") 
 
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
@@ -305,40 +305,40 @@ Subject: %^{Subject}
 --text follows this line--
 %?")
 
-  ("g" "gratitude" entry (file "gratitude.txt")
-   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+	("g" "gratitude" entry (file "gratitude.txt")
+	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-  ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-  ("n" "note" entry (file org-default-notes-file)
-   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+	("n" "note" entry (file org-default-notes-file)
+	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
-  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
-  ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-  ("h" "historical interest" entry (file "historical-lifestream.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("h" "historical interest" entry (file "historical-lifestream.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
@@ -348,8 +348,8 @@ Subject: %^{Subject}
 ;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
 ;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
 
-  ("f" "flowy" entry (file "flowy.org")
-   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+	("f" "flowy" entry (file "flowy.org")
+	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -393,8 +393,8 @@ Subject: %^{Subject}
   (when (equal major-mode 'org-mode)
     (save-excursion
       (ignore-errors
-  (org-back-to-heading)
-  (org-update-parent-todo-statistics)))))
+	(org-back-to-heading)
+	(org-update-parent-todo-statistics)))))
 
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
@@ -464,7 +464,7 @@ Subject: %^{Subject}
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
-     (call-interactively 'org-agenda-schedule)))
+	   (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -596,7 +596,7 @@ Subject: %^{Subject}
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
-          (buffer-substring-no-properties b e)))
+			    (buffer-substring-no-properties b e)))
     (message-send-and-exit)))
 
 (add-to-list 'completion-styles 'initials t)
@@ -670,7 +670,7 @@ Subject: %^{Subject}
    (quote
     ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
  '(case-fold-search t)
- '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\|svg\\'" "display" (file)))))
 
  '(ccm-recenter-at-end-of-file t)
  '(clean-buffer-list-delay-general 1)
@@ -886,9 +886,9 @@ Subject: %^{Subject}
  '(safe-local-variable-values
    (quote
     ((eval when
-     (fboundp
-      (quote rainbow-mode))
-     (rainbow-mode 1)))))
+	   (fboundp
+	    (quote rainbow-mode))
+	   (rainbow-mode 1)))))
 '(send-mail-function (quote sendmail-send-it))
  '(standard-indent 3)
  '(tooltip-mode nil)
@@ -1078,15 +1078,15 @@ Only modes that don't derive from `prog-mode' should be listed here.")
      (ac-ispell-setup)))
 
 (add-hook 'ido-setup-hook
-    (lambda ()
-      ;; Go straight home
-      (define-key ido-file-completion-map
-        (kbd "~")
-        (lambda ()
-    (interactive)
-    (if (looking-back "/")
-        (insert "~/")
-      (call-interactively 'self-insert-command))))))
+	  (lambda ()
+	    ;; Go straight home
+	    (define-key ido-file-completion-map
+	      (kbd "~")
+	      (lambda ()
+		(interactive)
+		(if (looking-back "/")
+		    (insert "~/")
+		  (call-interactively 'self-insert-command))))))
 
 (require 'ido)
 
@@ -1263,7 +1263,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (widen)
 (org-mime-subtree)
 (org-mime-htmlize)
-)
+) 
 
 (setq set-mark-command-repeat-pop t)
 
@@ -1313,52 +1313,52 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
-(add-hook 'dired-mode-hook 'hl-line-mode)
+  (add-hook 'dired-mode-hook 'hl-line-mode)
 
-(require 'dired-x)
+  (require 'dired-x)
 
-(setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
 
-(setq-default dired-omit-mode t)
+  (setq-default dired-omit-mode t)
 
-(define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
+  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
 
-(setq delete-by-moving-to-trash t
-      trash-directory "~/.Trash/emacs")
+  (setq delete-by-moving-to-trash t
+        trash-directory "~/.Trash/emacs")
 
-;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
+  ;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
 
-(defun tmtxt/dired-do-shell-mac-open ()
-  (interactive)
-  (save-window-excursion
-    (let ((files (dired-get-marked-files nil current-prefix-arg))
-          command)
-      ;; the open command
-      (setq command "open ")
-      (dolist (file files)
-        (setq command (concat command (shell-quote-argument file) " ")))
-      (message command)
-      ;; execute the command
-      (async-shell-command command))))
-(define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
+  (defun tmtxt/dired-do-shell-mac-open ()
+    (interactive)
+    (save-window-excursion
+      (let ((files (dired-get-marked-files nil current-prefix-arg))
+            command)
+        ;; the open command
+        (setq command "open ")
+        (dolist (file files)
+          (setq command (concat command (shell-quote-argument file) " ")))
+        (message command)
+        ;; execute the command
+        (async-shell-command command))))
+  (define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
 
-(defun dired-open-current-directory-in-finder ()
-  "Open the current directory in Finder"
-  (interactive)
-  (save-window-excursion
-    (dired-do-async-shell-command
-     "open .")))
+  (defun dired-open-current-directory-in-finder ()
+    "Open the current directory in Finder"
+    (interactive)
+    (save-window-excursion
+      (dired-do-async-shell-command
+       "open .")))
 
-(define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
+  (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
 
-;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
+  ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
-;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
+  ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik" (buffer-name buffer))
-     (member buffer buffer-stack-untracked))))
+	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
@@ -1475,55 +1475,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   ""
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
-
-(define-skeleton my-orgfootnote "Docstring." nil
-  "[fn:: " _ "] ")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ " :slide:")
-
-
-(define-skeleton slidy-image "Docstring." nil
-  "<figure >
-<img src='"_"'>
-<figcaption></figcaption>
-</figure>") 
-
-
-
-
-
-
-(define-skeleton my-something "Docstring." nil
-  "beginning" _ "end") 
-
-(define-skeleton my-beginl "Docstring." nil
-"#+BEGIN_SRC emacs-lisp 
-" _ " \n#+END_SRC")
-
-(define-skeleton my-begine "Docstring." nil
-"#+BEGIN_EXAMPLE
-" _ " 
-#+END_EXAMPLE")
-
-
-(define-skeleton my-bq "Docstring." nil
-"#+BEGIN_QUOTE
-" _ " 
-#+END_QUOTE
-Source:")
-
-
-
-(define-skeleton my-beginverse "Docstring." nil
-"#+BEGIN_VERSE
-"_" 
-#+END_VERSE")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ "                                      :slide:")
 
 (defun org-day ()
   "foo"
@@ -1736,10 +1687,10 @@ Also converts full stops to commas."
   (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
     (while (/= arg 0)
       (let ((this-win (window-buffer))
-      (next-win (window-buffer (funcall selector))))
-  (set-window-buffer (selected-window) next-win)
-  (set-window-buffer (funcall selector) this-win)
-  (select-window (funcall selector)))
+	    (next-win (window-buffer (funcall selector))))
+	(set-window-buffer (selected-window) next-win)
+	(set-window-buffer (funcall selector) this-win)
+	(select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (defun move-region-to-other-window (start end)
@@ -1815,11 +1766,11 @@ With prefix arg C-u, copy region instad of killing it."
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-  most-recent-filename)
+	most-recent-filename)
     (dolist (filename recentf-list)
       (unless (memq filename buffer-file-name-list)
-  (setq most-recent-filename filename)
-  (return)))
+	(setq most-recent-filename filename)
+	(return)))
     (find-file most-recent-filename)))
 
 (defun path-copy-full-path-to-clipboard ()
@@ -1838,16 +1789,16 @@ With prefix arg C-u, copy region instad of killing it."
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
-  (filename (buffer-file-name)))
+	(filename (buffer-file-name)))
     (if (not filename)
-  (message "Buffer '%s' is not visiting a file!" name)
+	(message "Buffer '%s' is not visiting a file!" name)
       (if (get-buffer new-name)
-    (message "A buffer named '%s' already exists!" new-name)
-  (progn
-    (rename-file name new-name 1)
-    (rename-buffer new-name)
-    (set-visited-file-name new-name)
-    (set-buffer-modified-p nil))))))
+	  (message "A buffer named '%s' already exists!" new-name)
+	(progn
+	  (rename-file name new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil))))))
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
@@ -1855,20 +1806,20 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-        (mapcar (lambda (path)
-            (replace-regexp-in-string home "~" path))
-          recentf-list)
-        nil t))))
+			  (mapcar (lambda (path)
+				    (replace-regexp-in-string home "~" path))
+				  recentf-list)
+			  nil t))))
 
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-   (tocpl (mapcar (function
-       (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-   (prompt (append '("File name: ") tocpl))
-   (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+	 (tocpl (mapcar (function
+			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+	 (prompt (append '("File name: ") tocpl))
+	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
@@ -2018,7 +1969,7 @@ Including indent-buffer, which should not be called automatically on save."
 (save-excursion (insert ")") 
                 ))
 
-(define-hyper-key "m kb" 'keybinding-read-and-insert)
+(define-hyper-key "m kb" 'keybinding-read-and-insert) 
 
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -2027,19 +1978,19 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my-isearch-yank-word-hook ()
   (when (equal this-command 'my-isearch-word-at-point)
     (let ((string (concat "\\<"
-        (buffer-substring-no-properties
-         (progn (skip-syntax-backward "w_") (point))
-         (progn (skip-syntax-forward "w_") (point)))
-        "\\>")))
+			  (buffer-substring-no-properties
+			   (progn (skip-syntax-backward "w_") (point))
+			   (progn (skip-syntax-forward "w_") (point)))
+			  "\\>")))
       (if (and isearch-case-fold-search
-         (eq 'not-yanks search-upper-case))
-    (setq string (downcase string)))
+	       (eq 'not-yanks search-upper-case))
+	  (setq string (downcase string)))
       (setq isearch-string string
-      isearch-message
-      (concat isearch-message
-        (mapconcat 'isearch-text-char-description
-             string ""))
-      isearch-yank-flag t)
+	    isearch-message
+	    (concat isearch-message
+		    (mapconcat 'isearch-text-char-description
+			       string ""))
+	    isearch-yank-flag t)
       (isearch-search-and-update))))
 
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
@@ -2150,7 +2101,7 @@ searches all buffers."
 (global-set-key (kbd "M-s s")   #'helm-again)
 
 ;; (require 'palimpsest)
-(palimpsest-mode 1)
+(palimpsest-mode 1) 
 
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
@@ -2169,11 +2120,11 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
 
-(setq magit-last-seen-setup-instructions "1.4.0")
+(setq magit-last-seen-setup-instructions "1.4.0") 
 
 ;; (load-theme 'leuven)
 
-;;; Tell ispell.el that ’ can be part of a word.
+ ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
              "['\x2019]" nil ("-B") nil utf-8)))
@@ -2194,12 +2145,12 @@ searches all buffers."
            "'" "’" (car args))
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
-            #'endless/replace-quote)
+            #'endless/replace-quote) 
 
-(run-with-idle-timer 60 t 'recentf-save-list)
+ (run-with-idle-timer 60 t 'recentf-save-list) 
 
 (advice-add #'org-remove-angle-brackets :before-until
-            (lambda (s) (if (string-prefix-p "mailto:" s) s)))
+            (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
 
 (defun jay/save-some-buffers ()
 (interactive)
@@ -2244,7 +2195,7 @@ searches all buffers."
 
 (setq set-mark-command-repeat-pop t)
 
-(setq custom-safe-themes t)
+(setq custom-safe-themes t) 
 
 (setq gnus-select-method '(nnml "")) 
 (setq gnus-select-method '(nnimap "gmail"
@@ -2254,9 +2205,9 @@ searches all buffers."
 
 (setq gnus-select-method
       '(nnimap "gmail"
-         (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
-         (nnimap-server-port "imaps")
-         (nnimap-stream ssl)))
+	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
 
 
 ;; How to read HTML mail 
@@ -2285,7 +2236,7 @@ searches all buffers."
        " "
        "%1{%B%}"
        "%s\n"))
-(setq gnus-summary-display-arrow t)
+(setq gnus-summary-display-arrow t) 
 
 (defun org-mime-htmlize (&optional arg) 
 "Export a portion of an email body composed using `mml-mode' to
@@ -2304,20 +2255,20 @@ export that region, otherwise export the entire body."
                        ;; TODO: should catch signature...
                        (point-max)))
          (raw-body (concat org-mime-default-header
-         (buffer-substring html-start html-end)))
+			   (buffer-substring html-start html-end)))
          (tmp-file (make-temp-name (expand-file-name
-            "mail" temporary-file-directory)))
+				    "mail" temporary-file-directory)))
          (body (org-export-string-as raw-body 'org t))
          ;; because we probably don't want to export a huge style file
          (org-export-htmlize-output-type 'inline-css)
          ;; makes the replies with ">"s look nicer
          (org-export-preserve-breaks org-mime-preserve-breaks)
-   ;; dvipng for inline latex because MathJax doesn't work in mail
-   (org-html-with-latex 'dvipng)
+	 ;; dvipng for inline latex because MathJax doesn't work in mail
+	 (org-html-with-latex 'dvipng)
          ;; to hold attachments for inline html images
          (html-and-images
           (org-mime-replace-images
-     (org-export-string-as raw-body 'html t) tmp-file))
+	   (org-export-string-as raw-body 'html t) tmp-file))
          (html-images (unless arg (cdr html-and-images)))
          (html (org-mime-apply-html-hook
                 (if arg
@@ -2327,7 +2278,7 @@ export that region, otherwise export the entire body."
     (save-excursion
       (goto-char html-start)
       (insert (org-mime-multipart
-         body html (mapconcat 'identity html-images "\n"))))))
+	       body html (mapconcat 'identity html-images "\n"))))))
 
 
 (defun new-email-from-subtree ()
@@ -2490,11 +2441,11 @@ subsequent sends."
 (replace-string "<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">") 
 (beginning-of-buffer) 
 (replace-string "<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">") 
-)
+) 
 
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)
-(key-seq-define text-mode-map "qf" 'flyspell-buffer)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
 
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -2517,7 +2468,7 @@ subsequent sends."
   (interactive)
   ;; do something …
   (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
-  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses"))
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
 
 (defun oleh-ido-setup-hook ()
   (define-key ido-file-dir-completion-map "~"
