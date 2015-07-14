@@ -161,6 +161,7 @@
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
+ '(org-download-image-dir "/Users/jay/Downloads")
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
  '(org-drill-optimal-factor-matrix
    (quote
@@ -330,7 +331,9 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((eval when
+    ((buffer-file-coding-system . utf-8-unix)
+     (org-html-head-include-scripts)
+     (eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -473,14 +476,6 @@
 
 
 
-;;;; Ignore / Exclude Uninteresting Things
-
-;; Make Buffer-stack ignore uninteresting buffers
-(defun buffer-stack-filter-regexp (buffer)
-  "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Work\\|Compile\\|tramp\\|accountability\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|widget\\|acct\\|melpa\\|fontification\\|Helm\\|daycolate\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|booktime\\|*scratch*\\|koma" (buffer-name buffer))
-	   (member buffer buffer-stack-untracked))))
-(setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 ;; (toggle-fullscreen)
 

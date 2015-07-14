@@ -1914,8 +1914,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
-(add-to-list 'recentf-exclude "Calendar")
-
+(add-to-list 'recentf-exclude "Calendar") 
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
@@ -2051,63 +2050,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   ""
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
-#+END_SRC
-
-** Skeletons
-
-#+BEGIN_SRC emacs-lisp
-(define-skeleton my-orgfootnote "Docstring." nil
-  "[fn:: " _ "] ")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ "                               :slide:
-** Notes                                                              :notes:
-")
-
-
-(define-skeleton slidy-image "Docstring." nil
-  "<figure >
-<img src='"_"'>
-<figcaption></figcaption>
-</figure>") 
-
-
-
-
-
-
-(define-skeleton my-something "Docstring." nil
-  "beginning" _ "end") 
-
-(define-skeleton my-beginl "Docstring." nil
-"#+BEGIN_SRC emacs-lisp 
-" _ " \n#+END_SRC")
-
-(define-skeleton my-begine "Docstring." nil
-"#+BEGIN_EXAMPLE
-" _ " 
-#+END_EXAMPLE")
-
-
-(define-skeleton my-bq "Docstring." nil
-"#+BEGIN_QUOTE
-" _ " 
-#+END_QUOTE
-Source:")
-
-
-
-(define-skeleton my-beginverse "Docstring." nil
-"#+BEGIN_VERSE
-"_" 
-#+END_VERSE")
-
-
-(define-skeleton my-org-slide "Docstring." nil
-  "* " _ "                                      :slide:")
-
-
 #+END_SRC
 
 * My custom functions for working with dates and times

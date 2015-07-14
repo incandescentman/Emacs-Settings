@@ -406,3 +406,23 @@ Desired output:
 
 Thanks!
 
+
+** 
+** TODO [#B] a smart-space exception for org-mode tags
+
+Example:
+#+BEGIN_EXAMPLE
+* Is this a viable^                                                   :slide: 
+#+END_EXAMPLE
+
+Let's say the point is on the carat and I type "business?"
+
+Current output: 
+#+BEGIN_EXAMPLE
+* Is this a viable business ?slide: 
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+* Is this a viable business?^                                          :slide: 
+#+END_EXAMPLE
