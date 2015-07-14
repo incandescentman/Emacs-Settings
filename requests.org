@@ -379,6 +379,19 @@ Jay Dixit<br  />
 
 Does that make sense? Thanks! 
 
+**** NOTE-TO-JAY Question
+
+Do you want a command you can call, or do you want to *always* add the ~div~ tag? The following piece of code always adds it:
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (goto-char (point-min))
+            (insert "<div style=\"font-family:Georgia,serif\">")
+            (goto-char (point-max))
+            (insert "</div>")))
+#+END_SRC
+
 ** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 
