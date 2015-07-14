@@ -3511,19 +3511,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
   ;; do something …
   (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
   (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
-  #+END_SRC
-
-
-* YASnippet
-[[http://mbork.pl/2013-10-13_Changing_the_default_prompting_method_for_YASnippet][Marcin Borkowski: 2013-10-13 Changing the default prompting method for YASnippet]]
-k
-#+BEGIN_EXAMPLE emacs-lisp 
-(setq yas-prompt-functions
-      (cons 'yas-ido-prompt
-	    (remove 'yas-ido-prompt
-		    yas-prompt-functions))) 
-#+END_EXAMPLE
-
+  #+END_SRC 
 
 * find-file tricks
 [[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex

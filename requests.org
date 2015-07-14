@@ -383,22 +383,26 @@ Does that make sense? Thanks!
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 
 ** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
-Can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
+Currently, auto-capitalize-mode does this only if I type a new sentence after the period. If the next sentence is already there, and the first word of the sentence is uncapitalized, auto-capitalize mode does nothing. 
+
+Therefore can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
 
 (save-excursion 
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))) 
 
-: This is an existing sentence. 
+Example:
+: ^this is an existing sentence. 
 
 Suppose the point is on the t in this and I type "Here's a new sentence. " 
 
 Current output: 
-: Here's a new sentence. this is an existing sentence. 
+: Here's a new sentence. ^this is an existing sentence. 
 
 Desired output: 
-: Here's a new sentence. This is an existing sentence. 
+: Here's a new sentence. ^This is an existing sentence. 
 
 Thanks!
 

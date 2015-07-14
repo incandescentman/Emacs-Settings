@@ -2273,18 +2273,32 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 #+END_SRC
 
 
-** PLEASE-CHECK-MY-INEPT-CODE Autocapitalize-and-downcase
-and this too?
+* TODO make auto-capitalize-mode downcase next word upon auto-capitalization? 
+Suppose I have a sentence:
+
+: Two three four. 
+
+Suppose I put the point on the "T" in "Two" and enter the text "one" followed by a space. Auto-capitalize-mode will recognize that the point is at the beginning of a line or sentence, and will automatically capitalize the "O" in "One."
+
+Current output: 
+: One Two three four.  
+But since "Two" is no longer the beginning of the sentence, I want to direct auto-capitalize-mode to automatically downcase the next word in the sentence if there is one? 
+
+Desired output: 
+: One two three four.  
+In other words, how can I instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes a word if there is another word after the point before a line break or period? 
 
 #+BEGIN_SRC emacs-lisp 
-(defadvice capitalize-word (after capitalize-word-advice activate)
-  (unless 
-(or
-(looking-at " I\\b")
-(looking-at (sentence-end))
-(looking-at (user-full-name))
-)
-    (downcase-word 1)))
+  (defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
+    (unless 
+  (or
+  (looking-at " I\\b")
+  (looking-at (sentence-end))
+  ;; (looking at (line-end)); doesn't work 
+  ;; (looking-at (user-full-name))
+  )
+      (downcase-word 1)))
 
 #+END_SRC
 
