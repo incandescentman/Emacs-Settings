@@ -1927,6 +1927,11 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "recentf")
 
+(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
+".png" ".gif" ".bmp" ".tif" ".jpeg" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
 #+END_SRC
 
 * Garbage characters
@@ -3617,4 +3622,49 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["<" "&lt;"]
  [">" "&gt;"]
  ))) 
+  #+END_SRC
+
+* openwith
+
+  #+BEGIN_SRC emacs-lisp
+(when (require 'openwith nil 'noerror)
+      (setq openwith-associations
+            (list
+             (list (openwith-make-extension-regexp
+                    '())
+                   "open"
+                   '(file))
+
+(list (openwith-make-extension-regexp
+                    '("mp3"))
+                   "open"
+                   '(file)) 
+
+(list (openwith-make-extension-regexp
+                    '("mp4" "mpg" "mpeg" 
+                      "avi" "wmv" "wav" "mov" "flv"
+                      "ogm" "ogg" "mkv"))
+                   "open -a vlc"
+                   '(file)) 
+
+             (list (openwith-make-extension-regexp
+                    '("xbm" "pbm" "pgm" "ppm" "pnm"
+                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+                   "open"
+                   '(file))
+             (list (openwith-make-extension-regexp
+                    '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+                   "open"
+                   '(file))
+             '("\\.lyx" "lyx" (file))
+             '("\\.chm" "kchmviewer" (file))
+             (list (openwith-make-extension-regexp
+                    '("pdf"))
+                   "open"
+                   '(file))
+             ))
+      (openwith-mode 1))
+
+(setq org-startup-with-inline-images nil) 
+
   #+END_SRC

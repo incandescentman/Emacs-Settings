@@ -1387,6 +1387,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "recentf")
 
+(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
+".png" ".gif" ".bmp" ".tif" ".jpeg" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
+
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
   (interactive)
@@ -2602,3 +2608,43 @@ subsequent sends."
  ["<" "&lt;"]
  [">" "&gt;"]
  ))) 
+
+(when (require 'openwith nil 'noerror)
+      (setq openwith-associations
+            (list
+             (list (openwith-make-extension-regexp
+                    '())
+                   "open"
+                   '(file))
+
+(list (openwith-make-extension-regexp
+                    '("mp3"))
+                   "open"
+                   '(file)) 
+
+(list (openwith-make-extension-regexp
+                    '("mp4" "mpg" "mpeg" 
+                      "avi" "wmv" "wav" "mov" "flv"
+                      "ogm" "ogg" "mkv"))
+                   "open -a vlc"
+                   '(file)) 
+
+             (list (openwith-make-extension-regexp
+                    '("xbm" "pbm" "pgm" "ppm" "pnm"
+                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+                   "open"
+                   '(file))
+             (list (openwith-make-extension-regexp
+                    '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+                   "open"
+                   '(file))
+             '("\\.lyx" "lyx" (file))
+             '("\\.chm" "kchmviewer" (file))
+             (list (openwith-make-extension-regexp
+                    '("pdf"))
+                   "open"
+                   '(file))
+             ))
+      (openwith-mode 1))
+
+(setq org-startup-with-inline-images nil) 
