@@ -3614,6 +3614,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 * xah-replace-pairs
 
   #+BEGIN_SRC emacs-lisp
+(require 'xah-replace-pairs)
 (defun replace-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end

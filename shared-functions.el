@@ -2600,6 +2600,7 @@ subsequent sends."
                             ))
 )
 
+(require 'xah-replace-pairs)
 (defun replace-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
