@@ -669,8 +669,9 @@ Subject: %^{Subject}
  '(buffer-stack-untracked
    (quote
     ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(case-fold-search t)
-;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\|svg\\'" "display" (file)))))
+ '(case-fold-search t) 
+'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+
 
  '(ccm-recenter-at-end-of-file t)
  '(clean-buffer-list-delay-general 1)
