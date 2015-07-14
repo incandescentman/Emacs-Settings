@@ -370,7 +370,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "TODO" "MISSED" "|" "DONE! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
@@ -3386,10 +3386,14 @@ subsequent sends."
     (org-mime-htmlize)
     (beginning-of-buffer)
 (mark-whole-buffer)
-(xah-replace-pairs-region begin end
-                          '(["h2" "li"]
-["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
-["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"]
+(xah-replace-pairs-region begin end 
+'(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+
                             ))
 ))
 #+end_src
@@ -3570,8 +3574,8 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (point-min))
-      (while (re-search-forward "\\s-+" nil t)
-        (replace-match " ")))))
+      (while (re-search-forward "^\\s-+" nil t)
+        (replace-match "")))))
   #+END_SRC
 
 * double-line-breaks-in-region
@@ -3586,3 +3590,18 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 ))) 
   #+END_SRC
 
+* fixup css
+
+  #+BEGIN_SRC emacs-lisp
+(defun fixup-css-region (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+                          '(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+                            ))
+)
+  #+END_SRC

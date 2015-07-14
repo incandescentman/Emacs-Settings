@@ -200,7 +200,7 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "|" "DONE! :-)")
+        (sequence "TODO" "MISSED" "|" "DONE! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
@@ -2489,10 +2489,14 @@ subsequent sends."
     (org-mime-htmlize)
     (beginning-of-buffer)
 (mark-whole-buffer)
-(xah-replace-pairs-region begin end
-                          '(["h2" "li"]
-["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
-["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"]
+(xah-replace-pairs-region begin end 
+'(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+
                             ))
 ))
 
@@ -2567,8 +2571,8 @@ subsequent sends."
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (point-min))
-      (while (re-search-forward "\\s-+" nil t)
-        (replace-match " ")))))
+      (while (re-search-forward "^\\s-+" nil t)
+        (replace-match "")))))
 
 (defun double-line-breaks-in-region (begin end)
   (interactive "r")
@@ -2577,3 +2581,15 @@ subsequent sends."
  ["\r" "\n\n"]
 ["\n" "\n\n"] 
 ))) 
+
+(defun fixup-css-region (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+                          '(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+
+["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+                            ))
+)
