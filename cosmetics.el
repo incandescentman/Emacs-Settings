@@ -62,3 +62,12 @@
   (guide-key/add-local-guide-key-sequence "C-c C-x")
   (guide-key/add-local-highlight-command-regexp "org-"))
 (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+
+;; (require 'org-serenity-mode)
+(defun serenity-mode ()
+  "serenity"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("  ")))
+  (org-serenity-mode)  
+  (org-bullets-mode)
+)

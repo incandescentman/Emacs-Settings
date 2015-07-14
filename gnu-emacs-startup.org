@@ -278,7 +278,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste)
+           (pasteboard-paste-no-spaces)
            (buffer-string))))
     (search-forward search-term)))
 
@@ -344,7 +344,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(Define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)

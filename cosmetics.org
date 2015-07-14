@@ -109,7 +109,7 @@ I think this is something similar ([[https://github.com/kai2nenobu/guide-key][so
 
 * Distraction-free editing
 #+BEGIN_SRC emacs-lisp
-(require 'org-serenity-mode)
+;; (require 'org-serenity-mode)
 (defun serenity-mode ()
   "serenity"
   (interactive)

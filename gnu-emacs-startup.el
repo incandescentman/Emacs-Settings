@@ -181,7 +181,7 @@
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste)
+           (pasteboard-paste-no-spaces)
            (buffer-string))))
     (search-forward search-term)))
 
@@ -229,7 +229,7 @@
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(Define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
