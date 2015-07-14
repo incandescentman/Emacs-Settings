@@ -1217,6 +1217,13 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq org-mime-default-header "")
 
+;; put a div tag around the whole message to put it in Georgia font. 
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (goto-char (point-min))
+            (insert "<div style=\"font-family:Georgia,serif\">")
+            (goto-char (point-max))
+            (insert "</div>"))) 
 
 (add-hook 'org-mime-html-hook
           (lambda ()

@@ -220,7 +220,7 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 Thanks!
 
-*** TODO [#A] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+*** DONE [#A] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
 When composing email in Emacs, I use org-mime, which is available through org-plus-contrib, to convert my email to HTML. After composing an email, I call a function called org-mime-htmlize, and the result is a message-mode buffer that looks something like this:
 
 #+BEGIN_EXAMPLE
@@ -391,6 +391,9 @@ Do you want a command you can call, or do you want to *always* add the ~div~ tag
             (goto-char (point-max))
             (insert "</div>")))
 #+END_SRC
+
+**** NOTE-TO-RÚDI Answer
+Yes, I want to always add it. This is perfect, thanks! 
 
 ** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
