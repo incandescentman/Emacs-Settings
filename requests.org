@@ -442,3 +442,6 @@ Desired output:
 #+BEGIN_EXAMPLE
 * Is this a viable business?^                                          :slide: 
 #+END_EXAMPLE
+
+* TODO [#C] kill-ring-to-pasteboard
+Can we create a function to push the contents of the kill ring to the pasteboard? Because some functions (e.g. gist-buffer) push output into the kill ring and I'd like to be able to access it from other OSX apps. Thanks!
