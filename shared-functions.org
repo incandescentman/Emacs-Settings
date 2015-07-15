@@ -3348,7 +3348,7 @@ HEADER and VALUE are strings.
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
   (interactive)
-; store location.
+                                        ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
     (let ((content (progn
@@ -3382,25 +3382,40 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to)) 
-) 
+      ) 
     (org-mime-htmlize)
     (beginning-of-buffer)
-(mark-whole-buffer)
-(xah-replace-pairs-region begin end 
-'(["h2" "li"]
-["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+    (mark-whole-buffer)
+    (xah-replace-pairs-region begin end 
+                              '(["h2" "li"]
+                                
+                                ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
 
-["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+                                ["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
 
-["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+                                ["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
 
-                            ))
-))
+                                ))
+    ))
 #+end_src
 
 Here's an example of the kind of message I'd want it to work in.
 
-After the line org-mime-htmlize:
+**** org-mode:
+
+* daily: <2015-07-14 Tue> [60%]
+  :PROPERTIES:
+  :SENT-ON:  Wed Jul 15 02:06:16 2015
+  :TO:       sunjaydixit@gmail.com
+  :END:
+** MISSED drop off laundry 
+** DONE copyedit Dahlberg report
+** DONE done pay credit cards
+** DONE finish presentation for tomorrow 
+** TODO read therapy book 
+
+
+** After the line org-mime-htmlize:
 
 #+BEGIN_EXAMPLE
 To: Erika Casriel <erika.casriel@comcast.net>
@@ -3481,6 +3496,87 @@ From: Jay Dixit <dixit@aya.yale.edu>
 **** NOTE-TO-JAY Question
 
      Could you please provide me the original contents of the org-mode file that results in this example? It would help a lot to debug. Thanks!
+
+**** NOTE-TO-RÚDI Sure, here you go. 
+
+***** org-mode subtree
+****** daily: <2015-07-14 Tue> [60%]
+       :PROPERTIES:
+       :SENT-ON:  Wed Jul 15 02:06:16 2015
+       :TO:       sunjaydixit@gmail.com
+       :END:
+******* MISSED drop off laundry 
+******* DONE copyedit Dahlberg report
+******* DONE done pay credit cards
+******* DONE finish presentation for tomorrow 
+******* TODO read therapy book 
+
+****** after running org-mime-subtree and entering the "To" address
+To: Jay Dixit <sunjaydixit@gmail.com>
+Subject: daily: <2015-07-14 Tue> [60%]
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+* MISSED drop off laundry
+* DONE copyedit Dahlberg report
+* DONE done pay credit cards
+* DONE finish presentation for tomorrow
+* TODO read therapy book 
+****** after running org-mime-subtree
+To: Jay Dixit <sunjaydixit@gmail.com>
+Subject: daily: <2015-07-14 Tue> [60%]
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+<#multipart type=alternative><#part type=text/plain>* MISSED drop off laundry
+* DONE copyedit Dahlberg report
+* DONE done pay credit cards
+* DONE finish presentation for tomorrow
+* TODO read therapy book
+<#multipart type=related><#part type=text/html><div style="font-family:Georgia,serif"><div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="todo MISSED">MISSED</span> drop off laundry</h2>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="todo DONE">DONE</span> copyedit Dahlberg report</h2>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="todo DONE">DONE</span> done pay credit cards</h2>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="todo DONE">DONE</span> finish presentation for tomorrow</h2>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="todo TODO">TODO</span> read therapy book</h2>
+</div>
+</div><#/multipart>
+<#/multipart>
+
+****** desired output
+To: Jay Dixit <sunjaydixit@gmail.com>
+Subject: daily: <2015-07-14 Tue> [60%]
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+<#multipart type=alternative><#part type=text/plain>* MISSED drop off laundry
+* DONE copyedit Dahlberg report
+* DONE done pay credit cards
+* DONE finish presentation for tomorrow
+* TODO read therapy book
+<#multipart type=related><#part type=text/html><div style="font-family:Georgia,serif"><div id="outline-container-sec-1" class="outline-2">
+<li id="sec-1"><span class="todo MISSED" style="color:red;font-weight:bold">MISSED</span> drop off laundry</li>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<li id="sec-2"><span class="todo DONE" style="color:green;font-weight:bold">DONE</span> copyedit Dahlberg report</li>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<li id="sec-3"><span class="todo DONE" style="color:green;font-weight:bold">DONE</span> done pay credit cards</li>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<li id="sec-4"><span class="todo DONE" style="color:green;font-weight:bold">DONE</span> finish presentation for tomorrow</li>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<li id="sec-5"><span class="todo TODO" style="color:red;font-weight:bold">TODO</span> read therapy book</li>
+</div>
+</div><#/multipart>
+<#/multipart>
+
 
 * key-seq 
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 
@@ -3594,7 +3690,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 ))) 
   #+END_SRC
 
-* fixup css
+* fixup-css-region
 
   #+BEGIN_SRC emacs-lisp
 (defun fixup-css-region (begin end)

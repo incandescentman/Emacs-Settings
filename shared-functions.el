@@ -2452,7 +2452,7 @@ HEADER and VALUE are strings.
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
   (interactive)
-; store location.
+                                        ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
     (let ((content (progn
@@ -2486,20 +2486,21 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to)) 
-) 
+      ) 
     (org-mime-htmlize)
     (beginning-of-buffer)
-(mark-whole-buffer)
-(xah-replace-pairs-region begin end 
-'(["h2" "li"]
-["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+    (mark-whole-buffer)
+    (xah-replace-pairs-region begin end 
+                              '(["h2" "li"]
+                                
+                                ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
 
-["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+                                ["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
 
-["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
+                                ["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
 
-                            ))
-))
+                                ))
+    ))
 
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)
