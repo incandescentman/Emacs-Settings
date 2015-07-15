@@ -1386,7 +1386,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
 ".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
-".png" ".gif" ".bmp" ".tif" ".jpeg" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
+".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -2630,6 +2630,7 @@ subsequent sends."
                       "png" "gif" "bmp" "tif" "jpeg" "jpg"))
                    "open"
                    '(file))
+
              (list (openwith-make-extension-regexp
                     '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
                    "open"
@@ -2651,5 +2652,6 @@ subsequent sends."
                     :foreground 'unspecified
                     :inherit 'error) 
 
+(require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory)) 
