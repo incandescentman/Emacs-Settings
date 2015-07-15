@@ -201,6 +201,10 @@ Say the point is on the comma and I hit comma. Current behavior is to do nothing
 
 Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
 
+***** NOTE-TO-JAY Test files
+
+      I added some test files: [[file:smart-period-test.elt][smart-period-test.elt]] and [[file:smart-comma-test.elt][smart-comma-test.elt]] with several examples of the use of these functions (the other smart punctuation marks should be similar). Please review them.
+
 *** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
