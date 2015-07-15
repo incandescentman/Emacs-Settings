@@ -2587,12 +2587,13 @@ subsequent sends."
 (interactive "r")
   (xah-replace-pairs-region begin end
                           '(["h2" "li"]
-["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:red;font-weight:bold\">"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
 
 ["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
 
-["<span class=\"done DONE\">" "<span class=\"done DONE\" style=\"color:green;font-weight:bold\">"] 
-                            ))
+["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
+
+))
 )
 
 (require 'xah-replace-pairs)
