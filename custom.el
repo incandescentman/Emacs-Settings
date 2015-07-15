@@ -330,9 +330,7 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((org-export-html-style-include-scripts)
-     (org-export-html-style-include-default)
-     (buffer-file-coding-system . utf-8-unix)
+    ((buffer-file-coding-system . utf-8-unix)
      (org-html-head-include-scripts)
      (eval when
            (fboundp

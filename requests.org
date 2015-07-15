@@ -224,185 +224,10 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 Thanks!
 
-*** DONE [#A] a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
-When composing email in Emacs, I use org-mime, which is available through org-plus-contrib, to convert my email to HTML. After composing an email, I call a function called org-mime-htmlize, and the result is a message-mode buffer that looks something like this:
-
-#+BEGIN_EXAMPLE
-To: Jay Dixit <sunjaydixit@gmail.com>
-Subject: test of org-mime
-From: Jay Dixit <dixit@aya.yale.edu>
---text follows this line--
-<#multipart type=alternative><#part type=text/plain>:PROPERTIES:
-:SENT-ON:  Thu Jul  9 01:51:18 2015
-:TO:       Jay Dixit <sunjaydixit@gmail.com>
-:END:
-Hello.
-
-There's this:
-
-- one
-- two
-- three
-
-And this:
-1. one
-2. two
-3. three
-
-Warm regards,
-Jay Dixit
-
----
-Jay Dixit 
-(646) 355-8001 
-[[http://jaydixit.com/][jaydixit.com]] 
-<#multipart type=related><#part type=text/html><p>
-Hello.<br  />
-</p>
-
-<p>
-There&rsquo;s this:<br  />
-</p>
-
-<ul class="org-ul">
-<li>one<br  />
-</li>
-<li>two<br  />
-</li>
-<li>three<br  />
-</li>
-</ul>
-
-<p>
-And this:<br  />
-</p>
-<ol class="org-ol">
-<li>one<br  />
-</li>
-<li>two<br  />
-</li>
-<li>three<br  />
-</li>
-</ol>
-
-<p>
-Warm regards,<br  />
-Jay Dixit<br  />
-</p>
-
-<p>
-&#x2014;<br  />
-Jay Dixit<br  />
-(646) 355-8001<br  />
-<a href="http://jaydixit.com/">jaydixit.com</a> <br  />
-</p>
-<#/multipart>
-<#/multipart> 
-#+END_EXAMPLE
-
-I'd like a function I can call after I call org-mime-htmlize that will add HTML styling tags at the beginning and end of the HTML part of the message. Specifically, I'd like to: 
-1. add ~<div style="font-family:Georgia,serif">~ right after ~<#multipart type=related><#part type=text/html>~
-2. add a closing ~</div>~ right before ~<#/multipart><#/multipart>~
-
-So for the example above, the desired output would be: 
-#+BEGIN_EXAMPLE
-To: Jay Dixit <sunjaydixit@gmail.com>
-Subject: test of org-mime
-From: Jay Dixit <dixit@aya.yale.edu>
---text follows this line--
-<#multipart type=alternative><#part type=text/plain>:PROPERTIES:
-:SENT-ON:  Thu Jul  9 01:51:18 2015
-:TO:       Jay Dixit <sunjaydixit@gmail.com>
-:END:
-Hello.
-
-There's this:
-
-- one
-- two
-- three
-
-And this:
-1. one
-2. two
-3. three
-
-Warm regards,
-Jay Dixit
-
----
-Jay Dixit 
-(646) 355-8001 
-[[http://jaydixit.com/][jaydixit.com]] 
-<#multipart type=related><#part type=text/html>
-<div style="font-family:Georgia,serif"> 
-<p>
-Hello.<br  />
-</p>
-
-<p>
-There&rsquo;s this:<br  />
-</p>
-
-<ul class="org-ul">
-<li>one<br  />
-</li>
-<li>two<br  />
-</li>
-<li>three<br  />
-</li>
-</ul>
-
-<p>
-And this:<br  />
-</p>
-<ol class="org-ol">
-<li>one<br  />
-</li>
-<li>two<br  />
-</li>
-<li>three<br  />
-</li>
-</ol>
-
-<p>
-Warm regards,<br  />
-Jay Dixit<br  />
-</p>
-
-<p>
-&#x2014;<br  />
-Jay Dixit<br  />
-(646) 355-8001<br  />
-<a href="http://jaydixit.com/">jaydixit.com</a> <br  />
-</p>
-</div>
-<#/multipart>
-<#/multipart> 
-#+END_EXAMPLE
-
-Does that make sense? Thanks! 
-
-**** NOTE-TO-JAY Question
-
-Do you want a command you can call, or do you want to *always* add the ~div~ tag? The following piece of code always adds it:
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (goto-char (point-min))
-            (insert "<div style=\"font-family:Georgia,serif\">")
-            (goto-char (point-max))
-            (insert "</div>")))
-#+END_SRC
-
-**** NOTE-TO-RÚDI Answer
-Yes, I want to always add it. This is perfect, thanks! 
-
-** TODO [#C] a tweak to my/kill-sentence-dwim 
+*** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 
-** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+*** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
 When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
 Currently, auto-capitalize-mode does this only if I type a new sentence after the period. If the next sentence is already there, and the first word of the sentence is uncapitalized, auto-capitalize mode does nothing. 
@@ -428,7 +253,7 @@ Thanks!
 
 
 ** 
-** TODO [#B] a smart-space exception for org-mode tags
+*** TODO [#B] a smart-space exception for org-mode tags
 
 Example:
 #+BEGIN_EXAMPLE
@@ -447,5 +272,5 @@ Desired output:
 * Is this a viable business?^                                          :slide: 
 #+END_EXAMPLE
 
-* TODO [#C] kill-ring-to-pasteboard
+*** TODO [#C] kill-ring-to-pasteboard
 Can we create a function to push the contents of the kill ring to the pasteboard? Because some functions (e.g. gist-buffer) push output into the kill ring and I'd like to be able to access it from other OSX apps. Thanks!
