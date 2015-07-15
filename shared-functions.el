@@ -1225,10 +1225,10 @@ Only modes that don't derive from `prog-mode' should be listed here.")
             (goto-char (point-max))
             (insert "</div>"))) 
 
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "p" "font-family: Georgia,serif; color:#000;")))
+;; (add-hook 'org-mime-html-hook
+;;          (lambda ()
+;;            (org-mime-change-element-style
+;;             "p" "font-family: Georgia,serif; color:#000;")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1240,12 +1240,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "div"
-             "font-family: Georgia,serif;"))) 
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
              "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
 
@@ -1253,12 +1247,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
           (lambda ()
 ;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
 (local-set-key "\M-p" 'org-mime-htmlize)))
-
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\M-o" 'org-mime-subtree)))
-
 
 (defun mime-send-mail ()
       "org-mime-subtree and HTMLize"
@@ -2633,7 +2621,7 @@ subsequent sends."
 (list (openwith-make-extension-regexp
                     '("mp4" "mpg" "mpeg" 
                       "avi" "wmv" "wav" "mov" "flv"
-                      "ogm" "ogg" "mkv"))
+                      "ogm" "ogg" "mkv" "webm"))
                    "open -a vlc"
                    '(file)) 
 
@@ -2656,3 +2644,12 @@ subsequent sends."
       (openwith-mode 1))
 
 (setq org-startup-with-inline-images nil) 
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(require 'rainbow-delimiters)
+(set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                    :foreground 'unspecified
+                    :inherit 'error) 
+
+(setq-default org-download-image-dir "/Users/jay/Downloads")
+(setq org-download-method (quote directory)) 

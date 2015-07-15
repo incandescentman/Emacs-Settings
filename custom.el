@@ -161,7 +161,6 @@
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
- '(org-download-image-dir "/Users/jay/Downloads")
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
  '(org-drill-optimal-factor-matrix
    (quote
@@ -331,7 +330,9 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((buffer-file-coding-system . utf-8-unix)
+    ((org-export-html-style-include-scripts)
+     (org-export-html-style-include-default)
+     (buffer-file-coding-system . utf-8-unix)
      (org-html-head-include-scripts)
      (eval when
            (fboundp

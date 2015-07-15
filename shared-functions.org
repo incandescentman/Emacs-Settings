@@ -1695,10 +1695,10 @@ Disable IDO faces to see flx highlights:
             (goto-char (point-max))
             (insert "</div>"))) 
 
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "p" "font-family: Georgia,serif; color:#000;")))
+;; (add-hook 'org-mime-html-hook
+;;          (lambda ()
+;;            (org-mime-change-element-style
+;;             "p" "font-family: Georgia,serif; color:#000;")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1710,12 +1710,6 @@ Disable IDO faces to see flx highlights:
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "div"
-             "font-family: Georgia,serif;"))) 
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
              "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
 
@@ -1723,12 +1717,6 @@ Disable IDO faces to see flx highlights:
           (lambda ()
 ;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
 (local-set-key "\M-p" 'org-mime-htmlize)))
-
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\M-o" 'org-mime-subtree)))
-
 
 (defun mime-send-mail ()
       "org-mime-subtree and HTMLize"
@@ -3651,7 +3639,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (list (openwith-make-extension-regexp
                     '("mp4" "mpg" "mpeg" 
                       "avi" "wmv" "wav" "mov" "flv"
-                      "ogm" "ogg" "mkv"))
+                      "ogm" "ogg" "mkv" "webm"))
                    "open -a vlc"
                    '(file)) 
 
@@ -3675,4 +3663,28 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 (setq org-startup-with-inline-images nil) 
 
+  #+END_SRC
+
+* Monochrome rainbows are the best way to reveal unbalanced delimiters
+I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters. 
+
+The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter. 
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(require 'rainbow-delimiters)
+(set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                    :foreground 'unspecified
+                    :inherit 'error) 
+#+END_SRC
+
+* Chords
+Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evil-mode is the best VIM). Chords are so much more comfortable! For example I press j and x together instead of M-x. Just be careful when choosing chords that they are combinations you will never type normally. I mainly use chords for switching buffers, navigating windows, opening files, and transposing expressions. 
+
+* org-download
+
+
+  #+BEGIN_SRC emacs-lisp 
+(setq-default org-download-image-dir "/Users/jay/Downloads")
+(setq org-download-method (quote directory)) 
   #+END_SRC

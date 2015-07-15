@@ -11,11 +11,11 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing:
 
-1. requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
-2. shared-functions.org: erika-send-email 
-3. requests.org: smart-punctuation when there's already a correctly placed punctuation mark
-4. requests.org: smart-punctuation when there's already a misplaced punctuation mark
-5. kill-clause etc.
+** DONE requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
+** TODO shared-functions.org: erika-send-email-styled 
+** TODO requests.org: smart-punctuation when there's already a correctly placed punctuation mark
+** TODO requests.org: smart-punctuation when there's already a misplaced punctuation mark
+** TODO kill-clause etc.
 
 Thanks again!
 

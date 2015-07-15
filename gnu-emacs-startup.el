@@ -369,8 +369,8 @@
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 ;; org-mime
-(define-key org-mode-map (kbd "M-n") 'new-email-from-subtree)
-(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree-no-signature)
+(define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
+(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
 (defun kill-sentence-to-period ()
   "Leave the period in there."
