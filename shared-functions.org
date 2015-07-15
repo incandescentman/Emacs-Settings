@@ -1926,7 +1926,7 @@ Make it so that recentf does not record the following uninteresting file types:
 
 (add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
 ".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
-".png" ".gif" ".bmp" ".tif" ".jpeg" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
+".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
 #+END_SRC
 
 * Garbage characters
@@ -3648,6 +3648,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
                       "png" "gif" "bmp" "tif" "jpeg" "jpg"))
                    "open"
                    '(file))
+
              (list (openwith-make-extension-regexp
                     '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
                    "open"
@@ -3685,6 +3686,7 @@ Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evi
 
 
   #+BEGIN_SRC emacs-lisp 
+(require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory)) 
   #+END_SRC
