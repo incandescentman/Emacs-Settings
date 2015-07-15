@@ -3478,6 +3478,10 @@ From: Jay Dixit <dixit@aya.yale.edu>
 <#/multipart> 
 #+END_EXAMPLE 
 
+**** NOTE-TO-JAY Question
+
+     Could you please provide me the original contents of the org-mode file that results in this example? It would help a lot to debug. Thanks!
+
 * key-seq 
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 
 
