@@ -95,9 +95,9 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;; Built-in
 ;;;;; basic coloring
 
-   `(org-block-background ((t (:background ,zenburn-bg-05))))
-   `(org-block-begin-line ((t (:background ,zenburn-bg-05 :overline "#A7A7A7"))))
-   `(org-block-end-line ((t (:background ,zenburn-bg-05 :underline "#A7A7A7"))))
+   `(org-block-background ((t (:background ,zenburn-bg-1))))
+   `(org-block-begin-line ((t (:background ,zenburn-bg-1))))
+   `(org-block-end-line ((t (:background ,zenburn-bg-1))))
 
     
 
