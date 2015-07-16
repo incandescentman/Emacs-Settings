@@ -994,47 +994,35 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
-  (let ((old-point (point)))
-    ;; 0. forward smart punctuation marks right after point
-    (unless not-so-smart
-      (re-search-forward (format "\\=[%s]*" *smart-punctuation-marks*) nil t))
-    ;; 1. go back until there are no more spaces/tabs
-    (when (re-search-backward "[^ 	][ 	]+\\="
-                              nil t)
-      (forward-char 1))
-    (flet ((replace (text)
-             (let ((nr-new-chars (- (length text) (length (match-string 1)))))
-               (replace-match text t t nil 1)
-               (goto-char old-point)
-               (forward-char nr-new-chars))))
-      (let (exception)
-        (cond ((or not-so-smart
-                   (not (re-search-backward (format "[^%s]\\([%s]+\\)\\="
-                                                    *smart-punctuation-marks*
-                                                    *smart-punctuation-marks*)
-                                            nil t)))
-               ;; 2.1. if there's not a series of punctuation marks, or if we
-               ;; don't want to replace (`not-so-smart'), just insert the
-               ;; `new-punct', and move to the `old-point' + the length of
-               ;; `new-punct'.
-               (insert new-punct)
-               (goto-char old-point)
-               (forward-char (length new-punct)))
-              ((setf exception
-                     (let ((potential-new-punct
-                            (concat (match-string 1) new-punct)))
-                       (find-if (lambda (exception)
-                                  (search potential-new-punct exception))
-                                *smart-punctuation-exceptions*)))
-               ;; 2.2. if the series of punctuation marks concatenated with
-               ;; `new-punct' form (even if partially) an exception, then replace
-               ;; it with that exception and fix the spaces.
-               (replace exception))
-              (t
-               ;; 2.3. if there is a series of punctuation marks and there is no
-               ;; matching exception, replace by the `new-punct' and fix the
-               ;; spaces.
-               (replace new-punct)))))))
+  (flet ((go-back (regexp)
+           (re-search-backward regexp nil t)
+           (ignore-errors        ; might signal `end-of-buffer'
+             (forward-char (length (match-string 0))))))
+    (if not-so-smart
+        (let ((old-point (point)))
+          (go-back "[^ \t]")
+          (insert new-punct)
+          (goto-char old-point)
+          (forward-char (length new-punct)))
+      (let ((old-point (point)))
+        (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+        (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                   *smart-punctuation-marks*)
+                           nil t)
+        (let* ((old-punct (match-string 2))
+               (was-after-punct (>= old-point (point))))
+          (replace-match "" nil t nil 1)
+          (replace-match (or (unless (string= old-punct "")
+                               (let ((potential-new-punct (concat old-punct new-punct)))
+                                 (find-if (lambda (exception)
+                                            (search potential-new-punct exception))
+                                          *smart-punctuation-exceptions*)))
+                             new-punct)
+                         nil t nil 2)
+          (when (looking-at "[ \t]*\\<")
+            (if was-after-punct
+                (my/fix-space)
+              (save-excursion (my/fix-space)))))))))
 
 (defun smart-period ()
   (interactive)

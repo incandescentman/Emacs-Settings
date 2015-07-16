@@ -1,0 +1,91 @@
+Hi Rúdi,
+
+Good idea to have the test files for the smart punctuation, and to keep them around. 
+
+I added a case at the beginning of smart-comma-test.elt---the one I describe here: 
+
+#+BEGIN_EXAMPLE
+: You might have a conscious intention to eat healthier, but you forget.
+
+Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma... Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. 
+#+END_EXAMPLE
+
+Here are the lines I added to smart-comma-test.elt: 
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier^, but you forget. 
+Output: You might have a conscious intention to eat healthier,^ but you forget. 
+#+END_EXAMPLE
+
+For the same reason, I changed some existing lines in smart-period-test.elt. Here's how the lines looked before:
+
+#+BEGIN_EXAMPLE 
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+Output: You might have a conscious intention to eat healthier, but you forget..^
+
+Input: You might have a conscious intention to eat healthier, but you forget^.
+Output: You might have a conscious intention to eat healthier, but you forget..^ 
+#+END_EXAMPLE
+
+Here's the behavior I want:
+
+#+BEGIN_EXAMPLE 
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+Output: You might have a conscious intention to eat healthier, but you forget..^
+
+Input: You might have a conscious intention to eat healthier, but you forget^.
+Output: You might have a conscious intention to eat healthier, but you forget.^ 
+#+END_EXAMPLE
+
+These cases are fine as they are:
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier, but you forget.^
+Output: You might have a conscious intention to eat healthier, but you forget..^
+
+Input: You might have a conscious intention to eat healthier, but you forget..^
+Output: You might have a conscious intention to eat healthier, but you forget...^ 
+#+END_EXAMPLE
+
+However, if it is too complicated to distinguish between my intention to write a period "." and my intention to write an ellipsis "..." then I am fine with creating an alternative way to enter an ellipsis (e.g. a function insert-ellipsis) so that smart-period didn't have to distinguish between the above cases. In other words, this case... 
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier, but you forget.^
+Output: You might have a conscious intention to eat healthier, but you forget..^ 
+#+END_EXAMPLE
+
+...isn't that important if preserving this functionality makes this case...
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier, but you forget^.
+Output: You might have a conscious intention to eat healthier, but you forget.^ 
+#+END_EXAMPLE
+
+...too complicated.
+
+Another note in that spirit: if eliminating smart-colon makes things easier, that's fine. I can enter colons without the benefit of smart-punctuation spacing. 
+
+However, note this request:
+
+*** TODO [#B] a smart-space exception for org-mode tags
+
+Example:
+#+BEGIN_EXAMPLE
+* Is this a viable^                                                   :slide: 
+#+END_EXAMPLE
+
+Let's say the point is on the carat and I type "business?"
+
+Current output: 
+#+BEGIN_EXAMPLE
+* Is this a viable business ?slide: 
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+* Is this a viable business?^                                          :slide: 
+#+END_EXAMPLE
+
+Note that in this request, the colon is preexisting, and I'm typing a smart-period on a line BEFORE the colon appears. Ideally I could enter a period in an org-mode heading without removing the space between the heading and the org-mode tag.
+
+Thank you so much for being so clever ab solving out this increasingly complex problem! :-)
