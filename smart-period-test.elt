@@ -27,3 +27,9 @@ Output: You might have a conscious intention. ^to eat healthier, but you forget.
 
 Input: You might have a conscious intention to eat healthier, but you forget ^.
 Output: You might have a conscious intention to eat healthier, but you forget..^
+
+Input: ...^
+Output: .............................................^
+
+Input: A...^
+Output: A.............................................^
