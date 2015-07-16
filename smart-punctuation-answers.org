@@ -89,3 +89,25 @@ Desired output:
 Note that in this request, the colon is preexisting, and I'm typing a smart-period on a line BEFORE the colon appears. Ideally I could enter a period in an org-mode heading without removing the space between the heading and the org-mode tag.
 
 Thank you so much for being so clever ab solving out this increasingly complex problem! :-)
+
+* NOTE-TO-JAY I think it works now
+
+  A couple of notes bear relevance:
+
+  - I changed the following test case in [[file:smart-period-test.elt][smart-period-test.elt]]:
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+Output: you might have a conscious intention to eat healthier, but you forget.^
+#+END_EXAMPLE
+
+    After your changes, it contained a whitespace in the output after the carat. It didn't seem to me logical, so I removed it. Do you confirm?
+
+  - Invoking smart punctuation on org headings should be OK now, unless you have a situation such as this one:
+
+#+BEGIN_EXAMPLE
+**                                                                     :oops:
+#+END_EXAMPLE
+
+    i.e., an empty heading with tags. Are you comfortable with that?
+
