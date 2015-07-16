@@ -12,7 +12,7 @@
 If you could tackle the requests in the following order, that would be amazing:
 
 ** DONE requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
-** TODO shared-functions.org: erika-send-email-styled 
+** DONE shared-functions.org: erika-send-email-styled 
 ** TODO requests.org: smart-punctuation when there's already a correctly placed punctuation mark
 ** TODO requests.org: smart-punctuation when there's already a misplaced punctuation mark
 ** TODO kill-clause etc.
@@ -230,7 +230,7 @@ I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input an
 *** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
 When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
-Currently, auto-capitalize-mode does this only if I type a new sentence after the period. If the next sentence is already there, and the first word of the sentence is uncapitalized, auto-capitalize mode does nothing. 
+Currently, auto-capitalize-mode does this only if I type a new sentence after the period at that moment. If the next sentence is *already there*, and the first word of that sentence is uncapitalized, auto-capitalize mode does nothing. 
 
 Therefore can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
 
@@ -249,9 +249,9 @@ Current output:
 Desired output: 
 : Here's a new sentence. ^This is an existing sentence. 
 
-Thanks!
+i.e. the period (or question mark or exclamation point) should trigger the capitalization of the first word in the next sentence. 
 
-
+Thanks! 
 ** 
 *** TODO [#B] a smart-space exception for org-mode tags
 

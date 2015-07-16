@@ -1901,7 +1901,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "h" 'replace-string)
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
-(define-hyper-key "f" 'isearch-forward)
+;; (define-hyper-key "f" 'isearch-forward)
+;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer) 
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 (define-hyper-key "r" 'helm-mini)
@@ -1960,7 +1961,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email) 
+(define-hyper-key "m ek" 'erika-send-email-styled) 
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -2487,20 +2488,22 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to)) 
       ) 
-    (org-mime-htmlize)
-    (beginning-of-buffer)
-    (mark-whole-buffer)
-    (xah-replace-pairs-region begin end 
-                              '(["h2" "li"]
-                                
-                                ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
-
-                                ["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
-
-                                ["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
-
-                                ))
-    ))
+    (let ((org-mime-html-hook
+           (list* (lambda ()
+                    (goto-char (point-min))
+                    (while (re-search-forward "</?\\(h2\\)" nil t)
+                      (replace-match "li" nil t nil 1)))
+                  (lambda ()
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                  org-mime-html-hook)))
+      (org-mime-htmlize))))
 
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)
