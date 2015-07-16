@@ -202,8 +202,32 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
    (region-beginning) (region-end) "pbcopy"))
 #+END_SRC
 
-** pasteboard-paste
+** TODO pasteboard-paste
+Can you add an exception/edge case to pasteboard paste that checks to see if I'm at the start of a plain-text list, and if it is, to not remove the space after the hyphen? In the following example, suppose the point is where the carat is, and I do pasteboard-copy on the text "this is text copied from elsewhere" and then I do pasteboard-paste.
 
+Example:
+#+BEGIN_EXAMPLE
+- this is the first item
+- this is the second item 
+- ^
+#+END_EXAMPLE
+
+Current output:
+#+begin_EXAMPLE
+- this is the first item
+- this is the second item 
+-this is text copied from elsewhere 
+#+END_EXAMPLE 
+Desired output:
+#+begin_EXAMPLE
+- this is the first item
+- this is the second item 
+- this is text copied from elsewhere
+#+END_EXAMPLE
+
+And can you add this to the following three functions, i.e. pasteboard-paste, pasteboard-paste-without-smart-quotes, and pasteboard-paste-no-spaces? Thanks!
+
+*** pasteboard-paste 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -221,8 +245,8 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
       (my/fix-space))))
 #+END_SRC
 
-** pasteboard-paste-without-smart-quotes
-
+*** pasteboard-paste-without-smart-quotes
+ 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
@@ -232,7 +256,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 #+END_SRC
 
 
-** pasteboard-paste-no-spaces
+*** pasteboard-paste-no-spaces
 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-no-spaces ()
