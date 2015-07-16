@@ -2503,7 +2503,9 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-      (org-mime-htmlize))))
+      (org-mime-htmlize)))
+(message-send-and-exit)
+)
 
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)

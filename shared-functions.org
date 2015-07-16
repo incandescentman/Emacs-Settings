@@ -2,7 +2,7 @@
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
-#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
@@ -3329,7 +3329,7 @@ subsequent sends."
 #+END_SRC
 
 
-*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#A] erika-send-email-styled    :rudi:
+*** DONE [#A] erika-send-email-styled                                  :rudi:
 The search and replace code in the function ~erika-send-mail~ below isn't working. I tried using a package I found called [[http://ergoemacs.org/emacs/elisp_replace_string_region.html][xah-replace-pairs.el]]
 
 Code: [[https://github.com/xahlee/xah-replace-pairs][xahlee/xah-replace-pairs]]
@@ -3399,8 +3399,10 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-      (org-mime-htmlize))))
-#+end_src
+      (org-mime-htmlize)))
+(message-send-and-exit)
+)
+#+END_SRC
 
 **** NOTE-TO-JAY Question
 
