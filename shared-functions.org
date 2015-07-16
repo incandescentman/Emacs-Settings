@@ -3383,20 +3383,22 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to)) 
       ) 
-    (org-mime-htmlize)
-    (beginning-of-buffer)
-    (mark-whole-buffer)
-    (xah-replace-pairs-region begin end 
-                              '(["h2" "li"]
-                                
-                                ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
-
-                                ["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
-
-                                ["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
-
-                                ))
-    ))
+    (let ((org-mime-html-hook
+           (list* (lambda ()
+                    (goto-char (point-min))
+                    (while (re-search-forward "</?\\(h2\\)" nil t)
+                      (replace-match "li" nil t nil 1)))
+                  (lambda ()
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                  org-mime-html-hook)))
+      (org-mime-htmlize))))
 #+end_src
 
 Here's an example of the kind of message I'd want it to work in.
@@ -3577,6 +3579,9 @@ From: Jay Dixit <dixit@aya.yale.edu>
 </div><#/multipart>
 <#/multipart>
 
+**** NOTE-TO-JAY Try it now
+
+     I went for another implementation, which I think should work and is (just slightly) less kludgy. I'm pretty sure we're running different versions of ~org-mime~, so I'm not entirely sure the output is the one you desire; please get back to me otherwise.
 
 * key-seq 
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 
