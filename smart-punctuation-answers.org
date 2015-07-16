@@ -1,3 +1,4 @@
+* Note to Rúdi <2015-07-16 Thu 13:00>
 Hi Rúdi,
 
 Good idea to have the test files for the smart punctuation, and to keep them around. 
@@ -89,3 +90,20 @@ Desired output:
 Note that in this request, the colon is preexisting, and I'm typing a smart-period on a line BEFORE the colon appears. Ideally I could enter a period in an org-mode heading without removing the space between the heading and the org-mode tag.
 
 Thank you so much for being so clever ab solving out this increasingly complex problem! :-)
+
+* Update, <2015-07-16 Thu 15:10>
+Hi Rúdi,
+
+I made more edits to those files. Specifically:
+
+** I changed this behavior: 
+
+Input: You might have a conscious intention to eat healthier ^, but you forget.
+Output: You might have a conscious intention to eat healthier,^ but you forget.
+Desired output: You might have a conscious intention to eat healthier, ^but you forget. 
+
+** I also edited the following input line to correct the desired output:
+
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+
+Thanks!
