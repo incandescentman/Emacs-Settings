@@ -2271,7 +2271,7 @@ Ha! Yes, that was going to be my next request! Perfect!
 *** NOTE-TO-RÚDI On second thought... 
 On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
 
-* PLEASE-CHECK-MY-INEPT-CODE backward-kill-word-correctly-and-capitalize                     :rudi:
+* PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
 I wrote this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK. Can you make sure? Thanks!
 
 #+BEGIN_SRC emacs-lisp
@@ -2285,7 +2285,8 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 #+END_SRC
 
 
-* TODO make auto-capitalize-mode downcase next word upon auto-capitalization? 
+* TODO [#A] changes to defadvice capitalize-word                       :rudi:
+Rúdi: I want make auto-capitalize-mode downcase next word upon auto-capitalization (I wrote this part already) but WITHOUT going past the line break (I need you to add this part)
 Suppose I have a sentence:
 
 : Two three four. 
@@ -2298,19 +2299,19 @@ But since "Two" is no longer the beginning of the sentence, I want to direct aut
 
 Desired output: 
 : One two three four.  
-In other words, how can I instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes a word if there is another word after the point before a line break or period? 
+
+In other words, I want to instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes a word if there is another word after the point before a line break or period? 
 
 #+BEGIN_SRC emacs-lisp 
   (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at " I\\b")
+  (looking-at " I\\b") ; never downcase the word "I" 
   (looking-at (sentence-end))
-  ;; (looking at (line-end)); doesn't work 
+  ;; (looking at (line-end)); doesn't work yet 
   ;; (looking-at (user-full-name))
   )
-      (downcase-word 1)))
-
+      (downcase-word 1))) 
 #+END_SRC
 

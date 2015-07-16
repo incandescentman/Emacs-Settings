@@ -13,9 +13,10 @@ If you could tackle the requests in the following order, that would be amazing:
 
 ** DONE requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
 ** DONE shared-functions.org: erika-send-email-styled 
-** TODO requests.org: smart-punctuation when there's already a correctly placed punctuation mark
-** TODO requests.org: smart-punctuation when there's already a misplaced punctuation mark
-** TODO kill-clause etc.
+** TODO [#A] requests.org: smart-punctuation when there's already a correctly placed punctuation mark
+** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
+** TODO [#B] gnu-emacs-startup.org: changes to defadvice capitalize-word 
+** TODO [#C] kill-clause etc.
 
 Thanks again!
 
