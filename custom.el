@@ -433,7 +433,17 @@
      (define-key org-mode-map [C-up] 'org-metaup)
      (define-key org-mode-map [C-down] 'org-metadown)
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
-     ))
+     ;; add these new ones below
+     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+     (define-key org-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+;; may need to somehow persistently unbind prelude-smart-open-line in prelude-mode.el
+     
+     (define-key key-minor-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
+     (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
+     
+;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+))
 
 ;; this doesn't work though :-(
 (eval-after-load "orgstruct"

@@ -1122,9 +1122,9 @@ subsequent sends. could save them all in a logbook?
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at " I\\b")
+  (looking-at " I\\b") ; never downcase the word "I" 
   (looking-at (sentence-end))
-  ;; (looking at (line-end)); doesn't work 
+  ;; (looking at (line-end)); doesn't work yet 
   ;; (looking-at (user-full-name))
   )
-      (downcase-word 1)))
+      (downcase-word 1))) 
