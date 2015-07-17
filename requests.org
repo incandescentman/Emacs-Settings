@@ -15,7 +15,7 @@ If you could tackle the requests in the following order, that would be amazing:
 ** DONE shared-functions.org: erika-send-email-styled 
 ** DONE [#A] requests.org: smart-punctuation when there's already a correctly placed punctuation mark
 ** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
-** TODO [#B] gnu-emacs-startup.org: changes to defadvice capitalize-word 
+** TODO [#A] gnu-emacs-startup.org: changes to defadvice capitalize-word 
 ** TODO [#C] kill-clause etc.
 
 Thanks again!
@@ -178,7 +178,10 @@ Output: Let's not forget parenthesis^!
 
 Thanks! 
 
-*** TODO [#A] smart-punctuation behaviors 
+**** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
+Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
+
+*** todo [#A] smart-punctuation behaviors 
 **** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
 
@@ -210,7 +213,7 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
 
      I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
 
-*** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
+*** TODO [#B] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
 See my existing code: 
@@ -232,7 +235,7 @@ Thanks!
 *** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 
-*** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+*** TODO [#A] add to smart-period, smart-question-mark, and smart-exclamation mark
 When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
 Currently, auto-capitalize-mode does this only if I type a new sentence after the period at that moment. If the next sentence is *already there*, and the first word of that sentence is uncapitalized, auto-capitalize mode does nothing. 
