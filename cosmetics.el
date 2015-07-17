@@ -32,24 +32,32 @@
 
 (recenter-top-bottom)
 
-(when (executable-find "hunspell")
+(executable-find "hunspell") 
   (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t))
+  (setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
 
 (setq ispell-dictionary "en_US")
 (setq ispell-program-name "/usr/local/bin/hunspell")
 (setenv "DICTIONARY" "en_US")
-(if (file-exists-p "/usr/bin/hunspell")
-    (progn
-      (setq ispell-program-name "hunspell")
-      (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8)))))
 
-(executable-find "hunspell")
-;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
+
+(setq ispell-program-name "hunspell")
+      (eval-after-load "ispell"
+        '(progn (defun ispell-get-coding-system () 'utf-8)))
+
+(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
+
+(setq ispell-extra-args '("-d en_US"))
+
 (flyspell-mode-on)
+
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
 (require 'guide-key)
 (setq guide-key/guide-key-sequence '("s-m" "C-x 4"))

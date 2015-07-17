@@ -1,3 +1,4 @@
+* Note to Rúdi <2015-07-16 Thu 13:00>
 Hi Rúdi,
 
 Good idea to have the test files for the smart punctuation, and to keep them around. 
@@ -90,6 +91,23 @@ Note that in this request, the colon is preexisting, and I'm typing a smart-peri
 
 Thank you so much for being so clever ab solving out this increasingly complex problem! :-)
 
+* Update, <2015-07-16 Thu 15:10>
+Hi Rúdi,
+
+I made more edits to those files. Specifically:
+
+** I changed this behavior: 
+
+Input: You might have a conscious intention to eat healthier ^, but you forget.
+Output: You might have a conscious intention to eat healthier,^ but you forget.
+Desired output: You might have a conscious intention to eat healthier, ^but you forget. 
+
+** I also edited the following input line to correct the desired output:
+
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+
+Thanks!
+
 * NOTE-TO-JAY I think it works now
 
   A couple of notes bear relevance:
@@ -103,11 +121,19 @@ Output: you might have a conscious intention to eat healthier, but you forget.^
 
     After your changes, it contained a whitespace in the output after the carat. It didn't seem to me logical, so I removed it. Do you confirm?
 
-  - Invoking smart punctuation on org headings should be OK now, unless you have a situation such as this one:
+* NOTE-TO-RÚDI Answer
+Thanks. Actually, I did intend that whitespace. For me, if there's already a space after the last word of the sentence, I'd prefer to make smart-punctuation insert the punctuation but retain the space. I'm adding the space back in in the example.
+
+* NOTE-TO-JAY I think it works now 
+- invoking smart punctuation on org headings should be OK now, unless you have a situation such as this one:
 
 #+BEGIN_EXAMPLE
 **                                                                     :oops:
 #+END_EXAMPLE
 
     i.e., an empty heading with tags. Are you comfortable with that?
+
+* NOTE-TO-RÚDI Answer
+Yes! I'd never enter a period as the first character of a heading, so that's fine. 
+
 

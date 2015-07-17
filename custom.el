@@ -74,7 +74,8 @@
  '(gmm/auto-mode-list
    (quote
     ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
- '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+;; '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+;; '(gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
  '(grep-find-ignored-directories
    (quote
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
@@ -330,9 +331,7 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((buffer-file-coding-system . utf-8-unix)
-     (org-html-head-include-scripts)
-     (eval when
+    ((eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))
@@ -433,7 +432,17 @@
      (define-key org-mode-map [C-up] 'org-metaup)
      (define-key org-mode-map [C-down] 'org-metadown)
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
-     ))
+     ;; add these new ones below
+     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+     (define-key org-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+;; may need to somehow persistently unbind prelude-smart-open-line in prelude-mode.el
+     
+     (define-key key-minor-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
+     (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
+     
+;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+))
 
 ;; this doesn't work though :-(
 (eval-after-load "orgstruct"

@@ -9,13 +9,14 @@
 
 
 * NOTE-TO-RÚDI priorities
-If you could tackle the requests in the following order, that would be amazing:
-
-** DONE requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
-** DONE shared-functions.org: erika-send-email-styled 
-** TODO requests.org: smart-punctuation when there's already a correctly placed punctuation mark
-** TODO requests.org: smart-punctuation when there's already a misplaced punctuation mark
-** TODO kill-clause etc.
+If you could tackle the requests in the following order, that would be amazing: 
+** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, see my note)
+** TODO [#A] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subtree]]
+** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
+** TODO [#A] gnu-emacs-startup.org: [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break]]
+** TODO [#A] [[*add%20"capitalize%20first%20word%20of%20next%20sentence"%20to%20smart-period,%20smart-question-mark,%20and%20smart-exclamation%20mark][add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark]]
+** TODO priority B requests
+** TODO [#C] kill-clause etc.
 
 Thanks again!
 
@@ -177,7 +178,10 @@ Output: Let's not forget parenthesis^!
 
 Thanks! 
 
-*** TODO [#A] smart-punctuation behaviors 
+**** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
+Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
+
+*** TODO smart-punctuation behaviors 
 **** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
 
@@ -192,7 +196,7 @@ Current behavior: no effect.
 Desired behavior: 
 : You might have a conscious intention to eat healthier, but you forget.
 
-**** TODO [#A] smart-punctuation when there's already a correctly placed punctuation mark
+**** TESTING [#A] smart-punctuation when there's already a correctly placed punctuation mark
 Example:
 
 : You might have a conscious intention to eat healthier, but you forget.
@@ -209,7 +213,7 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
 
      I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
 
-*** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
+*** TODO [#B] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
 See my existing code: 
@@ -231,7 +235,7 @@ Thanks!
 *** TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 
-*** TODO [#B] add to smart-period, smart-question-mark, and smart-exclamation mark
+*** TODO [#A] add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark
 When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
 Currently, auto-capitalize-mode does this only if I type a new sentence after the period at that moment. If the next sentence is *already there*, and the first word of that sentence is uncapitalized, auto-capitalize mode does nothing. 
@@ -257,7 +261,7 @@ i.e. the period (or question mark or exclamation point) should trigger the capit
 
 Thanks! 
 ** 
-*** TODO [#B] a smart-space exception for org-mode tags
+*** TESTING [#B] a smart-space exception for org-mode tags
 
 Example:
 #+BEGIN_EXAMPLE
@@ -276,5 +280,8 @@ Desired output:
 * Is this a viable business?^                                          :slide: 
 #+END_EXAMPLE
 
-*** TODO [#C] kill-ring-to-pasteboard
+*** NOTE-TO-RÚDI Question about spaces?
+It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
+
+*** todo [#C] kill-ring-to-pasteboard
 Can we create a function to push the contents of the kill ring to the pasteboard? Because some functions (e.g. gist-buffer) push output into the kill ring and I'd like to be able to access it from other OSX apps. Thanks!

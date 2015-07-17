@@ -994,35 +994,48 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (expand-abbrev)
-  (flet ((go-back (regexp)
-           (re-search-backward regexp nil t)
-           (ignore-errors        ; might signal `end-of-buffer'
-             (forward-char (length (match-string 0))))))
-    (if not-so-smart
+  (save-restriction
+    (when (and (eql major-mode 'org-mode)
+               (org-at-heading-p))
+      (save-excursion
+        (org-beginning-of-line)
+        (let ((heading-text (fifth (org-heading-components))))
+          (when heading-text
+            (search-forward heading-text)
+            (narrow-to-region (match-beginning 0) (match-end 0))))))
+    (flet ((go-back (regexp)
+                    (re-search-backward regexp nil t)
+                    (ignore-errors      ; might signal `end-of-buffer'
+                      (forward-char (length (match-string 0))))))
+      (if not-so-smart
+          (let ((old-point (point)))
+            (go-back "[^ \t]")
+            (insert new-punct)
+            (goto-char old-point)
+            (forward-char (length new-punct)))
         (let ((old-point (point)))
-          (go-back "[^ \t]")
-          (insert new-punct)
-          (goto-char old-point)
-          (forward-char (length new-punct)))
-      (let ((old-point (point)))
-        (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
-        (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                   *smart-punctuation-marks*)
-                           nil t)
-        (let* ((old-punct (match-string 2))
-               (was-after-punct (>= old-point (point))))
-          (replace-match "" nil t nil 1)
-          (replace-match (or (unless (string= old-punct "")
-                               (let ((potential-new-punct (concat old-punct new-punct)))
-                                 (find-if (lambda (exception)
-                                            (search potential-new-punct exception))
-                                          *smart-punctuation-exceptions*)))
-                             new-punct)
-                         nil t nil 2)
-          (when (looking-at "[ \t]*\\<")
-            (if was-after-punct
-                (my/fix-space)
-              (save-excursion (my/fix-space)))))))))
+          (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+          (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                     *smart-punctuation-marks*)
+                             nil t)
+          (let* ((old-punct (match-string 2))
+                 (was-after-punct (>= old-point (point))))
+            (replace-match "" nil t nil 1)
+            (replace-match (or (when (and was-after-punct
+                                          (not (string= old-punct "")))
+                                 (let ((potential-new-punct (concat old-punct new-punct)))
+                                   (find-if (lambda (exception)
+                                              (search potential-new-punct exception))
+                                            *smart-punctuation-exceptions*)))
+                               new-punct)
+                           nil t nil 2)
+            (when (looking-at "[ \t]*\\<")
+              (if was-after-punct
+                  (my/fix-space)
+                (save-excursion (my/fix-space)))))))))
+  (when (and (eql major-mode 'org-mode)
+             (org-at-heading-p))
+    (org-align-tags-here org-tags-column)))
 
 (defun smart-period ()
   (interactive)
@@ -1122,9 +1135,9 @@ subsequent sends. could save them all in a logbook?
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at " I\\b")
+  (looking-at " I\\b") ; never downcase the word "I" 
   (looking-at (sentence-end))
-  ;; (looking at (line-end)); doesn't work 
+  ;; (looking at (line-end)); doesn't work yet 
   ;; (looking-at (user-full-name))
   )
-      (downcase-word 1)))
+      (downcase-word 1))) 

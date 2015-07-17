@@ -35,7 +35,7 @@
 
 '(mouse-highlight nil)
 
-(setq confirm-kill-emacs 'yes-or-no-p) 
+(setq confirm-kill-emacs 'yes-or-no-p)
 
 (setq ring-bell-function
       (lambda ()
@@ -100,7 +100,7 @@
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("README$" . org-mode))
 (add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode)) 
+(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
@@ -116,9 +116,6 @@
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-
 (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)
@@ -129,9 +126,9 @@
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
       '((heading . always)
-       (plain-list-item . nil))) 
-(setq org-return-follows-link t) 
-(setq org-export-with-planning t) 
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
+(setq org-export-with-planning t)
 
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
@@ -163,7 +160,7 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
 
-;; (setq org-agenda-prefix-format "%t %s") 
+;; (setq org-agenda-prefix-format "%t %s")
 
 (add-hook 'org-finalize-agenda-hook
           (lambda () (remove-text-properties
@@ -207,9 +204,9 @@
         (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
         (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
         (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)") 
+        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)")
         (sequence "STRATEGY" "|")
-(sequence "DONE" "|") 
+(sequence "DONE" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
@@ -225,10 +222,10 @@
          (end-of-line))
         (t
          (org-delete-backward-char N))))
-(add-hook 
+(add-hook
  'org-mode-hook
  (lambda ()
-   (define-key org-mode-map (kbd "DEL") 
+   (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
 
 (defun my-org-export-change-options (plist backend)
@@ -374,11 +371,11 @@ Subject: %^{Subject}
   "workflowy"
   (interactive)
   (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
+  (zin/org-outline-mode)
 (org-bullets-mode)
   (boss-mode)
   (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
+  (define-key org-mode-map (kbd "DEL")
     'new-org-delete-backward-char)
   (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
   (insert "\n* "))
@@ -550,7 +547,7 @@ Subject: %^{Subject}
 
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
-;; is this the best mode for editing HTML? 
+;; is this the best mode for editing HTML?
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 
 '(org-support-shift-select (quote always))
@@ -606,7 +603,7 @@ Subject: %^{Subject}
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses") 
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
@@ -620,6 +617,7 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (org-mime-htmlize)))
 
 ;; (require 'org-pomodoro)
 
@@ -664,12 +662,12 @@ Subject: %^{Subject}
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t)))) 
+'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
     ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(case-fold-search t) 
+ '(case-fold-search t)
 '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
 
 
@@ -1217,13 +1215,13 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (setq org-mime-default-header "")
 
-;; put a div tag around the whole message to put it in Georgia font. 
+;; put a div tag around the whole message to put it in Georgia font.
 (add-hook 'org-mime-html-hook
           (lambda ()
             (goto-char (point-min))
             (insert "<div style=\"font-family:Georgia,serif\">")
             (goto-char (point-max))
-            (insert "</div>"))) 
+            (insert "</div>")))
 
 ;; (add-hook 'org-mime-html-hook
 ;;          (lambda ()
@@ -1253,13 +1251,13 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (interactive)
 (org-narrow-to-subtree)
 (end-of-buffer)
-(insert "\n\n---\nJay Dixit 
-[[http://jaydixit.com/][jaydixit.com]] 
-(646) 355-8001\n") 
+(insert "\n\n---\nJay Dixit
+[[http://jaydixit.com/][jaydixit.com]]
+(646) 355-8001\n")
 (widen)
 (org-mime-subtree)
 (org-mime-htmlize)
-) 
+)
 
 (setq set-mark-command-repeat-pop t)
 
@@ -1369,7 +1367,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
-(add-to-list 'recentf-exclude "Calendar") 
+(add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
@@ -1384,9 +1382,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
 
-(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
-".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
-".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
+".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp"))
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -1513,7 +1511,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (global-discover-mode 1)
 
-(load "makey") 
+(load "makey")
 
 (discover-add-context-menu
  :context-menu '(isearch
@@ -1697,14 +1695,14 @@ Also converts full stops to commas."
 (defun move-region-to-other-window (start end)
   "Move selected text to other window"
   (interactive "r")
-  (if (use-region-p) 
+  (if (use-region-p)
       (let ((count (count-words-region start end)))
         (save-excursion
           (kill-region start end)
-          (other-window 1)   
+          (other-window 1)
           (yank)
           (newline))
-        (other-window -1)     
+        (other-window -1)
         (message "Moved %s words" count))
     (message "No region selected")))
 
@@ -1713,7 +1711,7 @@ Also converts full stops to commas."
   (interactive)
   (if (org-in-regexp org-bracket-link-regexp 1)
       (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3) 
+        (description (if (match-end 3)
                  (org-match-string-no-properties 3)
                  (org-match-string-no-properties 1))))
     (apply 'delete-region remove)
@@ -1874,7 +1872,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-h") 'help-command)
 
 ;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir) 
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
 (global-set-key (kbd "C-c h") 'helm-mini)
 
 (cl-dolist (map '(message-mode-map orgstruct-mode-map))
@@ -1905,7 +1903,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer) 
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
-(define-hyper-key "r" 'helm-mini)
+;; (define-hyper-key "r" 'helm-mini)
+(define-hyper-key "r" 'recentf-open-files-compl)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
@@ -1932,46 +1931,46 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
 
-(define-hyper-key "m a" 'org-agenda) 
-(define-hyper-key "m j" 'helm-imenu-anywhere) 
+(define-hyper-key "m a" 'org-agenda)
+(define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
 
-(define-hyper-key "m cy" 'cyberpunk-jay) 
-(define-hyper-key "m cl" 'cyberpunk-large) 
-(define-hyper-key "m zb" 'zenburn) 
-(define-hyper-key "m lv" 'leuven) 
-;; (define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m cy" 'cyberpunk-jay)
+(define-hyper-key "m cl" 'cyberpunk-large)
+(define-hyper-key "m zb" 'zenburn)
+(define-hyper-key "m lv" 'leuven)
+;; (define-hyper-key "m cl" 'cyberpunk-large)
 
-(define-hyper-key "m cw" 'cyberpunk-writeroom) 
-(define-hyper-key "m wb" 'whiteboard) 
+(define-hyper-key "m cw" 'cyberpunk-writeroom)
+(define-hyper-key "m wb" 'whiteboard)
 (define-hyper-key "m sl" 'solarized-light)
-(define-hyper-key "m sd" 'solarized-dark) 
-(define-hyper-key "m ri" 'ritchie) 
-(define-hyper-key "m sp" 'spolsky) 
-(define-hyper-key "m wr" 'writeroom-mode) 
-(define-hyper-key "m wf" 'workflowy-mode) 
-(define-hyper-key "m st" 'small-type) 
-(define-hyper-key "m mp" 'morning-pages) 
-(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
-(define-hyper-key "m lt" 'large-type) 
-(define-hyper-key "m mt" 'medium-type) 
-(define-hyper-key "m df" 'delete-file-and-buffer) 
+(define-hyper-key "m sd" 'solarized-dark)
+(define-hyper-key "m ri" 'ritchie)
+(define-hyper-key "m sp" 'spolsky)
+(define-hyper-key "m wr" 'writeroom-mode)
+(define-hyper-key "m wf" 'workflowy-mode)
+(define-hyper-key "m st" 'small-type)
+(define-hyper-key "m mp" 'morning-pages)
+(define-hyper-key "m rf" 'prelude-rename-file-and-buffer)
+(define-hyper-key "m lt" 'large-type)
+(define-hyper-key "m mt" 'medium-type)
+(define-hyper-key "m df" 'delete-file-and-buffer)
 
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled) 
+(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
-(insert "(define-key key-minor-mode-map ") 
-        (insert (format "(kbd \"%s\")" (key-description key))) 
+(insert "(define-key key-minor-mode-map ")
+        (insert (format "(kbd \"%s\")" (key-description key)))
         (insert " '")
-(save-excursion (insert ")") 
+(save-excursion (insert ")")
                 ))
 
-(define-hyper-key "m kb" 'keybinding-read-and-insert) 
+(define-hyper-key "m kb" 'keybinding-read-and-insert)
 
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -2103,7 +2102,7 @@ searches all buffers."
 (global-set-key (kbd "M-s s")   #'helm-again)
 
 ;; (require 'palimpsest)
-(palimpsest-mode 1) 
+(palimpsest-mode 1)
 
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
@@ -2122,7 +2121,7 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
 
-(setq magit-last-seen-setup-instructions "1.4.0") 
+(setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; (load-theme 'leuven)
 
@@ -2147,12 +2146,12 @@ searches all buffers."
            "'" "’" (car args))
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
-            #'endless/replace-quote) 
+            #'endless/replace-quote)
 
- (run-with-idle-timer 60 t 'recentf-save-list) 
+ (run-with-idle-timer 60 t 'recentf-save-list)
 
 (advice-add #'org-remove-angle-brackets :before-until
-            (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
+            (lambda (s) (if (string-prefix-p "mailto:" s) s)))
 
 (defun jay/save-some-buffers ()
 (interactive)
@@ -2160,15 +2159,15 @@ searches all buffers."
     (cond
       ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
       ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
-((and buffer-file-name (eq major-mode 'fundamental-mode))) 
-((and buffer-file-name (eq major-mode 'markdown-mode))) 
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'fundamental-mode)))
+((and buffer-file-name (eq major-mode 'markdown-mode)))
 
-((and buffer-file-name (eq major-mode 'css-mode))) 
+((and buffer-file-name (eq major-mode 'css-mode)))
 
-((and buffer-file-name (eq major-mode 'nmxml-mode))) 
-((and buffer-file-name (eq major-mode 'gitconfig-mode))) 
-((and buffer-file-name (eq major-mode 'gitignore-mode))) 
+((and buffer-file-name (eq major-mode 'nmxml-mode)))
+((and buffer-file-name (eq major-mode 'gitconfig-mode)))
+((and buffer-file-name (eq major-mode 'gitignore-mode)))
       ((and buffer-file-name (eq major-mode 'sh-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
@@ -2197,13 +2196,19 @@ searches all buffers."
 
 (setq set-mark-command-repeat-pop t)
 
-(setq custom-safe-themes t) 
+(setq custom-safe-themes t)
 
-(setq gnus-select-method '(nnml "")) 
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit")
+(setq gnus-always-read-dribble-file t)
+(setq gnus-select-method '(nnml ""))
 (setq gnus-select-method '(nnimap "gmail"
 (nnimap-address "imap.gmail.com")
 (nnimap-server-port 993)
-(nnimap-stream ssl))) 
+(nnimap-stream ssl)))
+
+
+
 
 (setq gnus-select-method
       '(nnimap "gmail"
@@ -2212,12 +2217,18 @@ searches all buffers."
 	       (nnimap-stream ssl)))
 
 
-;; How to read HTML mail 
-(setq mm-text-html-renderer 'w3m) 
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\not") 
 
 
-;; More attractive Summary View 
+;; How to read HTML mail
+(setq mm-text-html-renderer 'w3m)
+(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\n")
+
+;; sort by most recent date
+(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
+
+
+;; More attractive Summary View
 ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
 (when window-system
   (setq gnus-sum-thread-tree-indent "  ")
@@ -2238,9 +2249,31 @@ searches all buffers."
        " "
        "%1{%B%}"
        "%s\n"))
-(setq gnus-summary-display-arrow t) 
+(setq gnus-summary-display-arrow t)
 
-(defun org-mime-htmlize (&optional arg) 
+  ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
+  (when window-system
+    (setq gnus-sum-thread-tree-indent "  ")
+    (setq gnus-sum-thread-tree-root "") ;; "● ")
+    (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
+    (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
+    (setq gnus-sum-thread-tree-vertical        "│")
+    (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
+    (setq gnus-sum-thread-tree-single-leaf     "╰─► "))
+  (setq gnus-summary-line-format
+        (concat
+         "%0{%U%R%z%}"
+         "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
+         "  "
+         "%4{%-20,20f%}"               ;; name
+         "  "
+         "%3{│%}"
+         " "
+         "%1{%B%}"
+         "%s\n"))
+  (setq gnus-summary-display-arrow t)
+
+(defun org-mime-htmlize (&optional arg)
 "Export a portion of an email body composed using `mml-mode' to
 html using `org-mode'.  If called with an active region only
 export that region, otherwise export the entire body."
@@ -2282,7 +2315,6 @@ export that region, otherwise export the entire body."
       (insert (org-mime-multipart
 	       body html (mapconcat 'identity html-images "\n"))))))
 
-
 (defun new-email-from-subtree ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
@@ -2296,7 +2328,7 @@ HEADER and VALUE are strings.
 
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
-  (interactive) 
+  (interactive)
   ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
@@ -2328,12 +2360,12 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
+        (message-goto-to))
 (end-of-buffer)
-(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit 
-(646) 355-8001 
-[[http://jaydixit.com/][jaydixit.com]] 
-\n")) 
+(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
+(646) 355-8001
+[[http://jaydixit.com/][jaydixit.com]]
+\n"))
 (org-mime-htmlize)))
 
 
@@ -2350,7 +2382,7 @@ HEADER and VALUE are strings.
 
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
-  (interactive) 
+  (interactive)
   ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
@@ -2382,9 +2414,9 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
+        (message-goto-to))
 (end-of-buffer)
-) 
+)
 (org-mime-htmlize)))
 
 (defun erika-send-email ()
@@ -2410,7 +2442,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>") 
+          (TO "Erika Casriel <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -2434,10 +2466,79 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
-) 
-(org-mime-htmlize))
-) 
+        (message-goto-to))
+)
+;; (org-mime-htmlize)
+))
+
+(defun erika-send-email-styled-without-send ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+  (interactive)
+                                        ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (save-excursion
+    (let ((content (progn
+                     (unless (org-on-heading-p) (outline-previous-heading))
+                     (let ((headline (org-element-at-point)))
+                       (buffer-substring
+                        (org-element-property :contents-begin headline)
+                        (org-element-property :contents-end headline)))))
+          (TO "Erika Casriel <erika.casriel@comcast.net")
+          (CC (org-entry-get (point) "CC" t))
+          (BCC (org-entry-get (point) "BCC" t))
+          (SUBJECT (nth 4 (org-heading-components)))
+          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+          (continue nil)
+          (switch-function nil)
+          (yank-action nil)
+          (send-actions '((email-send-action . nil)))
+          (return-action '(email-heading-return)))
+
+
+
+      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+      (message-goto-body)
+      (insert content)
+      (when CC
+        (message-goto-cc)
+        (insert CC))
+      (when BCC
+        (message-goto-bcc)
+        (insert BCC))
+      (if TO
+          (message-goto-body)
+        (message-goto-to))
+      )
+    (let ((org-mime-html-hook
+           (list* (lambda ()
+                    (goto-char (point-min))
+                    (while (re-search-forward "</?\\(h2\\)" nil t)
+                      (replace-match "li" nil t nil 1)))
+                  (lambda ()
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                  org-mime-html-hook)))
+(org-mime-htmlize)
+))
+;; (message-send-and-exit)
+)
 
 (defun erika-send-email-styled ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -2462,7 +2563,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>") 
+          (TO "Erika Casriel <sunjaydixit@gmail.com")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -2486,8 +2587,8 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
-      ) 
+        (message-goto-to))
+      )
     (let ((org-mime-html-hook
            (list* (lambda ()
                     (goto-char (point-min))
@@ -2503,11 +2604,14 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-      (org-mime-htmlize))))
+(org-mime-htmlize)
+))
+(message-send-and-exit)
+)
 
-(require 'key-seq) 
+(require 'key-seq)
 (key-seq-define-global "qd" 'dired)
-(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
+(key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -2515,9 +2619,9 @@ subsequent sends."
   (let ((is-heading))
     (save-excursion
       (forward-line 0)
-      (when (looking-at "^\\*") 
+      (when (looking-at "^\\*")
         (setq is-heading t)))
-    (if is-heading 
+    (if is-heading
         (progn
           (org-todo 'none) ; remove TODO
           (org-toggle-heading)) ; remove heading
@@ -2529,8 +2633,8 @@ subsequent sends."
 "One sentence summary of what this command do."
   (interactive)
   ;; do something …
-  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
-  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
+  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses")
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses"))
 
 (defun oleh-ido-setup-hook ()
   (define-key ido-file-dir-completion-map "~"
@@ -2540,7 +2644,7 @@ subsequent sends."
       (setq ido-exit 'refresh)
       (exit-minibuffer))))
 
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook) 
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
 
 (defun ido-find-file-jump (dir)
   "Return a command that sends DIR to `ido-find-file'."
@@ -2548,7 +2652,7 @@ subsequent sends."
      (interactive)
      (ido-set-current-directory ,dir)
      (setq ido-exit 'refresh)
-     (exit-minibuffer))) 
+     (exit-minibuffer)))
 
 
 
@@ -2584,8 +2688,8 @@ subsequent sends."
   (xah-replace-pairs-region begin end
  '(
  ["\r" "\n\n"]
-["\n" "\n\n"] 
-))) 
+["\n" "\n\n"]
+)))
 
 (defun fixup-css-region (begin end)
 (interactive "r")
@@ -2593,9 +2697,9 @@ subsequent sends."
                           '(["h2" "li"]
 ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
 
-["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"]
 
-["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
+["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
 
 ))
 )
@@ -2608,7 +2712,7 @@ subsequent sends."
  ["&" "&amp;"]
  ["<" "&lt;"]
  [">" "&gt;"]
- ))) 
+ )))
 
 (when (require 'openwith nil 'noerror)
       (setq openwith-associations
@@ -2621,14 +2725,14 @@ subsequent sends."
 (list (openwith-make-extension-regexp
                     '("mp3"))
                    "open"
-                   '(file)) 
+                   '(file))
 
 (list (openwith-make-extension-regexp
-                    '("mp4" "mpg" "mpeg" 
+                    '("mp4" "mpg" "mpeg"
                       "avi" "wmv" "wav" "mov" "flv"
                       "ogm" "ogg" "mkv" "webm"))
                    "open -a vlc"
-                   '(file)) 
+                   '(file))
 
              (list (openwith-make-extension-regexp
                     '("xbm" "pbm" "pgm" "ppm" "pnm"
@@ -2649,14 +2753,14 @@ subsequent sends."
              ))
       (openwith-mode 1))
 
-(setq org-startup-with-inline-images nil) 
+(setq org-startup-with-inline-images nil)
 
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (require 'rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
-                    :inherit 'error) 
+                    :inherit 'error)
 
 (require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
-(setq org-download-method (quote directory)) 
+(setq org-download-method (quote directory))
