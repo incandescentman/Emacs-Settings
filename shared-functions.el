@@ -1959,7 +1959,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled)
+(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")

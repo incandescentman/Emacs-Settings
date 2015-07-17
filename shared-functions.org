@@ -1,7 +1,7 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
-#+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
+#+TODO: | NOTE-TO-JAY NOTE-TO-RÚDI NOTE-TO-RÚDI
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
@@ -2656,7 +2656,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled)
+(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -3401,10 +3401,14 @@ subsequent sends."
 )
 #+END_SRC
 
-*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE erika-send-email-styled
+*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#A] erika-send-email-styled
 Hi Rúdi,
 
-I added the line
+In the Gnus section, I added the line...
+
+(setq message-send-hook (quote (org-mime-htmlize)))
+
+...because I'd like to call org-mime-htmlize automatically every time I send an email. However, adding this line made erika-send-email-styled break. I tried to debug it, without much luck. Can you investigate? Thanks!
 
 
 #+BEGIN_SRC emacs-lisp
