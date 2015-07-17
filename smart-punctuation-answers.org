@@ -107,3 +107,33 @@ Desired output: You might have a conscious intention to eat healthier, ^but you 
 Input: You might have a conscious intention to eat healthier, but you forget ^.
 
 Thanks!
+
+* NOTE-TO-JAY I think it works now
+
+  A couple of notes bear relevance:
+
+  - I changed the following test case in [[file:smart-period-test.elt][smart-period-test.elt]]:
+
+#+BEGIN_EXAMPLE
+Input: You might have a conscious intention to eat healthier, but you forget ^.
+Output: you might have a conscious intention to eat healthier, but you forget.^
+#+END_EXAMPLE
+
+    After your changes, it contained a whitespace in the output after the carat. It didn't seem to me logical, so I removed it. Do you confirm?
+
+* NOTE-TO-RÚDI Answer
+Thanks. Actually, I did intend that whitespace. For me, if there's already a space after the last word of the sentence, I'd prefer to make smart-punctuation insert the punctuation but retain the space. I'm adding the space back in in the example.
+
+* NOTE-TO-JAY I think it works now 
+- invoking smart punctuation on org headings should be OK now, unless you have a situation such as this one:
+
+#+BEGIN_EXAMPLE
+**                                                                     :oops:
+#+END_EXAMPLE
+
+    i.e., an empty heading with tags. Are you comfortable with that?
+
+* NOTE-TO-RÚDI Answer
+Yes! I'd never enter a period as the first character of a heading, so that's fine. 
+
+

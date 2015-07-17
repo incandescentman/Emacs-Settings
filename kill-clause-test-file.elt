@@ -5,13 +5,13 @@ Input: ^The second test case: a sentence with a colon.
 Output: ^A sentence with a colon.
 
 Input: The second test case^: a sentence with a colon.
-Output: ^The second test case.
+Output: The second test case^.
 
 Input: The second test case:^ a sentence with a colon.
-Output: ^The second test case.
+Output: The second test case^.
 
 Input: The second test case: ^a sentence with a colon.
-Output: ^The second test case.
+Output: The second test case^.
 
 Input: ^We should consider, for completeness, comma separated clauses.
 Output: ^For completeness, comma separated clauses.
