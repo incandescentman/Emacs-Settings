@@ -2,7 +2,8 @@
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
-#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE 
+
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
@@ -33,6 +34,9 @@
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 #+END_SRC
+
+#+RESULTS:
+| ~/gnulisp/recent-addresses-0.1/ | ~/Dropbox/emacs/prelude/personal/ | ~/gnulisp/emacs-pastebin-master/ | ~/.emacs.d/helm-cmd-t | /Users/jay/.emacs.d/elpa/ace-jump-mode-20140616.115/ | /Users/jay/.emacs.d/elpa/ack-and-a-half-1.2.0/ | /Users/jay/.emacs.d/elpa/anzu-20150517.2142/ | /Users/jay/.emacs.d/elpa/auctex-11.88.6/ | /Users/jay/.emacs.d/elpa/auto-capitalize-20131014.505/ | /Users/jay/.emacs.d/elpa/auto-compile-20150511.1017/ | /Users/jay/.emacs.d/elpa/auto-complete-20150618.1949/ | /Users/jay/.emacs.d/elpa/auto-package-update-20150516.757/ | /Users/jay/.emacs.d/elpa/autopair-20140825.427/ | /Users/jay/.emacs.d/elpa/browse-kill-ring-20150606.1040/ | /Users/jay/.emacs.d/elpa/buffer-stack-20101223.1020 | /Users/jay/.emacs.d/elpa/bury-successful-compilation-20150328.1728/ | /Users/jay/.emacs.d/elpa/centered-cursor-mode-20150420.1942/ | /Users/jay/.emacs.d/elpa/color-theme-20080305.34 | /Users/jay/.emacs.d/elpa/cyberpunk-theme-20150714.1020/ | /Users/jay/.emacs.d/elpa/define-word-20150709.1223/ | /Users/jay/.emacs.d/elpa/deft-20150626.1247/ | /Users/jay/.emacs.d/elpa/dic-lookup-w3m-20150706.417/ | /Users/jay/.emacs.d/elpa/dired+-20150625.548/ | /Users/jay/.emacs.d/elpa/dired-details+-20150104.2150/ | /Users/jay/.emacs.d/elpa/dired-details-20130824.1158/ | /Users/jay/.emacs.d/elpa/dired-hacks-utils-20150213.1523/ | /Users/jay/.emacs.d/elpa/dired-imenu-20140109.810 | /Users/jay/.emacs.d/elpa/dired-single-20130824.1200 | /Users/jay/.emacs.d/elpa/dired-sort-menu+-20150104.2151/ | /Users/jay/.emacs.d/elpa/dired-sort-menu-20130824.1207 | /Users/jay/.emacs.d/elpa/discover-20140103.1339/ | /Users/jay/.emacs.d/elpa/edit-server-20141231.1358/ | /Users/jay/.emacs.d/elpa/elisp-slime-nav-20141224.854/ | /Users/jay/.emacs.d/elpa/emms-mark-ext-20130528.2027 | /Users/jay/.emacs.d/elpa/emms-20150519.736/ | /Users/jay/.emacs.d/elpa/engine-mode-20150613.759/ | /Users/jay/.emacs.d/elpa/exec-path-from-shell-20141212.846/ | /Users/jay/.emacs.d/elpa/expand-region-20150525.205/ | /Users/jay/.emacs.d/elpa/f-20150605.927/ | /Users/jay/.emacs.d/elpa/flx-ido-20140821.2033 | /Users/jay/.emacs.d/elpa/flx-isearch-20150529.1732/ | /Users/jay/.emacs.d/elpa/flx-20140921.739 | /Users/jay/.emacs.d/elpa/flycheck-20150714.1203/ | /Users/jay/.emacs.d/elpa/flyspell-lazy-20141222.652/ | /Users/jay/.emacs.d/elpa/fountain-mode-20150618.116/ | /Users/jay/.emacs.d/elpa/frame-cmds-20150104.2207/ | /Users/jay/.emacs.d/elpa/frame-fns-20150104.2208/ | /Users/jay/.emacs.d/elpa/frame-restore-20140811.1409/ | /Users/jay/.emacs.d/elpa/gandalf-theme-20130809.247/ | /Users/jay/.emacs.d/elpa/gist-20150505.1341/ | /Users/jay/.emacs.d/elpa/gh-20150126.1125/ | /Users/jay/.emacs.d/elpa/gitconfig-mode-20150405.1627/ | /Users/jay/.emacs.d/elpa/gitignore-mode-20150405.1627/ | /Users/jay/.emacs.d/elpa/gnorb-1.1.1/ | /Users/jay/.emacs.d/elpa/google-contacts-20140530.233 | /Users/jay/.emacs.d/elpa/google-this-20150522.240/ | /Users/jay/.emacs.d/elpa/goto-last-change-20150109.1023/ | /Users/jay/.emacs.d/elpa/grizzl-20150711.2230/ | /Users/jay/.emacs.d/elpa/guide-key-20150107.2235/ | /Users/jay/.emacs.d/elpa/guru-mode-20140905.702/ | /Users/jay/.emacs.d/elpa/ham-mode-20140815.1335 | /Users/jay/.emacs.d/elpa/helm-cmd-t-20150213.636 2/ | /Users/jay/.emacs.d/elpa/helm-descbinds-20140122.2158 | /Users/jay/.emacs.d/elpa/helm-dictionary-20141226.1136/ | /Users/jay/.emacs.d/elpa/helm-google-20141228.340/ | /Users/jay/.emacs.d/elpa/google-20140330.856 | /Users/jay/.emacs.d/elpa/helm-orgcard-20130608.430 | /Users/jay/.emacs.d/elpa/helm-projectile-20150714.842/ | /Users/jay/.emacs.d/elpa/helm-swoop-20150704.839/ | /Users/jay/.emacs.d/elpa/helm-w3m-20150323.21/ | /Users/jay/.emacs.d/elpa/helm-wordnet-20150614.814/ | /Users/jay/.emacs.d/elpa/help-fns+-20150403.1452/ | /Users/jay/.emacs.d/elpa/ht-20140122.1555 | /Users/jay/.emacs.d/elpa/html-to-markdown-20131212.1441 | /Users/jay/.emacs.d/elpa/htmlize-20130207.1202 | /Users/jay/.emacs.d/elpa/ido-better-flex-0.2 | /Users/jay/.emacs.d/elpa/ido-gnus-20140216.846/ | /Users/jay/.emacs.d/elpa/ido-hacks-20150331.1209/ | /Users/jay/.emacs.d/elpa/ido-ubiquitous-20150630.926/ | /Users/jay/.emacs.d/elpa/ido-completing-read+-20150630.926/ | /Users/jay/.emacs.d/elpa/ido-vertical-mode-20150623.1410/ | /Users/jay/.emacs.d/elpa/idomenu-20141123.1320/ | /Users/jay/.emacs.d/elpa/imenu+-20150104.2348/ | /Users/jay/.emacs.d/elpa/imenu-anywhere-20150523.537/ | /Users/jay/.emacs.d/elpa/info+-20150520.1807/ | /Users/jay/.emacs.d/elpa/isearch+-20150711.1903/ | /Users/jay/.emacs.d/elpa/js2-mode-20150713/ | /Users/jay/.emacs.d/elpa/kanban-20130815.48/ | /Users/jay/.emacs.d/elpa/key-chord-20140929.2246 | /Users/jay/.emacs.d/elpa/langtool-20150609.2131/ | /Users/jay/.emacs.d/elpa/late-night-theme-0.0 | /Users/jay/.emacs.d/elpa/leuven-theme-20150622.306/ | /Users/jay/.emacs.d/elpa/logito-20120225.1255 | /Users/jay/.emacs.d/elpa/lorem-ipsum-20140911.1408/ | /Users/jay/.emacs.d/elpa/magithub-0.2 | /Users/jay/.emacs.d/elpa/magit-20150715.1602/ | /Users/jay/.emacs.d/elpa/magit-popup-20150711.505/ | /Users/jay/.emacs.d/elpa/git-commit-20150706.331/ | /Users/jay/.emacs.d/elpa/makey-20131231.630/ | /Users/jay/.emacs.d/elpa/maxframe-20140916.754 | /Users/jay/.emacs.d/elpa/move-text-20140307.1644 | /Users/jay/.emacs.d/elpa/mpages-20150710.704/ | /Users/jay/.emacs.d/elpa/multiple-cursors-20150710.456/ | /Users/jay/.emacs.d/elpa/narrow-indirect-20150105.33/ | /Users/jay/.emacs.d/elpa/neotree-20150704.718/ | /Users/jay/.emacs.d/elpa/noflet-20141102.654/ | /Users/jay/.emacs.d/elpa/oauth-20130127.1751 | /Users/jay/.emacs.d/elpa/oauth2-0.10 | /Users/jay/.emacs.d/elpa/olivetti-20150620.2136/ | /Users/jay/.emacs.d/elpa/openwith-20120531.1436 | /Users/jay/.emacs.d/elpa/org-bullets-20140918.1137/ | /Users/jay/.emacs.d/elpa/org-download-20150707.344/ | /Users/jay/.emacs.d/elpa/org-fstree-20090723.819 | /Users/jay/.emacs.d/elpa/org-gcal-20150626.1830/ | /Users/jay/.emacs.d/elpa/org-grep-20140214.2022/ | /Users/jay/.emacs.d/elpa/org-mac-link-20150609.2315/ | /Users/jay/.emacs.d/elpa/org-plus-contrib-20150713/ | /Users/jay/.emacs.d/elpa/org-pomodoro-20150621.552/ | /Users/jay/.emacs.d/elpa/alert-20150402.1246/ | /Users/jay/.emacs.d/elpa/log4e-20150105.505/ | /Users/jay/.emacs.d/elpa/gntp-20141024.1950/ | /Users/jay/.emacs.d/elpa/org-projectile-20150701.1057/ | /Users/jay/.emacs.d/elpa/org2blog-20150509.2301 | /Users/jay/.emacs.d/elpa/metaweblog-20141130.605/ | /Users/jay/.emacs.d/elpa/org-20150713/ | /Users/jay/.emacs.d/elpa/osx-browse-20140508.1341 | /Users/jay/.emacs.d/elpa/browse-url-dwim-20140731.1222 | /Users/jay/.emacs.d/elpa/osx-plist-20101130.448/ | /Users/jay/.emacs.d/elpa/packed-20150614.529/ | /Users/jay/.emacs.d/elpa/palimpsest-20130731.821 | /Users/jay/.emacs.d/elpa/paradox-20150611.645/ | /Users/jay/.emacs.d/elpa/paredit-20150217.713/ | /Users/jay/.emacs.d/elpa/pdf-tools-20150709.1215/ | /Users/jay/.emacs.d/elpa/persistent-soft-20150223.1053/ | /Users/jay/.emacs.d/elpa/pcache-20150125.1653/ | /Users/jay/.emacs.d/elpa/point-stack-20140102.1223 | /Users/jay/.emacs.d/elpa/popup-20150626.711/ | /Users/jay/.emacs.d/elpa/powerline-20150628.1957/ | /Users/jay/.emacs.d/elpa/projectile-20150714.241/ | /Users/jay/.emacs.d/elpa/pkg-info-20150517.443/ | /Users/jay/.emacs.d/elpa/epl-20150517.433/ | /Users/jay/.emacs.d/elpa/rainbow-delimiters-20150320.17/ | /Users/jay/.emacs.d/elpa/rainbow-mode-0.11/ | /Users/jay/.emacs.d/elpa/recentf-ext-20130130.2150 | /Users/jay/.emacs.d/elpa/request-deferred-20130526.1015 | /Users/jay/.emacs.d/elpa/request-20140316.417 | /Users/jay/.emacs.d/elpa/deferred-20150309.2052/ | /Users/jay/.emacs.d/elpa/reveal-in-finder-20140905.335 | /Users/jay/.emacs.d/elpa/rich-minority-20150305.516/ | /Users/jay/.emacs.d/elpa/s-20140910.334/ | /Users/jay/.emacs.d/elpa/scratch-palette-20150225.42/ | /Users/jay/.emacs.d/elpa/popwin-20150315.600/ | /Users/jay/.emacs.d/elpa/scss-mode-20150107.1400/ | /Users/jay/.emacs.d/elpa/seq-20150709.1040/ | /Users/jay/.emacs.d/elpa/shut-up-20150423.522/ | /Users/jay/.emacs.d/elpa/smartparens-20150710.202/ | /Users/jay/.emacs.d/elpa/smex-20141210.1422/ | /Users/jay/.emacs.d/elpa/solarized-theme-20150714.1020/ | /Users/jay/.emacs.d/elpa/spinner-1.3.1/ | /Users/jay/.emacs.d/elpa/stem-20131102.409/ | /Users/jay/.emacs.d/elpa/string-utils-20140508.1341 | /Users/jay/.emacs.d/elpa/list-utils-20140508.1341 | /Users/jay/.emacs.d/elpa/stripe-buffer-20141208.708/ | /Users/jay/.emacs.d/elpa/sublime-themes-20150328.131/ | /Users/jay/.emacs.d/elpa/sx-20150702.818/ | /Users/jay/.emacs.d/elpa/let-alist-1.0.4/ | /Users/jay/.emacs.d/elpa/markdown-mode-20150715.1126/ | /Users/jay/.emacs.d/elpa/sync-recentf-20140725.452/ | /Users/jay/.emacs.d/elpa/tablist-20150618.2218/ | /Users/jay/.emacs.d/elpa/twittering-mode-20150131.708/ | /Users/jay/.emacs.d/elpa/undo-tree-20140509.522 | /Users/jay/.emacs.d/elpa/unfill-20131103.213 | /Users/jay/.emacs.d/elpa/use-package-20150622.1044/ | /Users/jay/.emacs.d/elpa/diminish-20091203.1012 | /Users/jay/.emacs.d/elpa/bind-key-20150321.213/ | /Users/jay/.emacs.d/elpa/uuidgen-20140918.1601/ | /Users/jay/.emacs.d/elpa/volatile-highlights-20141004.2240 | /Users/jay/.emacs.d/elpa/w3m-20150608.1838/ | /Users/jay/.emacs.d/elpa/warm-night-theme-20150607.741/ | /Users/jay/.emacs.d/elpa/wc-mode-20150117.502/ | /Users/jay/.emacs.d/elpa/web-mode-20150709.1434/ | /Users/jay/.emacs.d/elpa/wgrep-helm-20140528.1427/ | /Users/jay/.emacs.d/elpa/wgrep-20141016.1656/ | /Users/jay/.emacs.d/elpa/with-editor-20150710.252/ | /Users/jay/.emacs.d/elpa/dash-20150704.253/ | /Users/jay/.emacs.d/elpa/worf-20150518.415/ | /Users/jay/.emacs.d/elpa/hydra-20150624.203/ | /Users/jay/.emacs.d/elpa/ace-link-20150625.222/ | /Users/jay/.emacs.d/elpa/avy-20150713.2331/ | /Users/jay/.emacs.d/elpa/helm-20150715.307/ | /Users/jay/.emacs.d/elpa/helm-core-20150715.2114/ | /Users/jay/.emacs.d/elpa/async-20150529.529/ | /Users/jay/.emacs.d/elpa/writeroom-mode-20150712.1731/ | /Users/jay/.emacs.d/elpa/visual-fill-column-20150311.1735/ | /Users/jay/.emacs.d/elpa/xah-replace-pairs-20150522.333/ | /Users/jay/.emacs.d/elpa/xml-rpc-20150529.832/ | /Users/jay/.emacs.d/elpa/yaml-mode-20141125.37/ | /Users/jay/.emacs.d/elpa/yaxception-20150105.652/ | /Users/jay/.emacs.d/elpa/zenburn-theme-20150701.2237/ | /Users/jay/.emacs.d/elpa/zone-matrix-0.0.1 | /Users/jay/.emacs.d/vendor | /Users/jay/.emacs.d/modules | /Users/jay/.emacs.d/core | /Library/Application Support/Emacs/24.5/site-lisp | /Library/Application Support/Emacs/site-lisp | /Applications/Emacs.app/Contents/Resources/site-lisp | /Applications/Emacs.app/Contents/Resources/lisp | /Applications/Emacs.app/Contents/Resources/lisp/vc | /Applications/Emacs.app/Contents/Resources/lisp/url | /Applications/Emacs.app/Contents/Resources/lisp/textmodes | /Applications/Emacs.app/Contents/Resources/lisp/progmodes | /Applications/Emacs.app/Contents/Resources/lisp/play | /Applications/Emacs.app/Contents/Resources/lisp/org | /Applications/Emacs.app/Contents/Resources/lisp/nxml | /Applications/Emacs.app/Contents/Resources/lisp/net | /Applications/Emacs.app/Contents/Resources/lisp/mh-e | /Applications/Emacs.app/Contents/Resources/lisp/mail | /Applications/Emacs.app/Contents/Resources/lisp/leim | /Applications/Emacs.app/Contents/Resources/lisp/language | /Applications/Emacs.app/Contents/Resources/lisp/international | /Applications/Emacs.app/Contents/Resources/lisp/gnus | /Applications/Emacs.app/Contents/Resources/lisp/eshell | /Applications/Emacs.app/Contents/Resources/lisp/erc | /Applications/Emacs.app/Contents/Resources/lisp/emulation | /Applications/Emacs.app/Contents/Resources/lisp/emacs-parallel | /Applications/Emacs.app/Contents/Resources/lisp/emacs-lisp | /Applications/Emacs.app/Contents/Resources/lisp/cedet | /Applications/Emacs.app/Contents/Resources/lisp/calendar | /Applications/Emacs.app/Contents/Resources/lisp/calc | /Applications/Emacs.app/Contents/Resources/lisp/obsolete |
 
 ** Require some packages
 #+BEGIN_SRC emacs-lisp
@@ -88,7 +92,7 @@
 ** Ask before exiting Emacs
 
 #+BEGIN_SRC emacs-lisp
-(setq confirm-kill-emacs 'yes-or-no-p) 
+(setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
 ** System alarms
@@ -106,6 +110,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 #+END_SRC
+
 
 ** Red cursor mode
 
@@ -198,16 +203,24 @@ Turn off fill mode, which adds random line breaks in my text files:
 (delete-selection-mode 1)
 #+END_SRC
 
+#+RESULTS:
+: t
+
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
 (autopair-mode 1)
 (setq buffer-save-without-query nil)
 #+END_SRC
 
+#+RESULTS:
+
 ** Search in Spotlight
 #+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
 #+END_SRC
+
+#+RESULTS:
+: mdfind
 
 ** Automatically open files in their correct modes
 
@@ -235,11 +248,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 #+END_SRC
 
-* GNUS
-#+BEGIN_SRC emacs-lisp
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-#+END_SRC
+#+RESULTS:
 
 * Org-mode
 ** Org setup
@@ -981,6 +990,7 @@ Make backups of files, even when they're in version control:
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (org-mime-htmlize))) 
 #+END_SRC
 
 * Pomodoro
@@ -3078,6 +3088,9 @@ Handy way of getting back to previous places.
 
 * gnus
 #+BEGIN_SRC emacs-lisp 
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit")
+(setq gnus-always-read-dribble-file t) 
 (setq gnus-select-method '(nnml "")) 
 (setq gnus-select-method '(nnimap "gmail"
 (nnimap-address "imap.gmail.com")
@@ -3118,8 +3131,7 @@ Handy way of getting back to previous places.
        "%1{%B%}"
        "%s\n"))
 (setq gnus-summary-display-arrow t) 
-#+END_SRC
-
+#+END_SRC 
 
 ** modified email-heading function
 
@@ -3324,18 +3336,15 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to)) 
 ) 
-(org-mime-htmlize))
-) 
+;; (org-mime-htmlize)
+)) 
 #+END_SRC
 
 
-*** erika-send-email-styled 
-The search and replace code in the function ~erika-send-mail~ below isn't working. I tried using a package I found called [[http://ergoemacs.org/emacs/elisp_replace_string_region.html][xah-replace-pairs.el]]
-
-Code: [[https://github.com/xahlee/xah-replace-pairs][xahlee/xah-replace-pairs]]
+*** erika-send-email-styled-without-send 
 
 #+begin_SRC emacs-lisp 
-(defun erika-send-email-styled ()
+(defun erika-send-email-styled-without-send ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -3358,7 +3367,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>") 
+          (TO "Erika Casriel <erika.casriel@comcast.net") 
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -3399,10 +3408,88 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-      (org-mime-htmlize)))
-(message-send-and-exit)
+(org-mime-htmlize)
+))
+;; (message-send-and-exit)
 )
 #+END_SRC
+ 
+*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE erika-send-email-styled
+Hi Rúdi,
+
+I added the line 
+
+
+#+BEGIN_SRC emacs-lisp 
+(defun erika-send-email-styled ()
+  "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields.  Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+  (interactive)
+                                        ; store location.
+  (setq *email-heading-point* (set-marker (make-marker) (point)))
+  (save-excursion
+    (let ((content (progn
+                     (unless (org-on-heading-p) (outline-previous-heading))
+                     (let ((headline (org-element-at-point)))
+                       (buffer-substring
+                        (org-element-property :contents-begin headline)
+                        (org-element-property :contents-end headline)))))
+          (TO "Erika Casriel <sunjaydixit@gmail.com") 
+          (CC (org-entry-get (point) "CC" t))
+          (BCC (org-entry-get (point) "BCC" t))
+          (SUBJECT (nth 4 (org-heading-components)))
+          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+          (continue nil)
+          (switch-function nil)
+          (yank-action nil)
+          (send-actions '((email-send-action . nil)))
+          (return-action '(email-heading-return)))
+
+
+
+      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+      (message-goto-body)
+      (insert content)
+      (when CC
+        (message-goto-cc)
+        (insert CC))
+      (when BCC
+        (message-goto-bcc)
+        (insert BCC))
+      (if TO
+          (message-goto-body)
+        (message-goto-to)) 
+      ) 
+    (let ((org-mime-html-hook
+           (list* (lambda ()
+                    (goto-char (point-min))
+                    (while (re-search-forward "</?\\(h2\\)" nil t)
+                      (replace-match "li" nil t nil 1)))
+                  (lambda ()
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+                    (goto-char (point-min))
+                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                  org-mime-html-hook)))
+(org-mime-htmlize)
+))
+(message-send-and-exit)
+)
+#+END_SRC 
 
 * key-seq 
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 

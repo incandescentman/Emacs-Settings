@@ -116,9 +116,6 @@
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-
 (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)
@@ -620,6 +617,7 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (org-mime-htmlize))) 
 
 ;; (require 'org-pomodoro)
 
@@ -2199,6 +2197,9 @@ searches all buffers."
 
 (setq custom-safe-themes t) 
 
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit")
+(setq gnus-always-read-dribble-file t) 
 (setq gnus-select-method '(nnml "")) 
 (setq gnus-select-method '(nnimap "gmail"
 (nnimap-address "imap.gmail.com")
@@ -2436,8 +2437,8 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to)) 
 ) 
-(org-mime-htmlize))
-) 
+;; (org-mime-htmlize)
+)) 
 
 (defun erika-send-email-styled ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -2503,9 +2504,17 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-      (org-mime-htmlize)))
-(message-send-and-exit)
+(org-mime-htmlize)
+))
+;; (message-send-and-exit)
 )
+
+(defun org-mime-htmlize-message-body ()
+"One sentence summary of what this command do."
+  (interactive)
+(message-goto-body)
+(org-mime-htmlize) 
+  ) 
 
 (require 'key-seq) 
 (key-seq-define-global "qd" 'dired)
