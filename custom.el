@@ -330,9 +330,7 @@
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
  '(safe-local-variable-values
    (quote
-    ((buffer-file-coding-system . utf-8-unix)
-     (org-html-head-include-scripts)
-     (eval when
+    ((eval when
            (fboundp
             (quote rainbow-mode))
            (rainbow-mode 1)))))

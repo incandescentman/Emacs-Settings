@@ -662,7 +662,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 #+END_SRC
 
-*** TODO [#C] make a smart-org-meta-return for scheduled and deadline
+*** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
 
 #+BEGIN_EXAMPLE
 TODO work out with Luke 
@@ -2298,8 +2298,9 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 #+END_SRC
 
 
-* TODO [#A] changes to defadvice capitalize-word                       :rudi:
-Rúdi: I want make auto-capitalize-mode downcase next word upon auto-capitalization (I wrote this part already) but WITHOUT going past the line break (I need you to add this part)
+* TODO [#A] Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
+Rúdi: I wanted make auto-capitalize-mode downcase next word upon auto-capitalization (I wrote this part already) but WITHOUT capitalizing any words that are past a line break (I need you to add this part).
+
 Suppose I have a sentence:
 
 : Two three four. 
@@ -2308,12 +2309,12 @@ Suppose I put the point on the "T" in "Two" and enter the text "one" followed by
 
 Current output: 
 : One Two three four.  
-But since "Two" is no longer the beginning of the sentence, I want to direct auto-capitalize-mode to automatically downcase the next word in the sentence if there is one? 
+But since "Two" is no longer the beginning of the sentence, I want to direct auto-capitalize-mode to automatically downcase the next word in the sentence if there is one.
 
 Desired output: 
 : One two three four.  
 
-In other words, I want to instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes a word if there is another word after the point before a line break or period? 
+In other words, I want to instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes. That's what I've done here: 
 
 #+BEGIN_SRC emacs-lisp 
   (defadvice capitalize-word (after capitalize-word-advice activate)
@@ -2328,3 +2329,4 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
       (downcase-word 1))) 
 #+END_SRC
 
+However, I tried to add exceptions for "line-end" (which is not a defined behavior) and also for user-full name. So, can you make it so that capitalize word stops when it finds a line break? Thanks!
