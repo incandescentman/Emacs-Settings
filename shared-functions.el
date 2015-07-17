@@ -1900,10 +1900,11 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
 ;; (define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer)
+;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer) 
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
-(define-hyper-key "r" 'helm-mini)
+;; (define-hyper-key "r" 'helm-mini)
+(define-hyper-key "r" 'recentf-open-files-compl)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
@@ -2206,6 +2207,9 @@ searches all buffers."
 (nnimap-server-port 993)
 (nnimap-stream ssl)))
 
+
+
+
 (setq gnus-select-method
       '(nnimap "gmail"
 	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
@@ -2213,9 +2217,15 @@ searches all buffers."
 	       (nnimap-stream ssl)))
 
 
+
+
 ;; How to read HTML mail
 (setq mm-text-html-renderer 'w3m)
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\not")
+(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\n")
+
+;; sort by most recent date
+(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
 
 
 ;; More attractive Summary View

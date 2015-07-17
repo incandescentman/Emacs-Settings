@@ -74,7 +74,8 @@
  '(gmm/auto-mode-list
    (quote
     ("[\\\\/]mail-google-com.*\\.\\(ckr\\|gmm\\|html?\\|txt\\)\\'" "[\\\\/]itsalltext[\\\\/]mail\\.google\\..*\\.txt\\'")))
- '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+;; '(gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+;; '(gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
  '(grep-find-ignored-directories
    (quote
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
