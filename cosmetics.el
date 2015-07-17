@@ -48,7 +48,9 @@
 
 (executable-find "hunspell")
 ;;  (setq ispell-program-name "hunspell")
-;;(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) (setq ispell-extra-args '("-d en_US")
+(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
+(setq ispell-extra-args '("-d en_US"))
+
 (flyspell-mode-on)
 
 (require 'guide-key)
