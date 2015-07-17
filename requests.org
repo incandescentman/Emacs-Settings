@@ -13,7 +13,7 @@ If you could tackle the requests in the following order, that would be amazing:
 
 ** DONE requests.org: a simple search and replace function to add two styling tags in an email message after calling org-mime-htmlize
 ** DONE shared-functions.org: erika-send-email-styled 
-** TODO [#A] requests.org: smart-punctuation when there's already a correctly placed punctuation mark
+** DONE [#A] requests.org: smart-punctuation when there's already a correctly placed punctuation mark
 ** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
 ** TODO [#B] gnu-emacs-startup.org: changes to defadvice capitalize-word 
 ** TODO [#C] kill-clause etc.
@@ -193,7 +193,7 @@ Current behavior: no effect.
 Desired behavior: 
 : You might have a conscious intention to eat healthier, but you forget.
 
-**** TODO [#A] smart-punctuation when there's already a correctly placed punctuation mark
+**** TESTING [#A] smart-punctuation when there's already a correctly placed punctuation mark
 Example:
 
 : You might have a conscious intention to eat healthier, but you forget.
@@ -258,7 +258,7 @@ i.e. the period (or question mark or exclamation point) should trigger the capit
 
 Thanks! 
 ** 
-*** TODO [#B] a smart-space exception for org-mode tags
+*** TESTING [#B] a smart-space exception for org-mode tags
 
 Example:
 #+BEGIN_EXAMPLE
@@ -277,5 +277,8 @@ Desired output:
 * Is this a viable business?^                                          :slide: 
 #+END_EXAMPLE
 
-*** TODO [#C] kill-ring-to-pasteboard
+*** NOTE-TO-RÚDI Question about spaces?
+It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
+
+*** todo [#C] kill-ring-to-pasteboard
 Can we create a function to push the contents of the kill ring to the pasteboard? Because some functions (e.g. gist-buffer) push output into the kill ring and I'd like to be able to access it from other OSX apps. Thanks!
