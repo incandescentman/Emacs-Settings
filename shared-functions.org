@@ -1,8 +1,8 @@
 * file settings                                                     :ARCHIVE:
-#+OPTIONS: f:t 
+#+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
-#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE 
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
@@ -35,14 +35,11 @@
 (add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
 #+END_SRC
 
-#+RESULTS:
-| ~/gnulisp/recent-addresses-0.1/ | ~/Dropbox/emacs/prelude/personal/ | ~/gnulisp/emacs-pastebin-master/ | ~/.emacs.d/helm-cmd-t | /Users/jay/.emacs.d/elpa/ace-jump-mode-20140616.115/ | /Users/jay/.emacs.d/elpa/ack-and-a-half-1.2.0/ | /Users/jay/.emacs.d/elpa/anzu-20150517.2142/ | /Users/jay/.emacs.d/elpa/auctex-11.88.6/ | /Users/jay/.emacs.d/elpa/auto-capitalize-20131014.505/ | /Users/jay/.emacs.d/elpa/auto-compile-20150511.1017/ | /Users/jay/.emacs.d/elpa/auto-complete-20150618.1949/ | /Users/jay/.emacs.d/elpa/auto-package-update-20150516.757/ | /Users/jay/.emacs.d/elpa/autopair-20140825.427/ | /Users/jay/.emacs.d/elpa/browse-kill-ring-20150606.1040/ | /Users/jay/.emacs.d/elpa/buffer-stack-20101223.1020 | /Users/jay/.emacs.d/elpa/bury-successful-compilation-20150328.1728/ | /Users/jay/.emacs.d/elpa/centered-cursor-mode-20150420.1942/ | /Users/jay/.emacs.d/elpa/color-theme-20080305.34 | /Users/jay/.emacs.d/elpa/cyberpunk-theme-20150714.1020/ | /Users/jay/.emacs.d/elpa/define-word-20150709.1223/ | /Users/jay/.emacs.d/elpa/deft-20150626.1247/ | /Users/jay/.emacs.d/elpa/dic-lookup-w3m-20150706.417/ | /Users/jay/.emacs.d/elpa/dired+-20150625.548/ | /Users/jay/.emacs.d/elpa/dired-details+-20150104.2150/ | /Users/jay/.emacs.d/elpa/dired-details-20130824.1158/ | /Users/jay/.emacs.d/elpa/dired-hacks-utils-20150213.1523/ | /Users/jay/.emacs.d/elpa/dired-imenu-20140109.810 | /Users/jay/.emacs.d/elpa/dired-single-20130824.1200 | /Users/jay/.emacs.d/elpa/dired-sort-menu+-20150104.2151/ | /Users/jay/.emacs.d/elpa/dired-sort-menu-20130824.1207 | /Users/jay/.emacs.d/elpa/discover-20140103.1339/ | /Users/jay/.emacs.d/elpa/edit-server-20141231.1358/ | /Users/jay/.emacs.d/elpa/elisp-slime-nav-20141224.854/ | /Users/jay/.emacs.d/elpa/emms-mark-ext-20130528.2027 | /Users/jay/.emacs.d/elpa/emms-20150519.736/ | /Users/jay/.emacs.d/elpa/engine-mode-20150613.759/ | /Users/jay/.emacs.d/elpa/exec-path-from-shell-20141212.846/ | /Users/jay/.emacs.d/elpa/expand-region-20150525.205/ | /Users/jay/.emacs.d/elpa/f-20150605.927/ | /Users/jay/.emacs.d/elpa/flx-ido-20140821.2033 | /Users/jay/.emacs.d/elpa/flx-isearch-20150529.1732/ | /Users/jay/.emacs.d/elpa/flx-20140921.739 | /Users/jay/.emacs.d/elpa/flycheck-20150714.1203/ | /Users/jay/.emacs.d/elpa/flyspell-lazy-20141222.652/ | /Users/jay/.emacs.d/elpa/fountain-mode-20150618.116/ | /Users/jay/.emacs.d/elpa/frame-cmds-20150104.2207/ | /Users/jay/.emacs.d/elpa/frame-fns-20150104.2208/ | /Users/jay/.emacs.d/elpa/frame-restore-20140811.1409/ | /Users/jay/.emacs.d/elpa/gandalf-theme-20130809.247/ | /Users/jay/.emacs.d/elpa/gist-20150505.1341/ | /Users/jay/.emacs.d/elpa/gh-20150126.1125/ | /Users/jay/.emacs.d/elpa/gitconfig-mode-20150405.1627/ | /Users/jay/.emacs.d/elpa/gitignore-mode-20150405.1627/ | /Users/jay/.emacs.d/elpa/gnorb-1.1.1/ | /Users/jay/.emacs.d/elpa/google-contacts-20140530.233 | /Users/jay/.emacs.d/elpa/google-this-20150522.240/ | /Users/jay/.emacs.d/elpa/goto-last-change-20150109.1023/ | /Users/jay/.emacs.d/elpa/grizzl-20150711.2230/ | /Users/jay/.emacs.d/elpa/guide-key-20150107.2235/ | /Users/jay/.emacs.d/elpa/guru-mode-20140905.702/ | /Users/jay/.emacs.d/elpa/ham-mode-20140815.1335 | /Users/jay/.emacs.d/elpa/helm-cmd-t-20150213.636 2/ | /Users/jay/.emacs.d/elpa/helm-descbinds-20140122.2158 | /Users/jay/.emacs.d/elpa/helm-dictionary-20141226.1136/ | /Users/jay/.emacs.d/elpa/helm-google-20141228.340/ | /Users/jay/.emacs.d/elpa/google-20140330.856 | /Users/jay/.emacs.d/elpa/helm-orgcard-20130608.430 | /Users/jay/.emacs.d/elpa/helm-projectile-20150714.842/ | /Users/jay/.emacs.d/elpa/helm-swoop-20150704.839/ | /Users/jay/.emacs.d/elpa/helm-w3m-20150323.21/ | /Users/jay/.emacs.d/elpa/helm-wordnet-20150614.814/ | /Users/jay/.emacs.d/elpa/help-fns+-20150403.1452/ | /Users/jay/.emacs.d/elpa/ht-20140122.1555 | /Users/jay/.emacs.d/elpa/html-to-markdown-20131212.1441 | /Users/jay/.emacs.d/elpa/htmlize-20130207.1202 | /Users/jay/.emacs.d/elpa/ido-better-flex-0.2 | /Users/jay/.emacs.d/elpa/ido-gnus-20140216.846/ | /Users/jay/.emacs.d/elpa/ido-hacks-20150331.1209/ | /Users/jay/.emacs.d/elpa/ido-ubiquitous-20150630.926/ | /Users/jay/.emacs.d/elpa/ido-completing-read+-20150630.926/ | /Users/jay/.emacs.d/elpa/ido-vertical-mode-20150623.1410/ | /Users/jay/.emacs.d/elpa/idomenu-20141123.1320/ | /Users/jay/.emacs.d/elpa/imenu+-20150104.2348/ | /Users/jay/.emacs.d/elpa/imenu-anywhere-20150523.537/ | /Users/jay/.emacs.d/elpa/info+-20150520.1807/ | /Users/jay/.emacs.d/elpa/isearch+-20150711.1903/ | /Users/jay/.emacs.d/elpa/js2-mode-20150713/ | /Users/jay/.emacs.d/elpa/kanban-20130815.48/ | /Users/jay/.emacs.d/elpa/key-chord-20140929.2246 | /Users/jay/.emacs.d/elpa/langtool-20150609.2131/ | /Users/jay/.emacs.d/elpa/late-night-theme-0.0 | /Users/jay/.emacs.d/elpa/leuven-theme-20150622.306/ | /Users/jay/.emacs.d/elpa/logito-20120225.1255 | /Users/jay/.emacs.d/elpa/lorem-ipsum-20140911.1408/ | /Users/jay/.emacs.d/elpa/magithub-0.2 | /Users/jay/.emacs.d/elpa/magit-20150715.1602/ | /Users/jay/.emacs.d/elpa/magit-popup-20150711.505/ | /Users/jay/.emacs.d/elpa/git-commit-20150706.331/ | /Users/jay/.emacs.d/elpa/makey-20131231.630/ | /Users/jay/.emacs.d/elpa/maxframe-20140916.754 | /Users/jay/.emacs.d/elpa/move-text-20140307.1644 | /Users/jay/.emacs.d/elpa/mpages-20150710.704/ | /Users/jay/.emacs.d/elpa/multiple-cursors-20150710.456/ | /Users/jay/.emacs.d/elpa/narrow-indirect-20150105.33/ | /Users/jay/.emacs.d/elpa/neotree-20150704.718/ | /Users/jay/.emacs.d/elpa/noflet-20141102.654/ | /Users/jay/.emacs.d/elpa/oauth-20130127.1751 | /Users/jay/.emacs.d/elpa/oauth2-0.10 | /Users/jay/.emacs.d/elpa/olivetti-20150620.2136/ | /Users/jay/.emacs.d/elpa/openwith-20120531.1436 | /Users/jay/.emacs.d/elpa/org-bullets-20140918.1137/ | /Users/jay/.emacs.d/elpa/org-download-20150707.344/ | /Users/jay/.emacs.d/elpa/org-fstree-20090723.819 | /Users/jay/.emacs.d/elpa/org-gcal-20150626.1830/ | /Users/jay/.emacs.d/elpa/org-grep-20140214.2022/ | /Users/jay/.emacs.d/elpa/org-mac-link-20150609.2315/ | /Users/jay/.emacs.d/elpa/org-plus-contrib-20150713/ | /Users/jay/.emacs.d/elpa/org-pomodoro-20150621.552/ | /Users/jay/.emacs.d/elpa/alert-20150402.1246/ | /Users/jay/.emacs.d/elpa/log4e-20150105.505/ | /Users/jay/.emacs.d/elpa/gntp-20141024.1950/ | /Users/jay/.emacs.d/elpa/org-projectile-20150701.1057/ | /Users/jay/.emacs.d/elpa/org2blog-20150509.2301 | /Users/jay/.emacs.d/elpa/metaweblog-20141130.605/ | /Users/jay/.emacs.d/elpa/org-20150713/ | /Users/jay/.emacs.d/elpa/osx-browse-20140508.1341 | /Users/jay/.emacs.d/elpa/browse-url-dwim-20140731.1222 | /Users/jay/.emacs.d/elpa/osx-plist-20101130.448/ | /Users/jay/.emacs.d/elpa/packed-20150614.529/ | /Users/jay/.emacs.d/elpa/palimpsest-20130731.821 | /Users/jay/.emacs.d/elpa/paradox-20150611.645/ | /Users/jay/.emacs.d/elpa/paredit-20150217.713/ | /Users/jay/.emacs.d/elpa/pdf-tools-20150709.1215/ | /Users/jay/.emacs.d/elpa/persistent-soft-20150223.1053/ | /Users/jay/.emacs.d/elpa/pcache-20150125.1653/ | /Users/jay/.emacs.d/elpa/point-stack-20140102.1223 | /Users/jay/.emacs.d/elpa/popup-20150626.711/ | /Users/jay/.emacs.d/elpa/powerline-20150628.1957/ | /Users/jay/.emacs.d/elpa/projectile-20150714.241/ | /Users/jay/.emacs.d/elpa/pkg-info-20150517.443/ | /Users/jay/.emacs.d/elpa/epl-20150517.433/ | /Users/jay/.emacs.d/elpa/rainbow-delimiters-20150320.17/ | /Users/jay/.emacs.d/elpa/rainbow-mode-0.11/ | /Users/jay/.emacs.d/elpa/recentf-ext-20130130.2150 | /Users/jay/.emacs.d/elpa/request-deferred-20130526.1015 | /Users/jay/.emacs.d/elpa/request-20140316.417 | /Users/jay/.emacs.d/elpa/deferred-20150309.2052/ | /Users/jay/.emacs.d/elpa/reveal-in-finder-20140905.335 | /Users/jay/.emacs.d/elpa/rich-minority-20150305.516/ | /Users/jay/.emacs.d/elpa/s-20140910.334/ | /Users/jay/.emacs.d/elpa/scratch-palette-20150225.42/ | /Users/jay/.emacs.d/elpa/popwin-20150315.600/ | /Users/jay/.emacs.d/elpa/scss-mode-20150107.1400/ | /Users/jay/.emacs.d/elpa/seq-20150709.1040/ | /Users/jay/.emacs.d/elpa/shut-up-20150423.522/ | /Users/jay/.emacs.d/elpa/smartparens-20150710.202/ | /Users/jay/.emacs.d/elpa/smex-20141210.1422/ | /Users/jay/.emacs.d/elpa/solarized-theme-20150714.1020/ | /Users/jay/.emacs.d/elpa/spinner-1.3.1/ | /Users/jay/.emacs.d/elpa/stem-20131102.409/ | /Users/jay/.emacs.d/elpa/string-utils-20140508.1341 | /Users/jay/.emacs.d/elpa/list-utils-20140508.1341 | /Users/jay/.emacs.d/elpa/stripe-buffer-20141208.708/ | /Users/jay/.emacs.d/elpa/sublime-themes-20150328.131/ | /Users/jay/.emacs.d/elpa/sx-20150702.818/ | /Users/jay/.emacs.d/elpa/let-alist-1.0.4/ | /Users/jay/.emacs.d/elpa/markdown-mode-20150715.1126/ | /Users/jay/.emacs.d/elpa/sync-recentf-20140725.452/ | /Users/jay/.emacs.d/elpa/tablist-20150618.2218/ | /Users/jay/.emacs.d/elpa/twittering-mode-20150131.708/ | /Users/jay/.emacs.d/elpa/undo-tree-20140509.522 | /Users/jay/.emacs.d/elpa/unfill-20131103.213 | /Users/jay/.emacs.d/elpa/use-package-20150622.1044/ | /Users/jay/.emacs.d/elpa/diminish-20091203.1012 | /Users/jay/.emacs.d/elpa/bind-key-20150321.213/ | /Users/jay/.emacs.d/elpa/uuidgen-20140918.1601/ | /Users/jay/.emacs.d/elpa/volatile-highlights-20141004.2240 | /Users/jay/.emacs.d/elpa/w3m-20150608.1838/ | /Users/jay/.emacs.d/elpa/warm-night-theme-20150607.741/ | /Users/jay/.emacs.d/elpa/wc-mode-20150117.502/ | /Users/jay/.emacs.d/elpa/web-mode-20150709.1434/ | /Users/jay/.emacs.d/elpa/wgrep-helm-20140528.1427/ | /Users/jay/.emacs.d/elpa/wgrep-20141016.1656/ | /Users/jay/.emacs.d/elpa/with-editor-20150710.252/ | /Users/jay/.emacs.d/elpa/dash-20150704.253/ | /Users/jay/.emacs.d/elpa/worf-20150518.415/ | /Users/jay/.emacs.d/elpa/hydra-20150624.203/ | /Users/jay/.emacs.d/elpa/ace-link-20150625.222/ | /Users/jay/.emacs.d/elpa/avy-20150713.2331/ | /Users/jay/.emacs.d/elpa/helm-20150715.307/ | /Users/jay/.emacs.d/elpa/helm-core-20150715.2114/ | /Users/jay/.emacs.d/elpa/async-20150529.529/ | /Users/jay/.emacs.d/elpa/writeroom-mode-20150712.1731/ | /Users/jay/.emacs.d/elpa/visual-fill-column-20150311.1735/ | /Users/jay/.emacs.d/elpa/xah-replace-pairs-20150522.333/ | /Users/jay/.emacs.d/elpa/xml-rpc-20150529.832/ | /Users/jay/.emacs.d/elpa/yaml-mode-20141125.37/ | /Users/jay/.emacs.d/elpa/yaxception-20150105.652/ | /Users/jay/.emacs.d/elpa/zenburn-theme-20150701.2237/ | /Users/jay/.emacs.d/elpa/zone-matrix-0.0.1 | /Users/jay/.emacs.d/vendor | /Users/jay/.emacs.d/modules | /Users/jay/.emacs.d/core | /Library/Application Support/Emacs/24.5/site-lisp | /Library/Application Support/Emacs/site-lisp | /Applications/Emacs.app/Contents/Resources/site-lisp | /Applications/Emacs.app/Contents/Resources/lisp | /Applications/Emacs.app/Contents/Resources/lisp/vc | /Applications/Emacs.app/Contents/Resources/lisp/url | /Applications/Emacs.app/Contents/Resources/lisp/textmodes | /Applications/Emacs.app/Contents/Resources/lisp/progmodes | /Applications/Emacs.app/Contents/Resources/lisp/play | /Applications/Emacs.app/Contents/Resources/lisp/org | /Applications/Emacs.app/Contents/Resources/lisp/nxml | /Applications/Emacs.app/Contents/Resources/lisp/net | /Applications/Emacs.app/Contents/Resources/lisp/mh-e | /Applications/Emacs.app/Contents/Resources/lisp/mail | /Applications/Emacs.app/Contents/Resources/lisp/leim | /Applications/Emacs.app/Contents/Resources/lisp/language | /Applications/Emacs.app/Contents/Resources/lisp/international | /Applications/Emacs.app/Contents/Resources/lisp/gnus | /Applications/Emacs.app/Contents/Resources/lisp/eshell | /Applications/Emacs.app/Contents/Resources/lisp/erc | /Applications/Emacs.app/Contents/Resources/lisp/emulation | /Applications/Emacs.app/Contents/Resources/lisp/emacs-parallel | /Applications/Emacs.app/Contents/Resources/lisp/emacs-lisp | /Applications/Emacs.app/Contents/Resources/lisp/cedet | /Applications/Emacs.app/Contents/Resources/lisp/calendar | /Applications/Emacs.app/Contents/Resources/lisp/calc | /Applications/Emacs.app/Contents/Resources/lisp/obsolete |
-
 ** Require some packages
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 #+END_SRC
-
+   
 * Require some org packages
 #+BEGIN_SRC emacs-lisp
 ;; (require 'org-bullets)
@@ -203,24 +200,16 @@ Turn off fill mode, which adds random line breaks in my text files:
 (delete-selection-mode 1)
 #+END_SRC
 
-#+RESULTS:
-: t
-
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
 (autopair-mode 1)
 (setq buffer-save-without-query nil)
 #+END_SRC
 
-#+RESULTS:
-
 ** Search in Spotlight
 #+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
 #+END_SRC
-
-#+RESULTS:
-: mdfind
 
 ** Automatically open files in their correct modes
 
@@ -231,7 +220,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("README$" . org-mode))
 (add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode)) 
+(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
@@ -248,8 +237,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 #+END_SRC
 
-#+RESULTS:
-
 * Org-mode
 ** Org setup
 *** Some favorite ~org~ settings:
@@ -264,9 +251,9 @@ Turn off fill mode, which adds random line breaks in my text files:
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
       '((heading . always)
-       (plain-list-item . nil))) 
-(setq org-return-follows-link t) 
-(setq org-export-with-planning t) 
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
+(setq org-export-with-planning t)
 
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
@@ -315,7 +302,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 *** agenda display settings
 
-    #+BEGIN_SRC emacs-lisp 
+    #+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -324,7 +311,7 @@ Turn off fill mode, which adds random line breaks in my text files:
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
 
-;; (setq org-agenda-prefix-format "%t %s") 
+;; (setq org-agenda-prefix-format "%t %s")
     #+END_SRC
 
 *** Stop mouse cursor from highlighting lines in org-agenda
@@ -386,9 +373,9 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
         (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
         (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)") 
+        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)")
         (sequence "STRATEGY" "|")
-(sequence "DONE" "|") 
+(sequence "DONE" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
@@ -408,10 +395,10 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
          (end-of-line))
         (t
          (org-delete-backward-char N))))
-(add-hook 
+(add-hook
  'org-mode-hook
  (lambda ()
-   (define-key org-mode-map (kbd "DEL") 
+   (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
 #+END_SRC
 
@@ -430,7 +417,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
 #+END_SRC
 
-*** export with drawers 
+*** export with drawers
 #+BEGIN_SRC emacs-lisp
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
@@ -592,11 +579,11 @@ e.g. nvALT
   "workflowy"
   (interactive)
   (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)  
+  (zin/org-outline-mode)
 (org-bullets-mode)
   (boss-mode)
   (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL") 
+  (define-key org-mode-map (kbd "DEL")
     'new-org-delete-backward-char)
   (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
   (insert "\n* "))
@@ -664,7 +651,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
   (org-table-map-tables 'org-table-align 'quietly))
 #+END_SRC
 
-*** Org extract link 
+*** Org extract link
 
 #+BEGIN_SRC emacs-lisp
 (defun my-org-extract-link ()
@@ -866,7 +853,7 @@ every new buffer will be unique:
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
-;; is this the best mode for editing HTML? 
+;; is this the best mode for editing HTML?
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 #+END_SRC
 
@@ -959,7 +946,7 @@ Make backups of files, even when they're in version control:
     (message-send-and-exit)))
 #+END_SRC
 
-** Forgot what this is 
+** Forgot what this is
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'completion-styles 'initials t)
@@ -976,7 +963,7 @@ Make backups of files, even when they're in version control:
 ** Remember recent email addresses
 
 #+BEGIN_SRC emacs-lisp
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses") 
+(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
@@ -990,7 +977,7 @@ Make backups of files, even when they're in version control:
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) 
+(setq message-send-hook (quote (org-mime-htmlize)))
 #+END_SRC
 
 * Pomodoro
@@ -1063,12 +1050,12 @@ I should probably eventually break these out of custom-set-variables and organiz
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t)))) 
+'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
     ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(case-fold-search t) 
+ '(case-fold-search t)
 '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
 
 
@@ -1413,12 +1400,12 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 
 
-* Miscellaneous 
+* Miscellaneous
 (setq vc-handled-backends ())
 
 * Key chords
 
-Use key chord 
+Use key chord
 #+BEGIN_SRC emacs-lisp
 ;;(require 'key-chord)
 (key-chord-mode 1)
@@ -1697,13 +1684,13 @@ Disable IDO faces to see flx highlights:
 
 (setq org-mime-default-header "")
 
-;; put a div tag around the whole message to put it in Georgia font. 
+;; put a div tag around the whole message to put it in Georgia font.
 (add-hook 'org-mime-html-hook
           (lambda ()
             (goto-char (point-min))
             (insert "<div style=\"font-family:Georgia,serif\">")
             (goto-char (point-max))
-            (insert "</div>"))) 
+            (insert "</div>")))
 
 ;; (add-hook 'org-mime-html-hook
 ;;          (lambda ()
@@ -1733,26 +1720,26 @@ Disable IDO faces to see flx highlights:
       (interactive)
 (org-narrow-to-subtree)
 (end-of-buffer)
-(insert "\n\n---\nJay Dixit 
-[[http://jaydixit.com/][jaydixit.com]] 
-(646) 355-8001\n") 
+(insert "\n\n---\nJay Dixit
+[[http://jaydixit.com/][jaydixit.com]]
+(646) 355-8001\n")
 (widen)
 (org-mime-subtree)
 (org-mime-htmlize)
-) 
+)
 
 
 #+END_SRC
 
 * Things that I don't know what they're for
 ** Set mark command
-# forgot what this is 
-(maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?) 
+# forgot what this is
+(maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?)
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
 #+END_SRC
 
-** I forgot what this is but it looks important 
+** I forgot what this is but it looks important
 #+BEGIN_SRC emacs-lisp
 (define-key org-mode-map
   (kbd "RET")
@@ -1841,7 +1828,7 @@ Jump to a definition in the current file. (This is awesome.)
 #+END_SRC
 
 ** Helm
-Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders. 
+Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders.
 
 #+BEGIN_SRC emacs-lisp
 (eval-after-load 'helm-grep
@@ -1919,7 +1906,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
-(add-to-list 'recentf-exclude "Calendar") 
+(add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
 (add-to-list 'recentf-exclude "\\ido*")
@@ -1934,9 +1921,9 @@ Make it so that recentf does not record the following uninteresting file types:
 
 (add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
 
-(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg" 
-".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv" 
-".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp")) 
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
+".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp"))
 #+END_SRC
 
 * Garbage characters
@@ -1997,7 +1984,7 @@ I think this is correct:
 (setq ls-lisp-ignore-case 't)
 #+END_SRC
 
-* Load shell environment correctly 
+* Load shell environment correctly
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -2016,7 +2003,7 @@ I think this is correct:
   )
 #+END_SRC
 
-** Paste notes with attribution 
+** Paste notes with attribution
 #+BEGIN_SRC emacs-lisp
 (defun web-research ()
   (interactive)
@@ -2105,7 +2092,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 
 (global-discover-mode 1)
 
-(load "makey") 
+(load "makey")
 
 (discover-add-context-menu
  :context-menu '(isearch
@@ -2291,7 +2278,7 @@ traditional word processors, highlighting whole words at a time:
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 #+END_SRC
 
-* Prose editing functions 
+* Prose editing functions
 ** Working with windows
 Transpose windows, useful:
 #+BEGIN_SRC emacs-lisp
@@ -2313,14 +2300,14 @@ Transpose windows, useful:
 (defun move-region-to-other-window (start end)
   "Move selected text to other window"
   (interactive "r")
-  (if (use-region-p) 
+  (if (use-region-p)
       (let ((count (count-words-region start end)))
         (save-excursion
           (kill-region start end)
-          (other-window 1)   
+          (other-window 1)
           (yank)
           (newline))
-        (other-window -1)     
+        (other-window -1)
         (message "Moved %s words" count))
     (message "No region selected")))
 #+END_SRC
@@ -2333,7 +2320,7 @@ A useful function: remove a hyperlink but leave the link description:
   (interactive)
   (if (org-in-regexp org-bracket-link-regexp 1)
       (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3) 
+        (description (if (match-end 3)
                  (org-match-string-no-properties 3)
                  (org-match-string-no-properties 1))))
     (apply 'delete-region remove)
@@ -2475,7 +2462,7 @@ function I have a persistent buffer list available.
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 #+END_SRC
 
-* Extra functionality 
+* Extra functionality
 ** Google search
 Enable Google search:
 #+BEGIN_SRC emacs-lisp
@@ -2513,7 +2500,7 @@ For popping around the buffer. I need to review how this works again.
 - ~smex-find-function~
 - ~smex-where-is~
 
-** BBDB contacts database (not currently using this) 
+** BBDB contacts database (not currently using this)
 
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
@@ -2561,7 +2548,7 @@ Redefine help shortcut:
 
 #+BEGIN_SRC emacs-lisp
 ;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir) 
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
 (global-set-key (kbd "C-c h") 'helm-mini)
 #+END_SRC
 
@@ -2604,7 +2591,7 @@ Shared Aquamacs / GNU Emacs keybindings:
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
 ;; (define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer) 
+;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer)
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 (define-hyper-key "r" 'helm-mini)
@@ -2637,49 +2624,49 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
 
-(define-hyper-key "m a" 'org-agenda) 
-(define-hyper-key "m j" 'helm-imenu-anywhere) 
+(define-hyper-key "m a" 'org-agenda)
+(define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
 #+END_SRC
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-hyper-key "m cy" 'cyberpunk-jay) 
-(define-hyper-key "m cl" 'cyberpunk-large) 
-(define-hyper-key "m zb" 'zenburn) 
-(define-hyper-key "m lv" 'leuven) 
-;; (define-hyper-key "m cl" 'cyberpunk-large) 
+(define-hyper-key "m cy" 'cyberpunk-jay)
+(define-hyper-key "m cl" 'cyberpunk-large)
+(define-hyper-key "m zb" 'zenburn)
+(define-hyper-key "m lv" 'leuven)
+;; (define-hyper-key "m cl" 'cyberpunk-large)
 
-(define-hyper-key "m cw" 'cyberpunk-writeroom) 
-(define-hyper-key "m wb" 'whiteboard) 
+(define-hyper-key "m cw" 'cyberpunk-writeroom)
+(define-hyper-key "m wb" 'whiteboard)
 (define-hyper-key "m sl" 'solarized-light)
-(define-hyper-key "m sd" 'solarized-dark) 
-(define-hyper-key "m ri" 'ritchie) 
-(define-hyper-key "m sp" 'spolsky) 
-(define-hyper-key "m wr" 'writeroom-mode) 
-(define-hyper-key "m wf" 'workflowy-mode) 
-(define-hyper-key "m st" 'small-type) 
-(define-hyper-key "m mp" 'morning-pages) 
-(define-hyper-key "m rf" 'prelude-rename-file-and-buffer) 
-(define-hyper-key "m lt" 'large-type) 
-(define-hyper-key "m mt" 'medium-type) 
-(define-hyper-key "m df" 'delete-file-and-buffer) 
+(define-hyper-key "m sd" 'solarized-dark)
+(define-hyper-key "m ri" 'ritchie)
+(define-hyper-key "m sp" 'spolsky)
+(define-hyper-key "m wr" 'writeroom-mode)
+(define-hyper-key "m wf" 'workflowy-mode)
+(define-hyper-key "m st" 'small-type)
+(define-hyper-key "m mp" 'morning-pages)
+(define-hyper-key "m rf" 'prelude-rename-file-and-buffer)
+(define-hyper-key "m lt" 'large-type)
+(define-hyper-key "m mt" 'medium-type)
+(define-hyper-key "m df" 'delete-file-and-buffer)
 
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled) 
+(define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
-(insert "(define-key key-minor-mode-map ") 
-        (insert (format "(kbd \"%s\")" (key-description key))) 
+(insert "(define-key key-minor-mode-map ")
+        (insert (format "(kbd \"%s\")" (key-description key)))
         (insert " '")
-(save-excursion (insert ")") 
+(save-excursion (insert ")")
                 ))
 
-(define-hyper-key "m kb" 'keybinding-read-and-insert) 
+(define-hyper-key "m kb" 'keybinding-read-and-insert)
 
 #+END_SRC
 
@@ -2868,7 +2855,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** helm projectile
 
-   #+BEGIN_EXAMPLE emacs-lisp 
+   #+BEGIN_EXAMPLE emacs-lisp
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
@@ -2877,7 +2864,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (define-key projectile-mode-map (kbd "C-c p /")
   #'(lambda ()
       (interactive)
-      (helm-ag (projectile-project-root)))) 
+      (helm-ag (projectile-project-root))))
    #+END_EXAMPLE
 
 * these seem to need to go at the end
@@ -2885,7 +2872,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
 ;; (require 'palimpsest)
-(palimpsest-mode 1) 
+(palimpsest-mode 1)
 #+END_SRC
 
 C-C C-R to move text to the bottom of the buffer
@@ -2930,11 +2917,11 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 ;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
 (load "~/Dropbox/elisp/jay-dixit-latex.el")
 (load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
-* 
+*
 magit
 
 #+BEGIN_SRC emacs-lisp
-(setq magit-last-seen-setup-instructions "1.4.0") 
+(setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 
 
@@ -2944,10 +2931,10 @@ magit
 #+END_SRC
 
 
-* Better backspace during isearch 
+* Better backspace during isearch
 Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
 
-#+BEGIN_EXAMPLE emacs-lisp 
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-isearch-delete ()
   "Delete the failed portion of the search string, or the last char if successful."
   (interactive)
@@ -2958,9 +2945,9 @@ Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Be
             isearch-new-message
             (mapconcat 'isearch-text-char-description isearch-new-string ""))))
 
-(define-key isearch-mode-map (kbd "<backspace>") 'my-isearch-delete) 
+(define-key isearch-mode-map (kbd "<backspace>") 'my-isearch-delete)
 #+END_EXAMPLE
- 
+
 
 * Tell isearch that curly apostrophes are the same as straight ones
 Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
@@ -2987,21 +2974,21 @@ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and 
            "'" "’" (car args))
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
-            #'endless/replace-quote) 
+            #'endless/replace-quote)
 #+END_SRC
- 
+
 
 * Save recentf automatically so recent files are stored even in the case of abnormal exit
-#+BEGIN_SRC emacs-lisp 
- (run-with-idle-timer 60 t 'recentf-save-list) 
+#+BEGIN_SRC emacs-lisp
+ (run-with-idle-timer 60 t 'recentf-save-list)
 #+END_SRC
- 
+
 
 * new stuff
-** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? 
+** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'?
 #+BEGIN_SRC emacs-lisp
 (advice-add #'org-remove-angle-brackets :before-until
-            (lambda (s) (if (string-prefix-p "mailto:" s) s))) 
+            (lambda (s) (if (string-prefix-p "mailto:" s) s)))
 #+END_SRC
 source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert-link-to-accept-mail-addresses-like-name-namesome-addr][org mode - How to allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? - Emacs Stack Exchange]]
 
@@ -3015,7 +3002,7 @@ to open source code block in indirect buffer
 
 
 * update packages
- (run-with-idle-timer 6000 t 'endless/upgrade) 
+ (run-with-idle-timer 6000 t 'endless/upgrade)
 
 
 * save some buffers
@@ -3026,15 +3013,15 @@ to open source code block in indirect buffer
     (cond
       ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
       ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode))) 
-((and buffer-file-name (eq major-mode 'fundamental-mode))) 
-((and buffer-file-name (eq major-mode 'markdown-mode))) 
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'fundamental-mode)))
+((and buffer-file-name (eq major-mode 'markdown-mode)))
 
-((and buffer-file-name (eq major-mode 'css-mode))) 
+((and buffer-file-name (eq major-mode 'css-mode)))
 
-((and buffer-file-name (eq major-mode 'nmxml-mode))) 
-((and buffer-file-name (eq major-mode 'gitconfig-mode))) 
-((and buffer-file-name (eq major-mode 'gitignore-mode))) 
+((and buffer-file-name (eq major-mode 'nmxml-mode)))
+((and buffer-file-name (eq major-mode 'gitconfig-mode)))
+((and buffer-file-name (eq major-mode 'gitignore-mode)))
       ((and buffer-file-name (eq major-mode 'sh-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
@@ -3063,8 +3050,8 @@ to open source code block in indirect buffer
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
 #+END_SRC
-* 
-* globally enable palimpsest-mode 
+*
+* globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
@@ -3075,27 +3062,27 @@ Handy way of getting back to previous places.
 
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
-#+END_SRC 
+#+END_SRC
 
-* 
+*
 
 * Treat all themes as safe
 
-#+BEGIN_SRC emacs-lisp 
-(setq custom-safe-themes t) 
+#+BEGIN_SRC emacs-lisp
+(setq custom-safe-themes t)
 #+END_SRC
- 
+
 
 * gnus
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq user-full-name "Jay Dixit")
-(setq gnus-always-read-dribble-file t) 
-(setq gnus-select-method '(nnml "")) 
+(setq gnus-always-read-dribble-file t)
+(setq gnus-select-method '(nnml ""))
 (setq gnus-select-method '(nnimap "gmail"
 (nnimap-address "imap.gmail.com")
 (nnimap-server-port 993)
-(nnimap-stream ssl))) 
+(nnimap-stream ssl)))
 
 (setq gnus-select-method
       '(nnimap "gmail"
@@ -3104,12 +3091,12 @@ Handy way of getting back to previous places.
 	       (nnimap-stream ssl)))
 
 
-;; How to read HTML mail 
-(setq mm-text-html-renderer 'w3m) 
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\not") 
+;; How to read HTML mail
+(setq mm-text-html-renderer 'w3m)
+(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s |  %&user-date; | %U\not")
 
 
-;; More attractive Summary View 
+;; More attractive Summary View
 ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
 (when window-system
   (setq gnus-sum-thread-tree-indent "  ")
@@ -3130,14 +3117,14 @@ Handy way of getting back to previous places.
        " "
        "%1{%B%}"
        "%s\n"))
-(setq gnus-summary-display-arrow t) 
-#+END_SRC 
+(setq gnus-summary-display-arrow t)
+#+END_SRC
 
 ** modified email-heading function
 
 #+BEGIN_SRC emacs-lisp
 
-(defun org-mime-htmlize (&optional arg) 
+(defun org-mime-htmlize (&optional arg)
 "Export a portion of an email body composed using `mml-mode' to
 html using `org-mode'.  If called with an active region only
 export that region, otherwise export the entire body."
@@ -3193,7 +3180,7 @@ HEADER and VALUE are strings.
 
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
-  (interactive) 
+  (interactive)
   ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
@@ -3225,12 +3212,12 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
+        (message-goto-to))
 (end-of-buffer)
-(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit 
-(646) 355-8001 
-[[http://jaydixit.com/][jaydixit.com]] 
-\n")) 
+(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
+(646) 355-8001
+[[http://jaydixit.com/][jaydixit.com]]
+\n"))
 (org-mime-htmlize)))
 
 
@@ -3247,7 +3234,7 @@ HEADER and VALUE are strings.
 
 Save when it was sent as a SENT property. this is overwritten on
 subsequent sends."
-  (interactive) 
+  (interactive)
   ; store location.
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (save-excursion
@@ -3279,14 +3266,14 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
+        (message-goto-to))
 (end-of-buffer)
-) 
+)
 (org-mime-htmlize)))
 #+END_SRC
- 
+
 ** Erika-send-mail
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (defun erika-send-email ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
@@ -3310,7 +3297,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>") 
+          (TO "Erika Casriel <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -3334,16 +3321,16 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
-) 
+        (message-goto-to))
+)
 ;; (org-mime-htmlize)
-)) 
+))
 #+END_SRC
 
 
-*** erika-send-email-styled-without-send 
+*** erika-send-email-styled-without-send
 
-#+begin_SRC emacs-lisp 
+#+begin_SRC emacs-lisp
 (defun erika-send-email-styled-without-send ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
@@ -3367,7 +3354,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net") 
+          (TO "Erika Casriel <erika.casriel@comcast.net")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -3391,8 +3378,8 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
-      ) 
+        (message-goto-to))
+      )
     (let ((org-mime-html-hook
            (list* (lambda ()
                     (goto-char (point-min))
@@ -3413,14 +3400,14 @@ subsequent sends."
 ;; (message-send-and-exit)
 )
 #+END_SRC
- 
+
 *** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE erika-send-email-styled
 Hi Rúdi,
 
-I added the line 
+I added the line
 
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (defun erika-send-email-styled ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
@@ -3444,7 +3431,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <sunjaydixit@gmail.com") 
+          (TO "Erika Casriel <sunjaydixit@gmail.com")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -3468,8 +3455,8 @@ subsequent sends."
         (insert BCC))
       (if TO
           (message-goto-body)
-        (message-goto-to)) 
-      ) 
+        (message-goto-to))
+      )
     (let ((org-mime-html-hook
            (list* (lambda ()
                     (goto-char (point-min))
@@ -3489,29 +3476,29 @@ subsequent sends."
 ))
 (message-send-and-exit)
 )
-#+END_SRC 
-
-* key-seq 
-key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical. 
-
-#+BEGIN_SRC emacs-lisp 
-(require 'key-seq) 
-(key-seq-define-global "qd" 'dired)
-(key-seq-define text-mode-map "qf" 'flyspell-buffer) 
 #+END_SRC
 
-* org-toggle-todo-heading 
+* key-seq
+key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical.
 
-  #+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
+(require 'key-seq)
+(key-seq-define-global "qd" 'dired)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer)
+#+END_SRC
+
+* org-toggle-todo-heading
+
+  #+BEGIN_SRC emacs-lisp
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
   (let ((is-heading))
     (save-excursion
       (forward-line 0)
-      (when (looking-at "^\\*") 
+      (when (looking-at "^\\*")
         (setq is-heading t)))
-    (if is-heading 
+    (if is-heading
         (progn
           (org-todo 'none) ; remove TODO
           (org-toggle-heading)) ; remove heading
@@ -3519,7 +3506,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
         (org-toggle-heading) ; convert to heading
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 #+END_SRC
- 
+
 * fix recent-addresses file
 
 
@@ -3529,9 +3516,9 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 "One sentence summary of what this command do."
   (interactive)
   ;; do something …
-  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses") 
-  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses")) 
-  #+END_SRC 
+  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses")
+  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses"))
+  #+END_SRC
 
 * find-file tricks
 [[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
@@ -3545,7 +3532,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
       (setq ido-exit 'refresh)
       (exit-minibuffer))))
 
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook) 
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
 
 (defun ido-find-file-jump (dir)
   "Return a command that sends DIR to `ido-find-file'."
@@ -3553,7 +3540,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
      (interactive)
      (ido-set-current-directory ,dir)
      (setq ido-exit 'refresh)
-     (exit-minibuffer))) 
+     (exit-minibuffer)))
 
 
 
@@ -3574,7 +3561,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 (add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
 #+END_SRC
- 
+
 
 * delete-extra-whitespace-region
 
@@ -3599,8 +3586,8 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
   (xah-replace-pairs-region begin end
  '(
  ["\r" "\n\n"]
-["\n" "\n\n"] 
-))) 
+["\n" "\n\n"]
+)))
   #+END_SRC
 
 * fixup-css-region
@@ -3612,9 +3599,9 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
                           '(["h2" "li"]
 ["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
 
-["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"] 
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"]
 
-["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"] 
+["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
 
 ))
 )
@@ -3631,7 +3618,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["&" "&amp;"]
  ["<" "&lt;"]
  [">" "&gt;"]
- ))) 
+ )))
   #+END_SRC
 
 * openwith
@@ -3648,14 +3635,14 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (list (openwith-make-extension-regexp
                     '("mp3"))
                    "open"
-                   '(file)) 
+                   '(file))
 
 (list (openwith-make-extension-regexp
-                    '("mp4" "mpg" "mpeg" 
+                    '("mp4" "mpg" "mpeg"
                       "avi" "wmv" "wav" "mov" "flv"
                       "ogm" "ogg" "mkv" "webm"))
                    "open -a vlc"
-                   '(file)) 
+                   '(file))
 
              (list (openwith-make-extension-regexp
                     '("xbm" "pbm" "pgm" "ppm" "pnm"
@@ -3676,31 +3663,31 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
              ))
       (openwith-mode 1))
 
-(setq org-startup-with-inline-images nil) 
+(setq org-startup-with-inline-images nil)
 
   #+END_SRC
 
 * Monochrome rainbows are the best way to reveal unbalanced delimiters
-I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters. 
+I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters.
 
-The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter. 
+The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (require 'rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
-                    :inherit 'error) 
+                    :inherit 'error)
 #+END_SRC
 
 * Chords
-Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evil-mode is the best VIM). Chords are so much more comfortable! For example I press j and x together instead of M-x. Just be careful when choosing chords that they are combinations you will never type normally. I mainly use chords for switching buffers, navigating windows, opening files, and transposing expressions. 
+Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evil-mode is the best VIM). Chords are so much more comfortable! For example I press j and x together instead of M-x. Just be careful when choosing chords that they are combinations you will never type normally. I mainly use chords for switching buffers, navigating windows, opening files, and transposing expressions.
 
 * org-download
 
 
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
 (require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
-(setq org-download-method (quote directory)) 
+(setq org-download-method (quote directory))
   #+END_SRC
