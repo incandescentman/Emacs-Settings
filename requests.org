@@ -9,8 +9,9 @@
 
 
 * NOTE-TO-RÚDI priorities
-If you could tackle the requests in the following order, that would be amazing:
-
+If you could tackle the requests in the following order, that would be amazing: 
+** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, see my note)
+** TODO [#A] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subtree]]
 ** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
 ** TODO [#A] gnu-emacs-startup.org: [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break]]
 ** TODO [#A] [[*add%20"capitalize%20first%20word%20of%20next%20sentence"%20to%20smart-period,%20smart-question-mark,%20and%20smart-exclamation%20mark][add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark]]

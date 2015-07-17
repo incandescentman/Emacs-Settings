@@ -3207,7 +3207,13 @@ export that region, otherwise export the entire body."
       (goto-char html-start)
       (insert (org-mime-multipart
 	       body html (mapconcat 'identity html-images "\n"))))))
+#+END_SRC
 
+** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE new-email-from-subtree          :rudi:
+
+See my note at send-email-erika-styled 
+
+#+BEGIN_SRC emacs-lisp 
 
 (defun new-email-from-subtree ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -3446,12 +3452,13 @@ subsequent sends."
 *** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#A] erika-send-email-styled
 Hi Rúdi,
 
-In the Gnus section, I added the line...
+So I added this line: 
 
 (setq message-send-hook (quote (org-mime-htmlize)))
 
-...because I'd like to call org-mime-htmlize automatically every time I send an email. However, adding this line made erika-send-email-styled break. I tried to debug it, without much luck. Can you investigate? Thanks!
+...because I'd like to call org-mime-htmlize automatically every time I send an email. However, adding this line breaks my other functions, including erika-send-email-styled and new-email-from-subtree. I tried to debug it, without much luck. Can you investigate? 
 
+By the way, the version of org-mime that I'm using is the one that comes with org-mode in the contrib section. I'll attach the file. Thanks! 
 
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email-styled ()

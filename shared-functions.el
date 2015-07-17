@@ -2315,7 +2315,6 @@ export that region, otherwise export the entire body."
       (insert (org-mime-multipart
 	       body html (mapconcat 'identity html-images "\n"))))))
 
-
 (defun new-email-from-subtree ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
