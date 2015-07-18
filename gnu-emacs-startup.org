@@ -166,8 +166,7 @@ Manually remove the scrollbar if default setting fails when creating a new frame
   (interactive)
   (scroll-bar-mode -1)
   )
-#+END_SRC
-
+#+END_SRC 
 
 Forgot what this does, I think it's in case Emacs crashes maybe to recover
 autosaves?

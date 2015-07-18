@@ -2,10 +2,20 @@
 (setq org-indent-mode t)
 (setq org-indent-indentation-per-level 2)
 
-(tooltip-mode -1)
-(tool-bar-mode -1)
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (tool-bar-mode -1)
+  (blink-cursor-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode 1)
+
+
+)
+
+
+;; (tooltip-mode -1)
+;; (tool-bar-mode -1)
 
 (add-hook 'org-mode-hook
           (lambda()

@@ -13,10 +13,20 @@
 
 *** Clean UI:
 #+BEGIN_SRC emacs-lisp
-(tooltip-mode -1)
-(tool-bar-mode -1)
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (tool-bar-mode -1)
+  (blink-cursor-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode 1)
+
+
+)
+
+
+;; (tooltip-mode -1)
+;; (tool-bar-mode -1)
 #+END_SRC
 
 *** Don't highlight lines:

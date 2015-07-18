@@ -617,7 +617,7 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize)))
+(setq message-send-hook (quote (org-mime-htmlize))) broke my other functions
 
 ;; (require 'org-pomodoro)
 
@@ -2419,7 +2419,7 @@ subsequent sends."
 )
 (org-mime-htmlize)))
 
-(defun erika-send-email ()
+(defun erika-send-email-without-send ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -2442,7 +2442,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>")
+          (TO "\"Erika Casriel\" <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -2468,10 +2468,10 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to))
 )
-;; (org-mime-htmlize)
+(org-mime-htmlize)
 ))
 
-(defun erika-send-email-styled-without-send ()
+(defun erika-send-email-styled ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -2494,7 +2494,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net")
+(TO "\"Erika Casriel\" <erika.casriel@comcast.net>") 
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -2537,7 +2537,7 @@ subsequent sends."
                   org-mime-html-hook)))
 (org-mime-htmlize)
 ))
-;; (message-send-and-exit)
+(message-send-and-exit)
 )
 
 (defun erika-send-email-styled ()
