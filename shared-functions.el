@@ -617,7 +617,7 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) broke my other functions
+(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
 ;; (require 'org-pomodoro)
 

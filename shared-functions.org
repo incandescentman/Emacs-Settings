@@ -977,7 +977,7 @@ Make backups of files, even when they're in version control:
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) broke my other functions
+(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 #+END_SRC
 
 * Pomodoro
@@ -3211,7 +3211,7 @@ export that region, otherwise export the entire body."
 
 ** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE new-email-from-subtree          :rudi:
 
-See my note at send-email-erika-styled 
+See my note at send-email-erika-styled. I'm afraid this function is now also broken, ever since I added (setq message-send-hook (quote (org-mime-htmlize)))
 
 #+BEGIN_SRC emacs-lisp 
 
