@@ -1942,6 +1942,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m lv" 'leuven)
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
 
+(define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 
+
 (define-hyper-key "m cw" 'cyberpunk-writeroom)
 (define-hyper-key "m wb" 'whiteboard)
 (define-hyper-key "m sl" 'solarized-light)
@@ -2695,3 +2697,7 @@ subsequent sends."
 (require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
+
+(defun delete-duplicate-lines-keep-blanks ()
+  (interactive)
+  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
