@@ -2251,3 +2251,25 @@ Do you want a command you can call, or do you want to *always* add the ~div~ tag
 ** NOTE-TO-RÚDI Answer
 Yes, I want to always add it. This is perfect, thanks! 
 
+
+* JavaScript 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-07-18 Sat 15:32
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests
+  :ARCHIVE_CATEGORY: requests
+  :END:
+** TODO [#B] Capture to PDF and return to Chrome
+Hi Rúdi,
+
+Do you know JavaScript? If you're interested, I might have some very quick JavaScript questions. for example the below, which comes from here:
+[[http://www.devontechnologies.com/download/extras-and-manuals.html][Install browser extensions and bookmarklets, and read the help files as PDFs or ebooks - DEVONtechnologies]]
+
+I believe it's the bookmarklet labeled "Text"
+
+#+BEGIN_SRC javascript
+javascript:window.location='x-devonthink://createText?location='+encodeURIComponent(window.location)+'&text='+encodeURIComponent(getSelection()); 
+#+END_SRC
+
+It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
+
