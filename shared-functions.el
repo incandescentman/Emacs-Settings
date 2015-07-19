@@ -1349,6 +1349,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
+
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
+
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik" (buffer-name buffer))

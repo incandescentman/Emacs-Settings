@@ -1879,6 +1879,12 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
+
+
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
+
 #+END_SRC
 
 * Ignore / Exclude Uninteresting Things
