@@ -3689,3 +3689,25 @@ You can tell delete-duplicate-lines to ignore blank lines by calling it via
   (interactive)
   (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
 #+END_SRC
+
+
+* helm search current directory 
+
+  #+BEGIN_SRC emacs-lisp
+(defun helm-do-grep-current-directory-tree ()
+  "Recursively search current directory.
+If a parent directory has a `dir-locals-file', use that as the
+root instead."
+  (interactive)
+  (let ((variables-file (dir-locals-find-file
+                         (or (buffer-file-name) default-directory))))
+    (helm-do-grep-1
+     (list
+      (cond
+       ((stringp variables-file)
+        (file-name-directory variables-file))
+       ((consp variables-file)
+        (nth 0 variables-file))
+       (t default-directory)))
+     t nil '("*"))))
+  #+END_SRC

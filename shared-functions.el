@@ -2706,3 +2706,20 @@ subsequent sends."
 (defun delete-duplicate-lines-keep-blanks ()
   (interactive)
   (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
+
+(defun helm-do-grep-current-directory-tree ()
+  "Recursively search current directory.
+If a parent directory has a `dir-locals-file', use that as the
+root instead."
+  (interactive)
+  (let ((variables-file (dir-locals-find-file
+                         (or (buffer-file-name) default-directory))))
+    (helm-do-grep-1
+     (list
+      (cond
+       ((stringp variables-file)
+        (file-name-directory variables-file))
+       ((consp variables-file)
+        (nth 0 variables-file))
+       (t default-directory)))
+     t nil '("*"))))
