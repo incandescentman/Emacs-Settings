@@ -68,17 +68,14 @@
 
 * hunspell
 
-   #+BEGIN_SRC emacs-lisp
-
-(executable-find "hunspell") 
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t) 
+   #+BEGIN_SRC emacs-lisp 
+(setq-default ispell-program-name (executable-find "hunspell")) 
+(setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
 
 (setq ispell-dictionary "en_US")
 (setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US")
-
+(setenv "DICTIONARY" "en_US") 
 
 (setq ispell-program-name "hunspell")
       (eval-after-load "ispell"
@@ -95,12 +92,10 @@
   (let ((current-location (point))
         (word (flyspell-get-word)))
     (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-
-
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location)))) 
    #+END_SRC
 
-References:
+** References:
 [[http://emacswiki.org/emacs/InteractiveSpell#toc2][EmacsWiki: Interactive Spell]]
 [[https://lists.gnu.org/archive/html/help-gnu-emacs/2015-03/msg00153.html][Getting flyspell + hunspell to work on OS X 10.10]]
 [[https://joelkuiper.eu/spellcheck_emacs][Spell checking in Emacs]]
@@ -111,7 +106,7 @@ References:
 [[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
 
 
-** Guide key 
+* Guide key 
 I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
 #+BEGIN_SRC emacs-lisp
 (require 'guide-key)

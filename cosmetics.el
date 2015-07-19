@@ -42,15 +42,13 @@
 
 (recenter-top-bottom)
 
-(executable-find "hunspell") 
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t) 
+(setq-default ispell-program-name (executable-find "hunspell")) 
+(setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
 
 (setq ispell-dictionary "en_US")
 (setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US")
-
+(setenv "DICTIONARY" "en_US") 
 
 (setq ispell-program-name "hunspell")
       (eval-after-load "ispell"
@@ -67,7 +65,7 @@
   (let ((current-location (point))
         (word (flyspell-get-word)))
     (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location)))) 
 
 (require 'guide-key)
 (setq guide-key/guide-key-sequence '("s-m" "C-x 4"))
