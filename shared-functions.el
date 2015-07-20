@@ -33,7 +33,8 @@
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
-'(mouse-highlight nil)
+(setq mouse-highlight nil)
+(setq-local cursor-in-non-selected-windows nil) 
 
 (setq confirm-kill-emacs 'yes-or-no-p)
 
@@ -565,6 +566,9 @@ Subject: %^{Subject}
 ;; add padding to numbered lists and bulleted lists (set to to)
 ;; (setq org-export-preserve-breaks t) 
 
+(load "/Users/jay/Dropbox/github/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/Dropbox/github/new-latex-templates/dotemacs.el") 
+
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
  backup-by-copying t      ; don't clobber symlinks
@@ -779,7 +783,7 @@ Subject: %^{Subject}
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+'(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
@@ -981,9 +985,8 @@ Subject: %^{Subject}
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through t))))
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
- '(org-hide-block-startup nil)
+ '(org-headline-done ((t (:strike-through to))))
+'(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")

@@ -893,11 +893,19 @@ every new buffer will be unique:
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-(setq org-export-preserve-breaks nil) 
+;; (setq org-export-preserve-breaks nil) 
 
 ;; add padding to numbered lists and bulleted lists (set to to)
-;; (setq org-export-preserve-breaks t) 
+(setq org-export-preserve-breaks t) 
 #+END_SRC
+
+** load my custom latex templates
+
+   #+BEGIN_SRC emacs-lisp
+(load "/Users/jay/Dropbox/github/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/Dropbox/github/new-latex-templates/dotemacs.el") 
+   #+END_SRC
+
 
 * Backups
 Make backups:
@@ -1172,7 +1180,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+'(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
@@ -1374,9 +1382,8 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through t))))
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
- '(org-hide-block-startup nil)
+ '(org-headline-done ((t (:strike-through to))))
+'(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")
