@@ -2670,7 +2670,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
+(define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")

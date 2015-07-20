@@ -561,10 +561,10 @@ Subject: %^{Subject}
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-(setq org-export-preserve-breaks nil) 
+;; (setq org-export-preserve-breaks nil) 
 
 ;; add padding to numbered lists and bulleted lists (set to to)
-;; (setq org-export-preserve-breaks t) 
+(setq org-export-preserve-breaks t) 
 
 (load "/Users/jay/Dropbox/github/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/Dropbox/github/new-latex-templates/dotemacs.el") 
@@ -1963,7 +1963,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
+(define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
