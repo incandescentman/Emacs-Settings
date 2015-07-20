@@ -31,7 +31,11 @@ Thanks again!
 Geneva... swans 
 #+END_EXAMPLE
 
-In the above example (without the BEGIN_EXAMPLE and END_EXAMPLE delimiters), if the point is after the "s" in "swans" and I hit smart-period, I get strange behavior... can you investigate? Thanks!
+In the above example (without the BEGIN_EXAMPLE and END_EXAMPLE delimiters), if the point is after the "s" in "swans" and I hit smart-period, I get strange behavior... 
+
+and this error: https://gist.github.com/fba6c32caf158aac9901
+
+can you investigate? Thanks!
 
 *** TODO [#B] kill-line-and-capitalize [1/3]
 Can you add something like this: 
