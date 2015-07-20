@@ -566,9 +566,11 @@ Subject: %^{Subject}
 ;; add padding to numbered lists and bulleted lists (set to to)
 ;; (setq org-export-preserve-breaks t) 
 
-(load "/Users/jay/Dropbox/github/new-latex-templates/blue-ruin.el") 
-(load "/Users/jay/Dropbox/github/new-latex-templates/dotemacs.el") 
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
 (require 'blue-ruin) 
+(require 'blue-ruin-no-cover) 
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
