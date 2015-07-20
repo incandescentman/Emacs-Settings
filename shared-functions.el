@@ -561,13 +561,14 @@ Subject: %^{Subject}
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-;; (setq org-export-preserve-breaks nil) 
+(setq org-export-preserve-breaks nil) 
 
 ;; add padding to numbered lists and bulleted lists (set to to)
-(setq org-export-preserve-breaks t) 
+;; (setq org-export-preserve-breaks t) 
 
 (load "/Users/jay/Dropbox/github/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/Dropbox/github/new-latex-templates/dotemacs.el") 
+(require 'blue-ruin) 
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
