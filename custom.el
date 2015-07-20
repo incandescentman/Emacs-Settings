@@ -185,7 +185,6 @@
      ("~" "\\verb" t))))
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
  '(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)

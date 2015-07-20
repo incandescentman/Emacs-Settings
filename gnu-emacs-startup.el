@@ -362,7 +362,7 @@
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 ;; grep, using current folder as default
-(define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-ag)
+(define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)

@@ -228,17 +228,6 @@
    (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
 
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc t)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
@@ -570,6 +559,12 @@ Subject: %^{Subject}
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
+;; don't add extra lines to numbered lists and bulleted lists (set to nil)
+(setq org-export-preserve-breaks nil) 
+
+;; add padding to numbered lists and bulleted lists (set to to)
+;; (setq org-export-preserve-breaks t) 
+
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
  backup-by-copying t      ; don't clobber symlinks
@@ -773,8 +768,7 @@ Subject: %^{Subject}
      ("~" "\\verb" t))))
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-time-stamp-file nil)
+'(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
@@ -977,8 +971,7 @@ Subject: %^{Subject}
  '(org-export-latex-date-format "%d %B %Y.")
  '(org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-with-clocks t)
+'(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
  '(org-export-with-toc nil)
@@ -2224,6 +2217,10 @@ searches all buffers."
 	       (nnimap-stream ssl)))
 
 
+
+;; store email in ~/gmail directory
+(setq nnml-directory "~/gmail")
+(setq message-directory "~/gmail") 
 
 
 ;; How to read HTML mail

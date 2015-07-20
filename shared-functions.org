@@ -50,19 +50,7 @@
 ; (require 'org-fstree)
 #+END_SRC
 
-* Set up spellcheck
-** Find aspell and hunspell
-# #+BEGIN_SRC emacs-lisp
-(cond
- ((executable-find "aspell")
-  (setq ispell-program-name "aspell")
-  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
- ((executable-find "hunspell")
-  (setq ispell-program-name "hunspell")
-  (setq ispell-extra-args '("-d en_U.S.")))
- )
-# #+END_SRC
-
+* Set up spellcheck 
 ** Spellcheck add word
 #+BEGIN_SRC emacs-lisp
 (defun add-word-to-personal-dictionary ()
@@ -113,6 +101,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 This customization with the big blocky boxy red cursor makes me so happy.
 # #+BEGIN_SRC emacs-lisp
+(setq-default cursor-type 'box) 
 (set-cursor-color "red")
 (setq default-frame-alist
       '((cursor-color . "red")))
@@ -404,7 +393,10 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** Org export
 *** Change section numbering depending on what export format I use
-#+BEGIN_SRC emacs-lisp
+
+Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
+
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
    ((equal backend 'html)
@@ -415,7 +407,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_SRC
+#+END_EXAMPLE
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp
@@ -897,6 +889,12 @@ every new buffer will be unique:
  '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; don't add extra lines to numbered lists and bulleted lists (set to nil)
+(setq org-export-preserve-breaks nil) 
+
+;; add padding to numbered lists and bulleted lists (set to to)
+;; (setq org-export-preserve-breaks t) 
 #+END_SRC
 
 * Backups
@@ -1161,8 +1159,7 @@ I should probably eventually break these out of custom-set-variables and organiz
      ("~" "\\verb" t))))
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-time-stamp-file nil)
+'(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
@@ -1365,8 +1362,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-export-latex-date-format "%d %B %Y.")
  '(org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-with-clocks t)
+'(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
  '(org-export-with-toc nil)
@@ -2642,7 +2638,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m cy" 'cyberpunk-jay)
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
-(define-hyper-key "m lv" 'leuven)
+(define-hyper-key "m le" 'leuven)
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
 
 (define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 
@@ -3103,6 +3099,10 @@ Handy way of getting back to previous places.
 	       (nnimap-stream ssl)))
 
 
+
+;; store email in ~/gmail directory
+(setq nnml-directory "~/gmail")
+(setq message-directory "~/gmail") 
 
 
 ;; How to read HTML mail
@@ -3711,3 +3711,5 @@ root instead."
        (t default-directory)))
      t nil '("*"))))
   #+END_SRC
+
+
