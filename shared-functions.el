@@ -1937,7 +1937,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m cy" 'cyberpunk-jay)
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
-(define-hyper-key "m lv" 'leuven)
+(define-hyper-key "m le" 'leuven)
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
 
 (define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 

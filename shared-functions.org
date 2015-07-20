@@ -71,7 +71,9 @@
 ** Stop accidentally highlighting org-mode links all the time:
 
 #+BEGIN_SRC emacs-lisp
-'(mouse-highlight nil)
+(setq mouse-highlight nil)
+(setq-local cursor-in-non-selected-windows nil) 
+
 #+END_SRC
 
 ** Ask before exiting Emacs
