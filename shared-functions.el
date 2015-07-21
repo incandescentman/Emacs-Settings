@@ -33,7 +33,8 @@
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
-'(mouse-highlight nil)
+(setq mouse-highlight nil)
+(setq-local cursor-in-non-selected-windows nil) 
 
 (setq confirm-kill-emacs 'yes-or-no-p)
 
@@ -227,17 +228,6 @@
  (lambda ()
    (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
-
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc t)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
 
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
@@ -570,6 +560,18 @@ Subject: %^{Subject}
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
+;; don't add extra lines to numbered lists and bulleted lists (set to nil)
+(setq org-export-preserve-breaks nil) 
+
+;; add padding to numbered lists and bulleted lists (set to to)
+;; (setq org-export-preserve-breaks t) 
+
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
+(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
+(require 'blue-ruin) 
+(require 'blue-ruin-no-cover) 
+
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
  backup-by-copying t      ; don't clobber symlinks
@@ -617,7 +619,7 @@ Subject: %^{Subject}
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize)))
+(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
 ;; (require 'org-pomodoro)
 
@@ -773,8 +775,7 @@ Subject: %^{Subject}
      ("~" "\\verb" t))))
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-time-stamp-file nil)
+'(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
@@ -785,7 +786,7 @@ Subject: %^{Subject}
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+'(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
@@ -977,8 +978,7 @@ Subject: %^{Subject}
  '(org-export-latex-date-format "%d %B %Y.")
  '(org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- '(org-export-preserve-breaks t)
- '(org-export-with-clocks t)
+'(org-export-with-clocks t)
  '(org-export-with-drawers t)
  '(org-export-with-section-numbers nil)
  '(org-export-with-toc nil)
@@ -988,9 +988,8 @@ Subject: %^{Subject}
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through t))))
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
- '(org-hide-block-startup nil)
+ '(org-headline-done ((t (:strike-through to))))
+'(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")
@@ -1348,6 +1347,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
+
+
+(require 'dired-x)
+(setq-default dired-omit-files-p t) ; this is buffer-local variable 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
@@ -1939,8 +1943,10 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m cy" 'cyberpunk-jay)
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
-(define-hyper-key "m lv" 'leuven)
+(define-hyper-key "m le" 'leuven)
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
+
+(define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 
 
 (define-hyper-key "m cw" 'cyberpunk-writeroom)
 (define-hyper-key "m wb" 'whiteboard)
@@ -1960,7 +1966,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
-(define-hyper-key "m ek" 'erika-send-email-styled-without-send)
+(define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -2218,6 +2224,10 @@ searches all buffers."
 
 
 
+;; store email in ~/gmail directory
+(setq nnml-directory "~/gmail")
+(setq message-directory "~/gmail") 
+
 
 ;; How to read HTML mail
 (setq mm-text-html-renderer 'w3m)
@@ -2442,7 +2452,7 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net>")
+          (TO "\"Erika Casriel\" <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
           (BCC (org-entry-get (point) "BCC" t))
           (SUBJECT (nth 4 (org-heading-components)))
@@ -2468,77 +2478,8 @@ subsequent sends."
           (message-goto-body)
         (message-goto-to))
 )
-;; (org-mime-htmlize)
-))
-
-(defun erika-send-email-styled-without-send ()
-  "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields.  Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
-  (interactive)
-                                        ; store location.
-  (setq *email-heading-point* (set-marker (make-marker) (point)))
-  (save-excursion
-    (let ((content (progn
-                     (unless (org-on-heading-p) (outline-previous-heading))
-                     (let ((headline (org-element-at-point)))
-                       (buffer-substring
-                        (org-element-property :contents-begin headline)
-                        (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <erika.casriel@comcast.net")
-          (CC (org-entry-get (point) "CC" t))
-          (BCC (org-entry-get (point) "BCC" t))
-          (SUBJECT (nth 4 (org-heading-components)))
-          (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-          (continue nil)
-          (switch-function nil)
-          (yank-action nil)
-          (send-actions '((email-send-action . nil)))
-          (return-action '(email-heading-return)))
-
-
-
-      (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-      (message-goto-body)
-      (insert content)
-      (when CC
-        (message-goto-cc)
-        (insert CC))
-      (when BCC
-        (message-goto-bcc)
-        (insert BCC))
-      (if TO
-          (message-goto-body)
-        (message-goto-to))
-      )
-    (let ((org-mime-html-hook
-           (list* (lambda ()
-                    (goto-char (point-min))
-                    (while (re-search-forward "</?\\(h2\\)" nil t)
-                      (replace-match "li" nil t nil 1)))
-                  (lambda ()
-                    (goto-char (point-min))
-                    (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-                    (goto-char (point-min))
-                    (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
-                    (goto-char (point-min))
-                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
-                    (goto-char (point-min))
-                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
-                  org-mime-html-hook)))
 (org-mime-htmlize)
 ))
-;; (message-send-and-exit)
-)
 
 (defun erika-send-email-styled ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -2764,3 +2705,58 @@ subsequent sends."
 (require 'org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
+
+(defun delete-duplicate-lines-keep-blanks ()
+  (interactive)
+  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
+
+(defun helm-do-grep-current-directory-tree ()
+  "Recursively search current directory.
+If a parent directory has a `dir-locals-file', use that as the
+root instead."
+  (interactive)
+  (let ((variables-file (dir-locals-find-file
+                         (or (buffer-file-name) default-directory))))
+    (helm-do-grep-1
+     (list
+      (cond
+       ((stringp variables-file)
+        (file-name-directory variables-file))
+       ((consp variables-file)
+        (nth 0 variables-file))
+       (t default-directory)))
+     t nil '("*"))))
+
+(defun contract-contractions (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["I have" "I've"]
+["I am" "I'm"] 
+)))
+
+(defun dcaps-to-scaps ()
+  "Convert word in DOuble CApitals to Single Capitals."
+  (interactive)
+  (and (= ?w (char-syntax (char-before)))
+       (save-excursion
+         (and (if (called-interactively-p)
+                  (skip-syntax-backward "w")
+                (= -3 (skip-syntax-backward "w")))
+              (let (case-fold-search)
+                (looking-at "\\b[[:upper:]]\\{2\\}[[:lower:]]"))
+              (capitalize-word 1)))))
+
+(add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
+
+(define-minor-mode dubcaps-mode
+  "Toggle `dubcaps-mode'.  Converts words in DOuble CApitals to
+Single Capitals as you type."
+  :init-value nil
+  :lighter (" DC")
+  (if dubcaps-mode
+      (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
+    (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
+
+(add-hook 'text-mode-hook #'dubcaps-mode)
+(add-hook 'org-mode-hook #'dubcaps-mode)

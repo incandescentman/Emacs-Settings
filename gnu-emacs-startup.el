@@ -243,6 +243,7 @@
 
 
 
+
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
@@ -361,7 +362,7 @@
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 ;; grep, using current folder as default
-(define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
+(define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
@@ -757,10 +758,7 @@ password: %s" userid password))
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
    (let ((src-code-types
-          '("emacs-lisp" "sh" "css"
-"dot"
-
-"latex")))
+          '("emacs-lisp" "sh" "css" "dot" "latex")))
      (list (ido-completing-read "Source code type: " src-code-types))))
   (progn
     (newline-and-indent)

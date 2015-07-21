@@ -1,0 +1,4 @@
+* TODO increase spacing between paragraphs
+* TODO increase spacing between numbered list items
+* TODO increase spacing between bulleted list items
+* TODO in the right header (rhead), remove space between @title and : character

@@ -166,8 +166,7 @@ Manually remove the scrollbar if default setting fails when creating a new frame
   (interactive)
   (scroll-bar-mode -1)
   )
-#+END_SRC
-
+#+END_SRC 
 
 Forgot what this does, I think it's in case Emacs crashes maybe to recover
 autosaves?
@@ -382,6 +381,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 
+
 ;; pop mark
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
@@ -500,7 +500,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 ;; grep, using current folder as default
-(define-key key-minor-mode-map (kbd "s-G") 'helm-do-grep)
+(define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
 (define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
@@ -1456,10 +1456,7 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
    (let ((src-code-types
-          '("emacs-lisp" "sh" "css"
-"dot"
-
-"latex")))
+          '("emacs-lisp" "sh" "css" "dot" "latex")))
      (list (ido-completing-read "Source code type: " src-code-types))))
   (progn
     (newline-and-indent)

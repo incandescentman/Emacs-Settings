@@ -1,4 +1,4 @@
-
+(require 'ox-latex)
 
 ;; Find LaTeX on my system
 (if (eq window-system 'mac)
@@ -16,6 +16,5 @@
 
 ;; TOC and section numbers
 (setq org-export-with-section-numbers t)
-(setq org-export-with-toc nil)
+(setq org-export-with-toc t)
 
-(load "/Users/jay/elisp/signal-flare-wide.el")
