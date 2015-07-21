@@ -1961,7 +1961,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m rf" 'prelude-rename-file-and-buffer)
 (define-hyper-key "m lt" 'large-type)
 (define-hyper-key "m mt" 'medium-type)
-(define-hyper-key "m df" 'delete-file-and-buffer)
+(define-hyper-key "m df" 'prelude-delete-file-and-buffer)
 
 
 ;; accountability
@@ -2760,3 +2760,15 @@ Single Capitals as you type."
 
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
+
+(defun prelude-delete-file-and-buffer ()
+  "Kill the current buffer and deletes the file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (if (vc-backend filename)
+          (vc-delete-file filename)
+        (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
+          (delete-file filename)
+          (message "Deleted file %s" filename)
+          (kill-buffer))))))
