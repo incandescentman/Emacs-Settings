@@ -1956,10 +1956,10 @@ Oleh
           (when heading-text
             (search-forward heading-text)
             (narrow-to-region (match-beginning 0) (match-end 0))))))
-    (flet ((go-back (regexp)
-                    (re-search-backward regexp nil t)
-                    (ignore-errors      ; might signal `end-of-buffer'
-                      (forward-char (length (match-string 0))))))
+    (cl-flet ((go-back (regexp)
+                (re-search-backward regexp nil t)
+                (ignore-errors      ; might signal `end-of-buffer'
+                  (forward-char (length (match-string 0))))))
       (if not-so-smart
           (let ((old-point (point)))
             (go-back "[^ \t]")
