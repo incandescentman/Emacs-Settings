@@ -37,6 +37,38 @@ and this error: https://gist.github.com/fba6c32caf158aac9901
 
 can you investigate? Thanks!
 
+*** TODO smart-punctuation behaviors 
+**** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
+Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
+
+Example:
+
+: You might have a conscious intention to eat healthier , but you forget.
+
+Say the point is on the comma. 
+
+Current behavior: no effect.
+
+Desired behavior: 
+: You might have a conscious intention to eat healthier, but you forget.
+
+**** TESTING [#A] smart-punctuation when there's already a correctly placed punctuation mark
+Example:
+
+: You might have a conscious intention to eat healthier, but you forget.
+
+Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma. I'd like to replicate this behavior---hitting comma gives consistent behavior regardless of whether there is an existing comma or not. 
+
+Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
+
+***** NOTE-TO-JAY Test files
+
+      I added some test files: [[file:smart-period-test.elt][smart-period-test.elt]] and [[file:smart-comma-test.elt][smart-comma-test.elt]] with several examples of the use of these functions (the other smart punctuation marks should be similar). Please review them.
+
+**** NOTE-TO-JAY Try it now
+
+     I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
+
 *** TODO [#B] kill-line-and-capitalize [1/3]
 Can you add something like this: 
 
@@ -181,60 +213,6 @@ Thanks!
 **** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
 Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
 
-*** TODO smart-punctuation behaviors 
-**** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
-Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
-
-Example:
-
-: You might have a conscious intention to eat healthier , but you forget.
-
-Say the point is on the comma. 
-
-Current behavior: no effect.
-
-Desired behavior: 
-: You might have a conscious intention to eat healthier, but you forget.
-
-**** TESTING [#A] smart-punctuation when there's already a correctly placed punctuation mark
-Example:
-
-: You might have a conscious intention to eat healthier, but you forget.
-
-Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma. I'd like to replicate this behavior---hitting comma gives consistent behavior regardless of whether there is an existing comma or not. 
-
-Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
-
-***** NOTE-TO-JAY Test files
-
-      I added some test files: [[file:smart-period-test.elt][smart-period-test.elt]] and [[file:smart-comma-test.elt][smart-comma-test.elt]] with several examples of the use of these functions (the other smart punctuation marks should be similar). Please review them.
-
-**** NOTE-TO-JAY Try it now
-
-     I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
-
-*** TODO [#B] create an auto-capitalization-predicate-exceptions-list?
-I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
-
-See my existing code: 
-
-#+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-#+END_SRC
-
-This works. However, I'd like to be able to keep this list in a plain text format and add to it. The reason I'm asking is because I wanted to add the word "vs." to the list (e.g. "good vs. evil") but I couldn't get the regexp correct with all the slash escaping. It would be easier if the list looked something like this: 
-
-#+BEGIN_SRC emacs-lisp
-(setq *auto-capitalize-exceptions*
-  (list "e.g." "i.e. " "vs." "..." "- [ ] ")) 
-#+END_SRC
-
-Thanks!
-
-*** TODO [#C] a tweak to my/kill-sentence-dwim 
-I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
-
 *** TODO [#A] add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark
 When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
 
@@ -260,6 +238,28 @@ Desired output:
 i.e. the period (or question mark or exclamation point) should trigger the capitalization of the first word in the next sentence. 
 
 Thanks! 
+
+*** TODO [#B] create an auto-capitalization-predicate-exceptions-list?
+I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
+
+See my existing code: 
+
+#+BEGIN_SRC emacs-lisp
+(setq auto-capitalize-predicate
+      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+#+END_SRC
+
+This works. However, I'd like to be able to keep this list in a plain text format and add to it. The reason I'm asking is because I wanted to add the word "vs." to the list (e.g. "good vs. evil") but I couldn't get the regexp correct with all the slash escaping. It would be easier if the list looked something like this: 
+
+#+BEGIN_SRC emacs-lisp
+(setq *auto-capitalize-exceptions*
+  (list "e.g." "i.e. " "vs." "..." "- [ ] ")) 
+#+END_SRC
+
+Thanks!
+
+*** TODO [#C] a tweak to my/kill-sentence-dwim 
+I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 ** 
 *** TESTING [#B] a smart-space exception for org-mode tags
 
@@ -283,5 +283,5 @@ Desired output:
 *** NOTE-TO-RÚDI Question about spaces?
 It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
 
-*** todo [#C] kill-ring-to-pasteboard
+*** TODO [#C] kill-ring-to-pasteboard
 Can we create a function to push the contents of the kill ring to the pasteboard? Because some functions (e.g. gist-buffer) push output into the kill ring and I'd like to be able to access it from other OSX apps. Thanks!
