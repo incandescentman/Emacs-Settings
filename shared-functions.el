@@ -2726,3 +2726,11 @@ root instead."
         (nth 0 variables-file))
        (t default-directory)))
      t nil '("*"))))
+
+(defun contract-contractions (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["I have" "I've"]
+["I am" "I'm"] 
+)))
