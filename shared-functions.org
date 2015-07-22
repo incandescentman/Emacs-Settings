@@ -1450,7 +1450,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 * Autocomplete
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (require 'auto-complete)
 (defun ac-ispell-get-word ()
   (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
@@ -1466,14 +1466,14 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (ac-define-source ispell
   '((prefix . ac-prefix)
     (candidates . ac-ispell-get-candidates)))
-#+END_EXAMPLE 
+#+END_SRC 
 
 It's not a good idea to add `ac-source-ispell' to `ac-sources', I'll recommend
 manual invoking.
 
 Newer version of ~ac-define-source~ would provide us an
 ~ac-complete-ispell-word~.  In case it didn't:
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun ac-expand-ispell-word ()
   (interactive)
   (let ((ac-sources '(ac-source-ispell)))
@@ -1482,12 +1482,12 @@ Newer version of ~ac-define-source~ would provide us an
 (define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
 
 (ac-flyspell-workaround)
-#+END_EXAMPLE
+#+END_SRC
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
 ;; Completion words longer than 4 characters
-#+END_EXAMPLE
+#+END_SRC
 
 #+BEGIN_EXAMPLE emacs-lisp
 (defun buffer-background-black ()
@@ -1503,11 +1503,11 @@ Newer version of ~ac-define-source~ would provide us an
 ;; (add-hook 'message-mode-hook 'buffer-background-black)
 #+END_EXAMPLE
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (eval-after-load "auto-complete"
   '(progn
      (ac-ispell-setup)))
-#+END_EXAMPLE 
+#+END_SRC 
 
 * ~ido~
 
@@ -2831,11 +2831,11 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq helm-swoop-speed-or-color nil)
 #+END_SRC
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-#+END_EXAMPLE 
+#+END_SRC 
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
@@ -2946,25 +2946,6 @@ magit
 #+BEGIN_SRC emacs-lisp
 ;; (load-theme 'leuven)
 #+END_SRC
-
-
-* Better backspace during isearch
-Source: [[http://endlessparentheses.com/better-backspace-during-isearch.html][Better backspace during isearch · Endless Parentheses]]
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-isearch-delete ()
-  "Delete the failed portion of the search string, or the last char if successful."
-  (interactive)
-  (with-isearch-suspended
-      (setq isearch-new-string
-            (substring
-             isearch-string 0 (or (isearch-fail-pos) (1- (length isearch-string))))
-            isearch-new-message
-            (mapconcat 'isearch-text-char-description isearch-new-string ""))))
-
-(define-key isearch-mode-map (kbd "<backspace>") 'my-isearch-delete)
-#+END_EXAMPLE
-
 
 * Tell isearch that curly apostrophes are the same as straight ones
 Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]

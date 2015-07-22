@@ -1031,6 +1031,38 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
+(require 'auto-complete)
+(defun ac-ispell-get-word ()
+  (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
+
+(defun ac-ispell-get-candidates (prefix)
+  (let ((word prefix)
+        (interior-frag nil))
+    (lookup-words (concat (and interior-frag "*") word
+                          (if (or interior-frag (null ispell-look-p))
+                              "*"))
+                  ispell-complete-word-dict)))
+
+(ac-define-source ispell
+  '((prefix . ac-prefix)
+    (candidates . ac-ispell-get-candidates)))
+
+(defun ac-expand-ispell-word ()
+  (interactive)
+  (let ((ac-sources '(ac-source-ispell)))
+    (call-interactively 'ac-start)))
+
+(define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
+
+(ac-flyspell-workaround)
+
+(load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
+;; Completion words longer than 4 characters
+
+(eval-after-load "auto-complete"
+  '(progn
+     (ac-ispell-setup)))
+
 (add-hook 'ido-setup-hook
 	  (lambda ()
 	    ;; Go straight home
@@ -2014,6 +2046,10 @@ searches all buffers."
 (setq helm-swoop-split-direction 'split-window-vertically)
 
 (setq helm-swoop-speed-or-color nil)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
 (global-set-key (kbd "M-y")     #'helm-show-kill-ring)
