@@ -2692,7 +2692,16 @@ Single Capitals as you type."
           (kill-buffer))))))
 
 (require 'yasnippet) 
+
+;; load yasnippet directories
+;; TODO needs to be set before loading snippets somehow
+(setq yas-snippet-dirs '("~/.emacs.d/snippets" yas-installed-snippets-dir 
+                           "~/Downloads/interesting-snippets" "~/Dropbox/emacs/snippets"))
+
+;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 
+
+
 
    (add-hook 'org-mode-hook
                     (lambda ()
