@@ -2691,6 +2691,7 @@ Single Capitals as you type."
           (message "Deleted file %s" filename)
           (kill-buffer))))))
 
+(require 'yasnippet) 
    (add-hook 'org-mode-hook
                     (lambda ()
                       (org-set-local 'yas-trigger-key [tab])

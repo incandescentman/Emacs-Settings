@@ -3791,8 +3791,8 @@ Single Capitals as you type."
 
 * yasnippet
 
-  #+BEGIN_SRC emacs-lisp
-
+  #+BEGIN_SRC emacs-lisp 
+(require 'yasnippet) 
    (add-hook 'org-mode-hook
                     (lambda ()
                       (org-set-local 'yas-trigger-key [tab])
