@@ -550,7 +550,7 @@ Subject: %^{Subject}
 (setq default-directory "~/Dropbox/writing/" )
 
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2014/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2015/bin/universal-darwin")
   )
 
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
@@ -786,7 +786,7 @@ Subject: %^{Subject}
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
-'(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
@@ -1031,50 +1031,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
 
-(require 'auto-complete)
-(defun ac-ispell-get-word ()
-  (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
-
-(defun ac-ispell-get-candidates (prefix)
-  (let ((word prefix)
-        (interior-frag nil))
-    (lookup-words (concat (and interior-frag "*") word
-                          (if (or interior-frag (null ispell-look-p))
-                              "*"))
-                  ispell-complete-word-dict)))
-
-(ac-define-source ispell
-  '((prefix . ac-prefix)
-    (candidates . ac-ispell-get-candidates)))
-
-(defun ac-expand-ispell-word ()
-  (interactive)
-  (let ((ac-sources '(ac-source-ispell)))
-    (call-interactively 'ac-start)))
-
-(define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
-
-(ac-flyspell-workaround)
-
-(load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
-;; Completion words longer than 4 characters
-
-(defun buffer-background-black ()
-  (interactive)
-  (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
-  (buffer-face-mode 1))
-
-;;
-(defun my/enable-ac-ispell ()
-  (add-to-list 'ac-sources 'ac-source-ispell))
-(add-hook 'org-mode-hook 'my/enable-ac-ispell)
-(add-hook 'message-mode-hook 'my/enable-ac-ispell)
-;; (add-hook 'message-mode-hook 'buffer-background-black)
-
-(eval-after-load "auto-complete"
-  '(progn
-     (ac-ispell-setup)))
-
 (add-hook 'ido-setup-hook
 	  (lambda ()
 	    ;; Go straight home
@@ -1268,8 +1224,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
         (delete-region (region-beginning)
                        (region-end))
       (call-interactively 'org-return))))
-
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
 
 (add-hook 'desktop-after-read-hook 'calendar)
 
@@ -1488,7 +1442,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (defun jd-org-today ()
   "insert a new heading with today's date"
   (interactive)
-(insert "\n** daily: ")
+(insert "\n** committed actions: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 (insert "*** TODO \n")
@@ -1535,17 +1489,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                ("More"
                 ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
  :bind "M-s")
-
-(setq ac-auto-start 3)
-(setq company-minimum-prefix-length 3)
-
-(defun endless/config-prose-completion ()
-  "Make auto-complete less agressive in this buffer."
-  (setq-local company-minimum-prefix-length 6)
-  (setq-local ac-auto-start 6))
-
-(add-hook 'org-mode-hook
-  #'endless/config-prose-completion)
 
 (defun endless/convert-punctuation (rg rp)
   "Look for regexp RG around point, and replace with RP.
@@ -2072,10 +2015,6 @@ searches all buffers."
 
 (setq helm-swoop-speed-or-color nil)
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
 (global-set-key (kbd "M-y")     #'helm-show-kill-ring)
 (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
@@ -2176,27 +2115,6 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'gitignore-mode)))
       ((and buffer-file-name (eq major-mode 'sh-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
-
-;;;; autocomplete
-;; I don't know what I'm doing here but it seems to work
-;; auto-complete mode
-(require 'auto-complete)
-(dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
-                                    sass-mode  csv-mode
-                                    html-mode sh-mode
-                                    lisp-mode  markdown-mode emacs-lisp-mode ))
-  (add-to-list 'ac-modes mode))
-
-
-;; tab completion
-(ac-set-trigger-key "TAB")
-
-;; haven't used these, not sure how to
-(define-key ac-completing-map (kbd "C-M-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
-(define-key ac-completing-map "\t" 'ac-complete)
-(define-key ac-completing-map (kbd "M-RET") 'ac-help)
-(define-key ac-completing-map "\r" 'nil)
 
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 

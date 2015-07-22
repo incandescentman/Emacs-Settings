@@ -877,7 +877,7 @@ every new buffer will be unique:
 
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2014/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2015/bin/universal-darwin")
   )
 #+END_SRC
 
@@ -1183,7 +1183,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
-'(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
@@ -1450,7 +1450,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 * Autocomplete
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (require 'auto-complete)
 (defun ac-ispell-get-word ()
   (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
@@ -1466,14 +1466,14 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (ac-define-source ispell
   '((prefix . ac-prefix)
     (candidates . ac-ispell-get-candidates)))
-#+END_SRC
+#+END_EXAMPLE 
 
 It's not a good idea to add `ac-source-ispell' to `ac-sources', I'll recommend
 manual invoking.
 
 Newer version of ~ac-define-source~ would provide us an
 ~ac-complete-ispell-word~.  In case it didn't:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ac-expand-ispell-word ()
   (interactive)
   (let ((ac-sources '(ac-source-ispell)))
@@ -1482,14 +1482,14 @@ Newer version of ~ac-define-source~ would provide us an
 (define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
 
 (ac-flyspell-workaround)
-#+END_SRC
+#+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
 ;; Completion words longer than 4 characters
-#+END_SRC
+#+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun buffer-background-black ()
   (interactive)
   (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
@@ -1501,13 +1501,13 @@ Newer version of ~ac-define-source~ would provide us an
 (add-hook 'org-mode-hook 'my/enable-ac-ispell)
 (add-hook 'message-mode-hook 'my/enable-ac-ispell)
 ;; (add-hook 'message-mode-hook 'buffer-background-black)
-#+END_SRC
+#+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (eval-after-load "auto-complete"
   '(progn
      (ac-ispell-setup)))
-#+END_SRC
+#+END_EXAMPLE 
 
 * ~ido~
 
@@ -1763,9 +1763,9 @@ Disable IDO faces to see flx highlights:
 ** Hippie expand
 
 [[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
-#+END_SRC
+#+END_EXAMPLE 
 
 ** Calendar
 Show calendar after start:
@@ -2075,7 +2075,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (defun jd-org-today ()
   "insert a new heading with today's date"
   (interactive)
-(insert "\n** daily: ")
+(insert "\n** committed actions: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 (insert "*** TODO \n")
@@ -2133,7 +2133,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 # haven't tried this yet
 
 Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2144,7 +2144,7 @@ Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]]
 
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
-#+END_SRC
+#+END_EXAMPLE 
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
 ([[http://endlessparentheses.com/super-smart-capitalization.html][source]]):
@@ -2831,11 +2831,11 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq helm-swoop-speed-or-color nil)
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-#+END_SRC
+#+END_EXAMPLE 
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
@@ -3044,7 +3044,7 @@ to open source code block in indirect buffer
 #+END_SRC
 
 * stuff that I moved from custom.el
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
@@ -3066,7 +3066,7 @@ to open source code block in indirect buffer
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil)
-#+END_SRC
+#+END_EXAMPLE 
 *
 * globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
