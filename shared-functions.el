@@ -2692,6 +2692,8 @@ Single Capitals as you type."
           (kill-buffer))))))
 
 (require 'yasnippet) 
+(setq yas-indent-line (quote none)) 
+
    (add-hook 'org-mode-hook
                     (lambda ()
                       (org-set-local 'yas-trigger-key [tab])
