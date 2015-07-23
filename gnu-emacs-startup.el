@@ -291,6 +291,10 @@
 
 (define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ;
 
+(define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
+
+
+
 ;; book bindings
 (define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) ; go to my book folder
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
