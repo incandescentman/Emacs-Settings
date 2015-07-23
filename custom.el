@@ -120,7 +120,7 @@
    "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files
    (quote
-    ("~/Dropbox/writing/notationaldata/accountability.org" "~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")))
+    ("~/Dropbox/writing/notationaldata/accountability.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-prefix-format
    (quote
@@ -274,7 +274,6 @@
     (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
-;; '(org-org-htmlized-css-url " /Users/jay/Dropbox/web-design/custom-css/email.css ") ; doesn't work
  '(org-pomodoro-format "Pomodoro: %s")
  '(org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
  '(org-pomodoro-length 50)
@@ -336,6 +335,8 @@
  '(tool-bar-mode nil)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
+ '(typopunct-buffer-language (quote english))
+ '(typopunct-language-alist (quote ((english 8220 8221 8216 8217))))
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")

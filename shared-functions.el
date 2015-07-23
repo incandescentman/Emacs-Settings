@@ -1341,7 +1341,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -2767,3 +2767,23 @@ Single Capitals as you type."
                       (setq yas-trigger-key [tab])
                       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
                       (define-key yas-keymap [tab] 'yas-next-field))) 
+
+(require 'typopunct) ;; available here: http://www.emacswiki.org/emacs/typopunct.el 
+    (defconst typopunct-ellipsis (decode-char 'ucs #x2026))
+    (defconst typopunct-middot   (decode-char 'ucs #xB7)) ; or 2219
+    (defun typopunct-insert-ellipsis-or-middot (arg)
+      "Change three consecutive dots to a typographical ellipsis mark."
+      (interactive "p")
+      (cond
+       ((and (= 1 arg)
+             (eq (char-before) ?^))
+        (delete-char -1)
+        (insert typopunct-middot))
+       ((and (= 1 arg)
+             (eq this-command last-command)
+             (looking-back "\\.\\."))
+        (replace-match "")
+        (insert typopunct-ellipsis))
+       (t
+        (self-insert-command arg))))
+    (define-key typopunct-map "." 'typopunct-insert-ellipsis-or-middot) 
