@@ -19,3 +19,8 @@
 (setq org-export-with-toc nil)
 
 (load "/Users/jay/elisp/signal-flare-wide.el")
+
+(defun insert-ellipsis ()
+       (interactive)
+       (insert "… ")
+  )
