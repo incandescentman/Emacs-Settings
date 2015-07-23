@@ -51,9 +51,9 @@
 
 (defvar typopunct-map
   (let ((map (make-sparse-keymap)))
-    (define-key map [?-] 'typopunct-insert-typographical-dashes)
-    (define-key map [?\"] 'typopunct-insert-quotation-mark)
-    (define-key map [?\'] 'typopunct-insert-single-quotation-mark)
+;;    (define-key map [?-] 'typopunct-insert-typographical-dashes)
+;;    (define-key map [?\"] 'typopunct-insert-quotation-mark)
+;;    (define-key map [?\'] 'typopunct-insert-single-quotation-mark)
     map)
   "Keymap used by TypoPunct mode.")
 
@@ -164,6 +164,42 @@ function that should return non nil, when
   :type '(alist :key-type symbol :value-type function))
 
 
+(defvar typopunct-opening-quote-syntax-list
+  '(?\  ?\- ?\( )
+  "Syntax classes for opening quotation marks.
+If the character before point belongs to one of these syntax classes,
+then the function `typopunct-insert-quotation-mark' inserts an opening
+quotation mark.")
+
+(defun typopunct-insert-quotation-mark (&optional single)
+  "Insert typographical quotation marks depending on language.
+The language assumed is either the value of the text property
+`typopunct-language' or the value of the variable
+`typopunct-buffer-language'."
+  (interactive)
+  (let ((lang (or (get-text-property (point) 'typopunct-language)
+		  typopunct-buffer-language))
+	(pfunc (cdr (assq major-mode typopunct-mode-exeptions-alist)))
+	(qmark nil))
+    (if (and lang
+	     (not (and pfunc
+		       (funcall pfunc))))
+	(if (or (bobp)
+		(memq (char-syntax (char-before))
+		      typopunct-opening-quote-syntax-list))
+	    ;; After whitespace etc.: Opening quotation mark.
+	    (setq qmark (if single
+			    (typopunct-opening-single-quotation-mark lang)
+			  (typopunct-opening-quotation-mark lang)))
+	  ;; Everywhere else: Closing quotation mark.
+	  (setq qmark (if single
+			  (typopunct-closing-single-quotation-mark lang)
+			(typopunct-closing-quotation-mark lang)))))
+      (insert (or qmark (if single ?\' ?\")))))
+
+(defun typopunct-insert-single-quotation-mark ()
+  (interactive)
+  (typopunct-insert-quotation-mark t))
 
 (define-minor-mode typopunct-mode
   "Toggle TypoPunct mode, a minor mode for automatic typographical punctuation.
