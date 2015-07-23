@@ -2099,9 +2099,6 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-
 (setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; (load-theme 'leuven)
@@ -2767,23 +2764,3 @@ Single Capitals as you type."
                       (setq yas-trigger-key [tab])
                       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
                       (define-key yas-keymap [tab] 'yas-next-field))) 
-
-(require 'typopunct) ;; available here: http://www.emacswiki.org/emacs/typopunct.el 
-    (defconst typopunct-ellipsis (decode-char 'ucs #x2026))
-    (defconst typopunct-middot   (decode-char 'ucs #xB7)) ; or 2219
-    (defun typopunct-insert-ellipsis-or-middot (arg)
-      "Change three consecutive dots to a typographical ellipsis mark."
-      (interactive "p")
-      (cond
-       ((and (= 1 arg)
-             (eq (char-before) ?^))
-        (delete-char -1)
-        (insert typopunct-middot))
-       ((and (= 1 arg)
-             (eq this-command last-command)
-             (looking-back "\\.\\."))
-        (replace-match "")
-        (insert typopunct-ellipsis))
-       (t
-        (self-insert-command arg))))
-    (define-key typopunct-map "." 'typopunct-insert-ellipsis-or-middot) 

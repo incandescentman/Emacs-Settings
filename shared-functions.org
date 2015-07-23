@@ -2919,10 +2919,10 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+END_SRC
 
 * experimenting
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq auto-capitalize-predicate
       (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-#+END_SRC
+#+END_EXAMPLE 
 
 
 
@@ -3816,33 +3816,4 @@ Single Capitals as you type."
 
 
 
-#+END_SRC
-
-
-* typographical ellipsis
-
-Ellipsis and middle dot
-To insert a typographical ellipsis sign (…) on three consecutive dots, or a middle dot (·) on '^.', use the following code:
-
-
-#+BEGIN_SRC emacs-lisp
-(require 'typopunct) ;; available here: http://www.emacswiki.org/emacs/typopunct.el 
-    (defconst typopunct-ellipsis (decode-char 'ucs #x2026))
-    (defconst typopunct-middot   (decode-char 'ucs #xB7)) ; or 2219
-    (defun typopunct-insert-ellipsis-or-middot (arg)
-      "Change three consecutive dots to a typographical ellipsis mark."
-      (interactive "p")
-      (cond
-       ((and (= 1 arg)
-             (eq (char-before) ?^))
-        (delete-char -1)
-        (insert typopunct-middot))
-       ((and (= 1 arg)
-             (eq this-command last-command)
-             (looking-back "\\.\\."))
-        (replace-match "")
-        (insert typopunct-ellipsis))
-       (t
-        (self-insert-command arg))))
-    (define-key typopunct-map "." 'typopunct-insert-ellipsis-or-middot) 
 #+END_SRC
