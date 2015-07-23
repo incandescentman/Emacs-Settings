@@ -148,6 +148,65 @@
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 
+(setq org-export-allow-bind-keywords t)
+ (setq org-export-blocks-witheld (quote (hidden)))
+ (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
+ (setq org-export-html-style-include-default t)
+ (setq org-export-latex-date-format "%d %B %Y.")
+ (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+ (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+ (setq org-export-with-clocks t)
+ (setq org-export-with-drawers t)
+ (setq org-export-with-section-numbers nil)
+ (setq org-export-with-toc nil)
+
+'(org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
+     ("/" "\\textit{%s}" nil)
+     ("_" "\\underline{%s}" nil)
+     ("+" "\\st{%s}" nil)
+     ("=" "\\verb" t)
+     ("~" "\\verb" t))))
+
+'(org-html-footnotes-section
+   "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>")
+
+'(org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+
+'(org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
+     (code . verb)
+     (italic . "\\textit{%s}")
+     (strike-through . "\\sout{%s}")
+     (underline . "\\uline{%s}")
+     ;; (verbatim . protectedtext)
+     )))
+
+'(org-latex-toc-command "\\tableofcontents
+\\newpage
+")
+
+'(safe-local-variable-values (quote    ((eval when
+	   (fboundp
+	    (quote rainbow-mode))
+	   (rainbow-mode 1)))))
+
+'(org-html-footnotes-section "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>") 
+
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
@@ -664,50 +723,41 @@ Subject: %^{Subject}
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
- '(buffer-stack-show-position nil)
- '(buffer-stack-untracked
-   (quote
-    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(case-fold-search t)
-'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
 
-
- '(ccm-recenter-at-end-of-file t)
- '(clean-buffer-list-delay-general 1)
- '(column-number-mode nil)
- '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(message-kill-buffer-on-exit t)
-                       '(abbrev-all-caps nil)
-'(flyspell-abbrev-p t)
-                       '(flyspell-use-global-abbrev-table-p t)
-                       '(global-flyspell-mode t)
+'(abbrev-all-caps nil)
                        '(ac-auto-show-menu 2.0)
                        '(ac-auto-start 4)
                        '(ac-candidate-menu-min 3)
                        '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
-
+                       '(flyspell-use-global-abbrev-table-p t)
+                       '(global-flyspell-mode t)
                        '(mail-kill-buffer-on-exit t)
-
-'(message-kill-buffer-on-exit t)
- '(mail-kill-buffer-on-exit t)
-
-
+  '(abbrev-all-caps nil)
   '(smex-prompt-string "I love you.  ")
   '(undo-limit 800000)
   '(user-full-name "Jay Dixit")
   '(user-mail-address "dixit@aya.yale.edu")
-
-
+ '(blink-cursor-mode nil)
+ '(buffer-stack-show-position nil)
+ '(buffer-stack-untracked (quote    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
+ '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
+ '(calendar-latitude 40.7)
+ '(case-fold-search t)
+ '(ccm-recenter-at-end-of-file t)
+ '(clean-buffer-list-delay-general 1)
+ '(column-number-mode nil)
  '(compose-mail-user-agent-warnings nil)
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
+ '(cua-mode nil)
+ '(cursor-type (quote box) t)
  '(cursor-type (quote box))
  '(debug-on-error t)
- '(delete-window-preserve-buffer
-   (quote
-    ("*scratch*" "current-book-research.txt" "accountability.txt")))
+ '(deft-directory "~/Dropbox/writing/notationaldata/")
+ '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
+ '(dired-clean-up-buffers-too nil)
  '(dired-details-hidden-string "")
+ '(dired-kept-versions 8)
  '(display-time-mode t)
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
@@ -715,121 +765,70 @@ Subject: %^{Subject}
  '(flyspell-abbrev-p t)
  '(flyspell-use-global-abbrev-table-p t)
  '(global-flyspell-mode t)
-'(grep-find-ignored-directories
-   (quote
-    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
- '(grep-find-ignored-files
-   (quote
-    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
+ '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
+ '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
+ '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
  '(grep-highlight-matches (quote always))
- '(ido-ignore-files
-   (quote
-    ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
+ '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
+ '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
+ '(ido-use-faces t)
+ '(ido-use-url-at-point t)
+ '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
  '(initial-major-mode (quote org-mode))
- '(mail-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+ '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
  '(make-backup-files t)
  '(message-draft-headers (quote (From References Date)))
  '(message-kill-buffer-on-exit t)
  '(message-required-headers (quote (From (optional . References))))
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-
+ '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
+ '(org-agenda-jump-prefer-future t)
+ '(org-agenda-skip-scheduled-if-done t)
+ '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
- '(org-ascii-table-use-ascii-art to)
-'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+ '(org-ascii-table-use-ascii-art t)
+ '(org-ascii-table-use-ascii-art t)
+ '(org-bullets-face-name (quote \"Courier\"))
+ '(org-catch-invisible-edits (quote error))
  '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
  '(org-clock-in-resume t)
  '(org-clock-persist-query-resume nil)
  '(org-clock-report-include-clocking-task t)
- '(org-clocktable-defaults
-   (quote
-    (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+ '(org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
  '(org-closed-string "COMPLETED:")
  '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
+ '(org-display-custom-times nil)
  '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
  '(org-edit-src-content-indentation 4)
  '(org-ellipsis (quote org-warning))
  '(org-enable-fixed-width-editor nil)
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
- '(org-export-allow-bind-keywords t)
- '(org-export-blocks-witheld (quote (hidden)))
- '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- '(org-export-html-style-include-default t)
- '(org-export-latex-date-format "%d %B %Y.")
- '(org-export-latex-emphasis-alist
-   (quote
-    (("*" "\\emph{%s}" nil)
-     ("/" "\\textit{%s}" nil)
-     ("_" "\\underline{%s}" nil)
-     ("+" "\\st{%s}" nil)
-     ("=" "\\verb" t)
-     ("~" "\\verb" t))))
- '(org-export-latex-image-default-option "width=20.5cm")
- '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
-'(org-export-time-stamp-file nil)
- '(org-export-with-clocks t)
- '(org-export-with-drawers t)
- '(org-export-with-section-numbers nil)
- '(org-export-with-toc nil)
- '(org-extend-today-until 8)
+'(org-extend-today-until 8)
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
-;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+ '(org-headline-done ((t (:strike-through t))))
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")
- '(org-html-footnotes-section
-   "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
- '(org-html-head-include-default-style nil)
  '(org-html-head-include-scripts nil)
  '(org-html-html5-fancy t)
  '(org-html-postamble nil)
- '(org-html-text-markup-alist
-   (quote
-    ((bold . "<strong>%s</strong>")
-     (code . "<blockquote>%s</blockquote>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
- '(org-html-toplevel-hlevel 2)
-'(org-indent-indentation-per-level 2)
+ '(org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
- ; (org-indirect-buffer-display (quote other-window))
  '(org-insert-mode-line-in-empty-file t)
- '(org-latex-text-markup-alist
-   (quote
-    ((bold . "\\textbf{%s}")
-     (code . verb)
-     (italic . "\\textit{%s}")
-     (strike-through . "\\sout{%s}")
-     (underline . "\\uline{%s}")
-     ;; (verbatim . protectedtext)
-     )))
-
- '(org-latex-toc-command "\\tableofcontents
-\\newpage
-")
- '(org-list-allow-alphabetical t)
  '(org-list-indent-offset 3)
  '(org-log-done nil)
  '(org-log-note-clock-out nil)
@@ -840,6 +839,7 @@ Subject: %^{Subject}
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
+ '(org-modules (quote    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -851,9 +851,7 @@ Subject: %^{Subject}
  '(org-pomodoro-short-break-format "Short Break: %s")
  '(org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
  '(org-pomodoro-sound "~/sounds/large-applause.mp3")
- '(org-pomodoro-ticking-sound
-   "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a")
- '(org-priority-faces nil)
+'(org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
  '(org-provide-checkbox-statistics t)
  '(org-replace-disputed-keys nil)
  '(org-return-follows-link t)
@@ -864,7 +862,7 @@ Subject: %^{Subject}
  '(org-startup-indented t)
  '(org-support-shift-select (quote always))
  '(org-time-clocksum-use-effort-durations t)
- '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ '(org-time-stamp-custom-formats (quote ("<%a %b %d>" . "<%m/%d %a %I:%M%p>"))) ; like this: "Apr 18 Fri"
  '(org-use-speed-commands t)
  '(org-yank-adjusted-subtrees t)
  '(org2blog/wp-confirm-post nil)
@@ -878,18 +876,11 @@ Subject: %^{Subject}
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
- '(recentf-exclude
-   (quote
-    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
+ '(recentf-exclude (quote    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
- '(safe-local-variable-values
-   (quote
-    ((eval when
-	   (fboundp
-	    (quote rainbow-mode))
-	   (rainbow-mode 1)))))
-'(send-mail-function (quote sendmail-send-it))
+ '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
+ '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
@@ -897,117 +888,33 @@ Subject: %^{Subject}
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
  '(visual-line-mode nil t)
- '(cua-mode nil)
-'(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
-
- '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
- '(ido-use-faces t)
-
- '(display-time-mode t)
-  '(abbrev-all-caps nil)
-
- '(blink-cursor-mode nil)
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
- '(calendar-latitude 40.7)
- '(case-fold-search t)
- '(cua-highlight-region-shift-only t)
- '(cua-mode nil nil (cua-base))
- '(cursor-type (quote box) t)
- '(debug-on-error t)
- '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(dired-clean-up-buffers-too nil)
- '(dired-details-hidden-string "")
- '(dired-kept-versions 8)
- '(display-time-mode t)
- '(edit-server-default-major-mode (quote org-mode))
- '(edit-server-new-frame t)
- '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
-
- '(flyspell-abbrev-p t)
- '(flyspell-use-global-abbrev-table-p t)
- '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
- '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
- '(grep-highlight-matches (quote always))
- '(ido-save-directory-list-file "~/Dropbox/emacs/prelude/personal/.savefile/ido.hist")
- '(ido-use-faces t)
- '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
- '(initial-major-mode (quote org-mode))
- '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(mail-kill-buffer-on-exit t)
- '(make-backup-files t)
- '(message-draft-headers (quote (From References Date)))
- '(message-kill-buffer-on-exit t)
- '(message-required-headers (quote (From (optional . References))))
+ ; (org-indirect-buffer-display (quote other-window))
+'(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
+'(flyspell-abbrev-p t)
+'(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
+'(message-kill-buffer-on-exit t)
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-
- '(org-M-RET-may-split-line (quote ((item . t))))
- '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-jump-prefer-future t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-timegrid-use-ampm t)
- '(org-archive-location "archive/%s_archive::")
- '(org-ascii-headline-spacing (quote (1 . 1)))
- '(org-ascii-table-use-ascii-art t)
- '(org-bullets-face-name (quote \"Courier\"))
- '(org-catch-invisible-edits (quote error))
- '(org-clock-auto-clock-resolution t)
- '(org-clock-idle-time 5)
- '(org-clock-in-resume t)
- '(org-clock-persist-query-resume nil)
- '(org-clock-report-include-clocking-task t)
- '(org-closed-string "COMPLETED:")
- '(org-ctrl-k-protect-subtree t)
- '(org-custom-properties (quote (">")))
- '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
- '(org-display-custom-times nil)
- '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
- '(org-edit-src-content-indentation 4)
- '(org-ellipsis (quote org-warning))
- '(org-enforce-todo-checkbox-dependencies t)
- '(org-enforce-todo-dependencies t)
- '(org-export-allow-bind-keywords t)
-
-'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
- '(org-export-blocks-witheld (quote (hidden)))
- '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- '(org-export-html-style-include-default t)
- '(org-export-latex-date-format "%d %B %Y.")
- '(org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
- '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+'(org-export-latex-image-default-option "width=20.5cm")
+'(org-export-time-stamp-file nil)
 '(org-export-with-clocks t)
- '(org-export-with-drawers t)
- '(org-export-with-section-numbers nil)
- '(org-export-with-toc nil)
- '(org-extend-today-until 8)
- '(org-fontify-done-headline t)
- '(org-fontify-emphasized-text t)
- '(org-footnote-define-inline t)
- '(org-footnote-section "Footnotes")
- '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through to))))
 '(org-hide-block-startup nil)
- '(org-hide-emphasis-markers t)
- '(org-hide-leading-stars t)
- '(org-html-container-element "div")
- '(org-html-footnotes-section "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
- '(org-html-head-include-default-style nil)
- '(org-html-head-include-scripts nil)
- '(org-html-html5-fancy t)
- '(org-html-postamble nil)
- '(org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
+'(org-html-head-include-default-style nil)
+'(org-html-toplevel-hlevel 2)
+'(org-indent-indentation-per-level 2)
+'(org-list-allow-alphabetical t)
+'(org-priority-faces nil)
+'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
+'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
+'(send-mail-function (quote sendmail-send-it))
+;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
 
- '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
- '(org-time-stamp-custom-formats (quote ("<%a %b %d>" . "<%m/%d %a %I:%M%p>"))) ; like this: "Apr 18 Fri"
- '(smex-prompt-string "I love you. "))
+
+;; end
+)
 
 ;;(require 'key-chord)
 (key-chord-mode 1)
