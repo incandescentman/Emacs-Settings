@@ -3763,7 +3763,7 @@ Single Capitals as you type."
 
 (defun new-week ()
   (interactive)
-(tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n" 
+(tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
   ) 
 
 

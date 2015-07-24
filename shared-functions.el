@@ -2688,3 +2688,14 @@ Single Capitals as you type."
         (setq case-fold-search old-flag))
       (if (and b e (< (point) e)) (setq rlt nil)))
     (setq ad-return-value rlt)))
+
+(require 'tiny)
+(tiny-setup-default) 
+
+(require 'tiny)
+(tiny-setup-default) 
+
+(defun new-week ()
+  (interactive)
+(tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
+  ) 
