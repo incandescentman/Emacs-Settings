@@ -371,6 +371,9 @@ Subject: %^{Subject}
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
+("k" "nika" entry (file "nika-capture.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+
 	("h" "historical interest" entry (file "historical-lifestream.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
@@ -2047,9 +2050,9 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
-
-((and buffer-file-name (eq major-mode 'css-mode)))
-
+((and buffer-file-name (eq major-mode 'snippet-mode))) 
+((and buffer-file-name (eq major-mode 'css-mode))) 
+((and buffer-file-name (eq major-mode 'xml-mode))) 
 ((and buffer-file-name (eq major-mode 'nmxml-mode)))
 ((and buffer-file-name (eq major-mode 'gitconfig-mode)))
 ((and buffer-file-name (eq major-mode 'gitignore-mode)))
@@ -2692,10 +2695,16 @@ Single Capitals as you type."
 (require 'tiny)
 (tiny-setup-default) 
 
-(require 'tiny)
-(tiny-setup-default) 
-
 (defun new-week ()
   (interactive)
 (tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
   ) 
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (make-local-variable 'outline-regexp)
+            (setq outline-regexp "^;;; ")
+            (make-local-variable 'outline-heading-end-regexp)
+            (setq outline-heading-end-regexp ":\n")
+            (outline-minor-mode 1)
+))

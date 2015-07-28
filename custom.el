@@ -11,7 +11,8 @@
 ;; (require 'google-contacts-message)
 ;; (require 'google-weather)
 
-
+;; enable python 
+(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))
 
 ;;;; I believe these are the settings that GNU Emacs saved automatically when I changed things using the Options menu. I'm sure there is a lot of redundancy here that doesn't need to be here since it's already defined in my init files.
 (custom-set-variables
@@ -478,3 +479,5 @@
 
 (recenter-top-bottom)
 
+
+(smartparens-mode 1)
