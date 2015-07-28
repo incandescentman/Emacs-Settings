@@ -2836,7 +2836,9 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * experimenting
 #+BEGIN_EXAMPLE emacs-lisp
 (setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
+      (lambda () 
+        (save-match-data
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 #+END_EXAMPLE 
 
 
