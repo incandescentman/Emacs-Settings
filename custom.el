@@ -80,8 +80,9 @@
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
  '(grep-find-ignored-files
    (quote
-    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*" "*fontification*" "*helm*" "*750words*")))
+    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
  '(grep-highlight-matches (quote always))
+ '(helm-ff-smart-completion t)
  '(htmlize-output-type (quote inline-css))
  '(ido-ignore-files
    (quote
@@ -141,8 +142,8 @@
      (latin1 61 45 45)
      (utf-8 9552 9472 9548 9476 9480))))
  '(org-bullets-bullet-list (quote (" ")))
- '(org-bullets-face-name (quote \"Courier\"))
- '(org-catch-invisible-edits (quote error))
+ '(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
+ '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
  '(org-clock-idle-time 5)
  '(org-clock-in-resume t)
@@ -171,11 +172,11 @@
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-bind-keywords t)
- '(org-export-blocks-witheld (quote (hidden)))
+ '(org-export-blocks-witheld (quote (hidden)) t)
  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- '(org-export-html-style-include-default t)
- '(org-export-latex-date-format "%d %B %Y.")
+ '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
+ '(org-export-html-style-include-default t t)
+ '(org-export-latex-date-format "%d %B %Y." t)
  '(org-export-latex-emphasis-alist
    (quote
     (("*" "\\emph{%s}" nil)
@@ -183,9 +184,9 @@
      ("_" "\\underline{%s}" nil)
      ("+" "\\st{%s}" nil)
      ("=" "\\verb" t)
-     ("~" "\\verb" t))))
+     ("~" "\\verb" t))) t)
  '(org-export-latex-image-default-option "width=20.5cm")
- '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+ '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
  '(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-drawers t)
@@ -198,7 +199,7 @@
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through to))))
+ '(org-headline-done ((t (:strike-through t))))
  '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
@@ -323,12 +324,7 @@
  '(rm-blacklist
    (quote
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
- '(safe-local-variable-values
-   (quote
-    ((eval when
-           (fboundp
-            (quote rainbow-mode))
-           (rainbow-mode 1)))))
+ '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
  '(send-mail-function (quote sendmail-send-it))
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)

@@ -321,7 +321,7 @@
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
-'(org-provide-checkbox-statistics to)
+'(org-provide-checkbox-statistics t)
 ;; '(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
@@ -581,7 +581,7 @@ Subject: %^{Subject}
 '(shift-select-mode nil)
 '(transient-mark-mode t)
 '(user-mail-address "dixit@aya.yale.edu")
-'(global-flyspell-mode to)
+'(global-flyspell-mode t)
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
 '(setq mail-user-agent 'message-user-agent)
@@ -996,18 +996,18 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       ido-handle-duplicate-virtual-buffers 2
       ido-decorations (quote ("{" "}" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not so readable bro]" " [Too big yo]" " [Make it so.]"))
       ido-enable-last-directory-history t
-      ido-enter-matching-directory t
+ido-enter-matching-directory nil
       ido-use-faces t
       ido-use-url-at-point t
       ido-max-prospects 10)
 (setq ido-everywhere t)
 
-(setq org-complegtion-use-ido t)
+(setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
-(setq ido-enable-last-directory-history nil)
-(setq ido-confirm-unique-completion nil) ;; wait for RET, even for unique?
-(setq ido-show-dot-for-dired t) ;; put . as the first item
+(setq ido-enable-last-directory-history t)
+(setq ido-confirm-unique-completion t) ;; wait for RET, even for unique?
+(setq ido-show-dot-for-dired nil) ;; put . as the first item
 (setq ido-use-filename-at-point t) ;; prefer file names near point
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
