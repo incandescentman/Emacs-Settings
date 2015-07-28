@@ -17,6 +17,9 @@ Input: ^We should consider, for completeness, comma separated clauses.
 Output: ^For completeness, comma separated clauses.
 
 Input: We should consider^, for completeness, comma separated clauses.
+Output: Input: We should consider ^for completeness, comma separated clauses. 
+
+Input: We should consider ^for completeness, comma separated clauses.
 Output: We should consider^, comma separated clauses. 
 
 Input: We should consider,^ for completeness, comma separated clauses.
@@ -26,6 +29,9 @@ Input: We should consider, ^for completeness, comma separated clauses.
 Output: We should consider, ^comma separated clauses.
 
 Input: We should consider, for completeness^, comma separated clauses.
+Output: We should consider, for completeness ^comma separated clauses.
+
+Input: We should consider, for completeness ^comma separated clauses.
 Output: We should consider, for completeness^.
 
 Input: ^Don't forget the semi-colon; that's important too.
