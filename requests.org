@@ -24,7 +24,7 @@ Thanks again!
 
 * open requests 
 ** Emacs 
-*** PLEASE-DEBUG [#A] strange behavior with smart-period 
+*** DONE [#A] strange behavior with smart-period 
 
 #+BEGIN_EXAMPLE
 **** heading 3

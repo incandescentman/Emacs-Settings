@@ -2834,12 +2834,12 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+END_SRC
 
 * experimenting
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
           (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
-#+END_EXAMPLE 
+#+END_SRC 
 
 
 

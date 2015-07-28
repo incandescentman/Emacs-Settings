@@ -372,7 +372,7 @@ Subject: %^{Subject}
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+	 "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
 
 	("h" "historical interest" entry (file "historical-lifestream.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -2008,6 +2008,11 @@ searches all buffers."
         (setq count (1+ count))
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
+
+(setq auto-capitalize-predicate
+      (lambda () 
+        (save-match-data
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
