@@ -333,8 +333,6 @@
  '(tool-bar-mode nil)
  '(tooltip-mode nil)
  '(tramp-default-method "ssh")
- '(typopunct-buffer-language (quote english))
- '(typopunct-language-alist (quote ((english 8220 8221 8216 8217))))
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")

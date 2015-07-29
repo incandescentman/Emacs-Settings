@@ -183,7 +183,18 @@
          (with-temp-buffer
            (pasteboard-paste-no-spaces)
            (buffer-string))))
-    (search-forward search-term)))
+    (search-forward search-term))) 
+
+(setq x-select-enable-clipboard t) 
+(defun push-kill-ring-to-pasteboard ()
+  (interactive)
+  (x-select-text (current-kill 0))) 
+
+(defun gist-buffer-to-pasteboard ()
+  (interactive)
+  (gist-buffer)
+  (push-kill-ring-to-pasteboard)
+  )
 
 (global-unset-key (kbd "s-m"))
 (defvar s-m-map (make-keymap)

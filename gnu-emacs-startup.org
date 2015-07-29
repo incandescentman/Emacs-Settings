@@ -1,4 +1,5 @@
-* file settings                                                     :ARCimE:
+
+* file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
@@ -303,9 +304,26 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
          (with-temp-buffer
            (pasteboard-paste-no-spaces)
            (buffer-string))))
-    (search-forward search-term)))
-
+    (search-forward search-term))) 
 #+END_SRC
+
+* kill ring to pasteboard functions
+** push kill ring to OSX pasteboard 
+  #+BEGIN_SRC emacs-lisp 
+(setq x-select-enable-clipboard t) 
+(defun push-kill-ring-to-pasteboard ()
+  (interactive)
+  (x-select-text (current-kill 0))) 
+  #+END_SRC
+
+** gist-buffer-to-pasteboard 
+  #+BEGIN_SRC emacs-lisp
+(defun gist-buffer-to-pasteboard ()
+  (interactive)
+  (gist-buffer)
+  (push-kill-ring-to-pasteboard)
+  )
+  #+END_SRC 
 
 * Keybindings
 

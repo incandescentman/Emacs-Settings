@@ -1,3 +1,11 @@
+;; Local Variables:
+;; mode: org-mode
+;; how do I make these apply ONLY TO THIS BUFFER?
+;; eval (make-local-variable abbrev-mode) 
+;; eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space) 
+;; eval: (setq abbrev-mode nil) 
+;; end: 
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -3792,5 +3800,4 @@ Single Capitals as you type."
             (outline-minor-mode 1)
 ))
   #+END_SRC
-
 
