@@ -1143,3 +1143,14 @@ subsequent sends. could save them all in a logbook?
   (let ((fix-capitalization (my/beginning-of-sentence-p))) 
     (when fix-capitalization
       (save-excursion (capitalize-word 1)))))
+
+  (defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
+    (unless 
+  (or
+  (looking-at " I\\b") ; never downcase the word "I" 
+  (looking-at (sentence-end))
+(looking-at "[[:space:]]+$") ; doesn't work yet 
+(looking-at (user-full-name))
+  )
+      (downcase-word 1))) 

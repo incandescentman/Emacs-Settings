@@ -2335,17 +2335,17 @@ Desired output:
 
 In other words, I want to instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes. That's what I've done here: 
 
-#+BEGIN_EXAMPLE emacs-lisp 
+#+BEGIN_SRC emacs-lisp 
   (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
   (looking-at " I\\b") ; never downcase the word "I" 
   (looking-at (sentence-end))
-  ;; (looking at (line-end)); doesn't work yet 
-  ;; (looking-at (user-full-name))
+(looking-at "[[:space:]]+$") ; doesn't work yet 
+(looking-at (user-full-name))
   )
       (downcase-word 1))) 
-#+END_EXAMPLE
+#+END_SRC 
 
-However, I tried to add exceptions for "line-end" (which is not a defined behavior) and also for user-full name. So, can you make it so that capitalize word stops when it finds a line break? Thanks!
+I tried to add exceptions for "line-end" and also for user-full name. 
