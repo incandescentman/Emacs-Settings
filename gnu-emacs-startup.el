@@ -1053,7 +1053,10 @@ subsequent sends. could save them all in a logbook?
 (defun smart-period ()
   (interactive)
 (smart-punctuation ".") 
-)
+(save-excursion
+(unless (looking-at "[ ]*$")
+(capitalize-word 1))
+))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 
@@ -1150,7 +1153,8 @@ subsequent sends. could save them all in a logbook?
   (or
   (looking-at " I\\b") ; never downcase the word "I" 
   (looking-at (sentence-end))
-(looking-at "[[:space:]]+$") ; doesn't work yet 
+;; (looking-at "[[:space:]]+$") ;; actually I think this means 1 or more whitespace?
+(looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
   )
       (downcase-word 1))) 
