@@ -2082,6 +2082,7 @@ searches all buffers."
 
 
 
+
 (setq gnus-select-method
       '(nnimap "gmail"
 	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
@@ -2090,10 +2091,15 @@ searches all buffers."
 
 
 
+
 ;; store email in ~/gmail directory
 (setq nnml-directory "~/gmail")
 (setq message-directory "~/gmail") 
 
+;; define gnus directories
+(setq message-directory "~/Dropbox/emacs/gnus/mail/")
+(setq gnus-directory "~/Dropbox/emacs/gnus/news/")
+(setq nnfolder-directory "~/Dropbox/emacs/gnus/mail/archive") 
 
 ;; How to read HTML mail
 (setq mm-text-html-renderer 'w3m)
