@@ -27,6 +27,7 @@
  '(ac-candidate-menu-min 3)
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(auto-save-visited-file-name t)
  '(autopair-blink t)
  '(autopair-global-mode t)
  '(blink-cursor-mode nil)
