@@ -1068,13 +1068,21 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-question-mark ()
   (interactive)
-  (smart-punctuation "?"))
+  (smart-punctuation "?")
+(save-excursion
+(unless (looking-at "[ ]*$")
+(capitalize-word 1))
+))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 
 (defun smart-exclamation-point ()
   (interactive)
-  (smart-punctuation "!"))
+  (smart-punctuation "!")
+(save-excursion
+(unless (looking-at "[ ]*$")
+(capitalize-word 1))
+))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 
