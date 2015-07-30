@@ -1,6 +1,5 @@
 ;; Local Variables:
-;; mode: org-mode
-;; how do I make these apply ONLY TO THIS BUFFER?
+;; mode: org 
 ;; eval (make-local-variable abbrev-mode) 
 ;; eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space) 
 ;; eval: (setq abbrev-mode nil) 
