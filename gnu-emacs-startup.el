@@ -175,6 +175,7 @@
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
+(unless (looking-at ("\n*") (org-complex-heading-regexp))) 
       (capitalize-word 1))))
 
 (defun pasteboard-search-in-current-buffer ()
@@ -1055,7 +1056,7 @@ subsequent sends. could save them all in a logbook?
 (smart-punctuation ".") 
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
@@ -1071,7 +1072,7 @@ subsequent sends. could save them all in a logbook?
   (smart-punctuation "?")
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
@@ -1081,7 +1082,7 @@ subsequent sends. could save them all in a logbook?
   (smart-punctuation "!")
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
@@ -1166,3 +1167,15 @@ subsequent sends. could save them all in a logbook?
 (looking-at (user-full-name))
   )
       (downcase-word 1))) 
+
+(defun capitalize-unless-org-heading ()
+  (interactive)
+(unless (looking-at org-complex-heading-regexp)
+(capitalize-word 1)
+)) 
+
+(defun downcase-unless-org-heading ()
+  (interactive)
+(unless (looking-at org-complex-heading-regexp)
+(downcase-word 1)
+)) 

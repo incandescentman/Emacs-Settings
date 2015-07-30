@@ -2,6 +2,10 @@
 Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/requests.org
 
 
+** TODO [#A] gnu-emacs-startup.org: [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break]]
+** TODO [#A] [[*add%20"capitalize%20first%20word%20of%20next%20sentence"%20to%20smart-period,%20smart-question-mark,%20and%20smart-exclamation%20mark][add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark]]
+
+
 * DONE [#A] smart-org-meta-return-dwim
   :PROPERTIES:
   :ARCHIVE_TIME: 2015-06-27 Sat 16:52
@@ -2272,4 +2276,38 @@ javascript:window.location='x-devonthink://createText?location='+encodeURICompon
 #+END_SRC
 
 It works correctly to capture text from Chrome and insert it into a tool called DevonThink. Ideally I'd like it to automatically return me to Chrome again when it's done instead of leaving me in DevonThink. Straightforward? Thanks! 
+
+
+* TESTING [#A] add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-07-29 Wed 19:49
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TESTING
+  :END:
+When I type a period, the next word after the period (i.e. the first word of the next sentence) should be automatically capitalized.
+
+Currently, auto-capitalize-mode does this only if I type a new sentence after the period at that moment. If the next sentence is *already there*, and the first word of that sentence is uncapitalized, auto-capitalize mode does nothing. 
+
+Therefore can you add something like the below to smart-period, smart-question-mark, and smart-exclamation mark? 
+
+(save-excursion 
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))) 
+
+Example:
+: ^this is an existing sentence. 
+
+Suppose the point is on the t in this and I type "Here's a new sentence. " 
+
+Current output: 
+: Here's a new sentence. ^this is an existing sentence. 
+
+Desired output: 
+: Here's a new sentence. ^This is an existing sentence. 
+
+i.e. the period (or question mark or exclamation point) should trigger the capitalization of the first word in the next sentence. 
+
+Thanks! 
 

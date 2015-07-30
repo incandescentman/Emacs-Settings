@@ -293,6 +293,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
+(unless (looking-at ("\n*") (org-complex-heading-regexp))) 
       (capitalize-word 1))))
 #+END_SRC
 
@@ -2020,7 +2021,7 @@ Oleh
 (smart-punctuation ".") 
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
@@ -2042,7 +2043,7 @@ Oleh
   (smart-punctuation "?")
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
@@ -2055,7 +2056,7 @@ Oleh
   (smart-punctuation "!")
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
@@ -2361,3 +2362,25 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
 #+END_SRC 
 
 I tried to add exceptions for "line-end" and also for user-full name. 
+
+* capitalize-unless-org-heading
+
+  #+BEGIN_SRC emacs-lisp 
+(defun capitalize-unless-org-heading ()
+  (interactive)
+(unless (looking-at org-complex-heading-regexp)
+(capitalize-word 1)
+)) 
+  #+END_SRC
+
+* downcase-unless-org-heading
+(May not be needed.)
+
+  #+BEGIN_SRC emacs-lisp 
+(defun downcase-unless-org-heading ()
+  (interactive)
+(unless (looking-at org-complex-heading-regexp)
+(downcase-word 1)
+)) 
+  #+END_SRC
+
