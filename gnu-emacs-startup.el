@@ -131,9 +131,7 @@
         (end (if mark-active
                  (mark)
                (point))))
-    (shell-command-on-region start end
-                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-                             nil t)
+    (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
     (my/fix-space)
     (save-excursion
       (goto-char start)
