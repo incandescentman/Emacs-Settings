@@ -2329,3 +2329,25 @@ Thanks!
   :ARCHIVE_CATEGORY: requests
   :ARCHIVE_TODO: TESTING
   :END:
+
+* TODO [#B] kill-line-and-capitalize [2/3]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-07-30 Thu 18:30
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+Can you add something like this: 
+
+(save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-word 1))))
+
+to:
+
+- [X] pasteboard-cut.
+- [X] my/kill-line-dwim 
+- [ ] kill-clause.
+
+Thanks! 

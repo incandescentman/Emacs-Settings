@@ -11,16 +11,25 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
-** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, see my note)
-** TODO [#A] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
-** TODO priority B requests
-** TODO [#C] kill-clause etc.
-** TODO strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+** TODO [#A] inserting smart-punctuation when there's already a space between the word and the point 
+Say I want to place a smart-period...
+
+Input: You might have a conscious intention to eat healthier, but you forget ^
+Current output: You might have a conscious intention to eat healthier, but you forget.^ 
+Desired output: You might have a conscious intention to eat healthier, but you forget. ^
+
+But this behavior should stay the same: 
+Input: You might have a conscious intention to eat healthier, but you forget^
+Output: You might have a conscious intention to eat healthier, but you forget.^ 
+
+** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
+** TODO [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+** TODO other smart-punctuation behaviors below 
+** TODO [#C] [[*kill-clause][kill-clause]] etc.
+** TODO [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 
 * open requests 
 ** Emacs 
-
 *** TODO smart-punctuation behaviors 
 **** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
@@ -53,21 +62,7 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
 
      I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
 
-*** TODO [#B] kill-line-and-capitalize [2/3]
-Can you add something like this: 
-
-(save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
-
-to:
-
-- [X] pasteboard-cut.
-- [X] my/kill-line-dwim 
-- [ ] kill-clause.
-
-Thanks! 
-
+*** kill-clause
 **** NOTE-TO-JAY Questions
 
      Regarding ~pasteboard-cut~, I think it's rather straightforward. Please give it a go.
@@ -194,7 +189,7 @@ Thanks!
 **** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
 Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
 
-*** TODO [#B] create an auto-capitalization-predicate-exceptions-list?
+*** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
 See my existing code: 
