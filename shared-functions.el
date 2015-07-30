@@ -2717,3 +2717,10 @@ Single Capitals as you type."
             (setq outline-heading-end-regexp ":\n")
             (outline-minor-mode 1)
 ))
+
+(defun accountability-open ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
+  )
+
+(define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)

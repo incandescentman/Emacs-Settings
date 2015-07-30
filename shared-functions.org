@@ -11,6 +11,10 @@ You can toggle it in necessary files by setting the local variables section at t
  # org-config-files-local-mode: t
  # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
  # End: 
+;;;   Current time:      (current-time-string)
+;;;   Last command:      last-command
+;;; (abbrev-mode)
+(user-full-name)
 
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
@@ -3813,3 +3817,14 @@ Single Capitals as you type."
 
 (which-key-mode)
   #+END_EXAMPLE 
+
+* a keybinding to open my accountability file
+
+  #+BEGIN_SRC emacs-lisp
+(defun accountability-open ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
+  )
+
+(define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
+  #+END_SRC
