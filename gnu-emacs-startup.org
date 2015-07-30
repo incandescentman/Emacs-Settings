@@ -294,7 +294,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
   (save-excursion
     (when (my/beginning-of-sentence-p)
 (unless (looking-at ("\n*") (org-complex-heading-regexp))) 
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 #+END_SRC
 
 ** pasteboard-search-in-current buffer
