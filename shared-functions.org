@@ -3719,8 +3719,7 @@ Single Capitals as you type."
 
 ;; load yasnippet directories
 ;; TODO needs to be set before loading snippets somehow
-(setq yas-snippet-dirs '("~/.emacs.d/snippets" yas-installed-snippets-dir 
-                           "~/Downloads/interesting-snippets" "~/Dropbox/emacs/snippets"))
+(setq yas-snippet-dirs '("~/Downloads/interesting-snippets" "~/Dropbox/emacs/snippets"))
 
 ;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 
