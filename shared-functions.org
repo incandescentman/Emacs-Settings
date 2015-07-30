@@ -1675,13 +1675,7 @@ Disable IDO faces to see flx highlights:
 
 #+END_SRC
 
-* Things that I don't know what they're for
-** Set mark command
-# forgot what this is
-(maybe [[http://stackoverflow.com/questions/2715616/can-the-point-have-a-longer-history][this]]?)
-#+BEGIN_SRC emacs-lisp
-(setq set-mark-command-repeat-pop t)
-#+END_SRC
+* Things that I don't know what they're for 
 
 ** I forgot what this is but it looks important
 #+BEGIN_SRC emacs-lisp

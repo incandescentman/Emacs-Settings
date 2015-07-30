@@ -1156,8 +1156,6 @@ ido-enter-matching-directory nil
 (org-mime-htmlize)
 )
 
-(setq set-mark-command-repeat-pop t)
-
 (define-key org-mode-map
   (kbd "RET")
   (lambda()

@@ -36,7 +36,7 @@
 "#+BEGIN_QUOTE
 " _ " 
 #+END_QUOTE
-Source:")
+Source: ")
 
 
 
