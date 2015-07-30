@@ -176,7 +176,7 @@
   (save-excursion
     (when (my/beginning-of-sentence-p)
 (unless (looking-at ("\n*") (org-complex-heading-regexp))) 
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 
 (defun pasteboard-search-in-current-buffer ()
   (interactive)
