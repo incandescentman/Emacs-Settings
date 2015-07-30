@@ -11,14 +11,12 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** TODO strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 ** TODO [#A] requests.org: smart-punctuation when there's already a misplaced punctuation mark
 ** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, see my note)
 ** TODO [#A] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
 ** TODO priority B requests
 ** TODO [#C] kill-clause etc.
-
-Thanks again!
+** TODO strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 
 * open requests 
 ** Emacs 

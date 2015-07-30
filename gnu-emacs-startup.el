@@ -437,7 +437,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
@@ -552,7 +552,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
-      (save-excursion (capitalize-word 1)))))
+      (save-excursion (capitalize-unless-org-heading)))))
 
 (defun timesvr ()
   "Task request to my virtual assistant."
@@ -996,7 +996,7 @@ subsequent sends. could save them all in a logbook?
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
@@ -1152,7 +1152,7 @@ subsequent sends. could save them all in a logbook?
 (call-interactively 'backward-kill-word-correctly) 
   (let ((fix-capitalization (my/beginning-of-sentence-p))) 
     (when fix-capitalization
-      (save-excursion (capitalize-word 1)))))
+      (save-excursion (capitalize-unless-org-heading)))))
 
   (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 

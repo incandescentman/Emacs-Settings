@@ -593,7 +593,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 #+END_SRC
 
 * Browsing
@@ -778,7 +778,7 @@ Thanks!
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
-      (save-excursion (capitalize-word 1)))))
+      (save-excursion (capitalize-unless-org-heading)))))
 #+END_SRC
 
 
@@ -1948,7 +1948,7 @@ Oleh
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+      (capitalize-unless-org-heading))))
 #+END_SRC
 
 
@@ -2323,7 +2323,7 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 (call-interactively 'backward-kill-word-correctly) 
   (let ((fix-capitalization (my/beginning-of-sentence-p))) 
     (when fix-capitalization
-      (save-excursion (capitalize-word 1)))))
+      (save-excursion (capitalize-unless-org-heading)))))
 #+END_SRC
 
 
