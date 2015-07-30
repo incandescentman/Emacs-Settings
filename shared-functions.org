@@ -3,12 +3,13 @@
     "Minor mode for editing configuration files in org-mode." 
     :init-value nil)
 (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
+(setq abbrev-mode nil) )
 
-You can toggle it in necessary files by setti ng the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
+You can toggle it in necessary files by setting the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
 
  # Local Variables:
- # my-org-buffer-local-mode: t
- # eval:(define-key my-org-buffer-local-mode-map (kbd "<f10>") 'some-other-custom-defun-specific-to-this-buffer)
+ # org-config-files-local-mode: t
+ # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
  # End: 
 
 * file settings                                                     :ARCHIVE:
