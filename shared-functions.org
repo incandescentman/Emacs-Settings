@@ -1,15 +1,28 @@
-;; Local Variables:
-;; mode: org 
-;; eval (make-local-variable abbrev-mode) 
-;; eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space) 
-;; eval: (setq abbrev-mode nil) 
-;; end: 
+
+(define-minor-mode org-config-files-local-mode
+    "Minor mode for editing configuration files in org-mode." 
+    :init-value nil)
+(define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
+
+You can toggle it in necessary files by setti ng the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
+
+ # Local Variables:
+ # my-org-buffer-local-mode: t
+ # eval:(define-key my-org-buffer-local-mode-map (kbd "<f10>") 'some-other-custom-defun-specific-to-this-buffer)
+ # End: 
 
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RÚDI NOTE-TO-RÚDI
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
+
+# Local Variables:
+# enable-local-eval: t 
+# eval: (make-local-variable abbrev-mode) 
+# eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space) 
+# eval: (setq abbrev-mode nil) 
+# end: 
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
