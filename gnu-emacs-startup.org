@@ -2346,11 +2346,3 @@ Don't expand past certain delimiters, e.g. line break, ), and "
     (expand-abbrev)))
   )
 #+END_SRC
-
-But \not \but 
-
-But n \n n but n \n n but 
-not not \not 
- noot \not 
-not \not 
-

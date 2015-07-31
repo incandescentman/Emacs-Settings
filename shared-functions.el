@@ -2741,3 +2741,6 @@ Single Capitals as you type."
 ;; (define-key key-minor-mode-map (kbd "s-E") 'accountability-open) doesn't work 
 
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
+
+(require 're-builder)
+(setq reb-re-syntax 'string)

@@ -3853,5 +3853,9 @@ Single Capitals as you type."
   #+END_SRC
 
 
+* re-builder
+
+  #+BEGIN_SRC emacs-lisp
 (require 're-builder)
 (setq reb-re-syntax 'string)
+  #+END_SRC
