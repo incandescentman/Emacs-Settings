@@ -278,7 +278,7 @@
 ;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
 
 
-(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "==") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
