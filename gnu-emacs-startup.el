@@ -1163,9 +1163,10 @@ subsequent sends. could save them all in a logbook?
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at " I\\b") ; never downcase the word "I" 
-  (looking-at (sentence-end))
-;; (looking-at "[[:space:]]+$") ;; actually I think this means 1 or more whitespace?
+  (looking-at "[ ]*I\b") ; never downcase the word I 
+  (looking-at "[ ]*\"I\b") ; never downcase the word "I 
+  (looking-at "[ ]*\(I\b") ; never downcase the word (I 
+(looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
   )

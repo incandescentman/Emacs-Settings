@@ -2730,4 +2730,10 @@ Single Capitals as you type."
 
 (define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
 
+(defun playful-open ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/playful.org")
+  )
+;; (define-key key-minor-mode-map (kbd "s-E") 'accountability-open) doesn't work 
+
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
