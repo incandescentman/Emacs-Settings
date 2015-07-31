@@ -547,6 +547,7 @@ Subject: %^{Subject}
 (global-set-key [(A-left)] 'buffer-stack-up)
 
 (defvar new-buffer-count 0)
+
 (defun new-buffer ()
   (interactive)
   (setq new-buffer-count (+ new-buffer-count 1))
@@ -554,6 +555,12 @@ Subject: %^{Subject}
   (org-mode))
 (global-set-key (kbd "s-T") 'new-buffer)
 ;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+(defun new-lisp-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (emacs-lisp-mode))
 
 (defun org-new-scratch-buffer ()
   (interactive)

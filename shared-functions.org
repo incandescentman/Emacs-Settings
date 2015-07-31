@@ -862,6 +862,7 @@ Open new buffers without prompting me for a filename global counter to ensure
 every new buffer will be unique:
 #+BEGIN_SRC emacs-lisp
 (defvar new-buffer-count 0)
+
 (defun new-buffer ()
   (interactive)
   (setq new-buffer-count (+ new-buffer-count 1))
@@ -869,6 +870,13 @@ every new buffer will be unique:
   (org-mode))
 (global-set-key (kbd "s-T") 'new-buffer)
 ;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+(defun new-lisp-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (emacs-lisp-mode))
+
 #+END_SRC
 
 *** Create new buffer as org-mode subtree in current file
