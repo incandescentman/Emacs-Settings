@@ -385,6 +385,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
@@ -769,7 +770,7 @@ Thanks!
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
-  (expand-abbrev)
+  (smart-expand)
   (if (or (re-search-forward "\\=[ 	]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
@@ -1945,7 +1946,7 @@ Oleh
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
-  (expand-abbrev)
+  (smart-expand)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -1967,7 +1968,11 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :" ") ; "))
+
+;; how do I add an exception for ") ; "? 
+;; e.g. if I want to add a comment after a line of lisp?
+
    #+END_SRC
 
 
@@ -1975,7 +1980,7 @@ Oleh
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-punctuation (new-punct &optional not-so-smart)
-  (expand-abbrev)
+  (smart-expand)
   (save-restriction
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
@@ -1998,7 +2003,7 @@ Oleh
         (let ((old-point (point)))
           (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
           (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                     *smart-punctuation-marks*)
+                                     ,*smart-punctuation-marks*)
                              nil t)
           (let* ((old-punct (match-string 2))
                  (was-after-punct (>= old-point (point))))
@@ -2008,7 +2013,7 @@ Oleh
                                  (let ((potential-new-punct (concat old-punct new-punct)))
                                    (find-if (lambda (exception)
                                               (search potential-new-punct exception))
-                                            *smart-punctuation-exceptions*)))
+                                            ,*smart-punctuation-exceptions*)))
                                new-punct)
                            nil t nil 2)
             (when (looking-at "[ \t]*\\<")
@@ -2094,79 +2099,7 @@ Oleh
   (smart-punctuation ":" t))
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
-#+END_SRC
-
-* TODO [#C] request: backspace after expand-abbrev
-Hi Rúdi,
-
-To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos.
-
-The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it.
-
-See below.
-
-<KB>bc </KB>
-output:
-#+BEGIN_EXAMPLE:
-because ^
-#+END_EXAMPLE:
-
-<KB>bg </KB>
-output:
-#+BEGIN_EXAMPLE:
-beginning ^
-#+END_EXAMPLE:
-
-Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
-
-Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks!
-
-** NOTE-TO-JAY Question
-
-    The question here is: what do you mean by "within a few keystrokes"?
-
-    So, suppose you define a parameter that determines the maximum amount of keystrokes before Emacs "forgets" about ~expand-abbrev~. Let's say its value is 5 and let's take your example:
-
-<KB>bg </KB>
-output:
-#+BEGIN_EXAMPLE:
-beginning ^
-#+END_EXAMPLE:
-
-Suppose you now type "oops" (four keystrokes). You get:
-
-#+BEGIN_EXAMPLE:
-beginning oops^
-#+END_EXAMPLE:
-
-What should happen when you ~my/delete-backward~? I can imagine two scenarios:
-
-1. Delete the 's'. Further ~my/delete-backward~ invocations would delete each individual character downto the first 'o', then on the *fifth*, 'beginning' would be unexpanded.
-2. Unexpand 'beginning'. Further invocations would delete the characters (starting in 's', etc).
-
-My personal opinion: 2, albeit easier to implement, would be messy. Suppose you really did mean to write 'beginning', but not 'oops'. You'd have to type some more, or perhaps make inocuous keystrokes just to get Emacs to forget about unexpanding, and *only* then you could ~my/delete-backward~.
-
-3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
-
-** NOTE-TO-RÚDI Answer
-Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a low-priority request.
-
-** NOTE-TO-JAY Clarification
-
-   I think I didn't make myself clear about what I meant with 3. My suggestion was to add a keybinding of C-BACKSPACE to ~unexpand-abbrev~, so you wouldn't have to BACKSPACE at all in order to unexpand. For example, you'd type:
-
-: bg^
-
-   But you had wanted to type 'bc'. When you hit space, Emacs expands it to 'beginning'. Unaware of the typo, you'd keep going:
-
-: beginning Emacs is great!^
-
-   When you'd finish typing, you'd realise the mistake and would hit C-BACKSPACE, which would ~unexpand-abbrev~, and leave point after the unexpanded text:
-
-: bg^ Emacs is great!
-
-   This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
-
+#+END_SRC 
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
@@ -2358,15 +2291,16 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-(looking-at " I\\b") ; never downcase the word "I" 
-  (looking-at "[ ]*I\b") ; for some reason this doesn't work
-(looking-at "[ ]*\"I\b") 
-(looking-at "[ ]*\(I\b") 
+;; (looking-at " I\\b") ; never downcase the word "I" 
+  (looking-at "[ ]*I\\b") never downcase the word "I" 
+(looking-at "[ ]*\"I\\b") 
+(looking-at "[ ]*\(I\\b") 
 (looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
   )
-      (downcase-word 1))) 
+(save-excursion
+      (downcase-word 1)))) 
 #+END_SRC 
 
 I tried to add exceptions for "line-end" and also for user-full name. 
@@ -2403,7 +2337,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
   (unless
       (or
        (looking-back "\)\n*")
-(looking-back "\)")
+(looking-back "\)[ ]*")
 (looking-back "\\\b") 
     (expand-abbrev)))
   )
@@ -2415,11 +2349,4 @@ But n \n n but n \n n but
 not not \not 
  noot \not 
 not \not 
-
-
-Cocaine: the. The. the I feel perfect." 
-
-\n 
-
-n 
 

@@ -1,6 +1,79 @@
 
 Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/requests.org
 
+* TODO [#C] request: backspace after expand-abbrev
+Hi Rúdi,
+
+To complete the cycle on all these enchancesments to how Emacs handles spacing and abbrev expansion, I want to create a better way to correct typos.
+
+The problem is that if I make a typographical error when I'm typing an abbrev, it becomes difficult to correct it.
+
+See below.
+
+<KB>bc </KB>
+output:
+#+BEGIN_EXAMPLE:
+because ^
+#+END_EXAMPLE:
+
+<KB>bg </KB>
+output:
+#+BEGIN_EXAMPLE:
+beginning ^
+#+END_EXAMPLE:
+
+Let's say I accidentally type "bg" when I meant to type "bc". Now I'm at the end of the word beginning. If I hit BACKSPACE (my/delete-backward) I now have to delete through an entire unwanted word.
+
+Is it possible (and not too difficult) to make it so that if I invoke my/delete-backward within a few keystrokes of Emacs running expand-abbrev, to run unexpand-abbrev automatically? Thanks!
+
+** NOTE-TO-JAY Question
+
+    The question here is: what do you mean by "within a few keystrokes"?
+
+    So, suppose you define a parameter that determines the maximum amount of keystrokes before Emacs "forgets" about ~expand-abbrev~. Let's say its value is 5 and let's take your example:
+
+<KB>bg </KB>
+output:
+#+BEGIN_EXAMPLE:
+beginning ^
+#+END_EXAMPLE:
+
+Suppose you now type "oops" (four keystrokes). You get:
+
+#+BEGIN_EXAMPLE:
+beginning oops^
+#+END_EXAMPLE:
+
+What should happen when you ~my/delete-backward~? I can imagine two scenarios:
+
+1. Delete the 's'. Further ~my/delete-backward~ invocations would delete each individual character downto the first 'o', then on the *fifth*, 'beginning' would be unexpanded.
+2. Unexpand 'beginning'. Further invocations would delete the characters (starting in 's', etc).
+
+My personal opinion: 2, albeit easier to implement, would be messy. Suppose you really did mean to write 'beginning', but not 'oops'. You'd have to type some more, or perhaps make inocuous keystrokes just to get Emacs to forget about unexpanding, and *only* then you could ~my/delete-backward~.
+
+3. Perhaps another option: binding a similar keyboard combination (say M-<backspace>, C-M-<backspace>, or C-M-S-<backspace>) to ~unexpand-abbrev~. Did you consider this? Why didn't it convince you?
+
+** NOTE-TO-RÚDI Answer
+Definitely #1. if possible, #1 would be great. #3 could work also. it's just a bit easier to type BACKSPACE 5 times than it is to type it 4 times followed by C-BACKSPACE. but this is also an option if #1 is pretty complicated. Either way, let's make this a low-priority request.
+
+** NOTE-TO-JAY Clarification
+
+   I think I didn't make myself clear about what I meant with 3. My suggestion was to add a keybinding of C-BACKSPACE to ~unexpand-abbrev~, so you wouldn't have to BACKSPACE at all in order to unexpand. For example, you'd type:
+
+: bg^
+
+   But you had wanted to type 'bc'. When you hit space, Emacs expands it to 'beginning'. Unaware of the typo, you'd keep going:
+
+: beginning Emacs is great!^
+
+   When you'd finish typing, you'd realise the mistake and would hit C-BACKSPACE, which would ~unexpand-abbrev~, and leave point after the unexpanded text:
+
+: bg^ Emacs is great!
+
+   This way, unexpanding and deleting is totally independent (well, as long as you don't delete the expanded word :) ). Of course if you want to also delete the text after the expansion you can use BACKSPACE, or even kill words.
+
+
+
 
 ** TODO [#A] gnu-emacs-startup.org: [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break]]
 ** TODO [#A] [[*add%20"capitalize%20first%20word%20of%20next%20sentence"%20to%20smart-period,%20smart-question-mark,%20and%20smart-exclamation%20mark][add "capitalize first word of next sentence" to smart-period, smart-question-mark, and smart-exclamation mark]]
