@@ -578,7 +578,7 @@ Make ~kill-sentence~ work in a more intuitive way:
 When point is at the beginning of a sentence, kill the entire
 sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
   (interactive)
-(expand-abbrev)
+(smart-expand) 
   (if (my/beginning-of-sentence-p)
       (progn
         (kill-sentence)
@@ -596,7 +596,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
-  (expand-abbrev)
+;;  (expand-abbrev)
   (org-kill-line)
   (my/fix-space)
   (save-excursion
@@ -626,7 +626,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(expand-abbrev)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -2358,9 +2358,10 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at "[ ]*I\b") ; never downcase the word I 
-  (looking-at "[ ]*\"I\b") ; never downcase the word "I 
-  (looking-at "[ ]*\(I\b") ; never downcase the word (I 
+(looking-at " I\\b") ; never downcase the word "I" 
+  (looking-at "[ ]*I\b") ; for some reason this doesn't work
+(looking-at "[ ]*\"I\b") 
+(looking-at "[ ]*\(I\b") 
 (looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
@@ -2390,4 +2391,35 @@ I tried to add exceptions for "line-end" and also for user-full name.
 (downcase-word 1)
 )) 
   #+END_SRC
+
+
+* smart-expand
+Don't expand past certain delimiters, e.g. line break, ), and "
+
+
+#+BEGIN_SRC emacs-lisp
+(defun smart-expand ()
+  (interactive) 
+  (unless
+      (or
+       (looking-back "\)\n*")
+(looking-back "\)")
+(looking-back "\\\b") 
+    (expand-abbrev)))
+  )
+#+END_SRC
+
+But \not \but 
+
+But n \n n but n \n n but 
+not not \not 
+ noot \not 
+not \not 
+
+
+Cocaine: the. The. the I feel perfect." 
+
+\n 
+
+n 
 

@@ -1391,7 +1391,10 @@ ido-enter-matching-directory nil
 (insert "\n** committed actions: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
-(insert "*** TODO \n")
+(insert "*** TODO morning pages\n")
+(insert "*** TODO meditate\n")
+(insert "*** TODO work on book\n") 
+(insert "*** TODO \n") 
 (left-char)
   )
 
