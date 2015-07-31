@@ -52,7 +52,10 @@
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
+ '(deft-recursive t)
  '(deft-text-mode (quote org-mode))
+ '(deft-use-filename-as-title t)
+ '(deft-use-filter-string-for-filename t)
  '(delete-window-preserve-buffer
    (quote
     ("*scratch*" "current-book-research.txt" "accountability.txt")))
