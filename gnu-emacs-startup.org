@@ -385,7 +385,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-(define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
@@ -636,20 +636,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 ** my/fix-space
-
 #+BEGIN_SRC emacs-lisp
 ;;; new version
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
   (just-one-space)
-  (when (or (looking-back "^[[:space:]]+")
-            (looking-back "-[[:space:]]+")
-            (looking-at "[.,:;!?»)-]")
-            (looking-back"( ")
-            (looking-at " )")
-            )
-    (delete-horizontal-space)))
+
+    (when (or
+           (looking-back "^[[:space:]]+")
+           (looking-back "-[[:space:]]+")
+           (looking-at "[.,:;!?»)-]")
+           (looking-back"( ")
+           (looking-at " )")
+           ))
+      (unless
+      (looking-back "^-[[:space:]]+")
+
+  (delete-horizontal-space)))
 #+END_SRC
 
 

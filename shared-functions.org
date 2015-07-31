@@ -3851,3 +3851,7 @@ Single Capitals as you type."
   #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
   #+END_SRC
+
+
+(require 're-builder)
+(setq reb-re-syntax 'string)

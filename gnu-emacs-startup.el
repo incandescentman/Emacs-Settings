@@ -240,6 +240,7 @@
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 
 (define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
@@ -419,7 +420,7 @@
 When point is at the beginning of a sentence, kill the entire
 sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
   (interactive)
-(expand-abbrev)
+(smart-expand) 
   (if (my/beginning-of-sentence-p)
       (progn
         (kill-sentence)
@@ -437,7 +438,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
-  (expand-abbrev)
+;;  (expand-abbrev)
   (org-kill-line)
   (my/fix-space)
   (save-excursion
@@ -454,7 +455,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(expand-abbrev)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -466,13 +467,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
   (just-one-space)
-  (when (or (looking-back "^[[:space:]]+")
-            (looking-back "-[[:space:]]+")
-            (looking-at "[.,:;!?»)-]")
-            (looking-back"( ")
-            (looking-at " )")
-            )
-    (delete-horizontal-space)))
+
+    (when (or
+           (looking-back "^[[:space:]]+")
+           (looking-back "-[[:space:]]+")
+           (looking-at "[.,:;!?»)-]")
+           (looking-back"( ")
+           (looking-at " )")
+           ))
+      (unless
+      (looking-back "^-[[:space:]]+")
+
+  (delete-horizontal-space)))
 
 (defun insert-space ()
   (interactive)
@@ -544,7 +550,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
-  (expand-abbrev)
+  (smart-expand)
   (if (or (re-search-forward "\\=[ 	]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
@@ -990,7 +996,7 @@ subsequent sends. could save them all in a logbook?
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
-  (expand-abbrev)
+  (smart-expand)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -1007,10 +1013,13 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :"))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :" ") ; "))
+
+;; how do I add an exception for ") ; "? 
+;; e.g. if I want to add a comment after a line of lisp?
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
-  (expand-abbrev)
+  (smart-expand)
   (save-restriction
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
@@ -1163,14 +1172,16 @@ subsequent sends. could save them all in a logbook?
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-  (looking-at "[ ]*I\b") ; never downcase the word I 
-  (looking-at "[ ]*\"I\b") ; never downcase the word "I 
-  (looking-at "[ ]*\(I\b") ; never downcase the word (I 
+;; (looking-at " I\\b") ; never downcase the word "I" 
+  (looking-at "[ ]*I\\b") never downcase the word "I" 
+(looking-at "[ ]*\"I\\b") 
+(looking-at "[ ]*\(I\\b") 
 (looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
   )
-      (downcase-word 1))) 
+(save-excursion
+      (downcase-word 1)))) 
 
 (defun capitalize-unless-org-heading ()
   (interactive)
@@ -1183,3 +1194,13 @@ subsequent sends. could save them all in a logbook?
 (unless (looking-at org-complex-heading-regexp)
 (downcase-word 1)
 )) 
+
+(defun smart-expand ()
+  (interactive) 
+  (unless
+      (or
+       (looking-back "\)\n*")
+(looking-back "\)[ ]*")
+(looking-back "\\\b") 
+    (expand-abbrev)))
+  )
