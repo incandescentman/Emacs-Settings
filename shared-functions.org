@@ -3834,3 +3834,9 @@ Single Capitals as you type."
 
 (define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
   #+END_SRC
+
+* dictionary look up
+
+  #+BEGIN_SRC emacs-lisp
+;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
+  #+END_SRC
