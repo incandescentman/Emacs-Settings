@@ -462,7 +462,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
-;;; new version
+;;; I changed this a bunch, not sure if it still works correctly. 
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
@@ -477,8 +477,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            ))
       (unless
       (looking-back "^-[[:space:]]+")
-
-  (delete-horizontal-space)))
+  (delete-horizontal-space))
+(just-one-space))
 
 (defun insert-space ()
   (interactive)
