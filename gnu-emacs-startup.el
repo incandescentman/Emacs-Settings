@@ -1153,9 +1153,9 @@ subsequent sends. could save them all in a logbook?
           (setf capitalize t))
       (delete-backward-char 1))
     (save-excursion
-      (when (or (looking-at "[[:space:]]")
-                (looking-back "[[:space:]]"))
-        (my/fix-space)))
+      (when (or (looking-at "[[:space:]]+")
+                (looking-back "[[:space:]]+"))
+        (just-one-space)))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
         (capitalize-word 1)))))
@@ -1172,8 +1172,7 @@ subsequent sends. could save them all in a logbook?
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-;; (looking-at " I\\b") ; never downcase the word "I" 
-  (looking-at "[ ]*I\\b") never downcase the word "I" 
+(looking-at "[ ]*I\\b") ; never downcase the word "I" 
 (looking-at "[ ]*\"I\\b") 
 (looking-at "[ ]*\(I\\b") 
 (looking-at (sentence-end))
@@ -1189,18 +1188,16 @@ subsequent sends. could save them all in a logbook?
 (capitalize-word 1)
 )) 
 
-(defun downcase-unless-org-heading ()
-  (interactive)
-(unless (looking-at org-complex-heading-regexp)
-(downcase-word 1)
-)) 
-
 (defun smart-expand ()
   (interactive) 
+
   (unless
-      (or
+  
+    (or
        (looking-back "\)\n*")
 (looking-back "\)[ ]*")
-(looking-back "\\\b") 
-    (expand-abbrev)))
-  )
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backlash
+)
+    (expand-abbrev)
+)
+)

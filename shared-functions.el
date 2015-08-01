@@ -2732,7 +2732,7 @@ Single Capitals as you type."
   (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
   )
 
-(define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
+;; (define-key key-minor-mode-map (kbd "<f9>") 'accountability-open)
 
 (defun playful-open ()
   (interactive)
