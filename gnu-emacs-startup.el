@@ -484,7 +484,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command))
-(unexpand-abbrev))
+(unexpand-abbrev)
+)
 
 (global-set-key (kbd "M-SPC") 'insert-space)
 
@@ -1138,7 +1139,8 @@ subsequent sends. could save them all in a logbook?
   (save-excursion
     (when (or (looking-at "[[:space:]]")
               (looking-back "[[:space:]]"))
-      (my/fix-space))))
+(unless (looking-back "\\w ")
+      (my/fix-space)))))
 
 (defcustom capitalize-after-deleting-single-char nil
   "Determines whether capitalization should occur after deleting a single character.")
@@ -1153,9 +1155,10 @@ subsequent sends. could save them all in a logbook?
           (setf capitalize t))
       (delete-backward-char 1))
     (save-excursion
-      (when (or (looking-at "[[:space:]]+")
-                (looking-back "[[:space:]]+"))
-        (just-one-space)))
+      (when (or (looking-at "[[:space:]]")
+		(looking-back "[[:space:]]"))
+(unless (looking-back "\\w ")
+	(my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
         (capitalize-word 1)))))

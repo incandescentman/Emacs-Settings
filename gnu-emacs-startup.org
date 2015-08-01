@@ -663,7 +663,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command))
-(unexpand-abbrev))
+(unexpand-abbrev)
+)
 
 (global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
@@ -2209,7 +2210,8 @@ No space. Does that make sense? Thanks!
   (save-excursion
     (when (or (looking-at "[[:space:]]")
               (looking-back "[[:space:]]"))
-      (my/fix-space))))
+(unless (looking-back "\\w ")
+      (my/fix-space)))))
 #+END_SRC
 
 ** TESTING [#B] my-delete-backward-and-capitalize? 
@@ -2241,23 +2243,13 @@ First delete region, and then:
     (save-excursion
       (when (or (looking-at "[[:space:]]")
 		(looking-back "[[:space:]]"))
-	(my/fix-space)))
+(unless (looking-back "\\w ")
+	(my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
         (capitalize-word 1)))))
 #+END_SRC
-
-
-*** NOTE-TO-JAY Try this
-
-    Question, though: do you mean the capitalisation to occur *only* when a region is deleted? Don't you want it to occur also if you delete a single character? That's what my suggestion does:
-
-*** NOTE-TO-RÚDI Absolutely.
-Ha! Yes, that was going to be my next request! Perfect!
-
-*** NOTE-TO-RÚDI On second thought... 
-On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
-
+ 
 * PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
 I wrote this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK. Can you make sure? Thanks!
 
