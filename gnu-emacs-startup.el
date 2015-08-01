@@ -478,7 +478,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (unless
       (looking-back "^-[[:space:]]+")
   (delete-horizontal-space))
-(just-one-space))
+
+(unless 
+ (looking-back "^") 
+(just-one-space)
+)
+
+)
 
 (defun insert-space ()
   (interactive)
