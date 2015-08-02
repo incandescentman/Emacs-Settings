@@ -3836,13 +3836,13 @@ Single Capitals as you type."
   (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
   )
 
-(define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
+(define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
 
 (defun playful-open ()
   (interactive)
   (find-file "/Users/jay/Dropbox/writing/notationaldata/playful.org")
   )
-;; (define-key key-minor-mode-map (kbd "s-E") 'accountability-open) doesn't work 
+(define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
   #+END_SRC
 
@@ -3853,5 +3853,9 @@ Single Capitals as you type."
   #+END_SRC
 
 
+* re-builder
+
+  #+BEGIN_SRC emacs-lisp
 (require 're-builder)
 (setq reb-re-syntax 'string)
+  #+END_SRC

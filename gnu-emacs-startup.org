@@ -637,7 +637,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
-;;; new version
+;;; I changed this a bunch, not sure if it still works correctly. 
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
@@ -652,8 +652,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            ))
       (unless
       (looking-back "^-[[:space:]]+")
+  (delete-horizontal-space))
 
-  (delete-horizontal-space)))
+(unless 
+ (looking-back "^") 
+(just-one-space)
+)
+
+)
 #+END_SRC
 
 
@@ -663,7 +669,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command))
-(unexpand-abbrev))
+(unexpand-abbrev)
+)
 
 (global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
@@ -2209,7 +2216,8 @@ No space. Does that make sense? Thanks!
   (save-excursion
     (when (or (looking-at "[[:space:]]")
               (looking-back "[[:space:]]"))
-      (my/fix-space))))
+(unless (looking-back "\\w ")
+      (my/fix-space)))))
 #+END_SRC
 
 ** TESTING [#B] my-delete-backward-and-capitalize? 
@@ -2240,24 +2248,14 @@ First delete region, and then:
       (delete-backward-char 1))
     (save-excursion
       (when (or (looking-at "[[:space:]]")
-                (looking-back "[[:space:]]"))
-        (my/fix-space)))
+		(looking-back "[[:space:]]"))
+(unless (looking-back "\\w ")
+	(my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
         (capitalize-word 1)))))
 #+END_SRC
-
-
-*** NOTE-TO-JAY Try this
-
-    Question, though: do you mean the capitalisation to occur *only* when a region is deleted? Don't you want it to occur also if you delete a single character? That's what my suggestion does:
-
-*** NOTE-TO-RÚDI Absolutely.
-Ha! Yes, that was going to be my next request! Perfect!
-
-*** NOTE-TO-RÚDI On second thought... 
-On second thought, can you provide an option for my/delete-backward-and-capitalize to allow me to turn OFF capitalization when I delete single characters? I thought it was a great idea, but it turns out that when I'm editing, there are many cases when I delete single characters and it capitalizes characters when I don't want it to. So if we could remove that functionality, or (if possible) provide an option to turn it off, that would be great. Thanks!
-
+ 
 * PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
 I wrote this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK. Can you make sure? Thanks!
 
@@ -2295,8 +2293,7 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
     (unless 
   (or
-;; (looking-at " I\\b") ; never downcase the word "I" 
-  (looking-at "[ ]*I\\b") never downcase the word "I" 
+(looking-at "[ ]*I\\b") ; never downcase the word "I" 
 (looking-at "[ ]*\"I\\b") 
 (looking-at "[ ]*\(I\\b") 
 (looking-at (sentence-end))
@@ -2318,18 +2315,7 @@ I tried to add exceptions for "line-end" and also for user-full name.
 (capitalize-word 1)
 )) 
   #+END_SRC
-
-* downcase-unless-org-heading
-(May not be needed.)
-
-  #+BEGIN_SRC emacs-lisp 
-(defun downcase-unless-org-heading ()
-  (interactive)
-(unless (looking-at org-complex-heading-regexp)
-(downcase-word 1)
-)) 
-  #+END_SRC
-
+ 
 
 * smart-expand
 Don't expand past certain delimiters, e.g. line break, ), and "
@@ -2338,19 +2324,15 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 #+BEGIN_SRC emacs-lisp
 (defun smart-expand ()
   (interactive) 
+
   (unless
-      (or
+  
+    (or
        (looking-back "\)\n*")
 (looking-back "\)[ ]*")
-(looking-back "\\\b") 
-    (expand-abbrev)))
-  )
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backlash
+)
+    (expand-abbrev)
+)
+)
 #+END_SRC
-
-But \not \but 
-
-But n \n n but n \n n but 
-not not \not 
- noot \not 
-not \not 
-

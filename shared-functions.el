@@ -2732,12 +2732,15 @@ Single Capitals as you type."
   (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
   )
 
-(define-key key-minor-mode-map (kbd "<f12>") 'accountability-open)
+(define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
 
 (defun playful-open ()
   (interactive)
   (find-file "/Users/jay/Dropbox/writing/notationaldata/playful.org")
   )
-;; (define-key key-minor-mode-map (kbd "s-E") 'accountability-open) doesn't work 
+(define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
+
+(require 're-builder)
+(setq reb-re-syntax 'string)
