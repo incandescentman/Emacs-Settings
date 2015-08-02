@@ -2007,7 +2007,7 @@ Oleh
         (let ((old-point (point)))
           (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
           (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                     ,*smart-punctuation-marks*)
+                                     *smart-punctuation-marks*)
                              nil t)
           (let* ((old-punct (match-string 2))
                  (was-after-punct (>= old-point (point))))
@@ -2017,7 +2017,7 @@ Oleh
                                  (let ((potential-new-punct (concat old-punct new-punct)))
                                    (find-if (lambda (exception)
                                               (search potential-new-punct exception))
-                                            ,*smart-punctuation-exceptions*)))
+                                            *smart-punctuation-exceptions*)))
                                new-punct)
                            nil t nil 2)
             (when (looking-at "[ \t]*\\<")
