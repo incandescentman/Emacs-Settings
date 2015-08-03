@@ -1,0 +1,8 @@
+
+* file settings                                                     :ARCHIVE:
+#+OPTIONS: f:t) )
+#+TODO): TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
+#+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
+#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE 
+#+OPTIONS: 
+

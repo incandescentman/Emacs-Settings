@@ -463,28 +463,42 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 ;;; I changed this a bunch, not sure if it still works correctly. 
+;; (defun my/fix-space ()
+;;   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+;;   (interactive)
+;;   (just-one-space)
+;; 
+;;     (when (or
+;;            (looking-back "^[[:space:]]+")
+;;            (looking-back "-[[:space:]]+")
+;;            (looking-at "[.,:;!?»)-]")
+;;            (looking-back"( ")
+;;            (looking-at " )")
+;;            ))
+;;       (unless
+;;       (looking-back "^-[[:space:]]+")
+;;   (delete-horizontal-space))
+;; 
+;; (unless 
+;;  (looking-back "^") 
+;; (just-one-space)
+;; )
+;; 
+;; )
+
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
   (just-one-space)
-
-    (when (or
-           (looking-back "^[[:space:]]+")
-           (looking-back "-[[:space:]]+")
-           (looking-at "[.,:;!?»)-]")
-           (looking-back"( ")
-           (looking-at " )")
-           ))
-      (unless
-      (looking-back "^-[[:space:]]+")
-  (delete-horizontal-space))
-
-(unless 
- (looking-back "^") 
-(just-one-space)
-)
-
-)
+  (when (and (or
+              (looking-back "^[[:space:]]+")
+              (looking-back "-[[:space:]]+")
+              (looking-at "[.,:;!?»)-]")
+              (looking-back"( ")
+              (looking-at " )")
+              )
+             (not (looking-back "^-[[:space:]]+")))
+    (delete-horizontal-space)))
 
 (defun insert-space ()
   (interactive)
