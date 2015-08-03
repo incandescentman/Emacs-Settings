@@ -462,7 +462,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
-;;; I changed this a bunch, not sure if it still works correctly. 
+(defun jay/insert-paren-single ()
+  "Insert paren without expanding abbrev."
+  (interactive)
+(smart-expand)
+;; (insert-parentheses 1) 
+(insert "\)")
+)
+
+(define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
+(define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+
+;;; I changed this a)) bunch, not sure if it still works correctly. 
 ;; (defun my/fix-space ()
 ;;   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
 ;;   (interactive)
@@ -497,7 +508,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
               (looking-back"( ")
               (looking-at " )")
               )
-             (not (looking-back "^-[[:space:]]+")))
+             (not (looking-back "^-[[:space:]]+"))
+             (not (looking-back " - "))
+
+)
     (delete-horizontal-space)))
 
 (defun insert-space ()
@@ -1219,8 +1233,14 @@ subsequent sends. could save them all in a logbook?
     (or
        (looking-back "\)\n*")
 (looking-back "\)[ ]*")
+(looking-back ":t[ ]*") 
+
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backlash
 )
     (expand-abbrev)
 )
 )
+
+;; (require 'dictem) 
+
+(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 

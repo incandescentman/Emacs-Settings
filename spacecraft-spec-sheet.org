@@ -6,3 +6,9 @@
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE 
 #+OPTIONS: 
 
+
+
+Input: How to write a book in Emacs - Mastering Emacs (More about typesetting^ than about writing)
+Scenario: invoke backward-delete-word-and-capitalize X3
+Current output: How to write a book in Emacs - Mastering Emacs ( ^ than about writing)
+Desired output: How to write a book in Emacs - Mastering Emacs (^ than about writing)

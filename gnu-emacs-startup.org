@@ -634,19 +634,17 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 
-jay/insert-right-parenthesis
-#+BEGIN_SRC emacs-lisp
 (defun jay/insert-paren-single ()
   "Insert paren without expanding abbrev."
   (interactive)
 (smart-expand)
 ;; (insert-parentheses 1) 
-(insert "\)"
-))
+(insert "\)")
+)
 
 (define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
 (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
-(define-key autopair-minor-mode-map (kbd ")") ')
+
 #+END_SRC
 
 ** my/fix-space
@@ -2373,7 +2371,13 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 * dictem
 
   #+BEGIN_SRC emacs-lisp
-(require 'dictem) 
+;; (require 'dictem) 
   #+END_SRC
 
 
+* fountain
+
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
+
+  #+END_SRC

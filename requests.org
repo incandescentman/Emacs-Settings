@@ -232,3 +232,7 @@ Desired output:
 
 *** NOTE-TO-RÚDI Question about spaces?
 It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
+
+
+* autolist
+[[https://github.com/calvinwyoung/org-autolist][calvinwyoung/org-autolist]]

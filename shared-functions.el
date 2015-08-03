@@ -116,6 +116,7 @@
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
 
 (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
@@ -1255,7 +1256,7 @@ ido-enter-matching-directory nil
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -2744,3 +2745,5 @@ Single Capitals as you type."
 
 (require 're-builder)
 (setq reb-re-syntax 'string)
+
+(imenu-list-minor-mode) 
