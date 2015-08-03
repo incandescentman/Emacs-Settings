@@ -638,28 +638,42 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
 ;;; I changed this a bunch, not sure if it still works correctly. 
+;; (defun my/fix-space ()
+;;   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
+;;   (interactive)
+;;   (just-one-space)
+;; 
+;;     (when (or
+;;            (looking-back "^[[:space:]]+")
+;;            (looking-back "-[[:space:]]+")
+;;            (looking-at "[.,:;!?»)-]")
+;;            (looking-back"( ")
+;;            (looking-at " )")
+;;            ))
+;;       (unless
+;;       (looking-back "^-[[:space:]]+")
+;;   (delete-horizontal-space))
+;; 
+;; (unless 
+;;  (looking-back "^") 
+;; (just-one-space)
+;; )
+;; 
+;; )
+
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
   (just-one-space)
-
-    (when (or
-           (looking-back "^[[:space:]]+")
-           (looking-back "-[[:space:]]+")
-           (looking-at "[.,:;!?»)-]")
-           (looking-back"( ")
-           (looking-at " )")
-           ))
-      (unless
-      (looking-back "^-[[:space:]]+")
-  (delete-horizontal-space))
-
-(unless 
- (looking-back "^") 
-(just-one-space)
-)
-
-)
+  (when (and (or
+              (looking-back "^[[:space:]]+")
+              (looking-back "-[[:space:]]+")
+              (looking-at "[.,:;!?»)-]")
+              (looking-back"( ")
+              (looking-at " )")
+              )
+             (not (looking-back "^-[[:space:]]+")))
+    (delete-horizontal-space)))
 #+END_SRC
 
 
@@ -2014,7 +2028,7 @@ Oleh
         (let ((old-point (point)))
           (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
           (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                     ,*smart-punctuation-marks*)
+                                     *smart-punctuation-marks*)
                              nil t)
           (let* ((old-punct (match-string 2))
                  (was-after-punct (>= old-point (point))))
@@ -2024,7 +2038,7 @@ Oleh
                                  (let ((potential-new-punct (concat old-punct new-punct)))
                                    (find-if (lambda (exception)
                                               (search potential-new-punct exception))
-                                            ,*smart-punctuation-exceptions*)))
+                                            *smart-punctuation-exceptions*)))
                                new-punct)
                            nil t nil 2)
             (when (looking-at "[ \t]*\\<")
