@@ -3864,5 +3864,5 @@ Single Capitals as you type."
 * imenu-list
 
   #+BEGIN_SRC emacs-lisp
-(imenu-list-minor-mode) 
+
   #+END_SRC

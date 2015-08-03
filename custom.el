@@ -426,7 +426,8 @@
      (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
      
 ;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
-;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+     ;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+     (imenu-list-minor-mode) 
 ))
 
 ;; this doesn't work though :-(

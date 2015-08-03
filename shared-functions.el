@@ -2746,4 +2746,4 @@ Single Capitals as you type."
 (require 're-builder)
 (setq reb-re-syntax 'string)
 
-(imenu-list-minor-mode) 
+
