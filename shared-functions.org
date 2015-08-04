@@ -1781,6 +1781,7 @@ Jump to a definition in the current file. (This is awesome.)
 Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders.
 
 #+BEGIN_SRC emacs-lisp
+(setq helm-M-x-always-save-history t)
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 #+END_SRC
@@ -3865,4 +3866,11 @@ Single Capitals as you type."
 
   #+BEGIN_SRC emacs-lisp
 
+  #+END_SRC
+
+* stripe buffer
+
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+(add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
   #+END_SRC
