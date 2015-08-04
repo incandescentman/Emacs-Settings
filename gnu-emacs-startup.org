@@ -291,7 +291,6 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-(unless (looking-at ("\n*") (org-complex-heading-regexp))) 
       (capitalize-unless-org-heading))))
 #+END_SRC
 
@@ -1445,9 +1444,9 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
-;; (require 'saveplace)
+(require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+(setq save-place-file "/Users/jay/emacs/.savefile/.places") 
 #+END_SRC
 
 The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.

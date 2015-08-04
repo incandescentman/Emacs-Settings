@@ -173,7 +173,6 @@
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-(unless (looking-at ("\n*") (org-complex-heading-regexp))) 
       (capitalize-unless-org-heading))))
 
 (defun pasteboard-search-in-current-buffer ()
@@ -784,9 +783,9 @@ password: %s" userid password))
 )
 
 ;; Save point position between sessions
-;; (require 'saveplace)
+(require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+(setq save-place-file "/Users/jay/emacs/.savefile/.places") 
 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."

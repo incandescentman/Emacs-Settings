@@ -70,6 +70,7 @@
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+ '(fasd-enable-initial-prompt nil)
  '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions

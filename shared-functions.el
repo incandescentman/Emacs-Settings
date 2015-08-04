@@ -1803,7 +1803,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 ;; (define-hyper-key "r" 'helm-mini)
-(define-hyper-key "r" 'recentf-open-files-compl)
+;; (define-hyper-key "r" 'recentf-open-files-compl)
+(define-hyper-key "r" 'fasd-find-file)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
@@ -2751,3 +2752,6 @@ Single Capitals as you type."
 
 (add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
+
+(global-fasd-mode 1)
+(setq fasd-enable-initial-prompt nil)
