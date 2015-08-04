@@ -427,6 +427,7 @@
      
 ;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
      ;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
+     (find-file "~/nd/playful.org")
      (imenu-list-minor-mode) 
 ))
 
