@@ -1,4 +1,7 @@
 (require 'org)
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
 ;; (disable-theme 'zenburn)
 
 ;; globally turn off fucking piece of shit guru mode
