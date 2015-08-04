@@ -2069,7 +2069,8 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
-(smart-punctuation ".") 
+(smart-punctuation ". ") ; new, hope this doesn't break it 
+;; old (smart-punctuation ".") 
 (save-excursion
 (unless (looking-at "[ ]*$")
 (capitalize-unless-org-heading))
