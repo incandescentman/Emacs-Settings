@@ -920,7 +920,6 @@ Subject: %^{Subject}
 '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
 '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
 '(send-mail-function (quote sendmail-send-it))
-;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
 
 
 ;; end
@@ -1204,6 +1203,7 @@ ido-enter-matching-directory nil
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
 
+(setq helm-M-x-always-save-history t)
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
@@ -1402,7 +1402,7 @@ ido-enter-matching-directory nil
 (defun jd-clock-in ()
   "insert a new heading with today's date, and then clock in"
   (interactive)
-  (org-insert-subheading ())
+  (org-insert-heading ())
   (org-insert-time-stamp (current-time))
   (org-clock-in)
   (next-line)
@@ -2747,3 +2747,6 @@ Single Capitals as you type."
 (setq reb-re-syntax 'string)
 
 
+
+(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+(add-hook 'org-mode-hook 'turn-on-stripe-table-mode)

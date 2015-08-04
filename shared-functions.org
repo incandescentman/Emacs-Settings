@@ -1348,7 +1348,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
 '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
 '(send-mail-function (quote sendmail-send-it))
-;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
 
 
 ;; end
@@ -2031,7 +2030,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (defun jd-clock-in ()
   "insert a new heading with today's date, and then clock in"
   (interactive)
-  (org-insert-subheading ())
+  (org-insert-heading ())
   (org-insert-time-stamp (current-time))
   (org-clock-in)
   (next-line)
@@ -3868,8 +3867,7 @@ Single Capitals as you type."
 
   #+END_SRC
 
-* stripe buffer
-
+* stripe buffer 
   #+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
