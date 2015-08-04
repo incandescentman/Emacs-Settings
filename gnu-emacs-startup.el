@@ -1100,8 +1100,7 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-period ()
   (interactive)
-(smart-punctuation ". ") ; new, hope this doesn't break it 
-;; old (smart-punctuation ".") 
+(smart-punctuation ".")
 (save-excursion
 (unless (looking-at "[ ]*$")
 (capitalize-unless-org-heading))
