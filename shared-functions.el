@@ -1244,6 +1244,7 @@ ido-enter-matching-directory nil
        "open .")))
 
   (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
+  (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
