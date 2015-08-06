@@ -278,7 +278,7 @@
 ;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
 
 
-;; (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
@@ -1211,6 +1211,7 @@ subsequent sends. could save them all in a logbook?
 (looking-at "[ ]*I\\b") ; never downcase the word "I" 
 (looking-at "[ ]*\"I\\b") 
 (looking-at "[ ]*\(I\\b") 
+;; (looking-at "\\") ; how do you search for a literal backslash?
 (looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))

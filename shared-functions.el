@@ -2882,6 +2882,7 @@ Single Capitals as you type."
                   (if (eq (widget-type (widget-at)) 'editable-field)
                       (beginning-of-line))))) 
 
+;; modify the keybindings 
 (define-key notmuch-show-mode-map "y"
       (lambda ()
         "archive"
@@ -2913,6 +2914,50 @@ Single Capitals as you type."
         (if (member "flagged" (notmuch-tree-get-tags))
             (notmuch-tree-tag (list "-flagged"))
           (notmuch-tree-tag (list "+flagged")))))
+
+
+(define-key notmuch-show-mode-map "g"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-search-mode-map "g"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-tree-mode-map "g"
+      (lambda ()
+        "archive"
+(notmuch-refresh-this-buffer))) 
+
+(define-key notmuch-hello-mode-map "g"
+(notmuch-refresh-this-buffer)) 
+
+
+;; modify the documentation about the keybindings
+(defun notmuch-hello-insert-footer ()
+  "Insert the notmuch-hello footer."
+  (let ((start (point)))
+    (widget-insert "Type a search query and hit RET to view matching threads.\n")
+    (when notmuch-search-history
+      (widget-insert "Hit RET to re-submit a previous search. Edit it first if you like.\n")
+      (widget-insert "Save recent searches with the `save' button.\n"))
+    (when notmuch-saved-searches
+      (widget-insert "Edit saved searches with the `edit' button.\n"))
+    (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
+    (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
+    (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
+    (widget-insert "`S' to star or unstar messages.\n")
+    (widget-insert "`y' to unstar and archive a message.\n")
+    (widget-create 'link
+		   :notify (lambda (&rest ignore)
+			     (customize-variable 'notmuch-hello-sections))
+		   :button-prefix "" :button-suffix ""
+		   "Customize")
+    (widget-insert " this page.")
+    (let ((fill-column (- (window-width) notmuch-hello-indent)))
+      (center-region start (point)))))
 
 
 
