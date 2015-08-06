@@ -2772,11 +2772,13 @@ Single Capitals as you type."
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 
+(setq mu4e-attachment-dir "~/Downloads") 
+
 
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
-    '( ("/[Gmail].Starred"               . ?i)
-       ("/[Gmail].Sent Mail"   . ?s)))
+    '( ("/starred"               . ?i)
+       ("/sent"   . ?s)))
 
 ;; something about ourselves
 (setq
@@ -2803,13 +2805,6 @@ Single Capitals as you type."
 ;;   - view in browser (provided below)
 (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
-
-;; (setq mu4e-maildir-shortcuts
-;;     '( ("/INBOX"               . ?i)
-;;        ("/[Gmail].Sent Mail"   . ?s)
-;;        ("/[Gmail].Trash"       . ?t)
-;;        ("/[Gmail].All Mail"    . ?a))) 
-
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
         (defun my-do-compose-stuff ()
@@ -2825,8 +2820,46 @@ Single Capitals as you type."
 ;; fetch mail every 10 mins
 (setq mu4e-update-interval 600)
 
+
+;; Use fancy chars
+(setq mu4e-use-fancy-chars t) 
+
+
+(setq mu4e-confirm-quit nil
+      mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
+      mu4e-html2text-command "html2text -utf8 -width 72"
+      ) 
+
+;; maildirs
+(require 'mu4e-maildirs-extension)
+(mu4e-maildirs-extension) 
+(setq mu4e-maildirs-extension-title "Folders")
+
+;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
+
+(require 'gnus-dired)
+;; make the `gnus-dired-mail-buffers' function also work on
+;; message-mode derived modes, such as mu4e-compose-mode
+(defun gnus-dired-mail-buffers ()
+  "Return a list of active message buffers."
+  (let (buffers)
+    (save-current-buffer
+      (dolist (buffer (buffer-list t))
+        (set-buffer buffer)
+        (when (and (derived-mode-p 'message-mode)
+                   (null message-sent-message-via))
+          (push (buffer-name buffer) buffers))))
+    (nreverse buffers)))
+
+(setq gnus-dired-mail-mode 'mu4e-user-agent)
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode) 
+
 (define-key gnus-summary-mode-map "c"
   'compose-mail)
  
 (define-key gnus-summary-mode-map "a"
   'gnus-summary-wide-reply) 
+
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
+(require 'notmuch)
+(setq notmuch-search-oldest-first nil)

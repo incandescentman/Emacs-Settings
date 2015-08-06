@@ -3933,13 +3933,6 @@ Single Capitals as you type."
 ;;   - view in browser (provided below)
 (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
-
-;; (setq mu4e-maildir-shortcuts
-;;     '( ("/INBOX"               . ?i)
-;;        ("/[Gmail].Sent Mail"   . ?s)
-;;        ("/[Gmail].Trash"       . ?t)
-;;        ("/[Gmail].All Mail"    . ?a))) 
-
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
         (defun my-do-compose-stuff ()
@@ -4017,4 +4010,13 @@ With this, I can attach a file as an attachment to a new email message by enteri
   'gnus-summary-wide-reply) 
 
 
+  #+END_SRC
+
+
+* notmuch
+
+  #+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
+(require 'notmuch)
+(setq notmuch-search-oldest-first nil)
   #+END_SRC
