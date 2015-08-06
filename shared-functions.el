@@ -2759,7 +2759,7 @@ Single Capitals as you type."
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
 (require 'mu4e)
-(setq mu4e-maildir "~/Dropbox/mail/gmail")
+(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail")
 (setq mu4e-drafts-folder "/[Gmail].Drafts")
 (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
