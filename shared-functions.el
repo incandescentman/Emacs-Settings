@@ -2766,12 +2766,16 @@ Single Capitals as you type."
 
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
+
 ;; allow for updating mail using 'U' in the main view:
-(setq mu4e-get-mail-command "offlineimap")
+;; (setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-change-filenames-when-moving t)
+
 
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
-    '( ("/INBOX"               . ?i)
+    '( ("/[Gmail].Starred"               . ?i)
        ("/[Gmail].Sent Mail"   . ?s)))
 
 ;; something about ourselves
@@ -2806,12 +2810,6 @@ Single Capitals as you type."
 ;;        ("/[Gmail].Trash"       . ?t)
 ;;        ("/[Gmail].All Mail"    . ?a))) 
 
-
-;; allow for updating mail using 'U' in the main view:
-(setq mu4e-get-mail-command "offlineimap")
-
-
-
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
         (defun my-do-compose-stuff ()
@@ -2826,3 +2824,9 @@ Single Capitals as you type."
 
 ;; fetch mail every 10 mins
 (setq mu4e-update-interval 600)
+
+(define-key gnus-summary-mode-map "c"
+  'compose-mail)
+ 
+(define-key gnus-summary-mode-map "a"
+  'gnus-summary-wide-reply) 
