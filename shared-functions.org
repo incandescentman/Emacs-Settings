@@ -4085,8 +4085,11 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (define-key notmuch-tree-mode-map "g"
       (lambda ()
         "archive"
-        (interactive)
-        (notmuch-refresh-this-buffer))) 
+(notmuch-refresh-this-buffer))) 
+
+(define-key notmuch-hello-mode-map "g"
+(notmuch-refresh-this-buffer)) 
+
 
 ;; modify the documentation about the keybindings
 (defun notmuch-hello-insert-footer ()
@@ -4101,8 +4104,8 @@ With this, I can attach a file as an attachment to a new email message by enteri
     (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
     (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
     (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
-    (widget-insert "`S' to star or unstar messages\n")
     (widget-insert "`S' to star or unstar messages.\n")
+    (widget-insert "`y' to unstar and archive a message.\n")
     (widget-create 'link
 		   :notify (lambda (&rest ignore)
 			     (customize-variable 'notmuch-hello-sections))
