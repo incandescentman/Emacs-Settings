@@ -4101,7 +4101,7 @@ With this, I can attach a file as an attachment to a new email message by enteri
     (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
     (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
     (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
-    (widget-insert "`S' to star or unstar messages.\n")
+    (widget-insert "`S' to star or unstar messages\n")
     (widget-insert "`S' to star or unstar messages.\n")
     (widget-create 'link
 		   :notify (lambda (&rest ignore)
