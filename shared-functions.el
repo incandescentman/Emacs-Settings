@@ -2759,9 +2759,11 @@ Single Capitals as you type."
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
 (require 'mu4e)
-(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail")
-(setq mu4e-drafts-folder "/[Gmail].Drafts")
-(setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
+(setq mu4e-sent-folder   "/sent")
+(setq mu4e-drafts-folder "/drafts")
+(setq mu4e-trash-folder  "/trash") 
+
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
 ;; allow for updating mail using 'U' in the main view:
@@ -2778,7 +2780,7 @@ Single Capitals as you type."
    user-full-name  "Jay Dixit"
    mu4e-compose-signature
     (concat
-      "Cheers,\n"
+      "Best,\n"
       "Jay\n"))
 
 ;; show images
@@ -2797,6 +2799,19 @@ Single Capitals as you type."
 ;;   - view in browser (provided below)
 (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
+
+;; (setq mu4e-maildir-shortcuts
+;;     '( ("/INBOX"               . ?i)
+;;        ("/[Gmail].Sent Mail"   . ?s)
+;;        ("/[Gmail].Trash"       . ?t)
+;;        ("/[Gmail].All Mail"    . ?a))) 
+
+
+;; allow for updating mail using 'U' in the main view:
+(setq mu4e-get-mail-command "offlineimap")
+
+
+
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
         (defun my-do-compose-stuff ()
@@ -2811,10 +2826,3 @@ Single Capitals as you type."
 
 ;; fetch mail every 10 mins
 (setq mu4e-update-interval 600)
-
-;; configuration for sending mail
-(setq message-send-mail-function 'smtpmail-send-it
-     smtpmail-stream-type 'starttls
-     smtpmail-default-smtp-server "smtp.gmail.com"
-     smtpmail-smtp-server "smtp.gmail.com"
-     smtpmail-smtp-service 587)
