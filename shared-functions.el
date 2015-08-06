@@ -2957,8 +2957,11 @@ Single Capitals as you type."
 		   "Customize")
     (widget-insert " this page.")
     (let ((fill-column (- (window-width) notmuch-hello-indent)))
-      (center-region start (point)))))
-
-
-
+      (center-region start (point))))) 
 ;; doesn't work 
+
+(require 'deft)
+(setq deft-extensions '("org" "md" "txt"))
+(setq deft-default-extension "org")
+(setq deft-directory "~/nd/")
+(setq deft-use-filename-as-title t) 

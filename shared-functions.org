@@ -4044,17 +4044,22 @@ With this, I can attach a file as an attachment to a new email message by enteri
         "archive"
         (interactive)
         (notmuch-show-tag (list "-flagged" "-inbox")))) 
+;; do I use this even?
+
 (define-key notmuch-search-mode-map "y"
       (lambda ()
-        "archive"
+        "toggle flagged tag for message"
         (interactive)
-        (notmuch-search-tag (list "-flagged" "-inbox")))) 
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged" "-inbox"))
+          (notmuch-search-tag (list "+flagged" "+inbox")))))
 (define-key notmuch-tree-mode-map "y"
       (lambda ()
-        "archive"
+        "toggle flagged tag for message"
         (interactive)
-        (notmuch-tree-tag (list "-flagged" "-inbox")))) 
-
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged" "-inbox"))
+          (notmuch-tree-tag (list "+flagged" "+inbox"))))) 
 
 (define-key notmuch-search-mode-map "S"
       (lambda ()
@@ -4113,9 +4118,18 @@ With this, I can attach a file as an attachment to a new email message by enteri
 		   "Customize")
     (widget-insert " this page.")
     (let ((fill-column (- (window-width) notmuch-hello-indent)))
-      (center-region start (point)))))
-
-
-
+      (center-region start (point))))) 
 ;; doesn't work 
+
   #+END_SRC
+
+* deft-turbo
+
+  #+BEGIN_SRC emacs-lisp
+(require 'deft)
+(setq deft-extensions '("org" "md" "txt"))
+(setq deft-default-extension "org")
+(setq deft-directory "~/nd/")
+(setq deft-use-filename-as-title t) 
+  #+END_SRC
+
