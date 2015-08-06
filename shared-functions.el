@@ -2863,3 +2863,57 @@ Single Capitals as you type."
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-oldest-first nil)
+(defadvice notmuch-mua-reply (around notmuch-fix-sender)
+     (let ((sender "Jay Dixit <dixit@aya.yale.edu>"))
+       ad-do-it))
+   (ad-activate 'notmuch-mua-reply) 
+
+;; Initially the cursor is positioned at the beginning of buffer. 
+;; Some users liked the "ancient" version where cursor was moved to the first Saved searches button. 
+;; Add the following code to your notmuch emacs configuration file in case you want this behaviour:
+
+    (add-hook 'notmuch-hello-refresh-hook
+              (lambda ()
+                (if (and (eq (point) (point-min))
+                         (search-forward "Saved searches:" nil t))
+                    (progn
+                      (forward-line)
+                      (widget-forward 1))
+                  (if (eq (widget-type (widget-at)) 'editable-field)
+                      (beginning-of-line))))) 
+
+(define-key notmuch-show-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "-flagged" "-inbox")))) 
+(define-key notmuch-search-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "-flagged" "-inbox")))) 
+(define-key notmuch-tree-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-tree-tag (list "-flagged" "-inbox")))) 
+
+
+(define-key notmuch-search-mode-map "S"
+      (lambda ()
+        "toggle flagged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged"))
+          (notmuch-search-tag (list "+flagged")))))
+(define-key notmuch-tree-mode-map "S"
+      (lambda ()
+        "toggle flagged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged"))
+          (notmuch-tree-tag (list "+flagged")))))
+
+
+
+;; doesn't work 

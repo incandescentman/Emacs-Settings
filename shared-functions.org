@@ -4019,4 +4019,100 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-oldest-first nil)
+(defadvice notmuch-mua-reply (around notmuch-fix-sender)
+     (let ((sender "Jay Dixit <dixit@aya.yale.edu>"))
+       ad-do-it))
+   (ad-activate 'notmuch-mua-reply) 
+
+;; Initially the cursor is positioned at the beginning of buffer. 
+;; Some users liked the "ancient" version where cursor was moved to the first Saved searches button. 
+;; Add the following code to your notmuch emacs configuration file in case you want this behaviour:
+
+    (add-hook 'notmuch-hello-refresh-hook
+              (lambda ()
+                (if (and (eq (point) (point-min))
+                         (search-forward "Saved searches:" nil t))
+                    (progn
+                      (forward-line)
+                      (widget-forward 1))
+                  (if (eq (widget-type (widget-at)) 'editable-field)
+                      (beginning-of-line))))) 
+
+;; modify the keybindings 
+(define-key notmuch-show-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "-flagged" "-inbox")))) 
+(define-key notmuch-search-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "-flagged" "-inbox")))) 
+(define-key notmuch-tree-mode-map "y"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-tree-tag (list "-flagged" "-inbox")))) 
+
+
+(define-key notmuch-search-mode-map "S"
+      (lambda ()
+        "toggle flagged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged"))
+          (notmuch-search-tag (list "+flagged")))))
+(define-key notmuch-tree-mode-map "S"
+      (lambda ()
+        "toggle flagged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged"))
+          (notmuch-tree-tag (list "+flagged")))))
+
+
+(define-key notmuch-show-mode-map "g"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-search-mode-map "g"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-tree-mode-map "g"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+
+;; modify the documentation about the keybindings
+(defun notmuch-hello-insert-footer ()
+  "Insert the notmuch-hello footer."
+  (let ((start (point)))
+    (widget-insert "Type a search query and hit RET to view matching threads.\n")
+    (when notmuch-search-history
+      (widget-insert "Hit RET to re-submit a previous search. Edit it first if you like.\n")
+      (widget-insert "Save recent searches with the `save' button.\n"))
+    (when notmuch-saved-searches
+      (widget-insert "Edit saved searches with the `edit' button.\n"))
+    (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
+    (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
+    (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
+    (widget-insert "`S' to star or unstar messages.\n")
+    (widget-insert "`S' to star or unstar messages.\n")
+    (widget-create 'link
+		   :notify (lambda (&rest ignore)
+			     (customize-variable 'notmuch-hello-sections))
+		   :button-prefix "" :button-suffix ""
+		   "Customize")
+    (widget-insert " this page.")
+    (let ((fill-column (- (window-width) notmuch-hello-indent)))
+      (center-region start (point)))))
+
+
+
+;; doesn't work 
   #+END_SRC

@@ -121,6 +121,7 @@
  '(mu4e-user-mail-address-list
    (quote
     ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com " "jaydixit.work@gmail.com")))
+ '(notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
  '(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
@@ -384,8 +385,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(bold ((t (:bold t :foreground "red"))))
- '(hl-line ((t (:inherit highlight))))
+ '(hl-line ((t (:background "#FBFFAD" :foreground "black"))))
  '(org-headline-done ((t (:strike-through t))))
  '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
