@@ -484,4 +484,4 @@
 (recenter-top-bottom)
 
 
-(smartparens-mode 1)
+
