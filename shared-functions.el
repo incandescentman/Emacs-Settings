@@ -2966,6 +2966,12 @@ Single Capitals as you type."
       (center-region start (point))))) 
 ;; doesn't work 
 
+
+(require 'org-notmuch) 
+
+(setq message-citation-line-format "")
+(setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
+
 (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 (setq deft-default-extension "org")

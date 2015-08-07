@@ -4122,6 +4122,13 @@ With this, I can attach a file as an attachment to a new email message by enteri
       (center-region start (point))))) 
 ;; doesn't work 
 
+
+(require 'org-notmuch) 
+
+(setq message-citation-line-format "")
+(setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
+
+
   #+END_SRC
 
 * deft-turbo
