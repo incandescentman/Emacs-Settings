@@ -626,7 +626,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(smart-expand)
+;; (smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -643,6 +643,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
 (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+(define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 #+END_SRC
 

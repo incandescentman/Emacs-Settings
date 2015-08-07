@@ -1,4 +1,3 @@
-
 (require 'package)
 
 (add-to-list 'package-archives
@@ -2759,6 +2758,7 @@ Single Capitals as you type."
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
+(setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
 (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
 (setq mu4e-sent-folder   "/sent")

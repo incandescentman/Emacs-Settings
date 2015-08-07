@@ -3887,6 +3887,7 @@ Single Capitals as you type."
   #+BEGIN_SRC emacs-lisp 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
+(setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
 (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
 (setq mu4e-sent-folder   "/sent")
@@ -4139,5 +4140,14 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (setq deft-default-extension "org")
 (setq deft-directory "~/nd/")
 (setq deft-use-filename-as-title t) 
+  #+END_SRC
+
+* insert slash no abbrev
+
+  #+BEGIN_SRC emacs-lisp
+(defun jay/insert-slash ()
+  (interactive)
+  (insert "/")
+  )
   #+END_SRC
 
