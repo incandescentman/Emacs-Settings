@@ -1190,7 +1190,11 @@ subsequent sends. could save them all in a logbook?
     (save-excursion
       (when (or (looking-at "[[:space:]]")
 		(looking-back "[[:space:]]"))
-(unless (looking-back "\\w ")
+;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
+(unless (and
+(looking-back "\\w ")
+(looking-at "\\w") 
+) 
 	(my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
