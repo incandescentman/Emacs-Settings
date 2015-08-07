@@ -2070,6 +2070,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'css-mode))) 
 ((and buffer-file-name (eq major-mode 'xml-mode))) 
 ((and buffer-file-name (eq major-mode 'nmxml-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode)))
 ((and buffer-file-name (eq major-mode 'gitconfig-mode)))
 ((and buffer-file-name (eq major-mode 'gitignore-mode)))
       ((and buffer-file-name (eq major-mode 'sh-mode)))
@@ -2888,17 +2889,22 @@ Single Capitals as you type."
         "archive"
         (interactive)
         (notmuch-show-tag (list "-flagged" "-inbox")))) 
+;; do I use this even?
+
 (define-key notmuch-search-mode-map "y"
       (lambda ()
-        "archive"
+        "toggle flagged tag for message"
         (interactive)
-        (notmuch-search-tag (list "-flagged" "-inbox")))) 
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged" "-inbox"))
+          (notmuch-search-tag (list "+flagged" "+inbox")))))
 (define-key notmuch-tree-mode-map "y"
       (lambda ()
-        "archive"
+        "toggle flagged tag for message"
         (interactive)
-        (notmuch-tree-tag (list "-flagged" "-inbox")))) 
-
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged" "-inbox"))
+          (notmuch-tree-tag (list "+flagged" "+inbox"))))) 
 
 (define-key notmuch-search-mode-map "S"
       (lambda ()
