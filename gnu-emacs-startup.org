@@ -2366,19 +2366,12 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 (looking-back "\)[ ]*")
 (looking-back ":t[ ]*") 
 
-;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backlash
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
     (expand-abbrev)
 )
 )
 #+END_SRC
-
-* dictem
-
-  #+BEGIN_SRC emacs-lisp
-;; (require 'dictem) 
-  #+END_SRC
-
 
 * fountain
 

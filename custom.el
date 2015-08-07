@@ -193,7 +193,7 @@
  '(org-export-blocks-witheld (quote (hidden)) t)
  '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
- '(org-export-html-style-include-default t t)
+ '(org-export-html-style-include-default t)
  '(org-export-latex-date-format "%d %B %Y." t)
  '(org-export-latex-emphasis-alist
    (quote
@@ -291,7 +291,7 @@
  '(org-mac-grab-Together-app-p nil)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+    (org-bbdb org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-habit org-irc org-mew org-vm org-wl org-w3m org-choose org-collector)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")

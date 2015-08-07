@@ -1239,12 +1239,10 @@ subsequent sends. could save them all in a logbook?
 (looking-back "\)[ ]*")
 (looking-back ":t[ ]*") 
 
-;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backlash
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
     (expand-abbrev)
 )
 )
-
-;; (require 'dictem) 
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
