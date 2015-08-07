@@ -1,4 +1,3 @@
-
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -471,6 +470,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
 (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+(define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 ;;; I changed this a)) bunch, not sure if it still works correctly. 
 ;; (defun my/fix-space ()
@@ -517,7 +517,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command))
-(unexpand-abbrev)
+;; (unexpand-abbrev)
 )
 
 (global-set-key (kbd "M-SPC") 'insert-space)
@@ -770,13 +770,13 @@ password: %s" userid password))
 
 ;; (send-mail "jkitchin" "trustme99")
 
-(let ((data (quote (("userid" "password") hline ("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
+(let ((data (quote (("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
 ;; (mapcar (lambda (x) (fun (car x) (cadr x))) data)
 )
 
-(let ((data (quote (("userid" "password") hline ("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
+(let ((data (quote (("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
 ;; (mapcar (lambda (x) (fun (nth 0 x) (nth 1 x))) data)

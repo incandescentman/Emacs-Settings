@@ -2977,3 +2977,8 @@ Single Capitals as you type."
 (setq deft-default-extension "org")
 (setq deft-directory "~/nd/")
 (setq deft-use-filename-as-title t) 
+
+(defun jay/insert-slash ()
+  (interactive)
+  (insert "/")
+  )

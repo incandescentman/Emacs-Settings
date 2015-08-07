@@ -626,7 +626,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-;; (smart-expand)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -698,7 +698,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (let ((last-command-event ? ))
     (call-interactively 'self-insert-command))
-(unexpand-abbrev)
+;; (unexpand-abbrev)
 )
 
 (global-set-key (kbd "M-SPC") 'insert-space)
