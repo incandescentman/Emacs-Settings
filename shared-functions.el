@@ -2260,7 +2260,7 @@ subsequent sends."
 (646) 355-8001
 [[http://jaydixit.com/][jaydixit.com]]
 \n"))
-(org-mime-htmlize)))
+))
 
 
 (defun new-email-from-subtree-no-signature ()
@@ -2311,7 +2311,7 @@ subsequent sends."
         (message-goto-to))
 (end-of-buffer)
 )
-(org-mime-htmlize)))
+))
 
 (defun erika-send-email ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.

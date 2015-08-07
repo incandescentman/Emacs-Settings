@@ -3224,7 +3224,7 @@ subsequent sends."
 (646) 355-8001
 [[http://jaydixit.com/][jaydixit.com]]
 \n"))
-(org-mime-htmlize)))
+))
 
 
 (defun new-email-from-subtree-no-signature ()
@@ -3275,7 +3275,7 @@ subsequent sends."
         (message-goto-to))
 (end-of-buffer)
 )
-(org-mime-htmlize)))
+))
 #+END_SRC
 
 ** PLEASE-DEBUG erika-send-mail 
