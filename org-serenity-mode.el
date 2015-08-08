@@ -19,7 +19,7 @@
                       '(org-hide-leading-stars t)
          '(org-fontify-done-headline t)
                       '(org-fontify-emphasized-text t)
-                      '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
+;; '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
  '(org-indent-indentation-per-level 2)
 )
 

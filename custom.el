@@ -136,8 +136,7 @@
       (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-export-html-style
-   "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
+ '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
  '(org-agenda-files
    (quote
     ("~/Dropbox/writing/notationaldata/accountability.org")))
@@ -218,8 +217,7 @@
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
  '(org-headline-done ((t (:strike-through t))))
- '(org-hidden-keywords (quote (author title)) nil nil "#+BEGIN_QUOTE")
- '(org-hide-block-startup nil)
+'(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
  '(org-html-container-element "div")

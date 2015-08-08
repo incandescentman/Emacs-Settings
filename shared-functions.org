@@ -4135,13 +4135,13 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
 * deft-turbo
 
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_EXAMPLE emacs-lisp 
 (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 (setq deft-default-extension "org")
 (setq deft-directory "~/nd/")
 (setq deft-use-filename-as-title t) 
-  #+END_SRC
+  #+END_EXAMPLE
 
 * insert slash no abbrev
 

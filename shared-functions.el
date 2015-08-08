@@ -2973,12 +2973,6 @@ Single Capitals as you type."
 (setq message-citation-line-format "")
 (setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
 
-(require 'deft)
-(setq deft-extensions '("org" "md" "txt"))
-(setq deft-default-extension "org")
-(setq deft-directory "~/nd/")
-(setq deft-use-filename-as-title t) 
-
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
