@@ -2776,17 +2776,13 @@ Single Capitals as you type."
 
 (setq mu4e-attachment-dir "~/Downloads") 
 
-
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
     '( ("/starred"               . ?i)
        ("/sent"   . ?s)))
 
 ;; something about ourselves
-(setq
-   user-mail-address "sunjaydixit@gmail.com"
-   user-full-name  "Jay Dixit"
-   mu4e-compose-signature
+(setq mu4e-compose-signature
     (concat
       "Best,\n"
       "Jay\n"))
@@ -2805,7 +2801,7 @@ Single Capitals as you type."
 ;;   - html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
 ;;   - w3m -dump -cols 80 -T text/html
 ;;   - view in browser (provided below)
-(setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
