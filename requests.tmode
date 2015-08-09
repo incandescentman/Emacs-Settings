@@ -1,0 +1,29 @@
+1. DON'T SEPARATE STARS FROM HEADERS
+
+Input: 
+
+** ^fix htmlization
+
+Suppose I then press RETURN. 
+
+Current output: 
+** 
+Fix htmlization
+
+Desired output:
+Input: 
+
+** ^Fix htmlization
+
+Enter 
+
+Current output:
+
+** 
+Fix htmlization
+
+Desired output: 
+
+** ^Fix htmlization 
+#+END_SRC 
+Source: 

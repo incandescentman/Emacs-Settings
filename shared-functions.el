@@ -95,6 +95,7 @@
 (setq locate-command "mdfind")
 
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
@@ -122,14 +123,12 @@
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist t)
-(setq org-export-with-smart-quotes t)
 (setq org-fontify-quote-and-verse-blocks t)
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
 (setq org-return-follows-link t)
-(setq org-export-with-planning t)
 
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
@@ -147,65 +146,6 @@
                                       ("A" . org-archive-subtree-default-with-confirmation)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
-
-(setq org-export-allow-bind-keywords t)
- (setq org-export-blocks-witheld (quote (hidden)))
- (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- (setq org-export-html-style-include-default t)
- (setq org-export-latex-date-format "%d %B %Y.")
- (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
- (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- (setq org-export-with-clocks t)
- (setq org-export-with-drawers t)
- (setq org-export-with-section-numbers nil)
- (setq org-export-with-toc nil)
-
-'(org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
-     ("/" "\\textit{%s}" nil)
-     ("_" "\\underline{%s}" nil)
-     ("+" "\\st{%s}" nil)
-     ("=" "\\verb" t)
-     ("~" "\\verb" t))))
-
-'(org-html-footnotes-section
-   "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
-
-'(org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
-     (code . "<blockquote>%s</blockquote>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
-
-'(org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
-     (code . verb)
-     (italic . "\\textit{%s}")
-     (strike-through . "\\sout{%s}")
-     (underline . "\\uline{%s}")
-     ;; (verbatim . protectedtext)
-     )))
-
-'(org-latex-toc-command "\\tableofcontents
-\\newpage
-")
-
-'(safe-local-variable-values (quote    ((eval when
-	   (fboundp
-	    (quote rainbow-mode))
-	   (rainbow-mode 1)))))
-
-'(org-html-footnotes-section "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>") 
 
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
@@ -287,14 +227,6 @@
  (lambda ()
    (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
-
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
 
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
@@ -1839,6 +1771,10 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
 (define-hyper-key "m le" 'leuven)
+
+(define-hyper-key "m nm" 'notmuch-hello) 
+(define-hyper-key "m mu" 'mu4e)
+
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
 
 (define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 

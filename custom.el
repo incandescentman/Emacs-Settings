@@ -120,7 +120,7 @@
      ("/[Gmail].Sent Mail" . 115))))
  '(mu4e-user-mail-address-list
    (quote
-    ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com " "jaydixit.work@gmail.com")))
+    ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com" "jaydixit.work@gmail.com")))
  '(notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
  '(olivetti-body-width 100)
  '(only-global-abbrevs t)
@@ -136,8 +136,7 @@
       (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
- '(org-agenda-files
+'(org-agenda-files
    (quote
     ("~/Dropbox/writing/notationaldata/accountability.org")))
  '(org-agenda-jump-prefer-future t)
@@ -188,29 +187,7 @@
  '(org-enable-fixed-width-editor nil)
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
- '(org-export-allow-bind-keywords t)
- '(org-export-blocks-witheld (quote (hidden)) t)
- '(org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- '(org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
- '(org-export-html-style-include-default t)
- '(org-export-latex-date-format "%d %B %Y." t)
- '(org-export-latex-emphasis-alist
-   (quote
-    (("*" "\\emph{%s}" nil)
-     ("/" "\\textit{%s}" nil)
-     ("_" "\\underline{%s}" nil)
-     ("+" "\\st{%s}" nil)
-     ("=" "\\verb" t)
-     ("~" "\\verb" t))) t)
- '(org-export-latex-image-default-option "width=20.5cm")
- '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
- '(org-export-time-stamp-file nil)
- '(org-export-with-clocks t)
- '(org-export-with-drawers t)
- '(org-export-with-section-numbers nil)
- '(org-export-with-timestamps (quote active))
- '(org-export-with-toc nil)
- '(org-extend-today-until 8)
+'(org-extend-today-until 8)
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
  '(org-footnote-define-inline t)
@@ -220,31 +197,7 @@
 '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
- '(org-html-container-element "div")
- '(org-html-footnotes-section
-   "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
- '(org-html-head
-   "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css' />")
- '(org-html-head-include-default-style nil)
- '(org-html-head-include-scripts nil)
- '(org-html-html5-fancy t)
- '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
- '(org-html-postamble nil)
- '(org-html-text-markup-alist
-   (quote
-    ((bold . "<strong>%s</strong>")
-     (code . "<blockquote>%s</blockquote>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
- '(org-html-toplevel-hlevel 2)
- '(org-icalendar-alarm-time 15)
+'(org-icalendar-alarm-time 15)
  '(org-icalendar-categories (quote (local-tags todo-state)))
  '(org-icalendar-exclude-tags (quote ("noexport" "ARCHIVE")))
  '(org-icalendar-store-UID t)

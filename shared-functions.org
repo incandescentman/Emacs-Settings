@@ -231,6 +231,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
@@ -263,14 +264,12 @@ Turn off fill mode, which adds random line breaks in my text files:
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist t)
-(setq org-export-with-smart-quotes t)
 (setq org-fontify-quote-and-verse-blocks t)
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
 (setq org-return-follows-link t)
-(setq org-export-with-planning t)
 
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
@@ -310,13 +309,66 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 ** org-export
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_EXAMPLE emacs-lisp
+;; '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
+;; '(org-html-container-element "div")
+;;  '(org-html-footnotes-section
+;;    "<div id=\"footnotes\">
+;; <h2 class=\"footnotes\">%s </h2>
+;; <div id=\"footnote\">
+;; %s
+;; </div>
+;; </div>")
+;;  '(org-html-head
+;;    "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css' />")
+;;  '(org-html-head-include-default-style nil)
+;;  '(org-html-head-include-scripts nil)
+;;  '(org-html-html5-fancy t)
+;;  '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
+;;  '(org-html-postamble nil)
+;;  '(org-html-text-markup-alist
+;;    (quote
+;;     ((bold . "<strong>%s</strong>")
+;;      (code . "<blockquote>%s</blockquote>")
+;;      (italic . "<em>%s</em>")
+;;      (strike-through . "<del>%s</del>")
+;;      (underline . "<span class=\"underline\">%s</span>")
+;;      (verbatim . "<code>%s</code>"))))
+;;  '(org-html-toplevel-hlevel 2)
 
+
+
+
+(setq org-export-with-planning t)
 (setq org-export-allow-bind-keywords t)
- (setq org-export-blocks-witheld (quote (hidden)))
+;; (setq org-export-blocks-witheld (quote (hidden)) t) 
+(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+;; (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
+;; (setq org-export-html-style-include-default t) 
+;; (setq org-export-with-smart-quotes t) 
+;; (setq org-export-allow-bind-keywords t)
+;; (setq org-export-blocks-witheld (quote (hidden)))
+;; '(org-export-latex-date-format "%d %B %Y." t)
+;;  '(org-export-latex-emphasis-alist
+;;    (quote
+;;     (("*" "\\emph{%s}" nil)
+;;      ("/" "\\textit{%s}" nil)
+;;      ("_" "\\underline{%s}" nil)
+;;      ("+" "\\st{%s}" nil)
+;;      ("=" "\\verb" t)
+;;      ("~" "\\verb" t))) t)
+;;  '(org-export-latex-image-default-option "width=20.5cm")
+;;  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
+;;  '(org-export-time-stamp-file nil)
+;;  '(org-export-with-clocks t)
+;;  '(org-export-with-drawers t)
+;;  '(org-export-with-section-numbers nil)
+;;  '(org-export-with-timestamps (quote active))
+;;  '(org-export-with-toc nil)
+
  (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
  (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
- (setq org-export-html-style-include-default t)
+;; (setq org-export-html-style-include-default t)
  (setq org-export-latex-date-format "%d %B %Y.")
  (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
  (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
@@ -370,7 +422,36 @@ Turn off fill mode, which adds random line breaks in my text files:
 %s
 </div>
 </div>") 
-   #+END_SRC
+   #+END_EXAMPLE 
+
+
+*** Change section numbering depending on what export format I use
+
+Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc t)
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+#+END_EXAMPLE
+
+*** export with drawers
+#+BEGIN_EXAMPLE emacs-lisp
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+(setq org-icalendar-include-todo t) 
+#+END_EXAMPLE 
 
 ** Org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
@@ -481,35 +562,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
  (lambda ()
    (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
-#+END_SRC
-
-** Org export
-*** Change section numbering depending on what export format I use
-
-Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-    (plist-put plist :with-toc t)
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
-
-*** export with drawers
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
 #+END_SRC
 
 ** Org-mode hooks and other org settings
@@ -2599,6 +2651,10 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
 (define-hyper-key "m le" 'leuven)
+
+(define-hyper-key "m nm" 'notmuch-hello) 
+(define-hyper-key "m mu" 'mu4e)
+
 ;; (define-hyper-key "m cl" 'cyberpunk-large)
 
 (define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 
@@ -3329,8 +3385,7 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to))
-)
-(org-mime-htmlize)
+) 
 ))
 #+END_SRC
 
@@ -3411,11 +3466,30 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-(org-mime-htmlize)
 ))
 (message-send-and-exit)
 )
 #+END_SRC
+
+* Automatic send email to myself
+
+#+BEGIN_SRC emacs-lisp
+(defun email-heading-to-me ()
+  "Send the current org-mode heading as the body of an email, with headline
+as the subject."
+  (interactive)
+  (save-excursion
+    (org-mark-subtree)
+    (let ((content (buffer-substring (point) (mark)))
+          (SUBJECT (nth 4 (org-heading-components))))
+
+      (compose-mail "your@email.here" SUBJECT)
+      (message-goto-body)
+      (insert content)
+      (message-send)
+      (message-kill-buffer))))
+#+END_SRC
+
 
 * key-seq
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical.
@@ -4091,9 +4165,8 @@ With this, I can attach a file as an attachment to a new email message by enteri
         "archive"
 (notmuch-refresh-this-buffer))) 
 
-(define-key notmuch-hello-mode-map "g"
-(notmuch-refresh-this-buffer)) 
-
+(define-key notmuch-hello-mode-map "g" (notmuch-refresh-this-buffer)) 
+;; doesn't work
 
 ;; modify the documentation about the keybindings
 (defun notmuch-hello-insert-footer ()
