@@ -3947,7 +3947,7 @@ Single Capitals as you type."
 
 * stripe buffer 
   #+BEGIN_SRC emacs-lisp
-(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
   #+END_SRC
 

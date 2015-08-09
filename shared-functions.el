@@ -2297,8 +2297,7 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to))
-)
-(org-mime-htmlize)
+) 
 ))
 
 (defun erika-send-email-styled ()
@@ -2365,10 +2364,24 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-(org-mime-htmlize)
 ))
 (message-send-and-exit)
 )
+
+(defun email-heading-to-me ()
+  "Send the current org-mode heading as the body of an email, with headline
+as the subject."
+  (interactive)
+  (save-excursion
+    (org-mark-subtree)
+    (let ((content (buffer-substring (point) (mark)))
+          (SUBJECT (nth 4 (org-heading-components))))
+
+      (compose-mail "your@email.here" SUBJECT)
+      (message-goto-body)
+      (insert content)
+      (message-send)
+      (message-kill-buffer))))
 
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
@@ -2687,7 +2700,7 @@ Single Capitals as you type."
 
 
 
-(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
 (global-fasd-mode 1)
@@ -2870,9 +2883,8 @@ Single Capitals as you type."
         "archive"
 (notmuch-refresh-this-buffer))) 
 
-(define-key notmuch-hello-mode-map "g"
-(notmuch-refresh-this-buffer)) 
-
+(define-key notmuch-hello-mode-map "g" (notmuch-refresh-this-buffer)) 
+;; doesn't work
 
 ;; modify the documentation about the keybindings
 (defun notmuch-hello-insert-footer ()

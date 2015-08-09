@@ -239,3 +239,13 @@ It works! Now, next question. Currently, when I type spaces between words in the
 
 ** 
 *** 
+
+*** capitalize after ellipsis and line breaks
+
+e.g. 
+
+This is the end...
+
+but this is a new beginning. 
+
+But should be autocapitalized. 

@@ -1,0 +1,9 @@
+Input:
+A word and a qnother^ word
+
+Scenario:
+my-backward-delete-and-capitalize x2 
+
+Current output:
+A word and a 
+

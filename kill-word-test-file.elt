@@ -1,0 +1,7 @@
+Input: as a dentist, I want to treat my patients with the same level of care I saw Dr. Rubinstein give his ^office. His practice is in Providence, Rhode Island, and provides a multitude of oral services to an affluent population. 
+
+Scenario: kill-word-correctly-and-capitalize 
+
+Current output: As a dentist, I want to treat my patients with the same level of care I saw Dr. Rubinstein give his^. His practice is in Providence, Rhode Island, and provides a multitude of oral services to an affluent population. 
+
+Desired output: As a dentist, I want to treat my patients with the same level of care I saw Dr. Rubinstein give his ^. His practice is in Providence, Rhode Island, and provides a multitude of oral services to an affluent population. 
