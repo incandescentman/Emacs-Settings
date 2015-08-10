@@ -1768,6 +1768,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
+(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
 
 (define-hyper-key "m cy" 'cyberpunk-jay)
 (define-hyper-key "m cl" 'cyberpunk-large)
@@ -2003,6 +2004,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'python-mode)))
 ((and buffer-file-name (eq major-mode 'text-mode)))
 ((and buffer-file-name (eq major-mode 'snippet-mode))) 
 ((and buffer-file-name (eq major-mode 'css-mode))) 
@@ -2899,8 +2901,7 @@ Single Capitals as you type."
     (when notmuch-saved-searches
       (widget-insert "Edit saved searches with the `edit' button.\n"))
     (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
-    (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
-    (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
+(widget-insert "`G' to refresh this screen. `s' to search messages. `q' to quit.\n")
     (widget-insert "`S' to star or unstar messages.\n")
     (widget-insert "`y' to unstar and archive a message.\n")
     (widget-create 'link

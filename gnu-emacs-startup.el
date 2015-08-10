@@ -235,7 +235,7 @@
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
+;; (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)

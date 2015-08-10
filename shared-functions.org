@@ -2645,6 +2645,7 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
+(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
 #+END_SRC
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
@@ -3022,6 +3023,7 @@ to open source code block in indirect buffer
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'python-mode)))
 ((and buffer-file-name (eq major-mode 'text-mode)))
 ((and buffer-file-name (eq major-mode 'snippet-mode))) 
 ((and buffer-file-name (eq major-mode 'css-mode))) 
@@ -4181,8 +4183,7 @@ With this, I can attach a file as an attachment to a new email message by enteri
     (when notmuch-saved-searches
       (widget-insert "Edit saved searches with the `edit' button.\n"))
     (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
-    (widget-insert "`=' to refresh this screen. `s' to search messages. `q' to quit.\n")
-    (widget-insert "`g' to refresh this screen. `s' to search messages. `q' to quit.\n")
+(widget-insert "`G' to refresh this screen. `s' to search messages. `q' to quit.\n")
     (widget-insert "`S' to star or unstar messages.\n")
     (widget-insert "`y' to unstar and archive a message.\n")
     (widget-create 'link
@@ -4223,3 +4224,6 @@ With this, I can attach a file as an attachment to a new email message by enteri
   )
   #+END_SRC
 
+
+* poetry
+(define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
