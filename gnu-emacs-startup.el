@@ -1047,9 +1047,9 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "???" "! :" ". :" ") ; "))
 
-;; how do I add an exception for ") ; "? 
+;; How do I add an exception for ") ; "? 
 ;; e.g. if I want to add a comment after a line of lisp?
 
 (defun smart-punctuation (new-punct &optional not-so-smart)

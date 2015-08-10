@@ -2600,6 +2600,8 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 *** mkhyper - shared Aquamacs / GNU Emacs keybindings:
 #+BEGIN_SRC emacs-lisp
 (define-hyper-key "h" 'replace-string)
+(define-hyper-key "o" 'reveal-in-finder)
+
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
 (define-hyper-key "]" 'visit-most-recent-file)
