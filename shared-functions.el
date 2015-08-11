@@ -1915,7 +1915,7 @@ searches all buffers."
 (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
 
 (setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/.emacs.d/data/helm-history"
+      helm-adaptive-history-file             "~/.emacs.d/.save/Helm-history"
       helm-yank-symbol-first                 t
       helm-move-to-line-cycle-in-source      t
       helm-buffers-fuzzy-matching            t
