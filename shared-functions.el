@@ -624,6 +624,9 @@ Subject: %^{Subject}
 (setq message-send-hook (quote (recent-addresses-add-headers)))
 (setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\n")
+(setq message-citation-line-function 'message-insert-formatted-citation-line) 
+
 ;; (require 'org-pomodoro)
 
 (defun pomodoro-start ()
