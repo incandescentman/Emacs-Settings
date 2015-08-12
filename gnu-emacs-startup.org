@@ -365,7 +365,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-;; (define-key message-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 ;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
@@ -632,7 +632,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
-(define-key message-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key orgstruct-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 (defun jay/insert-paren-single ()
   "Insert paren without expanding abbrev."
@@ -2077,7 +2077,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
-(define-key message-mode-map (kbd ".") 'smart-period)
+(define-key orgstruct-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
 ** smart-comma
@@ -2087,7 +2087,7 @@ Oleh
   (smart-punctuation ","))
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
-(define-key message-mode-map (kbd ",") 'smart-comma)
+(define-key orgstruct-mode-map (kbd ",") 'smart-comma)
 #+END_SRC
 
 ** smart-question-mark
@@ -2101,7 +2101,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
-(define-key message-mode-map (kbd "?") 'smart-question-mark)
+(define-key orgstruct-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
 ** smart-exclamation-point
@@ -2115,7 +2115,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
-(define-key message-mode-map (kbd "!") 'smart-exclamation-point)
+(define-key orgstruct-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
 ** smart-hyphen
@@ -2124,7 +2124,7 @@ Oleh
   (smart-punctuation "-"))
 
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
-(define-key message-mode-map (kbd "-") 'smart-hyphen)
+(define-key orgstruct-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
 ** smart-semicolon
@@ -2135,7 +2135,7 @@ Oleh
   (smart-punctuation ";" t))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
-(define-key message-mode-map (kbd ";") 'smart-semicolon)
+(define-key orgstruct-mode-map (kbd ";") 'smart-semicolon)
 #+END_SRC
 
 ** smart-colon
@@ -2146,7 +2146,7 @@ Oleh
   (smart-punctuation ":" t))
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
-(define-key message-mode-map (kbd ":") 'smart-colon)
+(define-key orgstruct-mode-map (kbd ":") 'smart-colon)
 #+END_SRC 
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode

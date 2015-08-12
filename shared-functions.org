@@ -1018,7 +1018,7 @@ every new buffer will be unique:
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook message-mode-hook turn-on-orgstruct)
+;; (add-hook 'message-mode-hook '(orgstruct-mode 1))
 #+END_SRC
 
 ** Define my default directory:
@@ -1121,7 +1121,7 @@ Make backups of files, even when they're in version control:
 ** orgstruct mode
 #+BEGIN_SRC emacs-lisp
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-;; (add-hook 'message-mode-hook 'orgstruct-mode 'append)
+(add-hook 'message-mode-hook 'orgstruct-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 #+END_SRC

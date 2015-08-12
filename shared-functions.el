@@ -548,7 +548,7 @@ Subject: %^{Subject}
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook message-mode-hook turn-on-orgstruct)
+;; (add-hook 'message-mode-hook '(orgstruct-mode 1))
 
 (setq default-directory "~/Dropbox/writing/" )
 
@@ -604,7 +604,7 @@ Subject: %^{Subject}
 (add-to-list 'completion-styles 'initials t)
 
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-;; (add-hook 'message-mode-hook 'orgstruct-mode 'append)
+(add-hook 'message-mode-hook 'orgstruct-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
