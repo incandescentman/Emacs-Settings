@@ -84,7 +84,7 @@
 
 (defun book-proposal-directory()
   (interactive)
- (cyberpunk-jay)
+;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
   (dired "~/b/writing-in-progress/proposal"))
 

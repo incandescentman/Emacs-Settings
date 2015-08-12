@@ -1,4 +1,3 @@
-
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()

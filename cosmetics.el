@@ -1,4 +1,3 @@
-
 (setq org-indent-mode t)
 (setq org-indent-indentation-per-level 2)
 
