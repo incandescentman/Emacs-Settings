@@ -2919,9 +2919,6 @@ Single Capitals as you type."
 
 (require 'org-notmuch) 
 
-(setq message-citation-line-format "")
-(setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
-
 (setq nm-results-window-size 25)
 
 (defun jay/insert-slash ()
