@@ -302,6 +302,8 @@ Turn off fill mode, which adds random line breaks in my text files:
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
                                       ("z" . org-add-note)
+                                      ("m" . (lambda nil (interactive) (org-todo "MISSED")))
+
                                       ("A" . org-archive-subtree-default-with-confirmation)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
@@ -4201,9 +4203,15 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
 (setq message-citation-line-format "")
 (setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
-
-
   #+END_SRC
+
+* nevermore
+
+  #+BEGIN_SRC emacs-lisp
+(setq nm-results-window-size 25)
+  #+END_SRC
+
+
 
 * deft-turbo
 

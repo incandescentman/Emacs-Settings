@@ -473,7 +473,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; and the keybinding
 (define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
-
+(define-key key-minor-mode-map (kbd "C-k") 'my/kill-line-dwim)
 
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
@@ -632,6 +632,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key message-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 (defun jay/insert-paren-single ()
   "Insert paren without expanding abbrev."
@@ -2076,6 +2077,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
+(define-key message-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
 ** smart-comma
@@ -2085,6 +2087,7 @@ Oleh
   (smart-punctuation ","))
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
+(define-key message-mode-map (kbd ",") 'smart-comma)
 #+END_SRC
 
 ** smart-question-mark
@@ -2098,6 +2101,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
+(define-key message-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
 ** smart-exclamation-point
@@ -2111,6 +2115,7 @@ Oleh
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+(define-key message-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
 ** smart-hyphen
@@ -2119,6 +2124,7 @@ Oleh
   (smart-punctuation "-"))
 
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
+(define-key message-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
 ** smart-semicolon
@@ -2129,6 +2135,7 @@ Oleh
   (smart-punctuation ";" t))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
+(define-key message-mode-map (kbd ";") 'smart-semicolon)
 #+END_SRC
 
 ** smart-colon
@@ -2139,6 +2146,7 @@ Oleh
   (smart-punctuation ":" t))
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key message-mode-map (kbd ":") 'smart-colon)
 #+END_SRC 
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode

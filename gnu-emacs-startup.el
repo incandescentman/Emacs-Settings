@@ -327,7 +327,7 @@
 
 ;; and the keybinding
 (define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
-
+(define-key key-minor-mode-map (kbd "C-k") 'my/kill-line-dwim)
 
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
@@ -459,6 +459,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key message-mode-map (kbd "<SPC>") 'jay/insert-space)
 
 (defun jay/insert-paren-single ()
   "Insert paren without expanding abbrev."
@@ -1106,12 +1107,14 @@ subsequent sends. could save them all in a logbook?
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
+(define-key message-mode-map (kbd ".") 'smart-period)
 
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ","))
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
+(define-key message-mode-map (kbd ",") 'smart-comma)
 
 (defun smart-question-mark ()
   (interactive)
@@ -1122,6 +1125,7 @@ subsequent sends. could save them all in a logbook?
 ))
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
+(define-key message-mode-map (kbd "?") 'smart-question-mark)
 
 (defun smart-exclamation-point ()
   (interactive)
@@ -1132,18 +1136,21 @@ subsequent sends. could save them all in a logbook?
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+(define-key message-mode-map (kbd "!") 'smart-exclamation-point)
 
 (defun smart-semicolon ()
   (interactive)
   (smart-punctuation ";" t))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
+(define-key message-mode-map (kbd ";") 'smart-semicolon)
 
 (defun smart-colon ()
   (interactive)
   (smart-punctuation ":" t))
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key message-mode-map (kbd ":") 'smart-colon)
 
 (defun backward-kill-word-correctly ()
   "Kill word."

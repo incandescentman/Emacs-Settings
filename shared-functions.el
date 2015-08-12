@@ -143,6 +143,8 @@
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
                                       ("z" . org-add-note)
+                                      ("m" . (lambda nil (interactive) (org-todo "MISSED")))
+
                                       ("A" . org-archive-subtree-default-with-confirmation)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
@@ -2919,6 +2921,8 @@ Single Capitals as you type."
 
 (setq message-citation-line-format "")
 (setq message-citation-line-function 'turn-on-auto-capitalize-mode) 
+
+(setq nm-results-window-size 25)
 
 (defun jay/insert-slash ()
   (interactive)
