@@ -388,52 +388,12 @@
      
      (define-key key-minor-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
      (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
-     
+
 ;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
      ;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
      (find-file "~/nd/playful.org")
      (imenu-list-minor-mode) 
 ))
-
-;; this doesn't work though :-(
-(eval-after-load "orgstruct"
-  '(progn
-     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<S-right>") nil)
- (define-key orgstruct-mode-map (kbd "<M-return>") nil)
-     ))
-
-;; I think there's some redundancy here, not sure if I need both. either way it doesn't work.
-
-     (define-key orgstruct-mode-map (kbd "<M-S-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-S-down>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-left>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-right>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-up>") nil)
-     (define-key orgstruct-mode-map (kbd "<M-down>") nil)
-
-     (define-key orgstruct-mode-map [C-S-right] 'org-shiftmetaright)
-     (define-key orgstruct-mode-map [C-S-left] 'org-shiftmetaleft)
-     (define-key orgstruct-mode-map [C-right] 'org-metaright)
-     (define-key orgstruct-mode-map [C-left] 'org-metaleft)
-     (define-key orgstruct-mode-map [C-up] 'org-metaup)
-     (define-key orgstruct-mode-map [C-down] 'org-metadown)
-     (define-key orgstruct-mode-map [C-S-return] 'org-insert-todo-heading)
-
-
-
-
-
-
 
 
 ;; (toggle-fullscreen)
