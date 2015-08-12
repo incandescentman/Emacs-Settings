@@ -391,40 +391,6 @@
      
 ;;     (define-key key-minor-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
      ;;     (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content) ; formerly bound to C-return
-
-     ;; unbind keys in orgstruct-mode
-
-     (cl-dolist (map '(message-mode-map orgstruct-mode-map))
-  (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
-                    "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-    (define-key (eval map) (kbd key) nil)))
-     ;; Source:
-     ;; http://stackoverflow.com/questions/24454326/in-emacs-how-to-change-key-bindings-for-orgstruct-mode
-     ;; 
-(eval-after-load "org" '(progn
-  (define-key org-mode-map "\M-1" (lambda () (interactive) (org-global-cycle 1)))
-  (define-key org-mode-map "\M-2" (lambda () (interactive) (org-global-cycle 2)))
-  (define-key org-mode-map "\M-3" (lambda () (interactive) (org-global-cycle 3)))
-  (define-key org-mode-map "\M-4" (lambda () (interactive) (org-global-cycle 4)))
-  (define-key org-mode-map "\M-5" (lambda () (interactive) (org-global-cycle 5)))
-  (define-key org-mode-map "\M-6" (lambda () (interactive) (org-global-cycle 6)))
-  (define-key org-mode-map "\M-7" (lambda () (interactive) (org-global-cycle 7)))
-  (define-key org-mode-map "\M-8" (lambda () (interactive) (org-global-cycle 8)))
-  (define-key org-mode-map "\M-9" (lambda () (interactive) (org-global-cycle 9)))
-  (define-key org-mode-map "\M-0" (lambda () (interactive) (show-all)))
-  (define-key orgstruct-mode-map "\M-1" (lambda () (interactive) (org-global-cycle 1)))
-  (define-key orgstruct-mode-map "\M-2" (lambda () (interactive) (org-global-cycle 2)))
-  (define-key orgstruct-mode-map "\M-3" (lambda () (interactive) (org-global-cycle 3)))
-  (define-key orgstruct-mode-map "\M-4" (lambda () (interactive) (org-global-cycle 4)))
-  (define-key orgstruct-mode-map "\M-5" (lambda () (interactive) (org-global-cycle 5)))
-  (define-key orgstruct-mode-map "\M-6" (lambda () (interactive) (org-global-cycle 6)))
-  (define-key orgstruct-mode-map "\M-7" (lambda () (interactive) (org-global-cycle 7)))
-  (define-key orgstruct-mode-map "\M-8" (lambda () (interactive) (org-global-cycle 8)))
-  (define-key orgstruct-mode-map "\M-9" (lambda () (interactive) (org-global-cycle 9)))
-  (define-key orgstruct-mode-map "\M-0" (lambda () (interactive) (show-all)))
-  )) 
-
-
      (find-file "~/nd/playful.org")
      (imenu-list-minor-mode) 
 ))
