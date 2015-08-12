@@ -1126,8 +1126,7 @@ Make backups of files, even when they're in version control:
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 #+END_SRC
 
-** Remember recent email addresses
-
+** Remember recent email addresses 
 #+BEGIN_SRC emacs-lisp
 (setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
@@ -1145,6 +1144,14 @@ Make backups of files, even when they're in version control:
 (setq message-send-hook (quote (recent-addresses-add-headers)))
 (setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 #+END_SRC
+
+when replying, look kind of like gmail 
+
+#+BEGIN_SRC emacs-lisp
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\n")
+(setq message-citation-line-function 'message-insert-formatted-citation-line) 
+#+END_SRC
+
 
 * Pomodoro
 
