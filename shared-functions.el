@@ -1779,6 +1779,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m cl" 'cyberpunk-large)
 (define-hyper-key "m zb" 'zenburn)
 (define-hyper-key "m le" 'leuven)
+(define-hyper-key "m ts" 'transparent-serenity)
+(define-hyper-key "m tg" 'top-gun-mode)
 
 (define-hyper-key "m nm" 'notmuch-hello) 
 (define-hyper-key "m mu" 'mu4e)

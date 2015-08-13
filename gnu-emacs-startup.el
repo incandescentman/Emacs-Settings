@@ -441,7 +441,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
+      (capitalize-word 1))))
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
