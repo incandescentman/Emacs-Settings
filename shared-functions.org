@@ -4241,3 +4241,14 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
 * poetry
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
+
+* zone
+
+  #+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
+
+;; (setq zone-programs [zone-pgm-drip]) 
+;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
+(setq zone-programs [zone-pgm-putz-with-case]) 
+
+  #+END_SRC

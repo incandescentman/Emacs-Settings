@@ -2930,3 +2930,7 @@ Single Capitals as you type."
   (interactive)
   (insert "/")
   )
+
+;; (setq zone-programs [zone-pgm-drip]) 
+;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
+(setq zone-programs [zone-pgm-putz-with-case]) 
