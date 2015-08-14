@@ -1,5 +1,3 @@
-
-
 ;; Find LaTeX on my system
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2014/bin/universal-darwin")
@@ -24,5 +22,3 @@
        (interactive)
        (insert "… ")
   )
-
-

@@ -2931,6 +2931,8 @@ Single Capitals as you type."
   (insert "/")
   )
 
+  (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
+
 ;; (setq zone-programs [zone-pgm-drip]) 
 ;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
 (setq zone-programs [zone-pgm-putz-with-case]) 
