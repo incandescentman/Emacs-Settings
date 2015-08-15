@@ -250,7 +250,8 @@
 
 (define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
-(define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
+(define-key dired-mode-map (kbd "s-o") 'reveal-in-finder)
+(define-key key-minor-mode-map (kbd "s-o") 'reveal-in-finder)
 
 
 ;; pop mark
