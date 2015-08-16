@@ -1733,7 +1733,8 @@ Including indent-buffer, which should not be called automatically on save."
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 
 (define-hyper-key "h" 'replace-string)
-(define-hyper-key "o" 'reveal-in-finder)
+(define-hyper-key "O" 'reveal-in-finder)
+(define-hyper-key "o" 'projectile-find-file)
 
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
