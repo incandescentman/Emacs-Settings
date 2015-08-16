@@ -135,8 +135,7 @@
      ("\\.\\(?:jp?g\\|png\\)\\'" "display"
       (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
- '(org-activate-links (quote (bracket plain radio tag date footnote)))
-'(org-agenda-files
+ '(org-agenda-files
    (quote
     ("~/Dropbox/writing/notationaldata/accountability.org")))
  '(org-agenda-jump-prefer-future t)
@@ -168,7 +167,7 @@
  '(org-clocktable-defaults
    (quote
     (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
- '(org-closed-string "COMPLETED:")
+ '(org-closed-string "COMPLETED:" t)
  '(org-confirm-babel-evaluate nil)
  '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
@@ -187,17 +186,35 @@
  '(org-enable-fixed-width-editor nil)
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
-'(org-extend-today-until 8)
+ '(org-export-latex-image-default-option "width=20.5cm")
+ '(org-export-time-stamp-file nil)
+ '(org-export-with-clocks t)
+ '(org-extend-today-until 8)
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
  '(org-footnote-define-inline t)
  '(org-footnote-section "Footnotes")
  '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
  '(org-headline-done ((t (:strike-through t))))
-'(org-hide-block-startup nil)
+ '(org-hide-block-startup nil)
  '(org-hide-emphasis-markers t)
  '(org-hide-leading-stars t)
-'(org-icalendar-alarm-time 15)
+ '(org-highlight-links (quote (bracket plain radio tag date footnote)))
+ '(org-html-container-element "div")
+ '(org-html-head-include-default-style nil)
+ '(org-html-head-include-scripts nil)
+ '(org-html-html5-fancy t)
+ '(org-html-postamble nil)
+ '(org-html-text-markup-alist
+   (quote
+    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+ '(org-html-toplevel-hlevel 2)
+ '(org-icalendar-alarm-time 15)
  '(org-icalendar-categories (quote (local-tags todo-state)))
  '(org-icalendar-exclude-tags (quote ("noexport" "ARCHIVE")))
  '(org-icalendar-store-UID t)
@@ -242,7 +259,7 @@
  '(org-mac-grab-Together-app-p nil)
  '(org-modules
    (quote
-    (org-bbdb org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-habit org-irc org-mew org-vm org-wl org-w3m org-choose org-collector)))
+    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
@@ -283,6 +300,11 @@
  '(osx-browse-prefer-new-window t)
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
+ '(projectile-completion-system (quote helm))
+ '(projectile-globally-ignored-directories
+   (quote
+    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images ")))
+ '(projectile-globally-ignored-file-suffixes (quote (".docx")))
  '(reb-re-syntax (quote string))
  '(recentf-exclude
    (quote

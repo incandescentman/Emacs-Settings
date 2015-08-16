@@ -110,7 +110,9 @@ You can toggle it in necessary files by setting the local variables section at t
 ** System alarms
 
 In some cases, you'd like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit C-g in the minibuffer or during an isearch:
+
 #+BEGIN_SRC emacs-lisp
+
 (setq ring-bell-function
       (lambda ()
 	(unless (memq this-command
@@ -120,7 +122,10 @@ In some cases, you'd like to reduce the number of warnings or eliminate warnings
 
 Also, change the alert sound. Instead of beeping or flashing, Emacs could play a cool sound file, whenever an error occurs:
 #+BEGIN_SRC emacs-lisp
-(setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
+;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
+
+;; turn off alarms completely
+(setq ring-bell-function 'ignore) 
 #+END_SRC
 
 
@@ -193,8 +198,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 
 (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
-(defun my-org-after-todo ()
-  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
+;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 #+END_SRC
 
 * Editing / environment settings
@@ -2609,7 +2613,8 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 *** mkhyper - shared Aquamacs / GNU Emacs keybindings:
 #+BEGIN_SRC emacs-lisp
 (define-hyper-key "h" 'replace-string)
-(define-hyper-key "o" 'reveal-in-finder)
+(define-hyper-key "O" 'reveal-in-finder)
+(define-hyper-key "o" 'projectile-find-file)
 
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)

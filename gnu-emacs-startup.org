@@ -342,7 +342,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 #+END_SRC
 
 
-** Custom keybindings
+** TODO Custom keybindings
 
 #+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
@@ -396,8 +396,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
-(define-key dired-mode-map (kbd "s-o") 'reveal-in-finder)
-(define-key key-minor-mode-map (kbd "s-o") 'reveal-in-finder)
+(define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
+(define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
+
+(define-key dired-mode-map (kbd "s-o") 'projectile-find-file) 
+(define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
 
 
 ;; pop mark
@@ -902,6 +905,7 @@ provided the (transient) mark is active."
  (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
  (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
  (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+
  (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
  (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
  (define-key key-minor-mode-map (kbd "s-R") 'web-research)

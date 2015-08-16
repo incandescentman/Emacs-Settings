@@ -43,7 +43,10 @@
 		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
 	  (ding))))
 
-(setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
+;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
+
+;; turn off alarms completely
+(setq ring-bell-function 'ignore) 
 
 (defun  incarnadine-cursor ()
   (interactive)
@@ -80,8 +83,7 @@
 
 
 (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
-(defun my-org-after-todo ()
-  (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
+;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 
 (setq sentence-end-double-space nil)
 
