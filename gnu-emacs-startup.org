@@ -2358,9 +2358,10 @@ I tried to add exceptions for "line-end" and also for user-full name.
   #+BEGIN_SRC emacs-lisp 
 (defun capitalize-unless-org-heading ()
   (interactive)
-(unless (looking-at org-complex-heading-regexp)
+;; (unless (looking-at org-complex-heading-regexp)
 (capitalize-word 1)
-)) 
+;; )
+) 
   #+END_SRC
  
 
@@ -2391,3 +2392,18 @@ Don't expand past certain delimiters, e.g. line break, ), and "
   #+BEGIN_SRC emacs-lisp
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
   #+END_SRC
+
+* display file name
+How can I modify the titlebar to contain the current file name?
+
+The contents of an Emacs frame's titlebar is controlled by the variable frame-title-format, which has the same structure as the variable mode-line-format. (Use C-h v or M-x describe-variable to get information about one or both of these variables.)
+
+By default, the titlebar for a frame does contain the name of the buffer currently being visited, except if there is a single frame. In such a case, the titlebar contains Emacs invocation name and the name of the machine at which Emacs was invoked. This is done by setting frame-title-format to the default value of
+
+(multiple-frames "%b" ("" invocation-name "@" system-name))
+To modify the behavior such that frame titlebars contain the buffer's name regardless of the number of existing frames, include the following in your .emacs:
+
+
+#+BEGIN_SRC emacs-lisp
+(setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that.")) 
+#+END_SRC

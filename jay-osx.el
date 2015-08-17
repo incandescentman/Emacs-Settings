@@ -7,7 +7,11 @@
 (setq mac-option-key-is-meta t)
 (setq mac-option-modifier 'meta)
 
+(define-key key-minor-mode-map (kbd "<home>") 'beginning-of-buffer)
+(define-key key-minor-mode-map (kbd "<end>") 'end-of-buffer)
+
 (define-key key-minor-mode-map (kbd "s-q") 'save-buffers-kill-terminal)
 (define-key key-minor-mode-map (kbd "s-f") 'isearch-forward)
+(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
 

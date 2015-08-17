@@ -1236,9 +1236,10 @@ subsequent sends. could save them all in a logbook?
 
 (defun capitalize-unless-org-heading ()
   (interactive)
-(unless (looking-at org-complex-heading-regexp)
+;; (unless (looking-at org-complex-heading-regexp)
 (capitalize-word 1)
-)) 
+;; )
+) 
 
 (defun smart-expand ()
   (interactive) 
@@ -1257,3 +1258,5 @@ subsequent sends. could save them all in a logbook?
 )
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
+
+(setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that.")) 
