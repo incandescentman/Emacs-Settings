@@ -3918,11 +3918,10 @@ Single Capitals as you type."
 
 * which-key mode 
   #+BEGIN_SRC emacs-lisp
-(require 'which-key)
-(setq which-key-popup-type 'side-window) 
-(setq which-key-side-window-location 'bottom) 
-
-(which-key-mode)
+;; (require 'which-key)
+;; (setq which-key-popup-type 'side-window) 
+;; (setq which-key-side-window-location 'bottom) 
+;; (which-key-mode)
   #+END_SRC 
 
 * a keybinding to open my accountability file

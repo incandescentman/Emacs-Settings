@@ -2815,11 +2815,10 @@ Single Capitals as you type."
             (outline-minor-mode 1)
 ))
 
-(require 'which-key)
-(setq which-key-popup-type 'side-window) 
-(setq which-key-side-window-location 'bottom) 
-
-(which-key-mode)
+;; (require 'which-key)
+;; (setq which-key-popup-type 'side-window) 
+;; (setq which-key-side-window-location 'bottom) 
+;; (which-key-mode)
 
 (defun accountability-open ()
   (interactive)
