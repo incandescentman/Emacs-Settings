@@ -2620,7 +2620,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "\\" 'visit-most-recent-file)
 (define-hyper-key "]" 'visit-most-recent-file)
 ;; (define-hyper-key "f" 'isearch-forward)
-;; (define-hyper-key "F" 'pasteboard-search-in-current-buffer) 
+(define-hyper-key "F" 'pasteboard-search-for-clipboard-contents) 
 (define-hyper-key "r" 'xsteve-ido-choose-from-recentf)
 (define-hyper-key "R" 'helm-projectile-recentf)
 ;; (define-hyper-key "r" 'helm-mini)
@@ -2630,7 +2630,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
 (define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'org-mac-chrome-insert-frontmost-url-with-quotes)
+(define-hyper-key "K" 'widen)
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "S" 'org-mac-skim-insert-page)
@@ -4258,9 +4258,12 @@ With this, I can attach a file as an attachment to a new email message by enteri
 * unbind orgstruct navigation keys
 
   #+BEGIN_SRC emacs-lisp 
-     (cl-dolist (map '(message-mode-map orgstruct-mode-map))
+(defun unbind-orgstruct-keys ()
+  (interactive)
+       (cl-dolist (map '(message-mode-map orgstruct-mode-map))
   (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
                     "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
     (define-key (eval map) (kbd key) nil)))
-
+  )
+(add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
   #+END_SRC

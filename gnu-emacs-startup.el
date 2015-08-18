@@ -174,7 +174,7 @@
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
 
-(defun pasteboard-search-in-current-buffer ()
+(defun pasteboard-search-for-clipboard-contents ()
   (interactive)
   (let ((search-term
          (with-temp-buffer
@@ -235,7 +235,7 @@
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
-;; (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)

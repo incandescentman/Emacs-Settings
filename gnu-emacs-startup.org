@@ -294,9 +294,9 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
       (capitalize-unless-org-heading))))
 #+END_SRC
 
-** pasteboard-search-in-current buffer
+** pasteboard-search-for-clipboard-contents
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-search-in-current-buffer ()
+(defun pasteboard-search-for-clipboard-contents ()
   (interactive)
   (let ((search-term
          (with-temp-buffer
@@ -381,7 +381,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
-;; (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-in-current-buffer)
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
