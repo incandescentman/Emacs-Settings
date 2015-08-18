@@ -189,6 +189,7 @@
  '(org-export-latex-image-default-option "width=20.5cm")
  '(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
+ '(org-export-with-toc nil)
  '(org-extend-today-until 8)
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)

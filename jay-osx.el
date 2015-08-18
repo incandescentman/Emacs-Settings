@@ -16,3 +16,5 @@
 
 
 (define-key key-minor-mode-map (kbd "s-o") 'replace-string)
+
+(setq mac-pass-command-to-system nil)
