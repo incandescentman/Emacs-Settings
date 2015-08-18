@@ -315,7 +315,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 ** org-export
 
-   #+BEGIN_EXAMPLE emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 ;; '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
 ;; '(org-html-container-element "div")
 ;;  '(org-html-footnotes-section
@@ -428,7 +428,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 %s
 </div>
 </div>") 
-   #+END_EXAMPLE 
+   #+END_SRC 
 
 
 *** Change section numbering depending on what export format I use
@@ -449,7 +449,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 #+END_EXAMPLE
 
 *** export with drawers
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
@@ -457,7 +457,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
   (format "@<div class=\"drawer\">%s@</div>\n" content))
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
 (setq org-icalendar-include-todo t) 
-#+END_EXAMPLE 
+#+END_SRC 
 
 ** Org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
@@ -3074,9 +3074,9 @@ to open source code block in indirect buffer
 (define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
 (define-key ac-completing-map "\t" 'ac-complete)
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
-(define-key ac-completing-map "\r" 'nil)
-#+END_EXAMPLE 
-*
+(define-key ac-completing-map "\r" 'nil) 
+#+END_EXAMPLE
+
 * globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
@@ -3088,9 +3088,7 @@ Handy way of getting back to previous places.
 
 #+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
-#+END_SRC
-
-*
+#+END_SRC 
 
 * Treat all themes as safe
 
@@ -3919,13 +3917,13 @@ Single Capitals as you type."
   #+END_SRC
 
 * which-key mode 
-  #+BEGIN_EXAMPLE emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 (require 'which-key)
 (setq which-key-popup-type 'side-window) 
 (setq which-key-side-window-location 'bottom) 
 
 (which-key-mode)
-  #+END_EXAMPLE 
+  #+END_SRC 
 
 * a keybinding to open my accountability file
 

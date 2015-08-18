@@ -15,3 +15,4 @@
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
 
+(define-key key-minor-mode-map (kbd "s-o") 'replace-string)

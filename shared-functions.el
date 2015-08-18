@@ -151,6 +151,127 @@
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 
+;; '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
+;; '(org-html-container-element "div")
+;;  '(org-html-footnotes-section
+;;    "<div id=\"footnotes\">
+;; <h2 class=\"footnotes\">%s </h2>
+;; <div id=\"footnote\">
+;; %s
+;; </div>
+;; </div>")
+;;  '(org-html-head
+;;    "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css' />")
+;;  '(org-html-head-include-default-style nil)
+;;  '(org-html-head-include-scripts nil)
+;;  '(org-html-html5-fancy t)
+;;  '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
+;;  '(org-html-postamble nil)
+;;  '(org-html-text-markup-alist
+;;    (quote
+;;     ((bold . "<strong>%s</strong>")
+;;      (code . "<blockquote>%s</blockquote>")
+;;      (italic . "<em>%s</em>")
+;;      (strike-through . "<del>%s</del>")
+;;      (underline . "<span class=\"underline\">%s</span>")
+;;      (verbatim . "<code>%s</code>"))))
+;;  '(org-html-toplevel-hlevel 2)
+
+
+
+
+(setq org-export-with-planning t)
+(setq org-export-allow-bind-keywords t)
+;; (setq org-export-blocks-witheld (quote (hidden)) t) 
+(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+;; (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
+;; (setq org-export-html-style-include-default t) 
+;; (setq org-export-with-smart-quotes t) 
+;; (setq org-export-allow-bind-keywords t)
+;; (setq org-export-blocks-witheld (quote (hidden)))
+;; '(org-export-latex-date-format "%d %B %Y." t)
+;;  '(org-export-latex-emphasis-alist
+;;    (quote
+;;     (("*" "\\emph{%s}" nil)
+;;      ("/" "\\textit{%s}" nil)
+;;      ("_" "\\underline{%s}" nil)
+;;      ("+" "\\st{%s}" nil)
+;;      ("=" "\\verb" t)
+;;      ("~" "\\verb" t))) t)
+;;  '(org-export-latex-image-default-option "width=20.5cm")
+;;  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
+;;  '(org-export-time-stamp-file nil)
+;;  '(org-export-with-clocks t)
+;;  '(org-export-with-drawers t)
+;;  '(org-export-with-section-numbers nil)
+;;  '(org-export-with-timestamps (quote active))
+;;  '(org-export-with-toc nil)
+
+ (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
+;; (setq org-export-html-style-include-default t)
+ (setq org-export-latex-date-format "%d %B %Y.")
+ (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+ (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+ (setq org-export-with-clocks t)
+ (setq org-export-with-drawers t)
+ (setq org-export-with-section-numbers nil)
+ (setq org-export-with-toc nil)
+
+'(org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
+     ("/" "\\textit{%s}" nil)
+     ("_" "\\underline{%s}" nil)
+     ("+" "\\st{%s}" nil)
+     ("=" "\\verb" t)
+     ("~" "\\verb" t))))
+
+'(org-html-footnotes-section
+   "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>")
+
+'(org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+
+'(org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
+     (code . verb)
+     (italic . "\\textit{%s}")
+     (strike-through . "\\sout{%s}")
+     (underline . "\\uline{%s}")
+     ;; (verbatim . protectedtext)
+     )))
+
+'(org-latex-toc-command "\\tableofcontents
+\\newpage
+")
+
+'(safe-local-variable-values (quote    ((eval when
+	   (fboundp
+	    (quote rainbow-mode))
+	   (rainbow-mode 1)))))
+
+'(org-html-footnotes-section "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>") 
+
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+(setq org-icalendar-include-todo t) 
+
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
@@ -2693,6 +2814,12 @@ Single Capitals as you type."
             (setq outline-heading-end-regexp ":\n")
             (outline-minor-mode 1)
 ))
+
+(require 'which-key)
+(setq which-key-popup-type 'side-window) 
+(setq which-key-side-window-location 'bottom) 
+
+(which-key-mode)
 
 (defun accountability-open ()
   (interactive)
