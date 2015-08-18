@@ -3065,3 +3065,8 @@ Single Capitals as you type."
 ;; (setq zone-programs [zone-pgm-drip]) 
 ;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
 (setq zone-programs [zone-pgm-putz-with-case]) 
+
+     (cl-dolist (map '(message-mode-map orgstruct-mode-map))
+  (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
+                    "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+    (define-key (eval map) (kbd key) nil)))

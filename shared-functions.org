@@ -4254,3 +4254,13 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (setq zone-programs [zone-pgm-putz-with-case]) 
 
   #+END_SRC
+
+* unbind orgstruct navigation keys
+
+  #+BEGIN_SRC emacs-lisp 
+     (cl-dolist (map '(message-mode-map orgstruct-mode-map))
+  (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
+                    "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+    (define-key (eval map) (kbd key) nil)))
+
+  #+END_SRC
