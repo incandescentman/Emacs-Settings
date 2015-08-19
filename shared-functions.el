@@ -374,7 +374,6 @@
 '(org-insert-mode-line-in-empty-file t)
 '(org-list-indent-offset 3)
 '(org-log-done (quote time))
-'(org-log-refile (quote time))
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
@@ -886,8 +885,7 @@ Subject: %^{Subject}
  '(org-list-indent-offset 3)
  '(org-log-done nil)
  '(org-log-note-clock-out nil)
- '(org-log-refile nil)
- '(org-mac-Skim-highlight-selection-p t)
+'(org-mac-Skim-highlight-selection-p t)
  '(org-mac-grab-Firefox+Vimperator-p nil)
  '(org-mac-grab-Firefox-app-p nil)
  '(org-mac-grab-Mail-app-p nil)
@@ -1052,7 +1050,7 @@ ido-enter-matching-directory nil
       ido-max-prospects 10)
 (setq ido-everywhere t)
 
-(setq org-completion-use-ido t)
+;; (setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
 (setq ido-enable-last-directory-history t)
@@ -1062,14 +1060,13 @@ ido-enter-matching-directory nil
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
 
-(setq org-refile-use-outline-path t)
+;; (setq org-refile-use-outline-path to)
 
-(setq org-goto-interface 'outline-path-completion
-      org-goto-max-level 2)
+;; (setq org-goto-interface 'outline-path-completion org-goto-max-level 2)
 
 (setq org-outline-path-complete-in-steps nil)
 
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
+;; (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
 (setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
@@ -1698,10 +1695,10 @@ With prefix arg C-u, copy region instad of killing it."
 (defun my-org-files-list ()
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
+          (org-buffer-list 'files to)))
 
 
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+;; (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
 
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."

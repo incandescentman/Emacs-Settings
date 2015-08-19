@@ -593,7 +593,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 '(org-insert-mode-line-in-empty-file t)
 '(org-list-indent-offset 3)
 '(org-log-done (quote time))
-'(org-log-refile (quote time))
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
@@ -1335,8 +1334,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-list-indent-offset 3)
  '(org-log-done nil)
  '(org-log-note-clock-out nil)
- '(org-log-refile nil)
- '(org-mac-Skim-highlight-selection-p t)
+'(org-mac-Skim-highlight-selection-p t)
  '(org-mac-grab-Firefox+Vimperator-p nil)
  '(org-mac-grab-Firefox-app-p nil)
  '(org-mac-grab-Mail-app-p nil)
@@ -1556,7 +1554,7 @@ ido-enter-matching-directory nil
 
 Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
 #+BEGIN_SRC emacs-lisp
-(setq org-completion-use-ido t)
+;; (setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
 (setq ido-enable-last-directory-history t)
@@ -1569,10 +1567,9 @@ Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
 
 Use full outline paths for refile targets - we file directly with IDO:
 #+BEGIN_SRC emacs-lisp
-(setq org-refile-use-outline-path t)
+;; (setq org-refile-use-outline-path to)
 
-(setq org-goto-interface 'outline-path-completion
-      org-goto-max-level 2)
+;; (setq org-goto-interface 'outline-path-completion org-goto-max-level 2)
 #+END_SRC
 
 Targets complete directly with IDO:
@@ -1582,7 +1579,7 @@ Targets complete directly with IDO:
 
 Allow refile to create parent tasks with confirmation:
 #+BEGIN_SRC emacs-lisp
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
+;; (setq org-refile-allow-creating-parent-nodes (quote confirm))
 #+END_SRC
 
 Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
@@ -2394,10 +2391,10 @@ With prefix arg C-u, copy region instad of killing it."
 (defun my-org-files-list ()
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
+          (org-buffer-list 'files to)))
 
 
-(setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+;; (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
 #+END_SRC
 
 * Working with files
