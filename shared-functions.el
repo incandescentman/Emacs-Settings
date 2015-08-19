@@ -383,21 +383,6 @@
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
-
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-
 (setq org-capture-templates
       (quote
        (
@@ -3076,4 +3061,4 @@ Single Capitals as you type."
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
 
 (require 'org-contacts) 
-;; (require 'org-vcard)
+(require 'org-vcard)

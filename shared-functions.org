@@ -605,15 +605,15 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** Org refile settings
 *** Exclude ~DONE~ state tasks from refile targets:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
-#+END_SRC
+#+END_EXAMPLE
 
 ** Fix '\emsp' bug in clocktable (doesn't work though):
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-org-clocktable-indent-string (level)
   (if (= level 1)
       ""
@@ -623,7 +623,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
               str (concat str "--")))
       (concat str "-> "))))
 (advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-#+END_SRC
+#+END_EXAMPLE
 
 ** org-capture setup
 
@@ -4272,5 +4272,5 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
   #+BEGIN_SRC emacs-lisp
 (require 'org-contacts) 
-;; (require 'org-vcard)
+(require 'org-vcard)
   #+END_SRC
