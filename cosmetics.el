@@ -33,7 +33,7 @@
         (width . 160) ; character
         (height . 42) ; lines
         ))
-(zenburn)
+;; (zenburn)
 (monaco-font)
 ;; (minuscule-type)
 
