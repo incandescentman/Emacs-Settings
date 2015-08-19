@@ -82,7 +82,7 @@
   (require 'play-sound))
 
 
-(add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
+;; (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
 ;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 
 (setq sentence-end-double-space nil)
