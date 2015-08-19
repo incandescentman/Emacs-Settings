@@ -744,7 +744,7 @@ Subject: %^{Subject}
 (setq message-draft-headers (quote (From References Date)))
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
-(setq message-send-hook (quote (recent-addresses-add-headers)))
+;; (setq message-send-hook (quote (recent-addresses-add-headers)))
 (setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\n")
@@ -946,6 +946,7 @@ Subject: %^{Subject}
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
  '(recentf-exclude (quote    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
+'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm"))) 
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
@@ -976,7 +977,6 @@ Subject: %^{Subject}
 '(org-indent-indentation-per-level 2)
 '(org-list-allow-alphabetical t)
 '(org-priority-faces nil)
-'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm")))
 '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
 '(send-mail-function (quote sendmail-send-it))
 
