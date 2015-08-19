@@ -735,7 +735,7 @@ Subject: %^{Subject}
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
-(add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
 (setq mail-default-directory
    "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
