@@ -3076,4 +3076,4 @@ Single Capitals as you type."
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
 
 (require 'org-contacts) 
-(require 'org-vcard)
+;; (require 'org-vcard)

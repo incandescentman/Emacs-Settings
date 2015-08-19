@@ -4272,5 +4272,5 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
   #+BEGIN_SRC emacs-lisp
 (require 'org-contacts) 
-(require 'org-vcard)
+;; (require 'org-vcard)
   #+END_SRC
