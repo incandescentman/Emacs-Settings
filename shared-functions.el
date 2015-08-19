@@ -3074,3 +3074,6 @@ Single Capitals as you type."
     (define-key (eval map) (kbd key) nil)))
   )
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
+
+(require 'org-contacts) 
+(require 'org-vcard)

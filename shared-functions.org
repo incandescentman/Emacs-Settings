@@ -4267,3 +4267,10 @@ With this, I can attach a file as an attachment to a new email message by enteri
   )
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
   #+END_SRC
+
+* org-contacts
+
+  #+BEGIN_SRC emacs-lisp
+(require 'org-contacts) 
+(require 'org-vcard)
+  #+END_SRC
