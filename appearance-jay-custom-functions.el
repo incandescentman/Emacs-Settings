@@ -269,4 +269,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
         (buffer-face-set 'hard-to-read-font))
     (progn
       (font-lock-mode t)
-      (buffer-face-mode nil))))
+      (buffer-face-mode nil)))) 
+
+

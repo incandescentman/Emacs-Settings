@@ -34,9 +34,8 @@
         (height . 42) ; lines
         ))
 ;; (zenburn)
-(monaco-font)
+;; (monaco-font)
 ;; (minuscule-type)
-
 (turn-on-olivetti-mode)
 
 (recenter-top-bottom)
