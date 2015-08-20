@@ -25,7 +25,6 @@
 (defun inconsolata-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Inconsolata":height 160))
-
 (defun last-words ()
   (interactive)
   (set-face-attribute 'default nil :font "Last Words" :height 200))
@@ -97,6 +96,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   (org-mode)
   )
+
+(defun tomorrow-night ()
+  (interactive)
+  (load-theme 'sanityinc-tomorrow-night)
+)
+
 
 (defun solarized-dark ()
   "Open my own customized version of the Solarized color theme."

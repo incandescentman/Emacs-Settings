@@ -30,6 +30,30 @@ Output: You might have a conscious intention to eat healthier, but you forget.^
 
 * open requests 
 ** Emacs 
+
+*** TODO change smart-return behavior for headings
+Make org-return insert line break, not separate headings from stars
+
+In the following example, ignore the commas. I just put them in so org doesn't think these are actual headings. ^ is the cursor.
+
+Input:
+,** ^The Minister's Daughter
+
+Scenario: I hit <return>
+
+Current output: 
+#+BEGIN_EXAMPLE 
+,** 
+,^The minister's Daughter
+
+#+END_EXAMPLE 
+
+Desired output: 
+#+BEGIN_EXAMPLE 
+,
+,** ^The Minister's Daughter 
+#+END_EXAMPLE 
+
 *** TODO smart-punctuation behaviors 
 **** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
