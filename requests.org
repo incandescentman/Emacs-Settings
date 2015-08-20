@@ -54,6 +54,21 @@ Desired output:
 ,** ^The Minister's Daughter 
 #+END_EXAMPLE 
 
+*** TODO no autocapitalize checklist items
+- [ ] This
+- [ ] That
+- [ ] And this 
+
+These get autocapitalized... can we disable?
+
+*** TODO capitalize after ellipsis and line break
+In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
+
+However, sometimes an ellipsis occurs at the end of a paragraph...
+
+in these cases, the first letter of the new sentence on 
+^ the new line SHOULD be capitalized. Can we fix? Thanks! 
+
 *** TODO smart-punctuation behaviors 
 **** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
