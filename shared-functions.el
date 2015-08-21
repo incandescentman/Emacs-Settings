@@ -1875,7 +1875,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
 
-(define-hyper-key "m a" 'org-agenda)
+;; (define-hyper-key "m a" 'org-agenda)
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
@@ -1888,6 +1888,11 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m ts" 'transparent-serenity)
 (define-hyper-key "m tg" 'top-gun-mode)
 (define-hyper-key "m tn" 'tomorrow-night)
+
+
+(define-hyper-key "m aa" 'add-global-abbrev)
+
+
 
 (define-hyper-key "m nm" 'notmuch-hello) 
 (define-hyper-key "m mu" 'mu4e)
