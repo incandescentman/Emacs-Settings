@@ -1,3 +1,7 @@
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
+(require 'org)
+(require 'org-mime)
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -2085,6 +2089,7 @@ searches all buffers."
 (setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; (load-theme 'leuven)
+(incarnadine-cursor)
 
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist

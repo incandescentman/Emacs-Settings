@@ -2977,6 +2977,7 @@ magit
 * startup
 #+BEGIN_SRC emacs-lisp
 ;; (load-theme 'leuven)
+(incarnadine-cursor)
 #+END_SRC
 
 * Tell isearch that curly apostrophes are the same as straight ones
