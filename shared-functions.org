@@ -40,6 +40,10 @@ You can toggle it in necessary files by setting the local variables section at t
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
+(require 'org)
+(require 'org-mime)
+
 (require 'package)
 
 (add-to-list 'package-archives
