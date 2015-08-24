@@ -270,5 +270,3 @@ The function is poorly named, didn't really want to 'load' it, just open it."
     (progn
       (font-lock-mode t)
       (buffer-face-mode nil)))) 
-
-

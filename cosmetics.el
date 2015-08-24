@@ -32,6 +32,7 @@
       '(
         (width . 160) ; character
         (height . 42) ; lines
+(cursor-color . "red") 
         ))
 ;; (zenburn)
 ;; (monaco-font)

@@ -273,8 +273,3 @@ The function is poorly named, didn't really want to 'load' it, just open it."
       (font-lock-mode t)
       (buffer-face-mode nil)))) 
 #+END_SRC
-
-* startup
-
-  #+BEGIN_SRC emacs-lisp
-  #+END_SRC

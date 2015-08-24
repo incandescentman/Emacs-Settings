@@ -57,7 +57,8 @@
   (set-cursor-color "red")
   (setq default-frame-alist
 	'((cursor-color . "red")))
-  (add-to-list 'default-frame-alist '(cursor-color . "red")))
+
+  )
 
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
@@ -164,8 +165,8 @@
 ;; %s
 ;; </div>
 ;; </div>")
-;;  '(org-html-head
-;;    "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css' />")
+(setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
+
 ;;  '(org-html-head-include-default-style nil)
 ;;  '(org-html-head-include-scripts nil)
 ;;  '(org-html-html5-fancy t)
@@ -219,9 +220,7 @@
  (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
  (setq org-export-with-clocks t)
  (setq org-export-with-drawers t)
- (setq org-export-with-section-numbers nil)
- (setq org-export-with-toc nil)
-
+ (setq org-export-with-section-numbers nil) 
 '(org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
      ("/" "\\textit{%s}" nil)
      ("_" "\\underline{%s}" nil)
@@ -2089,7 +2088,7 @@ searches all buffers."
 (setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; (load-theme 'leuven)
-(incarnadine-cursor)
+;; (incarnadine-cursor)
 
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
