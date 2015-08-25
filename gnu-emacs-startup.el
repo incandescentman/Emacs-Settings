@@ -311,7 +311,9 @@
 
 
 ;; book bindings
-(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) ; go to my book folder
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) 
+(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory) 
+
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c

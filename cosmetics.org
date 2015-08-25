@@ -64,6 +64,8 @@
 (turn-on-olivetti-mode)
 
 (recenter-top-bottom)
+(deja-vu-font)
+
 #+END_SRC
 
 

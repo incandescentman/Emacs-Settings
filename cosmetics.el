@@ -40,6 +40,7 @@
 (turn-on-olivetti-mode)
 
 (recenter-top-bottom)
+(deja-vu-font)
 
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 

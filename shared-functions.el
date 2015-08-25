@@ -156,55 +156,7 @@
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 
-;; '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
-;; '(org-html-container-element "div")
-;;  '(org-html-footnotes-section
-;;    "<div id=\"footnotes\">
-;; <h2 class=\"footnotes\">%s </h2>
-;; <div id=\"footnote\">
-;; %s
-;; </div>
-;; </div>")
 (setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
-
-;;  '(org-html-head-include-default-style nil)
-;;  '(org-html-head-include-scripts nil)
-;;  '(org-html-html5-fancy t)
-;;  '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
-;;  '(org-html-postamble nil)
-;;  '(org-html-text-markup-alist
-;;    (quote
-;;     ((bold . "<strong>%s</strong>")
-;;      (code . "<blockquote>%s</blockquote>")
-;;      (italic . "<em>%s</em>")
-;;      (strike-through . "<del>%s</del>")
-;;      (underline . "<span class=\"underline\">%s</span>")
-;;      (verbatim . "<code>%s</code>"))))
-;;  '(org-html-toplevel-hlevel 2)
-
-
-
-
-(setq org-export-with-planning t)
-(setq org-export-allow-bind-keywords t)
-;; (setq org-export-blocks-witheld (quote (hidden)) t) 
-(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
-;; (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
-;; (setq org-export-html-style-include-default t) 
-;; (setq org-export-with-smart-quotes t) 
-;; (setq org-export-allow-bind-keywords t)
-;; (setq org-export-blocks-witheld (quote (hidden)))
-;; '(org-export-latex-date-format "%d %B %Y." t)
-;;  '(org-export-latex-emphasis-alist
-;;    (quote
-;;     (("*" "\\emph{%s}" nil)
-;;      ("/" "\\textit{%s}" nil)
-;;      ("_" "\\underline{%s}" nil)
-;;      ("+" "\\st{%s}" nil)
-;;      ("=" "\\verb" t)
-;;      ("~" "\\verb" t))) t)
-;;  '(org-export-latex-image-default-option "width=20.5cm")
-;;  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
 (setq org-export-time-stamp-file nil)
 (setq org-export-with-clocks t)
 (setq org-export-with-drawers t)
@@ -221,14 +173,18 @@
  (setq org-export-with-clocks t)
  (setq org-export-with-drawers t)
  (setq org-export-with-section-numbers nil) 
-'(org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
+(setq org-export-with-planning t)
+(setq org-export-allow-bind-keywords t)
+;; (setq org-export-blocks-witheld (quote (hidden)) t) 
+(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+(setq org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
      ("/" "\\textit{%s}" nil)
      ("_" "\\underline{%s}" nil)
      ("+" "\\st{%s}" nil)
      ("=" "\\verb" t)
      ("~" "\\verb" t))))
 
-'(org-html-footnotes-section
+(setq org-html-footnotes-section
    "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
 <div id=\"footnote\">
@@ -236,14 +192,14 @@
 </div>
 </div>")
 
-'(org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
+(setq org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
      (code . "<blockquote>%s</blockquote>")
      (italic . "<em>%s</em>")
      (strike-through . "<del>%s</del>")
      (underline . "<span class=\"underline\">%s</span>")
      (verbatim . "<code>%s</code>"))))
 
-'(org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
+(setq org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
      (code . verb)
      (italic . "\\textit{%s}")
      (strike-through . "\\sout{%s}")
@@ -251,16 +207,16 @@
      ;; (verbatim . protectedtext)
      )))
 
-'(org-latex-toc-command "\\tableofcontents
+(setq org-latex-toc-command "\\tableofcontents
 \\newpage
 ")
 
-'(safe-local-variable-values (quote    ((eval when
+(setq safe-local-variable-values (quote    ((eval when
 	   (fboundp
 	    (quote rainbow-mode))
 	   (rainbow-mode 1)))))
 
-'(org-html-footnotes-section "<div id=\"footnotes\">
+(setq org-html-footnotes-section "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
 <div id=\"footnote\">
 %s
@@ -3069,3 +3025,33 @@ Single Capitals as you type."
 
 (require 'org-contacts) 
 (require 'org-vcard)
+
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t))) 
+
+(eval-after-load 'dired
+  '(progn
+     (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
+     (defun my-dired-create-file (file)
+       "Create a file called FILE.
+If FILE already exists, signal an error."
+       (interactive
+        (list (read-file-name "Create file: " (dired-current-directory))))
+       (let* ((expanded (expand-file-name file))
+              (try expanded)
+              (dir (directory-file-name (file-name-directory expanded)))
+              new)
+         (if (file-exists-p expanded)
+             (error "Cannot create file %s: file exists" expanded))
+         ;; Find the topmost nonexistent parent dir (variable `new')
+         (while (and try (not (file-exists-p try)) (not (equal new try)))
+           (setq new try
+                 try (directory-file-name (file-name-directory try))))
+         (when (not (file-exists-p dir))
+           (make-directory dir t))
+         (write-region "" nil expanded t)
+         (when new
+           (dired-add-file new)
+           (dired-move-to-filename)))))) 

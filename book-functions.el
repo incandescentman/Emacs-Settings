@@ -88,6 +88,12 @@
 ;; (toggle-fullscreen)
   (dired "~/b/writing-in-progress/proposal"))
 
+(defun book-mistakes-directory()
+  (interactive)
+;; (cyberpunk-jay)
+;; (toggle-fullscreen)
+  (dired "~/b/writing-in-progress/12-mistakes"))
+
 
 (defun book-load-current ()
   (interactive)

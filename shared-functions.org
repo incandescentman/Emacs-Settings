@@ -4285,3 +4285,46 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (require 'org-contacts) 
 (require 'org-vcard)
   #+END_SRC
+
+
+* If you want Emacs to treat all new files as modified, you can automate the solution like this:
+
+
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t))) 
+  #+END_SRC
+
+Here's an adaptation of dired-create-directory. It works the same way, so as well as a plain filename, you can also specify new parent directories (to be created under the current directory) for the file (e.g. foo/bar/filename).
+
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'dired
+  '(progn
+     (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
+     (defun my-dired-create-file (file)
+       "Create a file called FILE.
+If FILE already exists, signal an error."
+       (interactive
+        (list (read-file-name "Create file: " (dired-current-directory))))
+       (let* ((expanded (expand-file-name file))
+              (try expanded)
+              (dir (directory-file-name (file-name-directory expanded)))
+              new)
+         (if (file-exists-p expanded)
+             (error "Cannot create file %s: file exists" expanded))
+         ;; Find the topmost nonexistent parent dir (variable `new')
+         (while (and try (not (file-exists-p try)) (not (equal new try)))
+           (setq new try
+                 try (directory-file-name (file-name-directory try))))
+         (when (not (file-exists-p dir))
+           (make-directory dir t))
+         (write-region "" nil expanded t)
+         (when new
+           (dired-add-file new)
+           (dired-move-to-filename)))))) 
+#+END_SRC
+
+Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.

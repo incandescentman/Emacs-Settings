@@ -122,6 +122,19 @@
    (quote
     ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com" "jaydixit.work@gmail.com")))
  '(notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
+ '(notmuch-show-logo t)
+ '(notmuch-tag-formats
+   (quote
+    (("unread"
+      (propertize tag
+                  (quote face)
+                  (quote
+                   (:foreground "red"))))
+     ("flagged"
+      (propertize tag
+                  (quote face)
+                  (quote
+                   (:foreground "blue")))))))
  '(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
@@ -364,7 +377,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(hl-line ((t (:foreground "black"))))
  '(org-headline-done ((t (:strike-through t))))
  '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)

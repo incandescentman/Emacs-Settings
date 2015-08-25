@@ -22,6 +22,15 @@
   (interactive)
   (set-face-attribute 'default nil :font "Monaco"))
 
+(defun consolas-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Consolas"))
+
+(defun deja-vu-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
+
+
 (defun inconsolata-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Inconsolata":height 160))
