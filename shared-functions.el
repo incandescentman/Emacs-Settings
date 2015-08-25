@@ -156,6 +156,8 @@
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 
+(setq org-export-with-smart-quotes t) 
+
 (setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
 (setq org-export-time-stamp-file nil)
 (setq org-export-with-clocks t)
@@ -222,6 +224,21 @@
 %s
 </div>
 </div>") 
+
+(setq org-html-head-include-default-style nil)
+(setq org-html-head-include-scripts nil)
+(setq org-html-html5-fancy t)
+(setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
+(setq org-html-postamble nil)
+(setq org-html-text-markup-alist
+   (quote
+    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+(setq org-html-toplevel-hlevel 2)
 
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
@@ -1849,7 +1866,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m tn" 'tomorrow-night)
 
 
-(define-hyper-key "m aa" 'add-global-abbrev)
+(define-hyper-key "m h" 'org-export-dispatch)
+
 
 
 

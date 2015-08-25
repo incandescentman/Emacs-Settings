@@ -321,6 +321,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 ** org-export 
 
 #+BEGIN_SRC emacs-lisp 
+(setq org-export-with-smart-quotes t) 
 
 (setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
 (setq org-export-time-stamp-file nil)
@@ -388,6 +389,23 @@ Turn off fill mode, which adds random line breaks in my text files:
 %s
 </div>
 </div>") 
+
+(setq org-html-head-include-default-style nil)
+(setq org-html-head-include-scripts nil)
+(setq org-html-html5-fancy t)
+(setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
+(setq org-html-postamble nil)
+(setq org-html-text-markup-alist
+   (quote
+    ((bold . "<strong>%s</strong>")
+     (code . "<blockquote>%s</blockquote>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+(setq org-html-toplevel-hlevel 2)
+
+
    #+END_SRC 
 
 
@@ -402,27 +420,12 @@ Turn off fill mode, which adds random line breaks in my text files:
 ;; </div>
 ;; </div>")
 
-;;  '(org-html-head-include-default-style nil)
-;;  '(org-html-head-include-scripts nil)
-;;  '(org-html-html5-fancy t)
-;;  '(org-html-metadata-timestamp-format "%m-%d %a %H:%M")
-;;  '(org-html-postamble nil)
-;;  '(org-html-text-markup-alist
-;;    (quote
-;;     ((bold . "<strong>%s</strong>")
-;;      (code . "<blockquote>%s</blockquote>")
-;;      (italic . "<em>%s</em>")
-;;      (strike-through . "<del>%s</del>")
-;;      (underline . "<span class=\"underline\">%s</span>")
-;;      (verbatim . "<code>%s</code>"))))
-;;  '(org-html-toplevel-hlevel 2)
 
 
 
 
 ;; (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
 ;; (setq org-export-html-style-include-default t) 
-;; (setq org-export-with-smart-quotes t) 
 ;; (setq org-export-allow-bind-keywords t)
 ;; (setq org-export-blocks-witheld (quote (hidden)))
 ;; '(org-export-latex-date-format "%d %B %Y." t)
@@ -2677,7 +2680,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m tn" 'tomorrow-night)
 
 
-(define-hyper-key "m aa" 'add-global-abbrev)
+(define-hyper-key "m h" 'org-export-dispatch)
+
 
 
 
