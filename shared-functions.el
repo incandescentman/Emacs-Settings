@@ -2897,6 +2897,20 @@ Single Capitals as you type."
 
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
+(setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
+(setq notmuch-tag-formats
+   (quote
+    (("unread"
+      (propertize tag
+                  (quote face)
+                  (quote
+                   (:foreground "red"))))
+     ("flagged"
+      (propertize tag
+                  (quote face)
+                  (quote
+                   (:foreground "blue")))))))
+
 (setq notmuch-search-oldest-first nil)
 (defadvice notmuch-mua-reply (around notmuch-fix-sender)
      (let ((sender "Jay Dixit <dixit@aya.yale.edu>"))

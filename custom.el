@@ -121,21 +121,7 @@
  '(mu4e-user-mail-address-list
    (quote
     ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com" "jaydixit.work@gmail.com")))
- '(notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
- '(notmuch-show-logo t)
- '(notmuch-tag-formats
-   (quote
-    (("unread"
-      (propertize tag
-                  (quote face)
-                  (quote
-                   (:foreground "red"))))
-     ("flagged"
-      (propertize tag
-                  (quote face)
-                  (quote
-                   (:foreground "blue")))))))
- '(olivetti-body-width 100)
+'(olivetti-body-width 100)
  '(only-global-abbrevs t)
  '(openwith-associations
    (quote
