@@ -94,8 +94,8 @@
   "Open my favorite file:  ~.emacs.
 The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
-  (org-mode)
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.believe")
+;;  (org-mode)
   (set-cursor-color "violet")
   )
 
@@ -103,7 +103,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
   (load-theme 'ritchie)
   (incarnadine-cursor)
-  (org-mode)
+;; (org-mode)
   )
 
 (defun tomorrow-night ()
