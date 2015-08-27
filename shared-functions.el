@@ -3033,6 +3033,15 @@ Single Capitals as you type."
 
 (require 'org-notmuch) 
 
+;; display in the middle of large displays
+(add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
+
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode) 
+
+(add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
+
 (setq nm-results-window-size 25)
 
 (defun jay/insert-slash ()
@@ -3087,3 +3096,5 @@ If FILE already exists, signal an error."
          (when new
            (dired-add-file new)
            (dired-move-to-filename)))))) 
+
+(setq olivetti-body-width 120) 

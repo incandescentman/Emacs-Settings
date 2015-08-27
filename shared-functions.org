@@ -4240,7 +4240,19 @@ With this, I can attach a file as an attachment to a new email message by enteri
 
 
 (require 'org-notmuch) 
+
+;; display in the middle of large displays
+(add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
+
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode) 
 #+END_SRC
+
+* nevermore 
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
+  #+END_SRC
 
 * nevermore
 
@@ -4346,3 +4358,9 @@ If FILE already exists, signal an error."
 #+END_SRC
 
 Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
+
+* olivetti
+
+  #+BEGIN_SRC emacs-lisp
+(setq olivetti-body-width 120) 
+  #+END_SRC
