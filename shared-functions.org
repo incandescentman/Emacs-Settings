@@ -879,6 +879,7 @@ Make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
+;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
 #+END_SRC
 
 * Typography
@@ -1161,8 +1162,8 @@ Make backups of files, even when they're in version control:
 when replying, look kind of like gmail 
 
 #+BEGIN_SRC emacs-lisp
-(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\n")
-(setq message-citation-line-function 'message-insert-formatted-citation-line) 
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
 #+END_SRC
 
 
@@ -3550,6 +3551,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
           (org-toggle-heading)) ; remove heading
       (progn
         (org-toggle-heading) ; convert to heading
+(org-do-promote)
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 #+END_SRC
 
@@ -4246,7 +4248,7 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
 (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 #+END_SRC
 
 * nevermore 
@@ -4360,7 +4362,6 @@ If FILE already exists, signal an error."
 Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
 
 * olivetti
-
   #+BEGIN_SRC emacs-lisp
-(setq olivetti-body-width 120) 
+(setq olivetti-body-width 120)
   #+END_SRC

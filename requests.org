@@ -288,3 +288,15 @@ This is the end...
 but this is a new beginning. 
 
 But should be autocapitalized. 
+
+
+
+*** an edge case for kill-word-correctly-and-capitalize 
+
+Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+
+Scenario: kill-word-correctly-and-capitalize
+
+Current output: The 16/8 doesn't appeal to me as much. also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+
+Desired output: The 16/8 doesn't appeal to me as much. Also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 

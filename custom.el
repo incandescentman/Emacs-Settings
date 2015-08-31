@@ -121,7 +121,8 @@
  '(mu4e-user-mail-address-list
    (quote
     ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com" "jaydixit.work@gmail.com")))
-'(only-global-abbrevs t)
+ '(olivetti-body-width 120)
+ '(only-global-abbrevs t)
  '(openwith-associations
    (quote
     (("\\.pdf\\'" "open"

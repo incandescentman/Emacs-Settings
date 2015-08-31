@@ -539,6 +539,7 @@ Subject: %^{Subject}
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
+;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -707,8 +708,8 @@ Subject: %^{Subject}
 ;; (setq message-send-hook (quote (recent-addresses-add-headers)))
 (setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
-(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\n")
-(setq message-citation-line-function 'message-insert-formatted-citation-line) 
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
 
 ;; (require 'org-pomodoro)
 
@@ -2502,6 +2503,7 @@ as the subject."
           (org-toggle-heading)) ; remove heading
       (progn
         (org-toggle-heading) ; convert to heading
+(org-do-promote)
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 
 (defun fix-recent-addresses-file ()
@@ -3038,7 +3040,7 @@ Single Capitals as you type."
 (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
 (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 
@@ -3097,4 +3099,4 @@ If FILE already exists, signal an error."
            (dired-add-file new)
            (dired-move-to-filename)))))) 
 
-(setq olivetti-body-width 120) 
+(setq olivetti-body-width 120)
