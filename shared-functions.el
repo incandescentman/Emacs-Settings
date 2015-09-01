@@ -353,8 +353,8 @@
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
-'(org-provide-checkbox-statistics t)
-;; '(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+'(org-provide-checkbox-statistics to)
+;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 

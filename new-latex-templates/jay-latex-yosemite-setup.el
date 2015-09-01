@@ -13,8 +13,3 @@
  '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
    "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; TOC and section numbers
-(setq org-export-with-section-numbers t)
-(setq org-export-with-toc t)
-

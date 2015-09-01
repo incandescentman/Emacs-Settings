@@ -1,6 +1,6 @@
 (require 'org)
 (require 'org-bullets)
-;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (disable-theme 'zenburn)
 
@@ -121,6 +121,9 @@
  '(mu4e-user-mail-address-list
    (quote
     ("dixit@aya.yale.edu" "jay@jaydixit.com" "sunjaydixit@gmail.com" "jaydixit.work@gmail.com")))
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(olivetti-body-width 120)
  '(only-global-abbrevs t)
  '(openwith-associations
@@ -320,7 +323,11 @@
  '(rm-blacklist
    (quote
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
- '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
+ '(safe-local-variable-values
+   (quote
+    ((buffer-file-coding-system . utf-8-unix)
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t))))
  '(send-mail-function (quote sendmail-send-it))
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)
