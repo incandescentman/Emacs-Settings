@@ -2349,6 +2349,7 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
 ;; (looking-at "\\") ; how do you search for a literal backslash?
 (looking-at (sentence-end))
 (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
+(looking-at "[ ]*\"[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at (user-full-name))
   )
 (save-excursion

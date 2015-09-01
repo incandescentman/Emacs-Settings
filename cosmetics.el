@@ -85,5 +85,5 @@
   (interactive)
   (setq org-bullets-bullet-list (quote ("  ")))
   (org-serenity-mode)  
-  (org-bullets-mode)
+;;  (org-bullets-mode)
 )

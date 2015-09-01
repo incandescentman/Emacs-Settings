@@ -24,7 +24,7 @@
 )
 
 ; turn on org-bullets mode in org-mode
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
 ;; display : as > for block quotes :-)

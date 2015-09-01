@@ -1,4 +1,4 @@
-(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
+(add-to-list 'load-path "plus-/Users/jay/Dropbox/emacs/prelude/elpa/org-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
 
@@ -536,7 +536,7 @@ Subject: %^{Subject}
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 ;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
@@ -1275,8 +1275,10 @@ ido-enter-matching-directory nil
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
+(setq buffer-stack-filter 'buffer-stack-filter-regexp)
+(setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
@@ -1411,8 +1413,11 @@ ido-enter-matching-directory nil
 (insert "\n** committed actions: ")
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
+
+(insert "*** TODO wake up by 8:30am\n") 
+(insert "*** TODO blue light therapy\n") 
+(insert "*** TODO meditate\n") 
 (insert "*** TODO morning pages\n")
-(insert "*** TODO meditate\n")
 (insert "*** TODO work on book\n") 
 (insert "*** TODO \n") 
 (left-char)
@@ -1865,6 +1870,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m ts" 'transparent-serenity)
 (define-hyper-key "m tg" 'top-gun-mode)
 (define-hyper-key "m tn" 'tomorrow-night)
+
+(define-hyper-key "m ma" 'add-global-abbrev) 
 
 
 (define-hyper-key "m h" 'org-export-dispatch)
