@@ -3107,3 +3107,11 @@ If FILE already exists, signal an error."
            (dired-move-to-filename)))))) 
 
 (setq olivetti-body-width 120)
+
+(defun kill-to-buffer-end ()
+  (interactive) 
+  (end-of-buffer)
+(delete-region (mark) (point))
+(recenter-top-bottom)
+)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 

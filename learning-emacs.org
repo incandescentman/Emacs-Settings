@@ -1,3 +1,11 @@
+* search and replace across files
+1. ~M-x find-name-dired~: you will be prompted for a root directory and a filename pattern.
+2. Press ~t~ to "toggle mark" for all files found.
+3. Press ~Q~ for "Query-Replace in Files...": you will be prompted for query/substitution regexps.
+4. Proceed as with ~query-replace-regexp~: ~SPACE~ to replace and move to next match, ~n~ to skip a match, etc.
+
+
+
 * regexp
 Let Emacs Create Your Regexp
 One can use the function 'regexp-opt' to create elisp regexps. Suppose you want to find out the syntax for a regexp that matches both "end" and "endif". Enter the following in an elisp buffer, say *scratch*: 

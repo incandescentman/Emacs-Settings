@@ -4372,3 +4372,15 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   #+BEGIN_SRC emacs-lisp
 (setq olivetti-body-width 120)
   #+END_SRC
+
+* kill to buffer end
+
+  #+BEGIN_SRC emacs-lisp
+(defun kill-to-buffer-end ()
+  (interactive) 
+  (end-of-buffer)
+(delete-region (mark) (point))
+(recenter-top-bottom)
+)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
+  #+END_SRC

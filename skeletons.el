@@ -2,7 +2,7 @@
   "[fn:: " _ "] ")
 
 
-(define-skeleton my-org-slide "Docstring." nil
+(define-skeleton my-org-slide-notes "Docstring." nil
   "* " _ "                               :slide:
 ** Notes                                                              :notes:
 ")
