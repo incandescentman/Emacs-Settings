@@ -97,7 +97,8 @@
 
 (defun book-load-current ()
   (interactive)
-(find-file "/Users/jay/b/writing-in-progress/proposal/outline-structure-only.txt")
+(kill-buffer "playful.org") 
+  (find-file "/Users/jay/b/writing-in-progress/proposal/outline-structure-only.txt")
 (find-file "/Users/jay/b/writing-in-progress/proposal/12-mistakes-of-modern-love-outline.txt")
 (find-file "/Users/jay/b/writing-in-progress/proposal/outline-with-notes.txt")
   )
