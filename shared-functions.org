@@ -150,9 +150,15 @@ And create a function to restore the red cursor in case a color-theme overwrites
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-	'((cursor-color . "red")))
-
+	'((cursor-color . "red"))) 
   )
+
+(defun  magenta-cursor ()
+  (interactive)
+  (set-cursor-color "#DC8CC3")
+  (setq default-frame-alist
+	'((cursor-color . "#DC8CC3"))) 
+  ) 
 #+END_SRC
 
 ** Split windows correctly
@@ -3978,12 +3984,6 @@ Single Capitals as you type."
   #+BEGIN_SRC emacs-lisp
 (require 're-builder)
 (setq reb-re-syntax 'string)
-  #+END_SRC
-
-* imenu-list
-
-  #+BEGIN_SRC emacs-lisp
-
   #+END_SRC
 
 * stripe buffer 

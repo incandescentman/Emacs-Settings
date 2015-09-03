@@ -604,6 +604,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
+;; don't leave stray stars behind when killing a line
+(when (looking-back "* ")
+(beginning-of-line)
+)
+
+
 ;;  (expand-abbrev)
   (org-kill-line)
   (my/fix-space)

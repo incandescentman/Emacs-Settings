@@ -100,7 +100,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-block-begin-line ((t (:background ,zenburn-bg-05))))
    `(org-block-end-line ((t (:background ,zenburn-bg-05))))
 
-    
+   `(org-list-dt ((t (:bold t :foreground ,zenburn-magenta))))
+
+
 
    '(button ((t (:underline t))))
 
