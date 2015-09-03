@@ -4379,3 +4379,11 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   #+BEGIN_SRC emacs-lisp
 (setq olivetti-body-width 120)
   #+END_SRC
+
+
+* save every 10 seconds? 
+
+  #+BEGIN_SRC emacs-lisp
+(run-at-time nil 10 'jay/save-some-buffers) 
+  #+END_SRC
+but how to make it stop saying "no files need saving"?

@@ -607,9 +607,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; don't leave stray stars behind when killing a line
 (when (looking-back "* ")
 (beginning-of-line)
-)
-
-
+) 
 ;;  (expand-abbrev)
   (org-kill-line)
   (my/fix-space)
@@ -2294,7 +2292,8 @@ First delete region, and then:
   (interactive)
 (when (looking-back "[*]+ ")
 (kill-line 0)
-(insert " "))
+(insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire 
+)
 
   (let ((capitalize capitalize-after-deleting-single-char))
     (if (use-region-p)
