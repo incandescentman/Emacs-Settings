@@ -3998,9 +3998,10 @@ Single Capitals as you type."
 (global-fasd-mode 1)
 (setq fasd-enable-initial-prompt nil)
   #+END_SRC
-
-* mu4e 
-  #+BEGIN_SRC emacs-lisp 
+ 
+* email
+** mu4e 
+   #+BEGIN_SRC emacs-lisp 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
@@ -4077,23 +4078,23 @@ Single Capitals as you type."
 (mu4e-maildirs-extension) 
 (setq mu4e-maildirs-extension-title "Folders")
 
-#+END_SRC
+ #+END_SRC
 
-* mu4e keybindings
+*** mu4e keybindings
 
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 
-  #+END_SRC
+    #+END_SRC
 
-* mu4e attachments
-Wouldn't it be awesome to be able to send files from dired using your mail client?
+*** mu4e attachments
+  Wouldn't it be awesome to be able to send files from dired using your mail client?
 
-I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
+  I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
 
 
-#+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
 ;; message-mode derived modes, such as mu4e-compose-mode
@@ -4110,13 +4111,14 @@ I'll need a special version of the gnus-dired-mail-buffers function so it unders
 
 (setq gnus-dired-mail-mode 'mu4e-user-agent)
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode) 
-#+END_SRC
+  #+END_SRC
 
-With this, I can attach a file as an attachment to a new email message by entering C-c RET C-a, and I'm good to go. 
+  With this, I can attach a file as an attachment to a new email message by entering C-c RET C-a, and I'm good to go. 
 
-* gnus keybindings
+** gnus
+*** gnus keybindings
 
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 (define-key gnus-summary-mode-map "c"
   'compose-mail)
  
@@ -4124,12 +4126,12 @@ With this, I can attach a file as an attachment to a new email message by enteri
   'gnus-summary-wide-reply) 
 
 
-  #+END_SRC
+    #+END_SRC
 
 
-* notmuch
+** notmuch
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
@@ -4256,20 +4258,32 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
-#+END_SRC
+ #+END_SRC
 
-* nevermore 
-  #+BEGIN_SRC emacs-lisp
+** nevermore 
+   #+BEGIN_SRC emacs-lisp
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
-  #+END_SRC
-
-* nevermore
-
-  #+BEGIN_SRC emacs-lisp
 (setq nm-results-window-size 25)
-  #+END_SRC
+   #+END_SRC
 
+** org-contacts
 
+   #+BEGIN_SRC emacs-lisp
+(require 'org-contacts) 
+(require 'org-vcard)
+   #+END_SRC
+
+** kill to buffer end
+
+   #+BEGIN_SRC emacs-lisp
+(defun kill-to-buffer-end ()
+  (interactive) 
+  (end-of-buffer)
+(delete-region (mark) (point))
+(recenter-top-bottom)
+)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
+   #+END_SRC
 
 * deft-turbo
 
@@ -4318,13 +4332,6 @@ With this, I can attach a file as an attachment to a new email message by enteri
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
   #+END_SRC
 
-* org-contacts
-
-  #+BEGIN_SRC emacs-lisp
-(require 'org-contacts) 
-(require 'org-vcard)
-  #+END_SRC
-
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this:
 
@@ -4371,16 +4378,4 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 * olivetti
   #+BEGIN_SRC emacs-lisp
 (setq olivetti-body-width 120)
-  #+END_SRC
-
-* kill to buffer end
-
-  #+BEGIN_SRC emacs-lisp
-(defun kill-to-buffer-end ()
-  (interactive) 
-  (end-of-buffer)
-(delete-region (mark) (point))
-(recenter-top-bottom)
-)
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
   #+END_SRC

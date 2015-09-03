@@ -3061,8 +3061,18 @@ Single Capitals as you type."
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
-
 (setq nm-results-window-size 25)
+
+(require 'org-contacts) 
+(require 'org-vcard)
+
+(defun kill-to-buffer-end ()
+  (interactive) 
+  (end-of-buffer)
+(delete-region (mark) (point))
+(recenter-top-bottom)
+)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
 
 (defun jay/insert-slash ()
   (interactive)
@@ -3083,9 +3093,6 @@ Single Capitals as you type."
     (define-key (eval map) (kbd key) nil)))
   )
 (add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
-
-(require 'org-contacts) 
-(require 'org-vcard)
 
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -3118,11 +3125,3 @@ If FILE already exists, signal an error."
            (dired-move-to-filename)))))) 
 
 (setq olivetti-body-width 120)
-
-(defun kill-to-buffer-end ()
-  (interactive) 
-  (end-of-buffer)
-(delete-region (mark) (point))
-(recenter-top-bottom)
-)
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
