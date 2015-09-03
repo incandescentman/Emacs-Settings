@@ -444,6 +444,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
+;; don't leave stray stars behind when killing a line
+(when (looking-back "* ")
+(beginning-of-line)
+)
+
+
 ;;  (expand-abbrev)
   (org-kill-line)
   (my/fix-space)
@@ -1196,6 +1202,10 @@ subsequent sends. could save them all in a logbook?
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
+(when (looking-back "[*]+ ")
+(kill-line 0)
+(insert " "))
+
   (let ((capitalize capitalize-after-deleting-single-char))
     (if (use-region-p)
         (progn

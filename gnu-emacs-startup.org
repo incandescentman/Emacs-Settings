@@ -2292,6 +2292,10 @@ First delete region, and then:
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
+(when (looking-back "[*]+ ")
+(kill-line 0)
+(insert " "))
+
   (let ((capitalize capitalize-after-deleting-single-char))
     (if (use-region-p)
         (progn

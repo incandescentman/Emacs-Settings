@@ -1,0 +1,13 @@
+
+   `(org-block-background ((t (:background ,zenburn-bg-05))))
+   `(org-block ((t (:background ,zenburn-bg-05))))
+   `(org-block-begin-line ((t (:background ,zenburn-bg-05))))
+   `(org-block-end-line ((t (:background ,zenburn-bg-05))))
+
+   `(org-list-dt ((t (:bold t :foreground ,zenburn-magenta))))
+
+
+   `(bold ((,class (:bold t :foreground ,zenburn-magenta))))
+   `(italic ((t (:foreground ,zenburn-cyan ))))
+
+   `(cursor ((t (:foreground ,zenburn-fg :background ,zenburn-magenta))))

@@ -56,9 +56,15 @@
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-	'((cursor-color . "red")))
-
+	'((cursor-color . "red"))) 
   )
+
+(defun  magenta-cursor ()
+  (interactive)
+  (set-cursor-color "#DC8CC3")
+  (setq default-frame-alist
+	'((cursor-color . "#DC8CC3"))) 
+  ) 
 
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
@@ -2823,8 +2829,6 @@ Single Capitals as you type."
 
 (require 're-builder)
 (setq reb-re-syntax 'string)
-
-
 
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
