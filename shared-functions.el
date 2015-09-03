@@ -240,6 +240,17 @@
      (verbatim . "<code>%s</code>"))))
 (setq org-html-toplevel-hlevel 2)
 
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+    (plist-put plist :with-toc t)
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
 (setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."

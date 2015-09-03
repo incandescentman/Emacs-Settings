@@ -445,7 +445,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
    ((equal backend 'html)
@@ -456,7 +456,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
+#+END_SRC
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp

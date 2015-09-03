@@ -1,4 +1,4 @@
-#+TITLE:Alice in Wonderland 
+#+TITLE:Signal Flare Business Plan
 #+AUTHOR:Jay Dixit
 #+LaTeX_CLASS: blue-ruin
 #+EMAIL:     dixit@aya.yale.edu
@@ -10,7 +10,6 @@
 #+LATEX_HEADER: \leftheader{Jay Dixit} 
 #+LATEX_HEADER: \leftheaderurl{http://jaydixit.com} 
 #+LATEX_HEADER: \coverimage{/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/images/image1.jpg} 
-
 
 * Executive summary
 ** Overview
