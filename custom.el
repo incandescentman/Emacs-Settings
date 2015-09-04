@@ -8,6 +8,9 @@
 (setq prelude-guru nil)
 
 
+(setq left-margin-width 10)
+(setq right-margin-width 10)
+
 
 ;;;; never got these working
 ;; (require 'google-contacts)
