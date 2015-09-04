@@ -445,7 +445,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Kill the current line."
   (interactive)
 ;; don't leave stray stars behind when killing a line
-(when (looking-back "* ")
+(when 
+(or
+(looking-back "\\[") 
+(looking-back "* "))
 (beginning-of-line)
 ) 
 ;;  (expand-abbrev)
@@ -561,9 +564,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun smart-return ()
   (interactive)
 
-;; don't leave stray stars 
-(when (looking-back "* ")
-(beginning-of-line)) 
+;; don't leave stray stars or links
+(when 
+(or
+(looking-back "\\[") 
+(looking-back "* "))
+(beginning-of-line)
+) 
 ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
