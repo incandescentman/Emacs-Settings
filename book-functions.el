@@ -86,18 +86,18 @@
   (interactive)
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
-  (dired "~/b/writing-in-progress/proposal"))
+  (dired "~/b/proposal"))
 
 (defun book-mistakes-directory()
   (interactive)
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
-  (dired "~/b/writing-in-progress/12-mistakes"))
+  (dired "~/b/12-mistakes"))
 
 
 (defun book-load-current ()
   (interactive)
 (kill-buffer "playful.org") 
-(find-file "/Users/jay/b/writing-in-progress/proposal/12-mistakes-of-modern-love-outline.txt")
-(find-file "/Users/jay/b/writing-in-progress/proposal/outline-with-notes.txt")
+(find-file "/Users/jay/b/proposal/12-mistakes-of-modern-love-outline.txt")
+(find-file "/Users/jay/b/proposal/outline-with-notes.txt")
   )

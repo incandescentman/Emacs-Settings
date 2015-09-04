@@ -560,9 +560,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-return ()
   (interactive)
+
+;; don't leave stray stars 
+(when (looking-back "* ")
+(beginning-of-line)) 
+;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
-                (newline)))
+                (newline))) 
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and org-return-follows-link

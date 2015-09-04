@@ -2644,7 +2644,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "R" 'helm-projectile-recentf)
 ;; (define-hyper-key "r" 'helm-mini)
 ;; (define-hyper-key "r" 'recentf-open-files-compl)
-(define-hyper-key "r" 'fasd-find-file)
+(define-hyper-key "r" 'projectile-find-file)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
@@ -4381,9 +4381,9 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   #+END_SRC
 
 
-* save every 10 seconds? 
+* save every 30 seconds? 
 
   #+BEGIN_SRC emacs-lisp
-(run-at-time nil 10 'jay/save-some-buffers) 
+(run-at-time nil 30 'jay/save-some-buffers) 
   #+END_SRC
 but how to make it stop saying "no files need saving"?
