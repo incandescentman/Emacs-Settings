@@ -812,31 +812,20 @@ password: %s" userid password))
 (setq-default save-place t)
 (setq save-place-file "/Users/jay/emacs/.savefile/.places") 
 
-(define-minor-mode embolden-next-word
+(define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
   nil
-  :lighter " EMBOLDEN"
+  :lighter " don't abbreviate"
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "SPC") (lambda ()
                       (interactive)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "*"))
-                      (insert "* ")
-                      (embolden-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "*"))
-                    (insert "*. ")
-                    (embolden-next-word -1)))
+(insert "/ ")
+))
             map)
-  (if embolden-next-word
+  (if insert-slash-no-abbrev
       (set-register 'p (point))
     (set-register 'p nil)))
-
-(global-set-key "\C-o" 'embolden-next-word)
+;; (global-set-key "/" 'insert-slash-no-abbrev)
 
 (defun org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."

@@ -99,5 +99,5 @@
   (interactive)
 (kill-buffer "playful.org") 
 (find-file "/Users/jay/b/proposal/12-mistakes-of-modern-love-outline.txt")
-(find-file "/Users/jay/b/proposal/outline-with-notes.txt")
+(find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
   )

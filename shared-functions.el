@@ -414,7 +414,7 @@ Subject: %^{Subject}
 	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
@@ -1891,6 +1891,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m ma" 'add-global-abbrev) 
 
 
+(define-hyper-key "m cf" 'customize-face) 
+
 (define-hyper-key "m h" 'org-export-dispatch)
 
 
@@ -1932,6 +1934,9 @@ Including indent-buffer, which should not be called automatically on save."
                 ))
 
 (define-hyper-key "m kb" 'keybinding-read-and-insert)
+(define-hyper-key "m mk" 'keybinding-read-and-insert)
+
+(define-key key-minor-mode-map (kbd "<C-M-return>") 'org-insert-subheading)
 
 (defun my-isearch-word-at-point ()
   (interactive)
@@ -2952,7 +2957,7 @@ Single Capitals as you type."
       (propertize tag
                   (quote face)
                   (quote
-                   (:foreground "blue")))))))
+                   (:foreground "pink")))))))
 
 (setq notmuch-search-oldest-first nil)
 (defadvice notmuch-mua-reply (around notmuch-fix-sender)
@@ -3132,3 +3137,9 @@ If FILE already exists, signal an error."
 (setq olivetti-body-width 120)
 
 (run-at-time nil 30 'jay/save-some-buffers) 
+
+(defun load-config ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org"))
+
+(define-key key-minor-mode-map (kbd "M-p") 'load-config)

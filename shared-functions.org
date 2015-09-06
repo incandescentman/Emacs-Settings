@@ -683,7 +683,7 @@ Subject: %^{Subject}
 	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-	("s" "storytelling and writing" entry (file "~/Dropbox/writing/notationaldata/writing-teacher/teaching-writing-and-storytelling.txt")
+	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
@@ -2694,6 +2694,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m ma" 'add-global-abbrev) 
 
 
+(define-hyper-key "m cf" 'customize-face) 
+
 (define-hyper-key "m h" 'org-export-dispatch)
 
 
@@ -2735,6 +2737,9 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
                 ))
 
 (define-hyper-key "m kb" 'keybinding-read-and-insert)
+(define-hyper-key "m mk" 'keybinding-read-and-insert)
+
+(define-key key-minor-mode-map (kbd "<C-M-return>") 'org-insert-subheading)
 
 #+END_SRC
 
@@ -4147,7 +4152,7 @@ Single Capitals as you type."
       (propertize tag
                   (quote face)
                   (quote
-                   (:foreground "blue")))))))
+                   (:foreground "pink")))))))
 
 (setq notmuch-search-oldest-first nil)
 (defadvice notmuch-mua-reply (around notmuch-fix-sender)
@@ -4388,3 +4393,27 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (run-at-time nil 30 'jay/save-some-buffers) 
   #+END_SRC
 but how to make it stop saying "no files need saving"?
+
+* unbound keys
+;; (require 'unbound)
+
+#+BEGIN_SRC emacs-lisp
+(defun load-config ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org"))
+
+(define-key key-minor-mode-map (kbd "M-p") 'load-config)
+#+END_SRC
+
+
+M-p
+C-x y
+C-x x
+C-x w
+C-x t
+C-x j
+C-c z
+C-c x
+C-c q
+
+

@@ -1482,8 +1482,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ***** embolden next word
 
-   #+BEGIN_SRC emacs-lisp
-
+   #+BEGIN_EXAMPLE emacs-lisp 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
   nil
@@ -1508,8 +1507,31 @@ The last line sets the path to where saveplace stores your position data. Change
       (set-register 'p (point))
     (set-register 'p nil)))
 
-(global-set-key "\C-o" 'embolden-next-word)
-   #+END_SRC
+(global-set-key "\C-o" 'embolden-next-word) 
+   #+END_EXAMPLE
+
+***** no-abbrev-slash
+Doesn't work.
+
+      #+BEGIN_SRC emacs-lisp
+(define-minor-mode insert-slash-no-abbrev
+    "Make the next word you type bold."
+  nil
+  :lighter " don't abbreviate"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+(insert "/ ")
+))
+            map)
+  (if insert-slash-no-abbrev
+      (set-register 'p (point))
+    (set-register 'p nil)))
+;; (global-set-key "/" 'insert-slash-no-abbrev)
+
+      #+END_SRC
+
+
 
 ***** ideas
 C-d on an empty line in the shell terminates the process.
