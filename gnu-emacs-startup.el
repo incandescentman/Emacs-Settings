@@ -1127,7 +1127,7 @@ subsequent sends. could save them all in a logbook?
 (smart-punctuation ".")
 (save-excursion
 (unless (looking-at "[ ]*$")
-(capitalize-unless-org-heading))
+(capitalize-word 1))
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)

@@ -1846,8 +1846,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (define-hyper-key "R" 'xsteve-ido-choose-from-recentf)
 ;; (define-hyper-key "R" 'helm-projectile-recentf)
 ;; (define-hyper-key "r" 'helm-mini)
-(define-hyper-key "R" 'recentf-open-files-compl)
-(define-hyper-key "r" 'projectile-find-file)
+(define-hyper-key "r" 'recentf-open-files-compl)
+(define-hyper-key "R" 'projectile-find-file)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
@@ -2088,6 +2088,7 @@ searches all buffers."
 
 ;; (load-theme 'leuven)
 ;; (incarnadine-cursor)
+(monaco-font)
 
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
