@@ -3004,7 +3004,7 @@ magit
 #+BEGIN_SRC emacs-lisp
 ;; (load-theme 'leuven)
 ;; (incarnadine-cursor)
-(monaco-font)
+;; (monaco-font)
 #+END_SRC
 
 * Tell isearch that curly apostrophes are the same as straight ones
@@ -4179,8 +4179,19 @@ Single Capitals as you type."
       (lambda ()
         "archive"
         (interactive)
-        (notmuch-show-tag (list "-flagged" "-inbox")))) 
-;; do I use this even?
+        (notmuch-show-tag (list "-flagged" "-inbox"))
+(notmuch-refresh-this-buffer))) 
+
+(define-key notmuch-show-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+)) 
+
+
+
 
 (define-key notmuch-search-mode-map "y"
       (lambda ()
@@ -4196,6 +4207,7 @@ Single Capitals as you type."
         (if (member "flagged" (notmuch-tree-get-tags))
             (notmuch-tree-tag (list "-flagged" "-inbox"))
           (notmuch-tree-tag (list "+flagged" "+inbox"))))) 
+
 
 (define-key notmuch-search-mode-map "S"
       (lambda ()

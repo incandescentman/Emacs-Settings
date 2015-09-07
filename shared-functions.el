@@ -2093,7 +2093,7 @@ searches all buffers."
 
 ;; (load-theme 'leuven)
 ;; (incarnadine-cursor)
-(monaco-font)
+;; (monaco-font)
 
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
