@@ -4402,7 +4402,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 * save every 30 seconds? 
 
   #+BEGIN_SRC emacs-lisp
-(run-at-time nil 30 'jay/save-some-buffers) 
+;; (run-at-time nil 30 'jay/save-some-buffers) 
   #+END_SRC
 but how to make it stop saying "no files need saving"?
 

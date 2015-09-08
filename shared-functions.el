@@ -2984,8 +2984,19 @@ Single Capitals as you type."
       (lambda ()
         "archive"
         (interactive)
-        (notmuch-show-tag (list "-flagged" "-inbox")))) 
-;; do I use this even?
+        (notmuch-show-tag (list "-flagged" "-inbox"))
+(notmuch-refresh-this-buffer))) 
+
+(define-key notmuch-show-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+)) 
+
+
+
 
 (define-key notmuch-search-mode-map "y"
       (lambda ()
@@ -3001,6 +3012,7 @@ Single Capitals as you type."
         (if (member "flagged" (notmuch-tree-get-tags))
             (notmuch-tree-tag (list "-flagged" "-inbox"))
           (notmuch-tree-tag (list "+flagged" "+inbox"))))) 
+
 
 (define-key notmuch-search-mode-map "S"
       (lambda ()
@@ -3136,7 +3148,7 @@ If FILE already exists, signal an error."
 
 (setq olivetti-body-width 120)
 
-(run-at-time nil 30 'jay/save-some-buffers) 
+;; (run-at-time nil 30 'jay/save-some-buffers) 
 
 (defun load-config ()
   (interactive)
