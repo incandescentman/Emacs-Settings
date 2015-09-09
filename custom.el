@@ -203,7 +203,7 @@
  '(org-export-time-stamp-file nil)
  '(org-export-with-clocks t)
  '(org-export-with-toc nil)
- '(org-extend-today-until 8)
+ '(org-extend-today-until 0)
  '(org-fontify-done-headline t)
  '(org-fontify-emphasized-text t)
  '(org-footnote-define-inline t)
