@@ -2947,6 +2947,7 @@ Single Capitals as you type."
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats
+
    (quote
     (("unread"
       (propertize tag
@@ -2958,6 +2959,15 @@ Single Capitals as you type."
                   (quote face)
                   (quote
                    (:foreground "pink")))))))
+
+(custom-set-faces
+
+'(notmuch-search-date ((t (:inherit default :height 1.2))))
+ '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
+ '(notmuch-search-subject ((t (:inherit default :height 1.2))))
+ '(notmuch-search-count ((t (:inherit default :height 0.1))))
+ '(notmuch-tag-face ((t (:foreground "OliveDrab1" :height 1)))) )
+
 
 (setq notmuch-search-oldest-first nil)
 (defadvice notmuch-mua-reply (around notmuch-fix-sender)
@@ -3080,6 +3090,7 @@ Single Capitals as you type."
 (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
 (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
