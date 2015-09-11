@@ -2097,7 +2097,6 @@ Oleh
                                nil t)
             (let* ((old-punct (match-string 2))
                    (was-after-punct (>= old-point (point))))
-              (message (format "was-after-space = %s" was-after-space))
               (replace-match "" nil t nil 1)
               (replace-match (or (when (and was-after-punct
                                             (not (string= old-punct "")))
