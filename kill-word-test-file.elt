@@ -5,3 +5,11 @@ Scenario: kill-word-correctly-and-capitalize
 Current output: As a dentist, I want to treat my patients with the same level of care I saw Dr. Rubinstein give his^. His practice is in Providence, Rhode Island, and provides a multitude of oral services to an affluent population. 
 
 Desired output: As a dentist, I want to treat my patients with the same level of care I saw Dr. Rubinstein give his ^. His practice is in Providence, Rhode Island, and provides a multitude of oral services to an affluent population. 
+
+
+Input: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. ^However, you can easily retrieve definitions
+Scenario: kill-word-correctly-and-capitalize x1
+Current output: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac.^, You can easily retrieve definitions
+Desired ouput: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. You can easily retrieve definitions
+Or if that's too complicated then this: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. ^, You can easily retrieve definitions
+
