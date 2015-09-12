@@ -1890,6 +1890,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (define-hyper-key "m ma" 'add-global-abbrev) 
 
+(define-hyper-key "m rr" 'replace-regexp) 
+
 
 (define-hyper-key "m cf" 'customize-face) 
 
@@ -3161,8 +3163,13 @@ If FILE already exists, signal an error."
 
 ;; (run-at-time nil 30 'jay/save-some-buffers) 
 
-(defun load-config ()
+(defun load-shared-functions ()
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org"))
 
-(define-key key-minor-mode-map (kbd "M-p") 'load-config)
+(defun load-gnu-startup ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
+
+(define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
