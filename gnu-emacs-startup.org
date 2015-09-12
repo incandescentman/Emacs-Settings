@@ -608,12 +608,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* "))
+(looking-back "* ")
+(looking-back "- ")
+)
 (beginning-of-line)
 ) 
 ;;  (expand-abbrev)
   (org-kill-line)
-  (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))

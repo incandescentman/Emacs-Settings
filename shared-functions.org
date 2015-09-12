@@ -2693,6 +2693,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-hyper-key "m ma" 'add-global-abbrev) 
 
+(define-hyper-key "m rr" 'replace-regexp) 
+
 
 (define-hyper-key "m cf" 'customize-face) 
 
@@ -3391,7 +3393,7 @@ subsequent sends."
 *** NOTE-TO-JAY Clarification
     I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
 
-** PLEASE-DEBUG erika-send-mail 
+** DONE erika-send-mail 
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -3418,7 +3420,7 @@ subsequent sends."
                         (org-element-property :contents-end headline)))))
           (TO "\"Erika Casriel\" <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <luke.haseloff@gmail.com") 
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>") 
           (SUBJECT (nth 4 (org-heading-components)))
           (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
           (continue nil)
@@ -3445,7 +3447,7 @@ subsequent sends."
 ))
 #+END_SRC
 
-*** PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE [#A] erika-send-email-styled
+*** DONE [#A] erika-send-email-styled
 Hi Rúdi,
 
 So I added this line: 
@@ -3481,9 +3483,9 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <sunjaydixit@gmail.com")
+          (TO "Erika Casriel <sunjaydixit@gmail.com>")
           (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <luke.haseloff@gmail.com")
+(BCC "Luke Haseloff <sunjaydixit@gmail.com>")
 (SUBJECT (nth 4 (org-heading-components)))
           (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
           (continue nil)
@@ -4424,11 +4426,16 @@ but how to make it stop saying "no files need saving"?
 ;; (require 'unbound)
 
 #+BEGIN_SRC emacs-lisp
-(defun load-config ()
+(defun load-shared-functions ()
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org"))
 
-(define-key key-minor-mode-map (kbd "M-p") 'load-config)
+(defun load-gnu-startup ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
+
+(define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
 #+END_SRC
 
 
