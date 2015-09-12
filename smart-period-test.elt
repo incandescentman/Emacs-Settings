@@ -1,5 +1,5 @@
-Input: You might have a conscious intention to eat healthier, but you forget ^ 
-Output: You might have a conscious intention to eat healthier, but you forget. ^ 
+Input: You might have a conscious intention to eat healthier, but you forget ^
+Output: You might have a conscious intention to eat healthier, but you forget. ^
 
 Input: You might have a conscious intention to eat healthier, but you forget^.
 Output: You might have a conscious intention to eat healthier, but you forget.^
@@ -8,7 +8,7 @@ Input: You might have a conscious intention to eat healthier, but you forget ^.
 Output: You might have a conscious intention to eat healthier, but you forget. ^
 
 Input: You might have a conscious intention to eat healthier, but you forget ^?
-Output: you might have a conscious intention to eat healthier, but you forget. ^ 
+Output: You might have a conscious intention to eat healthier, but you forget. ^
 
 Input: You might have a conscious intention to eat healthier^, but you forget.
 Output: You might have a conscious intention to eat healthier.^ But you forget.
@@ -39,14 +39,4 @@ Output: .............................................^
 
 Input: A...^
 Output: A.............................................^
-
-
-input: COMMUNITY OUTREACH AND HOSPITAL EXTERNSHIPS. I welcome the prospect of becoming engaged with the local community—working in local hospitals and clinics..
-
-
-Input: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. ^However, you can easily retrieve definitions
-Scenario: kill-word-correctly-and-capitalize x1
-Current output: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac.^, You can easily retrieve definitions
-Desired ouput: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. You can easily retrieve definitions
-Or if that's too complicated then this: He also encourages you to use an older dictionary, Webster's 1913, and describes how to install it on Mac. ^, You can easily retrieve definitions
 

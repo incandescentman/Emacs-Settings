@@ -3483,7 +3483,7 @@ subsequent sends."
           (TO "Erika Casriel <sunjaydixit@gmail.com")
           (CC (org-entry-get (point) "CC" t))
 (BCC "Luke Haseloff <luke.haseloff@gmail.com")
-(Subject (nth 4 (org-heading-components)))
+(SUBJECT (nth 4 (org-heading-components)))
           (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
           (continue nil)
           (switch-function nil)
@@ -3521,8 +3521,8 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
-))
 (message-send-and-exit)
+))
 )
 #+END_SRC
 

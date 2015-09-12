@@ -11,7 +11,7 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** TODO [#A] inserting smart-punctuation when there's already a space between the word and the point 
+** PLEASE-TEST [#A] inserting smart-punctuation when there's already a space between the word and the point 
 Say I want to place a smart-period...
 
 Input: You might have a conscious intention to eat healthier, but you forget ^
