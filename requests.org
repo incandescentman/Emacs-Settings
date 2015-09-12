@@ -11,18 +11,6 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** DONE [#A] inserting smart-punctuation when there's already a space between the word and the point 
-Say I want to place a smart-period...
-
-Input: You might have a conscious intention to eat healthier, but you forget ^
-Current output: You might have a conscious intention to eat healthier, but you forget.^ 
-Desired output: You might have a conscious intention to eat healthier, but you forget. ^
-
-But this behavior should stay the same: 
-Input: You might have a conscious intention to eat healthier, but you forget^
-Output: You might have a conscious intention to eat healthier, but you forget.^ 
-
-** DONE [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
 ** TODO [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subtree]]
 ** TODO other smart-punctuation behaviors below 
 ** TODO [#C] [[*kill-clause][kill-clause]] etc.
@@ -270,16 +258,9 @@ Desired output:
 #+END_EXAMPLE
 
 *** NOTE-TO-RÚDI Question about spaces?
-It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
+It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag. 
 
-
-* autolist
-[[https://github.com/calvinwyoung/org-autolist][calvinwyoung/org-autolist]]
-
-** 
-*** 
-
-*** capitalize after ellipsis and line breaks
+*** TODO capitalize after ellipsis and line breaks
 
 e.g. 
 
@@ -291,7 +272,7 @@ But should be autocapitalized.
 
 
 
-*** an edge case for kill-word-correctly-and-capitalize 
+*** TODO an edge case for kill-word-correctly-and-capitalize 
 
 Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
 
