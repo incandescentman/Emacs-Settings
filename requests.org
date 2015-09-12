@@ -11,7 +11,7 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** PLEASE-TEST [#A] inserting smart-punctuation when there's already a space between the word and the point 
+** DONE [#A] inserting smart-punctuation when there's already a space between the word and the point 
 Say I want to place a smart-period...
 
 Input: You might have a conscious intention to eat healthier, but you forget ^
@@ -22,8 +22,8 @@ But this behavior should stay the same:
 Input: You might have a conscious intention to eat healthier, but you forget^
 Output: You might have a conscious intention to eat healthier, but you forget.^ 
 
-** TODO [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
-** TODO [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+** DONE [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
+** TODO [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subtree]]
 ** TODO other smart-punctuation behaviors below 
 ** TODO [#C] [[*kill-clause][kill-clause]] etc.
 ** TODO [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
@@ -70,7 +70,7 @@ in these cases, the first letter of the new sentence on
 ^ the new line SHOULD be capitalized. Can we fix? Thanks! 
 
 *** TODO smart-punctuation behaviors 
-**** TODO [#A] smart-punctuation when there's already a misplaced punctuation mark?
+**** DONE [#A] smart-punctuation when there's already a misplaced punctuation mark?
 Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
 
 Example:
@@ -84,7 +84,7 @@ Current behavior: no effect.
 Desired behavior: 
 : You might have a conscious intention to eat healthier, but you forget.
 
-**** TESTING [#A] smart-punctuation when there's already a correctly placed punctuation mark
+**** DONE [#A] smart-punctuation when there's already a correctly placed punctuation mark
 Example:
 
 : You might have a conscious intention to eat healthier, but you forget.
