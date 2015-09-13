@@ -2452,3 +2452,34 @@ Output: You might have a conscious intention to eat healthier, but you forget.^
   :ARCHIVE_CATEGORY: requests
   :ARCHIVE_TODO: DONE
   :END:
+
+* TODO change smart-return behavior for headings
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-12 Sat 20:56
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+Make org-return insert line break, not separate headings from stars
+
+In the following example, ignore the commas. I just put them in so org doesn't think these are actual headings. ^ is the cursor.
+
+Input:
+,** ^The Minister's Daughter
+
+Scenario: I hit <return>
+
+Current output: 
+#+BEGIN_EXAMPLE 
+,** 
+,^The minister's Daughter
+
+#+END_EXAMPLE 
+
+Desired output: 
+#+BEGIN_EXAMPLE 
+,
+,** ^The Minister's Daughter 
+#+END_EXAMPLE 
+
