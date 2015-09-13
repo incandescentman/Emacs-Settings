@@ -3390,9 +3390,6 @@ subsequent sends."
 ))
 #+END_SRC
 
-*** NOTE-TO-JAY Clarification
-    I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
-
 ** DONE erika-send-mail 
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email ()

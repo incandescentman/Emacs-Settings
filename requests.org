@@ -12,6 +12,7 @@
 If you could tackle the requests in the following order, that would be amazing: 
 
 ** PLEASE-CLARIFY [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+    I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
 ** PLEASE-TEST other smart-punctuation behaviors below 
    I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 ** TODO [#C] [[*kill-clause][kill-clause]] etc.
