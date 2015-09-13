@@ -2424,3 +2424,62 @@ to:
 - [ ] kill-clause.
 
 Thanks! 
+
+* DONE [#A] inserting smart-punctuation when there's already a space between the word and the point 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-12 Sat 19:08
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: priorities
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :END:
+Say I want to place a smart-period...
+
+Input: You might have a conscious intention to eat healthier, but you forget ^
+Current output: You might have a conscious intention to eat healthier, but you forget.^ 
+Desired output: You might have a conscious intention to eat healthier, but you forget. ^
+
+But this behavior should stay the same: 
+Input: You might have a conscious intention to eat healthier, but you forget^
+Output: You might have a conscious intention to eat healthier, but you forget.^ 
+
+
+* DONE [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-12 Sat 19:08
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: priorities
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :END:
+
+* TODO change smart-return behavior for headings
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-12 Sat 20:56
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+Make org-return insert line break, not separate headings from stars
+
+In the following example, ignore the commas. I just put them in so org doesn't think these are actual headings. ^ is the cursor.
+
+Input:
+,** ^The Minister's Daughter
+
+Scenario: I hit <return>
+
+Current output: 
+#+BEGIN_EXAMPLE 
+,** 
+,^The minister's Daughter
+
+#+END_EXAMPLE 
+
+Desired output: 
+#+BEGIN_EXAMPLE 
+,
+,** ^The Minister's Daughter 
+#+END_EXAMPLE 
+

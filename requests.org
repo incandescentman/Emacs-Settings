@@ -11,51 +11,14 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** DONE [#A] inserting smart-punctuation when there's already a space between the word and the point 
-Say I want to place a smart-period...
-
-Input: You might have a conscious intention to eat healthier, but you forget ^
-Current output: You might have a conscious intention to eat healthier, but you forget.^ 
-Desired output: You might have a conscious intention to eat healthier, but you forget. ^
-
-But this behavior should stay the same: 
-Input: You might have a conscious intention to eat healthier, but you forget^
-Output: You might have a conscious intention to eat healthier, but you forget.^ 
-
-** DONE [#A] [[file:shared-functions.org::*erika-send-email-styled][erika-send-email-styled]] (I changed my setup, which broke this function. See my note in the other file)
 ** PLEASE-CLARIFY [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
 ** PLEASE-TEST other smart-punctuation behaviors below 
    I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
-
 ** TODO [#C] [[*kill-clause][kill-clause]] etc.
 ** TODO [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 
 * open requests 
 ** Emacs 
-
-*** TODO change smart-return behavior for headings
-Make org-return insert line break, not separate headings from stars
-
-In the following example, ignore the commas. I just put them in so org doesn't think these are actual headings. ^ is the cursor.
-
-Input:
-,** ^The Minister's Daughter
-
-Scenario: I hit <return>
-
-Current output: 
-#+BEGIN_EXAMPLE 
-,** 
-,^The minister's Daughter
-
-#+END_EXAMPLE 
-
-Desired output: 
-#+BEGIN_EXAMPLE 
-,
-,** ^The Minister's Daughter 
-#+END_EXAMPLE 
-
 *** TODO no autocapitalize checklist items
 - [ ] This
 - [ ] That
@@ -63,7 +26,7 @@ Desired output:
 
 These get autocapitalized... can we disable?
 
-*** TODO capitalize after ellipsis and line break
+*** TODO capitalize first character of new line after ellipsis
 In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
 
 However, sometimes an ellipsis occurs at the end of a paragraph...
@@ -272,16 +235,9 @@ Desired output:
 #+END_EXAMPLE
 
 *** NOTE-TO-RÚDI Question about spaces?
-It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
+It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag. 
 
-
-* autolist
-[[https://github.com/calvinwyoung/org-autolist][calvinwyoung/org-autolist]]
-
-** 
-*** 
-
-*** capitalize after ellipsis and line breaks
+*** TODO capitalize after ellipsis and line breaks
 
 e.g. 
 
@@ -293,7 +249,7 @@ But should be autocapitalized.
 
 
 
-*** an edge case for kill-word-correctly-and-capitalize 
+*** TODO an edge case for kill-word-correctly-and-capitalize 
 
 Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
 
