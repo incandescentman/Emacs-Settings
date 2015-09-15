@@ -8,6 +8,9 @@
 
 
 
+* TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
+See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
+
 * DONE [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
    I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
 
