@@ -1,6 +1,6 @@
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
-#+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
+#+TODO: TODO PLEASE-CLARIFY PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE: 
@@ -11,8 +11,10 @@
 * NOTE-TO-RÚDI priorities
 If you could tackle the requests in the following order, that would be amazing: 
 
-** TODO [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subtree]]
-** TODO other smart-punctuation behaviors below 
+** PLEASE-CLARIFY [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+    I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
+** PLEASE-TEST other smart-punctuation behaviors below 
+   I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 ** TODO [#C] [[*kill-clause][kill-clause]] etc.
 ** TODO [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 
