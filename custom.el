@@ -146,9 +146,7 @@
      ("\\.\\(?:jp?g\\|png\\)\\'" "display"
       (file)))))
  '(org-M-RET-may-split-line (quote ((item . t))))
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/writing/notationaldata/accountability.org")))
+ '(org-agenda-files nil)
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-prefix-format
    (quote
@@ -338,7 +336,11 @@
  '(rm-blacklist
    (quote
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
- '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
+ '(safe-local-variable-values
+   (quote
+    ((buffer-file-coding-system . utf-8-unix)
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t))))
  '(send-mail-function (quote sendmail-send-it))
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)
@@ -381,7 +383,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-'(org-headline-done ((t (:strike-through t))))
+ '(notmuch-search-count ((t (:inherit default :height 0.1))))
+ '(notmuch-search-date ((t (:inherit default :height 1.2))))
+ '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
+ '(notmuch-search-subject ((t (:inherit default :height 1.2))))
+ '(notmuch-tag-face ((t (:foreground "OliveDrab1" :height 1))))
+ '(org-ellipsis ((t (:foreground "violet" :underline t))))
+ '(org-headline-done ((t (:strike-through t))))
  '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))

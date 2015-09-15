@@ -257,3 +257,13 @@ Scenario: kill-word-correctly-and-capitalize
 Current output: The 16/8 doesn't appeal to me as much. also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
 
 Desired output: The 16/8 doesn't appeal to me as much. Also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+
+
+*** TODO a change to endless downcase 
+In [[file:shared-functions.org::*Intelligently%20change%20punctuation%20of%20sentences%20when%20I%20change%20the%20capitalization][endless/downcase]], don't convert "..." to "..,"
+
+Input: The only thing we have to fear... ^Is fear itself.
+Scenario: invoke ~endless/downcase~
+Current output: The only thing we have to fear.., is^ fear itself. 
+Desired output: The only thing we have to fear... is^ fear itself. 
+

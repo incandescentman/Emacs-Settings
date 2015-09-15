@@ -3173,3 +3173,6 @@ If FILE already exists, signal an error."
 
 (define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
+
+(setq org-ellipsis " ◦◦◦ ") 
+; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))

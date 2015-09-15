@@ -4447,3 +4447,19 @@ C-c x
 C-c q
 
 
+
+* org-agenda skip keywords
+
+  #+BEGIN_EXAMPLE emacs-lisp
+(setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS"))) 
+
+
+  #+END_EXAMPLE 
+
+* org-ellipsis
+
+  #+BEGIN_SRC emacs-lisp
+(setq org-ellipsis " ◦◦◦ ") 
+; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
+
+  #+END_SRC
