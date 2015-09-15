@@ -1,15 +1,7 @@
 * the error message I get
-progn: Search failed: "Now rate how willing you were to have these sensations/feelings without acting on them, i.e. trying to manage them, get rid of them, suppress them, run from them (0 to 8):"
-
+Search failed: "Now rate how willing you were to have these sensations/feelings without acting on them, i.e. trying to manage them, get rid of them, suppress them, run from them (0 to 8):"
 
 * how to induce the error: 
-1. Place a comma after "run from them" 
+In the heading below, place a comma after "run from them" 
 
 * Now rate how willing you were to have these sensations/feelings without acting on them, i.e. trying to manage them, get rid of them, suppress them, run from them (0 to 8):
-
-
-
-Now try to place a period after the 7 in the following headline: 
-
-* opposing viewpoints - Jay and Eric discuss whether Shakespeare should be taught before or after grade 7
-Eric Pan's advice to students: read the books that inspire you. Any. 
