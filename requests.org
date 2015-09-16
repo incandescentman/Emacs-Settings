@@ -238,3 +238,14 @@ Input: The only thing we have to fear... ^Is fear itself.
 Scenario: invoke ~endless/downcase~
 Current output: The only thing we have to fear.., is^ fear itself. 
 Desired output: The only thing we have to fear... is^ fear itself.
+
+* TODO pasteboard-paste-without-smart-quotes 
+I'm finding that pasteboard-paste-without-smart-quotes inserts rogue spaces in the pasted contents. Doesn't happen every time... but it happens often. Can you reproduce / debug? Thank you!!
+
+* TODO smart comma
+When point is on a period, exclamation point, or question mark and it hit "," then next word should also be downcased. Basically, if I'm changing a period to a comma, next word should be downcased.
+
+Input: I'd like to stay^. But I'm late.
+Scenario: Point is on the period and I type a comma (",") 
+Current output: I'd like to stay,^ But I'm late. 
+Desired output: I'd like to stay,^ but I'm late. 
