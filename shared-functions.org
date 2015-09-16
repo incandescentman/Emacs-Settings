@@ -346,7 +346,7 @@ Turn off fill mode, which adds random line breaks in my text files:
  (setq org-export-with-clocks t)
  (setq org-export-with-drawers t)
  (setq org-export-with-section-numbers nil) 
-(setq org-export-with-planning t)
+(setq org-export-with-planning nil)
 (setq org-export-allow-bind-keywords t)
 ;; (setq org-export-blocks-witheld (quote (hidden)) t) 
 (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
@@ -553,17 +553,10 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "TODO" "STARTED" "|" "DONE! :-)")
         (sequence "MISSED" "|" "DONE! :-)")
         (sequence "COMMITTED" "RESULTS" "|")
-        (sequence "MISSED" "|" "DONE! :-)") 
-(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "WEEKS" "WEEKLY" "DAILY" "GOALS" "SOMEDAY" "|") 
-        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
+(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
-        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
-        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
-        (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)")
         (sequence "STRATEGY" "|")
-(sequence "DONE" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
@@ -3446,17 +3439,7 @@ subsequent sends."
 ))
 #+END_SRC
 
-*** DONE [#A] erika-send-email-styled
-Hi Rúdi,
-
-So I added this line: 
-
-(setq message-send-hook (quote (org-mime-htmlize)))
-
-...because I'd like to call org-mime-htmlize automatically every time I send an email. However, adding this line breaks my other functions, including erika-send-email-styled and new-email-from-subtree. I tried to debug it, without much luck. Can you investigate? 
-
-By the way, the version of org-mime that I'm using is the one that comes with org-mode in the contrib section. I'll attach the file. Thanks! 
-
+*** erika-send-email-styled
 
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email-styled ()
@@ -3482,9 +3465,9 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <sunjaydixit@gmail.com>")
+          (TO "Erika Casriel <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <sunjaydixit@gmail.com>")
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
 (SUBJECT (nth 4 (org-heading-components)))
           (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
           (continue nil)
@@ -3519,9 +3502,13 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
                     (goto-char (point-min))
-                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+
+(org-mime-change-class-style "off" "list-style-type: none;")
+                    (goto-char (point-min)) 
+
+                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold")
                     (goto-char (point-min))
-                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
 (message-send-and-exit)
 ))
@@ -4454,7 +4441,7 @@ C-c q
 * org-agenda skip keywords
 
   #+BEGIN_EXAMPLE emacs-lisp
-(setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS"))) 
+;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS"))) 
 
 
   #+END_EXAMPLE 
