@@ -2524,3 +2524,16 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
    I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
 
 
+
+* DONE [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-16 Wed 12:09
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :END:
+   I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
+
+** NOTE-TO-RÚDI fixed
+Not sure what changed, but I'm confirming that this is working now. 
+

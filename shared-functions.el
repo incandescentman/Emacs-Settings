@@ -315,7 +315,8 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "MISSED" "STARTED" "|" "DONE! :-)")
+        (sequence "TODO" "STARTED" "|" "DONE! :-)")
+        (sequence "MISSED" "|" "DONE! :-)")
         (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")

@@ -11,11 +11,8 @@
 * TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
 See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
 
-* DONE [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
-   I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
-
-** NOTE-TO-RÚDI fixed
-Not sure what changed, but I'm confirming that this is working now. 
+* TODO how include plain-text URLs and image links in org-mime? 
+This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-urls-and-image-links-in-org-mime][org export - how include plain-text URLs and image links in org-mime? - Emacs Stack Exchange]] 
 
 * PLEASE-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
