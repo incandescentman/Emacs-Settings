@@ -2483,3 +2483,57 @@ Desired output:
 ,** ^The Minister's Daughter 
 #+END_EXAMPLE 
 
+
+* TODO smart-punctuation behaviors 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-15 Tue 15:42
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_OLPATH: open requests/Emacs
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+** DONE [#A] smart-punctuation when there's already a misplaced punctuation mark?
+Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
+
+Example:
+
+: You might have a conscious intention to eat healthier , but you forget.
+
+Say the point is on the comma. 
+
+Current behavior: no effect.
+
+Desired behavior: 
+: You might have a conscious intention to eat healthier, but you forget.
+
+** DONE [#A] smart-punctuation when there's already a correctly placed punctuation mark
+Example:
+
+: You might have a conscious intention to eat healthier, but you forget.
+
+Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma. I'd like to replicate this behavior---hitting comma gives consistent behavior regardless of whether there is an existing comma or not. 
+
+Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
+
+*** NOTE-TO-JAY Test files
+
+    I added some test files: [[file:smart-period-test.elt][smart-period-test.elt]] and [[file:smart-comma-test.elt][smart-comma-test.elt]] with several examples of the use of these functions (the other smart punctuation marks should be similar). Please review them.
+
+** NOTE-TO-JAY Try it now
+
+   I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
+
+
+
+* DONE [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-09-16 Wed 12:09
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: DONE
+  :END:
+   I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
+
+** NOTE-TO-RÚDI fixed
+Not sure what changed, but I'm confirming that this is working now. 
+

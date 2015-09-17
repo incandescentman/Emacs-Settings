@@ -315,16 +315,14 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "MISSED" "STARTED" "|" "DONE! :-)")
-        (sequence "DELEGATE" "DELEGATED" "|" "DONE! :-)")
+        (sequence "TODO" "STARTED" "|" "DONE! :-)")
+        (sequence "MISSED" "|" "DONE! :-)")
+        (sequence "COMMITTED" "RESULTS" "|")
+        (sequence "MISSED" "|" "DONE! :-)") 
+(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "WEEKS" "WEEKLY" "DAILY" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
-        (sequence "SOMEDAY/MAYBE" "|" "DONE! :-)")
-        (sequence "MAYBE" "|" "MAYBE NOT" "DONE! :-)")
-        (sequence "NEXT" "|" "DONE! :-)")
-        (sequence "DID NOT DO :-/" "STARTED" "|" "DONE! :-)")
         (sequence "STRATEGY" "|")
-(sequence "DONE" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "|" "DONE! :-)")
         ))
@@ -2457,9 +2455,9 @@ subsequent sends."
                        (buffer-substring
                         (org-element-property :contents-begin headline)
                         (org-element-property :contents-end headline)))))
-          (TO "Erika Casriel <sunjaydixit@gmail.com>")
+          (TO "Erika Casriel <erika.casriel@comcast.net>")
           (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <sunjaydixit@gmail.com>")
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
 (SUBJECT (nth 4 (org-heading-components)))
           (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
           (continue nil)
@@ -2494,9 +2492,9 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
                     (goto-char (point-min))
-                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold")
                     (goto-char (point-min))
-                    (org-mime-change-class-style "todo DONE" "color:green;font-weight:bold"))
+                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
 (message-send-and-exit)
 ))
@@ -3173,3 +3171,6 @@ If FILE already exists, signal an error."
 
 (define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
+
+(setq org-ellipsis " ◦◦◦ ") 
+; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))

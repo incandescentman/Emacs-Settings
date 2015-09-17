@@ -5,7 +5,7 @@ Input: ^The second test case: a sentence with a colon.
 Output: ^A sentence with a colon.
 
 Input: The second test case^: a sentence with a colon.
-Output: The second test case^.
+Output: The second test case ^a sentence with a colon.
 
 Input: The second test case:^ a sentence with a colon.
 Output: The second test case^.

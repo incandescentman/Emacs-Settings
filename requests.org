@@ -8,26 +8,26 @@
 
 
 
-* NOTE-TO-RÚDI priorities
-If you could tackle the requests in the following order, that would be amazing: 
+* TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
+See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
 
-** PLEASE-CLARIFY [#B] [[file:shared-functions.org::*new-email-from-subtree][new-email-from-subree]]
-    I can't seem to reproduce the problem. It seems to work well for me. What is the error/undesired behaviour you're getting?
-** PLEASE-TEST other smart-punctuation behaviors below 
-   I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
-** TODO [#C] [[*kill-clause][kill-clause]] etc.
-** TODO [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+* TODO how include plain-text URLs and image links in org-mime? 
+This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-urls-and-image-links-in-org-mime][org export - how include plain-text URLs and image links in org-mime? - Emacs Stack Exchange]] 
 
-* open requests 
-** Emacs 
-*** TODO no autocapitalize checklist items
+* PLEASE-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
+
+** NOTE-TO-RÚDI still getting the error
+I still get an error when I follow the directions [[file:smart-punctuation-error.org::*how%20to%20induce%20the%20error:][here]]. It's when I try to place a comma in the heading at the bottom of the file. Can you try doing this and tell me if you can reproduce the error? Thanks! 
+
+* TODO don't autocapitalize checklist items
 - [ ] This
 - [ ] That
 - [ ] And this 
 
-These get autocapitalized... can we disable?
+These get autocapitalized... can we disable that?
 
-*** TODO capitalize first character of new line after ellipsis
+* TODO capitalize first character of new line after ellipsis
 In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
 
 However, sometimes an ellipsis occurs at the end of a paragraph...
@@ -35,41 +35,8 @@ However, sometimes an ellipsis occurs at the end of a paragraph...
 in these cases, the first letter of the new sentence on 
 ^ the new line SHOULD be capitalized. Can we fix? Thanks! 
 
-*** TODO smart-punctuation behaviors 
-**** DONE [#A] smart-punctuation when there's already a misplaced punctuation mark?
-Can we adjust the behavior of smart-punctuation somewhat for the edge case of dealing with a sentence that already has a misplaced punctuation mark (i.e. there's a space between the word and the punctuation mark.
-
-Example:
-
-: You might have a conscious intention to eat healthier , but you forget.
-
-Say the point is on the comma. 
-
-Current behavior: no effect.
-
-Desired behavior: 
-: You might have a conscious intention to eat healthier, but you forget.
-
-**** DONE [#A] smart-punctuation when there's already a correctly placed punctuation mark
-Example:
-
-: You might have a conscious intention to eat healthier, but you forget.
-
-Say the point is on the comma and I hit comma. Current behavior is to do nothing and keep the point on the comma. But this is counterintuitive, because if there is NO comma and I hit comma, it gives me a comma, my point is placed on the space AFTER the comma. I'd like to replicate this behavior---hitting comma gives consistent behavior regardless of whether there is an existing comma or not. 
-
-Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit one of those punctuation marks, the point should be placed AFTER the punctuation mark, not stay on it. Thanks!! 
-
-***** NOTE-TO-JAY Test files
-
-      I added some test files: [[file:smart-period-test.elt][smart-period-test.elt]] and [[file:smart-comma-test.elt][smart-comma-test.elt]] with several examples of the use of these functions (the other smart punctuation marks should be similar). Please review them.
-
-**** NOTE-TO-JAY Try it now
-
-     I refactored ~smart-punctuation~, and now it passes all test cases for period, comma, and colon, which I also added a test file for. Please check if it is working as intended and, otherwise, provide the test cases where it is not.
-
-*** kill-clause
-**** NOTE-TO-JAY Questions
-
+* TODO kill-clause
+** NOTE-TO-JAY Questions 
      Regarding ~pasteboard-cut~, I think it's rather straightforward. Please give it a go.
 
      As for ~kill-line~, there's something I should clarify: this is a builtin command (comes with Emacs), so it's not something I can easily change. Except that Emacs Lisp has a nice little functionality called "advicing", which allows dynamically adding behaviour to functions without having access to their code. I could do this to ~kill-line~. However, this is usually not recommended, since it could mess up other functionalities that might depend on the default ~kill-line~ implementation. Anyway, since you have the ~my/kill-line-dwim~ function, isn't that the one you use?
@@ -108,7 +75,7 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
 
      Correct?
 
-**** NOTE-TO-RÚDI Answers for kill-clause below.
+** NOTE-TO-RÚDI Answers for kill-clause below.
 
 This is a test sentence^, nothing to see here. And then another.
 
@@ -150,7 +117,7 @@ This is a test sentence, nothing to see here.^<EOB>
 
 : Correct! Thanks for thoroughly thinking through these cases, much appreciated! 
 
-**** NOTE-TO-RÚDI Comments about my edits to kill-clause-test-file.el 
+** NOTE-TO-RÚDI Comments about my edits to kill-clause-test-file.el 
 What a brilliant approach, to create the test file! Here are some notes about my edits to the file.
 
 Kill-clause should only kill one clause, which I think means it should only ever kill one comma, not two. So for the example below, it should leave the second comma in. I edited the desired output in kill-clause-test-file.el.
@@ -191,10 +158,10 @@ Output: Let's not forget parenthesis^!
 
 Thanks! 
 
-**** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
+** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
 Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
 
-*** TODO [#C] create an auto-capitalization-predicate-exceptions-list?
+* TODO [#C] create an auto-capitalization-predicate-exceptions-list?
 I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
 
 See my existing code: 
@@ -213,10 +180,10 @@ This works. However, I'd like to be able to keep this list in a plain text forma
 
 Thanks!
 
-*** TODO [#C] a tweak to my/kill-sentence-dwim 
+* TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 ** 
-*** TESTING [#B] a smart-space exception for org-mode tags
+* TESTING [#B] a smart-space exception for org-mode tags
 
 Example:
 #+BEGIN_EXAMPLE
@@ -238,7 +205,7 @@ Desired output:
 *** NOTE-TO-RÚDI Question about spaces?
 It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag. 
 
-*** TODO capitalize after ellipsis and line breaks
+* TODO capitalize after ellipsis and line breaks
 
 e.g. 
 
@@ -250,7 +217,7 @@ But should be autocapitalized.
 
 
 
-*** TODO an edge case for kill-word-correctly-and-capitalize 
+* TODO an edge case for kill-word-correctly-and-capitalize 
 
 Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
 
@@ -259,3 +226,23 @@ Scenario: kill-word-correctly-and-capitalize
 Current output: The 16/8 doesn't appeal to me as much. also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
 
 Desired output: The 16/8 doesn't appeal to me as much. Also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+
+
+* TODO a change to endless downcase 
+In [[file:shared-functions.org::*Intelligently%20change%20punctuation%20of%20sentences%20when%20I%20change%20the%20capitalization][endless/downcase]], don't convert "..." to "..,"
+
+Input: The only thing we have to fear... ^Is fear itself.
+Scenario: invoke ~endless/downcase~
+Current output: The only thing we have to fear.., is^ fear itself. 
+Desired output: The only thing we have to fear... is^ fear itself.
+
+* TODO pasteboard-paste-without-smart-quotes 
+I'm finding that pasteboard-paste-without-smart-quotes inserts rogue spaces in the pasted contents. Doesn't happen every time... but it happens often. Can you reproduce / debug? Thank you!!
+
+* TODO smart comma
+When point is on a period, exclamation point, or question mark and it hit "," then next word should also be downcased. Basically, if I'm changing a period to a comma, next word should be downcased.
+
+Input: I'd like to stay^. But I'm late.
+Scenario: Point is on the period and I type a comma (",") 
+Current output: I'd like to stay,^ But I'm late. 
+Desired output: I'd like to stay,^ but I'm late. 
