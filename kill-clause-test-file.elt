@@ -17,7 +17,7 @@ Input: ^We should consider, for completeness, comma separated clauses.
 Output: ^For completeness, comma separated clauses.
 
 Input: We should consider^, for completeness, comma separated clauses.
-Output: Input: We should consider ^for completeness, comma separated clauses. 
+Output: We should consider ^for completeness, comma separated clauses.
 
 Input: We should consider ^for completeness, comma separated clauses.
 Output: We should consider^, comma separated clauses.
