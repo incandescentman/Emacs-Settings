@@ -2722,6 +2722,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m mt" 'medium-type)
 (define-hyper-key "m df" 'prelude-delete-file-and-buffer)
 
+(define-hyper-key "m bl" 'blue-light)
+
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
@@ -2978,7 +2980,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 #+END_SRC 
 
 

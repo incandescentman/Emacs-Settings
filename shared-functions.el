@@ -181,7 +181,7 @@
  (setq org-export-with-clocks t)
  (setq org-export-with-drawers t)
  (setq org-export-with-section-numbers nil) 
-(setq org-export-with-planning t)
+(setq org-export-with-planning nil)
 (setq org-export-allow-bind-keywords t)
 ;; (setq org-export-blocks-witheld (quote (hidden)) t) 
 (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
@@ -318,8 +318,7 @@
         (sequence "TODO" "STARTED" "|" "DONE! :-)")
         (sequence "MISSED" "|" "DONE! :-)")
         (sequence "COMMITTED" "RESULTS" "|")
-        (sequence "MISSED" "|" "DONE! :-)") 
-(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "WEEKS" "WEEKLY" "DAILY" "GOALS" "SOMEDAY" "|") 
+(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
@@ -1920,6 +1919,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m mt" 'medium-type)
 (define-hyper-key "m df" 'prelude-delete-file-and-buffer)
 
+(define-hyper-key "m bl" 'blue-light)
+
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
@@ -2087,7 +2088,7 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -2492,6 +2493,10 @@ subsequent sends."
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
                     (goto-char (point-min))
+
+(org-mime-change-class-style "off" "list-style-type: none;")
+                    (goto-char (point-min)) 
+
                     (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold")
                     (goto-char (point-min))
                     (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold"))

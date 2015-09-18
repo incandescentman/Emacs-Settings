@@ -107,6 +107,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (org-mode)
   )
 
+(defun blue-light ()
+  (interactive)
+  (load-theme 'material-light)
+  (incarnadine-cursor)
+(org-mode)
+  )
+
+
 (defun tomorrow-night ()
   (interactive)
   (load-theme 'sanityinc-tomorrow-night)
