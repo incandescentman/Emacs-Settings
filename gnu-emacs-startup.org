@@ -2402,7 +2402,25 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
       (downcase-word 1)))) 
 #+END_SRC 
 
-I tried to add exceptions for "line-end" and also for user-full name. 
+I tried to add exceptions for "line-end" and also for user-full name.
+
+** NOTE-TO-JAY Clarification
+
+   Can you give me an example where it *doesn't* work? I tried:
+
+#+BEGIN_EXAMPLE
+One two three four. ^
+Five six
+#+END_EXAMPLE
+
+   And then type "seven ", and the output, as I expected, was:
+
+#+BEGIN_EXAMPLE
+One two three four. Seven ^
+Five six
+#+END_EXAMPLE
+
+   So, it didn't downcase past the line break. In which case is it not working for you?
 
 * capitalize-unless-org-heading
 
