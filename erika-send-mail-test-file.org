@@ -1,0 +1,18 @@
+* dailies - week of <2015-09-14> 
+*** COMMITTED <2015-09-18 Fri> 
+**** TODO meditate 
+     SCHEDULED: <2015-09-18 Fri> 
+**** TODO morning pages 
+     SCHEDULED: <2015-09-18 Fri> 
+**** TODO review and consolidate therapy notes
+**** TODO call with Erika
+     SCHEDULED: <2015-09-18 Fri 14:30>
+**** TODO pitch Washington Post
+**** TODO write and submit two lines of poetry
+     DEADLINE: <2015-09-18 Fri 20:00>
+**** TODO pick up prescriptions 
+**** TODO improv rehearsal 
+     SCHEDULED: <2015-09-18 Fri 18:00>
+**** TODO improv performance
+     SCHEDULED: <2015-09-18 Fri 20:30>
+

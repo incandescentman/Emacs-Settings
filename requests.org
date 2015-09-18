@@ -20,6 +20,13 @@ I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they w
 ** NOTE-TO-RÚDI still getting the error
 I still get an error when I follow the directions [[file:smart-punctuation-error.org::*how%20to%20induce%20the%20error:][here]]. It's when I try to place a comma in the heading at the bottom of the file. Can you try doing this and tell me if you can reproduce the error? Thanks! 
 
+* TODO make erika-send-mail-styled respect the "COMMITTED" org-todo-keyword
+See the test file here: [[file:~/gnulisp/erika-send-mail-test-file.org::*<2015-09-18%20Fri>][erika-send-mail-test-file.org]]
+
+I want to send only the subtree, heading ** COMMITTED <2015-09-18 Fri> 
+
+If I place the point at the beginning of ** COMMITTED <2015-09-18 Fri>, it successfully sends the styled + formatted email. But the org-todo-keyword "COMMITTED" is omitted from the subject header. Can we make it so it's included? Thanks! 
+
 * TODO don't autocapitalize checklist items
 - [ ] This
 - [ ] That
