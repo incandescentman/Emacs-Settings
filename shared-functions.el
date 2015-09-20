@@ -1921,6 +1921,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (define-hyper-key "m bl" 'blue-light)
 
+(define-hyper-key "m eu" 'endless/upgrade)
+
 
 ;; accountability
 (define-hyper-key "m td" 'jd-org-today)
