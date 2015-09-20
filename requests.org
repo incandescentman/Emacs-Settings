@@ -18,7 +18,41 @@ This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-ur
 
    The problem somehow appears to be related with ~org-bullets~ mode, but I can't seem to reproduce. Have you tried updating the ~org-plus-contrib~ package? I'm using version 20150914 (only a week old) and seems to work for me.
 
-* PLEASE-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+** NOTE-TO-RUDI not sure the cause
+I am indeed using the same org-plus-contrib, same error... not sure what's causing it. However, it persists even when I have org-bullets turned off. tried it again just now and got this:
+
+
+   #+BEGIN_SRC emacs-lisp
+Debugger entered--Lisp error: (args-out-of-range 0 0)
+  get-text-property(0 face)
+  org-activate-plain-links(67)
+  font-lock-fontify-keywords-region(1 67 nil)
+  font-lock-default-fontify-region(1 67 nil)
+  font-lock-fontify-region(1 67 nil)
+  byte-code("\212\303 \304\216\305ed	#\210\306 \210\307\211+\207" [save-match-data-internal verbose font-lock-fontified match-data ((byte-code "\301\302\"\207" [save-match-data-internal set-match-data evaporate] 3)) font-lock-fontify-region font-lock-after-fontify-buffer t] 4)
+  font-lock-default-fontify-buffer()
+  font-lock-fontify-buffer()
+  org-bullets-mode(1)
+  (lambda nil (org-bullets-mode 1))()
+  run-hooks(change-major-mode-after-body-hook text-mode-hook outline-mode-hook org-mode-hook)
+  apply(run-hooks (change-major-mode-after-body-hook text-mode-hook outline-mode-hook org-mode-hook))
+  run-mode-hooks(org-mode-hook)
+  org-mode()
+  org-export-string-as(#("http://www.bakadesuyo.com/2014/10/how-to-get-people-to-like-you/\n\n" 0 64 (fontified nil) 64 65 (fontified nil) 65 66 (fontified nil)) org t)
+  (let* ((region-p (org-region-active-p)) (html-start (or (and region-p (region-beginning)) (save-excursion (goto-char (point-min)) (search-forward mail-header-separator) (+ (point) 1)))) (html-end (or (and region-p (region-end)) (point-max))) (raw-body (concat org-mime-default-header (buffer-substring html-start html-end))) (tmp-file (make-temp-name (expand-file-name "mail" temporary-file-directory))) (body (org-export-string-as raw-body (quote org) t)) (org-export-htmlize-output-type (quote inline-css)) (org-export-preserve-breaks org-mime-preserve-breaks) (org-html-with-latex (quote dvipng)) (html-and-images (org-mime-replace-images (org-export-string-as raw-body (quote html) t) tmp-file)) (html-images (if arg nil (cdr html-and-images))) (html (org-mime-apply-html-hook (if arg (format org-mime-fixedwith-wrap body) (car html-and-images))))) (delete-region html-start html-end) (save-excursion (goto-char html-start) (insert (org-mime-multipart body html (mapconcat (quote identity) html-images "\n")))))
+  org-mime-htmlize()
+  run-hooks(message-send-hook)
+  message-send(nil)
+  message-send-and-exit(nil)
+  #<subr call-interactively>(message-send-and-exit nil nil)
+  ad-Advice-call-interactively(#<subr call-interactively> message-send-and-exit nil nil)
+  apply(ad-Advice-call-interactively #<subr call-interactively> (message-send-and-exit nil nil))
+  call-interactively(message-send-and-exit nil nil)
+  command-execute(message-send-and-exit) 
+   #+END_SRC
+
+
+* please-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 
 ** NOTE-TO-RÚDI still getting the error
@@ -172,28 +206,9 @@ Thanks!
 ** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
 Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
 
-* TODO [#C] create an auto-capitalization-predicate-exceptions-list?
-I'd like to create a plain-text list of words that are exceptions to auto-capitalization. So for e.g. if I type e.g. like I have in this sentence, I don't want the next word to be automatically capitalized. 
-
-See my existing code: 
-
-#+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-predicate
-      (lambda () (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20)))))
-#+END_SRC
-
-This works. However, I'd like to be able to keep this list in a plain text format and add to it. The reason I'm asking is because I wanted to add the word "vs." to the list (e.g. "good vs. evil") but I couldn't get the regexp correct with all the slash escaping. It would be easier if the list looked something like this: 
-
-#+BEGIN_SRC emacs-lisp
-(setq *auto-capitalize-exceptions*
-  (list "e.g." "i.e. " "vs." "..." "- [ ] ")) 
-#+END_SRC
-
-Thanks!
-
 * TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
-** 
+*
 * TESTING [#B] a smart-space exception for org-mode tags
 
 Example:
@@ -225,7 +240,6 @@ This is the end...
 but this is a new beginning. 
 
 But should be autocapitalized. 
-
 
 
 * TODO an edge case for kill-word-correctly-and-capitalize 
