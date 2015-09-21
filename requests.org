@@ -8,8 +8,29 @@
 
 
 
+
 * TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
 See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
+
+How to reproduce the error: instructions in the new file downcase-error-example-file.org
+
+* TODO smart-punctuation in an org-heading
+Smart-punctuation is working as desired in plain text.
+
+Example #1 (works as desired):
+
+Input: Thinking is harder than it sounds ^
+Scenario: add semicolon 
+Output: Thinking is harder than it sounds; ^
+
+However, this doesn't work in an org-heading. 
+
+Example #2 (doesn't work as desired): 
+
+Input: * Thinking is harder than it sounds ^
+Scenario: add semicolon 
+Output: Thinking is harder than it sounds;^ 
+
 
 * TODO how include plain-text URLs and image links in org-mime? 
 This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-urls-and-image-links-in-org-mime][org export - how include plain-text URLs and image links in org-mime? - Emacs Stack Exchange]]
@@ -19,8 +40,7 @@ This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-ur
    The problem somehow appears to be related with ~org-bullets~ mode, but I can't seem to reproduce. Have you tried updating the ~org-plus-contrib~ package? I'm using version 20150914 (only a week old) and seems to work for me.
 
 ** NOTE-TO-RUDI not sure the cause
-I am indeed using the same org-plus-contrib, same error... not sure what's causing it. However, it persists even when I have org-bullets turned off. tried it again just now and got this:
-
+I am indeed using the same org-plus-contrib, same error... not sure what's causing it. However, it persists even when I have org-bullets turned off. tried it again just now and got this: 
 
    #+BEGIN_SRC emacs-lisp
 Debugger entered--Lisp error: (args-out-of-range 0 0)
@@ -203,9 +223,6 @@ Output: Let's not forget parenthesis^!
 
 Thanks! 
 
-** NOTE-TO-RÚDI I reviewed kill-clause-test-file.el 
-Thanks for the question about kill-clause-test-file.el. I reviewed the file and did find an error, which I corrected. The rest is as I intend it. I realize some of the desired behaviors may seem strange. But I'm crafting the tests with my specific editing habits in mind. I guess the main point is that when I use kill clause, usually I do so because I intend to write more words /within that clause/, not after it. In any case, the tests in the file will be an accurate gauge of the desired behavior. Thanks again! :-)
-
 * TODO [#C] a tweak to my/kill-sentence-dwim 
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 *
@@ -240,7 +257,6 @@ This is the end...
 but this is a new beginning. 
 
 But should be autocapitalized. 
-
 
 * TODO an edge case for kill-word-correctly-and-capitalize 
 
