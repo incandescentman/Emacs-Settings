@@ -2433,6 +2433,16 @@ Five six
 ) 
   #+END_SRC
  
+* downcase-save-excursion 
+
+  #+BEGIN_SRC emacs-lisp
+(defun downcase-save-excursion ()
+  (interactive)
+  (save-excursion
+      (downcase-word 1))
+  )
+  #+END_SRC
+
 
 * smart-expand
 Don't expand past certain delimiters, e.g. line break, ), and "

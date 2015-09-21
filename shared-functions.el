@@ -315,7 +315,7 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "STARTED" "|" "DONE")
+(sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 

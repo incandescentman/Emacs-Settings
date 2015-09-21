@@ -1259,6 +1259,12 @@ subsequent sends. could save them all in a logbook?
 ;; )
 ) 
 
+(defun downcase-save-excursion ()
+  (interactive)
+  (save-excursion
+      (downcase-word 1))
+  )
+
 (defun smart-expand ()
   (interactive) 
 
