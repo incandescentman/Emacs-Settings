@@ -315,15 +315,15 @@
 
 (setq org-todo-keywords
       '(
-        (sequence "TODO" "STARTED" "|" "DONE! :-)")
-        (sequence "MISSED" "|" "DONE! :-)")
+        (sequence "TODO" "STARTED" "|" "DONE")
+        (sequence "MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE! :-)")
+        (sequence "GOAL" "PLAN" "|" "DONE")
         ))
 
 (defun new-org-delete-backward-char (N)
@@ -3181,3 +3181,10 @@ If FILE already exists, signal an error."
 
 (setq org-ellipsis " ◦◦◦ ") 
 ; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
+
+;; Set to the location of your Org files on your local system
+(setq org-directory "/Users/jay/Dropbox/writing/notationaldata")
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg") 

@@ -145,7 +145,7 @@
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-agenda-files
    (quote
-    ("~/github/incandescentman.github.io/org-agenda-test-file.org")))
+    ("~/Dropbox/writing/notationaldata/accountability.org")))
  '(org-agenda-jump-prefer-future t)
  '(org-agenda-prefix-format
    (quote
