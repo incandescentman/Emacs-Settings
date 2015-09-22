@@ -14,7 +14,10 @@ See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%2
 
 How to reproduce the error: instructions in the new file downcase-error-example-file.org
 
-* TODO smart-punctuation in an org-heading
+* TODO another capitalization error
+Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
+ 
+* todo smart-punctuation in an org-heading
 Smart-punctuation is working as desired in plain text.
 
 Example #1 (works as desired):
