@@ -146,7 +146,7 @@
  '(org-agenda-files
    (quote
     ("~/Dropbox/writing/notationaldata/accountability.org")))
- '(org-agenda-jump-prefer-future t)
+ ; '(org-agenda-jump-prefer-future t)
  '(org-agenda-prefix-format
    (quote
     ((agenda . " %-12:c%?-12t% s")
@@ -154,8 +154,8 @@
      (todo . " %i %-12:c")
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-timegrid-use-ampm t)
+; '(org-agenda-skip-scheduled-if-done t)
+; '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)

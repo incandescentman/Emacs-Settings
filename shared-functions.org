@@ -271,10 +271,10 @@ Turn off fill mode, which adds random line breaks in my text files:
 #+END_SRC
 
 * Org-mode
-** Org setup
+** org setup
 *** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
-(setq org-use-property-inheritance t)
+; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -295,8 +295,9 @@ Turn off fill mode, which adds random line breaks in my text files:
 #+BEGIN_SRC emacs-lisp
 '(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
 #+END_SRC
-** Org custom functions
-*** Archiving
+
+** org custom functions
+*** archiving
 (defadvice org-archive-subtree (around my-org-archive-subtree activate)
   (let ((org-archive-location
 	 (if (save-excursion (org-back-to-heading)
@@ -475,18 +476,19 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 (setq org-icalendar-include-todo t) 
 #+END_SRC 
 
-** Org-mode key bindings:
+** org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
-** Org agenda
+
+** org agenda
 
 *** agenda display settings
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_EXAMPLE emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -496,29 +498,28 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_SRC
+    #+END_EXAMPLE 
 
 *** Stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
+;(add-hook 'org-finalize-agenda-hook
+;          (lambda () (remove-text-properties
+;                      (point-min) (point-max) '(mouse-face t))))
 #+END_SRC
 
 ** org stuck projects (?)
 Defining stuck projects as todos that do not contain "scheduled" or
 "deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
 #+BEGIN_SRC emacs-lisp
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
+;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 #+END_SRC
 
-** Org settings
+** org settings
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 'org-agenda-list)
+; (add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
+; (setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -546,7 +547,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 #+END_SRC
 
-** Org keywords
+** org todo keywords
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
@@ -701,7 +702,7 @@ Subject: %^{Subject}
 	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 #+END_SRC
 
-** Another org-setting, not sure what this one does exactly
+** another org-setting, not sure what this one does exactly
 #+BEGIN_SRC emacs-lisp
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -710,13 +711,7 @@ Subject: %^{Subject}
     (apply 'completing-read args)))
 #+END_SRC
 
-** Mobile org
-Can't get this to work on my iPhone:
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
-#+END_SRC
-
-** Org custom functions
+** org custom functions
 *** Workflowy mode
 Make ~org-mode~ temporarily emulate traditional outlining keybindings
 e.g. nvALT
@@ -756,7 +751,7 @@ e.g. nvALT
   (org-next-item))
 #+END_SRC
 
-*** Update parent cookie
+*** update parent cookie
 I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
@@ -800,7 +795,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
               (org-todo 'todo)))))))
 #+END_SRC
 
-*** Org align tables
+*** org align tables
 
 #+BEGIN_SRC emacs-lisp
 (defun my-align-all-tables ()
@@ -808,7 +803,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
   (org-table-map-tables 'org-table-align 'quietly))
 #+END_SRC
 
-*** Org extract link
+*** org extract link
 
 #+BEGIN_SRC emacs-lisp
 (defun my-org-extract-link ()
@@ -818,7 +813,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
     (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
 #+END_SRC
 
-*** Org insert link
+*** org insert link
 
 Insert link with HTML title as default description. When using `org-insert-link'
 (`C-c C-l') it might be useful to extract contents from HTML <title> tag and use
@@ -846,7 +841,7 @@ it as a default link description. Here is a way to accomplish this:
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 #+END_SRC
 
-*** Org insert subtask
+*** org insert subtask
 
 #+BEGIN_SRC emacs-lisp
 (defun my-org-insert-sub-task ()
@@ -858,7 +853,7 @@ it as a default link description. Here is a way to accomplish this:
       (org-deadline nil parent-deadline))))
 #+END_SRC
 
-*** Reschedule agenda items to today with a single command
+*** reschedule agenda items to today with a single command
 
 #+BEGIN_SRC emacs-lisp
 (defun org-agenda-reschedule-to-today ()
@@ -867,7 +862,7 @@ it as a default link description. Here is a way to accomplish this:
 	   (call-interactively 'org-agenda-schedule)))
 #+END_SRC
 
-*** Org archive done
+*** org archive done
 
 Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
 #+BEGIN_SRC emacs-lisp
@@ -876,7 +871,7 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 #+END_SRC
 
-** Org capture
+** org capture
 Make org-capture open in full window! :-)
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
@@ -1300,9 +1295,9 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-jump-prefer-future t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-timegrid-use-ampm t)
+; '(org-agenda-jump-prefer-future t)
+; '(org-agenda-skip-scheduled-if-done t)
+; '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)

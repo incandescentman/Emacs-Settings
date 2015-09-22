@@ -131,7 +131,7 @@
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
 
-(setq org-use-property-inheritance t)
+; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -270,27 +270,16 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
-(setq org-agenda-prefix-format
-   (quote
-    ((agenda . " %?-12t% s")
-     (timeline . "  % s")
-     (todo . " %i %-12:c")
-     (tags . " %i %-12:c")
-     (search . " %i %-12:c"))))
+;(add-hook 'org-finalize-agenda-hook
+;          (lambda () (remove-text-properties
+;                      (point-min) (point-max) '(mouse-face t))))
 
-;; (setq org-agenda-prefix-format "%t %s")
+;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
-(add-hook 'org-finalize-agenda-hook
-          (lambda () (remove-text-properties
-                      (point-min) (point-max) '(mouse-face t))))
-
-(setq org-stuck-projects
-      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
-
-(add-hook 'after-init-hook 'org-agenda-list)
+; (add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
+; (setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -436,8 +425,6 @@ Subject: %^{Subject}
   (if (and ido-mode (listp (second args)))
       (apply 'ido-completing-read args)
     (apply 'completing-read args)))
-
-(setq org-mobile-directory "/Users/jay/Dropbox/Apps/mobileorg/")
 
 (define-minor-mode zin/org-outline-mode
   "" nil
@@ -828,9 +815,9 @@ Subject: %^{Subject}
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(org-M-RET-may-split-line (quote ((item . t))))
  '(org-activate-links (quote (bracket plain radio tag date footnote)))
- '(org-agenda-jump-prefer-future t)
- '(org-agenda-skip-scheduled-if-done t)
- '(org-agenda-timegrid-use-ampm t)
+; '(org-agenda-jump-prefer-future t)
+; '(org-agenda-skip-scheduled-if-done t)
+; '(org-agenda-timegrid-use-ampm t)
  '(org-archive-location "archive/%s_archive::")
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
