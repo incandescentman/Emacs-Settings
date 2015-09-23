@@ -1265,7 +1265,12 @@ subsequent sends. could save them all in a logbook?
 (defun downcase-save-excursion ()
   (interactive)
 (unless
+(or
+
+(looking-at "[ ]*I\\b") ; never downcase the word "I" 
+(looking-at "[ ]*I'")  ; never downcase I'm I've etc. 
 (looking-at "[ ]*$") 
+)
   (save-excursion
       (downcase-word 1))
   ))

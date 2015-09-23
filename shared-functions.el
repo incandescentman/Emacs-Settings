@@ -1276,7 +1276,7 @@ ido-enter-matching-directory nil
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compiler\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -3097,6 +3097,7 @@ Single Capitals as you type."
 
 (require 'org-contacts) 
 (require 'org-vcard)
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 (defun kill-to-buffer-end ()
   (interactive) 
@@ -3194,6 +3195,10 @@ If FILE already exists, signal an error."
 
 (define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
 
-;; add org-opml to load-path
-(let ((default-directory "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/"))
-  (normal-top-level-add-subdirs-to-load-path)) 
+;; add org-opml directory to load-path
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/")
+
+;; load org-opml
+(load-library "org-opml") 
+
+(require 'org-element-debug)
