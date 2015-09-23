@@ -9,6 +9,14 @@
 
 
 
+* TODO capitalize first character of new line after ellipsis
+In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
+
+However, sometimes an ellipsis occurs at the end of a paragraph...
+
+in these cases, the first letter of the new sentence on 
+^ the new line SHOULD be capitalized. Can we fix? Thanks! 
+
 * TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
 See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
 
@@ -16,7 +24,28 @@ How to reproduce the error: instructions in the new file downcase-error-example-
 
 * TODO another capitalization error
 Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
- 
+
+* TODO a smart-return list-type for ---
+You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
+
+Can we add a new list-type to org-mode for three hyphens?
+
+Input:
+
+---Hello.
+---Hi.
+---What's up.^
+
+Scenario: I hit return 
+
+Desired output:
+
+---Hello.
+---Hi.
+---What's up.
+---^ 
+
+Thanks!
 * todo smart-punctuation in an org-heading
 Smart-punctuation is working as desired in plain text.
 
@@ -95,13 +124,6 @@ If I place the point at the beginning of ** COMMITTED <2015-09-18 Fri>, it succe
 
 These get autocapitalized... can we disable that?
 
-* TODO capitalize first character of new line after ellipsis
-In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
-
-However, sometimes an ellipsis occurs at the end of a paragraph...
-
-in these cases, the first letter of the new sentence on 
-^ the new line SHOULD be capitalized. Can we fix? Thanks! 
 
 * TODO kill-clause
 ** NOTE-TO-JAY Questions 

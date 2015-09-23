@@ -1752,6 +1752,11 @@ With prefix arg C-u, copy region instad of killing it."
 
 ;; (require 'gnugol)
 
+(defun gnugol-word-at-point ()
+  (interactive)
+(gnugol-search-google (thing-at-point 'word))
+)
+
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
@@ -2077,7 +2082,7 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -3175,3 +3180,20 @@ If FILE already exists, signal an error."
 (setq org-mobile-inbox-for-pull "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg") 
+
+(defun bold-region-or-point ()
+  (interactive)
+  (if (region-active-p)
+      (progn
+        (goto-char (region-end))
+        (insert "*")
+        (goto-char (region-beginning))
+        (insert "*"))
+    (insert "**")
+    (backward-char)))
+
+(define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
+
+;; add org-opml to load-path
+(let ((default-directory "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/"))
+  (normal-top-level-add-subdirs-to-load-path)) 

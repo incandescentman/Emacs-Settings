@@ -395,6 +395,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-S-r") nil)
 (define-key org-mode-map (kbd "C-S-r") nil)
 
+(define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
+(define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
+
 
 (define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
@@ -2438,9 +2441,11 @@ Five six
   #+BEGIN_SRC emacs-lisp
 (defun downcase-save-excursion ()
   (interactive)
+(unless
+(looking-at "[ ]*$") 
   (save-excursion
       (downcase-word 1))
-  )
+  ))
   #+END_SRC
 
 

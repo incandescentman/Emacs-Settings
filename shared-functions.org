@@ -2511,6 +2511,11 @@ Enable Google search:
 ** Google search through Gnugol
 #+BEGIN_SRC emacs-lisp
 ;; (require 'gnugol)
+
+(defun gnugol-word-at-point ()
+  (interactive)
+(gnugol-search-google (thing-at-point 'word))
+)
 #+END_SRC
 * Things I want to learn
 ** Need to add "cleanup buffer safe" here from whattheemacsd.com
@@ -2977,7 +2982,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.]*" (- (point) 20))))))
 #+END_SRC 
 
 
@@ -4462,4 +4467,32 @@ C-c q
 (setq org-mobile-inbox-for-pull "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg") 
+  #+END_SRC
+
+* bold-region-or-point
+#+BEGIN_SRC emacs-lisp
+(defun bold-region-or-point ()
+  (interactive)
+  (if (region-active-p)
+      (progn
+        (goto-char (region-end))
+        (insert "*")
+        (goto-char (region-beginning))
+        (insert "*"))
+    (insert "**")
+    (backward-char)))
+
+(define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
+#+END_SRC
+
+
+
+* org-opml
+
+  #+BEGIN_SRC emacs-lisp
+;; add org-opml directory to load-path
+(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/")
+
+;; load org-opml
+(load-library "org-opml") 
   #+END_SRC

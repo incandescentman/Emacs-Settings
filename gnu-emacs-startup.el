@@ -249,6 +249,9 @@
 (define-key key-minor-mode-map (kbd "C-S-r") nil)
 (define-key org-mode-map (kbd "C-S-r") nil)
 
+(define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
+(define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
+
 
 (define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
@@ -1261,9 +1264,11 @@ subsequent sends. could save them all in a logbook?
 
 (defun downcase-save-excursion ()
   (interactive)
+(unless
+(looking-at "[ ]*$") 
   (save-excursion
       (downcase-word 1))
-  )
+  ))
 
 (defun smart-expand ()
   (interactive) 
