@@ -28,6 +28,10 @@ Open another-capitalization-error.org to see another capitalization error I intr
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
 
+- this
+- that
+- ^
+
 Can we add a new list-type to org-mode for three hyphens?
 
 Input:
@@ -44,6 +48,8 @@ Desired output:
 ---Hi.
 ---What's up.
 ---^ 
+
+Also, unlike plain text lists, these should always begin with a capital letter. 
 
 Thanks!
 * todo smart-punctuation in an org-heading
