@@ -357,7 +357,7 @@
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics to)
-;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
@@ -387,6 +387,13 @@ Subject: %^{Subject}
 
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+("W" "Wise Mind" entry (file "wisemind.txt")
+	 "\n\n* %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
 
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -2410,8 +2417,6 @@ subsequent sends."
           (send-actions '((email-send-action . nil)))
           (return-action '(email-heading-return)))
 
-
-
       (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
       (message-goto-body)
       (insert content)
@@ -2491,9 +2496,9 @@ subsequent sends."
 (org-mime-change-class-style "off" "list-style-type: none;")
                     (goto-char (point-min)) 
 
-                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold")
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
                     (goto-char (point-min))
-                    (org-mime-change-class-style "done DONE_____" "color:green;font-weight:bold"))
+                    (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
                   org-mime-html-hook)))
 (message-send-and-exit)
 ))
