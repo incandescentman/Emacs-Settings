@@ -318,3 +318,9 @@ Input: I'd like to stay^. But I'm late.
 Scenario: Point is on the period and I type a comma (",") 
 Current output: I'd like to stay,^ But I'm late. 
 Desired output: I'd like to stay,^ but I'm late. 
+
+
+* TODO message-goto-to
+In new-email-from-subtree and new-email-from-subtree-no-signature, can we add ~(message-goto-to)~ so that the first field I land on is the To: field?
+
+Also, after I insert the name and tab to complete the email address from org-contacts, is there an easy way to then get to the message body without using movement keys to get there (e.g. by tabbing again or something else)?

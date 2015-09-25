@@ -673,7 +673,7 @@ Subject: %^{Subject}
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
-	 "\n\n* %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* wm%?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 
 	("e" "expression" entry (file "expression.txt")
