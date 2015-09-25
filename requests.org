@@ -324,3 +324,15 @@ Desired output: I'd like to stay,^ but I'm late.
 In new-email-from-subtree and new-email-from-subtree-no-signature, can we add ~(message-goto-to)~ so that the first field I land on is the To: field?
 
 Also, after I insert the name and tab to complete the email address from org-contacts, is there an easy way to then get to the message body without using movement keys to get there (e.g. by tabbing again or something else)?
+
+* TODO downcase next word on invocation of third period (but not past line break)
+Example: Something that's just weird more than funny..^ And having to explain how it got that way. 
+Scenario: Having already hit "." twice, I hit it a third time so that you'll have three dots.
+Current output: Something that's just weird more than funny...^ And having to explain how it got that way. 
+Desired output: Something that's just weird more than funny...^ and having to explain how it got that way. 
+
+* TODO make org-agenda not display tasks scheduled for future days?
+This:
+http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
+
+

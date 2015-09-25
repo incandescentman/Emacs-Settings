@@ -1,3 +1,12 @@
+(defun book-load-current ()
+  (interactive)
+(kill-buffer "playful.org") 
+(find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+(find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
+(find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
+)
+
+
 (push "~/.emacs.d/helm-cmd-t" load-path)
 (require 'helm-config)
 (require 'helm-cmd-t)
@@ -76,11 +85,16 @@
 (interactive)
 (find-file "/Users/jay/b/booktime.org")
 (end-of-buffer)
-(jd-clock-in)
+(book-load-current)
 (book-dired))
 
 
-
+(defun book-clock-in ()
+  (interactive)
+  (find-file "/Users/jay/b/booktime.org")
+(end-of-buffer)
+(jd-clock-in)
+)
 
 (defun book-proposal-directory()
   (interactive)
@@ -93,11 +107,3 @@
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
   (dired "~/b/12-mistakes"))
-
-
-(defun book-load-current ()
-  (interactive)
-(kill-buffer "playful.org") 
-(find-file "/Users/jay/b/proposal/12-mistakes-of-modern-love-outline.txt")
-(find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
-  )
