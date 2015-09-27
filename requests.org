@@ -9,7 +9,7 @@
 
 
 
-* TODO capitalize first character of new line after ellipsis
+* PLEASE-TEST capitalize first character of new line after ellipsis
 In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
 
 However, sometimes an ellipsis occurs at the end of a paragraph...
@@ -17,7 +17,7 @@ However, sometimes an ellipsis occurs at the end of a paragraph...
 in these cases, the first letter of the new sentence on 
 ^ the new line SHOULD be capitalized. Can we fix? Thanks! 
 
-* TODO Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
+* PLEASE-TEST Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
 See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
 
 How to reproduce the error: instructions in the new file downcase-error-example-file.org
