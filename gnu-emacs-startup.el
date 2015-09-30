@@ -472,7 +472,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-;; (smart-expand)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -1239,21 +1239,18 @@ subsequent sends. could save them all in a logbook?
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
 
-  (defadvice capitalize-word (after capitalize-word-advice activate)
-  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
-    (unless 
-  (or
-(looking-at "[ ]*I\\b") ; never downcase the word "I" 
-(looking-at "[ ]*\"I\\b") 
-(looking-at "[ ]*\(I\\b") 
-;; (looking-at "\\") ; how do you search for a literal backslash?
-(looking-at (sentence-end))
-(looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
-(looking-at "[ ]*\"[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
-(looking-at (user-full-name))
-  )
-(save-excursion
-      (downcase-word 1)))) 
+(defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+  (unless 
+      (or
+       (looking-at "\\W*I\\b")          ; never downcase the word "I" 
+       ;; (looking-at "\\") ; how do you search for a literal backslash?
+       (looking-at (sentence-end))
+       (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at (user-full-name))
+       )
+    (save-excursion
+      (downcase-word 1))))
 
 (defun capitalize-unless-org-heading ()
   (interactive)

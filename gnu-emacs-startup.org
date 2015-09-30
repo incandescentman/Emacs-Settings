@@ -644,7 +644,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-;; (smart-expand)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
