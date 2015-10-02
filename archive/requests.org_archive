@@ -2537,3 +2537,13 @@ Same thing if I hit ! or ? or . or ; and change the punctuation. Whenever I hit 
 ** NOTE-TO-RÚDI fixed
 Not sure what changed, but I'm confirming that this is working now. 
 
+
+* TODO kill to buffer end 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2015-10-02 Fri 15:41
+  :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+  :ARCHIVE_CATEGORY: requests
+  :ARCHIVE_TODO: TODO
+  :END:
+See the function I created [[file:shared-functions.org::*kill%20to%20buffer%20end][kill-to-buffer-end]] and the keybinding I created for it. Can we make it so that this keybinding applies only in message-mode and not other modes?
+

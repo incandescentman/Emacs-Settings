@@ -336,9 +336,6 @@ This:
 http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
 
 
-* TODO kill to buffer end 
-See the function I created [[file:shared-functions.org::*kill%20to%20buffer%20end][kill-to-buffer-end]] and the keybinding I created for it. Can we make it so that this keybinding applies only in message-mode and not other modes?
-
 * TODO no capitalis on cheklist items 
 - [ ] these
 - [ ] Should

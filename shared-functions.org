@@ -4585,3 +4585,75 @@ C-c q
   #+BEGIN_SRC emacs-lisp
 (require 'org-element-debug)
   #+END_SRC
+
+
+* isearch current word
+isearch Current Word
+
+Buy Xah Emacs Tutorial. Master emacs benefits for life.
+PayPal
+Xah Lee, 2010-05-29, …, 2015-09-03
+Here's a command that will do isearch of the word under cursor.
+
+(defun xah-search-current-word ()
+  "Call `isearch' on current word or text selection.
+"word" here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
+URL `http://ergoemacs.org/emacs/modernization_isearch.html'
+Version 2015-04-09"
+  (interactive)
+  (let ( ξp1 ξp2 )
+    (if (use-region-p)
+        (progn
+          (setq ξp1 (region-beginning))
+          (setq ξp2 (region-end)))
+      (save-excursion
+        (skip-chars-backward "-_A-Za-z0-9")
+        (setq ξp1 (point))
+        (right-char)
+        (skip-chars-forward "-_A-Za-z0-9")
+        (setq ξp2 (point))))
+    (setq mark-active nil)
+    (when (< ξp1 (point))
+      (goto-char ξp1))
+    (isearch-mode t)
+    (isearch-yank-string (buffer-substring-no-properties ξp1 ξp2))))
+
+(define-key key-minor-mode-map (kbd "M-o") 'xah-search-current-word)
+
+You need to give it a easy key. Such as 【Ctrl+3】. 〔➤ Emacs: How to Define Keys〕 Note: if you use the key 【Ctrl+⇧ Shift+s】, it won't work if emacs runs in terminal.
+
+
+
+
+
+* isearch arrow keys
+
+Here's very convenient keys for isearch. Put it in your emacs init.
+
+
+#+BEGIN_SRC emacs-lisp
+
+(progn
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward) ; single key, useful
+  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+ )
+
+#+END_SRC
+
+
+when in isearch, the arrow keys will:
+
+→ next occurrence.
+← previous occurrence.
+↑ previous search term.
+↓ next search term.
+Enter ↵ exit isearch.
+
+This way, searching forward/backward is just one single key press, no key combination.
+
+This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
+
+
