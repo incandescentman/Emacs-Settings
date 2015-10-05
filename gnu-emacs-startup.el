@@ -452,6 +452,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (or
 (looking-back "\\[") 
 (looking-back "* ")
+(looking-back "^*+")
 (looking-back "- ")
 )
 (beginning-of-line)

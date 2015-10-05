@@ -1167,7 +1167,18 @@ ido-enter-matching-directory nil
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
+             "blockquote" "
+    color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
 
 
 (add-hook 'message-mode-hook
@@ -2818,7 +2829,7 @@ Single Capitals as you type."
 
 ;; load yasnippet directories
 ;; TODO needs to be set before loading snippets somehow
-(setq yas-snippet-dirs '("~/Downloads/interesting-snippets" "~/Dropbox/emacs/snippets"))
+(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/Dropbox/emacs/snippets"))
 
 ;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 

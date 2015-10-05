@@ -31,6 +31,8 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(auto-save-visited-file-name t)
  '(autopair-blink t)
  '(autopair-global-mode t)
@@ -77,6 +79,7 @@
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(fasd-enable-initial-prompt nil)
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -154,7 +157,7 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
  '(org-archive-location "archive/%s_archive::")
- '(org-archive-reversed-order t)
+ '(org-archive-reversed-order nil)
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
  '(org-ascii-underline
@@ -179,7 +182,7 @@
     (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
  '(org-closed-string "COMPLETED:" t)
  '(org-confirm-babel-evaluate nil)
-'(org-ctrl-k-protect-subtree t)
+ '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
@@ -343,6 +346,28 @@
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(writeroom-global-effects
@@ -358,6 +383,8 @@
  '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
  '(notmuch-search-subject ((t (:inherit default :height 1.2))))
  '(notmuch-tag-face ((t (:foreground "OliveDrab1" :height 1))))
+ '(org-headline-done ((t (:strike-through t))))
+ '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 
