@@ -9,18 +9,17 @@
 
 
 
-* DONE capitalize first character of new line after ellipsis
-In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
+* TODO try to resolve org-element crashes?
+I'm finding my Emacs crashing a lot; other times I get errors like these which I assume are related to the crashes:
+http://pastebin.com/Tncs79r0
+http://pastebin.com/jfdEYwVk
 
-However, sometimes an ellipsis occurs at the end of a paragraph...
+I mean total Emacs crashes, where I have to force quit Emacs itself. It's happened in various org-mode situations including:
+- pasting text from OSX clipboard
+- promoting/demoting org-headings
+- moving subtree up or down (i.e. using org-metadown org org-metaup)
 
-in these cases, the first letter of the new sentence on 
-^ the new line SHOULD be capitalized. Can we fix? Thanks! 
-
-* DONE Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
-See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
-
-How to reproduce the error: instructions in the new file downcase-error-example-file.org
+I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
 
 * TODO another capitalization error
 Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!

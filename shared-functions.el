@@ -306,7 +306,7 @@
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
-        (sequence "COMMITTED" "RESULTS" "|")
+        (sequence "COMMITTED" "|" "RESULTS")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
