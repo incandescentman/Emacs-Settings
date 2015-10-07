@@ -437,7 +437,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
-(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
 
 
@@ -751,39 +752,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 #+END_SRC
-
-*** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
-
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^
-#+END_EXAMPLE
-
-Say the point is at the carat and I hit smart-org-meta-return 
-
-Current output: 
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^
-
-* TODO
-#+END_EXAMPLE
-
-Desired output:
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
-* TODO
-#+END_EXAMPLE
-
-Same thing for scheduled:
-#+BEGIN_EXAMPLE 
-*** DONE send July priorities to Erika
-    DEADLINE: <2015-07-10 Fri> ^
-
-#+END_EXAMPLE
-
-Thanks!
 
 *** smart-return
 
@@ -1486,7 +1454,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ***** embolden next word
 
-   #+BEGIN_EXAMPLE emacs-lisp 
+   #+BEGIN_SRC emacs-lisp 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
   nil
@@ -1512,7 +1480,8 @@ The last line sets the path to where saveplace stores your position data. Change
     (set-register 'p nil)))
 
 (global-set-key "\C-o" 'embolden-next-word) 
-   #+END_EXAMPLE
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+   #+END_SRC 
 
 ***** no-abbrev-slash
 Doesn't work.

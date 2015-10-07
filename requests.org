@@ -345,3 +345,37 @@ http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-disp
 * TODO create a function smart-org-meta-control-return-dwim 
 
 Same as smart-org-meta-return-dwim but that inserts a subheading instead? See org-insert-subheading. 
+
+
+*** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
+
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+#+END_EXAMPLE
+
+Say the point is at the carat and I hit smart-org-meta-return 
+
+Current output: 
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+
+* TODO
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
+* TODO
+#+END_EXAMPLE
+
+Same thing for scheduled:
+#+BEGIN_EXAMPLE 
+*** DONE send July priorities to Erika
+    DEADLINE: <2015-07-10 Fri> ^
+
+#+END_EXAMPLE
+
+Thanks!

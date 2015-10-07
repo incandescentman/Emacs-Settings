@@ -306,7 +306,7 @@
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
-        (sequence "COMMITTED" "|" "RESULTS")
+        (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
@@ -2084,7 +2084,7 @@ searches all buffers."
 (palimpsest-mode 1)
 
 (font-lock-add-keywords
- 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+ 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?❱) nil)))
 
 (defun replace-word (tosearch toreplace)
   (interactive "sSearch for word: \nsReplace with: ")
@@ -2603,6 +2603,24 @@ as the subject."
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
+
+(defun org-toggle-heading-same-level ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*")
+        (setq is-heading t)))
+    (if is-heading
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+(org-do-promote)
+;        (org-todo 'nextset)
+)))) ; add TODO  #+END_SRC
 
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -3294,5 +3312,5 @@ If FILE already exists, signal an error."
   (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
   (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
   (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward) ; single key, useful
-  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )

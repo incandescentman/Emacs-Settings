@@ -335,7 +335,13 @@
  '(rm-blacklist
    (quote
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
- '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
+ '(safe-local-variable-values
+   (quote
+    ((eval when
+           (fboundp
+            (quote rainbow-mode))
+           (rainbow-mode 1))
+     (org-export-allow-bind-keywords . t))))
  '(send-mail-function (quote sendmail-send-it))
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)

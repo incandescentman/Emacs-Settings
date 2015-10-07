@@ -553,7 +553,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
-        (sequence "COMMITTED" "|" "RESULTS")
+        (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
@@ -623,19 +623,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
-#+END_EXAMPLE
-
-** Fix '\emsp' bug in clocktable (doesn't work though):
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
 #+END_EXAMPLE
 
 ** org-capture setup
@@ -2949,7 +2936,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** helm projectile
 
-   #+BEGIN_EXAMPLE emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
@@ -2959,7 +2946,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   #'(lambda ()
       (interactive)
       (helm-ag (projectile-project-root))))
-   #+END_EXAMPLE
+   #+END_SRC 
 
 * these seem to need to go at the end
 
@@ -2978,7 +2965,7 @@ This doesn't seem to be working.
 http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+BEGIN_SRC emacs-lisp
 (font-lock-add-keywords
- 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+ 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?❱) nil)))
 #+END_SRC
 
 * replace word
@@ -3637,6 +3624,28 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
+#+END_SRC
+
+* org-toggle-heading-same-level
+
+  #+BEGIN_SRC emacs-lisp
+(defun org-toggle-heading-same-level ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*")
+        (setq is-heading t)))
+    (if is-heading
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+(org-do-promote)
+;        (org-todo 'nextset)
+)))) ; add TODO  #+END_SRC
 #+END_SRC
 
 * org-toggle-todo-heading
@@ -4649,7 +4658,7 @@ Here's very convenient keys for isearch. Put it in your emacs init.
   (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
   (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
   (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward) ; single key, useful
-  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
 #+END_SRC
