@@ -818,6 +818,33 @@ password: %s" userid password))
 (setq-default save-place t)
 (setq save-place-file "/Users/jay/emacs/.savefile/.places")
 
+(define-minor-mode embolden-next-word
+    "Make the next word you type bold."
+  nil
+  :lighter " EMBOLDEN"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion
+                        (goto-char (get-register 'p))
+                        (insert "*"))
+                      (insert "* ")
+                      (embolden-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion
+                      (goto-char (get-register 'p))
+                      (insert "*"))
+                    (insert "*. ")
+                    (embolden-next-word -1)))
+            map)
+  (if embolden-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-o" 'embolden-next-word) 
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
   nil
