@@ -632,12 +632,6 @@ This is working correctly:
 (setq org-capture-templates
       (quote
        (
-        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
-From: Jay Dixit <dixit@aya.yale.edu>
-To: %^{Send mail to}
-Subject: %^{Subject}
---text follows this line--
-%?")
 
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
@@ -661,7 +655,6 @@ Subject: %^{Subject}
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
 	 "\n\n* wm%?\n" :prepend t :kill-buffer t)
-
 
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -878,7 +871,7 @@ Make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 ;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
-#+END_SRC
+#+END_SRC 
 
 * Typography
 ** Replace smart quotes with straight quotes
