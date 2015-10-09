@@ -488,7 +488,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 *** agenda display settings
 
-    #+BEGIN_EXAMPLE emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -498,13 +498,13 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_EXAMPLE 
+    #+END_SRC 
 
 *** Stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
-;(add-hook 'org-finalize-agenda-hook
-;          (lambda () (remove-text-properties
-;                      (point-min) (point-max) '(mouse-face t))))
+(add-hook 'org-finalize-agenda-hook
+(lambda () (remove-text-properties
+(point-min) (point-max) '(mouse-face t))))
 #+END_SRC
 
 ** org stuck projects (?)
@@ -516,10 +516,10 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 ** org settings
 #+BEGIN_SRC emacs-lisp
-; (add-hook 'after-init-hook 'org-agenda-list)
+(add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-; (setq org-agenda-window-setup 'current-window)
+(setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -4662,17 +4662,12 @@ This way, searching forward/backward is just one single key press, no key combin
 This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
 
 
-* done-state
+* move point to next TODO heading upon DONE state change 
 
-
-  #+BEGIN_SRC emacs-lisp
-(add-hook 'org-after-todo-state-change-hook
-(lambda () (org-next-visible-heading 1)) )
-
-(defun bb/next-heading (&rest args)
-    (org-next-visible-heading 1))
-
-
+  #+BEGIN_SRC emacs-lisp 
+(defun bb/next-heading (&rest args) 
+(when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
+(advice-add 'org-todo :after 'bb/next-heading) 
   #+END_SRC
 
 

@@ -270,16 +270,26 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
-;(add-hook 'org-finalize-agenda-hook
-;          (lambda () (remove-text-properties
-;                      (point-min) (point-max) '(mouse-face t))))
+(setq org-agenda-prefix-format
+   (quote
+    ((agenda . " %?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
+
+;; (setq org-agenda-prefix-format "%t %s")
+
+(add-hook 'org-finalize-agenda-hook
+(lambda () (remove-text-properties
+(point-min) (point-max) '(mouse-face t))))
 
 ;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
-; (add-hook 'after-init-hook 'org-agenda-list)
+(add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-; (setq org-agenda-window-setup 'current-window)
+(setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -3313,11 +3323,9 @@ If FILE already exists, signal an error."
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
-(add-hook 'org-after-todo-state-change-hook
-(lambda () (org-next-visible-heading 1)) )
-
-(defun bb/next-heading (&rest args)
-    (org-next-visible-heading 1))
+(defun bb/next-heading (&rest args) 
+(when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
+(advice-add 'org-todo :after 'bb/next-heading)
 
 ;; (defun org-checkbox-next ()
 ;; (interactive)
