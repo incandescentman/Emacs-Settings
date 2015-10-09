@@ -729,21 +729,6 @@ e.g. nvALT
 
 #+END_SRC
 
-*** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_SRC emacs-lisp
-;; (defun org-checkbox-next ()
-;; (interactive)
-;;  (when (org-at-item-checkbox-on)
-;;    (org-toggle-checkbox))
-;;  (org-next-item))
-
-(defadvice org-toggle-checkbox (after org-toggle-checkboxad-Advice-org-toggle-checkbox activate)
-(org-next-item) 
-)
-
-
-#+END_SRC
-
 *** update parent cookie
 I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
@@ -4675,5 +4660,32 @@ Enter ↵ exit isearch.
 This way, searching forward/backward is just one single key press, no key combination.
 
 This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
+
+
+* done-state
+
+
+  #+BEGIN_SRC emacs-lisp
+(add-hook 'org-after-todo-state-change-hook
+(lambda () (org-next-visible-heading 1)) )
+
+(defun bb/next-heading (&rest args)
+    (org-next-visible-heading 1))
+
+
+  #+END_SRC
+
+
+*** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+#+BEGIN_SRC emacs-lisp
+;; (defun org-checkbox-next ()
+;; (interactive)
+;;  (when (org-at-item-checkbox-on)
+;;    (org-toggle-checkbox))
+;;  (org-next-item))
+
+(advice-add 'org-toggle-checkbox :after 'org-next-item) 
+
+#+END_SRC
 
 

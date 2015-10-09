@@ -450,16 +450,6 @@
   (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
   (insert "\n* "))
 
-;; (defun org-checkbox-next ()
-;; (interactive)
-;;  (when (org-at-item-checkbox-on)
-;;    (org-toggle-checkbox))
-;;  (org-next-item))
-
-(defadvice org-toggle-checkbox (after org-toggle-checkboxad-Advice-org-toggle-checkbox activate)
-(org-next-item) 
-)
-
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
     (save-excursion
@@ -540,6 +530,11 @@
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
+
+(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+(add-hook 'org-capture-mode-hook 'writeroom-mode)
+;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -3317,3 +3312,17 @@ If FILE already exists, signal an error."
   (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward) ; single key, useful
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
+
+(add-hook 'org-after-todo-state-change-hook
+(lambda () (org-next-visible-heading 1)) )
+
+(defun bb/next-heading (&rest args)
+    (org-next-visible-heading 1))
+
+;; (defun org-checkbox-next ()
+;; (interactive)
+;;  (when (org-at-item-checkbox-on)
+;;    (org-toggle-checkbox))
+;;  (org-next-item))
+
+(advice-add 'org-toggle-checkbox :after 'org-next-item)
