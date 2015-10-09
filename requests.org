@@ -1,3 +1,4 @@
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-CLARIFY PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -5,25 +6,6 @@
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE: 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
-
-
-
-
-* TODO try to resolve org-element crashes?
-I'm finding my Emacs crashing a lot; other times I get errors like these which I assume are related to the crashes:
-http://pastebin.com/Tncs79r0
-http://pastebin.com/jfdEYwVk
-
-I mean total Emacs crashes, where I have to force quit Emacs itself. It's happened in various org-mode situations including:
-- pasting text from OSX clipboard
-- promoting/demoting org-headings
-- moving subtree up or down (i.e. using org-metadown org org-metaup)
-
-I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
-
-* TODO another capitalization error
-Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
-
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
 
@@ -51,6 +33,22 @@ Desired output:
 Also, unlike plain text lists, these should always begin with a capital letter. 
 
 Thanks!
+
+
+* TODO try to resolve org-element crashes?
+I'm finding my Emacs crashing a lot; other times I get errors like these which I assume are related to the crashes:
+http://pastebin.com/Tncs79r0
+http://pastebin.com/jfdEYwVk
+
+I mean total Emacs crashes, where I have to force quit Emacs itself. It's happened in various org-mode situations including:
+- pasting text from OSX clipboard
+- promoting/demoting org-headings
+- moving subtree up or down (i.e. using org-metadown org org-metaup)
+
+I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
+
+* TODO another capitalization error
+Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
 * todo smart-punctuation in an org-heading
 Smart-punctuation is working as desired in plain text.
 
