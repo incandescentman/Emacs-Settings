@@ -3327,10 +3327,30 @@ If FILE already exists, signal an error."
 (when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
 (advice-add 'org-todo :after 'bb/next-heading)
 
-;; (defun org-checkbox-next ()
-;; (interactive)
-;;  (when (org-at-item-checkbox-on)
-;;    (org-toggle-checkbox))
-;;  (org-next-item))
+(defmacro my/with-advice (adlist &rest body)
+  "Execute BODY with temporary advice in ADLIST.
 
-(advice-add 'org-toggle-checkbox :after 'org-next-item)
+Each element of ADLIST should be a list of the form
+  (SYMBOL WHERE FUNCTION [PROPS])
+suitable for passing to `advice-add'.  The BODY is wrapped in an
+`unwind-protect' form, so the advice will be removed even in the
+event of an error or nonlocal exit."
+  (declare (debug ((&rest (&rest form)) body))
+           (indent 1))
+  `(progn
+     ,@(mapcar (lambda (adform)
+                 (cons 'advice-add adform))
+               adlist)
+     (unwind-protect (progn ,@body)
+       ,@(mapcar (lambda (adform)
+                   `(advice-remove ,(car adform) ,(nth 2 adform)))
+                 adlist))))
+
+(defun my/org-checkbox-toggle-advice (orig-fn &rest args)
+  "Advice to move to next list item on checkbox toggle."
+  (my/with-advice 
+      ((#'org-update-checkbox-count-maybe :after #'org-next-item))
+    (apply orig-fn args)))
+
+(advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
+(advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)

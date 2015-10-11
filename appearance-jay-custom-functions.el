@@ -22,6 +22,11 @@
   (interactive)
   (set-face-attribute 'default nil :font "Monaco"))
 
+(defun vera-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Bitstream Vera Sans Mono"))
+
+
 (defun consolas-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Consolas"))
@@ -289,3 +294,25 @@ The function is poorly named, didn't really want to 'load' it, just open it."
     (progn
       (font-lock-mode t)
       (buffer-face-mode nil)))) 
+
+
+(defun box-cursor ()
+(interactive)
+(setq-default cursor-type 'box) 
+(set-cursor-color "red") 
+(setq blink-cursor-mode nil) 
+) 
+
+(defun horizontal-cursor ()
+(interactive)
+(setq-default cursor-type 'hbar) 
+(set-cursor-color "black") 
+(setq blink-cursor-blinks 10) 
+(setq blink-cursor-mode t) 
+) 
+
+
+(defun ommwriter-mode ()
+(interactive) 
+(vera-font)
+(horizontal-cursor))
