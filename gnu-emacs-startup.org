@@ -2462,3 +2462,11 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that.")) 
 #+END_SRC
+
+
+
+* keybindings for terminal
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "M-(") 'backward-word)
+(define-key key-minor-mode-map (kbd "M-)") 'forward-word)
+#+END_SRC

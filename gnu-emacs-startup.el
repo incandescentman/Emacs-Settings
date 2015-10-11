@@ -1320,3 +1320,6 @@ subsequent sends. could save them all in a logbook?
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 
 (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
+
+(define-key key-minor-mode-map (kbd "M-(") 'backward-word)
+(define-key key-minor-mode-map (kbd "M-)") 'forward-word)

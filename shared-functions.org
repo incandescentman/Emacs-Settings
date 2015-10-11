@@ -137,7 +137,8 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 This customization with the big blocky boxy red cursor makes me so happy.
 # #+BEGIN_SRC emacs-lisp
-(setq-default cursor-type 'box) 
+;; (setq-default cursor-type 'box) 
+(setq-default cursor-type 'hbar) 
 (set-cursor-color "red")
 (setq default-frame-alist
       '((cursor-color . "red")))
@@ -965,7 +966,6 @@ every new buffer will be unique:
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
@@ -1239,8 +1239,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cua-mode nil)
- '(cursor-type (quote box) t)
- '(cursor-type (quote box))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))

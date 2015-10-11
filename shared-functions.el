@@ -37,34 +37,34 @@
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
 (setq mouse-highlight nil)
-(setq-local cursor-in-non-selected-windows nil)
+(setq-local cursor-in-non-selected-windows nil) 
 
 (setq confirm-kill-emacs 'yes-or-no-p)
 
 (setq ring-bell-function
       (lambda ()
-  (unless (memq this-command
-          '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-    (ding))))
+	(unless (memq this-command
+		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+	  (ding))))
 
 ;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
 ;; turn off alarms completely
-(setq ring-bell-function 'ignore)
+(setq ring-bell-function 'ignore) 
 
 (defun  incarnadine-cursor ()
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-  '((cursor-color . "red"))) 
+	'((cursor-color . "red"))) 
   )
 
 (defun  magenta-cursor ()
   (interactive)
   (set-cursor-color "#DC8CC3")
   (setq default-frame-alist
-  '((cursor-color . "#DC8CC3"))) 
-  )
+	'((cursor-color . "#DC8CC3"))) 
+  ) 
 
 (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
@@ -89,7 +89,7 @@
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
 (unless (and (fboundp 'play-sound-internal)
-       (subrp (symbol-function 'play-sound-internal)))
+	     (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
 
@@ -129,7 +129,7 @@
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
+(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
 
 ; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
@@ -220,9 +220,9 @@
 ")
 
 (setq safe-local-variable-values (quote    ((eval when
-     (fboundp
-      (quote rainbow-mode))
-     (rainbow-mode 1)))))
+	   (fboundp
+	    (quote rainbow-mode))
+	   (rainbow-mode 1)))))
 
 (setq org-html-footnotes-section "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
@@ -263,7 +263,7 @@
   (setq content (org-remove-indentation content))
   (format "@<div class=\"drawer\">%s@</div>\n" content))
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t)
+(setq org-icalendar-include-todo t) 
 
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
@@ -375,49 +375,49 @@
       (quote
        (
 
-  ("g" "gratitude" entry (file "gratitude.txt")
-   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+	("g" "gratitude" entry (file "gratitude.txt")
+	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-  ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-  ("n" "note" entry (file org-default-notes-file)
-   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+	("n" "note" entry (file org-default-notes-file)
+	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
-  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+	("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
 ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
-   "\n\n* wm%?\n" :prepend t :kill-buffer t)
+	 "\n\n* wm%?\n" :prepend t :kill-buffer t)
 
-  ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("e" "expression" entry (file "expression.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-   "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+	 "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
 
-  ("h" "historical interest" entry (file "historical-lifestream.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	("h" "historical interest" entry (file "historical-lifestream.txt")
+	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
@@ -427,8 +427,8 @@
 ;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
 ;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
 
-  ("f" "flowy" entry (file "flowy.org")
-   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+	("f" "flowy" entry (file "flowy.org")
+	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -464,8 +464,8 @@
   (when (equal major-mode 'org-mode)
     (save-excursion
       (ignore-errors
-  (org-back-to-heading)
-  (org-update-parent-todo-statistics)))))
+	(org-back-to-heading)
+	(org-update-parent-todo-statistics)))))
 
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
@@ -535,7 +535,7 @@
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
-     (call-interactively 'org-agenda-schedule)))
+	   (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -544,7 +544,7 @@
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
-;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work
+;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -606,7 +606,6 @@
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
@@ -656,13 +655,13 @@
 (setq org-export-preserve-breaks nil) 
 
 ;; add padding to numbered lists and bulleted lists (set to to)
-;; (setq org-export-preserve-breaks t)
+;; (setq org-export-preserve-breaks t) 
 
 (load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
 (require 'blue-ruin) 
-(require 'blue-ruin-no-cover)
+(require 'blue-ruin-no-cover) 
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq
@@ -687,7 +686,7 @@
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
-          (buffer-substring-no-properties b e)))
+			    (buffer-substring-no-properties b e)))
     (message-send-and-exit)))
 
 (add-to-list 'completion-styles 'initials t)
@@ -714,7 +713,7 @@
 (setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
 
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
-;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
 
 ;; (require 'org-pomodoro)
 
@@ -785,8 +784,6 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cua-mode nil)
- '(cursor-type (quote box) t)
- '(cursor-type (quote box))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
@@ -1004,15 +1001,15 @@ Only modes that don't derive from `prog-mode' should be listed here.")
      (ac-ispell-setup)))
 
 (add-hook 'ido-setup-hook
-    (lambda ()
-      ;; Go straight home
-      (define-key ido-file-completion-map
-        (kbd "~")
-        (lambda ()
-    (interactive)
-    (if (looking-back "/")
-        (insert "~/")
-      (call-interactively 'self-insert-command))))))
+	  (lambda ()
+	    ;; Go straight home
+	    (define-key ido-file-completion-map
+	      (kbd "~")
+	      (lambda ()
+		(interactive)
+		(if (looking-back "/")
+		    (insert "~/")
+		  (call-interactively 'self-insert-command))))))
 
 (require 'ido)
 
@@ -1241,7 +1238,7 @@ font-family: Courier, 'Courier New', monospace;
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
-(add-hook 'dired-mode-hook 'hl-line-mode)
+  (add-hook 'dired-mode-hook 'hl-line-mode)
 
   (require 'dired-x)
 
@@ -1287,12 +1284,12 @@ font-family: Courier, 'Courier New', monospace;
 
 (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
-(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$")
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
   (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
-     (member buffer buffer-stack-untracked))))
+	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -1623,10 +1620,10 @@ Also converts full stops to commas."
   (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
     (while (/= arg 0)
       (let ((this-win (window-buffer))
-      (next-win (window-buffer (funcall selector))))
-  (set-window-buffer (selected-window) next-win)
-  (set-window-buffer (funcall selector) this-win)
-  (select-window (funcall selector)))
+	    (next-win (window-buffer (funcall selector))))
+	(set-window-buffer (selected-window) next-win)
+	(set-window-buffer (funcall selector) this-win)
+	(select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (defun move-region-to-other-window (start end)
@@ -1702,11 +1699,11 @@ With prefix arg C-u, copy region instad of killing it."
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-  most-recent-filename)
+	most-recent-filename)
     (dolist (filename recentf-list)
       (unless (memq filename buffer-file-name-list)
-  (setq most-recent-filename filename)
-  (return)))
+	(setq most-recent-filename filename)
+	(return)))
     (find-file most-recent-filename)))
 
 (defun path-copy-full-path-to-clipboard ()
@@ -1725,16 +1722,16 @@ With prefix arg C-u, copy region instad of killing it."
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
-  (filename (buffer-file-name)))
+	(filename (buffer-file-name)))
     (if (not filename)
-  (message "Buffer '%s' is not visiting a file!" name)
+	(message "Buffer '%s' is not visiting a file!" name)
       (if (get-buffer new-name)
-    (message "A buffer named '%s' already exists!" new-name)
-  (progn
-    (rename-file name new-name 1)
-    (rename-buffer new-name)
-    (set-visited-file-name new-name)
-    (set-buffer-modified-p nil))))))
+	  (message "A buffer named '%s' already exists!" new-name)
+	(progn
+	  (rename-file name new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil))))))
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
@@ -1742,20 +1739,20 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-        (mapcar (lambda (path)
-            (replace-regexp-in-string home "~" path))
-          recentf-list)
-        nil t))))
+			  (mapcar (lambda (path)
+				    (replace-regexp-in-string home "~" path))
+				  recentf-list)
+			  nil t))))
 
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-   (tocpl (mapcar (function
-       (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-   (prompt (append '("File name: ") tocpl))
-   (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+	 (tocpl (mapcar (function
+			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+	 (prompt (append '("File name: ") tocpl))
+	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
@@ -1955,19 +1952,19 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my-isearch-yank-word-hook ()
   (when (equal this-command 'my-isearch-word-at-point)
     (let ((string (concat "\\<"
-        (buffer-substring-no-properties
-         (progn (skip-syntax-backward "w_") (point))
-         (progn (skip-syntax-forward "w_") (point)))
-        "\\>")))
+			  (buffer-substring-no-properties
+			   (progn (skip-syntax-backward "w_") (point))
+			   (progn (skip-syntax-forward "w_") (point)))
+			  "\\>")))
       (if (and isearch-case-fold-search
-         (eq 'not-yanks search-upper-case))
-    (setq string (downcase string)))
+	       (eq 'not-yanks search-upper-case))
+	  (setq string (downcase string)))
       (setq isearch-string string
-      isearch-message
-      (concat isearch-message
-        (mapconcat 'isearch-text-char-description
-             string ""))
-      isearch-yank-flag t)
+	    isearch-message
+	    (concat isearch-message
+		    (mapconcat 'isearch-text-char-description
+			       string ""))
+	    isearch-yank-flag t)
       (isearch-search-and-update))))
 
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
@@ -2115,7 +2112,7 @@ searches all buffers."
 ;; (incarnadine-cursor)
 ;; (monaco-font)
 
-;;; Tell ispell.el that ’ can be part of a word.
+ ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
              "['\x2019]" nil ("-B") nil utf-8)))
@@ -2138,7 +2135,7 @@ searches all buffers."
 (advice-add #'ispell-parse-output :filter-args
             #'endless/replace-quote)
 
-(run-with-idle-timer 60 t 'recentf-save-list)
+ (run-with-idle-timer 60 t 'recentf-save-list)
 
 (advice-add #'org-remove-angle-brackets :before-until
             (lambda (s) (if (string-prefix-p "mailto:" s) s)))
@@ -2185,9 +2182,9 @@ searches all buffers."
 
 (setq gnus-select-method
       '(nnimap "gmail"
-         (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
-         (nnimap-server-port "imaps")
-         (nnimap-stream ssl)))
+	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
 
 
 
@@ -2233,27 +2230,27 @@ searches all buffers."
        "%s\n"))
 (setq gnus-summary-display-arrow t)
 
-;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
-(when window-system
-  (setq gnus-sum-thread-tree-indent "  ")
-  (setq gnus-sum-thread-tree-root "") ;; "● ")
-  (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
-  (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
-  (setq gnus-sum-thread-tree-vertical        "│")
-  (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
-  (setq gnus-sum-thread-tree-single-leaf     "╰─► "))
-(setq gnus-summary-line-format
-      (concat
-       "%0{%U%R%z%}"
-       "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-       "  "
-       "%4{%-20,20f%}"               ;; name
-       "  "
-       "%3{│%}"
-       " "
-       "%1{%B%}"
-       "%s\n"))
-(setq gnus-summary-display-arrow t)
+  ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
+  (when window-system
+    (setq gnus-sum-thread-tree-indent "  ")
+    (setq gnus-sum-thread-tree-root "") ;; "● ")
+    (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
+    (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
+    (setq gnus-sum-thread-tree-vertical        "│")
+    (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
+    (setq gnus-sum-thread-tree-single-leaf     "╰─► "))
+  (setq gnus-summary-line-format
+        (concat
+         "%0{%U%R%z%}"
+         "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
+         "  "
+         "%4{%-20,20f%}"               ;; name
+         "  "
+         "%3{│%}"
+         " "
+         "%1{%B%}"
+         "%s\n"))
+  (setq gnus-summary-display-arrow t)
 
 (defun org-mime-htmlize (&optional arg)
 "Export a portion of an email body composed using `mml-mode' to
@@ -2272,20 +2269,20 @@ export that region, otherwise export the entire body."
                        ;; TODO: should catch signature...
                        (point-max)))
          (raw-body (concat org-mime-default-header
-         (buffer-substring html-start html-end)))
+			   (buffer-substring html-start html-end)))
          (tmp-file (make-temp-name (expand-file-name
-            "mail" temporary-file-directory)))
+				    "mail" temporary-file-directory)))
          (body (org-export-string-as raw-body 'org t))
          ;; because we probably don't want to export a huge style file
          (org-export-htmlize-output-type 'inline-css)
          ;; makes the replies with ">"s look nicer
          (org-export-preserve-breaks org-mime-preserve-breaks)
-   ;; dvipng for inline latex because MathJax doesn't work in mail
-   (org-html-with-latex 'dvipng)
+	 ;; dvipng for inline latex because MathJax doesn't work in mail
+	 (org-html-with-latex 'dvipng)
          ;; to hold attachments for inline html images
          (html-and-images
           (org-mime-replace-images
-     (org-export-string-as raw-body 'html t) tmp-file))
+	   (org-export-string-as raw-body 'html t) tmp-file))
          (html-images (unless arg (cdr html-and-images)))
          (html (org-mime-apply-html-hook
                 (if arg
@@ -2295,7 +2292,7 @@ export that region, otherwise export the entire body."
     (save-excursion
       (goto-char html-start)
       (insert (org-mime-multipart
-         body html (mapconcat 'identity html-images "\n"))))))
+	       body html (mapconcat 'identity html-images "\n"))))))
 
 (defun new-email-from-subtree ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -2784,7 +2781,7 @@ as the subject."
 
 (defun delete-duplicate-lines-keep-blanks ()
   (interactive)
-  (delete-duplicate-lines (region-beginning) (region-end) nil nil t))
+  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
 
 (defun helm-do-grep-current-directory-tree ()
   "Recursively search current directory.
@@ -2887,7 +2884,7 @@ Single Capitals as you type."
                       (make-variable-buffer-local 'yas-trigger-key)
                       (setq yas-trigger-key [tab])
                       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-                      (define-key yas-keymap [tab] 'yas-next-field)))
+                      (define-key yas-keymap [tab] 'yas-next-field))) 
 
 ;; NO spell check for embedded snippets
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
@@ -2912,7 +2909,7 @@ Single Capitals as you type."
 (defun new-week ()
   (interactive)
 (tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
-  )
+  ) 
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
@@ -3045,13 +3042,13 @@ Single Capitals as you type."
     (nreverse buffers)))
 
 (setq gnus-dired-mail-mode 'mu4e-user-agent)
-(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode) 
 
 (define-key gnus-summary-mode-map "c"
   'compose-mail)
  
 (define-key gnus-summary-mode-map "a"
-  'gnus-summary-wide-reply)
+  'gnus-summary-wide-reply) 
 
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
@@ -3183,10 +3180,10 @@ Single Capitals as you type."
     (widget-insert "`S' to star or unstar messages.\n")
     (widget-insert "`y' to unstar and archive a message.\n")
     (widget-create 'link
-       :notify (lambda (&rest ignore)
-           (customize-variable 'notmuch-hello-sections))
-       :button-prefix "" :button-suffix ""
-       "Customize")
+		   :notify (lambda (&rest ignore)
+			     (customize-variable 'notmuch-hello-sections))
+		   :button-prefix "" :button-suffix ""
+		   "Customize")
     (widget-insert " this page.")
     (let ((fill-column (- (window-width) notmuch-hello-indent)))
       (center-region start (point))))) 
@@ -3201,7 +3198,7 @@ Single Capitals as you type."
 (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 (setq nm-results-window-size 25)
@@ -3216,18 +3213,18 @@ Single Capitals as you type."
 (delete-region (mark) (point))
 (recenter-top-bottom)
 )
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
 
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
   )
 
-(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
+  (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
 
 ;; (setq zone-programs [zone-pgm-drip]) 
 ;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
-(setq zone-programs [zone-pgm-putz-with-case])
+(setq zone-programs [zone-pgm-putz-with-case]) 
 
 (defun unbind-orgstruct-keys ()
   (interactive)
@@ -3236,12 +3233,12 @@ Single Capitals as you type."
                     "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
     (define-key (eval map) (kbd key) nil)))
   )
-(add-hook 'message-mode-hook 'unbind-orgstruct-keys)
+(add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
 
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
-    (set-buffer-modified-p t)))
+    (set-buffer-modified-p t))) 
 
 (eval-after-load 'dired
   '(progn
@@ -3266,11 +3263,11 @@ If FILE already exists, signal an error."
          (write-region "" nil expanded t)
          (when new
            (dired-add-file new)
-           (dired-move-to-filename))))))
+           (dired-move-to-filename)))))) 
 
 (setq olivetti-body-width 120)
 
-;; (run-at-time nil 30 'jay/save-some-buffers)
+;; (run-at-time nil 30 'jay/save-some-buffers) 
 
 (defun load-shared-functions ()
   (interactive)
@@ -3291,7 +3288,7 @@ If FILE already exists, signal an error."
 ;; Set to the name of the file where new notes will be stored
 (setq org-mobile-inbox-for-pull "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg") 
 
 (defun bold-region-or-point ()
   (interactive)
@@ -3310,7 +3307,7 @@ If FILE already exists, signal an error."
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/")
 
 ;; load org-opml
-(load-library "org-opml")
+(load-library "org-opml") 
 
 (require 'org-element-debug)
 
@@ -3325,7 +3322,7 @@ If FILE already exists, signal an error."
 
 (defun bb/next-heading (&rest args) 
 (when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
-(advice-add 'org-todo :after 'bb/next-heading)
+(advice-add 'org-todo :after 'bb/next-heading) 
 
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
