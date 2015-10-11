@@ -4695,7 +4695,9 @@ event of an error or nonlocal exit."
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice to move to next list item on checkbox toggle."
   (my/with-advice 
-      ((#'org-update-checkbox-count-maybe :after #'org-next-item))
+      ((#'org-update-checkbox-count-maybe
+        :after (lambda ()
+                 (ignore-errors (org-next-item)))))
     (apply orig-fn args)))
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
