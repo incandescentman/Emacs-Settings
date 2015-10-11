@@ -57,7 +57,6 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cursor ((t (:foreground "#DC8CC3" :background "#DC8CC3"))))
- '(cursor-type (quote box))
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
