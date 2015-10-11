@@ -3353,3 +3353,7 @@ event of an error or nonlocal exit."
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
+
+(defcustom ivy-height 50
+  "Number of lines for the minibuffer window."
+  :type 'integer) 

@@ -4703,3 +4703,10 @@ event of an error or nonlocal exit."
 #+END_SRC
 
 
+
+* Swiper 
+  #+BEGIN_SRC emacs-lisp
+(defcustom ivy-height 50
+  "Number of lines for the minibuffer window."
+  :type 'integer) 
+  #+END_SRC
