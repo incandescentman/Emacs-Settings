@@ -109,3 +109,5 @@
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
   (dired "~/b/12-mistakes"))
+
+

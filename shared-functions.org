@@ -4278,6 +4278,42 @@ Single Capitals as you type."
 )) 
 
 
+(define-key notmuch-search-mode-map "d"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "-flagged" "-inbox"))
+(notmuch-search-next-thread))) 
+
+(define-key notmuch-search-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "+flagged" "+inbox"))
+(notmuch-search-next-thread))) 
+
+
+;; show mode
+(define-key notmuch-show-mode-map "d"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "-flagged" "-inbox"))
+(notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+)) 
+
+(define-key notmuch-show-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "+flagged" "+inbox"))
+(notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+
+)) 
+
+
 
 
 (define-key notmuch-search-mode-map "y"
@@ -4326,6 +4362,24 @@ Single Capitals as you type."
       (lambda ()
         "archive"
 (notmuch-refresh-this-buffer))) 
+
+
+
+(define-key notmuch-show-mode-map "x"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-search-mode-map "x"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-tree-mode-map "x"
+      (lambda ()
+        "archive"
+(notmuch-refresh-this-buffer))) 
+
 
 (define-key notmuch-hello-mode-map "g" (notmuch-refresh-this-buffer)) 
 ;; doesn't work
@@ -4709,4 +4763,11 @@ event of an error or nonlocal exit."
 (defcustom ivy-height 50
   "Number of lines for the minibuffer window."
   :type 'integer) 
+  #+END_SRC
+
+
+* cut-subtree
+
+  #+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
   #+END_SRC

@@ -312,6 +312,7 @@
 
 (define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
 
+(define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
 
 
 ;; book bindings
