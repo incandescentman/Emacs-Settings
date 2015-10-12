@@ -6,6 +6,17 @@
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE: 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
+
+
+* TODO kill-clause 
+
+Example: 
+As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
+
+Scenario: invoke kill-clause
+
+
+
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
 
