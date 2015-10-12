@@ -413,3 +413,29 @@ Same thing for scheduled:
 #+END_EXAMPLE
 
 Thanks!
+
+* cycle contraction
+I want an Emacs lisp function I can call that will automatically convert a two-word phrase (e.g. "do not") into its English contraction (e.g. "don't"). Maybe we would call it cycle-contraction.
+
+For example, let's say I have this sentence:
+
+: I do not want to see the movie.
+
+And let's say the point is on the space between "do" and "not."
+
+If I invoke cycle-contraction, Emacs should convert "do not" to "don't" so the sentence would look like this:
+
+: I don't want to see the movie.
+
+Conversely, if the point is somewhere on the word "couldn't" and I call cycle-contraction, it should convert it to the long-form-phrase "could not".
+
+We would define each long-form-phrase and its contraction as a list of pairs, maybe something like this:
+
+(setq contraction-pairs
+(
+(("do not") ("don't"))
+(("will not") ("won't"))
+(("could not") ("couldn't"))
+))
+
+What do you think?
