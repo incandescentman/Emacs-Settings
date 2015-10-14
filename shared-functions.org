@@ -2542,8 +2542,8 @@ For popping around the buffer. I need to review how this works again.
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-]") 'outline-next-visible-heading)
-(global-set-key (kbd "M-[") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'outline-next-visible-heading)
+(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -3267,11 +3267,11 @@ export that region, otherwise export the entire body."
 	       body html (mapconcat 'identity html-images "\n"))))))
 #+END_SRC
 
-** new-email-from-subtree 
+** new-email-from-subtree-with-signature 
 
 #+BEGIN_SRC emacs-lisp 
 
-(defun new-email-from-subtree ()
+(defun new-email-from-subtree-with-signature ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -3321,7 +3321,8 @@ subsequent sends."
 (insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
 (646) 355-8001
 [[http://jaydixit.com/][jaydixit.com]]
-\n"))
+\n")
+(message-goto-to))
 ))
 
 
@@ -3371,7 +3372,7 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to))
-(end-of-buffer)
+;; (end-of-buffer)
 )
 ))
 #+END_SRC
@@ -3606,6 +3607,10 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
+
+(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
+
 #+END_SRC
 
 * org-toggle-heading-same-level
@@ -4563,8 +4568,8 @@ but how to make it stop saying "no files need saving"?
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
-(define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
+(define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
 #+END_SRC
 
 
@@ -4718,7 +4723,16 @@ This is especially useful with a command that searches current word. See: Emacs:
 
   #+BEGIN_SRC emacs-lisp 
 (defun bb/next-heading (&rest args) 
-(when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
+(when 
+
+(or
+(org-entry-is-done-p) 
+(string= (org-get-todo-state) "MISSED") 
+)
+(outline-next-visible-heading 1))) 
+
+
+
 (advice-add 'org-todo :after 'bb/next-heading) 
   #+END_SRC
 

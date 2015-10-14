@@ -85,6 +85,7 @@ In the example above, let's say the point is on the ^ and I want to kill to the 
 
 * TODO another capitalization error
 Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
+
 * todo smart-punctuation in an org-heading
 Smart-punctuation is working as desired in plain text.
 
@@ -143,7 +144,7 @@ Debugger entered--Lisp error: (args-out-of-range 0 0)
    #+END_SRC
 
 
-* please-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+* PLEASE-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 
 ** NOTE-TO-RÚDI still getting the error
@@ -369,7 +370,7 @@ This:
 http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
 
 
-* TODO no capitalis on cheklist items 
+* TODO no capitals on cheklist items 
 - [ ] these
 - [ ] Should
 - [ ] Not

@@ -396,8 +396,8 @@
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 ;; org-mime
-(define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
-(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
+;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
+;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
 (define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
 (define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)

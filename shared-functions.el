@@ -1785,8 +1785,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
-(global-set-key (kbd "M-]") 'outline-next-visible-heading)
-(global-set-key (kbd "M-[") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'outline-next-visible-heading)
+(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -2294,7 +2294,7 @@ export that region, otherwise export the entire body."
       (insert (org-mime-multipart
          body html (mapconcat 'identity html-images "\n"))))))
 
-(defun new-email-from-subtree ()
+(defun new-email-from-subtree-with-signature ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -2344,7 +2344,8 @@ subsequent sends."
 (insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
 (646) 355-8001
 [[http://jaydixit.com/][jaydixit.com]]
-\n"))
+\n")
+(message-goto-to))
 ))
 
 
@@ -2394,7 +2395,7 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to))
-(end-of-buffer)
+;; (end-of-buffer)
 )
 ))
 
@@ -2607,6 +2608,9 @@ as the subject."
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
+
+(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
 
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -3331,8 +3335,8 @@ If FILE already exists, signal an error."
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
-(define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
+(define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
 
 (setq org-ellipsis " ◦◦◦ ") 
 ; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
@@ -3375,7 +3379,16 @@ If FILE already exists, signal an error."
  )
 
 (defun bb/next-heading (&rest args) 
-(when (org-entry-is-done-p) (outline-next-visible-heading 1))) 
+(when 
+
+(or
+(org-entry-is-done-p) 
+(string= (org-get-todo-state) "MISSED") 
+)
+(outline-next-visible-heading 1))) 
+
+
+
 (advice-add 'org-todo :after 'bb/next-heading)
 
 (defmacro my/with-advice (adlist &rest body)
