@@ -440,3 +440,11 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 ))
 
 What do you think?
+
+* this
+
+Don't use an -ly word. ^
+scenario: comma
+current output: Don't use an -ly word,^
+desired output: Don't use an -ly word, ^
+
