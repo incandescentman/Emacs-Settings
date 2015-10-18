@@ -1,4 +1,5 @@
 
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-CLARIFY PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -6,6 +7,12 @@
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE: 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
+* smart punctuation behavior 
+
+Example: Don't use an adverb word. ^
+scenario: I hit comma
+current output: Don't use an adverb word,^
+desired output: Don't use an adverb word, ^
 
 
 * TODO kill-clause 
@@ -441,10 +448,6 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 
 What do you think?
 
-* this
 
-Don't use an -ly word. ^
-scenario: comma
-current output: Don't use an -ly word,^
-desired output: Don't use an -ly word, ^
-
+* embolden/italicize word
+If active region, then wrap region in * or /.
