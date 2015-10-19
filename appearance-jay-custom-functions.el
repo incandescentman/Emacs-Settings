@@ -17,6 +17,10 @@
   (interactive)
   (set-face-attribute 'default nil :font "Garamond Premier Pro"))
 
+(defun hack-font ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Hack"))
+
 
 (defun monaco-font ()
   (interactive)
@@ -25,7 +29,6 @@
 (defun vera-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Bitstream Vera Sans Mono"))
-
 
 (defun consolas-font ()
   (interactive)

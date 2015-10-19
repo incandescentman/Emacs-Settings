@@ -143,3 +143,8 @@ Here is a version of the use-package expression that will load define-word only 
 
 * rx
 [[http://emacs.stackexchange.com/questions/2288/how-do-i-create-a-dynamic-regexp-with-rx?rq=1][regular expressions - How do I create a dynamic regexp with rx? - Emacs Stack Exchange]]
+
+
+* packages to check out 
+https://github.com/larstvei/Focus/blob/master/README.md 
+
