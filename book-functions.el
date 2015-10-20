@@ -4,8 +4,11 @@
   (kill-buffer "playful.org")
   (error nil))
 (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+(text-scale-increase 1)
 (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
+(text-scale-increase 1)
 (find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
+(text-scale-increase 1)
 )
 
 
@@ -85,10 +88,13 @@
 (defun work-on-book ()
 "Work on my book! :-)"
 (interactive)
-(find-file "/Users/jay/b/booktime.org")
+;; (find-file "/Users/jay/b/booktime.org")
 (end-of-buffer)
 (book-load-current)
-(book-dired))
+(text-scale-increase 1)
+(book-dired)
+(text-scale-increase 1)
+)
 
 
 (defun book-clock-in ()
