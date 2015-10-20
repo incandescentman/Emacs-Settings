@@ -2916,6 +2916,16 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (global-set-key (kbd "M-s s")   #'helm-again)
 #+END_SRC
 
+** projectile
+
+   #+BEGIN_SRC emacs-lisp
+(setq projectile-completion-system (quote helm))
+(setq projectile-enable-caching nil)
+(setq projectile-globally-ignored-buffers (quote ("docx ")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
+
+   #+END_SRC
+
 ** helm projectile
 
    #+BEGIN_SRC emacs-lisp

@@ -9,6 +9,7 @@
 (text-scale-increase 1)
 (find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
 (text-scale-increase 1)
+(text-scale-increase 1)
 )
 
 

@@ -2074,6 +2074,11 @@ searches all buffers."
 
 (global-set-key (kbd "M-s s")   #'helm-again)
 
+(setq projectile-completion-system (quote helm))
+(setq projectile-enable-caching nil)
+(setq projectile-globally-ignored-buffers (quote ("docx ")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
+
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
