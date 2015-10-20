@@ -2078,6 +2078,9 @@ searches all buffers."
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
 (setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
+(setq projectile-globally-ignored-directories
+   (quote
+    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni")))
 
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list

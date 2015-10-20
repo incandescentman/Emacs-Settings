@@ -2923,7 +2923,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
 (setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
-
+(setq projectile-globally-ignored-directories
+   (quote
+    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
    #+END_SRC
 
 ** helm projectile
