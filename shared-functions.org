@@ -2531,7 +2531,7 @@ For popping around the buffer. I need to review how this works again.
 ** BBDB contacts database (not currently using this)
 
 #+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
+;; (add-to-list 'load-path "~/elisp/bbdb/lisp")
 ;; (require 'bbdb) ;; (3)
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
@@ -2976,12 +2976,12 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 ** Load my LaTeX files
 
-;; (load "~/Dropbox/elisp/latex.el")
-(load "~/Dropbox/elisp/signal-flare.el")
-(load "~/Dropbox/elisp/signal-flare-wide.el")
-;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
-(load "~/Dropbox/elisp/jay-dixit-latex.el")
-(load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
+;; (load "~/elisp/latex.el")
+(load "~/elisp/signal-flare.el")
+(load "~/elisp/signal-flare-wide.el")
+;; (load "~/elisp/signal-flare-wide-different-image.el")
+(load "~/elisp/jay-dixit-latex.el")
+(load "~/elisp/signal-flare-smaller-fonts.el")
 *
 magit
 
@@ -4417,9 +4417,9 @@ Single Capitals as you type."
 (require 'org-notmuch) 
 
 ;; display in the middle of large displays
-(add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
@@ -4784,6 +4784,7 @@ event of an error or nonlocal exit."
 
   #+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
+(define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
   #+END_SRC
 
 
@@ -4803,3 +4804,5 @@ event of an error or nonlocal exit."
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
   #+END_SRC
+
+
