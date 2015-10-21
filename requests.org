@@ -446,11 +446,4 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 (("could not") ("couldn't"))
 ))
 
-What do you think?
-
-
-* embolden/italicize word
-If active region, then wrap region in * or /.
-
-
-* 
+What do you think? 

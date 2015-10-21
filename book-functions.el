@@ -4,12 +4,13 @@
   (kill-buffer "playful.org")
   (error nil))
 (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
-(text-scale-increase 1)
+(text-scale-increase 2)
 (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
-(text-scale-increase 1)
+(text-scale-increase 2)
 (find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
-(text-scale-increase 1)
-(text-scale-increase 1)
+(text-scale-increase 2)
+(find-file "/Users/jay/b/12-mistakes/short-term_meta.txt")
+(text-scale-increase 2)
 )
 
 
@@ -82,7 +83,8 @@
 ;; (cyberpunk-jay)
  ;; (toggle-fullscreen)
  (org-mode)
-  (dired "~/b/"))
+;;  (dired "~/b/"))
+(dired "~/b/12-mistakes/"))
 
 
 
@@ -92,9 +94,9 @@
 ;; (find-file "/Users/jay/b/booktime.org")
 (end-of-buffer)
 (book-load-current)
-(text-scale-increase 1)
+(text-scale-increase 2)
 (book-dired)
-(text-scale-increase 1)
+(text-scale-increase 2)
 )
 
 
