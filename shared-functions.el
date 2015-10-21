@@ -3452,5 +3452,5 @@ event of an error or nonlocal exit."
 
 (require 'wrap-region)
 (wrap-region-add-wrapper "*" "*" "*")  
-(wrap-region-add-wrapper "/" "/" "/")  
+(wrap-region-add-wrapper "\/" "\/" "\/")  
 (add-hook 'org-mode-hook 'wrap-region-mode)

@@ -424,6 +424,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
+;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
+
+;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
+
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 

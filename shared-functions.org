@@ -4823,6 +4823,6 @@ event of an error or nonlocal exit."
   #+BEGIN_SRC emacs-lisp
 (require 'wrap-region)
 (wrap-region-add-wrapper "*" "*" "*")  
-(wrap-region-add-wrapper "/" "/" "/")  
+(wrap-region-add-wrapper "\/" "\/" "\/")  
 (add-hook 'org-mode-hook 'wrap-region-mode) 
   #+END_SRC
