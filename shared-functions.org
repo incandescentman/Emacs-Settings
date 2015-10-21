@@ -4817,3 +4817,12 @@ event of an error or nonlocal exit."
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
   #+END_SRC
+
+* wrap region
+
+  #+BEGIN_SRC emacs-lisp
+(require 'wrap-region)
+(wrap-region-add-wrapper "*" "*" "*")  
+(wrap-region-add-wrapper "/" "/" "/")  
+(add-hook 'org-mode-hook 'wrap-region-mode) 
+  #+END_SRC

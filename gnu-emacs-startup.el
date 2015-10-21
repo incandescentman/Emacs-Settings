@@ -443,9 +443,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (delete-forward-char 1))
 )
 
-;; and the keybinding
-(global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
-
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
@@ -464,6 +461,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-word 1))))
+
+(defun kill-sentence-maybe-else-kill-line ()
+  (interactive)
+(when
+    (not (looking-at "$"))
+  (my/kill-sentence-dwim))
+  (when
+      (looking-at "$")
+    (my/kill-line-dwim))
+)
+;; and the keybinding
+(global-set-key (kbd "M-k") 'kill-sentence-maybe-else-kill-line)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 

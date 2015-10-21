@@ -3449,3 +3449,8 @@ event of an error or nonlocal exit."
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
+
+(require 'wrap-region)
+(wrap-region-add-wrapper "*" "*" "*")  
+(wrap-region-add-wrapper "/" "/" "/")  
+(add-hook 'org-mode-hook 'wrap-region-mode)
