@@ -506,7 +506,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
 (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
-(define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
+;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 ;;; I changed this a)) bunch, not sure if it still works correctly. 
 ;; (defun my/fix-space ()
