@@ -3458,3 +3458,5 @@ event of an error or nonlocal exit."
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
+
+(org-content 1)
