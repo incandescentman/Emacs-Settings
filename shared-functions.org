@@ -4478,12 +4478,12 @@ Single Capitals as you type."
 
 * insert slash no abbrev
 
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_EXAMPLE emacs-lisp
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
   )
-  #+END_SRC
+  #+END_EXAMPLE 
 
 
 * poetry
@@ -4827,3 +4827,16 @@ event of an error or nonlocal exit."
 (wrap-region-add-wrapper "\/" "\/" "\/")  
 (add-hook 'org-mode-hook 'wrap-region-mode) 
   #+END_SRC
+
+* faces 
+** bold
+
+   #+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+)
+   #+END_SRC

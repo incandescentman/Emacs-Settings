@@ -3283,11 +3283,6 @@ Single Capitals as you type."
 )
 (define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end)
 
-(defun jay/insert-slash ()
-  (interactive)
-  (insert "/")
-  )
-
 (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
 
 ;; (setq zone-programs [zone-pgm-drip]) 
@@ -3455,3 +3450,11 @@ event of an error or nonlocal exit."
 (wrap-region-add-wrapper "*" "*" "*")  
 (wrap-region-add-wrapper "\/" "\/" "\/")  
 (add-hook 'org-mode-hook 'wrap-region-mode)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+)

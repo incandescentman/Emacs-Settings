@@ -46,10 +46,6 @@
  '(autopair-blink t)
  '(autopair-global-mode t)
  '(blink-cursor-mode nil)
- '(bold
-   ((((class color)
-      (min-colors 89))
-     (:bold t :foreground "#DC8CC3"))))
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
@@ -343,13 +339,7 @@
  '(rm-blacklist
    (quote
     (" hl-p" "Guide" "Olv" "Helm" "Palimpsest" "Olivetti")))
- '(safe-local-variable-values
-   (quote
-    ((eval when
-           (fboundp
-            (quote rainbow-mode))
-           (rainbow-mode 1))
-     (org-export-allow-bind-keywords . t))))
+ '(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
  '(send-mail-function (quote sendmail-send-it))
  '(smex-prompt-string "I love you. ")
  '(sp-base-key-bindings nil)
@@ -392,6 +382,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(notmuch-search-count ((t (:inherit default :height 0.1))))
  '(notmuch-search-date ((t (:inherit default :height 1.2))))
  '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
