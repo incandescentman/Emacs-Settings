@@ -4846,33 +4846,50 @@ event of an error or nonlocal exit."
  (defun org-show-level-1 () 
   (interactive) 
  (org-content 1)) 
-(define-key key-minor-mode-map (kbd "s-!") 'org-show-level-1)
+
  (defun org-show-level-2 () 
   (interactive) 
  (org-content 2)) 
-(define-key key-minor-mode-map (kbd "s-@") 'org-show-level-2)
+
  (defun org-show-level-3 () 
   (interactive) 
  (org-content 3)) 
-(define-key key-minor-mode-map (kbd "s-#") 'org-show-level-3)
+
  (defun org-show-level-4 () 
   (interactive) 
  (org-content 4)) 
-(define-key key-minor-mode-map (kbd "s-$") 'org-show-level-4)
+
  (defun org-show-level-5 () 
   (interactive) 
  (org-content 5)) 
-(define-key key-minor-mode-map (kbd "s-%") 'org-show-level-5)
+
  (defun org-show-level-6 () 
   (interactive) 
  (org-content 6)) 
-(define-key key-minor-mode-map (kbd "s-^") 'org-show-level-6)
+
  (defun org-show-level-7 () 
   (interactive) 
  (org-content 7)) 
-(define-key key-minor-mode-map (kbd "s-$") 'org-show-level-7)
+
  (defun org-show-level-8 () 
   (interactive) 
  (org-content 8)) 
+
+ (define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
+
+ (define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
+
+ (define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
+
+ (define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
+
+ (define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
+
+ (define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
+
+ (define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
+
+ (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
+ 
   #+END_SRC
 
