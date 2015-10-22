@@ -1940,7 +1940,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m tg" 'top-gun-mode)
 (define-hyper-key "m tn" 'tomorrow-night)
 
-(define-hyper-key "m ma" 'add-global-abbrev) 
+(define-hyper-key "m ma" 'inverse-add-global-abbrev) 
 
 (define-hyper-key "m rr" 'replace-regexp) 
 
@@ -3506,11 +3506,15 @@ event of an error or nonlocal exit."
   :ensure t
   :config
   (wrap-region-add-wrappers
-   '(("*" "*" nil org-mode)
+   '(
+;;     ("*" "*" nil org-mode)
+;;     ("/" "/" nil org-mode)
      ("~" "~" nil org-mode)
-     ("/" "/" nil org-mode)
      ("_" "_" nil org-mode)
-     ("$" "$" nil (org-mode latex-mode))))
+     ("*" "*" nil (org-mode message-mode))
+     ("/" "/" nil (org-mode message-mode))
+      ("$" "$" nil (org-mode latex-mode))
+      ))
   (add-hook 'org-mode-hook 'wrap-region-mode)
   (add-hook 'latex-mode-hook 'wrap-region-mode))
 
@@ -3522,6 +3526,7 @@ event of an error or nonlocal exit."
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
 
+(require 'god-mode) 
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'bar
