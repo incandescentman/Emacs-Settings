@@ -28,6 +28,8 @@
 
 ; (require 'org-fstree)
 
+(require 'use-package)
+
 (defun add-word-to-personal-dictionary ()
   (interactive)
   (let ((current-location (point))
@@ -546,6 +548,54 @@
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 ;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work
+
+(defun org-show-level-1 () 
+ (interactive) 
+(org-content 1)) 
+
+(defun org-show-level-2 () 
+ (interactive) 
+(org-content 2)) 
+
+(defun org-show-level-3 () 
+ (interactive) 
+(org-content 3)) 
+
+(defun org-show-level-4 () 
+ (interactive) 
+(org-content 4)) 
+
+(defun org-show-level-5 () 
+ (interactive) 
+(org-content 5)) 
+
+(defun org-show-level-6 () 
+ (interactive) 
+(org-content 6)) 
+
+(defun org-show-level-7 () 
+ (interactive) 
+(org-content 7)) 
+
+(defun org-show-level-8 () 
+ (interactive) 
+(org-content 8)) 
+
+(define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
+
+(define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
+
+(define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
+
+(define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
+
+(define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
+
+(define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
+
+(define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
+
+(define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8)
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -3446,10 +3496,23 @@ event of an error or nonlocal exit."
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
 
-(require 'wrap-region)
-(wrap-region-add-wrapper "*" "*" "*")  
-(wrap-region-add-wrapper "\/" "\/" "\/")  
-(add-hook 'org-mode-hook 'wrap-region-mode)
+;; (require 'wrap-region)
+;; (wrap-region-add-wrapper "*" "*" "*")  
+;; (wrap-region-add-wrapper "\/" "\/" "\/")  
+;; (add-hook 'org-mode-hook 'wrap-region-mode) 
+
+;; wrap-region
+(use-package wrap-region
+  :ensure t
+  :config
+  (wrap-region-add-wrappers
+   '(("*" "*" nil org-mode)
+     ("~" "~" nil org-mode)
+     ("/" "/" nil org-mode)
+     ("_" "_" nil org-mode)
+     ("$" "$" nil (org-mode latex-mode))))
+  (add-hook 'org-mode-hook 'wrap-region-mode)
+  (add-hook 'latex-mode-hook 'wrap-region-mode))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -3459,50 +3522,16 @@ event of an error or nonlocal exit."
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
 
-(defun org-show-level-1 () 
- (interactive) 
-(org-content 1)) 
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'bar
+                      'box)))
 
-(defun org-show-level-2 () 
- (interactive) 
-(org-content 2)) 
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
-(defun org-show-level-3 () 
- (interactive) 
-(org-content 3)) 
 
-(defun org-show-level-4 () 
- (interactive) 
-(org-content 4)) 
-
-(defun org-show-level-5 () 
- (interactive) 
-(org-content 5)) 
-
-(defun org-show-level-6 () 
- (interactive) 
-(org-content 6)) 
-
-(defun org-show-level-7 () 
- (interactive) 
-(org-content 7)) 
-
-(defun org-show-level-8 () 
- (interactive) 
-(org-content 8)) 
-
-(define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
-
-(define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
-
-(define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
-
-(define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
-
-(define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
-
-(define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
-
-(define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
-
-(define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8)
+             (require 'god-mode-isearch)
+(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
+(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
+(define-key god-local-mode-map (kbd ".") 'repeat)

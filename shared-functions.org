@@ -80,6 +80,12 @@ You can toggle it in necessary files by setting the local variables section at t
 ; (require 'org-fstree)
 #+END_SRC
 
+* pre config
+#+BEGIN_SRC emacs-lisp
+(require 'use-package)
+#+END_SRC
+
+
 * Set up spellcheck 
 ** Spellcheck add word
 #+BEGIN_SRC emacs-lisp
@@ -859,6 +865,58 @@ Make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 ;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
 #+END_SRC 
+
+** org-levels 
+   #+BEGIN_SRC emacs-lisp
+ (defun org-show-level-1 () 
+  (interactive) 
+ (org-content 1)) 
+
+ (defun org-show-level-2 () 
+  (interactive) 
+ (org-content 2)) 
+
+ (defun org-show-level-3 () 
+  (interactive) 
+ (org-content 3)) 
+
+ (defun org-show-level-4 () 
+  (interactive) 
+ (org-content 4)) 
+
+ (defun org-show-level-5 () 
+  (interactive) 
+ (org-content 5)) 
+
+ (defun org-show-level-6 () 
+  (interactive) 
+ (org-content 6)) 
+
+ (defun org-show-level-7 () 
+  (interactive) 
+ (org-content 7)) 
+
+ (defun org-show-level-8 () 
+  (interactive) 
+ (org-content 8)) 
+
+ (define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
+
+ (define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
+
+ (define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
+
+ (define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
+
+ (define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
+
+ (define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
+
+ (define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
+
+ (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
+ 
+   #+END_SRC
 
 * Typography
 ** Replace smart quotes with straight quotes
@@ -4822,11 +4880,26 @@ event of an error or nonlocal exit."
 * wrap region
 
   #+BEGIN_SRC emacs-lisp
-(require 'wrap-region)
-(wrap-region-add-wrapper "*" "*" "*")  
-(wrap-region-add-wrapper "\/" "\/" "\/")  
-(add-hook 'org-mode-hook 'wrap-region-mode) 
+;; (require 'wrap-region)
+;; (wrap-region-add-wrapper "*" "*" "*")  
+;; (wrap-region-add-wrapper "\/" "\/" "\/")  
+;; (add-hook 'org-mode-hook 'wrap-region-mode) 
+
+;; wrap-region
+(use-package wrap-region
+  :ensure t
+  :config
+  (wrap-region-add-wrappers
+   '(("*" "*" nil org-mode)
+     ("~" "~" nil org-mode)
+     ("/" "/" nil org-mode)
+     ("_" "_" nil org-mode)
+     ("$" "$" nil (org-mode latex-mode))))
+  (add-hook 'org-mode-hook 'wrap-region-mode)
+  (add-hook 'latex-mode-hook 'wrap-region-mode)) 
   #+END_SRC
+Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
+
 
 * faces 
 ** bold
@@ -4841,55 +4914,23 @@ event of an error or nonlocal exit."
 )
    #+END_SRC
 
-* org-levels 
-  #+BEGIN_SRC emacs-lisp
- (defun org-show-level-1 () 
-  (interactive) 
- (org-content 1)) 
 
- (defun org-show-level-2 () 
-  (interactive) 
- (org-content 2)) 
+** god mode
 
- (defun org-show-level-3 () 
-  (interactive) 
- (org-content 3)) 
+   #+BEGIN_SRC emacs-lisp
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'bar
+                      'box)))
 
- (defun org-show-level-4 () 
-  (interactive) 
- (org-content 4)) 
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
- (defun org-show-level-5 () 
-  (interactive) 
- (org-content 5)) 
 
- (defun org-show-level-6 () 
-  (interactive) 
- (org-content 6)) 
+             (require 'god-mode-isearch)
+(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
+(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
+(define-key god-local-mode-map (kbd ".") 'repeat)
 
- (defun org-show-level-7 () 
-  (interactive) 
- (org-content 7)) 
 
- (defun org-show-level-8 () 
-  (interactive) 
- (org-content 8)) 
-
- (define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
-
- (define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
-
- (define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
-
- (define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
-
- (define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
-
- (define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
-
- (define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
-
- (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
- 
-  #+END_SRC
-
+   #+END_SRC
