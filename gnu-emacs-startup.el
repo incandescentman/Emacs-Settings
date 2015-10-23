@@ -280,6 +280,9 @@
 
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
+  "*"))) ; wow this was a stroke of genius 
 
 
 

@@ -3476,25 +3476,19 @@ event of an error or nonlocal exit."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
 
-(defcustom ivy-height 50
-  "Number of lines for the minibuffer window."
-  :type 'integer)
-
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; swiper                                                                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcustom ivy-height 50
+  "Number of lines for the minibuffer window."
+  :type 'integer) 
 (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-display-style 'fancy)
 
-;;advise swiper to recenter on exit
-(defun bjm-swiper-recenter (&rest args)
-  "recenter display after swiper"
-  (recenter)
-  )
-(advice-add 'swiper :after #'bjm-swiper-recenter)
+(define-key key-minor-mode-map (kbd "M-m") 'swiper-mc)
 
 ;; (require 'wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")  
