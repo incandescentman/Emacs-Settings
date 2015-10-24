@@ -226,7 +226,7 @@ Desired output:
 
 And can you add this to the following three functions, i.e. pasteboard-paste, pasteboard-paste-without-smart-quotes, and pasteboard-paste-no-spaces? Thanks!
 
-*** pasteboard-paste 
+*** pasteboard-paste (smart-quotes) 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -251,6 +251,25 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 #+END_SRC
+
+*** pasteboard-paste-spaces-maybe 
+    #+BEGIN_SRC emacs-lisp
+(defun pasteboard-paste-spaces-maybe ()
+(interactive) 
+;; begin if 
+(if 
+(or 
+(looking-back "'")
+(looking-back "(")
+(looking-back "\\[")
+(looking-back "\"")
+)
+;; end if 
+
+    (pasteboard-paste-no-spaces) ; then
+  (pasteboard-paste-without-smart-quotes))   ; else
+  ) 
+    #+END_SRC
 
 
 *** pasteboard-paste-no-spaces
@@ -366,7 +385,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 ;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe) 
 ;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 ;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 

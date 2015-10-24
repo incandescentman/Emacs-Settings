@@ -142,6 +142,22 @@
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 
+(defun pasteboard-paste-spaces-maybe ()
+(interactive) 
+;; begin if 
+(if 
+(or 
+(looking-back "'")
+(looking-back "(")
+(looking-back "\\[")
+(looking-back "\"")
+)
+;; end if 
+
+    (pasteboard-paste-no-spaces) ; then
+  (pasteboard-paste-without-smart-quotes))   ; else
+  ) 
+
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -221,7 +237,7 @@
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 ;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe) 
 ;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
 ;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
@@ -581,9 +597,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (call-rebinding-org-blank-behaviour 'org-meta-return))
 
-(defun smart-org-insert-todo-heading-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
+(defun smart-org-insert-heading-respect-content-dwim ()
+(interactive) 
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+)
 
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
