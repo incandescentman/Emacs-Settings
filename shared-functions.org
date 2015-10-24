@@ -2716,6 +2716,11 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "(" 'org-velocity)
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
+(define-hyper-key "{" 'org-previous-visible-heading)
+(define-hyper-key "}" 'org-next-visible-heading)
+;; why not use N and P here? TODO
+
+
 
 ;; (define-hyper-key "m a" 'org-agenda)
 (define-hyper-key "m j" 'helm-imenu-anywhere)

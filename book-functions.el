@@ -9,7 +9,6 @@
 (text-scale-increase 2)
 (find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
 (text-scale-increase 2)
-(find-file "/Users/jay/b/12-mistakes/short-term_meta.txt")
 (text-scale-increase 2)
 )
 
@@ -91,12 +90,12 @@
 (defun work-on-book ()
 "Work on my book! :-)"
 (interactive)
-;; (find-file "/Users/jay/b/booktime.org")
-(end-of-buffer)
-(book-load-current)
+(book-load-current) 
 (text-scale-increase 2)
+(split-window-horizontally)
 (book-dired)
 (text-scale-increase 2)
+(other-window 1)
 )
 
 
