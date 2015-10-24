@@ -759,7 +759,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 *** smart-org-meta-return-dwim
 
-#+BEGIN_SRC emacs-lisp
+**** old version, works
+ #+BEGIN_EXAMPLE emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
@@ -782,7 +783,50 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-#+END_SRC
+ #+END_EXAMPLE 
+
+
+
+**** new version
+From here: 
+[[https://www.reddit.com/r/emacs/comments/3pw2qq/orgmode_headings_and_blank_lines/][{Org-mode} Headings and blank lines : emacs]]
+
+ #+BEGIN_SRC emacs-lisp
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
+
+(defun call-rebinding-org-blank-behaviour (fn)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively fn)))
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
+
+(defun smart-org-insert-heading-respect-content-dwim ()
+(interactive) 
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+)
+
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+(insert "TODO ")
+)
+
+(defun smart-org-insert-todo-heading-respect-content-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+ #+END_SRC
 
 *** smart-return
 

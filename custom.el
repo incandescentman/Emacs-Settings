@@ -433,8 +433,8 @@
      (define-key org-mode-map [C-down] 'org-metadown)
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
      ;; add these new ones below
-     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
-     (define-key org-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-insert-heading-respect-content-dwim)
+     (define-key org-mode-map (kbd "<C-return>") 'smart-org-insert-heading-respect-content-dwim)
 ;; may need to somehow persistently unbind prelude-smart-open-line in prelude-mode.el
      
      (define-key key-minor-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
