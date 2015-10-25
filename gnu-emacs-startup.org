@@ -2230,17 +2230,17 @@ Oleh
 #+END_SRC
 
 ** smart-comma
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ",")
-(unless (looking-at "\\W*$")) )
+(unless (looking-at "\\W*$")) 
 (save-excursion (downcase-word 1)))
 
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
 (define-key orgstruct-mode-map (kbd ",") 'smart-comma)
-#+END_EXAMPLE
+#+END_SRC
 
 ** smart-question-mark
 #+BEGIN_SRC emacs-lisp

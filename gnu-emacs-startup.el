@@ -1237,6 +1237,16 @@ subsequent sends. could save them all in a logbook?
 (define-key org-mode-map (kbd ".") 'smart-period)
 (define-key orgstruct-mode-map (kbd ".") 'smart-period)
 
+(defun smart-comma ()
+  (interactive)
+  (smart-punctuation ",")
+(unless (looking-at "\\W*$")) 
+(save-excursion (downcase-word 1)))
+
+
+(define-key org-mode-map (kbd ",") 'smart-comma)
+(define-key orgstruct-mode-map (kbd ",") 'smart-comma)
+
 (defun smart-question-mark ()
   (interactive)
   (smart-punctuation "?")
