@@ -231,6 +231,9 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+
+(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -610,19 +613,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content))
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content)
+)
 
-;; regular keybindings, they work
-;; (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-;; (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-;; (define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
-;; (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+(defun smart-org-insert-subheading ()
+  (interactive)
 
-;; trying something new
-(define-key org-mode-map (kbd "C-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-insert-heading-respect-content-dwim)
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+(call-rebinding-org-blank-behaviour 'org-meta-return) 
+(org-demote-subtree)
+  )
+
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+(define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
 
 (defun smart-return ()
   (interactive)
@@ -1134,7 +1140,18 @@ subsequent sends. could save them all in a logbook?
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
-  (smart-expand)
+
+(if 
+
+;; if
+(looking-back "* ") 
+
+;; then 
+(kill-line)
+
+;; else 
+
+(  (smart-expand)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -1145,7 +1162,7 @@ subsequent sends. could save them all in a logbook?
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
+      (capitalize-unless-org-heading))))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
@@ -1216,7 +1233,10 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-comma ()
   (interactive)
-  (smart-punctuation ","))
+  (smart-punctuation ",")
+(unless looking-at "\\W*$" )
+(save-excursion (downcase-word 1)))
+
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
 (define-key orgstruct-mode-map (kbd ",") 'smart-comma)

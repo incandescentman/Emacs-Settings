@@ -2000,8 +2000,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m kb" 'keybinding-read-and-insert)
 (define-hyper-key "m mk" 'keybinding-read-and-insert)
 
-(define-key key-minor-mode-map (kbd "<C-M-return>") 'org-insert-subheading)
-
 (defun my-isearch-word-at-point ()
   (interactive)
   (call-interactively 'isearch-forward-regexp))

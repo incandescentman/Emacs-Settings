@@ -2793,7 +2793,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m kb" 'keybinding-read-and-insert)
 (define-hyper-key "m mk" 'keybinding-read-and-insert)
 
-(define-key key-minor-mode-map (kbd "<C-M-return>") 'org-insert-subheading)
+
 
 #+END_SRC
 
