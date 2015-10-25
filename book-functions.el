@@ -25,13 +25,17 @@
 
 (setq jays-library-public (helm-cmd-t-get-create-source-dir "~/Dropbox/Public/library"))
 
+(setq emacs-settings (helm-cmd-t-get-create-source-dir "~/gnulisp"))
 
 
 
 (setq helm-ff-lynx-style-map nil helm-input-idle-delay 0.1 helm-idle-delay 0.1)
 
 
-
+(defun search-within-emacs-settings ()
+  (interactive)
+  (helm :sources (list
+emacs-settings)))
 
 (defun helm-book-plus ()
   "Choose file from book folder."
