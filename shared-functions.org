@@ -5084,4 +5084,3 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 (setq org-completion-use-ido nil) 
 #+END_EXAMPLE
 
-<e 

@@ -196,8 +196,7 @@
          (with-temp-buffer
            (pasteboard-paste-no-spaces)
            (buffer-string))))
-    (search-forward search-term))) 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+    (search-forward search-term)))
 
 (setq x-select-enable-clipboard t) 
 (defun push-kill-ring-to-pasteboard ()
@@ -231,6 +230,8 @@
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
 
 (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 

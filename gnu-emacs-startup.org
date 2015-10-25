@@ -321,7 +321,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
            (pasteboard-paste-no-spaces)
            (buffer-string))))
     (search-forward search-term))) 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+
 #+END_SRC
 
 * kill ring to pasteboard functions
@@ -379,6 +379,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
 
 (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
