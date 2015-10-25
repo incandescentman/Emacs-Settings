@@ -618,7 +618,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
-'(org-provide-checkbox-statistics to)
+'(org-provide-checkbox-statistics t)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
@@ -626,7 +626,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** Org refile settings
 *** Exclude ~DONE~ state tasks from refile targets:
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
@@ -1099,7 +1099,7 @@ every new buffer will be unique:
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 (setq org-export-preserve-breaks nil) 
 
-;; add padding to numbered lists and bulleted lists (set to to)
+;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t) 
 #+END_SRC
 
@@ -1543,7 +1543,7 @@ Newer version of ~ac-define-source~ would provide us an
 ;; Completion words longer than 4 characters
 #+END_SRC
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (defun buffer-background-black ()
   (interactive)
   (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
@@ -1594,11 +1594,7 @@ ido-enter-matching-directory nil
       ido-use-url-at-point t
       ido-max-prospects 10)
 (setq ido-everywhere t)
-#+END_SRC
 
-Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
-#+BEGIN_SRC emacs-lisp
-;; (setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
 (setq ido-enable-last-directory-history t)
@@ -1607,19 +1603,21 @@ Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
 (setq ido-use-filename-at-point t) ;; prefer file names near point
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
+
 #+END_SRC
 
-Use full outline paths for refile targets - we file directly with IDO:
-#+BEGIN_SRC emacs-lisp
-;; (setq org-refile-use-outline-path to)
-
-;; (setq org-goto-interface 'outline-path-completion org-goto-max-level 2)
-#+END_SRC
-
-Targets complete directly with IDO:
+* org-refile
 #+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil)
+(setq org-completion-use-ido nil) 
+;; (setq org-refile-use-outline-path t) 
+
+
+
+(setq org-goto-interface 'outline-path-completion org-goto-max-level 3) 
+(setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
 #+END_SRC
+
 
 Allow refile to create parent tasks with confirmation:
 #+BEGIN_SRC emacs-lisp
@@ -1628,7 +1626,6 @@ Allow refile to create parent tasks with confirmation:
 
 Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
 #+BEGIN_SRC emacs-lisp
-(setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
 #+END_SRC
@@ -1821,7 +1818,7 @@ font-family: Courier, 'Courier New', monospace;
 ** Hippie expand
 
 [[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
 #+END_EXAMPLE 
 
@@ -2201,7 +2198,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 # haven't tried this yet
 
 Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2451,10 +2448,10 @@ With prefix arg C-u, copy region instad of killing it."
 (defun my-org-files-list ()
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
-          (org-buffer-list 'files to)))
+          (org-buffer-list 'files t)))
 
 
-;; (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
 #+END_SRC
 
 * Working with files
@@ -3155,7 +3152,7 @@ to open source code block in indirect buffer
 #+END_SRC
 
 * stuff that I moved from custom.el
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
@@ -4531,7 +4528,7 @@ Single Capitals as you type."
 
 * deft-turbo
 
-  #+BEGIN_EXAMPLE emacs-lisp 
+  #+BEGIN_ESRCemacs-lisp 
 (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 (setq deft-default-extension "org")
@@ -4541,7 +4538,7 @@ Single Capitals as you type."
 
 * insert slash no abbrev
 
-  #+BEGIN_EXAMPLE emacs-lisp
+  #+BEGIN_ESRCemacs-lisp
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
@@ -4664,7 +4661,7 @@ C-c q
 
 * org-agenda skip keywords
 
-  #+BEGIN_EXAMPLE emacs-lisp
+  #+BEGIN_ESRCemacs-lisp
 ;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS"))) 
 
 
@@ -5061,26 +5058,17 @@ execute speed commands."
 
 #+END_SRC
 
-* use helm for org-refile 
-#+BEGIN_SRC emacs-lisp
-(setq org-outline-path-complete-in-steps nil)
-(setq org-completion-use-ido nil) 
-#+END_SRC
-   #+END_SRC
-
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
 
 
 
 
-** if then else indentation
-#+BEGIN_EXAMPLE
+* if then else indentation
+#+BEGIN_SRC 
 (put 'if 'lisp-indent-function nil) 
-#+END_EXAMPLE
+#+END_SRC 
 
-** use helm for org-refile 
-#+BEGIN_EXAMPLE
-(setq org-outline-path-complete-in-steps nil)
-(setq org-completion-use-ido nil) 
-#+END_EXAMPLE
+* use helm for org-refile 
+#+BEGIN_SRC 
+#+End_src 
 

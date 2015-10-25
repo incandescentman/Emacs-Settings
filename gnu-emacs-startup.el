@@ -231,11 +231,17 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+
+(define-key key-minor-mode-map (kbd "M-q") 'org-refile)
+
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
 
 (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
 (define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
+(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
+(define-key key-minor-mode-map (kbd "s-\"") 'org-refile-region)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -363,9 +369,7 @@
 ;; own structure editing
 (define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
 
-;; (define-key key-minor-mode-map (kbd "C-c C-w") 'org-refile) ; very useful when working with a split frame
-
-;; for extracting content from my browser
+;; For extracting content from my browser
 (define-key key-minor-mode-map (kbd "s-W") 'web-research)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
@@ -1232,16 +1236,6 @@ subsequent sends. could save them all in a logbook?
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 (define-key orgstruct-mode-map (kbd ".") 'smart-period)
-
-(defun smart-comma ()
-  (interactive)
-  (smart-punctuation ",")
-(unless looking-at "\\W*$" )
-(save-excursion (downcase-word 1)))
-
-
-(define-key org-mode-map (kbd ",") 'smart-comma)
-(define-key orgstruct-mode-map (kbd ",") 'smart-comma)
 
 (defun smart-question-mark ()
   (interactive)

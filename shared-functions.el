@@ -369,69 +369,10 @@
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
-'(org-provide-checkbox-statistics to)
+'(org-provide-checkbox-statistics t)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
-
-(setq org-capture-templates
-      (quote
-       (
-
-  ("g" "gratitude" entry (file "gratitude.txt")
-   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
-
-  ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
-
-  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-  ("n" "note" entry (file org-default-notes-file)
-   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
-
-  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
-
-  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-("W" "Wise Mind" entry (file "wisemind.txt")
-   "\n\n* wm%?\n" :prepend t :kill-buffer t)
-
-  ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-("k" "nika" entry (file "nika-capture.txt")
-   "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
-
-  ("h" "historical interest" entry (file "historical-lifestream.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
-
-  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-  ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
-
-  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
-
-("M" "Memorize" entry
-               (file+headline (concat org-directory "org-drill-jays-decks.org")
-                              "Vocabulary")
-               "* Word :drill:\n%^ \n** Answer \n%^")
-
-;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
-
-  ("f" "flowy" entry (file "flowy.org")
-   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -705,7 +646,7 @@
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 (setq org-export-preserve-breaks nil) 
 
-;; add padding to numbered lists and bulleted lists (set to to)
+;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t)
 
 (load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
@@ -1080,7 +1021,6 @@ ido-enter-matching-directory nil
       ido-max-prospects 10)
 (setq ido-everywhere t)
 
-;; (setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
 (setq ido-enable-last-directory-history t)
@@ -1090,15 +1030,17 @@ ido-enter-matching-directory nil
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
 
-;; (setq org-refile-use-outline-path to)
-
-;; (setq org-goto-interface 'outline-path-completion org-goto-max-level 2)
-
 (setq org-outline-path-complete-in-steps nil)
+(setq org-completion-use-ido nil) 
+;; (setq org-refile-use-outline-path t) 
+
+
+
+(setq org-goto-interface 'outline-path-completion org-goto-max-level 3) 
+(setq org-refile-targets '((my-org-files-list :maxlevel . 3)))
 
 ;; (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
-(setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
 
@@ -1741,10 +1683,7 @@ With prefix arg C-u, copy region instad of killing it."
 (defun my-org-files-list ()
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
-          (org-buffer-list 'files to)))
-
-
-;; (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+          (org-buffer-list 'files t)))
 
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
@@ -3623,6 +3562,3 @@ narrowed."
 (add-to-list 'org-structure-template-alist 
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
 )
-
-(setq org-outline-path-complete-in-steps nil)
-(setq org-completion-use-ido nil)
