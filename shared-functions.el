@@ -3616,3 +3616,13 @@ narrowed."
 ;; This line actually replaces Emacs' entire narrowing keymap, that's
 ;; how much I like this command. Only copy it if that's what you want.
  (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+
+;; Add <p for python expansion
+
+(add-to-list 'org-structure-template-alist
+'("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") 
+'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
+             ) 
+(add-to-list 'org-structure-template-alist 
+'("la" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>")
+)

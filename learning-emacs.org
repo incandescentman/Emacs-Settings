@@ -146,5 +146,41 @@ Here is a version of the use-package expression that will load define-word only 
 
 
 * packages to check out 
-https://github.com/larstvei/Focus/blob/master/README.md 
+https://github.com/larstvei/Focus/blob/master/README.md
+
+
+
+* if-then-else
+
+More info: 
+- [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Conditionals.html][GNU Emacs Lisp Reference Manual: Conditionals]]
+- [[http://emacswiki.org/emacs/WhenToUseIf][EmacsWiki: When To Use If]]
+- 
+
+** basic structure
+
+#+BEGIN_SRC emacs-lisp
+
+(if (> 4 5)                               ; if-part
+    (message "4 falsely greater than 5!") ; then-part
+    (message "4 is not greater than 5!"))   ; else-part 
+
+#+END_SRC
+
+
+** How to execute several expressions in 'else' block? 
+ (if COND THEN ELSE...)
+
+ If COND yields non-nil, do THEN, else do ELSE...
+ Returns the value of THEN or the value of the last of the ELSE's.
+ THEN must be one expression, but ELSE... can be zero or more expressions.
+ If COND yields nil, and there are no ELSE's, the value is nil. 
+
+
+ #+BEGIN_SRC emacs-lisp
+(if (> 1 2)
+    (message "True")
+  (message "False")
+  (message "I repeat, completely false"))
+ #+END_SRC
 
