@@ -612,10 +612,17 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content))
 
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-(define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
-(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+;; regular keybindings, they work
+;; (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+;; (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+;; (define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
+;; (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+
+;; trying something new
+(define-key org-mode-map (kbd "C-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-insert-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 
 (defun smart-return ()
   (interactive)

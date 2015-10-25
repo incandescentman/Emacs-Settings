@@ -184,3 +184,13 @@ More info:
   (message "I repeat, completely false"))
  #+END_SRC
 
+** How can you write multiple statements in elisp 'if' statement? 
+
+Use progn:
+
+#+BEGIN_EXAMPLE
+(if condition
+    (progn
+        (do-something)
+        (do-something-else))) 
+#+END_EXAMPLE
