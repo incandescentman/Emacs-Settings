@@ -5053,11 +5053,19 @@ execute speed commands."
 
 (add-to-list 'org-structure-template-alist
 '("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") 
-'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
+'("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") 
              ) 
 (add-to-list 'org-structure-template-alist 
-'("la" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>")
+'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
 )
+
+#+END_SRC
+
+* use helm for org-refile 
+#+BEGIN_SRC emacs-lisp
+(setq org-outline-path-complete-in-steps nil)
+(setq org-completion-use-ido nil) 
+#+END_SRC
    #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
@@ -5069,3 +5077,11 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 #+BEGIN_EXAMPLE
 (put 'if 'lisp-indent-function nil) 
 #+END_EXAMPLE
+
+** use helm for org-refile 
+#+BEGIN_EXAMPLE
+(setq org-outline-path-complete-in-steps nil)
+(setq org-completion-use-ido nil) 
+#+END_EXAMPLE
+
+<e 
