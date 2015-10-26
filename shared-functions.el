@@ -3562,3 +3562,5 @@ narrowed."
 (add-to-list 'org-structure-template-alist 
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
 )
+
+(add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))

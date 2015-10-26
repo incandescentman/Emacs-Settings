@@ -1406,3 +1406,10 @@ subsequent sends. could save them all in a logbook?
 
 (define-key key-minor-mode-map (kbd "M-(") 'backward-word)
 (define-key key-minor-mode-map (kbd "M-)") 'forward-word)
+
+(defun capitalize-sentence ()
+  (interactive)
+  (endless/capitalize)
+(org-forward-sentence 1)
+)
+(define-key key-minor-mode-map (kbd "M-c") 'capitalize-sentence)

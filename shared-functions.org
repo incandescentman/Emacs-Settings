@@ -5068,7 +5068,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 (put 'if 'lisp-indent-function nil) 
 #+END_SRC 
 
-* use helm for org-refile 
-#+BEGIN_SRC 
-#+End_src 
-
+* org element debug
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
+#+END_SRC
