@@ -28,7 +28,7 @@
 
 ; (require 'org-fstree)
 
-(require 'use-package)
+;; (require 'use-package)
 
 (defun add-word-to-personal-dictionary ()
   (interactive)
@@ -105,7 +105,7 @@
 
 (delete-selection-mode 1)
 
-(autopair-mode 1)
+(autopair-mode -1)
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
@@ -373,6 +373,65 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
+
+(setq org-capture-templates
+      (quote
+       (
+
+  ("g" "gratitude" entry (file "gratitude.txt")
+   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+
+  ("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+
+  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
+  ("n" "note" entry (file org-default-notes-file)
+   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+
+  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+
+  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
+   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+
+("e" "expression" entry (file "expression.txt")
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+("W" "Wise Mind" entry (file "wisemind.txt")
+   "\n\n* wm%?\n" :prepend t :kill-buffer t)
+
+  ("e" "expression" entry (file "expression.txt")
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+("k" "nika" entry (file "nika-capture.txt")
+   "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+
+  ("h" "historical interest" entry (file "historical-lifestream.txt")
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+
+  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+  ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+
+  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+
+("M" "Memorize" entry
+               (file+headline (concat org-directory "org-drill-jays-decks.org")
+                              "Vocabulary")
+               "* Word :drill:\n%^ \n** Answer \n%^")
+
+;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
+
+  ("f" "flowy" entry (file "flowy.org")
+   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"

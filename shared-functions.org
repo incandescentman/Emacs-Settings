@@ -82,7 +82,7 @@ You can toggle it in necessary files by setting the local variables section at t
 
 * pre config
 #+BEGIN_SRC emacs-lisp
-(require 'use-package)
+;; (require 'use-package)
 #+END_SRC
 
 
@@ -241,7 +241,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
-(autopair-mode 1)
+(autopair-mode -1)
 (setq buffer-save-without-query nil)
 #+END_SRC
 
@@ -626,7 +626,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** Org refile settings
 *** Exclude ~DONE~ state tasks from refile targets:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
@@ -636,6 +636,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 ** org-capture setup
 
 This is working correctly:
+
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
       (quote
