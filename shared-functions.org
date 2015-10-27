@@ -5078,3 +5078,60 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 #+BEGIN_SRC emacs-lisp
 (setq org-cycle-emulate-tab) 
 #+END_SRC
+
+
+* convert from org-mode to Word
+#+BEGIN_SRC emacs-lisp
+;; This setup is tested on Emacs 24.3 & Emacs 24.4 on Linux/OSX
+;; org v7 bundled with Emacs 24.3
+(setq org-export-odt-preferred-output-format "doc")
+;; org v8 bundled with Emacs 24.4
+(setq org-odt-preferred-output-format "doc")
+;; BTW, you can assign "pdf" in above variables if you prefer PDF format
+
+;; Only OSX need below setup
+(defun my-setup-odt-org-convert-process ()
+  (interactive)
+  (let ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
+    (when (and (eq system-type 'darwin) (file-exists-p cmd))
+      ;; org v7
+      (setq org-export-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i")))
+      ;; org v8
+      (setq org-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i"))))
+    ))
+(my-setup-odt-org-convert-process) 
+#+END_SRC
+
+Source: [[http://blog.binchen.org/posts/how-to-take-screen-shot-for-business-people-efficiently-in-emacs.html][How to take screen shot for business people efficiently in Emacs | Chen's blog]]
+
+2.4 Tips
+
+If you need page break in exported document, insert below snippet into the org file:
+
+#+ODT: <text:p text:style-name="PageBreak"/> 
+
+* Create org file and insert path of screen shot 
+#+BEGIN_SRC emacs-lisp
+(defun insert-file-link-from-clipboard ()
+  "Make sure the full path of file exist in clipboard. This command will convert
+The full path into relative path and insert it as a local file link in org-mode"
+  (interactive)
+  (let (str)
+    (with-temp-buffer
+      (shell-command
+       (cond
+        ((eq system-type 'cygwin) "getclip")
+        ((eq system-type 'darwin) "pbpaste")
+        (t "xsel -ob"))
+       1)
+      (setq str (buffer-string)))
+
+    ;; convert to relative path (relative to current buffer) if possible
+    (let ((m (string-match (file-name-directory (buffer-file-name)) str) ))
+      (when m
+        (if (= 0 m )
+            (setq str (substring str (length (file-name-directory (buffer-file-name)))))
+          ))
+        (insert (format "[[file:%s]]" str)))
+    )) 
+#+END_SRC
