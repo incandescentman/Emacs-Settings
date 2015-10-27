@@ -527,7 +527,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-(setq org-agenda-window-setup 'current-window)
+;; (setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -3038,7 +3038,12 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
       (message "Replaced %s match(es)" count))))
 #+END_SRC
 
-* experimenting
+* auto-capitalize
+
+#+BEGIN_SRC emacs-lisp
+(setq auto-capitalize-words '("I" "setq"))
+#+end_SRC
+
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
       (lambda () 
