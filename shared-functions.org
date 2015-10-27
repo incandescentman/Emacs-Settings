@@ -5073,3 +5073,8 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
 #+END_SRC
+
+* disable TAB to indent
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-emulate-tab) 
+#+END_SRC

@@ -3623,3 +3623,5 @@ narrowed."
 )
 
 (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
+
+(setq org-cycle-emulate-tab)
