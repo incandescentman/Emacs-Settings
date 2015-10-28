@@ -1231,7 +1231,11 @@ subsequent sends. could save them all in a logbook?
   (interactive)
 (smart-punctuation ".")
 (save-excursion
-(unless (looking-at "[ ]*$")
+(unless 
+(or 
+(looking-at "[ ]*$")
+(looking-at "\"[ ]*$") 
+)
 (capitalize-word 1))
 ))
 
@@ -1360,6 +1364,9 @@ subsequent sends. could save them all in a logbook?
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+(looking-at "\\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+
        (looking-at (user-full-name))
        )
     (save-excursion

@@ -1919,7 +1919,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "8" 'search-open-buffers)
 (define-hyper-key "B" 'clone-indirect-buffer-other-window)
 (define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
+(define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
