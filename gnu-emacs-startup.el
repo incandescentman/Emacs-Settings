@@ -495,9 +495,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ) 
 ;;  (expand-abbrev)
   (org-kill-line)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+;;  (save-excursion
+;;    (when (my/beginning-of-sentence-on)
+;;      (capitalize-word 1)))
+)
 
 (defun kill-sentence-maybe-else-kill-line ()
   (interactive)
@@ -1240,8 +1241,8 @@ subsequent sends. could save them all in a logbook?
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ",")
-(unless (looking-at "\\W*$")) 
-(save-excursion (downcase-word 1)))
+(unless (looking-at "\\W*$") 
+(save-excursion (downcase-word 1))))
 
 
 (define-key org-mode-map (kbd ",") 'smart-comma)

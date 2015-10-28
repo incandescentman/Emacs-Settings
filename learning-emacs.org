@@ -194,3 +194,10 @@ Use progn:
         (do-something)
         (do-something-else))) 
 #+END_EXAMPLE
+
+** unless
+(unless condition a b c) 
+
+Unless A, do B and C.
+
+If A is not true, then do B and C.
