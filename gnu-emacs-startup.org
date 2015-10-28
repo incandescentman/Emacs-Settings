@@ -2226,6 +2226,7 @@ Oleh
 (or 
 (looking-at "[ ]*$")
 (looking-at "\"[ ]*$") 
+(looking-at "\)[ ]*$") 
 )
 (capitalize-word 1))
 ))
@@ -2501,7 +2502,7 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
        (looking-at (sentence-end))
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
-(looking-at "\\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
 
        (looking-at (user-full-name))
        )
