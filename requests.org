@@ -15,14 +15,6 @@ current output: Don't use an adverb word,^
 desired output: Don't use an adverb word, ^
 
 
-* TODO kill-clause 
-
-Example: 
-As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
-
-Scenario: invoke kill-clause
-
-
 
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
@@ -448,6 +440,13 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 
 What do you think? 
 
-* swiper-much 
+* swiper-mc 
 
-* isearch using pasteboard contents
+
+* TODO kill-clause 
+
+Example: 
+As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
+
+Scenario: invoke kill-clause
+
