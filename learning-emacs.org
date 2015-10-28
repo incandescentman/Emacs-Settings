@@ -161,9 +161,9 @@ More info:
 
 #+BEGIN_SRC emacs-lisp
 
-(if (> 4 5)                               ; if-part
-    (message "4 falsely greater than 5!") ; then-part
-    (message "4 is not greater than 5!"))   ; else-part 
+(if (> 4 5)                               ; if 
+    (message "4 falsely greater than 5!") ; then
+    (message "4 is not greater than 5!"))   ; else
 
 #+END_SRC
 

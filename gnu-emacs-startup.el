@@ -488,6 +488,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (or
 (looking-back "\\[") 
 (looking-back "* ")
+(looking-back "* TODO ")
 (looking-back "^*+")
 (looking-back "- ")
 )
@@ -644,7 +645,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* "))
+(looking-back "* ")
+;; (looking-back "* TODO ") ; actually I don't think I want this 
+;; (looking-back "^*+")
+;; (looking-back "- ") 
+
+)
 (beginning-of-line)
 ) 
 ;;

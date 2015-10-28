@@ -644,6 +644,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (looking-at ".. ")
 (delete-forward-char 1))
 )
+#+END_SRC
+
+* my/kill-line-dwim
+
+#+BEGIN_SRC emacs-lisp
+
 
 (defun my/kill-line-dwim ()
   "Kill the current line."
@@ -653,6 +659,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (or
 (looking-back "\\[") 
 (looking-back "* ")
+(looking-back "* TODO ")
 (looking-back "^*+")
 (looking-back "- ")
 )
@@ -880,7 +887,12 @@ From here:
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* "))
+(looking-back "* ")
+;; (looking-back "* TODO ") ; actually I don't think I want this 
+;; (looking-back "^*+")
+;; (looking-back "- ") 
+
+)
 (beginning-of-line)
 ) 
 ;;

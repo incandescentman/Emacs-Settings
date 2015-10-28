@@ -1933,7 +1933,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
-(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
 
 (define-hyper-key "m cy" 'cyberpunk-jay)
 (define-hyper-key "m cl" 'cyberpunk-large)

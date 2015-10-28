@@ -2724,7 +2724,7 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
-(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
+
 #+END_SRC
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:

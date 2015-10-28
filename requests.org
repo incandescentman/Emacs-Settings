@@ -450,3 +450,7 @@ As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend
 
 Scenario: invoke kill-clause
 
+* highlighted region or thing at point 
+So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+
+
