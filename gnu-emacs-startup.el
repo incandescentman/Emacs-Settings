@@ -1394,6 +1394,11 @@ subsequent sends. could save them all in a logbook?
 (looking-at "[ ]*I\\b") ; never downcase the word "I" 
 (looking-at "[ ]*I'")  ; never downcase I'm I've etc. 
 (looking-at "[ ]*$") 
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+       (looking-at (user-full-name)) 
+
+
 )
   (save-excursion
       (downcase-word 1))
@@ -1424,7 +1429,21 @@ subsequent sends. could save them all in a logbook?
 
 (defun capitalize-sentence ()
   (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
   (endless/capitalize)
 (org-forward-sentence 1)
+(jay/right-char) 
 )
 (define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
+
+(defun downcase-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (downcase-word 1)
+(org-forward-sentence 1)
+(jay/right-char)
+)
+
+(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
