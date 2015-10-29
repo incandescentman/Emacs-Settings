@@ -454,3 +454,6 @@ Scenario: invoke kill-clause
 So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
 
 
+
+* move region or subtree
+I have move-region-to-other-window. Make it look for active region first?
