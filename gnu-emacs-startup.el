@@ -1427,4 +1427,4 @@ subsequent sends. could save them all in a logbook?
   (endless/capitalize)
 (org-forward-sentence 1)
 )
-(define-key key-minor-mode-map (kbd "M-c") 'capitalize-sentence)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
