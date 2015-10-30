@@ -516,7 +516,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs)
 
 ;; own structure editing
-(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window) 
+
+
 
 ;; For extracting content from my browser
 (define-key key-minor-mode-map (kbd "s-W") 'web-research)
@@ -577,7 +580,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
-(define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
