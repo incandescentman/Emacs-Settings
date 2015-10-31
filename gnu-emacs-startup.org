@@ -2583,6 +2583,28 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 
 #+BEGIN_SRC emacs-lisp
+
+(defun smart-expand ()
+  (interactive) 
+
+  (unless
+  
+    (or
+       (looking-back "\)\n*")
+(looking-back "\)[ ]*")
+(looking-back ":t[ ]*") 
+
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+)
+    (expand-abbrev)
+)
+)
+
+#+END_SRC
+
+
+
+
 (defun smart-expand ()
   (interactive)
 
@@ -2597,8 +2619,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 )
     (expand-abbrev)
 )
-)
-#+END_SRC
+) 
 
 * fountain
 

@@ -1407,14 +1407,14 @@ subsequent sends. could save them all in a logbook?
   ))
 
 (defun smart-expand ()
-  (interactive)
+  (interactive) 
 
   (unless
-
+  
     (or
        (looking-back "\)\n*")
 (looking-back "\)[ ]*")
-(looking-back ":t[ ]*")
+(looking-back ":t[ ]*") 
 
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
