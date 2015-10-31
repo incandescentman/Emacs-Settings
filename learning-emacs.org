@@ -169,6 +169,8 @@ More info:
 
 
 ** How to execute several expressions in 'else' block? 
+You don't need progn for this, as this is already the default behaviour: 
+
  (if COND THEN ELSE...)
 
  If COND yields non-nil, do THEN, else do ELSE...
@@ -176,6 +178,7 @@ More info:
  THEN must be one expression, but ELSE... can be zero or more expressions.
  If COND yields nil, and there are no ELSE's, the value is nil. 
 
+You would, of course, use progn if you wished to evaluate multiple expressions in the THEN form. 
 
  #+BEGIN_SRC emacs-lisp
 (if (> 1 2)

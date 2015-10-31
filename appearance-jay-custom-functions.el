@@ -321,3 +321,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (interactive) 
 (vera-font)
 (horizontal-cursor))
+
+(defun iterm-mode () 
+(when (display-graphic-p) 
+(spacemacs/toggle-highlight-current-line-globally-off)
+(setq menu-bar-mode-1) 
+  ) 
+)
