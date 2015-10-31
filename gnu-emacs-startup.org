@@ -2540,15 +2540,19 @@ Five six
 
    So, it didn't downcase past the line break. In which case is it not working for you?
 
-* capitalize-unless-org-heading
-
+* capitalize-unless-org-heading 
   #+BEGIN_SRC emacs-lisp 
 (defun capitalize-unless-org-heading ()
   (interactive)
-;; (unless (looking-at org-complex-heading-regexp)
-(capitalize-word 1)
-;; )
+(unless 
+(or
+(looking-at "*")
+(looking-at "[ ]*$\*") ; 
+(looking-at "* TODO")
 ) 
+(capitalize-word 1))
+)
+
   #+END_SRC
  
 * downcase-save-excursion 

@@ -1377,9 +1377,13 @@ subsequent sends. could save them all in a logbook?
 
 (defun capitalize-unless-org-heading ()
   (interactive)
-;; (unless (looking-at org-complex-heading-regexp)
-(capitalize-word 1)
-;; )
+(unless 
+(or
+(looking-at "*")
+(looking-at "[ ]*$\*") ; 
+(looking-at "* TODO")
+) 
+(capitalize-word 1))
 )
 
 (defun downcase-save-excursion ()
