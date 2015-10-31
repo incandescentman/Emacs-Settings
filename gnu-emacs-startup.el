@@ -1243,7 +1243,12 @@ subsequent sends. could save them all in a logbook?
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ",")
-(unless (looking-at "\\W*$") 
+(unless 
+(or
+(looking-at "\\W*$") 
+(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+)
+
 (save-excursion (downcase-word 1))))
 
 

@@ -322,9 +322,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (vera-font)
 (horizontal-cursor))
 
+(defun is-in-terminal ()
+    (not (display-graphic-p))) 
+
 (defun iterm-mode () 
-(when (display-graphic-p) 
+(interactive)
 (spacemacs/toggle-highlight-current-line-globally-off)
 (setq menu-bar-mode-1) 
-  ) 
+
 )
