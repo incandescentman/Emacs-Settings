@@ -1949,7 +1949,9 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
-(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon") 
+
+
 
 #+END_SRC
 
