@@ -1155,18 +1155,7 @@ subsequent sends. could save them all in a logbook?
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
-
-(if 
-
-;; if
-(looking-back "* ") 
-
-;; then 
-(kill-line)
-
-;; else 
-
-(  (smart-expand)
+  (smart-expand)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -1177,7 +1166,7 @@ subsequent sends. could save them all in a logbook?
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))))
+      (capitalize-unless-org-heading))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")

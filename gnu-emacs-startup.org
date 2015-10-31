@@ -2134,22 +2134,12 @@ Oleh
 ** kill-clause
 
 #+BEGIN_SRC emacs-lisp
+
 ;; Identify the end of sentences globally.
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
-
-(if 
-
-;; if
-(looking-back "* ") 
-
-;; then 
-(kill-line)
-
-;; else 
-
-(  (smart-expand)
+  (smart-expand)
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -2160,7 +2150,8 @@ Oleh
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))))
+      (capitalize-unless-org-heading))))
+
 #+END_SRC
 
 
