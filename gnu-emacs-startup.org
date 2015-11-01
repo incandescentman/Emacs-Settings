@@ -480,9 +480,12 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
-(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading 
+
+
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
@@ -872,7 +875,7 @@ From here:
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-(define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before-this-heading)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
 
@@ -2133,7 +2136,8 @@ Oleh
 
 ** kill-clause
 
-#+BEGIN_SRC emacs-lisp
+This version leaves a rogue comma:
+#+BEGIN_EXAMPLE emacs-lisp
 
 ;; Identify the end of sentences globally.
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
@@ -2152,7 +2156,28 @@ Oleh
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
 
+#+END_EXAMPLE
+
+Old version that I retrieved:
+#+BEGIN_SRC emacs-lisp
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
 #+END_SRC
+ 
 
 
 ** smart-punctuation exceptions
@@ -2679,3 +2704,13 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 (define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
 
 #+END_SRC 
+
+* return-insert-blank-line-before 
+
+#+BEGIN_SRC emacs-lisp
+(defun return-insert-blank-line-before ()
+  (interactive)
+  (beginning-of-line)
+(smart-return)
+  )
+#+END_SRC

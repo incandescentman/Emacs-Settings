@@ -331,9 +331,12 @@
 
 (define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
 
-(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading 
+
+
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
@@ -636,7 +639,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-(define-key org-mode-map (kbd "C-<return>") 'smart-org-insert-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before-this-heading)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading)
 
@@ -1447,3 +1450,9 @@ subsequent sends. could save them all in a logbook?
 )
 
 (define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
+
+(defun return-insert-blank-line-before ()
+  (interactive)
+  (beginning-of-line)
+(smart-return)
+  )

@@ -455,5 +455,12 @@ So that I have two words highlighted and I run gnugol-word-at-point, it first ta
 
 
 
-* move region or subtree
+* move region or subtree to other window 
 I have move-region-to-other-window. Make it look for active region first?
+
+* org refile region or subtree
+If active region, then refile region 
+else refile subtree
+
+* pasteboard-search-for-clipboard-contents 
+- make this do isearch-repeat-forward when invoked again?
