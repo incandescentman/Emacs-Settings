@@ -464,3 +464,24 @@ else refile subtree
 
 * pasteboard-search-for-clipboard-contents 
 - make this do isearch-repeat-forward when invoked again?
+
+* helm-multi-swoop-all thing at point
+
+* swiper multi thing at point?
+
+* how to find function within my init files?
+I often want to do this:
+1. C-it the to find what a keystroke does
+2. Find that function within my init files
+
+How to do this?
+
+Is there a?
+
+helm-multi-swoop-all thing at point
+
+swiper multi thing at point?
+
+How to do
+
+* describe-key and find function in my init files

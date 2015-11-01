@@ -1330,7 +1330,7 @@ subsequent sends. could save them all in a logbook?
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-(when (looking-back "[*]+ ")
+(when (looking-back "^[*]+ ")
 (kill-line 0)
 (insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire 
 )
