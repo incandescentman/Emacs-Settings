@@ -329,7 +329,8 @@
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
-(define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
+(define-key org-mode-map (kbd "M-K") 'kill-clause)
+(define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
 
 (define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading 
 
@@ -1382,8 +1383,8 @@ subsequent sends. could save them all in a logbook?
   (interactive)
 (unless 
 (or
-(looking-at "*")
-(looking-at "[ ]*$\*") ; 
+(looking-at "\*")
+(looking-at "[\n\t ]*\\*") ; fails to find
 (looking-at "* TODO")
 ) 
 (capitalize-word 1))
