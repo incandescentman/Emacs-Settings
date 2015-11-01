@@ -1,4 +1,4 @@
-(add-to-list 'load-path "plus-/Users/jay/Dropbox/emacs/prelude/elpa/org-contrib-20150810/")
+;; (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
 
@@ -6,7 +6,7 @@
 
 (add-to-list 'package-archives
              '("marmalade" .
-               "http://marmalade-repo.org/packages/" ))
+               "http://marmalade-repo.org/packages/" ) t)
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
