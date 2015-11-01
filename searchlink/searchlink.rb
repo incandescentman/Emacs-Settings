@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 SILENT = ENV['SL_SILENT'] =~ /false/i ? false : true || true
-VERSION = '2.2.2'
-# SearchLink by Brett Terpstra 2015 &lt;http://brettterpstra.com/projects/searchlink/&gt;
+VERSION = '2.2.0'
+# SearchLink by Brett Terpstra 2014 <http://brettterpstra.com/projects/searchlink/>
 # MIT License, please maintain attribution
 require 'net/https'
 require 'rexml/document'
@@ -13,14 +13,14 @@ require 'cgi'
 require 'fileutils'
 require 'time'
 
-if RUBY_VERSION.to_f &gt; 1.9
+if RUBY_VERSION.to_f > 1.9
   Encoding.default_external = Encoding::UTF_8
   Encoding.default_internal = Encoding::UTF_8
 end
 
 class String
   def clean
-    gsub(/\n+/,' ').gsub(/"/,"&amp;quot").gsub(/\|/,"-").gsub(/([&amp;\?]utm_[scm].+=[^&amp;\s!,\.\)\]]++?)+(&amp;.*)/, '\2').sub(/\?&amp;/,'').strip
+    gsub(/\n+/,' ').gsub(/"/,"&quot").gsub(/\|/,"-").gsub(/([&\?]utm_[scm].+=[^&\s!,\.\)\]]++?)+(&.*)/, '\2').sub(/\?&/,'').strip
   end
 end
 
@@ -36,7 +36,7 @@ class SearchLink
 
     @printout = opt[:echo] || false
     unless File.exists? File.expand_path("~/.searchlink")
-      default_config =&lt;&lt;ENDCONFIG
+      default_config =<<ENDCONFIG
 # set to true to have an HTML comment included detailing any errors
 debug: true
 # set to true to have an HTML comment included reporting results
@@ -69,8 +69,8 @@ validate_links: false
 
 # append affiliate link info to iTunes urls, empty quotes for none
 # example:
-# itunes_affiliate = "&amp;at=10l4tL&amp;ct=searchlink"
-itunes_affiliate: "&amp;at=10l4tL&amp;ct=searchlink"
+# itunes_affiliate = "&at=10l4tL&ct=searchlink"
+itunes_affiliate: "&at=10l4tL&ct=searchlink"
 
 # to create Amazon affiliate links, set amazon_partner to:
 # [tag, camp, creative]
@@ -82,7 +82,7 @@ amazon_partner: ["brettterpstra-20", "1789", "9325"]
 
 # To create custom abbreviations for Google Site Searches,
 # add to (or replace) the hash below.
-# "abbreviation" =&gt; "site.url",
+# "abbreviation" => "site.url",
 # This allows you, for example to use [search term](!bt)
 # as a shortcut to search brettterpstra.com (using a site-specific
 # Google search). Keys in this list can override existing
@@ -108,7 +108,7 @@ custom_site_searches:
   spark: macsparky.com
   man: http://man.cx/$term
   dev: developer.apple.com
-  nq: http://nerdquery.com/?media_only=0&amp;query=$term&amp;search=1&amp;category=-1&amp;catid=&amp;type=and&amp;results=50&amp;db=0&amp;prefix=0
+  nq: http://nerdquery.com/?media_only=0&query=$term&search=1&category=-1&catid=&type=and&results=50&db=0&prefix=0
 
 # Remove or comment (with #) history searches you don't want
 # performed by `!h`. You can force-enable them per search, e.g.
@@ -151,8 +151,8 @@ ENDCONFIG
 
     # append affiliate link info to iTunes urls, empty quotes for none
     # example:
-    # $itunes_affiliate = "&amp;at=10l4tL&amp;ct=searchlink"
-    @cfg['itunes_affiliate'] ||= "&amp;at=10l4tL&amp;ct=searchlink"
+    # $itunes_affiliate = "&at=10l4tL&ct=searchlink"
+    @cfg['itunes_affiliate'] ||= "&at=10l4tL&ct=searchlink"
 
     # to create Amazon affiliate links, set amazon_partner to:
     # [tag, camp, creative]
@@ -163,13 +163,13 @@ ENDCONFIG
 
     # To create custom abbreviations for Google Site Searches,
     # add to (or replace) the hash below.
-    # "abbreviation" =&gt; "site.url",
+    # "abbreviation" => "site.url",
     # This allows you, for example to use [search term](!bt)
     # as a shortcut to search brettterpstra.com. Keys in this
     # hash can override existing search triggers.
     @cfg['custom_site_searches'] ||= {
-      "bt" =&gt; "brettterpstra.com",
-      "md" =&gt; "www.macdrifter.com"
+      "bt" => "brettterpstra.com",
+      "md" => "www.macdrifter.com"
     }
 
     # confirm existence of links generated from custom search replacements
@@ -183,107 +183,23 @@ ENDCONFIG
     @match_length = nil;
   end
 
-  def available_searches
-    searches = [
-      ["a", "Amazon"],
-      ["g", "Google"],
-      ["b", "Bing"],
-      ["wiki", "Wikipedia"],
-      ["s", "Software search (Google)"],
-      ["@t", "Twitter user link"],
-      ["@adn", "App.net user link"],
-      ["ipod", "iTunes podcast"],
-      ["isong", "iTunes song"],
-      ["iart", "iTunes artist"],
-      ["ialb", "iTunes album"],
-      ["lsong", "Last.fm song"],
-      ["lart", "Last.fm artist"],
-      ["mas", "Mac App Store"],
-      ["masd", "Mac App Store developer link"],
-      ["itu", "iTunes App Store"],
-      ["itud", "iTunes App Store developer link"],
-      ["def", "Dictionary definition"],
-      ["sp", "Spelling"],
-      ["h", "Web history"],
-      ["hs[hb]", "Safari [history, bookmarks]"],
-      ["hc[hb]", "Chrome [history, bookmarks]"]
-    ]
-    out = ""
-    searches.each {|s|
-      out += "!#{s[0]}#{spacer(s[0])}#{s[1]}\n"
-    }
-    out
-  end
-
-  def spacer(str)
-    len = str.length
-    str.scan(/[mwv]/).each do |tt|
-      len += 1
-    end
-    str.scan(/[t]/).each do |tt|
-      len -= 1
-    end
-    spacer = case len
-    when 0..3
-      "\t\t"
-    when 4..12
-      " \t"
-    end
-    spacer
-  end
-
-  def get_help_text
-    help_text =&lt;&lt;EOHELP
--- [Available searches] -------------------
-#{available_searches}
-EOHELP
-
-    if @cfg['custom_site_searches']
-      help_text += "\n-- [Custom Searches] ----------------------\n"
-      @cfg['custom_site_searches'].each {|label, site|
-        help_text += "!#{label}#{spacer(label)} #{site}\n"
-      }
-    end
-    help_text
-  end
-
-  def help_dialog
-    help_text = "[SearchLink v#{VERSION}]\n\n"
-    help_text += get_help_text
-    help_text += "\nClick \\\"More Help\\\" for additional information"
-    res = %x{osascript &lt;&lt;'APPLESCRIPT'
-set _res to display dialog "#{help_text.gsub(/\n/,'\\\n')}" buttons {"OK", "More help"} default button "OK" with title "SearchLink Help"
-
-return button returned of _res
-APPLESCRIPT
-    }.strip
-    if res == "More help"
-      %x{open http://brettterpstra.com/projects/searchlink}
-    end
-  end
-
-  def help_cli
-    $stdout.puts get_help_text
-  end
-
   def parse(input)
     @output = ''
-    return false unless input &amp;&amp; input.length &gt; 0
-    parse_arguments(input, {:only_meta =&gt; true})
+    return false unless input && input.length > 0
+    parse_arguments(input, {:only_meta => true})
     @originput = input.dup
 
     if input.strip =~ /^help$/i
       if SILENT
-        help_dialog # %x{open http://brettterpstra.com/projects/searchlink/}
+        %x{open http://brettterpstra.com/projects/searchlink/}
       else
         $stdout.puts "SearchLink v#{VERSION}"
         $stdout.puts "See http://brettterpstra.com/projects/searchlink/ for help"
       end
-      print input
       Process.exit
     end
 
-    @cfg['inline'] = true if input.scan(/\]\(/).length == 1 &amp;&amp; input.split(/\n/).length == 1
+    @cfg['inline'] = true if input.scan(/\]\(/).length == 1 && input.split(/\n/).length == 1
     @errors = {}
     @report = []
 
@@ -292,8 +208,8 @@ APPLESCRIPT
     counter_links = 0
     counter_errors = 0
 
-    input.sub!(/\n?&lt;!-- Report:.*?--&gt;\n?/m, '')
-    input.sub!(/\n?&lt;!-- Errors:.*?--&gt;\n?/m, '')
+    input.sub!(/\n?<!-- Report:.*?-->\n?/m, '')
+    input.sub!(/\n?<!-- Errors:.*?-->\n?/m, '')
 
     input.scan(/\[(.*?)\]:\s+(.*?)\n/).each {|match|
       links[match[1].strip] = match[0]
@@ -311,12 +227,12 @@ APPLESCRIPT
 
     highest_marker = 0
     input.scan(/^\s{,3}\[(?:#{prefix})?(\d+)\]: /).each do |match|
-      highest_marker = $1.to_i if $1.to_i &gt; highest_marker
+      highest_marker = $1.to_i if $1.to_i > highest_marker
     end
 
     footnote_counter = 0
     input.scan(/^\s{,3}\[\^(?:#{prefix})?fn(\d+)\]: /).each do |match|
-      footnote_counter = $1.to_i if $1.to_i &gt; footnote_counter
+      footnote_counter = $1.to_i if $1.to_i > footnote_counter
     end
 
     if input =~ /\[(.*?)\]\((.*?)\)/
@@ -380,19 +296,19 @@ APPLESCRIPT
           link_text = this_match[1] || ''
           link_info = parse_arguments(this_match[2].strip).strip || ''
 
-          if link_text == '' &amp;&amp; link_info =~ /".*?"/
+          if link_text == '' && link_info =~ /".*?"/
             link_info.gsub!(/\"(.*?)\"/) {|q|
               link_text = $1 if link_text == ''
               $1
             }
           end
 
-          if link_info.strip =~ /:$/ &amp;&amp; line.strip == match
+          if link_info.strip =~ /:$/ && line.strip == match
             ref_title = true
             link_info.sub!(/\s*:\s*$/,'')
           end
 
-          unless link_text.length &gt; 0 || link_info.sub(/^[!\^]\S+/,'').strip.length &gt; 0
+          unless link_text.length > 0 || link_info.sub(/^[!\^]\S+/,'').strip.length > 0
             add_error('No input', match)
             counter_errors += 1
             invalid_search = true
@@ -415,7 +331,7 @@ APPLESCRIPT
             else
               note = $1.strip
               footnote_counter += 1
-              if link_text.length &gt; 0 &amp;&amp; link_text.scan(/\s/).length == 0
+              if link_text.length > 0 && link_text.scan(/\s/).length == 0
                 ref = link_text
               else
                 ref = prefix + "fn" + ("%04d" % footnote_counter).to_s
@@ -424,15 +340,15 @@ APPLESCRIPT
               res = %Q{[^#{ref}]}
               cursor_difference = cursor_difference + (@match_length - res.length)
               @match_length = res.length
-              add_report("#{match_string} =&gt; Footnote #{ref}")
+              add_report("#{match_string} => Footnote #{ref}")
               res
             end
-          elsif (link_text == "" &amp;&amp; link_info == "") || is_url?(link_info)
+          elsif (link_text == "" && link_info == "") || is_url?(link_info)
             add_error('Invalid search', match) unless is_url?(link_info)
             match
           else
 
-            if link_text.length &gt; 0 &amp;&amp; link_info == ""
+            if link_text.length > 0 && link_info == ""
               link_info = link_text
             end
 
@@ -469,10 +385,10 @@ APPLESCRIPT
             elsif link_info =~ /^\!/
               search_word = link_info.match(/^\!(\S+)/)
 
-              if search_word &amp;&amp; valid_search?(search_word[1])
+              if search_word && valid_search?(search_word[1])
                 search_type = search_word[1] unless search_word.nil?
                 search_terms = link_text
-              elsif search_word &amp;&amp; search_word[1] =~ /^(\S+\.)+\S+$/
+              elsif search_word && search_word[1] =~ /^(\S+\.)+\S+$/
                 search_type = 'g'
                 search_terms = "site:#{search_word[1]} #{link_text}"
               else
@@ -481,7 +397,7 @@ APPLESCRIPT
                 search_terms = false
               end
 
-            elsif link_text &amp;&amp; link_text.length &gt; 0 &amp;&amp; (link_info.nil? || link_info.length == 0)
+            elsif link_text && link_text.length > 0 && (link_info.nil? || link_info.length == 0)
               search_type = 'g'
               search_terms = link_text
             else
@@ -493,20 +409,20 @@ APPLESCRIPT
             @cfg['custom_site_searches'].each {|k,v|
               if search_type == k
                 link_text = search_terms if link_text == ''
-                v = parse_arguments(v, {:no_restore =&gt; true})
+                v = parse_arguments(v, {:no_restore => true})
                 if v =~ /^(\/|http)/i
                   search_type = 'r'
                   tokens = v.scan(/\$term\d+d?/).sort.uniq
 
-                  if tokens.length &gt; 0
+                  if tokens.length > 0
                     highest_token = 0
                     tokens.each {|token|
                       if token =~ /(\d+)d?$/
-                        highest_token = $1.to_i if $1.to_i &gt; highest_token
+                        highest_token = $1.to_i if $1.to_i > highest_token
                       end
                     }
                     terms_p = search_terms.split(/ +/)
-                    if terms_p.length &gt; highest_token
+                    if terms_p.length > highest_token
                       remainder = terms_p[highest_token-1..-1].join(" ")
                       terms_p = terms_p[0..highest_token - 2]
                       terms_p.push(remainder)
@@ -541,20 +457,20 @@ APPLESCRIPT
 
                 break
               end
-            } if search_type &amp;&amp; search_terms &amp;&amp; search_terms.length &gt; 0
+            } if search_type && search_terms && search_terms.length > 0
 
-            if search_type &amp;&amp; search_terms
+            if search_type && search_terms
               url = false
               title = false
               # $stderr.puts "Searching #{search_type} for #{search_terms}"
               url, title, link_text = do_search(search_type, search_terms, link_text)
 
               if url
-                link_text = title if link_text == '' &amp;&amp; title
+                link_text = title if link_text == '' && title
                 if link_only || search_type =~ /sp(ell)?/
                   cursor_difference = cursor_difference + (@match_length - url.length)
                   @match_length = url.length
-                  add_report("#{match_string} =&gt; #{url}")
+                  add_report("#{match_string} => #{url}")
                   url
                 elsif ref_title
                   unless links.has_key? url
@@ -566,7 +482,7 @@ APPLESCRIPT
                   res = make_link('inline', link_text, url, title)
                   cursor_difference = cursor_difference + (@match_length - res.length)
                   @match_length = res.length
-                  add_report("#{match_string} =&gt; #{url}")
+                  add_report("#{match_string} => #{url}")
                   res
                 else
                   unless links.has_key? url
@@ -579,7 +495,7 @@ APPLESCRIPT
                   res = make_link(type, link_text, links[url], false)
                   cursor_difference = cursor_difference + (@match_length - res.length)
                   @match_length = res.length
-                  add_report("#{match_string} =&gt; #{url}")
+                  add_report("#{match_string} => #{url}")
                   res
                 end
               else
@@ -601,7 +517,7 @@ APPLESCRIPT
       $stderr.puts("\n") unless SILENT
 
       input = out.delete_if {|l|
-        l.strip =~ /^&lt;!--DELETE--&gt;$/
+        l.strip =~ /^<!--DELETE-->$/
       }.join("\n")
 
       if @cfg['inline']
@@ -683,20 +599,20 @@ APPLESCRIPT
           @cfg['custom_site_searches'].each {|k,v|
             if type == k
               link_text = terms if link_text == ''
-              v = parse_arguments(v, {:no_restore =&gt; true})
+              v = parse_arguments(v, {:no_restore => true})
               if v =~ /^(\/|http)/i
                 type = 'r'
                 tokens = v.scan(/\$term\d+d?/).sort.uniq
 
-                if tokens.length &gt; 0
+                if tokens.length > 0
                   highest_token = 0
                   tokens.each {|token|
                     if token =~ /(\d+)d?$/
-                      highest_token = $1.to_i if $1.to_i &gt; highest_token
+                      highest_token = $1.to_i if $1.to_i > highest_token
                     end
                   }
                   terms_p = terms.split(/ +/)
-                  if terms_p.length &gt; highest_token
+                  if terms_p.length > highest_token
                     remainder = terms_p[highest_token-1..-1].join(" ")
                     terms_p = terms_p[0..highest_token - 2]
                     terms_p.push(remainder)
@@ -731,7 +647,7 @@ APPLESCRIPT
 
               break
             end
-          } if type &amp;&amp; terms &amp;&amp; terms.length &gt; 0
+          } if type && terms && terms.length > 0
 
           if type =~ /^(\S+\.)+\S+$/
             terms = "site:#{type} #{terms}"
@@ -818,7 +734,7 @@ APPLESCRIPT
       unless skip_flags
         while input =~ /^#{o}:\s+(.*?)$/ || input =~ /--(no-)?#{o}/ do
 
-          if input =~ /--(no-)?#{o}/ &amp;&amp; !skip_flags
+          if input =~ /--(no-)?#{o}/ && !skip_flags
             unless @prev_config.has_key? o
               @prev_config[o] = @cfg[o]
               bool = $1.nil? || $1 == '' ? true : false
@@ -842,7 +758,7 @@ APPLESCRIPT
   end
 
   def make_link(type, text, url, title=false)
-    title = title &amp;&amp; cfg['include_titles'] ? %Q{ "#{title.clean}"} : ""
+    title = title && cfg['include_titles'] ? %Q{ "#{title.clean}"} : ""
     case type
     when 'ref_title'
       %Q{\n[#{text.strip}]: #{url}#{title}}
@@ -854,7 +770,7 @@ APPLESCRIPT
   end
 
   def add_output(str)
-    if @printout &amp;&amp; !@clipboard
+    if @printout && !@clipboard
       print str
     end
     @output += str
@@ -882,7 +798,7 @@ APPLESCRIPT
       }
 
       output = @footer.sort.join("\n").strip
-      output += "\n\n" if output.length &gt; 0 &amp;&amp; !footnotes.empty?
+      output += "\n\n" if output.length > 0 && !footnotes.empty?
       output += footnotes.join("\n\n") unless footnotes.empty?
       return output.gsub(/\n{3,}/,"\n\n")
     end
@@ -914,9 +830,9 @@ APPLESCRIPT
   end
 
   def print_report
-    return if (@cfg['inline'] &amp;&amp; @originput.split(/\n/).length == 1) || @clipboard
+    return if (@cfg['inline'] && @originput.split(/\n/).length == 1) || @clipboard
     unless @report.empty?
-      out = "\n&lt;!-- Report:\n#{@report.join("\n")}\n--&gt;\n"
+      out = "\n<!-- Report:\n#{@report.join("\n")}\n-->\n"
       add_output out
     end
   end
@@ -924,7 +840,7 @@ APPLESCRIPT
   def print_errors(type = 'Errors')
     return if @errors.empty?
     out = ''
-    if @originput.split(/\n/).length &gt; 1
+    if @originput.split(/\n/).length > 1
       inline = false
     else
       inline = @cfg['inline'] || @originput.split(/\n/).length == 1
@@ -941,7 +857,7 @@ APPLESCRIPT
     unless out == ''
       sep = inline ? " " : "\n"
       out.sub!(/\| /, '')
-      out = "#{sep}&lt;!-- #{type}:#{sep}#{out}--&gt;#{sep}"
+      out = "#{sep}<!-- #{type}:#{sep}#{out}-->#{sep}"
     end
     if @clipboard
       $stderr.puts out
@@ -977,7 +893,7 @@ APPLESCRIPT
       # response = Net::HTTP.get_response(URI(uri_str))
       response = false
 
-      Net::HTTP.start(url.host, url.port, :use_ssl =&gt; url.scheme == 'https') {|http| response = http.request_head(url.path) }
+      Net::HTTP.start(url.host, url.port, :use_ssl => url.scheme == 'https') {|http| response = http.request_head(url.path) }
 
       case response
       when Net::HTTPMethodNotAllowed, Net::HTTPServiceUnavailable then
@@ -995,9 +911,9 @@ APPLESCRIPT
         notify("Error validating", uri_str)
         false
       end
-    rescue =&gt; e
+    rescue => e
       notify("Error validating", uri_str)
-      add_error('link validation', "Possibly invalid =&gt; #{uri_str} (#{e})")
+      add_error('link validation', "Possibly invalid => #{uri_str} (#{e})")
       return true
     end
   end
@@ -1076,7 +992,7 @@ APPLESCRIPT
 
     results = []
 
-    if types.length &gt; 0
+    if types.length > 0
       types.each {|type|
 
         url, title, date = case type
@@ -1094,7 +1010,7 @@ APPLESCRIPT
           false
         end
         if url
-          results &lt;&lt; {'url' =&gt; url, 'title' =&gt; title, 'date' =&gt; date}
+          results << {'url' => url, 'title' => title, 'date' => date}
         end
       }
 
@@ -1121,27 +1037,27 @@ APPLESCRIPT
     onlyin = "~/Library/Caches/Metadata/Safari"
     onlyin += type ? "/"+type.capitalize : "/"
     type = type ? ".#{type}" : "*"
-    # created:&gt;10/13/13 kind:safari filename:.webbookmark
+    # created:>10/13/13 kind:safari filename:.webbookmark
     # Safari history/bookmarks
     terms = term.split(/\s+/).delete_if {|t| t.strip =~ /^\s*$/ }.map{|t|
       %Q{kMDItemTextContent = "*#{t}*"cdw}
-    }.join(" &amp;&amp; ")
+    }.join(" && ")
 
-    date = type == ".history" ? "&amp;&amp; kMDItemContentCreationDate &gt; $time.today(-182) " : ""
+    date = type == ".history" ? "&& kMDItemContentCreationDate > $time.today(-182) " : ""
 
     avoid_results = ["404", "not found", "chrome-extension"].map {|q|
       %Q{ kMDItemDisplayName != "*#{q}*"cdw }
-    }.join(" &amp;&amp; ")
-    query = %Q{((kMDItemContentType = "com.apple.safari#{type}") #{date}&amp;&amp; (#{avoid_results}) &amp;&amp; (#{terms}))}
+    }.join(" && ")
+    query = %Q{((kMDItemContentType = "com.apple.safari#{type}") #{date}&& (#{avoid_results}) && (#{terms}))}
     search = %x{mdfind -onlyin #{onlyin.gsub(/ /,'\ ')} '#{query}'}
-    if search.length &gt; 0
+    if search.length > 0
       res = []
       search.split(/\n/).each {|file|
         url = %x{mdls -raw -name kMDItemURL "#{file}"}
         date = %x{mdls -raw -name kMDItemDateAdded "#{file}"}
         date = Time.parse(date)
         title = %x{mdls -raw -name kMDItemDisplayName "#{file}"}
-        res &lt;&lt; {'url' =&gt; url, 'date' =&gt; date, 'title' =&gt; title}
+        res << {'url' => url, 'date' => date, 'title' => title}
       }
       res.delete_if {|k,el| el =~ /\(null\)/ }
 
@@ -1163,7 +1079,7 @@ APPLESCRIPT
         urls = extract_chrome_bookmarks(json["children"],urls)
       elsif json["type"] == "url"
         date = Time.at(json["date_added"].to_i / 1000000 + (Time.new(1601,01,01).strftime('%s').to_i))
-        urls &lt;&lt; {'url' =&gt; json["url"], 'title' =&gt; json["name"], 'date' =&gt; date}
+        urls << {'url' => json["url"], 'title' => json["name"], 'date' => date}
       else
         json.each {|k,v|
           urls = extract_chrome_bookmarks(v,urls)
@@ -1177,35 +1093,31 @@ APPLESCRIPT
   end
 
   def wiki(terms)
-    uri = URI.parse("https://en.wikipedia.org/w/api.php?action=query&amp;format=json&amp;prop=info&amp;inprop=url&amp;titles=#{CGI.escape(terms)}")
+    uri = URI.parse("http://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&inprop=url&titles=#{CGI.escape(terms)}")
     req = Net::HTTP::Get.new(uri.request_uri)
     req['Referer'] = "http://brettterpstra.com"
     req['User-Agent'] = "SearchLink (http://brettterpstra.com)"
-    res = Net::HTTP.start(uri.host, uri.port, :use_ssl =&gt; true) {|http|
+    res = Net::HTTP.start(uri.host, uri.port) {|http|
       http.request(req)
     }
-    if RUBY_VERSION.to_f &gt; 1.9
+    if RUBY_VERSION.to_f > 1.9
       body = res.body.force_encoding('utf-8')
     else
       body = res.body
     end
-
     result = JSON.parse(body)
 
     if result
       result['query']['pages'].each do |page,info|
-        unless info.key? "missing"
-          return [info['fullurl'],info['title']]
-        end
+        return [info['fullurl'],info['title']]
       end
     end
-    return false
   end
 
   def zero_click(terms)
-    url = URI.parse("http://api.duckduckgo.com/?q=#{CGI.escape(terms)}&amp;format=json&amp;no_redirect=1&amp;no_html=1&amp;skip_disambig=1")
+    url = URI.parse("http://api.duckduckgo.com/?q=#{CGI.escape(terms)}&format=json&no_redirect=1&no_html=1&skip_disambig=1")
     res = Net::HTTP.get_response(url).body
-    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f &gt; 1.9
+    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
 
     result = JSON.parse(res)
     if result
@@ -1222,16 +1134,16 @@ APPLESCRIPT
   def itunes(entity, terms, dev, aff='')
     aff = @cfg['itunes_affiliate']
 
-    url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&amp;country=#{@cfg['country_code']}&amp;entity=#{entity}&amp;attribute=allTrackTerm")
+    url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&entity=#{entity}&attribute=allTrackTerm")
     res = Net::HTTP.get_response(url).body
-    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f &gt; 1.9
+    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
 
     json = JSON.parse(res)
-    if json['resultCount'] &amp;&amp; json['resultCount'] &gt; 0
+    if json['resultCount'] && json['resultCount'] > 0
       result = json['results'][0]
       case entity
       when /(mac|iPad)Software/
-        output_url = dev &amp;&amp; result['sellerUrl'] ? result['sellerUrl'] : result['trackViewUrl']
+        output_url = dev && result['sellerUrl'] ? result['sellerUrl'] : result['trackViewUrl']
         output_title = result['trackName']
       when /(musicArtist|song|album)/
         case result['wrapperType']
@@ -1261,9 +1173,9 @@ APPLESCRIPT
   end
 
   def lastfm(entity, terms)
-    url = URI.parse("http://ws.audioscrobbler.com/2.0/?method=#{entity}.search&amp;#{entity}=#{CGI.escape(terms)}&amp;api_key=2f3407ec29601f97ca8a18ff580477de&amp;format=json")
+    url = URI.parse("http://ws.audioscrobbler.com/2.0/?method=#{entity}.search&#{entity}=#{CGI.escape(terms)}&api_key=2f3407ec29601f97ca8a18ff580477de&format=json")
     res = Net::HTTP.get_response(url).body
-    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f &gt; 1.9
+    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
     json = JSON.parse(res)
     if json['results']
       begin
@@ -1287,11 +1199,11 @@ APPLESCRIPT
   end
 
   def bing(terms, define = false) # actually bing due to deprecated Google API
-    uri = URI.parse(%Q{https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27#{CGI.escape(terms)}%27&amp;$format=json})
+    uri = URI.parse(%Q{https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27#{CGI.escape(terms)}%27&$format=json})
     req = Net::HTTP::Get.new(uri)
     req.basic_auth '2b0c04b5-efa5-4362-9f4c-8cae5d470cef', 'M+B8HkyFfCAcdvh1g8bYST12R/3i46zHtVQRfx0L/6s'
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl =&gt; true) {|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) {|http|
       http.request(req)
     }
 
@@ -1312,13 +1224,13 @@ APPLESCRIPT
 
   def google(terms, define = false)
     begin
-      uri = URI.parse("http://ajax.googleapis.com/ajax/services/search/web?v=1.0&amp;filter=1&amp;rsz=small&amp;q=#{CGI.escape(terms)}")
+      uri = URI.parse("http://ajax.googleapis.com/ajax/services/search/web?v=1.0&filter=1&rsz=small&q=#{CGI.escape(terms)}")
       req = Net::HTTP::Get.new(uri.request_uri)
       req['Referer'] = "http://brettterpstra.com"
       res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.request(req)
       }
-      if RUBY_VERSION.to_f &gt; 1.9
+      if RUBY_VERSION.to_f > 1.9
         body = res.body.force_encoding('utf-8')
       else
         body = res.body
@@ -1329,8 +1241,8 @@ APPLESCRIPT
         result = json['responseData']['results'][0]
         return false if result.nil?
         output_url = result['unescapedUrl']
-        if define &amp;&amp; output_url =~ /dictionary/
-          output_title = result['content'].gsub(/&lt;\/?.*?&gt;/,'')
+        if define && output_url =~ /dictionary/
+          output_title = result['content'].gsub(/<\/?.*?>/,'')
         else
           output_title = result['titleNoFormatting']
         end
@@ -1349,12 +1261,12 @@ APPLESCRIPT
       caps.push(w =~ /^[A-Z]/ ? true : false)
     }
 
-    uri = URI.parse("https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/SpellingSuggestions?Query=%27#{CGI.escape(terms)}%27&amp;$format=json")
+    uri = URI.parse("https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/SpellingSuggestions?Query=%27#{CGI.escape(terms)}%27&$format=json")
     req = Net::HTTP::Get.new(uri)
 
     req.basic_auth '2b0c04b5-efa5-4362-9f4c-8cae5d470cef', 'M+B8HkyFfCAcdvh1g8bYST12R/3i46zHtVQRfx0L/6s'
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl =&gt; true) {|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) {|http|
       http.request(req)
     }
     if res
@@ -1383,7 +1295,7 @@ APPLESCRIPT
     if url =~ /http:\/\/www.amazon.com\/(?:(.*?)\/)?dp\/([^\?]+)/
       title = $1
       id = $2
-      az_url = "http://www.amazon.com/gp/product/#{id}/ref=as_li_ss_tl?ie=UTF8&amp;camp=#{amazon_partner[1]}&amp;creative=#{amazon_partner[2]}&amp;creativeASIN=#{id}&amp;linkCode=as2&amp;tag=#{amazon_partner[0]}"
+      az_url = "http://www.amazon.com/gp/product/#{id}/ref=as_li_ss_tl?ie=UTF8&camp=#{amazon_partner[1]}&creative=#{amazon_partner[2]}&creativeASIN=#{id}&linkCode=as2&tag=#{amazon_partner[0]}"
       return [az_url, title]
     else
       return [url,'']
@@ -1392,7 +1304,7 @@ APPLESCRIPT
 
   def do_search(search_type, search_terms, link_text='')
     notify("Searching", search_terms)
-    return [false, search_terms, link_text] unless search_terms.length &gt; 0
+    return [false, search_terms, link_text] unless search_terms.length > 0
 
     case search_type
     when /^r$/ # simple replacement
@@ -1433,7 +1345,7 @@ APPLESCRIPT
       str = $1
       types = []
       if str =~ /s([hb]*)/
-        if $1.length &gt; 1
+        if $1.length > 1
           types.push('safari_all')
         elsif $1 == 'h'
           types.push('safari_history')
@@ -1443,7 +1355,7 @@ APPLESCRIPT
       end
 
       if str =~ /c([hb]*)/
-        if $1.length &gt; 1
+        if $1.length > 1
           types.push('chrome_bookmarks')
           types.push('chrome_history')
         elsif $1 == 'h'
@@ -1471,7 +1383,7 @@ APPLESCRIPT
 
     when /^def$/ # wikipedia/dictionary search
       # title, definition, definition_link, wiki_link = zero_click(search_terms)
-      # if search_type == 'def' &amp;&amp; definition_link != ''
+      # if search_type == 'def' && definition_link != ''
       #   url = definition_link
       #   title = definition.gsub(/'+/,"'")
       # elsif wiki_link != ''
@@ -1480,7 +1392,7 @@ APPLESCRIPT
       # end
       fix = spell(search_terms)
 
-      if fix &amp;&amp; search_terms.downcase != fix.downcase
+      if fix && search_terms.downcase != fix.downcase
         add_error('Spelling', "Spelling altered for '#{search_terms}' to '#{fix}'")
         search_terms = fix
         link_text = fix
@@ -1530,7 +1442,7 @@ APPLESCRIPT
       end
     end
     link_text = search_terms if link_text == ''
-    if url &amp;&amp; @cfg['validate_links'] &amp;&amp; !valid_link?(url) &amp;&amp; search_type !~ /^sp(ell)?/
+    if url && @cfg['validate_links'] && !valid_link?(url) && search_type !~ /^sp(ell)?/
       [false, "Not found: #{url}", link_text]
     elsif !url
       [false, "No results: #{url}", link_text]
@@ -1541,12 +1453,12 @@ APPLESCRIPT
 
 end
 
-## Stupid small pure Ruby JSON parser &amp; generator.
+## Stupid small pure Ruby JSON parser & generator.
 #
 # Copyright © 2013 Mislav Marohnić
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this
-# software and associated documentation files (the "Software"), to deal in the Software
+# software and associated documentation files (the “Software”), to deal in the Software
 # without restriction, including without limitation the rights to use, copy, modify,
 # merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
 # permit persons to whom the Software is furnished to do so, subject to the following
@@ -1555,7 +1467,7 @@ end
 # The above copyright notice and this permission notice shall be included in all copies or
 # substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 # INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
@@ -1567,8 +1479,8 @@ require 'forwardable'
 
 # Usage:
 #
-#   JSON.parse(json_string) =&gt; Array/Hash
-#   JSON.generate(object)   =&gt; json string
+#   JSON.parse(json_string) => Array/Hash
+#   JSON.generate(object)   => json string
 #
 # Run tests by executing this file directly. Pipe standard input to the script to have it
 # parsed as JSON and to display the result in Ruby.
@@ -1626,11 +1538,11 @@ class JSON
   def array
     ary = []
     space
-    repeat_until(AEN) { ary &lt;&lt; value; endkey }
+    repeat_until(AEN) { ary << value; endkey }
     ary
   end
 
-  SPEC = {'b' =&gt; "\b", 'f' =&gt; "\f", 'n' =&gt; "\n", 'r' =&gt; "\r", 't' =&gt; "\t"}
+  SPEC = {'b' => "\b", 'f' => "\f", 'n' => "\n", 'r' => "\r", 't' => "\t"}
   UNI = 'u'; CODE = /[a-fA-F0-9]{4}/
   STR = /"/; STE = '"'
   ESC = '\\'
@@ -1640,13 +1552,13 @@ class JSON
       str, esc = '', false
       while c = s.getch
         if esc
-          str &lt;&lt; (c == UNI ? (s.scan(CODE) || error).to_i(16).chr : SPEC[c] || c)
+          str << (c == UNI ? (s.scan(CODE) || error).to_i(16).chr : SPEC[c] || c)
           esc = false
         else
           case c
           when ESC then esc = true
           when STE then break
-          else str &lt;&lt; c
+          else str << c
           end
         end
       end
@@ -1662,7 +1574,7 @@ class JSON
     until scan(reg)
       pos = s.pos
       yield
-      error unless s.pos &gt; pos
+      error unless s.pos > pos
     end
   end
 
@@ -1683,16 +1595,16 @@ class JSON
     end
 
     ESC_MAP = Hash.new {|h,k| k }.update \
-      "\r" =&gt; 'r',
-      "\n" =&gt; 'n',
-      "\f" =&gt; 'f',
-      "\t" =&gt; 't',
-      "\b" =&gt; 'b'
+      "\r" => 'r',
+      "\n" => 'n',
+      "\f" => 'f',
+      "\t" => 't',
+      "\b" => 'b'
 
     def quote(str) %("#{str}") end
 
     def generate_String(str)
-      quote str.gsub(/[\r\n\f\t\b"\\]/) { "\\#{ESC_MAP[$&amp;]}"}
+      quote str.gsub(/[\r\n\f\t\b"\\]/) { "\\#{ESC_MAP[$&]}"}
     end
 
     def generate_simple(obj) obj.inspect end
@@ -1721,16 +1633,15 @@ class JSON
   extend Generator
 end
 
-sl = SearchLink.new({:echo =&gt; false})
+sl = SearchLink.new({:echo => false})
 overwrite = true
 backup = sl.cfg['backup']
 
-if ARGV.length &gt; 0
+if ARGV.length > 0
   files = []
   ARGV.each {|arg|
     if arg =~ /^(--?)?(h(elp)?|v(ersion)?)$/
       $stdout.puts "SearchLink v#{VERSION}"
-      sl.help_cli
       $stdout.puts "See http://brettterpstra.com/projects/searchlink/ for help"
       Process.exit
     elsif arg =~ /^--?(stdout)$/
@@ -1742,13 +1653,13 @@ if ARGV.length &gt; 0
     end
   }
   files.each {|file|
-    if File.exists?(file) &amp;&amp; %x{file -b "#{file}"|grep -c text}.to_i &gt; 0
-      if RUBY_VERSION.to_f &gt; 1.9
+    if File.exists?(file) && %x{file -b "#{file}"|grep -c text}.to_i > 0
+      if RUBY_VERSION.to_f > 1.9
         input = IO.read(file).force_encoding('utf-8')
       else
         input = IO.read(file)
       end
-      FileUtils.cp(file,file+".bak") if backup &amp;&amp; overwrite
+      FileUtils.cp(file,file+".bak") if backup && overwrite
 
       sl.parse(input)
 
@@ -1764,7 +1675,7 @@ if ARGV.length &gt; 0
     end
   }
 else
-  if RUBY_VERSION.to_f &gt; 1.9
+  if RUBY_VERSION.to_f > 1.9
     input = STDIN.read.force_encoding('utf-8')
   else
     input = STDIN.read
