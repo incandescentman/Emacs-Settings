@@ -2714,3 +2714,20 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 (newline)
   )
 #+END_SRC
+
+
+* refile active region or subtree
+
+#+BEGIN_SRC emacs-lisp
+(defun refile-region-or-subtree (beg end copy)
+(interactive)
+(if
+
+    (region-active-p)                               ; if
+    (org-refile-region) ; then
+    (org-refile); else
+)
+)
+#+END_SRC
+
+Doesn't work.

@@ -1456,3 +1456,13 @@ subsequent sends. could save them all in a logbook?
   (beginning-of-line)
 (newline)
   )
+
+(defun refile-region-or-subtree (beg end copy)
+(interactive)
+(if
+
+    (region-active-p)                               ; if
+    (org-refile-region) ; then
+    (org-refile); else
+)
+)
