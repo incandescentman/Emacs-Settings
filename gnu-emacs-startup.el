@@ -1454,5 +1454,5 @@ subsequent sends. could save them all in a logbook?
 (defun return-insert-blank-line-before ()
   (interactive)
   (beginning-of-line)
-(smart-return)
+(newline)
   )

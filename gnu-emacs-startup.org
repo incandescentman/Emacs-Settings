@@ -2711,6 +2711,6 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 (defun return-insert-blank-line-before ()
   (interactive)
   (beginning-of-line)
-(smart-return)
+(newline)
   )
 #+END_SRC
