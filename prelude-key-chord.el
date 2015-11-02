@@ -36,8 +36,8 @@
 (require 'key-chord)
 
 ;; (key-chord-define-global "jj" 'imenu)
-(key-chord-define-global "jj" 'helm-org-in-buffer-headings)
-(key-chord-define-global "kk" 'helm-imenu)
+(key-chord-define-global "kk" 'helm-org-in-buffer-headings)
+(key-chord-define-global "jj" 'helm-imenu)
 ;; (key-chord-define-global "jk" 'ace-jump-line-mode)
 
 (key-chord-define-global "jk" 'avy-move-line)
@@ -54,7 +54,7 @@
 (key-chord-define-global "LL" 'turn-off-auto-capitalize-mode)
 (key-chord-define-global "DD" 'deft)
 (key-chord-define-global "ZZ" 'repeat-complex-command)
-(key-chord-define-global "RR" 'isearch-backward)
+(key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 (key-chord-define-global "FF" 'isearch-forward)
 (key-chord-define-global "hh" 'helm-M-x)

@@ -961,8 +961,6 @@
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
- '(recentf-exclude (quote    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
-'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm"))) 
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
@@ -1373,8 +1371,10 @@ font-family: Courier, 'Courier New', monospace;
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "recentf")
+(add-to-list 'recentf-exclude "bookmarks")
+(add-to-list 'recentf-exclude "rollback-info")
 
-(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp" ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
 ".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
@@ -2163,7 +2163,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "iPad"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've"))
 
 (setq auto-capitalize-predicate
       (lambda () 

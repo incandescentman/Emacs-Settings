@@ -664,10 +664,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* ")
-(looking-back "* TODO ")
-(looking-back "^*+")
+(looking-back "\* ")
+(looking-back "\* TODO ")
+(looking-back "^\*+")
 (looking-back "- ")
+(looking-back "# ")
 )
 (beginning-of-line)
 ) 
@@ -893,7 +894,8 @@ From here:
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* ")
+(looking-back "\* ")
+(looking-back "# ")
 ;; (looking-back "* TODO ") ; actually I don't think I want this 
 ;; (looking-back "^*+")
 ;; (looking-back "- ") 
@@ -2188,7 +2190,7 @@ Old version that I retrieved:
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 ;; How do I add an exception for ") ; "? 
 ;; e.g. if I want to add a comment after a line of lisp?
@@ -2721,7 +2723,7 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 #+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree (beg end copy)
-(interactive)
+(interactive "P")
 (if
 
     (region-active-p)                               ; if
@@ -2737,4 +2739,17 @@ Doesn't work.
 #+BEGIN_SRC emacs-lisp
 (defadvice load-theme (before theme-dont-propagate activate)
  (mapcar #'disable-theme custom-enabled-themes))
+#+END_SRC
+
+* toggle item or hyphenation
+#+BEGIN_SRC emacs-lisp
+(defun toggle-item-or-hyphenation ()
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (org-toggle-item) ; then
+    (cycle-hyphenation); else
+)
+)
 #+END_SRC
