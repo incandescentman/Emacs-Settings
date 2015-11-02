@@ -2732,3 +2732,9 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 #+END_SRC
 
 Doesn't work.
+
+* disable color themes
+#+BEGIN_SRC emacs-lisp
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapcar #'disable-theme custom-enabled-themes))
+#+END_SRC

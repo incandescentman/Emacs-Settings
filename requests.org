@@ -485,3 +485,8 @@ swiper multi thing at point?
 How to do
 
 * describe-key and find function in my init files
+
+* describe-key to pasteboard
+
+* embolden next word
+Embolden next word expand-abbrev.
