@@ -1998,7 +1998,6 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "recentf")
 (add-to-list 'recentf-exclude "bookmarks")
 (add-to-list 'recentf-exclude "rollback-info")
-(add-to-list 'recentf-exclude "abbrev")
 (add-to-list 'recentf-exclude "gnu-emacs-startup")
 (add-to-list 'recentf-exclude "shared-functions")
 

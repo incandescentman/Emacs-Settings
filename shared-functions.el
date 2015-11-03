@@ -1373,7 +1373,6 @@ font-family: Courier, 'Courier New', monospace;
 (add-to-list 'recentf-exclude "recentf")
 (add-to-list 'recentf-exclude "bookmarks")
 (add-to-list 'recentf-exclude "rollback-info")
-(add-to-list 'recentf-exclude "abbrev")
 (add-to-list 'recentf-exclude "gnu-emacs-startup")
 (add-to-list 'recentf-exclude "shared-functions")
 
