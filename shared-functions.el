@@ -2229,6 +2229,7 @@ searches all buffers."
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 
 (setq set-mark-command-repeat-pop t)
 

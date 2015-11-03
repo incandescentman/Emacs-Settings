@@ -3193,6 +3193,7 @@ to open source code block in indirect buffer
 * globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
 
 * Pop to mark
