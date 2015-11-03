@@ -1373,6 +1373,9 @@ font-family: Courier, 'Courier New', monospace;
 (add-to-list 'recentf-exclude "recentf")
 (add-to-list 'recentf-exclude "bookmarks")
 (add-to-list 'recentf-exclude "rollback-info")
+(add-to-list 'recentf-exclude "abbrev")
+(add-to-list 'recentf-exclude "gnu-emacs-startup")
+(add-to-list 'recentf-exclude "shared-functions")
 
 (add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp" ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 

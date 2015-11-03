@@ -45,7 +45,6 @@ Automatically load abbreviations table:
 (setq only-global-abbrevs t)
 #+END_SRC
 
-* 
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
@@ -2328,7 +2327,14 @@ Old version that I retrieved:
 #+BEGIN_SRC emacs-lisp
 (defun smart-semicolon ()
   (interactive)
-  (smart-punctuation ";" t))
+  (smart-punctuation ";" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
 (define-key orgstruct-mode-map (kbd ";") 'smart-semicolon)
@@ -2339,10 +2345,21 @@ Old version that I retrieved:
 #+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
+
+
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
 (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
+
+
 #+END_SRC 
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode

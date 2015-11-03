@@ -1285,14 +1285,30 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-semicolon ()
   (interactive)
-  (smart-punctuation ";" t))
+  (smart-punctuation ";" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
 (define-key orgstruct-mode-map (kbd ";") 'smart-semicolon)
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
+
+
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
 (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
