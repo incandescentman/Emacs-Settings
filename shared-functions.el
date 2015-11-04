@@ -1228,6 +1228,12 @@ font-family: Courier, 'Courier New', monospace;
     font-weight: 400 !important;")))
 
 
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "p" "margin-bottom: 1em")))
+
+
 (add-hook 'message-mode-hook
           (lambda ()
 ;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
