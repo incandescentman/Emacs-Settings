@@ -3,6 +3,7 @@
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
 
+
 (global-set-key [(control x) (?0)] 'delete-other-windows)
 (global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-0") 'delete-window)
@@ -1162,18 +1163,22 @@ subsequent sends. could save them all in a logbook?
 (defun kill-clause ()
   (interactive)
   (smart-expand)
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
-
+  ;; test if line is header
+  (if (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+      (kill-line)
+    (progn
+      (let ((old-point (point))
+            (kill-punct (my/beginning-of-sentence-p)))
+        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+          (kill-region old-point
+                       (if kill-punct
+                           (match-end 0)
+                         (match-beginning 0)))))
+      (my/fix-space)
+      (save-excursion
+        (when (my/beginning-of-sentence-p)
+          (capitalize-unless-org-heading))))))
+  
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 
