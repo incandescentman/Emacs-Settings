@@ -446,10 +446,10 @@
   "" nil
   :lighter " OOut"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<return>") 'smart-org-meta-return-dwim)
             (define-key map (kbd "<tab>") 'org-metaright)
             (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
+            (define-key map (kbd "<M-return>") 'smart-return)
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
 
@@ -2176,7 +2176,7 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|Ms\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -3680,3 +3680,11 @@ The full path into relative path and insert it as a local file link in org-mode"
           ))
         (insert (format "[[file:%s]]" str)))
     ))
+
+(dotimes (n 10)
+  (global-unset-key (kbd (format "M-%d" n))))
+
+(defhydra hydra-zoom (global-map "{")
+  "zoom"
+  ("x" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))

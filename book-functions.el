@@ -3,12 +3,16 @@
 (condition-case nil
   (kill-buffer "playful.org")
   (error nil))
-(find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+
+(book-dired)
+
+;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates---outline.txt")
 (text-scale-increase 2)
-(find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
+;; (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates.txt")
 (text-scale-increase 2)
-(find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
-(text-scale-increase 2)
+;; (find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
 (text-scale-increase 2)
 )
 
@@ -97,7 +101,6 @@ emacs-settings)))
 (book-load-current) 
 (text-scale-increase 2)
 (split-window-horizontally)
-(book-dired)
 (text-scale-increase 2)
 (other-window 1)
 )
