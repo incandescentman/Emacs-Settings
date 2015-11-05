@@ -381,6 +381,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
+
 (define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
 
 (define-key key-minor-mode-map (kbd "M-q") 'org-refile)
@@ -2788,3 +2790,15 @@ Doesn't work.
 s-p
 M-[
 M-]
+
+
+* replace-inner
+#+BEGIN_SRC emacs-lisp
+(defun replace-inner ()
+  (interactive)
+(change-inner)
+  (pasteboard-paste-no-spaces)
+  )
+#+END_SRC
+
+doesn't work.
