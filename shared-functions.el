@@ -105,10 +105,6 @@
 
 (delete-selection-mode 1)
 
-(eval-after-load "org"
-(autopair-mode 1)
-)
-
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")
@@ -446,10 +442,10 @@
   "" nil
   :lighter " OOut"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<return>") 'smart-org-meta-return-dwim)
             (define-key map (kbd "<tab>") 'org-metaright)
             (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
+            (define-key map (kbd "<M-return>") 'smart-return)
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
 
@@ -1845,8 +1841,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
-(global-set-key (kbd "M-n") 'outline-next-visible-heading)
-(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+
+(global-set-key (kbd "M-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -1865,6 +1864,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key '[(f6)] 'point-stack-pop)
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
+
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
 
@@ -2176,7 +2177,7 @@ searches all buffers."
 (setq auto-capitalize-predicate
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|Ms\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -3442,8 +3443,9 @@ If FILE already exists, signal an error."
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
 ;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
 ;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward) ; single key, useful
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
+
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
@@ -3680,3 +3682,11 @@ The full path into relative path and insert it as a local file link in org-mode"
           ))
         (insert (format "[[file:%s]]" str)))
     ))
+
+(dotimes (n 10)
+  (global-unset-key (kbd (format "M-%d" n))))
+
+(defhydra hydra-zoom (global-map "{")
+  "zoom"
+  ("x" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))

@@ -28,7 +28,8 @@
 (recenter-top-bottom)
   )
 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook (smartparens-mode 1))
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -234,6 +235,10 @@
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
+
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
 (define-key key-minor-mode-map (kbd "M-q") 'org-refile)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
@@ -303,6 +308,7 @@
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
+(define-key key-minor-mode-map (kbd "s-0") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
@@ -1504,3 +1510,15 @@ subsequent sends. could save them all in a logbook?
     (cycle-hyphenation); else
 )
 )
+
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space)
+  )
+
+(defun replace-inner ()
+  (interactive)
+(change-inner)
+  (pasteboard-paste-no-spaces)
+  )
