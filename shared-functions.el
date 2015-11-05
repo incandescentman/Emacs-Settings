@@ -105,10 +105,6 @@
 
 (delete-selection-mode 1)
 
-(eval-after-load "org"
-(autopair-mode 1)
-)
-
 (setq buffer-save-without-query nil)
 
 (setq locate-command "mdfind")

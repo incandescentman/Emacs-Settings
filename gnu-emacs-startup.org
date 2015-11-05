@@ -58,7 +58,8 @@ Automatically load abbreviations table:
 * org-mode settings
 
   #+BEGIN_SRC emacs-lisp 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook (smartparens-mode 1))
 (setq org-hierarchical-todo-statistics nil) 
   #+END_SRC
 

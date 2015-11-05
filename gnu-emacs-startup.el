@@ -27,7 +27,8 @@
 (recenter-top-bottom)
   )
 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook (smartparens-mode 1))
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -232,6 +233,8 @@
 ;; mk - mykeybindings
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
 
 (define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
 
@@ -1507,4 +1510,10 @@ subsequent sends. could save them all in a logbook?
   (interactive)
   (org-forward-sentence)
   (my/fix-space)
+  )
+
+(defun replace-inner ()
+  (interactive)
+(change-inner)
+  (pasteboard-paste-no-spaces)
   )
