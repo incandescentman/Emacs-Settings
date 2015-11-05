@@ -1845,8 +1845,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
-(global-set-key (kbd "M-n") 'outline-next-visible-heading)
-(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+
+(global-set-key (kbd "M-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -1865,6 +1868,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key '[(f6)] 'point-stack-pop)
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
+
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
 

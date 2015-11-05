@@ -2617,8 +2617,11 @@ For popping around the buffer. I need to review how this works again.
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-n") 'outline-next-visible-heading)
-(global-set-key (kbd "M-p") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+
+(global-set-key (kbd "M-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -2637,6 +2640,8 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (global-set-key '[(f6)] 'point-stack-pop)
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
+
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 #+END_SRC
 
 Make ^H delete rather than help:
