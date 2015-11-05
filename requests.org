@@ -1,4 +1,16 @@
 
+* region or thing
+
+** highlighted region or thing at point
+So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+
+** move region or subtree to other window
+I have move-region-to-other-window. Make it look for active region first?
+
+** org refile region or subtree
+If active region, then refile region 
+else refile subtree
+
 
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
@@ -368,19 +380,6 @@ Desired output: Something that's just weird more than funny...^ and having to ex
 This:
 http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
 
-
-* TODO no capitals on cheklist items 
-- [ ] these
-- [ ] Should
-- [ ] Not
-- [ ] Get
-- [ ] Autocapitalized
-
-* TODO create a function smart-org-meta-control-return-dwim 
-
-Same as smart-org-meta-return-dwim but that inserts a subheading instead? See org-insert-subheading. 
-
-
 *** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
 
 #+BEGIN_EXAMPLE
@@ -449,18 +448,6 @@ Example:
 As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
 
 Scenario: invoke kill-clause
-
-* highlighted region or thing at point 
-So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
-
-
-
-* move region or subtree to other window 
-I have move-region-to-other-window. Make it look for active region first?
-
-* org refile region or subtree
-If active region, then refile region 
-else refile subtree
 
 * pasteboard-search-for-clipboard-contents 
 - make this do isearch-repeat-forward when invoked again?

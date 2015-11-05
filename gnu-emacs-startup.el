@@ -3,7 +3,6 @@
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
 
-
 (global-set-key [(control x) (?0)] 'delete-other-windows)
 (global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-0") 'delete-window)
@@ -553,8 +552,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\)")
 )
 
-(define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
-(define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key org-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
 ;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 ;;; I changed this a)) bunch, not sure if it still works correctly. 
@@ -1169,22 +1168,18 @@ subsequent sends. could save them all in a logbook?
 (defun kill-clause ()
   (interactive)
   (smart-expand)
-  ;; test if line is header
-  (if (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
-    (progn
-      (let ((old-point (point))
-            (kill-punct (my/beginning-of-sentence-p)))
-        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-          (kill-region old-point
-                       (if kill-punct
-                           (match-end 0)
-                         (match-beginning 0)))))
-      (my/fix-space)
-      (save-excursion
-        (when (my/beginning-of-sentence-p)
-          (capitalize-unless-org-heading))))))
-  
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 

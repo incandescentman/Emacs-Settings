@@ -742,11 +742,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\)")
 )
 
-(define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
-(define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key org-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
 ;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 #+END_SRC
+
+This fucked up autopair mode so I'm turning it off again.
+
 
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
