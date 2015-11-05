@@ -381,6 +381,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
 (define-key key-minor-mode-map (kbd "M-q") 'org-refile)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
@@ -2773,6 +2775,14 @@ Doesn't work.
 )
 #+END_SRC
 
+* my-forward-sentence
+#+BEGIN_SRC emacs-lisp
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space)
+  )
+#+END_SRC
 
 * available keybindings
 s-p

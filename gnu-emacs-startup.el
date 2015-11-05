@@ -233,6 +233,8 @@
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
 (define-key key-minor-mode-map (kbd "M-q") 'org-refile)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
@@ -1500,3 +1502,9 @@ subsequent sends. could save them all in a logbook?
     (cycle-hyphenation); else
 )
 )
+
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space)
+  )

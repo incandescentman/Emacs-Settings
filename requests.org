@@ -490,3 +490,6 @@ How to do
 
 * embolden next word
 Embolden next word expand-abbrev.
+
+* kill sentence shouldn't kill the line break after a sentence
+(But it should if there's no sentence)
