@@ -380,6 +380,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
+
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
 (define-key key-minor-mode-map (kbd "s-H") 'replace-inner)

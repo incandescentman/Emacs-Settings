@@ -3,11 +3,11 @@
 
 * region or thing
 
-** highlighted region or thing at point
-So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
-
 ** move region or subtree to other window
 I have move-region-to-other-window. Make it look for active region first?
+
+** highlighted region or thing at point
+So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
 
 ** org refile region or subtree
 If active region, then refile region 
@@ -31,6 +31,8 @@ current output: Don't use an adverb word,^
 desired output: Don't use an adverb word, ^
 
 
+* org-mac-chrome-insert-frontmost-url
+new link from clipboard (prompt for title)
 
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
