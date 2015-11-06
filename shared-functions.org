@@ -3067,9 +3067,13 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
+      (and
+      (not (and
+            (string-equal "org-mode" major-mode)
+            (string-match "^-\s\\[.?\\]\s" (thing-at-point 'line))))
       (lambda () 
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
 #+END_SRC 
 
 

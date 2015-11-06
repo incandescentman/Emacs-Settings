@@ -2178,9 +2178,13 @@ searches all buffers."
 (setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
 
 (setq auto-capitalize-predicate
-      (lambda () 
-        (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
+      (lambda ()
+        (and
+         (not (and
+               (string-equal "org-mode" major-mode)
+               (string-match "^-\s\\[.?\\]\s" (thing-at-point 'line))))
+         (save-match-data
+           (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 

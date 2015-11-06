@@ -1171,17 +1171,20 @@ subsequent sends. could save them all in a logbook?
 (defun kill-clause ()
   (interactive)
   (smart-expand)
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
+  (if (let ((sm (string-match "[*]+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+      (kill-line)
+    (progn
+      (let ((old-point (point))
+            (kill-punct (my/beginning-of-sentence-p)))
+        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+          (kill-region old-point
+                       (if kill-punct
+                           (match-end 0)
+                         (match-beginning 0)))))
+      (my/fix-space)
+      (save-excursion
+        (when (my/beginning-of-sentence-p)
+          (capitalize-unless-org-heading))))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
