@@ -483,7 +483,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'counsel-M-x) ; call helm-M-x instead of regular M-as
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key org-mode-map (kbd "M-K") 'kill-clause)
@@ -2762,7 +2762,7 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 * refile active region or subtree
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree (beg end copy)
 (interactive "P")
 (if
@@ -2772,7 +2772,7 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
     (org-refile); else
 )
 )
-#+END_EXAMPLE
+#+END_SRC
 
 Doesn't work.
 

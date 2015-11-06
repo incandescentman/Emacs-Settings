@@ -335,7 +335,7 @@
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'counsel-M-x) ; call helm-M-x instead of regular M-as
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key org-mode-map (kbd "M-K") 'kill-clause)
@@ -1496,6 +1496,16 @@ subsequent sends. could save them all in a logbook?
   (beginning-of-line)
 (newline)
   )
+
+(defun refile-region-or-subtree (beg end copy)
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (refile-region) ; then
+    (org-refile); else
+)
+)
 
 (defadvice load-theme (before theme-dont-propagate activate)
  (mapcar #'disable-theme custom-enabled-themes))
