@@ -1389,14 +1389,15 @@ subsequent sends. could save them all in a logbook?
 
 (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
-  (unless 
+  (unless
       (or
-       (looking-at "\\W*I\\b")          ; never downcase the word "I" 
+       (looking-at "\\W*I\\b")          ; never downcase the word "I"
+       (looking-at "[ ]*I\'")          ; never downcase the word "I'
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
-(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
-(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?" 
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 
        (looking-at (user-full-name))
        )
@@ -1420,6 +1421,7 @@ subsequent sends. could save them all in a logbook?
 (or
 
 (looking-at "[ ]*I\\b") ; never downcase the word "I"
+;; (looking-at "[ ]*I\'") ; never downcase the word "I'"
 (looking-at "[ ]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"

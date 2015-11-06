@@ -1,4 +1,6 @@
 
+
+
 * region or thing
 
 ** highlighted region or thing at point
@@ -11,6 +13,8 @@ I have move-region-to-other-window. Make it look for active region first?
 If active region, then refile region 
 else refile subtree
 
+* forward-clause
+(define-key key-minor-mode-map (kbd "M-E") 'forward-clause)
 
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
