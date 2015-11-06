@@ -283,12 +283,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun garamond-font ()
   (interactive)
-(widen)
-(load-theme 'leuven)
-  (set-face-attribute 'default nil :font "Garamond Premier Pro")
+(set-face-attribute 'default nil :font "Garamond Premier Pro")
 (org-mode)
-(text-scale-increase 3)
 (horizontal-cursor)
+(setq cursor-color 'red)
 )
 
 
@@ -312,6 +310,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun box-cursor ()
 (interactive)
 (setq-default cursor-type 'box)
+(setq cursor-type 'box)
 (set-cursor-color "red")
 (setq blink-cursor-mode nil)
 )
@@ -319,7 +318,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun horizontal-cursor ()
 (interactive)
 (setq-default cursor-type 'hbar)
-(set-cursor-color "black")
+(setq cursor-type 'hbar)
+;; (set-cursor-color "black")
+(set-cursor-color "red")
 (setq blink-cursor-blinks 10)
 (setq blink-cursor-mode t)
 )

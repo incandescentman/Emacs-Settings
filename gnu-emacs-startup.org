@@ -396,7 +396,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
 (define-key key-minor-mode-map (kbd "s-'") 'org-refile)
-(define-key key-minor-mode-map (kbd "s-\"") 'org-refile-region)
+(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -2179,6 +2179,12 @@ Old version that I retrieved:
 (defun kill-clause ()
   (interactive)
   (smart-expand)
+
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
+
+
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -2189,7 +2195,7 @@ Old version that I retrieved:
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
+      (capitalize-unless-org-heading)))))
 #+END_SRC
  
 
@@ -2756,17 +2762,17 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 * refile active region or subtree
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun refile-region-or-subtree (beg end copy)
 (interactive "P")
 (if
 
     (region-active-p)                               ; if
-    (org-refile-region) ; then
+    (refile-region) ; then
     (org-refile); else
 )
 )
-#+END_SRC
+#+END_EXAMPLE
 
 Doesn't work.
 

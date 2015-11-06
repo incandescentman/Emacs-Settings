@@ -1711,13 +1711,13 @@ Also converts full stops to commas."
     (apply 'delete-region remove)
     (insert description))))
 
-(defvar org-refile-region-format "\n%s\n")
+(defvar refile-region-format "\n%s\n")
 
-(defvar org-refile-region-position 'top
+(defvar refile-region-position 'top
   "Where to refile a region. Use 'bottom to refile at the
 end of the subtree. ")
 
-(defun org-refile-region (beg end copy)
+(defun refile-region (beg end copy)
   "Refile the active region.
 If no region is active, refile the current paragraph.
 With prefix arg C-u, copy region instad of killing it."

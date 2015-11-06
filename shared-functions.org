@@ -2424,13 +2424,13 @@ A useful function: remove a hyperlink but leave the link description:
 ** Refile region
 Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
 #+BEGIN_SRC emacs-lisp
-(defvar org-refile-region-format "\n%s\n")
+(defvar refile-region-format "\n%s\n")
 
-(defvar org-refile-region-position 'top
+(defvar refile-region-position 'top
   "Where to refile a region. Use 'bottom to refile at the
 end of the subtree. ")
 
-(defun org-refile-region (beg end copy)
+(defun refile-region (beg end copy)
   "Refile the active region.
 If no region is active, refile the current paragraph.
 With prefix arg C-u, copy region instad of killing it."
