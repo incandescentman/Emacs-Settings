@@ -1497,16 +1497,6 @@ subsequent sends. could save them all in a logbook?
 (newline)
   )
 
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
-(if
-
-    (region-active-p)                               ; if
-    (refile-region) ; then
-    (org-refile); else
-)
-)
-
 (defadvice load-theme (before theme-dont-propagate activate)
  (mapcar #'disable-theme custom-enabled-themes))
 

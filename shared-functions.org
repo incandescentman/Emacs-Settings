@@ -5196,3 +5196,19 @@ Hydras and key-chords.
 q is a good candidate for chords, since in words it has u after, and only a few letters ever come before a q. so I tap my two pinkie-fingers on qp to summon a project(ile)-related hydra.
 
 [[https://github.com/abo-abo/hydra][abo-abo/hydra]]
+
+
+* refile active region or subtree
+
+#+BEGIN_SRC emacs-lisp
+(defun refile-region-or-subtree (beg end copy)
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (refile-region) ; then
+    (org-refile); else
+)
+)
+#+END_SRC
+Doesn't work.

@@ -3697,3 +3697,13 @@ The full path into relative path and insert it as a local file link in org-mode"
   "zoom"
   ("x" text-scale-increase "in")
   ("l" text-scale-decrease "out"))
+
+(defun refile-region-or-subtree (beg end copy)
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (refile-region) ; then
+    (org-refile); else
+)
+)
