@@ -2786,22 +2786,6 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 #+END_SRC
 
 
-* refile active region or subtree
-
-#+BEGIN_SRC emacs-lisp
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
-(if
-
-    (region-active-p)                               ; if
-    (refile-region) ; then
-    (org-refile); else
-)
-)
-#+END_SRC
-
-Doesn't work.
-
 * disable color themes
 #+BEGIN_SRC emacs-lisp
 (defadvice load-theme (before theme-dont-propagate activate)

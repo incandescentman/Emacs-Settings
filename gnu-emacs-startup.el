@@ -1171,20 +1171,23 @@ subsequent sends. could save them all in a logbook?
 (defun kill-clause ()
   (interactive)
   (smart-expand)
-  (if (let ((sm (string-match "[*]+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
-    (progn
-      (let ((old-point (point))
-            (kill-punct (my/beginning-of-sentence-p)))
-        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-          (kill-region old-point
-                       (if kill-punct
-                           (match-end 0)
-                         (match-beginning 0)))))
-      (my/fix-space)
-      (save-excursion
-        (when (my/beginning-of-sentence-p)
-          (capitalize-unless-org-heading))))))
+
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
+
+
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading)))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
@@ -1493,16 +1496,6 @@ subsequent sends. could save them all in a logbook?
   (beginning-of-line)
 (newline)
   )
-
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
-(if
-
-    (region-active-p)                               ; if
-    (refile-region) ; then
-    (org-refile); else
-)
-)
 
 (defadvice load-theme (before theme-dont-propagate activate)
  (mapcar #'disable-theme custom-enabled-themes))
