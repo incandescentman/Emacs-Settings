@@ -612,7 +612,7 @@
   (clipboard-yank)
   (replace-smart-quotes (mark) (point)))
 
-;; (require 'buffer-stack)
+;(require 'buffer-stack)
 
 (global-set-key [(s-right)] 'buffer-stack-down)
 (global-set-key [(s-left)] 'buffer-stack-up)
@@ -995,7 +995,7 @@
 ;; end
 )
 
-;;(require 'key-chord)
+(require 'key-chord)
 (key-chord-mode 1)
 
 (defvar yank-indent-modes
@@ -2181,7 +2181,7 @@ searches all buffers."
       (lambda ()
         (and
          (not (and
-               (string-equal "org-mode" major-mode)
+               (eq 'org-mode major-mode)
                (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
          (save-match-data
            (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
@@ -2687,12 +2687,12 @@ as the subject."
       (message-send)
       (message-kill-buffer))))
 
-(require 'key-seq)
-(key-seq-define-global "qd" 'dired)
-(key-seq-define text-mode-map "qf" 'flyspell-buffer)
+;(require 'key-seq)
+;(key-seq-define-global "qd" 'dired)
+;(key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
-(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
-(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
+;(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
+;(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
 
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -3444,7 +3444,7 @@ If FILE already exists, signal an error."
 ;; load org-opml
 (load-library "org-opml") 
 
-(require 'org-element-debug)
+;(require 'org-element-debug)
 
 (progn
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
