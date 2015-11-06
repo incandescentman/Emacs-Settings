@@ -386,7 +386,7 @@
 
 
 ;; For extracting content from my browser
-(define-key key-minor-mode-map (kbd "s-W") 'web-research)
+(define-key key-minor-mode-map (kbd "s-W") 'widen)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 

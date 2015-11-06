@@ -31,6 +31,12 @@ current output: Don't use an adverb word,^
 desired output: Don't use an adverb word, ^
 
 
+* visit-most-recent-file
+No error when I invoke visit-most-recent-file and it finds next file is the same file
+
+~/nd/playful.org and /Users/jay/Dropbox/writing/notationaldata/playful.org are the same file [2 times]
+
+
 * org-mac-chrome-insert-frontmost-url
 new link from clipboard (prompt for title)
 

@@ -46,13 +46,13 @@
 (defun tiny-type ()
   (interactive)
   (set-face-attribute 'default nil  :height 150)
-  
+
   )
 
 (defun miniscule-type ()
   (interactive)
   (set-face-attribute 'default nil  :height 140)
-  
+
   )
 
 
@@ -123,7 +123,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun tomorrow-night ()
   (interactive)
   (load-theme 'sanityinc-tomorrow-night)
-(org-mode) 
+(org-mode)
 )
 
 
@@ -131,7 +131,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   "Open my own customized version of the Solarized color theme."
   (interactive)
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
- (load-theme 'solarized-dark) 
+ (load-theme 'solarized-dark)
   (org-mode)
 ;  (incarnadine-cursor)
   )
@@ -205,11 +205,11 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun matrix ()
   (interactive)
-  (set-face-attribute 'default nil :background "black" :foreground "lime") 
+  (set-face-attribute 'default nil :background "black" :foreground "lime")
   ;; (set-face-attribute 'default nil :background "black" :foreground "lime" :font "Courier" :height 180)
-) 
+)
 
-;;;; functions to change the appearance of Emacs to various beautiful defaults automatically load 
+;;;; functions to change the appearance of Emacs to various beautiful defaults automatically load
 
 ;; Set transparency of emacs
 (defun transparency-set-value (value)
@@ -222,7 +222,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun transparent-serenity (value)
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
-  (set-frame-parameter (selected-frame) 'alpha value) 
+  (set-frame-parameter (selected-frame) 'alpha value)
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
   (toggle-frame-fullscreen)
   (toggle-frame-maximized)
@@ -232,7 +232,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun top-gun-mode ()
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive)
-(set-frame-parameter (selected-frame) 'alpha '(40 40)) 
+(set-frame-parameter (selected-frame) 'alpha '(40 40))
   (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
 (set-fringe-mode -1)
 )
@@ -283,8 +283,13 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun garamond-font ()
   (interactive)
+(widen)
 (load-theme 'leuven)
-  (set-face-attribute 'default nil :font "Garamond Premier Pro"))
+  (set-face-attribute 'default nil :font "Garamond Premier Pro")
+(org-mode)
+(text-scale-increase 3)
+(horizontal-cursor)
+)
 
 
 
@@ -301,36 +306,36 @@ The function is poorly named, didn't really want to 'load' it, just open it."
         (buffer-face-set 'hard-to-read-font))
     (progn
       (font-lock-mode t)
-      (buffer-face-mode nil)))) 
+      (buffer-face-mode nil))))
 
 
 (defun box-cursor ()
 (interactive)
-(setq-default cursor-type 'box) 
-(set-cursor-color "red") 
-(setq blink-cursor-mode nil) 
-) 
+(setq-default cursor-type 'box)
+(set-cursor-color "red")
+(setq blink-cursor-mode nil)
+)
 
 (defun horizontal-cursor ()
 (interactive)
-(setq-default cursor-type 'hbar) 
-(set-cursor-color "black") 
-(setq blink-cursor-blinks 10) 
-(setq blink-cursor-mode t) 
-) 
+(setq-default cursor-type 'hbar)
+(set-cursor-color "black")
+(setq blink-cursor-blinks 10)
+(setq blink-cursor-mode t)
+)
 
 
 (defun ommwriter-mode ()
-(interactive) 
+(interactive)
 (vera-font)
 (horizontal-cursor))
 
 (defun is-in-terminal ()
-    (not (display-graphic-p))) 
+    (not (display-graphic-p)))
 
-(defun iterm-mode () 
+(defun iterm-mode ()
 (interactive)
 (spacemacs/toggle-highlight-current-line-globally-off)
-(setq menu-bar-mode-1) 
+(setq menu-bar-mode-1)
 
 )

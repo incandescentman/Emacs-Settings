@@ -145,7 +145,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 This customization with the big blocky boxy red cursor makes me so happy.
 # #+BEGIN_SRC emacs-lisp
 ;; (setq-default cursor-type 'box) 
-(setq-default cursor-type 'hbar) 
+;; (setq-default cursor-type 'hbar)
 (set-cursor-color "red")
 (setq default-frame-alist
       '((cursor-color . "red")))
@@ -2481,7 +2481,9 @@ With prefix arg C-u, copy region instad of killing it."
       (unless (memq filename buffer-file-name-list)
 	(setq most-recent-filename filename)
 	(return)))
-    (find-file most-recent-filename)))
+(ignore-errors (find-file most-recent-filename)
+)
+))
 #+END_SRC
 
 ** Copy path
@@ -3060,7 +3062,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -4994,8 +4996,8 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
                         'bar
                       'box)))
 
-(add-hook 'god-mode-enabled-hook 'my-update-cursor)
-(add-hook 'god-mode-disabled-hook 'my-update-cursor)
+;; (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
 
              (require 'god-mode-isearch)
