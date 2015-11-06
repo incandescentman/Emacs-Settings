@@ -13,9 +13,6 @@
   (interactive)
   (set-face-attribute 'default nil :font "Georgia"))
 
-(defun garamond-font ()
-  (interactive)
-  (set-face-attribute 'default nil :font "Garamond Premier Pro"))
 
 (defun hack-font ()
   (interactive)
@@ -283,6 +280,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   (org-mode)
   )
+
+(defun garamond-font ()
+  (interactive)
+(load-theme 'leuven)
+  (set-face-attribute 'default nil :font "Garamond Premier Pro"))
+
 
 
 (make-face 'hard-to-read-font)
