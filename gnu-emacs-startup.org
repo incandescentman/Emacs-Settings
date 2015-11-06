@@ -2815,7 +2815,7 @@ doesn't work.
 
 
 * smex
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (require 'smex)
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
@@ -2823,4 +2823,16 @@ doesn't work.
 (defcustom ivy-height 30
   "Number of lines for the minibuffer window."
   :type 'integer)
-#+END_EXAMPLE
+#+END_SRC
+
+
+* bjm-swiper
+
+#+BEGIN_SRC emacs-lisp
+;;advise swiper to recenter on exit
+(defun bjm-swiper-recenter (&rest args)
+  "recenter display after swiper"
+  (recenter)
+  )
+(advice-add 'swiper :after #'bjm-swiper-recenter)
+#+END_SRC

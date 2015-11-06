@@ -210,3 +210,17 @@ If A is not true, then do B and C.
 
 * this
 C-x C-b") 'ibuffer
+
+
+* simplest find and replace
+
+#+BEGIN_SRC emacs-lisp
+;;fix ; typos
+(defun bjm-semicolon-to-l ()
+  "Change the most recent semicolon behind the point to an l character. Useful for fixing a common touch-typing error"
+  (interactive)
+  (save-excursion
+    (search-backward ";")
+    (delete-char 1)
+    (insert "l")))
+#+END_SRC

@@ -1523,3 +1523,18 @@ subsequent sends. could save them all in a logbook?
 (change-inner)
   (pasteboard-paste-no-spaces)
   )
+
+(require 'smex)
+(setq smex-completion-method 'ivy)
+(setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+
+(defcustom ivy-height 30
+  "Number of lines for the minibuffer window."
+  :type 'integer)
+
+;;advise swiper to recenter on exit
+(defun bjm-swiper-recenter (&rest args)
+  "recenter display after swiper"
+  (recenter)
+  )
+(advice-add 'swiper :after #'bjm-swiper-recenter)
