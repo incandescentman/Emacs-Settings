@@ -240,7 +240,7 @@
 
 (define-key key-minor-mode-map (kbd "M-q") 'org-refile)
 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents) 
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
@@ -251,12 +251,12 @@
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe) 
-;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 
 ;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -290,7 +290,7 @@
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
 
-(define-key dired-mode-map (kbd "s-o") 'projectile-find-file) 
+(define-key dired-mode-map (kbd "s-o") 'projectile-find-file)
 (define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
 
 
@@ -315,7 +315,7 @@
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
-  "*"))) ; wow this was a stroke of genius 
+  "*"))) ; wow this was a stroke of genius
 
 
 
@@ -332,13 +332,14 @@
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
+;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "M-x") 'counsel-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key org-mode-map (kbd "M-K") 'kill-clause)
 (define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
 
-(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading 
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading
 
 
 (define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
@@ -365,8 +366,8 @@
 
 
 ;; book bindings
-(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) 
-(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory) 
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
+(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
 
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
@@ -378,7 +379,7 @@
 
 ;; own structure editing
 (define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
-(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window) 
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
 
@@ -415,7 +416,7 @@
 
 ;; deleting things
 ;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
-(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize) 
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize)
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
@@ -1389,7 +1390,9 @@ subsequent sends. could save them all in a logbook?
 
 (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+
   (unless
+
       (or
        (looking-at "\\W*I\\b")          ; never downcase the word "I"
        (looking-at "[ ]*I\'")          ; never downcase the word "I'
@@ -1398,9 +1401,10 @@ subsequent sends. could save them all in a logbook?
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-
        (looking-at (user-full-name))
+
        )
+
     (save-excursion
       (downcase-word 1))))
 
