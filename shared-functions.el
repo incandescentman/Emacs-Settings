@@ -2182,7 +2182,7 @@ searches all buffers."
         (and
          (not (and
                (string-equal "org-mode" major-mode)
-               (string-match "^-\s\\[.?\\]\s" (thing-at-point 'line))))
+               (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
          (save-match-data
            (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
 
