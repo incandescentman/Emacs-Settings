@@ -4,7 +4,7 @@
 * region or thing
 
 ** move region or subtree to other window
-I have move-region-to-other-window. Make it look for active region first?
+I also have a function move-region-to-other-window. Make it look for active region first?
 
 ** highlighted region or thing at point
 So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
