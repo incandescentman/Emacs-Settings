@@ -5303,3 +5303,9 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   ("r" mc/mark-all-in-region-regexp :exit t)
   ("q" nil)) )
 #+END_SRC
+
+
+* sunrise commander
+#+BEGIN_SRC emacs-lisp
+(require 'sunrise-commander)
+#+END_SRC

@@ -661,8 +661,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "\* ")
-(looking-back "# ")
+;; (looking-back "\* ")
+(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+(looking-back "^# ")
 ;; (looking-back "* TODO ") ; actually I don't think I want this 
 ;; (looking-back "^*+")
 ;; (looking-back "- ") 
@@ -1168,24 +1169,26 @@ subsequent sends. could save them all in a logbook?
 
 ;; Identify the end of sentences globally.
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
-
 (defun kill-clause ()
   (interactive)
   (smart-expand)
-  (if (let ((sm (string-match "[*]+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
-    (progn
-      (let ((old-point (point))
-            (kill-punct (my/beginning-of-sentence-p)))
-        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-          (kill-region old-point
-                       (if kill-punct
-                           (match-end 0)
-                         (match-beginning 0)))))
-      (my/fix-space)
-      (save-excursion
-        (when (my/beginning-of-sentence-p)
-          (capitalize-unless-org-heading))))))
+
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
+
+
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading)))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")

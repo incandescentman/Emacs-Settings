@@ -905,8 +905,9 @@ From here:
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "\* ")
-(looking-back "# ")
+;; (looking-back "\* ")
+(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+(looking-back "^# ")
 ;; (looking-back "* TODO ") ; actually I don't think I want this 
 ;; (looking-back "^*+")
 ;; (looking-back "- ") 
