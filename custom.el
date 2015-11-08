@@ -1,3 +1,5 @@
+
+
 (require 'org)
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -17,8 +19,17 @@
 ;; (require 'google-contacts-message)
 ;; (require 'google-weather)
 
-;; enable python 
-(org-babel-do-load-languages 'org-babel-load-languages '((python . t)))
+;; enable babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   ;; (perl . t)
+   ;;  (ruby . t)
+     (sh . t)
+     (python . t)
+     (emacs-lisp . t)
+   ))
+
 
 ;;;; I believe these are the settings that GNU Emacs saved automatically when I changed things using the Options menu. I'm sure there is a lot of redundancy here that doesn't need to be here since it's already defined in my init files.
 (custom-set-variables
@@ -31,14 +42,12 @@
  '(ac-auto-show-menu 2.0)
  '(ac-auto-start 4)
  '(ac-candidate-menu-min 3)
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(auto-save-visited-file-name t)
  '(autopair-blink t)
  '(autopair-global-mode t)
  '(blink-cursor-mode nil)
- '(bold
-   ((((class color)
-      (min-colors 89))
-     (:bold t :foreground "#DC8CC3"))))
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked
    (quote
@@ -55,7 +64,6 @@
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cursor ((t (:foreground "#DC8CC3" :background "#DC8CC3"))))
- '(cursor-type (quote box))
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
@@ -77,6 +85,7 @@
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(fasd-enable-initial-prompt nil)
+ '(fci-rule-color "#383838")
  '(flyspell-abbrev-p t)
  '(flyspell-mark-duplications-exceptions
    (quote
@@ -154,7 +163,7 @@
      (tags . " %i %-12:c")
      (search . " %i %-12:c"))))
  '(org-archive-location "archive/%s_archive::")
- '(org-archive-reversed-order t)
+ '(org-archive-reversed-order nil)
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
  '(org-ascii-underline
@@ -179,7 +188,7 @@
     (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
  '(org-closed-string "COMPLETED:" t)
  '(org-confirm-babel-evaluate nil)
-'(org-ctrl-k-protect-subtree t)
+ '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
  '(org-display-custom-times nil)
@@ -343,6 +352,28 @@
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  '(writeroom-global-effects
@@ -353,11 +384,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(notmuch-search-count ((t (:inherit default :height 0.1))))
  '(notmuch-search-date ((t (:inherit default :height 1.2))))
  '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
  '(notmuch-search-subject ((t (:inherit default :height 1.2))))
  '(notmuch-tag-face ((t (:foreground "OliveDrab1" :height 1))))
+ '(org-headline-done ((t (:strike-through t))))
+ '(org-link ((t (:inherit link :underline nil))))
  '(tabula-rasa-cursor ((t (:inherit nil :foreground "red" :inverse-video t))) t t)
  '(writegood-weasels-face ((t (:underline (:color "orange" :style wave))))))
 
@@ -401,8 +435,8 @@
      (define-key org-mode-map [C-down] 'org-metadown)
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
      ;; add these new ones below
-     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
-     (define-key org-mode-map (kbd "<C-return>") 'smart-org-meta-return-dwim)
+     (define-key key-minor-mode-map (kbd "<C-return>") 'smart-org-insert-heading-respect-content-dwim)
+     (define-key org-mode-map (kbd "<C-return>") 'smart-org-insert-heading-respect-content-dwim)
 ;; may need to somehow persistently unbind prelude-smart-open-line in prelude-mode.el
      
      (define-key key-minor-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)

@@ -40,7 +40,7 @@ You can toggle it in necessary files by setting the local variables section at t
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "plus-/Users/jay/Dropbox/emacs/prelude/elpa/org-contrib-20150810/")
+;; (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
 
@@ -48,7 +48,8 @@ You can toggle it in necessary files by setting the local variables section at t
 
 (add-to-list 'package-archives
              '("marmalade" .
-               "http://marmalade-repo.org/packages/" ))
+               "http://marmalade-repo.org/packages/" ) t)
+
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
@@ -78,6 +79,12 @@ You can toggle it in necessary files by setting the local variables section at t
 
 ; (require 'org-fstree)
 #+END_SRC
+
+* pre config
+#+BEGIN_SRC emacs-lisp
+;; (require 'use-package)
+#+END_SRC
+
 
 * Set up spellcheck 
 ** Spellcheck add word
@@ -137,7 +144,8 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 This customization with the big blocky boxy red cursor makes me so happy.
 # #+BEGIN_SRC emacs-lisp
-(setq-default cursor-type 'box) 
+;; (setq-default cursor-type 'box) 
+;; (setq-default cursor-type 'hbar)
 (set-cursor-color "red")
 (setq default-frame-alist
       '((cursor-color . "red")))
@@ -233,7 +241,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 ** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
-(autopair-mode 1)
+
 (setq buffer-save-without-query nil)
 #+END_SRC
 
@@ -488,7 +496,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 *** agenda display settings
 
-    #+BEGIN_EXAMPLE emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -498,13 +506,13 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_EXAMPLE 
+    #+END_SRC 
 
 *** Stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
-;(add-hook 'org-finalize-agenda-hook
-;          (lambda () (remove-text-properties
-;                      (point-min) (point-max) '(mouse-face t))))
+(add-hook 'org-finalize-agenda-hook
+(lambda () (remove-text-properties
+(point-min) (point-max) '(mouse-face t))))
 #+END_SRC
 
 ** org stuck projects (?)
@@ -516,10 +524,10 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 ** org settings
 #+BEGIN_SRC emacs-lisp
-; (add-hook 'after-init-hook 'org-agenda-list)
+(add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
-; (setq org-agenda-window-setup 'current-window)
+;; (setq org-agenda-window-setup 'current-window)
 
 ;; Delete IDs When Cloning
 (setq org-clone-delete-id t)
@@ -610,7 +618,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
-'(org-provide-checkbox-statistics to)
+'(org-provide-checkbox-statistics t)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
@@ -625,32 +633,14 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (setq org-refile-target-verify-function 'bh/verify-refile-target)
 #+END_EXAMPLE
 
-** Fix '\emsp' bug in clocktable (doesn't work though):
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-clocktable-indent-string (level)
-  (if (= level 1)
-      ""
-    (let ((str "^"))
-      (while (> level 2)
-        (setq level (1- level)
-              str (concat str "--")))
-      (concat str "-> "))))
-(advice-add 'org-clocktable-indent-string :override #'my-org-clocktable-indent-string)
-#+END_EXAMPLE
-
 ** org-capture setup
 
 This is working correctly:
+
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
       (quote
        (
-        ("m" "Mail" entry (file+olp org-default-notes-file "Emails") "** Email %T
-From: Jay Dixit <dixit@aya.yale.edu>
-To: %^{Send mail to}
-Subject: %^{Subject}
---text follows this line--
-%?")
 
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
@@ -674,7 +664,6 @@ Subject: %^{Subject}
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
 	 "\n\n* wm%?\n" :prepend t :kill-buffer t)
-
 
 	("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -719,7 +708,7 @@ Subject: %^{Subject}
 #+END_SRC
 
 ** org custom functions
-*** Workflowy mode
+*** zin/org-outline-mode
 Make ~org-mode~ temporarily emulate traditional outlining keybindings
 e.g. nvALT
 #+BEGIN_SRC emacs-lisp
@@ -727,13 +716,17 @@ e.g. nvALT
   "" nil
   :lighter " OOut"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'org-meta-return)
+            (define-key map (kbd "<return>") 'smart-org-meta-return-dwim)
             (define-key map (kbd "<tab>") 'org-metaright)
             (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'org-return)
+            (define-key map (kbd "<M-return>") 'smart-return)
             map))
 (global-set-key "\C-co" 'zin/org-outline-mode)
+#+END_SRC
 
+*** Workflowy mode
+
+#+BEGIN_SRC emacs-lisp
 (defun workflowy-mode ()
   "workflowy"
   (interactive)
@@ -747,15 +740,6 @@ e.g. nvALT
   (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
   (insert "\n* "))
 
-#+END_SRC
-
-*** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_SRC emacs-lisp
-(defun org-checkbox-next ()
-  (interactive)
-  (when (org-at-item-checkbox-p)
-    (org-toggle-checkbox))
-  (org-next-item))
 #+END_SRC
 
 *** update parent cookie
@@ -885,7 +869,59 @@ Make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 ;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
-#+END_SRC
+#+END_SRC 
+
+** org-levels 
+   #+BEGIN_SRC emacs-lisp
+ (defun org-show-level-1 () 
+  (interactive) 
+ (org-content 1)) 
+
+ (defun org-show-level-2 () 
+  (interactive) 
+ (org-content 2)) 
+
+ (defun org-show-level-3 () 
+  (interactive) 
+ (org-content 3)) 
+
+ (defun org-show-level-4 () 
+  (interactive) 
+ (org-content 4)) 
+
+ (defun org-show-level-5 () 
+  (interactive) 
+ (org-content 5)) 
+
+ (defun org-show-level-6 () 
+  (interactive) 
+ (org-content 6)) 
+
+ (defun org-show-level-7 () 
+  (interactive) 
+ (org-content 7)) 
+
+ (defun org-show-level-8 () 
+  (interactive) 
+ (org-content 8)) 
+
+ (define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1) 
+
+ (define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2) 
+
+ (define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3) 
+
+ (define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4) 
+
+ (define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5) 
+
+ (define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6) 
+
+ (define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7) 
+
+ (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
+ 
+   #+END_SRC
 
 * Typography
 ** Replace smart quotes with straight quotes
@@ -994,7 +1030,6 @@ every new buffer will be unique:
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
-'(cursor-type (quote box))
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
@@ -1069,7 +1104,7 @@ every new buffer will be unique:
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 (setq org-export-preserve-breaks nil) 
 
-;; add padding to numbered lists and bulleted lists (set to to)
+;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t) 
 #+END_SRC
 
@@ -1268,8 +1303,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(cua-highlight-region-shift-only t)
  '(cua-mode nil nil (cua-base))
  '(cua-mode nil)
- '(cursor-type (quote box) t)
- '(cursor-type (quote box))
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
  '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
@@ -1393,8 +1426,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(pomodoro-break-time 10)
  '(pomodoro-work-time 50)
  '(reb-re-syntax (quote string))
- '(recentf-exclude (quote    ( ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar")))
-'(recentf-exclude (quote (".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "\\ido.hist\\'" "elpa" ".bmk" ".jabber" "helm"))) 
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
  '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
@@ -1515,7 +1546,7 @@ Newer version of ~ac-define-source~ would provide us an
 ;; Completion words longer than 4 characters
 #+END_SRC
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (defun buffer-background-black ()
   (interactive)
   (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
@@ -1566,11 +1597,7 @@ ido-enter-matching-directory nil
       ido-use-url-at-point t
       ido-max-prospects 10)
 (setq ido-everywhere t)
-#+END_SRC
 
-Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
-#+BEGIN_SRC emacs-lisp
-;; (setq org-completion-use-ido t)
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
 (setq ido-enable-last-directory-history t)
@@ -1579,19 +1606,21 @@ Using ~ido-mode~ for ~org-refile~ (and archiving via refile):
 (setq ido-use-filename-at-point t) ;; prefer file names near point
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
+
 #+END_SRC
 
-Use full outline paths for refile targets - we file directly with IDO:
-#+BEGIN_SRC emacs-lisp
-;; (setq org-refile-use-outline-path to)
-
-;; (setq org-goto-interface 'outline-path-completion org-goto-max-level 2)
-#+END_SRC
-
-Targets complete directly with IDO:
+* org-refile
 #+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil)
+(setq org-completion-use-ido nil) 
+;; (setq org-refile-use-outline-path t) 
+
+
+
+(setq org-goto-interface 'outline-path-completion org-goto-max-level 3) 
+(setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
 #+END_SRC
+
 
 Allow refile to create parent tasks with confirmation:
 #+BEGIN_SRC emacs-lisp
@@ -1600,7 +1629,6 @@ Allow refile to create parent tasks with confirmation:
 
 Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
 #+BEGIN_SRC emacs-lisp
-(setq org-completion-use-ido t)
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
 #+END_SRC
@@ -1740,7 +1768,24 @@ Disable IDO faces to see flx highlights:
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
+             "blockquote" "
+    color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "p" "margin-bottom: 1em")))
 
 
 (add-hook 'message-mode-hook
@@ -1782,7 +1827,7 @@ Disable IDO faces to see flx highlights:
 ** Hippie expand
 
 [[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
 #+END_EXAMPLE 
 
@@ -1912,7 +1957,9 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 (require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
-(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$") 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon") 
+
+
 
 #+END_SRC
 
@@ -1922,7 +1969,7 @@ Make Buffer-stack ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
 	   (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -1955,8 +2002,12 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "recentf")
+(add-to-list 'recentf-exclude "bookmarks")
+(add-to-list 'recentf-exclude "rollback-info")
+(add-to-list 'recentf-exclude "gnu-emacs-startup")
+(add-to-list 'recentf-exclude "shared-functions")
 
-(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
+(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp" ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
 ".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
@@ -2162,7 +2213,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 # haven't tried this yet
 
 Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2373,13 +2424,13 @@ A useful function: remove a hyperlink but leave the link description:
 ** Refile region
 Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
 #+BEGIN_SRC emacs-lisp
-(defvar org-refile-region-format "\n%s\n")
+(defvar refile-region-format "\n%s\n")
 
-(defvar org-refile-region-position 'top
+(defvar refile-region-position 'top
   "Where to refile a region. Use 'bottom to refile at the
 end of the subtree. ")
 
-(defun org-refile-region (beg end copy)
+(defun refile-region (beg end copy)
   "Refile the active region.
 If no region is active, refile the current paragraph.
 With prefix arg C-u, copy region instad of killing it."
@@ -2405,17 +2456,17 @@ With prefix arg C-u, copy region instad of killing it."
         (goto-char pos)
         (if (eql refile-region-position 'bottom)
             (org-end-of-subtree)
-          (org-end-of-meta-data-and-drawers))
+          (org-end-of-meta-data))
         (insert (format refile-region-format text))))))
 
 
 (defun my-org-files-list ()
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
-          (org-buffer-list 'files to)))
+          (org-buffer-list 'files t)))
 
 
-;; (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
+
 #+END_SRC
 
 * Working with files
@@ -2430,7 +2481,9 @@ With prefix arg C-u, copy region instad of killing it."
       (unless (memq filename buffer-file-name-list)
 	(setq most-recent-filename filename)
 	(return)))
-    (find-file most-recent-filename)))
+(ignore-errors (find-file most-recent-filename)
+)
+))
 #+END_SRC
 
 ** Copy path
@@ -2551,7 +2604,7 @@ For popping around the buffer. I need to review how this works again.
 ** BBDB contacts database (not currently using this)
 
 #+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path "~/Dropbox/elisp/bbdb/lisp")
+;; (add-to-list 'load-path "~/elisp/bbdb/lisp")
 ;; (require 'bbdb) ;; (3)
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
@@ -2562,8 +2615,11 @@ For popping around the buffer. I need to review how this works again.
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-]") 'outline-next-visible-heading)
-(global-set-key (kbd "M-[") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+
+(global-set-key (kbd "M-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -2582,6 +2638,8 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (global-set-key '[(f6)] 'point-stack-pop)
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
+
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 #+END_SRC
 
 Make ^H delete rather than help:
@@ -2653,7 +2711,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
 (define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'widen)
+(define-hyper-key "K" 'org-cut-subtree)
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "S" 'org-mac-skim-insert-page)
@@ -2673,16 +2731,21 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "8" 'search-open-buffers)
 (define-hyper-key "B" 'clone-indirect-buffer-other-window)
 (define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
+(define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
 (define-hyper-key "[" 'org-backward-heading-same-level)
 (define-hyper-key "]" 'org-forward-heading-same-level)
+(define-hyper-key "{" 'org-previous-visible-heading)
+(define-hyper-key "}" 'org-next-visible-heading)
+;; why not use N and P here? TODO
+
+
 
 ;; (define-hyper-key "m a" 'org-agenda)
 (define-hyper-key "m j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
-(define-hyper-key "F" 'pasteboard-search-in-current-buffer)
+
 #+END_SRC
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
@@ -2695,7 +2758,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m tg" 'top-gun-mode)
 (define-hyper-key "m tn" 'tomorrow-night)
 
-(define-hyper-key "m ma" 'add-global-abbrev) 
+(define-hyper-key "m ma" 'inverse-add-global-abbrev) 
 
 (define-hyper-key "m rr" 'replace-regexp) 
 
@@ -2749,7 +2812,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-hyper-key "m kb" 'keybinding-read-and-insert)
 (define-hyper-key "m mk" 'keybinding-read-and-insert)
 
-(define-key key-minor-mode-map (kbd "<C-M-return>") 'org-insert-subheading)
+
 
 #+END_SRC
 
@@ -2936,9 +2999,21 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (global-set-key (kbd "M-s s")   #'helm-again)
 #+END_SRC
 
+** projectile
+
+   #+BEGIN_SRC emacs-lisp
+(setq projectile-completion-system (quote helm))
+(setq projectile-enable-caching nil)
+(setq projectile-globally-ignored-buffers (quote ("docx ")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
+(setq projectile-globally-ignored-directories
+   (quote
+    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
+   #+END_SRC
+
 ** helm projectile
 
-   #+BEGIN_EXAMPLE emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (require 'helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
@@ -2948,7 +3023,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   #'(lambda ()
       (interactive)
       (helm-ag (projectile-project-root))))
-   #+END_EXAMPLE
+   #+END_SRC 
 
 * these seem to need to go at the end
 
@@ -2967,7 +3042,7 @@ This doesn't seem to be working.
 http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+BEGIN_SRC emacs-lisp
 (font-lock-add-keywords
- 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?> ) nil)))
+ 'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?❱) nil)))
 #+END_SRC
 
 * replace word
@@ -2984,30 +3059,41 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
       (message "Replaced %s match(es)" count))))
 #+END_SRC
 
-* experimenting
+* auto-capitalize
+
+#+BEGIN_SRC emacs-lisp
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
-      (lambda () 
+ (lambda ()
+   (and
+     (not (and
+            (eq 'org-mode major-mode)
+            (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
+      
         (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20))))))
+          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
 #+END_SRC 
 
 
 
 ** Load my LaTeX files
 
-;; (load "~/Dropbox/elisp/latex.el")
-(load "~/Dropbox/elisp/signal-flare.el")
-(load "~/Dropbox/elisp/signal-flare-wide.el")
-;; (load "~/Dropbox/elisp/signal-flare-wide-different-image.el")
-(load "~/Dropbox/elisp/jay-dixit-latex.el")
-(load "~/Dropbox/elisp/signal-flare-smaller-fonts.el")
+;; (load "~/elisp/latex.el")
+(load "~/elisp/signal-flare.el")
+(load "~/elisp/signal-flare-wide.el")
+;; (load "~/elisp/signal-flare-wide-different-image.el")
+(load "~/elisp/jay-dixit-latex.el")
+(load "~/elisp/signal-flare-smaller-fonts.el")
 *
 magit
 
 #+BEGIN_SRC emacs-lisp
 (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
+
 
 
 * startup
@@ -3084,6 +3170,7 @@ to open source code block in indirect buffer
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
 ((and buffer-file-name (eq major-mode 'python-mode)))
 ((and buffer-file-name (eq major-mode 'text-mode)))
 ((and buffer-file-name (eq major-mode 'snippet-mode))) 
@@ -3098,7 +3185,7 @@ to open source code block in indirect buffer
 #+END_SRC
 
 * stuff that I moved from custom.el
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_ESRCemacs-lisp
 
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
@@ -3125,6 +3212,7 @@ to open source code block in indirect buffer
 * globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
 
 * Pop to mark
@@ -3287,11 +3375,11 @@ export that region, otherwise export the entire body."
 	       body html (mapconcat 'identity html-images "\n"))))))
 #+END_SRC
 
-** new-email-from-subtree 
+** new-email-from-subtree-with-signature 
 
 #+BEGIN_SRC emacs-lisp 
 
-(defun new-email-from-subtree ()
+(defun new-email-from-subtree-with-signature ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.
 
 use these properties
@@ -3341,7 +3429,8 @@ subsequent sends."
 (insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
 (646) 355-8001
 [[http://jaydixit.com/][jaydixit.com]]
-\n"))
+\n")
+(message-goto-to))
 ))
 
 
@@ -3391,7 +3480,7 @@ subsequent sends."
       (if TO
           (message-goto-body)
         (message-goto-to))
-(end-of-buffer)
+;; (end-of-buffer)
 )
 ))
 #+END_SRC
@@ -3626,6 +3715,32 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (require 'key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
+
+(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
+
+#+END_SRC
+
+* org-toggle-heading-same-level
+
+  #+BEGIN_SRC emacs-lisp
+(defun org-toggle-heading-same-level ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*")
+        (setq is-heading t)))
+    (if is-heading
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+(org-do-promote)
+;        (org-todo 'nextset)
+)))) ; add TODO  #+END_SRC
 #+END_SRC
 
 * org-toggle-todo-heading
@@ -3938,7 +4053,7 @@ Single Capitals as you type."
 
 ;; load yasnippet directories
 ;; TODO needs to be set before loading snippets somehow
-(setq yas-snippet-dirs '("~/Downloads/interesting-snippets" "~/Dropbox/emacs/snippets"))
+(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/Dropbox/emacs/snippets"))
 
 ;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 
@@ -4276,6 +4391,42 @@ Single Capitals as you type."
 )) 
 
 
+(define-key notmuch-search-mode-map "d"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "-flagged" "-inbox"))
+(notmuch-search-next-thread))) 
+
+(define-key notmuch-search-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-search-tag (list "+flagged" "+inbox"))
+(notmuch-search-next-thread))) 
+
+
+;; show mode
+(define-key notmuch-show-mode-map "d"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "-flagged" "-inbox"))
+(notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+)) 
+
+(define-key notmuch-show-mode-map "u"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-show-tag (list "+flagged" "+inbox"))
+(notmuch-bury-or-kill-this-buffer)
+(notmuch-refresh-this-buffer) 
+
+)) 
+
+
 
 
 (define-key notmuch-search-mode-map "y"
@@ -4325,6 +4476,24 @@ Single Capitals as you type."
         "archive"
 (notmuch-refresh-this-buffer))) 
 
+
+
+(define-key notmuch-show-mode-map "x"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-search-mode-map "x"
+      (lambda ()
+        "archive"
+        (interactive)
+        (notmuch-refresh-this-buffer))) 
+(define-key notmuch-tree-mode-map "x"
+      (lambda ()
+        "archive"
+(notmuch-refresh-this-buffer))) 
+
+
 (define-key notmuch-hello-mode-map "g" (notmuch-refresh-this-buffer)) 
 ;; doesn't work
 
@@ -4356,9 +4525,9 @@ Single Capitals as you type."
 (require 'org-notmuch) 
 
 ;; display in the middle of large displays
-(add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
@@ -4393,7 +4562,7 @@ Single Capitals as you type."
 
 * deft-turbo
 
-  #+BEGIN_EXAMPLE emacs-lisp 
+  #+BEGIN_ESRCemacs-lisp 
 (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 (setq deft-default-extension "org")
@@ -4403,12 +4572,12 @@ Single Capitals as you type."
 
 * insert slash no abbrev
 
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_ESRCemacs-lisp
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
   )
-  #+END_SRC
+  #+END_EXAMPLE 
 
 
 * poetry
@@ -4507,8 +4676,8 @@ but how to make it stop saying "no files need saving"?
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
-(define-key key-minor-mode-map (kbd "M-p") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "M-P") 'load-gnu-startup)
+(define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
 #+END_SRC
 
 
@@ -4526,7 +4695,7 @@ C-c q
 
 * org-agenda skip keywords
 
-  #+BEGIN_EXAMPLE emacs-lisp
+  #+BEGIN_ESRCemacs-lisp
 ;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS"))) 
 
 
@@ -4585,3 +4754,558 @@ C-c q
   #+BEGIN_SRC emacs-lisp
 (require 'org-element-debug)
   #+END_SRC
+
+
+* isearch current word
+isearch Current Word
+
+Buy Xah Emacs Tutorial. Master emacs benefits for life.
+PayPal
+Xah Lee, 2010-05-29, …, 2015-09-03
+Here's a command that will do isearch of the word under cursor.
+
+(defun xah-search-current-word ()
+  "Call `isearch' on current word or text selection.
+"word" here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
+URL `http://ergoemacs.org/emacs/modernization_isearch.html'
+Version 2015-04-09"
+  (interactive)
+  (let ( ξp1 ξp2 )
+    (if (use-region-p)
+        (progn
+          (setq ξp1 (region-beginning))
+          (setq ξp2 (region-end)))
+      (save-excursion
+        (skip-chars-backward "-_A-Za-z0-9")
+        (setq ξp1 (point))
+        (right-char)
+        (skip-chars-forward "-_A-Za-z0-9")
+        (setq ξp2 (point))))
+    (setq mark-active nil)
+    (when (< ξp1 (point))
+      (goto-char ξp1))
+    (isearch-mode t)
+    (isearch-yank-string (buffer-substring-no-properties ξp1 ξp2))))
+
+(define-key key-minor-mode-map (kbd "M-o") 'xah-search-current-word)
+
+You need to give it a easy key. Such as 【Ctrl+3】. 〔➤ Emacs: How to Define Keys〕 Note: if you use the key 【Ctrl+⇧ Shift+s】, it won't work if emacs runs in terminal.
+
+
+
+
+
+* isearch arrow keys
+
+Here's very convenient keys for isearch. Put it in your emacs init.
+
+
+#+BEGIN_SRC emacs-lisp
+
+(progn
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
+
+;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+ )
+
+#+END_SRC
+
+
+when in isearch, the arrow keys will:
+
+→ next occurrence.
+← previous occurrence.
+↑ previous search term.
+↓ next search term.
+Enter ↵ exit isearch.
+
+This way, searching forward/backward is just one single key press, no key combination.
+
+This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
+
+
+* move point to next TODO heading upon DONE state change 
+
+  #+BEGIN_SRC emacs-lisp 
+(defun bb/next-heading (&rest args) 
+(when 
+
+(or
+(org-entry-is-done-p) 
+(string= (org-get-todo-state) "MISSED") 
+)
+(outline-next-visible-heading 1))) 
+
+
+
+(advice-add 'org-todo :after 'bb/next-heading) 
+  #+END_SRC
+
+
+* Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+#+BEGIN_SRC emacs-lisp
+(defmacro my/with-advice (adlist &rest body)
+  "Execute BODY with temporary advice in ADLIST.
+
+Each element of ADLIST should be a list of the form
+  (SYMBOL WHERE FUNCTION [PROPS])
+suitable for passing to `advice-add'.  The BODY is wrapped in an
+`unwind-protect' form, so the advice will be removed even in the
+event of an error or nonlocal exit."
+  (declare (debug ((&rest (&rest form)) body))
+           (indent 1))
+  `(progn
+     ,@(mapcar (lambda (adform)
+                 (cons 'advice-add adform))
+               adlist)
+     (unwind-protect (progn ,@body)
+       ,@(mapcar (lambda (adform)
+                   `(advice-remove ,(car adform) ,(nth 2 adform)))
+                 adlist))))
+
+(defun my/org-checkbox-toggle-advice (orig-fn &rest args)
+  "Advice to move to next list item on checkbox toggle."
+  (my/with-advice 
+      ((#'org-update-checkbox-count-maybe
+        :after (lambda ()
+                 (ignore-errors (org-next-item)))))
+    (apply orig-fn args)))
+
+(advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
+(advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
+#+END_SRC
+
+* cut-subtree
+
+  #+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
+(define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
+  #+END_SRC
+
+* multiple cursors
+
+  #+BEGIN_SRC emacs-lisp
+(require 'multiple-cursors) 
+(require 'multiple-cursors-core)
+;; This is globally useful, so it goes under `C-x', and `m'
+;; for "multiple-cursors" is easy to remember.
+(define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
+;; Usually, both `C-x C-m' and `C-x RET' invoke the
+;; `mule-keymap', but that's a waste of keys. Here we put it
+;; _just_ under `C-x RET'.
+(define-key ctl-x-map (kbd "<return>") mule-keymap)
+
+;; Remember `er/expand-region' is bound to M-2!
+;; (define-key key-minor-mode-map (kbd "M-#") 'mc/mark-all-dwim)
+(global-set-key (kbd "M-2") #'mc/mark-all-dwim)
+;; (global-set-key (kbd "M-3") #'mc/mark-next-like-this)
+;; (global-set-key (kbd "M-4") #'mc/mark-previous-like-this)
+(define-key key-minor-mode-map (kbd "M-3") 'mc/mark-next-like-this)
+(define-key key-minor-mode-map (kbd "M-4") 'mc/mark-previous-like-this)
+
+
+;; These vary between keyboards. They're supposed to be
+;; Shifted versions of the two above.
+(global-set-key (kbd "M-£") #'mc/unmark-next-like-this)
+(global-set-key (kbd "M-$") #'mc/unmark-previous-like-this)
+
+(define-prefix-command 'endless/mc-map)
+;; C-x m is usually `compose-mail'. Bind it to something
+;; else if you use this command.
+(define-key ctl-x-map "m" 'endless/mc-map)
+
+;;; Really really nice!
+(define-key endless/mc-map "i" #'mc/insert-numbers)
+(define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
+(define-key endless/mc-map "a" #'mc/mark-all-like-this)
+
+;;; Occasionally useful
+(define-key endless/mc-map "d"
+  #'mc/mark-all-symbols-like-this-in-defun)
+(define-key endless/mc-map "r" #'mc/reverse-regions)
+(define-key endless/mc-map "s" #'mc/sort-regions)
+(define-key endless/mc-map "l" #'mc/edit-lines)
+(define-key endless/mc-map "\C-a"
+  #'mc/edit-beginnings-of-lines)
+(define-key endless/mc-map "\C-e"
+  #'mc/edit-ends-of-lines)
+  #+END_SRC
+
+
+* swiper
+
+  #+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; swiper                                                                 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcustom ivy-height 50
+  "Number of lines for the minibuffer window."
+  :type 'integer) 
+(global-set-key (kbd "C-s") 'swiper)
+(setq ivy-display-style 'fancy)
+(define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
+
+  #+END_SRC
+
+* wrap region
+
+  #+BEGIN_SRC emacs-lisp
+;; (require 'wrap-region)
+;; (wrap-region-add-wrapper "*" "*" "*")  
+;; (wrap-region-add-wrapper "\/" "\/" "\/")  
+;; (add-hook 'org-mode-hook 'wrap-region-mode) 
+
+;; wrap-region
+(use-package wrap-region
+  :ensure t
+  :config
+  (wrap-region-add-wrappers
+   '(
+;;     ("*" "*" nil org-mode)
+;;     ("/" "/" nil org-mode)
+     ("~" "~" nil org-mode)
+     ("_" "_" nil org-mode)
+     ("*" "*" nil (org-mode message-mode))
+     ("/" "/" nil (org-mode message-mode))
+      ("$" "$" nil (org-mode latex-mode))
+      ))
+  (add-hook 'org-mode-hook 'wrap-region-mode)
+  (add-hook 'latex-mode-hook 'wrap-region-mode)) 
+  #+END_SRC
+Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
+
+
+* faces 
+** bold
+
+   #+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+)
+   #+END_SRC
+
+
+** god mode
+
+   #+BEGIN_SRC emacs-lisp
+(require 'god-mode) 
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'bar
+                      'box)))
+
+;; (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
+
+
+             (require 'god-mode-isearch)
+(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
+(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
+(define-key god-local-mode-map (kbd ".") 'repeat)
+
+
+   #+END_SRC
+
+** C-c C-c to exit source code blocks
+
+   #+BEGIN_SRC emacs-lisp
+(eval-after-load 'org-src
+  '(define-key org-src-mode-map
+     "\C-c\C-c" #'org-edit-src-exit))
+   #+END_SRC
+
+
+** narrow or widen
+
+   #+BEGIN_SRC emacs-lisp
+(defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+Intelligently means: region, org-src-block, org-subtree, or defun,
+whichever applies first.
+Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+With prefix P, don't widen, just narrow even if buffer is already
+narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+        ((region-active-p)
+         (narrow-to-region (region-beginning) (region-end)))
+        ((derived-mode-p 'org-mode)
+         ;; `org-edit-src-code' is not a real narrowing command.
+         ;; Remove this first conditional if you don't want it.
+         (cond ((ignore-errors (org-edit-src-code))
+                (delete-other-windows))
+               ((org-at-block-p)
+                (org-narrow-to-block))
+               (t (org-narrow-to-subtree))))
+        (t (narrow-to-defun))))
+
+;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
+;; This line actually replaces Emacs' entire narrowing keymap, that's
+;; how much I like this command. Only copy it if that's what you want.
+ (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
+   #+END_SRC
+
+
+** org go speed
+
+; Speed commands are really useful, but I often want to make use of
+; them when I'm not at the beginning of a header. This command brings
+; you back to the beginning of an item's header, so that you can do
+; speed commands.
+
+(defun org-go-speed ()
+  "Goes to the beginning of an element's header, so that you can
+execute speed commands."
+  (interactive)
+  (when (equal major-mode 'org-mode)
+    (if (org-at-heading-p)
+        (org-beginning-of-line)
+      (org-up-element))))
+
+; bind-key comes from Use Package
+(bind-key "C-c s" 'org-go-speed) 
+
+(global-set-key "\M-9" 'backward-sexp)
+(global-set-key "\M-0" 'forward-sexp) 
+
+
+** org insert easy template source blocks 
+   #+BEGIN_SRC emacs-lisp
+;; Add <p for python expansion
+
+(add-to-list 'org-structure-template-alist
+'("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") 
+'("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") 
+             ) 
+(add-to-list 'org-structure-template-alist 
+'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
+)
+
+#+END_SRC
+
+Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
+
+
+
+
+* if then else indentation
+#+BEGIN_SRC 
+(put 'if 'lisp-indent-function nil) 
+#+END_SRC 
+
+* org element debug
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
+#+END_SRC
+
+* disable TAB to indent
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-emulate-tab) 
+#+END_SRC
+
+
+* convert from org-mode to Word
+#+BEGIN_SRC emacs-lisp
+;; This setup is tested on Emacs 24.3 & Emacs 24.4 on Linux/OSX
+;; org v7 bundled with Emacs 24.3
+(setq org-export-odt-preferred-output-format "doc")
+;; org v8 bundled with Emacs 24.4
+(setq org-odt-preferred-output-format "doc")
+;; BTW, you can assign "pdf" in above variables if you prefer PDF format
+
+;; Only OSX need below setup
+(defun my-setup-odt-org-convert-process ()
+  (interactive)
+  (let ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
+    (when (and (eq system-type 'darwin) (file-exists-p cmd))
+      ;; org v7
+      (setq org-export-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i")))
+      ;; org v8
+      (setq org-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i"))))
+    ))
+(my-setup-odt-org-convert-process) 
+#+END_SRC
+
+Source: [[http://blog.binchen.org/posts/how-to-take-screen-shot-for-business-people-efficiently-in-emacs.html][How to take screen shot for business people efficiently in Emacs | Chen's blog]]
+
+2.4 Tips
+
+If you need page break in exported document, insert below snippet into the org file:
+
+#+ODT: <text:p text:style-name="PageBreak"/> 
+
+* Create org file and insert path of screen shot 
+#+BEGIN_SRC emacs-lisp
+(defun insert-file-link-from-clipboard ()
+  "Make sure the full path of file exist in clipboard. This command will convert
+The full path into relative path and insert it as a local file link in org-mode"
+  (interactive)
+  (let (str)
+    (with-temp-buffer
+      (shell-command
+       (cond
+        ((eq system-type 'cygwin) "getclip")
+        ((eq system-type 'darwin) "pbpaste")
+        (t "xsel -ob"))
+       1)
+      (setq str (buffer-string)))
+
+    ;; convert to relative path (relative to current buffer) if possible
+    (let ((m (string-match (file-name-directory (buffer-file-name)) str) ))
+      (when m
+        (if (= 0 m )
+            (setq str (substring str (length (file-name-directory (buffer-file-name)))))
+          ))
+        (insert (format "[[file:%s]]" str)))
+    )) 
+#+END_SRC
+
+
+* unbind meta-number
+
+This unbinds M-1, M-2, ..., M-0, which I very rarely used (I use C-u for count arguments) and I suddenly found myself with 10 new shortcuts that are easy to type (especially M-1, M-2 and M-3). You can also use them as prefixes, so for example M-1 r could be ivy-recentf and M-1 s could be swiper.
+
+I hope this is somewhat helpful to someone else, happy hacking! Source: [[https://www.reddit.com/r/emacs/comments/3ricev/tip_for_when_you_are_running_out_of_easytopress/][Tip for when you are running out of easy-to-press key shortcuts : emacs]]
+
+#+BEGIN_SRC emacs-lisp
+(dotimes (n 10)
+  (global-unset-key (kbd (format "M-%d" n))))
+#+END_SRC
+
+* key chords
+
+Hydras and key-chords.
+q is a good candidate for chords, since in words it has u after, and only a few letters ever come before a q. so I tap my two pinkie-fingers on qp to summon a project(ile)-related hydra.
+
+[[https://github.com/abo-abo/hydra][abo-abo/hydra]]
+
+
+* refile active region or subtree
+
+#+BEGIN_SRC emacs-lisp
+(defun refile-region-or-subtree (beg end copy)
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (refile-region) ; then
+    (org-refile); else
+)
+)
+#+END_SRC
+Doesn't work.
+
+* hydras experiments
+
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-zoom (global-map "s-n")
+  "email"
+  ("ek" erika-send-mail "erika-send-mail")
+  ("nm" notmuch "notmuch")
+)
+
+(global-set-key
+ (kbd "C-n")
+(defhydra hydra-move
+   (:body-pre (next-line))
+   "move"
+   ("n" next-line)
+   ("p" previous-line)
+   ("f" forward-char)
+   ("b" backward-char)
+   ("a" beginning-of-line)
+   ("e" move-end-of-line)
+   ("v" scroll-up-command)
+   ;; Converting M-v to V here by analogy.
+   ("V" scroll-down-command)
+   ("l" recenter-top-bottom)))
+
+
+
+#+END_SRC
+
+Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile · abo-abo/hydra Wiki]]
+
+
+* hydra helm
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-helm (:hint nil :color pink)
+	"
+									  ╭──────┐
+   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
+  ╭───────────────────────────────────────────────────────────────────────┴──────╯
+	^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+	^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
+	^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+	^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+  --------------------------------------------------------------------------------
+	"
+	("<tab>" helm-keyboard-quit "back" :exit t)
+	("<escape>" nil "quit")
+	("\\" (insert "\\") "\\" :color blue)
+	("h" helm-beginning-of-buffer)
+	("j" helm-next-line)
+	("k" helm-previous-line)
+	("l" helm-end-of-buffer)
+	("g" helm-beginning-of-buffer)
+	("G" helm-end-of-buffer)
+	("n" helm-next-source)
+	("p" helm-previous-source)
+	("K" helm-scroll-other-window-down)
+	("J" helm-scroll-other-window)
+	("c" helm-recenter-top-bottom-other-window)
+	("m" helm-toggle-visible-mark)
+	("t" helm-toggle-all-marks)
+	("u" helm-unmark-all)
+	("H" helm-help)
+	("s" helm-buffer-help)
+	("v" helm-execute-persistent-action)
+	("d" helm-persistent-delete-marked)
+	("y" helm-yank-selection)
+	("w" helm-toggle-resplit-and-swap-windows)
+	("f" helm-follow-mode))
+#+END_SRC
+[[https://github.com/abo-abo/hydra/wiki/Helm-2][Helm 2 · abo-abo/hydra Wiki]]
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key
+ (kbd "C-9")
+
+(defhydra multiple-cursors-hydra (:hint nil)
+  "
+     ^Up^            ^Down^        ^Other^
+----------------------------------------------
+[_p_]   Next    [_n_]   Next    [_l_] Edit lines
+[_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+[_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+^ ^             ^ ^             [_q_] Quit
+"
+  ("l" mc/edit-lines :exit t)
+  ("a" mc/mark-all-like-this :exit t)
+  ("n" mc/mark-next-like-this)
+  ("N" mc/skip-to-next-like-this)
+  ("M-n" mc/unmark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("P" mc/skip-to-previous-like-this)
+  ("M-p" mc/unmark-previous-like-this)
+  ("r" mc/mark-all-in-region-regexp :exit t)
+  ("q" nil)) )
+#+END_SRC
+
+
+* sunrise commander
+#+BEGIN_SRC emacs-lisp
+(require 'sunrise-commander)
+#+END_SRC

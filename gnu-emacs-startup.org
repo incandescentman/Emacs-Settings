@@ -36,16 +36,15 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
-(setq abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/elisp/.abbrev_defs")
+(setq abbrev-file-name "~/elisp/.abbrev_defs")
 
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
-(read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
+(read-abbrev-file "~/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 #+END_SRC
 
-* 
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
@@ -59,7 +58,8 @@ Automatically load abbreviations table:
 * org-mode settings
 
   #+BEGIN_SRC emacs-lisp 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook (smartparens-mode 1))
 (setq org-hierarchical-todo-statistics nil) 
   #+END_SRC
 
@@ -226,7 +226,7 @@ Desired output:
 
 And can you add this to the following three functions, i.e. pasteboard-paste, pasteboard-paste-without-smart-quotes, and pasteboard-paste-no-spaces? Thanks!
 
-*** pasteboard-paste 
+*** pasteboard-paste (smart-quotes) 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -251,6 +251,25 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 #+END_SRC
+
+*** pasteboard-paste-spaces-maybe 
+    #+BEGIN_SRC emacs-lisp
+(defun pasteboard-paste-spaces-maybe ()
+(interactive) 
+;; begin if 
+(if 
+(or 
+(looking-back "'")
+(looking-back "(")
+(looking-back "\\[")
+(looking-back "\"")
+)
+;; end if 
+
+    (pasteboard-paste-no-spaces) ; then
+  (pasteboard-paste-without-smart-quotes))   ; else
+  ) 
+    #+END_SRC
 
 
 *** pasteboard-paste-no-spaces
@@ -302,6 +321,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
            (pasteboard-paste-no-spaces)
            (buffer-string))))
     (search-forward search-term))) 
+
 #+END_SRC
 
 * kill ring to pasteboard functions
@@ -360,16 +380,33 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
+
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
+(define-key key-minor-mode-map (kbd "M-q") 'org-refile)
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+
+(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+
+(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
+(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
+(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 
 ;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -403,7 +440,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
 
-(define-key dired-mode-map (kbd "s-o") 'projectile-find-file) 
+(define-key dired-mode-map (kbd "s-o") 'projectile-find-file)
 (define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
 
 
@@ -420,10 +457,23 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
+(define-key key-minor-mode-map (kbd "s-0") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
+
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
+  "*"))) ; wow this was a stroke of genius
+
+
+
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
+;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
+
+;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
+
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 
@@ -432,13 +482,19 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
-(define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
+(define-key org-mode-map (kbd "M-K") 'kill-clause)
+(define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
 
-(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading
+
+
+(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
@@ -456,11 +512,12 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
 
+(define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
 
 
 ;; book bindings
-(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) 
-(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory) 
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
+(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
 
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
@@ -471,12 +528,13 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs)
 
 ;; own structure editing
-(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
-;; (define-key key-minor-mode-map (kbd "C-c C-w") 'org-refile) ; very useful when working with a split frame
 
-;; for extracting content from my browser
-(define-key key-minor-mode-map (kbd "s-W") 'web-research)
+
+;; For extracting content from my browser
+(define-key key-minor-mode-map (kbd "s-W") 'widen)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
@@ -508,7 +566,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; deleting things
 ;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
-(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize) 
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize)
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
@@ -534,13 +592,14 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
-(define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 ;; org-mime
-(define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
-(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree) 
+;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
+;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
+
+
 #+END_SRC
 
 ** new keybindings without modifier keys
@@ -599,9 +658,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (looking-at ".. ")
 (delete-forward-char 1))
 )
+#+END_SRC
 
-;; and the keybinding
-(global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
+* my/kill-line-dwim
+
+#+BEGIN_SRC emacs-lisp
+
 
 (defun my/kill-line-dwim ()
   "Kill the current line."
@@ -610,17 +672,40 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* ")
+(looking-back "\* ")
+(looking-back "\* TODO ")
+(looking-back "^\*+")
 (looking-back "- ")
+(looking-back "# ")
 )
 (beginning-of-line)
 ) 
 ;;  (expand-abbrev)
   (org-kill-line)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+;;  (save-excursion
+;;    (when (my/beginning-of-sentence-on)
+;;      (capitalize-word 1)))
+)
 #+END_SRC
+
+* kill-sentence-maybe-else-kill-line
+
+
+  #+BEGIN_SRC emacs-lisp
+(defun kill-sentence-maybe-else-kill-line ()
+  (interactive)
+(when
+    (not (looking-at "$"))
+  (my/kill-sentence-dwim))
+  (when
+      (looking-at "$")
+    (my/kill-line-dwim))
+)
+;; and the keybinding
+(global-set-key (kbd "M-k") 'kill-sentence-maybe-else-kill-line)
+
+  #+END_SRC
+
 
 * Browsing
 
@@ -644,7 +729,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-;; (smart-expand)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -660,11 +745,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\)")
 )
 
-(define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
-(define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
-(define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
+;; (define-key org-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 #+END_SRC
+
+This fucked up autopair mode so I'm turning it off again.
+
 
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
@@ -726,7 +814,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 *** smart-org-meta-return-dwim
 
-#+BEGIN_SRC emacs-lisp
+**** old version, works
+ #+BEGIN_EXAMPLE emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
@@ -749,40 +838,62 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
-#+END_SRC
+ #+END_EXAMPLE 
 
-*** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
 
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^
-#+END_EXAMPLE
 
-Say the point is at the carat and I hit smart-org-meta-return 
+**** new version
+From here: 
+[[https://www.reddit.com/r/emacs/comments/3pw2qq/orgmode_headings_and_blank_lines/][{Org-mode} Headings and blank lines : emacs]]
 
-Current output: 
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^
+ #+BEGIN_SRC emacs-lisp
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
 
-* TODO
-#+END_EXAMPLE
+(defun call-rebinding-org-blank-behaviour (fn)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively fn)))
 
-Desired output:
-#+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
-* TODO
-#+END_EXAMPLE
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
 
-Same thing for scheduled:
-#+BEGIN_EXAMPLE 
-*** DONE send July priorities to Erika
-    DEADLINE: <2015-07-10 Fri> ^
+(defun smart-org-insert-heading-respect-content-dwim ()
+(interactive) 
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+)
 
-#+END_EXAMPLE
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+(insert "TODO ")
+)
 
-Thanks!
+(defun smart-org-insert-todo-heading-respect-content-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content)
+)
+
+(defun smart-org-insert-subheading ()
+  (interactive)
+
+(call-rebinding-org-blank-behaviour 'org-meta-return) 
+(org-demote-subtree)
+  )
+
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+(define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
+
+
+ #+END_SRC
 
 *** smart-return
 
@@ -794,7 +905,14 @@ Thanks!
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* "))
+;; (looking-back "\* ")
+(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+(looking-back "^# ")
+;; (looking-back "* TODO ") ; actually I don't think I want this 
+;; (looking-back "^*+")
+;; (looking-back "- ") 
+
+)
 (beginning-of-line)
 ) 
 ;;
@@ -1485,7 +1603,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ***** embolden next word
 
-   #+BEGIN_EXAMPLE emacs-lisp 
+   #+BEGIN_SRC emacs-lisp
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
   nil
@@ -1510,8 +1628,40 @@ The last line sets the path to where saveplace stores your position data. Change
       (set-register 'p (point))
     (set-register 'p nil)))
 
-(global-set-key "\C-o" 'embolden-next-word) 
-   #+END_EXAMPLE
+(global-set-key "\C-o" 'embolden-next-word)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+   #+END_SRC
+
+***** italicize next word
+
+   #+BEGIN_SRC emacs-lisp
+(define-minor-mode italicize-next-word
+    "Make the next word you type bold."
+  nil
+  :lighter " ITALICIZE"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion
+                        (goto-char (get-register 'p))
+                        (insert "/"))
+                      (insert "/ ")
+                      (italicize-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion
+                      (goto-char (get-register 'p))
+                      (insert "/"))
+                    (insert "/. ")
+                    (italicize-next-word -1)))
+            map)
+  (if italicize-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-i" 'italicize-next-word)
+(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
+   #+END_SRC
 
 ***** no-abbrev-slash
 Doesn't work.
@@ -2032,7 +2182,35 @@ Oleh
 
 ** kill-clause
 
-#+BEGIN_SRC emacs-lisp
+This version kill org-mode headings by 'kill-line'
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (if (let ((sm (string-match "[*]+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+      (kill-line)
+    (progn
+      (let ((old-point (point))
+            (kill-punct (my/beginning-of-sentence-p)))
+        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+          (kill-region old-point
+                       (if kill-punct
+                           (match-end 0)
+                         (match-beginning 0)))))
+      (my/fix-space)
+      (save-excursion
+        (when (my/beginning-of-sentence-p)
+          (capitalize-unless-org-heading))))))
+
+#+END_EXAMPLE
+
+
+This version leaves a rogue comma:
+#+BEGIN_EXAMPLE emacs-lisp
+
 ;; Identify the end of sentences globally.
 (setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
@@ -2049,7 +2227,35 @@ Oleh
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
+
+#+END_EXAMPLE
+
+Old version that I retrieved:
+#+BEGIN_SRC emacs-lisp
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
+
+
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading)))))
 #+END_SRC
+ 
 
 
 ** smart-punctuation exceptions
@@ -2059,7 +2265,7 @@ Oleh
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 ;; How do I add an exception for ") ; "? 
 ;; e.g. if I want to add a comment after a line of lisp?
@@ -2124,7 +2330,12 @@ Oleh
   (interactive)
 (smart-punctuation ".")
 (save-excursion
-(unless (looking-at "[ ]*$")
+(unless 
+(or 
+(looking-at "[ ]*$")
+(looking-at "\"[ ]*$") 
+(looking-at "\)[ ]*$") 
+)
 (capitalize-word 1))
 ))
 
@@ -2136,7 +2347,15 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-comma ()
   (interactive)
-  (smart-punctuation ","))
+  (smart-punctuation ",")
+(unless 
+(or
+(looking-at "\\W*$") 
+(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+)
+
+(save-excursion (downcase-word 1))))
+
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
 (define-key orgstruct-mode-map (kbd ",") 'smart-comma)
@@ -2184,7 +2403,14 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-semicolon ()
   (interactive)
-  (smart-punctuation ";" t))
+  (smart-punctuation ";" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
 (define-key orgstruct-mode-map (kbd ";") 'smart-semicolon)
@@ -2195,10 +2421,21 @@ Oleh
 #+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
+
+
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
 (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
+
+
 #+END_SRC 
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode
@@ -2329,7 +2566,7 @@ First delete region, and then:
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-(when (looking-back "[*]+ ")
+(when (looking-back "^[*]+ ")
 (kill-line 0)
 (insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire 
 )
@@ -2389,17 +2626,24 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
 #+BEGIN_SRC emacs-lisp 
 (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
-  (unless 
+
+  (unless
+
       (or
-       (looking-at "\\W*I\\b")          ; never downcase the word "I" 
+       (looking-at "\\W*I\\b")          ; never downcase the word "I"
+       (looking-at "[ ]*I\'")          ; never downcase the word "I'
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
+
        )
+
     (save-excursion
       (downcase-word 1))))
-#+END_SRC 
+#+END_SRC
 
 I tried to add exceptions for "line-end" and also for user-full name.
 
@@ -2421,15 +2665,19 @@ Five six
 
    So, it didn't downcase past the line break. In which case is it not working for you?
 
-* capitalize-unless-org-heading
-
+* capitalize-unless-org-heading 
   #+BEGIN_SRC emacs-lisp 
 (defun capitalize-unless-org-heading ()
   (interactive)
-;; (unless (looking-at org-complex-heading-regexp)
-(capitalize-word 1)
-;; )
+(unless 
+(or
+(looking-at "\*")
+(looking-at "[\n\t ]*\\*") ; fails to find
+(looking-at "* TODO")
 ) 
+(capitalize-word 1))
+)
+
   #+END_SRC
  
 * downcase-save-excursion 
@@ -2440,9 +2688,16 @@ Five six
 (unless
 (or
 
-(looking-at "[ ]*I\\b") ; never downcase the word "I" 
-(looking-at "[ ]*I'")  ; never downcase I'm I've etc. 
-(looking-at "[ ]*$") 
+(looking-at "[ ]*I\\b") ; never downcase the word "I"
+;; (looking-at "[ ]*I\'") ; never downcase the word "I'"
+(looking-at "[ ]*I'")  ; never downcase I'm I've etc.
+(looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
+       (looking-at (user-full-name))
+
+
 )
   (save-excursion
       (downcase-word 1))
@@ -2455,6 +2710,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 
 #+BEGIN_SRC emacs-lisp
+
 (defun smart-expand ()
   (interactive) 
 
@@ -2470,7 +2726,27 @@ Don't expand past certain delimiters, e.g. line break, ), and "
     (expand-abbrev)
 )
 )
+
 #+END_SRC
+
+
+
+
+(defun smart-expand ()
+  (interactive)
+
+  (unless
+
+    (or
+       (looking-back "\)\n*")
+(looking-back "\)[ ]*")
+(looking-back ":t[ ]*")
+
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+)
+    (expand-abbrev)
+)
+) 
 
 * fountain
 
@@ -2491,4 +2767,122 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that.")) 
+#+END_SRC
+
+
+
+* keybindings for terminal
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "M-(") 'backward-word)
+(define-key key-minor-mode-map (kbd "M-)") 'forward-word)
+#+END_SRC
+
+
+* capitalize sentence
+#+BEGIN_SRC emacs-lisp
+(defun capitalize-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (endless/capitalize)
+(org-forward-sentence 1)
+(jay/right-char) 
+)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
+
+#+END_SRC 
+
+* downcase sentence
+#+BEGIN_SRC emacs-lisp
+(defun downcase-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (downcase-word 1)
+(org-forward-sentence 1)
+(jay/right-char)
+)
+
+(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
+
+#+END_SRC 
+
+* return-insert-blank-line-before 
+
+#+BEGIN_SRC emacs-lisp
+(defun return-insert-blank-line-before ()
+  (interactive)
+  (beginning-of-line)
+(newline)
+  )
+#+END_SRC
+
+
+* disable color themes
+#+BEGIN_SRC emacs-lisp
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapcar #'disable-theme custom-enabled-themes))
+#+END_SRC
+
+* toggle item or hyphenation
+#+BEGIN_SRC emacs-lisp
+(defun toggle-item-or-hyphenation ()
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (org-toggle-item) ; then
+    (cycle-hyphenation); else
+)
+)
+#+END_SRC
+
+* my-forward-sentence
+#+BEGIN_SRC emacs-lisp
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space)
+  )
+#+END_SRC
+
+* available keybindings
+s-p
+M-[
+M-]
+
+
+* replace-inner
+#+BEGIN_SRC emacs-lisp
+(defun replace-inner ()
+  (interactive)
+(change-inner)
+  (pasteboard-paste-no-spaces)
+  )
+#+END_SRC
+
+doesn't work.
+
+
+* smex
+#+BEGIN_SRC emacs-lisp
+(require 'smex)
+(setq smex-completion-method 'ivy)
+(setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+
+(defcustom ivy-height 30
+  "Number of lines for the minibuffer window."
+  :type 'integer)
+#+END_SRC
+
+
+* bjm-swiper
+
+#+BEGIN_SRC emacs-lisp
+;;advise swiper to recenter on exit
+(defun bjm-swiper-recenter (&rest args)
+  "recenter display after swiper"
+  (recenter)
+  )
+(advice-add 'swiper :after #'bjm-swiper-recenter)
 #+END_SRC

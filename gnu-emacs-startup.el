@@ -12,11 +12,11 @@
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/Dropbox/elisp/.abbrev_defs")
-(setq abbrev-file-name "~/Dropbox/elisp/.abbrev_defs")
+(read-abbrev-file "~/elisp/.abbrev_defs")
+(setq abbrev-file-name "~/elisp/.abbrev_defs")
 
 (set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
-(read-abbrev-file "~/Dropbox/elisp/own-abbrevs.abbrev_defs")
+(read-abbrev-file "~/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 
@@ -27,8 +27,9 @@
 (recenter-top-bottom)
   )
 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
-(setq org-hierarchical-todo-statistics nil) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook (smartparens-mode 1))
+(setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
@@ -142,16 +143,32 @@
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
 
+(defun pasteboard-paste-spaces-maybe ()
+(interactive) 
+;; begin if 
+(if 
+(or 
+(looking-back "'")
+(looking-back "(")
+(looking-back "\\[")
+(looking-back "\"")
+)
+;; end if 
+
+    (pasteboard-paste-no-spaces) ; then
+  (pasteboard-paste-without-smart-quotes))   ; else
+  )
+
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-	(end (if mark-active
-		 (mark)
-	       (point))))
+  (end (if mark-active
+     (mark)
+         (point))))
     (shell-command-on-region start end
-			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t)
+           "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+           nil t)
     (save-excursion
 
       )))
@@ -180,12 +197,12 @@
          (with-temp-buffer
            (pasteboard-paste-no-spaces)
            (buffer-string))))
-    (search-forward search-term))) 
+    (search-forward search-term)))
 
 (setq x-select-enable-clipboard t) 
 (defun push-kill-ring-to-pasteboard ()
   (interactive)
-  (x-select-text (current-kill 0))) 
+  (x-select-text (current-kill 0)))
 
 (defun gist-buffer-to-pasteboard ()
   (interactive)
@@ -215,16 +232,33 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
+
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
+(define-key key-minor-mode-map (kbd "M-q") 'org-refile)
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+
+(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+
+(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
+(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
+(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 ;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
-;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes) 
+;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 
 ;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -258,7 +292,7 @@
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
 
-(define-key dired-mode-map (kbd "s-o") 'projectile-find-file) 
+(define-key dired-mode-map (kbd "s-o") 'projectile-find-file)
 (define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
 
 
@@ -275,10 +309,23 @@
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 (define-key key-minor-mode-map (kbd "H-w") 'widen)
+(define-key key-minor-mode-map (kbd "s-0") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
+
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
+  "*"))) ; wow this was a stroke of genius
+
+
+
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
+;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
+
+;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
+
 (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 
@@ -287,13 +334,19 @@
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-as
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
-(define-key key-minor-mode-map (kbd "M-K") 'kill-clause)
+(define-key org-mode-map (kbd "M-K") 'kill-clause)
+(define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
 
-(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading)
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading
+
+
+(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
@@ -311,11 +364,12 @@
 
 (define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
 
+(define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
 
 
 ;; book bindings
-(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory) 
-(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory) 
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
+(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
 
 (define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
 
@@ -326,12 +380,13 @@
 (define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs)
 
 ;; own structure editing
-(define-key key-minor-mode-map (kbd "C-c C-`") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
-;; (define-key key-minor-mode-map (kbd "C-c C-w") 'org-refile) ; very useful when working with a split frame
 
-;; for extracting content from my browser
-(define-key key-minor-mode-map (kbd "s-W") 'web-research)
+
+;; For extracting content from my browser
+(define-key key-minor-mode-map (kbd "s-W") 'widen)
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
@@ -363,7 +418,7 @@
 
 ;; deleting things
 ;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
-(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize) 
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize)
 
 ;; a keybinding for "delete" in addition to "backspace"
 (define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
@@ -389,13 +444,12 @@
 (define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
 
 ;; some custom functions
-(define-key key-minor-mode-map (kbd "C-c C-m") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 ;; org-mime
-(define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
-(define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree) 
+;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
+;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
 (define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
 (define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
@@ -441,9 +495,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (delete-forward-char 1))
 )
 
-;; and the keybinding
-(global-set-key (kbd "M-k") 'my/kill-sentence-dwim)
-
 (defun my/kill-line-dwim ()
   "Kill the current line."
   (interactive)
@@ -451,16 +502,32 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* ")
+(looking-back "\* ")
+(looking-back "\* TODO ")
+(looking-back "^\*+")
 (looking-back "- ")
+(looking-back "# ")
 )
 (beginning-of-line)
 ) 
 ;;  (expand-abbrev)
   (org-kill-line)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-word 1))))
+;;  (save-excursion
+;;    (when (my/beginning-of-sentence-on)
+;;      (capitalize-word 1)))
+)
+
+(defun kill-sentence-maybe-else-kill-line ()
+  (interactive)
+(when
+    (not (looking-at "$"))
+  (my/kill-sentence-dwim))
+  (when
+      (looking-at "$")
+    (my/kill-line-dwim))
+)
+;; and the keybinding
+(global-set-key (kbd "M-k") 'kill-sentence-maybe-else-kill-line)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
@@ -472,7 +539,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-;; (smart-expand)
+(smart-expand)
 (insert "\ ")
   (just-one-space)
 )
@@ -488,9 +555,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\)")
 )
 
-(define-key org-mode-map (kbd ")") 'jay/insert-paren-single) 
-(define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
-(define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
+;; (define-key org-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
+;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
 ;;; I changed this a)) bunch, not sure if it still works correctly. 
 ;; (defun my/fix-space ()
@@ -545,7 +612,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . nil)))
-(setq org-return-follows-link t)
 
 (defun call-rebinding-org-blank-behaviour (fn)
   (let ((org-blank-before-new-entry
@@ -558,12 +624,35 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (call-rebinding-org-blank-behaviour 'org-meta-return))
 
+(defun smart-org-insert-heading-respect-content-dwim ()
+(interactive) 
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+)
+
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
+  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+(insert "TODO ")
+)
+
+(defun smart-org-insert-todo-heading-respect-content-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content)
+)
+
+(defun smart-org-insert-subheading ()
+  (interactive)
+
+(call-rebinding-org-blank-behaviour 'org-meta-return) 
+(org-demote-subtree)
+  )
+
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
+(define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading)
 
 (defun smart-return ()
   (interactive)
@@ -572,7 +661,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when 
 (or
 (looking-back "\\[") 
-(looking-back "* "))
+;; (looking-back "\* ")
+(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+(looking-back "^# ")
+;; (looking-back "* TODO ") ; actually I don't think I want this 
+;; (looking-back "^*+")
+;; (looking-back "- ") 
+
+)
 (beginning-of-line)
 ) 
 ;;
@@ -608,13 +704,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (org-meta-return))
         (t (org-return))))
 
-(define-key org-mode-map (kbd "<return>") 'smart-return) 
+(define-key org-mode-map (kbd "<return>") 'smart-return)
 
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (smart-expand)
-  (if (or (re-search-forward "\\=[ 	]*\n" nil t)
+  (if (or (re-search-forward "\\=[  ]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
@@ -667,8 +763,8 @@ provided the (transient) mark is active."
                       (or (mark t) 0))))
       (if (and transient-mark-mode mark-active)
           (progn (goto-char right)
-		 (setq deactivate-mark t))
-	(call-interactively 'right-char)))))
+     (setq deactivate-mark t))
+  (call-interactively 'right-char)))))
 
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
@@ -693,8 +789,8 @@ provided the (transient) mark is active."
    (format
     "http://www.google.com/search?q=%s"
     (if (region-active-p)
-	(url-hexify-string (buffer-substring (region-beginning)
-					     (region-end)))
+  (url-hexify-string (buffer-substring (region-beginning)
+               (region-end)))
       (thing-at-point 'word)))))
 
 
@@ -714,13 +810,13 @@ provided the (transient) mark is active."
     (mapconcat
      (lambda (tup)
        (concat "[" (elt tup 0) "]"
-	       (elt tup 1) " "))
+         (elt tup 1) " "))
      words-funcs "") ": "))
    (let ((input (read-char-exclusive)))
      (funcall
       (elt
        (assoc
-	(char-to-string input) words-funcs)
+  (char-to-string input) words-funcs)
        2))))
 
 (defun words-twitter ()
@@ -729,8 +825,8 @@ provided the (transient) mark is active."
    (format
     "https://twitter.com/search?q=%s"
     (if (region-active-p)
-	(url-hexify-string (buffer-substring (region-beginning)
-					     (region-end)))
+  (url-hexify-string (buffer-substring (region-beginning)
+               (region-end)))
       (thing-at-point 'word)))))
 
 (add-to-list 'words-funcs
@@ -742,37 +838,37 @@ provided the (transient) mark is active."
   (interactive)
 
   (let* ((url-request-method "POST")
-	 (url-request-data (format
-			    "key=some-random-text-&data=%s"
-			    (url-hexify-string
-			     (thing-at-point 'paragraph))))
-	 (xml  (with-current-buffer
-		   (url-retrieve-synchronously
-		    "http://service.afterthedeadline.com/checkDocument")
-		 (xml-parse-region url-http-end-of-headers (point-max))))
-	 (results (car xml))
-	 (errors (xml-get-children results 'error)))
+   (url-request-data (format
+          "key=some-random-text-&data=%s"
+          (url-hexify-string
+           (thing-at-point 'paragraph))))
+   (xml  (with-current-buffer
+       (url-retrieve-synchronously
+        "http://service.afterthedeadline.com/checkDocument")
+     (xml-parse-region url-http-end-of-headers (point-max))))
+   (results (car xml))
+   (errors (xml-get-children results 'error)))
 
     (switch-to-buffer-other-frame "*ATD*")
     (erase-buffer)
     (dolist (err errors)
       (let* ((children (xml-node-children err))
-	     ;; for some reason I could not get the string out, and had to do this.
-	     (s (car (last (nth 1 children))))
-	     ;; the last/car stuff doesn't seem right. there is probably
-	     ;; a more idiomatic way to get this
-	     (desc (last (car (xml-get-children children 'description))))
-	     (type (last (car (xml-get-children children 'type))))
-	     (suggestions (xml-get-children children 'suggestions))
-	     (options (xml-get-children (xml-node-name suggestions) 'option))
-	     (opt-string  (mapconcat
-			   (lambda (el)
-			     (when (listp el)
-			       (car (last el))))
-			   options
-			   " ")))
+       ;; for some reason I could not get the string out, and had to do this.
+       (s (car (last (nth 1 children))))
+       ;; the last/car stuff doesn't seem right. there is probably
+       ;; a more idiomatic way to get this
+       (desc (last (car (xml-get-children children 'description))))
+       (type (last (car (xml-get-children children 'type))))
+       (suggestions (xml-get-children children 'suggestions))
+       (options (xml-get-children (xml-node-name suggestions) 'option))
+       (opt-string  (mapconcat
+         (lambda (el)
+           (when (listp el)
+             (car (last el))))
+         options
+         " ")))
 
-	(insert (format "** %s ** %s
+  (insert (format "** %s ** %s
 Description: %s
 Suggestions: %s
 
@@ -814,7 +910,61 @@ password: %s" userid password))
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file "/Users/jay/emacs/.savefile/.places") 
+(setq save-place-file "/Users/jay/emacs/.savefile/.places")
+
+(define-minor-mode embolden-next-word
+    "Make the next word you type bold."
+  nil
+  :lighter " EMBOLDEN"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion
+                        (goto-char (get-register 'p))
+                        (insert "*"))
+                      (insert "* ")
+                      (embolden-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion
+                      (goto-char (get-register 'p))
+                      (insert "*"))
+                    (insert "*. ")
+                    (embolden-next-word -1)))
+            map)
+  (if embolden-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-o" 'embolden-next-word)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+
+(define-minor-mode italicize-next-word
+    "Make the next word you type bold."
+  nil
+  :lighter " ITALICIZE"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion
+                        (goto-char (get-register 'p))
+                        (insert "/"))
+                      (insert "/ ")
+                      (italicize-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion
+                      (goto-char (get-register 'p))
+                      (insert "/"))
+                    (insert "/. ")
+                    (italicize-next-word -1)))
+            map)
+  (if italicize-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-i" 'italicize-next-word)
+(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
 
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
@@ -854,28 +1004,28 @@ password: %s" userid password))
   (let ((file (buffer-file-name)))
     (kill-buffer (current-buffer))
     (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
-(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3)) 
+(add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3))
 
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)
-      (message "Hello World!")) 
+      (message "Hello World!"))
 
 (defun hello (someone)
       "Say hello to SOMEONE via M-x hello."
       (interactive "sWho do you want to say hello to? ")
-      (message "Hello %s!" someone)) 
+      (message "Hello %s!" someone))
 
 (defun multiple-hello (someone num)
       "Say hello to SOMEONE via M-x hello, for NUM times."
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
-        (insert (format "Hello %s!\n" someone)))) 
+        (insert (format "Hello %s!\n" someone))))
 
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-	(auto-capitalize-mode -1))
+  (auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -927,16 +1077,16 @@ subsequent sends. could save them all in a logbook?
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (org-mark-subtree)
   (let ((content (buffer-substring (point) (mark)))
-	(TO (org-entry-get (point) "TO" t))
-	(CC (org-entry-get (point) "CC" t))
-	(BCC (org-entry-get (point) "BCC" t))
-	(SUBJECT (nth 4 (org-heading-components)))
-	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-	(continue nil)
-	(switch-function nil)
-	(yank-action nil)
-	(send-actions '((email-send-action . nil)))
-	(return-action '(email-heading-return)))
+  (TO (org-entry-get (point) "TO" t))
+  (CC (org-entry-get (point) "CC" t))
+  (BCC (org-entry-get (point) "BCC" t))
+  (SUBJECT (nth 4 (org-heading-components)))
+  (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+  (continue nil)
+  (switch-function nil)
+  (yank-action nil)
+  (send-actions '((email-send-action . nil)))
+  (return-action '(email-heading-return)))
 
     (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
     (message-goto-body)
@@ -948,7 +1098,7 @@ subsequent sends. could save them all in a logbook?
       (message-goto-bcc)
       (insert BCC))
     (if TO
-	(message-goto-body)
+  (message-goto-body)
       (message-goto-to))
     ))
 
@@ -960,42 +1110,42 @@ subsequent sends. could save them all in a logbook?
 ;; Move files to trash when deleting
 (setq delete-by-moving-to-trash t)
 
-    (defgroup helm-org-wiki nil
-      "Simple jump-to-org-file package."
-      :group 'org
-      :prefix "helm-org-wiki-")
-    (defcustom helm-org-wiki-directory "~/nd/"
-      "Directory where files for `helm-org-wiki' are stored."
-      :group 'helm-org-wiki
-      :type 'directory)
-    (defun helm-org-wiki-files ()
-      "Return .org files in `helm-org-wiki-directory'."
-      (let ((default-directory helm-org-wiki-directory))
-        (mapcar #'file-name-sans-extension
-                (file-expand-wildcards "*.txt"))))
-    (defvar helm-source-org-wiki
-      `((name . "Projects")
-        (candidates . helm-org-wiki-files)
-        (action . ,(lambda (x)
-                      (find-file (expand-file-name
-                                  (format "%s.txt" x)
-                                  helm-org-wiki-directory))))))
-    (defvar helm-source-org-wiki-not-found
-      `((name . "Create org-wiki")
-        (dummy)
-        (action . (lambda (x)
-                    (helm-switch-to-buffer
-                     (find-file
-                      (format "%s/%s.org"
-                              helm-org-wiki-directory x)))))))
-    ;;;###autoload
-    (defun helm-org-wiki ()
-      "Select an org-file to jump to."
-      (interactive)
-      (helm :sources
-            '(helm-source-org-wiki
-              helm-source-org-wiki-not-found)))
-    (provide 'helm-org-wiki)
+(defgroup helm-org-wiki nil
+  "Simple jump-to-org-file package."
+  :group 'org
+  :prefix "helm-org-wiki-")
+(defcustom helm-org-wiki-directory "~/nd/"
+  "Directory where files for `helm-org-wiki' are stored."
+  :group 'helm-org-wiki
+  :type 'directory)
+(defun helm-org-wiki-files ()
+  "Return .org files in `helm-org-wiki-directory'."
+  (let ((default-directory helm-org-wiki-directory))
+    (mapcar #'file-name-sans-extension
+            (file-expand-wildcards "*.txt"))))
+(defvar helm-source-org-wiki
+  `((name . "Projects")
+    (candidates . helm-org-wiki-files)
+    (action . ,(lambda (x)
+                  (find-file (expand-file-name
+                              (format "%s.txt" x)
+                              helm-org-wiki-directory))))))
+(defvar helm-source-org-wiki-not-found
+  `((name . "Create org-wiki")
+    (dummy)
+    (action . (lambda (x)
+                (helm-switch-to-buffer
+                 (find-file
+                  (format "%s/%s.org"
+                          helm-org-wiki-directory x)))))))
+;;;###autoload
+(defun helm-org-wiki ()
+  "Select an org-file to jump to."
+  (interactive)
+  (helm :sources
+        '(helm-source-org-wiki
+          helm-source-org-wiki-not-found)))
+(provide 'helm-org-wiki)
 
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
@@ -1049,6 +1199,12 @@ subsequent sends. could save them all in a logbook?
 (defun kill-clause ()
   (interactive)
   (smart-expand)
+
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
+
+
   (let ((old-point (point))
         (kill-punct (my/beginning-of-sentence-p)))
     (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
@@ -1059,13 +1215,13 @@ subsequent sends. could save them all in a logbook?
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
+      (capitalize-unless-org-heading)))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 ;; How do I add an exception for ") ; "? 
 ;; e.g. if I want to add a comment after a line of lisp?
@@ -1121,7 +1277,12 @@ subsequent sends. could save them all in a logbook?
   (interactive)
 (smart-punctuation ".")
 (save-excursion
-(unless (looking-at "[ ]*$")
+(unless 
+(or 
+(looking-at "[ ]*$")
+(looking-at "\"[ ]*$") 
+(looking-at "\)[ ]*$") 
+)
 (capitalize-word 1))
 ))
 
@@ -1130,7 +1291,15 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-comma ()
   (interactive)
-  (smart-punctuation ","))
+  (smart-punctuation ",")
+(unless 
+(or
+(looking-at "\\W*$") 
+(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+)
+
+(save-excursion (downcase-word 1))))
+
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
 (define-key orgstruct-mode-map (kbd ",") 'smart-comma)
@@ -1159,14 +1328,30 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-semicolon ()
   (interactive)
-  (smart-punctuation ";" t))
+  (smart-punctuation ";" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
 (define-key orgstruct-mode-map (kbd ";") 'smart-semicolon)
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t))
+  (smart-punctuation ":" t)
+(unless
+(or
+(looking-at "\\W*$")
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+)
+
+(save-excursion (downcase-word 1))))
+
+
 
 (define-key org-mode-map (kbd ":") 'smart-colon)
 (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
@@ -1207,7 +1392,7 @@ subsequent sends. could save them all in a logbook?
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-(when (looking-back "[*]+ ")
+(when (looking-back "^[*]+ ")
 (kill-line 0)
 (insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire 
 )
@@ -1220,13 +1405,13 @@ subsequent sends. could save them all in a logbook?
       (delete-backward-char 1))
     (save-excursion
       (when (or (looking-at "[[:space:]]")
-		(looking-back "[[:space:]]"))
+    (looking-back "[[:space:]]"))
 ;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
 (unless (and
 (looking-back "\\w ")
 (looking-at "\\w") 
 ) 
-	(my/fix-space))))
+  (my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
         (capitalize-word 1)))))
@@ -1239,37 +1424,52 @@ subsequent sends. could save them all in a logbook?
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
 
-  (defadvice capitalize-word (after capitalize-word-advice activate)
-  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence." 
-    (unless 
-  (or
-(looking-at "[ ]*I\\b") ; never downcase the word "I" 
-(looking-at "[ ]*\"I\\b") 
-(looking-at "[ ]*\(I\\b") 
-;; (looking-at "\\") ; how do you search for a literal backslash?
-(looking-at (sentence-end))
-(looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
-(looking-at "[ ]*\"[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
-(looking-at (user-full-name))
-  )
-(save-excursion
-      (downcase-word 1)))) 
+(defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+
+  (unless
+
+      (or
+       (looking-at "\\W*I\\b")          ; never downcase the word "I"
+       (looking-at "[ ]*I\'")          ; never downcase the word "I'
+       ;; (looking-at "\\") ; how do you search for a literal backslash?
+       (looking-at (sentence-end))
+       (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+       (looking-at (user-full-name))
+
+       )
+
+    (save-excursion
+      (downcase-word 1))))
 
 (defun capitalize-unless-org-heading ()
   (interactive)
-;; (unless (looking-at org-complex-heading-regexp)
-(capitalize-word 1)
-;; )
+(unless 
+(or
+(looking-at "\*")
+(looking-at "[\n\t ]*\\*") ; fails to find
+(looking-at "* TODO")
 ) 
+(capitalize-word 1))
+)
 
 (defun downcase-save-excursion ()
   (interactive)
 (unless
 (or
 
-(looking-at "[ ]*I\\b") ; never downcase the word "I" 
-(looking-at "[ ]*I'")  ; never downcase I'm I've etc. 
-(looking-at "[ ]*$") 
+(looking-at "[ ]*I\\b") ; never downcase the word "I"
+;; (looking-at "[ ]*I\'") ; never downcase the word "I'"
+(looking-at "[ ]*I'")  ; never downcase I'm I've etc.
+(looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
+(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
+       (looking-at (user-full-name))
+
+
 )
   (save-excursion
       (downcase-word 1))
@@ -1291,6 +1491,76 @@ subsequent sends. could save them all in a logbook?
 )
 )
 
-(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 
-(setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that.")) 
+(setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
+
+(define-key key-minor-mode-map (kbd "M-(") 'backward-word)
+(define-key key-minor-mode-map (kbd "M-)") 'forward-word)
+
+(defun capitalize-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (endless/capitalize)
+(org-forward-sentence 1)
+(jay/right-char) 
+)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
+
+(defun downcase-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (downcase-word 1)
+(org-forward-sentence 1)
+(jay/right-char)
+)
+
+(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
+
+(defun return-insert-blank-line-before ()
+  (interactive)
+  (beginning-of-line)
+(newline)
+  )
+
+(defadvice load-theme (before theme-dont-propagate activate)
+ (mapcar #'disable-theme custom-enabled-themes))
+
+(defun toggle-item-or-hyphenation ()
+(interactive "P")
+(if
+
+    (region-active-p)                               ; if
+    (org-toggle-item) ; then
+    (cycle-hyphenation); else
+)
+)
+
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space)
+  )
+
+(defun replace-inner ()
+  (interactive)
+(change-inner)
+  (pasteboard-paste-no-spaces)
+  )
+
+(require 'smex)
+(setq smex-completion-method 'ivy)
+(setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+
+(defcustom ivy-height 30
+  "Number of lines for the minibuffer window."
+  :type 'integer)
+
+;;advise swiper to recenter on exit
+(defun bjm-swiper-recenter (&rest args)
+  "recenter display after swiper"
+  (recenter)
+  )
+(advice-add 'swiper :after #'bjm-swiper-recenter)

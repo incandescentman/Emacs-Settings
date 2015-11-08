@@ -1,3 +1,19 @@
+
+
+
+* region or thing
+
+** move region or subtree to other window
+I also have a function move-region-to-other-window. Make it look for active region first?
+
+** highlighted region or thing at point
+So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+
+
+
+* forward-clause
+(define-key key-minor-mode-map (kbd "M-E") 'forward-clause)
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t 
 #+TODO: TODO PLEASE-CLARIFY PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -5,25 +21,22 @@
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
 #+TITLE: 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
+* smart punctuation behavior 
+
+Example: Don't use an adverb word. ^
+scenario: I hit comma
+current output: Don't use an adverb word,^
+desired output: Don't use an adverb word, ^
 
 
+* visit-most-recent-file
+No error when I invoke visit-most-recent-file and it finds next file is the same file
+
+~/nd/playful.org and /Users/jay/Dropbox/writing/notationaldata/playful.org are the same file [2 times]
 
 
-* PLEASE-TEST capitalize first character of new line after ellipsis
-In a sentence like this... autocapitalize does not capitalize after the ellipsis. This is as desired.
-
-However, sometimes an ellipsis occurs at the end of a paragraph...
-
-in these cases, the first letter of the new sentence on 
-^ the new line SHOULD be capitalized. Can we fix? Thanks! 
-
-* PLEASE-TEST Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break 
-See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%20that%20capitalize%20word%20doesn't%20downcase%20past%20a%20line%20break][this]]. 
-
-How to reproduce the error: instructions in the new file downcase-error-example-file.org
-
-* TODO another capitalization error
-Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
+* org-mac-chrome-insert-frontmost-url
+new link from clipboard (prompt for title)
 
 * TODO a smart-return list-type for ---
 You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
@@ -52,6 +65,48 @@ Desired output:
 Also, unlike plain text lists, these should always begin with a capital letter. 
 
 Thanks!
+
+
+* TODO try to resolve org-element crashes?
+I'm finding my Emacs crashing a lot; other times I get errors like these which I assume are related to the crashes:
+http://pastebin.com/Tncs79r0
+http://pastebin.com/jfdEYwVk
+
+I mean total Emacs crashes, where I have to force quit Emacs itself. It's happened in various org-mode situations including:
+- pasting text from OSX clipboard
+- promoting/demoting org-headings
+- moving subtree up or down (i.e. using org-metadown org org-metaup)
+
+I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
+
+* create a special behavior for kill-clause when on org-heading 
+Kill-clause is working as desired. However, I have created a special behavior for my/kill-line-dwim for when the point is on an org-heading:
+
+
+#+BEGIN_SRC emacs-lisp
+(when 
+(or
+(looking-back "\\[") 
+(looking-back "* ")
+(looking-back "^*+")
+(looking-back "- ")
+)
+(beginning-of-line)
+) 
+#+END_SRC
+
+This is working as I want it. But now I need a way to get default behavior for the following scenario: 
+
+#+BEGIN_EXAMPLE
+,* a heading with extra words ^words extra
+#+END_EXAMPLE
+
+In the example above, let's say the point is on the ^ and I want to kill to the end of the line, i.e. kill those last two words. Now that I've modified my/kill-line-dwim, that won't work. Can we make it so that kill-clause, if I invoke it when the point is on an org-heading, simply kills to the end of the line (the way kill-line does by default)? Thanks!
+
+
+* TODO another capitalization error
+Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
+
 * todo smart-punctuation in an org-heading
 Smart-punctuation is working as desired in plain text.
 
@@ -110,7 +165,7 @@ Debugger entered--Lisp error: (args-out-of-range 0 0)
    #+END_SRC
 
 
-* please-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
+* PLEASE-TEST [#C] strange behavior with smart-comma (see [[file:smart-punctuation-error.org::*in%20the%20example%20below:][smart-punctuation-error.org]])
 I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 
 ** NOTE-TO-RÚDI still getting the error
@@ -335,4 +390,103 @@ Desired output: Something that's just weird more than funny...^ and having to ex
 This:
 http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
 
+*** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
 
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+#+END_EXAMPLE
+
+Say the point is at the carat and I hit smart-org-meta-return 
+
+Current output: 
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
+
+* TODO
+#+END_EXAMPLE
+
+Desired output:
+#+BEGIN_EXAMPLE
+TODO work out with Luke 
+   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
+* TODO
+#+END_EXAMPLE
+
+Same thing for scheduled:
+#+BEGIN_EXAMPLE 
+*** DONE send July priorities to Erika
+    DEADLINE: <2015-07-10 Fri> ^
+
+#+END_EXAMPLE
+
+Thanks!
+
+* cycle contraction
+I want an Emacs lisp function I can call that will automatically convert a two-word phrase (e.g. "do not") into its English contraction (e.g. "don't"). Maybe we would call it cycle-contraction.
+
+For example, let's say I have this sentence:
+
+: I do not want to see the movie.
+
+And let's say the point is on the space between "do" and "not."
+
+If I invoke cycle-contraction, Emacs should convert "do not" to "don't" so the sentence would look like this:
+
+: I don't want to see the movie.
+
+Conversely, if the point is somewhere on the word "couldn't" and I call cycle-contraction, it should convert it to the long-form-phrase "could not".
+
+We would define each long-form-phrase and its contraction as a list of pairs, maybe something like this:
+
+(setq contraction-pairs
+(
+(("do not") ("don't"))
+(("will not") ("won't"))
+(("could not") ("couldn't"))
+))
+
+What do you think? 
+
+* swiper-mc 
+
+
+* TODO kill-clause 
+
+Example: 
+As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
+
+Scenario: invoke kill-clause
+
+* pasteboard-search-for-clipboard-contents 
+- make this do isearch-repeat-forward when invoked again?
+
+* helm-multi-swoop-all thing at point
+
+* swiper multi thing at point?
+
+* how to find function within my init files?
+I often want to do this:
+1. C-it the to find what a keystroke does
+2. Find that function within my init files
+
+How to do this?
+
+Is there a?
+
+helm-multi-swoop-all thing at point
+
+swiper multi thing at point?
+
+How to do
+
+* describe-key and find function in my init files
+
+* describe-key to pasteboard
+
+* embolden next word
+Embolden next word expand-abbrev.
+
+* kill sentence shouldn't kill the line break after a sentence
+(But it should if there's no sentence)

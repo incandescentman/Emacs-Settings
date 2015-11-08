@@ -1,9 +1,20 @@
 (defun book-load-current ()
   (interactive)
-(kill-buffer "playful.org") 
-(find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
-(find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
-(find-file "/Users/jay/Dropbox/writing/book/proposal/list-of-love-biases-mistakes.txt")
+(condition-case nil
+  (kill-buffer "playful.org")
+  (error nil))
+
+;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates--conceptual-outline.txt")
+(text-scale-increase 2)
+;; (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/12-mistakes-conceptual-outline.txt")
+(text-scale-increase 2)
+(split-window-horizontally)
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates---chapter.txt")
+(text-scale-increase 2)
+;; (other-window 1)
+
 )
 
 
@@ -19,13 +30,17 @@
 
 (setq jays-library-public (helm-cmd-t-get-create-source-dir "~/Dropbox/Public/library"))
 
+(setq emacs-settings (helm-cmd-t-get-create-source-dir "~/gnulisp"))
 
 
 
 (setq helm-ff-lynx-style-map nil helm-input-idle-delay 0.1 helm-idle-delay 0.1)
 
 
-
+(defun search-within-emacs-settings ()
+  (interactive)
+  (helm :sources (list
+emacs-settings)))
 
 (defun helm-book-plus ()
   "Choose file from book folder."
@@ -76,17 +91,17 @@
 ;; (cyberpunk-jay)
  ;; (toggle-fullscreen)
  (org-mode)
-  (dired "~/b/"))
+;;  (dired "~/b/"))
+(dired "~/b/12-mistakes/"))
 
 
 
 (defun work-on-book ()
 "Work on my book! :-)"
 (interactive)
-(find-file "/Users/jay/b/booktime.org")
-(end-of-buffer)
+;; (book-dired)
 (book-load-current)
-(book-dired))
+)
 
 
 (defun book-clock-in ()
@@ -107,3 +122,5 @@
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
   (dired "~/b/12-mistakes"))
+
+
