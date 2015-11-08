@@ -30,3 +30,6 @@ Output: You might have a conscious intention to eat healthier, ^but you forget.
 
 Input: You might have a conscious intention to eat healthier, but you forget ^.
 Output: You might have a conscious intention to eat healthier, but you forget, ^
+
+Input: Don't use an adverb word. ^
+Output: Don't use an adverb word, ^
