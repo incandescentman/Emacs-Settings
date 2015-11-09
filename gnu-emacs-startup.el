@@ -232,6 +232,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)

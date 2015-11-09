@@ -1692,7 +1692,8 @@ Also converts full stops to commas."
       (let ((count (count-words-region start end)))
         (save-excursion
           (kill-region start end)
-          (other-window 1)
+(newline)
+(other-window 1)
           (yank)
           (newline))
         (other-window -1)
