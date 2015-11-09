@@ -338,5 +338,12 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (interactive)
 (spacemacs/toggle-highlight-current-line-globally-off)
 (setq menu-bar-mode-1)
-
 )
+
+(defun beach-mode ()
+  (interactive)
+  (transparency-set-value 50)
+  (setq fringe-mode 'no-fringes)
+  (org-mode)
+(text-scale-increase 2)
+  )

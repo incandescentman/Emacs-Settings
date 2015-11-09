@@ -7,7 +7,26 @@
 I also have a function move-region-to-other-window. Make it look for active region first?
 
 ** highlighted region or thing at point
+ I use several functions that do dictionary lookups of the "thing at point." 
+1. gnugol-word-at-point, which is a function that does (defun gnugol-word-at-point ()
+  (interactive)
+(gnugol-search-google (thing-at-point 'word))
+) 
+gnugol-search-google is defined in gnugol.el
+2. define-word-at-point, which is an interactive autoloaded
+Lisp closure in define-word.el' 
+
+These both work fine. However, I'd like to be able to highlight a 2-word or 3-word PHRASE (i.e. select the region) and THEN invoke gnugol-word-at-point or define-word-at-point and have gnugol or define-word look up the entire phrase.
+
+Can you implement a functionality for these two functions that allows me to do "lookup active region or if no active region then lookup word at point"?
+
+Thanks!
+
 So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+
+
+
+** define word 
 
 
 
