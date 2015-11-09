@@ -1250,7 +1250,7 @@ subsequent sends. could save them all in a logbook?
         (let ((old-point (point)))
           (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
           (let ((was-after-space (and (< (point) old-point)
-                                      (looking-at " "))))
+                                      (find ?  (buffer-substring (point) old-point)))))
             (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
                                        *smart-punctuation-marks*)
                                nil t)

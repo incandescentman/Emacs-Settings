@@ -2847,9 +2847,13 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 #+END_SRC
 
 * available keybindings
-s-p
-M-[
-M-]
+
+s-[
+s-]
+
+;; (global-set-key (kbd "M-N") 'outline-next-visible-heading)
+;; (global-set-key (kbd "M-P") 'outline-previous-visible-heading)
+
 
 
 * replace-inner

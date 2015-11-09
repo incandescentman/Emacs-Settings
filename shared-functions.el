@@ -1843,11 +1843,21 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
-(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
-(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+(global-set-key (kbd "s-N") 'outline-next-visible-heading)
+(global-set-key (kbd "s-P") 'outline-previous-visible-heading)
+(define-key key-minor-mode-map (kbd "s-N") 'outline-next-visible-heading)
+(define-key key-minor-mode-map (kbd "s-P") 'outline-previous-visible-heading)
 
-(global-set-key (kbd "M-N") 'outline-next-visible-heading)
-(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
+(global-set-key (kbd "s-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "s-p") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-n") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-p") 'org-backward-heading-same-level)
+
+(global-set-key (kbd "M-p") 'projectile-commander)
+(global-set-key (kbd "M-n") 'ni-narrow-to-region-indirect-other-window)
+
+
+
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -1867,6 +1877,9 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
 
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 (define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -1904,7 +1917,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
-(define-hyper-key "]" 'visit-most-recent-file)
+
 ;; (define-hyper-key "f" 'isearch-forward)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents) 
 ;; (define-hyper-key "R" 'xsteve-ido-choose-from-recentf)
@@ -1935,8 +1948,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "o" 'eval-buffer)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
-(define-hyper-key "[" 'org-backward-heading-same-level)
-(define-hyper-key "]" 'org-forward-heading-same-level)
 (define-hyper-key "{" 'org-previous-visible-heading)
 (define-hyper-key "}" 'org-next-visible-heading)
 ;; why not use N and P here? TODO
@@ -3718,11 +3729,20 @@ The full path into relative path and insert it as a local file link in org-mode"
 )
 )
 
-(defhydra hydra-zoom (global-map "s-n")
+(defhydra hydra-zoom (global-map "s-]")
   "email"
   ("ek" erika-send-mail "erika-send-mail")
   ("nm" notmuch "notmuch")
 )
+
+
+(defhydra hydra-zoom (global-map "s-[")
+  "email"
+  ("ek" erika-send-mail "erika-send-mail")
+  ("nm" notmuch "notmuch")
+)
+
+
 
 (global-set-key
  (kbd "C-n")
