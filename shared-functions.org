@@ -2615,20 +2615,20 @@ For popping around the buffer. I need to review how this works again.
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "s-N") 'outline-next-visible-heading)
-(global-set-key (kbd "s-P") 'outline-previous-visible-heading)
-(define-key key-minor-mode-map (kbd "s-N") 'outline-next-visible-heading)
-(define-key key-minor-mode-map (kbd "s-P") 'outline-previous-visible-heading)
+(global-set-key (kbd "M-C-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-C-P") 'outline-previouM-C-visible-heading)
+(define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
+(define-key key-minor-mode-map (kbd "M-C-P") 'outline-previous-visible-heading)
 
-(global-set-key (kbd "s-n") 'org-forward-heading-same-level)
-(global-set-key (kbd "s-p") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "s-n") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "s-p") 'org-backward-heading-same-level)
+(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-n") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
-(global-set-key (kbd "M-p") 'projectile-commander)
-(global-set-key (kbd "M-n") 'ni-narrow-to-region-indirect-other-window)
-
-
+(global-set-key (kbd "s-p") 'projectile-commander)
+(global-set-key (kbd "s-n") 'ni-narrow-to-region-indirect-other-window)
+(define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
+(define-key key-minor-mode-map (kbd "s-n") 'ni-narrow-to-region-indirect-other-window)
 
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
