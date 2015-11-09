@@ -3729,17 +3729,19 @@ The full path into relative path and insert it as a local file link in org-mode"
 )
 )
 
-(defhydra hydra-zoom (global-map "s-]")
+(defhydra email (global-map "s-]")
   "email"
-  ("ek" erika-send-mail "erika-send-mail")
-  ("nm" notmuch "notmuch")
+  ("a" erika-send-email)
+  ("i" notmuch "inbox")
+  ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
+  ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
 )
 
 
 (defhydra hydra-zoom (global-map "s-[")
   "email"
-  ("ek" erika-send-mail "erika-send-mail")
-  ("nm" notmuch "notmuch")
+  ("e" erika-send-mail)
+  ("n" notmuch)
 )
 
 

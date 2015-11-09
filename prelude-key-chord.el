@@ -59,7 +59,7 @@
 (key-chord-define-global "FF" 'isearch-forward)
 (key-chord-define-global "hh" 'helm-M-x)
 
-(key-chord-define-global "nm" 'new-email-from-subtree-no-signature)
+;; (key-chord-define-global "nm" 'new-email-from-subtree-no-signature)
 
 
 ;; (key-chord-define-global "EE" 'insert-ellipsis)

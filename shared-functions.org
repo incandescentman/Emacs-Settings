@@ -5236,17 +5236,19 @@ Doesn't work.
 
 
 #+BEGIN_SRC emacs-lisp
-(defhydra hydra-zoom (global-map "s-]")
+(defhydra email (global-map "s-]")
   "email"
-  ("ek" erika-send-mail "erika-send-mail")
-  ("nm" notmuch "notmuch")
+  ("a" erika-send-email)
+  ("i" notmuch "inbox")
+  ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
+  ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
 )
 
 
 (defhydra hydra-zoom (global-map "s-[")
   "email"
-  ("ek" erika-send-mail "erika-send-mail")
-  ("nm" notmuch "notmuch")
+  ("e" erika-send-mail)
+  ("n" notmuch)
 )
 
 
