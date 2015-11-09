@@ -2846,14 +2846,6 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
   )
 #+END_SRC
 
-* available keybindings
-
-s-[
-s-]
-
-;; (global-set-key (kbd "M-N") 'outline-next-visible-heading)
-;; (global-set-key (kbd "M-P") 'outline-previous-visible-heading)
-
 
 
 * replace-inner
@@ -2890,3 +2882,8 @@ doesn't work.
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
 #+END_SRC
+
+* available keybindings
+
+s-P
+s-N
