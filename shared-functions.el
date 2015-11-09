@@ -3558,14 +3558,29 @@ event of an error or nonlocal exit."
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
 ;; (require 'wrap-region)
-;; (wrap-region-add-wrapper "*" "*" "*")  
-;; (wrap-region-add-wrapper "\/" "\/" "\/")  
-;; (add-hook 'org-mode-hook 'wrap-region-mode) 
+;; (wrap-region-add-wrapper "*" "*" "*")
+;; (wrap-region-add-wrapper "\/" "\/" "\/")
+;; (add-hook 'org-mode-hook 'wrap-region-mode)
 
 ;; wrap-region
 (use-package wrap-region
   :ensure t
   :config
+
+(defun wrap-region-define-wrappers ()
+  "Defines defaults wrappers."
+  (mapc
+   (lambda (pair)
+     (apply 'wrap-region-add-wrapper pair))
+   '(
+     ;; ("\"" "\"")
+     ;; ("'"  "'")
+     ;; ("("  ")")
+     ("{"  "}")
+     ;; ("["  "]")
+     ("<"  ">"))))
+
+
   (wrap-region-add-wrappers
    '(
 ;;     ("*" "*" nil org-mode)
