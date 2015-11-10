@@ -24,7 +24,7 @@
   "Predicate: Checks whether the current line org-checkbox"
   (and
    (eq 'org-mode major-mode)
-   (string-match "^\s*[-+*]\s\\[.?\\]\s" (thing-at-point 'line))))
+   (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (thing-at-point 'line))))
 
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
