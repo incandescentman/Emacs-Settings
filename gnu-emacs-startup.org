@@ -55,6 +55,16 @@ Automatically load abbreviations table:
   )
 #+END_SRC
 
+* org-checkbox-p
+
+  #+BEGIN_SRC emacs-lisp 
+  (defun org-checkbox-p ()
+  "Predicate: Checks whether the current line org-checkbox"
+    (and
+      (eq 'org-mode major-mode)
+      (string-match "^\s*[-+*]\s\\[.?\\]\s" (thing-at-point 'line))))
+  #+END_SRC
+
 * org-mode settings
 
   #+BEGIN_SRC emacs-lisp 
@@ -903,21 +913,21 @@ From here:
 (defun smart-return ()
   (interactive)
 
-;; don't leave stray stars or links
-(when 
-(or
-(looking-back "\\[") 
-;; (looking-back "\* ")
-(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
-(looking-back "^# ")
-;; (looking-back "* TODO ") ; actually I don't think I want this 
-;; (looking-back "^*+")
-;; (looking-back "- ") 
+  ;; don't leave stray stars or links
+  (when 
+      (or
+       (looking-back "\\[") 
+       ;; (looking-back "\* ")
+       (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+       (looking-back "^# ")
+       ;; (looking-back "* TODO ") ; actually I don't think I want this 
+       ;; (looking-back "^*+")
+       ;; (looking-back "- ") 
 
-)
-(beginning-of-line)
-) 
-;;
+       )
+    (beginning-of-line)
+    ) 
+  ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline))) 
@@ -947,7 +957,10 @@ From here:
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
+         (let ((is-org-chbs (org-checkbox-p)))
+           (org-meta-return)
+           (when is-org-chbs
+             (insert "[ ] "))))
         (t (org-return))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 

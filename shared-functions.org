@@ -3079,14 +3079,13 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
- (lambda ()
-   (and
-     (not (and
-            (eq 'org-mode major-mode)
-            (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
-      
-        (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
+      (lambda ()
+        (and
+         (not (org-checkbox-p))
+         (save-match-data
+           (not (looking-back
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 (- (point) 20)))))))
 
 #+END_SRC 
 
@@ -5221,15 +5220,11 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 * refile active region or subtree
 
 #+BEGIN_SRC emacs-lisp
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
-(if
-
-    (region-active-p)                               ; if
-    (refile-region) ; then
-    (org-refile); else
-)
-)
+(defun refile-region-or-subtree ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'refile-region)
+    (org-refile)))
 #+END_SRC
 Doesn't work.
 
