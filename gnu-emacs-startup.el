@@ -20,6 +20,12 @@
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 
+(defun org-checkbox-p ()
+  "Predicate: Checks whether the current line org-checkbox"
+  (and
+   (eq 'org-mode major-mode)
+   (string-match "^\s*[-+*]\s\\[.?\\]\s" (thing-at-point 'line))))
+
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
   (interactive)
@@ -659,24 +665,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun smart-return ()
   (interactive)
 
-;; don't leave stray stars or links
-(when 
-(or
-(looking-back "\\[") 
-;; (looking-back "\* ")
-(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
-(looking-back "^# ")
-;; (looking-back "* TODO ") ; actually I don't think I want this 
-;; (looking-back "^*+")
-;; (looking-back "- ") 
+  ;; don't leave stray stars or links
+  (when
+      (or
+       (looking-back "\\[")
+       ;; (looking-back "\* ")
+       (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+       (looking-back "^# ")
+       ;; (looking-back "* TODO ") ; actually I don't think I want this
+       ;; (looking-back "^*+")
+       ;; (looking-back "- ")
 
-)
-(beginning-of-line)
-) 
-;;
+       )
+    (beginning-of-line)
+    )
+  ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
-                (newline))) 
+                (newline)))
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and org-return-follows-link
@@ -703,7 +709,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
+         (let ((is-org-chbs (org-checkbox-p)))
+           (org-meta-return)
+           (when is-org-chbs
+             (insert "[ ] "))))
         (t (org-return))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
@@ -1202,22 +1211,22 @@ subsequent sends. could save them all in a logbook?
   (interactive)
   (smart-expand)
 
-(if
-(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-(kill-line)
+  (if
+      (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+      (kill-line)
 
 
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading)))))
+    (let ((old-point (point))
+          (kill-punct (my/beginning-of-sentence-p)))
+      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+        (kill-region old-point
+                     (if kill-punct
+                         (match-end 0)
+                       (match-beginning 0)))))
+    (my/fix-space)
+    (save-excursion
+      (when (my/beginning-of-sentence-p)
+        (capitalize-unless-org-heading)))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
