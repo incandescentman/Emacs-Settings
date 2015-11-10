@@ -347,3 +347,18 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (org-mode)
 (text-scale-increase 2)
   )
+
+(defun beach-light ()
+  (interactive)
+(load-theme 'leuven)
+(beach-mode)
+(text-scale-increase 2)
+  )
+
+
+(defun beach-dark ()
+  (interactive)
+(load-theme 'cyberpunk)
+(beach-mode)
+(text-scale-increase 2)
+  )

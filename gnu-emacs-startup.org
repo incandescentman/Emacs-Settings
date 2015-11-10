@@ -437,7 +437,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
-(define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
@@ -2889,4 +2888,13 @@ doesn't work.
 
 s-P
 s-N
-s-:
+is-:
+
+
+* abbrev advice
+#+BEGIN_EXAMPLE emacs-lisp
+(defadvice expand-abbrev (after expand-abbrev-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+  (my/fix-space)
+  )
+#+END_EXAMPLE

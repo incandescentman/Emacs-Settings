@@ -1855,9 +1855,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
 (global-set-key (kbd "s-p") 'projectile-commander)
-(global-set-key (kbd "s-n") 'ni-narrow-to-region-indirect-other-window)
 (define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
-(define-key key-minor-mode-map (kbd "s-n") 'ni-narrow-to-region-indirect-other-window)
 
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
@@ -3754,6 +3752,7 @@ The full path into relative path and insert it as a local file link in org-mode"
    "move"
    ("n" next-line)
    ("p" previous-line)
+   ("k" my/kill-line-dwim)
    ("f" forward-char)
    ("b" backward-char)
    ("a" beginning-of-line)
@@ -3762,6 +3761,25 @@ The full path into relative path and insert it as a local file link in org-mode"
    ;; Converting M-v to V here by analogy.
    ("V" scroll-down-command)
    ("l" recenter-top-bottom)))
+
+(global-set-key
+ (kbd "s-n")
+(defhydra hydra-move
+   (:body-pre (next-line))
+   "move"
+   ("n" org-next-visible-heading)
+   ("p" org-previous-visible-heading)
+   ("k" org-cut-subtree)
+   ("f" forward-char)
+   ("b" backward-char)
+   ("d" org-todo)
+   ("m" (lambda nil (interactive) (org-todo "MISSED")))
+   ("e" move-end-of-line)
+   ("v" scroll-up-command)
+   ;; Converting M-v to V here by analogy.
+   ("V" scroll-down-command)
+   ("l" recenter-top-bottom)
+))
 
 (defhydra hydra-helm (:hint nil :color pink)
   "
