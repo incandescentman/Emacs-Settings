@@ -3719,12 +3719,11 @@ The full path into relative path and insert it as a local file link in org-mode"
 (dotimes (n 10)
   (global-unset-key (kbd (format "M-%d" n))))
 
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
+(defun refile-region-or-subtree ()
+(interactive)
 (if
-
     (region-active-p)                               ; if
-    (refile-region) ; then
+    (call-interactively 'refile-region) ; then
     (org-refile); else
 )
 )
