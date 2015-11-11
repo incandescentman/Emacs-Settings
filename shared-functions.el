@@ -2597,7 +2597,11 @@ subsequent sends."
                   (lambda ()
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-                    (goto-char (point-min))
+
+(goto-char (point-min))
+                    (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
+
+               (goto-char (point-min))
                     (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
                     (goto-char (point-min))
 

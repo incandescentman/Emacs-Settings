@@ -233,8 +233,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive)
 (set-frame-parameter (selected-frame) 'alpha '(40 40))
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
-(set-fringe-mode -1)
+  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.believe")
+;; (set-fringe-mode -1)
+(setq fringe-styles '("no-fringes" . 0)) 
 )
 
 
@@ -343,7 +344,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun beach-mode ()
   (interactive)
   (transparency-set-value 50)
-  (setq fringe-mode 'no-fringes)
+(setq fringe-styles '("no-fringes" . 0)) 
   (org-mode)
 (text-scale-increase 2)
   )

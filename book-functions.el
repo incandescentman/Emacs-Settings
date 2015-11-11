@@ -5,7 +5,7 @@
   (error nil))
 
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
-(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates--conceptual-outline.txt")
+(find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates---conceptual-outline.txt")
 (text-scale-increase 2)
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
 (find-file "/Users/jay/Dropbox/writing/book/12-mistakes/12-mistakes-conceptual-outline.txt")

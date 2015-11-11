@@ -943,33 +943,6 @@ password: %s" userid password))
 (global-set-key "\C-o" 'embolden-next-word)
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
 
-(define-minor-mode italicize-next-word
-    "Make the next word you type bold."
-  nil
-  :lighter " ITALICIZE"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "SPC") (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "/"))
-                      (insert "/ ")
-                      (italicize-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "/"))
-                    (insert "/. ")
-                    (italicize-next-word -1)))
-            map)
-  (if italicize-next-word
-      (set-register 'p (point))
-    (set-register 'p nil)))
-
-(global-set-key "\C-i" 'italicize-next-word)
-(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
-
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
   nil
