@@ -55,7 +55,7 @@ Automatically load abbreviations table:
   )
 #+END_SRC
 
-* org-checkbox-p
+* org predicates
 
   #+BEGIN_SRC emacs-lisp 
   (defun org-checkbox-p ()
@@ -63,6 +63,12 @@ Automatically load abbreviations table:
     (and
       (eq 'org-mode major-mode)
       (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (thing-at-point 'line))))
+
+  (defun org-plain-text-list-p ()
+  "Predicate: Checks whether the current line org-plain-text-list"
+    (and
+      (eq 'org-mode major-mode)
+      (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (thing-at-point 'line))))
   #+END_SRC
 
 * org-mode settings
@@ -881,8 +887,11 @@ From here:
 
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
-(insert "TODO ")
+  (let ((listitem-or-checkbox (org-plain-text-list-p)))
+    (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+    (if listitem-or-checkbox
+        (insert "[ ] ")
+        (insert "TODO ")))
 )
 
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
