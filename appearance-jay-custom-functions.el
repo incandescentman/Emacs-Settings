@@ -275,13 +275,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (org-mode)
   )
 
-(defun garamond-font ()
+(defun gfont ()
   (interactive)
 (set-face-attribute 'default nil :font "Garamond Premier Pro" :height 260)
 ;; (org-mode)
 ;;(horizontal-cursor)
 ;; (setq cursor-color 'red)
 )
+
 
 
 

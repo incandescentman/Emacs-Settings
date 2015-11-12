@@ -31,13 +31,13 @@
 "Predicate: Checks whether the current line org-checkbox"
   (and
     (eq 'org-mode major-mode)
-    (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (thing-at-point 'line))))
+    (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
 
 (defun org-plain-text-list-p ()
 "Predicate: Checks whether the current line org-plain-text-list"
   (and
     (eq 'org-mode major-mode)
-    (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (thing-at-point 'line))))
+    (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
@@ -244,7 +244,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
-(define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
@@ -258,11 +258,11 @@
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
-(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
-(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
-(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
-(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
+(define-key key-minor-mode-map (kbd "M-'") 'open-abbrevs)
+
+(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -367,7 +367,9 @@
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
-(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
+(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
+
+(define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r

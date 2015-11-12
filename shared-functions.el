@@ -3413,6 +3413,10 @@ If FILE already exists, signal an error."
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
+(defun open-abbrevs ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/aquamacs-jay/.abbrev_defs"))
+
 (define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
 
@@ -3829,3 +3833,9 @@ The full path into relative path and insert it as a local file link in org-mode"
   ("q" nil)) )
 
 (require 'sunrise-commander)
+
+(defun cycle-hyphenation-or-toggle-item ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'org-toggle-item)
+    (cycle-hyphenation)))
