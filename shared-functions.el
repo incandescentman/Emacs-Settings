@@ -2187,14 +2187,13 @@ searches all buffers."
 (setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
 
 (setq auto-capitalize-predicate
- (lambda ()
-   (and
-     (not (and
-            (eq 'org-mode major-mode)
-            (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
-      
-        (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
+      (lambda ()
+        (and
+         (not (org-checkbox-p))
+         (save-match-data
+           (not (looking-back
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 (- (point) 20)))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -3722,12 +3721,11 @@ The full path into relative path and insert it as a local file link in org-mode"
 (dotimes (n 10)
   (global-unset-key (kbd (format "M-%d" n))))
 
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
+(defun refile-region-or-subtree ()
+(interactive)
 (if
-
     (region-active-p)                               ; if
-    (refile-region) ; then
+    (call-interactively 'refile-region) ; then
     (org-refile); else
 )
 )
