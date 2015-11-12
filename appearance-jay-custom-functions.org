@@ -286,7 +286,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun garamond-font ()
   (interactive)
-(set-face-attribute 'default nil :font "Garamond Premier Pro")
+(set-face-attribute 'default nil :font "Garamond Premier Pro" :height 260)
 (org-mode)
 (horizontal-cursor)
 (setq cursor-color 'red)
