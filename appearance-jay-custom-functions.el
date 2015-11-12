@@ -258,13 +258,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (writeroom-mode 1)
 (recenter-top-bottom))
 
-(defun morning-pages()
-  "distraction-free"
-(interactive)
-(org-capture)
-(rainy-highway-mode)
-(org-clock-in)
-)
 
 (defun medium-type ()
   (interactive)
@@ -285,9 +278,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun garamond-font ()
   (interactive)
 (set-face-attribute 'default nil :font "Garamond Premier Pro" :height 260)
-(org-mode)
-(horizontal-cursor)
-(setq cursor-color 'red)
+;; (org-mode)
+;;(horizontal-cursor)
+;; (setq cursor-color 'red)
 )
 
 
