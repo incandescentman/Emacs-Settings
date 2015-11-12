@@ -20,18 +20,24 @@
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 
-(defun org-checkbox-p ()
-  "Predicate: Checks whether the current line org-checkbox"
-  (and
-   (eq 'org-mode major-mode)
-   (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (thing-at-point 'line))))
-
 (defun reflash-indentation ()
 "One sentence summary of what this command do."
   (interactive)
   (org-indent-mode 1)
 (recenter-top-bottom)
   )
+
+(defun org-checkbox-p ()
+"Predicate: Checks whether the current line org-checkbox"
+  (and
+    (eq 'org-mode major-mode)
+    (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (thing-at-point 'line))))
+
+(defun org-plain-text-list-p ()
+"Predicate: Checks whether the current line org-plain-text-list"
+  (and
+    (eq 'org-mode major-mode)
+    (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (thing-at-point 'line))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
@@ -641,8 +647,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
-(insert "TODO ")
+  (let ((listitem-or-checkbox (org-plain-text-list-p)))
+    (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+    (if listitem-or-checkbox
+        (insert "[ ] ")
+        (insert "TODO ")))
 )
 
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
@@ -668,23 +677,23 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
 
   ;; don't leave stray stars or links
-  (when
+  (when 
       (or
-       (looking-back "\\[")
+       (looking-back "\\[") 
        ;; (looking-back "\* ")
        (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
        (looking-back "^# ")
-       ;; (looking-back "* TODO ") ; actually I don't think I want this
+       ;; (looking-back "* TODO ") ; actually I don't think I want this 
        ;; (looking-back "^*+")
-       ;; (looking-back "- ")
+       ;; (looking-back "- ") 
 
        )
     (beginning-of-line)
-    )
+    ) 
   ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
-                (newline)))
+                (newline))) 
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and org-return-follows-link
@@ -1186,22 +1195,22 @@ subsequent sends. could save them all in a logbook?
   (interactive)
   (smart-expand)
 
-  (if
-      (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
+(if
+(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+(kill-line)
 
 
-    (let ((old-point (point))
-          (kill-punct (my/beginning-of-sentence-p)))
-      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-        (kill-region old-point
-                     (if kill-punct
-                         (match-end 0)
-                       (match-beginning 0)))))
-    (my/fix-space)
-    (save-excursion
-      (when (my/beginning-of-sentence-p)
-        (capitalize-unless-org-heading)))))
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading)))))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")

@@ -1032,18 +1032,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   '((prefix . ac-prefix)
     (candidates . ac-ispell-get-candidates)))
 
-(defun ac-expand-ispell-word ()
-  (interactive)
-  (let ((ac-sources '(ac-source-ispell)))
-    (call-interactively 'ac-start)))
-
-(define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
-
-(ac-flyspell-workaround)
-
-(load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
-;; Completion words longer than 4 characters
-
 (eval-after-load "auto-complete"
   '(progn
      (ac-ispell-setup)))
@@ -3722,13 +3710,10 @@ The full path into relative path and insert it as a local file link in org-mode"
   (global-unset-key (kbd (format "M-%d" n))))
 
 (defun refile-region-or-subtree ()
-(interactive)
-(if
-    (region-active-p)                               ; if
-    (call-interactively 'refile-region) ; then
-    (org-refile); else
-)
-)
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'refile-region)
+    (org-refile)))
 
 (defhydra email (global-map "s-]")
   "email"
@@ -3766,7 +3751,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (global-set-key
  (kbd "s-n")
-(defhydra hydra-move
+(defhydra accountability-move
    (:body-pre (next-line))
    "move"
    ("n" org-next-visible-heading)

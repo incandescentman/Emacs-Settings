@@ -1530,7 +1530,7 @@ manual invoking.
 
 Newer version of ~ac-define-source~ would provide us an
 ~ac-complete-ispell-word~.  In case it didn't:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ac-expand-ispell-word ()
   (interactive)
   (let ((ac-sources '(ac-source-ispell)))
@@ -1539,14 +1539,13 @@ Newer version of ~ac-define-source~ would provide us an
 (define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
 
 (ac-flyspell-workaround)
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
 ;; Completion words longer than 4 characters
-#+END_SRC
+#+END_EXAMPLE
 
-#+BEGIN_ESRCemacs-lisp
+
+#+BEGIN_EXAMPLE emacs-lisp
 (defun buffer-background-black ()
   (interactive)
   (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
@@ -5270,7 +5269,7 @@ Doesn't work.
 
 (global-set-key
  (kbd "s-n")
-(defhydra hydra-move
+(defhydra accountability-move
    (:body-pre (next-line))
    "move"
    ("n" org-next-visible-heading)
