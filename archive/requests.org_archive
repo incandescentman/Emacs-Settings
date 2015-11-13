@@ -2574,3 +2574,75 @@ See [[file:gnu-emacs-startup.org::*Change%20"defadvice%20capitalize-word"%20so%2
 
 How to reproduce the error: instructions in the new file downcase-error-example-file.org
 
+
+* move region or subtree to other window
+:PROPERTIES:
+:ARCHIVE_TIME: 2015-11-12 Thu 16:10
+:ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+:ARCHIVE_OLPATH: region or thing
+:ARCHIVE_CATEGORY: requests
+:END:
+I also have a function move-region-to-other-window. Make it look for active region first?
+
+* TODO a smart-return list-type for ---
+:PROPERTIES:
+:ARCHIVE_TIME: 2015-11-12 Thu 16:12
+:ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+:ARCHIVE_CATEGORY: requests
+:ARCHIVE_TODO: TODO
+:END:
+You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
+
+- this
+- that
+- ^
+
+Can we add a new list-type to org-mode for three hyphens?
+
+Input:
+
+---Hello.
+---Hi.
+---What's up.^
+
+Scenario: I hit return
+
+Desired output:
+
+---Hello.
+---Hi.
+---What's up.
+---^
+
+Also, unlike plain text lists, these should always begin with a capital letter.
+
+Thanks!
+
+* create a special behavior for kill-clause when on org-heading
+:PROPERTIES:
+:ARCHIVE_TIME: 2015-11-12 Thu 16:12
+:ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/requests.org
+:ARCHIVE_CATEGORY: requests
+:END:
+Kill-clause is working as desired. However, I have created a special behavior for my/kill-line-dwim for when the point is on an org-heading:
+
+
+#+BEGIN_SRC emacs-lisp
+(when
+(or
+(looking-back "\\[")
+(looking-back "* ")
+(looking-back "^*+")
+(looking-back "- ")
+)
+(beginning-of-line)
+)
+#+END_SRC
+
+This is working as I want it. But now I need a way to get default behavior for the following scenario:
+
+#+BEGIN_EXAMPLE
+,* a heading with extra words ^words extra
+#+END_EXAMPLE
+
+In the example above, let's say the point is on the ^ and I want to kill to the end of the line, i.e. kill those last two words. Now that I've modified my/kill-line-dwim, that won't work. Can we make it so that kill-clause, if I invoke it when the point is on an org-heading, simply kills to the end of the line (the way kill-line does by default)? Thanks!

@@ -939,7 +939,17 @@ From here:
 
        )
     (beginning-of-line)
-    ) 
+    )
+
+;; don't follow org-links if point is at the end of a line
+;; but this now creates two newlines, hmm
+(when
+(or
+(looking-at "\]\]$")
+(looking-back "\]\]")
+)
+(newline)
+)
   ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
@@ -2381,7 +2391,8 @@ Old version that I retrieved:
 (unless 
 (or
 (looking-at "\\W*$") 
-(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 )
 
 (save-excursion (downcase-word 1))))
