@@ -2469,6 +2469,20 @@ With prefix arg C-u, copy region instad of killing it."
 
 #+END_SRC
 
+
+* move-region-or-subtree-to-other-window
+
+#+BEGIN_SRC emacs-lisp
+(defun move-region-or-subtree-to-other-window ()
+  (interactive)
+  (when (and
+         (eq 'org-mode major-mode)
+         (not (region-active-p)))
+    (org-mark-subtree))
+  (call-interactively 'move-region-to-other-window))
+#+END_SRC
+
+
 * Working with files
 ** Reopen last closed file, very useful:
 #+BEGIN_SRC emacs-lisp
@@ -4764,6 +4778,8 @@ C-c q
 ;; load org-opml
 (load-library "org-opml") 
   #+END_SRC
+
+
 
 
 * org-element-debug
