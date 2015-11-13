@@ -71,11 +71,12 @@ Automatically load abbreviations table:
       (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
   #+END_SRC
 
-* org-mode settings
+* org-mode hooks
 
   #+BEGIN_SRC emacs-lisp 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil) 
   #+END_SRC
 

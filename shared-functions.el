@@ -1740,6 +1740,14 @@ With prefix arg C-u, copy region instad of killing it."
             (buffer-file-name buffer))
           (org-buffer-list 'files t)))
 
+(defun move-region-or-subtree-to-other-window ()
+  (interactive)
+  (when (and
+         (eq 'org-mode major-mode)
+         (not (region-active-p)))
+    (org-mark-subtree))
+  (call-interactively 'move-region-to-other-window))
+
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)

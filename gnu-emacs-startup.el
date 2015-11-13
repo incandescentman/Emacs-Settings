@@ -41,6 +41,7 @@
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -699,10 +700,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and org-return-follows-link
+              (not (looking-back "\\]\\]"))
               (let ((tprop (get-text-property (point) 'face)))
                 (or (eq tprop 'org-link)
                     (and (listp tprop) (memq 'org-link tprop)))))
-         (call-interactively 'org-open-at-point))
+         (if (not (looking-at "\\[\\[.*"))
+             (call-interactively 'org-open-at-point)
+           (newline)))
         ((and (eq major-mode 'org-mode)
               (let ((el (org-element-at-point)))
                 (and el
