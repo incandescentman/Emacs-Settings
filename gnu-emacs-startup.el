@@ -700,11 +700,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and org-return-follows-link
-              (not (looking-back "\\]\\]"))
               (let ((tprop (get-text-property (point) 'face)))
                 (or (eq tprop 'org-link)
                     (and (listp tprop) (memq 'org-link tprop)))))
-         (if (not (looking-at "\\[\\[.*"))
+         (if (not (or (looking-at "\\[\\[.*")
+                      (looking-back "\\]\\]")))
              (call-interactively 'org-open-at-point)
            (newline)))
         ((and (eq major-mode 'org-mode)
