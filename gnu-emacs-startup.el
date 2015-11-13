@@ -1302,7 +1302,8 @@ subsequent sends. could save them all in a logbook?
 (unless 
 (or
 (looking-at "\\W*$") 
-(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 )
 
 (save-excursion (downcase-word 1))))
