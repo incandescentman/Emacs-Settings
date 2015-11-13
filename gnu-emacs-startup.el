@@ -692,16 +692,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
        )
     (beginning-of-line)
     )
-
-;; don't follow org-links if point is at the end of a line
-;; but this now creates two newlines, hmm
-(when
-(or
-(looking-at "\]\]$")
-(looking-back "\]\]")
-)
-(newline)
-)
   ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
