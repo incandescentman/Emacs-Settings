@@ -1,4 +1,7 @@
+* after a list
+Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
 
+Right now it creates another item. I want just a newline, or in the case of smart-org-insert-todo-heading-dwim, a todo heading.
 
 
 * region or thing
