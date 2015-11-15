@@ -940,24 +940,28 @@ From here:
 
        )
     (beginning-of-line)
-    )
+    ) 
   ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline))) 
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and org-return-follows-link
-              (let ((tprop (get-text-property (point) 'face)))
-                (or (eq tprop 'org-link)
-                    (and (listp tprop) (memq 'org-link tprop)))))
-         (cond ((or (looking-at "\\[\\[.*")
-                    (looking-back "\\]\\]"))
-                (newline))
-               ((char-equal (string-to-char "]") (following-char))
-                (progn (end-of-line)
-                       (newline)))
-               (t (call-interactively 'org-open-at-point))))
+        ((and (eq major-mode 'org-mode)
+              org-return-follows-link
+              (org-in-regexp org-any-link-re))
+         (cond
+          ((or (looking-at "\\[\\[.*")
+               (looking-back "\\]\\]")
+               (and (thing-at-point 'url)
+                    (let ((bnds (bounds-of-thing-at-point 'url)))
+                      (or (>= (car bnds) (point))
+                          (<= (cdr bnds) (point))))))
+           (newline))
+          ((char-equal (string-to-char "]") (following-char))
+           (progn (end-of-line)
+                  (newline)))
+          (t (call-interactively 'org-open-at-point))))
         ((and (eq major-mode 'org-mode)
               (let ((el (org-element-at-point)))
                 (and el
