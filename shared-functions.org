@@ -1342,7 +1342,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
  '(org-ascii-table-use-ascii-art t)
- '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
  '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
@@ -1446,7 +1445,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
-'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
 '(org-export-latex-image-default-option "width=20.5cm")
 '(org-export-time-stamp-file nil)
 '(org-export-with-clocks t)
@@ -1554,8 +1552,8 @@ Newer version of ~ac-define-source~ would provide us an
 ;;
 (defun my/enable-ac-ispell ()
   (add-to-list 'ac-sources 'ac-source-ispell))
-(add-hook 'org-mode-hook 'my/enable-ac-ispell)
-(add-hook 'message-mode-hook 'my/enable-ac-ispell)
+;; (add-hook 'org-mode-hook 'my/enable-ac-ispell)
+;; (add-hook 'message-mode-hook 'my/enable-ac-ispell)
 ;; (add-hook 'message-mode-hook 'buffer-background-black)
 #+END_EXAMPLE
 
