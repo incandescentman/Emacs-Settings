@@ -3851,4 +3851,4 @@ The full path into relative path and insert it as a local file link in org-mode"
   "Fontifyy list headings")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:$" . 'list-heading-face)))
+  '(("^.*:[ ]*$" . 'list-heading-face)))

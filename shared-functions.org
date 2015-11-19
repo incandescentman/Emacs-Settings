@@ -5405,5 +5405,5 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   "Fontifyy list headings")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:$" . 'list-heading-face)))
+  '(("^.*:[ ]*$" . 'list-heading-face)))
 #+END_SRC
