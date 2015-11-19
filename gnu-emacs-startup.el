@@ -261,7 +261,7 @@
 
 ;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
-(define-key key-minor-mode-map (kbd "M-'") 'open-abbrevs)
+(define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
 (define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
 
@@ -703,7 +703,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
               org-return-follows-link
               (org-in-regexp org-any-link-re))
          (cond
-          ((or (looking-at "\\[\\[.*")
+          ((or
+;; (looking-at "\\[\\[.*")
                (looking-back "\\]\\]")
                (and (thing-at-point 'url)
                     (let ((bnds (bounds-of-thing-at-point 'url)))
