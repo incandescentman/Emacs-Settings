@@ -619,7 +619,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 #+END_SRC
@@ -1196,7 +1195,7 @@ Make backups of files, even when they're in version control:
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 ;; (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
+(setq message-send-hook (quote (org-mime-htmlize)))
 #+END_SRC
 
 when replying, look kind of like gmail 
@@ -5400,10 +5399,24 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 * fontify list headings 
 
 #+BEGIN_SRC emacs-lisp
-(defface list-heading-face
+(defface list-title-face
   '((t (:background "pale green")))
   "Fontifyy list headings")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:[ ]*$" . 'list-heading-face)))
+  '(("^.*:[ ]*$" . 'list-title-face)))
+#+END_SRC
+
+
+(setq org-element-use-cache nil)
+
+
+* tst-send-message
+
+#+BEGIN_SRC emacs-lisp
+(defun tst-send-msg ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
 #+END_SRC

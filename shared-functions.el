@@ -369,7 +369,6 @@
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
@@ -760,7 +759,7 @@
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 ;; (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
+(setq message-send-hook (quote (org-mime-htmlize)))
 
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
@@ -3846,9 +3845,9 @@ The full path into relative path and insert it as a local file link in org-mode"
       (call-interactively 'org-toggle-item)
     (cycle-hyphenation)))
 
-(defface list-heading-face
+(defface list-title-face
   '((t (:background "pale green")))
   "Fontifyy list headings")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:[ ]*$" . 'list-heading-face)))
+  '(("^.*:[ ]*$" . 'list-title-face)))
