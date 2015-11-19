@@ -3845,3 +3845,10 @@ The full path into relative path and insert it as a local file link in org-mode"
   (if (region-active-p)
       (call-interactively 'org-toggle-item)
     (cycle-hyphenation)))
+
+(defface list-heading-face
+  '((t (:background "pale green")))
+  "Fontifyy list headings")
+
+(font-lock-add-keywords 'org-mode
+  '(("^.*:$" . 'list-heading-face)))

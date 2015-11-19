@@ -5394,3 +5394,16 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
     (cycle-hyphenation)))
 
 #+END_SRC
+
+
+
+* fontify list headings 
+
+#+BEGIN_SRC emacs-lisp
+(defface list-heading-face
+  '((t (:background "pale green")))
+  "Fontifyy list headings")
+
+(font-lock-add-keywords 'org-mode
+  '(("^.*:$" . 'list-heading-face)))
+#+END_SRC
