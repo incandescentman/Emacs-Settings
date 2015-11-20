@@ -601,7 +601,10 @@
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
-                            ("\x2019" . "'"))
+                            ("\x2019" . "'")
+                            ("- " . "")
+; also remove stray spac- es
+)
                           nil beg end))
 
 (defun paste-and-replace-quotes ()
@@ -3851,3 +3854,9 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (font-lock-add-keywords 'org-mode
   '(("^.*:[ ]*$" . 'list-title-face)))
+
+(defun tst-send-msg ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))

@@ -932,7 +932,11 @@ Replace smart quotes with straight quotes so that spell check can recognize word
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
-                            ("\x2019" . "'"))
+                            ("\x2019" . "'")
+                            ("- " . "")
+                            ("—" . "---")
+; also remove stray spac- es
+)
                           nil beg end))
 #+END_SRC
 
