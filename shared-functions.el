@@ -605,6 +605,7 @@
                             ("- " . "")
                             ("—" . "---")
                             ("• " . "- ")
+                            ("  " . " Th")
 ; also remove stray spac- es
 )
                           nil beg end))
