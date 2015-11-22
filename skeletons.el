@@ -34,7 +34,7 @@
 
 (define-skeleton my-bq "Docstring." nil
 "#+BEGIN_QUOTE
-" _ " 
+" _ "
 #+END_QUOTE
 Source: ")
 

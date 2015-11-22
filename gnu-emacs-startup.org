@@ -55,11 +55,28 @@ Automatically load abbreviations table:
   )
 #+END_SRC
 
-* org-mode settings
+* org predicates
+
+  #+BEGIN_SRC emacs-lisp 
+  (defun org-checkbox-p ()
+  "Predicate: Checks whether the current line org-checkbox"
+    (and
+      (eq 'org-mode major-mode)
+      (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
+
+  (defun org-plain-text-list-p ()
+  "Predicate: Checks whether the current line org-plain-text-list"
+    (and
+      (eq 'org-mode major-mode)
+      (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
+  #+END_SRC
+
+* org-mode hooks
 
   #+BEGIN_SRC emacs-lisp 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil) 
   #+END_SRC
 
@@ -380,6 +397,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
@@ -392,11 +411,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
-(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
-(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
-(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
-(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
+(define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
+
+(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -435,7 +454,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
-(define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
@@ -461,11 +479,15 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
-(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C-0") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change-reverse) ; super useful when editing
+
+
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
-  "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 
 
@@ -499,7 +521,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
-(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
+(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
+
+(define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r
@@ -814,34 +838,6 @@ This fucked up autopair mode so I'm turning it off again.
 
 *** smart-org-meta-return-dwim
 
-**** old version, works
- #+BEGIN_EXAMPLE emacs-lisp
-(setq org-blank-before-new-entry
-      '((heading . always)
-       (plain-list-item . nil)))
-(setq org-return-follows-link t)
-
-(defun call-rebinding-org-blank-behaviour (fn)
-  (let ((org-blank-before-new-entry
-         (copy-tree org-blank-before-new-entry)))
-    (when (org-at-heading-p)
-      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
-    (call-interactively fn)))
-
-(defun smart-org-meta-return-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
-
-(defun smart-org-insert-todo-heading-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
-
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
- #+END_EXAMPLE 
-
-
-
 **** new version
 From here: 
 [[https://www.reddit.com/r/emacs/comments/3pw2qq/orgmode_headings_and_blank_lines/][{Org-mode} Headings and blank lines : emacs]]
@@ -860,7 +856,18 @@ From here:
 
 (defun smart-org-meta-return-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
+(if
+
+    (and
+     (looking-back "^")
+     (looking-at ".+")
+     )                               ; if
+    (org-toggle-heading-same-level) ; then
+ (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else 
+
+) 
+
+
 
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
@@ -869,8 +876,11 @@ From here:
 
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
-(insert "TODO ")
+  (let ((listitem-or-checkbox (org-plain-text-list-p)))
+    (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+    (if listitem-or-checkbox
+        (insert "[ ] ")
+        (insert "TODO ")))
 )
 
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
@@ -901,31 +911,42 @@ From here:
 (defun smart-return ()
   (interactive)
 
-;; don't leave stray stars or links
-(when 
-(or
-(looking-back "\\[") 
-;; (looking-back "\* ")
-(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
-(looking-back "^# ")
-;; (looking-back "* TODO ") ; actually I don't think I want this 
-;; (looking-back "^*+")
-;; (looking-back "- ") 
+  ;; don't leave stray stars or links
+  (when 
+      (or
+       (looking-back "\\[") 
+       ;; (looking-back "\* ")
+       (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+       (looking-back "^# ")
+       ;; (looking-back "* TODO ") ; actually I don't think I want this 
+       ;; (looking-back "^*+")
+       ;; (looking-back "- ") 
 
-)
-(beginning-of-line)
-) 
-;;
+       )
+    (beginning-of-line)
+    ) 
+  ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline))) 
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and org-return-follows-link
-              (let ((tprop (get-text-property (point) 'face)))
-                (or (eq tprop 'org-link)
-                    (and (listp tprop) (memq 'org-link tprop)))))
-         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              org-return-follows-link
+              (org-in-regexp org-any-link-re))
+         (cond
+          ((or
+;; (looking-at "\\[\\[.*")
+               (looking-back "\\]\\]")
+               (and (thing-at-point 'url)
+                    (let ((bnds (bounds-of-thing-at-point 'url)))
+                      (or (>= (car bnds) (point))
+                          (<= (cdr bnds) (point))))))
+           (newline))
+          ((char-equal (string-to-char "]") (following-char))
+           (progn (forward-char 2)
+                  (newline)))
+          (t (call-interactively 'org-open-at-point))))
         ((and (eq major-mode 'org-mode)
               (let ((el (org-element-at-point)))
                 (and el
@@ -945,7 +966,10 @@ From here:
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
+         (let ((is-org-chbs (org-checkbox-p)))
+           (org-meta-return)
+           (when is-org-chbs
+             (insert "[ ] "))))
         (t (org-return))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 
@@ -1632,37 +1656,6 @@ The last line sets the path to where saveplace stores your position data. Change
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
    #+END_SRC
 
-***** italicize next word
-
-   #+BEGIN_SRC emacs-lisp
-(define-minor-mode italicize-next-word
-    "Make the next word you type bold."
-  nil
-  :lighter " ITALICIZE"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "SPC") (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "/"))
-                      (insert "/ ")
-                      (italicize-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "/"))
-                    (insert "/. ")
-                    (italicize-next-word -1)))
-            map)
-  (if italicize-next-word
-      (set-register 'p (point))
-    (set-register 'p nil)))
-
-(global-set-key "\C-i" 'italicize-next-word)
-(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
-   #+END_SRC
-
 ***** no-abbrev-slash
 Doesn't work.
 
@@ -1683,8 +1676,6 @@ Doesn't work.
 ;; (global-set-key "/" 'insert-slash-no-abbrev)
 
       #+END_SRC
-
-
 
 ***** ideas
 C-d on an empty line in the shell terminates the process.
@@ -2276,52 +2267,52 @@ Old version that I retrieved:
 ** smart-punctuation (auxiliary)
 
 #+BEGIN_SRC emacs-lisp
-(defun smart-punctuation (new-punct &optional not-so-smart)
-  (smart-expand)
-  (save-restriction
+  (defun smart-punctuation (new-punct &optional not-so-smart)
+    (smart-expand)
+    (save-restriction
+      (when (and (eql major-mode 'org-mode)
+                 (org-at-heading-p))
+        (save-excursion
+          (org-beginning-of-line)
+          (let ((heading-text (fifth (org-heading-components))))
+            (when heading-text
+              (search-forward heading-text)
+              (narrow-to-region (match-beginning 0) (match-end 0))))))
+      (cl-flet ((go-back (regexp)
+                  (re-search-backward regexp nil t)
+                  (ignore-errors      ; might signal `end-of-buffer'
+                    (forward-char (length (match-string 0))))))
+        (if not-so-smart
+            (let ((old-point (point)))
+              (go-back "[^ \t]")
+              (insert new-punct)
+              (goto-char old-point)
+              (forward-char (length new-punct)))
+          (let ((old-point (point)))
+            (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+            (let ((was-after-space (and (< (point) old-point)
+                                        (find ?  (buffer-substring (point) old-point)))))
+              (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                         ,*smart-punctuation-marks*)
+                                 nil t)
+              (let* ((old-punct (match-string 2))
+                     (was-after-punct (>= old-point (point))))
+                (replace-match "" nil t nil 1)
+                (replace-match (or (when (and was-after-punct
+                                              (not (string= old-punct "")))
+                                     (let ((potential-new-punct (concat old-punct new-punct)))
+                                       (find-if (lambda (exception)
+                                                  (search potential-new-punct exception))
+                                                ,*smart-punctuation-exceptions*)))
+                                   new-punct)
+                               nil t nil 2)
+                (if was-after-space
+                    (my/fix-space)
+                  (when (looking-at "[ \t]*\\<")
+                    (save-excursion (my/fix-space))))))))))
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
-      (save-excursion
-        (org-beginning-of-line)
-        (let ((heading-text (fifth (org-heading-components))))
-          (when heading-text
-            (search-forward heading-text)
-            (narrow-to-region (match-beginning 0) (match-end 0))))))
-    (cl-flet ((go-back (regexp)
-                (re-search-backward regexp nil t)
-                (ignore-errors      ; might signal `end-of-buffer'
-                  (forward-char (length (match-string 0))))))
-      (if not-so-smart
-          (let ((old-point (point)))
-            (go-back "[^ \t]")
-            (insert new-punct)
-            (goto-char old-point)
-            (forward-char (length new-punct)))
-        (let ((old-point (point)))
-          (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
-          (let ((was-after-space (and (< (point) old-point)
-                                      (looking-at " "))))
-            (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                       *smart-punctuation-marks*)
-                               nil t)
-            (let* ((old-punct (match-string 2))
-                   (was-after-punct (>= old-point (point))))
-              (replace-match "" nil t nil 1)
-              (replace-match (or (when (and was-after-punct
-                                            (not (string= old-punct "")))
-                                   (let ((potential-new-punct (concat old-punct new-punct)))
-                                     (find-if (lambda (exception)
-                                                (search potential-new-punct exception))
-                                              *smart-punctuation-exceptions*)))
-                                 new-punct)
-                             nil t nil 2)
-              (if was-after-space
-                  (my/fix-space)
-                (when (looking-at "[ \t]*\\<")
-                  (save-excursion (my/fix-space))))))))))
-  (when (and (eql major-mode 'org-mode)
-             (org-at-heading-p))
-    (org-align-tags-here org-tags-column)))
+      (org-align-tags-here org-tags-column)))
 #+END_SRC
 
 ** smart-period
@@ -2351,7 +2342,8 @@ Old version that I retrieved:
 (unless 
 (or
 (looking-at "\\W*$") 
-(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 )
 
 (save-excursion (downcase-word 1))))
@@ -2846,10 +2838,6 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
   )
 #+END_SRC
 
-* available keybindings
-s-p
-M-[
-M-]
 
 
 * replace-inner
@@ -2885,4 +2873,64 @@ doesn't work.
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
+#+END_SRC
+
+* available keybindings
+
+s-P
+s-N
+s-:
+s.
+s-'
+s-l
+* abbrev advice
+#+BEGIN_EXAMPLE emacs-lisp
+(defadvice expand-abbrev (after expand-abbrev-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+  (my/fix-space)
+  )
+#+END_EXAMPLE
+
+
+
+
+* keep cursor at same position when scrolling
+#+BEGIN_EXAMPLE
+(setq scroll-preserve-screen-position 1)
+;;scroll window up/down by one line
+(define-key key-minor-mode-map (kbd "M-n") (kbd "C-u 1 C-v"))
+(define-key key-minor-mode-map (kbd "M-p") (kbd "C-u 1 M-v")) 
+
+#+END_EXAMPLE
+
+This:
+*This*
+
+*This*
+
+The only way is this
+
+* embolden-or-bold
+#+BEGIN_SRC emacs-lisp
+
+(defun embolden-or-bold ()
+  (interactive)
+  (if (region-active-p)
+(wrap-region-trigger arg "*")
+    (embolden-next-word)))
+
+#+END_SRC
+
+* send message without bullets
+#+BEGIN_SRC emacs-lisp
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+
 #+END_SRC

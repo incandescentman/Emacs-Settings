@@ -1,13 +1,32 @@
+* after a list
+Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
 
+Right now it creates another item. I want just a newline, or in the case of smart-org-insert-todo-heading-dwim, a todo heading.
 
 
 * region or thing
 
-** move region or subtree to other window
-I also have a function move-region-to-other-window. Make it look for active region first?
-
 ** highlighted region or thing at point
+ I use several functions that do dictionary lookups of the "thing at point." 
+1. gnugol-word-at-point, which is a function that does (defun gnugol-word-at-point ()
+  (interactive)
+(gnugol-search-google (thing-at-point 'word))
+) 
+gnugol-search-google is defined in gnugol.el
+2. define-word-at-point, which is an interactive autoloaded
+Lisp closure in define-word.el' 
+
+These both work fine. However, I'd like to be able to highlight a 2-word or 3-word PHRASE (i.e. select the region) and THEN invoke gnugol-word-at-point or define-word-at-point and have gnugol or define-word look up the entire phrase.
+
+Can you implement a functionality for these two functions that allows me to do "lookup active region or if no active region then lookup word at point"?
+
+Thanks!
+
 So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+
+
+
+** define word 
 
 
 
@@ -35,36 +54,9 @@ No error when I invoke visit-most-recent-file and it finds next file is the same
 ~/nd/playful.org and /Users/jay/Dropbox/writing/notationaldata/playful.org are the same file [2 times]
 
 
-* org-mac-chrome-insert-frontmost-url
-new link from clipboard (prompt for title)
+* org-mac-chrome-insert-frontmost-url-with-prompt
+- new link from clipboard (prompt for title, with default)
 
-* TODO a smart-return list-type for ---
-You've already made plain-text lists work as desired through org-return, such that if I'm in a plain text list and hit return, it automatically brings me to a new list item.
-
-- this
-- that
-- ^
-
-Can we add a new list-type to org-mode for three hyphens?
-
-Input:
-
----Hello.
----Hi.
----What's up.^
-
-Scenario: I hit return 
-
-Desired output:
-
----Hello.
----Hi.
----What's up.
----^ 
-
-Also, unlike plain text lists, these should always begin with a capital letter. 
-
-Thanks!
 
 
 * TODO try to resolve org-element crashes?
@@ -78,31 +70,6 @@ I mean total Emacs crashes, where I have to force quit Emacs itself. It's happen
 - moving subtree up or down (i.e. using org-metadown org org-metaup)
 
 I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
-
-* create a special behavior for kill-clause when on org-heading 
-Kill-clause is working as desired. However, I have created a special behavior for my/kill-line-dwim for when the point is on an org-heading:
-
-
-#+BEGIN_SRC emacs-lisp
-(when 
-(or
-(looking-back "\\[") 
-(looking-back "* ")
-(looking-back "^*+")
-(looking-back "- ")
-)
-(beginning-of-line)
-) 
-#+END_SRC
-
-This is working as I want it. But now I need a way to get default behavior for the following scenario: 
-
-#+BEGIN_EXAMPLE
-,* a heading with extra words ^words extra
-#+END_EXAMPLE
-
-In the example above, let's say the point is on the ^ and I want to kill to the end of the line, i.e. kill those last two words. Now that I've modified my/kill-line-dwim, that won't work. Can we make it so that kill-clause, if I invoke it when the point is on an org-heading, simply kills to the end of the line (the way kill-line does by default)? Thanks!
-
 
 * TODO another capitalization error
 Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
@@ -127,13 +94,6 @@ Output: Thinking is harder than it sounds;^
 
 * TODO how include plain-text URLs and image links in org-mime? 
 This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-urls-and-image-links-in-org-mime][org export - how include plain-text URLs and image links in org-mime? - Emacs Stack Exchange]]
-
-** NOTE-TO-JAY Cannot reproduce
-
-   The problem somehow appears to be related with ~org-bullets~ mode, but I can't seem to reproduce. Have you tried updating the ~org-plus-contrib~ package? I'm using version 20150914 (only a week old) and seems to work for me.
-
-** NOTE-TO-RUDI not sure the cause
-I am indeed using the same org-plus-contrib, same error... not sure what's causing it. However, it persists even when I have org-bullets turned off. tried it again just now and got this: 
 
    #+BEGIN_SRC emacs-lisp
 Debugger entered--Lisp error: (args-out-of-range 0 0)

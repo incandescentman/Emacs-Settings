@@ -27,8 +27,21 @@
 (recenter-top-bottom)
   )
 
+(defun org-checkbox-p ()
+"Predicate: Checks whether the current line org-checkbox"
+  (and
+    (eq 'org-mode major-mode)
+    (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
+
+(defun org-plain-text-list-p ()
+"Predicate: Checks whether the current line org-plain-text-list"
+  (and
+    (eq 'org-mode major-mode)
+    (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
+
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -232,6 +245,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
@@ -244,11 +259,11 @@
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
-(define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
+;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
 
-(define-key key-minor-mode-map (kbd "M-'") 'org-toggle-item)
-(define-key key-minor-mode-map (kbd "s-'") 'org-refile)
-(define-key key-minor-mode-map (kbd "s-\"") 'refile-region)
+(define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
+
+(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -287,7 +302,6 @@
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
-(define-key key-minor-mode-map (kbd "s-N") 'ni-narrow-to-region-indirect-other-window)
 
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
@@ -313,11 +327,15 @@
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
-(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C-0") 'goto-last-change) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change-reverse) ; super useful when editing
+
+
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
-  "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 
 
@@ -351,7 +369,9 @@
 
 (define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
 
-(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation)
+(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
+
+(define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
 
 (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 (define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r
@@ -622,7 +642,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-org-meta-return-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
+(if
+
+    (and
+     (looking-back "^")
+     (looking-at ".+")
+     )                               ; if
+    (org-toggle-heading-same-level) ; then
+ (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else 
+
+) 
+
+
 
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
@@ -631,8 +662,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
-(insert "TODO ")
+  (let ((listitem-or-checkbox (org-plain-text-list-p)))
+    (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+    (if listitem-or-checkbox
+        (insert "[ ] ")
+        (insert "TODO ")))
 )
 
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
@@ -657,31 +691,42 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun smart-return ()
   (interactive)
 
-;; don't leave stray stars or links
-(when 
-(or
-(looking-back "\\[") 
-;; (looking-back "\* ")
-(looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
-(looking-back "^# ")
-;; (looking-back "* TODO ") ; actually I don't think I want this 
-;; (looking-back "^*+")
-;; (looking-back "- ") 
+  ;; don't leave stray stars or links
+  (when 
+      (or
+       (looking-back "\\[") 
+       ;; (looking-back "\* ")
+       (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
+       (looking-back "^# ")
+       ;; (looking-back "* TODO ") ; actually I don't think I want this 
+       ;; (looking-back "^*+")
+       ;; (looking-back "- ") 
 
-)
-(beginning-of-line)
-) 
-;;
+       )
+    (beginning-of-line)
+    ) 
+  ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline))) 
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and org-return-follows-link
-              (let ((tprop (get-text-property (point) 'face)))
-                (or (eq tprop 'org-link)
-                    (and (listp tprop) (memq 'org-link tprop)))))
-         (call-interactively 'org-open-at-point))
+        ((and (eq major-mode 'org-mode)
+              org-return-follows-link
+              (org-in-regexp org-any-link-re))
+         (cond
+          ((or
+;; (looking-at "\\[\\[.*")
+               (looking-back "\\]\\]")
+               (and (thing-at-point 'url)
+                    (let ((bnds (bounds-of-thing-at-point 'url)))
+                      (or (>= (car bnds) (point))
+                          (<= (cdr bnds) (point))))))
+           (newline))
+          ((char-equal (string-to-char "]") (following-char))
+           (progn (forward-char 2)
+                  (newline)))
+          (t (call-interactively 'org-open-at-point))))
         ((and (eq major-mode 'org-mode)
               (let ((el (org-element-at-point)))
                 (and el
@@ -701,7 +746,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (org-meta-return))
+         (let ((is-org-chbs (org-checkbox-p)))
+           (org-meta-return)
+           (when is-org-chbs
+             (insert "[ ] "))))
         (t (org-return))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
@@ -938,33 +986,6 @@ password: %s" userid password))
 
 (global-set-key "\C-o" 'embolden-next-word)
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
-
-(define-minor-mode italicize-next-word
-    "Make the next word you type bold."
-  nil
-  :lighter " ITALICIZE"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "SPC") (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "/"))
-                      (insert "/ ")
-                      (italicize-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "/"))
-                    (insert "/. ")
-                    (italicize-next-word -1)))
-            map)
-  (if italicize-next-word
-      (set-register 'p (point))
-    (set-register 'p nil)))
-
-(global-set-key "\C-i" 'italicize-next-word)
-(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
 
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
@@ -1250,7 +1271,7 @@ subsequent sends. could save them all in a logbook?
         (let ((old-point (point)))
           (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
           (let ((was-after-space (and (< (point) old-point)
-                                      (looking-at " "))))
+                                      (find ?  (buffer-substring (point) old-point)))))
             (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
                                        *smart-punctuation-marks*)
                                nil t)
@@ -1295,7 +1316,8 @@ subsequent sends. could save them all in a logbook?
 (unless 
 (or
 (looking-at "\\W*$") 
-(looking-at "\\W*I\\b")          ; never downcase the word "I" 
+(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 )
 
 (save-excursion (downcase-word 1))))
@@ -1564,3 +1586,19 @@ subsequent sends. could save them all in a logbook?
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
+
+(defun embolden-or-bold ()
+  (interactive)
+  (if (region-active-p)
+(wrap-region-trigger arg "*")
+    (embolden-next-word)))
+
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))

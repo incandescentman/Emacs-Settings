@@ -369,7 +369,6 @@
 '(org-odd-levels-only nil)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-directory "~/Dropbox/writing/notationaldata/")
 (setq org-default-notes-file (concat org-directory "notes.txt"))
 
@@ -602,7 +601,12 @@
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
-                            ("\x2019" . "'"))
+                            ("\x2019" . "'")
+                            ("- " . "")
+                            ("—" . "---")
+                            ("• " . "- ")
+       ; also remove stray spac- es
+)
                           nil beg end))
 
 (defun paste-and-replace-quotes ()
@@ -760,7 +764,7 @@
 (setq message-kill-buffer-on-exit t)
 (setq message-required-headers (quote (From (optional . References))))
 ;; (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize))) ; broke my other functions
+(setq message-send-hook (quote (org-mime-htmlize)))
 
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
@@ -873,7 +877,6 @@
  '(org-ascii-headline-spacing (quote (1 . 1)))
  '(org-ascii-table-use-ascii-art t)
  '(org-ascii-table-use-ascii-art t)
- '(org-bullets-face-name (quote \"Courier\"))
  '(org-catch-invisible-edits (quote error))
  '(org-catch-invisible-edits (quote smart))
  '(org-clock-auto-clock-resolution t)
@@ -977,7 +980,6 @@
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
-'(org-bullets-face-name (quote \"Lucida\ Sans\ Typeriter\"))
 '(org-export-latex-image-default-option "width=20.5cm")
 '(org-export-time-stamp-file nil)
 '(org-export-with-clocks t)
@@ -1031,18 +1033,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (ac-define-source ispell
   '((prefix . ac-prefix)
     (candidates . ac-ispell-get-candidates)))
-
-(defun ac-expand-ispell-word ()
-  (interactive)
-  (let ((ac-sources '(ac-source-ispell)))
-    (call-interactively 'ac-start)))
-
-(define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
-
-(ac-flyspell-workaround)
-
-(load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
-;; Completion words longer than 4 characters
 
 (eval-after-load "auto-complete"
   '(progn
@@ -1264,8 +1254,8 @@ font-family: Courier, 'Courier New', monospace;
   (server-start))
 
 ;; (require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
+;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+;; (openwith-mode t)
 
 (setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
 
@@ -1343,7 +1333,7 @@ font-family: Courier, 'Courier New', monospace;
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt\\|book-capture.txt" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|later.txt" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -1578,7 +1568,7 @@ Also converts full stops to commas."
     (call-interactively 'upcase-word)))
 
 (global-set-key "\M-c" 'endless/capitalize)
-(global-set-key "\M-l" 'endless/downcase)
+(global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
 (defun endless/upgrade ()
@@ -1692,7 +1682,8 @@ Also converts full stops to commas."
       (let ((count (count-words-region start end)))
         (save-excursion
           (kill-region start end)
-          (other-window 1)
+(newline)
+(other-window 1)
           (yank)
           (newline))
         (other-window -1)
@@ -1750,6 +1741,14 @@ With prefix arg C-u, copy region instad of killing it."
   (mapcar (lambda (buffer)
             (buffer-file-name buffer))
           (org-buffer-list 'files t)))
+
+(defun move-region-or-subtree-to-other-window ()
+  (interactive)
+  (when (and
+         (eq 'org-mode major-mode)
+         (not (region-active-p)))
+    (org-mark-subtree))
+  (call-interactively 'move-region-to-other-window))
 
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
@@ -1850,11 +1849,19 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (bbdb-initialize 'gnus 'message)   ;; (4)
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
+(global-set-key (kbd "M-C-N") 'outline-next-visible-heading)
+(global-set-key (kbd "M-C-P") 'outline-previouM-C-visible-heading)
+(define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
+(define-key key-minor-mode-map (kbd "M-C-P") 'outline-previous-visible-heading)
+
 (global-set-key (kbd "M-n") 'org-forward-heading-same-level)
 (global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-n") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
-(global-set-key (kbd "M-N") 'outline-next-visible-heading)
-(global-set-key (kbd "M-P") 'outline-previous-visible-heading)
+(global-set-key (kbd "s-p") 'projectile-commander)
+(define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
+
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
@@ -1874,6 +1881,9 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key '[(f7)] 'point-stack-forward-stack-pop)
 (global-set-key '[(f8)] 'search-open-buffers)
 
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
+(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 (define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -1911,7 +1921,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "\\" 'visit-most-recent-file)
-(define-hyper-key "]" 'visit-most-recent-file)
+
 ;; (define-hyper-key "f" 'isearch-forward)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents) 
 ;; (define-hyper-key "R" 'xsteve-ido-choose-from-recentf)
@@ -1942,8 +1952,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "o" 'eval-buffer)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
-(define-hyper-key "[" 'org-backward-heading-same-level)
-(define-hyper-key "]" 'org-forward-heading-same-level)
 (define-hyper-key "{" 'org-previous-visible-heading)
 (define-hyper-key "}" 'org-next-visible-heading)
 ;; why not use N and P here? TODO
@@ -2112,7 +2120,7 @@ searches all buffers."
 (setq helm-swoop-speed-or-color nil)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
@@ -2184,14 +2192,13 @@ searches all buffers."
 (setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
 
 (setq auto-capitalize-predicate
- (lambda ()
-   (and
-     (not (and
-            (eq 'org-mode major-mode)
-            (string-match "^\s*-\s\\[.?\\]\s" (thing-at-point 'line))))
-      
-        (save-match-data
-          (not (looking-back "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*" (- (point) 20)))))))
+      (lambda ()
+        (and
+         (not (org-checkbox-p))
+         (save-match-data
+           (not (looking-back
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 (- (point) 20)))))))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
@@ -2594,7 +2601,11 @@ subsequent sends."
                   (lambda ()
                     (goto-char (point-min))
                     (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-                    (goto-char (point-min))
+
+(goto-char (point-min))
+                    (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
+
+               (goto-char (point-min))
                     (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
                     (goto-char (point-min))
 
@@ -3419,6 +3430,10 @@ If FILE already exists, signal an error."
   (interactive)
 (find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
+(defun open-abbrevs ()
+  (interactive)
+(find-file "/Users/jay/Dropbox/emacs/aquamacs-jay/.abbrev_defs"))
+
 (define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
 
@@ -3565,14 +3580,29 @@ event of an error or nonlocal exit."
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
 ;; (require 'wrap-region)
-;; (wrap-region-add-wrapper "*" "*" "*")  
-;; (wrap-region-add-wrapper "\/" "\/" "\/")  
-;; (add-hook 'org-mode-hook 'wrap-region-mode) 
+;; (wrap-region-add-wrapper "*" "*" "*")
+;; (wrap-region-add-wrapper "\/" "\/" "\/")
+;; (add-hook 'org-mode-hook 'wrap-region-mode)
 
 ;; wrap-region
 (use-package wrap-region
   :ensure t
   :config
+
+(defun wrap-region-define-wrappers ()
+  "Defines defaults wrappers."
+  (mapc
+   (lambda (pair)
+     (apply 'wrap-region-add-wrapper pair))
+   '(
+     ;; ("\"" "\"")
+     ;; ("'"  "'")
+     ;; ("("  ")")
+     ("{"  "}")
+     ;; ("["  "]")
+     ("<"  ">"))))
+
+
   (wrap-region-add-wrappers
    '(
 ;;     ("*" "*" nil org-mode)
@@ -3653,7 +3683,7 @@ narrowed."
 
 (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
 
-(setq org-cycle-emulate-tab)
+;; (setq org-cycle-emulate-tab t)
 
 ;; This setup is tested on Emacs 24.3 & Emacs 24.4 on Linux/OSX
 ;; org v7 bundled with Emacs 24.3
@@ -3700,21 +3730,28 @@ The full path into relative path and insert it as a local file link in org-mode"
 (dotimes (n 10)
   (global-unset-key (kbd (format "M-%d" n))))
 
-(defun refile-region-or-subtree (beg end copy)
-(interactive "P")
-(if
+(defun refile-region-or-subtree ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'refile-region)
+    (org-refile)))
 
-    (region-active-p)                               ; if
-    (refile-region) ; then
-    (org-refile); else
-)
-)
-
-(defhydra hydra-zoom (global-map "s-n")
+(defhydra email (global-map "s-]")
   "email"
-  ("ek" erika-send-mail "erika-send-mail")
-  ("nm" notmuch "notmuch")
+  ("a" erika-send-email)
+  ("i" notmuch "inbox")
+  ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
+  ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
 )
+
+
+(defhydra hydra-zoom (global-map "s-[")
+  "email"
+  ("e" erika-send-mail)
+  ("n" notmuch)
+)
+
+
 
 (global-set-key
  (kbd "C-n")
@@ -3723,6 +3760,7 @@ The full path into relative path and insert it as a local file link in org-mode"
    "move"
    ("n" next-line)
    ("p" previous-line)
+   ("k" my/kill-line-dwim)
    ("f" forward-char)
    ("b" backward-char)
    ("a" beginning-of-line)
@@ -3731,6 +3769,25 @@ The full path into relative path and insert it as a local file link in org-mode"
    ;; Converting M-v to V here by analogy.
    ("V" scroll-down-command)
    ("l" recenter-top-bottom)))
+
+(global-set-key
+ (kbd "s-n")
+(defhydra accountability-move
+   (:body-pre (next-line))
+   "move"
+   ("n" org-next-visible-heading)
+   ("p" org-previous-visible-heading)
+   ("k" org-cut-subtree)
+   ("f" forward-char)
+   ("b" backward-char)
+   ("d" org-todo)
+   ("m" (lambda nil (interactive) (org-todo "MISSED")))
+   ("e" move-end-of-line)
+   ("v" scroll-up-command)
+   ;; Converting M-v to V here by analogy.
+   ("V" scroll-down-command)
+   ("l" recenter-top-bottom)
+))
 
 (defhydra hydra-helm (:hint nil :color pink)
   "
@@ -3793,3 +3850,33 @@ The full path into relative path and insert it as a local file link in org-mode"
   ("q" nil)) )
 
 (require 'sunrise-commander)
+
+(defun cycle-hyphenation-or-toggle-item ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'org-toggle-item)
+    (cycle-hyphenation)))
+
+(defface list-title-face
+  '((t (:background "pale green")))
+  "fontify list titles")
+
+(font-lock-add-keywords 'org-mode
+                        '(("^.*:[ ]*$" . 'list-title-face)))
+
+(defun tst-send-msg ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(defun downcase-or-endless-downcase ()
+(interactive)
+(if
+
+(looking-back "...[ ]*")                               ; if
+    (call-interactively 'downcase-word); then
+    (call-interactively 'endless/downcase); else
+
+)
+)
