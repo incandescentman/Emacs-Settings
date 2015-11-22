@@ -1856,8 +1856,8 @@ Don't start the server unless we can verify that it isn't running.
 *** Open PDFs in Skim
 #+BEGIN_SRC emacs-lisp
 ;; (require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
+;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+;; (openwith-mode t)
 #+END_SRC
 
 * Bookmarks
@@ -2272,7 +2272,7 @@ Also converts full stops to commas."
     (call-interactively 'upcase-word)))
 
 (global-set-key "\M-c" 'endless/capitalize)
-(global-set-key "\M-l" 'endless/downcase)
+(global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
 (defun endless/upgrade ()
@@ -5424,4 +5424,18 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   (remove-hook 'org-mode-hook 'org-bullets-mode)
   (message-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
+#+END_SRC
+
+* downcase-or-endless-downcase
+#+BEGIN_SRC emacs-lisp
+(defun downcase-or-endless-downcase ()
+(interactive)
+(if
+
+(looking-back "...[ ]*")                               ; if
+    (call-interactively 'downcase-word); then
+    (call-interactively 'endless/downcase); else
+
+)
+)
 #+END_SRC

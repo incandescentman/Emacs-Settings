@@ -1254,8 +1254,8 @@ font-family: Courier, 'Courier New', monospace;
   (server-start))
 
 ;; (require 'openwith)
-'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
-(openwith-mode t)
+;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+;; (openwith-mode t)
 
 (setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
 
@@ -1568,7 +1568,7 @@ Also converts full stops to commas."
     (call-interactively 'upcase-word)))
 
 (global-set-key "\M-c" 'endless/capitalize)
-(global-set-key "\M-l" 'endless/downcase)
+(global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key "\M-u" 'endless/upcase)
 
 (defun endless/upgrade ()
@@ -2113,7 +2113,7 @@ searches all buffers."
 (setq helm-swoop-speed-or-color nil)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
@@ -3862,3 +3862,14 @@ The full path into relative path and insert it as a local file link in org-mode"
   (remove-hook 'org-mode-hook 'org-bullets-mode)
   (message-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(defun downcase-or-endless-downcase ()
+(interactive)
+(if
+
+(looking-back "...[ ]*")                               ; if
+    (call-interactively 'downcase-word); then
+    (call-interactively 'endless/downcase); else
+
+)
+)

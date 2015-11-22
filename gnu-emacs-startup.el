@@ -642,7 +642,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun smart-org-meta-return-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
+(if
+
+    (and
+     (looking-back "^")
+     (looking-at ".+")
+     )                               ; if
+    (org-toggle-heading-same-level) ; then
+ (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else 
+
+) 
+
+
 
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
