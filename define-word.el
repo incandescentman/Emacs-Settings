@@ -91,13 +91,7 @@ The rule is that all definitions must contain \"Plural of\".")
   "Use `define-word' to define word at point.
 When the region is active, define the marked phrase."
   (interactive)
-  (if (use-region-p)
-      (define-word
-        (buffer-substring-no-properties
-         (region-beginning)
-         (region-end)))
-    (define-word (substring-no-properties
-                  (thing-at-point 'word)))))
+  (define-word (region-or-word-at-point)))
 
 (provide 'define-word)
 
