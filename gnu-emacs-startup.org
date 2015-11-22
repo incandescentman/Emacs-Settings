@@ -2965,10 +2965,10 @@ The only way is this
 * embolden-or-bold
 #+BEGIN_SRC emacs-lisp
 
-(defun embolden-or-bold ()
-  (interactive)
+(defun embolden-or-bold (arg)
+  (interactive "p")
   (if (region-active-p)
-(wrap-region-trigger arg "*")
+    (wrap-region-trigger arg "*")
     (embolden-next-word)))
 
 #+END_SRC
