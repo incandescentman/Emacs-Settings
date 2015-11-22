@@ -2492,15 +2492,16 @@ With prefix arg C-u, copy region instad of killing it."
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
-  (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-	most-recent-filename)
-    (dolist (filename recentf-list)
-      (unless (memq filename buffer-file-name-list)
-	(setq most-recent-filename filename)
-	(return)))
-(ignore-errors (find-file most-recent-filename)
-)
-))
+  (let ((buffer-file-name-list
+         (mapcar 'file-truename
+                 (remove nil (mapcar 'buffer-file-name (buffer-list)))))
+        (recent-files-names (delete-dups (mapcar 'file-truename recentf-list)))
+        most-recent-filename)
+    (dolist (filename recent-files-names)
+      (unless (member filename buffer-file-name-list)
+        (setq most-recent-filename filename)
+        (return)))
+    (ignore-errors (find-file most-recent-filename))))
 #+END_SRC
 
 ** Copy path
