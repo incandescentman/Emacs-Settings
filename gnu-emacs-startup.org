@@ -485,8 +485,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
-  "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 
 
@@ -2955,7 +2956,19 @@ s-l
 #+END_EXAMPLE
 
 This:
-This:
+*This*
 
-*
-*
+*This*
+
+The only way is this
+
+* embolden-or-bold
+#+BEGIN_SRC emacs-lisp
+
+(defun embolden-or-bold ()
+  (interactive)
+  (if (region-active-p)
+(wrap-region-trigger arg "*")
+    (embolden-next-word)))
+
+#+END_SRC

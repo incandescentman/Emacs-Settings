@@ -3211,7 +3211,7 @@ to open source code block in indirect buffer
 #+END_SRC
 
 * stuff that I moved from custom.el
-#+BEGIN_ESRCemacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
@@ -5161,7 +5161,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 
 * disable TAB to indent
 #+BEGIN_SRC emacs-lisp
-(setq org-cycle-emulate-tab) 
+;; (setq org-cycle-emulate-tab t)
 #+END_SRC
 
 
@@ -5250,7 +5250,7 @@ q is a good candidate for chords, since in words it has u after, and only a few 
       (call-interactively 'refile-region)
     (org-refile)))
 #+END_SRC
-Doesn't work.
+
 
 * hydras experiments
 

@@ -333,8 +333,9 @@
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg
-  "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+
+(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 
 
@@ -1574,3 +1575,9 @@ subsequent sends. could save them all in a logbook?
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
+
+(defun embolden-or-bold ()
+  (interactive)
+  (if (region-active-p)
+(wrap-region-trigger arg "*")
+    (embolden-next-word)))

@@ -3677,7 +3677,7 @@ narrowed."
 
 (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
 
-(setq org-cycle-emulate-tab)
+;; (setq org-cycle-emulate-tab t)
 
 ;; This setup is tested on Emacs 24.3 & Emacs 24.4 on Linux/OSX
 ;; org v7 bundled with Emacs 24.3
