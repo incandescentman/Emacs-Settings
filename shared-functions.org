@@ -2987,7 +2987,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 #+BEGIN_SRC emacs-lisp
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 #+END_SRC 
 

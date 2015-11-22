@@ -72,7 +72,7 @@
 ;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)
 (key-chord-define-global "NN" 'org-narrow-to-subtree)
 
-(key-chord-define-global "II" 'god-local-mode)
+(key-chord-define-global "II" 'god-mode-all)
 
 ;; (setq key-chord-one-key-delay 0.11) 
 

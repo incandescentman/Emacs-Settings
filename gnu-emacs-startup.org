@@ -838,34 +838,6 @@ This fucked up autopair mode so I'm turning it off again.
 
 *** smart-org-meta-return-dwim
 
-**** old version, works
- #+BEGIN_EXAMPLE emacs-lisp
-(setq org-blank-before-new-entry
-      '((heading . always)
-       (plain-list-item . nil)))
-(setq org-return-follows-link t)
-
-(defun call-rebinding-org-blank-behaviour (fn)
-  (let ((org-blank-before-new-entry
-         (copy-tree org-blank-before-new-entry)))
-    (when (org-at-heading-p)
-      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
-    (call-interactively fn)))
-
-(defun smart-org-meta-return-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
-
-(defun smart-org-insert-todo-heading-dwim ()
-  (interactive)
-  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
-
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
- #+END_EXAMPLE 
-
-
-
 **** new version
 From here: 
 [[https://www.reddit.com/r/emacs/comments/3pw2qq/orgmode_headings_and_blank_lines/][{Org-mode} Headings and blank lines : emacs]]
@@ -884,7 +856,18 @@ From here:
 
 (defun smart-org-meta-return-dwim ()
   (interactive)
-  (call-rebinding-org-blank-behaviour 'org-meta-return))
+(if
+
+    (and
+     (looking-back "^")
+     (looking-at ".+")
+     )                               ; if
+    (org-toggle-heading-same-level) ; then
+ (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else 
+
+) 
+
+
 
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
@@ -1673,39 +1656,6 @@ The last line sets the path to where saveplace stores your position data. Change
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
    #+END_SRC
 
-***** italicize next word
-
-deprecated. use embolden next word, and bold words will be changed into italics during export. for purposes of visual display within Emacs, we'll display as bold. but semantically we'll treat these as italics, since there is no bold in books.
-
-   #+BEGIN_EXAMPLE emacs-lisp
-(define-minor-mode italicize-next-word
-    "Make the next word you type bold."
-  nil
-  :lighter " ITALICIZE"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "SPC") (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "/"))
-                      (insert "/ ")
-                      (italicize-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "/"))
-                    (insert "/. ")
-                    (italicize-next-word -1)))
-            map)
-  (if italicize-next-word
-      (set-register 'p (point))
-    (set-register 'p nil)))
-
-(global-set-key "\C-i" 'italicize-next-word)
-(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
-   #+END_EXAMPLE
-
 ***** no-abbrev-slash
 Doesn't work.
 
@@ -1726,8 +1676,6 @@ Doesn't work.
 ;; (global-set-key "/" 'insert-slash-no-abbrev)
 
       #+END_SRC
-
-
 
 ***** ideas
 C-d on an empty line in the shell terminates the process.

@@ -533,3 +533,74 @@ Yes, that would be great, but let's deprioritize it. Thanks!
 (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 #+END_SRC
 
+
+* italicize next word
+:PROPERTIES:
+:ARCHIVE_TIME: 2015-11-21 Sat 19:59
+:ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+:ARCHIVE_OLPATH: experiments - tested/words - some interesting utilities for text in Emacs/Send email to a list of users
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+
+deprecated. use embolden next word, and bold words will be changed into italics during export. for purposes of visual display within Emacs, we'll display as bold. but semantically we'll treat these as italics, since there is no bold in books.
+
+   #+BEGIN_EXAMPLE emacs-lisp
+(define-minor-mode italicize-next-word
+    "Make the next word you type bold."
+  nil
+  :lighter " ITALICIZE"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "SPC") (lambda ()
+                      (interactive)
+                      (save-excursion
+                        (goto-char (get-register 'p))
+                        (insert "/"))
+                      (insert "/ ")
+                      (italicize-next-word -1)))
+        (define-key map (kbd ".") (lambda ()
+                    (interactive)
+                    (save-excursion
+                      (goto-char (get-register 'p))
+                      (insert "/"))
+                    (insert "/. ")
+                    (italicize-next-word -1)))
+            map)
+  (if italicize-next-word
+      (set-register 'p (point))
+    (set-register 'p nil)))
+
+(global-set-key "\C-i" 'italicize-next-word)
+(define-key key-minor-mode-map (kbd "C-i") 'italicize-next-word)
+   #+END_EXAMPLE
+
+* old version, works
+:PROPERTIES:
+:ARCHIVE_TIME: 2015-11-21 Sat 20:21
+:ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
+:ARCHIVE_OLPATH: spacecraft-mode - superior handling of whitespace for writing and editing prose/self insert space/smart-org-meta-return-dwim
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+ #+BEGIN_EXAMPLE emacs-lisp
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
+
+(defun call-rebinding-org-blank-behaviour (fn)
+  (let ((org-blank-before-new-entry
+         (copy-tree org-blank-before-new-entry)))
+    (when (org-at-heading-p)
+      (rplacd (assoc 'heading org-blank-before-new-entry) nil))
+    (call-interactively fn)))
+
+(defun smart-org-meta-return-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-meta-return))
+
+(defun smart-org-insert-todo-heading-dwim ()
+  (interactive)
+  (call-rebinding-org-blank-behaviour 'org-insert-todo-heading))
+
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim)
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim)
+ #+END_EXAMPLE
