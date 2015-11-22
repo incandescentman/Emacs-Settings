@@ -4632,7 +4632,16 @@ Can we make this happen automatically at startup? Or maybe a message-mode hook? 
                     "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
     (define-key (eval map) (kbd key) nil)))
   )
-(add-hook 'message-mode-hook 'unbind-orgstruct-keys) 
+
+(defun unbind-orgstruct-keys-in-message-mode ()
+  (interactive)
+  (when (and (eq 'message-mode major-mode)
+             orgstruct-mode)
+    (unbind-orgstruct-keys)))
+
+(add-hook 'orgstruct-mode-hook 'unbind-orgstruct-keys-in-message-mode)
+
+;;(add-hook 'message-mode-hook 'unbind-orgstruct-keys)
   #+END_SRC
 
 
