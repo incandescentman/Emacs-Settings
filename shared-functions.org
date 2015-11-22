@@ -5407,10 +5407,10 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+BEGIN_SRC emacs-lisp
 (defface list-title-face
   '((t (:background "pale green")))
-  "Fontifyy list headings")
+  "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:[ ]*$" . 'list-title-face)))
+                        '(("^.*:[ ]*$" . 'list-title-face)))
 #+END_SRC
 
 

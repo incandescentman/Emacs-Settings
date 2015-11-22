@@ -3853,10 +3853,10 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (defface list-title-face
   '((t (:background "pale green")))
-  "Fontifyy list headings")
+  "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:[ ]*$" . 'list-title-face)))
+                        '(("^.*:[ ]*$" . 'list-title-face)))
 
 (defun tst-send-msg ()
   (interactive)
