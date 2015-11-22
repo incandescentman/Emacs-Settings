@@ -1581,3 +1581,13 @@ subsequent sends. could save them all in a logbook?
   (if (region-active-p)
 (wrap-region-trigger arg "*")
     (embolden-next-word)))
+
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))

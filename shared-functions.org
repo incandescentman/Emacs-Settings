@@ -936,8 +936,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("- " . "")
                             ("—" . "---")
                             ("• " . "- ")
-                            ("  " . " Th")
-; also remove stray spac- es
+       ; also remove stray spac- es
 )
                           nil beg end))
 #+END_SRC

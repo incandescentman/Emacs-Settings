@@ -2972,3 +2972,17 @@ The only way is this
     (embolden-next-word)))
 
 #+END_SRC
+
+* send message without bullets
+#+BEGIN_SRC emacs-lisp
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+
+#+END_SRC
