@@ -1822,10 +1822,17 @@ With prefix arg C-u, copy region instad of killing it."
 
 ;; (require 'gnugol)
 
+(defun region-or-word-at-point ()
+  (if (use-region-p)
+      (buffer-substring-no-properties
+       (region-beginning)
+       (region-end))
+    (substring-no-properties
+     (thing-at-point 'word))))
+
 (defun gnugol-word-at-point ()
   (interactive)
-(gnugol-search-google (thing-at-point 'word))
-)
+  (gnugol-search-google (region-or-word-at-point)))
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.

@@ -173,7 +173,7 @@
 	;; (if (search-forward (concat "[Search: " str "]")) () 
 ;;	(message "%s" gnugol-full-cmd)	
 	(save-excursion 
-	  (insert-string (concat "* [[gnugol: " str "][Search: " str "]]\n"))
+	  (insert (concat "* [[gnugol: " str "][Search: " str "]]\n"))
 	  (insert 
 	   (shell-command-to-string gnugol-full-cmd)
 	    )
@@ -200,59 +200,15 @@
 
 ;; Do I really understand lexical scoping yet?
 
-(defun gnugol-search-dummy(str)
-  "Search the dummy engine via gnugol. (Useful for debugging)"
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "dummy")
-    (gnugol str)
-    )
-)
+(defmacro define-gnugol-search-using (&rest engines)
+  `(progn ,@(mapcar (lambda (engine)
+                      `(defun ,(intern (concatenate 'string "gnugol-search-" engine)) (str)
+                         (interactive "sSearch: ")
+                         (let ((gnugol-default-engine ,engine))
+                           (gnugol str))))
+                    engines)))
 
-(defun gnugol-search-credits(str)
-  "Search the local credits engine via gnugol."
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "credits")
-    (gnugol str)
-    )
-)
-
-(defun gnugol-search-bing(str)
-  "Search bing via gnugol."
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "bing")
-    (gnugol str)
-    )
-)
-
-(defun gnugol-search-duck(str)
-  "Search duckduckgo via gnugol."
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "duck")
-    (gnugol str)
-    )
-)
-
-(defun gnugol-search-stackapps(str)
-  "Search stackapps via gnugol."
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "stackapps")
-    (gnugol str)
-    )
-)
-
-(defun gnugol-search-google(str)
-  "Search google via gnugol."
-  (interactive "sSearch: ")
-  (let (gnugol-default-engine)
-    (setq gnugol-default-engine "google")
-    (gnugol str)
-    )
-)
+(define-gnugol-search-using "dummy" "credits" "bing" "duck" "stackapps" "google")
 
 ;; This are examples of using a site specific search
 
