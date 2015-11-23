@@ -1187,35 +1187,6 @@ ido-enter-matching-directory nil
             (goto-char (point-max))
             (insert "</div>")))
 
-;; (add-hook 'org-mime-html-hook
-;;          (lambda ()
-;;            (org-mime-change-element-style
-;;             "p" "font-family: Georgia,serif; color:#000;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
-                           "#E6E1DC" "#232323"))))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "
-    color: #777;
-    quotes: none;
-    border-radius: 15px;
-    font-weight: 400;
-    color: #87ceeb;
-    line-height: 1.3em;
-    background: none repeat scroll 0% 0% rgb(61, 61, 61);
-    padding: 20px;
-quotes: '«' '»';
-font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important;")))
-
-
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
@@ -1239,6 +1210,38 @@ font-family: Courier, 'Courier New', monospace;
 (org-mime-subtree)
 (org-mime-htmlize)
 )
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "pre" "color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "
+  background:rgba(255,0,0,0.05);
+  border:1px solid rgba(255,0,0,0.2);
+  border-radius:8px;
+  color:#3f3f3f;
+  font-family:Garamond, serif;
+  line-height:1.2;
+  padding: 1em 1em 1em 1em;
+  text-align:left;
+  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+  white-space:0;
+  width:500px;
+  word-wrap:normal!important;")))
 
 (defun tst-send-msg ()
   (interactive)
