@@ -1753,15 +1753,16 @@ With prefix arg C-u, copy region instad of killing it."
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
-  (let ((buffer-file-name-list (mapcar 'buffer-file-name (buffer-list)))
-  most-recent-filename)
-    (dolist (filename recentf-list)
-      (unless (memq filename buffer-file-name-list)
-  (setq most-recent-filename filename)
-  (return)))
-(ignore-errors (find-file most-recent-filename)
-)
-))
+  (let ((buffer-file-name-list
+         (mapcar 'file-truename
+                 (remove nil (mapcar 'buffer-file-name (buffer-list)))))
+        (recent-files-names (delete-dups (mapcar 'file-truename recentf-list)))
+        most-recent-filename)
+    (dolist (filename recent-files-names)
+      (unless (member filename buffer-file-name-list)
+        (setq most-recent-filename filename)
+        (return)))
+    (ignore-errors (find-file most-recent-filename))))
 
 (defun path-copy-full-path-to-clipboard ()
   "Copy the full current filename and path to the clipboard"
@@ -1821,17 +1822,10 @@ With prefix arg C-u, copy region instad of killing it."
 
 ;; (require 'gnugol)
 
-(defun region-or-word-at-point ()
-  (if (use-region-p)
-      (buffer-substring-no-properties
-       (region-beginning)
-       (region-end))
-    (substring-no-properties
-     (thing-at-point 'word))))
-
 (defun gnugol-word-at-point ()
   (interactive)
-  (gnugol-search-google (region-or-word-at-point)))
+(gnugol-search-google (thing-at-point 'word))
+)
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -2189,7 +2183,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc"))
 
 (setq auto-capitalize-predicate
       (lambda ()
@@ -2200,7 +2194,7 @@ searches all buffers."
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
 
-(setq magit-last-seen-setup-instructions "1.4.0")
+;; (setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; (load-theme 'leuven)
 ;; (incarnadine-cursor)
@@ -3386,7 +3380,16 @@ Single Capitals as you type."
                     "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
     (define-key (eval map) (kbd key) nil)))
   )
-(add-hook 'message-mode-hook 'unbind-orgstruct-keys)
+
+(defun unbind-orgstruct-keys-in-message-mode ()
+  (interactive)
+  (when (and (eq 'message-mode major-mode)
+             orgstruct-mode)
+    (unbind-orgstruct-keys)))
+
+(add-hook 'orgstruct-mode-hook 'unbind-orgstruct-keys-in-message-mode)
+
+;;(add-hook 'message-mode-hook 'unbind-orgstruct-keys)
 
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()

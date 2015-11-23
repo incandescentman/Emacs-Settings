@@ -1587,10 +1587,10 @@ subsequent sends. could save them all in a logbook?
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
 
-(defun embolden-or-bold ()
-  (interactive)
+(defun embolden-or-bold (arg)
+  (interactive "p")
   (if (region-active-p)
-(wrap-region-trigger arg "*")
+    (wrap-region-trigger arg "*")
     (embolden-next-word)))
 
 (defun send-message-without-bullets ()
