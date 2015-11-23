@@ -51,6 +51,10 @@ You can toggle it in necessary files by setting the local variables section at t
                "http://marmalade-repo.org/packages/" ) t)
 
 
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
@@ -1757,29 +1761,13 @@ Disable IDO faces to see flx highlights:
 ;;            (org-mime-change-element-style
 ;;             "p" "font-family: Georgia,serif; color:#000;")))
 
+
+
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
              "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
                            "#E6E1DC" "#232323"))))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "
-    color: #777;
-    quotes: none;
-    border-radius: 15px;
-    font-weight: 400;
-    color: #87ceeb;
-    line-height: 1.3em;
-    background: none repeat scroll 0% 0% rgb(61, 61, 61);
-    padding: 20px;
-quotes: '«' '»';
-font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important;")))
-
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -1804,8 +1792,46 @@ font-family: Courier, 'Courier New', monospace;
 (org-mime-subtree)
 (org-mime-htmlize)
 )
+#+END_SRC
+
+** org-mime blockquote hacker style
+#+BEGIN_EXAMPLE emacs-lisp
 
 
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
+#+END_EXAMPLE
+
+** org-mime blockquote literary style
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "
+	background:rgba(255,0,0,0.05);
+	border:1px solid rgba(255,0,0,0.2);
+	border-radius:8px;
+	color:#3f3f3f;
+	font-family:Monaco, Helvetica, sans-serif;
+	line-height:1.2;
+	padding: 0 1em 1em 1em;
+	text-align:left;
+	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+	white-space:0;
+	width:500px;
+  word-wrap:normal!important;")))
 #+END_SRC
 
 
