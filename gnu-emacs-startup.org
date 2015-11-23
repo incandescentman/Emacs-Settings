@@ -1652,8 +1652,8 @@ The last line sets the path to where saveplace stores your position data. Change
       (set-register 'p (point))
     (set-register 'p nil)))
 
-;; (global-set-key "\C-o" 'embolden-next-word)
-(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+(global-set-key "\C-o" 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
    #+END_SRC
 
 ***** no-abbrev-slash

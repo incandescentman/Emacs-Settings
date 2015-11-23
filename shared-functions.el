@@ -1894,7 +1894,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
-(global-set-key (kbd "`") 'flyspell-auto-correct-word)
+(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
+;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (global-set-key (kbd "M-`") 'other-frame)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)

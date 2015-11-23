@@ -984,8 +984,8 @@ password: %s" userid password))
       (set-register 'p (point))
     (set-register 'p nil)))
 
-;; (global-set-key "\C-o" 'embolden-next-word)
-(define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
+(global-set-key "\C-o" 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
 
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
