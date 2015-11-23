@@ -2876,13 +2876,14 @@ doesn't work.
 #+END_SRC
 
 * available keybindings
-
+C-o
 s-P
 s-N
 s-:
 s.
 s-'
 s-l
+s-i
 * abbrev advice
 #+BEGIN_EXAMPLE emacs-lisp
 (defadvice expand-abbrev (after expand-abbrev-advice activate)
