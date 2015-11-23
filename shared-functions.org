@@ -567,7 +567,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
 #+END_SRC
 

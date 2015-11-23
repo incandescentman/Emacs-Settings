@@ -324,7 +324,7 @@
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "|" "DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
 
 (defun new-org-delete-backward-char (N)

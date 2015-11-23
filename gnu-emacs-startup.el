@@ -333,9 +333,9 @@
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
 
-(define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 
 
@@ -984,7 +984,7 @@ password: %s" userid password))
       (set-register 'p (point))
     (set-register 'p nil)))
 
-(global-set-key "\C-o" 'embolden-next-word)
+;; (global-set-key "\C-o" 'embolden-next-word)
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-next-word)
 
 (define-minor-mode insert-slash-no-abbrev
