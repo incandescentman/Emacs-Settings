@@ -7,6 +7,9 @@
 (setq mac-option-key-is-meta t)
 (setq mac-option-modifier 'meta)
 
+;; (setq mac-function-modifier 'hyper)
+
+
 (define-key key-minor-mode-map (kbd "<home>") 'beginning-of-buffer)
 (define-key key-minor-mode-map (kbd "<end>") 'end-of-buffer)
 

@@ -8,8 +8,6 @@
              '("marmalade" .
                "http://marmalade-repo.org/packages/" ) t)
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 
@@ -1237,6 +1235,12 @@ font-family: Courier, 'Courier New', monospace;
 (org-mime-subtree)
 (org-mime-htmlize)
 )
+
+(defun tst-send-msg ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (define-key org-mode-map
   (kbd "RET")
@@ -3867,12 +3871,6 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (font-lock-add-keywords 'org-mode
                         '(("^.*:[ ]*$" . 'list-title-face)))
-
-(defun tst-send-msg ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (defun downcase-or-endless-downcase ()
 (interactive)

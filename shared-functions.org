@@ -50,8 +50,6 @@ You can toggle it in necessary files by setting the local variables section at t
              '("marmalade" .
                "http://marmalade-repo.org/packages/" ) t)
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 
@@ -136,7 +134,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 ;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
 ;; turn off alarms completely
-(setq ring-bell-function 'ignore) 
+(setq ring-bell-function 'ignore)
 #+END_SRC
 
 
@@ -1809,6 +1807,18 @@ font-family: Courier, 'Courier New', monospace;
 
 
 #+END_SRC
+
+
+** tst-send-message
+
+#+BEGIN_SRC emacs-lisp
+(defun tst-send-msg ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (message-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+#+END_SRC
+
 
 * Things that I don't know what they're for 
 
@@ -5426,16 +5436,6 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (setq org-element-use-cache nil)
 
-
-* tst-send-message
-
-#+BEGIN_SRC emacs-lisp
-(defun tst-send-msg ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
-#+END_SRC
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
