@@ -1243,12 +1243,6 @@ font-family: Courier, 'Courier New', monospace;
   width:500px;
   word-wrap:normal!important;")))
 
-(defun tst-send-msg ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
-
 (define-key org-mode-map
   (kbd "RET")
   (lambda()

@@ -1821,18 +1821,6 @@ font-family: Courier, 'Courier New', monospace;
   word-wrap:normal!important;")))
 #+END_SRC
 
-
-** tst-send-message
-
-#+BEGIN_SRC emacs-lisp
-(defun tst-send-msg ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
-#+END_SRC
-
-
 * Things that I don't know what they're for 
 
 ** I forgot what this is but it looks important
@@ -3535,7 +3523,7 @@ subsequent sends."
 ))
 #+END_SRC
 
-** DONE erika-send-mail 
+** erika-send-mail
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email ()
   "Send the current org-mode heading as the body of an email, with headline as the subject.

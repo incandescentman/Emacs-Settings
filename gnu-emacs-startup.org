@@ -2904,13 +2904,6 @@ s-i
 
 #+END_EXAMPLE
 
-This:
-*This*
-
-*This*
-
-*The* *this* only way is this
-
 * embolden-or-bold
 #+BEGIN_SRC emacs-lisp
 
@@ -2933,5 +2926,4 @@ This:
 (add-hook 'message-mode-hook
           (lambda ()
             (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
-
 #+END_SRC
