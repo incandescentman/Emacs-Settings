@@ -1220,6 +1220,7 @@ ido-enter-matching-directory nil
     font-weight: 400;
     color: #87ceeb;
     line-height: 1.3em;
+width:60%;
     background: none repeat scroll 0% 0% rgb(61, 61, 61);
     padding: 20px;
 quotes: '«' '»';
@@ -1237,10 +1238,11 @@ font-family: Courier, 'Courier New', monospace;
   font-family:Garamond, serif;
   line-height:1.2;
   padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
   text-align:left;
   text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
   white-space:0;
-  width:500px;
+  width:60%;
   word-wrap:normal!important;")))
 
 (define-key org-mode-map
@@ -1827,10 +1829,18 @@ With prefix arg C-u, copy region instad of killing it."
 
 ;; (require 'gnugol)
 
-(defun gnugol-word-at-point ()
-  (interactive)
-(gnugol-search-google (thing-at-point 'word))
-)
+(defun region-or-word-at-point ()
+  (if (use-region-p)
+      (buffer-substring-no-properties
+       (region-beginning)
+       (region-end))
+    (substring-no-properties
+     (thing-at-point 'word))))
+
+ (defun gnugol-word-at-point ()
+   (interactive)
+
+  (gnugol-search-google (region-or-word-at-point)))
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
