@@ -1947,7 +1947,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "b" 'org-narrow-to-subtree)
+(define-hyper-key "b" 'narrow-or-widen-dwim) 
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
@@ -3684,11 +3684,6 @@ narrowed."
                 (org-narrow-to-block))
                (t (org-narrow-to-subtree))))
         (t (narrow-to-defun))))
-
-;; (define-key endless/toggle-map "n" #'narrow-or-widen-dwim)
-;; This line actually replaces Emacs' entire narrowing keymap, that's
-;; how much I like this command. Only copy it if that's what you want.
- (define-key ctl-x-map "n" #'narrow-or-widen-dwim)
 
 ;; Add <p for python expansion
 

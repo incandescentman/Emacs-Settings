@@ -322,7 +322,7 @@
 (define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
-(define-key key-minor-mode-map (kbd "H-w") 'widen)
+
 (define-key key-minor-mode-map (kbd "s-0") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
@@ -406,7 +406,7 @@
 
 
 ;; For extracting content from my browser
-(define-key key-minor-mode-map (kbd "s-W") 'widen)
+
 (define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
