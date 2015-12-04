@@ -3882,7 +3882,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 (interactive)
 (if
 
-(looking-back "...[ ]*")                               ; if
+(looking-back "\\.\\.\\.[ ]*")                               ; if
     (call-interactively 'downcase-word); then
     (call-interactively 'endless/downcase); else
 
