@@ -563,6 +563,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
 
+;; indirect buffer
+(define-key key-minor-mode-map (kbd "s-i") 'clone-indirect-buffer-other-window)
+
+
+
 ;; and the keybinding
 (define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
 (define-key key-minor-mode-map (kbd "C-k") 'my/kill-line-dwim)

@@ -922,6 +922,8 @@ Make org-capture open in full window! :-)
 
  (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
  
+(define-key key-minor-mode-map (kbd "C-s-0") 'show-all)
+
    #+END_SRC
 
 * Typography
@@ -2748,7 +2750,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "O" 'reveal-in-finder)
 (define-hyper-key "o" 'projectile-find-file)
 
-(define-hyper-key "i" 'org-mac-chrome-insert-frontmost-url)
+
 (define-hyper-key "\\" 'visit-most-recent-file)
 
 ;; (define-hyper-key "f" 'isearch-forward)
@@ -5458,3 +5460,4 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 )
 )
 #+END_SRC
+
