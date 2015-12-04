@@ -5436,7 +5436,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 #+BEGIN_SRC emacs-lisp
 (defface list-title-face
-  '((t (:background "pale green")))
+  '((t (:inherit font-lock-warning-face :weight bold)))
   "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
