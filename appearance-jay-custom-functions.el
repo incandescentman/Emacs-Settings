@@ -357,3 +357,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (beach-mode)
 (text-scale-increase 2)
   )
+
+(defun ample-zen ()
+  (interactive)
+(load-theme 'ample-zen)
+(org-mode)
+(text-scale-increase 2)
+)
