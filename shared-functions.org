@@ -2768,7 +2768,6 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "b" 'narrow-or-widen-dwim) 
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
@@ -5389,7 +5388,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key
- (kbd "C-9")
+ (kbd "C-8")
 
 (defhydra multiple-cursors-hydra (:hint nil)
   "
@@ -5461,3 +5460,8 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 )
 #+END_SRC
 
+
+* trying to stop org crashes
+#+BEGIN_SRC emacs-lisp
+(setq org-element-use-cache nil)
+#+END_SRC

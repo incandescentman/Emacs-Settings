@@ -249,6 +249,9 @@
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
+(define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
+; narrow-or-widen-dwim 
+
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
 (define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
@@ -327,13 +330,14 @@
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
-(define-key key-minor-mode-map (kbd "C-0") 'goto-last-change) ; super useful when editing
-(define-key key-minor-mode-map (kbd "C--") 'goto-last-change-reverse) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C-9") 'goto-last-change-reverse) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-(define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+; replaced it with multiple-cursors-hydra/body for now
 
 ;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
@@ -1247,7 +1251,7 @@ subsequent sends. could save them all in a logbook?
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 ;; How do I add an exception for ") ; "? 
 ;; e.g. if I want to add a comment after a line of lisp?
@@ -1323,9 +1327,11 @@ subsequent sends. could save them all in a logbook?
 (looking-at "\\W*$") 
 (looking-at "\\W*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
+(looking-at "[ ]*\"")          ; beginning of a quote
 )
 
-(save-excursion (downcase-word 1))))
+(save-excursion (downcase-word 1)))
+)
 
 
 (define-key org-mode-map (kbd ",") 'smart-comma)
@@ -1355,7 +1361,7 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-semicolon ()
   (interactive)
-  (smart-punctuation ";" t)
+  (smart-punctuation ";")
 (unless
 (or
 (looking-at "\\W*$")

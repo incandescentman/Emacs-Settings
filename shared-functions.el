@@ -1949,7 +1949,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "d" 'org-todo)
 (define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
 (define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "b" 'narrow-or-widen-dwim) 
 (define-hyper-key "a" 'mark-whole-buffer) ; select all
 (define-hyper-key "w" 'delete-window) ; close
 (define-hyper-key "`" 'other-window)
@@ -3843,7 +3842,7 @@ The full path into relative path and insert it as a local file link in org-mode"
   ("f" helm-follow-mode))
 
 (global-set-key
- (kbd "C-9")
+ (kbd "C-8")
 
 (defhydra multiple-cursors-hydra (:hint nil)
   "
@@ -3890,3 +3889,5 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 )
 )
+
+(setq org-element-use-cache nil)
