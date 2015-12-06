@@ -3112,7 +3112,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc" "file" "http"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -5464,4 +5464,36 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 * trying to stop org crashes
 #+BEGIN_SRC emacs-lisp
 (setq org-element-use-cache nil)
+#+END_SRC
+
+
+* use dired for directory links
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-file-apps '(directory . emacs)) 
+#+END_SRC
+
+Alternatively you can modify the link description as follows:
+#+BEGIN_EXAMPLE
+
+[[file+emacs:~/projects][Projects]]
+
+Use this notation in the org mode to create a link:
+
+[[/path/to/file.php::line][string-to-display]]
+If you want the file name to be displayed, use just
+
+[[/path/to/file.php::line]]
+
+
+#+END_EXAMPLE
+
+It will open the link in Emacs with typing C-c C-o.
+
+
+* sort lines case insensitive
+#+BEGIN_SRC emacs-lisp
+(defun sort-lines-case-insensitive ()
+  (interactive)
+  (let ((sort-fold-case t))
+    (call-interactively 'sort-lines))) 
 #+END_SRC

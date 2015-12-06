@@ -2200,7 +2200,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc" "file" "http"))
 
 (setq auto-capitalize-predicate
       (lambda ()
@@ -3891,3 +3891,10 @@ The full path into relative path and insert it as a local file link in org-mode"
 )
 
 (setq org-element-use-cache nil)
+
+(add-to-list 'org-file-apps '(directory . emacs))
+
+(defun sort-lines-case-insensitive ()
+  (interactive)
+  (let ((sort-fold-case t))
+    (call-interactively 'sort-lines)))

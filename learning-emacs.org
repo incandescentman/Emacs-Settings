@@ -224,3 +224,12 @@ C-x C-b") 'ibuffer
     (delete-char 1)
     (insert "l")))
 #+END_SRC
+
+* Hunspell personal dictionaries 
+file://~/.hunspell_en_US 
+file:///users/jay/.aspell.en.pws
+file:///~/Library/Spelling/LocalDictionary
+
+[[~/Library/Spelling/LocalDictionary]]
+
+[[~/.hunspell_en_US]]
