@@ -860,7 +860,7 @@
  '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
  '(grep-highlight-matches (quote always))
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
- '(ido-save-directory-list-file "~/Dropbox/emacs/.savefile/ido.hist")
+'(ido-save-directory-list-file "~/emacs-local/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
@@ -966,7 +966,7 @@
  '(reb-re-syntax (quote string))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
- '(recentf-save-file "~/Dropbox/emacs/.savefile/recentf")
+'(recentf-save-file "~/emacs-local/.savefile/recentf")
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
@@ -2139,7 +2139,7 @@ searches all buffers."
 (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
 
 (setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/Dropbox/emacs/.savefile/helm-history"
+      helm-adaptive-history-file             "~/emacs-local/.savefile/helm-history"
       helm-yank-symbol-first                 t
       helm-move-to-line-cycle-in-source      t
       helm-buffers-fuzzy-matching            t

@@ -967,7 +967,6 @@ password: %s" userid password))
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-;; (setq save-place-file "/Users/jay/Dropbox/emacs/.savefile/.places")
 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
