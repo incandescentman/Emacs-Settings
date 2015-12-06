@@ -1627,7 +1627,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
-(setq save-place-file "/Users/jay/Dropbox/emacs/.savefile/.places") 
+;; (setq save-place-file "/Users/jay/Dropbox/emacs/.savefile/.places") 
 #+END_SRC
 
 The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
