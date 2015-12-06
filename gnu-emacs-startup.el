@@ -327,6 +327,7 @@
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "s-0") 'widen)
+(define-key key-minor-mode-map (kbd "s-W") 'widen)
 (define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
