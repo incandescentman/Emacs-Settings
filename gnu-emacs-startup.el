@@ -249,8 +249,6 @@
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
 
-(define-key key-minor-mode-map (kbd "s-A") 'show-all)
-
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
@@ -548,7 +546,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (org-kill-line)
 ;;  (save-excursion
 ;;    (when (my/beginning-of-sentence-on)
-;;      (capitalize-word 1)))
+;;      (capitalize-unless-org-heading)))
 )
 
 (defun kill-sentence-maybe-else-kill-line ()
@@ -1317,7 +1315,7 @@ subsequent sends. could save them all in a logbook?
 (looking-at "\"[ ]*$") 
 (looking-at "\)[ ]*$") 
 )
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
@@ -1451,7 +1449,7 @@ subsequent sends. could save them all in a logbook?
   (my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
-        (capitalize-word 1)))))
+        (capitalize-unless-org-heading)))))
 
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
@@ -1488,6 +1486,8 @@ subsequent sends. could save them all in a logbook?
 (looking-at "\*")
 (looking-at "[\n\t ]*\\*") ; fails to find
 (looking-at "* TODO")
+(looking-at "[\n\t\[ ]*[A-Z]")
+(looking-at "[\n\t#+ ]*[A-Z]")
 ) 
 (capitalize-word 1))
 )

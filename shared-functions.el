@@ -598,6 +598,7 @@
  (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8) 
  
 (define-key key-minor-mode-map (kbd "C-s-0") 'show-all)
+(define-key key-minor-mode-map (kbd "C-s-a") 'show-all)
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
@@ -1861,7 +1862,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
 
 (global-set-key (kbd "M-C-N") 'outline-next-visible-heading)
-(global-set-key (kbd "M-C-P") 'outline-previouM-C-visible-heading)
+(global-set-key (kbd "M-C-P") 'outline-previous-visible-heading)
 (define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
 (define-key key-minor-mode-map (kbd "M-C-P") 'outline-previous-visible-heading)
 

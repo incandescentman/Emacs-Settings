@@ -401,8 +401,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
 
-(define-key key-minor-mode-map (kbd "s-A") 'show-all)
-
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
@@ -722,7 +720,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (org-kill-line)
 ;;  (save-excursion
 ;;    (when (my/beginning-of-sentence-on)
-;;      (capitalize-word 1)))
+;;      (capitalize-unless-org-heading)))
 )
 #+END_SRC
 
@@ -2340,7 +2338,7 @@ Old version that I retrieved:
 (looking-at "\"[ ]*$") 
 (looking-at "\)[ ]*$") 
 )
-(capitalize-word 1))
+(capitalize-unless-org-heading))
 ))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
@@ -2586,16 +2584,16 @@ First delete region, and then:
       (delete-backward-char 1))
     (save-excursion
       (when (or (looking-at "[[:space:]]")
-		(looking-back "[[:space:]]"))
+    (looking-back "[[:space:]]"))
 ;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
 (unless (and
 (looking-back "\\w ")
 (looking-at "\\w") 
 ) 
-	(my/fix-space))))
+  (my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
-        (capitalize-word 1)))))
+        (capitalize-unless-org-heading))))) 
 #+END_SRC
  
 * PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
@@ -2681,6 +2679,8 @@ Five six
 (looking-at "\*")
 (looking-at "[\n\t ]*\\*") ; fails to find
 (looking-at "* TODO")
+(looking-at "[\n\t\[ ]*[A-Z]")
+(looking-at "[\n\t#+ ]*[A-Z]")
 ) 
 (capitalize-word 1))
 )
