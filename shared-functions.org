@@ -3112,7 +3112,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc" "file" "http"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc" "file" "http" "fn"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp

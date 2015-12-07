@@ -397,7 +397,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
 ;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+
+(define-key key-minor-mode-map (kbd "s-A") 'show-all)
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
@@ -2896,6 +2900,7 @@ s-'
 s-l
 s-i
 * abbrev advice
+Didn't work. 
 #+BEGIN_EXAMPLE emacs-lisp
 (defadvice expand-abbrev (after expand-abbrev-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
@@ -2938,3 +2943,15 @@ s-i
           (lambda ()
             (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
 #+END_SRC
+
+
+* color theme advice
+#+BEGIN_SRC emacs-lisp 
+(defadvice load-theme (after load-theme-advice activate)
+(custom-set-faces
+'(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-link ((t (:underline nil))))) 
+(org-mode) 
+  )
+#+END_SRC 
+

@@ -245,7 +245,11 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
 ;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+
+(define-key key-minor-mode-map (kbd "s-A") 'show-all)
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
@@ -1613,3 +1617,10 @@ subsequent sends. could save them all in a logbook?
 (add-hook 'message-mode-hook
           (lambda ()
             (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+
+(defadvice load-theme (after load-theme-advice activate)
+(custom-set-faces
+'(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-link ((t (:underline nil))))) 
+(org-mode) 
+  )
