@@ -2109,7 +2109,7 @@ searches all buffers."
 
 (require 'helm-config)
 (helm-mode t)
-(helm-adaptative-mode t)
+;; (helm-adaptative-mode t)
 
 (require 'helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
@@ -3899,3 +3899,16 @@ The full path into relative path and insert it as a local file link in org-mode"
   (interactive)
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines)))
+
+(defun re-builder-large ()
+  "Just like `re-builder', only make the font and window larger."
+  (interactive)
+  (re-builder)
+  (text-scale-increase 5)
+  (set-window-text-height (selected-window) 7))
+
+(defun typewriter-mode ()
+  (interactive)
+  (setq centered-cursor-mode t)
+  (setq global-centered-cursor-mode t)
+  )

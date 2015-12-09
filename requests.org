@@ -2,6 +2,11 @@
 
 Complete word, then add completion to abbrev list.
 
+* cycle case
+realiz realized realizing 
+
+mend mended mending 
+
 * after a list
 Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
 

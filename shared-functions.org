@@ -2966,7 +2966,7 @@ AdrianKubala:
 #+BEGIN_SRC emacs-lisp
 (require 'helm-config)
 (helm-mode t)
-(helm-adaptative-mode t)
+;; (helm-adaptative-mode t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -5498,4 +5498,26 @@ It will open the link in Emacs with typing C-c C-o.
   (interactive)
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines))) 
+#+END_SRC
+
+
+* re-builder large
+#+BEGIN_SRC emacs-lisp
+
+(defun re-builder-large ()
+  "Just like `re-builder', only make the font and window larger."
+  (interactive)
+  (re-builder)
+  (text-scale-increase 5)
+  (set-window-text-height (selected-window) 7))
+
+#+END_SRC
+
+* typewriter mode
+#+BEGIN_SRC emacs-lisp
+(defun typewriter-mode ()
+  (interactive)
+  (setq centered-cursor-mode t)
+  (setq global-centered-cursor-mode t)
+  )
 #+END_SRC
