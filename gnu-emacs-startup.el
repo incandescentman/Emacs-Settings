@@ -1488,6 +1488,7 @@ subsequent sends. could save them all in a logbook?
 (let ((case-fold-search nil))
   (looking-at "[\n\t ]*[A-Z]")) 
 (looking-at "[\n\t ]*#\\+")
+(looking-at "[\n\t ]*\(")
 ) 
 (capitalize-word 1))
 )
