@@ -335,7 +335,7 @@
          (delete-region
           (region-beginning)
           (region-end)))
-        ((looking-back "^\\**[ ]*")
+        ((looking-back "^\\*+[ ]*") ;; one or more stars
          (previous-line)
          (end-of-line))
 (
@@ -1192,17 +1192,16 @@ ido-enter-matching-directory nil
 (setq org-mime-default-header "")
 
 ;; put a div tag around the whole message to put it in Georgia font.
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (goto-char (point-min))
-            (insert "<div style=\"font-family:Georgia,serif\">")
-            (goto-char (point-max))
-            (insert "</div>")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "p" "margin-bottom: 1em")))
+             "p" "font-family:Georgia,serif; margin-bottom: 1em")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "li" "font-family:Georgia,serif")))
 
 
 (add-hook 'message-mode-hook
@@ -1922,6 +1921,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
+(define-key orgstruct-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (global-set-key (kbd "M-`") 'other-frame)
 (global-set-key (kbd "s-z") 'undo)

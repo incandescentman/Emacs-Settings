@@ -2937,11 +2937,20 @@ Didn't work.
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
   (message-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
+  (add-hook 'org-mode-hook 'org-bullets-mode)) 
+#+END_SRC
 
+* orgstruct-mode-map 
+#+BEGIN_SRC emacs-lisp
+(define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
+#+END_SRC
+
+* message-mode-map
+#+BEGIN_SRC emacs-lisp
 (add-hook 'message-mode-hook
           (lambda ()
-            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets) 
+)) 
 #+END_SRC
 
 

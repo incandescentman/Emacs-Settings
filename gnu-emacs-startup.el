@@ -1614,9 +1614,12 @@ subsequent sends. could save them all in a logbook?
   (message-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
+(define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
+
 (add-hook 'message-mode-hook
           (lambda ()
-            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets) 
+))
 
 (defadvice load-theme (after load-theme-advice activate)
 (custom-set-faces
