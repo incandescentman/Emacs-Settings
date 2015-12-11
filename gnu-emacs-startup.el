@@ -571,7 +571,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(smart-expand)
+  (unless
+      (or
+(looking-back "vs[[:punct:]]+[ ]*") ; don't add extra periods to vs. 
+       ) 
+  (smart-expand))
 (insert "\ ")
   (just-one-space)
 )
@@ -1307,7 +1311,13 @@ subsequent sends. could save them all in a logbook?
 
 (defun smart-period ()
   (interactive)
-(smart-punctuation ".")
+
+(unless
+      (or
+(looking-back "vs[[:punct:]]*+*[ ]*") ; don't add extra periods to vs. 
+       ) 
+  (smart-punctuation ".")) 
+
 (save-excursion
 (unless 
 (or 
