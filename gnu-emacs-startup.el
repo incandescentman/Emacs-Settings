@@ -1437,7 +1437,7 @@ subsequent sends. could save them all in a logbook?
         (progn
           (delete-region (region-beginning) (region-end))
           (setf capitalize t))
-      (delete-backward-char 1))
+      (new-org-delete-backward-char 1))
     (save-excursion
       (when (or (looking-at "[[:space:]]")
     (looking-back "[[:space:]]"))

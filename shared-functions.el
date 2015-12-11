@@ -335,11 +335,20 @@
          (delete-region
           (region-beginning)
           (region-end)))
-        ((looking-back "[*]+ ")
+        ((looking-back "^\\**[ ]*")
          (previous-line)
          (end-of-line))
+(
+(looking-back "^[ ]*- ") 
+         (previous-line)
+         (end-of-line))
+
         (t
-         (org-delete-backward-char N))))
+         (org-delete-backward-char N))
+
+
+
+))
 (add-hook
  'org-mode-hook
  (lambda ()
