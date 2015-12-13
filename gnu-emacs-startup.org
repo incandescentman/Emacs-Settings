@@ -1650,6 +1650,7 @@ The last line sets the path to where saveplace stores your position data. Change
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "SPC") (lambda ()
                       (interactive)
+                      (expand-abbrev)
                       (save-excursion
                         (goto-char (get-register 'p))
                         (insert "*"))
@@ -1657,6 +1658,7 @@ The last line sets the path to where saveplace stores your position data. Change
                       (embolden-next-word -1)))
         (define-key map (kbd ".") (lambda ()
                     (interactive)
+                    (expand-abbrev)
                     (save-excursion
                       (goto-char (get-register 'p))
                       (insert "*"))
@@ -2937,7 +2939,12 @@ Didn't work.
 (defun embolden-or-bold (arg)
   (interactive "p")
   (if (region-active-p)
-    (wrap-region-trigger arg "*")
+      ;;      (wrap-region-trigger arg "*")
+      (let ((s (replace-regexp-in-string
+                "[*]" "" (delete-and-extract-region (region-beginning) (region-end)))))
+        (insert "*")
+        (insert s)
+        (insert "*"))
     (embolden-next-word)))
 
 #+END_SRC
