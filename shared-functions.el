@@ -1203,12 +1203,29 @@ ido-enter-matching-directory nil
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "p" "font-family:Georgia,serif; margin-bottom: 1em")))
+             "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
 
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
              "li" "font-family:Georgia,serif")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "h2" "color:#C92228;
+    font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-transition:all .5s linear;
+    border-bottom:2px dotted #CCC;
+text-transform:capitalize; font-weight:bold;")))
+
 
 
 (add-hook 'message-mode-hook
@@ -1392,6 +1409,10 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "rollback-info")
 (add-to-list 'recentf-exclude "gnu-emacs-startup")
 (add-to-list 'recentf-exclude "shared-functions")
+(add-to-list 'recentf-exclude ".jpg")
+(add-to-list 'recentf-exclude ".gif")
+(add-to-list 'recentf-exclude ".png")
+(add-to-list 'recentf-exclude "contacts")
 
 (add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp" ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 

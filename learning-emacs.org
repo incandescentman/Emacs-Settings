@@ -233,3 +233,6 @@ file:///~/Library/Spelling/LocalDictionary
 [[~/Library/Spelling/LocalDictionary]]
 
 [[~/.hunspell_en_US]]
+
+* tiny-expand syntax
+file:///users/jay/Dropbox/writing/notationaldata/accountability/tiny-syntax-examples.md

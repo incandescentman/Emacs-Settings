@@ -1493,12 +1493,12 @@ subsequent sends. could save them all in a logbook?
   (interactive)
 (unless 
 (or
-(looking-at "[\n\t ]*\\*")
+(looking-at "[[:punct:]]*[\n\t ]*\\*")
 ;; (looking-at "\\* TODO"); redundant
 (let ((case-fold-search nil))
-  (looking-at "[\n\t ]*[A-Z]")) 
-(looking-at "[\n\t ]*#\\+")
-(looking-at "[\n\t ]*\(")
+  (looking-at "[[:punct:]]*[\n\t ]*[A-Z]")) 
+(looking-at "[[:punct:]]*[\n\t ]*#\\+")
+(looking-at "[[:punct:]]*[\n\t ]*\(")
 ) 
 (capitalize-word 1))
 )
