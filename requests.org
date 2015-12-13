@@ -1,3 +1,9 @@
+* change the behavior of org-smart-meta-return/dwim
+
+For plain-text lists 
+
+* make emacs work more like Workflowy 
+
 * relig
 
 Complete word, then add completion to abbrev list.

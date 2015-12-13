@@ -1196,7 +1196,7 @@ ido-enter-matching-directory nil
 (add-hook 'org-mime-html-hook
           (lambda ()
             (goto-char (point-min))
-            (insert "<div style=\"font-family:Georgia,serif! important\">")
+            (insert "<div style=\"font-family:Georgia,serif\">")
             (goto-char (point-max))
             (insert "</div>"))) 
 
