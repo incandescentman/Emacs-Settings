@@ -1224,9 +1224,7 @@ ido-enter-matching-directory nil
     font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
     -webkit-transition:all .5s linear;
     border-bottom:2px dotted #CCC;
-text-transform:capitalize; font-weight:bold;")))
-
-
+text-transform:capitalize; font-weight:bold;"))) 
 
 (add-hook 'message-mode-hook
           (lambda ()
