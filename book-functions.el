@@ -1,5 +1,6 @@
 (defun book-load-current ()
   (interactive)
+  (jay/save-some-buffers)
 (condition-case nil
   (kill-buffer "playful.org")
   (error nil))
