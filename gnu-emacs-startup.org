@@ -332,7 +332,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
 ** wrapped-search-forward 
 #+BEGIN_SRC emacs-lisp
 
-(defvar-local failed-search)
+(defvar-local failed-search nil)
 
 (defun wrapped-search-forward (str)
   (interactive "sWrappedSearch:")
