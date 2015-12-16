@@ -204,13 +204,34 @@
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
 
+(defvar-local failed-search nil)
+
+(defun wrapped-search-forward (str)
+  (interactive "sWrappedSearch:")
+  (if (and
+       failed-search
+       (>= (car failed-search) (point))
+       (string-equal (cdr failed-search) str))
+      (let ((p (save-excursion
+                 (goto-char 0)
+                 (search-forward str nil t))))
+        (if p
+            (progn
+              (goto-char p)
+              (setq-local failed-search nil))
+          (message "WrappedSearch: Not found.")))
+    (let ((p (search-forward str nil t)))
+      (unless p
+        (setq-local failed-search (cons (point) str))
+        (message "Search: Not found.")))))
+
 (defun pasteboard-search-for-clipboard-contents ()
   (interactive)
   (let ((search-term
          (with-temp-buffer
            (pasteboard-paste-no-spaces)
            (buffer-string))))
-    (search-forward search-term)))
+    (wrapped-search-forward search-term)))
 
 (setq x-select-enable-clipboard t) 
 (defun push-kill-ring-to-pasteboard ()
