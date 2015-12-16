@@ -251,8 +251,8 @@
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
-(define-key key-minor-mode-map (kbd "s-b") 'org-narrow-to-subtree)
-; narrow-or-widen-dwim 
+(define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
+; org-narrow-to-subtree 
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
@@ -351,7 +351,7 @@
 
 ;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
 
-(define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
+;; (define-key key-minor-mode-map (kbd "C-j") 'prelude-top-join-line)
 
 
 (define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
@@ -1532,7 +1532,7 @@ subsequent sends. could save them all in a logbook?
   
     (or
        (looking-back "\)\n*")
-(looking-back "\)[ ]*")
+(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*") 
 (looking-back ":t[ ]*") 
 
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
@@ -1645,3 +1645,16 @@ subsequent sends. could save them all in a logbook?
 '(org-link ((t (:underline nil))))) 
 (org-mode) 
   )
+
+(defun reformat-email (begin end)
+  (interactive "r")
+(xah-replace-pairs-region begin end
+ '(
+ ["> " ""]
+))
+  (unfill-region begin end)
+  (fill-region begin end)
+  (xah-replace-pairs-region begin end
+ '(
+ ["\n" "\n> "]
+)))

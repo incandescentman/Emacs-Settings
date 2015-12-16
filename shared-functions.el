@@ -1204,7 +1204,6 @@ ido-enter-matching-directory nil
             (org-mime-change-element-style
              "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
 
-
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
@@ -1863,6 +1862,7 @@ With prefix arg C-u, copy region instad of killing it."
 
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
+;; [[file:shared-functions.org::*Google%20search%20through%20Gnugol][Google\ search\ through\ Gnugol:1]]
 ;; (require 'gnugol)
 
 (defun region-or-word-at-point ()
@@ -1877,6 +1877,7 @@ With prefix arg C-u, copy region instad of killing it."
    (interactive)
 
   (gnugol-search-google (region-or-word-at-point)))
+;; Google\ search\ through\ Gnugol:1 ends here
 
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
@@ -3096,8 +3097,8 @@ Single Capitals as you type."
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
-(global-fasd-mode 1)
-(setq fasd-enable-initial-prompt nil)
+;; (global-fasd-mode 1)
+;; (setq fasd-enable-initial-prompt nil)
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path)) 
@@ -3699,26 +3700,28 @@ event of an error or nonlocal exit."
      "\C-c\C-c" #'org-edit-src-exit))
 
 (defun narrow-or-widen-dwim (p)
-  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
-Intelligently means: region, org-src-block, org-subtree, or defun,
-whichever applies first.
-Narrowing to org-src-block actually calls `org-edit-src-code'.
+  "Widen if buffer is narrowed, narrow-dwim otherwise.
+Dwim means: region, org-src-block, org-subtree, or defun,
+whichever applies first. Narrowing to org-src-block actually
+calls `org-edit-src-code'.
 
-With prefix P, don't widen, just narrow even if buffer is already
-narrowed."
+With prefix P, don't widen, just narrow even if buffer is
+already narrowed."
   (interactive "P")
   (declare (interactive-only))
   (cond ((and (buffer-narrowed-p) (not p)) (widen))
         ((region-active-p)
          (narrow-to-region (region-beginning) (region-end)))
         ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing command.
-         ;; Remove this first conditional if you don't want it.
+         ;; `org-edit-src-code' is not a real narrowing
+         ;; command. Remove this first conditional if you
+         ;; don't want it.
          (cond ((ignore-errors (org-edit-src-code))
                 (delete-other-windows))
-               ((org-at-block-p)
-                (org-narrow-to-block))
+               ((ignore-errors (org-narrow-to-block) t))
                (t (org-narrow-to-subtree))))
+        ((derived-mode-p 'latex-mode)
+         (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
 
 ;; Add <p for python expansion
