@@ -949,6 +949,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("\x2018" . "'")
                             ("\x2019" . "'")
 ("—" . "---")
+("…" . "...")
                             ("• " . "- ")
        ; also remove stray spac- es
 )
@@ -3149,7 +3150,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "I'm" "I'll" "I'd" "I've" "ediff" "btw" "nyc" "file" "http" "fn"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "fn"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp

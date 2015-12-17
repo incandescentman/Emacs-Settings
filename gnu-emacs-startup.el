@@ -266,7 +266,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
-
+(define-key key-minor-mode-map (kbd "s-m c s") 'org-clone-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
 
@@ -1654,11 +1654,7 @@ subsequent sends. could save them all in a logbook?
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
-
-(add-hook 'message-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\C-c" 'send-message-without-bullets) 
-))
+(define-key orgstruct-mode-map (kbd "\C-c\C-c") 'send-message-without-bullets)
 
 (defadvice load-theme (after load-theme-advice activate)
 (custom-set-faces
