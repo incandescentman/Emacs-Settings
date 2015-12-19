@@ -1499,7 +1499,9 @@ subsequent sends. could save them all in a logbook?
 
       (or
        (looking-at "\\W*I\\b")          ; never downcase the word "I"
-       (looking-at "[ ]*I\'")          ; never downcase the word "I'
+       (looking-at "\\W*OK\\b")          ; never downcase the word "OK"
+       (looking-at "[ ]*I\'")          ; never downcase the word "I" 
+
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
        (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"

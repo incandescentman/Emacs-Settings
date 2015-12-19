@@ -1382,10 +1382,10 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "\\ido")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
-(add-to-list 'recentf-exclude "*message*")
+(add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude ".tex\\")
-(add-to-list 'recentf-exclude "html")
-(add-to-list 'recentf-exclude "gz")
+(add-to-list 'recentf-exclude ".html")
+(add-to-list 'recentf-exclude ".gz")
 (add-to-list 'recentf-exclude "System")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "bookmark")
@@ -1393,8 +1393,8 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude ".tex")
 (add-to-list 'recentf-exclude "helm")
-(add-to-list 'recentf-exclude "\\ido*")
-(add-to-list 'recentf-exclude "*archive")
+(add-to-list 'recentf-exclude "\\ido")
+(add-to-list 'recentf-exclude "archive")
 (add-to-list 'recentf-exclude "ics")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "gnugol")
@@ -1411,7 +1411,7 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude ".png")
 (add-to-list 'recentf-exclude "contacts")
 
-(add-to-list 'recentf-exclude '("doc" " docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp" ".html" ".tex" "*message*" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
+(add-to-list 'recentf-exclude '(".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp" ".html" ".tex" "message" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
 ".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
