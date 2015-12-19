@@ -15,7 +15,7 @@
 (read-abbrev-file "~/elisp/.abbrev_defs")
 (setq abbrev-file-name "~/elisp/.abbrev_defs")
 
-(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/Dropbox/elisp/own-abbrevs.abbrev_defs"))
+(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/elisp/own-abbrevs.abbrev_defs"))
 (read-abbrev-file "~/elisp/own-abbrevs.abbrev_defs")
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)

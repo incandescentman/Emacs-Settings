@@ -99,7 +99,7 @@
   "Open my favorite file:  ~.emacs.
 The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
 (monaco-font)
 (org-mode)
   (set-cursor-color "violet")
@@ -130,7 +130,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun solarized-dark ()
   "Open my own customized version of the Solarized color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
  (load-theme 'solarized-dark)
   (org-mode)
 ;  (incarnadine-cursor)
@@ -139,7 +139,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun solarized-light ()
   "Open my own customized version of the Solarized color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/solarized-jay.el")
   (load-theme 'solarized-light)
   (org-mode)
   (incarnadine-cursor)
@@ -148,7 +148,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun whiteboard ()
   "Open my own customized version of the Solarized color theme."
   (interactive)
-    (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/whiteboard-jay.el")
+    (load-file "~/emacs/prelude/personal/jay-custom-color-themes/whiteboard-jay.el")
   (org-mode)
     )
 
@@ -163,7 +163,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun big-cyberpunk ()
   "Open my own customized version of the Cyberpunk color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-big-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-big-jay.el")
   (org-mode)
   (org-bullets-mode 1)
   (incarnadine-cursor)
@@ -174,7 +174,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun cyberpunk-jay ()
   "Open my own customized version of the Cyberpunk color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (org-mode)
   (org-bullets-mode 1)
   (incarnadine-cursor)
@@ -184,7 +184,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun cyberpunk-writeroom ()
   "Open my own customized version of the Cyberpunk color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (org-mode)
   (org-bullets-mode 1)
   (incarnadine-cursor)
@@ -195,7 +195,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun cyberpunk-large ()
   "Open my own customized version of the Cyberpunk color theme."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (org-mode)
   (org-bullets-mode 1)
   (incarnadine-cursor)
@@ -223,7 +223,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
   (toggle-frame-fullscreen)
   (toggle-frame-maximized)
   )
@@ -233,7 +233,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive)
 (set-frame-parameter (selected-frame) 'alpha '(40 40))
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.believe")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.believe")
 ;; (set-fringe-mode -1)
 (setq fringe-styles '("no-fringes" . 0)) 
 )
@@ -243,7 +243,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
   (set-frame-parameter (selected-frame) 'alpha '(65 65))
   (add-to-list 'default-frame-alist '(alpha 65 65))
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (shut-the-fuck-up)
 )
 

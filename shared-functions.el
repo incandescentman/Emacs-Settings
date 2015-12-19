@@ -1,4 +1,4 @@
-;; (add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/elpa/org-plus-contrib-20150810/")
+;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
 
@@ -19,7 +19,7 @@
 
 (package-initialize)
 
-(add-to-list 'load-path "~/Dropbox/emacs/prelude/personal/")
+(add-to-list 'load-path "~/emacs/prelude/personal/")
 
 (require 'org)
 
@@ -725,9 +725,9 @@
 ;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t)
 
-(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
-(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
-(load "/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
+(load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
+(load "/Users/jay/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
 (require 'blue-ruin) 
 (require 'blue-ruin-no-cover)
 
@@ -764,7 +764,7 @@
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
-(setq recent-addresses-file "~/Dropbox/emacs/prelude/recent-addresses")
+(setq recent-addresses-file "~/emacs/prelude/recent-addresses")
 (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
 (require 'recent-addresses)
 (recent-addresses-mode 1)
@@ -870,7 +870,7 @@
  '(grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "Icon*")))
  '(grep-highlight-matches (quote always))
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*")))
-'(ido-save-directory-list-file "~/emacs-local/.savefile/ido.hist")
+'(ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
@@ -976,7 +976,7 @@
  '(reb-re-syntax (quote string))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999)
-'(recentf-save-file "~/emacs-local/.savefile/recentf")
+'(recentf-save-file "~/emacs/.savefile/recentf")
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
@@ -1030,7 +1030,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
 
-(add-to-list 'custom-theme-load-path "~/Dropbox/emacs/prelude/personal/sublime-themes-jay/")
+(add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
 (require 'auto-complete)
 (defun ac-ispell-get-word ()
@@ -2176,7 +2176,7 @@ searches all buffers."
 (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
 
 (setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/emacs-local/.savefile/helm-history"
+      helm-adaptive-history-file             "~/emacs/.savefile/helm-history"
       helm-yank-symbol-first                 t
       helm-move-to-line-cycle-in-source      t
       helm-buffers-fuzzy-matching            t
@@ -2338,9 +2338,9 @@ searches all buffers."
 (setq message-directory "~/gmail") 
 
 ;; define gnus directories
-(setq message-directory "~/Dropbox/emacs/gnus/mail/")
-(setq gnus-directory "~/Dropbox/emacs/gnus/news/")
-(setq nnfolder-directory "~/Dropbox/emacs/gnus/mail/archive") 
+(setq message-directory "~/emacs/gnus/mail/")
+(setq gnus-directory "~/emacs/gnus/news/")
+(setq nnfolder-directory "~/emacs/gnus/mail/archive") 
 
 ;; How to read HTML mail
 (setq mm-text-html-renderer 'w3m)
@@ -2800,7 +2800,7 @@ as the subject."
   (interactive)
   ;; do something …
   (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses")
-  (load "/Users/jay/Dropbox/emacs/prelude/recent-addresses"))
+  (load "/Users/jay/emacs/prelude/recent-addresses"))
 
 (defun oleh-ido-setup-hook ()
   (define-key ido-file-dir-completion-map "~"
@@ -3003,7 +3003,7 @@ Single Capitals as you type."
 
 ;; load yasnippet directories
 ;; TODO needs to be set before loading snippets somehow
-(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/Dropbox/emacs/snippets"))
+(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
 
 ;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 
@@ -3202,7 +3202,7 @@ Single Capitals as you type."
 (define-key gnus-summary-mode-map "a"
   'gnus-summary-wide-reply)
 
-(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/notmuch/")
+(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats
@@ -3421,7 +3421,7 @@ Single Capitals as you type."
 )
 (define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end)
 
-(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/zone-matrix/")  
+(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
 
 ;; (setq zone-programs [zone-pgm-drip]) 
 ;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
@@ -3481,15 +3481,15 @@ If FILE already exists, signal an error."
 
 (defun load-shared-functions ()
   (interactive)
-(find-file "/Users/jay/Dropbox/emacs/prelude/personal/shared-functions.org"))
+(find-file "/Users/jay/emacs/prelude/personal/shared-functions.org"))
 
 (defun load-gnu-startup ()
   (interactive)
-(find-file "/Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org")) 
+(find-file "/Users/jay/emacs/prelude/personal/gnu-emacs-startup.org")) 
 
 (defun open-abbrevs ()
   (interactive)
-(find-file "/Users/jay/Dropbox/emacs/aquamacs-jay/.abbrev_defs"))
+(find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs"))
 
 (define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
@@ -3518,7 +3518,7 @@ If FILE already exists, signal an error."
 (define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
 
 ;; add org-opml directory to load-path
-(add-to-list 'load-path "/Users/jay/Dropbox/emacs/prelude/personal/org-opml/")
+(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/org-opml/")
 
 ;; load org-opml
 (load-library "org-opml")
