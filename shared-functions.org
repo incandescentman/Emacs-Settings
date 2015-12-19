@@ -948,6 +948,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
                             ("\x2019" . "'")
+(" — " . "---")
 ("—" . "---")
 ("…" . "...")
                             ("• " . "- ")
