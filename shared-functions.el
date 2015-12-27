@@ -617,10 +617,12 @@
                             ("\x2018" . "'")
                             ("\x2019" . "'")
 (" — " . "---")
+(" - " . "---")
 ("—" . "---")
 ("…" . "...")
-                            ("• " . "- ")
-       ; also remove stray spac- es
+("• " . "- ")
+("- " . "") ; also remove stray spac- besides
+("­ ". "") ; also remove stray spac- es
 )
                           nil beg end))
 
@@ -2238,7 +2240,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "fn"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "require" "fn"))
 
 (setq auto-capitalize-predicate
       (lambda ()
@@ -3951,3 +3953,17 @@ The full path into relative path and insert it as a local file link in org-mode"
   (setq centered-cursor-mode t)
   (setq global-centered-cursor-mode t)
   )
+
+(defun touch-file ()
+  "Force modification of current file, unless already modified."
+  (interactive)
+  (if (and (verify-visited-file-modtime (current-buffer))
+           (not (buffer-modified-p)))
+      (progn
+        (set-buffer-modified-p t)
+        (save-buffer 0))))
+
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t)))

@@ -949,10 +949,12 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("\x2018" . "'")
                             ("\x2019" . "'")
 (" — " . "---")
+(" - " . "---")
 ("—" . "---")
 ("…" . "...")
-                            ("• " . "- ")
-       ; also remove stray spac- es
+("• " . "- ")
+("- " . "") ; also remove stray spac- besides
+("­ ". "") ; also remove stray spac- es
 )
                           nil beg end))
 #+END_SRC
@@ -3151,7 +3153,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "fn"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "require" "fn"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -5558,4 +5560,25 @@ It will open the link in Emacs with typing C-c C-o.
   (setq centered-cursor-mode t)
   (setq global-centered-cursor-mode t)
   )
+#+END_SRC
+
+* touch file
+#+BEGIN_SRC emacs-lisp
+(defun touch-file ()
+  "Force modification of current file, unless already modified."
+  (interactive)
+  (if (and (verify-visited-file-modtime (current-buffer))
+           (not (buffer-modified-p)))
+      (progn
+        (set-buffer-modified-p t)
+        (save-buffer 0)))) 
+#+END_SRC
+
+* If you want Emacs to treat all new files as modified, you can automate the solution like this 
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'find-file-hooks 'assume-new-is-modified)
+(defun assume-new-is-modified ()
+  (when (not (file-exists-p (buffer-file-name)))
+    (set-buffer-modified-p t))) 
 #+END_SRC

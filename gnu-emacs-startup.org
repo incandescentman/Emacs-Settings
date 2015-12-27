@@ -11,7 +11,8 @@
   - Emacs version: 24.5.1
   - Use case: GNU Emacs-specific settings
 
-* Handle Emacs UTF-8 input
+* Environment settings
+** Handle Emacs UTF-8 input
 
 #+BEGIN_SRC emacs-lisp
 (set-terminal-coding-system 'utf-8)
@@ -20,7 +21,7 @@
 (setenv "LANG" "en_US.UTF-8")
 #+END_SRC
 
-* Sticky windows
+** Sticky windows
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [(control x) (?0)] 'delete-other-windows)
@@ -278,8 +279,12 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
 (or 
 (looking-back "'")
 (looking-back "(")
+(looking-at ")")
 (looking-back "\\[")
+(looking-at "\\]")
+(looking-at "\\/")
 (looking-back "\"")
+(looking-at "\"")
 )
 ;; end if 
 
@@ -918,7 +923,7 @@ From here:
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
   (let ((listitem-or-checkbox (org-plain-text-list-p)))
-    (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
+    (call-rebinding-org-blank-behaviour 'org-insert-heading)
     (if listitem-or-checkbox
         (insert "[ ] ")
         (insert "TODO ")))
@@ -2721,6 +2726,7 @@ Five six
   (looking-at "[[:punct:]]*[\n\t ]*[A-Z]")) 
 (looking-at "[[:punct:]]*[\n\t ]*#\\+")
 (looking-at "[[:punct:]]*[\n\t ]*\(")
+(looking-at "[[:punct:]]*[\n\t ]*\<")
 ) 
 (capitalize-word 1))
 )
