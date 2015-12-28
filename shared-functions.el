@@ -621,8 +621,8 @@
 ("—" . "---")
 ("…" . "...")
 ("• " . "- ")
-("- " . "") ; also remove stray spac- besides
-("­ ". "") ; also remove stray spac- es
+;; ("- " . "") ; also remove stray spac- es
+;; ("­ ". "") ; also remove stray spac- es
 )
                           nil beg end))
 
@@ -996,7 +996,7 @@
 '(message-kill-buffer-on-exit t)
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
 '(org-export-latex-image-default-option "width=20.5cm")
 '(org-export-time-stamp-file nil)
 '(org-export-with-clocks t)
@@ -1212,6 +1212,25 @@ ido-enter-matching-directory nil
           (lambda ()
             (org-mime-change-element-style
              "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-class-style 
+"example" "
+  background:rgba(255,0,0,0.05);
+  border:1px solid rgba(255,0,0,0.2);
+  border-radius:8px;
+  color:#3f3f3f;
+  font-family:Garamond, serif;
+  line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+margin-left:2em;
+  text-align:left;
+  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+  white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
 
 
 (add-hook 'org-mime-html-hook
@@ -2882,47 +2901,6 @@ as the subject."
  ["<" "&lt;"]
  [">" "&gt;"]
  )))
-
-(when (require 'openwith nil 'noerror)
-      (setq openwith-associations
-            (list
-             (list (openwith-make-extension-regexp
-                    '())
-                   "open"
-                   '(file))
-
-(list (openwith-make-extension-regexp
-                    '("mp3"))
-                   "open"
-                   '(file))
-
-(list (openwith-make-extension-regexp
-                    '("mp4" "mpg" "mpeg"
-                      "avi" "wmv" "wav" "mov" "flv"
-                      "ogm" "ogg" "mkv" "webm"))
-                   "open -a vlc"
-                   '(file))
-
-             (list (openwith-make-extension-regexp
-                    '("xbm" "pbm" "pgm" "ppm" "pnm"
-                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-                   "open"
-                   '(file))
-
-             (list (openwith-make-extension-regexp
-                    '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
-                   "open"
-                   '(file))
-             '("\\.lyx" "lyx" (file))
-             '("\\.chm" "kchmviewer" (file))
-             (list (openwith-make-extension-regexp
-                    '("pdf"))
-                   "open"
-                   '(file))
-             ))
-      (openwith-mode 1))
-
-(setq org-startup-with-inline-images nil)
 
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (require 'rainbow-delimiters)

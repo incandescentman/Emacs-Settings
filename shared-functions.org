@@ -953,8 +953,8 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ("—" . "---")
 ("…" . "...")
 ("• " . "- ")
-("- " . "") ; also remove stray spac- besides
-("­ ". "") ; also remove stray spac- es
+;; ("- " . "") ; also remove stray spac- es
+;; ("­ ". "") ; also remove stray spac- es
 )
                           nil beg end))
 #+END_SRC
@@ -1466,7 +1466,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(message-kill-buffer-on-exit t)
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-'(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
 '(org-export-latex-image-default-option "width=20.5cm")
 '(org-export-time-stamp-file nil)
 '(org-export-with-clocks t)
@@ -1782,6 +1782,25 @@ Disable IDO faces to see flx highlights:
           (lambda ()
             (org-mime-change-element-style
              "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-class-style 
+"example" "
+	background:rgba(255,0,0,0.05);
+	border:1px solid rgba(255,0,0,0.2);
+	border-radius:8px;
+	color:#3f3f3f;
+  font-family:Garamond, serif;
+	line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+margin-left:2em;
+	text-align:left;
+	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+	white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
 
 
 (add-hook 'org-mime-html-hook
@@ -3975,7 +3994,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * openwith
 
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_EXAMPLE emacs-lisp
 (when (require 'openwith nil 'noerror)
       (setq openwith-associations
             (list
@@ -4017,7 +4036,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 (setq org-startup-with-inline-images nil)
 
-  #+END_SRC
+  #+END_EXAMPLE 
 
 * Monochrome rainbows are the best way to reveal unbalanced delimiters
 I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters.
