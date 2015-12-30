@@ -2987,7 +2987,7 @@ Didn't work.
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
+  (notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode)) 
 #+END_SRC
 

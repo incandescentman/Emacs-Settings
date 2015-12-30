@@ -109,7 +109,7 @@ You can toggle it in necessary files by setting the local variables section at t
 ** Stop accidentally highlighting org-mode links all the time:
 
 #+BEGIN_SRC emacs-lisp
-(setq mouse-highlight nil)
+(setq mouse-highlight t)
 (setq-local cursor-in-non-selected-windows nil) 
 
 #+END_SRC
@@ -5600,4 +5600,9 @@ It will open the link in Emacs with typing C-c C-o.
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t))) 
+#+END_SRC
+
+* ical
+#+BEGIN_SRC emacs-lisp
+'(org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
 #+END_SRC

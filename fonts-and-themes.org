@@ -225,7 +225,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value)
-  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
+  (load-theme 'cyberpunk) 
   (toggle-frame-fullscreen)
   (toggle-frame-maximized)
   )
@@ -235,7 +235,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive)
 (set-frame-parameter (selected-frame) 'alpha '(40 40))
-  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.believe")
+  (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-serenity.el")
 ;; (set-fringe-mode -1)
 (setq fringe-styles '("no-fringes" . 0)) 
 )

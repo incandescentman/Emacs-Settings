@@ -41,7 +41,7 @@
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
-(setq mouse-highlight nil)
+(setq mouse-highlight t)
 (setq-local cursor-in-non-selected-windows nil)
 
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -3945,3 +3945,5 @@ The full path into relative path and insert it as a local file link in org-mode"
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
+
+'(org-icalendar-use-scheduled (quote (event-if-not-todo todo-start)))
