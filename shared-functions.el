@@ -3903,7 +3903,14 @@ The full path into relative path and insert it as a local file link in org-mode"
 (interactive)
 (if
 
-(looking-back "\\.\\.\\.[ ]*")                               ; if
+; If
+(or
+(looking-back "\\.\\.\\.[ ]*") 
+(looking-back "i.e.[ ]*") 
+(looking-back "e.g.[ ]*") 
+(looking-back "vs.[ ]*") 
+(looking-back "vs.[ ]*") 
+)
     (call-interactively 'downcase-word); then
     (call-interactively 'endless/downcase); else
 

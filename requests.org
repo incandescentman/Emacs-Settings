@@ -1,3 +1,14 @@
+* don't capitalize after inserting org-link 
+
+#+BEGIN_EXAMPLE
+imagine themselves there. Maybe something like [[https://www.videoblocks.com/video/people-mingle-and-drink-at-a-classy-bar-7n938b0/][this]] or like [[http://www.shutterstock.com/video/clip-6724390-stock-footage-team-ambitious-young-male-female-multi-ethnic-business-associates-celebrating-business-success.html?src=search/v7ED5x7IEZJu-9ZQHIy5nA:1:84/gg][this]] or like [[https://www.shutterstock.com/video/clip-9148838-stock-footage-in-high-quality-format-excited-young-people-singing-along-at-a-music-festival.html?src=search/NQjGGayx-Rb4BTTqtoTa8Q:1:37/3p][this]] but more tailored to what your event will actually look like. 
+- 
+#+END_EXAMPLE
+
+
+* C-g 
+
+C-go to escape in other apps 
 * change the behavior of org-smart-meta-return/dwim
 
 For plain-text lists 

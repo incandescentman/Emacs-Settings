@@ -280,9 +280,14 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
 (looking-back "'")
 (looking-back "(")
 (looking-at ")")
+(looking-at "|")
+(looking-back "|")
 (looking-back "\\[")
 (looking-at "\\]")
 (looking-at "\\/")
+(looking-at "\\/")
+(looking-at "\\\\")
+(looking-back "\\\\")
 (looking-back "\"")
 (looking-at "\"")
 )
@@ -292,6 +297,9 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
   (pasteboard-paste-without-smart-quotes))   ; else
   ) 
     #+END_SRC
+
+    #+RESULTS:
+    : pasteboard-paste-spaces-maybe
 
 
 *** pasteboard-paste-no-spaces
@@ -2723,10 +2731,10 @@ Five six
 (looking-at "[[:punct:]]*[\n\t ]*\\*")
 ;; (looking-at "\\* TODO"); redundant
 (let ((case-fold-search nil))
-  (looking-at "[[:punct:]]*[\n\t ]*[A-Z]")) 
-(looking-at "[[:punct:]]*[\n\t ]*#\\+")
-(looking-at "[[:punct:]]*[\n\t ]*\(")
-(looking-at "[[:punct:]]*[\n\t ]*\<")
+  (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")) 
+(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
+(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*\(")
+(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*\<")
 ) 
 (capitalize-word 1))
 )
@@ -2987,7 +2995,7 @@ Didn't work.
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send)
+  (message-send)
   (add-hook 'org-mode-hook 'org-bullets-mode)) 
 #+END_SRC
 
