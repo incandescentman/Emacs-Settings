@@ -3002,7 +3002,7 @@ Didn't work.
 * orgstruct-mode-map 
 #+BEGIN_SRC emacs-lisp
 (define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
-(define-key orgstruct-mode-map (kbd "\C-c\C-c") 'send-message-without-bullets)
+(define-key orgstruct-mode-map (kbd "\C-c\C-c") 'notmuch-mua-send)
 #+END_SRC
 
 * message-mode-map
