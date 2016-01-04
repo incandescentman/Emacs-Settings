@@ -4442,7 +4442,7 @@ Single Capitals as you type."
 ** notmuch
 
    #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
+; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats

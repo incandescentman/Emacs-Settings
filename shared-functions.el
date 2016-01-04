@@ -3183,7 +3183,7 @@ Single Capitals as you type."
 (define-key gnus-summary-mode-map "a"
   'gnus-summary-wide-reply)
 
-(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
+; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats
