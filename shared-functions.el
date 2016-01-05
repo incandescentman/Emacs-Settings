@@ -338,17 +338,17 @@
         ((looking-back "^\\*+[ ]*") ;; one or more stars
          (previous-line)
          (end-of-line))
-(
-(looking-back "^[ ]*- ") 
-         (previous-line)
-         (end-of-line))
 
-        (t
-         (org-delete-backward-char N))
+;; this is to "don't delete the hyphen markers for plain-text lists"
+;; I didn't like it so I turned it off 
+; (
+; (looking-back "^[ ]*- ") 
+; (previous-line)
+; (end-of-line)) 
+(t 
+(org-delete-backward-char N)
+)))
 
-
-
-))
 (add-hook
  'org-mode-hook
  (lambda ()
@@ -616,6 +616,7 @@
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
                             ("\x2019" . "'")
+                            ("’" . "'")
 (" — " . "---")
 (" - " . "---")
 ("—" . "---")

@@ -889,13 +889,8 @@ This fucked up autopair mode so I'm turning it off again.
 (global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
 
-
-*** smart-org-meta-return-dwim
-
-**** new version
-From here: 
-[[https://www.reddit.com/r/emacs/comments/3pw2qq/orgmode_headings_and_blank_lines/][{Org-mode} Headings and blank lines : emacs]]
-
+** smart insertion of headings and subheadings
+*** smart-org-meta-return-dwim 
  #+BEGIN_SRC emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
@@ -921,13 +916,18 @@ From here:
 
 ) 
 
+#+END_SRC
 
-
+*** smart-org-insert-heading-respect-content-dwim 
+#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
   (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
 )
+#+END_SRC
 
+*** smart-org-insert-todo-heading-dwim 
+#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
   (let ((listitem-or-checkbox (org-plain-text-list-p)))
@@ -936,31 +936,45 @@ From here:
         (insert "[ ] ")
         (insert "TODO ")))
 )
+#+END_SRC
 
+*** smart-org-insert-todo-heading-respect-content-dwim 
+#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
   (interactive)
   (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content)
 )
+#+END_SRC
 
+*** smart-org-insert-subheading 
+#+BEGIN_SRC emacs-lisp 
 (defun smart-org-insert-subheading ()
-  (interactive)
-
+  (interactive) 
 (call-rebinding-org-blank-behaviour 'org-meta-return) 
 (org-demote-subtree)
-  )
+) 
+#+END_SRC
 
+*** smart-org-insert-todo-subheading 
+#+BEGIN_SRC emacs-lisp 
+(defun smart-org-insert-todo-subheading ()
+  (interactive) 
+(call-rebinding-org-blank-behaviour 'org-insert-todo-subheading) 
+) 
+#+END_SRC
 
+*** keybindings 
+#+BEGIN_SRC emacs-lisp 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
-
-
+(define-key org-mode-map (kbd "<C-M-return>") 'smart-org-insert-todo-subheading) 
  #+END_SRC
 
-*** smart-return
 
+*** smart-return 
 #+BEGIN_SRC emacs-lisp
 (defun smart-return ()
   (interactive)
@@ -2603,18 +2617,7 @@ No space. Does that make sense? Thanks!
       (my/fix-space)))))
 #+END_SRC
 
-** TESTING [#B] my-delete-backward-and-capitalize? 
-enable my-delete-backward to delete region and capitalize new first letter in sentence
-Rúdi: Can we add to my/delete-backward something like what I wrote below, so that if I delete a region containing the first part of a sentence or sentences, it automatically capitalizes the first letter of what is now the first word in the sentence?
-
-#+BEGIN_QUOTE
-First delete region, and then:
-(if (my/beginning-of-sentence-p)
-(progn
-(capitalize-word)
- (left-word)
-)))
-#+END_QUOTE
+** my-delete-backward-and-capitalize 
 
 #+BEGIN_SRC emacs-lisp
 (defcustom capitalize-after-deleting-single-char nil

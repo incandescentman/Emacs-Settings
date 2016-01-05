@@ -700,8 +700,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ) 
 
-
-
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive) 
   (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
@@ -722,18 +720,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 
 (defun smart-org-insert-subheading ()
-  (interactive)
-
+  (interactive) 
 (call-rebinding-org-blank-behaviour 'org-meta-return) 
 (org-demote-subtree)
-  )
+) 
 
+(defun smart-org-insert-todo-subheading ()
+  (interactive) 
+(call-rebinding-org-blank-behaviour 'org-insert-todo-subheading) 
+) 
 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
+(define-key org-mode-map (kbd "<C-M-return>") 'smart-org-insert-todo-subheading) 
 
 (defun smart-return ()
   (interactive)
