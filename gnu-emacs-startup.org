@@ -1028,6 +1028,8 @@ From here:
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 
 #+END_SRC
+
+
 ** kill word correctly
 
 #+BEGIN_SRC emacs-lisp
@@ -2995,14 +2997,15 @@ Didn't work.
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
+  (notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode)) 
 #+END_SRC
 
 * orgstruct-mode-map 
 #+BEGIN_SRC emacs-lisp
 (define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
-(define-key orgstruct-mode-map (kbd "\C-c\C-c") 'notmuch-mua-send)
+; (define-key orgstruct-mode-map (kbd "<return>") 'message-mode-smart-return)
+(define-key orgstruct-mode-map (kbd "\C-c\C-c") 'send-message-without-bullets)
 #+END_SRC
 
 * message-mode-map
@@ -3010,6 +3013,7 @@ Didn't work.
 (add-hook 'message-mode-hook
           (lambda ()
             (local-set-key "\C-c\C-c" 'send-message-without-bullets) 
+; (local-set-key (kbd "<return>") 'orgstruct-mode-smart-return) 
 )) 
 #+END_EXAMPLE 
 
