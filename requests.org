@@ -1,3 +1,5 @@
+* when cursor is on blank line and insert-heading, add heading to current line don't add line break 
+
 * don't capitalize after inserting org-link 
 
 #+BEGIN_EXAMPLE
