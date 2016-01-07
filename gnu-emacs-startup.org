@@ -1011,12 +1011,14 @@ From here:
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (let ((is-org-chbs (org-checkbox-p)))
-           (if (eq major-mode 'org-mode)
-               (org-meta-return)
-             (orgstruct-hijacker-org-meta-return))
+         (let ((is-org-chbs (org-checkbox-p))
+               (meta-ret-kb (key-binding (kbd "M-RET"))))
+           (if meta-ret-kb
+               (call-interactively meta-ret-kb)
+             (newline))
            (when is-org-chbs
              (insert "[ ] "))))
+        ((key-binding (kbd "M-RET")) (call-interactively (key-binding (kbd "M-RET"))))
         ((eq major-mode 'org-mode) (org-return))
         (t (newline))))
 
