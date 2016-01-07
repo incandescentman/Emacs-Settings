@@ -267,7 +267,6 @@
   (setq content (org-remove-indentation content))
   (format "@<div class=\"drawer\">%s@</div>\n" content))
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t) 
 
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
@@ -3954,4 +3953,10 @@ The full path into relative path and insert it as a local file link in org-mode"
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t))) 
 
-'(org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
+(setq org-icalendar-include-todo nil) 
+(setq org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID t)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")

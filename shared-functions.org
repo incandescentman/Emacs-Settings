@@ -483,7 +483,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
   (setq content (org-remove-indentation content))
   (format "@<div class=\"drawer\">%s@</div>\n" content))
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-(setq org-icalendar-include-todo t) 
+
 #+END_SRC 
 
 ** org-mode key bindings:
@@ -5612,5 +5612,13 @@ It will open the link in Emacs with typing C-c C-o.
 
 * ical
 #+BEGIN_SRC emacs-lisp
-'(org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
+(setq org-icalendar-include-todo nil) 
+(setq org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID t)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")
+
 #+END_SRC
+

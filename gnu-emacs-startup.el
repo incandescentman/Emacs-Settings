@@ -733,7 +733,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
-(define-key org-mode-map (kbd "<C-M-return>") 'smart-org-insert-todo-subheading)
+(define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 
 (defun smart-return ()
   (interactive)

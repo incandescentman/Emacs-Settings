@@ -935,6 +935,7 @@ This fucked up autopair mode so I'm turning it off again.
         (insert "[ ] ")
         (insert "TODO ")))
 )
+
 #+END_SRC
 
 *** smart-org-insert-todo-heading-respect-content-dwim 
@@ -969,7 +970,7 @@ This fucked up autopair mode so I'm turning it off again.
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
-(define-key org-mode-map (kbd "<C-M-return>") 'smart-org-insert-todo-subheading) 
+(define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading) 
  #+END_SRC
 
 
