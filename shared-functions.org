@@ -5613,12 +5613,48 @@ It will open the link in Emacs with typing C-c C-o.
 * ical
 #+BEGIN_SRC emacs-lisp
 (setq org-icalendar-include-todo nil) 
-(setq org-icalendar-use-scheduled (quote (event-if-not-todo todo-start))) 
+(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
 (setq org-icalendar-alarm-time 60)
  (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
  (setq org-icalendar-combined-name "Org-Mode")
-(setq org-icalendar-store-UID t)
+(setq org-icalendar-store-UID nil)
 (setq org-icalendar-timezone "(-18000 \"EST\") ")
-
+(setq org-agenda-default-appointment-duration '15)
 #+END_SRC
 
+
+
+* create directories when necessary 
+
+** Can I create directories that don't exist while creating a new file in emacs?
+
+In emacs, I create a file by visiting it with C-x C-f. Let's say I'd like to create /home/myself/new_directory/file.txt.
+
+If new_directory does not exist yet, is there a way to have it get created during the creation of file.txt without any extra steps? (I'm thinking of something like using the -p flag to mkdir in Linux.)
+
+I feel like there's a different keystroke instead of C-x C-f that can do this, but I can't remember what it is. 
+
+You can also advise function find-file to transparently create necessary directories.
+
+#+BEGIN_EXAMPLE 
+(defadvice find-file (before make-directory-maybe (filename &optional wildcards) activate)
+  "Create parent directory if not exists while visiting file."
+  (unless (file-exists-p filename)
+    (let ((dir (file-name-directory filename)))
+      (unless (file-exists-p dir)
+        (make-directory dir)))))
+Simply put this in your .emacs somewhere and use C-x C-f as usual. 
+#+END_EXAMPLE
+
+** create intermediate dirs when saving a file 
+
+Wow, this works.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook
+          (lambda ()
+            (when buffer-file-name
+              (let ((dir (file-name-directory buffer-file-name)))
+                (when (and (not (file-exists-p dir))
+                           (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                  (make-directory dir t)))))) 
+#+END_SRC
