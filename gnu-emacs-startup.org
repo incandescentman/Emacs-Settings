@@ -58,10 +58,10 @@ Automatically load abbreviations table:
 * org predicates
 
   #+BEGIN_SRC emacs-lisp 
-
   (defun org-or-orgtsruct-p ()
     (or (eq major-mode 'org-mode)
-        (bound-and-true-p orgstruct-mode)))
+        (and (bound-and-true-p orgstruct-mode)
+             (org-context-p 'headline 'item))))
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -1011,15 +1011,11 @@ From here:
                          (let ((parent (getf (second el) :parent)))
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
-         (let ((is-org-chbs (org-checkbox-p))
-               (meta-ret-kb (key-binding (kbd "M-RET"))))
-           (if meta-ret-kb
-               (call-interactively meta-ret-kb)
-             (newline))
+         (let ((is-org-chbs (org-checkbox-p)))
+           (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
            (when is-org-chbs
              (insert "[ ] "))))
-        ((key-binding (kbd "M-RET")) (call-interactively (key-binding (kbd "M-RET"))))
-        ((eq major-mode 'org-mode) (org-return))
+        ((org-or-orgtsruct-p) (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return))))
         (t (newline))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 
