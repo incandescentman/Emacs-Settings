@@ -3961,3 +3961,11 @@ The full path into relative path and insert it as a local file link in org-mode"
 (setq org-icalendar-store-UID nil)
 (setq org-icalendar-timezone "(-18000 \"EST\") ")
 (setq org-agenda-default-appointment-duration '15)
+
+(add-hook 'before-save-hook
+          (lambda ()
+            (when buffer-file-name
+              (let ((dir (file-name-directory buffer-file-name)))
+                (when (and (not (file-exists-p dir))
+                           (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                  (make-directory dir t))))))
