@@ -1046,6 +1046,7 @@ This fucked up autopair mode so I'm turning it off again.
         (t (newline))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 
+(define-key orgstruct-mode-map (kbd "<return>") 'smart-return) 
 #+END_SRC
 
 

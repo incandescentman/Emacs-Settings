@@ -3419,7 +3419,7 @@ Single Capitals as you type."
 (defun unbind-orgstruct-keys-in-message-mode ()
   (interactive)
   (when (and (eq 'message-mode major-mode)
-             orgstruct-mode)
+             (bound-and-true-p orgstruct-mode))
     (unbind-orgstruct-keys)))
 
 (add-hook 'orgstruct-mode-hook 'unbind-orgstruct-keys-in-message-mode)

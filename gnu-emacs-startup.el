@@ -26,16 +26,21 @@
 (recenter-top-bottom)
   )
 
+(defun org-or-orgtsruct-p ()
+  (or (eq major-mode 'org-mode)
+      (and (bound-and-true-p orgstruct-mode)
+           (org-context-p 'headline 'item))))
+
 (defun org-checkbox-p ()
 "Predicate: Checks whether the current line org-checkbox"
   (and
-    (eq 'org-mode major-mode)
+    (org-or-orgtsruct-p)
     (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
 
 (defun org-plain-text-list-p ()
 "Predicate: Checks whether the current line org-plain-text-list"
   (and
-    (eq 'org-mode major-mode)
+    (org-or-orgtsruct-p)
     (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
@@ -739,31 +744,30 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
 
   ;; don't leave stray stars or links
-  (when 
+  (when
       (or
-       (looking-back "\\[") 
+       (looking-back "\\[")
        ;; (looking-back "\* ")
        (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
        (looking-back "^# ")
-       ;; (looking-back "* TODO ") ; actually I don't think I want this 
+       ;; (looking-back "* TODO ") ; actually I don't think I want this
        ;; (looking-back "^*+")
-       ;; (looking-back "- ") 
+       ;; (looking-back "- ")
 
        )
     (beginning-of-line)
-    ) 
+    )
   ;;
   (cond (mark-active
          (progn (delete-region (mark) (point))
-                (newline))) 
+                (newline)))
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and (eq major-mode 'org-mode)
+        ((and (org-or-orgtsruct-p)
               org-return-follows-link
               (org-in-regexp org-any-link-re))
          (cond
-          ((or
-;; (looking-at "\\[\\[.*")
+          ((or (looking-at "\\[\\[.*")
                (looking-back "\\]\\]")
                (and (thing-at-point 'url)
                     (let ((bnds (bounds-of-thing-at-point 'url)))
@@ -774,7 +778,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (progn (forward-char 2)
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
-        ((and (eq major-mode 'org-mode)
+        ((and (org-or-orgtsruct-p)
               (let ((el (org-element-at-point)))
                 (and el
                      ;; point is at an item
@@ -786,7 +790,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
-        ((and (eq major-mode 'org-mode)
+        ((and (org-or-orgtsruct-p)
               (let ((el (org-element-at-point)))
                 (and el
                      (or (member (first el) '(item plain-list))
@@ -794,12 +798,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                            (and parent
                                 (member (first parent) '(item plain-list))))))))
          (let ((is-org-chbs (org-checkbox-p)))
-           (org-meta-return)
+           (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
            (when is-org-chbs
              (insert "[ ] "))))
-        (t (org-return))))
+        ((org-or-orgtsruct-p) (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return))))
+        (t (newline))))
 
-(define-key org-mode-map (kbd "<return>") 'smart-return)
+(define-key org-mode-map (kbd "<return>") 'smart-return) 
+(define-key orgstruct-mode-map (kbd "<return>") 'smart-return)
 
 (defun kill-word-correctly ()
   "Kill word."
