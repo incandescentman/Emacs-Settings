@@ -3907,6 +3907,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 (or
 (looking-back "\\.\\.\\.[ ]*") 
 (looking-back "i.e.[ ]*") 
+(looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 
 (looking-back "vs.[ ]*") 
 (looking-back "vs.[ ]*") 
