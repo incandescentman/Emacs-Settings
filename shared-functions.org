@@ -5518,6 +5518,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 (or
 (looking-back "\\.\\.\\.[ ]*") 
 (looking-back "i.e.[ ]*") 
+(looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 
 (looking-back "vs.[ ]*") 
 (looking-back "vs.[ ]*") 
