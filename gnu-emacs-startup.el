@@ -767,7 +767,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
               org-return-follows-link
               (org-in-regexp org-any-link-re))
          (cond
-          ((or (looking-at "\\[\\[.*")
+          ((or 
+;; (looking-at "\\[\\[.*")
                (looking-back "\\]\\]")
                (and (thing-at-point 'url)
                     (let ((bnds (bounds-of-thing-at-point 'url)))
@@ -801,7 +802,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
            (when is-org-chbs
              (insert "[ ] "))))
-        ((org-or-orgtsruct-p) (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return))))
+        ((org-or-orgtsruct-p) (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-return))))
         (t (newline))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 

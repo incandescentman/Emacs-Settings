@@ -1,0 +1,31 @@
+Searchlink works in a few ways:
+
+- Run a quick search on a single selection, and have the selection replaced with the resulting url (and optional title) as a Markdown inline link, a Markdown reference, or just a plain url.
+- Run a single search and have the results put on your clipboard, perfect for using from scripts and launchers (e.g. LaunchBar or Alfred).
+- The "bracket" format, which allows you to just write, marking things to link as you go. When you're done, you can run it on the full document and---if your queries were good---have your links generated automatically without ever opening a browser.
+
+
+Replace text with a link 
+
+: dark night of the soul
+
+If you end the selected text with "!!", it will only output the url.
+
+: dark night of the soul!!
+
+If you end the search with a "^"---which can be before or after a "!!"---it will copy the result to the clipboard and not print anything out.
+
+: dark night of the soul !!^
+
+In single line searches, text in parenthesis or double quotes will be used as the link title
+
+: dark night of the soul "my article"
+
+** arg 
+- !wiki
+- !def
+- !@t : Link text as Twitter username
+
+** modifiers 
+- !! will only return the URL without any link formatting
+- ^ will output the result to the clipboard and leave input text in place
