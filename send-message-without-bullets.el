@@ -1,7 +1,19 @@
+(defvar *sent-emails-org-file* "~/nd/sent-emails.org")
+(defun save-buffer-to-sent-emails-org-file ()
+  ;; header
+  (write-region
+   (concat "\n\n\n* ===============================\n* -- "
+           (current-time-string)
+           " --\n* -------------------------------\n\n")
+   0 *sent-emails-org-file* t)
+  ;; buffer
+  (write-region nil 0 *sent-emails-org-file* t))
+
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (message-send)
+  (save-buffer-to-sent-emails-org-file)
+  (notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook

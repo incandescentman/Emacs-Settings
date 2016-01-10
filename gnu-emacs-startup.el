@@ -1671,11 +1671,19 @@ subsequent sends. could save them all in a logbook?
         (insert "*"))
     (embolden-next-word)))
 
-(defun send-message-without-bullets ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode))
+(defvar *sent-emails-org-file* "~/sent-emails.org")
+
+(defun save-buffer-to-sent-emails-org-file ()
+  ;; header
+  (write-region
+   (concat "\n\n\n* ===============================\n* -- "
+           (current-time-string)
+           " --\n* -------------------------------\n\n")
+   0 *sent-emails-org-file* t)
+  ;; buffer
+  (write-region nil 0 *sent-emails-org-file* t))
+
+(load "/Users/jay/emacs/prelude/personal/send-message-without-bullets.el")
 
 (define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
 ; (define-key orgstruct-mode-map (kbd "<return>") 'message-mode-smart-return)

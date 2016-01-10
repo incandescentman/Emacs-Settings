@@ -2992,6 +2992,8 @@ Didn't work.
 #+END_EXAMPLE
 
 * embolden-or-bold
+
+* 
 #+BEGIN_SRC emacs-lisp
 
 (defun embolden-or-bold (arg)
@@ -3007,13 +3009,23 @@ Didn't work.
 
 #+END_SRC
 
+* save buffer to sent-emails-org-file 
+#+BEGIN_SRC emacs-lisp
+(defvar *sent-emails-org-file* "~/sent-emails.org")
+
+(defun save-buffer-to-sent-emails-org-file ()
+  ;; header
+  (write-region
+   (concat "\n\n\n* ===============================\n* -- "
+           (current-time-string)
+           " --\n* -------------------------------\n\n")
+   0 *sent-emails-org-file* t)
+  ;; buffer
+  (write-region nil 0 *sent-emails-org-file* t))
+#+END_SRC
 * send message without bullets
 #+BEGIN_SRC emacs-lisp
-(defun send-message-without-bullets ()
-  (interactive)
-  (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send)
-  (add-hook 'org-mode-hook 'org-bullets-mode)) 
+(load "/Users/jay/emacs/prelude/personal/send-message-without-bullets.el")
 #+END_SRC
 
 * orgstruct-mode-map 

@@ -3184,7 +3184,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * auto-capitalize
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "require" "fn"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "fn"))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp

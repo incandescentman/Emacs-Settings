@@ -2266,7 +2266,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "require" "fn"))
+(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "fn"))
 
 (setq auto-capitalize-predicate
       (lambda ()
