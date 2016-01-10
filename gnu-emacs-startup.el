@@ -1671,19 +1671,29 @@ subsequent sends. could save them all in a logbook?
         (insert "*"))
     (embolden-next-word)))
 
-(defvar *sent-emails-org-file* "~/sent-emails.org")
+(defvar *sent-emails-org-file* "/Users/jay/Dropbox/writing/notationaldata/sent-emails.org")
 
 (defun save-buffer-to-sent-emails-org-file ()
   ;; header
   (write-region
-   (concat "\n\n\n* ===============================\n* -- "
-           (current-time-string)
+   (concat "\n\n\n* ===============================\not* -- "
+;; (org-insert-time-stamp (current-time)) 
+(insert (format-time-string "%F %l:%M%P\n\n")) 
            " --\n* -------------------------------\n\n")
    0 *sent-emails-org-file* t)
   ;; buffer
   (write-region nil 0 *sent-emails-org-file* t))
 
-(load "/Users/jay/emacs/prelude/personal/send-message-without-bullets.el")
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+  (save-buffer-to-sent-emails-org-file)
+  (notmuch-mua-send)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
 
 (define-key orgstruct-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
 ; (define-key orgstruct-mode-map (kbd "<return>") 'message-mode-smart-return)

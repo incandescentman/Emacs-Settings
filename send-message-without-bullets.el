@@ -1,10 +1,10 @@
-(defvar *sent-emails-org-file* "~/nd/sent-emails.org")
+(defvar *sent-emails-org-file* "/Users/jay/Dropbox/writing/notationaldata/sent-emails.org")
 (defun save-buffer-to-sent-emails-org-file ()
   ;; header
   (write-region
-   (concat "\n\n\n* ===============================\n* -- "
+   (concat "\n\n\n* "
            (current-time-string)
-           " --\n* -------------------------------\n\n")
+           "\n\n")
    0 *sent-emails-org-file* t)
   ;; buffer
   (write-region nil 0 *sent-emails-org-file* t))
