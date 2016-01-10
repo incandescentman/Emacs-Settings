@@ -647,7 +647,7 @@
   (setq new-buffer-count (+ new-buffer-count 1))
   (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
   (org-mode))
-(global-set-key (kbd "s-T") 'new-buffer)
+;; (global-set-key (kbd "s-T") 'new-buffer)
 ;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
 
 (defun new-lisp-buffer ()
@@ -655,6 +655,13 @@
   (setq new-buffer-count (+ new-buffer-count 1))
   (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
   (emacs-lisp-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; multiple scratch buffers                                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; uses package "scratch"
+(autoload 'scratch "scratch" nil t) 
+(global-set-key (kbd "s-T") 'scratch)
 
 (defun org-new-scratch-buffer ()
   (interactive)
@@ -2000,7 +2007,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (define-hyper-key "r" 'helm-mini)
 (define-hyper-key "r" 'recentf-open-files-compl)
 (define-hyper-key "R" 'projectile-find-file)
-(define-hyper-key "t" 'new-buffer)
+(define-hyper-key "t" 'scratch)
 (define-hyper-key "T" 'org-new-scratch-buffer)
 (define-hyper-key "g" 'isearch-repeat-forward)
 (define-hyper-key "k" 'ido-kill-buffer)
