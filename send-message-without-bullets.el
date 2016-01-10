@@ -13,7 +13,7 @@
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
   (save-buffer-to-sent-emails-org-file)
-  (message-send)
+  (notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
