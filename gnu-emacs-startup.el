@@ -1675,11 +1675,11 @@ subsequent sends. could save them all in a logbook?
 
 (defun save-buffer-to-sent-emails-org-file ()
   ;; header
-  (write-region
-   (concat "\n\n\n* ===============================\not* -- "
-;; (org-insert-time-stamp (current-time)) 
-(insert (format-time-string "%F %l:%M%P\n\n")) 
-           " --\n* -------------------------------\n\n")
+
+(write-region
+   (concat "\n\n\n* "
+(format-time-string "%F %l:%M%P\n\n")
+           "\n\n")
    0 *sent-emails-org-file* t)
   ;; buffer
   (write-region nil 0 *sent-emails-org-file* t))
