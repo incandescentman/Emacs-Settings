@@ -1543,9 +1543,10 @@ subsequent sends. could save them all in a logbook?
 ;; (looking-at "\\* TODO"); redundant
 (let ((case-fold-search nil))
   (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")) 
-(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
-(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*\(")
-(looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*\<")
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
+
 ) 
 (capitalize-word 1))
 )
