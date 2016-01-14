@@ -5670,3 +5670,12 @@ Wow, this works.
                            (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
                   (make-directory dir t)))))) 
 #+END_SRC
+
+
+* org-twbs
+#+BEGIN_SRC emacs-lisp
+'(org-twbs-head-include-default-style t)
+ '(org-twbs-htmlize-output-type (quote inline-css))
+ '(org-twbs-indent t)
+
+#+END_SRC
