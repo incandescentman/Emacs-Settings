@@ -5679,3 +5679,9 @@ Wow, this works.
  '(org-twbs-indent t)
 
 #+END_SRC
+
+
+* no inline images
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-with-inline-images nil) 
+#+END_SRC

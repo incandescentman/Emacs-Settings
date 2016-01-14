@@ -3977,3 +3977,9 @@ The full path into relative path and insert it as a local file link in org-mode"
                 (when (and (not (file-exists-p dir))
                            (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
                   (make-directory dir t)))))) 
+
+'(org-twbs-head-include-default-style t)
+ '(org-twbs-htmlize-output-type (quote inline-css))
+ '(org-twbs-indent t)
+
+(setq org-startup-with-inline-images nil) 

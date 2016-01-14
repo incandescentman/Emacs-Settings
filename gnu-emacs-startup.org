@@ -2752,6 +2752,7 @@ Five six
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:") 
 
 ) 
 (capitalize-word 1))
