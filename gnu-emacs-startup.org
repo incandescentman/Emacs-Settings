@@ -2832,6 +2832,29 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
   #+BEGIN_SRC emacs-lisp
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
+
+(defcustom fountain-export-default-command
+  'fountain-export-shell-script
+  "\\<fountain-mode-map>Default function to call with \\[fountain-export-default]."
+  :type '(radio (function-item fountain-export-shell-script)
+                (function-item fountain-export-buffer-to-html))
+  :group 'fountain-export)
+
+(defcustom fountain-export-shell-script
+  "afterwriting --config ~/.config/afterwriting/config.json --source %s --pdf --overwrite"
+  "Shell command string to convert Fountain source to ouput.
+\"%s\" will be substituted with `buffer-file-name'"
+  :type 'string
+  :group 'fountain-export)
+
+(defun fountain-export-shell-script (&optional buffer)
+  "Call shell script defined in `fountain-export-shell-script'."
+  (interactive)
+  (let* ((buffer (or buffer (current-buffer)))
+         (file (shell-quote-argument (buffer-file-name buffer)))
+         (command (format fountain-export-shell-script file)))
+    (async-shell-command command "*Fountain Export Process*")))
+
   #+END_SRC
 
 * display file name
