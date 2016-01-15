@@ -1,0 +1,178 @@
+* [#A] 1. Sending email with image link 
+
+** Input:
+~M-x compose-mail~ 
+
+#+BEGIN_QUOTE
+To: sunjaydixit@gmail.com 
+Subject: test
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+http://i.imgur.com/LXF8MBa.png 
+
+#+END_QUOTE
+
+~C-c C-c~ 
+
+** Results: 
+#+BEGIN_QUOTE
+From: Jay Dixit <dixit@aya.yale.edu>
+To: sunjaydixit@gmail.com 
+Subject: test
+Date: Fri, 15 Jan 2016 15:23:43 -0500
+Message-ID: <m21t9ik2wg.fsf@aya.yale.edu>
+--text follows this line--
+<#multipart type=alternative><#part type=text/plain>[[http://i.imgur.com/LXF8MBa.png]] 
+<#multipart type=related><#part type=text/html><div style="font-family:Georgia,serif">
+<div class="figure">
+<p style="font-family:Georgia,serif; margin-bottom: 1em;"><img src="cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_LXF8MBa.png" alt="LXF8MBa.png" /> <br  />
+</p>
+</div>
+</div><#part type="image/png" filename="/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/LXF8MBa.png" disposition=inline id="<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_LXF8MBa.png>">
+<#/part>
+<#/multipart>
+<#/multipart>
+
+#+END_QUOTE
+
+** Backtrace: 
+
+#+BEGIN_SRC emacs-lisp
+Debugger entered--Lisp error: (file-error "Opening input file" "no such file or directory" "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png")
+  insert-file-contents("/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png" nil nil nil nil)
+  mm-insert-file-contents("/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png" nil nil nil nil t)
+  mml-generate-mime-1((part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))
+  mml-compute-boundary-1((part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))
+  mapc(mml-compute-boundary-1 ((tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . ""))))
+  mml-compute-boundary-1((multipart (type . "related") (tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . ""))))
+  mapc(mml-compute-boundary-1 ((tag-location . 186) (part (type . "text/plain") (tag-location . 215) (contents . "[[http://i.imgur.com/erkff32.png]] \n")) (multipart (type . "related") (tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))))
+  mml-compute-boundary-1((multipart (type . "alternative") (tag-location . 186) (part (type . "text/plain") (tag-location . 215) (contents . "[[http://i.imgur.com/erkff32.png]] \n")) (multipart (type . "related") (tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))))
+  mml-compute-boundary((multipart (type . "alternative") (tag-location . 186) (part (type . "text/plain") (tag-location . 215) (contents . "[[http://i.imgur.com/erkff32.png]] \n")) (multipart (type . "related") (tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))))
+  mml-generate-mime-1((multipart (type . "alternative") (tag-location . 186) (part (type . "text/plain") (tag-location . 215) (contents . "[[http://i.imgur.com/erkff32.png]] \n")) (multipart (type . "related") (tag-location . 274) (part (type . "text/html") (tag-location . 299) (contents . "<div style=\"font-family:Georgia,serif\">\n<div class=\"figure\">\n<p style=\"font-family:Georgia,serif; margin-bottom: 1em;\"><img src=\"cid:_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png\" alt=\"erkff32.png\" /> <br  />\n</p>\n</div>\n</div>")) (part (type . "image/png") (filename . "/var/folders/g1/pmt051xx6fj4b8mj85kxdst40000gn/T/http:/i.imgur.com/erkff32.png") (disposition . "inline") (id . "<_var_folders_g1_pmt051xx6fj4b8mj85kxdst40000gn_T_http:_i.imgur.com_erkff32.png>") (tag-location . 581) (contents . "")))))
+  mml-generate-mime()
+  message-encode-message-body()
+  message-send-mail(nil)
+  message-send-via-mail(nil)
+  message-send(nil)
+  notmuch-mua-send()
+  send-message-without-bullets()
+  call-interactively(send-message-without-bullets nil nil)
+  command-execute(send-message-without-bullets) 
+#+END_SRC
+
+
+** Desired behavior 
+I would like it to automatically display the image in the email as inline HTML, the same way it does when exporting from org-mode to HTML.
+
+In org-mode, this input:
+
+#+BEGIN_QUOTE
+    * Image 
+    http://i.imgur.com/erkff32.png 
+#+END_QUOTE
+
+M-x org-export-dispatch > HTML 
+
+Correctly generates an IMG tag in the HTML: 
+
+#+BEGIN_HTML
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Jay Dixit" />
+<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/web-design/custom-css/email.css' />
+</head>
+<body>
+<div id="content">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Image</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+
+<div class="figure">
+<p><img src="http://i.imgur.com/erkff32.png" alt="erkff32.png" /> 
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html> 
+#+END_HTML 
+
+I would like this to happen when sending emails as well! 
+
+* [#A] 2. Sending email with image attachment 
+** Input:
+M-x compose-mail
+To: sunjaydixit@gmail.com 
+Subject: test
+C-c C-a (Attach File)
+Attach file: /Users/jay/Downloads/8Cx1UyM.png 
+Content type: image/png
+One Line description:puppy
+Disposition: Attachment 
+
+#+BEGIN_QUOTE
+To: sunjaydixit@gmail.com 
+Subject: test
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+<#part type="image/png- filename="/Users/jay/Downloads/8Cx1UyM.png- disposition=attachment description=puppy>
+<#/part> 
+#+END_QUOTE
+
+
+C-c C-c 
+ 
+** Results:
+This works correctly, EXCEPT that it inserts junk into the message text, so that the recipient sees this:
+
+http://i.imgur.com/b5xVIcO.png 
+
+** Desired output 
+Can you make it so that this junk doesn't appear to the recipient? 
+
+* [#C] 3. Lower priority: automatically attach images?
+This one is lower priority, and if it's difficult, then don't worry about it. 
+
+In org-mode, this input:
+
+#+BEGIN_QUOTE
+    * Image 
+    file:/Users/jay/Downloads/8Cx1UyM.png 
+
+#+END_QUOTE
+
+M-x org-export-dispatch > HTML 
+
+...correctly generates an IMG tag in the HTML: 
+
+#+BEGIN_HTML
+<div class="figure">
+<p><img src="file:///Users/jay/Downloads/8Cx1UyM.png" alt="8Cx1UyM.png" /> 
+</p>
+</div> 
+#+END_HTML 
+
+Is it possible to make it so that if I do this:
+
+~M-x compose-mail~ 
+
+#+BEGIN_QUOTE
+To: sunjaydixit@gmail.com 
+Subject: test
+From: Jay Dixit <dixit@aya.yale.edu>
+--text follows this line--
+
+file:/Users/jay/Downloads/8Cx1UyM.png 
+#+END_QUOTE
+
+C-c C-can 
+
+...that message-mode will automatically add file:/Users/jay/Downloads/8Cx1UyM.png as an attachment (and again, per #2 above, display it inline using an <img> tag?

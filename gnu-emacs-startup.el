@@ -772,13 +772,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
               org-return-follows-link
               (org-in-regexp org-any-link-re))
          (cond
-          ((or 
-;; (looking-at "\\[\\[.*")
-               (looking-back "\\]\\]")
-               (and (thing-at-point 'url)
-                    (let ((bnds (bounds-of-thing-at-point 'url)))
-                      (or (>= (car bnds) (point))
-                          (<= (cdr bnds) (point))))))
+          ((or
+            ;;(looking-at "\\[\\[.*")
+            (looking-back ">")
+            (looking-back "\\]\\]")
+            (and (thing-at-point 'url)
+                 (let ((bnds (bounds-of-thing-at-point 'url)))
+                   (or (>= (car bnds) (point))
+                       (<= (cdr bnds) (point))))))
            (newline))
           ((char-equal (string-to-char "]") (following-char))
            (progn (forward-char 2)
@@ -807,7 +808,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
            (when is-org-chbs
              (insert "[ ] "))))
-        ((org-or-orgtsruct-p) (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-return))))
+        ((and
+          (org-or-orgtsruct-p)
+          (not (and
+                org-return-follows-link
+                (looking-back ">"))))
+         (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-return))))
         (t (newline))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return) 
