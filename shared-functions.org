@@ -77,7 +77,8 @@ You can toggle it in necessary files by setting the local variables section at t
 ;; (require 'org-bullets)
 (require 'ox-latex)
 (require 'ox-org)
-  (require 'ox-html)
+(require 'ox-html)
+(require 'ox-md)
 ; (require 'org-fstree)
 #+END_SRC
 
@@ -2358,6 +2359,7 @@ Also converts full stops to commas."
 (global-set-key "\M-c" 'endless/capitalize)
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key "\M-u" 'endless/upcase)
+(define-key key-minor-mode-map (kbd "M-u") 'caps-lock-mode) 
 
 (defun endless/upgrade ()
   "Update all packages, no questions asked."
@@ -3180,12 +3182,14 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
       (message "Replaced %s match(es)" count))))
 #+END_SRC
 
-* auto-capitalize
 
+* words to always lowercase
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "fn"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at"))
 #+END_SRC
 
+
+* auto-capitalize-predicate 
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
       (lambda ()

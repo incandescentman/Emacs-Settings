@@ -26,7 +26,8 @@
 ;; (require 'org-bullets)
 (require 'ox-latex)
 (require 'ox-org)
-  (require 'ox-html)
+(require 'ox-html)
+(require 'ox-md)
 ; (require 'org-fstree)
 
 ;; (require 'use-package)
@@ -1641,6 +1642,7 @@ Also converts full stops to commas."
 (global-set-key "\M-c" 'endless/capitalize)
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key "\M-u" 'endless/upcase)
+(define-key key-minor-mode-map (kbd "M-u") 'caps-lock-mode) 
 
 (defun endless/upgrade ()
   "Update all packages, no questions asked."
@@ -2265,7 +2267,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "fn"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at"))
 
 (setq auto-capitalize-predicate
       (lambda ()

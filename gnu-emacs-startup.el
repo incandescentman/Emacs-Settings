@@ -195,8 +195,7 @@
     (shell-command-on-region start end
            "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
            nil t)
-    (save-excursion
-
+    (save-excursion 
       )))
 
 (defun pasteboard-cut ()
@@ -1554,7 +1553,7 @@ subsequent sends. could save them all in a logbook?
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:") 
-
+;; (looking-at '(auto-capitalize-words)) ; doesn't work 
 ) 
 (capitalize-word 1))
 )

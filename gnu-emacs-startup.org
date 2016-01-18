@@ -223,32 +223,9 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
    (region-beginning) (region-end) "pbcopy"))
 #+END_SRC
 
-** TODO pasteboard-paste
-Can you add an exception/edge case to pasteboard paste that checks to see if I'm at the start of a plain-text list, and if it is, to not remove the space after the hyphen? In the following example, suppose the point is where the carat is, and I do pasteboard-copy on the text "this is text copied from elsewhere" and then I do pasteboard-paste.
+** pasteboard-paste
 
-Example:
-#+BEGIN_EXAMPLE
-- this is the first item
-- this is the second item 
-- ^
-#+END_EXAMPLE
-
-Current output:
-#+begin_EXAMPLE
-- this is the first item
-- this is the second item 
--this is text copied from elsewhere 
-#+END_EXAMPLE 
-Desired output:
-#+begin_EXAMPLE
-- this is the first item
-- this is the second item 
-- this is text copied from elsewhere
-#+END_EXAMPLE
-
-And can you add this to the following three functions, i.e. pasteboard-paste, pasteboard-paste-without-smart-quotes, and pasteboard-paste-no-spaces? Thanks!
-
-*** pasteboard-paste (smart-quotes) 
+*** pasteboard-paste (with smart quotes by default) 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -264,8 +241,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
       (my/fix-space))))
 #+END_SRC
 
-*** pasteboard-paste-without-smart-quotes
- 
+*** pasteboard-paste-without-smart-quotes (and without spaces)
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
@@ -306,8 +282,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
     : pasteboard-paste-spaces-maybe
 
 
-*** pasteboard-paste-no-spaces
-
+*** pasteboard-paste-no-spaces 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -319,8 +294,7 @@ And can you add this to the following three functions, i.e. pasteboard-paste, pa
     (shell-command-on-region start end
 			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
 			     nil t)
-    (save-excursion
-
+    (save-excursion 
       )))
 #+END_SRC
 
@@ -2760,7 +2734,7 @@ Five six
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:") 
-
+;; (looking-at '(auto-capitalize-words)) ; doesn't work 
 ) 
 (capitalize-word 1))
 )

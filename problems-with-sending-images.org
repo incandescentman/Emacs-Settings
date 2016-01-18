@@ -176,3 +176,25 @@ file:/Users/jay/Downloads/8Cx1UyM.png
 C-c C-can 
 
 ...that message-mode will automatically add file:/Users/jay/Downloads/8Cx1UyM.png as an attachment (and again, per #2 above, display it inline using an <img> tag?
+
+* [#A] 4. In OSX pasteboard ring, store hyperlinks in Markdown format, not org-mode format 
+Can you look at ~pasteboard-copy~, ~pasteboard-paste~, ~pasteboard-paste-no-spaces~? 
+
+I posted a question and got some answers here:
+https://www.reddit.com/r/emacs/comments/4154bu/how_to_get_orgmode_to_recognize_markdownstyle/ 
+
+When I select text that includes one or more links and then do pasteboard-copy, I'd like to make it so that pasteboard-copy:
+
+1. First converts the links to Markdown format.
+2. Then does pbcopy, so that the copied text that is pushed to the OSX system pasteboard will store the links in Markdown format.
+
+Also, when I do pasteboard-paste or pasteboard-paste-no-spaces, I'd like the links to first be converted back to org-mode format, so that when I paste into an Emacs buffer, the links will be recognized by org-mode. 
+
+Does that make sense? Thanks! 
+
+
+* [#A] capitalize-unless-org-heading 
+Can you add the list of ~auto-capitalize-words~ to capitalize-unless-org-heading? 
+
+Look at the line I commented out. I want capitalize-unless-org-heading to check to see if it's ~(looking-at '(auto-capitalize-words))~ but I don't know the right syntax. Thanks!
+
