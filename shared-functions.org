@@ -3140,6 +3140,11 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
         (and
          (not (org-checkbox-p))
          (save-match-data
+           (not (and
+                 (org-or-orgtsruct-p)
+                 (looking-back
+                 "\\[\\[.*\\]\\][^.\n]*\\.?"))))
+         (save-match-data
            (not (looking-back
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
