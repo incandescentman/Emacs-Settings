@@ -3185,7 +3185,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never capitalize 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if" "blockquote"))
 #+END_SRC
 
 
