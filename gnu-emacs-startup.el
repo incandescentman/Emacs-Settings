@@ -1594,6 +1594,9 @@ subsequent sends. could save them all in a logbook?
 )
 )
 
+(load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
+(require 'fountain-mode)
+
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
 
 (defcustom fountain-export-default-command
