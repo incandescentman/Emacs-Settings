@@ -317,8 +317,9 @@
 
 ;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-
+(define-key key-minor-mode-map (kbd "C-s-v") 'kdm/html2org-clipboard)
 (define-key key-minor-mode-map (kbd "M-v") 'kdm/html2org-clipboard)
+
 
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
