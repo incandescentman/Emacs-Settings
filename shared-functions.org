@@ -3183,10 +3183,17 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+END_SRC
 
 
-* words to always lowercase
+* words to never capitalize 
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if"))
 #+END_SRC
+
+
+* words to never downcase
+#+BEGIN_SRC emacs-lisp
+(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I"))
+#+END_SRC
+
 
 
 * auto-capitalize-predicate 
