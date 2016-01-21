@@ -3095,6 +3095,8 @@ Single Capitals as you type."
 (setq reb-re-syntax 'string)
 
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+
+;; note that this slows everything down 
 (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
 ;; (global-fasd-mode 1)

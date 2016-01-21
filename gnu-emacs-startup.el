@@ -152,7 +152,9 @@
     (my/fix-space)
     (save-excursion
       (goto-char start)
-      (my/fix-space))))
+      (my/fix-space)))
+(reflash-indentation)
+)
 
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
