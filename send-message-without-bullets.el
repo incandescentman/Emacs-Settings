@@ -1,3 +1,9 @@
+(defvar *mail-signature* "\n---\nJay Dixit\n(646) 355-8001\njaydixit.com")
+(defun sign-current-email ()
+  (save-excursion
+    (end-of-buffer)
+    (insert *mail-signature*)))
+
 (defvar *sent-emails-org-file* "~/sent-emails.org")
 (defun save-buffer-to-sent-emails-org-file ()
   ;; header
@@ -12,10 +18,17 @@
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (save-buffer-to-sent-emails-org-file)
   (notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
+(defun custom-send-message (arg)
+  (interactive "p")
+  (when (and arg (= 0 (mod arg 4)))
+    (sign-current-email))
+  (save-buffer-to-sent-emails-org-file)
+  (send-message-without-bullets))
+
 (add-hook 'message-mode-hook
           (lambda ()
-            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+            (local-set-key "\C-c\C-c" 'custom-send-message)))
+
