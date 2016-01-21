@@ -377,6 +377,7 @@
 '(org-log-done (quote time))
 '(org-n-level-faces 9)
 '(org-odd-levels-only nil)
+'(org-indent-mode 1)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
 (setq org-directory "~/Dropbox/writing/notationaldata/")
