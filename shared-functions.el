@@ -3412,7 +3412,7 @@ Single Capitals as you type."
 (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
-(defun kill-to-buffer-end-or-begin (arg)
+(defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
   (if (and arg (= 0 (mod arg 4)))
       (beginning-of-buffer)
@@ -3420,7 +3420,7 @@ Single Capitals as you type."
   (delete-region (mark) (point))
   (recenter-top-bottom))
 
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-begin)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-beginning)
 
   (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
 
