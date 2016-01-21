@@ -3204,6 +3204,11 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
         (and
          (not (org-checkbox-p))
          (save-match-data
+           (not (and
+                 (org-or-orgtsruct-p)
+                 (looking-back
+                 "\\[\\[.*\\]\\][^.\n]*\\.?"))))
+         (save-match-data
            (not (looking-back
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
@@ -4690,13 +4695,15 @@ Single Capitals as you type."
 ** kill to buffer end
 
    #+BEGIN_SRC emacs-lisp
-(defun kill-to-buffer-end ()
-  (interactive) 
-  (end-of-buffer)
-(delete-region (mark) (point))
-(recenter-top-bottom)
-)
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end) 
+(defun kill-to-buffer-end-or-begin (arg)
+  (interactive "p")
+  (if (and arg (= 0 (mod arg 4)))
+      (beginning-of-buffer)
+    (end-of-buffer))
+  (delete-region (mark) (point))
+  (recenter-top-bottom))
+
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-begin)
    #+END_SRC
 
 * deft-turbo
