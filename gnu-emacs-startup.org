@@ -3034,6 +3034,7 @@ Didn't work.
   ;; buffer
   (write-region nil 0 *sent-emails-org-file* t)) 
 #+END_SRC
+
 * send message without bullets
 #+BEGIN_SRC emacs-lisp
 (defun send-message-without-bullets ()

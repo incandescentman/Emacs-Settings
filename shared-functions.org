@@ -4695,7 +4695,7 @@ Single Capitals as you type."
 ** kill to buffer end
 
    #+BEGIN_SRC emacs-lisp
-(defun kill-to-buffer-end-or-begin (arg)
+(defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
   (if (and arg (= 0 (mod arg 4)))
       (beginning-of-buffer)
@@ -4703,7 +4703,7 @@ Single Capitals as you type."
   (delete-region (mark) (point))
   (recenter-top-bottom))
 
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-begin)
+(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-beginning)
    #+END_SRC
 
 * deft-turbo
