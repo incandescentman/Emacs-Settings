@@ -5100,9 +5100,6 @@ event of an error or nonlocal exit."
 * swiper
 
   #+BEGIN_SRC emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; swiper                                                                 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcustom ivy-height 50
   "Number of lines for the minibuffer window."
   :type 'integer) 
@@ -5642,7 +5639,7 @@ It will open the link in Emacs with typing C-c C-o.
     (set-buffer-modified-p t))) 
 #+END_SRC
 
-* ical
+* iCal
 #+BEGIN_SRC emacs-lisp
 (setq org-icalendar-include-todo nil) 
 (setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
