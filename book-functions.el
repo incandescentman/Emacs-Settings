@@ -10,6 +10,7 @@
 (text-scale-increase 2)
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-conceptual-outline.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/12-mistakes/12-mistakes-conceptual-outline.txt")
+(find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
 (text-scale-increase 2)
 (split-window-horizontally)
 (find-file "/Users/jay/Dropbox/writing/book/12-mistakes/02_hookup-mode_using-st-criteria-for-finding-lt-mates---chapter.txt")
