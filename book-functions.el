@@ -126,3 +126,17 @@ emacs-settings)))
   (dired "~/b/12-mistakes"))
 
 
+
+
+(defun book-load-current ()
+  (interactive)
+  (jay/save-some-buffers)
+(condition-case nil
+  (kill-buffer "playful.org")
+  (error nil))
+
+;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
+(find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
+;; (text-scale-increase 2)
+;; (other-window 1)
+)

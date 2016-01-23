@@ -168,6 +168,7 @@
 (if 
 (or 
 (looking-back "'")
+(looking-at "'")
 (looking-back "(")
 (looking-at ")")
 (looking-at "|")

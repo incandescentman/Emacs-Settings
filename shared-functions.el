@@ -1642,8 +1642,8 @@ Also converts full stops to commas."
 
 (global-set-key "\M-c" 'endless/capitalize)
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
-(global-set-key "\M-u" 'endless/upcase)
-(define-key key-minor-mode-map (kbd "M-u") 'caps-lock-mode) 
+(global-set-key (kbd "M-u") 'endless/upcase)
+(global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
 
 (defun endless/upgrade ()
   "Update all packages, no questions asked."

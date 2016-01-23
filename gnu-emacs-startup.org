@@ -260,6 +260,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (if 
 (or 
 (looking-back "'")
+(looking-at "'")
 (looking-back "(")
 (looking-at ")")
 (looking-at "|")
