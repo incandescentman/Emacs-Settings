@@ -561,15 +561,15 @@ Defining stuck projects as todos that do not contain "scheduled" or
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
-(sequence "TODO" "STARTED" "|" "DONE")
-        (sequence "MISSED" "|" "DONE")
+(sequence "☛ TODO" "STARTED" "|" "✔ DONE")
+        (sequence "✘ MISSED" "|" "✔ DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "✔ DONE")
         ))
 #+END_SRC
 
@@ -3860,8 +3860,8 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
-(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
-(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
+(key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
 
 #+END_SRC
 

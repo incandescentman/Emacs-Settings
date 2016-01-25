@@ -1555,6 +1555,8 @@ subsequent sends. could save them all in a logbook?
   (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")) 
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\)")
+(looking-at "[[:punct:]]*\)[\n\t ]*")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:") 
 ;; (looking-at '(auto-capitalize-words)) ; doesn't work 

@@ -317,15 +317,15 @@
 
 (setq org-todo-keywords
       '(
-(sequence "TODO" "STARTED" "|" "DONE")
-        (sequence "MISSED" "|" "DONE")
+(sequence "☛ TODO" "STARTED" "|" "✔ DONE")
+        (sequence "✘ MISSED" "|" "✔ DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "✔ DONE")
         ))
 
 (defun new-org-delete-backward-char (N)
@@ -2797,8 +2797,8 @@ as the subject."
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
-(key-seq-define-global "nm" 'new-email-from-subtree-no-signature)
-(key-seq-define-global "mn" 'new-email-from-subtree-with-signature)
+(key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
 
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
