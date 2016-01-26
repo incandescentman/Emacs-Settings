@@ -215,12 +215,19 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** pasteboard-copy
 #+BEGIN_SRC emacs-lisp
-
-(defun pasteboard-copy()
+(defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
-  (interactive)
-  (shell-command-on-region
-   (region-beginning) (region-end) "pbcopy"))
+  (interactive "r")
+  (let* ((txt (buffer-substring (region-beginning) (region-end)))
+         (txt-updated-links
+          (replace-regexp-in-string "[[\\(.*\\)][\\(.*\\)]]" "\\[\\2\\](\\1)"  txt)))
+    (shell-command (format "echo %s | pbcopy" (shell-quote-argument txt-updated-links)))))
+
+;; (defun pasteboard-copy()
+;;   "Copy region to OS X system pasteboard."
+;;  (interactive)
+;;  (shell-command-on-region
+;;   (region-beginning) (region-end) "pbcopy"))
 #+END_SRC
 
 ** pasteboard-paste
