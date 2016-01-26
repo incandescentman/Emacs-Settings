@@ -2227,13 +2227,22 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 * My custom functions for working with dates and times
 
 #+BEGIN_SRC emacs-lisp
-(defun org-day ()
+(defun org-current-time ()
   "foo"
   (interactive)
-  (insert (format-time-string "[%H:%M]"))
+(insert (format-time-string "[%H:%M]"))
   )
 
-(defun jd-org-today ()
+(defun org-today () 
+  "insert a new heading with today's date"
+  (interactive)
+(smart-org-meta-return-dwim) 
+  (org-insert-time-stamp (current-time))
+(insert "\n") 
+  )
+
+
+(defun org-today-and-accountability ()
   "insert a new heading with today's date"
   (interactive)
 (insert "\n** committed actions: ")
@@ -2258,6 +2267,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (next-line)
   (next-line)
   )
+
 #+END_SRC
 
 * Discover mode

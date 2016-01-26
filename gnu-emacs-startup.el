@@ -281,6 +281,11 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-m t d") 'org-today)
+(define-key key-minor-mode-map (kbd "s-m c i") 'jd-clock-in)
+
+
+
 (define-key key-minor-mode-map (kbd "s-.") 'searchlink)
 
 (define-key key-minor-mode-map (kbd "s-m c s") 'org-clone-subtree)

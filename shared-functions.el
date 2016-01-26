@@ -1536,13 +1536,22 @@ margin-bottom: 1em;
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
 
-(defun org-day ()
+(defun org-current-time ()
   "foo"
   (interactive)
-  (insert (format-time-string "[%H:%M]"))
+(insert (format-time-string "[%H:%M]"))
   )
 
-(defun jd-org-today ()
+(defun org-today () 
+  "insert a new heading with today's date"
+  (interactive)
+(smart-org-meta-return-dwim) 
+  (org-insert-time-stamp (current-time))
+(insert "\n") 
+  )
+
+
+(defun org-today-and-accountability ()
   "insert a new heading with today's date"
   (interactive)
 (insert "\n** committed actions: ")
