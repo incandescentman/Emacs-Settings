@@ -1762,6 +1762,10 @@ subsequent sends. could save them all in a logbook?
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(org-link ((t (:underline nil))))) 
+'(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
+
+
+
 (org-mode) 
   )
 
