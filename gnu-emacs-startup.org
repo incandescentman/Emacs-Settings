@@ -2532,7 +2532,7 @@ Can we fix? Thanks!
 
    ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' ”), but if this example makes sense to you, we can also handle it.
 
-** NOTE-TO-RÚDI Answer
+** NOTE-TO-SERJ Answer
 OK great. To answer your question, here are a few ways a sentence might look:
 
 #+BEGIN_QUOTE
@@ -2547,7 +2547,7 @@ OK great. To answer your question, here are a few ways a sentence might look:
 
    My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~jay/insert-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
 
-** NOTE-TO-RÚDI Yes, #2 is working. 
+** NOTE-TO-SERJ Yes, #2 is working. 
 You're right, #2 works. Not sure why it wasn't working for me before... I must have done something when I was playing with autopair-mode. But yes, #2 works.
 
 #3 definitely still doesn't work. And yes, auto-capitalize seems to work correctly in most other cases. Thanks!
@@ -2556,7 +2556,7 @@ You're right, #2 works. Not sure why it wasn't working for me before... I must h
 
    Please also check if sentence commands (killing sentences, etc.) are working as you intend, since I changed the ~sentence-end-base~ variable.
 
-** NOTE-TO-RÚDI Great!
+** NOTE-TO-SERJ Great!
 Looks great! I will keep testing.
 
 * TODO [#A] check my changes to backward-kill-word-correctly?          :rudi:
@@ -2588,7 +2588,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 
    Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~jay/insert-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
 
-** NOTE-TO-RÚDI Answer
+** NOTE-TO-SERJ Answer
 Good question. The answer is that there should never be a space after "---"
 
 Example:

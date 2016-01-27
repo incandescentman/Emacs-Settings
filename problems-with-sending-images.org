@@ -193,8 +193,7 @@ Also, when I do pasteboard-paste or pasteboard-paste-no-spaces, I'd like the lin
 Does that make sense? Thanks! 
 
 
-* [#A] capitalize-unless-org-heading 
+* ✔ DONE [#A] capitalize-unless-org-heading 
 Can you add the list of ~auto-capitalize-words~ to capitalize-unless-org-heading? 
 
 Look at the line I commented out. I want capitalize-unless-org-heading to check to see if it's ~(looking-at '(auto-capitalize-words))~ but I don't know the right syntax. Thanks!
-

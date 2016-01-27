@@ -19,7 +19,7 @@ You can toggle it in necessary files by setting the local variables section at t
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
-#+TODO: | NOTE-TO-JAY NOTE-TO-RÚDI NOTE-TO-RÚDI
+#+TODO: | NOTE-TO-JAY NOTE-TO-SERJ NOTE-TO-SERJ
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
 
 # Local Variables:
