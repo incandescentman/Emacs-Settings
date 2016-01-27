@@ -561,15 +561,15 @@ Defining stuck projects as todos that do not contain "scheduled" or
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
       '(
-(sequence "TODO" "STARTED" "|" "✔ DONE")
-        (sequence "✘ MISSED" "|" "✔ DONE")
+(sequence "TODO" "STARTED" "|" "DONE")
+        (sequence "✘ MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "NOTE" "|" "✔ DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
 #+END_SRC
 

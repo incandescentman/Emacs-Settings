@@ -317,15 +317,15 @@
 
 (setq org-todo-keywords
       '(
-(sequence "TODO" "STARTED" "|" "✔ DONE")
-        (sequence "✘ MISSED" "|" "✔ DONE")
+(sequence "TODO" "STARTED" "|" "DONE")
+        (sequence "✘ MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "IF" "THEN" "|")
-        (sequence "GOAL" "PLAN" "NOTE" "|" "✔ DONE")
+        (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
 
 (defun new-org-delete-backward-char (N)
