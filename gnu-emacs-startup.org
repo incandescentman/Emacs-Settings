@@ -217,17 +217,19 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
-  (interactive "r")
+  (interactive)
   (let* ((txt (buffer-substring (region-beginning) (region-end)))
          (txt-updated-links
-          (replace-regexp-in-string "[[\\(.*\\)][\\(.*\\)]]" "\\[\\2\\](\\1)"  txt)))
-    (shell-command (format "echo %s | pbcopy" (shell-quote-argument txt-updated-links)))))
-
-;; (defun pasteboard-copy()
-;;   "Copy region to OS X system pasteboard."
-;;  (interactive)
-;;  (shell-command-on-region
-;;   (region-beginning) (region-end) "pbcopy"))
+          (replace-regexp-in-string
+           "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
+           (lambda (m)
+             (concat "[" (or (match-string 3 m)
+                             (match-string 1 m))
+                     "](" (match-string 1 m) ")"))
+           txt)))
+    (message "Copied: %s" txt-updated-links)
+    (shell-command-to-string
+     (format "echo %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 #+END_SRC
 
 ** pasteboard-paste
@@ -240,14 +242,35 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (let ((start (point))
         (end (if mark-active
                  (mark)
-               (point))))
-    (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+               (point)))
+        (ins-text
+         (replace-regexp-in-string
+          "\\[\\([^]]*\\)\\](\\([^)]*\\))"
+          "[[\\2][\\1]]"
+          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
+    ;; (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+    (delete-region start end)
+    (insert ins-text)
     (my/fix-space)
     (save-excursion
       (goto-char start)
       (my/fix-space)))
-(reflash-indentation)
-)
+  (reflash-indentation))
+
+;; (defun pasteboard-paste ()
+;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+;;   (interactive)
+;;   (let ((start (point))
+;;         (end (if mark-active
+;;                  (mark)
+;;                (point))))
+;;     (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+;;     (my/fix-space)
+;;     (save-excursion
+;;       (goto-char start)
+;;       (my/fix-space)))
+;; (reflash-indentation)
+;; )
 #+END_SRC
 
 *** pasteboard-paste-without-smart-quotes (and without spaces)
