@@ -26,22 +26,22 @@
 (recenter-top-bottom)
   )
 
-(defun org-or-orgtsruct-p ()
-  (or (eq major-mode 'org-mode)
-      (and (bound-and-true-p orgstruct-mode)
-           (org-context-p 'headline 'item))))
+  (defun org-or-orgtsruct-p ()
+    (or (eq major-mode 'org-mode)
+        (and (bound-and-true-p orgstruct-mode)
+             (org-context-p 'headline 'item))))
 
-(defun org-checkbox-p ()
-"Predicate: Checks whether the current line org-checkbox"
-  (and
-    (org-or-orgtsruct-p)
-    (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
+  (defun org-checkbox-p ()
+  "Predicate: Checks whether the current line org-checkbox"
+    (and
+      (org-or-orgtsruct-p)
+      (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
 
-(defun org-plain-text-list-p ()
-"Predicate: Checks whether the current line org-plain-text-list"
-  (and
-    (org-or-orgtsruct-p)
-    (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
+  (defun org-plain-text-list-p ()
+  "Predicate: Checks whether the current line org-plain-text-list"
+    (and
+      (org-or-orgtsruct-p)
+      (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
@@ -88,7 +88,7 @@
     (after dired-after-updating-hook first () activate)
   "Sort dired listings with directories first before adding marks."
   (mydired-sort)
-  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide))) 
+  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
 
 (defcustom dired-details-hidden-string ""
   "*This string will be shown in place of file details and symbolic links."
@@ -135,26 +135,57 @@
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
 
-(defun pasteboard-copy()
-  "Copy region to OS X system pasteboard."
-  (interactive)
-  (shell-command-on-region
-   (region-beginning) (region-end) "pbcopy"))
+  (defun pasteboard-copy ()
+    "Copy region to OS X system pasteboard."
+    (interactive)
+    (let* ((txt (buffer-substring (region-beginning) (region-end)))
+           (txt-updated-links
+            (replace-regexp-in-string
+             "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
+             (lambda (m)
+               (concat "[" (or (match-string 3 m)
+                               (match-string 1 m))
+                       "](" (match-string 1 m) ")"))
+             txt)))
+      (message "Copied: %s" txt-updated-links)
+      (shell-command-to-string
+       (format "echo %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 
-(defun pasteboard-paste ()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
-  (interactive)
-  (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point))))
-    (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-    (my/fix-space)
-    (save-excursion
-      (goto-char start)
-      (my/fix-space)))
-(reflash-indentation)
-)
+  (defun pasteboard-paste ()
+    "Paste from OS X system pasteboard via `pbpaste' to point."
+    (interactive)
+    (let ((start (point))
+          (end (if mark-active
+                   (mark)
+                 (point)))
+          (ins-text
+           (replace-regexp-in-string
+            "\\[\\([^]]*\\)\\](\\([^)]*\\))"
+            "[[\\2][\\1]]"
+            (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
+      ;; (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+      (delete-region start end)
+      (insert ins-text)
+      (my/fix-space)
+      (save-excursion
+        (goto-char start)
+        (my/fix-space)))
+    (reflash-indentation))
+
+  ;; (defun pasteboard-paste ()
+  ;;   "Paste from OS X system pasteboard via `pbpaste' to point."
+  ;;   (interactive)
+  ;;   (let ((start (point))
+  ;;         (end (if mark-active
+  ;;                  (mark)
+  ;;                (point))))
+  ;;     (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
+  ;;     (my/fix-space)
+  ;;     (save-excursion
+  ;;       (goto-char start)
+  ;;       (my/fix-space)))
+  ;; (reflash-indentation)
+  ;; )
 
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
@@ -163,10 +194,10 @@
     (replace-smart-quotes beg (point))))
 
 (defun pasteboard-paste-spaces-maybe ()
-(interactive) 
-;; begin if 
-(if 
-(or 
+(interactive)
+;; begin if
+(if
+(or
 (looking-back "'")
 (looking-at "'")
 (looking-back "(")
@@ -182,7 +213,7 @@
 (looking-back "\"")
 (looking-at "\"")
 )
-;; end if 
+;; end if
 
     (pasteboard-paste-no-spaces) ; then
   (pasteboard-paste-without-smart-quotes))   ; else
@@ -192,13 +223,13 @@
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-  (end (if mark-active
-     (mark)
-         (point))))
+	(end (if mark-active
+		 (mark)
+	       (point))))
     (shell-command-on-region start end
-           "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-           nil t)
-    (save-excursion 
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
+    (save-excursion
       )))
 
 (defun pasteboard-cut ()
@@ -207,7 +238,7 @@
   (pasteboard-copy)
   (delete-region (region-beginning) (region-end))
   (my/fix-space)
-  ) 
+  )
 
 (defun pasteboard-cut-and-capitalize ()
   "Cut region and put on OS X system pasteboard."
@@ -248,7 +279,7 @@
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
-(setq x-select-enable-clipboard t) 
+(setq x-select-enable-clipboard t)
 (defun push-kill-ring-to-pasteboard ()
   (interactive)
   (x-select-text (current-kill 0)))
@@ -295,7 +326,7 @@
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
-; org-narrow-to-subtree 
+; org-narrow-to-subtree
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
@@ -559,7 +590,7 @@
 When point is at the beginning of a sentence, kill the entire
 sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
   (interactive)
-(smart-expand) 
+(smart-expand)
   (if (my/beginning-of-sentence-p)
       (progn
         (kill-sentence)
@@ -575,9 +606,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Kill the current line."
   (interactive)
 ;; don't leave stray stars behind when killing a line
-(when 
+(when
 (or
-(looking-back "\\[") 
+(looking-back "\\[")
 (looking-back "\* ")
 (looking-back "\* TODO ")
 (looking-back "^\*+")
@@ -585,7 +616,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (looking-back "# ")
 )
 (beginning-of-line)
-) 
+)
 ;;  (expand-abbrev)
   (org-kill-line)
 ;;  (save-excursion
@@ -617,9 +648,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (unless
       (or
-(looking-back "vs[[:punct:]]+[ ]*") ; don't add extra periods to vs. 
-(looking-back ">") ; don't expand days of the week inside timestamps 
-       ) 
+(looking-back "vs[[:punct:]]+[ ]*") ; don't add extra periods to vs.
+(looking-back ">") ; don't expand days of the week inside timestamps
+       )
   (smart-expand))
 (insert "\ ")
   (just-one-space)
@@ -632,7 +663,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Insert paren without expanding abbrev."
   (interactive)
 (smart-expand)
-;; (insert-parentheses 1) 
+;; (insert-parentheses 1)
 (insert "\)")
 )
 
@@ -640,12 +671,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
 ;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
 
-;;; I changed this a)) bunch, not sure if it still works correctly. 
+;;; I changed this a)) bunch, not sure if it still works correctly.
 ;; (defun my/fix-space ()
 ;;   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
 ;;   (interactive)
 ;;   (just-one-space)
-;; 
+;;
 ;;     (when (or
 ;;            (looking-back "^[[:space:]]+")
 ;;            (looking-back "-[[:space:]]+")
@@ -656,12 +687,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;;       (unless
 ;;       (looking-back "^-[[:space:]]+")
 ;;   (delete-horizontal-space))
-;; 
-;; (unless 
-;;  (looking-back "^") 
+;;
+;; (unless
+;;  (looking-back "^")
 ;; (just-one-space)
 ;; )
-;; 
+;;
 ;; )
 
 (defun my/fix-space ()
@@ -710,12 +741,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
      (looking-at ".+")
      )                               ; if
     (org-toggle-heading-same-level) ; then
- (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else 
+ (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else
 
 )
 
 (defun smart-org-insert-heading-respect-content-dwim ()
-(interactive) 
+(interactive)
   (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
 )
 
@@ -734,22 +765,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
 
 (defun smart-org-insert-subheading ()
-  (interactive) 
-(call-rebinding-org-blank-behaviour 'org-meta-return) 
+  (interactive)
+(call-rebinding-org-blank-behaviour 'org-meta-return)
 (org-demote-subtree)
 )
 
 (defun smart-org-insert-todo-subheading ()
-  (interactive) 
-(call-rebinding-org-blank-behaviour 'org-insert-todo-subheading) 
+  (interactive)
+(call-rebinding-org-blank-behaviour 'org-insert-todo-subheading)
 )
 
-(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim) 
-(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim) 
+(define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim)
+(define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim)
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
-(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim) 
-(define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading) 
-(define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading) 
+(define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim)
+(define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading)
+(define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -824,14 +855,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-return))))
         (t (newline))))
 
-(define-key org-mode-map (kbd "<return>") 'smart-return) 
+(define-key org-mode-map (kbd "<return>") 'smart-return)
 (define-key orgstruct-mode-map (kbd "<return>") 'smart-return)
 
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
   (smart-expand)
-  (if (or (re-search-forward "\\=[  ]*\n" nil t)
+  (if (or (re-search-forward "\\=[ 	]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
@@ -884,8 +915,8 @@ provided the (transient) mark is active."
                       (or (mark t) 0))))
       (if (and transient-mark-mode mark-active)
           (progn (goto-char right)
-     (setq deactivate-mark t))
-  (call-interactively 'right-char)))))
+		 (setq deactivate-mark t))
+	(call-interactively 'right-char)))))
 
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
@@ -910,8 +941,8 @@ provided the (transient) mark is active."
    (format
     "http://www.google.com/search?q=%s"
     (if (region-active-p)
-  (url-hexify-string (buffer-substring (region-beginning)
-               (region-end)))
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
       (thing-at-point 'word)))))
 
 
@@ -931,13 +962,13 @@ provided the (transient) mark is active."
     (mapconcat
      (lambda (tup)
        (concat "[" (elt tup 0) "]"
-         (elt tup 1) " "))
+	       (elt tup 1) " "))
      words-funcs "") ": "))
    (let ((input (read-char-exclusive)))
      (funcall
       (elt
        (assoc
-  (char-to-string input) words-funcs)
+	(char-to-string input) words-funcs)
        2))))
 
 (defun words-twitter ()
@@ -946,8 +977,8 @@ provided the (transient) mark is active."
    (format
     "https://twitter.com/search?q=%s"
     (if (region-active-p)
-  (url-hexify-string (buffer-substring (region-beginning)
-               (region-end)))
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
       (thing-at-point 'word)))))
 
 (add-to-list 'words-funcs
@@ -959,37 +990,37 @@ provided the (transient) mark is active."
   (interactive)
 
   (let* ((url-request-method "POST")
-   (url-request-data (format
-          "key=some-random-text-&data=%s"
-          (url-hexify-string
-           (thing-at-point 'paragraph))))
-   (xml  (with-current-buffer
-       (url-retrieve-synchronously
-        "http://service.afterthedeadline.com/checkDocument")
-     (xml-parse-region url-http-end-of-headers (point-max))))
-   (results (car xml))
-   (errors (xml-get-children results 'error)))
+	 (url-request-data (format
+			    "key=some-random-text-&data=%s"
+			    (url-hexify-string
+			     (thing-at-point 'paragraph))))
+	 (xml  (with-current-buffer
+		   (url-retrieve-synchronously
+		    "http://service.afterthedeadline.com/checkDocument")
+		 (xml-parse-region url-http-end-of-headers (point-max))))
+	 (results (car xml))
+	 (errors (xml-get-children results 'error)))
 
     (switch-to-buffer-other-frame "*ATD*")
     (erase-buffer)
     (dolist (err errors)
       (let* ((children (xml-node-children err))
-       ;; for some reason I could not get the string out, and had to do this.
-       (s (car (last (nth 1 children))))
-       ;; the last/car stuff doesn't seem right. there is probably
-       ;; a more idiomatic way to get this
-       (desc (last (car (xml-get-children children 'description))))
-       (type (last (car (xml-get-children children 'type))))
-       (suggestions (xml-get-children children 'suggestions))
-       (options (xml-get-children (xml-node-name suggestions) 'option))
-       (opt-string  (mapconcat
-         (lambda (el)
-           (when (listp el)
-             (car (last el))))
-         options
-         " ")))
+	     ;; for some reason I could not get the string out, and had to do this.
+	     (s (car (last (nth 1 children))))
+	     ;; the last/car stuff doesn't seem right. there is probably
+	     ;; a more idiomatic way to get this
+	     (desc (last (car (xml-get-children children 'description))))
+	     (type (last (car (xml-get-children children 'type))))
+	     (suggestions (xml-get-children children 'suggestions))
+	     (options (xml-get-children (xml-node-name suggestions) 'option))
+	     (opt-string  (mapconcat
+			   (lambda (el)
+			     (when (listp el)
+			       (car (last el))))
+			   options
+			   " ")))
 
-  (insert (format "** %s ** %s
+	(insert (format "** %s ** %s
 Description: %s
 Suggestions: %s
 
@@ -1120,7 +1151,7 @@ password: %s" userid password))
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-  (auto-capitalize-mode -1))
+	(auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -1172,16 +1203,16 @@ subsequent sends. could save them all in a logbook?
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (org-mark-subtree)
   (let ((content (buffer-substring (point) (mark)))
-  (TO (org-entry-get (point) "TO" t))
-  (CC (org-entry-get (point) "CC" t))
-  (BCC (org-entry-get (point) "BCC" t))
-  (SUBJECT (nth 4 (org-heading-components)))
-  (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-  (continue nil)
-  (switch-function nil)
-  (yank-action nil)
-  (send-actions '((email-send-action . nil)))
-  (return-action '(email-heading-return)))
+	(TO (org-entry-get (point) "TO" t))
+	(CC (org-entry-get (point) "CC" t))
+	(BCC (org-entry-get (point) "BCC" t))
+	(SUBJECT (nth 4 (org-heading-components)))
+	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+	(continue nil)
+	(switch-function nil)
+	(yank-action nil)
+	(send-actions '((email-send-action . nil)))
+	(return-action '(email-heading-return)))
 
     (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
     (message-goto-body)
@@ -1193,54 +1224,54 @@ subsequent sends. could save them all in a logbook?
       (message-goto-bcc)
       (insert BCC))
     (if TO
-  (message-goto-body)
+	(message-goto-body)
       (message-goto-to))
     ))
 
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil) 
+(setq auto-revert-verbose nil)
 
 
 ;; Move files to trash when deleting
 (setq delete-by-moving-to-trash t)
 
-(defgroup helm-org-wiki nil
-  "Simple jump-to-org-file package."
-  :group 'org
-  :prefix "helm-org-wiki-")
-(defcustom helm-org-wiki-directory "~/nd/"
-  "Directory where files for `helm-org-wiki' are stored."
-  :group 'helm-org-wiki
-  :type 'directory)
-(defun helm-org-wiki-files ()
-  "Return .org files in `helm-org-wiki-directory'."
-  (let ((default-directory helm-org-wiki-directory))
-    (mapcar #'file-name-sans-extension
-            (file-expand-wildcards "*.txt"))))
-(defvar helm-source-org-wiki
-  `((name . "Projects")
-    (candidates . helm-org-wiki-files)
-    (action . ,(lambda (x)
-                  (find-file (expand-file-name
-                              (format "%s.txt" x)
-                              helm-org-wiki-directory))))))
-(defvar helm-source-org-wiki-not-found
-  `((name . "Create org-wiki")
-    (dummy)
-    (action . (lambda (x)
-                (helm-switch-to-buffer
-                 (find-file
-                  (format "%s/%s.org"
-                          helm-org-wiki-directory x)))))))
-;;;###autoload
-(defun helm-org-wiki ()
-  "Select an org-file to jump to."
-  (interactive)
-  (helm :sources
-        '(helm-source-org-wiki
-          helm-source-org-wiki-not-found)))
-(provide 'helm-org-wiki)
+    (defgroup helm-org-wiki nil
+      "Simple jump-to-org-file package."
+      :group 'org
+      :prefix "helm-org-wiki-")
+    (defcustom helm-org-wiki-directory "~/nd/"
+      "Directory where files for `helm-org-wiki' are stored."
+      :group 'helm-org-wiki
+      :type 'directory)
+    (defun helm-org-wiki-files ()
+      "Return .org files in `helm-org-wiki-directory'."
+      (let ((default-directory helm-org-wiki-directory))
+        (mapcar #'file-name-sans-extension
+                (file-expand-wildcards "*.txt"))))
+    (defvar helm-source-org-wiki
+      `((name . "Projects")
+        (candidates . helm-org-wiki-files)
+        (action . ,(lambda (x)
+                      (find-file (expand-file-name
+                                  (format "%s.txt" x)
+                                  helm-org-wiki-directory))))))
+    (defvar helm-source-org-wiki-not-found
+      `((name . "Create org-wiki")
+        (dummy)
+        (action . (lambda (x)
+                    (helm-switch-to-buffer
+                     (find-file
+                      (format "%s/%s.org"
+                              helm-org-wiki-directory x)))))))
+    ;;;###autoload
+    (defun helm-org-wiki ()
+      "Select an org-file to jump to."
+      (interactive)
+      (helm :sources
+            '(helm-source-org-wiki
+              helm-source-org-wiki-not-found)))
+    (provide 'helm-org-wiki)
 
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
@@ -1318,71 +1349,71 @@ subsequent sends. could save them all in a logbook?
 (setq *smart-punctuation-exceptions*
   (list "?!" ".." "..." "............................................." "---" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
-;; How do I add an exception for ") ; "? 
+;; How do I add an exception for ") ; "?
 ;; e.g. if I want to add a comment after a line of lisp?
 
-(defun smart-punctuation (new-punct &optional not-so-smart)
-  (smart-expand)
-  (save-restriction
+  (defun smart-punctuation (new-punct &optional not-so-smart)
+    (smart-expand)
+    (save-restriction
+      (when (and (eql major-mode 'org-mode)
+                 (org-at-heading-p))
+        (save-excursion
+          (org-beginning-of-line)
+          (let ((heading-text (fifth (org-heading-components))))
+            (when heading-text
+              (search-forward heading-text)
+              (narrow-to-region (match-beginning 0) (match-end 0))))))
+      (cl-flet ((go-back (regexp)
+                  (re-search-backward regexp nil t)
+                  (ignore-errors      ; might signal `end-of-buffer'
+                    (forward-char (length (match-string 0))))))
+        (if not-so-smart
+            (let ((old-point (point)))
+              (go-back "[^ \t]")
+              (insert new-punct)
+              (goto-char old-point)
+              (forward-char (length new-punct)))
+          (let ((old-point (point)))
+            (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+            (let ((was-after-space (and (< (point) old-point)
+                                        (find ?  (buffer-substring (point) old-point)))))
+              (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                         *smart-punctuation-marks*)
+                                 nil t)
+              (let* ((old-punct (match-string 2))
+                     (was-after-punct (>= old-point (point))))
+                (replace-match "" nil t nil 1)
+                (replace-match (or (when (and was-after-punct
+                                              (not (string= old-punct "")))
+                                     (let ((potential-new-punct (concat old-punct new-punct)))
+                                       (find-if (lambda (exception)
+                                                  (search potential-new-punct exception))
+                                                *smart-punctuation-exceptions*)))
+                                   new-punct)
+                               nil t nil 2)
+                (if was-after-space
+                    (my/fix-space)
+                  (when (looking-at "[ \t]*\\<")
+                    (save-excursion (my/fix-space))))))))))
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
-      (save-excursion
-        (org-beginning-of-line)
-        (let ((heading-text (fifth (org-heading-components))))
-          (when heading-text
-            (search-forward heading-text)
-            (narrow-to-region (match-beginning 0) (match-end 0))))))
-    (cl-flet ((go-back (regexp)
-                (re-search-backward regexp nil t)
-                (ignore-errors      ; might signal `end-of-buffer'
-                  (forward-char (length (match-string 0))))))
-      (if not-so-smart
-          (let ((old-point (point)))
-            (go-back "[^ \t]")
-            (insert new-punct)
-            (goto-char old-point)
-            (forward-char (length new-punct)))
-        (let ((old-point (point)))
-          (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
-          (let ((was-after-space (and (< (point) old-point)
-                                      (find ?  (buffer-substring (point) old-point)))))
-            (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                       *smart-punctuation-marks*)
-                               nil t)
-            (let* ((old-punct (match-string 2))
-                   (was-after-punct (>= old-point (point))))
-              (replace-match "" nil t nil 1)
-              (replace-match (or (when (and was-after-punct
-                                            (not (string= old-punct "")))
-                                   (let ((potential-new-punct (concat old-punct new-punct)))
-                                     (find-if (lambda (exception)
-                                                (search potential-new-punct exception))
-                                              *smart-punctuation-exceptions*)))
-                                 new-punct)
-                             nil t nil 2)
-              (if was-after-space
-                  (my/fix-space)
-                (when (looking-at "[ \t]*\\<")
-                  (save-excursion (my/fix-space))))))))))
-  (when (and (eql major-mode 'org-mode)
-             (org-at-heading-p))
-    (org-align-tags-here org-tags-column)))
+      (org-align-tags-here org-tags-column)))
 
 (defun smart-period ()
   (interactive)
 
 (unless
       (or
-(looking-back "vs[[:punct:]]*+*[ ]*") ; don't add extra periods to vs. 
-       ) 
-  (smart-punctuation ".")) 
+(looking-back "vs[[:punct:]]*+*[ ]*") ; don't add extra periods to vs.
+       )
+  (smart-punctuation "."))
 
 (save-excursion
-(unless 
-(or 
+(unless
+(or
 (looking-at "[ ]*$")
-(looking-at "\"[ ]*$") 
-(looking-at "\)[ ]*$") 
+(looking-at "\"[ ]*$")
+(looking-at "\)[ ]*$")
 )
 (capitalize-unless-org-heading))
 ))
@@ -1393,9 +1424,9 @@ subsequent sends. could save them all in a logbook?
 (defun smart-comma ()
   (interactive)
   (smart-punctuation ",")
-(unless 
+(unless
 (or
-(looking-at "\\W*$") 
+(looking-at "\\W*$")
 (looking-at "\\W*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[ ]*\"")          ; beginning of a quote
@@ -1498,7 +1529,7 @@ subsequent sends. could save them all in a logbook?
   (interactive)
 (when (looking-back "^[*]+ ")
 (kill-line 0)
-(insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire 
+(insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire
 )
 
   (let ((capitalize capitalize-after-deleting-single-char))
@@ -1513,8 +1544,8 @@ subsequent sends. could save them all in a logbook?
 ;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
 (unless (and
 (looking-back "\\w ")
-(looking-at "\\w") 
-) 
+(looking-at "\\w")
+)
   (my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
@@ -1523,8 +1554,8 @@ subsequent sends. could save them all in a logbook?
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
-(call-interactively 'backward-kill-word-correctly) 
-  (let ((fix-capitalization (my/beginning-of-sentence-p))) 
+(call-interactively 'backward-kill-word-correctly)
+  (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
 
@@ -1536,7 +1567,7 @@ subsequent sends. could save them all in a logbook?
       (or
        (looking-at "\\W*I\\b")          ; never downcase the word "I"
        (looking-at "\\W*OK\\b")          ; never downcase the word "OK"
-       (looking-at "[ ]*I\'")          ; never downcase the word "I" 
+       (looking-at "[ ]*I\'")          ; never downcase the word "I"
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
@@ -1552,22 +1583,40 @@ subsequent sends. could save them all in a logbook?
 
 (defun capitalize-unless-org-heading ()
   (interactive)
-(unless 
+(unless
 (or
 (looking-at "[[:punct:]]*[\n\t ]*\\*")
 ;; (looking-at "\\* TODO"); redundant
 (let ((case-fold-search nil))
-  (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")) 
+  (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]"))
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
 (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\)")
 (looking-at "[[:punct:]]*\)[\n\t ]*")
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<") 
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:") 
-;; (looking-at '(auto-capitalize-words)) ; doesn't work 
-) 
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
+(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
+;; (looking-at '(auto-capitalize-words)) ; doesn't work
+)
 (capitalize-word 1))
 )
+
+  (unless
+      (or
+       (looking-at "[[:punct:]]*[\n\t ]*\\*")
+       ;; (looking-at "\\* TODO"); redundant
+       (let ((case-fold-search nil))
+         (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]"))
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
+       (looking-at
+        (concat
+         "\\("
+         (reduce (lambda (a b) (concat a "\\|" b))
+                 auto-capitalize-words)
+         "\\)")))
+    (capitalize-word 1))
 
 (defun downcase-save-excursion ()
   (interactive)
@@ -1576,7 +1625,7 @@ subsequent sends. could save them all in a logbook?
 
 (looking-at "[ ]*I\\b") ; never downcase the word "I"
 ;; (looking-at "[ ]*I\'") ; never downcase the word "I'"
-(looking-at "[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc. 
+(looking-at "[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
@@ -1590,14 +1639,14 @@ subsequent sends. could save them all in a logbook?
   ))
 
 (defun smart-expand ()
-  (interactive) 
+  (interactive)
 
   (unless
-  
+
     (or
        (looking-back "\)\n*")
-(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*") 
-(looking-back ":t[ ]*") 
+(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
+(looking-back ":t[ ]*")
 
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
@@ -1608,7 +1657,7 @@ subsequent sends. could save them all in a logbook?
 (load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
 (require 'fountain-mode)
 
-(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 
 (defcustom fountain-export-default-command
   'fountain-export-shell-script
@@ -1643,7 +1692,7 @@ subsequent sends. could save them all in a logbook?
 (org-backward-sentence))
   (endless/capitalize)
 (org-forward-sentence 1)
-(jay/right-char) 
+(jay/right-char)
 )
 (define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
 
@@ -1761,12 +1810,12 @@ subsequent sends. could save them all in a logbook?
 (defadvice load-theme (after load-theme-advice activate)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-'(org-link ((t (:underline nil))))) 
+'(org-link ((t (:underline nil)))))
 '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
 
 
 
-(org-mode) 
+(org-mode)
   )
 
 (defun reformat-email (begin end)
