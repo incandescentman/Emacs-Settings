@@ -1536,7 +1536,7 @@ margin-bottom: 1em;
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
 
-(defun org-current-time ()
+(defun jd--org-current-time ()
   "foo"
   (interactive)
 (insert (format-time-string "[%H:%M]"))

@@ -2227,7 +2227,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 * My custom functions for working with dates and times
 
 #+BEGIN_SRC emacs-lisp
-(defun org-current-time ()
+(defun jd--org-current-time ()
   "foo"
   (interactive)
 (insert (format-time-string "[%H:%M]"))
