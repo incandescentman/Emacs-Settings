@@ -441,7 +441,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
 
 ;; unbind some existing keybindings
-(define-key undo-tree-map (kbd "C-x r") nil)
+;; (define-key undo-tree-map (kbd "C-x r") nil)
 
 ;; and the keybindings
 ;; mk - mykeybindings
