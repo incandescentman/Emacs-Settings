@@ -2932,7 +2932,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 ;; accountability
-(define-hyper-key "m td" 'jd-org-today)
+(define-hyper-key "m td" 'org-today)
 (define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
@@ -5117,7 +5117,7 @@ event of an error or nonlocal exit."
   "Number of lines for the minibuffer window."
   :type 'integer) 
 (global-set-key (kbd "C-s") 'swiper)
-(setq ivy-display-style 'fancy)
+;; (setq ivy-display-style 'fancy)
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
   #+END_SRC

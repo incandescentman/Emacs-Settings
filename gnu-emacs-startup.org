@@ -3020,14 +3020,14 @@ doesn't work.
 
 * bjm-swiper
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;;advise swiper to recenter on exit
 (defun bjm-swiper-recenter (&rest args)
   "recenter display after swiper"
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
-#+END_SRC
+#+END_EXAMPLE 
 
 * available keybindings
 
