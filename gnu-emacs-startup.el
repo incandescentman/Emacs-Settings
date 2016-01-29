@@ -223,12 +223,12 @@
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point))))
+  (end (if mark-active
+     (mark)
+         (point))))
     (shell-command-on-region start end
-                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-                             nil t)
+           "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+           nil t)
     (save-excursion
       )))
 
@@ -862,7 +862,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Kill word."
   (interactive)
   (smart-expand)
-  (if (or (re-search-forward "\\=[      ]*\n" nil t)
+  (if (or (re-search-forward "\\=[  ]*\n" nil t)
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
@@ -915,8 +915,8 @@ provided the (transient) mark is active."
                       (or (mark t) 0))))
       (if (and transient-mark-mode mark-active)
           (progn (goto-char right)
-                 (setq deactivate-mark t))
-        (call-interactively 'right-char)))))
+     (setq deactivate-mark t))
+  (call-interactively 'right-char)))))
 
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
@@ -941,8 +941,8 @@ provided the (transient) mark is active."
    (format
     "http://www.google.com/search?q=%s"
     (if (region-active-p)
-        (url-hexify-string (buffer-substring (region-beginning)
-                                             (region-end)))
+  (url-hexify-string (buffer-substring (region-beginning)
+               (region-end)))
       (thing-at-point 'word)))))
 
 
@@ -962,13 +962,13 @@ provided the (transient) mark is active."
     (mapconcat
      (lambda (tup)
        (concat "[" (elt tup 0) "]"
-               (elt tup 1) " "))
+         (elt tup 1) " "))
      words-funcs "") ": "))
    (let ((input (read-char-exclusive)))
      (funcall
       (elt
        (assoc
-        (char-to-string input) words-funcs)
+  (char-to-string input) words-funcs)
        2))))
 
 (defun words-twitter ()
@@ -977,8 +977,8 @@ provided the (transient) mark is active."
    (format
     "https://twitter.com/search?q=%s"
     (if (region-active-p)
-        (url-hexify-string (buffer-substring (region-beginning)
-                                             (region-end)))
+  (url-hexify-string (buffer-substring (region-beginning)
+               (region-end)))
       (thing-at-point 'word)))))
 
 (add-to-list 'words-funcs
@@ -990,37 +990,37 @@ provided the (transient) mark is active."
   (interactive)
 
   (let* ((url-request-method "POST")
-         (url-request-data (format
-                            "key=some-random-text-&data=%s"
-                            (url-hexify-string
-                             (thing-at-point 'paragraph))))
-         (xml  (with-current-buffer
-                   (url-retrieve-synchronously
-                    "http://service.afterthedeadline.com/checkDocument")
-                 (xml-parse-region url-http-end-of-headers (point-max))))
-         (results (car xml))
-         (errors (xml-get-children results 'error)))
+   (url-request-data (format
+          "key=some-random-text-&data=%s"
+          (url-hexify-string
+           (thing-at-point 'paragraph))))
+   (xml  (with-current-buffer
+       (url-retrieve-synchronously
+        "http://service.afterthedeadline.com/checkDocument")
+     (xml-parse-region url-http-end-of-headers (point-max))))
+   (results (car xml))
+   (errors (xml-get-children results 'error)))
 
     (switch-to-buffer-other-frame "*ATD*")
     (erase-buffer)
     (dolist (err errors)
       (let* ((children (xml-node-children err))
-             ;; for some reason I could not get the string out, and had to do this.
-             (s (car (last (nth 1 children))))
-             ;; the last/car stuff doesn't seem right. there is probably
-             ;; a more idiomatic way to get this
-             (desc (last (car (xml-get-children children 'description))))
-             (type (last (car (xml-get-children children 'type))))
-             (suggestions (xml-get-children children 'suggestions))
-             (options (xml-get-children (xml-node-name suggestions) 'option))
-             (opt-string  (mapconcat
-                           (lambda (el)
-                             (when (listp el)
-                               (car (last el))))
-                           options
-                           " ")))
+       ;; for some reason I could not get the string out, and had to do this.
+       (s (car (last (nth 1 children))))
+       ;; the last/car stuff doesn't seem right. there is probably
+       ;; a more idiomatic way to get this
+       (desc (last (car (xml-get-children children 'description))))
+       (type (last (car (xml-get-children children 'type))))
+       (suggestions (xml-get-children children 'suggestions))
+       (options (xml-get-children (xml-node-name suggestions) 'option))
+       (opt-string  (mapconcat
+         (lambda (el)
+           (when (listp el)
+             (car (last el))))
+         options
+         " ")))
 
-        (insert (format "** %s ** %s
+  (insert (format "** %s ** %s
 Description: %s
 Suggestions: %s
 
@@ -1151,7 +1151,7 @@ password: %s" userid password))
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-        (auto-capitalize-mode -1))
+  (auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -1203,16 +1203,16 @@ subsequent sends. could save them all in a logbook?
   (setq *email-heading-point* (set-marker (make-marker) (point)))
   (org-mark-subtree)
   (let ((content (buffer-substring (point) (mark)))
-        (TO (org-entry-get (point) "TO" t))
-        (CC (org-entry-get (point) "CC" t))
-        (BCC (org-entry-get (point) "BCC" t))
-        (SUBJECT (nth 4 (org-heading-components)))
-        (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-        (continue nil)
-        (switch-function nil)
-        (yank-action nil)
-        (send-actions '((email-send-action . nil)))
-        (return-action '(email-heading-return)))
+  (TO (org-entry-get (point) "TO" t))
+  (CC (org-entry-get (point) "CC" t))
+  (BCC (org-entry-get (point) "BCC" t))
+  (SUBJECT (nth 4 (org-heading-components)))
+  (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+  (continue nil)
+  (switch-function nil)
+  (yank-action nil)
+  (send-actions '((email-send-action . nil)))
+  (return-action '(email-heading-return)))
 
     (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
     (message-goto-body)
@@ -1224,7 +1224,7 @@ subsequent sends. could save them all in a logbook?
       (message-goto-bcc)
       (insert BCC))
     (if TO
-        (message-goto-body)
+  (message-goto-body)
       (message-goto-to))
     ))
 
