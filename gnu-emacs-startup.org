@@ -446,6 +446,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
+
+
+
 (define-key key-minor-mode-map (kbd "s-m t d") 'org-today)
 (define-key key-minor-mode-map (kbd "s-m c i") 'jd-clock-in)
 
@@ -901,13 +905,24 @@ This fucked up autopair mode so I'm turning it off again.
 #+BEGIN_SRC emacs-lisp
 (defun insert-space ()
   (interactive)
-  (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command))
+;;  (let ((last-command-event ? ))
+  ;;    (call-interactively 'self-insert-command))
+  (insert " ")
 ;; (unexpand-abbrev)
 )
 
-(global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
+
+** self insert space - old
+#+BEGIN_EXAMPLE emacs-lisp
+(defun insert-space ()
+  (interactive)
+  (let ((last-command-event ? ))
+    (call-interactively 'self-insert-command))
+;; (unexpand-abbrev)
+) 
+(global-set-key (kbd "M-SPC") 'insert-space)
+#+END_EXAMPLE 
 
 ** smart insertion of headings and subheadings
 *** smart-org-meta-return-dwim

@@ -312,6 +312,10 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
+
+
+
 (define-key key-minor-mode-map (kbd "s-m t d") 'org-today)
 (define-key key-minor-mode-map (kbd "s-m c i") 'jd-clock-in)
 
@@ -714,12 +718,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun insert-space ()
   (interactive)
-  (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command))
+;;  (let ((last-command-event ? ))
+  ;;    (call-interactively 'self-insert-command))
+  (insert " ")
 ;; (unexpand-abbrev)
 )
-
-(global-set-key (kbd "M-SPC") 'insert-space)
 
 (setq org-blank-before-new-entry
       '((heading . always)
