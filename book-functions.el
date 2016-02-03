@@ -136,7 +136,8 @@ emacs-settings)))
   (error nil))
 
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
-(find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
-;; (text-scale-increase 2)
+;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
+(find-file "/Users/jay/Dropbox/writing/book/feb-18/playboy.txt")
+
 ;; (other-window 1)
 )
