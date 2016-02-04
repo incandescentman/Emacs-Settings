@@ -129,7 +129,7 @@ Jump to SearchLink Error service accepts a highlighted error line and jumps to i
 
 
 
-earchLink 2.0 is up now. I had enough changes to make after the last version---which I already thought was a pretty big step forward---that I decided it was time for a major version bump. If you're not familliar with SearchLink as a tool for speedier blogging and online writing, see the project page for more info.
+SearchLink 2.0 is up now. I had enough changes to make after the last version---which I already thought was a pretty big step forward---that I decided it was time for a major version bump. If you're not familliar with SearchLink as a tool for speedier blogging and online writing, see the project page for more info.
 
 External configuration
 First, you can now copy all config options to a file called ".searchlink" in your home folder and SearchLink will read configuration options from that, overriding what's in the Automator action. If/when new options are added, you'll have to manually paste override values into the config file, but the benefit is that you won't have to reconfigure existing options every time you update to the latest version.
