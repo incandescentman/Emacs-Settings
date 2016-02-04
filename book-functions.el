@@ -138,6 +138,7 @@ emacs-settings)))
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
 (find-file "/Users/jay/Dropbox/writing/book/feb-18/playboy.txt")
+(find-file "/Users/jay/Dropbox/writing/book/feb-18/bias.txt")
 
 ;; (other-window 1)
 )

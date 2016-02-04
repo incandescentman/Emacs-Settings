@@ -255,7 +255,8 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
       (save-excursion
         (goto-char start)
         (my/fix-space)))
-    (reflash-indentation))
+;; (reflash-indentation)
+)
 
   ;; (defun pasteboard-paste ()
   ;;   "Paste from OS X system pasteboard via `pbpaste' to point."

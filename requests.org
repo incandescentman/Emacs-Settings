@@ -1,3 +1,8 @@
+* convert to numbered list 
+(define-key key-minor-mode-map (kbd "M-#") 'convert-to-numbered-list)
+
+Or M-- cycles to numbered list before it cycles back 
+
 * Do not downcase list 
 
 
