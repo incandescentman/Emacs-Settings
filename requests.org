@@ -3,7 +3,9 @@
 
 Or M-- cycles to numbered list before it cycles back 
 
-* Do not downcase list 
+* create a do not downcase list 
+
+* don't capitalize words that already begin with a capital
 
 
 * when cursor is on blank line and insert-heading, add heading to current line don't add line break 

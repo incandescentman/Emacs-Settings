@@ -5,9 +5,15 @@
   (set-face-attribute 'default nil :font "Courier")
     (set-frame-width (selected-frame) 97))
 
-(defun lucida-font ()
+(defun lucida-typewriter ()
   (interactive)
-  (set-face-attribute 'default nil :font "Ludida Sans Typewriter"))
+  (set-face-attribute 'default nil :font "Lucida Sans Typewriter"))
+
+(defun lucida-console ()
+  (interactive)
+  (set-face-attribute 'default nil :font "Lucida Console"))
+
+
 
 (defun georgia-font ()
   (interactive)
