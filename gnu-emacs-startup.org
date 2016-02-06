@@ -686,8 +686,12 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; edit Emacs preferences using standard OSX keybinding for preferences
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
-;; grep, using current folder as default
-(define-key key-minor-mode-map (kbd "s-G") 'helm-ag)
+;; grep, using current project as default
+(define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
+
+;; ag, using current folder as default 
+(define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
+;; does that keyvinding work?
 
 ;; some custom functions
 
