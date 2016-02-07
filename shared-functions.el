@@ -953,7 +953,7 @@
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
  '(org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
- '(org-pomodoro-length 50)
+ '(org-pomodoro-length 25)
  '(org-pomodoro-long-break-format "Long Break: %s")
  '(org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  '(org-pomodoro-play-ticking-sounds nil)
