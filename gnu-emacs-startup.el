@@ -149,44 +149,28 @@
            txt)))
     (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
-     (format "echo %s | pbcopy" (shell-quote-argument txt-updated-links)))))
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 
 (defun pasteboard-paste ()
-    "Paste from OS X system pasteboard via `pbpaste' to point."
-    (interactive)
-    (let ((start (point))
-          (end (if mark-active
-                   (mark)
-                 (point)))
-          (ins-text
-           (replace-regexp-in-string
-            "\\[\\([^]]*\\)\\](\\([^)]*\\))"
-            "[[\\2][\\1]]"
-            (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
-      ;; (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-      (delete-region start end)
-      (insert ins-text)
-      (my/fix-space)
-      (save-excursion
-        (goto-char start)
-        (my/fix-space)))
-;; (reflash-indentation)
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point)))
+        (ins-text
+         (replace-regexp-in-string
+          "\\[\\([^]]*\\)\\](\\([^)]*\\))"
+          "[[\\2][\\1]]"
+          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
+    (delete-region start end)
+    (insert ins-text)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space)))
+;;(reflash-indentation)
 )
-
-  ;; (defun pasteboard-paste ()
-  ;;   "Paste from OS X system pasteboard via `pbpaste' to point."
-  ;;   (interactive)
-  ;;   (let ((start (point))
-  ;;         (end (if mark-active
-  ;;                  (mark)
-  ;;                (point))))
-  ;;     (shell-command-on-region start end "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'" nil t)
-  ;;     (my/fix-space)
-  ;;     (save-excursion
-  ;;       (goto-char start)
-  ;;       (my/fix-space)))
-  ;; (reflash-indentation)
-  ;; )
 
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
@@ -312,6 +296,8 @@
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "s-m p m") 'poetry-mode)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
