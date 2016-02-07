@@ -5569,8 +5569,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (font-lock-add-keywords 'org-mode
 			'(("^.*:[ ]*$" . 'list-title-face))
-                              '(("^QUESTION:[ ]*$" . 'list-title-face))
-
+                              '("^QUESTION:" . 'list-title-face) 
 )
 #+END_SRC
 
