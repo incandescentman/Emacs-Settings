@@ -3952,7 +3952,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (font-lock-add-keywords 'org-mode
       '(("^.*:[ ]*$" . 'list-title-face))
-                              '("^QUESTION:" . 'list-title-face) 
+'("QUESTION:" . 'list-title-face) 
 )
 
 (defun downcase-or-endless-downcase ()
