@@ -4345,7 +4345,7 @@ Single Capitals as you type."
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 
 ;; note that this slows everything down 
-(add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
+;; (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
   #+END_SRC
 
@@ -5412,7 +5412,7 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 (global-set-key
  (kbd "C-p")
 (defhydra hydra-move
-   (:body-pre (next-line))
+   (:body-pre (previous-line))
    "move"
    ("n" next-line)
    ("p" previous-line)
@@ -5740,5 +5740,18 @@ Wow, this works.
 * no inline images
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-with-inline-images nil) 
+#+END_SRC
+
+
+* reuse directory buffers
+#+BEGIN_SRC emacs-lisp
+(require 'dired+)
+(toggle-diredp-find-file-reuse-dir 1) 
+(add-hook 'dired-mode-hook
+ (lambda ()
+  (define-key dired-mode-map (kbd "C-<up>")
+    (lambda () (interactive) (find-alternate-file "..")))
+  ; was dired-up-directory
+ )) 
 #+END_SRC
 

@@ -3110,7 +3110,7 @@ Single Capitals as you type."
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 
 ;; note that this slows everything down 
-(add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
+;; (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
 ;; (global-fasd-mode 1)
 ;; (setq fasd-enable-initial-prompt nil)
@@ -3823,7 +3823,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 (global-set-key
  (kbd "C-p")
 (defhydra hydra-move
-   (:body-pre (next-line))
+   (:body-pre (previous-line))
    "move"
    ("n" next-line)
    ("p" previous-line)
@@ -4030,3 +4030,12 @@ The full path into relative path and insert it as a local file link in org-mode"
  '(org-twbs-indent t)
 
 (setq org-startup-with-inline-images nil)
+
+(require 'dired+)
+(toggle-diredp-find-file-reuse-dir 1) 
+(add-hook 'dired-mode-hook
+ (lambda ()
+  (define-key dired-mode-map (kbd "C-<up>")
+    (lambda () (interactive) (find-alternate-file "..")))
+  ; was dired-up-directory
+ ))
