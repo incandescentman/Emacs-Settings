@@ -3822,12 +3822,12 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (global-set-key
  (kbd "C-p")
-(defhydra hydra-move
+(defhydra hydra-move-previous
    (:body-pre (previous-line))
-   "move"
-   ("n" next-line)
-   ("p" previous-line)
-   ("k" my/kill-line-dwim)
+   "move" 
+("p" previous-line) 
+("n" next-line)
+("k" my/kill-line-dwim)
    ("f" forward-char)
    ("b" backward-char)
    ("a" beginning-of-line)
@@ -3841,7 +3841,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 (global-set-key
  (kbd "C-n")
-(defhydra hydra-move
+(defhydra hydra-move-next
    (:body-pre (next-line))
    "move"
    ("n" next-line)
@@ -3951,7 +3951,7 @@ The full path into relative path and insert it as a local file link in org-mode"
   "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-                        '(("^.*:[ ]*$" . 'list-title-face)))
+      '(("^.*:[ ]*$" . 'list-title-face)))
 
 (defun downcase-or-endless-downcase ()
 (interactive)

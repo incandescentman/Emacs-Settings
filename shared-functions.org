@@ -5411,12 +5411,12 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 
 (global-set-key
  (kbd "C-p")
-(defhydra hydra-move
+(defhydra hydra-move-previous
    (:body-pre (previous-line))
-   "move"
-   ("n" next-line)
-   ("p" previous-line)
-   ("k" my/kill-line-dwim)
+   "move" 
+("p" previous-line) 
+("n" next-line)
+("k" my/kill-line-dwim)
    ("f" forward-char)
    ("b" backward-char)
    ("a" beginning-of-line)
@@ -5430,7 +5430,7 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 
 (global-set-key
  (kbd "C-n")
-(defhydra hydra-move
+(defhydra hydra-move-next
    (:body-pre (next-line))
    "move"
    ("n" next-line)
@@ -5568,7 +5568,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-                        '(("^.*:[ ]*$" . 'list-title-face)))
+			'(("^.*:[ ]*$" . 'list-title-face)))
 #+END_SRC
 
 
