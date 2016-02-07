@@ -3821,6 +3821,25 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 
 (global-set-key
+ (kbd "C-p")
+(defhydra hydra-move
+   (:body-pre (next-line))
+   "move"
+   ("n" next-line)
+   ("p" previous-line)
+   ("k" my/kill-line-dwim)
+   ("f" forward-char)
+   ("b" backward-char)
+   ("a" beginning-of-line)
+   ("e" move-end-of-line)
+   ("v" scroll-up-command)
+   ;; Converting M-v to V here by analogy.
+   ("V" scroll-down-command)
+   ("l" recenter-top-bottom)))
+
+
+
+(global-set-key
  (kbd "C-n")
 (defhydra hydra-move
    (:body-pre (next-line))
@@ -3836,6 +3855,9 @@ The full path into relative path and insert it as a local file link in org-mode"
    ;; Converting M-v to V here by analogy.
    ("V" scroll-down-command)
    ("l" recenter-top-bottom)))
+
+
+
 
 (global-set-key
  (kbd "s-n")

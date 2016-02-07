@@ -105,16 +105,16 @@
   "Open my favorite file:  ~.emacs.
 The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
-  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
-(monaco-font)
+;;  (load-file "~/Dropbox/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
+  (load-theme 'zenburn)
+  (monaco-font)
 (org-mode)
   (set-cursor-color "violet")
   )
 
 (defun ritchie ()
   (interactive)
-  (load-theme 'ritchie)
-  (incarnadine-cursor)
+(incarnadine-cursor)
 (org-mode)
   )
 

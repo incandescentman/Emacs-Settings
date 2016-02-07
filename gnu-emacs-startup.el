@@ -1809,6 +1809,7 @@ subsequent sends. could save them all in a logbook?
 (define-key mu4e-compose-mode-map (kbd "\C-c\C-c") 'custom-send-message)
 
 (defadvice load-theme (after load-theme-advice activate)
+  (spacemacs/toggle-fringe-off)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(org-link ((t (:underline nil)))))

@@ -5410,6 +5410,25 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 
 
 (global-set-key
+ (kbd "C-p")
+(defhydra hydra-move
+   (:body-pre (next-line))
+   "move"
+   ("n" next-line)
+   ("p" previous-line)
+   ("k" my/kill-line-dwim)
+   ("f" forward-char)
+   ("b" backward-char)
+   ("a" beginning-of-line)
+   ("e" move-end-of-line)
+   ("v" scroll-up-command)
+   ;; Converting M-v to V here by analogy.
+   ("V" scroll-down-command)
+   ("l" recenter-top-bottom)))
+
+
+
+(global-set-key
  (kbd "C-n")
 (defhydra hydra-move
    (:body-pre (next-line))
@@ -5425,6 +5444,9 @@ q is a good candidate for chords, since in words it has u after, and only a few 
    ;; Converting M-v to V here by analogy.
    ("V" scroll-down-command)
    ("l" recenter-top-bottom)))
+
+
+
 
 (global-set-key
  (kbd "s-n")
