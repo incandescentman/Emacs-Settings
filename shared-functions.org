@@ -5568,9 +5568,8 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-			'(("^.*:[ ]*$" . 'list-title-face))
-                              '("^QUESTION:" . 'list-title-face) 
-)
+  '(("^.*:[ ]*$" . 'list-title-face)
+    ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face)))
 #+END_SRC
 
 #+RESULTS:
