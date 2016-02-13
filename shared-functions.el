@@ -3951,9 +3951,8 @@ The full path into relative path and insert it as a local file link in org-mode"
   "fontify list titles")
 
 (font-lock-add-keywords 'org-mode
-      '(("^.*:[ ]*$" . 'list-title-face))
-'("QUESTION:" . 'list-title-face) 
-)
+'(("^.*:[ ]*$" . 'list-title-face)
+    ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face)))
 
 (defun downcase-or-endless-downcase ()
 (interactive)
