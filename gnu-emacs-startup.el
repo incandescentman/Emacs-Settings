@@ -297,6 +297,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
+
 (define-key key-minor-mode-map (kbd "s-m p m") 'poetry-mode)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
