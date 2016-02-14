@@ -147,7 +147,7 @@
                              (match-string 1 m))
                      "](" (match-string 1 m) ")"))
            txt)))
-    (message "Copied: %s" txt-updated-links)
+;; (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
      (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 
