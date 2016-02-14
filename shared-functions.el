@@ -2348,6 +2348,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'snippet-mode))) 
 ((and buffer-file-name (eq major-mode 'css-mode))) 
 ((and buffer-file-name (eq major-mode 'xml-mode))) 
+((and buffer-file-name (eq major-mode 'nxml-mode))) 
 ((and buffer-file-name (eq major-mode 'fountain-mode))) 
 ((and buffer-file-name (eq major-mode 'nmxml-mode)))
 ((and buffer-file-name (eq major-mode 'web-mode)))
@@ -4090,6 +4091,46 @@ minibuffer."
   (pcase arg
     ((or 1 4) (insert value))
     (-1 (message value))))))
+
+(cheatsheet-add :group 'Common
+                :key "M-s-="
+                :description "calc-eval-region") 
+
+(cheatsheet-add :group 'Dired
+                :key "C-x C-j"
+                :description "dired of current file") 
+
+(cheatsheet-add :group 'Dired
+                :key "C-x d"
+                :description "recent directories") 
+
+
+(cheatsheet-add :group 'Dired 
+                :key "C-x C-d"
+                :description "ido-list-directory") 
+
+
+(cheatsheet-add :group 'Common
+                :key "C-x u"
+                :description "undo-tree-visualize") 
+
+(cheatsheet-add :group 'Mooovement
+                :key "C-c C-j"
+                :description "org-goto") 
+
+
+(cheatsheet-add :group 'Mooovement 
+                :key "C- -"
+                :description "goto-last-edit") 
+
+
+(cheatsheet-add :group 'Search 
+                :key "s-G"
+                :description "helm-projectile-grep") 
+
+(cheatsheet-add :group 'Mooovement 
+                :key "C- drag"
+                :description "mouse-copy")
 
 (require 'mouse-copy)
 (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
