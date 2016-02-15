@@ -5886,3 +5886,17 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
 (add-to-list 'flycheck-checkers 'proselint) 
 #+END_SRC
 
+
+* Braxton
+#+BEGIN_SRC emacs-lisp
+(defun braxton ()
+  "Task request to my virtual assistant."
+  (interactive)
+  (message-mail)
+  (message-goto-to)
+  (insert "braxton.robbason@gmail.com")
+  (message-goto-subject) (insert "starting: " (format-time-string "%F %l:%M%P"))
+  (message-goto-body) (insert "\n")
+  )
+
+#+END_SRC

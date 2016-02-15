@@ -4146,3 +4146,13 @@ minibuffer."
   :modes (text-mode markdown-mode gfm-mode org-mode))
 
 (add-to-list 'flycheck-checkers 'proselint)
+
+(defun braxton ()
+  "Task request to my virtual assistant."
+  (interactive)
+  (message-mail)
+  (message-goto-to)
+  (insert "braxton.robbason@gmail.com")
+  (message-goto-subject) (insert "starting: " (format-time-string "%F %l:%M%P"))
+  (message-goto-body) (insert "\n")
+  )
