@@ -197,6 +197,8 @@
 (looking-back "\\\\")
 (looking-back "\"")
 (looking-at "\"")
+(looking-at "<")
+(looking-at ">")
 )
 ;; end if
 

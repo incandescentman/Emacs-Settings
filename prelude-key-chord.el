@@ -52,7 +52,7 @@
 (key-chord-define-global "WW" 'widen)
 (key-chord-define-global "CC" 'turn-on-auto-capitalize-mode)
 (key-chord-define-global "LL" 'turn-off-auto-capitalize-mode)
-(key-chord-define-global "DD" 'deft)
+(key-chord-define-global "DD" 'bjm/ivy-dired-recent-dirs)
 ;; (key-chord-define-global "ZZ" 'repeat-complex-command)
 (key-chord-define-global "ZZ" 'undo-tree-undo)
 (key-chord-define-global "RR" 'replace-regexp)

@@ -4104,6 +4104,10 @@ minibuffer."
                 :key "C-x d"
                 :description "recent directories") 
 
+(cheatsheet-add :group 'Dired
+                :key "DD"
+                :description "recent directories") 
+
 
 (cheatsheet-add :group 'Dired 
                 :key "C-x C-d"
@@ -4130,7 +4134,33 @@ minibuffer."
 
 (cheatsheet-add :group 'Mooovement 
                 :key "C- drag"
-                :description "mouse-copy")
+                :description "mouse-copy") 
+
+
+(cheatsheet-add :group 'Movement 
+                :key "jj"
+                :description "helm-imenu") 
+
+(cheatsheet-add :group 'Movement 
+                :key "kk"
+                :description "helm-org-in-buffer-headings") 
+
+(cheatsheet-add :group 'Movement 
+                :key "jk"
+                :description "avy-goto-line") 
+
+(cheatsheet-add :group 'Common 
+                :key "XX"
+                :description "M-x") 
+
+(cheatsheet-add :group 'Search 
+                :key "ww"
+                :description "helm-swoop") 
+
+
+(cheatsheet-add :group 'Search 
+                :key "SS"
+                :description "swiper")
 
 (require 'mouse-copy)
 (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
