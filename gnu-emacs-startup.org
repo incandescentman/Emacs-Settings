@@ -680,7 +680,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
 ;; ag, using current folder as default 
-(define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
+;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
 ;; does that keyvinding work?
 
 ;; some custom functions
@@ -3023,7 +3023,7 @@ doesn't work.
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
-(defcustom ivy-height 30
+(defcustom ivy-height 50
   "Number of lines for the minibuffer window."
   :type 'integer)
 #+END_SRC
@@ -3162,6 +3162,7 @@ Didn't work.
   (spacemacs/toggle-fringe-off)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-quote ((t (:inherit default))))
 '(org-link ((t (:underline nil)))))
 '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
 

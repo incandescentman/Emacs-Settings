@@ -546,7 +546,7 @@
 (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
 ;; ag, using current folder as default 
-(define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
+;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
 ;; does that keyvinding work?
 
 ;; some custom functions
@@ -1803,6 +1803,7 @@ subsequent sends. could save them all in a logbook?
   (spacemacs/toggle-fringe-off)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-quote ((t (:inherit default))))
 '(org-link ((t (:underline nil)))))
 '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
 
