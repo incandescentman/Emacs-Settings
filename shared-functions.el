@@ -4229,7 +4229,9 @@ minibuffer."
    (if (region-active-p)
        (list (region-beginning) (region-end))
      (list (point-min) (point-max))))
-  (let ((bunches (make-hash-table :test 'equal)))
+  (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
+        (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
+        (bunches (make-hash-table :test 'equal)))
     (save-excursion
       (goto-char beg)
       (move-beginning-of-line 1)
@@ -4242,7 +4244,10 @@ minibuffer."
                              (point)))
                while (< (point) end) do
                (forward-char)
-               (puthash line (cons lnum (gethash line bunches)) bunches)))
+               (unless
+                (or (and (string-match "[ \t]+" line) ignore-white)
+                    (and (string-match "^$" line) ignore-blank))
+                (puthash line (cons lnum (gethash line bunches)) bunches))))
     (cl-loop for line being the hash-key of bunches 
              using (hash-value positions)
              unless (cdr positions) do
