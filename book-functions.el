@@ -2,7 +2,7 @@
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "playful.org")
+  (kill-buffer "disciplined.org")
   (error nil))
 
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
@@ -132,7 +132,7 @@ emacs-settings)))
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "playful.org")
+  (kill-buffer "disciplined.org")
   (error nil))
 
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")

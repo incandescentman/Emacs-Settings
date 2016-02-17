@@ -656,7 +656,7 @@ This is working correctly:
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "disciplined.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
 	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -1359,7 +1359,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
+ '(initial-buffer-choice "~/Dropbox/writing/notationaldata/disciplined.org")
  '(initial-major-mode (quote org-mode))
  '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
@@ -4320,7 +4320,7 @@ Single Capitals as you type."
 
 (defun playful-open ()
   (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/playful.org")
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/disciplined.org")
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
