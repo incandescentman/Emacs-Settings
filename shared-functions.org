@@ -5967,3 +5967,65 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
   )
 
 #+END_SRC
+
+* query-replace-duplicate-lines-keep-blanks
+#+BEGIN_SRC emacs-lisp
+(defun my/update-lines (bunches pos keep)
+  (cl-loop with dec = (if keep 0 1)
+           for line being the hash-key of bunches
+           using (hash-value positions) do
+           (puthash
+            line
+            (cl-loop for p in positions
+                     if (< p pos) collect p
+                     else if (> p pos) collect (- p dec))
+            bunches)))
+
+(defun my/delete-duplicate-lines (beg end)
+  (interactive
+   (if (region-active-p)
+       (list (region-beginning) (region-end))
+     (list (point-min) (point-max))))
+  (let ((bunches (make-hash-table :test 'equal)))
+    (save-excursion
+      (goto-char beg)
+      (move-beginning-of-line 1)
+      (cl-loop for lnum = (count-lines (point-min) beg)
+               then (1+ lnum)
+               for line = (buffer-substring-no-properties
+                           (point)
+                           (progn
+                             (move-end-of-line 1)
+                             (point)))
+               while (< (point) end) do
+               (forward-char)
+               (puthash line (cons lnum (gethash line bunches)) bunches)))
+    (cl-loop for line being the hash-key of bunches 
+             using (hash-value positions)
+             unless (cdr positions) do
+             (remhash line bunches))
+    (cl-loop for line being the hash-key of bunches do
+             (cl-loop for positions = (gethash line bunches)
+                      while positions do
+                      (cl-loop with continue = t
+                               for pos in positions
+                               while continue do
+                               (goto-char (point-min))
+                               (forward-line pos)
+                               (let ((len (length line)))
+                                 (when (yes-or-no-p
+                                        (format "Delete '%s%s'? "
+                                                (substring line 0 (min len 13))
+                                                (cond
+                                                 ((> len 16) "...")
+                                                 ((> len 13) (substring line 13 len))
+                                                 (t ""))))
+                                   (delete-region
+                                    (point)
+                                    (progn
+                                      (move-end-of-line 1)
+                                      (forward-char)
+                                      (point)))
+                                   (setf continue nil)))
+                               (my/update-lines bunches pos continue)))))) 
+#+END_SRC
