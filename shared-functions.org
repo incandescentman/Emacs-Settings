@@ -1863,7 +1863,7 @@ text-transform:capitalize; font-weight:bold;")))
     font-weight: 400;
     color: #87ceeb;
     line-height: 1.3em;
-width:60%;
+width:80%;
     background: none repeat scroll 0% 0% rgb(61, 61, 61);
     padding: 20px;
 quotes: '«' '»';
@@ -3200,7 +3200,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if" "blockquote" "http" "fn"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if" "blockquote" "http" "eBay"))
 #+END_SRC
 
 
@@ -5560,23 +5560,26 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 
 
-* fontify list headings 
-
+* fontify list titles
 #+BEGIN_SRC emacs-lisp
+
+;; define list-title face 
 (defface list-title-face
   '((t (:inherit font-lock-warning-face :weight bold)))
-  "fontify list titles")
+  "fontify list titles") 
 
 (font-lock-add-keywords 'org-mode
-'(("^.*:[ ]*$" . 'list-title-face)
-    ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face))) 
+                        '(
+                          ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
+                          ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
+                          ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line 
+                          )
+                        ) 
 #+END_SRC
 
-#+RESULTS:
 
-
-(setq org-element-use-cache nil)
-
+* org-element use cache
+(setq org-element-use-cache nil) 
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
