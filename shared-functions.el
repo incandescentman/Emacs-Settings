@@ -2944,10 +2944,6 @@ as the subject."
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
 
-(defun delete-duplicate-lines-keep-blanks ()
-  (interactive)
-  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
-
 (defun helm-do-grep-current-directory-tree ()
   "Recursively search current directory.
 If a parent directory has a `dir-locals-file', use that as the
@@ -4218,6 +4214,60 @@ minibuffer."
 (message-send-and-exit) 
   )
 
+(eval-when-compile
+  (require 'cl-macs))
+
+(defun delete-duplicate-lines-interactive (oldfun &rest args)
+  "Make `delete-region' interactive in `delete-duplicate-lines'."
+  (let ((reverse (nth 2 args))
+    (adjacent (nth 3 args))
+    (arg-interactive (nth 5 args)))
+    (if arg-interactive
+    (let ((ol (make-overlay 1 1)))
+      (overlay-put ol 'face 'secondary-selection) ;; could be customizable
+      (unwind-protect
+          (let (continue
+            (deleted-lines 0))
+        (catch :quit
+          (advice-add 'delete-region
+                  :around
+                  (lambda (delete-region-original start end)
+                (if continue
+                    (funcall delete-region-original start end)
+                  (recenter)
+                  (move-overlay ol start end)
+                  (cl-case  (let (mark-active) (read-key "Delete line? ([y]es, [n]ext, [!] all, [q]uit, any other key is equivalent to next):"))
+                    (?y
+                     (funcall delete-region-original start end)
+                     (setq deleted-lines (1+ deleted-lines)))
+                    (?!
+                     (setq continue t)
+                     (funcall delete-region-original start end)
+                     (setq deleted-lines (1+ deleted-lines)))
+                    (?q
+                     (throw :quit nil))))
+                (when reverse (goto-char start)))
+                  '((name . interactive)))
+          (apply oldfun args))
+        (message "Deleted %d %sduplicate line%s%s"
+             deleted-lines
+             (if adjacent "adjacent " "")
+             (if (= deleted-lines 1) "" "s")
+             (if reverse " backward" "")))
+        (advice-remove 'delete-region 'interactive))
+      (delete-overlay ol))
+      (apply oldfun args) ;; non-interactive case
+      )))
+
+(advice-add 'delete-duplicate-lines :around 
+        #'delete-duplicate-lines-interactive)
+
+(load-library "sort.el") ;; Somehow `delete-region` is replaced in "sort.elc". Therefore load the source version again.
+
+(defun delete-duplicate-lines-keep-blanks ()
+  (interactive)
+  (delete-duplicate-lines (region-beginning) (region-end) nil nil t t)) 
+
 (defun my/update-lines (bunches pos keep)
   (cl-loop with dec = (if keep 0 1)
            for line being the hash-key of bunches
@@ -4229,6 +4279,28 @@ minibuffer."
                      else if (> p pos) collect (- p dec))
             bunches)))
 
+(defun my/suggest-delete-line (line)
+  (let ((len (length line)))
+    (move-overlay selection (point) (+ (point) len))
+    (let* ((inhibit-quit t)
+           (answer 
+            (with-local-quit
+              (read-key
+               (format "Delete '%s%s'? [y]es/[n]o"
+                       (substring line 0 (min len 13))
+                       (cond
+                        ((> len 16) "...")
+                        ((> len 13) (substring line 13 len))
+                        (t "")))))))
+      (when (= answer ?y)
+        (delete-region
+         (point)
+         (progn
+           (move-end-of-line 1)
+           (forward-char)
+           (point))))
+      answer)))
+
 (defun my/delete-duplicate-lines (beg end)
   (interactive
    (if (region-active-p)
@@ -4236,7 +4308,9 @@ minibuffer."
      (list (point-min) (point-max))))
   (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
         (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
-        (bunches (make-hash-table :test 'equal)))
+        (bunches (make-hash-table :test 'equal))
+        (selection (make-overlay 1 1)))
+    (overlay-put selection 'face 'secondary-selection)
     (save-excursion
       (goto-char beg)
       (move-beginning-of-line 1)
@@ -4250,14 +4324,14 @@ minibuffer."
                while (< (point) end) do
                (forward-char)
                (unless
-                (or (and (string-match "[ \t]+" line) ignore-white)
-                    (and (string-match "^$" line) ignore-blank))
-                (puthash line (cons lnum (gethash line bunches)) bunches))))
+                   (or (and (string-match "[ \t]+" line) ignore-white)
+                       (and (string-match "^$" line) ignore-blank))
+                 (puthash line (cons lnum (gethash line bunches)) bunches))))
     (cl-loop for line being the hash-key of bunches 
              using (hash-value positions)
              unless (cdr positions) do
              (remhash line bunches))
-    (cl-loop for line being the hash-key of bunches do
+    (cl-loop named :outer for line being the hash-key of bunches do
              (cl-loop for positions = (gethash line bunches)
                       while positions do
                       (cl-loop with continue = t
@@ -4265,19 +4339,10 @@ minibuffer."
                                while continue do
                                (goto-char (point-min))
                                (forward-line pos)
-                               (let ((len (length line)))
-                                 (when (yes-or-no-p
-                                        (format "Delete '%s%s'? "
-                                                (substring line 0 (min len 13))
-                                                (cond
-                                                 ((> len 16) "...")
-                                                 ((> len 13) (substring line 13 len))
-                                                 (t ""))))
-                                   (delete-region
-                                    (point)
-                                    (progn
-                                      (move-end-of-line 1)
-                                      (forward-char)
-                                      (point)))
-                                   (setf continue nil)))
-                               (my/update-lines bunches pos continue))))))
+                               (recenter)
+                               (cl-case (my/suggest-delete-line line)
+                                 (?\C-g (cl-return-from :outer))
+                                 (?y)
+                                 (otherwise (setf continue nil)))
+                               (my/update-lines bunches pos continue))))
+    (delete-overlay selection))) 

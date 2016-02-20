@@ -2546,8 +2546,8 @@ Old version that I retrieved:
 
 
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
-(define-key orgstruct-mode-map (kbd ":") 'smart-colon)
+;; (define-key org-mode-map (kbd ":") 'smart-colon)
+;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
 
 
 #+END_SRC
