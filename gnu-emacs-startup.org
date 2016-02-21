@@ -2774,29 +2774,13 @@ Five six
   #+BEGIN_SRC emacs-lisp
 (defun capitalize-unless-org-heading ()
   (interactive)
-(unless
-(or
-(looking-at "[[:punct:]]*[\n\t ]*\\*")
-;; (looking-at "\\* TODO"); redundant
-(let ((case-fold-search nil))
-  (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]"))
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\)")
-(looking-at "[[:punct:]]*\)[\n\t ]*")
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
-(looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
-;; (looking-at '(auto-capitalize-words)) ; doesn't work
-)
-(capitalize-word 1))
-)
-
   (unless
       (or
        (looking-at "[[:punct:]]*[\n\t ]*\\*")
        ;; (looking-at "\\* TODO"); redundant
        (let ((case-fold-search nil))
-         (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]"))
+         (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
+         (looking-at "[A-Z].*"))
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
@@ -2807,8 +2791,7 @@ Five six
          (reduce (lambda (a b) (concat a "\\|" b))
                  auto-capitalize-words)
          "\\)")))
-    (capitalize-word 1))
-
+    (capitalize-word 1)))
   #+END_SRC
 
 * downcase-save-excursion
