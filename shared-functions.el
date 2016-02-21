@@ -112,6 +112,7 @@
 (setq locate-command "mdfind")
 
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))

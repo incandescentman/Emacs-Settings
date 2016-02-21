@@ -256,6 +256,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
