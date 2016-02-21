@@ -227,7 +227,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
                              (match-string 1 m))
                      "](" (match-string 1 m) ")"))
            txt)))
-    (message "Copied: %s" txt-updated-links)
+;; (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
      (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 #+END_SRC
@@ -254,7 +254,8 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (save-excursion
       (goto-char start)
       (my/fix-space)))
-  (reflash-indentation)) 
+;;(reflash-indentation)
+) 
 #+END_SRC
 
 *** pasteboard-paste-without-smart-quotes (and without spaces)
@@ -287,6 +288,8 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (looking-back "\\\\")
 (looking-back "\"")
 (looking-at "\"")
+(looking-at "<")
+(looking-at ">")
 )
 ;; end if
 
@@ -429,6 +432,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
+
+(define-key key-minor-mode-map (kbd "s-m p m") 'poetry-mode)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
@@ -673,7 +680,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
 ;; ag, using current folder as default 
-(define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
+;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
 ;; does that keyvinding work?
 
 ;; some custom functions
@@ -995,6 +1002,7 @@ This fucked up autopair mode so I'm turning it off again.
 (define-key org-mode-map (kbd "C-S-<return>") 'smart-org-insert-todo-heading-respect-content-dwim)
 (define-key org-mode-map (kbd "C-M-<return>") 'smart-org-insert-subheading)
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
+(define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -2538,8 +2546,8 @@ Old version that I retrieved:
 
 
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
-(define-key orgstruct-mode-map (kbd ":") 'smart-colon)
+;; (define-key org-mode-map (kbd ":") 'smart-colon)
+;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
 
 
 #+END_SRC
@@ -2998,7 +3006,7 @@ doesn't work.
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
-(defcustom ivy-height 30
+(defcustom ivy-height 50
   "Number of lines for the minibuffer window."
   :type 'integer)
 #+END_SRC
@@ -3137,6 +3145,7 @@ Didn't work.
   (spacemacs/toggle-fringe-off)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-quote ((t (:inherit default))))
 '(org-link ((t (:underline nil)))))
 '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
 

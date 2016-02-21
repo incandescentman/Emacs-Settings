@@ -656,7 +656,7 @@ This is working correctly:
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-	("L" "Later" checkitem (file+headline "playful.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "disciplined.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
 	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -1359,7 +1359,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/playful.org")
+ '(initial-buffer-choice "~/Dropbox/writing/notationaldata/disciplined.org")
  '(initial-major-mode (quote org-mode))
  '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
@@ -1428,7 +1428,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-odd-levels-only nil)
  '(org-pomodoro-format "Pomodoro: %s")
  '(org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
- '(org-pomodoro-length 50)
+ '(org-pomodoro-length 25)
  '(org-pomodoro-long-break-format "Long Break: %s")
  '(org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  '(org-pomodoro-play-ticking-sounds nil)
@@ -1863,7 +1863,7 @@ text-transform:capitalize; font-weight:bold;")))
     font-weight: 400;
     color: #87ceeb;
     line-height: 1.3em;
-width:60%;
+width:80%;
     background: none repeat scroll 0% 0% rgb(61, 61, 61);
     padding: 20px;
 quotes: '«' '»';
@@ -2846,7 +2846,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 ;; (define-hyper-key "R" 'xsteve-ido-choose-from-recentf)
 ;; (define-hyper-key "R" 'helm-projectile-recentf)
 ;; (define-hyper-key "r" 'helm-mini)
-(define-hyper-key "r" 'recentf-open-files-compl)
+(define-hyper-key "r" 'ivy-recentf)
 (define-hyper-key "R" 'projectile-find-file)
 (define-hyper-key "t" 'new-buffer)
 (define-hyper-key "T" 'org-new-scratch-buffer)
@@ -3200,13 +3200,13 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if" "blockquote" "http" "fn"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "if" "blockquote" "http" "eBay"))
 #+END_SRC
 
 
 * words to never downcase
 #+BEGIN_SRC emacs-lisp
-(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I"))
+(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
 #+END_SRC
 
 
@@ -3328,6 +3328,7 @@ to open source code block in indirect buffer
 ((and buffer-file-name (eq major-mode 'snippet-mode))) 
 ((and buffer-file-name (eq major-mode 'css-mode))) 
 ((and buffer-file-name (eq major-mode 'xml-mode))) 
+((and buffer-file-name (eq major-mode 'nxml-mode))) 
 ((and buffer-file-name (eq major-mode 'fountain-mode))) 
 ((and buffer-file-name (eq major-mode 'nmxml-mode)))
 ((and buffer-file-name (eq major-mode 'web-mode)))
@@ -4107,16 +4108,6 @@ Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evi
 (setq org-download-method (quote directory))
   #+END_SRC
 
-* delete duplicate lines
-You can tell delete-duplicate-lines to ignore blank lines by calling it via
-
-
-#+BEGIN_SRC emacs-lisp
-(defun delete-duplicate-lines-keep-blanks ()
-  (interactive)
-  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
-#+END_SRC
-
 
 * helm search current directory 
 
@@ -4320,7 +4311,7 @@ Single Capitals as you type."
 
 (defun playful-open ()
   (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/playful.org")
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/disciplined.org")
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
@@ -5560,23 +5551,26 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 
 
-* fontify list headings 
-
+* fontify list titles
 #+BEGIN_SRC emacs-lisp
+
+;; define list-title face 
 (defface list-title-face
   '((t (:inherit font-lock-warning-face :weight bold)))
-  "fontify list titles")
+  "fontify list titles") 
 
 (font-lock-add-keywords 'org-mode
-  '(("^.*:[ ]*$" . 'list-title-face)
-    ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face)))
+                        '(
+                          ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
+                          ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
+                          ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line 
+                          )
+                        ) 
 #+END_SRC
 
-#+RESULTS:
 
-
-(setq org-element-use-cache nil)
-
+* org-element use cache
+(setq org-element-use-cache nil) 
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
@@ -5758,3 +5752,354 @@ Wow, this works.
  )) 
 #+END_SRC
 
+
+* open recent directories
+#+BEGIN_SRC emacs-lisp
+;; open recent directory, requires ivy (part of swiper)
+;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
+(defun bjm/ivy-dired-recent-dirs ()
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+  (let ((recent-dirs
+         (delete-dups
+          (mapcar (lambda (file)
+                    (if (file-directory-p file) file (file-name-directory file)))
+                  recentf-list))))
+
+    (let ((dir (ivy-read "Directory: "
+                         recent-dirs
+                         :re-builder #'ivy--regex
+                         :sort nil
+                         :initial-input nil)))
+      (dired dir))))
+
+
+
+(define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs) 
+;; c-x C-d runs the command ido-list-directory 
+#+END_SRC
+
+
+* calc eval region 
+#+BEGIN_SRC emacs-lisp
+(defun calc-eval-region (arg)
+  "Evaluate an expression in calc and communicate the result.
+
+If the region is active evaluate that, otherwise search backwards
+to the first whitespace character to find the beginning of the
+expression. By default, replace the expression with its value. If
+called with the universal prefix argument, keep the expression
+and insert the result into the buffer after it. If called with a
+negative prefix argument, just echo the result in the
+minibuffer."
+  (interactive "p")
+  (let (start end)
+(if (use-region-p)
+    (setq start (region-beginning) end (region-end))
+  (progn
+    (setq end (point))
+    (setq start (search-backward-regexp "\\s-\\|\n" 0 1))
+    (setq start (1+ (if start start 0)))
+    (goto-char end)))
+(let ((value (calc-eval (buffer-substring-no-properties start end))))
+  (pcase arg
+    (1 (delete-region start end))
+    (4 (insert " = ")))
+  (pcase arg
+    ((or 1 4) (insert value))
+    (-1 (message value)))))) 
+#+END_SRC
+
+
+* cheatsheet
+#+BEGIN_SRC emacs-lisp
+(cheatsheet-add :group 'Common
+                :key "M-s-="
+                :description "calc-eval-region") 
+
+(cheatsheet-add :group 'Dired
+                :key "C-x C-j"
+                :description "dired of current file") 
+
+(cheatsheet-add :group 'Dired
+                :key "C-x d"
+                :description "recent directories") 
+
+(cheatsheet-add :group 'Dired
+                :key "DD"
+                :description "recent directories") 
+
+
+(cheatsheet-add :group 'Dired 
+                :key "C-x C-d"
+                :description "ido-list-directory") 
+
+
+(cheatsheet-add :group 'Common
+                :key "C-x u"
+                :description "undo-tree-visualize") 
+
+(cheatsheet-add :group 'Mooovement
+                :key "C-c C-j"
+                :description "org-goto") 
+
+
+(cheatsheet-add :group 'Mooovement 
+                :key "C- -"
+                :description "goto-last-edit") 
+
+
+(cheatsheet-add :group 'Search 
+                :key "s-G"
+                :description "helm-projectile-grep") 
+
+(cheatsheet-add :group 'Mooovement 
+                :key "C- drag"
+                :description "mouse-copy") 
+
+
+(cheatsheet-add :group 'Movement 
+                :key "jj"
+                :description "helm-imenu") 
+
+(cheatsheet-add :group 'Movement 
+                :key "kk"
+                :description "helm-org-in-buffer-headings") 
+
+(cheatsheet-add :group 'Movement 
+                :key "jk"
+                :description "avy-goto-line") 
+
+(cheatsheet-add :group 'Common 
+                :key "XX"
+                :description "M-x") 
+
+(cheatsheet-add :group 'Search 
+                :key "ww"
+                :description "helm-swoop") 
+
+
+(cheatsheet-add :group 'Search 
+                :key "FF"
+                :description "swiper") 
+
+(cheatsheet-add :group 'Search 
+                :key "SS"
+                :description "helm-multi-swoop-org") 
+
+
+(cheatsheet-add :group 'Buffers 
+                :key "WW"
+                :description "widen") 
+
+(cheatsheet-add :group 'Editing 
+                :key "ZZ"
+                :description "undo") 
+
+(cheatsheet-add :group 'Replacing 
+                :key "RR"
+                :description "replace-regexp") 
+
+(cheatsheet-add :group 'MultipleCursors 
+                :key "MM"
+                :description "mc/mark-all-dwim") 
+
+(cheatsheet-add :group 'Action!
+                :key "HH"
+                :description "mc/mark-all-dwim") 
+
+
+#+END_SRC
+
+
+
+
+(key-chord-define-global "HH" 'helm-M-x)
+
+
+;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)
+(key-chord-define-global "NN" 'org-narrow-to-subtree)
+
+(key-chord-define-global "II" 'god-mode-all)
+
+
+* mouse-copy
+#+BEGIN_SRC emacs-lisp
+(require 'mouse-copy)
+(global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
+(global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving) 
+#+END_SRC
+
+
+* proselint 
+Source: http://unconj.ca/blog/linting-prose-in-emacs.html 
+
+#+BEGIN_SRC emacs-lisp
+(flycheck-define-checker proselint
+  "A linter for prose."
+  :command ("proselint" source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+        (id (one-or-more (not (any " "))))
+        (message) line-end))
+  :modes (text-mode markdown-mode gfm-mode org-mode))
+
+(add-to-list 'flycheck-checkers 'proselint) 
+#+END_SRC
+
+
+* Braxton
+#+BEGIN_SRC emacs-lisp
+(defun braxton ()
+  "Task request to my virtual assistant."
+  (interactive)
+  (message-mail)
+  (message-goto-to)
+  (insert "braxton.robbason@gmail.com")
+  (message-goto-subject) (insert "starting: " (format-time-string "%F %l:%M%P"))
+  (message-goto-body) (insert "Starting! " (format-time-string "%F %l:%M%P\n")) 
+(message-send-and-exit) 
+  )
+
+#+END_SRC
+
+* query-replace-duplicate-lines-keep-blanks
+
+Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-duplicate-lines/20384?noredirect=1#comment31370_20384][replace - how to query-delete-duplicate-lines? - Emacs Stack Exchange]]
+#+BEGIN_SRC emacs-lisp
+(eval-when-compile
+  (require 'cl-macs))
+
+(defun delete-duplicate-lines-interactive (oldfun &rest args)
+  "Make `delete-region' interactive in `delete-duplicate-lines'."
+  (let ((reverse (nth 2 args))
+    (adjacent (nth 3 args))
+    (arg-interactive (nth 5 args)))
+    (if arg-interactive
+    (let ((ol (make-overlay 1 1)))
+      (overlay-put ol 'face 'secondary-selection) ;; could be customizable
+      (unwind-protect
+          (let (continue
+            (deleted-lines 0))
+        (catch :quit
+          (advice-add 'delete-region
+                  :around
+                  (lambda (delete-region-original start end)
+                (if continue
+                    (funcall delete-region-original start end)
+                  (recenter)
+                  (move-overlay ol start end)
+                  (cl-case  (let (mark-active) (read-key "Delete line? ([y]es, [n]ext, [!] all, [q]uit, any other key is equivalent to next):"))
+                    (?y
+                     (funcall delete-region-original start end)
+                     (setq deleted-lines (1+ deleted-lines)))
+                    (?!
+                     (setq continue t)
+                     (funcall delete-region-original start end)
+                     (setq deleted-lines (1+ deleted-lines)))
+                    (?q
+                     (throw :quit nil))))
+                (when reverse (goto-char start)))
+                  '((name . interactive)))
+          (apply oldfun args))
+        (message "Deleted %d %sduplicate line%s%s"
+             deleted-lines
+             (if adjacent "adjacent " "")
+             (if (= deleted-lines 1) "" "s")
+             (if reverse " backward" "")))
+        (advice-remove 'delete-region 'interactive))
+      (delete-overlay ol))
+      (apply oldfun args) ;; non-interactive case
+      )))
+
+(advice-add 'delete-duplicate-lines :around 
+        #'delete-duplicate-lines-interactive)
+
+(load-library "sort.el") ;; Somehow `delete-region` is replaced in "sort.elc". Therefore load the source version again.
+
+(defun delete-duplicate-lines-keep-blanks ()
+  (interactive)
+  (delete-duplicate-lines (region-beginning) (region-end) nil nil t t)) 
+#+END_SRC
+
+* my/delete-duplicate-lines
+#+BEGIN_SRC emacs-lisp
+(defun my/update-lines (bunches pos keep)
+  (cl-loop with dec = (if keep 0 1)
+           for line being the hash-key of bunches
+           using (hash-value positions) do
+           (puthash
+            line
+            (cl-loop for p in positions
+                     if (< p pos) collect p
+                     else if (> p pos) collect (- p dec))
+            bunches)))
+
+(defun my/suggest-delete-line (line)
+  (let ((len (length line)))
+    (move-overlay selection (point) (+ (point) len))
+    (let* ((inhibit-quit t)
+           (answer 
+            (with-local-quit
+              (read-key
+               (format "Delete '%s%s'? [y]es/[n]o"
+                       (substring line 0 (min len 13))
+                       (cond
+                        ((> len 16) "...")
+                        ((> len 13) (substring line 13 len))
+                        (t "")))))))
+      (when (= answer ?y)
+        (delete-region
+         (point)
+         (progn
+           (move-end-of-line 1)
+           (forward-char)
+           (point))))
+      answer)))
+
+(defun my/delete-duplicate-lines (beg end)
+  (interactive
+   (if (region-active-p)
+       (list (region-beginning) (region-end))
+     (list (point-min) (point-max))))
+  (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
+        (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
+        (bunches (make-hash-table :test 'equal))
+        (selection (make-overlay 1 1)))
+    (overlay-put selection 'face 'secondary-selection)
+    (save-excursion
+      (goto-char beg)
+      (move-beginning-of-line 1)
+      (cl-loop for lnum = (count-lines (point-min) beg)
+               then (1+ lnum)
+               for line = (buffer-substring-no-properties
+                           (point)
+                           (progn
+                             (move-end-of-line 1)
+                             (point)))
+               while (< (point) end) do
+               (forward-char)
+               (unless
+                   (or (and (string-match "[ \t]+" line) ignore-white)
+                       (and (string-match "^$" line) ignore-blank))
+                 (puthash line (cons lnum (gethash line bunches)) bunches))))
+    (cl-loop for line being the hash-key of bunches 
+             using (hash-value positions)
+             unless (cdr positions) do
+             (remhash line bunches))
+    (cl-loop named :outer for line being the hash-key of bunches do
+             (cl-loop for positions = (gethash line bunches)
+                      while positions do
+                      (cl-loop with continue = t
+                               for pos in positions
+                               while continue do
+                               (goto-char (point-min))
+                               (forward-line pos)
+                               (recenter)
+                               (cl-case (my/suggest-delete-line line)
+                                 (?\C-g (cl-return-from :outer))
+                                 (?y)
+                                 (otherwise (setf continue nil)))
+                               (my/update-lines bunches pos continue))))
+    (delete-overlay selection))) 
+#+END_SRC
