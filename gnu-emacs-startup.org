@@ -3127,6 +3127,9 @@ Didn't work.
 (define-key orgstruct-mode-map (kbd "\C-c\C-c") 'custom-send-message)
 (define-key mu4e-compose-mode-map (kbd "\C-c\C-c") 'custom-send-message)
 
+
+(define-key orgstruct-mode-map (kbd "C-c .") 'org-time-stamp)
+
 #+END_SRC
 
 * message-mode-map

@@ -2748,11 +2748,16 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 
 (global-set-key (kbd "M-n") 'org-forward-heading-same-level)
 (global-set-key (kbd "M-N") 'org-next-visible-heading)
-(global-set-key (kbd "M-P") 'org-previous-visible-heading)
-
-(global-set-key (kbd "M-p") 'org-backward-heading-same-level)
+(global-set-key (kbd "M-p") 'org-backward-heading-same-level) 
+(global-set-key (kbd "M-P") 'org-previous-visible-heading) 
 (define-key key-minor-mode-map (kbd "M-n") 'org-forward-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
+
+
+(define-key key-minor-mode-map (kbd "M-[") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-[") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-{") 'org-next-visible-heading)
+(define-key key-minor-mode-map (kbd "M-}") 'org-previous-visible-heading)
 
 (global-set-key (kbd "s-p") 'projectile-commander)
 (define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
@@ -4844,8 +4849,11 @@ but how to make it stop saying "no files need saving"?
   (interactive)
 (find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs"))
 
-(define-key key-minor-mode-map (kbd "M-[") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "M-]") 'load-gnu-startup)
+
+(define-key key-minor-mode-map (kbd "C-{") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "C-}") 'load-gnu-startup)
+
+
 #+END_SRC
 
 
@@ -6104,3 +6112,31 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
                                (my/update-lines bunches pos continue))))
     (delete-overlay selection))) 
 #+END_SRC
+
+
+* org-time-stamp formats 
+** current settings
+
+#+BEGIN_SRC emacs-lisp
+(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>")) 
+#+END_SRC
+
+<%Y-%m-%d %a>
+<2016-02-23 Tue>
+
+<%Y-%m-%d %H:%M%p> 
+<2016-02-23 10:51AM>
+
+
+** alternative settings 
+
+*** with day of the week
+
+#+BEGIN_EXAMPLE emacs-lisp
+(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M%p>")) 
+#+END_EXAMPLE
+
+<2016-02-23 Tue>
+
+<2016-02-23 Tue 10:48AM>
+
