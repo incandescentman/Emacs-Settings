@@ -657,18 +657,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 (define-key orgstruct-mode-map (kbd "<SPC>") 'jay/insert-space)
-
-(defun jay/insert-paren-single ()
-  "Insert paren without expanding abbrev."
-  (interactive)
-(smart-expand)
-;; (insert-parentheses 1)
-(insert "\)")
-)
-
-;; (define-key org-mode-map (kbd ")") 'jay/insert-paren-single)
-;; (define-key key-minor-mode-map (kbd ")") 'jay/insert-paren-single)
-;; (define-key key-minor-mode-map (kbd "/") 'jay/insert-slash)
+(global-set-key (kbd "M-SPC") 'insert-space) 
+(define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
+(define-key orgstruct-mode-map (kbd "<M-SPC>") 'insert-space)
 
 ;;; I changed this a)) bunch, not sure if it still works correctly.
 ;; (defun my/fix-space ()

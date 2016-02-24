@@ -6134,7 +6134,8 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 *** with day of the week
 
 #+BEGIN_EXAMPLE emacs-lisp
-(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M%p>")) 
+(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>")) 
+
 #+END_EXAMPLE
 
 <2016-02-23 Tue>
