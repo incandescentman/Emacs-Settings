@@ -1,3 +1,9 @@
+;; tramp fix
+#+BEGIN_SRC emacs-lisp
+(setq tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no") 
+#+END_SRC
+
 
 (define-minor-mode org-config-files-local-mode
     "Minor mode for editing configuration files in org-mode." 
