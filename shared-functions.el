@@ -1954,7 +1954,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
 
-(define-key key-minor-mode-map (kbd "M-[") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-]") 'org-forward-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-[") 'org-backward-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-{") 'org-next-visible-heading)
 (define-key key-minor-mode-map (kbd "M-}") 'org-previous-visible-heading)

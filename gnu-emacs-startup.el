@@ -299,6 +299,11 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+;; don't know why this stopped working
+(define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
+(define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
+
+
 (define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
 
 (define-key key-minor-mode-map (kbd "s-m p m") 'poetry-mode)

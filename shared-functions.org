@@ -2761,7 +2761,7 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
 
-(define-key key-minor-mode-map (kbd "M-[") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-]") 'org-forward-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-[") 'org-backward-heading-same-level)
 (define-key key-minor-mode-map (kbd "M-{") 'org-next-visible-heading)
 (define-key key-minor-mode-map (kbd "M-}") 'org-previous-visible-heading)
