@@ -3154,15 +3154,15 @@ Single Capitals as you type."
 (setq mu4e-attachment-dir "~/Downloads") 
 
 ;; shortcuts
-(setq mu4e-maildir-shortcuts
-    '( ("/starred"               . ?i)
-       ("/sent"   . ?s)))
+;;(setq mu4e-maildir-shortcuts
+;; '( ("/starred"               . ?I)
+;; ("/sent"   . ?s)))
 
 ;; something about ourselves
-(setq mu4e-compose-signature
-    (concat
-      "Best,\n"
-      "Jay\n"))
+;;(setq mu4e-compose-signature
+;; (concat
+;; "best,\not"
+;; "jay\n"))
 
 ;; show images
 (setq mu4e-show-images t)
@@ -3206,9 +3206,9 @@ Single Capitals as you type."
       ) 
 
 ;; maildirs
-(require 'mu4e-maildirs-extension)
-(mu4e-maildirs-extension) 
-(setq mu4e-maildirs-extension-title "Folders")
+;; (require 'mu4e-maildirs-extension)
+;; (mu4e-maildirs-extension) 
+;; (setq mu4e-maildirs-extension-title "Folders")
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 

@@ -4448,9 +4448,9 @@ Single Capitals as you type."
       ) 
 
 ;; maildirs
-(require 'mu4e-maildirs-extension)
-(mu4e-maildirs-extension) 
-(setq mu4e-maildirs-extension-title "Folders")
+;; (require 'mu4e-maildirs-extension)
+;; (mu4e-maildirs-extension) 
+;; (setq mu4e-maildirs-extension-title "Folders")
 
  #+END_SRC
 
