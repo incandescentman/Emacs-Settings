@@ -4377,7 +4377,7 @@ Single Capitals as you type."
 
 ;; only add email sent directly to me 
 (setq mu4e-compose-complete-only-personal t)
-c
+
 (setq mu4e-compose-dont-reply-to-self t)
 (setq mu4e-compose-in-new-frame nil)
 (setq mu4e-compose-signature-auto-include nil)
@@ -4396,15 +4396,15 @@ c
 (setq mu4e-attachment-dir "~/Downloads") 
 
 ;; shortcuts
-(setq mu4e-maildir-shortcuts
-    '( ("/starred"               . ?i)
-       ("/sent"   . ?s)))
+;;(setq mu4e-maildir-shortcuts
+;; '( ("/starred"               . ?I)
+;; ("/sent"   . ?s)))
 
 ;; something about ourselves
-(setq mu4e-compose-signature
-    (concat
-      "Best,\n"
-      "Jay\n"))
+;;(setq mu4e-compose-signature
+;; (concat
+;; "best,\not"
+;; "jay\n"))
 
 ;; show images
 (setq mu4e-show-images t)

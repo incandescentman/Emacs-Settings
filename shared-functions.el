@@ -3133,6 +3133,9 @@ Single Capitals as you type."
 ;; display HTML email nicely
 (setq mu4e-html2text-command "w3m -T text/html") 
 
+;; only add email sent directly to me 
+(setq mu4e-compose-complete-only-personal t)
+
 (setq mu4e-compose-dont-reply-to-self t)
 (setq mu4e-compose-in-new-frame nil)
 (setq mu4e-compose-signature-auto-include nil)
@@ -3209,7 +3212,12 @@ Single Capitals as you type."
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 
+
+;; start screen
 (define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
+
+
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 
 ;; inbox
