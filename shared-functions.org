@@ -2886,8 +2886,8 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "o" 'eval-buffer)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
-(define-hyper-key "{" 'org-previous-visible-heading)
-(define-hyper-key "}" 'org-next-visible-heading)
+(define-hyper-key "{" 'path-copy-full-path-to-clipboard)
+(define-hyper-key "}" 'path-copy-full-path-to-clipboard)
 ;; why not use N and P here? TODO
 
 
@@ -4367,10 +4367,23 @@ Single Capitals as you type."
   (normal-top-level-add-subdirs-to-load-path)) 
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
-(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
+(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
 (setq mu4e-sent-folder   "/sent")
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder  "/trash") 
+
+;; display HTML email nicely
+(setq mu4e-html2text-command "w3m -T text/html") 
+
+;; only add email sent directly to me 
+(setq mu4e-compose-complete-only-personal t)
+c
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-in-new-frame nil)
+(setq mu4e-compose-signature-auto-include nil)
+(setq mu4e-user-mail-address-list
+   (quote
+    ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")))
 
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
@@ -4447,6 +4460,19 @@ Single Capitals as you type."
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 
+
+;; start screen
+(define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
+
+
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+
+;; inbox
+(define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
+
     #+END_SRC
 
 *** mu4e attachments
@@ -4454,9 +4480,37 @@ Single Capitals as you type."
 
   I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
 
+*** gmail starred 
+
+
+The remaining problem is to propagate to Gmail that I've refiled 
+(archived) a message. I also noticed that flagging a message in /mu4e/ 
+doesn't immediately mean the message is starred on the Gmail side. With 
+the recently added ~mu4e-mark-execute-pre-hook~ it becomes possible to 
+whip Gmail into doing my bidding :) 
+
+# #+BEGIN_SRC elisp 
+(add-hook 'mu4e-mark-execute-pre-hook 
+          (lambda (mark msg) 
+            (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\Inbox")) 
+                  ((equal mark 'flag) (mu4e-action-retag-message msg "\\Starred")) 
+                  ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\Starred"))))) 
+# #+END_SRC 
+
+I've been using this for about a week now and I'm rather liking this setup so far. 
+
+It wasn't until after a couple of days that I realised this makes /mu4e/ 
+more like Gmail than it was with me first setup, i.e. all email is in a 
+single folder and I use searching exclusively to find stuff :-) 
+Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9DgAJ][Mu4e and Gmail, my current setup - Google Groups]]
+
+
+
+** gnus
+
 
   #+BEGIN_SRC emacs-lisp
-(require 'gnus-dired)
+;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
 ;; message-mode derived modes, such as mu4e-compose-mode
 (defun gnus-dired-mail-buffers ()
@@ -4476,7 +4530,7 @@ Single Capitals as you type."
 
   With this, I can attach a file as an attachment to a new email message by entering C-c RET C-a, and I'm good to go. 
 
-** gnus
+
 *** gnus keybindings
 
     #+BEGIN_SRC emacs-lisp

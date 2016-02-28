@@ -2053,8 +2053,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-hyper-key "o" 'eval-buffer)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
-(define-hyper-key "{" 'org-previous-visible-heading)
-(define-hyper-key "}" 'org-next-visible-heading)
+(define-hyper-key "{" 'path-copy-full-path-to-clipboard)
+(define-hyper-key "}" 'path-copy-full-path-to-clipboard)
 ;; why not use N and P here? TODO
 
 
@@ -3125,10 +3125,20 @@ Single Capitals as you type."
   (normal-top-level-add-subdirs-to-load-path)) 
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
-(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
+(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
 (setq mu4e-sent-folder   "/sent")
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder  "/trash") 
+
+;; display HTML email nicely
+(setq mu4e-html2text-command "w3m -T text/html") 
+
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-in-new-frame nil)
+(setq mu4e-compose-signature-auto-include nil)
+(setq mu4e-user-mail-address-list
+   (quote
+    ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")))
 
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
@@ -3199,7 +3209,15 @@ Single Capitals as you type."
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 
-(require 'gnus-dired)
+(define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+
+;; inbox
+(define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag)
+
+;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
 ;; message-mode derived modes, such as mu4e-compose-mode
 (defun gnus-dired-mail-buffers ()
