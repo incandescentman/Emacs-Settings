@@ -626,6 +626,8 @@
 ("—" . "---")
 ("…" . "...")
 ("• " . "- ")
+(" " . "")
+("  " . " ")
 ;; ("- " . "") ; also remove stray spac- es
 ;; ("­ ". "") ; also remove stray spac- es
 )
@@ -3236,6 +3238,13 @@ Single Capitals as you type."
 
 
 ;; unset keys (worked!)
+(add-hook 'mu4e-headers-mode-hook 
+          (lambda ()
+            (local-unset-key (kbd "<M-right>"))
+            (local-unset-key (kbd "<M-left>"))
+)) 
+
+
 (add-hook 'mu4e-view-mode-hook 
           (lambda ()
             (local-unset-key (kbd "<M-right>"))
@@ -4002,7 +4011,7 @@ The full path into relative path and insert it as a local file link in org-mode"
                           ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
                           ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
                           ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line 
-                          ("^\\*+[ ]*[A-Za-z]+:" . 'list-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
+                          ("^\\*+[ ]*[A-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
                           )
                         )
 
@@ -4419,6 +4428,14 @@ minibuffer."
 
 (spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
 ;; doesn't work
+
+(define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
+(define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
+(define-key key-minor-mode-map (kbd "}nl") 'new-lisp-buffer)
+(require 'wn-org)
+;; (define-key key-minor-mode-map (kbd "]d") 'wn-org)
+
+;; (spacemacs/set-leader-keys "d" 'forward-char)
 
 (evil-leader/set-key
 "c[" 'load-shared-functions

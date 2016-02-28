@@ -569,11 +569,6 @@
 ;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
 ;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
-(define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
-(define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
-(define-key key-minor-mode-map (kbd "}nl") 'new-lisp-buffer)
-(define-key key-minor-mode-map (kbd "]d") 'wn-org)
-
 (defun kill-sentence-to-period ()
   "Leave the period in there."
   (interactive)
