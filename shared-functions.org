@@ -4396,9 +4396,14 @@ Single Capitals as you type."
 (setq mu4e-attachment-dir "~/Downloads") 
 
 ;; shortcuts
-;;(setq mu4e-maildir-shortcuts
-;; '( ("/starred"               . ?I)
-;; ("/sent"   . ?s)))
+(setq mu4e-maildir-shortcuts
+'( ("/starred[Gmail]/.Starred"               . ?i)
+("/sent"   . ?s)))
+
+(defun mu4e-gmail ()
+  (interactive)
+  (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
+  ) 
 
 ;; something about ourselves
 ;;(setq mu4e-compose-signature
@@ -4464,14 +4469,28 @@ Single Capitals as you type."
 ;; start screen
 (define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
-
-
-(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-main-mode-map "g" 'mu4e-update-mail-and-index) 
 
 ;; inbox
 (define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
+(define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+
+
+
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+
+
+;; unset keys (worked!)
+(add-hook 'mu4e-view-mode-hook 
+          (lambda ()
+            (local-unset-key (kbd "<M-right>"))
+            (local-unset-key (kbd "<M-left>"))
+)) 
+
+
 
     #+END_SRC
 
@@ -4908,12 +4927,7 @@ but how to make it stop saying "no files need saving"?
 
 (defun open-abbrevs ()
   (interactive)
-(find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs"))
-
-
-(define-key key-minor-mode-map (kbd "C-{") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "C-}") 'load-gnu-startup)
-
+(find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")) 
 
 #+END_SRC
 
@@ -6208,4 +6222,37 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom))) 
+#+END_SRC
+
+
+* evil leader keybindings
+#+BEGIN_SRC emacs-lisp
+(spacemacs/set-leader-keys "gx" 'forward-char) 
+;; works
+
+;; global, I think? 
+(evil-leader/set-key
+"gp" 'forward-char 
+) 
+;; works
+
+
+(evil-leader/set-key-for-mode 'org-mode
+        "gl"   'ledger-delete-current-transaction
+) 
+;; doesn't work 
+
+(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
+;; doesn't work 
+
+
+#+END_SRC
+
+
+* config files without RSI
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key
+"c[" 'load-shared-functions
+"c]" 'load-gnu-startup
+) 
 #+END_SRC

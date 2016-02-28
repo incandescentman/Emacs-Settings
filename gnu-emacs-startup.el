@@ -299,6 +299,13 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+;; mu4e-gmail
+(define-key key-minor-mode-map (kbd "s-l") 'mu4e-gmail)
+(define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)
+
+
+(define-key key-minor-mode-map (kbd "C-c d") 'prelude-duplicate-current-line-or-region)
+
 ;; don't know why this stopped working
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)

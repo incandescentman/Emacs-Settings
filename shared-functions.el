@@ -3154,9 +3154,14 @@ Single Capitals as you type."
 (setq mu4e-attachment-dir "~/Downloads") 
 
 ;; shortcuts
-;;(setq mu4e-maildir-shortcuts
-;; '( ("/starred"               . ?I)
-;; ("/sent"   . ?s)))
+(setq mu4e-maildir-shortcuts
+'( ("/starred[Gmail]/.Starred"               . ?i)
+("/sent"   . ?s)))
+
+(defun mu4e-gmail ()
+  (interactive)
+  (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
+  ) 
 
 ;; something about ourselves
 ;;(setq mu4e-compose-signature
@@ -3216,14 +3221,26 @@ Single Capitals as you type."
 ;; start screen
 (define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
-
-
-(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-main-mode-map "g" 'mu4e-update-mail-and-index) 
 
 ;; inbox
 (define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
-(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag)
+(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
+(define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+
+
+
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+
+
+;; unset keys (worked!)
+(add-hook 'mu4e-view-mode-hook 
+          (lambda ()
+            (local-unset-key (kbd "<M-right>"))
+            (local-unset-key (kbd "<M-left>"))
+))
 
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
@@ -3538,10 +3555,6 @@ If FILE already exists, signal an error."
 (defun open-abbrevs ()
   (interactive)
 (find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs"))
-
-
-(define-key key-minor-mode-map (kbd "C-{") 'load-shared-functions)
-(define-key key-minor-mode-map (kbd "C-}") 'load-gnu-startup)
 
 (setq org-ellipsis " ◦◦◦ ") 
 ; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
@@ -4388,3 +4401,26 @@ minibuffer."
 
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom)))
+
+(spacemacs/set-leader-keys "gx" 'forward-char) 
+;; works
+
+;; global, I think? 
+(evil-leader/set-key
+"gp" 'forward-char 
+) 
+;; works
+
+
+(evil-leader/set-key-for-mode 'org-mode
+        "gl"   'ledger-delete-current-transaction
+) 
+;; doesn't work 
+
+(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
+;; doesn't work
+
+(evil-leader/set-key
+"c[" 'load-shared-functions
+"c]" 'load-gnu-startup
+)
