@@ -1166,7 +1166,7 @@ every new buffer will be unique:
 * Backups
 Make backups:
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-directory-alist `(("." . "~/emacs/.saves")))
 (setq
  backup-by-copying t      ; don't clobber symlinks
  delete-old-versions t
@@ -4481,8 +4481,9 @@ Single Capitals as you type."
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
 
 
-
+;; message view
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 
 
 ;; unset keys (worked!)
@@ -5748,9 +5749,10 @@ It will open the link in Emacs with typing C-c C-o.
   )
 #+END_SRC
 
-* touch file
+* Save file as new 
+
 #+BEGIN_SRC emacs-lisp
-(defun touch-file ()
+(defun save-file-as-new ()
   "Force modification of current file, unless already modified."
   (interactive)
   (if (and (verify-visited-file-modtime (current-buffer))
@@ -5758,6 +5760,34 @@ It will open the link in Emacs with typing C-c C-o.
       (progn
         (set-buffer-modified-p t)
         (save-buffer 0)))) 
+#+END_SRC
+
+* touch-file
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'dired
+ '(progn
+  (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
+  (defun touch-file (file)
+  "Create a file called FILE.
+If FILE already exists, signal an error."
+  (interactive
+  (list (read-file-name "Create file: " (dired-current-directory))))
+  (let* ((expanded (expand-file-name file))
+    (try expanded)
+    (dir (directory-file-name (file-name-directory expanded)))
+    new)
+   (if (file-exists-p expanded)
+    (error "Cannot create file %s: file exists" expanded))
+   ;; Find the topmost nonexistent parent dir (variable `new')
+   (while (and try (not (file-exists-p try)) (not (equal new try)))
+   (setq new try
+     try (directory-file-name (file-name-directory try))))
+   (when (not (file-exists-p dir))
+   (make-directory dir t))
+   (write-region "" nil expanded t)
+   (when new
+   (dired-add-file new)
+   (dired-move-to-filename)))))) 
 #+END_SRC
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this 

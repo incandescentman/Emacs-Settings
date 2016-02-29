@@ -299,6 +299,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key dired-mode-map (kbd "c") 'touch-file) 
+
 ;; mu4e-gmail
 (define-key key-minor-mode-map (kbd "s-l") 'mu4e-gmail)
 (define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)

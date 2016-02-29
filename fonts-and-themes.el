@@ -105,6 +105,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 '(minibuffer-prompt ((t (:weight bold :foreground "white" :background "black"))))
 '(org-ellipsis ((t (:background "#3F3F3F" :foreground "#E0CF9F" :underline t)))) 
+'(org-ellipsis ((t (:background "#3F3F3F" :foreground "#E0CF9F" :underline t)))) 
+
+`(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F")))) 
+
 
 )
 

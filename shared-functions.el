@@ -4056,7 +4056,7 @@ The full path into relative path and insert it as a local file link in org-mode"
   (setq global-centered-cursor-mode t)
   )
 
-(defun touch-file ()
+(defun save-file-as-new ()
   "Force modification of current file, unless already modified."
   (interactive)
   (if (and (verify-visited-file-modtime (current-buffer))
@@ -4064,6 +4064,31 @@ The full path into relative path and insert it as a local file link in org-mode"
       (progn
         (set-buffer-modified-p t)
         (save-buffer 0))))
+
+(eval-after-load 'dired
+ '(progn
+  (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
+  (defun touch-file (file)
+  "Create a file called FILE.
+If FILE already exists, signal an error."
+  (interactive
+  (list (read-file-name "Create file: " (dired-current-directory))))
+  (let* ((expanded (expand-file-name file))
+    (try expanded)
+    (dir (directory-file-name (file-name-directory expanded)))
+    new)
+   (if (file-exists-p expanded)
+    (error "Cannot create file %s: file exists" expanded))
+   ;; Find the topmost nonexistent parent dir (variable `new')
+   (while (and try (not (file-exists-p try)) (not (equal new try)))
+   (setq new try
+     try (directory-file-name (file-name-directory try))))
+   (when (not (file-exists-p dir))
+   (make-directory dir t))
+   (write-region "" nil expanded t)
+   (when new
+   (dired-add-file new)
+   (dired-move-to-filename))))))
 
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
