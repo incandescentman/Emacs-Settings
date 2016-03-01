@@ -748,7 +748,7 @@
 (require 'blue-ruin) 
 (require 'blue-ruin-no-cover)
 
-(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-directory-alist `(("." . "~/emacs/.saves")))
 (setq
  backup-by-copying t      ; don't clobber symlinks
  delete-old-versions t
@@ -3233,8 +3233,9 @@ Single Capitals as you type."
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
 
 
-
+;; message view
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 
 
 ;; unset keys (worked!)
