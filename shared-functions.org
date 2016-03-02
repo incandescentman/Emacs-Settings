@@ -293,9 +293,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 #+BEGIN_SRC emacs-lisp
 ; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-clock-persist t)
 (setq org-fontify-quote-and-verse-blocks t)
 ;; blank lines before new headings
 (setq org-blank-before-new-entry
@@ -1388,13 +1385,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-ascii-table-use-ascii-art t)
  '(org-catch-invisible-edits (quote error))
  '(org-catch-invisible-edits (quote smart))
- '(org-clock-auto-clock-resolution t)
- '(org-clock-idle-time 5)
- '(org-clock-in-resume t)
- '(org-clock-persist-query-resume nil)
- '(org-clock-report-include-clocking-task t)
- '(org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
- '(org-closed-string "COMPLETED:")
  '(org-ctrl-k-protect-subtree t)
  '(org-custom-properties (quote (">")))
  '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
