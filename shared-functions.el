@@ -983,7 +983,7 @@
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
- '(tramp-default-method "ssh")
+;; '(tramp-default-method "ssh")
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
@@ -4419,7 +4419,7 @@ minibuffer."
                                (my/update-lines bunches pos continue))))
     (delete-overlay selection)))
 
-(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>"))
+;;(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>"))
 
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom)))
@@ -4465,3 +4465,24 @@ minibuffer."
 (setq ido-save-directory-list-file "/Users/jay/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "/Users/jay/emacs/.savefile/projectile-bookmarks.eld"
 )
+
+(setq org-clock-auto-clock-resolution t)
+ (setq org-clock-idle-time 30)
+ (setq org-clock-in-resume t)
+ (setq org-clock-persist-query-resume nil)
+ (setq org-clock-report-include-clocking-task t)
+ (setq org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-clock-persist t)
+(setq org-clock-into-drawer nil)
+(setq org-clock-persist-query-resume nil)
+(setq org-clock-report-include-clocking-task t)
+(setq org-clocktable-defaults
+ (quote
+ (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+
+(setq org-time-clocksum-format
+ (quote
+ (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))

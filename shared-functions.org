@@ -1461,7 +1461,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
- '(tramp-default-method "ssh")
+;; '(tramp-default-method "ssh")
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
  '(user-mail-address "dixit@aya.yale.edu")
@@ -6220,7 +6220,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 ** current settings
 
 #+BEGIN_SRC emacs-lisp
-(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>")) 
+;;(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>")) 
 #+END_SRC
 
 <%Y-%m-%d %a>
@@ -6235,7 +6235,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 *** with day of the week
 
 #+BEGIN_EXAMPLE emacs-lisp
-(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>")) 
+;; (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %I:%M%p>")) 
 
 #+END_EXAMPLE
 
