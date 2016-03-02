@@ -420,6 +420,7 @@
 (define-key key-minor-mode-map (kbd "C-9") 'goto-last-change-reverse) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 
+(define-key key-minor-mode-map (kbd "s-=") 'zoom-in-and-disable-menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)

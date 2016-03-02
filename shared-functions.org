@@ -6320,3 +6320,12 @@ Available leader keybindings
 "c]" 'load-gnu-startup
 ) 
 #+END_SRC
+
+* zoom and menu bar mode
+#+BEGIN_SRC emacs-lisp
+(defun zoom-in-and-disable-menu-bar-mode ()
+  (interactive)
+  (setq menu-bar-mode -1)
+  (text-scale-increase 1)
+  )
+#+END_SRC

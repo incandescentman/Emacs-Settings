@@ -4468,3 +4468,9 @@ minibuffer."
 "c[" 'load-shared-functions
 "c]" 'load-gnu-startup
 )
+
+(defun zoom-in-and-disable-menu-bar-mode ()
+  (interactive)
+  (setq menu-bar-mode -1)
+  (text-scale-increase 1)
+  )
