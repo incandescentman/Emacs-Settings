@@ -1,4 +1,9 @@
 
+* Spacemacs
+** Search for a package: 
+#+BEGIN_EXAMPLE
+] h SPC and search 
+#+END_EXAMPLE 
 
 
 * search and replace across files

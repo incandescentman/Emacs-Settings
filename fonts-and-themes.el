@@ -186,10 +186,8 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (interactive)
   (load-file "~/emacs/prelude/personal/jay-custom-color-themes/cyberpunk-jay.el")
   (org-mode)
-  (org-bullets-mode 1)
   (incarnadine-cursor)
-  (turn-on-auto-capitalize-mode)
-(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
+)
 
 (defun cyberpunk-writeroom ()
   "Open my own customized version of the Cyberpunk color theme."

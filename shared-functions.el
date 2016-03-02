@@ -1956,10 +1956,10 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
 
 
-(define-key key-minor-mode-map (kbd "M-]") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-[") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-{") 'org-next-visible-heading)
-(define-key key-minor-mode-map (kbd "M-}") 'org-previous-visible-heading)
+(define-key key-minor-mode-map (kbd "M-{") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-}") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-[") 'org-previous-visible-heading)
+(define-key key-minor-mode-map (kbd "M-]") 'org-next-visible-heading)
 
 (global-set-key (kbd "s-p") 'projectile-commander)
 (define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
@@ -2353,6 +2353,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode)))
 ((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
 ((and buffer-file-name (eq major-mode 'python-mode)))
 ((and buffer-file-name (eq major-mode 'text-mode)))
