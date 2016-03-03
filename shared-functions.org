@@ -6318,12 +6318,23 @@ Available leader keybindings
 
 
 * savefile
-#+BEGIN_SRC emacs-lisp
+
+** new current locations
+#+BEGIN_EXAMPLE emacs-lisp
+(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
+(setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
+(setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
+)
+#+END_EXAMPLE 
+
+
+** old locations
+#+BEGIN_EXAMPLE emacs-lisp
 (setq recentf-save-file "/Users/jay/emacs/.savefilerecentf")
 (setq ido-save-directory-list-file "/Users/jay/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "/Users/jay/emacs/.savefile/projectile-bookmarks.eld"
 )
-#+END_SRC
+#+END_EXAMPLE 
 
 * org-clock
 #+BEGIN_SRC emacs-lisp

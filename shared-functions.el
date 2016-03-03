@@ -4461,11 +4461,6 @@ minibuffer."
   (text-scale-increase 1)
   )
 
-(setq recentf-save-file "/Users/jay/emacs/.savefilerecentf")
-(setq ido-save-directory-list-file "/Users/jay/emacs/.savefile/ido.hist")
-(setq projectile-known-projects-file "/Users/jay/emacs/.savefile/projectile-bookmarks.eld"
-)
-
 (setq org-clock-auto-clock-resolution t)
  (setq org-clock-idle-time 30)
  (setq org-clock-in-resume t)
