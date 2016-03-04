@@ -3135,6 +3135,9 @@ Single Capitals as you type."
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
 
+;; don't confirm before applying flags
+(setq mu4e-headers-leave-behavior 'apply) 
+
 ;; allow for updating mail using 'U' in the main view:
 ;; (setq mu4e-get-mail-command "offlineimap")
 (setq mu4e-get-mail-command "mbsync -a")
@@ -4216,7 +4219,7 @@ minibuffer."
 
 (cheatsheet-add :group 'Movement 
                 :key "kk"
-                :description "helm-org-in-buffer-headings") 
+                :description "helm-imenu") 
 
 (cheatsheet-add :group 'Movement 
                 :key "jk"
@@ -4453,6 +4456,7 @@ minibuffer."
 (evil-leader/set-key
 "c[" 'load-shared-functions
 "c]" 'load-gnu-startup
+"gb" 'gist-buffer-to-pasteboard
 )
 
 (defun zoom-in-and-disable-menu-bar-mode ()
@@ -4465,15 +4469,11 @@ minibuffer."
  (setq org-clock-idle-time 30)
  (setq org-clock-in-resume t)
  (setq org-clock-persist-query-resume nil)
- (setq org-clock-report-include-clocking-task t)
- (setq org-clocktable-defaults (quote (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
-
+ (setq org-clock-report-include-clocking-task t) 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist t)
 (setq org-clock-into-drawer nil)
-(setq org-clock-persist-query-resume nil)
-(setq org-clock-report-include-clocking-task t)
 (setq org-clocktable-defaults
  (quote
  (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
