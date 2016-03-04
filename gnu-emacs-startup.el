@@ -393,7 +393,9 @@
 
 
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
-(define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
+(define-key org-mode-map (kbd "s-O") 'uo-byword-file)
+;; (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
+
 
 (define-key dired-mode-map (kbd "s-o") 'projectile-find-file)
 (define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
