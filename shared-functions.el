@@ -1380,7 +1380,7 @@ margin-bottom: 1em;
       (dired-do-async-shell-command
        "open .")))
 
-  (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
+;; (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
   (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
@@ -2006,7 +2006,6 @@ Including indent-buffer, which should not be called automatically on save."
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 
 (define-hyper-key "h" 'replace-string)
-(define-hyper-key "O" 'reveal-in-finder)
 (define-hyper-key "o" 'projectile-find-file)
 
 
@@ -3110,8 +3109,9 @@ Single Capitals as you type."
 ;; (global-fasd-mode 1)
 ;; (setq fasd-enable-initial-prompt nil)
 
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path)) 
+;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
+; what is this?
+
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
 (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
@@ -3119,18 +3119,40 @@ Single Capitals as you type."
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder  "/trash") 
 
+
+;; my profile
+(setq mu4e-user-mail-address-list
+  (quote
+  ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")))
+;; signature
+;;(setq mu4e-compose-signature
+;; (concat
+;; "best,\not"
+;; "jay\n"))
+
+
+
 ;; display HTML email nicely
 (setq mu4e-html2text-command "w3m -T text/html") 
+;; works but better than the other one, html2text or whatever it's called 
+;; convert html emails properly
+;; Possible options:
+;; ---html2text -utf8 -width 72
+;; ---textutil -stdin -format html -convert txt -stdout
+;; ---html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
+;; ---w3m -dump -cols 80 -T text/html
+;; ---view in browser (provided below)
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
-;; only add email sent directly to me 
+
+;; collect email addresses
+;; only add email addresses of email sent directly to me 
 (setq mu4e-compose-complete-only-personal t)
 
+;; composing mail
 (setq mu4e-compose-dont-reply-to-self t)
 (setq mu4e-compose-in-new-frame nil)
 (setq mu4e-compose-signature-auto-include nil)
-(setq mu4e-user-mail-address-list
-   (quote
-    ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")))
 
 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
@@ -3145,21 +3167,11 @@ Single Capitals as you type."
 
 (setq mu4e-attachment-dir "~/Downloads") 
 
-;; shortcuts
-(setq mu4e-maildir-shortcuts
-'( ("/starred[Gmail]/.Starred"               . ?i)
-("/sent"   . ?s)))
-
+;; go straight to inbox; bound to s-l
 (defun mu4e-gmail ()
   (interactive)
   (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
   ) 
-
-;; something about ourselves
-;;(setq mu4e-compose-signature
-;; (concat
-;; "best,\not"
-;; "jay\n"))
 
 ;; show images
 (setq mu4e-show-images t)
@@ -3168,14 +3180,6 @@ Single Capitals as you type."
 (when (fboundp 'imagemagick-register-types)
   (imagemagick-register-types))
 
-;; convert html emails properly
-;; Possible options:
-;;   - html2text -utf8 -width 72
-;;   - textutil -stdin -format html -convert txt -stdout
-;;   - html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
-;;   - w3m -dump -cols 80 -T text/html
-;;   - view in browser (provided below)
-;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
@@ -3207,6 +3211,12 @@ Single Capitals as you type."
 ;; (mu4e-maildirs-extension) 
 ;; (setq mu4e-maildirs-extension-title "Folders")
 
+;; shortcuts
+(setq mu4e-maildir-shortcuts
+'( ("/starred[Gmail]/.Starred"        . ?i)
+("/sent"  . ?s)))
+
+
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
 
 
@@ -3223,9 +3233,10 @@ Single Capitals as you type."
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
 
 
-;; message view
+;; message view ("mu4e-view-mode)")
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
 
 
 ;; unset keys (worked!)
@@ -3472,9 +3483,9 @@ Single Capitals as you type."
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 (setq nm-results-window-size 25)
 
-(require 'org-contacts) 
-(require 'org-vcard)
-(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+;; (require 'org-contacts) 
+;; (require 'org-vcard)
+;; (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 (defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
