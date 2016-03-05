@@ -878,16 +878,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
 
-(defun timesvr ()
-  "Task request to my virtual assistant."
-  (interactive)
-  (message-mail)
-  (message-goto-subject) (insert "task request: " (format-time-string "%F %l:%M%P"))
-  (message-goto-body) (insert "\n")
-  )
-(global-set-key (kbd "C-c t") 'timesvr)
-(global-set-key (kbd "C-c m") 'compose-mail)
-
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
  Like `backward-char', but moves point to the beginning of the region
@@ -1149,86 +1139,6 @@ password: %s" userid password))
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
         (insert (format "Hello %s!\n" someone))))
-
-(defun dwiw-auto-capitalize ()
-  (if (org-in-block-p '("src"))
-      (when auto-capitalize
-  (auto-capitalize-mode -1))
-    (unless auto-capitalize
-      (auto-capitalize-mode 1))))
-
-;; (add-hook 'post-command-hook dwiw-auto-capitalize)
-
-(defun email-region (start end)
-  "Send region as the body of an email."
-  (interactive "r")
-  (let ((content (buffer-substring start end)))
-    (compose-mail)
-    (message-goto-body)
-    (insert content)
-    (message-goto-to)))
-
-(defvar *email-heading-point* nil
-  "global variable to store point in for returning")
-
-(defvar *email-to-addresses* nil
-  "global variable to store to address in email")
-
-(defun email-heading-return ()
-  "after returning from compose do this"
-  (switch-to-buffer (marker-buffer  *email-heading-point*))
-  (goto-char (marker-position  *email-heading-point*))
-  (setq *email-heading-point* nil)
-  (org-set-property "SENT-ON" (current-time-string))
-  ;; reset this incase you added new ones
-  (org-set-property "TO" *email-to-addresses*)
-  )
-
-(defun email-send-action ()
-  "send action for compose-mail"
-  (setq *email-to-addresses* (mail-fetch-field "To")))
-
-(defun email-heading ()
-  "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-OTHER-HEADERS is an alist specifying additional
-header fields.  Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-save when it was sent as s SENT property. this is overwritten on
-subsequent sends. could save them all in a logbook?
-"
-  (interactive)
-  ; store location.
-  (setq *email-heading-point* (set-marker (make-marker) (point)))
-  (org-mark-subtree)
-  (let ((content (buffer-substring (point) (mark)))
-  (TO (org-entry-get (point) "TO" t))
-  (CC (org-entry-get (point) "CC" t))
-  (BCC (org-entry-get (point) "BCC" t))
-  (SUBJECT (nth 4 (org-heading-components)))
-  (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-  (continue nil)
-  (switch-function nil)
-  (yank-action nil)
-  (send-actions '((email-send-action . nil)))
-  (return-action '(email-heading-return)))
-
-    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-    (message-goto-body)
-    (insert content)
-    (when CC
-      (message-goto-cc)
-      (insert CC))
-    (when BCC
-      (message-goto-bcc)
-      (insert BCC))
-    (if TO
-  (message-goto-body)
-      (message-goto-to))
-    ))
 
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)

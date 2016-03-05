@@ -1113,21 +1113,6 @@ This fucked up autopair mode so I'm turning it off again.
 #+END_SRC
 
 
-** timesvr
-
-#+BEGIN_SRC emacs-lisp
-(defun timesvr ()
-  "Task request to my virtual assistant."
-  (interactive)
-  (message-mail)
-  (message-goto-subject) (insert "task request: " (format-time-string "%F %l:%M%P"))
-  (message-goto-body) (insert "\n")
-  )
-(global-set-key (kbd "C-c t") 'timesvr)
-(global-set-key (kbd "C-c m") 'compose-mail)
-#+END_SRC
-
-
 * character movement
 #+BEGIN_SRC emacs-lisp
 
@@ -1966,7 +1951,7 @@ The key to handling this situation is to use /two/ sources in your helm session.
 
 It easy to add two sources. Here we define the sources as variables, and use the variables in the :sources list to the helm command.
 
-# #+BEGIN_SRC emacs-lisp
+# #+BEGIN_EXAMPLE emacs-lisp
 (defun some-action (arg)
   (message-box "%s\n%s"
     (helm-get-selection)
@@ -1986,7 +1971,7 @@ It easy to add two sources. Here we define the sources as variables, and use the
 			  (action . (("Google" . default-action)))))
 
 (helm :sources '(source1 fallback-source))
-# #+END_SRC
+# #+END_EXAMPLE
 
 #+RESULTS:
 : #<process open http://www.google.com/search?q=addtion%20pul>
@@ -2006,7 +1991,7 @@ I have been using auto-capitalize.el for a short time to automatically capitaliz
 Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
 
 Here is that code:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
@@ -2015,7 +2000,7 @@ Here is that code:
       (auto-capitalize-mode 1))))
 
 ;; (add-hook 'post-command-hook dwiw-auto-capitalize)
-#+END_SRC
+#+END_EXAMPLE
 
 #+RESULTS:
 | dwiw-auto-capitalize |
@@ -2027,7 +2012,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capit
 ** Better integration of org-mode and email
 I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun email-region (start end)
   "Send region as the body of an email."
   (interactive "r")
@@ -2036,7 +2021,7 @@ I like to email org-mode headings and content to people. It would be nice to hav
     (message-goto-body)
     (insert content)
     (message-goto-to)))
-#+END_SRC
+#+END_EXAMPLE
 
 that function is not glamorous, and you still have to fill in the email fields, and unless you use gnus and org-contacts, the only record keeping is through the email provider.
 
@@ -2046,7 +2031,7 @@ It turned out that is a relatively tall order. While it is easy to setup the ema
 
 So here is the code that lets me send org-headings, with the TO, CC, BCC properties, and that records when I sent the email after it is sent.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defvar *email-heading-point* nil
   "global variable to store point in for returning")
 
@@ -2108,7 +2093,7 @@ subsequent sends. could save them all in a logbook?
 	(message-goto-body)
       (message-goto-to))
     ))
-#+END_SRC
+#+END_EXAMPLE
 
 This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy.
 

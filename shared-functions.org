@@ -1223,14 +1223,13 @@ Make backups of files, even when they're in version control:
 
 ** Remember recent email addresses 
 #+BEGIN_SRC emacs-lisp
-(setq recent-addresses-file "~/emacs/prelude/recent-addresses")
-(add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
-(require 'recent-addresses)
-(recent-addresses-mode 1)
+;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
+;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
+;; (require 'recent-addresses)
+;; (recent-addresses-mode 1)
 ;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
-(setq mail-default-directory
-   "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 (setq mail-kill-buffer-on-exit t)
 (setq make-backup-files t)
 (setq message-draft-headers (quote (From References Date)))
@@ -1366,7 +1365,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/disciplined.org")
  '(initial-major-mode (quote org-mode))
- '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+;; '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(mail-kill-buffer-on-exit t)
  '(make-backup-files t)
  '(message-draft-headers (quote (From References Date)))
@@ -3412,10 +3411,10 @@ Handy way of getting back to previous places.
 
 ;; store email in ~/gmail directory
 (setq nnml-directory "~/gmail")
-(setq message-directory "~/gmail") 
+;; (setq message-directory "~/gmail") 
 
 ;; define gnus directories
-(setq message-directory "~/emacs/gnus/mail/")
+;; (setq message-directory "~/emacs/gnus/mail/")
 (setq gnus-directory "~/emacs/gnus/news/")
 (setq nnfolder-directory "~/emacs/gnus/mail/archive") 
 
