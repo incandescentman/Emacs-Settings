@@ -691,7 +691,7 @@
 '(send-mail-function (quote sendmail-send-it))
 '(shift-select-mode nil)
 '(transient-mark-mode t)
-'(user-mail-address "dixit@aya.yale.edu")
+
 '(global-flyspell-mode t)
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
@@ -850,7 +850,7 @@
   '(abbrev-all-caps nil)
 '(undo-limit 800000)
   '(user-full-name "Jay Dixit")
-  '(user-mail-address "dixit@aya.yale.edu")
+
  '(blink-cursor-mode nil)
  '(buffer-stack-show-position nil)
  '(buffer-stack-untracked (quote    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
@@ -984,7 +984,7 @@
 ;; '(tramp-default-method "ssh")
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
- '(user-mail-address "dixit@aya.yale.edu")
+
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
  ; (org-indirect-buffer-display (quote other-window))
@@ -3120,9 +3120,7 @@ Single Capitals as you type."
 
 
 ;; my profile
-(setq mu4e-user-mail-address-list
-  (quote
-  ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")))
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 ;; signature
 ;;(setq mu4e-compose-signature
 ;; (concat
@@ -3146,7 +3144,7 @@ Single Capitals as you type."
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
-;; (setq mu4e-compose-complete-only-personal nil)
+;; (setq mu4e-compose-complete-only-personal t)
 (setq mu4e-compose-complete-only-after "2015-01-01")
 
 ;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
