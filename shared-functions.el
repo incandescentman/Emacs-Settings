@@ -3144,7 +3144,7 @@ Single Capitals as you type."
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
-;; (setq mu4e-compose-complete-only-personal t)
+(setq mu4e-compose-complete-only-personal t)
 (setq mu4e-compose-complete-only-after "2015-01-01")
 
 ;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
