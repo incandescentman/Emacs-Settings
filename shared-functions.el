@@ -718,7 +718,6 @@
 (require 'auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'message-mode-hook '(orgstruct-mode 1))
 
 (setq default-directory "~/Dropbox/writing/" )
 
@@ -774,7 +773,7 @@
 (add-to-list 'completion-styles 'initials t)
 
 ;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-;; (add-hook 'message-mode-hook 'orgstruct-mode 'append)
+(add-hook 'message-mode-hook 'orgstruct-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
 
@@ -3146,7 +3145,7 @@ Single Capitals as you type."
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
-(setq mu4e-compose-complete-only-personal t)
+;; (setq mu4e-compose-complete-only-personal t)
 (setq mu4e-compose-complete-only-after "2015-01-01")
 
 ;; (setq mu4e-contacts-func 'mu4e~fill-contacts)
