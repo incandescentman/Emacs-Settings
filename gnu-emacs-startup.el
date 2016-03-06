@@ -299,6 +299,9 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(global-set-key (kbd "C-c m") 'compose-mail)
+
+
 (define-key dired-mode-map (kbd "c") 'touch-file) 
 
 ;; mu4e-gmail
