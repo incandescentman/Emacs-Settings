@@ -739,9 +739,11 @@
 ;; (setq org-export-preserve-breaks t)
 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
 (require 'blue-ruin) 
+(require 'blue-invoice) 
 (require 'blue-ruin-no-cover)
 
 (setq backup-directory-alist `(("." . "~/emacs/.saves")))
