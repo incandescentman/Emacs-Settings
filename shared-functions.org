@@ -4359,6 +4359,7 @@ Single Capitals as you type."
 (setq mu4e-sent-folder   "/sent")
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder  "/trash") 
+;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
 
 
 ;; my profile
@@ -4388,8 +4389,8 @@ Single Capitals as you type."
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
-(setq mu4e-compose-complete-only-personal t)
-;; (setq mu4e-compose-complete-only-after "2015-01-01")
+;; (setq mu4e-compose-complete-only-personal nil)
+(setq mu4e-compose-complete-only-after "2015-01-01")
 
 ;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
 ;;(mu4e~proc-contacts t nil) 
