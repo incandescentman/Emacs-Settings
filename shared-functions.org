@@ -6058,12 +6058,12 @@ minibuffer."
                 :description "mc/mark-all-dwim") 
 
 
-#+END_SRC
+#+END_SECOND
 
 
 
 
-(key-chord-define-global "HH" 'helm-M-x)
+;; (key-chord-define-global "HH" 'helm-M-x)
 
 
 ;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)

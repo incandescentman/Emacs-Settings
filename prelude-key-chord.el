@@ -51,6 +51,7 @@
 ;; (key-chord-define-global "JJ" 'prelude-switch-to-previous-buffer)
 (key-chord-define-global "UU" 'undo-tree-visualize)
 (key-chord-define-global "xx" 'helm-M-x)
+(key-chord-define-global "XX" 'M-x)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
 (key-chord-define-global "ww" 'helm-swoop)
 (key-chord-define-global "WW" 'widen)
