@@ -1,8 +1,3 @@
-;; tramp fix
-#+BEGIN_SRC emacs-lisp
-(setq tramp-ssh-controlmaster-options
-      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no") 
-#+END_SRC
 
 
 (define-minor-mode org-config-files-local-mode
@@ -1462,7 +1457,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
-;; '(tramp-default-method "ssh")
+'(tramp-default-method "ssh")
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
 
@@ -2159,7 +2154,7 @@ I think this is correct:
 
 * Load shell environment correctly
 #+BEGIN_SRC emacs-lisp
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setenv "PATH" (concat (getenv "PATH") "/usr/local/bin"))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 #+END_SRC
 
