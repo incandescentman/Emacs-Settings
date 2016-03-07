@@ -4792,9 +4792,9 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 ** org-contacts
 
    #+BEGIN_SRC emacs-lisp
-;; (require 'org-contacts) 
+(require 'org-contacts) 
 ;; (require 'org-vcard)
-;; (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
    #+END_SRC
 

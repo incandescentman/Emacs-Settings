@@ -3488,9 +3488,9 @@ Single Capitals as you type."
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 (setq nm-results-window-size 25)
 
-;; (require 'org-contacts) 
+(require 'org-contacts) 
 ;; (require 'org-vcard)
-;; (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 (defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
