@@ -3281,6 +3281,16 @@ Single Capitals as you type."
 (define-key gnus-summary-mode-map "a"
   'gnus-summary-wide-reply)
 
+(require 'org-contacts) 
+;; (require 'org-vcard)
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+
+(setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
+(add-to-list 'mu4e-headers-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t)
+
 ; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
 (require 'notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
@@ -3487,10 +3497,6 @@ Single Capitals as you type."
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 (setq nm-results-window-size 25)
-
-(require 'org-contacts) 
-;; (require 'org-vcard)
-(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 (defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
@@ -4204,6 +4210,11 @@ minibuffer."
 (cheatsheet-add :group 'Dired 
                 :key "C-x C-d"
                 :description "ido-list-directory") 
+
+
+(cheatsheet-add :group 'Mu4e 
+        :key "a e"
+        :description "org-contact-add") 
 
 
 (cheatsheet-add :group 'Common

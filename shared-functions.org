@@ -4575,6 +4575,36 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
     #+END_SRC
 
 
+
+** org-contacts
+
+  #+BEGIN_SRC emacs-lisp
+(require 'org-contacts) 
+;; (require 'org-vcard)
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+
+
+
+  #+END_SRC
+
+*** Maintaining an address-book with org-contacts
+
+Note, mu4e supports built-in address autocompletion; Address autocompletion, and that is the recommended way to do this. However, it is also possible to manage your addresses with org-mode, using org-contacts41.
+
+mu4e-actions defines a useful action (Actions) for adding a contact based on the From:-address in the message at point. To enable this, add to your configuration something like:
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
+(add-to-list 'mu4e-headers-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t) 
+#+END_SRC
+
+After this, you should be able to add contacts using a o in the headers view and the message view, using the org-capture mechanism. Note, the shortcut character o is due to the first character of org-contact-add.
+
+
+
 ** notmuch
 
    #+BEGIN_SRC emacs-lisp
@@ -4789,14 +4819,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (setq nm-results-window-size 25)
    #+END_SRC
 
-** org-contacts
-
-   #+BEGIN_SRC emacs-lisp
-(require 'org-contacts) 
-;; (require 'org-vcard)
-(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
-
-   #+END_SRC
 
 ** kill to buffer end
 
@@ -5959,6 +5981,11 @@ minibuffer."
 (cheatsheet-add :group 'Dired 
                 :key "C-x C-d"
                 :description "ido-list-directory") 
+
+
+(cheatsheet-add :group 'Mu4e 
+        :key "a e"
+        :description "org-contact-add") 
 
 
 (cheatsheet-add :group 'Common
