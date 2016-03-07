@@ -3575,6 +3575,8 @@ If FILE already exists, signal an error."
   (interactive)
 (find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs"))
 
+;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS")))
+
 (setq org-ellipsis " ◦◦◦ ") 
 ; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
 
@@ -4445,8 +4447,6 @@ minibuffer."
                                  (otherwise (setf continue nil)))
                                (my/update-lines bunches pos continue))))
     (delete-overlay selection)))
-
-;;(setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %H:%M%p>"))
 
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom)))

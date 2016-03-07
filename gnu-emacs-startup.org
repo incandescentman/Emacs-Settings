@@ -3019,16 +3019,6 @@ s-. searchlink
 
 s-l mu4e-gmail 
 s-i
-* abbrev advice
-Didn't work.
-#+BEGIN_EXAMPLE emacs-lisp
-(defadvice expand-abbrev (after expand-abbrev-advice activate)
-  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
-  (my/fix-space)
-  )
-#+END_EXAMPLE
-
-
 
 
 * keep cursor at same position when scrolling
