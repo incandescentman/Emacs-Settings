@@ -6363,12 +6363,12 @@ Available leader keybindings
 * savefile
 
 ** new current locations
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
 (setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
 (setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
 )
-#+END_EXAMPLE 
+#+END_SRC 
 
 
 ** old locations
