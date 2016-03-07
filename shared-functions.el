@@ -3174,6 +3174,7 @@ Single Capitals as you type."
 ;; go straight to inbox; bound to s-l
 (defun mu4e-gmail ()
   (interactive)
+(mu4e)
   (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
   ) 
 

@@ -3015,9 +3015,9 @@ doesn't work.
 s-P
 s-N
 s-:
-s.
+s-. searchlink 
 
-s-l
+s-l mu4e-gmail 
 s-i
 * abbrev advice
 Didn't work.
