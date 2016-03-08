@@ -4480,12 +4480,16 @@ Single Capitals as you type."
 (define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
 (define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+(define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
+(define-key mu4e-headers-mode-map "j" 'mu4e-headers-next) 
 
 
 ;; message view ("mu4e-view-mode)")
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
+(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
+(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
 
 
 ;; unset keys (worked!)
@@ -6356,4 +6360,20 @@ Available leader keybindings
 (setq org-time-clocksum-format
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))) 
+#+END_SRC
+
+
+* epub-mode
+define a minor mode epub-mode
+
+SPC is "wrap region in block quote tag"
+
+#+BEGIN_SRC emacs-lisp
+(defun epub-mode ()
+  (interactive)
+  (org-mode)
+  (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+  )
 #+END_SRC

@@ -3233,12 +3233,16 @@ Single Capitals as you type."
 (define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
 (define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+(define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
+(define-key mu4e-headers-mode-map "j" 'mu4e-headers-next) 
 
 
 ;; message view ("mu4e-view-mode)")
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
+(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
+(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
 
 
 ;; unset keys (worked!)
@@ -4389,20 +4393,3 @@ minibuffer."
 (setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
 (setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
 )
-
-(setq org-clock-auto-clock-resolution t)
- (setq org-clock-idle-time 30)
- (setq org-clock-in-resume t)
- (setq org-clock-persist-query-resume nil)
- (setq org-clock-report-include-clocking-task t) 
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-clock-persist t)
-(setq org-clock-into-drawer nil)
-(setq org-clocktable-defaults
- (quote
- (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
-
-(setq org-time-clocksum-format
- (quote
- (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
