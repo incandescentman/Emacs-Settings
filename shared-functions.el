@@ -402,6 +402,10 @@
   ("v" "visualness and visual actions" entry (file "visual-actions.txt")
    "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
+("a" "article ideas" entry (file "article-ideas.txt")
+   "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
+
+
 ("e" "expression" entry (file "expression.txt")
    "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
