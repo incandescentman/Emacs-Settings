@@ -3724,6 +3724,7 @@ event of an error or nonlocal exit."
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
 ;; (add-hook 'org-mode-hook 'wrap-region-mode)
+(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 ;; wrap-region
 (use-package wrap-region
@@ -4393,3 +4394,28 @@ minibuffer."
 (setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
 (setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
 )
+
+(setq org-clock-auto-clock-resolution t)
+ (setq org-clock-idle-time 30)
+ (setq org-clock-in-resume t)
+ (setq org-clock-persist-query-resume nil)
+ (setq org-clock-report-include-clocking-task t) 
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-clock-persist t)
+(setq org-clock-into-drawer nil)
+(setq org-clocktable-defaults
+ (quote
+ (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+
+(setq org-time-clocksum-format
+ (quote
+ (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+
+(defun epub-mode ()
+  (interactive)
+  (org-mode)
+  (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+  )

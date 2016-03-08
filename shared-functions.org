@@ -669,6 +669,10 @@ This is working correctly:
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
+("a" "article ideas" entry (file "article-ideas.txt")
+	 "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
+
+
 ("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
@@ -5242,6 +5246,7 @@ event of an error or nonlocal exit."
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
 ;; (add-hook 'org-mode-hook 'wrap-region-mode)
+(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 ;; wrap-region
 (use-package wrap-region

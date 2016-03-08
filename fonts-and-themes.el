@@ -11,7 +11,7 @@
 
 (defun georgia-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Georgia"))
+  (set-face-attribute 'default nil :font "Georgia" :height 160))
 
 
 (defun hack-font ()
