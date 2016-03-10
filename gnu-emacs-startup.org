@@ -1375,10 +1375,10 @@ It might be nice to link back to those words, so you could click on them and fix
 
 Source: tk
 
-*** invisible text in Emacs
+** invisible text in Emacs
 Source:    [[http://kitchingroup.cheme.cmu.edu/blog/2014/02/06/Invisible-text-in-Emacs/][invisible text in Emacs]]
 
-*** Making org-mode links to files in Emacs packages
+** Making org-mode links to files in Emacs packages
 #+BEGIN_EXAMPLE
 Today I will make a new org-mode link that lets me make links to files inside of Emacs packages. These files may be installed in different places on different systems (e.g. in the system directory, in ELPA directories, or in custom directories), so we need a way to construct paths to them. The application of this is eventually I hope to have some emacs packages of documentation, and I would like to have links between the packages that work no matter how they are installed.
 
@@ -1622,7 +1622,7 @@ I don't know if there is a more clever way to create these links. There are two 
 
 #+END_EXAMPLE
 
-*** Send email to a list of users
+** Send email to a list of users
 I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapcar to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
 
 #+BEGIN_SRC emacs-lisp
@@ -1696,13 +1696,13 @@ I am not sure that is the best way to get the first and second elements in the l
 Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list-of-users/][The Kitchin Research Group]]
 
 
-***** videos
+** videos
 - [[https://www.youtube.com/watch?v%3D6W82EdwQhxU][Hack Emacs - An Overview of Org Mode - YouTube]]
 - [[https://www.youtube.com/watch?v%3DoJTwQvgfgMM][Emacs Org-mode - a system for note-taking and project planning - YouTube]]
 - [[https://www.youtube.com/watch?v%3DnsGYet02bEk][Hack Emacs - Org Mode In Depth: Managing Structure - YouTube]]
 - [[https://www.youtube.com/watch?v%3DfgizHHd7nOo][Kitchin - org mode is awesome - YouTube]]
 
-***** macro to create defuns?
+** macro to create defuns?
 
 (defmacro make-my-function (name)
   (list 'defun (intern (format "my-%s-function" name)) ()
@@ -1711,7 +1711,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
         (list 'do-more-stuff)
         (list (intern (format "modify-%s" name)))))
 
-***** saveplace
+** saveplace
 ;; Save point position between sessions
 
 #+BEGIN_SRC emacs-lisp
@@ -1724,7 +1724,7 @@ The saveplace package is part of Emacs, and remembers the position of point - ev
 
 The last line sets the path to where saveplace stores your position data. Change it at your peril!
 
-***** embolden next word
+** embolden next word
 
    #+BEGIN_SRC emacs-lisp
 (define-minor-mode embolden-next-word
@@ -1757,7 +1757,7 @@ The last line sets the path to where saveplace stores your position data. Change
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
    #+END_SRC
 
-***** no-abbrev-slash
+** no-abbrev-slash
 Doesn't work.
 
       #+BEGIN_SRC emacs-lisp
@@ -1778,7 +1778,7 @@ Doesn't work.
 
       #+END_SRC
 
-***** ideas
+** ideas
 C-d on an empty line in the shell terminates the process.
 
 (defun comint-delchar-or-eof-or-kill-buffer (arg)
@@ -1810,7 +1810,7 @@ It lets you jump to the definition of a function with M-., and back again afterw
 That last line says that we want elisp-slime-nav-mode to continue doing its work for us, but we no longer want to be reminded of it.
 
 
-***** source code blocks: org-insert-src-block
+** source code blocks: org-insert-src-block
 [[http://wenshanren.org/?p%3D334][Emacs：insert source code block in org-mode | 肉山博客 (Wenshan's Blog)]]
 
 
