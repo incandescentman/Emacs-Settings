@@ -3092,7 +3092,8 @@ Didn't work.
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send)
+  (let ((emoji-cheat-sheet-plus--changed-hook (lambda (s e l) nil)))
+    (notmuch-mua-send))
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
