@@ -6116,7 +6116,6 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
   (insert "braxton.robbason@gmail.com")
   (message-goto-subject) (insert "starting: " (format-time-string "%F %l:%M%P"))
   (message-goto-body) (insert "Starting! " (format-time-string "%F %l:%M%P\n")) 
-(message-send-and-exit) 
   )
 
 #+END_SRC
