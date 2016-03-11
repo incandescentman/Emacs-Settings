@@ -5694,7 +5694,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 
 * org-element use cache
-(setq org-element-use-cache nil) 
+;; (setq org-element-use-cache nil) 
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
@@ -6016,15 +6016,15 @@ minibuffer."
                 :description "mouse-copy") 
 
 
-(cheatsheet-add :group 'Movement 
+(cheatsheet-add :group 'Mooovement 
                 :key "jj"
                 :description "helm-imenu") 
 
-(cheatsheet-add :group 'Movement 
+(cheatsheet-add :group 'Mooovement 
                 :key "kk"
                 :description "helm-imenu") 
 
-(cheatsheet-add :group 'Movement 
+(cheatsheet-add :group 'Mooovement 
                 :key "jk"
                 :description "avy-goto-line") 
 
@@ -6039,11 +6039,11 @@ minibuffer."
 
 (cheatsheet-add :group 'Search 
                 :key "FF"
-                :description "swiper") 
+                :description "isearch") 
 
 (cheatsheet-add :group 'Search 
                 :key "SS"
-                :description "helm-multi-swoop-org") 
+                :description "swiper") 
 
 
 (cheatsheet-add :group 'Buffers 
@@ -6067,7 +6067,7 @@ minibuffer."
                 :description "mc/mark-all-dwim") 
 
 
-#+END_SECOND
+#+END_SRC 
 
 
 
