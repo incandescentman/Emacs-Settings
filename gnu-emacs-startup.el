@@ -1557,6 +1557,7 @@ password: %s" userid password))
 (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
 (defcustom fountain-export-default-command
   'fountain-export-shell-script
