@@ -497,7 +497,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 *** agenda display settings
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_EXAMPLE emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -507,14 +507,14 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_SRC 
+    #+END_EXAMPLE 
 
 *** Stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'org-finalize-agenda-hook
 (lambda () (remove-text-properties
 (point-min) (point-max) '(mouse-face t))))
-#+END_SRC
+#+END_EXAMPLE
 
 ** org stuck projects (?)
 Defining stuck projects as todos that do not contain "scheduled" or
@@ -525,7 +525,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 ** org settings
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 'org-agenda-list)
+;; (add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
@@ -860,12 +860,12 @@ it as a default link description. Here is a way to accomplish this:
 
 *** reschedule agenda items to today with a single command
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
 	   (call-interactively 'org-agenda-schedule)))
-#+END_SRC
+#+END_EXAMPLE
 
 *** org archive done
 
@@ -5694,7 +5694,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 
 * org-element use cache
-;; (setq org-element-use-cache nil) 
+(setq org-element-use-cache t) 
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
@@ -5829,7 +5829,7 @@ If FILE already exists, signal an error."
 #+END_SRC
 
 * iCal
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq org-icalendar-include-todo nil) 
 (setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
 (setq org-icalendar-alarm-time 60)
@@ -5838,7 +5838,7 @@ If FILE already exists, signal an error."
 (setq org-icalendar-store-UID nil)
 (setq org-icalendar-timezone "(-18000 \"EST\") ")
 (setq org-agenda-default-appointment-duration '15)
-#+END_SRC
+#+END_EXAMPLE
 
 
 

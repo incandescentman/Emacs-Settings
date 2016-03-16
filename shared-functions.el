@@ -271,23 +271,9 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
-(setq org-agenda-prefix-format
-   (quote
-    ((agenda . " %?-12t% s")
-     (timeline . "  % s")
-     (todo . " %i %-12:c")
-     (tags . " %i %-12:c")
-     (search . " %i %-12:c"))))
-
-;; (setq org-agenda-prefix-format "%t %s")
-
-(add-hook 'org-finalize-agenda-hook
-(lambda () (remove-text-properties
-(point-min) (point-max) '(mouse-face t))))
-
 ;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
-(add-hook 'after-init-hook 'org-agenda-list)
+;; (add-hook 'after-init-hook 'org-agenda-list)
 (require 'org-inlinetask)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
@@ -545,11 +531,6 @@
     (org-insert-todo-subheading t)
     (when parent-deadline
       (org-deadline nil parent-deadline))))
-
-(defun org-agenda-reschedule-to-today ()
-  (interactive)
-  (cl-flet ((org-read-date (&rest rest) (current-time)))
-     (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -4115,15 +4096,6 @@ If FILE already exists, signal an error."
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
-
-(setq org-icalendar-include-todo nil) 
-(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
-(setq org-icalendar-alarm-time 60)
- (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
- (setq org-icalendar-combined-name "Org-Mode")
-(setq org-icalendar-store-UID nil)
-(setq org-icalendar-timezone "(-18000 \"EST\") ")
-(setq org-agenda-default-appointment-duration '15)
 
 (add-hook 'before-save-hook
           (lambda ()
