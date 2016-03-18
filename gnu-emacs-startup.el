@@ -324,7 +324,7 @@
 
 
 
-(define-key key-minor-mode-map (kbd "s-m t d") 'org-today)
+(define-key key-minor-mode-map (kbd "s-m t d") 'jd-org-today)
 (define-key key-minor-mode-map (kbd "s-m c i") 'jd-clock-in)
 
 

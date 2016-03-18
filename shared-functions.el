@@ -271,6 +271,20 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 
+(setq org-agenda-prefix-format
+   (quote
+    ((agenda . " %?-12t% s")
+     (timeline . "  % s")
+     (todo . " %i %-12:c")
+     (tags . " %i %-12:c")
+     (search . " %i %-12:c"))))
+
+;; (setq org-agenda-prefix-format "%t %s")
+
+(add-hook 'org-finalize-agenda-hook
+(lambda () (remove-text-properties
+(point-min) (point-max) '(mouse-face t))))
+
 ;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
 ;; (add-hook 'after-init-hook 'org-agenda-list)
@@ -531,6 +545,11 @@
     (org-insert-todo-subheading t)
     (when parent-deadline
       (org-deadline nil parent-deadline))))
+
+(defun org-agenda-reschedule-to-today ()
+  (interactive)
+  (cl-flet ((org-read-date (&rest rest) (current-time)))
+     (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -1376,52 +1395,51 @@ margin-bottom: 1em;
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours\\|recentf\\" (buffer-name buffer))
+  (not (or (string-match "Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours\\|recentf" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
-(require 'recentf)
-(add-to-list 'recentf-exclude "\\ido\\.last\\'")
-(add-to-list 'recentf-exclude "\\ido\\")
+(add-to-list 'recentf-exclude "\\ido.last\\'")
+(add-to-list 'recentf-exclude "\\ido")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
-(add-to-list 'recentf-exclude "org-clock-save\\.el\\")
-(add-to-list 'recentf-exclude "message\\")
-(add-to-list 'recentf-exclude "\\.tex\\")
-(add-to-list 'recentf-exclude "\\.html\\")
-(add-to-list 'recentf-exclude "\\.Icon\\")
-(add-to-list 'recentf-exclude "\\.gz\\")
-(add-to-list 'recentf-exclude "\\System\\")
-(add-to-list 'recentf-exclude "\\Applications\\")
-(add-to-list 'recentf-exclude "\\bookmark\\")
-(add-to-list 'recentf-exclude "\\750words\\")
-(add-to-list 'recentf-exclude "\\Calendar\\")
-(add-to-list 'recentf-exclude "\\.tex\\")
-(add-to-list 'recentf-exclude "\\helm")
-(add-to-list 'recentf-exclude "\\ido\\")
-(add-to-list 'recentf-exclude "\\archive\\")
-(add-to-list 'recentf-exclude "\\ics\\")
-(add-to-list 'recentf-exclude "\\agenda\\")
-(add-to-list 'recentf-exclude "\\gnugol\\")
-(add-to-list 'recentf-exclude "\\PDF\\")
-(add-to-list 'recentf-exclude "\\koma\\")
-(add-to-list 'recentf-exclude "\\LaTeX\\")
-(add-to-list 'recentf-exclude "\\recentf\\")
-(add-to-list 'recentf-exclude "\\bookmarks\\")
-(add-to-list 'recentf-exclude "\\rollback-info\\")
-(add-to-list 'recentf-exclude "\\gnu-emacs-startup\\")
-(add-to-list 'recentf-exclude "\\shared-functions\\")
-(add-to-list 'recentf-exclude "\\.jpg\\")
-(add-to-list 'recentf-exclude "\\.gif\\")
-(add-to-list 'recentf-exclude "\\.png\\")
-(add-to-list 'recentf-exclude "\\contacts\\")
+(add-to-list 'recentf-exclude "org-clock-save.el")
+(add-to-list 'recentf-exclude "message")
+(add-to-list 'recentf-exclude ".tex\\")
+(add-to-list 'recentf-exclude ".html")
+(add-to-list 'recentf-exclude ".Icon")
+(add-to-list 'recentf-exclude ".gz")
+(add-to-list 'recentf-exclude "System")
+(add-to-list 'recentf-exclude "Applications")
+(add-to-list 'recentf-exclude "bookmark")
+(add-to-list 'recentf-exclude "750words")
+(add-to-list 'recentf-exclude "Calendar")
+(add-to-list 'recentf-exclude ".tex")
+(add-to-list 'recentf-exclude "helm")
+(add-to-list 'recentf-exclude "\\ido")
+(add-to-list 'recentf-exclude "archive")
+(add-to-list 'recentf-exclude "ics")
+(add-to-list 'recentf-exclude "agenda")
+(add-to-list 'recentf-exclude "gnugol")
+(add-to-list 'recentf-exclude "PDF")
+(add-to-list 'recentf-exclude "koma")
+(add-to-list 'recentf-exclude "LaTeX")
+(add-to-list 'recentf-exclude "recentf")
+(add-to-list 'recentf-exclude "bookmarks")
+(add-to-list 'recentf-exclude "rollback-info")
+(add-to-list 'recentf-exclude "gnu-emacs-startup")
+(add-to-list 'recentf-exclude "shared-functions")
+(add-to-list 'recentf-exclude ".jpg")
+(add-to-list 'recentf-exclude ".gif")
+(add-to-list 'recentf-exclude ".png")
+(add-to-list 'recentf-exclude "contacts")
 
-(add-to-list 'recentf-exclude '("\\.doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.html\\" "\\.tex\\" "message\\" "org-clock-save\\.el\\" "\\recent-addresses\\'\\" "\\ido\\.last\\'\\" "elpa\\" "\\.bmk\\" "\\.jabber\\" "helm\\" "Calendar\\"))
+(add-to-list 'recentf-exclude '(".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp" ".html" ".tex" "message" "org-clock-save.el" "\\recent-addresses\\'" "\\ido.last\\'" "elpa" ".bmk" ".jabber" "helm" "Calendar"))
 
-(add-to-list 'recentf-exclude '("\\.mp4\\" "\\.mpg\\" "\\.mpeg"
-"\\.avi\\" "\\.wmv\\" "\\.wav\\" "\\.mov\\" "\\.flv\\" "\\.ogm\\" "\\.ogg\\" "\\.mkv"
-"\\.png\\" "\\.gif\\" "\\.bmp\\" "\\.tif\\" "\\.jpeg\\" "png\\" "\\.jpg\\" "\\.doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\"))
+(add-to-list 'recentf-exclude '(".mp4" ".mpg" ".mpeg"
+".avi" ".wmv" ".wav" ".mov" ".flv" ".ogm" ".ogg" ".mkv"
+".png" ".gif" ".bmp" ".tif" ".jpeg" "png" ".jpg" ".doc" ".docx" ".xls" ".xlsx" ".ppt" ".odt" ".ods" ".odg" ".odp"))
 
 (defun replace-garbage-chars ()
   "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -1512,7 +1530,7 @@ margin-bottom: 1em;
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
 
-(defun jd--org-current-time ()
+(defun jd-org-current-time ()
   "foo"
   (interactive)
 (insert (format-time-string "[%H:%M]"))
@@ -1527,7 +1545,7 @@ margin-bottom: 1em;
   )
 
 
-(defun org-today-and-accountability ()
+(defun jd-org-today-and-accountability ()
   "insert a new heading with today's date"
   (interactive)
 (insert "\n** committed actions: ")
@@ -2082,7 +2100,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;; accountability
-(define-hyper-key "m td" 'org-today)
+
 (define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
@@ -4096,6 +4114,15 @@ If FILE already exists, signal an error."
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
+
+(setq org-icalendar-include-todo nil) 
+(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID nil)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")
+(setq org-agenda-default-appointment-duration '15)
 
 (add-hook 'before-save-hook
           (lambda ()

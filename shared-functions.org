@@ -497,7 +497,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 *** agenda display settings
 
-    #+BEGIN_EXAMPLE emacs-lisp
+    #+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -507,14 +507,14 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_EXAMPLE 
+    #+END_SRC 
 
 *** Stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook 'org-finalize-agenda-hook
 (lambda () (remove-text-properties
 (point-min) (point-max) '(mouse-face t))))
-#+END_EXAMPLE
+#+END_SRC
 
 ** org stuck projects (?)
 Defining stuck projects as todos that do not contain "scheduled" or
@@ -860,12 +860,12 @@ it as a default link description. Here is a way to accomplish this:
 
 *** reschedule agenda items to today with a single command
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
 	   (call-interactively 'org-agenda-schedule)))
-#+END_EXAMPLE
+#+END_SRC
 
 *** org archive done
 
@@ -2936,7 +2936,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 ;; accountability
-(define-hyper-key "m td" 'org-today)
+
 (define-hyper-key "m ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
@@ -5730,7 +5730,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+END_SRC
 
 Alternatively you can modify the link description as follows:
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC
 
 [[file+emacs:~/projects][Projects]]
 
@@ -5742,7 +5742,7 @@ If you want the file name to be displayed, use just
 [[/path/to/file.php::line]]
 
 
-#+END_EXAMPLE
+#+END_SRC
 
 It will open the link in Emacs with typing C-c C-o.
 
@@ -5828,7 +5828,7 @@ If FILE already exists, signal an error."
 #+END_SRC
 
 * iCal
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq org-icalendar-include-todo nil) 
 (setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
 (setq org-icalendar-alarm-time 60)
@@ -5837,7 +5837,7 @@ If FILE already exists, signal an error."
 (setq org-icalendar-store-UID nil)
 (setq org-icalendar-timezone "(-18000 \"EST\") ")
 (setq org-agenda-default-appointment-duration '15)
-#+END_EXAMPLE
+#+END_SRC
 
 
 
