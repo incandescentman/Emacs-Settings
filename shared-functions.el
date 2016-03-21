@@ -1935,12 +1935,12 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
 (define-key key-minor-mode-map (kbd "M-C-P") 'outline-previous-visible-heading)
 
-(global-set-key (kbd "M-n") 'org-forward-heading-same-level)
-(global-set-key (kbd "M-N") 'org-next-visible-heading)
-(global-set-key (kbd "M-p") 'org-backward-heading-same-level) 
-(global-set-key (kbd "M-P") 'org-previous-visible-heading) 
-(define-key key-minor-mode-map (kbd "M-n") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-p") 'org-backward-heading-same-level)
+(global-set-key (kbd "M-N") 'org-forward-heading-same-level)
+(global-set-key (kbd "M-n") 'org-next-visible-heading)
+(global-set-key (kbd "M-P") 'org-backward-heading-same-level) 
+(global-set-key (kbd "M-p") 'org-previous-visible-heading) 
+(define-key key-minor-mode-map (kbd "M-N") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-P") 'org-backward-heading-same-level)
 
 
 (define-key key-minor-mode-map (kbd "M-{") 'org-backward-heading-same-level)

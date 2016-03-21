@@ -40,7 +40,7 @@
 
 
 (key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; doesn't work anymore
-;;(key-chord-define-global "kk" 'helm-imenu) ; temporary
+(key-chord-define-global "KK" 'helm-multi-swoop-org) ; temporary
 
 ;; (key-chord-define-global "jk" 'ace-jump-line-mode)
 
