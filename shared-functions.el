@@ -4494,9 +4494,9 @@ minibuffer."
   (text-scale-increase 1)
   )
 
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
-(setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
-(setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
+(setq recentf-save-file "~/emacs/.savefile/recentf")
+(setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
+(setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld"
 )
 
 (setq org-clock-auto-clock-resolution t)
