@@ -1673,7 +1673,7 @@ password: %s" userid password))
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send)
+  (notmuch-mua-send-and-exit)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
