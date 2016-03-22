@@ -3198,7 +3198,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay"))
+(setq auto-capitalize-words '("fn" "I" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay" "omg"))
 #+END_SRC
 
 
@@ -6337,9 +6337,9 @@ Available leader keybindings
 
 ** new current locations
 #+BEGIN_SRC emacs-lisp
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
-(setq ido-save-directory-list-file "/Users/jay/Dropbox/Apps/Emacs/savefile/ido.hist")
-(setq projectile-known-projects-file "/Users/jay/Dropbox/Apps/Emacs/savefile/projectile-bookmarks.eld"
+(setq recentf-save-file "~/emacs/.savefile/recentf")
+(setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
+(setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld"
 )
 #+END_SRC 
 
