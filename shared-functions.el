@@ -326,6 +326,8 @@
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
 
+(setq org-priority-start-cycle-with-default nil)
+
 (defun new-org-delete-backward-char (N)
   (interactive "p")
   (cond ((region-active-p)

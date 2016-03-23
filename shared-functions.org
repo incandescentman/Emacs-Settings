@@ -572,6 +572,12 @@ Defining stuck projects as todos that do not contain "scheduled" or
         ))
 #+END_SRC
 
+** org priorities
+Make it so that the command =org-priority-up= goes straight to #A
+#+BEGIN_SRC emacs-lisp
+(setq org-priority-start-cycle-with-default nil) 
+#+END_SRC
+
 ** Protect org headings from accidental demotion
 Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
 #+BEGIN_SRC emacs-lisp
