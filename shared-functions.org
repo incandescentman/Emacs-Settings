@@ -44,7 +44,7 @@ You can toggle it in necessary files by setting the local variables section at t
 ;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
-
+(require 'bind-key) 
 (require 'package)
 
 (add-to-list 'package-archives
@@ -4838,7 +4838,7 @@ After this, you should be able to add contacts using a o in the headers view and
   (delete-region (mark) (point))
   (recenter-top-bottom))
 
-(define-key key-minor-mode-map (kbd "C-w") 'kill-to-buffer-end-or-beginning)
+(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
    #+END_SRC
 
 * deft-turbo
@@ -4944,6 +4944,8 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 * olivetti
   #+BEGIN_SRC emacs-lisp
 (setq olivetti-body-width 120)
+(unbind-key (kbd "C-c [") olivetti-mode-map)
+(unbind-key (kbd "C-c ]") olivetti-mode-map) 
   #+END_SRC
 
 
@@ -6384,3 +6386,9 @@ SPC is "wrap region in block quote tag"
 (setq auto-window-vscroll nil)
   )
 #+END_SRC
+
+* inline tasks
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task) 
+#+END_SRC
+
