@@ -5684,7 +5684,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 ;; define list-title face 
 (defface list-title-face
-  '((t (:inherit font-lock-warning-face :weight bold)))
+  '((t (:foreground "red" ::weight bold)))
   "fontify list titles") 
 
 (font-lock-add-keywords 'org-mode

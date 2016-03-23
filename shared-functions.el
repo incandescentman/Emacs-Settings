@@ -1,7 +1,7 @@
 ;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
 (require 'org)
 (require 'org-mime)
-
+(require 'bind-key) 
 (require 'package)
 
 (add-to-list 'package-archives
@@ -3567,6 +3567,8 @@ If FILE already exists, signal an error."
            (dired-move-to-filename)))))) 
 
 (setq olivetti-body-width 120)
+(unbind-key (kbd "C-c [") olivetti-mode-map)
+(unbind-key (kbd "C-c ]") olivetti-mode-map) 
 
 ;; (run-at-time nil 30 'jay/save-some-buffers) 
 
@@ -4023,7 +4025,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 ;; define list-title face 
 (defface list-title-face
-  '((t (:inherit font-lock-warning-face :weight bold)))
+  '((t (:foreground "red" ::weight bold)))
   "fontify list titles") 
 
 (font-lock-add-keywords 'org-mode
