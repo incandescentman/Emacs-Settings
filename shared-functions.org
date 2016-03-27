@@ -2530,7 +2530,7 @@ Refile highlighted to a particular heading ([[http://stackoverflow.com/questions
   "Where to refile a region. Use 'bottom to refile at the
 end of the subtree. ")
 
-(defun refile-region (beg end copy)
+(defun jay-refile-region (beg end copy)
   "Refile the active region.
 If no region is active, refile the current paragraph.
 With prefix arg C-u, copy region instad of killing it."
@@ -5502,7 +5502,7 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 (defun refile-region-or-subtree ()
   (interactive)
   (if (region-active-p)
-      (call-interactively 'refile-region)
+      (call-interactively 'jay-refile-region)
     (org-refile)))
 #+END_SRC
 

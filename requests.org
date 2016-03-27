@@ -1,3 +1,14 @@
+* be able to pasteboard-copy and pasteboard paste footnotes containing org-links
+
+It's working correctly for regular links, e.g. [[https://github.com/syl20bnr/spacemacs/issues/65][Key binding discussion · Issue #65 · syl20bnr/spacemacs]]
+
+
+
+Not all women read romance novels, but a great many do. So many, in fact, that 13 percent of all paperbook sales are romance novels. Harlequin alone published 100 romance novels a month---all around the world and published in 32 languages, [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/f/Pop%20Culture%20of%20Sex-%20An%20Evolutionary%20Window%20on%20the%20Worlds%20of%20Pornography%20and%20Romance.pdf::1][pop Culture of Sex- An Evolutionary Window on the Worlds of Pornography and Romance.pdf, p. 1]]]. 
+
+In 2012, revenue from the sale of romance novels exceeded $1.5 billion [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. That same year, the Fifty Shades trilogy earned more sales than Harlequin's entire North American retail arm [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. 
+
+
 * convert to numbered list 
 (define-key key-minor-mode-map (kbd "M-#") 'convert-to-numbered-list)
 

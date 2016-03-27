@@ -333,7 +333,7 @@
 
 (define-key key-minor-mode-map (kbd "s-m c s") 'org-clone-subtree)
 
-;; (define-key key-minor-mode-map (kbd "s-p") 'refile-region)
+;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
 
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
