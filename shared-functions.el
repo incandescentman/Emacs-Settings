@@ -790,10 +790,10 @@
 ;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
 ;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-(setq mail-kill-buffer-on-exit t)
+(setq mail-kill-buffer-on-exit nil)
 (setq make-backup-files t)
 (setq message-draft-headers (quote (From References Date)))
-(setq message-kill-buffer-on-exit t)
+(setq message-kill-buffer-on-exit nil)
 (setq message-required-headers (quote (From (optional . References))))
 ;; (setq message-send-hook (quote (recent-addresses-add-headers)))
 (setq message-send-hook (quote (org-mime-htmlize)))
@@ -893,10 +893,10 @@
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/disciplined.org")
  '(initial-major-mode (quote org-mode))
 ;; '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(mail-kill-buffer-on-exit t)
+
  '(make-backup-files t)
  '(message-draft-headers (quote (From References Date)))
- '(message-kill-buffer-on-exit t)
+
  '(message-required-headers (quote (From (optional . References))))
  '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
  '(org-M-RET-may-split-line (quote ((item . t))))
@@ -996,7 +996,7 @@
 '(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
 '(flyspell-abbrev-p t)
 '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink")))
-'(message-kill-buffer-on-exit t)
+
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 ;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
