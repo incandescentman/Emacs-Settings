@@ -1499,7 +1499,9 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 
 * Miscellaneous
-(setq vc-handled-backends ())
+;; (setq vc-handled-backends ())
+;; (remove-hook 'find-file-hooks 'vc-find-file-hook) 
+(setq vc-handled-backends nil) 
 
 * Key chords
 
@@ -6059,6 +6061,11 @@ minibuffer."
                 :key "ZZ"
                 :description "undo") 
 
+(cheatsheet-add :group 'Editing 
+        :key "C-x C-o"
+        :description "delete-blank-lines") 
+
+
 (cheatsheet-add :group 'Replacing 
                 :key "RR"
                 :description "replace-regexp") 
@@ -6392,3 +6399,10 @@ SPC is "wrap region in block quote tag"
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task) 
 #+END_SRC
 
+
+* rifle
+#+BEGIN_SRC emacs-lisp
+(load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
+(require 'helm-org-rifle)
+
+#+END_SRC

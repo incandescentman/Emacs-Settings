@@ -3070,7 +3070,8 @@ s-i
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-  (notmuch-mua-send-and-exit)
+;; (notmuch-mua-send-and-exit)
+(notmuch-mua-send)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
