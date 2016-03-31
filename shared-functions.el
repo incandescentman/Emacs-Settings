@@ -1408,6 +1408,7 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude ".tex\\")
+(add-to-list 'recentf-exclude "\\recentf\\")
 (add-to-list 'recentf-exclude ".html")
 (add-to-list 'recentf-exclude ".Icon")
 (add-to-list 'recentf-exclude ".gz")
@@ -3532,7 +3533,17 @@ Single Capitals as you type."
              (bound-and-true-p orgstruct-mode))
     (unbind-orgstruct-keys)))
 
+(defun unbind-orgstruct-keys-in-mu4e-compose-mode ()
+ (interactive)
+ (when (and (eq 'mu4e-compose-mode major-mode)
+       (bound-and-true-p orgstruct-mode))
+  (unbind-orgstruct-keys)))
+
+
 (add-hook 'orgstruct-mode-hook 'unbind-orgstruct-keys-in-message-mode)
+(add-hook 'orgstruct-mode-hook 'unbind-orgstruct-keys-in-mu4e-compose-mode)
+
+
 
 ;;(add-hook 'message-mode-hook 'unbind-orgstruct-keys)
 
