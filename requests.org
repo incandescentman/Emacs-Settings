@@ -21,17 +21,6 @@ Or M-- cycles to numbered list before it cycles back
 
 * when cursor is on blank line and insert-heading, add heading to current line don't add line break 
 
-* don't capitalize after inserting org-link 
-
-#+BEGIN_EXAMPLE
-imagine themselves there. Maybe something like [[https://www.videoblocks.com/video/people-mingle-and-drink-at-a-classy-bar-7n938b0/][this]] or like [[http://www.shutterstock.com/video/clip-6724390-stock-footage-team-ambitious-young-male-female-multi-ethnic-business-associates-celebrating-business-success.html?src=search/v7ED5x7IEZJu-9ZQHIy5nA:1:84/gg][this]] or like [[https://www.shutterstock.com/video/clip-9148838-stock-footage-in-high-quality-format-excited-young-people-singing-along-at-a-music-festival.html?src=search/NQjGGayx-Rb4BTTqtoTa8Q:1:37/3p][this]] but more tailored to what your event will actually look like. 
-- 
-#+END_EXAMPLE
-
-
-* C-g 
-
-C-go to escape in other apps 
 * change the behavior of org-smart-meta-return/dwim
 
 For plain-text lists 
@@ -95,12 +84,6 @@ Example: Don't use an adverb word. ^
 scenario: I hit comma
 current output: Don't use an adverb word,^
 desired output: Don't use an adverb word, ^
-
-
-* visit-most-recent-file
-No error when I invoke visit-most-recent-file and it finds next file is the same file
-
-~/nd/playful.org and /Users/jay/Dropbox/writing/notationaldata/playful.org are the same file [2 times]
 
 
 * org-mac-chrome-insert-frontmost-url-with-prompt
@@ -458,23 +441,6 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 
 What do you think? 
 
-* swiper-mc 
-
-
-* TODO kill-clause 
-
-Example: 
-As soon as I was old enough to walk, ^from age 4 onward, I spent every weekend 
-
-Scenario: invoke kill-clause
-
-* pasteboard-search-for-clipboard-contents 
-- make this do isearch-repeat-forward when invoked again?
-
-* helm-multi-swoop-all thing at point
-
-* swiper multi thing at point?
-
 * how to find function within my init files?
 I often want to do this:
 1. C-it the to find what a keystroke does
@@ -494,9 +460,6 @@ How to do
 
 * describe-key to pasteboard
 
-* embolden next word
-Embolden next word expand-abbrev.
-
 * kill sentence shouldn't kill the line break after a sentence
 (But it should if there's no sentence)
 
@@ -507,5 +470,3 @@ Embolden next word expand-abbrev.
 But in most of the big cities in the United States, it's straight women who are in the majority---meaning that single straight guys are a scarce commodity. To potential heterosexual men. So what happens when there aren't enough men to go around? Psychologist Sarah Hill has spent the last few years studying this very question. 
 
 Test: kill "To potential heterosexual men."
-
-

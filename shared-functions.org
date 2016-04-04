@@ -1157,6 +1157,7 @@ every new buffer will be unique:
 ** load my custom latex templates
 
    #+BEGIN_SRC emacs-lisp
+   (load "/Users/jay/emacs/prelude/personal/mu4e-context.el")
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
@@ -4357,6 +4358,58 @@ Single Capitals as you type."
  
 * email
 ** mu4e 
+
+*** mu4e contexts
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-contexts
+  `( ,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+
+
+
+	 :match-func (lambda (msg)
+			(when msg 
+			 (mu4e-message-contact-field-matches msg 
+			  :to "dixit@aya.yale.edu")))
+	 :vars '( (mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
+            ( user-full-name	  . "Jay Dixit" )
+            (mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
+		  ( mu4e-compose-signature .
+		   (concat
+"\n---\nJay Dixit\n"
+"[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+     ,(make-mu4e-context
+	 :name "Vivovii"
+	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
+	 ;; leave-fun not defined
+	 :match-func (lambda (msg)
+			(when msg 
+			 (mu4e-message-contact-field-matches msg 
+			  :to "jay@vivovii.com")))
+	 :vars '( (mu4e-user-mail-address-list '("jay@vivovii.com"))
+            ( user-full-name	  . "Jay Dixit" )
+            (setq mu4e-maildir "/Users/jay/Dropbox/mail/vivovii/") 
+		  ( mu4e-compose-signature .
+		   (concat
+		    "Jay Dixit\n"
+		    "vivovii.com\n"))))))
+
+ ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
+ ;; guess or ask the correct context, e.g.
+
+ ;; start with the first (default) context; 
+ ;; default is to ask-if-none (ask when there's no context yet, and none match)
+ ;; (setq mu4e-context-policy 'pick-first)
+
+ ;; compose with the current context is no context matches;
+ ;; default is to ask 
+ ;; '(setq mu4e-compose-context-policy nil) 
+
+
+#+END_SRC
 *** mu4e setup
    #+BEGIN_SRC emacs-lisp 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
@@ -4364,7 +4417,7 @@ Single Capitals as you type."
 
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
-(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
+;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
 (setq mu4e-sent-folder   "/sent")
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder  "/trash") 
@@ -4372,11 +4425,11 @@ Single Capitals as you type."
 
 
 ;; my profile
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+;; (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 ;; signature
 ;;(setq mu4e-compose-signature
 ;; (concat
-;; "best,\not"
+;; "best,\n"
 ;; "jay\n"))
 
 
