@@ -1,7 +1,8 @@
 
-(setq user-mail-address '("dixit@aya.yale.edu")) 
 
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+
+(setq user-mail-address '("dixit@aya.yale.edu")) 
 
 (define-minor-mode org-config-files-local-mode
     "Minor mode for editing configuration files in org-mode." 
@@ -3907,7 +3908,7 @@ Single Capitals as you type."
 
 (require 'mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+;; (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
 (setq mu4e-sent-folder "/sent")
 (setq mu4e-drafts-folder "/drafts")
@@ -4117,7 +4118,7 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 	 :name "Vivovii"
 	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
 	 ;; leave-fun not defined 
-	 :vars '((user-mail-address . "jay@vivovii.com")
+	 :vars '((user-mail-address . "dixit@aya.yale.edu")
  (user-full-name . "Jay Dixit" )
  (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
  ( mu4e-compose-signature .

@@ -2690,7 +2690,7 @@ Single Capitals as you type."
 
 (require 'mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+;; (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
 (setq mu4e-sent-folder "/sent")
 (setq mu4e-drafts-folder "/drafts")
@@ -2852,11 +2852,7 @@ Single Capitals as you type."
 ,(make-mu4e-context
 	 :name "Sunjay E. Dixit"
 	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
- :match-func (lambda (msg)
-   (when msg 
-   (mu4e-message-contact-field-matches msg 
-       :to ("dixit@aya.yale.edu"))))
- :vars '
+:vars '
 (
 (user-mail-address . ("dixit@aya.yale.edu"))
   (user-full-name . "Jay Dixit" )
@@ -2868,12 +2864,8 @@ Single Capitals as you type."
 ,(make-mu4e-context
 	 :name "Vivovii"
 	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
-	 ;; leave-fun not defined
-	 :match-func (lambda (msg)
-		 (when msg 
-		 (mu4e-message-contact-field-matches msg 
-		 :to "jay@vivovii.com")))
-	 :vars '((user-mail-address . "jay@vivovii.com")
+	 ;; leave-fun not defined 
+	 :vars '((user-mail-address . "dixit@aya.yale.edu")
  (user-full-name . "Jay Dixit" )
  (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
  ( mu4e-compose-signature .
