@@ -3293,7 +3293,7 @@ Single Capitals as you type."
 		 (when msg 
 		 (mu4e-message-contact-field-matches msg 
 		 :to "jay@vivovii.com")))
-	 :vars '((mu4e-user-mail-address-list . '("jay@vivovii.com"))
+	 :vars '((user-mail-address . '("jay@vivovii.com"))
   (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
