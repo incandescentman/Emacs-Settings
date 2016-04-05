@@ -6058,3 +6058,16 @@ SPC is "wrap region in block quote tag"
 
 
 #+END_EXAMPLE 
+
+* html reply
+#+BEGIN_SRC emacs-lisp
+(defun org-mime-replace-multy-gt ()
+(interactive)
+(beginning-of-buffer)
+(while (re-search-forward "\\(\\(&gt; .*\n\\)+\\)" nil t)
+(replace-match "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n\\1</div>")))
+
+(add-hook 'org-mime-html-hook
+(lambda ()
+(org-mime-replace-multy-gt))) 
+#+END_SRC
