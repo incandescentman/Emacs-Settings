@@ -2697,8 +2697,12 @@ Single Capitals as you type."
 (setq mu4e-trash-folder "/trash") 
 ;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
 
+(setq mu4e-get-mail-command "mbsync -a") 
+
 
 ;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
+
+(setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
 
 
 ;; my profile
@@ -2743,7 +2747,7 @@ Single Capitals as you type."
 
 ;; allow for updating mail using 'U' in the main view:
 ;; (setq mu4e-get-mail-command "offlineimap")
-;; (setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 
 (setq mu4e-attachment-dir "~/Downloads") 
@@ -2842,25 +2846,9 @@ Single Capitals as you type."
 )) 
 
 (setq mu4e-contexts
- `( ,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
-	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
- :match-func (lambda (msg)
-   (when msg 
-   (mu4e-message-contact-field-matches msg 
-       :to "dixit@aya.yale.edu")))
- :vars '
-(
-(mu4e-user-mail-address-list . ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
-  (user-full-name . "Jay Dixit" )
-  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
-  (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
-(mu4e-get-mail-command . "mbsync gmail") 
-  ( mu4e-compose-signature .
-		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+ `( 
 
-
- ,(make-mu4e-context
+,(make-mu4e-context
 	 :name "Vivovii"
 	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
 	 ;; leave-fun not defined
@@ -2869,12 +2857,30 @@ Single Capitals as you type."
 		 (mu4e-message-contact-field-matches msg 
 		 :to "jay@vivovii.com")))
 	 :vars '((user-mail-address . "jay@vivovii.com")
+ (user-full-name . "Jay Dixit" )
+ (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
+ ( mu4e-compose-signature .
+		 ("Jay Dixit\nvivovii.com\n"))))
+
+
+,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+ :match-func (lambda (msg)
+   (when msg 
+   (mu4e-message-contact-field-matches msg 
+       :to ("dixit@aya.yale.edu"))))
+ :vars '
+(
+(mu4e-user-mail-address-list . ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
   (user-full-name . "Jay Dixit" )
-  (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
-  (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
-  (mu4e-get-mail-command . "mbsync vivovii") 
-  ( mu4e-compose-signature .
-		 ("Jay Dixit\nvivovii.com\n"))))))
+  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
+(mu4e-compose-signature .
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+
+))
 
  ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
  ;; guess or ask the correct context, e.g.
