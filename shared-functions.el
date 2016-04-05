@@ -3270,7 +3270,7 @@ Single Capitals as you type."
 
 (setq mu4e-contexts
  `( ,(make-mu4e-context
-	 :name "Personal"
+	 :name "Sunjay E. Dixit"
 	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
  :match-func (lambda (msg)
    (when msg 
