@@ -3274,8 +3274,8 @@ Single Capitals as you type."
    (when msg 
    (mu4e-message-contact-field-matches msg 
        :to "dixit@aya.yale.edu")))
- :vars '((mu4e-user-mail-address-list ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
-  ( user-full-name . "Jay Dixit" )
+ :vars '((mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
+  (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
 (mu4e-get-mail-command . "mbsync gmail") 
@@ -3293,8 +3293,8 @@ Single Capitals as you type."
 		 (when msg 
 		 (mu4e-message-contact-field-matches msg 
 		 :to "jay@vivovii.com")))
-	 :vars '((mu4e-user-mail-address-list . ("jay@vivovii.com"))
-  ( user-full-name . "Jay Dixit" )
+	 :vars '((mu4e-user-mail-address-list . '("jay@vivovii.com"))
+  (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
   (mu4e-get-mail-command . "mbsync vivovii") 
