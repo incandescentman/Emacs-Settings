@@ -3115,8 +3115,10 @@ Single Capitals as you type."
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
 
-(setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
+(setq mu4e-mu-binary "/usr/local/bin/mu") 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+
 (setq mu4e-sent-folder "/sent")
 (setq mu4e-drafts-folder "/drafts")
 (setq mu4e-trash-folder "/trash") 
@@ -3274,15 +3276,14 @@ Single Capitals as you type."
    (when msg 
    (mu4e-message-contact-field-matches msg 
        :to "dixit@aya.yale.edu")))
- :vars '((mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
+ :vars '
+((user-mail-address '("dixit@aya.yale.edu"))
   (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
 (mu4e-get-mail-command . "mbsync gmail") 
   ( mu4e-compose-signature .
-		 (concat
-"\n---\nJay Dixit\n"
-"[[http://jaydixit.com/][jaydixit.com]]\n"))))
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
 
 
  ,(make-mu4e-context
@@ -3299,9 +3300,7 @@ Single Capitals as you type."
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
   (mu4e-get-mail-command . "mbsync vivovii") 
   ( mu4e-compose-signature .
-		 (concat
-		 "Jay Dixit\n"
-		 "vivovii.com\n"))))))
+		 ("Jay Dixit\nvivovii.com\n"))))))
 
  ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
  ;; guess or ask the correct context, e.g.
@@ -3313,6 +3312,15 @@ Single Capitals as you type."
  ;; compose with the current context is no context matches;
  ;; default is to ask 
  ;; '(setq mu4e-compose-context-policy nil) 
+
+
+(defun mu4e-context-label ()
+ "Propertized string with the current context name, or \"\" if
+ there is none."
+ (if (mu4e-context-current)
+  (concat "[" (propertize (mu4e~quote-for-modeline
+			   (mu4e-context-name (mu4e-context-current)))
+		 'face 'mode-line-buffer-id) "]") "")) 
 
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
