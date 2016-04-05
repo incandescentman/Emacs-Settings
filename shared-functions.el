@@ -2853,7 +2853,7 @@ Single Capitals as you type."
 	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
 :vars '
 (
-(user-mail-address . ("dixit@aya.yale.edu"))
+(user-mail-address . "dixit@aya.yale.edu")
  (user-full-name . "Jay Dixit" )
  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
 (mu4e-compose-signature .
@@ -3677,6 +3677,12 @@ The full path into relative path and insert it as a local file link in org-mode"
                           ("^\\*+[ ]*[A-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
                           )
                         ) 
+
+;;(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
+;; any line that ends with a colon 
+
+(add-hook 'org-export-before-parsing-hook (lambda (backend)
+   (replace-regexp "^[A-Za-z]+:" "*\\1*"))) 
 
 (defun downcase-or-endless-downcase ()
 (interactive)

@@ -4107,7 +4107,7 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
 :vars '
 (
-(user-mail-address . ("dixit@aya.yale.edu"))
+(user-mail-address . "dixit@aya.yale.edu")
  (user-full-name . "Jay Dixit" )
  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
 (mu4e-compose-signature .
@@ -5314,6 +5314,14 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
                         ) 
 #+END_SRC
 
+** and on export
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
+;; any line that ends with a colon 
+
+(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\1*"))) 
+
+#+END_SRC
 
 * org-element use cache
 (setq org-element-use-cache t) 
