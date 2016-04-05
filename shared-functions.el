@@ -3168,7 +3168,7 @@ Single Capitals as you type."
 
 ;; allow for updating mail using 'U' in the main view:
 ;; (setq mu4e-get-mail-command "offlineimap")
-(setq mu4e-get-mail-command "mbsync -a")
+;; (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 
 (setq mu4e-attachment-dir "~/Downloads") 
@@ -3221,7 +3221,7 @@ Single Capitals as you type."
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
 '( 
-("/starred[Gmail]/.Starred" . ?i) 
+("/starred" . ?i) 
 ("/inbox" . ?v) 
 ("/sent" . ?s)))
 
@@ -3268,16 +3268,17 @@ Single Capitals as you type."
 
 (setq mu4e-contexts
  `( ,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
+	 :name "Personal"
 	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
  :match-func (lambda (msg)
    (when msg 
    (mu4e-message-contact-field-matches msg 
        :to "dixit@aya.yale.edu")))
- :vars '((mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
+ :vars '((mu4e-user-mail-address-list ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
   ( user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
+(mu4e-get-mail-command . "mbsync gmail") 
   ( mu4e-compose-signature .
 		 (concat
 "\n---\nJay Dixit\n"
@@ -3292,10 +3293,11 @@ Single Capitals as you type."
 		 (when msg 
 		 (mu4e-message-contact-field-matches msg 
 		 :to "jay@vivovii.com")))
-	 :vars '((mu4e-user-mail-address-list . '("jay@vivovii.com"))
+	 :vars '((mu4e-user-mail-address-list . ("jay@vivovii.com"))
   ( user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
+  (mu4e-get-mail-command . "mbsync vivovii") 
   ( mu4e-compose-signature .
 		 (concat
 		 "Jay Dixit\n"
