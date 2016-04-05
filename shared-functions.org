@@ -4098,28 +4098,45 @@ single folder and I use searching exclusively to find stuff :-)
 Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9DgAJ][Mu4e and Gmail, my current setup---Google Groups]]
 *** mu4e contexts
 #+BEGIN_SRC emacs-lisp
-(setq mu4e-contexts
-   `( ,(make-mu4e-context
-      :name "Sunjay"
-:enter-func (lambda () (mu4e-message "Sunjay gmail")) 
-:match-func (lambda (msg)
-   		   (when msg (mu4e-message-contact-field-matches msg :to "dixit@aya.yale.edu"))) 
-      :leave-func (lambda () (mu4e-clear-caches))
-      :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-home/starred")
-          (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-home/starred")
-          (mu4e-get-mail-command . "mbsync gmail")
-))
-     ,(make-mu4e-context
-      :name "vivovii"
-:enter-func (lambda () (mu4e-message "vivovii")) 
-:match-func (lambda (msg)
-   		   (when msg (mu4e-message-contact-field-matches msg :to "jay@vivovii.com"))) 
-      :leave-func (lambda () (mu4e-clear-caches))
-      :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-vivovii")
-          (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-vivovii")
-          (mu4e-get-mail-command . "mbsync vivovii")
-)))) 
 
+(setq mu4e-contexts
+ `( 
+
+,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+:vars '
+(
+(user-mail-address . ("dixit@aya.yale.edu"))
+ (user-full-name . "Jay Dixit" )
+ (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
+(mu4e-compose-signature .
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+,(make-mu4e-context
+	 :name "Vivovii"
+	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
+	 ;; leave-fun not defined 
+	 :vars '((user-mail-address . "jay@vivovii.com")
+ (user-full-name . "Jay Dixit" )
+ (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
+ ( mu4e-compose-signature .
+		 ("Jay Dixit\nvivovii.com\n"))))
+
+
+))
+
+ ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
+ ;; guess or ask the correct context, e.g.
+
+ ;; start with the first (default) context; 
+ ;; default is to ask-if-none (ask when there's no context yet, and none match)
+ ;; (setq mu4e-context-policy 'pick-first)
+
+ ;; compose with the current context is no context matches;
+ ;; default is to ask 
+ ;; '(setq mu4e-compose-context-policy nil) 
 
 
 (defun mu4e-context-label ()
@@ -6009,44 +6026,27 @@ SPC is "wrap region in block quote tag"
 
 * non working contexts
 #+BEGIN_EXAMPLE emacs-lisp
-
 (setq mu4e-contexts
- `( 
-
-,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
-	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
-:vars '
-(
-(user-mail-address . ("dixit@aya.yale.edu"))
- (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
-(mu4e-compose-signature .
-		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
-
-
-,(make-mu4e-context
-	 :name "Vivovii"
-	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
-	 ;; leave-fun not defined 
-	 :vars '((user-mail-address . "jay@vivovii.com")
- (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
- ( mu4e-compose-signature .
-		 ("Jay Dixit\nvivovii.com\n"))))
-
-
+  `( ,(make-mu4e-context
+   :name "Sunjay"
+:enter-func (lambda () (mu4e-message "Sunjay gmail")) 
+:match-func (lambda (msg)
+  		  (when msg (mu4e-message-contact-field-matches msg :to "dixit@aya.yale.edu"))) 
+   :leave-func (lambda () (mu4e-clear-caches))
+   :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-home/starred")
+     (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-home/starred")
+     (mu4e-get-mail-command . "mbsync gmail")
 ))
+   ,(make-mu4e-context
+   :name "vivovii"
+:enter-func (lambda () (mu4e-message "vivovii")) 
+:match-func (lambda (msg)
+  		  (when msg (mu4e-message-contact-field-matches msg :to "jay@vivovii.com"))) 
+   :leave-func (lambda () (mu4e-clear-caches))
+   :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-vivovii")
+     (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-vivovii")
+     (mu4e-get-mail-command . "mbsync vivovii")
+)))) 
 
- ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
- ;; guess or ask the correct context, e.g.
-
- ;; start with the first (default) context; 
- ;; default is to ask-if-none (ask when there's no context yet, and none match)
- ;; (setq mu4e-context-policy 'pick-first)
-
- ;; compose with the current context is no context matches;
- ;; default is to ask 
- ;; '(setq mu4e-compose-context-policy nil) 
 
 #+END_EXAMPLE 
