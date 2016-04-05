@@ -2848,6 +2848,23 @@ Single Capitals as you type."
 (setq mu4e-contexts
  `( 
 
+
+,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+ :match-func (lambda (msg)
+   (when msg 
+   (mu4e-message-contact-field-matches msg 
+       :to ("dixit@aya.yale.edu"))))
+ :vars '
+(
+(user-mail-address . ("dixit@aya.yale.edu"))
+  (user-full-name . "Jay Dixit" )
+  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
+(mu4e-compose-signature .
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
 ,(make-mu4e-context
 	 :name "Vivovii"
 	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
@@ -2861,23 +2878,6 @@ Single Capitals as you type."
  (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
  ( mu4e-compose-signature .
 		 ("Jay Dixit\nvivovii.com\n"))))
-
-
-,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
-	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
- :match-func (lambda (msg)
-   (when msg 
-   (mu4e-message-contact-field-matches msg 
-       :to ("dixit@aya.yale.edu"))))
- :vars '
-(
-(mu4e-user-mail-address-list . ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
-  (user-full-name . "Jay Dixit" )
-  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
-(mu4e-compose-signature .
-		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
-
 
 
 ))
