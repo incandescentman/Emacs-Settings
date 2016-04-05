@@ -3277,7 +3277,7 @@ Single Capitals as you type."
    (mu4e-message-contact-field-matches msg 
        :to "dixit@aya.yale.edu")))
  :vars '
-((user-mail-address '("dixit@aya.yale.edu"))
+((user-mail-address . '("dixit@aya.yale.edu"))
   (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
