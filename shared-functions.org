@@ -3920,7 +3920,7 @@ Single Capitals as you type."
 
 ;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
 
-(setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
+;; (setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
 
 
 ;; my profile
@@ -4101,20 +4101,22 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (setq mu4e-contexts
    `( ,(make-mu4e-context
       :name "Sunjay"
-      :match-func (lambda (_) (string-equal "Sunjay" (mu4e-context-name mu4e~context-current)))
-      :enter-func '()
+:enter-func (lambda () (mu4e-message "Sunjay gmail")) 
+:match-func (lambda (msg)
+   		   (when msg (mu4e-message-contact-field-matches msg :to "dixit@aya.yale.edu"))) 
       :leave-func (lambda () (mu4e-clear-caches))
-      :vars '((mu4e-maildir . "~/Dropbox/mumail/maildir-home")
-          (mu4e-mu-home . "~/Dropbox/mumail/mu-home")
+      :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-home/starred")
+          (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-home/starred")
           (mu4e-get-mail-command . "mbsync gmail")
 ))
      ,(make-mu4e-context
       :name "vivovii"
-      :match-func (lambda (_) (string-equal "vivovii" (mu4e-context-name mu4e~context-current)))
-      :enter-func '()
+:enter-func (lambda () (mu4e-message "vivovii")) 
+:match-func (lambda (msg)
+   		   (when msg (mu4e-message-contact-field-matches msg :to "jay@vivovii.com"))) 
       :leave-func (lambda () (mu4e-clear-caches))
-      :vars '((mu4e-maildir . "~/Dropbox/mumail/maildir-vivovii")
-          (mu4e-mu-home . "~/Dropbox/mumail/mu-vivovii")
+      :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-vivovii")
+          (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-vivovii")
           (mu4e-get-mail-command . "mbsync vivovii")
 )))) 
 
