@@ -2846,44 +2846,25 @@ Single Capitals as you type."
 )) 
 
 (setq mu4e-contexts
- `( 
-
-
-,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
-	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
-:vars '
-(
-(user-mail-address . ("dixit@aya.yale.edu"))
-  (user-full-name . "Jay Dixit" )
-  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
-(mu4e-compose-signature .
-		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
-
-
-,(make-mu4e-context
-	 :name "Vivovii"
-	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
-	 ;; leave-fun not defined 
-	 :vars '((user-mail-address . "dixit@aya.yale.edu")
- (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
- ( mu4e-compose-signature .
-		 ("Jay Dixit\nvivovii.com\n"))))
-
-
+   `( ,(make-mu4e-context
+      :name "Sunjay"
+      :match-func (lambda (_) (string-equal "Sunjay" (mu4e-context-name mu4e~context-current)))
+      :enter-func '()
+      :leave-func (lambda () (mu4e-clear-caches))
+      :vars '((mu4e-maildir . "~/Dropbox/mumail/maildir-home")
+          (mu4e-mu-home . "~/Dropbox/mumail/mu-home")
+          (mu4e-get-mail-command . "mbsync gmail")
 ))
+     ,(make-mu4e-context
+      :name "vivovii"
+      :match-func (lambda (_) (string-equal "vivovii" (mu4e-context-name mu4e~context-current)))
+      :enter-func '()
+      :leave-func (lambda () (mu4e-clear-caches))
+      :vars '((mu4e-maildir . "~/Dropbox/mumail/maildir-vivovii")
+          (mu4e-mu-home . "~/Dropbox/mumail/mu-vivovii")
+          (mu4e-get-mail-command . "mbsync vivovii")
+)))) 
 
- ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
- ;; guess or ask the correct context, e.g.
-
- ;; start with the first (default) context; 
- ;; default is to ask-if-none (ask when there's no context yet, and none match)
- ;; (setq mu4e-context-policy 'pick-first)
-
- ;; compose with the current context is no context matches;
- ;; default is to ask 
- ;; '(setq mu4e-compose-context-policy nil) 
 
 
 (defun mu4e-context-label ()
