@@ -3112,68 +3112,21 @@ Single Capitals as you type."
 ;; (global-fasd-mode 1)
 ;; (setq fasd-enable-initial-prompt nil)
 
-(setq mu4e-contexts
-  `( ,(make-mu4e-context
-	 :name "Sunjay E. Dixit"
-	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
-
-
-
-	 :match-func (lambda (msg)
-			(when msg 
-			 (mu4e-message-contact-field-matches msg 
-			  :to "dixit@aya.yale.edu")))
-	 :vars '( (mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
-            ( user-full-name	  . "Jay Dixit" )
-            (mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
-		  ( mu4e-compose-signature .
-		   (concat
-"\n---\nJay Dixit\n"
-"[[http://jaydixit.com/][jaydixit.com]]\n"))))
-
-
-     ,(make-mu4e-context
-	 :name "Vivovii"
-	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
-	 ;; leave-fun not defined
-	 :match-func (lambda (msg)
-			(when msg 
-			 (mu4e-message-contact-field-matches msg 
-			  :to "jay@vivovii.com")))
-	 :vars '( (mu4e-user-mail-address-list '("jay@vivovii.com"))
-            ( user-full-name	  . "Jay Dixit" )
-            (setq mu4e-maildir "/Users/jay/Dropbox/mail/vivovii/") 
-		  ( mu4e-compose-signature .
-		   (concat
-		    "Jay Dixit\n"
-		    "vivovii.com\n"))))))
-
- ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
- ;; guess or ask the correct context, e.g.
-
- ;; start with the first (default) context; 
- ;; default is to ask-if-none (ask when there's no context yet, and none match)
- ;; (setq mu4e-context-policy 'pick-first)
-
- ;; compose with the current context is no context matches;
- ;; default is to ask 
- ;; '(setq mu4e-compose-context-policy nil) 
-
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
 
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (require 'mu4e)
-;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
-(setq mu4e-sent-folder   "/sent")
+(setq mu4e-sent-folder "/sent")
 (setq mu4e-drafts-folder "/drafts")
-(setq mu4e-trash-folder  "/trash") 
+(setq mu4e-trash-folder "/trash") 
 ;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
 
 
+;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
+
+
 ;; my profile
-;; (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
-;; signature
 ;;(setq mu4e-compose-signature
 ;; (concat
 ;; "best,\n"
@@ -3222,30 +3175,30 @@ Single Capitals as you type."
 
 ;; go straight to inbox; bound to s-l
 (defun mu4e-gmail ()
-  (interactive)
+ (interactive)
 (mu4e)
-  (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
-  ) 
+ (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
+ ) 
 
 ;; show images
 (setq mu4e-show-images t)
 
 ;; use imagemagick, if available
 (when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
+ (imagemagick-register-types))
 
 
 ;; spell check
 (add-hook 'mu4e-compose-mode-hook
-        (defun my-do-compose-stuff ()
-           "My settings for message composition."
-           (set-fill-column 72)
-           (flyspell-mode)))
+ (defun my-do-compose-stuff ()
+  "My settings for message composition."
+  (set-fill-column 72)
+  (flyspell-mode)))
 
 ;; add option to view html message in a browser
 ;; `aV` in view to activate
 (add-to-list 'mu4e-view-actions
-  '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+ '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
 ;; fetch mail every 10 mins
 (setq mu4e-update-interval 600)
@@ -3256,9 +3209,9 @@ Single Capitals as you type."
 
 
 (setq mu4e-confirm-quit nil
-      mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
-      mu4e-html2text-command "html2text -utf8 -width 72"
-      ) 
+ mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
+ mu4e-html2text-command "html2text -utf8 -width 72"
+ ) 
 
 ;; maildirs
 ;; (require 'mu4e-maildirs-extension)
@@ -3267,8 +3220,10 @@ Single Capitals as you type."
 
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
-'( ("/starred[Gmail]/.Starred"        . ?i)
-("/sent"  . ?s)))
+'( 
+("/starred[Gmail]/.Starred" . ?i) 
+("/inbox" . ?v) 
+("/sent" . ?s)))
 
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
@@ -3299,17 +3254,63 @@ Single Capitals as you type."
 
 ;; unset keys (worked!)
 (add-hook 'mu4e-headers-mode-hook 
-          (lambda ()
-            (local-unset-key (kbd "<M-right>"))
-            (local-unset-key (kbd "<M-left>"))
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
 )) 
 
 
 (add-hook 'mu4e-view-mode-hook 
-          (lambda ()
-            (local-unset-key (kbd "<M-right>"))
-            (local-unset-key (kbd "<M-left>"))
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
 )) 
+
+(setq mu4e-contexts
+ `( ,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+ :match-func (lambda (msg)
+   (when msg 
+   (mu4e-message-contact-field-matches msg 
+       :to "dixit@aya.yale.edu")))
+ :vars '((mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
+  ( user-full-name . "Jay Dixit" )
+  (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
+  (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
+  ( mu4e-compose-signature .
+		 (concat
+"\n---\nJay Dixit\n"
+"[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+ ,(make-mu4e-context
+	 :name "Vivovii"
+	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
+	 ;; leave-fun not defined
+	 :match-func (lambda (msg)
+		 (when msg 
+		 (mu4e-message-contact-field-matches msg 
+		 :to "jay@vivovii.com")))
+	 :vars '((mu4e-user-mail-address-list . '("jay@vivovii.com"))
+  ( user-full-name . "Jay Dixit" )
+  (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
+  (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/vivovii") 
+  ( mu4e-compose-signature .
+		 (concat
+		 "Jay Dixit\n"
+		 "vivovii.com\n"))))))
+
+ ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
+ ;; guess or ask the correct context, e.g.
+
+ ;; start with the first (default) context; 
+ ;; default is to ask-if-none (ask when there's no context yet, and none match)
+ ;; (setq mu4e-context-policy 'pick-first)
+
+ ;; compose with the current context is no context matches;
+ ;; default is to ask 
+ ;; '(setq mu4e-compose-context-policy nil) 
 
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
