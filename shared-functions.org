@@ -1,4 +1,4 @@
-
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
 (define-minor-mode org-config-files-local-mode
     "Minor mode for editing configuration files in org-mode." 
@@ -4097,9 +4097,10 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
  :match-func (lambda (msg)
    (when msg 
    (mu4e-message-contact-field-matches msg 
-       :to "dixit@aya.yale.edu")))
+       :to ("dixit@aya.yale.edu"))))
  :vars '
-((user-mail-address . "dixit@aya.yale.edu")
+(
+(mu4e-user-mail-address-list . ("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com"))
   (user-full-name . "Jay Dixit" )
   (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
   (mu4e-mu-home . "/Users/jay/Dropbox/mail/mu/gmail") 
