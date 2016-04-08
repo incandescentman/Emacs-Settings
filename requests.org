@@ -9,6 +9,11 @@ Not all women read romance novels, but a great many do. So many, in fact, that 1
 In 2012, revenue from the sale of romance novels exceeded $1.5 billion [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. That same year, the Fifty Shades trilogy earned more sales than Harlequin's entire North American retail arm [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. 
 
 
+Another example:
+
+harlequin even advertises that their novels feature "a guaranteed happily ever after." [fn:: [[skim:///users/jay/devonthink-databases/vivovii.dtBase2/Files.noindex/pdf/0/Harlequin.pdf::1][Harlequin.pdf, p. 1]]]. Blah.
+
+
 * convert to numbered list 
 (define-key key-minor-mode-map (kbd "M-#") 'convert-to-numbered-list)
 

@@ -5306,7 +5306,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (font-lock-add-keywords 'org-mode
                         '(
-                          ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
+;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
                           ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
                           ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line 
                           ("^\\*+[ ]*[A-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
@@ -6064,10 +6064,15 @@ SPC is "wrap region in block quote tag"
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
-(while (re-search-forward "\\(\\(&gt; .*\n\\)+\\)" nil t)
-(replace-match "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n\\1</div>")))
+(while (re-search-forward "\\(\\(^&gt;\\( .*\\)?\n\\)+\\)" nil t)
+(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n"
+(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
+"</div>")))) 
+
 
 (add-hook 'org-mime-html-hook
 (lambda ()
 (org-mime-replace-multy-gt))) 
 #+END_SRC
+
+
