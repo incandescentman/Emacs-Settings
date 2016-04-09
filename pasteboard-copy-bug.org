@@ -1,0 +1,23 @@
+* TODO be able to pasteboard-copy and pasteboard paste footnotes containing org-links
+
+=pasteboard-paste= and =pasteboard-copy= are indeed working correctly for regular links. here's an example of a regular hyperlink: [[https://github.com/syl20bnr/spacemacs/issues/65][Key binding discussion · Issue #65 · syl20bnr/spacemacs]]
+
+however, =pasteboard-paste= and =pasteboard-copy= are NOT working correctly for links that are INSIDE org-footnotes. Example:
+
+Harlequin alone published 100 romance novels a month---all around the world and published in 32 languages, [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/f/Pop%20Culture%20of%20Sex-%20An%20Evolutionary%20Window%20on%20the%20Worlds%20of%20Pornography%20and%20Romance.pdf::1][pop Culture of Sex- An Evolutionary Window on the Worlds of Pornography and Romance.pdf, p. 1]]]. 
+
+Another examples:
+
+In 2012, revenue from the sale of romance novels exceeded $1.5 billion [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. That same year, the Fifty Shades trilogy earned more sales than Harlequin's entire North American retail arm [fn:: [[skim:///Users/jay/devonthink-databases/book.dtBase2/Files.noindex/pdf/0/What%20Happened%20to%20the%20Harlequin%20Romance?%20-%20The%20New%20Yorker.pdf::1][What Happened to the Harlequin Romance?---The New Yorker.pdf, p. 1]]]. 
+
+Another example:
+
+harlequin even advertises that their novels feature "a guaranteed happily ever after." [fn:: [[skim:///users/jay/devonthink-databases/vivovii.dtBase2/Files.noindex/pdf/0/Harlequin.pdf::1][Harlequin.pdf, p. 1]]]. Blah.
+
+Objective: I'd like to be able to use 
+- pasteboard-cut-and-capitalize
+- pasteboard-copy
+- pasteboard-paste-spaces-maybe
+- etc
+
+in order to copy and paste these kinds of org-footnotes containing links. Thanks!
