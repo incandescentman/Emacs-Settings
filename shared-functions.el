@@ -2840,7 +2840,7 @@ Single Capitals as you type."
   (local-unset-key (kbd "<M-left>"))
 ))
 
-(setq mu4e-context-policy 'ask-if-none )
+(setq mu4e-context-policy 'nil)
 (setq mu4e-compose-context-policy 'ask-if-none)
 
 (setq mu4e-contexts
@@ -2850,7 +2850,8 @@ Single Capitals as you type."
    :name "Sunjay E. Dixit"
    :enter-func (lambda () 
 (mu4e-message "Switch to sunjaydixit@gmail.com context")
-(setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
+;; switch to sendmail to send email through gmail 
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
 )
 :vars '
 (
@@ -2864,6 +2865,7 @@ Single Capitals as you type."
 ,(make-mu4e-context
    :name "Vivovii"
    :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
@@ -2880,7 +2882,7 @@ Single Capitals as you type."
      ("Jay Dixit\nvivovii.com\n")))) 
 ))
 
-;; 
+;; change send-from address interactively 
 (defun vivovii-address ()
   (interactive)
   (setq message-send-mail-function 'smtpmail-send-it
@@ -2892,6 +2894,7 @@ Single Capitals as you type."
  smtpmail-smtp-service 587) 
 )
 
+;; change send-from address interactively 
 (defun yale-address ()
   (interactive)
   (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 

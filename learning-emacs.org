@@ -241,3 +241,20 @@ file:///~/Library/Spelling/LocalDictionary
 
 * tiny-expand syntax
 file:///users/jay/Dropbox/writing/notationaldata/accountability/tiny-syntax-examples.md
+
+
+* smtp change send-from address dynamically
+The below works!!!
+#+BEGIN_SRC emacs-lisp
+
+(require 'smtpmail)
+
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+ smtpmail-auth-credentials
+  '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587)
+
+#+END_SRC
