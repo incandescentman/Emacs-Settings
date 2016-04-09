@@ -1911,8 +1911,7 @@ With prefix arg C-u, copy region instad of killing it."
      (thing-at-point 'word))))
 
  (defun gnugol-word-at-point ()
-   (interactive)
-
+   (interactive) 
   (gnugol-search-google (region-or-word-at-point)))
 ;; Google\ search\ through\ Gnugol:1 ends here
 
@@ -2705,16 +2704,7 @@ Single Capitals as you type."
 (setq mu4e-get-mail-command "mbsync -a") 
 
 
-;; (setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail/") 
-
 ;; (setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
-
-
-;; my profile
-;;(setq mu4e-compose-signature
-;; (concat
-;; "best,\n"
-;; "jay\n"))
 
 
 
@@ -2761,7 +2751,7 @@ Single Capitals as you type."
 (defun mu4e-gmail ()
  (interactive)
 (mu4e)
- (mu4e~headers-jump-to-maildir "/starred[Gmail]/.Starred")
+ (mu4e~headers-jump-to-maildir "/starred")
  ) 
 
 ;; show images
