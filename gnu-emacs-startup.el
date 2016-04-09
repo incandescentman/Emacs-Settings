@@ -300,7 +300,7 @@
 ;; mk - mykeybindings
 
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
-(global-set-key (kbd "C-c m") 'yale-address-compose)
+(global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
 (define-key dired-mode-map (kbd "c") 'touch-file) 
