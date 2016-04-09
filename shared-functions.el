@@ -2840,6 +2840,52 @@ Single Capitals as you type."
   (local-unset-key (kbd "<M-left>"))
 )) 
 
+(setq mu4e-contexts
+ `( 
+
+,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda () (mu4e-message "Switch to sunjaydixit@gmail.com context"))
+:vars '
+(
+(user-mail-address . "dixit@aya.yale.edu")
+ (user-full-name . "Jay Dixit" )
+ (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
+(mu4e-compose-signature .
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+,(make-mu4e-context
+	 :name "Vivovii"
+	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context"))
+	 ;; leave-fun not defined 
+	 :vars '((user-mail-address . "jay@vivovii.com")
+ (user-full-name . "Jay Dixit" )
+ (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
+ ( mu4e-compose-signature .
+		 ("Jay Dixit\nvivovii.com\n")))) 
+))
+
+ ;; set `mu4e-context-policy` and `mu4e-compose-policy` to tweak when mu4e should
+ ;; guess or ask the correct context, e.g.
+
+ ;; start with the first (default) context; 
+ ;; default is to ask-if-none (ask when there's no context yet, and none match)
+ ;; (setq mu4e-context-policy 'pick-first)
+
+ ;; compose with the current context is no context matches;
+ ;; default is to ask 
+ ;; '(setq mu4e-compose-context-policy nil) 
+
+
+(defun mu4e-context-label ()
+ "Propertized string with the current context name, or \"\" if
+ there is none."
+ (if (mu4e-context-current)
+  (concat "[" (propertize (mu4e~quote-for-modeline
+			   (mu4e-context-name (mu4e-context-current)))
+		 'face 'mode-line-buffer-id) "]") "")) 
+
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
 ;; message-mode derived modes, such as mu4e-compose-mode
