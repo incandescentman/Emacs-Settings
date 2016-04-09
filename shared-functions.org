@@ -4104,6 +4104,8 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (mu4e-message "Switch to sunjaydixit@gmail.com context")
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
+;; open my starred gmail maildir
+(mu4e~headers-jump-to-maildir "/starred") 
 )
 :vars '
 (
@@ -4125,6 +4127,8 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
  smtpmail-auth-credentials
   '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
+;; open my vivovii inbox
+(mu4e~headers-jump-to-maildir "/inbox") 
 )
 	 ;; leave-fun not defined 
 	 :vars '((user-mail-address . "jay@vivovii.com")
@@ -4135,7 +4139,7 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 ))
 
 ;; change send-from address interactively 
-(defun vivovii-address ()
+(defun vivovii-address-compose ()
   (interactive)
   (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -4144,12 +4148,16 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
  smtpmail-auth-credentials
   '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
+(setq user-mail-address "jay@vivovii.com") 
+(compose-mail)
 )
 
 ;; change send-from address interactively 
-(defun yale-address ()
+(defun yale-address-compose ()
   (interactive)
   (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
+(setq user-mail-address "dixit@aya.yale.edu") 
+(compose-mail) 
   )
 
 

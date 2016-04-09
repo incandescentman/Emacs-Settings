@@ -2747,12 +2747,7 @@ Single Capitals as you type."
 
 (setq mu4e-attachment-dir "~/Downloads") 
 
-;; go straight to inbox; bound to s-l
-(defun mu4e-gmail ()
- (interactive)
-(mu4e)
- (mu4e~headers-jump-to-maildir "/starred")
- ) 
+
 
 ;; show images
 (setq mu4e-show-images t)
@@ -2840,8 +2835,10 @@ Single Capitals as you type."
   (local-unset-key (kbd "<M-left>"))
 ))
 
-(setq mu4e-context-policy 'nil)
+(setq mu4e-context-policy 'ask-if-none)
 (setq mu4e-compose-context-policy 'ask-if-none)
+
+
 
 (setq mu4e-contexts
  `( 
@@ -2852,6 +2849,8 @@ Single Capitals as you type."
 (mu4e-message "Switch to sunjaydixit@gmail.com context")
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
+;; open my starred gmail maildir
+(mu4e~headers-jump-to-maildir "/starred") 
 )
 :vars '
 (
@@ -2873,6 +2872,8 @@ Single Capitals as you type."
  smtpmail-auth-credentials
   '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
+;; open my vivovii inbox
+(mu4e~headers-jump-to-maildir "/inbox") 
 )
    ;; leave-fun not defined 
    :vars '((user-mail-address . "jay@vivovii.com")
@@ -2883,7 +2884,7 @@ Single Capitals as you type."
 ))
 
 ;; change send-from address interactively 
-(defun vivovii-address ()
+(defun vivovii-address-compose ()
   (interactive)
   (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -2892,13 +2893,33 @@ Single Capitals as you type."
  smtpmail-auth-credentials
   '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
+(setq user-mail-address "jay@vivovii.com") 
+(compose-mail)
 )
 
 ;; change send-from address interactively 
-(defun yale-address ()
+(defun yale-address-compose ()
   (interactive)
   (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
+(setq user-mail-address "dixit@aya.yale.edu") 
+(compose-mail) 
   )
+
+
+;; go straight to my personal gmail inbox; bound to s-l
+(defun mu4e-gmail ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/starred")
+ ) 
+
+;; go to Vivovii (work) inbox
+(defun mu4e-vivovii ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/index")
+ ) 
+
 
 (defun mu4e-context-label ()
  "Propertized string with the current context name, or \"\" if
