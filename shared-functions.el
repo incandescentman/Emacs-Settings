@@ -2869,8 +2869,8 @@ Single Capitals as you type."
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
  smtpmail-auth-credentials
-  '(("smtp.gmail.com" 465 "jay@vivovii.com" nil))
- smtpmail-smtp-service 465) 
+  '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587) 
 ;; open my vivovii inbox
 (mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
@@ -2890,8 +2890,8 @@ Single Capitals as you type."
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
  smtpmail-auth-credentials
- '(("smtp.gmail.com" 465 "jay@newyorkwritersintensive.com" nil))
- smtpmail-smtp-service 465) 
+ '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+ smtpmail-smtp-service 587) 
 ;; open my newyorkwritersintensive inbox
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
@@ -2913,8 +2913,8 @@ Single Capitals as you type."
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
 smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 465 "jay@vivovii.com" nil))
- smtpmail-smtp-service 465) 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587) 
 (setq user-mail-address "jay@vivovii.com") 
 (compose-mail)
 )
@@ -2927,8 +2927,8 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii")
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
 smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 465 "jay@newyorkwritersintensive.com" nil))
- smtpmail-smtp-service 465) 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+ smtpmail-smtp-service 587) 
 (setq user-mail-address "jay@newyorkwritersintensive.com") 
 (compose-mail)
 )
