@@ -4161,21 +4161,36 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 
 
 ;; change send-from address interactively 
-(defun vivovii-address-compose ()
+(defun vivovii-compose ()
   (interactive)
   (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
-  '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii") 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
 (setq user-mail-address "jay@vivovii.com") 
 (compose-mail)
 )
 
 ;; change send-from address interactively 
-(defun yale-address-compose ()
+(defun nywi-compose ()
+ (interactive)
+ (setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+ smtpmail-smtp-service 587) 
+(setq user-mail-address "jay@newyorkwritersintensive.com") 
+(compose-mail)
+)
+
+
+;; change send-from address interactively 
+(defun yale-compose ()
   (interactive)
   (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
 (setq user-mail-address "dixit@aya.yale.edu") 
@@ -4185,8 +4200,8 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (defun yale-or-vivovii-compose (arg)
  (interactive "p")
  (if (and arg (= 0 (mod arg 4)))
-   (vivovii-address-compose)
-  (yale-address-compose)))
+   (vivovii-compose)
+  (yale-compose)))
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
