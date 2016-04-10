@@ -2840,7 +2840,6 @@ Single Capitals as you type."
 (setq mu4e-compose-context-policy 'ask-if-none)
 
 
-
 (setq mu4e-contexts
  `( 
 
@@ -2938,7 +2937,6 @@ Single Capitals as you type."
 (defun mu4e-gmail ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "Sunjay E. Dixit")
  (mu4e~headers-jump-to-maildir "/gmail/starred")
  ) 
 
@@ -2946,7 +2944,6 @@ Single Capitals as you type."
 (defun mu4e-vivovii ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "vivovii") 
  (mu4e~headers-jump-to-maildir "/vivovii/inbox")
  ) 
 
@@ -2954,7 +2951,6 @@ Single Capitals as you type."
 (defun mu4e-nywi ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "nywi") 
  (mu4e~headers-jump-to-maildir "/nywi/inbox")
  ) 
 

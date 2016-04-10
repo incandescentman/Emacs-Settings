@@ -259,3 +259,28 @@ The below works!!!
  smtpmail-smtp-service 587)
 
 #+END_SRC
+
+* cond otherwise
+
+#+BEGIN_SRC emacs-lisp 
+(defun query-user (x y)
+ "..."
+ (interactive "sEnter friend's name: \nnEnter friend's age: ")
+ (message "Name is: %s, Age is: %d" x y)
+ ) 
+
+
+
+(defun test-input-func (value)
+ (interactive "sEnter Message: ") 
+(cond
+ ((equal value "foo") ; case #1---notice it's a function call to `equal' so it's in parens
+ (message "got foo") ; action 1
+ (+ 2 2))    ; return value for case 1
+ ((equal value "bar") ; case #2---also a function call (to `+')
+ nil)     ; return value for case 2
+ (t     ; default case---not a function call, just literal true
+ (message "Your message was: %s" value)))    ; return symbol 'hello 
+) 
+#+END_SRC
+

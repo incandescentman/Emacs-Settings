@@ -4192,7 +4192,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (defun mu4e-gmail ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "Sunjay E. Dixit")
  (mu4e~headers-jump-to-maildir "/gmail/starred")
  ) 
 
@@ -4200,7 +4199,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (defun mu4e-vivovii ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "vivovii") 
  (mu4e~headers-jump-to-maildir "/vivovii/inbox")
  ) 
 
@@ -4208,7 +4206,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (defun mu4e-nywi ()
  (interactive)
 (mu4e)
-(mu4e-context-switch "nywi") 
  (mu4e~headers-jump-to-maildir "/nywi/inbox")
  ) 
 
