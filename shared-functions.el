@@ -1409,7 +1409,7 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude ".tex\\")
-(add-to-list 'recentf-exclude "\\recentf\\")
+(add-to-list 'recentf-exclude "recentf")
 (add-to-list 'recentf-exclude ".html")
 (add-to-list 'recentf-exclude ".Icon")
 (add-to-list 'recentf-exclude ".gz")
@@ -2692,7 +2692,7 @@ Single Capitals as you type."
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 (setq user-full-name "Jay Dixit" )
-(setq mu4e-maildir "/Users/jay/Dropbox/mail/gmail") 
+(setq mu4e-maildir "/Users/jay/Dropbox/mu") 
 (setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
 
 
@@ -2791,7 +2791,7 @@ Single Capitals as you type."
 (setq mu4e-maildir-shortcuts
 '( 
 ("/starred" . ?i) 
-("/inbox" . ?v) 
+("/vivovii" . ?v) 
 ("/nywi" . ?n) 
 ("/sent" . ?s)))
 
@@ -2851,7 +2851,7 @@ Single Capitals as you type."
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
 ;; open my starred gmail maildir
-(mu4e~headers-jump-to-maildir "/starred") 
+(mu4e~headers-jump-to-maildir "/starred/inbox") 
 )
 :vars '
 (
@@ -2874,7 +2874,7 @@ Single Capitals as you type."
   '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
  smtpmail-smtp-service 587) 
 ;; open my vivovii inbox
-(mu4e~headers-jump-to-maildir "/inbox") 
+(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
    ;; leave-fun not defined 
    :vars '((user-mail-address . "jay@vivovii.com")
@@ -2895,7 +2895,7 @@ Single Capitals as you type."
  '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
  smtpmail-smtp-service 587) 
 ;; open my newyorkwritersintensive inbox
-(mu4e~headers-jump-to-maildir "/nywi") 
+(mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
    ;; leave-fun not defined 
    :vars '((user-mail-address . "jay@newyorkwritersintensive.com")
