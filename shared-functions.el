@@ -2870,7 +2870,7 @@ Single Capitals as you type."
  smtpmail-smtp-server "smtp.gmail.com"
  smtpmail-auth-credentials
   '(("smtp.gmail.com" 465 "jay@vivovii.com" nil))
- smtpmail-smtp-service 587) 
+ smtpmail-smtp-service 465) 
 ;; open my vivovii inbox
 (mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
@@ -2891,7 +2891,7 @@ Single Capitals as you type."
  smtpmail-smtp-server "smtp.gmail.com"
  smtpmail-auth-credentials
  '(("smtp.gmail.com" 465 "jay@newyorkwritersintensive.com" nil))
- smtpmail-smtp-service 587) 
+ smtpmail-smtp-service 465) 
 ;; open my newyorkwritersintensive inbox
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
