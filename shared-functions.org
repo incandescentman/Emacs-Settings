@@ -4013,9 +4013,9 @@ Single Capitals as you type."
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
 '( 
-("/starred" . ?i) 
-("/vivovii" . ?v) 
-("/nywi" . ?n) 
+("/gmail/starred" . ?i) 
+("/vivovii/inbox" . ?v) 
+("/nywi/inbox" . ?n) 
 ("/sent" . ?s)))
 
 
@@ -4095,7 +4095,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (setq mu4e-compose-context-policy 'ask-if-none)
 
 
-
 (setq mu4e-contexts
  `( 
 
@@ -4106,13 +4105,12 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
 ;; open my starred gmail maildir
-(mu4e~headers-jump-to-maildir "/starred/inbox") 
+(mu4e~headers-jump-to-maildir "/gmail/starred") 
 )
 :vars '
 (
 (user-mail-address . "dixit@aya.yale.edu")
  (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/gmail") 
 (mu4e-compose-signature .
 		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
 
@@ -4134,7 +4132,6 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 	 ;; leave-fun not defined 
 	 :vars '((user-mail-address . "jay@vivovii.com")
  (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/vivovii") 
  ( mu4e-compose-signature .
 		 ("Jay Dixit\nvivovii.com\n")))) 
 
@@ -4155,13 +4152,10 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 	 ;; leave-fun not defined 
 	 :vars '((user-mail-address . "jay@newyorkwritersintensive.com")
  (user-full-name . "Jay Dixit" )
- (mu4e-maildir . "/Users/jay/Dropbox/mail/newyorkwritersintensive") 
  ( mu4e-compose-signature .
 		 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
 
 ))
-
-
 
 
 ;; change send-from address interactively 
@@ -4198,15 +4192,26 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 (defun mu4e-gmail ()
  (interactive)
 (mu4e)
- (mu4e~headers-jump-to-maildir "/starred")
+(mu4e-context-switch "Sunjay E. Dixit")
+ (mu4e~headers-jump-to-maildir "/gmail/starred")
  ) 
 
 ;; go to Vivovii (work) inbox
 (defun mu4e-vivovii ()
  (interactive)
 (mu4e)
- (mu4e~headers-jump-to-maildir "/index")
+(mu4e-context-switch "vivovii") 
+ (mu4e~headers-jump-to-maildir "/vivovii/inbox")
  ) 
+
+;; go to NYWI (my company) inbox
+(defun mu4e-nywi ()
+ (interactive)
+(mu4e)
+(mu4e-context-switch "nywi") 
+ (mu4e~headers-jump-to-maildir "/nywi/inbox")
+ ) 
+
 
 
 (defun mu4e-context-label ()
