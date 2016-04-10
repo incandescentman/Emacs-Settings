@@ -2855,7 +2855,7 @@ Single Capitals as you type."
 :vars '
 (
 (user-mail-address . "dixit@aya.yale.edu")
- (user-full-name . "Jay Dixit" )
+(mu4e-get-mail-command . "mbsync gmail") 
 (mu4e-compose-signature .
      ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
 
@@ -2875,8 +2875,9 @@ Single Capitals as you type."
 (mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
    ;; leave-fun not defined 
-   :vars '((user-mail-address . "jay@vivovii.com")
- (user-full-name . "Jay Dixit" )
+   :vars '(
+(user-mail-address . "jay@vivovii.com")
+(mu4e-get-mail-command . "mbsync vivovii") 
  ( mu4e-compose-signature .
      ("Jay Dixit\nvivovii.com\n")))) 
 
@@ -2895,8 +2896,9 @@ Single Capitals as you type."
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
    ;; leave-fun not defined 
-   :vars '((user-mail-address . "jay@newyorkwritersintensive.com")
- (user-full-name . "Jay Dixit" )
+   :vars '(
+(user-mail-address . "jay@newyorkwritersintensive.com")
+(mu4e-get-mail-command . "mbsync nywi") 
  ( mu4e-compose-signature .
      ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
 
