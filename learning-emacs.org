@@ -284,3 +284,18 @@ The below works!!!
 ) 
 #+END_SRC
 
+* replace-regexp
+19:04 <Guest53541> in replace-regexp, I'm trying to figure out what to put to
+          put in the text that got matched
+19:04 <Guest53541> I'm doing this
+19:04 *** sssilver JOIN
+19:04 *** nkabir JOIN
+19:05 <ham-peas> Guest53541: use \n for the contents of the Nth parenthesized
+         submatch, like \1, \2, etc.
+19:05 <Guest53541> M-x replace-regexp foo <RET> \1bar <RET>
+19:05 <macrobat> ow333n: does emacs work or is there just a warning?
+19:05 *** juanpablo_ JOIN
+19:05 *** nocd JOIN
+19:06 <Guest53541> but instead of getting "foobar" like I would expect, it
+          gets replaced just just "bar"
+19:06 <ham-peas> to substitute the entire match, use \&

@@ -437,6 +437,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
+(define-key key-minor-mode-map (kbd "s-j") 'mc/mark-all-like-this-dwim)
+
 (define-key dired-mode-map (kbd "c") 'touch-file) 
 
 ;; mu4e-gmail

@@ -612,6 +612,32 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
      'new-org-delete-backward-char)))
 #+END_SRC
 
+** imenu-list
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+#+END_SRC
+
+Edit: in response to your comment, here's a simple command that, when invoked from the buffer clone, will switch to the base buffer and move point to wherever the cursor was in the buffer clone:
+
+#+BEGIN_SRC emacs-lisp
+(defun jump-to-point-and-show ()
+ "Switch to a cloned buffer's base buffer and move point to the
+cursor position in the clone."
+ (interactive)
+ (let ((buf (buffer-base-buffer)))
+  (unless buf
+   (error "You need to be in a cloned buffer!"))
+  (let ((pos (point))
+     (win (car (get-buffer-window-list buf))))
+   (if win
+     (select-window win)
+    (other-window 1)
+    (switch-to-buffer buf))
+   (goto-char pos)
+   (when (invisible-p (point))
+    (show-branches))))) 
+#+END_SRC 
+
 ** Org-mode hooks and other org settings
 #+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
@@ -2080,6 +2106,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude ".gz")
 (add-to-list 'recentf-exclude "System")
 (add-to-list 'recentf-exclude "Applications")
+(add-to-list 'recentf-exclude "sent mail")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "750words")
 (add-to-list 'recentf-exclude "Calendar")
@@ -5404,13 +5431,13 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+END_SRC
 
 ** and on export
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
 ;; any line that ends with a colon 
 
-(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\1*"))) 
+(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
 
-#+END_SRC
+#+END_EXAMPLE
 
 * org-element use cache
 (setq org-element-use-cache t) 
