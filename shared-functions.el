@@ -354,6 +354,8 @@
    (define-key org-mode-map (kbd "DEL")
      'new-org-delete-backward-char)))
 
+;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+
 '(initial-major-mode (quote org-mode))
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 '(org-replace-disputed-keys t)
@@ -1539,13 +1541,15 @@ margin-bottom: 1em;
 (insert (format-time-string "[%H:%M]"))
   )
 
+
 (defun jd-org-today () 
   "insert a new heading with today's date"
   (interactive)
 (smart-org-meta-return-dwim) 
   (org-insert-time-stamp (current-time))
-(insert "\n") 
-  )
+(insert " [0%]\n") 
+(insert "** TODO pomodoro #1 \n** TODO pomodoro #2 \n** TODO pomodoro #3 \n** TODO pomodoro #4 \n** TODO pomodoro #5 \n** TODO pomodoro #6 \n** TODO pomodoro #7 \n** TODO pomodoro #8 \n" ) 
+ )
 
 
 (defun jd-org-today-and-accountability ()
