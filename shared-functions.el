@@ -4284,3 +4284,14 @@ minibuffer."
 (add-hook 'org-mime-html-hook
 (lambda ()
 (org-mime-replace-multy-gt))) 
+
+(defun up-by-degrees ()
+ (interactive)
+       (previous-line 5)
+ )
+
+
+(defun down-by-degrees ()
+ (interactive)
+       (next-line 5)
+ )

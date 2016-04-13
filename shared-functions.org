@@ -6194,3 +6194,18 @@ SPC is "wrap region in block quote tag"
 #+END_SRC
 
 
+
+* up by degrees
+#+BEGIN_SRC emacs-lisp
+(defun up-by-degrees ()
+ (interactive)
+       (previous-line 5)
+ )
+
+
+(defun down-by-degrees ()
+ (interactive)
+       (next-line 5)
+ )
+#+END_SRC
+
