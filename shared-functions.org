@@ -2085,7 +2085,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours" (buffer-name buffer))
+  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|sent\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -2275,7 +2275,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (smart-org-meta-return-dwim) 
   (org-insert-time-stamp (current-time))
 (insert " [0%]\n") 
-(insert "** TODO pomodoro #1 \n** TODO pomodoro #2 \n** TODO pomodoro #3 \n** TODO pomodoro #4 \n** TODO pomodoro #5 \n** TODO pomodoro #6 \n** TODO pomodoro #7 \n** TODO pomodoro #8 \n" ) 
+(insert "** pomodoro #1 \n** pomodoro #2 \n** pomodoro #3 \n** pomodoro #4 \n** pomodoro #5 \n** pomodoro #6 \n** pomodoro #7 \n** pomodoro #8 \n\n\n" ) 
  )
 
 
