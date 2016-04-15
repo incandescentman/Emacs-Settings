@@ -5896,13 +5896,12 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+END_SRC
 
 ** and on export
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
 ;; any line that ends with a colon 
 
 (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
-
-#+END_EXAMPLE
+#+END_SRC
 
 * org-element use cache
 (setq org-element-use-cache t) 
@@ -6640,8 +6639,8 @@ SPC is "wrap region in block quote tag"
 
 #+END_EXAMPLE 
 
-* html reply
-#+BEGIN_SRC emacs-lisp
+* html reply - doesn't work yet 
+#+BEGIN_EXAMPLE emacs-lisp
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
@@ -6650,11 +6649,10 @@ SPC is "wrap region in block quote tag"
 (replace-regexp-in-string "^&gt; ?" "" (match-string 1))
 "</div>")))) 
 
-
 (add-hook 'org-mime-html-hook
 (lambda ()
 (org-mime-replace-multy-gt))) 
-#+END_SRC
+#+END_EXAMPLE 
 
 
 
