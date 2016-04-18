@@ -4201,8 +4201,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 ;; old code (works for HTML export, breaks http links)
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
 
-;; Serj's new code (works for http links, breaks HTML export)
-(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:\\([^/]\\|/[^/]\\|$\\)" "*\\&*")))
+(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2")))
 
 (defun downcase-or-endless-downcase ()
 (interactive)
