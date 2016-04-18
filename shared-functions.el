@@ -392,7 +392,7 @@
   ("g" "gratitude" entry (file "gratitude.txt")
    "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-  ("L" "Later" checkitem (file+headline "disciplined.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+  ("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
   ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
    "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -893,7 +893,7 @@
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*"))) 
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/disciplined.org")
+ '(initial-buffer-choice "~/Dropbox/writing/notationaldata/warm.org")
  '(initial-major-mode (quote org-mode))
 ;; '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
@@ -3099,7 +3099,7 @@ Single Capitals as you type."
 
 (defun playful-open ()
   (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/disciplined.org")
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/warm.org")
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
@@ -4199,7 +4199,7 @@ The full path into relative path and insert it as a local file link in org-mode"
                         )
 
 ;; old code (works for HTML export, breaks http links)
-(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
+;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
 
 ;; Serj's new code (works for http links, breaks HTML export)
 (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:\\([^/]\\|/[^/]\\|$\\)" "*\\&*")))
