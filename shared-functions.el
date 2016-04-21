@@ -676,7 +676,9 @@
 (defun org-new-scratch-buffer ()
   (interactive)
   (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-  (org-tree-to-indirect-buffer 'current-window)
+;; (org-tree-to-indirect-buffer 'current-window)
+(org-narrow-to-subtree)
+
   )
 
 (add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)

@@ -3123,6 +3123,20 @@ s-i
 #+END_EXAMPLE
 
 
+* fountain-mode-map
+#+BEGIN_EXAMPLE emacs-lisp
+(add-hook 'fountain-mode-hook
+     (lambda ()
+(local-set-key (kbd ".") 'smart-period) 
+(local-set-key (kbd ",") 'smart-comma) 
+(local-set-key (kbd "\`") 'flyspell-auto-correct-word)
+(local-set-key (kbd "<SPC>") 'jay/insert-space) 
+
+
+))
+#+END_EXAMPLE
+
+
 * color theme advice
 #+BEGIN_SRC emacs-lisp
 (defadvice load-theme (after load-theme-advice activate)
