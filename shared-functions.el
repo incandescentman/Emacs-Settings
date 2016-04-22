@@ -4193,6 +4193,12 @@ The full path into relative path and insert it as a local file link in org-mode"
   '((t (:foreground "red" ::weight bold)))
   "fontify list titles") 
 
+;; define heading-title face 
+(defface heading-title-face
+ '((t (:foreground "red" ::weight bold)))
+ "fontify heading titles") 
+
+
 (font-lock-add-keywords 'org-mode
                         '(
 ;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
