@@ -277,11 +277,11 @@
   (push-kill-ring-to-pasteboard)
   )
 
-(global-unset-key (kbd "s-m"))
-(defvar s-m-map (make-keymap)
+(global-unset-key (kbd "s-j"))
+(defvar s-j-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
-(define-key global-map (kbd "s-m") 's-m-prefix)
-(fset 's-m-prefix s-m-map)
+(define-key global-map (kbd "s-j") 's-j-prefix)
+(fset 's-j-prefix s-j-map)
 
 ;; create a custom minor mode to override other keybindings and use mine instead
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
@@ -303,7 +303,7 @@
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
-(define-key key-minor-mode-map (kbd "s-j") 'mc/mark-all-like-this-dwim)
+(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
 (define-key dired-mode-map (kbd "c") 'touch-file) 
 
@@ -321,20 +321,20 @@
 
 (define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
 
-(define-key key-minor-mode-map (kbd "s-m p m") 'poetry-mode)
+(define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
 
 
-(define-key key-minor-mode-map (kbd "s-m t d") 'jd-org-today)
-(define-key key-minor-mode-map (kbd "s-m c i") 'jd-clock-in)
+(define-key key-minor-mode-map (kbd "s-j t d") 'jd-org-today)
+(define-key key-minor-mode-map (kbd "s-j c i") 'jd-clock-in)
 
 
 
 (define-key key-minor-mode-map (kbd "s-.") 'searchlink)
 
-(define-key key-minor-mode-map (kbd "s-m c s") 'org-clone-subtree)
+(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
 

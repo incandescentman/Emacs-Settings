@@ -2880,6 +2880,8 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-hyper-key "h" 'replace-string)
 (define-hyper-key "o" 'projectile-find-file)
 
+(define-hyper-key "m" 'mc/mark-all-like-this-dwim)
+
 
 (define-hyper-key "\\" 'visit-most-recent-file)
 
@@ -2921,8 +2923,8 @@ Key bindings I don't use much and should remember to learn:
 
 
 
-;; (define-hyper-key "m a" 'org-agenda)
-(define-hyper-key "m j" 'helm-imenu-anywhere)
+;; (define-hyper-key "j a" 'org-agenda)
+(define-hyper-key "j j" 'helm-imenu-anywhere)
 (define-hyper-key ";" 'ido-goto-symbol)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
 
@@ -2930,56 +2932,56 @@ Key bindings I don't use much and should remember to learn:
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-hyper-key "m cy" 'cyberpunk-jay)
-(define-hyper-key "m cl" 'cyberpunk-large)
-(define-hyper-key "m zb" 'zenburn)
-(define-hyper-key "m le" 'leuven)
-(define-hyper-key "m ts" 'transparent-serenity)
-(define-hyper-key "m tg" 'top-gun-mode)
-(define-hyper-key "m tn" 'tomorrow-night)
+(define-hyper-key "j cy" 'cyberpunk-jay)
+(define-hyper-key "j cl" 'cyberpunk-large)
+(define-hyper-key "j zb" 'zenburn)
+(define-hyper-key "j le" 'leuven)
+(define-hyper-key "j ts" 'transparent-serenity)
+(define-hyper-key "j tg" 'top-gun-mode)
+(define-hyper-key "j tn" 'tomorrow-night)
 
-(define-hyper-key "m ma" 'inverse-add-global-abbrev) 
+(define-hyper-key "j ma" 'inverse-add-global-abbrev) 
 
-(define-hyper-key "m rr" 'replace-regexp) 
-
-
-(define-hyper-key "m cf" 'customize-face) 
-
-(define-hyper-key "m h" 'org-export-dispatch)
+(define-hyper-key "j rr" 'replace-regexp) 
 
 
+(define-hyper-key "j cf" 'customize-face) 
+
+(define-hyper-key "j h" 'org-export-dispatch)
 
 
-(define-hyper-key "m nm" 'notmuch-hello) 
-(define-hyper-key "m mu" 'mu4e)
 
-;; (define-hyper-key "m cl" 'cyberpunk-large)
 
-(define-hyper-key "m dd" 'delete-duplicate-lines-keep-blanks) 
+(define-hyper-key "j nm" 'notmuch-hello) 
+(define-hyper-key "j mu" 'mu4e)
 
-(define-hyper-key "m cw" 'cyberpunk-writeroom)
-(define-hyper-key "m wb" 'whiteboard)
-(define-hyper-key "m sl" 'solarized-light)
-(define-hyper-key "m sd" 'solarized-dark)
-(define-hyper-key "m ri" 'ritchie)
-(define-hyper-key "m sp" 'spolsky)
-(define-hyper-key "m wr" 'writeroom-mode)
-(define-hyper-key "m wf" 'workflowy-mode)
-(define-hyper-key "m st" 'small-type)
-(define-hyper-key "m mp" 'morning-pages)
-(define-hyper-key "m rf" 'prelude-rename-file-and-buffer)
-(define-hyper-key "m lt" 'large-type)
-(define-hyper-key "m mt" 'medium-type)
-(define-hyper-key "m df" 'prelude-delete-file-and-buffer)
+;; (define-hyper-key "j cl" 'cyberpunk-large)
 
-(define-hyper-key "m bl" 'blue-light)
+(define-hyper-key "j dd" 'delete-duplicate-lines-keep-blanks) 
 
-(define-hyper-key "m eu" 'endless/upgrade)
+(define-hyper-key "j cw" 'cyberpunk-writeroom)
+(define-hyper-key "j wb" 'whiteboard)
+(define-hyper-key "j sl" 'solarized-light)
+(define-hyper-key "j sd" 'solarized-dark)
+(define-hyper-key "j ri" 'ritchie)
+(define-hyper-key "j sp" 'spolsky)
+(define-hyper-key "j wr" 'writeroom-mode)
+(define-hyper-key "j wf" 'workflowy-mode)
+(define-hyper-key "j st" 'small-type)
+(define-hyper-key "j mp" 'morning-pages)
+(define-hyper-key "j rf" 'prelude-rename-file-and-buffer)
+(define-hyper-key "j lt" 'large-type)
+(define-hyper-key "j mt" 'medium-type)
+(define-hyper-key "j df" 'prelude-delete-file-and-buffer)
+
+(define-hyper-key "j bl" 'blue-light)
+
+(define-hyper-key "j eu" 'endless/upgrade)
 
 
 ;; accountability
 
-(define-hyper-key "m ek" 'erika-send-email-styled)
+(define-hyper-key "j ek" 'erika-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -2989,8 +2991,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (save-excursion (insert ")")
                 ))
 
-(define-hyper-key "m kb" 'keybinding-read-and-insert)
-(define-hyper-key "m mk" 'keybinding-read-and-insert)
+(define-hyper-key "j kb" 'keybinding-read-and-insert)
+(define-hyper-key "j mk" 'keybinding-read-and-insert)
 
 
 
@@ -5887,6 +5889,12 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
   '((t (:foreground "red" ::weight bold)))
   "fontify list titles") 
 
+;; define heading-title face 
+(defface heading-title-face
+ '((t (:foreground "red" ::weight bold)))
+ "fontify heading titles") 
+
+
 (font-lock-add-keywords 'org-mode
                         '(
 ;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
@@ -6664,13 +6672,13 @@ SPC is "wrap region in block quote tag"
 #+BEGIN_SRC emacs-lisp
 (defun up-by-degrees ()
  (interactive)
-       (previous-line 5)
+       (previous-line 6)
  )
 
 
 (defun down-by-degrees ()
  (interactive)
-       (next-line 5)
+       (next-line 6)
  )
 #+END_SRC
 
@@ -6704,6 +6712,6 @@ SPC is "wrap region in block quote tag"
 (require 'zone-settings)
 
 (setq zone-programs [zone-matrix])
-(zone-when-idle 60) 
+(zone-when-idle 300) 
 
 #+END_SRC
