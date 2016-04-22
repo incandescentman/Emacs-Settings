@@ -457,6 +457,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
+(define-key key-minor-mode-map (kbd "s-j p s") 'pomodoro-start)
+
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
 
@@ -911,6 +913,19 @@ This fucked up autopair mode so I'm turning it off again.
   (insert " ")
 ;; (unexpand-abbrev)
 )
+
+
+(defun insert-period ()
+ (interactive)
+ (insert ".")
+)
+
+
+(defun insert-comma ()
+ (interactive)
+ (insert ",")
+)
+
 
 #+END_SRC
 

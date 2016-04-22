@@ -1402,7 +1402,7 @@ margin-bottom: 1em;
 
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|sent\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours" (buffer-name buffer))
+  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|sent\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -3872,6 +3872,8 @@ event of an error or nonlocal exit."
 (define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
 (define-key endless/mc-map "a" #'mc/mark-all-like-this)
 
+
+
 ;;; Occasionally useful
 (define-key endless/mc-map "d"
   #'mc/mark-all-symbols-like-this-in-defun)
@@ -4814,3 +4816,7 @@ minibuffer."
 
 (setq zone-programs [zone-matrix])
 (zone-when-idle 300)
+
+(define-key mc/keymap (kbd ".") 'insert-period) 
+(define-key mc/keymap (kbd ",") 'insert-comma) 
+(define-key mc/keymap (kbd "SPC") 'insert-space)

@@ -323,6 +323,8 @@
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
+(define-key key-minor-mode-map (kbd "s-j p s") 'pomodoro-start)
+
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
 
@@ -726,6 +728,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   ;;    (call-interactively 'self-insert-command))
   (insert " ")
 ;; (unexpand-abbrev)
+)
+
+
+(defun insert-period ()
+ (interactive)
+ (insert ".")
+)
+
+
+(defun insert-comma ()
+ (interactive)
+ (insert ",")
 )
 
 (setq org-blank-before-new-entry
