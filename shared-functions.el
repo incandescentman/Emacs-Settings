@@ -4716,3 +4716,27 @@ minibuffer."
  (interactive)
        (next-line 5)
  )
+
+; (setq zone-programs [zone-pgm-dissolve])
+
+; (setq zone-programs [zone-pgm-whack-characters])
+; (setq zone-programs [zone-pgm-rotate])
+; (setq zone-programs [zone-pgm-rotate-LR-lockstep])
+; (setq zone-programs [zone-pgm-rotate-RL-lockstep])
+; (setq zone-programs [zone-pgm-rotate-LR-variable])
+; (setq zone-programs [zone-pgm-rotate-RL-variable])
+; (setq zone-programs [zone-pgm-drip])
+; (setq zone-programs [zone-pgm-drip-fretfully])
+; (setq zone-programs [zone-pgm-five-oclock-swan-dive])
+; (setq zone-programs [zone-pgm-martini-swan-dive])
+
+
+; (setq zone-programs [zone-pgm-stress])
+; (setq zone-programs [zone-pgm-stress-destress])
+
+(require 'zone-matrix)
+(require 'zone-matrix-settings)
+(require 'zone-settings)
+
+(setq zone-programs [zone-matrix])
+(zone-when-idle 60)
