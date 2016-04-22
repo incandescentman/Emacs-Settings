@@ -3883,12 +3883,78 @@ event of an error or nonlocal exit."
 (define-key endless/mc-map "\C-e"
   #'mc/edit-ends-of-lines)
 
+(define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
+(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+
 (defcustom ivy-height 50
   "Number of lines for the minibuffer window."
   :type 'integer) 
 (global-set-key (kbd "C-s") 'swiper)
 ;; (setq ivy-display-style 'fancy)
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
+
+(defun ivy-dired-mark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-mark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-dired-unmark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-unmark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-replace ()
+ (interactive)
+ (let ((from (with-selected-window swiper--window
+        (move-beginning-of-line nil)
+        (when (re-search-forward
+            (ivy--regex ivy-text) (line-end-position) t)
+         (match-string 0)))))
+  (if (null from)
+    (user-error "No match")
+   (let ((rep (read-string (format "Replace [%s] with: " from))))
+    (with-selected-window swiper--window
+     (undo-boundary)
+     (replace-match rep t t))))))
+
+(defun ivy-undo ()
+ (interactive)
+ (with-selected-window swiper--window
+  (undo))) 
+
+
+(defhydra hydra-ivy (:hint nil
+           :color pink)
+ "
+^^^^^^     ^Actions^  ^Dired^   ^Quit^
+^^^^^^--------------------------------------------
+^ ^ _l_ ^ ^   _._ repeat  _m_ark   _i_: cancel
+_j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
+^ ^ _k_ ^ ^   _u_ndo 
+"
+ ;; arrows
+ ("j" ivy-beginning-of-buffer)
+ ("k" ivy-next-line)
+ ("l" ivy-previous-line)
+ (";" ivy-end-of-buffer)
+ ;; actions
+ ("." hydra-repeat)
+ ("r" ivy-replace)
+ ("u" ivy-undo)
+ ;; dired
+ ("m" ivy-dired-mark)
+ ("," ivy-dired-unmark)
+ ;; exit
+ ("o" keyboard-escape-quit :exit t)
+ ("i" nil)) 
+
+(define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
 ;; (require 'wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")
