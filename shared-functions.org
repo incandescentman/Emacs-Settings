@@ -1286,11 +1286,10 @@ when replying, look kind of like gmail
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
 #+END_SRC
 
-
-* Pomodoro
-
+* org-pomodoro
 #+BEGIN_SRC emacs-lisp
-;; (require 'org-pomodoro)
+(add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done)))
 
 (defun pomodoro-start ()
   (interactive)

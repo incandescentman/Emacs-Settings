@@ -806,7 +806,8 @@
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
 
-;; (require 'org-pomodoro)
+(add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done)))
 
 (defun pomodoro-start ()
   (interactive)
