@@ -4811,12 +4811,12 @@ minibuffer."
 ; (setq zone-programs [zone-pgm-stress])
 ; (setq zone-programs [zone-pgm-stress-destress])
 
-(require 'zone-matrix)
-(require 'zone-matrix-settings)
-(require 'zone-settings)
+;; (require 'zone-matrix)
+;; (require 'zone-matrix-settings)
+;; (require 'zone-settings)
 
-(setq zone-programs [zone-matrix])
-(zone-when-idle 300)
+;; (setq zone-programs [zone-matrix])
+;; (zone-when-idle 300)
 
 (define-key mc/keymap (kbd ".") 'insert-period) 
 (define-key mc/keymap (kbd ",") 'insert-comma) 
