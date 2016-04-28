@@ -148,7 +148,7 @@
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
 
-'(org-modules (quote (org-info org-jsinfo org-pomodoro org-mac-link org-mime )))
+'(org-modules (quote (org-info org-jsinfo org-mac-link org-mime )))
 
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (
@@ -618,6 +618,10 @@
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
+;;(while (search-forward-regexp "- " nil to) 
+;; (replace-match "") nil t) 
+;; add alpha. And replace the alpha.
+
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
@@ -806,8 +810,23 @@
 (setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
 
+(setq org-pomodoro-format "Pomodoro: %s")
+ (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
+ (setq org-pomodoro-length 25)
+(setq org-pomodoro-short-break-length 0) 
+(setq org-pomodoro-long-break-length 0) 
+ (setq org-pomodoro-long-break-format "Long Break: %s")
+ (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
+ (setq org-pomodoro-play-ticking-sounds nil)
+ (setq org-pomodoro-short-break-format "Short Break: %s")
+ (setq org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
+ (setq org-pomodoro-sound "~/sounds/large-applause.mp3")
+(setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
+
+
+
 (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done)))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done) t))
 
 (defun pomodoro-start ()
   (interactive)
@@ -956,17 +975,7 @@
  '(org-modules (quote    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
- '(org-pomodoro-format "Pomodoro: %s")
- '(org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
- '(org-pomodoro-length 25)
- '(org-pomodoro-long-break-format "Long Break: %s")
- '(org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
- '(org-pomodoro-play-ticking-sounds nil)
- '(org-pomodoro-short-break-format "Short Break: %s")
- '(org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
- '(org-pomodoro-sound "~/sounds/large-applause.mp3")
-'(org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
- '(org-provide-checkbox-statistics t)
+'(org-provide-checkbox-statistics t)
  '(org-replace-disputed-keys nil)
  '(org-return-follows-link t)
  '(org-special-ctrl-a/e t)
@@ -985,9 +994,7 @@
  '(osx-browse-prefer-background nil)
  '(osx-browse-prefer-browser "com.google.Chrome")
  '(osx-browse-prefer-new-window t)
- '(pomodoro-break-time 10)
- '(pomodoro-work-time 50)
- '(reb-re-syntax (quote string))
+'(reb-re-syntax (quote string))
  '(recentf-max-menu-items 100)
  '(recentf-max-saved-items 999) 
  '(smex-prompt-string "I love you. ")
@@ -1102,24 +1109,11 @@ ido-enter-matching-directory nil
 (setq ido-use-filename-at-point 'guess)
 (setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
 
-(setq org-outline-path-complete-in-steps nil)
-(setq org-completion-use-ido nil) 
-;; (setq org-refile-use-outline-path t) 
-
-
-
-(setq org-goto-interface 'outline-path-completion org-goto-max-level 3) 
-(setq org-refile-targets '((my-org-files-list :maxlevel . 3)))
-
-;; (setq org-refile-allow-creating-parent-nodes (quote confirm))
-
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
 
 (setq ido-default-file-method 'selected-window)
 (setq ido-default-buffer-method 'selected-window)
-
-;; (require 'ido-hacks)
 
 (add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
 (add-hook 'ido-make-dir-list-hook 'ido-sort-mtime)
@@ -1550,9 +1544,7 @@ margin-bottom: 1em;
   (interactive)
 (smart-org-meta-return-dwim) 
   (org-insert-time-stamp (current-time))
-(insert " [0%]\n") 
-(insert "** pomodoro #1 \n** pomodoro #2 \n** pomodoro #3 \n** pomodoro #4 \n** pomodoro #5 \n** pomodoro #6 \n** pomodoro #7 \n** pomodoro #8 \n\n\n" ) 
- )
+)
 
 
 (defun jd-org-today-and-accountability ()
@@ -1788,6 +1780,27 @@ Also converts full stops to commas."
     (apply 'delete-region remove)
     (insert description))))
 
+(setq org-outline-path-complete-in-steps nil) ; Refile in a single go 
+(setq org-completion-use-ido nil) 
+(setq org-refile-use-outline-path t) ; Show full paths for refiling 
+
+
+
+
+(defun my-org-files-list ()
+ (mapcar (lambda (buffer)
+      (buffer-file-name buffer))
+     (org-buffer-list 'files t))) 
+
+(setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
+
+
+
+;; allow refile to create parent tasks with confirmation: 
+(setq org-refile-allow-creating-parent-nodes (quote confirm)) 
+
+; (setq org-goto-interface 'outline-path-completion org-goto-max-level 3)
+
 (defvar refile-region-format "\n%s\n")
 
 (defvar refile-region-position 'top
@@ -1822,12 +1835,6 @@ With prefix arg C-u, copy region instad of killing it."
             (org-end-of-subtree)
           (org-end-of-meta-data))
         (insert (format refile-region-format text))))))
-
-
-(defun my-org-files-list ()
-  (mapcar (lambda (buffer)
-            (buffer-file-name buffer))
-          (org-buffer-list 'files t)))
 
 (defun move-region-or-subtree-to-other-window ()
   (interactive)

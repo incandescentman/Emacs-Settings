@@ -440,3 +440,9 @@ Because '\' quotes special characters, '\$' is a regular expression that matches
 Note that '\' also has special meaning in the read syntax of Lisp strings (see String Type), and must be quoted with '\'. For example, the regular expression that matches the '\' character is '\\'. To write a Lisp string that contains the characters '\\', Lisp syntax requires you to quote each '\' with another '\'. Therefore, the read syntax for a regular expression matching '\' is "\\\\". 
 
 
+
+
+("anydigit" "\\([0-9]\\)+" nil 10) 
+("anydigit" "[[:digit:]+]" nil 1)
+
+
