@@ -1292,29 +1292,23 @@ when replying, look kind of like gmail
 
 * org-pomodoro
 #+BEGIN_SRC emacs-lisp
-(setq org-pomodoro-format "Pomodoro: %s")
- (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
- (setq org-pomodoro-length 25)
+;; (setq org-pomodoro-format "Pomodoro: %s")
+;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
+(setq org-pomodoro-length 25)
 (setq org-pomodoro-short-break-length 0) 
 (setq org-pomodoro-long-break-length 0) 
- (setq org-pomodoro-long-break-format "Long Break: %s")
- (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
+;; (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
- (setq org-pomodoro-short-break-format "Short Break: %s")
- (setq org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
- (setq org-pomodoro-sound "~/sounds/large-applause.mp3")
-(setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
+;; (setq org-pomodoro-short-break-format "Short Break: %s")
+;; (setq org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
+;; (setq org-pomodoro-sound "~/sounds/large-applause.mp3")
+;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
 
 
 
 (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
 (add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done) t))
 
-(defun pomodoro-start ()
-  (interactive)
-  (play-sound-file "~/sounds/mgm-lion-roar-short.mp3")
-  (org-pomodoro)
-  )
 #+END_SRC
 
 * Reveal in finder
