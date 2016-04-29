@@ -4784,6 +4784,18 @@ minibuffer."
 (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
 (require 'helm-org-rifle)
 
+(defun org-mime-replace-multy-gt ()
+(interactive)
+(beginning-of-buffer)
+(while (re-search-forward "\\(\\(^&gt;\\( .*\\)?\n\\)+\\)" nil t)
+(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n"
+(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
+"</div>")))) 
+
+(add-hook 'org-mime-html-hook
+(lambda ()
+(org-mime-replace-multy-gt)))
+
 (defun up-by-degrees ()
  (interactive)
        (previous-line 6)
