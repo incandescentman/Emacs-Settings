@@ -114,7 +114,7 @@ You can toggle it in necessary files by setting the local variables section at t
 ** Stop accidentally highlighting org-mode links all the time:
 
 #+BEGIN_SRC emacs-lisp
-(setq mouse-highlight t)
+(setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil) 
 
 #+END_SRC
@@ -1295,8 +1295,8 @@ when replying, look kind of like gmail
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
 (setq org-pomodoro-length 25)
-(setq org-pomodoro-short-break-length 0) 
-(setq org-pomodoro-long-break-length 0) 
+(setq org-pomodoro-short-break-length 1) 
+(setq org-pomodoro-long-break-length 1) 
 ;; (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
@@ -6730,7 +6730,7 @@ SPC is "wrap region in block quote tag"
 #+END_EXAMPLE 
 
 * html reply - doesn't work yet 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
@@ -6742,7 +6742,7 @@ SPC is "wrap region in block quote tag"
 (add-hook 'org-mime-html-hook
 (lambda ()
 (org-mime-replace-multy-gt))) 
-#+END_EXAMPLE 
+#+END_SRC 
 
 
 

@@ -41,7 +41,7 @@
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
-(setq mouse-highlight t)
+(setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil)
 
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -813,8 +813,8 @@
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
 (setq org-pomodoro-length 25)
-(setq org-pomodoro-short-break-length 0) 
-(setq org-pomodoro-long-break-length 0) 
+(setq org-pomodoro-short-break-length 1) 
+(setq org-pomodoro-long-break-length 1) 
 ;; (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
