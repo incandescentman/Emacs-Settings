@@ -4625,7 +4625,7 @@ minibuffer."
 
 (load-library "sort.el") ;; Somehow `delete-region` is replaced in "sort.elc". Therefore load the source version again.
 
-(defun delete-duplicate-lines-keep-blanks ()
+(defun delete-duplicate-lines-keep-blanks-interactive ()
   (interactive)
   (delete-duplicate-lines (region-beginning) (region-end) nil nil t t))
 
