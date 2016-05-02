@@ -825,7 +825,7 @@
 
 
 (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done) t))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
 
 ;; (require 'reveal-in-finder)
 

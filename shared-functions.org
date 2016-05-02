@@ -1307,7 +1307,7 @@ when replying, look kind of like gmail
 
 
 (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () '(org-todo 'done) t))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
 
 #+END_SRC
 
