@@ -286,7 +286,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
 #+END_SRC
 
-* Org-mode
+* org-mode
 ** org setup
 *** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
@@ -977,8 +977,17 @@ Make org-capture open in full window! :-)
 
    #+END_SRC
 
+
+** org-mode inline tasks
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task) 
+#+END_SRC
+
+
+
+
 * Typography
-** Replace smart quotes with straight quotes
+** TODO Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
 (defun replace-smart-quotes (beg end)
@@ -1308,6 +1317,8 @@ when replying, look kind of like gmail
 
 (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
 (add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
+(add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
+(add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
 
 #+END_SRC
 
@@ -5036,15 +5047,22 @@ After this, you should be able to add contacts using a o in the headers view and
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
    #+END_SRC
 
-* deft-turbo
 
-  #+BEGIN_EXAMPLE emacs-lisp 
-(require 'deft)
-(setq deft-extensions '("org" "md" "txt"))
-(setq deft-default-extension "org")
-(setq deft-directory "~/nd/")
-(setq deft-use-filename-as-title t) 
-  #+END_EXAMPLE
+** html reply---doesn't work yet 
+#+BEGIN_SRC emacs-lisp
+(defun org-mime-replace-multy-gt ()
+(interactive)
+(beginning-of-buffer)
+(while (re-search-forward "\\(\\(^&gt;\\( .*\\)?\n\\)+\\)" nil t)
+(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n"
+(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
+"</div>")))) 
+
+(add-hook 'org-mime-html-hook
+(lambda ()
+(org-mime-replace-multy-gt))) 
+#+END_SRC 
+
 
 * insert slash no abbrev
 
@@ -6428,64 +6446,15 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
 * query-replace-duplicate-lines-keep-blanks
 
 Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-duplicate-lines/20384?noredirect=1#comment31370_20384][replace - how to query-delete-duplicate-lines? - Emacs Stack Exchange]]
-#+BEGIN_SRC emacs-lisp
-(eval-when-compile
-  (require 'cl-macs))
 
-(defun delete-duplicate-lines-interactive (oldfun &rest args)
-  "Make `delete-region' interactive in `delete-duplicate-lines'."
-  (let ((reverse (nth 2 args))
-    (adjacent (nth 3 args))
-    (arg-interactive (nth 5 args)))
-    (if arg-interactive
-    (let ((ol (make-overlay 1 1)))
-      (overlay-put ol 'face 'secondary-selection) ;; could be customizable
-      (unwind-protect
-          (let (continue
-            (deleted-lines 0))
-        (catch :quit
-          (advice-add 'delete-region
-                  :around
-                  (lambda (delete-region-original start end)
-                (if continue
-                    (funcall delete-region-original start end)
-                  (recenter)
-                  (move-overlay ol start end)
-                  (cl-case  (let (mark-active) (read-key "Delete line? ([y]es, [n]ext, [!] all, [q]uit, any other key is equivalent to next):"))
-                    (?y
-                     (funcall delete-region-original start end)
-                     (setq deleted-lines (1+ deleted-lines)))
-                    (?!
-                     (setq continue t)
-                     (funcall delete-region-original start end)
-                     (setq deleted-lines (1+ deleted-lines)))
-                    (?q
-                     (throw :quit nil))))
-                (when reverse (goto-char start)))
-                  '((name . interactive)))
-          (apply oldfun args))
-        (message "Deleted %d %sduplicate line%s%s"
-             deleted-lines
-             (if adjacent "adjacent " "")
-             (if (= deleted-lines 1) "" "s")
-             (if reverse " backward" "")))
-        (advice-remove 'delete-region 'interactive))
-      (delete-overlay ol))
-      (apply oldfun args) ;; non-interactive case
-      )))
-
-(advice-add 'delete-duplicate-lines :around 
-        #'delete-duplicate-lines-interactive)
-
-(load-library "sort.el") ;; Somehow `delete-region` is replaced in "sort.elc". Therefore load the source version again.
-
-(defun delete-duplicate-lines-keep-blanks-interactive ()
-  (interactive)
-  (delete-duplicate-lines (region-beginning) (region-end) nil nil t t)) 
+#+BEGIN_SRC emacs-lisp 
+(defun delete-duplicate-lines-keep-blanks ()
+ (interactive)
+ (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
 #+END_SRC
 
 * my/delete-duplicate-lines
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my/update-lines (bunches pos keep)
   (cl-loop with dec = (if keep 0 1)
            for line being the hash-key of bunches
@@ -6564,7 +6533,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
                                  (otherwise (setf continue nil)))
                                (my/update-lines bunches pos continue))))
     (delete-overlay selection))) 
-#+END_SRC
+#+END_EXAMPLE 
 
 
 * recenter top bottom
@@ -6672,25 +6641,7 @@ Available leader keybindings
 #+END_SRC
 
 
-* epub-mode
-define a minor mode epub-mode
 
-SPC is "wrap region in block quote tag"
-
-#+BEGIN_SRC emacs-lisp
-(defun epub-mode ()
-  (interactive)
-  (org-mode)
-  (setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
-  )
-#+END_SRC
-
-* inline tasks
-#+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task) 
-#+END_SRC
 
 
 * rifle
@@ -6729,24 +6680,9 @@ SPC is "wrap region in block quote tag"
 
 #+END_EXAMPLE 
 
-* html reply - doesn't work yet 
-#+BEGIN_SRC emacs-lisp
-(defun org-mime-replace-multy-gt ()
-(interactive)
-(beginning-of-buffer)
-(while (re-search-forward "\\(\\(^&gt;\\( .*\\)?\n\\)+\\)" nil t)
-(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n"
-(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
-"</div>")))) 
+* navigation 
 
-(add-hook 'org-mime-html-hook
-(lambda ()
-(org-mime-replace-multy-gt))) 
-#+END_SRC 
-
-
-
-* up by degrees
+** up by degrees
 #+BEGIN_SRC emacs-lisp
 (defun up-by-degrees ()
  (interactive)
@@ -6763,6 +6699,16 @@ SPC is "wrap region in block quote tag"
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
 ;; any line that ends with a colon 
 
+
+
+* multiple-cursors-mode-map
+#+BEGIN_SRC emacs-lisp 
+ (define-key mc/keymap (kbd ".") 'insert-period) 
+ (define-key mc/keymap (kbd ",") 'insert-comma) 
+ (define-key mc/keymap (kbd "SPC") 'insert-space) 
+#+END_SRC
+
+* games / fun 
 
 
 * zone
@@ -6795,10 +6741,29 @@ SPC is "wrap region in block quote tag"
 #+END_SRC
 
 
+* not in use 
 
-* multiple-cursors-mode-map
-#+BEGIN_SRC emacs-lisp 
- (define-key mc/keymap (kbd ".") 'insert-period) 
- (define-key mc/keymap (kbd ",") 'insert-comma) 
- (define-key mc/keymap (kbd "SPC") 'insert-space) 
+** deft-turbo
+
+ #+BEGIN_EXAMPLE emacs-lisp 
+(require 'deft)
+(setq deft-extensions '("org" "md" "txt"))
+(setq deft-default-extension "org")
+(setq deft-directory "~/nd/")
+(setq deft-use-filename-as-title t) 
+ #+END_EXAMPLE
+** epub-mode
+define a minor mode epub-mode
+
+SPC is "wrap region in block quote tag"
+
+#+BEGIN_SRC emacs-lisp
+(defun epub-mode ()
+ (interactive)
+ (org-mode)
+ (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+ )
 #+END_SRC
+
