@@ -323,7 +323,7 @@
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-j p s") 'org-pomodoro)
+(define-key key-minor-mode-map (kbd "s-j p s") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 

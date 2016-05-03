@@ -826,10 +826,17 @@
 
 
 
-(add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
-(add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
-(add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
+;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
+;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
+;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
+;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
+;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
+
+(defun pomodoro-start-jay ()
+  (interactive)
+(org-todo 'done)
+(org-pomodoro)
+  )
 
 ;; (require 'reveal-in-finder)
 
@@ -4592,8 +4599,8 @@ minibuffer."
   )
 
 (defun delete-duplicate-lines-keep-blanks ()
-  (interactive)
-  (delete-duplicate-lines (region-beginning) (region-end) nil nil t t))
+ (interactive)
+ (delete-duplicate-lines (region-beginning) (region-end) nil nil t))
 
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom)))

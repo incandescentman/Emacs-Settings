@@ -1315,10 +1315,17 @@ when replying, look kind of like gmail
 
 
 
-(add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
-(add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
-(add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
+;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
+;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
+;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
+;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
+;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
+
+(defun pomodoro-start-jay ()
+  (interactive)
+(org-todo 'done)
+(org-pomodoro)
+  )
 
 #+END_SRC
 
