@@ -299,9 +299,13 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
+
+(define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
@@ -323,7 +327,7 @@
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-j p s") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
@@ -1611,7 +1615,7 @@ password: %s" userid password))
 (org-forward-sentence 1)
 (jay/right-char)
 )
-(define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
 
 (defun downcase-sentence ()
   (interactive)

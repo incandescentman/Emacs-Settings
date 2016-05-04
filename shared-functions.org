@@ -571,6 +571,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
+        (sequence "HED" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
@@ -1323,9 +1324,10 @@ when replying, look kind of like gmail
 
 (defun pomodoro-start-jay ()
   (interactive)
-(org-todo 'done)
+(org-todo 'done) 
+(previous-line)
 (org-pomodoro)
-  )
+)
 
 #+END_SRC
 
@@ -6034,6 +6036,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 (looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 
 (looking-back "vs.[ ]*") 
+(looking-back "U.K.[ ]*") 
 (looking-back "vs.[ ]*") 
 )
     (call-interactively 'downcase-word); then

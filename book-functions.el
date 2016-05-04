@@ -139,7 +139,7 @@ emacs-settings)))
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
 (find-file "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/bias.txt")
-(find-file "/Users/jay/Dropbox/writing/book/feb-18/00-the-pervy-professor-effect---an-intro-to-love-biases.txt")
+;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/00-the-pervy-professor-effect---an-intro-to-love-biases.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/bias-to-categorize.txt")
 
 ;; (other-window 1)

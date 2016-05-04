@@ -322,6 +322,7 @@
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
+        (sequence "HED" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))
@@ -834,9 +835,10 @@
 
 (defun pomodoro-start-jay ()
   (interactive)
-(org-todo 'done)
+(org-todo 'done) 
+(previous-line)
 (org-pomodoro)
-  )
+)
 
 ;; (require 'reveal-in-finder)
 
@@ -4317,6 +4319,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 (looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 
 (looking-back "vs.[ ]*") 
+(looking-back "U.K.[ ]*") 
 (looking-back "vs.[ ]*") 
 )
     (call-interactively 'downcase-word); then

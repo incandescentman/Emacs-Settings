@@ -433,9 +433,13 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
+
+(define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
@@ -457,7 +461,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-j p s") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
@@ -2934,7 +2938,7 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 (org-forward-sentence 1)
 (jay/right-char)
 )
-(define-key key-minor-mode-map (kbd "M-C") 'capitalize-sentence)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
 
 #+END_SRC
 
