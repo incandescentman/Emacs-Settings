@@ -529,7 +529,10 @@
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
-
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "s-_") 'avy-pop-mark)
 ;; use OSX standard keybinding for "Redo"
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
 
@@ -1530,6 +1533,8 @@ password: %s" userid password))
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
+       (looking-at "[\n\t ]*\\[fn")
+       (looking-at "[\n\t ]*)$")
        (looking-at
         (concat
          "\\("

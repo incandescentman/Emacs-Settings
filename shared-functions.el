@@ -4285,12 +4285,12 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 ;; define list-title face 
 (defface list-title-face
-  '((t (:foreground "red" ::weight bold)))
+  '((t (:foreground "red" :weight bold)))
   "fontify list titles") 
 
 ;; define heading-title face 
 (defface heading-title-face
- '((t (:foreground "red" ::weight bold)))
+ '((t (:foreground "red" :weight bold)))
  "fontify heading titles") 
 
 
@@ -4299,7 +4299,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 ;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
                           ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
                           ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line 
-                          ("^\\*+[ ]*[A-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
+;; ("^\\*+[ ]*[a-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
                           )
                         )
 
