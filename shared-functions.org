@@ -1305,8 +1305,8 @@ when replying, look kind of like gmail
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
 (setq org-pomodoro-length 25)
-(setq org-pomodoro-short-break-length 1) 
-(setq org-pomodoro-long-break-length 1) 
+(setq org-pomodoro-short-break-length 0) 
+(setq org-pomodoro-long-break-length 0) 
 ;; (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
@@ -1515,9 +1515,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(osx-browse-prefer-browser "com.google.Chrome")
  '(osx-browse-prefer-new-window t)
 '(reb-re-syntax (quote string))
- '(recentf-max-menu-items 100)
- '(recentf-max-saved-items 999) 
- '(smex-prompt-string "I love you. ")
+'(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
 '(tramp-default-method "ssh")
@@ -2098,10 +2096,15 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** recentf
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
+(setq recentf-max-menu-items 100)
+(setq recentf-max-saved-items 999) 
+
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "message")
+(add-to-list 'recentf-exclude "/var/") 
+(add-to-list 'recentf-exclude "persp-auto") 
 (add-to-list 'recentf-exclude ".tex\\")
 (add-to-list 'recentf-exclude "recentf")
 (add-to-list 'recentf-exclude ".html")

@@ -106,7 +106,7 @@
 
 ;; (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store\\|\\.doc$\\|\\.docx$\\|\\.xlsx$\\|\\.ini$\\|\\.fsLockFile$\\|Icon*")
 
-(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon*\\|\\*html")
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon*\\|\\*.html")
 
 ;; Enable toggling of uninteresting files.
 (setq dired-omit-mode t)
@@ -299,7 +299,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
-
+(define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
 (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
