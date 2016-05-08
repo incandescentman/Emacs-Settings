@@ -2571,11 +2571,11 @@ A useful function: remove a hyperlink but leave the link description:
 
 
 
-
 (defun my-org-files-list ()
- (mapcar (lambda (buffer)
-      (buffer-file-name buffer))
-     (org-buffer-list 'files t))) 
+ (delq nil
+  (mapcar (lambda (buffer)
+   (buffer-file-name buffer))
+   (org-buffer-list 'files t)))) 
 
 (setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
 

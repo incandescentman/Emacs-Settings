@@ -299,6 +299,9 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
+(define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 ;; (global-set-key (kbd "C-c m") 'compose-mail)

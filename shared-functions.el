@@ -1795,11 +1795,11 @@ Also converts full stops to commas."
 
 
 
-
 (defun my-org-files-list ()
- (mapcar (lambda (buffer)
-      (buffer-file-name buffer))
-     (org-buffer-list 'files t))) 
+ (delq nil
+  (mapcar (lambda (buffer)
+   (buffer-file-name buffer))
+   (org-buffer-list 'files t)))) 
 
 (setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
 
