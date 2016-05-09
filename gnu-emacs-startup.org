@@ -436,6 +436,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
 
+(define-key org-mode-map (kbd "C-c e") 'eval-subtree)
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
@@ -565,7 +567,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-0") 'widen)
 (define-key key-minor-mode-map (kbd "s-W") 'widen)
-(define-key key-minor-mode-map (kbd "C-c e") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
 (define-key key-minor-mode-map (kbd "C-9") 'goto-last-change-reverse) ; super useful when editing
