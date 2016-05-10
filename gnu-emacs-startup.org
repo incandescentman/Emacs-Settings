@@ -3050,7 +3050,7 @@ s-N
 s-:
 s-. searchlink 
 (define-key key-minor-mode-map (kbd "C-;") ')
-
+m-,
 s-i
 
 

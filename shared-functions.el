@@ -4729,3 +4729,44 @@ minibuffer."
  (eval-buffer)
  (org-edit-src-exit)
  )
+
+;; Utility functions:
+
+(defun sensible-defaults/comment-or-uncomment-region-or-line ()
+ "Comments or uncomments the region or the current line if there's no active region."
+ (interactive)
+ (let (beg end)
+  (if (region-active-p)
+    (setq beg (region-beginning) end (region-end))
+   (setq beg (line-beginning-position) end (line-end-position)))
+  (comment-or-uncomment-region beg end)))
+
+(global-set-key (kbd "M-;")
+         'sensible-defaults/comment-or-uncomment-region-or-line)
+
+
+(setq gc-cons-threshold 20000000)
+(setq vc-follow-symlinks t) 
+
+"When saving a file that starts with `#!', make it executable."
+ (add-hook 'after-save-hook
+      'executable-make-buffer-file-executable-if-script-p)
+
+(defun my-org-inline-css-hook (exporter)
+ "Insert custom inline css"
+ (when (eq exporter 'html)
+  (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
+      (path (concat dir "style.css"))
+      (homestyle (or (null dir) (null (file-exists-p path))))
+      (final (if homestyle "/Users/jay/Dropbox/web-design/custom-css/email.css" path))) ;; <- set your own style file path
+   (setq org-html-head-include-default-style nil)
+   (setq org-html-head (concat
+              "<style type=\"text/css\">\n"
+              "<!--/*--><![CDATA[/*><!--*/\n"
+              (with-temp-buffer
+               (insert-file-contents final)
+               (buffer-string))
+              "/*]]>*/-->\n"
+              "</style>\n")))))
+
+(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)

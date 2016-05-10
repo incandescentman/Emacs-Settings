@@ -303,13 +303,15 @@ The below works!!!
 
 
 * regex
+#+BEGIN_EXAMPLE
 [:digit:] a digit, same as [0-9]
 [:alpha:] a letter (an alphabetic character)
  [:alnum:] a letter or adigit (an alphanumeric character ()
  [:upper:] a letter in uppercase
- [:space:] a whitespace character, as defined by the syntax table
+ [[:space:]]+ a whitespace character, as defined by the syntax table
 [[:digit:]+] Any digit 
 
+#+END_EXAMPLE
 
 
 '[:ascii:]'
