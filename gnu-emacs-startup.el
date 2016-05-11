@@ -409,11 +409,11 @@
 (define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
+(define-key projectile-mode-map (kbd "s-o") nil) 
 
-(define-key org-mode-map (kbd "s-o") 'uo-byword-file) 
-(define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
-;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
-;; (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
+(define-key dired-mode-map (kbd "s-:") 'reveal-in-finder)
+(define-key key-minor-mode-map (kbd "s-:") 'reveal-in-finder)
+(define-key org-mode-map (kbd "s-O") 'uo-byword-file)
 
 
 ;; pop mark

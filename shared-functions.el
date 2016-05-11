@@ -2044,7 +2044,7 @@ Including indent-buffer, which should not be called automatically on save."
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 
 (define-hyper-key "h" 'replace-string)
-(define-hyper-key "o" 'projectile-find-file)
+
 
 (define-hyper-key "m" 'mc/mark-all-like-this-dwim)
 

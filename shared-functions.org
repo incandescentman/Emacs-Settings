@@ -2918,7 +2918,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 *** mkhyper - shared Aquamacs / GNU Emacs keybindings:
 #+BEGIN_SRC emacs-lisp
 (define-hyper-key "h" 'replace-string)
-(define-hyper-key "o" 'projectile-find-file)
+
 
 (define-hyper-key "m" 'mc/mark-all-like-this-dwim)
 
