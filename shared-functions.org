@@ -2954,7 +2954,7 @@ Key bindings I don't use much and should remember to learn:
 (define-hyper-key "7" 'point-stack-forward-stack-pop)
 (define-hyper-key "8" 'search-open-buffers)
 (define-hyper-key "B" 'clone-indirect-buffer-other-window)
-(define-hyper-key "o" 'eval-buffer)
+;; (define-hyper-key "o" 'eval-buffer)
 (define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-hyper-key "(" 'org-velocity)
 (define-hyper-key "{" 'path-copy-full-path-to-clipboard)

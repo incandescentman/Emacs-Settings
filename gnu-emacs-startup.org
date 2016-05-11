@@ -433,6 +433,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+(define-key key-minor-mode-map (kbd "C-;") 'helm-resume) 
 (define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
 
@@ -542,14 +544,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
-
+(define-key org-mode-map (kbd "s-o") 'uo-byword-file) 
 (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
-(define-key org-mode-map (kbd "s-O") 'uo-byword-file)
+;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
 ;; (define-key key-minor-mode-map (kbd "s-O") 'reveal-in-finder)
-
-
-(define-key dired-mode-map (kbd "s-o") 'projectile-find-file)
-(define-key key-minor-mode-map (kbd "s-o") 'projectile-find-file)
 
 
 ;; pop mark
@@ -1572,7 +1570,7 @@ pkg2:package1==intro.org::#install-section
 
 pkg2:package1==intro.org::intro-target
 
-They all work! That works for packages installed via the package manager. However, when I try this with my custom installed org-mode, it does not work. If I run (describe-package 'org) I see that org is a build in package, and that there is an alternate version available. It does not point to my org-installation.
+They all work! That works for packages installed via the package manager. However, when I try this with my custom installed org-mode, it does not work. If I run (describe-package 'org) I see that org is a build in package, and that there is an alternate version avalable. It does not point to my org-installation.
 
 pkg2:org==doc/library-of-babel.org
 
@@ -3049,8 +3047,9 @@ s-P
 s-N
 s-:
 s-. searchlink 
-(define-key key-minor-mode-map (kbd "C-;") ')
+
 m-,
+
 s-i
 
 
