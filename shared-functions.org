@@ -1049,8 +1049,19 @@ Aquamacs:
 #+END_SRC
 
 *** Uniqify buffers
-Open new buffers without prompting me for a filename global counter to ensure
-every new buffer will be unique:
+#+BEGIN_SRC emacs-lisp
+;; meaningful names for buffers with the same name
+;; from prelude
+;; http://bit.ly/1Woabxz
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers 
+#+END_SRC
+
+*** Uniqify new buffers
+Open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
 #+BEGIN_SRC emacs-lisp
 (defvar new-buffer-count 0)
 

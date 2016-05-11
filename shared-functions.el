@@ -658,6 +658,15 @@
 (global-set-key [(A-right)] 'buffer-stack-down)
 (global-set-key [(A-left)] 'buffer-stack-up)
 
+;; meaningful names for buffers with the same name
+;; from prelude
+;; http://bit.ly/1Woabxz
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
 (defvar new-buffer-count 0)
 
 (defun new-buffer ()
