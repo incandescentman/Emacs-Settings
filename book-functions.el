@@ -126,18 +126,28 @@ emacs-settings)))
   (dired "~/b/12-mistakes"))
 
 
+(defun book-search (args)
+  (interactive "P")
+(helm-org-agenda-files-headings)
+  )
+
+(defun current-buffers-search (args)
+  (interactive "P")
+(helm-multi-swoop-org)
+  )
 
 
 (defun book-load-current ()
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "disciplined.org")
+  (kill-buffer "warm.org")
   (error nil))
 
+(org-cycle-agenda-files)
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/intro.txt")
-(find-file "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt")
+;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/bias.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/00-the-pervy-professor-effect---an-intro-to-love-biases.txt")
 ;; (find-file "/Users/jay/Dropbox/writing/book/feb-18/bias-to-categorize.txt")

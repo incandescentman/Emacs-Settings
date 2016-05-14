@@ -1,4 +1,23 @@
 
+** use-package
+
+config blocks run AFTER the package is loaded
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+:config
+(projectile-global-mode)
+
+:bind
+("s-l". whatever) 
+)
+
+#+END_SRC
+
+this means it only runs the config block AFTER projectile is loaded 
+
+bind keys
+
 * Spacemacs
 ** Search for a package: 
 #+BEGIN_EXAMPLE

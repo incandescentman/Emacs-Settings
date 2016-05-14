@@ -356,7 +356,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 ;; (setq org-export-html-style-include-default t)
  (setq org-export-latex-date-format "%d %B %Y.")
  (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
- (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+;; (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
  (setq org-export-with-clocks t)
  (setq org-export-with-drawers t)
  (setq org-export-with-section-numbers nil) 
@@ -458,7 +458,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 ;;      ("=" "\\verb" t)
 ;;      ("~" "\\verb" t))) t)
 ;;  '(org-export-latex-image-default-option "width=20.5cm")
-;;  '(org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")) t)
 
 
 *** Change section numbering depending on what export format I use
@@ -1339,6 +1338,7 @@ when replying, look kind of like gmail
 (org-todo 'done) 
 (previous-line)
 (org-pomodoro)
+(work-on-book)
 )
 
 #+END_SRC
@@ -2965,7 +2965,8 @@ Key bindings I don't use much and should remember to learn:
 
 ;; (define-hyper-key "j a" 'org-agenda)
 (define-hyper-key "j j" 'helm-imenu-anywhere)
-(define-hyper-key ";" 'ido-goto-symbol)
+;; (define-hyper-key ";" 'ido-goto-symbol)
+;; (define-hyper-key ";" 'helm-resume)
 (define-hyper-key "D" 'diredp-dired-recent-dirs)
 
 #+END_SRC
@@ -6626,8 +6627,11 @@ Available leader keybindings
 "c[" 'load-shared-functions
 "c]" 'load-gnu-startup
 "gb" 'gist-buffer-to-pasteboard
+"]" 'insert-right-bracket 
 ) 
 #+END_SRC
+
+
 
 * zoom and menu bar mode
 #+BEGIN_SRC emacs-lisp
@@ -6858,3 +6862,38 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook) 
 #+END_SRC
+
+
+* fix latex verbatim 
+You can use a filter function that will replace default "verbatim" with
+whatever you want.
+
+Here's my fancyvrb filter for when such a place is created.
+
+Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
+#+BEGIN_SRC emacs-lisp
+
+ (defun org-latex-filter-fancyvrb (text backend info)
+  "Convert begin/end{verbatim} to begin/end{Verbatim}.
+ Allows use of the fancyvrb latex package."
+  (when 
+    (org-export-derived-backend-p backend 'latex) 
+  (replace-regexp-in-string
+   "\\\\\\(begin\\|end\\){verbatim}"
+   "\\\\\\1{quote}"
+   text)))
+
+ (add-to-list 'org-export-filter-final-output-functions
+     'org-latex-filter-fancyvrb) 
+#+END_SRC
+
+
+
+* insert right-bracket
+#+BEGIN_SRC emacs-lisp
+(defun insert-right-bracket ()
+  (interactive)
+  (insert "\]")
+  )
+#+END_SRC
+
