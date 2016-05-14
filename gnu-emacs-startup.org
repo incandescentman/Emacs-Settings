@@ -3055,7 +3055,7 @@ s-P
 s-N
 s-:
 s-. searchlink 
-
+s-u
 m-,
 
 s-i

@@ -6897,3 +6897,9 @@ Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html
   )
 #+END_SRC
 
+* selected
+#+BEGIN_SRC emacs-lisp
+(require 'selected)
+
+(define-key selected-keymap (kbd "s-u") 'upcase-region)
+#+END_SRC
