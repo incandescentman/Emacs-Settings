@@ -4801,3 +4801,7 @@ Allows use of the fancyvrb latex package."
   (interactive)
   (insert "\]")
   )
+
+(require 'selected)
+
+(define-key selected-keymap (kbd "s-u") 'upcase-region)
