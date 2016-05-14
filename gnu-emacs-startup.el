@@ -308,7 +308,7 @@
 (define-key key-minor-mode-map (kbd "M-s c") 'current-buffers-search)
 
 
-(define-key key-minor-mode-map (kbd "C-;") 'helm-resume) 
+(define-key key-minor-mode-map (kbd "s-;") 'helm-resume) 
 (define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
 

@@ -832,6 +832,8 @@
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
 ;; (setq org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
+
+(setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
 ;; (setq org-pomodoro-sound "~/sounds/large-applause.mp3")
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
 
@@ -1415,7 +1417,7 @@ margin-bottom: 1em;
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (setq recentf-max-menu-items 100)
-(setq recentf-max-saved-items 999) 
+(setq recentf-max-saved-items 100) 
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
