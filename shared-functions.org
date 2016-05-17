@@ -570,6 +570,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
+        (sequence "TIP" "|")
         (sequence "NOTES RESEARCH" "WRITING" "|")
         (sequence "HED" "|")
         (sequence "IF" "THEN" "|")
@@ -1318,13 +1319,12 @@ when replying, look kind of like gmail
 (setq org-pomodoro-length 25)
 (setq org-pomodoro-short-break-length 0) 
 (setq org-pomodoro-long-break-length 0) 
-;; (setq org-pomodoro-long-break-sound "~/sounds/tng-computer-programcomplete.mp3")
+(setq org-pomodoro-long-break-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
-;; (setq org-pomodoro-short-break-sound "~/sounds/tng-picard-engage.mp3")
+(setq org-pomodoro-short-break-sound ""/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3"")
 
 (setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
-;; (setq org-pomodoro-sound "~/sounds/large-applause.mp3")
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
 
 
@@ -2595,7 +2595,7 @@ A useful function: remove a hyperlink but leave the link description:
    (buffer-file-name buffer))
    (org-buffer-list 'files t)))) 
 
-(setq org-refile-targets '((my-org-files-list :maxlevel . 3))) 
+(setq org-refile-targets '((my-org-files-list :maxlevel . 4))) 
 
 
 
@@ -6905,3 +6905,25 @@ Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html
 
 (define-key selected-keymap (kbd "s-u") 'upcase-region)
 #+END_SRC
+
+
+(define-key key-minor-mode-map (kbd "<s-return>") 'smart-return)
+
+
+
+* repeat-last-command
+#+BEGIN_SRC emacs-lisp
+(defun repeat-last-command ()
+"repeats the last command called via M-x"
+(interactive)
+(let ((history extended-command-history)
+cmd)
+;; remove any occurence of this-command at the head of `history'.
+(while (string= this-command (setq cmd (pop history))))
+(message "Running cmd: %s" cmd)
+(call-interactively (intern cmd)))) 
+#+END_SRC
+
+
+* quid pro quo
+Auto italicize 

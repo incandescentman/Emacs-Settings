@@ -35,12 +35,12 @@
 
 (require 'key-chord)
 
-(key-chord-define-global "jj" 'helm-imenu)
+(key-chord-define-global "jj" 'helm-multi-swoop-org)
 ;; (key-chord-define-global "jj" 'imenu)
 
 
-(key-chord-define-global "kk" 'helm-multi-swoop-org) ; 
-(key-chord-define-global "KK" 'helm-org-in-buffer-headings) ; doesn't work anymore
+(key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; 
+(key-chord-define-global "KK" 'helm-imenu) ; 
 
 ;; (key-chord-define-global "jk" 'ace-jump-line-mode)
 
@@ -51,7 +51,7 @@
 ;; (key-chord-define-global "JJ" 'prelude-switch-to-previous-buffer)
 (key-chord-define-global "UU" 'undo-tree-visualize)
 (key-chord-define-global "xx" 'helm-M-x)
-(key-chord-define-global "XX" 'M-x)
+(key-chord-define-global "XX" 'repeat-last-command)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
 (key-chord-define-global "ww" 'helm-swoop)
 (key-chord-define-global "WW" 'widen)
