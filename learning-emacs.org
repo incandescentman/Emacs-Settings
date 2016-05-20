@@ -467,3 +467,23 @@ Note that '\' also has special meaning in the read syntax of Lisp strings (see S
 ("anydigit" "[[:digit:]+]" nil 1)
 
 
+
+* lisp cookbook
+
+This worked:
+#+BEGIN_SRC emacs-lisp 
+ (while (re-search-forward "Tip:" nil t)
+(goto-char (match-end 0))
+(endless/capitalize)
+) 
+#+END_SRC
+
+As did this, same thing.
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "•" nil t)
+(goto-char (match-beginning 0))
+(kill-word-correctly-and-capitalize)
+(end-of-line)
+(delete-backward-char 1)
+) 
+#+END_SRC

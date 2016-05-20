@@ -6927,3 +6927,40 @@ cmd)
 
 * quid pro quo
 Auto italicize 
+
+
+* Make Messages Buffer modifiable in Emacs 24.4
+Chen Bin
+
+Insert below code into the beginning of ~/.emacs because any part of .emacs may create Messages Buffer instance.
+
+#+BEGIN_SRC emacs-lisp
+(when (boundp 'messages-buffer-mode-hook)
+ (defun messages-buffer-mode-hook-setup ()
+ (read-only-mode -1))
+ (add-hook 'messages-buffer-mode-hook 'messages-buffer-mode-hook-setup)) 
+#+END_SRC
+
+* volatile
+#+BEGIN_SRC emacs-lisp
+
+(use-package volatile-highlights
+ :config
+ (volatile-highlights-mode t)) 
+#+END_SRC
+
+
+* org-copy-line
+#+BEGIN_SRC emacs-lisp
+(defun org-select-line ()
+ "Select the current line"
+ (interactive)
+ (org-beginning-of-line) ; move to end of line
+ (set-mark (line-end-position)))
+
+(defun org-copy-line ()
+ (interactive)
+(org-select-line)
+(pasteboard-copy)
+(set-mark nil)) 
+#+END_SRC
