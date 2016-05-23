@@ -1660,7 +1660,7 @@ I don't know if there is a more clever way to create these links. There are two 
 #+END_EXAMPLE
 
 ** Send email to a list of users
-I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapcar to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
+I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapc to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
 
 #+BEGIN_SRC emacs-lisp
 (defun send-mail (userid password)
@@ -1698,12 +1698,12 @@ We can pass that to a source block as a list of lists that will look like this:
  ((user1 trustme99) (user2 foolme99) (user3 blameme99))
 #+END_EXAMPLE
 
-Then, we can use a mapcar to process each element. Here I use a dummy function with two arguments. If I substitute the function above, each of these users would get an email.
+Then, we can use a mapc to process each element. Here I use a dummy function with two arguments. If I substitute the function above, each of these users would get an email.
 
 #+BEGIN_SRC emacs-lisp :var data=users
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
-;; (mapcar (lambda (x) (fun (car x) (cadr x))) data)
+;; (mapc (lambda (x) (fun (car x) (cadr x))) data)
 #+END_SRC
 
 #+RESULTS:
@@ -1719,7 +1719,7 @@ I am not sure that is the best way to get the first and second elements in the l
 #+BEGIN_SRC emacs-lisp :var data=users
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
-;; (mapcar (lambda (x) (fun (nth 0 x) (nth 1 x))) data)
+;; (mapc (lambda (x) (fun (nth 0 x) (nth 1 x))) data)
 #+END_SRC
 
 #+RESULTS:
@@ -2214,7 +2214,7 @@ Oleh
     (defun helm-org-wiki-files ()
       "Return .org files in `helm-org-wiki-directory'."
       (let ((default-directory helm-org-wiki-directory))
-        (mapcar #'file-name-sans-extension
+        (mapc #'file-name-sans-extension
                 (file-expand-wildcards "*.txt"))))
     (defvar helm-source-org-wiki
       `((name . "Projects")
@@ -2988,7 +2988,7 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 * disable color themes
 #+BEGIN_SRC emacs-lisp
 (defadvice load-theme (before theme-dont-propagate activate)
- (mapcar #'disable-theme custom-enabled-themes))
+ (mapc #'disable-theme custom-enabled-themes))
 #+END_SRC
 
 * toggle item or hyphenation

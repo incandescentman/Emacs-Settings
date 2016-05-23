@@ -2108,6 +2108,8 @@ Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
+(setq recentf-save-file-modes nil)
+
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
@@ -6965,11 +6967,6 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
 (set-mark nil)) 
 #+END_SRC
 
-* org-eww 
-#+BEGIN_SRC emacs-lisp
-(require 'org-eww)
-(add-hook 'org-mode-hook 'org-eww-mode) 
-#+END_SRC
 
 * fastdef
 #+BEGIN_SRC emacs-lisp

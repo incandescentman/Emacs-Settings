@@ -1418,6 +1418,8 @@ margin-bottom: 1em;
 
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
+(setq recentf-save-file-modes nil)
+
 
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
@@ -4838,9 +4840,6 @@ cmd)
 (org-select-line)
 (pasteboard-copy)
 (set-mark nil))
-
-(require 'org-eww)
-(add-hook 'org-mode-hook 'org-eww-mode)
 
 (autoload 'fastdef-insert "fastdef" nil t)
 (autoload 'fastdef-insert-from-history "fastdef" nil t)
