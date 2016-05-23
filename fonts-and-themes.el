@@ -109,8 +109,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 `(org-tag ((t (:bold t :weight bold :background "#3F3F3F"))))
 
 `(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F")))) 
-
-
 )
 
 (org-mode)
@@ -287,9 +285,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 ;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.1))))
 '(italic ((t (:foreground "#1F8DD6" :family "Garamond" :slant italic :height 1.3))))
-  '(org-link ((t (:underline nil)))))
-
-
+  '(org-link ((t (:underline nil))))) 
   )
 
 (defun gfont ()
@@ -386,3 +382,20 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (org-mode)
 (text-scale-increase 2)
 )
+
+
+
+
+
+(defun spacemacs-light ()
+ (interactive)
+(load-theme 'spacemacs-light)
+;; (load-file "/Users/jay/gnulisp/jay-custom-color-themes/leuven-jay.el")
+ (incarnadine-cursor)
+ (org-mode) 
+(custom-set-faces
+;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.1))))
+'(italic ((t (:foreground "#1F8DD6" :family "Garamond" :slant italic :height 1.3))))
+ '(org-link ((t (:underline nil))))) 
+ ) 
