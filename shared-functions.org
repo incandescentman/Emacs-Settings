@@ -6967,12 +6967,12 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
 
 * org-eww 
 #+BEGIN_SRC emacs-lisp
-;; (require 'org-eww)
-;; (add-hook 'org-mode-hook 'org-eww-mode) 
+(require 'org-eww)
+(add-hook 'org-mode-hook 'org-eww-mode) 
 #+END_SRC
 
 * fastdef
 #+BEGIN_SRC emacs-lisp
-;; (autoload 'fastdef-insert "fastdef" nil t)
-;; (autoload 'fastdef-insert-from-history "fastdef" nil t) 
+(autoload 'fastdef-insert "fastdef" nil t)
+(autoload 'fastdef-insert-from-history "fastdef" nil t) 
 #+END_SRC

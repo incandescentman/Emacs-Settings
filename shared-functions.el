@@ -4839,8 +4839,8 @@ cmd)
 (pasteboard-copy)
 (set-mark nil))
 
-;; (require 'org-eww)
-;; (add-hook 'org-mode-hook 'org-eww-mode)
+(require 'org-eww)
+(add-hook 'org-mode-hook 'org-eww-mode)
 
-;; (autoload 'fastdef-insert "fastdef" nil t)
-;; (autoload 'fastdef-insert-from-history "fastdef" nil t)
+(autoload 'fastdef-insert "fastdef" nil t)
+(autoload 'fastdef-insert-from-history "fastdef" nil t)
