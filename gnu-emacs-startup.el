@@ -687,7 +687,14 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (unless
       (or
 (looking-back "vs[[:punct:]]+[ ]*") ; don't add extra periods to vs.
+
+(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+
 (looking-back ">") ; don't expand days of the week inside timestamps
+
+
+
+
        )
   (smart-expand))
 (insert "\ ")
