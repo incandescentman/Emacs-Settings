@@ -2371,7 +2371,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 # haven't tried this yet
 
 Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2382,7 +2382,7 @@ Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]]
 
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
-#+END_EXAMPLE 
+#+END_SRC
 
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
