@@ -2074,6 +2074,23 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 #+END_SRC
 
+
+* savefile 
+** file current locations
+#+BEGIN_SRC emacs-lisp
+;; (setq recentf-save-file "~/emacs/.savefile/recentf")
+(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") ; don't know why this doesn't work 
+(setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
+(setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
+#+END_SRC 
+
+** recentf
+#+BEGIN_SRC emacs-lisp
+(setq recentf-max-menu-items 100)
+(setq recentf-max-saved-items 100) 
+(run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit 
+#+END_SRC
+
 * Ignore / Exclude Uninteresting Things
 
 ** buffer-stack ignore uninteresting buffers
@@ -2090,11 +2107,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** recentf-ignore
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
-(setq recentf-max-menu-items 100)
-(setq recentf-max-saved-items 100) 
-(setq recentf-save-file-modes nil)
-
-
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
@@ -3359,10 +3371,6 @@ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and 
 #+END_SRC
 
 
-* Save recentf automatically so recent files are stored even in the case of abnormal exit
-#+BEGIN_SRC emacs-lisp
- (run-with-idle-timer 60 t 'recentf-save-list)
-#+END_SRC
 
 
 * new stuff
@@ -6621,17 +6629,6 @@ Available leader keybindings
   )
 #+END_SRC
 
-
-* savefile
-
-** new current locations
-#+BEGIN_SRC emacs-lisp
-;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
-(setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
-(setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld"
-)
-#+END_SRC 
 
 * org-clock
 #+BEGIN_SRC emacs-lisp
