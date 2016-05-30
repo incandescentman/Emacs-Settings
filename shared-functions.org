@@ -1,16 +1,6 @@
 
 
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
-(setq user-mail-address '("dixit@aya.yale.edu")) 
-
-(define-minor-mode org-config-files-local-mode
-    "Minor mode for editing configuration files in org-mode." 
-    :init-value nil)
-(define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
-(setq abbrev-mode nil) )
-
-You can toggle it in necessary files by setting the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
 
  # Local Variables:
  # org-config-files-local-mode: t
@@ -41,7 +31,7 @@ You can toggle it in necessary files by setting the local variables section at t
   - Emacs version: 24.5.1
   - Use case: I use this file with both GNU Emacs for OSX and for Aquamacs.
 
-* Set up packages
+* packages
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp
@@ -86,12 +76,6 @@ You can toggle it in necessary files by setting the local variables section at t
 (require 'ox-md)
 ; (require 'org-fstree)
 #+END_SRC
-
-* pre config
-#+BEGIN_SRC emacs-lisp
-;; (require 'use-package)
-#+END_SRC
-
 
 * Set up spellcheck 
 ** Spellcheck add word
@@ -1013,7 +997,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 (" " . "")
 ("  " . " ")
 ;; ("- " . "") ; also remove stray spac- es
-;; ("­ ". "") ; also remove stray spac- es
+;; ("­ " . "") ; also remove stray spac- es
 )
                           nil beg end))
 #+END_SRC
@@ -4432,6 +4416,10 @@ Single Capitals as you type."
 ** mu4e 
 *** mu4e setup
  #+BEGIN_SRC emacs-lisp 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+
+(setq user-mail-address '("dixit@aya.yale.edu")) 
+
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
 (require 'smtpmail) 
@@ -6981,3 +6969,15 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
 (setq ispell-extra-args '("-d en_US"))
 
 #+END_SRC
+
+* org-config-files-mode
+#+BEGIN_EXAMPLE emacs-lisp
+(define-minor-mode org-config-files-local-mode
+  "Minor mode for editing configuration files in org-mode." 
+  :init-value nil)
+(define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
+(setq abbrev-mode nil) )
+
+You can toggle it in necessary files by setting the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
+
+#+END_EXAMPLE

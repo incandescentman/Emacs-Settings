@@ -30,8 +30,6 @@
 (require 'ox-md)
 ; (require 'org-fstree)
 
-;; (require 'use-package)
-
 (defun add-word-to-personal-dictionary ()
   (interactive)
   (let ((current-location (point))
@@ -641,7 +639,7 @@
 (" " . "")
 ("  " . " ")
 ;; ("- " . "") ; also remove stray spac- es
-;; ("­ ". "") ; also remove stray spac- es
+;; ("­ " . "") ; also remove stray spac- es
 )
                           nil beg end))
 
@@ -3159,6 +3157,10 @@ Single Capitals as you type."
 
 ;; (global-fasd-mode 1)
 ;; (setq fasd-enable-initial-prompt nil)
+
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+
+(setq user-mail-address '("dixit@aya.yale.edu")) 
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
