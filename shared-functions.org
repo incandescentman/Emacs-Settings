@@ -480,8 +480,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 (global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
 
-** org agenda
-
+** org agenda 
 *** agenda display settings
 
     #+BEGIN_SRC emacs-lisp
@@ -992,6 +991,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 (" - " . "---")
 ("—" . "---")
 (" – " . "---")
+("​" . "")
 ("…" . "...")
 ("• " . "- ")
 (" " . "")
@@ -2079,7 +2079,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** file current locations
 #+BEGIN_SRC emacs-lisp
 ;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") ; don't know why this doesn't work 
+(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 #+END_SRC 
