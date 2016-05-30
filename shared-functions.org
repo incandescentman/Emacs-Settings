@@ -4016,19 +4016,6 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 #+END_SRC
 
-* fix recent-addresses file
-
-
-  #+BEGIN_SRC emacs-lisp
-
-(defun fix-recent-addresses-file ()
-"One sentence summary of what this command do."
-  (interactive)
-  ;; do something …
-  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses")
-  (load "/Users/jay/emacs/prelude/recent-addresses"))
-  #+END_SRC
-
 * find-file tricks
 [[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
 
@@ -6651,7 +6638,8 @@ Available leader keybindings
 
 ** new current locations
 #+BEGIN_SRC emacs-lisp
-(setq recentf-save-file "~/emacs/.savefile/recentf")
+;; (setq recentf-save-file "~/emacs/.savefile/recentf")
+(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld"
 )

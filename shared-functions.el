@@ -2904,13 +2904,6 @@ as the subject."
 (org-do-promote)
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 
-(defun fix-recent-addresses-file ()
-"One sentence summary of what this command do."
-  (interactive)
-  ;; do something …
-  (shell-command "sed -i '' 's/\\\.\\\.\\\.//g' /Users/jay/.emacs.d/recent-addresses")
-  (load "/Users/jay/emacs/prelude/recent-addresses"))
-
 (defun oleh-ido-setup-hook ()
   (define-key ido-file-dir-completion-map "~"
     (lambda ()
@@ -4679,7 +4672,8 @@ minibuffer."
   (text-scale-increase 1)
   )
 
-(setq recentf-save-file "~/emacs/.savefile/recentf")
+;; (setq recentf-save-file "~/emacs/.savefile/recentf")
+(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf")
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld"
 )
