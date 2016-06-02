@@ -371,7 +371,7 @@
 
 (define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
 
-(define-key key-minor-mode-map (kbd "M-q") 'org-refile)
+(define-key key-minor-mode-map (kbd "M-q") 'unfill-region)
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
