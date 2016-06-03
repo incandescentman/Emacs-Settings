@@ -373,6 +373,9 @@
 
 (define-key key-minor-mode-map (kbd "M-q") 'unfill-region)
 
+(define-key key-minor-mode-map (kbd "C-M-]") 'next-subtree-and-narrow)
+(define-key key-minor-mode-map (kbd "C-M-[") 'previous-subtree-and-narrow)
+
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 ;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)

@@ -507,6 +507,9 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-q") 'unfill-region)
 
+(define-key key-minor-mode-map (kbd "C-M-]") 'next-subtree-and-narrow)
+(define-key key-minor-mode-map (kbd "C-M-[") 'previous-subtree-and-narrow)
+
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 ;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
@@ -2336,10 +2339,17 @@ This version kill org-mode headings by 'kill-line'
                        (if kill-punct
                            (match-end 0)
                          (match-beginning 0)))))
+
       (my/fix-space)
       (save-excursion
         (when (my/beginning-of-sentence-p)
-          (capitalize-unless-org-heading))))))
+          (capitalize-unless-org-heading)))
+
+;; below is my own hack to fix the ", , " issue
+(when
+(looking-back ", , ")
+(new-org-delete-backward-char 2) 
+t))))
 
 #+END_EXAMPLE
 
