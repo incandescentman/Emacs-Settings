@@ -35,22 +35,25 @@
 
 (require 'key-chord)
 
-(key-chord-define-global "jj" 'helm-multi-swoop-org)
+(key-chord-define-global "JJ" 'helm-multi-swoop-org)
 ;; (key-chord-define-global "jj" 'imenu)
 
 
-(key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; 
-(key-chord-define-global "KK" 'helm-imenu) ; 
+;; (key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; 
+;; (key-chord-define-global "KK" 'helm-imenu) ; 
+
+(key-chord-define-global "KK" 'helm-org-in-buffer-headings) ;
+
 
 ;; (key-chord-define-global "jk" 'ace-jump-line-mode)
 
-(key-chord-define-global "jk" 'avy-move-line)
+(key-chord-define-global "JK" 'avy-move-line)
 
 
 ;; (key-chord-define-global "jk" 'ace-jump-char-mode)
 ;; (key-chord-define-global "JJ" 'prelude-switch-to-previous-buffer)
 (key-chord-define-global "UU" 'undo-tree-visualize)
-(key-chord-define-global "xx" 'helm-M-x)
+(key-chord-define-global "XX" 'helm-M-x)
 (key-chord-define-global "YY" 'repeat-last-command)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
 (key-chord-define-global "ww" 'helm-swoop)
@@ -63,7 +66,7 @@
 (key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 (key-chord-define-global "FF" 'isearch-forward)
-(key-chord-define-global "hh" 'helm-M-x)
+(key-chord-define-global "HH" 'helm-M-x)
 
 ;; (key-chord-define-global "nm" 'new-email-from-subtree-no-signature)
 

@@ -197,6 +197,8 @@
 (looking-back "\\\\")
 (looking-back "\"")
 (looking-at "\"")
+(looking-back "\"")
+(looking-back "=")
 (looking-at "<")
 (looking-at ">")
 )
@@ -390,6 +392,7 @@
 ;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+(define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
 ;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 ;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
@@ -1557,6 +1560,7 @@ password: %s" userid password))
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
        (looking-at "[\n\t ]*\\[fn")
        (looking-at "[\n\t ]*)$")
+       (looking-at "\"[\n\t ]*$")
        (looking-at
         (concat
          "\\("
