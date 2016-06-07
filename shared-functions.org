@@ -7082,5 +7082,5 @@ You can toggle it in necessary files by setting the local variables section at t
 
 * right command is hyper key
 #+BEGIN_SRC emacs-lisp
-(setq mac-right-command-modifier 'hyper) 
+;; (setq mac-right-command-modifier 'hyper) 
 #+END_SRC

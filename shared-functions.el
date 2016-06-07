@@ -4934,3 +4934,5 @@ cmd)
  (org-previous-visible-heading 1)
  (org-narrow-to-subtree)
  )
+
+;; (setq mac-right-command-modifier 'hyper)
