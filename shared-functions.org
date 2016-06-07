@@ -2907,7 +2907,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
 (defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
 
-(defun define-hyper-key (key fun)
+(defun define-super-key (key fun)
   (cond
    (aquamacs-flag
     (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
@@ -2915,115 +2915,115 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 #+END_SRC
 
-*** mkhyper - shared Aquamacs / GNU Emacs keybindings:
+*** mksuper - shared Aquamacs / GNU Emacs keybindings:
 #+BEGIN_SRC emacs-lisp
-(define-hyper-key "h" 'replace-string)
+(define-super-key "h" 'replace-string)
 
 
-(define-hyper-key "m" 'mc/mark-all-like-this-dwim)
+(define-super-key "m" 'mc/mark-all-like-this-dwim)
 
 
-(define-hyper-key "\\" 'visit-most-recent-file)
+(define-super-key "\\" 'visit-most-recent-file)
 
-;; (define-hyper-key "f" 'isearch-forward)
-(define-hyper-key "F" 'pasteboard-search-for-clipboard-contents) 
-;; (define-hyper-key "R" 'xsteve-ido-choose-from-recentf)
-;; (define-hyper-key "R" 'helm-projectile-recentf)
-;; (define-hyper-key "r" 'helm-mini)
-(define-hyper-key "r" 'ivy-recentf)
-(define-hyper-key "R" 'projectile-find-file)
-(define-hyper-key "t" 'new-buffer)
-(define-hyper-key "T" 'org-new-scratch-buffer)
-(define-hyper-key "g" 'isearch-repeat-forward)
-(define-hyper-key "k" 'ido-kill-buffer)
-(define-hyper-key "K" 'org-cut-subtree)
-(define-hyper-key "d" 'org-todo)
-(define-hyper-key "L" 'org-mac-chrome-insert-frontmost-url)
-(define-hyper-key "S" 'org-mac-skim-insert-page)
-(define-hyper-key "a" 'mark-whole-buffer) ; select all
-(define-hyper-key "w" 'delete-window) ; close
-(define-hyper-key "`" 'other-window)
-(define-hyper-key "s" 'jay/save-some-buffers ) ; save all
+;; (define-super-key "f" 'isearch-forward)
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents) 
+;; (define-super-key "R" 'xsteve-ido-choose-from-recentf)
+;; (define-super-key "R" 'helm-projectile-recentf)
+;; (define-super-key "r" 'helm-mini)
+(define-super-key "r" 'ivy-recentf)
+(define-super-key "R" 'projectile-find-file)
+(define-super-key "t" 'new-buffer)
+(define-super-key "T" 'org-new-scratch-buffer)
+(define-super-key "g" 'isearch-repeat-forward)
+(define-super-key "k" 'ido-kill-buffer)
+(define-super-key "K" 'org-cut-subtree)
+(define-super-key "d" 'org-todo)
+(define-super-key "L" 'org-mac-chrome-insert-frontmost-url)
+(define-super-key "S" 'org-mac-skim-insert-page)
+(define-super-key "a" 'mark-whole-buffer) ; select all
+(define-super-key "w" 'delete-window) ; close
+(define-super-key "`" 'other-window)
+(define-super-key "s" 'jay/save-some-buffers ) ; save all
 #+END_SRC
 
 Key bindings I don't use much and should remember to learn:
 #+BEGIN_SRC emacs-lisp
-(define-hyper-key "4" 'clone-indirect-buffer-other-window)
-(define-hyper-key "5" 'point-stack-push)
-(define-hyper-key "6" 'point-stack-pop)
-(define-hyper-key "7" 'point-stack-forward-stack-pop)
-(define-hyper-key "8" 'search-open-buffers)
-(define-hyper-key "B" 'clone-indirect-buffer-other-window)
-;; (define-hyper-key "o" 'eval-buffer)
-(define-hyper-key "F" 'pasteboard-search-for-clipboard-contents)
-(define-hyper-key "(" 'org-velocity)
-(define-hyper-key "{" 'path-copy-full-path-to-clipboard)
-(define-hyper-key "}" 'path-copy-full-path-to-clipboard)
+(define-super-key "4" 'clone-indirect-buffer-other-window)
+(define-super-key "5" 'point-stack-push)
+(define-super-key "6" 'point-stack-pop)
+(define-super-key "7" 'point-stack-forward-stack-pop)
+(define-super-key "8" 'search-open-buffers)
+(define-super-key "B" 'clone-indirect-buffer-other-window)
+;; (define-super-key "o" 'eval-buffer)
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents)
+(define-super-key "(" 'org-velocity)
+(define-super-key "{" 'path-copy-full-path-to-clipboard)
+(define-super-key "}" 'path-copy-full-path-to-clipboard)
 ;; why not use N and P here? TODO
 
 
 
-;; (define-hyper-key "j a" 'org-agenda)
-(define-hyper-key "j j" 'helm-imenu-anywhere)
-;; (define-hyper-key ";" 'ido-goto-symbol)
-;; (define-hyper-key ";" 'helm-resume)
-(define-hyper-key "D" 'diredp-dired-recent-dirs)
+;; (define-super-key "j a" 'org-agenda)
+(define-super-key "j j" 'helm-imenu-anywhere)
+;; (define-super-key ";" 'ido-goto-symbol)
+;; (define-super-key ";" 'helm-resume)
+(define-super-key "D" 'diredp-dired-recent-dirs)
 
 #+END_SRC
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-hyper-key "j cy" 'cyberpunk-jay)
-(define-hyper-key "j cl" 'cyberpunk-large)
-(define-hyper-key "j zb" 'zenburn)
-(define-hyper-key "j le" 'leuven)
-(define-hyper-key "j ts" 'transparent-serenity)
-(define-hyper-key "j tg" 'top-gun-mode)
-(define-hyper-key "j tn" 'tomorrow-night)
+(define-super-key "j cy" 'cyberpunk-jay)
+(define-super-key "j cl" 'cyberpunk-large)
+(define-super-key "j zb" 'zenburn)
+(define-super-key "j le" 'leuven)
+(define-super-key "j ts" 'transparent-serenity)
+(define-super-key "j tg" 'top-gun-mode)
+(define-super-key "j tn" 'tomorrow-night)
 
-(define-hyper-key "j ma" 'inverse-add-global-abbrev) 
+(define-super-key "j ma" 'inverse-add-global-abbrev) 
 
-(define-hyper-key "j rr" 'replace-regexp) 
-
-
-(define-hyper-key "j cf" 'customize-face) 
-
-(define-hyper-key "j h" 'org-export-dispatch)
+(define-super-key "j rr" 'replace-regexp) 
 
 
+(define-super-key "j cf" 'customize-face) 
+
+(define-super-key "j h" 'org-export-dispatch)
 
 
-(define-hyper-key "j nm" 'notmuch-hello) 
-(define-hyper-key "j mu" 'mu4e)
 
-;; (define-hyper-key "j cl" 'cyberpunk-large)
 
-(define-hyper-key "j dd" 'delete-duplicate-lines-keep-blanks) 
+(define-super-key "j nm" 'notmuch-hello) 
+(define-super-key "j mu" 'mu4e)
 
-(define-hyper-key "j cw" 'cyberpunk-writeroom)
-(define-hyper-key "j wb" 'whiteboard)
-(define-hyper-key "j sl" 'solarized-light)
-(define-hyper-key "j sd" 'solarized-dark)
-(define-hyper-key "j ri" 'ritchie)
-(define-hyper-key "j sp" 'spolsky)
-(define-hyper-key "j wr" 'writeroom-mode)
-(define-hyper-key "j wf" 'workflowy-mode)
-(define-hyper-key "j st" 'small-type)
-(define-hyper-key "j mp" 'morning-pages)
-(define-hyper-key "j rf" 'prelude-rename-file-and-buffer)
-(define-hyper-key "j lt" 'large-type)
-(define-hyper-key "j mt" 'medium-type)
-(define-hyper-key "j df" 'prelude-delete-file-and-buffer)
+;; (define-super-key "j cl" 'cyberpunk-large)
 
-(define-hyper-key "j bl" 'blue-light)
+(define-super-key "j dd" 'delete-duplicate-lines-keep-blanks) 
 
-(define-hyper-key "j eu" 'endless/upgrade)
+(define-super-key "j cw" 'cyberpunk-writeroom)
+(define-super-key "j wb" 'whiteboard)
+(define-super-key "j sl" 'solarized-light)
+(define-super-key "j sd" 'solarized-dark)
+(define-super-key "j ri" 'ritchie)
+(define-super-key "j sp" 'spolsky)
+(define-super-key "j wr" 'writeroom-mode)
+(define-super-key "j wf" 'workflowy-mode)
+(define-super-key "j st" 'small-type)
+(define-super-key "j mp" 'morning-pages)
+(define-super-key "j rf" 'prelude-rename-file-and-buffer)
+(define-super-key "j lt" 'large-type)
+(define-super-key "j mt" 'medium-type)
+(define-super-key "j df" 'prelude-delete-file-and-buffer)
+
+(define-super-key "j bl" 'blue-light)
+
+(define-super-key "j eu" 'endless/upgrade)
 
 
 ;; accountability
 
-(define-hyper-key "j ek" 'erika-send-email-styled)
-(define-hyper-key "j ad" 'adrien-send-email-styled)
+(define-super-key "j ek" 'erika-send-email-styled)
+(define-super-key "j ad" 'adrien-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -3033,8 +3033,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (save-excursion (insert ")")
                 ))
 
-(define-hyper-key "j kb" 'keybinding-read-and-insert)
-(define-hyper-key "j mk" 'keybinding-read-and-insert)
+(define-super-key "j kb" 'keybinding-read-and-insert)
+(define-super-key "j mk" 'keybinding-read-and-insert)
 
 
 
@@ -7077,4 +7077,10 @@ You can toggle it in necessary files by setting the local variables section at t
  (org-previous-visible-heading 1)
  (org-narrow-to-subtree)
  ) 
+#+END_SRC
+
+
+* right command is hyper key
+#+BEGIN_SRC emacs-lisp
+(setq mac-right-command-modifier 'hyper) 
 #+END_SRC
