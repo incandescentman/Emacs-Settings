@@ -3771,8 +3771,8 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
-(while (re-search-forward "\\(\\(^&gt;\\( .*\\)?\n\\)+\\)" nil t)
-(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 4px;'>\n"
+(while (re-search-forward "\\(\\(^&gt;\\( *.*\\)?\n\\)+\\)" nil t)
+(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 6px;'>\n"
 (replace-regexp-in-string "^&gt; ?" "" (match-string 1))
 "</div>")))) 
 

@@ -1,3 +1,11 @@
+* make my/beginning-of-sentence-p return t if there is a quotation marks at beginning of 
+(defun my/beginning-of-sentence-p ()
+ "Return t if point is at the beginning of a sentence."
+ (let ((start (point))
+    (beg (save-excursion (forward-sentence) (forward-sentence -1))))
+  (eq start beg)))
+
+
 * mu4e unstar in gmail web interface
 - and reflected in mu4e 
 

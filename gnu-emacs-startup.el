@@ -1305,7 +1305,11 @@ password: %s" userid password))
   (my/fix-space)
   (save-excursion
     (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading)))))
+      (capitalize-unless-org-heading)))
+(when
+(looking-back ", , ")
+(new-org-delete-backward-char 2) 
+t)))
 
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
