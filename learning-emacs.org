@@ -487,3 +487,28 @@ As did this, same thing.
 (delete-backward-char 1)
 ) 
 #+END_SRC
+
+
+
+* Emacs learning 
+<<<radio targets>>>
+Jumping back with pop-mark
+
+Jumping between files with path/project files (projectile) with fuzzy auto-completion (flx-ido.el) or registers
+
+I just typed "%" in plain dired, the first key in some of the regular expression commands. It just sat there, of course, waiting for another key. I know that I can type C-h to see a list of the next keys that are supported for the "%" prefix key, but for a new user it might not be self-evident. It would be cool if Emacs could automatically popup that list, formatted as nicely as in your package, either after a slight delay, or directly.
+
+
+have a way to shortcut back to the previous document
+C-x SPC (pop-global-mark) has your back. C-x r SPC (point-to-register) and C-x r j (jump-to-register) have his.
+
+
+
+* Emacs learning
+- [[http://ergoemacs.org/emacs/eshell.html][Emacs: M-x eshell]]
+- [[http://ergoemacs.org/emacs/elisp.html][Practical Emacs Lisp]]
+- [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/emacs/emacs_unix.html][Emacs Shell Tutorial (Bash, cmd.exe, PowerShell)]]
+- [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/emacs/emacs_shell_vs_terminal.html][Emacs Inferior Shell vs Terminal: What's the advantage of running shell inside emacs?]]
+- [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/misc/emacs_abbrev_shell_elisp.html][Emacs: Interactive Abbrev in Shell]]
+- [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://xahlee.info/linux/linux_common_commands.html][Linux Tutorial by Example: Most Frequently Used Shell Commands]]
+- [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/emacs/emacs_shell_vs_term_vs_ansi-term_vs_eshell.html][Emacs: What's the difference between {shell, term, ansi-term, eshell}?]]

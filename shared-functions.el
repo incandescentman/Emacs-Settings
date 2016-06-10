@@ -1233,6 +1233,12 @@ margin-left:2em;
              "li" "font-family:Georgia,serif")))
 
 (add-hook 'org-mime-html-hook
+     (lambda ()
+      (org-mime-change-element-style
+       "strong" "color:#00ADEF;")))
+
+
+(add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
              "h2" "color:#C92228;
@@ -3398,27 +3404,6 @@ Single Capitals as you type."
 
 
 ,(make-mu4e-context
-   :name "Vivovii"
-   :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
-;; switch to smtp-mail in order to change send-from address
-(setq message-send-mail-function 'smtpmail-send-it
- smtpmail-stream-type 'starttls
- smtpmail-default-smtp-server "smtp.gmail.com"
- smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
-  '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
- smtpmail-smtp-service 587) 
-;; open my vivovii inbox
-(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
-)
-   ;; leave-fun not defined 
-   :vars '(
-(user-mail-address . "jay@vivovii.com")
-(mu4e-get-mail-command . "mbsync vivovii") 
- ( mu4e-compose-signature .
-     ("Jay Dixit\nvivovii.com\n")))) 
-
-,(make-mu4e-context
    :name "New York Writers Intensive"
    :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
 ;; switch to smtp-mail in order to change send-from address
@@ -3438,6 +3423,29 @@ Single Capitals as you type."
 (mu4e-get-mail-command . "mbsync nywi") 
  ( mu4e-compose-signature .
      ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
+
+
+,(make-mu4e-context
+   :name "Vivovii"
+   :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+;; switch to smtp-mail in order to change send-from address
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+ smtpmail-auth-credentials
+ '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587) 
+;; open my vivovii inbox
+(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
+)
+   ;; leave-fun not defined 
+   :vars '(
+(user-mail-address . "jay@vivovii.com")
+(mu4e-get-mail-command . "mbsync vivovii") 
+ ( mu4e-compose-signature .
+     ("Jay Dixit\nvivovii.com\n")))) 
+
 
 ))
 
