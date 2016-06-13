@@ -5378,7 +5378,7 @@ C-c q
 * org-element-debug
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-element-debug)
+;; (require 'org-element-debug)
   #+END_SRC
 
 
@@ -5515,8 +5515,8 @@ event of an error or nonlocal exit."
 * multiple cursors
 
   #+BEGIN_SRC emacs-lisp
-(require 'multiple-cursors) 
-(require 'multiple-cursors-core)
+(use-package multiple-cursors) 
+(use-package multiple-cursors-core)
 ;; This is globally useful, so it goes under `C-x', and `m'
 ;; for "multiple-cursors" is easy to remember.
 (define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)

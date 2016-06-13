@@ -3903,7 +3903,7 @@ If FILE already exists, signal an error."
 ;; load org-opml
 (load-library "org-opml")
 
-(require 'org-element-debug)
+;; (require 'org-element-debug)
 
 (progn
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
@@ -3961,8 +3961,8 @@ event of an error or nonlocal exit."
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
 
-(require 'multiple-cursors) 
-(require 'multiple-cursors-core)
+(use-package multiple-cursors) 
+(use-package multiple-cursors-core)
 ;; This is globally useful, so it goes under `C-x', and `m'
 ;; for "multiple-cursors" is easy to remember.
 (define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
