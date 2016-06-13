@@ -4187,7 +4187,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 * xah-replace-pairs
 
   #+BEGIN_SRC emacs-lisp
-(require 'xah-replace-pairs)
+(use-package xah-replace-pairs)
 (defun replace-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -4251,7 +4251,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(require 'rainbow-delimiters)
+(use-package rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
@@ -4264,7 +4264,7 @@ Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evi
 
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-download)
+(use-package org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
   #+END_SRC
@@ -4358,7 +4358,7 @@ Single Capitals as you type."
 
 * yasnippet 
   #+BEGIN_SRC emacs-lisp 
-(require 'yasnippet) 
+(use-package yasnippet) 
 (yas-global-mode 1) 
 
 ;; load yasnippet directories
@@ -4373,7 +4373,7 @@ Single Capitals as you type."
 
 ;;; auto complete mod
 ;;; should be loaded after yasnippet so that they can work together
-(require 'auto-complete-config)
+(use-package auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 ;;; set the trigger key so that it can work together with yasnippet on tab key,
@@ -4427,7 +4427,7 @@ Single Capitals as you type."
 * tiny-expand
 
 #+BEGIN_SRC emacs-lisp 
-(require 'tiny)
+(use-package tiny)
 (tiny-setup-default) 
 
 (defun new-week ()
@@ -4488,7 +4488,7 @@ Single Capitals as you type."
 * re-builder
 
   #+BEGIN_SRC emacs-lisp
-(require 're-builder)
+(use-package re-builder)
 (setq reb-re-syntax 'string)
   #+END_SRC
 
@@ -4519,8 +4519,8 @@ Single Capitals as you type."
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
-(require 'smtpmail) 
-(require 'mu4e)
+(use-package smtpmail) 
+(use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
@@ -4899,7 +4899,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 ** org-contacts
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-contacts) 
+(use-package org-contacts) 
 ;; (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
@@ -4929,7 +4929,7 @@ After this, you should be able to add contacts using a o in the headers view and
 
    #+BEGIN_SRC emacs-lisp
 ; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
-(require 'notmuch)
+(use-package notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats
 
@@ -5122,7 +5122,7 @@ After this, you should be able to add contacts using a o in the headers view and
 ;; doesn't work 
 
 
-(require 'org-notmuch) 
+(use-package org-notmuch) 
 
 ;; display in the middle of large displays
 ;; (add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)

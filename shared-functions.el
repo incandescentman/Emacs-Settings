@@ -3037,7 +3037,7 @@ as the subject."
 ))
 )
 
-(require 'xah-replace-pairs)
+(use-package xah-replace-pairs)
 (defun replace-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -3048,12 +3048,12 @@ as the subject."
  )))
 
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(require 'rainbow-delimiters)
+(use-package rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
 
-(require 'org-download)
+(use-package org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
 
@@ -3120,7 +3120,7 @@ Single Capitals as you type."
           (message "Deleted file %s" filename)
           (kill-buffer))))))
 
-(require 'yasnippet) 
+(use-package yasnippet) 
 (yas-global-mode 1) 
 
 ;; load yasnippet directories
@@ -3135,7 +3135,7 @@ Single Capitals as you type."
 
 ;;; auto complete mod
 ;;; should be loaded after yasnippet so that they can work together
-(require 'auto-complete-config)
+(use-package auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 ;;; set the trigger key so that it can work together with yasnippet on tab key,
@@ -3177,7 +3177,7 @@ Single Capitals as you type."
       (if (and b e (< (point) e)) (setq rlt nil)))
     (setq ad-return-value rlt)))
 
-(require 'tiny)
+(use-package tiny)
 (tiny-setup-default) 
 
 (defun new-week ()
@@ -3214,7 +3214,7 @@ Single Capitals as you type."
 
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
 
-(require 're-builder)
+(use-package re-builder)
 (setq reb-re-syntax 'string)
 
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
@@ -3231,8 +3231,8 @@ Single Capitals as you type."
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
-(require 'smtpmail) 
-(require 'mu4e)
+(use-package smtpmail) 
+(use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
@@ -3551,7 +3551,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 (define-key gnus-summary-mode-map "a"
   'gnus-summary-wide-reply)
 
-(require 'org-contacts) 
+(use-package org-contacts) 
 ;; (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
@@ -3562,7 +3562,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  '("org-contact-add" . mu4e-action-add-org-contact) t)
 
 ; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
-(require 'notmuch)
+(use-package notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
 (setq notmuch-tag-formats
 
@@ -3755,7 +3755,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 ;; doesn't work 
 
 
-(require 'org-notmuch) 
+(use-package org-notmuch) 
 
 ;; display in the middle of large displays
 ;; (add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
