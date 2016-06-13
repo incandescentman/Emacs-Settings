@@ -1766,7 +1766,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
-(require 'saveplace)
+;; (require 'saveplace)
 (setq-default save-place t)
 #+END_SRC
 
@@ -1920,7 +1920,7 @@ I stopped using openwith when I started using Helm, as I find typing C-c C-x fro
 ** openwith
 
 #+BEGIN_QUOTE
-(require 'openwith)
+;; (require 'openwith)
 (openwith-mode t)
 (setq openwith-associations '(("\\.pdf\\'" "Skim.app" (file))))
 #+END_QUOTE
@@ -2918,7 +2918,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
   #+BEGIN_SRC emacs-lisp
 (load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
-(require 'fountain-mode)
+;; (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
@@ -3055,7 +3055,7 @@ doesn't work.
 
 * smex
 #+BEGIN_SRC emacs-lisp
-(require 'smex)
+;; (require 'smex)
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 

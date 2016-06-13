@@ -1104,7 +1104,7 @@ password: %s" userid password))
 )
 
 ;; Save point position between sessions
-(require 'saveplace)
+;; (require 'saveplace)
 (setq-default save-place t)
 
 (define-minor-mode embolden-next-word
@@ -1610,7 +1610,7 @@ t)))
 )
 
 (load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
-(require 'fountain-mode)
+;; (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
@@ -1694,7 +1694,7 @@ t)))
   (pasteboard-paste-no-spaces)
   )
 
-(require 'smex)
+;; (require 'smex)
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
