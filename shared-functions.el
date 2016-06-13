@@ -750,9 +750,9 @@
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
-(require 'blue-ruin) 
-(require 'blue-invoice) 
-(require 'blue-ruin-no-cover)
+(use-package blue-ruin) 
+(use-package blue-invoice) 
+(use-package blue-ruin-no-cover)
 
 (setq backup-directory-alist `(("." . "~/emacs/.saves")))
 (setq
@@ -1045,7 +1045,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 (add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
-(require 'auto-complete)
+(use-package auto-complete)
 (defun ac-ispell-get-word ()
   (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
 
@@ -1076,7 +1076,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
         (insert "~/")
       (call-interactively 'self-insert-command))))))
 
-(require 'ido)
+(use-package ido)
 
 (ido-mode t)
 
