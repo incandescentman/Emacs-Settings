@@ -1962,14 +1962,14 @@ Show calendar after start:
 *** Emacs Server
 Don't start the server unless we can verify that it isn't running.
 #+BEGIN_SRC emacs-lisp
-(require 'server)
+(use-package server)
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
 #+END_SRC
 
 *** ~osx-browse~
 
-(require 'osx-browse)
+(use-package osx-browse)
 
 ** PDFs
 *** Open PDFs in Skim
@@ -2033,7 +2033,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
   (add-hook 'dired-mode-hook 'hl-line-mode)
 
-  (require 'dired-x)
+  (use-package dired-x)
 
   (setq-default dired-omit-files-p t) ; Buffer-local variable
 
@@ -2075,7 +2075,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
 
-(require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon") 
 
@@ -2213,7 +2212,7 @@ Make it so that recentf does not record the following uninteresting file types:
 
 * Word count
 #+BEGIN_SRC emacs-lisp
-(require 'wc-mode)
+(use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 #+END_SRC
 
@@ -2221,7 +2220,7 @@ Make it so that recentf does not record the following uninteresting file types:
 
 I think this is correct:
 #+BEGIN_SRC emacs-lisp
-(require 'ls-lisp)
+(use-package ls-lisp)
 (setq ls-lisp-ignore-case 't)
 #+END_SRC
 
@@ -3083,14 +3082,14 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 *** search all open buffers
 I know that string is in my Emacs somewhere!
 #+BEGIN_SRC emacs-lisp
-(require 'cl)
+(use-package cl)
 
 
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
   :type 'editable-list)
 
-(require 'grep)
+(use-package grep)
 
 (defun search-open-buffers (regexp prefix)
   "Searches file-visiting buffers for occurence of REGEXP. With
@@ -3145,13 +3144,13 @@ AdrianKubala:
 ** Helm
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-config)
+(use-package helm-config)
 (helm-mode t)
 ;; (helm-adaptative-mode t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-swoop)
+(use-package helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
 (setq helm-swoop-pre-input-function
@@ -3249,7 +3248,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** helm projectile
 
    #+BEGIN_SRC emacs-lisp
-(require 'helm-projectile)
+(use-package helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
 (helm-projectile-on)
@@ -3439,7 +3438,7 @@ to open source code block in indirect buffer
 ;;;; autocomplete
 ;; I don't know what I'm doing here but it seems to work
 ;; auto-complete mode
-(require 'auto-complete)
+(use-package auto-complete)
 (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
                                     sass-mode  csv-mode
                                     html-mode sh-mode
@@ -4046,7 +4045,7 @@ as the subject."
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical.
 
 #+BEGIN_SRC emacs-lisp
-(require 'key-seq)
+(use-package key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
 

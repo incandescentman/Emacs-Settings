@@ -1313,7 +1313,7 @@ margin-bottom: 1em;
 
 (add-hook 'desktop-after-read-hook 'calendar)
 
-(require 'server)
+(use-package server)
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
 
@@ -1349,7 +1349,7 @@ margin-bottom: 1em;
 
 (add-hook 'dired-mode-hook 'hl-line-mode)
 
-  (require 'dired-x)
+  (use-package dired-x)
 
   (setq-default dired-omit-files-p t) ; Buffer-local variable
 
@@ -1391,7 +1391,6 @@ margin-bottom: 1em;
   ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
 
-(require 'dired-x)
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon")
 
@@ -1501,10 +1500,10 @@ margin-bottom: 1em;
     (replace-string "Ñ" "---" nil (point-min) (point-max))
     ))
 
-(require 'wc-mode)
+(use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 
-(require 'ls-lisp)
+(use-package ls-lisp)
 (setq ls-lisp-ignore-case 't)
 
 (setenv "PATH" (concat (getenv "PATH") "/usr/local/bin"))
@@ -2188,14 +2187,14 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 
-(require 'cl)
+(use-package cl)
 
 
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
   :type 'editable-list)
 
-(require 'grep)
+(use-package grep)
 
 (defun search-open-buffers (regexp prefix)
   "Searches file-visiting buffers for occurence of REGEXP. With
@@ -2232,11 +2231,11 @@ searches all buffers."
   (goto-char (point-min))
   (isearch-forward))
 
-(require 'helm-config)
+(use-package helm-config)
 (helm-mode t)
 ;; (helm-adaptative-mode t)
 
-(require 'helm-swoop)
+(use-package helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
 (setq helm-swoop-pre-input-function
@@ -2300,7 +2299,7 @@ searches all buffers."
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
 (setq projectile-globally-ignored-files (quote ("TAGS" ".DS_Store")))
 
-(require 'helm-projectile)
+(use-package helm-projectile)
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
 (helm-projectile-on)
@@ -2928,7 +2927,7 @@ as the subject."
       (message-send)
       (message-kill-buffer))))
 
-(require 'key-seq)
+(use-package key-seq)
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
