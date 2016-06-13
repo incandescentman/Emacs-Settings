@@ -126,7 +126,7 @@ well.
 
 #+BEGIN_SRC emacs-lisp
 
-(require 'dired-details+)
+;; (require 'dired-details+)
 
 (defun mydired-sort ()
   "Sort dired listings with directories first."

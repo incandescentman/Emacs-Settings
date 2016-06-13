@@ -36,8 +36,8 @@
 
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
-(require 'org)
-(require 'org-mime)
+;; (require 'org)
+;; (require 'org-mime)
 (require 'bind-key) 
 (require 'package)
 
@@ -64,16 +64,19 @@
 
 ** Require some packages
 #+BEGIN_SRC emacs-lisp
-(require 'org)
+;; (require 'org)
 #+END_SRC
    
 * Require some org packages
 #+BEGIN_SRC emacs-lisp
 ;; (require 'org-bullets)
-(require 'ox-latex)
-(require 'ox-org)
-(require 'ox-html)
-(require 'ox-md)
+(use-package ox-latex) 
+;; (require 'ox-latex)
+;; (require 'ox-org)
+(use-package ox-org)
+;; (require 'ox-html)
+(use-package ox-html)
+;; (require 'ox-md)
 ; (require 'org-fstree)
 #+END_SRC
 
@@ -6745,8 +6748,8 @@ Available leader keybindings
 
 * rifle
 #+BEGIN_SRC emacs-lisp
-(load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
-(require 'helm-org-rifle)
+;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
+;; (require 'helm-org-rifle)
 
 #+END_SRC
 
@@ -6845,7 +6848,7 @@ Available leader keybindings
 ** deft-turbo
 
  #+BEGIN_EXAMPLE emacs-lisp 
-(require 'deft)
+;; (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 (setq deft-default-extension "org")
 (setq deft-directory "~/nd/")
@@ -6965,8 +6968,6 @@ Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html
 
 * selected
 #+BEGIN_SRC emacs-lisp
-(require 'selected)
-
 (define-key selected-keymap (kbd "s-u") 'upcase-region)
 #+END_SRC
 

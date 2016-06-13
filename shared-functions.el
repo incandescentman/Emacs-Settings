@@ -1,6 +1,6 @@
 ;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
-(require 'org)
-(require 'org-mime)
+;; (require 'org)
+;; (require 'org-mime)
 (require 'bind-key) 
 (require 'package)
 
@@ -21,13 +21,16 @@
 
 (add-to-list 'load-path "~/emacs/prelude/personal/")
 
-(require 'org)
+;; (require 'org)
 
 ;; (require 'org-bullets)
-(require 'ox-latex)
-(require 'ox-org)
-(require 'ox-html)
-(require 'ox-md)
+(use-package ox-latex) 
+;; (require 'ox-latex)
+;; (require 'ox-org)
+(use-package ox-org)
+;; (require 'ox-html)
+(use-package ox-html)
+;; (require 'ox-md)
 ; (require 'org-fstree)
 
 (defun add-word-to-personal-dictionary ()
@@ -4758,8 +4761,8 @@ minibuffer."
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
 
-(load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
-(require 'helm-org-rifle)
+;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
+;; (require 'helm-org-rifle)
 
 (defun up-by-degrees ()
  (interactive)
@@ -4873,8 +4876,6 @@ Allows use of the fancyvrb latex package."
   (interactive)
   (insert "\]")
   )
-
-(require 'selected)
 
 (define-key selected-keymap (kbd "s-u") 'upcase-region)
 
