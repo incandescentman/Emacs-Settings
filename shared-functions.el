@@ -289,7 +289,7 @@
 ;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
 ;; (add-hook 'after-init-hook 'org-agenda-list)
-(require 'org-inlinetask)
+(use-package org-inlinetask)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
 
@@ -505,7 +505,7 @@
   (when (org-in-regexp org-bracket-link-regexp 1)
     (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
 
-(require 'mm-url) ; to include mm-url-decode-entities-string
+(use-package mm-url) ; to include mm-url-decode-entities-string
 
 (defun my-org-insert-link ()
   "Insert org link where default description is set to html title."
@@ -643,7 +643,7 @@
 ;; meaningful names for buffers with the same name
 ;; from prelude
 ;; http://bit.ly/1Woabxz
-(require 'uniquify)
+(use-package uniquify)
 (setq uniquify-buffer-name-style 'forward)
 (setq uniquify-separator "/")
 (setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
@@ -722,7 +722,7 @@
 
 '(org-support-shift-select (quote always))
 
-(require 'auto-capitalize)
+(use-package auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 

@@ -515,7 +515,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** org settings
 #+BEGIN_SRC emacs-lisp
 ;; (add-hook 'after-init-hook 'org-agenda-list)
-(require 'org-inlinetask)
+(use-package org-inlinetask)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
 
@@ -849,7 +849,7 @@ Insert link with HTML title as default description. When using `org-insert-link'
 it as a default link description. Here is a way to accomplish this:
 
 #+BEGIN_SRC emacs-lisp
-(require 'mm-url) ; to include mm-url-decode-entities-string
+(use-package mm-url) ; to include mm-url-decode-entities-string
 
 (defun my-org-insert-link ()
   "Insert org link where default description is set to html title."
@@ -1040,7 +1040,7 @@ Aquamacs:
 ;; meaningful names for buffers with the same name
 ;; from prelude
 ;; http://bit.ly/1Woabxz
-(require 'uniquify)
+(use-package uniquify)
 (setq uniquify-buffer-name-style 'forward)
 (setq uniquify-separator "/")
 (setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
@@ -1161,7 +1161,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ** Autocapitalization
 
 #+BEGIN_SRC emacs-lisp
-(require 'auto-capitalize)
+(use-package auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 #+END_SRC
