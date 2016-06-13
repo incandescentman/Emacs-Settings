@@ -1,8 +1,8 @@
 ;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
 ;; (require 'org)
 ;; (require 'org-mime)
-(require 'bind-key) 
-(require 'package)
+;; (require 'bind-key) 
+;; (require 'package)
 
 (add-to-list 'package-archives
              '("marmalade" .
