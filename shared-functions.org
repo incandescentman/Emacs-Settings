@@ -5708,7 +5708,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 ** god mode
 
    #+BEGIN_SRC emacs-lisp
-(require 'god-mode) 
+;; (require 'god-mode) 
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'bar
@@ -6065,7 +6065,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 * sunrise commander
 #+BEGIN_SRC emacs-lisp
-(require 'sunrise-commander)
+;; (require 'sunrise-commander)
 #+END_SRC
 
 
@@ -6319,7 +6319,7 @@ Wow, this works.
 
 * reuse directory buffers
 #+BEGIN_SRC emacs-lisp
-(require 'dired+)
+;; (require ''dired+)
 (toggle-diredp-find-file-reuse-dir 1) 
 (add-hook 'dired-mode-hook
  (lambda ()

@@ -4125,7 +4125,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
 
-(require 'god-mode) 
+;; (require 'god-mode) 
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'bar
@@ -4369,7 +4369,7 @@ The full path into relative path and insert it as a local file link in org-mode"
   ("r" mc/mark-all-in-region-regexp :exit t)
   ("q" nil)) )
 
-(require 'sunrise-commander)
+;; (require 'sunrise-commander)
 
 (defun cycle-hyphenation-or-toggle-item ()
   (interactive)
@@ -4506,7 +4506,7 @@ If FILE already exists, signal an error."
 
 (setq org-startup-with-inline-images nil)
 
-(require 'dired+)
+;; (require ''dired+)
 (toggle-diredp-find-file-reuse-dir 1) 
 (add-hook 'dired-mode-hook
  (lambda ()
