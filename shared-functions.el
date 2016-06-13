@@ -4670,9 +4670,9 @@ minibuffer."
                 :key "HH"
                 :description "mc/mark-all-dwim")
 
-(require 'mouse-copy)
-(global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
-(global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving)
+;; (require 'mouse-copy)
+;; (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
+;; (global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving)
 
 (flycheck-define-checker proselint
   "A linter for prose."

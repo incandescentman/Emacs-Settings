@@ -6512,9 +6512,9 @@ minibuffer."
 
 * mouse-copy
 #+BEGIN_SRC emacs-lisp
-(require 'mouse-copy)
-(global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
-(global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving) 
+;; (require 'mouse-copy)
+;; (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
+;; (global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving) 
 #+END_SRC
 
 
