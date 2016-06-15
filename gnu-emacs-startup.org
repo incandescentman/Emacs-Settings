@@ -948,6 +948,7 @@ This fucked up autopair mode so I'm turning it off again.
 
 
 (defun insert-period ()
+"Inserts a fuckin' period!"
  (interactive)
  (insert ".")
 )
@@ -2296,7 +2297,8 @@ Oleh
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
 
-(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
+(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
+;; (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 #+END_SRC
 
 * clone subtree

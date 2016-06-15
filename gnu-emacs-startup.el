@@ -764,6 +764,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 (defun insert-period ()
+"Inserts a fuckin' period!"
  (interactive)
  (insert ".")
 )
@@ -1264,7 +1265,8 @@ password: %s" userid password))
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
 
-(define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
+(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
+;; (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 
 (defun org-clone-subtree ()
   (interactive)
