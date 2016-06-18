@@ -1411,6 +1411,7 @@ margin-bottom: 1em;
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
+(add-to-list 'recentf-exclude ".git'")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
@@ -2035,7 +2036,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (define-key orgstruct-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(global-set-key (kbd "M-`") 'other-frame)
+(global-set-key (kbd "M-`") 'prelude-swap-windows)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 

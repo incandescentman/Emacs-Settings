@@ -3205,7 +3205,6 @@ s-i
 * color theme advice
 #+BEGIN_SRC emacs-lisp
 (defadvice load-theme (after load-theme-advice activate)
-  (spacemacs/toggle-fringe-off)
 (custom-set-faces
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(org-quote ((t (:inherit default))))
