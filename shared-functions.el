@@ -2386,6 +2386,7 @@ searches all buffers."
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode))) 
 ((and buffer-file-name (eq major-mode 'conf-mode)))
 ((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
 ((and buffer-file-name (eq major-mode 'python-mode)))
