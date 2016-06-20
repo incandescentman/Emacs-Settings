@@ -221,6 +221,10 @@
     (save-excursion
       )))
 
+(defun pasteboard-without-spaces ()
+ "Return content of OS X system pasteboard via `pbpaste'."
+ (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
+
 (defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
@@ -301,6 +305,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
 
 (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
 (define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
@@ -356,7 +361,8 @@
 
 
 
-(define-key key-minor-mode-map (kbd "s-.") 'searchlink)
+(define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
+(define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
 (define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
 

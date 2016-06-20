@@ -4510,8 +4510,7 @@ Single Capitals as you type."
 ;; (setq fasd-enable-initial-prompt nil)
   #+END_SRC
  
-* email
-
+* email 
 ** mu4e 
 *** mu4e setup
  #+BEGIN_SRC emacs-lisp 
@@ -4624,7 +4623,7 @@ Single Capitals as you type."
 
  #+END_SRC
 
-**** mu4e keybindings 
+*** mu4e keybindings 
  #+BEGIN_SRC emacs-lisp
 
 ;; shortcuts
@@ -4661,7 +4660,6 @@ Single Capitals as you type."
 (define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
 (define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
 
-
 ;; unset keys (worked!)
 (add-hook 'mu4e-headers-mode-hook 
   (lambda ()
@@ -4669,21 +4667,19 @@ Single Capitals as you type."
   (local-unset-key (kbd "<M-left>"))
 )) 
 
-
 (add-hook 'mu4e-view-mode-hook 
   (lambda ()
   (local-unset-key (kbd "<M-right>"))
   (local-unset-key (kbd "<M-left>"))
 )) 
-
  #+END_SRC
 
-**** mu4e attachments
+*** mu4e attachments
  Wouldn't it be awesome to be able to send files from dired using your mail client?
 
  I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
 
-**** gmail starred 
+*** gmail starred 
 The remaining problem is to propagate to Gmail that I've refiled 
 (archived) a message. I also noticed that flagging a message in /mu4e/ 
 doesn't immediately mean the message is starred on the Gmail side. With 

@@ -138,7 +138,8 @@ emacs-settings)))
 
 (setq org-agenda-files
   (quote
-  ("~/Dropbox/writing/book/feb-18/ovulatory-shift.txt"))) 
+   ("~/Dropbox/writing/book/feb-18/ovulatory-shift.txt")
+   )) 
 
 (defun book-load-current ()
   (interactive)

@@ -3368,14 +3368,12 @@ Single Capitals as you type."
 (define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
 (define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
 
-
 ;; unset keys (worked!)
 (add-hook 'mu4e-headers-mode-hook 
   (lambda ()
   (local-unset-key (kbd "<M-right>"))
   (local-unset-key (kbd "<M-left>"))
 )) 
-
 
 (add-hook 'mu4e-view-mode-hook 
   (lambda ()

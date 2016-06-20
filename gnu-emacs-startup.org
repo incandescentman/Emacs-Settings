@@ -304,7 +304,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     : pasteboard-paste-spaces-maybe
 
 
-*** pasteboard-paste-no-spaces
+*** pasteboard-paste-no-spaces - original working version
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -318,6 +318,13 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 			     nil t)
     (save-excursion
       )))
+#+END_SRC 
+
+*** pasteboard-without-spaces 
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-without-spaces ()
+ "Return content of OS X system pasteboard via `pbpaste'."
+ (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")) 
 #+END_SRC
 
 ** pasteboard-cut
@@ -435,6 +442,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
 
 (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
 (define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
@@ -490,7 +498,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 
-(define-key key-minor-mode-map (kbd "s-.") 'searchlink)
+(define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
+(define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
 (define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
 
