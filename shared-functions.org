@@ -7091,4 +7091,26 @@ You can toggle it in necessary files by setting the local variables section at t
 ;; (setq mac-right-command-modifier 'hyper) 
 #+END_SRC
 
-* this
+* yasnippet fixes
+
+#+BEGIN_SRC emacs-lisp
+(defun yas/pasteboard-without-spaces ()
+ "Return content of OS X system pasteboard via `pbpaste'."
+ (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")) 
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp 
+(defun yas/org-get-time-stamp (&rest args)
+ "Return the string that `org-insert-time-stamp' would insert."
+ (with-temp-buffer
+  (apply #'org-insert-time-stamp args)
+  (buffer-string))) 
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun yas/tiny-expand (&rest args)
+ "Return the string that `tiny-expand' would insert."
+ (with-temp-buffer
+ (apply #'yas/tiny-expand args) 
+ (buffer-string))) 
+#+END_SRC

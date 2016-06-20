@@ -4944,3 +4944,19 @@ cmd)
  )
 
 ;; (setq mac-right-command-modifier 'hyper)
+
+(defun yas/pasteboard-without-spaces ()
+ "Return content of OS X system pasteboard via `pbpaste'."
+ (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
+
+(defun yas/org-get-time-stamp (&rest args)
+ "Return the string that `org-insert-time-stamp' would insert."
+ (with-temp-buffer
+  (apply #'org-insert-time-stamp args)
+  (buffer-string)))
+
+(defun yas/tiny-expand (&rest args)
+ "Return the string that `tiny-expand' would insert."
+ (with-temp-buffer
+ (apply #'yas/tiny-expand args) 
+ (buffer-string)))

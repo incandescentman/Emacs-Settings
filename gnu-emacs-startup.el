@@ -221,10 +221,6 @@
     (save-excursion
       )))
 
-(defun pasteboard-without-spaces ()
- "Return content of OS X system pasteboard via `pbpaste'."
- (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
-
 (defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)

@@ -320,13 +320,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
       )))
 #+END_SRC 
 
-*** pasteboard-without-spaces 
-#+BEGIN_SRC emacs-lisp
-(defun pasteboard-without-spaces ()
- "Return content of OS X system pasteboard via `pbpaste'."
- (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")) 
-#+END_SRC
-
 ** pasteboard-cut
 
 #+BEGIN_SRC emacs-lisp
