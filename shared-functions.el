@@ -4958,5 +4958,5 @@ cmd)
 (defun yas/tiny-expand (&rest args)
  "Return the string that `tiny-expand' would insert."
  (with-temp-buffer
- (apply #'yas/tiny-expand args) 
+ (apply #'tiny-expand args) 
  (buffer-string)))

@@ -136,11 +136,6 @@ emacs-settings)))
 (helm-multi-swoop-org)
   )
 
-(setq org-agenda-files
-  (quote
-   ("~/Dropbox/writing/book/feb-18/ovulatory-shift.txt")
-   )) 
-
 (defun book-load-current ()
   (interactive)
   (jay/save-some-buffers)
