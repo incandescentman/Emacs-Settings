@@ -3580,7 +3580,8 @@ Thanks to Dan Davison.
 
 ** modified email-heading function
 
-#+BEGIN_SRC emacs-lisp
+*** org-mime-htmlize - no longer works.
+#+BEGIN_EXAMPLE emacs-lisp
 
 (defun org-mime-htmlize (&optional arg)
 "Export a portion of an email body composed using `mml-mode' to
@@ -3623,7 +3624,7 @@ export that region, otherwise export the entire body."
    (goto-char html-start)
    (insert (org-mime-multipart
 	    body html (mapconcat 'identity html-images "\n"))))))
-#+END_SRC
+#+END_EXAMPLE
 
 ** new-email-from-subtree-with-signature 
 
@@ -7108,9 +7109,22 @@ You can toggle it in necessary files by setting the local variables section at t
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun yas/tiny-expand (&rest args)
- "Return the string that `tiny-expand' would insert."
- (with-temp-buffer
- (apply #'tiny-expand args) 
- (buffer-string))) 
+(defun yas/tiny-expand (str)
+  (with-temp-buffer
+    (insert str)
+    (goto-char (point-max)) ; tiny-expand works on text preceding point
+    (tiny-expand)
+    (buffer-string)))
+#+END_SRC
+
+* org-html-slideshow
+Set variables as safe
+#+BEGIN_SRC emacs-lisp
+(put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t)) 
+ 
+(put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t)) 
+
+(put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
+
+(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t)) 
 #+END_SRC
