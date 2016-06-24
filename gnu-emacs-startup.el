@@ -703,6 +703,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (looking-back ">") ; don't expand days of the week inside timestamps
 
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
 
 
 
@@ -1609,6 +1610,8 @@ t)))
        (looking-back "\)\n*")
 (looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
 (looking-back ":t[ ]*")
+(looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+
 
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )

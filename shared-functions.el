@@ -1417,6 +1417,7 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude "/var/") 
+(add-to-list 'recentf-exclude "*Org tags*") 
 (add-to-list 'recentf-exclude "persp-auto") 
 (add-to-list 'recentf-exclude "ido.hist") 
 (add-to-list 'recentf-exclude ".tex\\")
