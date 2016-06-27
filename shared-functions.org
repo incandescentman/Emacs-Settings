@@ -1516,7 +1516,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(smex-prompt-string "I love you. ")
  '(standard-indent 3)
  '(tooltip-mode nil)
-'(tramp-default-method "ssh")
+;; '(tramp-default-method "ssh")
  '(undo-limit 800000)
  '(user-full-name "Jay Dixit")
 
@@ -4361,12 +4361,16 @@ Single Capitals as you type."
   #+END_SRC
 
 * yasnippet 
-  #+BEGIN_SRC emacs-lisp 
-(use-package yasnippet) 
+#+BEGIN_SRC emacs-lisp 
+
+
+(use-package yasnippet 
+:bind ("C-c e" . yas-load-snippet-buffer)
+:init
 (yas-global-mode 1) 
 
+:config 
 ;; load yasnippet directories
-;; TODO needs to be set before loading snippets somehow
 (setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
 
 ;; don't insert random spaces in my prose
@@ -4375,34 +4379,39 @@ Single Capitals as you type."
 ;; take input word including hyphen.
 (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
-;;; auto complete mod
+) 
+
+
+;;; Auto complete mod
 ;;; should be loaded after yasnippet so that they can work together
-(use-package auto-complete-config)
+(use-package auto-complete-config
+:init
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
-;;; set the trigger key so that it can work together with yasnippet on tab key,
+;;; Set the trigger key so that it can work together with yasnippet on tab key,
 ;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
 ;;; activate, otherwise, auto-complete will
 (ac-set-trigger-key "TAB")
 (ac-set-trigger-key "<tab>") 
+)
 
 
-   (add-hook 'org-mode-hook
-                    (lambda ()
-                      (org-set-local 'yas-trigger-key [tab])
-                      (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
-
-    (defun yas-org-very-safe-expand ()
-            (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
-
-    (add-hook 'org-mode-hook
-                    (lambda ()
-                      (make-variable-buffer-local 'yas-trigger-key)
-                      (setq yas-trigger-key [tab])
-                      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-                      (define-key yas-keymap [tab] 'yas-next-field))) 
 
 
+  (add-hook 'org-mode-hook
+          (lambda ()
+           (org-set-local 'yas-trigger-key [tab])
+           (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
+
+  (defun yas-org-very-safe-expand ()
+      (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
+
+  (add-hook 'org-mode-hook
+          (lambda ()
+           (make-variable-buffer-local 'yas-trigger-key)
+           (setq yas-trigger-key [tab])
+           (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+           (define-key yas-keymap [tab] 'yas-next-field))) 
 
 #+END_SRC
 

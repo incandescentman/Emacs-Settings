@@ -435,6 +435,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
+(define-key key-minor-mode-map (kbd "M-,") 'insert-comma)
+
+
 (define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
 
 (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
@@ -583,7 +587,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-W") 'widen)
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key org-mode-map (kbd "C-c e") 'eval-subtree)
-;; (define-key snippet-mode-map (kbd "C-c e") 'yas-load-snippet-buffer) 
 
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
@@ -2303,7 +2306,6 @@ Oleh
                             (length *punctuation-markers-to-cycle-between*)))))
         (replace-match (format "%c" next) t t nil 1)))))
 
-(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
 ;; (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
 #+END_SRC
 
