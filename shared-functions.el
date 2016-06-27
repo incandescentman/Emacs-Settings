@@ -1411,7 +1411,7 @@ margin-bottom: 1em;
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
-(add-to-list 'recentf-exclude ".git'")
+(add-to-list 'recentf-exclude ".git")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
