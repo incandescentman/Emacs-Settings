@@ -550,7 +550,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq org-todo-keywords
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
-        (sequence "✘ MISSED" "|" "DONE")
+        (sequence "MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
@@ -6138,7 +6138,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 ; If
 (or
-(looking-back "\\.\\.\\.[ ]*") 
+(looking-back "\\.\\.\\.[ ]*[\n\t ]*") 
 (looking-back "i.e.[ ]*") 
 (looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 

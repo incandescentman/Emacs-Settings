@@ -317,7 +317,7 @@
 (setq org-todo-keywords
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
-        (sequence "✘ MISSED" "|" "DONE")
+        (sequence "MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
         (sequence "QUESTION" "|" "ANSWERED")
@@ -4378,7 +4378,7 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 ; If
 (or
-(looking-back "\\.\\.\\.[ ]*") 
+(looking-back "\\.\\.\\.[ ]*[\n\t ]*") 
 (looking-back "i.e.[ ]*") 
 (looking-back "[0-9]\.[ ]*") 
 (looking-back "e.g.[ ]*") 
