@@ -3096,6 +3096,8 @@ Single Capitals as you type."
 ;; take input word including hyphen.
 (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
+;; suppress backquote warnings, whatever those are 
+(setq warning-suppress-types (quote (((yasnippet\ backquote-change))))) 
 ) 
 
 
