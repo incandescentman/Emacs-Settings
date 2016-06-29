@@ -325,7 +325,7 @@
         (sequence "STRATEGY" "|")
         (sequence "TIP" "|")
         (sequence "NOTES RESEARCH" "WRITING" "|")
-        (sequence "HED" "|")
+        (sequence "PART" "HED" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))

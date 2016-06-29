@@ -331,6 +331,8 @@
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
+(define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
+
 (define-key dired-mode-map (kbd "c") 'touch-file) 
 
 ;; mu4e-gmail
