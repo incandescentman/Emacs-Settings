@@ -874,7 +874,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (unless
       (or
-(looking-back "vs[[:punct:]]+[ ]*") ; don't add extra periods to vs.
+(looking-back "\bvs[[:punct:]]+[ ]*") ; don't add extra periods to vs.
 
 (looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
@@ -2497,7 +2497,7 @@ t)))
 
 (unless
       (or
-(looking-back "vs[[:punct:]]*+*[ ]*") ; don't add extra periods to vs.
+(looking-back "\bvs[[:punct:]]*+*[ ]*") ; don't add extra periods to vs.
        )
   (smart-punctuation "."))
 
