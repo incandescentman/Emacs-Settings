@@ -91,11 +91,19 @@
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 #+END_SRC
 
-** Turn on on-the-fly spellcheck for org-mode
 
+* org-mode hooks 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-flyspell)
+
 #+END_SRC
+
+** globally enable palimpsest-mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+#+END_SRC
+
 
 * UI / customization of appearance and editing environment
 ** Stop accidentally highlighting org-mode links all the time:
@@ -1590,7 +1598,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 * Autocomplete
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package auto-complete)
 (defun ac-ispell-get-word ()
   (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
@@ -1606,7 +1614,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (ac-define-source ispell
   '((prefix . ac-prefix)
     (candidates . ac-ispell-get-candidates)))
-#+END_SRC 
+#+END_EXAMPLE 
 
 It's not a good idea to add `ac-source-ispell' to `ac-sources', I'll recommend
 manual invoking.
@@ -1640,12 +1648,11 @@ Newer version of ~ac-define-source~ would provide us an
 ;; (add-hook 'org-mode-hook 'my/enable-ac-ispell)
 ;; (add-hook 'message-mode-hook 'my/enable-ac-ispell)
 ;; (add-hook 'message-mode-hook 'buffer-background-black)
-#+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
 (eval-after-load "auto-complete"
   '(progn
      (ac-ispell-setup)))
+
 #+END_SRC 
 
 * ~ido~
@@ -2377,7 +2384,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
 # haven't tried this yet
 
 Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq ac-auto-start 3)
 (setq company-minimum-prefix-length 3)
 
@@ -2388,7 +2395,7 @@ Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]]
 
 (add-hook 'org-mode-hook
   #'endless/config-prose-completion)
-#+END_SRC
+#+END_EXAMPLE 
 
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
@@ -3459,12 +3466,6 @@ to open source code block in indirect buffer
 (define-key ac-completing-map (kbd "M-RET") 'ac-help)
 (define-key ac-completing-map "\r" 'nil) 
 #+END_EXAMPLE
-
-* globally enable palimpsest-mode
-#+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
-(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
-#+END_SRC
 
 * Pop to mark
 

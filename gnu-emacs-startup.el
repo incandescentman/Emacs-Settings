@@ -1249,10 +1249,6 @@ password: %s" userid password))
               helm-source-org-wiki-not-found)))
     (provide 'helm-org-wiki)
 
-(defun turn-on-autocomplete-mode ()
-   (auto-complete-mode 1))
-(add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-
 (defun cycle-hyphenation ()
   (interactive)
   (cond ((re-search-forward "\\=\\w*\\(-\\)\\w+" nil t)

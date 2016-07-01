@@ -2269,11 +2269,11 @@ Oleh
 
 
 * Emacs Lisp Mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-#+END_SRC
+#+END_EXAMPLE 
 
 * Reference for cleaning up whitespace around sentences:
 [[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
