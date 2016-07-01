@@ -2110,7 +2110,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-super-key "j st" 'small-type)
 (define-super-key "j mp" 'morning-pages)
 (define-super-key "j rf" 'prelude-rename-file-and-buffer)
-(define-super-key "j lt" 'large-type)
+(define-super-key "j lt" 'load-theme)
 (define-super-key "j mt" 'medium-type)
 (define-super-key "j df" 'prelude-delete-file-and-buffer)
 
