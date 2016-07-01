@@ -6535,7 +6535,7 @@ minibuffer."
 * proselint 
 Source: http://unconj.ca/blog/linting-prose-in-emacs.html 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (flycheck-define-checker proselint
   "A linter for prose."
   :command ("proselint" source-inplace)
@@ -6546,7 +6546,7 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
   :modes (text-mode markdown-mode gfm-mode org-mode))
 
 (add-to-list 'flycheck-checkers 'proselint) 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * Braxton
