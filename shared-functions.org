@@ -1387,7 +1387,7 @@ Defines ~ibuffer-do-replace-string~:
 To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
 ;; (require 'edit-server)
-(edit-server-start)
+;; (edit-server-start)
 #+END_SRC
 
 * Setting variables
@@ -1495,7 +1495,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-modules (quote    (org-bbdb org-bibtex org-gnus org-info org-annotate-file org-bullets org-invoice org-mac-iCal org-mac-link  org-panel org-secretary org-velocity org-habit org-irc org-mew org-mhe org-rmail org-vm org-wl org-w3m org-choose org-collector org-invoice)))
+ '(org-modules (quote    (org-pomodoro org-bullets org-mac-link)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
 '(org-provide-checkbox-statistics t)
