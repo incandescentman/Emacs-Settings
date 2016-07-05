@@ -52,9 +52,9 @@
 
 (setq ring-bell-function
       (lambda ()
-  (unless (memq this-command
-          '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-    (ding))))
+        (unless (memq this-command
+                      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+          (ding))))
 
 ;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
@@ -65,14 +65,14 @@
   (interactive)
   (set-cursor-color "red")
   (setq default-frame-alist
-  '((cursor-color . "red"))) 
+        '((cursor-color . "red"))) 
   )
 
 (defun  magenta-cursor ()
   (interactive)
   (set-cursor-color "#DC8CC3")
   (setq default-frame-alist
-  '((cursor-color . "#DC8CC3"))) 
+        '((cursor-color . "#DC8CC3"))) 
   )
 
 ;; (setq org-indirect-buffer-display 'current-window)
@@ -98,7 +98,7 @@
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
 (unless (and (fboundp 'play-sound-internal)
-       (subrp (symbol-function 'play-sound-internal)))
+             (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
 
@@ -226,9 +226,9 @@
 ")
 
 (setq safe-local-variable-values (quote    ((eval when
-     (fboundp
-      (quote rainbow-mode))
-     (rainbow-mode 1)))))
+           (fboundp
+            (quote rainbow-mode))
+           (rainbow-mode 1)))))
 
 (setq org-html-footnotes-section "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
@@ -396,53 +396,53 @@
       (quote
        (
 
-  ("g" "gratitude" entry (file "gratitude.txt")
-   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+        ("g" "gratitude" entry (file "gratitude.txt")
+         "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-  ("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+        ("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+        ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+         "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-  ("n" "note" entry (file org-default-notes-file)
-   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+        ("n" "note" entry (file org-default-notes-file)
+         "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+        ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+         "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
-  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+        ("v" "visualness and visual actions" entry (file "visual-actions.txt")
+         "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
 ("a" "article ideas" entry (file "article-ideas.txt")
-   "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
+         "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
 
 
 ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
-   "\n\n* wm%?\n" :prepend t :kill-buffer t)
+         "\n\n* wm%?\n" :prepend t :kill-buffer t)
 
-  ("e" "expression" entry (file "expression.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+        ("e" "expression" entry (file "expression.txt")
+         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-   "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+         "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
 
-  ("h" "historical interest" entry (file "historical-lifestream.txt")
-   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+        ("h" "historical interest" entry (file "historical-lifestream.txt")
+         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+        ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+        ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+        ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+         "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+        ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
@@ -452,8 +452,8 @@
 ;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
 ;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
 
-  ("f" "flowy" entry (file "flowy.org")
-   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+        ("f" "flowy" entry (file "flowy.org")
+         "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -489,8 +489,8 @@
   (when (equal major-mode 'org-mode)
     (save-excursion
       (ignore-errors
-  (org-back-to-heading)
-  (org-update-parent-todo-statistics)))))
+        (org-back-to-heading)
+        (org-update-parent-todo-statistics)))))
 
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
@@ -539,7 +539,7 @@
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
-     (call-interactively 'org-agenda-schedule)))
+           (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -780,7 +780,7 @@
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
-          (buffer-substring-no-properties b e)))
+                            (buffer-substring-no-properties b e)))
     (message-send-and-exit)))
 
 (add-to-list 'completion-styles 'initials t)
@@ -874,10 +874,7 @@
  ;; If there is more than one, they won't work right.
 
 '(abbrev-all-caps nil)
-                       '(ac-auto-show-menu 2.0)
-                       '(ac-auto-start 4)
-                       '(ac-candidate-menu-min 3)
-                       '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
+'(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
                        '(flyspell-use-global-abbrev-table-p t)
                        '(global-flyspell-mode t)
                        '(mail-kill-buffer-on-exit t)
@@ -1049,15 +1046,15 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
 (add-hook 'ido-setup-hook
-    (lambda ()
-      ;; Go straight home
-      (define-key ido-file-completion-map
-        (kbd "~")
-        (lambda ()
-    (interactive)
-    (if (looking-back "/")
-        (insert "~/")
-      (call-interactively 'self-insert-command))))))
+          (lambda ()
+            ;; Go straight home
+            (define-key ido-file-completion-map
+              (kbd "~")
+              (lambda ()
+                (interactive)
+                (if (looking-back "/")
+                    (insert "~/")
+                  (call-interactively 'self-insert-command))))))
 
 (use-package ido)
 
@@ -1197,18 +1194,18 @@ ido-enter-matching-directory nil
           (lambda ()
             (org-mime-change-class-style 
 "example" "
-  background:rgba(255,0,0,0.05);
-  border:1px solid rgba(255,0,0,0.2);
-  border-radius:8px;
-  color:#3f3f3f;
+        background:rgba(255,0,0,0.05);
+        border:1px solid rgba(255,0,0,0.2);
+        border-radius:8px;
+        color:#3f3f3f;
   font-family:Garamond, serif;
-  line-height:1.2;
+        line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
 margin-left:2em;
-  text-align:left;
-  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-  white-space:0;
+        text-align:left;
+        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+        white-space:0;
   width:60%;
   word-wrap:normal!important;")))
 
@@ -1271,17 +1268,17 @@ font-family: Courier, 'Courier New', monospace;
           (lambda ()
             (org-mime-change-element-style
              "blockquote" "
-  background:rgba(255,0,0,0.05);
-  border:1px solid rgba(255,0,0,0.2);
-  border-radius:8px;
-  color:#3f3f3f;
+        background:rgba(255,0,0,0.05);
+        border:1px solid rgba(255,0,0,0.2);
+        border-radius:8px;
+        color:#3f3f3f;
   font-family:Garamond, serif;
-  line-height:1.2;
+        line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
-  text-align:left;
-  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-  white-space:0;
+        text-align:left;
+        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+        white-space:0;
   width:60%;
   word-wrap:normal!important;")))
 
@@ -1749,10 +1746,10 @@ Also converts full stops to commas."
   (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
     (while (/= arg 0)
       (let ((this-win (window-buffer))
-      (next-win (window-buffer (funcall selector))))
-  (set-window-buffer (selected-window) next-win)
-  (set-window-buffer (funcall selector) this-win)
-  (select-window (funcall selector)))
+            (next-win (window-buffer (funcall selector))))
+        (set-window-buffer (selected-window) next-win)
+        (set-window-buffer (funcall selector) this-win)
+        (select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (defun move-region-to-other-window (start end)
@@ -1875,16 +1872,16 @@ With prefix arg C-u, copy region instad of killing it."
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
-  (filename (buffer-file-name)))
+        (filename (buffer-file-name)))
     (if (not filename)
-  (message "Buffer '%s' is not visiting a file!" name)
+        (message "Buffer '%s' is not visiting a file!" name)
       (if (get-buffer new-name)
-    (message "A buffer named '%s' already exists!" new-name)
-  (progn
-    (rename-file name new-name 1)
-    (rename-buffer new-name)
-    (set-visited-file-name new-name)
-    (set-buffer-modified-p nil))))))
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file name new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
@@ -1892,20 +1889,20 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-        (mapcar (lambda (path)
-            (replace-regexp-in-string home "~" path))
-          recentf-list)
-        nil t))))
+                          (mapcar (lambda (path)
+                                    (replace-regexp-in-string home "~" path))
+                                  recentf-list)
+                          nil t))))
 
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-   (tocpl (mapcar (function
-       (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-   (prompt (append '("File name: ") tocpl))
-   (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+         (tocpl (mapcar (function
+                         (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+         (prompt (append '("File name: ") tocpl))
+         (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
@@ -2142,19 +2139,19 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my-isearch-yank-word-hook ()
   (when (equal this-command 'my-isearch-word-at-point)
     (let ((string (concat "\\<"
-        (buffer-substring-no-properties
-         (progn (skip-syntax-backward "w_") (point))
-         (progn (skip-syntax-forward "w_") (point)))
-        "\\>")))
+                          (buffer-substring-no-properties
+                           (progn (skip-syntax-backward "w_") (point))
+                           (progn (skip-syntax-forward "w_") (point)))
+                          "\\>")))
       (if (and isearch-case-fold-search
-         (eq 'not-yanks search-upper-case))
-    (setq string (downcase string)))
+               (eq 'not-yanks search-upper-case))
+          (setq string (downcase string)))
       (setq isearch-string string
-      isearch-message
-      (concat isearch-message
-        (mapconcat 'isearch-text-char-description
-             string ""))
-      isearch-yank-flag t)
+            isearch-message
+            (concat isearch-message
+                    (mapconcat 'isearch-text-char-description
+                               string ""))
+            isearch-yank-flag t)
       (isearch-search-and-update))))
 
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
@@ -2396,9 +2393,9 @@ searches all buffers."
 
 (setq gnus-select-method
    '(nnimap "gmail"
-      (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
-      (nnimap-server-port "imaps")
-      (nnimap-stream ssl)))
+            (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
+            (nnimap-server-port "imaps")
+            (nnimap-stream ssl)))
 
 
 
@@ -2977,12 +2974,6 @@ as the subject."
  [">" "&gt;"]
  )))
 
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(use-package rainbow-delimiters)
-(set-face-attribute 'rainbow-delimiters-unmatched-face nil
-                    :foreground 'unspecified
-                    :inherit 'error)
-
 (use-package org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
@@ -3328,8 +3319,8 @@ Single Capitals as you type."
  `( 
 
 ,(make-mu4e-context
-   :name "Sunjay E. Dixit"
-   :enter-func (lambda () 
+         :name "Sunjay E. Dixit"
+         :enter-func (lambda () 
 (mu4e-message "Switch to sunjaydixit@gmail.com context")
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
@@ -3341,12 +3332,12 @@ Single Capitals as you type."
 (user-mail-address . "dixit@aya.yale.edu")
 (mu4e-get-mail-command . "mbsync gmail") 
 (mu4e-compose-signature .
-     ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+                 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
 
 
 ,(make-mu4e-context
-   :name "New York Writers Intensive"
-   :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
+         :name "New York Writers Intensive"
+         :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
 ;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -3358,17 +3349,17 @@ Single Capitals as you type."
 ;; open my newyorkwritersintensive inbox
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
-   ;; leave-fun not defined 
-   :vars '(
+         ;; leave-fun not defined 
+         :vars '(
 (user-mail-address . "jay@newyorkwritersintensive.com")
 (mu4e-get-mail-command . "mbsync nywi") 
  ( mu4e-compose-signature .
-     ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
+                 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
 
 
 ,(make-mu4e-context
-   :name "Vivovii"
-   :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+         :name "Vivovii"
+         :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
 ;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -3380,12 +3371,12 @@ Single Capitals as you type."
 ;; open my vivovii inbox
 (mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
-   ;; leave-fun not defined 
-   :vars '(
+         ;; leave-fun not defined 
+         :vars '(
 (user-mail-address . "jay@vivovii.com")
 (mu4e-get-mail-command . "mbsync vivovii") 
  ( mu4e-compose-signature .
-     ("Jay Dixit\nvivovii.com\n")))) 
+                 ("Jay Dixit\nvivovii.com\n")))) 
 
 
 ))
@@ -3464,8 +3455,8 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  there is none."
  (if (mu4e-context-current)
   (concat "[" (propertize (mu4e~quote-for-modeline
-         (mu4e-context-name (mu4e-context-current)))
-     'face 'mode-line-buffer-id) "]") ""))
+                           (mu4e-context-name (mu4e-context-current)))
+                 'face 'mode-line-buffer-id) "]") ""))
 
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
@@ -3499,210 +3490,6 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  '("org-contact-add" . mu4e-action-add-org-contact) t)
 (add-to-list 'mu4e-view-actions
  '("org-contact-add" . mu4e-action-add-org-contact) t)
-
-; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
-(use-package notmuch)
-(setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
-(setq notmuch-tag-formats
-
-   (quote
-    (("unread"
-      (propertize tag
-                  (quote face)
-                  (quote
-                   (:foreground "red"))))
-     ("flagged"
-      (propertize tag
-                  (quote face)
-                  (quote
-                   (:foreground "pink")))))))
-
-(custom-set-faces
-
-'(notmuch-search-date ((t (:inherit default :height 1.2))))
- '(notmuch-search-matching-authors ((t (:inherit default :height 1.2))))
- '(notmuch-search-subject ((t (:inherit default :height 1.2))))
- '(notmuch-search-count ((t (:inherit default :height 0.1))))
- '(notmuch-tag-face ((t (:foreground "OliveDrab1" :height 1)))) )
-
-
-(setq notmuch-search-oldest-first nil)
-(defadvice notmuch-mua-reply (around notmuch-fix-sender)
-     (let ((sender "Jay Dixit <dixit@aya.yale.edu>"))
-       ad-do-it))
-   (ad-activate 'notmuch-mua-reply) 
-
-;; Initially the cursor is positioned at the beginning of buffer. 
-;; Some users liked the "ancient" version where cursor was moved to the first Saved searches button. 
-;; Add the following code to your notmuch emacs configuration file in case you want this behaviour:
-
-    (add-hook 'notmuch-hello-refresh-hook
-              (lambda ()
-                (if (and (eq (point) (point-min))
-                         (search-forward "Saved searches:" nil t))
-                    (progn
-                      (forward-line)
-                      (widget-forward 1))
-                  (if (eq (widget-type (widget-at)) 'editable-field)
-                      (beginning-of-line))))) 
-
-;; modify the keybindings 
-(define-key notmuch-show-mode-map "y"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-show-tag (list "-flagged" "-inbox"))
-(notmuch-refresh-this-buffer))) 
-
-(define-key notmuch-show-mode-map "u"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-bury-or-kill-this-buffer)
-(notmuch-refresh-this-buffer) 
-)) 
-
-
-(define-key notmuch-search-mode-map "d"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-search-tag (list "-flagged" "-inbox"))
-(notmuch-search-next-thread))) 
-
-(define-key notmuch-search-mode-map "u"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-search-tag (list "+flagged" "+inbox"))
-(notmuch-search-next-thread))) 
-
-
-;; show mode
-(define-key notmuch-show-mode-map "d"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-show-tag (list "-flagged" "-inbox"))
-(notmuch-bury-or-kill-this-buffer)
-(notmuch-refresh-this-buffer) 
-)) 
-
-(define-key notmuch-show-mode-map "u"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-show-tag (list "+flagged" "+inbox"))
-(notmuch-bury-or-kill-this-buffer)
-(notmuch-refresh-this-buffer) 
-
-)) 
-
-
-
-
-(define-key notmuch-search-mode-map "y"
-      (lambda ()
-        "toggle flagged tag for message"
-        (interactive)
-        (if (member "flagged" (notmuch-search-get-tags))
-            (notmuch-search-tag (list "-flagged" "-inbox"))
-          (notmuch-search-tag (list "+flagged" "+inbox")))))
-(define-key notmuch-tree-mode-map "y"
-      (lambda ()
-        "toggle flagged tag for message"
-        (interactive)
-        (if (member "flagged" (notmuch-tree-get-tags))
-            (notmuch-tree-tag (list "-flagged" "-inbox"))
-          (notmuch-tree-tag (list "+flagged" "+inbox"))))) 
-
-
-(define-key notmuch-search-mode-map "S"
-      (lambda ()
-        "toggle flagged tag for message"
-        (interactive)
-        (if (member "flagged" (notmuch-search-get-tags))
-            (notmuch-search-tag (list "-flagged"))
-          (notmuch-search-tag (list "+flagged")))))
-(define-key notmuch-tree-mode-map "S"
-      (lambda ()
-        "toggle flagged tag for message"
-        (interactive)
-        (if (member "flagged" (notmuch-tree-get-tags))
-            (notmuch-tree-tag (list "-flagged"))
-          (notmuch-tree-tag (list "+flagged")))))
-
-
-(define-key notmuch-show-mode-map "g"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-refresh-this-buffer))) 
-(define-key notmuch-search-mode-map "g"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-refresh-this-buffer))) 
-(define-key notmuch-tree-mode-map "g"
-      (lambda ()
-        "archive"
-(notmuch-refresh-this-buffer))) 
-
-
-
-(define-key notmuch-show-mode-map "x"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-refresh-this-buffer))) 
-(define-key notmuch-search-mode-map "x"
-      (lambda ()
-        "archive"
-        (interactive)
-        (notmuch-refresh-this-buffer))) 
-(define-key notmuch-tree-mode-map "x"
-      (lambda ()
-        "archive"
-(notmuch-refresh-this-buffer))) 
-
-
-(define-key notmuch-hello-mode-map "g" (notmuch-refresh-this-buffer)) 
-;; doesn't work
-
-;; modify the documentation about the keybindings
-(defun notmuch-hello-insert-footer ()
-  "Insert the notmuch-hello footer."
-  (let ((start (point)))
-    (widget-insert "Type a search query and hit RET to view matching threads.\n")
-    (when notmuch-search-history
-      (widget-insert "Hit RET to re-submit a previous search. Edit it first if you like.\n")
-      (widget-insert "Save recent searches with the `save' button.\n"))
-    (when notmuch-saved-searches
-      (widget-insert "Edit saved searches with the `edit' button.\n"))
-    (widget-insert "Hit RET or click on a saved search or tag name to view matching threads.\n")
-(widget-insert "`G' to refresh this screen. `s' to search messages. `q' to quit.\n")
-    (widget-insert "`S' to star or unstar messages.\n")
-    (widget-insert "`y' to unstar and archive a message.\n")
-    (widget-create 'link
-       :notify (lambda (&rest ignore)
-           (customize-variable 'notmuch-hello-sections))
-       :button-prefix "" :button-suffix ""
-       "Customize")
-    (widget-insert " this page.")
-    (let ((fill-column (- (window-width) notmuch-hello-indent)))
-      (center-region start (point))))) 
-;; doesn't work 
-
-
-(use-package org-notmuch) 
-
-;; display in the middle of large displays
-;; (add-hook 'notmuch-show-hook 'turn-on-olivetti-mode 'append)
-;; (add-hook 'notmuch-hello-mode-hook 'turn-on-olivetti-mode 'append)
-;; (add-hook 'notmuch-search-hook 'turn-on-olivetti-mode 'append)
-
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 
 (add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
 (setq nm-results-window-size 25)
@@ -3947,8 +3734,14 @@ event of an error or nonlocal exit."
 (define-key endless/mc-map "\C-e"
   #'mc/edit-ends-of-lines)
 
+(use-package ivy
+
+
+ :config
+
 (define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+)
 
 (defcustom ivy-height 50
   "Number of lines for the minibuffer window."
@@ -4024,12 +3817,12 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
 ;; (add-hook 'org-mode-hook 'wrap-region-mode)
-(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 ;; wrap-region
 (use-package wrap-region
   :ensure t
   :config
+(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 (defun wrap-region-define-wrappers ()
   "Defines defaults wrappers."
@@ -4251,41 +4044,41 @@ The full path into relative path and insert it as a local file link in org-mode"
 ))
 
 (defhydra hydra-helm (:hint nil :color pink)
-  "
-                    ╭──────┐
+        "
+                                                                          ╭──────┐
    Navigation   Other  Sources     Mark             Do             Help   │ Helm │
   ╭───────────────────────────────────────────────────────────────────────┴──────╯
-  ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
-  ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
     _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
-  ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
-  ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
   --------------------------------------------------------------------------------
-  "
-  ("<tab>" helm-keyboard-quit "back" :exit t)
-  ("<escape>" nil "quit")
-  ("\\" (insert "\\") "\\" :color blue)
-  ("h" helm-beginning-of-buffer)
-  ("j" helm-next-line)
-  ("k" helm-previous-line)
-  ("l" helm-end-of-buffer)
-  ("g" helm-beginning-of-buffer)
-  ("G" helm-end-of-buffer)
-  ("n" helm-next-source)
-  ("p" helm-previous-source)
-  ("K" helm-scroll-other-window-down)
-  ("J" helm-scroll-other-window)
-  ("c" helm-recenter-top-bottom-other-window)
-  ("m" helm-toggle-visible-mark)
-  ("t" helm-toggle-all-marks)
-  ("u" helm-unmark-all)
-  ("H" helm-help)
-  ("s" helm-buffer-help)
-  ("v" helm-execute-persistent-action)
-  ("d" helm-persistent-delete-marked)
-  ("y" helm-yank-selection)
-  ("w" helm-toggle-resplit-and-swap-windows)
-  ("f" helm-follow-mode))
+        "
+        ("<tab>" helm-keyboard-quit "back" :exit t)
+        ("<escape>" nil "quit")
+        ("\\" (insert "\\") "\\" :color blue)
+        ("h" helm-beginning-of-buffer)
+        ("j" helm-next-line)
+        ("k" helm-previous-line)
+        ("l" helm-end-of-buffer)
+        ("g" helm-beginning-of-buffer)
+        ("G" helm-end-of-buffer)
+        ("n" helm-next-source)
+        ("p" helm-previous-source)
+        ("K" helm-scroll-other-window-down)
+        ("J" helm-scroll-other-window)
+        ("c" helm-recenter-top-bottom-other-window)
+        ("m" helm-toggle-visible-mark)
+        ("t" helm-toggle-all-marks)
+        ("u" helm-unmark-all)
+        ("H" helm-help)
+        ("s" helm-buffer-help)
+        ("v" helm-execute-persistent-action)
+        ("d" helm-persistent-delete-marked)
+        ("y" helm-yank-selection)
+        ("w" helm-toggle-resplit-and-swap-windows)
+        ("f" helm-follow-mode))
 
 (global-set-key
  (kbd "C-8")
@@ -4631,39 +4424,6 @@ minibuffer."
 
 (setq scroll-margin 25)
 (setq recenter-positions (quote (top middle bottom)))
-
-(spacemacs/set-leader-keys "gx" 'forward-char) 
-;; works
-
-;; global, I think? 
-(evil-leader/set-key
-"gp" 'forward-char 
-) 
-;; works
-
-
-(evil-leader/set-key-for-mode 'org-mode
-        "gl"   'ledger-delete-current-transaction
-) 
-;; doesn't work 
-
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
-;; doesn't work
-
-(define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
-(define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
-(define-key key-minor-mode-map (kbd "}nl") 'new-lisp-buffer)
-(require 'wn-org)
-;; (define-key key-minor-mode-map (kbd "]d") 'wn-org)
-
-;; (spacemacs/set-leader-keys "d" 'forward-char)
-
-(evil-leader/set-key
-"c[" 'load-shared-functions
-"c]" 'load-gnu-startup
-"gb" 'gist-buffer-to-pasteboard
-"]" 'insert-right-bracket 
-)
 
 (defun zoom-in-and-disable-menu-bar-mode ()
   (interactive)

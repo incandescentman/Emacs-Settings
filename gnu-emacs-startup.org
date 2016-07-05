@@ -652,7 +652,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
 
-(define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
+;; (define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
 
 
 ;; book bindings
@@ -2275,6 +2275,7 @@ Oleh
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
+(add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
 #+END_EXAMPLE 
 
 * Reference for cleaning up whitespace around sentences:

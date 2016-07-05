@@ -1400,10 +1400,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  ;; If there is more than one, they won't work right.
 
 '(abbrev-all-caps nil)
-                       '(ac-auto-show-menu 2.0)
-                       '(ac-auto-start 4)
-                       '(ac-candidate-menu-min 3)
-                       '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
+'(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
                        '(flyspell-use-global-abbrev-table-p t)
                        '(global-flyspell-mode t)
                        '(mail-kill-buffer-on-exit t)
@@ -1653,7 +1650,7 @@ Newer version of ~ac-define-source~ would provide us an
   '(progn
      (ac-ispell-setup)))
 
-#+END_SRC 
+#+END_EXAMPLE
 
 * ~ido~
 
@@ -4254,13 +4251,14 @@ I rely and paredit and formatting to keep my parenthesis honest, and for the mos
 
 The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (use-package rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
-#+END_SRC
+#+END_EXAMPLE
 
 * Chords
 Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evil-mode is the best VIM). Chords are so much more comfortable! For example I press j and x together instead of M-x. Just be careful when choosing chords that they are combinations you will never type normally. I mainly use chords for switching buffers, navigating windows, opening files, and transposing expressions.
@@ -4939,7 +4937,7 @@ After this, you should be able to add contacts using a o in the headers view and
 
 ** notmuch
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_EXAMPLE emacs-lisp
 ; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/notmuch/")
 (use-package notmuch)
 (setq notmuch-search-line-faces (quote (("unread" :weight bold) ("flagged"))))
@@ -5143,7 +5141,7 @@ After this, you should be able to add contacts using a o in the headers view and
 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
 (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
- #+END_SRC
+ #+END_EXAMPLE
 
 ** nevermore 
    #+BEGIN_SRC emacs-lisp
@@ -5578,9 +5576,14 @@ event of an error or nonlocal exit."
 
 * ivy
 #+BEGIN_SRC emacs-lisp
+(use-package ivy
+
+
+ :config
+
 (define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-
+)
 #+END_SRC 
 * swiper
 
@@ -5668,12 +5671,12 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
 ;; (add-hook 'org-mode-hook 'wrap-region-mode)
-(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 ;; wrap-region
 (use-package wrap-region
   :ensure t
   :config
+(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
 (defun wrap-region-define-wrappers ()
   "Defines defaults wrappers."
@@ -6663,64 +6666,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+END_SRC
 
 
-* evil leader keybindings
-#+BEGIN_SRC emacs-lisp
-(spacemacs/set-leader-keys "gx" 'forward-char) 
-;; works
-
-;; global, I think? 
-(evil-leader/set-key
-"gp" 'forward-char 
-) 
-;; works
-
-
-(evil-leader/set-key-for-mode 'org-mode
-        "gl"   'ledger-delete-current-transaction
-) 
-;; doesn't work 
-
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
-;; doesn't work 
-
-
-#+END_SRC
-
-
-
-** new keybindings without modifier keys (not this)
-
-   #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
-(define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
-(define-key key-minor-mode-map (kbd "}nl") 'new-lisp-buffer)
-(require 'wn-org)
-;; (define-key key-minor-mode-map (kbd "]d") 'wn-org)
-   #+END_SRC
-
-
-** Spacemacs keybindings 
-
-Available leader keybindings 
-- d
-- g
-- v
-
-#+BEGIN_SRC emacs-lisp
-;; (spacemacs/set-leader-keys "d" 'forward-char) 
-
-#+END_SRC
-
-* config files without RSI
-#+BEGIN_SRC emacs-lisp
-(evil-leader/set-key
-"c[" 'load-shared-functions
-"c]" 'load-gnu-startup
-"gb" 'gist-buffer-to-pasteboard
-"]" 'insert-right-bracket 
-) 
-#+END_SRC
-
 
 
 * zoom and menu bar mode
@@ -7141,3 +7086,10 @@ Set variables as safe
 
 (put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t)) 
 #+END_SRC
+
+
+* Auto-complete stuff
+
+'(ac-auto-show-menu 2.0)
+            '(ac-auto-start 4)
+            '(ac-candidate-menu-min 3)
