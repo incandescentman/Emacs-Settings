@@ -565,7 +565,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
         (sequence "TIP" "|")
-        (sequence "NOTES RESEARCH" "WRITING" "|")
+        (sequence "NOTES" "RESEARCH" "POINT" "NARRATIVE" "ANECDOTE" "WRITING" "|")
         (sequence "PART" "HED" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
@@ -6961,15 +6961,6 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
  (read-only-mode -1))
  (add-hook 'messages-buffer-mode-hook 'messages-buffer-mode-hook-setup)) 
 #+END_SRC
-
-* volatile
-#+BEGIN_SRC emacs-lisp
-
-(use-package volatile-highlights
- :config
- (volatile-highlights-mode t)) 
-#+END_SRC
-
 
 * org-copy-line
 #+BEGIN_SRC emacs-lisp
