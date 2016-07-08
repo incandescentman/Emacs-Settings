@@ -107,7 +107,7 @@
 
 (setq sentence-end-double-space nil)
 
-(global-auto-revert-mode 1)
+;; (global-auto-revert-mode 1)
 
 (delete-selection-mode 1)
 
@@ -1570,37 +1570,6 @@ margin-bottom: 1em;
   (next-line)
   (next-line)
   )
-
-;; (require 'discover)
-
-(discover-add-context-menu
- :context-menu (assq 'isearch discover-context-menus)
- :mode nil
- :mode-hook nil
- :bind "C-c s")
-
-(global-discover-mode 1)
-
-(load "makey")
-
-(discover-add-context-menu
- :context-menu '(isearch
-              (description "Isearch, occur and highlighting")
-              (lisp-switches
-               ("-cf" "Case should fold search" case-fold-search t nil))
-              (lisp-arguments
-               ("=l" "context lines to show (occur)"
-                "list-matching-lines-default-context-lines"
-                (lambda (dummy) (interactive) (read-number "Number of context lines to show: "))))
-              (actions
-               ("Isearch"
-                ("_" "isearch forward symbol" isearch-forward-symbol)
-                ("w" "isearch forward word" isearch-forward-word))
-               ("Occur"
-                ("o" "occur" occur))
-               ("More"
-                ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
- :bind "M-s")
 
 (defun endless/convert-punctuation (rg rp)
   "Look for regexp RG around point, and replace with RP.
@@ -4653,3 +4622,8 @@ cmd)
 (put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
 
 (put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
+
+(defun nolinum ()
+ (setq line-number-mode nil)
+)
+(add-hook 'org-mode-hook 'nolinum)

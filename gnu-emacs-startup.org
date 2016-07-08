@@ -81,7 +81,7 @@ Automatically load abbreviations table:
   #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
-(add-hook 'org-mode-hook (auto-revert-mode 1))
+;; (add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil)
   #+END_SRC
 
@@ -2174,8 +2174,8 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-o
 #+BEGIN_SRC emacs-lisp
 
 ;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+;; (setq global-auto-revert-non-file-buffers t)
+;; (setq auto-revert-verbose nil)
 
 
 ;; Move files to trash when deleting
@@ -3252,3 +3252,4 @@ s-i
 )))
 
 #+END_SRC
+

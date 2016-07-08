@@ -232,7 +232,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 ** Enable auto-revert
 
 #+BEGIN_SRC emacs-lisp
-(global-auto-revert-mode 1)
+;; (global-auto-revert-mode 1)
 #+END_SRC
 
 ** Make typing override text selection
@@ -2343,7 +2343,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 * Discover mode
 Show me what choices I have after I hit a prefix keybinding ([[https://github.com/mickeynp/discover.el][mickeynp/discover.el]]):
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (require 'discover)
 
 (discover-add-context-menu
@@ -2374,7 +2374,7 @@ Show me what choices I have after I hit a prefix keybinding ([[https://github.co
                ("More"
                 ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
  :bind "M-s")
-#+END_SRC
+#+END_EXAMPLE 
 
 * Prose editing settings
 ** Tab Completion for Prose
@@ -7084,3 +7084,12 @@ Set variables as safe
 '(ac-auto-show-menu 2.0)
             '(ac-auto-start 4)
             '(ac-candidate-menu-min 3)
+
+
+* no line numbers 
+#+BEGIN_SRC emacs-lisp
+(defun nolinum ()
+ (setq line-number-mode nil)
+)
+(add-hook 'org-mode-hook 'nolinum) 
+#+END_SRC
