@@ -3253,3 +3253,10 @@ s-i
 
 #+END_SRC
 
+
+
+* leader key, doesn't need a special mode
+
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
+#+END_SRC

@@ -1001,6 +1001,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 (" — " . "---")
 (" - " . "---")
 ("—" . "---")
+("''" . "\"")
 (" – " . "---")
 ("​" . "")
 ("…" . "...")
@@ -4379,7 +4380,7 @@ Single Capitals as you type."
 (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
 ;; suppress backquote warnings, whatever those are 
-(setq warning-suppress-types (quote (((yasnippet\ backquote-change))))) 
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
 ) 
 
 
