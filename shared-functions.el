@@ -41,9 +41,14 @@
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
-(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 
 (setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil)
@@ -79,7 +84,6 @@
 (setq undo-limit 100000)
 (setq split-width-threshold 75)
 
-(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
 (visual-line-mode t)
@@ -92,7 +96,6 @@
 
 (auto-fill-mode -1)
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
 ;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
@@ -106,8 +109,6 @@
 ;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 
 (setq sentence-end-double-space nil)
-
-;; (global-auto-revert-mode 1)
 
 (delete-selection-mode 1)
 
@@ -152,7 +153,7 @@
 ;; leave an empty line between folded subtrees
 (setq org-cycle-separator-lines 1)
 
-'(org-modules (quote (org-info org-jsinfo org-mac-link org-mime )))
+(setq org-modules (quote (org-mac-link org-mime )))
 
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (
@@ -364,7 +365,6 @@
 ;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
 '(initial-major-mode (quote org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
 '(org-replace-disputed-keys t)
 '(org-use-extra-keys nil)
 '(org-adapt-indentation nil)
@@ -728,7 +728,6 @@
 
 (use-package auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 
 (setq default-directory "~/Dropbox/writing/" )
 
@@ -970,7 +969,6 @@
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-modules (quote    (org-pomodoro org-bullets org-mac-link)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
 '(org-provide-checkbox-statistics t)
@@ -1318,7 +1316,7 @@ margin-bottom: 1em;
 
 (global-set-key (kbd "C-x C-i") 'ido-imenu)
 ;; (add-hook 'my-mode-hook 'imenu-add-menubar-index)
-(add-hook 'org-mode-hook 'imenu-add-menubar-index)
+;; (add-hook 'org-mode-hook 'imenu-add-menubar-index)
 
 (defun try-to-add-imenu ()
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
@@ -3031,7 +3029,7 @@ Single Capitals as you type."
 ) 
 
 
-;;; Auto complete mod
+;;; Auto complete mode
 ;;; should be loaded after yasnippet so that they can work together
 (use-package auto-complete-config
 :init
@@ -3046,21 +3044,8 @@ Single Capitals as you type."
 
 
 
-
-  (add-hook 'org-mode-hook
-          (lambda ()
-           (org-set-local 'yas-trigger-key [tab])
-           (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
-
   (defun yas-org-very-safe-expand ()
-      (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
-
-  (add-hook 'org-mode-hook
-          (lambda ()
-           (make-variable-buffer-local 'yas-trigger-key)
-           (setq yas-trigger-key [tab])
-           (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-           (define-key yas-keymap [tab] 'yas-next-field)))
+      (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
 
 ;; NO spell check for embedded snippets
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
@@ -3883,7 +3868,7 @@ already narrowed."
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
 )
 
-(add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
+;; (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
 
 ;; (setq org-cycle-emulate-tab t)
 
@@ -4624,7 +4609,9 @@ cmd)
 
 (put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
 
-(defun nolinum ()
- (setq line-number-mode nil)
-)
-(add-hook 'org-mode-hook 'nolinum)
+(diminish 'projectile-mode) 
+(diminish 'palimpsest-mode) 
+(diminish 'dubcaps-mode) 
+(diminish 'key-minor-mode) 
+(diminish 'wrap-region-mode) 
+(diminish '-mode)

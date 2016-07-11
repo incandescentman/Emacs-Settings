@@ -95,13 +95,17 @@
 * org-mode hooks 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 #+END_SRC
 
 ** globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
-(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
 
 
@@ -182,7 +186,6 @@ And create a function to restore the red cursor in case a color-theme overwrites
 ** Use visual line mode whenever possible
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
 (visual-line-mode t)
@@ -204,7 +207,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 #+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1)
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook  '(lambda () (auto-fill-mode -1)))
 ;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
@@ -227,12 +229,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
-#+END_SRC
-
-** Enable auto-revert
-
-#+BEGIN_SRC emacs-lisp
-;; (global-auto-revert-mode 1)
 #+END_SRC
 
 ** Make typing override text selection
@@ -301,7 +297,7 @@ Turn off fill mode, which adds random line breaks in my text files:
 
 *** Load my org modules
 #+BEGIN_SRC emacs-lisp
-'(org-modules (quote (org-info org-jsinfo org-mac-link org-mime )))
+(setq org-modules (quote (org-mac-link org-mime )))
 #+END_SRC
 
 ** org custom functions
@@ -637,7 +633,6 @@ cursor position in the clone."
 ** Org-mode hooks and other org settings
 #+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
 '(org-replace-disputed-keys t)
 '(org-use-extra-keys nil)
 '(org-adapt-indentation nil)
@@ -1171,8 +1166,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
 #+BEGIN_SRC emacs-lisp
 (use-package auto-capitalize)
-(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
 #+END_SRC
 
 ** Define my default directory:
@@ -1496,7 +1490,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(org-mac-grab-Mail-app-p nil)
  '(org-mac-grab-Safari-app-p nil)
  '(org-mac-grab-Together-app-p nil)
- '(org-modules (quote    (org-pomodoro org-bullets org-mac-link)))
  '(org-n-level-faces 9)
  '(org-odd-levels-only nil)
 '(org-provide-checkbox-statistics t)
@@ -2017,7 +2010,7 @@ Jump to a definition in the current file. (This is awesome.)
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-i") 'ido-imenu)
 ;; (add-hook 'my-mode-hook 'imenu-add-menubar-index)
-(add-hook 'org-mode-hook 'imenu-add-menubar-index)
+;; (add-hook 'org-mode-hook 'imenu-add-menubar-index)
 
 (defun try-to-add-imenu ()
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
@@ -4384,7 +4377,7 @@ Single Capitals as you type."
 ) 
 
 
-;;; Auto complete mod
+;;; Auto complete mode
 ;;; should be loaded after yasnippet so that they can work together
 (use-package auto-complete-config
 :init
@@ -4399,24 +4392,28 @@ Single Capitals as you type."
 
 
 
-
-  (add-hook 'org-mode-hook
-          (lambda ()
-           (org-set-local 'yas-trigger-key [tab])
-           (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
-
   (defun yas-org-very-safe-expand ()
       (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
-  (add-hook 'org-mode-hook
-          (lambda ()
-           (make-variable-buffer-local 'yas-trigger-key)
-           (setq yas-trigger-key [tab])
-           (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-           (define-key yas-keymap [tab] 'yas-next-field))) 
+
 
 #+END_SRC
 
+
+
+;; hopefully this doesn't break it 
+;; (add-hook 'org-mode-hook
+     (lambda ()
+      (org-set-local 'yas-trigger-key [tab])
+      (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
+
+
+;; (add-hook 'org-mode-hook
+     (lambda ()
+      (make-variable-buffer-local 'yas-trigger-key)
+      (setq yas-trigger-key [tab])
+      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+      (define-key yas-keymap [tab] 'yas-next-field)) 
 
 * flyspell skip source blocks
 
@@ -5832,7 +5829,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 
 * org element debug
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
+;; (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
 #+END_SRC
 
 * disable TAB to indent
@@ -7087,10 +7084,13 @@ Set variables as safe
             '(ac-candidate-menu-min 3)
 
 
-* no line numbers 
+* diminish
 #+BEGIN_SRC emacs-lisp
-(defun nolinum ()
- (setq line-number-mode nil)
-)
-(add-hook 'org-mode-hook 'nolinum) 
+(diminish 'projectile-mode) 
+(diminish 'palimpsest-mode) 
+(diminish 'dubcaps-mode) 
+(diminish 'key-minor-mode) 
+(diminish 'wrap-region-mode) 
+(diminish '-mode) 
+
 #+END_SRC
