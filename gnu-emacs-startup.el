@@ -1458,7 +1458,7 @@ t)))
 
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t)
+  (smart-punctuation ":")
 (unless
 (or
 (looking-at "\\W*$")

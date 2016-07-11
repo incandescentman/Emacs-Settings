@@ -4380,7 +4380,7 @@ Single Capitals as you type."
 (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
 ;; suppress backquote warnings, whatever those are 
-(add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
+;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
 ) 
 
 

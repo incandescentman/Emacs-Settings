@@ -2602,7 +2602,7 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
   (interactive)
-  (smart-punctuation ":" t)
+  (smart-punctuation ":")
 (unless
 (or
 (looking-at "\\W*$")
