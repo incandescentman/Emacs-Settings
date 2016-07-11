@@ -45,7 +45,6 @@
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'org-mode-hook (smartparens-mode 1))
-;; (add-hook 'org-mode-hook (auto-revert-mode 1))
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
