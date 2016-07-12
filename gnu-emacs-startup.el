@@ -300,6 +300,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-r") 'ivy-recentf)
+
 (define-key key-minor-mode-map (kbd "M-.") 'insert-period)
 (define-key key-minor-mode-map (kbd "M-,") 'insert-comma)
 

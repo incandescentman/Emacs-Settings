@@ -1377,8 +1377,6 @@ margin-bottom: 1em;
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon")
 
-;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-;; (setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 
@@ -2003,10 +2001,9 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; (define-super-key "f" 'isearch-forward)
 (define-super-key "F" 'pasteboard-search-for-clipboard-contents) 
-;; (define-super-key "R" 'xsteve-ido-choose-from-recentf)
 ;; (define-super-key "R" 'helm-projectile-recentf)
 ;; (define-super-key "r" 'helm-mini)
-(define-super-key "r" 'ivy-recentf)
+
 (define-super-key "R" 'projectile-find-file)
 (define-super-key "t" 'new-buffer)
 (define-super-key "T" 'org-new-scratch-buffer)

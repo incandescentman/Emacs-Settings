@@ -2088,8 +2088,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 * savefile 
 ** file current locations
 #+BEGIN_SRC emacs-lisp
-;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-;; (setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 #+END_SRC 
@@ -2940,10 +2938,9 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 
 ;; (define-super-key "f" 'isearch-forward)
 (define-super-key "F" 'pasteboard-search-for-clipboard-contents) 
-;; (define-super-key "R" 'xsteve-ido-choose-from-recentf)
 ;; (define-super-key "R" 'helm-projectile-recentf)
 ;; (define-super-key "r" 'helm-mini)
-(define-super-key "r" 'ivy-recentf)
+
 (define-super-key "R" 'projectile-find-file)
 (define-super-key "t" 'new-buffer)
 (define-super-key "T" 'org-new-scratch-buffer)
@@ -7100,3 +7097,57 @@ Set variables as safe
 
 
 #+END_SRC
+
+
+* extra 
+
+;; OSX KEY BINDINGS
+(global-set-key (kbd "s-,") 'customize-group)
+(global-set-key (kbd "s-h") 'replace-string)
+
+(global-set-key (kbd "s-\\") 'visit-most-recent-file)
+
+(global-set-key (kbd "s-w") 'delete-window)
+(global-set-key (kbd "s-k") 'kill-this-buffer)
+
+
+(global-set-key (kbd "s-F") 'locate)
+(global-set-key (kbd "s-(") 'org-velocity)
+(global-set-key (kbd "s-[") 'org-backward-heading-same-level)
+(global-set-key (kbd "s-]") 'org-forward-heading-same-level)
+					; (global-set-key (kbd "C-c s") 'org-copy-subtree)
+;; (define-key (kbd "C-v s") 'org-paste-subtree)
+					; (global-set-key (kbd "C-v s") 'org-paste-subtree)
+(global-set-key (kbd "s-l") 'org-insert-link)
+(global-set-key (kbd "s-y") 'redo)
+(global-set-key (kbd "s-i") 'org-emphasize)
+(global-set-key (kbd "s-`") 'other-window)
+
+(global-set-key (kbd "s-\\") 'visit-most-recent-file)
+;; available key mappings
+;; (global-set-key (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+(global-set-key (kbd "s-d") 'org-todo)
+(global-set-key (kbd "s-u") 'ido-dired)
+;; (global-set-key (kbd "s-b") 'org-narrow-to-subtree)
+(global-set-key (kbd "s-b") 'org-tree-to-indirect-buffer)
+(global-set-key (kbd "H-n") 'org-narrow-to-subtree)
+(global-set-key (kbd "H-w") 'widen)
+;; (global-set-key (kbd "s-g") 'google)
+(global-set-key (kbd "s-G") 'helm-do-grep)
+(global-set-key (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+(global-set-key (kbd "s-;") 'google-define-word-or-phrase)
+                    ;(global-set-key (kbd "C-c C-x C-i") 'pomodoro-start)
+                    ;(global-set-key (kbd "C-c C-x C-o") 'org-pomodoro)
+(global-set-key (kbd "s-R") 'web-research)
+
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+
+(setq org-return-follows-link t)
+(setq org-blank-before-new-entry 'always)
+
+;; most crucial keybindings
+(global-set-key (kbd "M-h") 'help-command)
+(global-set-key "\C-ce" 'eval-buffer)
+(global-set-key "\C-cr" 'eval-region)
+
+
