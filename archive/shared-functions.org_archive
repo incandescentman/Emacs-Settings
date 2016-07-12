@@ -28,3 +28,61 @@ isearch-toggle-regexp – Toggles regexp searching on and off.
 isearch-edit-string – Edit the search string in the MiniBuffer. This also provides other isearch options, including word searches (C-w). 
 
 
+
+* removed from init.el
+:PROPERTIES:
+:ARCHIVE_TIME: 2016-07-11 Mon 23:49
+:ARCHIVE_FILE: ~/emacs/prelude/personal/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+;; OSX KEY BINDINGS
+(global-set-key (kbd "s-,") 'customize-group)
+(global-set-key (kbd "s-h") 'replace-string)
+
+(global-set-key (kbd "s-\\") 'visit-most-recent-file)
+
+(global-set-key (kbd "s-w") 'delete-window)
+(global-set-key (kbd "s-k") 'kill-this-buffer)
+
+
+(global-set-key (kbd "s-F") 'locate)
+(global-set-key (kbd "s-(") 'org-velocity)
+(global-set-key (kbd "s-[") 'org-backward-heading-same-level)
+(global-set-key (kbd "s-]") 'org-forward-heading-same-level)
+					; (global-set-key (kbd "C-c s") 'org-copy-subtree)
+;; (define-key (kbd "C-v s") 'org-paste-subtree)
+					; (global-set-key (kbd "C-v s") 'org-paste-subtree)
+(global-set-key (kbd "s-l") 'org-insert-link)
+(global-set-key (kbd "s-y") 'redo)
+(global-set-key (kbd "s-i") 'org-emphasize)
+(global-set-key (kbd "s-`") 'other-window)
+
+(global-set-key (kbd "s-\\") 'visit-most-recent-file)
+;; available key mappings
+;; (global-set-key (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+(global-set-key (kbd "s-d") 'org-todo)
+(global-set-key (kbd "s-u") 'ido-dired)
+;; (global-set-key (kbd "s-b") 'org-narrow-to-subtree)
+(global-set-key (kbd "s-b") 'org-tree-to-indirect-buffer)
+(global-set-key (kbd "H-n") 'org-narrow-to-subtree)
+(global-set-key (kbd "H-w") 'widen)
+;; (global-set-key (kbd "s-g") 'google)
+(global-set-key (kbd "s-G") 'helm-do-grep)
+(global-set-key (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+(global-set-key (kbd "s-;") 'google-define-word-or-phrase)
+                    ;(global-set-key (kbd "C-c C-x C-i") 'pomodoro-start)
+                    ;(global-set-key (kbd "C-c C-x C-o") 'org-pomodoro)
+(global-set-key (kbd "s-R") 'web-research)
+
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+
+(setq org-return-follows-link t)
+(setq org-blank-before-new-entry 'always)
+
+;; most crucial keybindings
+(global-set-key (kbd "M-h") 'help-command)
+(global-set-key "\C-ce" 'eval-buffer)
+(global-set-key "\C-cr" 'eval-region)
+
+
