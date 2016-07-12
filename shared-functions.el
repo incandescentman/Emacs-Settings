@@ -1399,6 +1399,7 @@ margin-bottom: 1em;
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "message")
+(add-to-list 'recentf-exclude ".emacs.d")
 (add-to-list 'recentf-exclude "/var/") 
 (add-to-list 'recentf-exclude "*Org tags*") 
 (add-to-list 'recentf-exclude "persp-auto") 
