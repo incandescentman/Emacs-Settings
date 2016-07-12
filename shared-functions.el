@@ -209,6 +209,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (diminish 'org-indent-mode) 
 (diminish 'smartparens-mode)
 
+(add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
+
 ; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
 (setq org-fontify-quote-and-verse-blocks t)
@@ -1071,10 +1073,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; end
 )
 
-;;(require 'key-chord)
+;; (require 'key-chord)
 (key-chord-mode 1)
-
-(add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
 (add-hook 'ido-setup-hook
           (lambda ()
@@ -1322,8 +1322,6 @@ margin-bottom: 1em;
                        (region-end))
       (call-interactively 'org-return))))
 
-(add-hook 'desktop-after-read-hook 'calendar)
-
 (use-package server)
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
@@ -1331,13 +1329,6 @@ margin-bottom: 1em;
 ;; (require 'openwith)
 ;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 ;; (openwith-mode t)
-
-(setq bookmark-default-file  (concat user-emacs-directory "bookmarks"))
-
-(defun  boss-mode ()
-  (interactive)
-  (global-hl-line-mode -1)
-  (hl-line-mode -1))
 
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
@@ -1479,55 +1470,13 @@ margin-bottom: 1em;
 
 (setq grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "#*")))
 
-(defun replace-garbage-chars ()
-  "Replace goofy MS and other garbage characters with latin1 equivalents."
-  (interactive)
-  (save-excursion                       ;save the current point
-    (replace-string "΄" "\"" nil (point-min) (point-max))
-    (replace-string "“" "\"" nil (point-min) (point-max))
-    (replace-string "’" "'" nil (point-min) (point-max))
-    (replace-string "“" "\"" nil (point-min) (point-max))
-    (replace-string "—" "--" nil (point-min) (point-max)) ; multi-byte
-    (replace-string "" "'" nil (point-min) (point-max))
-    (replace-string "" "'" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "‘" "\"" nil (point-min) (point-max))
-    (replace-string "’" "'" nil (point-min) (point-max))
-    (replace-string "¡\"" "\"" nil (point-min) (point-max))
-    (replace-string "¡­" "..." nil (point-min) (point-max))
-    (replace-string "" "..." nil (point-min) (point-max))
-    (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
-    (replace-string "" "`" nil (point-min) (point-max)) ; \221
-    (replace-string "" "'" nil (point-min) (point-max)) ; \222
-    (replace-string "" "``" nil (point-min) (point-max))
-    (replace-string "" "'" nil (point-min) (point-max))
-    (replace-string "" "*" nil (point-min) (point-max))
-    (replace-string "" "--" nil (point-min) (point-max))
-    (replace-string "" "--" nil (point-min) (point-max))
-    (replace-string " " " " nil (point-min) (point-max)) ; M-SPC
-    (replace-string "¡" "\"" nil (point-min) (point-max))
-    (replace-string "´" "\"" nil (point-min) (point-max))
-    (replace-string "»" "<<" nil (point-min) (point-max))
-    (replace-string "Ç" "'" nil (point-min) (point-max))
-    (replace-string "È" "\"" nil (point-min) (point-max))
-    (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
-    (replace-string "ó" "-" nil (point-min) (point-max))
-    (replace-string "Õ" "'" nil (point-min) (point-max))
-    (replace-string "Õ" "'" nil (point-min) (point-max))
-    (replace-string "Ñ" "---" nil (point-min) (point-max))
-    ))
+
 
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 
 (use-package ls-lisp)
 (setq ls-lisp-ignore-case 't)
-
-(setenv "PATH" (concat (getenv "PATH") "/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
 
 (defun org-mac-chrome-insert-frontmost-url-with-quotes ()
   "with quotes"
@@ -4549,8 +4498,6 @@ Allows use of the fancyvrb latex package."
   (insert "\]")
   )
 
-;; (define-key selected-keymap (kbd "s-u") 'upcase-region)
-
 (defun repeat-last-command ()
 "repeats the last command called via M-x"
 (interactive)
@@ -4577,9 +4524,6 @@ cmd)
 (org-select-line)
 (pasteboard-copy)
 (set-mark nil))
-
-(autoload 'fastdef-insert "fastdef" nil t)
-(autoload 'fastdef-insert-from-history "fastdef" nil t)
 
 (defun next-subtree-and-narrow ()
  (interactive)

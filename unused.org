@@ -1,0 +1,135 @@
+
+* Bookmarks
+#+BEGIN_SRC emacs-lisp
+(setq bookmark-default-file (concat user-emacs-directory "bookmarks"))
+#+END_SRC
+
+
+* Things that I'm not sure if I need
+** Hippie expand
+
+[[http://trey-jackson.blogspot.ca/2007/12/emacs-tip-5-hippie-expand.html][Source]]:
+#+BEGIN_EXAMPLE emacs-lisp
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))
+#+END_EXAMPLE 
+
+** Calendar
+Show calendar after start:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'desktop-after-read-hook 'calendar)
+#+END_SRC
+
+
+* Custom UI modes
+** Boss mode
+
+#+BEGIN_SRC emacs-lisp
+(defun boss-mode ()
+ (interactive)
+ (global-hl-line-mode -1)
+ (hl-line-mode -1))
+#+END_SRC
+
+** garbage characters
+#+BEGIN_SRC emacs-lisp
+(defun replace-garbage-chars ()
+ "Replace goofy MS and other garbage characters with latin1 equivalents."
+ (interactive)
+ (save-excursion            ;save the current point
+  (replace-string "΄" "\"" nil (point-min) (point-max))
+  (replace-string """ "\"" nil (point-min) (point-max))
+  (replace-string "'" "'" nil (point-min) (point-max))
+  (replace-string """ "\"" nil (point-min) (point-max))
+  (replace-string "---" "--" nil (point-min) (point-max)) ; multi-byte
+  (replace-string "" "'" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
+  (replace-string "" "\"" nil (point-min) (point-max))
+  (replace-string "" "\"" nil (point-min) (point-max))
+  (replace-string "" "\"" nil (point-min) (point-max))
+  (replace-string "" "\"" nil (point-min) (point-max))
+  (replace-string "'" "\"" nil (point-min) (point-max))
+  (replace-string "'" "'" nil (point-min) (point-max))
+  (replace-string "¡\"" "\"" nil (point-min) (point-max))
+  (replace-string "¡­" "..." nil (point-min) (point-max))
+  (replace-string "" "..." nil (point-min) (point-max))
+  (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
+  (replace-string "" "`" nil (point-min) (point-max)) ; \221
+  (replace-string "" "'" nil (point-min) (point-max)) ; \222
+  (replace-string "" "``" nil (point-min) (point-max))
+  (replace-string "" "'" nil (point-min) (point-max))
+  (replace-string "" "*" nil (point-min) (point-max))
+  (replace-string "" "--" nil (point-min) (point-max))
+  (replace-string "" "--" nil (point-min) (point-max))
+  (replace-string " " " " nil (point-min) (point-max)) ; M-SPC
+  (replace-string "¡" "\"" nil (point-min) (point-max))
+  (replace-string "´" "\"" nil (point-min) (point-max))
+  (replace-string "»" "<<" nil (point-min) (point-max))
+  (replace-string "Ç" "'" nil (point-min) (point-max))
+  (replace-string "È" "\"" nil (point-min) (point-max))
+  (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
+  (replace-string "ó" "-" nil (point-min) (point-max))
+  (replace-string "Õ" "'" nil (point-min) (point-max))
+  (replace-string "Õ" "'" nil (point-min) (point-max))
+  (replace-string "Ñ" "---" nil (point-min) (point-max))
+  ))
+
+#+END_SRC
+
+
+
+* Load shell environment correctly
+#+BEGIN_SRC emacs-lisp
+(setenv "PATH" (concat (getenv "PATH") "/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+#+END_SRC
+
+
+
+* Discover mode
+Show me what choices I have after I hit a prefix keybinding ([[https://github.com/mickeynp/discover.el][mickeynp/discover.el]]):
+#+BEGIN_EXAMPLE emacs-lisp
+;; (require 'discover)
+
+(discover-add-context-menu
+ :context-menu (assq 'isearch discover-context-menus)
+ :mode nil
+ :mode-hook nil
+ :bind "C-c s")
+
+(global-discover-mode 1)
+
+(load "makey")
+
+(discover-add-context-menu
+ :context-menu '(isearch
+       (description "Isearch, occur and highlighting")
+       (lisp-switches
+        ("-cf" "Case should fold search" case-fold-search t nil))
+       (lisp-arguments
+        ("=l" "context lines to show (occur)"
+        "list-matching-lines-default-context-lines"
+        (lambda (dummy) (interactive) (read-number "Number of context lines to show: "))))
+       (actions
+        ("Isearch"
+        ("_" "isearch forward symbol" isearch-forward-symbol)
+        ("w" "isearch forward word" isearch-forward-word))
+        ("Occur"
+        ("o" "occur" occur))
+        ("More"
+        ("h" "highlighters ..." makey-key-mode-popup-isearch-highlight))))
+ :bind "M-s")
+#+END_EXAMPLE 
+
+
+* fastdef
+#+BEGIN_SRC emacs-lisp
+(autoload 'fastdef-insert "fastdef" nil t)
+(autoload 'fastdef-insert-from-history "fastdef" nil t) 
+#+END_SRC
+
+
+* selected
+#+BEGIN_SRC emacs-lisp
+;; (define-key selected-keymap (kbd "s-u") 'upcase-region)
+#+END_SRC
+
