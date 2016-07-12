@@ -2035,14 +2035,14 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 
 (use-package dired
-:bind  
+:bind (:map dired-mode-map 
 ("C-o" . dired-omit-mode)
  (  "s-o" . tmtxt/dired-do-shell-mac-open)
 ("s-O" . reveal-in-finder)
 ("C-c n" . my-dired-create-file)
  ("c" . touch-file) 
 ("s-:" .  reveal-in-finder)
-
+)
 
 )
 
@@ -3246,10 +3246,8 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
    #+BEGIN_SRC emacs-lisp
 (use-package projectile
-:bind
-( "s-o" . nil)
-)
 
+:config
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
@@ -3258,6 +3256,12 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
 (setq projectile-globally-ignored-files (quote ("TAGS" ".DS_Store")))
+
+
+:bind (:map projectile-mode-map 
+( "s-o" . nil)
+))
+
 
    #+END_SRC
 

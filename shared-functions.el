@@ -1331,14 +1331,14 @@ margin-bottom: 1em;
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
 (use-package dired
-:bind  
+:bind (:map dired-mode-map 
 ("C-o" . dired-omit-mode)
  (  "s-o" . tmtxt/dired-do-shell-mac-open)
 ("s-O" . reveal-in-finder)
 ("C-c n" . my-dired-create-file)
  ("c" . touch-file) 
 ("s-:" .  reveal-in-finder)
-
+)
 
 )
 
@@ -2240,9 +2240,9 @@ searches all buffers."
 (global-set-key (kbd "M-s s")   #'helm-again)
 
 (use-package projectile
-:bind
+:bind (:map projectile-mode-map 
 ( "s-o" . nil)
-)
+))
 
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
