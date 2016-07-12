@@ -41,6 +41,10 @@
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
 (add-hook 'org-mode-hook 'turn-on-flyspell) 
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
+
+(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
+
 ;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 ;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
