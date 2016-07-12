@@ -197,18 +197,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
 
-(diminish 'projectile-mode) 
-(diminish 'palimpsest-mode) 
-(diminish 'dubcaps-mode) 
-(diminish 'key-minor-mode) 
-(diminish 'visual-line-mode) 
-(diminish 'wrap-region-mode) 
-(diminish 'olivetti-mode) 
-(diminish 'yas-minor-mode) 
-(diminish 'abbrev-mode) 
-(diminish 'org-indent-mode) 
-(diminish 'smartparens-mode)
-
 (add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
 ; (setq org-use-property-inheritance t)

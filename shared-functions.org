@@ -1,8 +1,4 @@
-
-
-
-
- # Local Variables:
+# Local Variables:
  # org-config-files-local-mode: t
  # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
  # End: 
@@ -343,21 +339,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "Do indentation, as long as the region isn't too large."
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
-#+END_SRC
-
-** diminish
-#+BEGIN_SRC emacs-lisp
-(diminish 'projectile-mode) 
-(diminish 'palimpsest-mode) 
-(diminish 'dubcaps-mode) 
-(diminish 'key-minor-mode) 
-(diminish 'visual-line-mode) 
-(diminish 'wrap-region-mode) 
-(diminish 'olivetti-mode) 
-(diminish 'yas-minor-mode) 
-(diminish 'abbrev-mode) 
-(diminish 'org-indent-mode) 
-(diminish 'smartparens-mode) 
 #+END_SRC
 
 ** Miscellaneous

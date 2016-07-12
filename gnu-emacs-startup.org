@@ -1778,7 +1778,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
-;; (require 'saveplace)
+(require 'saveplace)
 (setq-default save-place t)
 #+END_SRC
 
@@ -3258,3 +3258,5 @@ s-i
 #+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
 #+END_SRC
+
+

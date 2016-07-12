@@ -1116,7 +1116,7 @@ password: %s" userid password))
 )
 
 ;; Save point position between sessions
-;; (require 'saveplace)
+(require 'saveplace)
 (setq-default save-place t)
 
 (define-minor-mode embolden-next-word
