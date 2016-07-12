@@ -2240,10 +2240,8 @@ searches all buffers."
 (global-set-key (kbd "M-s s")   #'helm-again)
 
 (use-package projectile
-:bind (:map projectile-mode-map 
-( "s-o" . nil)
-))
 
+:config
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
@@ -2253,9 +2251,18 @@ searches all buffers."
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
 (setq projectile-globally-ignored-files (quote ("TAGS" ".DS_Store")))
 
-(use-package helm-projectile)
+
+:bind (:map projectile-mode-map 
+( "s-o" . nil)
+))
+
+(use-package helm-projectile
+
+:config
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
+)
+
 (helm-projectile-on)
 
 (define-key projectile-mode-map (kbd "C-c p /")

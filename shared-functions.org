@@ -3268,9 +3268,13 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** helm projectile
 
    #+BEGIN_SRC emacs-lisp
-(use-package helm-projectile)
+(use-package helm-projectile
+
+:config
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
+)
+
 (helm-projectile-on)
 
 (define-key projectile-mode-map (kbd "C-c p /")
