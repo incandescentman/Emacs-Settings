@@ -40,19 +40,21 @@
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
+(setq-default ispell-program-name (executable-find "hunspell")) 
+(setq ispell-really-hunspell t) 
+(setq flyspell-default-dictionary "en_US")
 
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
+(setq ispell-dictionary "en_US")
+(setq ispell-program-name "/usr/local/bin/hunspell")
+(setenv "DICTIONARY" "en_US") 
 
-;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
-;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'org-mode-hook 'turn-on-font-lock)
-;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(setq ispell-program-name "hunspell")
+  (eval-after-load "ispell"
+  '(progn (defun ispell-get-coding-system () 'utf-8)))
 
-(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:][:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
+
+(setq ispell-extra-args '("-d en_US"))
 
 (setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil)
@@ -144,6 +146,68 @@
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
+
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+;;(while (search-forward-regexp "- " nil to) 
+;; (replace-match "") nil t) 
+;; add alpha. And replace the alpha.
+
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'")
+                            ("’" . "'")
+(" — " . "---")
+(" - " . "---")
+("—" . "---")
+("''" . "\"")
+(" – " . "---")
+("​" . "")
+("…" . "...")
+("• " . "- ")
+(" " . "")
+("  " . " ")
+;; ("- " . "") ; also remove stray spac- es
+;; ("­ " . "") ; also remove stray spac- es
+)
+                          nil beg end))
+
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
+
+(defvar yank-indent-modes
+  '(LaTeX-mode TeX-mode)
+  "Modes in which to indent regions that are yanked (or yank-popped).
+Only modes that don't derive from `prog-mode' should be listed here.")
+
+(defvar yank-indent-blacklisted-modes
+  '(python-mode slim-mode haml-mode)
+  "Modes for which auto-indenting is suppressed.")
+
+(defvar yank-advised-indent-threshold 1000
+  "Threshold (# chars) over which indentation does not automatically occur.")
+
+(defun yank-advised-indent-function (beg end)
+  "Do indentation, as long as the region isn't too large."
+  (if (<= (- end beg) yank-advised-indent-threshold)
+      (indent-region beg end nil)))
+
+(diminish 'projectile-mode) 
+(diminish 'palimpsest-mode) 
+(diminish 'dubcaps-mode) 
+(diminish 'key-minor-mode) 
+(diminish 'visual-line-mode) 
+(diminish 'wrap-region-mode) 
+(diminish 'olivetti-mode) 
+(diminish 'yas-minor-mode) 
+(diminish 'abbrev-mode) 
+(diminish 'org-indent-mode) 
+(diminish 'smartparens-mode)
 
 ; (setq org-use-property-inheritance t)
 (setq org-ctrl-k-protect-subtree t)
@@ -607,38 +671,19 @@
 
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task)
 
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-;;(while (search-forward-regexp "- " nil to) 
-;; (replace-match "") nil t) 
-;; add alpha. And replace the alpha.
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
 
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'")
-                            ("’" . "'")
-(" — " . "---")
-(" - " . "---")
-("—" . "---")
-("''" . "\"")
-(" – " . "---")
-("​" . "")
-("…" . "...")
-("• " . "- ")
-(" " . "")
-("  " . " ")
-;; ("- " . "") ; also remove stray spac- es
-;; ("­ " . "") ; also remove stray spac- es
-)
-                          nil beg end))
+(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
 
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
+;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+;; (add-hook 'org-mode-hook 'turn-on-font-lock)
+;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+
+(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 
 ;; (require 'buffer-stack)
 
@@ -696,9 +741,14 @@
 (setq read-buffer-completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
 
+;; (require 'reveal-in-finder)
+
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+;; (require 'edit-server)
+;; (edit-server-start)
 
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
@@ -841,8 +891,6 @@
 (work-on-book)
 )
 
-;; (require 'reveal-in-finder)
-
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 ;; (require 'eshell-autojump)
 
@@ -867,9 +915,6 @@
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-
-;; (require 'edit-server)
-;; (edit-server-start)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1028,23 +1073,6 @@
 
 ;;(require 'key-chord)
 (key-chord-mode 1)
-
-(defvar yank-indent-modes
-  '(LaTeX-mode TeX-mode)
-  "Modes in which to indent regions that are yanked (or yank-popped).
-Only modes that don't derive from `prog-mode' should be listed here.")
-
-(defvar yank-indent-blacklisted-modes
-  '(python-mode slim-mode haml-mode)
-  "Modes for which auto-indenting is suppressed.")
-
-(defvar yank-advised-indent-threshold 1000
-  "Threshold (# chars) over which indentation does not automatically occur.")
-
-(defun yank-advised-indent-function (beg end)
-  "Do indentation, as long as the region isn't too large."
-  (if (<= (- end beg) yank-advised-indent-threshold)
-      (indent-region beg end nil)))
 
 (add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
 
@@ -4553,22 +4581,6 @@ cmd)
 (autoload 'fastdef-insert "fastdef" nil t)
 (autoload 'fastdef-insert-from-history "fastdef" nil t)
 
-(setq-default ispell-program-name (executable-find "hunspell")) 
-(setq ispell-really-hunspell t) 
-(setq flyspell-default-dictionary "en_US")
-
-(setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US") 
-
-(setq ispell-program-name "hunspell")
-  (eval-after-load "ispell"
-  '(progn (defun ispell-get-coding-system () 'utf-8)))
-
-(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:][:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
-
-(setq ispell-extra-args '("-d en_US"))
-
 (defun next-subtree-and-narrow ()
  (interactive)
  (widen)
@@ -4610,15 +4622,3 @@ cmd)
 (put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
 
 (put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
-
-(diminish 'projectile-mode) 
-(diminish 'palimpsest-mode) 
-(diminish 'dubcaps-mode) 
-(diminish 'key-minor-mode) 
-(diminish 'visual-line-mode) 
-(diminish 'wrap-region-mode) 
-(diminish 'olivetti-mode) 
-(diminish 'yas-minor-mode) 
-(diminish 'abbrev-mode) 
-(diminish 'org-indent-mode) 
-(diminish 'smartparens-mode)

@@ -11,6 +11,7 @@
 ;;; (abbrev-mode)
 (user-full-name)
 
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 #+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -91,25 +92,24 @@
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 #+END_SRC
 
-
-* org-mode hooks 
+** Hunspell
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
+(setq-default ispell-program-name (executable-find "hunspell")) 
+(setq ispell-really-hunspell t) 
+(setq flyspell-default-dictionary "en_US")
 
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
+(setq ispell-dictionary "en_US")
+(setq ispell-program-name "/usr/local/bin/hunspell")
+(setenv "DICTIONARY" "en_US") 
 
-;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
-;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'org-mode-hook 'turn-on-font-lock)
-;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
-#+END_SRC
+(setq ispell-program-name "hunspell")
+  (eval-after-load "ispell"
+  '(progn (defun ispell-get-coding-system () 'utf-8)))
 
-** globally enable palimpsest-mode
-#+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:][:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
+
+(setq ispell-extra-args '("-d en_US"))
+
 #+END_SRC
 
 
@@ -228,7 +228,6 @@ Turn off fill mode, which adds random line breaks in my text files:
 ;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 #+END_SRC
 
-* Editing / environment settings
 ** Disable double spacing between sentences
 
 #+BEGIN_SRC emacs-lisp
@@ -279,6 +278,86 @@ Turn off fill mode, which adds random line breaks in my text files:
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
+#+END_SRC
+
+** Typography
+*** TODO Replace smart quotes with straight quotes
+Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
+#+BEGIN_SRC emacs-lisp
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+;;(while (search-forward-regexp "- " nil to) 
+;; (replace-match "") nil t) 
+;; add alpha. And replace the alpha.
+
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'")
+                            ("’" . "'")
+(" — " . "---")
+(" - " . "---")
+("—" . "---")
+("''" . "\"")
+(" – " . "---")
+("​" . "")
+("…" . "...")
+("• " . "- ")
+(" " . "")
+("  " . " ")
+;; ("- " . "") ; also remove stray spac- es
+;; ("­ " . "") ; also remove stray spac- es
+)
+                          nil beg end))
+#+END_SRC
+
+*** Paste and replace quotes
+Haven't used this next one:
+#+BEGIN_SRC emacs-lisp
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
+#+END_SRC
+
+
+** Indentation
+
+Automatically indenting yanked text if in programming-modes:
+#+BEGIN_SRC emacs-lisp
+(defvar yank-indent-modes
+  '(LaTeX-mode TeX-mode)
+  "Modes in which to indent regions that are yanked (or yank-popped).
+Only modes that don't derive from `prog-mode' should be listed here.")
+
+(defvar yank-indent-blacklisted-modes
+  '(python-mode slim-mode haml-mode)
+  "Modes for which auto-indenting is suppressed.")
+
+(defvar yank-advised-indent-threshold 1000
+  "Threshold (# chars) over which indentation does not automatically occur.")
+
+(defun yank-advised-indent-function (beg end)
+  "Do indentation, as long as the region isn't too large."
+  (if (<= (- end beg) yank-advised-indent-threshold)
+      (indent-region beg end nil)))
+#+END_SRC
+
+** diminish
+#+BEGIN_SRC emacs-lisp
+(diminish 'projectile-mode) 
+(diminish 'palimpsest-mode) 
+(diminish 'dubcaps-mode) 
+(diminish 'key-minor-mode) 
+(diminish 'visual-line-mode) 
+(diminish 'wrap-region-mode) 
+(diminish 'olivetti-mode) 
+(diminish 'yas-minor-mode) 
+(diminish 'abbrev-mode) 
+(diminish 'org-indent-mode) 
+(diminish 'smartparens-mode) 
 #+END_SRC
 
 * org-mode
@@ -979,48 +1058,24 @@ Make org-capture open in full window! :-)
 #+END_SRC
 
 
-
-
-* Typography
-** TODO Replace smart quotes with straight quotes
-Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
+** org-mode hooks 
 #+BEGIN_SRC emacs-lisp
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-;;(while (search-forward-regexp "- " nil to) 
-;; (replace-match "") nil t) 
-;; add alpha. And replace the alpha.
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
 
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'")
-                            ("’" . "'")
-(" — " . "---")
-(" - " . "---")
-("—" . "---")
-("''" . "\"")
-(" – " . "---")
-("​" . "")
-("…" . "...")
-("• " . "- ")
-(" " . "")
-("  " . " ")
-;; ("- " . "") ; also remove stray spac- es
-;; ("­ " . "") ; also remove stray spac- es
-)
-                          nil beg end))
+(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
+
+;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+;; (add-hook 'org-mode-hook 'turn-on-font-lock)
+;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 #+END_SRC
 
-** Paste and replace quotes
-Haven't used this next one:
+*** globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
+(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
 
 * My custom functions/settings
@@ -1112,6 +1167,12 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 (setq read-file-name-completion-ignore-case t)
 #+END_SRC
 
+** Reveal in finder
+
+#+BEGIN_SRC emacs-lisp
+;; (require 'reveal-in-finder)
+#+END_SRC
+
 * Browsing
 ** Make URLs in comments/strings clickable
 
@@ -1122,6 +1183,14 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ** Set the default browser
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+#+END_SRC
+
+** Edit with Emacs
+
+To enable Edit with Emacs in Chrome:
+#+BEGIN_SRC emacs-lisp
+;; (require 'edit-server)
+;; (edit-server-start)
 #+END_SRC
 
 * Miscellaneous/unsorted settings
@@ -1217,8 +1286,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 (use-package blue-ruin) 
 (use-package blue-invoice) 
 (use-package blue-ruin-no-cover) 
-   #+END_SRC
-
+   #+END_SRC 
 
 * Backups
 Make backups:
@@ -1339,12 +1407,6 @@ when replying, look kind of like gmail
 
 #+END_SRC
 
-* Reveal in finder
-
-#+BEGIN_SRC emacs-lisp
-;; (require 'reveal-in-finder)
-#+END_SRC
-
 * ~eshell~
 
 #+BEGIN_SRC emacs-lisp
@@ -1379,14 +1441,6 @@ Defines ~ibuffer-do-replace-string~:
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-#+END_SRC
-
-* Edit with Emacs
-
-To enable Edit with Emacs in Chrome:
-#+BEGIN_SRC emacs-lisp
-;; (require 'edit-server)
-;; (edit-server-start)
 #+END_SRC
 
 * Setting variables
@@ -1560,29 +1614,6 @@ Use key chord
 #+BEGIN_SRC emacs-lisp
 ;;(require 'key-chord)
 (key-chord-mode 1)
-#+END_SRC
-
-
-* Indentation
-
-Automatically indenting yanked text if in programming-modes:
-#+BEGIN_SRC emacs-lisp
-(defvar yank-indent-modes
-  '(LaTeX-mode TeX-mode)
-  "Modes in which to indent regions that are yanked (or yank-popped).
-Only modes that don't derive from `prog-mode' should be listed here.")
-
-(defvar yank-indent-blacklisted-modes
-  '(python-mode slim-mode haml-mode)
-  "Modes for which auto-indenting is suppressed.")
-
-(defvar yank-advised-indent-threshold 1000
-  "Threshold (# chars) over which indentation does not automatically occur.")
-
-(defun yank-advised-indent-function (beg end)
-  "Do indentation, as long as the region isn't too large."
-  (if (<= (- end beg) yank-advised-indent-threshold)
-      (indent-region beg end nil)))
 #+END_SRC
 
 * Color themes
@@ -7004,26 +7035,6 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
 (autoload 'fastdef-insert-from-history "fastdef" nil t) 
 #+END_SRC
 
-* Hunspell
-#+BEGIN_SRC emacs-lisp
-(setq-default ispell-program-name (executable-find "hunspell")) 
-(setq ispell-really-hunspell t) 
-(setq flyspell-default-dictionary "en_US")
-
-(setq ispell-dictionary "en_US")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-(setenv "DICTIONARY" "en_US") 
-
-(setq ispell-program-name "hunspell")
-  (eval-after-load "ispell"
-  '(progn (defun ispell-get-coding-system () 'utf-8)))
-
-(setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:][:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
-
-(setq ispell-extra-args '("-d en_US"))
-
-#+END_SRC
-
 * org-config-files-mode
 #+BEGIN_EXAMPLE emacs-lisp
 (define-minor-mode org-config-files-local-mode
@@ -7104,21 +7115,5 @@ Set variables as safe
 '(ac-auto-show-menu 2.0)
             '(ac-auto-start 4)
             '(ac-candidate-menu-min 3)
-
-
-* diminish
-#+BEGIN_SRC emacs-lisp
-(diminish 'projectile-mode) 
-(diminish 'palimpsest-mode) 
-(diminish 'dubcaps-mode) 
-(diminish 'key-minor-mode) 
-(diminish 'visual-line-mode) 
-(diminish 'wrap-region-mode) 
-(diminish 'olivetti-mode) 
-(diminish 'yas-minor-mode) 
-(diminish 'abbrev-mode) 
-(diminish 'org-indent-mode) 
-(diminish 'smartparens-mode) 
-#+END_SRC
 
 
