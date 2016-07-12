@@ -662,8 +662,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task)
 
 (add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
-
 (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
 
 ;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
@@ -918,9 +916,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 '(abbrev-all-caps nil)
 '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
-                       '(flyspell-use-global-abbrev-table-p t)
-                       '(global-flyspell-mode t)
-                       '(mail-kill-buffer-on-exit t)
+'(mail-kill-buffer-on-exit t)
   '(abbrev-all-caps nil)
 '(undo-limit 800000)
   '(user-full-name "Jay Dixit")
@@ -948,9 +944,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  '(edit-server-default-major-mode (quote org-mode))
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
- '(flyspell-abbrev-p t)
- '(flyspell-use-global-abbrev-table-p t)
- '(global-flyspell-mode t)
 '(grep-highlight-matches (quote always))
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*"))) 
  '(ido-use-faces t)
@@ -1044,7 +1037,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
  '(visual-line-mode nil t)
  '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
 '(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
-'(flyspell-abbrev-p t)
 
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
@@ -2257,7 +2249,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay" "omg"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay" "omg"))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
 
@@ -3039,6 +3031,18 @@ Single Capitals as you type."
 
   (defun yas-org-very-safe-expand ()
       (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
+
+(use-package flyspell
+:config
+'(flyspell-abbrev-p t)
+'(flyspell-use-global-abbrev-table-p t)
+'(global-flyspell-mode t)
+
+:bind
+(:map flyspell-mode-map 
+("C-." . nil)
+)
+)
 
 ;; NO spell check for embedded snippets
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
