@@ -1742,7 +1742,8 @@ t)))
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
-(notmuch-mua-send-and-exit)
+;; (notmuch-mua-send-and-exit)
+(message-send-and-exit) 
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook

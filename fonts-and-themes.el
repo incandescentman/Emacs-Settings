@@ -102,7 +102,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (load-file "~/emacs/prelude/personal/jay-custom-color-themes/zenburn-jay.el")
 (monaco-font)
 (custom-set-faces
-(spacemacs/toggle-fringe-off)
+;; (spacemacs/toggle-fringe-off)
 '(minibuffer-prompt ((t (:weight bold :foreground "white" :background "black"))))
 '(org-ellipsis ((t (:background "#3F3F3F" :foreground "#E0CF9F" :underline t)))) 
 '(org-ellipsis ((t (:background "#3F3F3F" :foreground "#E0CF9F" :underline t)))) 

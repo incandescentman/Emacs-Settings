@@ -1270,7 +1270,10 @@ To enable Edit with Emacs in Chrome:
 ** load my custom latex templates
 
    #+BEGIN_SRC emacs-lisp
-   (load "/Users/jay/emacs/prelude/personal/mu4e-context.el")
+(load "/Users/jay/emacs/prelude/personal/mu4e-context.el")
+
+(defun jay-load-latex ()
+(interactive) 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
@@ -1278,6 +1281,7 @@ To enable Edit with Emacs in Chrome:
 (use-package blue-ruin) 
 (use-package blue-invoice) 
 (use-package blue-ruin-no-cover) 
+  )
    #+END_SRC 
 
 * Backups
@@ -3170,6 +3174,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** helm projectile
 
    #+BEGIN_SRC emacs-lisp
+
+
+(setq ad-redefinition-action 'accept) 
 (use-package helm-projectile
 
 :config
@@ -5291,10 +5298,10 @@ C-c q
 
   #+BEGIN_SRC emacs-lisp
 ;; add org-opml directory to load-path
-(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/org-opml/")
+;; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/org-opml/")
 
 ;; load org-opml
-(load-library "org-opml") 
+;; (load-library "org-opml") 
   #+END_SRC
 
 

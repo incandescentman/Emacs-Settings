@@ -793,13 +793,17 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; (setq org-export-preserve-breaks t)
 
 (load "/Users/jay/emacs/prelude/personal/mu4e-context.el")
+
+(defun jay-load-latex ()
+(interactive) 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/prelude/personal/new-latex-templates/jay-latex-yosemite-setup.el") 
 (use-package blue-ruin) 
 (use-package blue-invoice) 
-(use-package blue-ruin-no-cover)
+(use-package blue-ruin-no-cover) 
+  )
 
 (setq backup-directory-alist `(("." . "~/emacs/.saves")))
 (setq
@@ -2221,6 +2225,7 @@ searches all buffers."
 ( "s-o" . nil)
 ))
 
+(setq ad-redefinition-action 'accept) 
 (use-package helm-projectile
 
 :config
@@ -3564,10 +3569,10 @@ If FILE already exists, signal an error."
 (define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
 
 ;; add org-opml directory to load-path
-(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/org-opml/")
+;; (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/org-opml/")
 
 ;; load org-opml
-(load-library "org-opml")
+;; (load-library "org-opml")
 
 ;; (require 'org-element-debug)
 
