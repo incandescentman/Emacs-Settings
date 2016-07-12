@@ -325,7 +325,7 @@
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 ;; (global-set-key (kbd "C-c m") 'compose-mail)
-(global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
+;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
 (define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
@@ -1797,4 +1797,7 @@ t)))
  ["\n" "\n> "]
 )))
 
-(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task)
+(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
+(define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
+(define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
+(define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
