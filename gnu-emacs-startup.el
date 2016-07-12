@@ -300,6 +300,9 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "C-v") 'kdm/html2org-clipboard)
+
+
 (define-key key-minor-mode-map (kbd "s-r") 'ivy-recentf)
 
 (define-key key-minor-mode-map (kbd "M-.") 'insert-period)
@@ -324,7 +327,7 @@
 
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
-;; (global-set-key (kbd "C-c m") 'compose-mail)
+(global-set-key (kbd "C-c m") 'compose-mail)
 ;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 

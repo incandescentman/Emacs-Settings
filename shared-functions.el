@@ -4559,3 +4559,23 @@ cmd)
 (put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
 
 (put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
+
+(defun loadup-gen ()
+ "Generate the lines to include in the lisp/loadup.el file
+to place all of the libraries that are loaded by your InitFile
+into the main dumped emacs"
+ (interactive)
+ (defun get-loads-from-*Messages* ()
+  (save-excursion
+   (let ((retval ()))
+        (set-buffer "*Messages*")
+        (beginning-of-buffer)
+        (while (search-forward-regexp "^Loading " nil t)
+         (let ((start (point)))
+          (search-forward "...")
+          (backward-char 3)
+          (setq retval (cons (buffer-substring-no-properties start (point)) retval))))
+        retval)))
+ (map 'list
+    (lambda (file) (princ (format "(load \"%s\")\n" file)))
+    (get-loads-from-*Messages*)))
