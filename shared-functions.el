@@ -1378,7 +1378,7 @@ margin-bottom: 1em;
 (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon")
 
 ;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
+;; (setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 

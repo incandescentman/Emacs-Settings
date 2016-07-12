@@ -2089,7 +2089,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** file current locations
 #+BEGIN_SRC emacs-lisp
 ;; (setq recentf-save-file "~/emacs/.savefile/recentf")
-(setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
+;; (setq recentf-save-file "/Users/jay/Dropbox/Apps/Emacs/savefile/recentf") 
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 #+END_SRC 
