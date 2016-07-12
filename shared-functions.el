@@ -1330,7 +1330,19 @@ margin-bottom: 1em;
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
 
-(add-hook 'dired-mode-hook 'hl-line-mode)
+(use-package dired
+:bind  
+("C-o" . dired-omit-mode)
+ (  "s-o" . tmtxt/dired-do-shell-mac-open)
+("s-O" . reveal-in-finder)
+("C-c n" . my-dired-create-file)
+ ("c" . touch-file) 
+("s-:" .  reveal-in-finder)
+
+
+)
+
+  (add-hook 'dired-mode-hook 'hl-line-mode)
 
   (use-package dired-x)
 
@@ -1338,7 +1350,6 @@ margin-bottom: 1em;
 
   (setq-default dired-omit-mode t)
 
-  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
 
   (setq delete-by-moving-to-trash t
         trash-directory "~/.Trash/emacs")
@@ -1357,7 +1368,6 @@ margin-bottom: 1em;
         (message command)
         ;; execute the command
         (async-shell-command command))))
-  (define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
 
   (defun dired-open-current-directory-in-finder ()
     "Open the current directory in Finder"
@@ -1366,8 +1376,6 @@ margin-bottom: 1em;
       (dired-do-async-shell-command
        "open .")))
 
-;; (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
-  (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
@@ -2231,6 +2239,11 @@ searches all buffers."
 
 (global-set-key (kbd "M-s s")   #'helm-again)
 
+(use-package projectile
+:bind
+( "s-o" . nil)
+)
+
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
@@ -3012,7 +3025,8 @@ Single Capitals as you type."
           (kill-buffer))))))
 
 (use-package yasnippet 
-:bind ("C-c e" . yas-load-snippet-buffer)
+:bind 
+("C-c e" . yas-load-snippet-buffer)
 :init
 (yas-global-mode 1) 
 
@@ -3512,10 +3526,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
 
-(eval-after-load 'dired
-  '(progn
-     (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
-     (defun my-dired-create-file (file)
+(defun my-dired-create-file (file)
        "Create a file called FILE.
 If FILE already exists, signal an error."
        (interactive
@@ -3535,7 +3546,7 @@ If FILE already exists, signal an error."
          (write-region "" nil expanded t)
          (when new
            (dired-add-file new)
-           (dired-move-to-filename))))))
+           (dired-move-to-filename))))
 
 (setq olivetti-body-width 120)
 (unbind-key (kbd "C-c [") olivetti-mode-map)
@@ -3815,21 +3826,6 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
-
-;; (require 'god-mode) 
-(defun my-update-cursor ()
-  (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        'bar
-                      'box)))
-
-;; (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
-
-
-             (require 'god-mode-isearch)
-(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
-(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
-(define-key god-local-mode-map (kbd ".") 'repeat)
 
 (eval-after-load 'org-src
   '(define-key org-src-mode-map
@@ -4144,10 +4140,7 @@ The full path into relative path and insert it as a local file link in org-mode"
         (set-buffer-modified-p t)
         (save-buffer 0))))
 
-(eval-after-load 'dired
- '(progn
-  (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
-  (defun touch-file (file)
+(defun touch-file (file)
   "Create a file called FILE.
 If FILE already exists, signal an error."
   (interactive
@@ -4167,7 +4160,7 @@ If FILE already exists, signal an error."
    (write-region "" nil expanded t)
    (when new
    (dired-add-file new)
-   (dired-move-to-filename))))))
+   (dired-move-to-filename))))
 
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -4521,7 +4514,7 @@ Allows use of the fancyvrb latex package."
   (insert "\]")
   )
 
-(define-key selected-keymap (kbd "s-u") 'upcase-region)
+;; (define-key selected-keymap (kbd "s-u") 'upcase-region)
 
 (defun repeat-last-command ()
 "repeats the last command called via M-x"

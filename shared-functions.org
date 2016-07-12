@@ -2033,6 +2033,19 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 * Dired
 
 #+BEGIN_SRC emacs-lisp
+
+(use-package dired
+:bind  
+("C-o" . dired-omit-mode)
+ (  "s-o" . tmtxt/dired-do-shell-mac-open)
+("s-O" . reveal-in-finder)
+("C-c n" . my-dired-create-file)
+ ("c" . touch-file) 
+("s-:" .  reveal-in-finder)
+
+
+)
+
   (add-hook 'dired-mode-hook 'hl-line-mode)
 
   (use-package dired-x)
@@ -2041,7 +2054,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
   (setq-default dired-omit-mode t)
 
-  (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
 
   (setq delete-by-moving-to-trash t
         trash-directory "~/.Trash/emacs")
@@ -2060,7 +2072,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
         (message command)
         ;; execute the command
         (async-shell-command command))))
-  (define-key dired-mode-map (kbd "s-o") 'tmtxt/dired-do-shell-mac-open)
 
   (defun dired-open-current-directory-in-finder ()
     "Open the current directory in Finder"
@@ -2069,8 +2080,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
       (dired-do-async-shell-command
        "open .")))
 
-;; (define-key dired-mode-map (kbd "s-O") 'dired-open-current-directory-in-finder)
-  (define-key dired-mode-map (kbd "s-O") 'reveal-in-finder)
 
   ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
 
@@ -3236,6 +3245,11 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ** projectile
 
    #+BEGIN_SRC emacs-lisp
+(use-package projectile
+:bind
+( "s-o" . nil)
+)
+
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
@@ -4360,7 +4374,8 @@ Single Capitals as you type."
 
 
 (use-package yasnippet 
-:bind ("C-c e" . yas-load-snippet-buffer)
+:bind 
+("C-c e" . yas-load-snippet-buffer)
 :init
 (yas-global-mode 1) 
 
@@ -5253,30 +5268,29 @@ Here's an adaptation of dired-create-directory. It works the same way, so as wel
 
 
 #+BEGIN_SRC emacs-lisp
-(eval-after-load 'dired
-  '(progn
-     (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
-     (defun my-dired-create-file (file)
-       "Create a file called FILE.
-If FILE already exists, signal an error."
-       (interactive
-        (list (read-file-name "Create file: " (dired-current-directory))))
-       (let* ((expanded (expand-file-name file))
-              (try expanded)
-              (dir (directory-file-name (file-name-directory expanded)))
-              new)
-         (if (file-exists-p expanded)
-             (error "Cannot create file %s: file exists" expanded))
-         ;; Find the topmost nonexistent parent dir (variable `new')
-         (while (and try (not (file-exists-p try)) (not (equal new try)))
-           (setq new try
-                 try (directory-file-name (file-name-directory try))))
-         (when (not (file-exists-p dir))
-           (make-directory dir t))
-         (write-region "" nil expanded t)
-         (when new
-           (dired-add-file new)
-           (dired-move-to-filename)))))) 
+
+
+       (defun my-dired-create-file (file)
+         "Create a file called FILE.
+  If FILE already exists, signal an error."
+         (interactive
+          (list (read-file-name "Create file: " (dired-current-directory))))
+         (let* ((expanded (expand-file-name file))
+                (try expanded)
+                (dir (directory-file-name (file-name-directory expanded)))
+                new)
+           (if (file-exists-p expanded)
+               (error "Cannot create file %s: file exists" expanded))
+           ;; Find the topmost nonexistent parent dir (variable `new')
+           (while (and try (not (file-exists-p try)) (not (equal new try)))
+             (setq new try
+                   try (directory-file-name (file-name-directory try))))
+           (when (not (file-exists-p dir))
+             (make-directory dir t))
+           (write-region "" nil expanded t)
+           (when new
+             (dired-add-file new)
+             (dired-move-to-filename))))
 #+END_SRC
 
 Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
@@ -5724,7 +5738,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 ** god mode
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_EXAMPLE emacs-lisp
 ;; (require 'god-mode) 
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
@@ -5741,7 +5755,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 (define-key god-local-mode-map (kbd ".") 'repeat)
 
 
-   #+END_SRC
+   #+END_EXAMPLE
 
 ** C-c C-c to exit source code blocks
 
@@ -6234,30 +6248,28 @@ It will open the link in Emacs with typing C-c C-o.
 
 * touch-file
 #+BEGIN_SRC emacs-lisp
-(eval-after-load 'dired
- '(progn
-  (define-key dired-mode-map (kbd "C-c n") 'my-dired-create-file)
-  (defun touch-file (file)
-  "Create a file called FILE.
-If FILE already exists, signal an error."
-  (interactive
-  (list (read-file-name "Create file: " (dired-current-directory))))
-  (let* ((expanded (expand-file-name file))
-    (try expanded)
-    (dir (directory-file-name (file-name-directory expanded)))
-    new)
-   (if (file-exists-p expanded)
-    (error "Cannot create file %s: file exists" expanded))
-   ;; Find the topmost nonexistent parent dir (variable `new')
-   (while (and try (not (file-exists-p try)) (not (equal new try)))
-   (setq new try
-     try (directory-file-name (file-name-directory try))))
-   (when (not (file-exists-p dir))
-   (make-directory dir t))
-   (write-region "" nil expanded t)
-   (when new
-   (dired-add-file new)
-   (dired-move-to-filename)))))) 
+
+    (defun touch-file (file)
+    "Create a file called FILE.
+  If FILE already exists, signal an error."
+    (interactive
+    (list (read-file-name "Create file: " (dired-current-directory))))
+    (let* ((expanded (expand-file-name file))
+      (try expanded)
+      (dir (directory-file-name (file-name-directory expanded)))
+      new)
+     (if (file-exists-p expanded)
+      (error "Cannot create file %s: file exists" expanded))
+     ;; Find the topmost nonexistent parent dir (variable `new')
+     (while (and try (not (file-exists-p try)) (not (equal new try)))
+     (setq new try
+       try (directory-file-name (file-name-directory try))))
+     (when (not (file-exists-p dir))
+     (make-directory dir t))
+     (write-region "" nil expanded t)
+     (when new
+     (dired-add-file new)
+     (dired-move-to-filename))))
 #+END_SRC
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this 
@@ -6924,7 +6936,7 @@ Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html
 
 * selected
 #+BEGIN_SRC emacs-lisp
-(define-key selected-keymap (kbd "s-u") 'upcase-region)
+;; (define-key selected-keymap (kbd "s-u") 'upcase-region)
 #+END_SRC
 
 

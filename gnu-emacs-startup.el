@@ -334,7 +334,6 @@
 
 (define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
 
-(define-key dired-mode-map (kbd "c") 'touch-file) 
 
 ;; mu4e-gmail
 (define-key key-minor-mode-map (kbd "s-l") 'mu4e-gmail)
@@ -432,9 +431,7 @@
 (define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
-(define-key projectile-mode-map (kbd "s-o") nil) 
 
-(define-key dired-mode-map (kbd "s-:") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "s-:") 'reveal-in-finder)
 (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
 
