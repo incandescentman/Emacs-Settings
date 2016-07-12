@@ -40,13 +40,13 @@
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
-(add-hook 'org-mode-hook 'turn-on-flyspell)
-(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
-(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-(add-hook 'org-mode-hook 'turn-on-font-lock)
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
+;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+;; (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+;; (add-hook 'org-mode-hook 'turn-on-font-lock)
+;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 
@@ -2171,7 +2171,7 @@ searches all buffers."
   (isearch-forward))
 
 (use-package helm-config)
-(helm-mode t)
+;; (helm-mode t)
 ;; (helm-adaptative-mode t)
 
 (use-package helm-swoop)
@@ -4613,5 +4613,5 @@ cmd)
 (diminish 'palimpsest-mode) 
 (diminish 'dubcaps-mode) 
 (diminish 'key-minor-mode) 
-(diminish 'wrap-region-mode) 
-(diminish '-mode)
+(diminish 'visual-line-mode) 
+(diminish 'visual-line-mode)
