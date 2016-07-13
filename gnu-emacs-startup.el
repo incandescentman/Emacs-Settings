@@ -194,6 +194,7 @@
 (looking-at "\\/")
 (looking-at "\\\\")
 (looking-back "\\\\")
+(looking-back "\/")
 (looking-back "\"")
 (looking-at "\"")
 (looking-back "\"")
