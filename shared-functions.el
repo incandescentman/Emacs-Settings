@@ -4567,7 +4567,13 @@ cmd)
 
 (put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
 
-(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
+(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t)) 
+
+(setq safe-local-variable-values
+  (quote
+  ((eval define-key key-minor-mode-map
+          (kbd "SPC")
+          (quote insert-space)))))
 
 (defun loadup-gen ()
  "Generate the lines to include in the lisp/loadup.el file
