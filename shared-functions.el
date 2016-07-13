@@ -3456,13 +3456,18 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
 
+(defvar *gt-div-style* "border-left: 2px solid gray; padding-left: 4px;")
+
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
 (while (re-search-forward "\\(\\(^&gt;\\( *.*\\)?\n\\)+\\)" nil t)
-(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 6px;'>\n"
+(replace-match (concat "<div style='" *gt-div-style* "'>\n"
 (replace-regexp-in-string "^&gt; ?" "" (match-string 1))
-"</div>")))) 
+"</div> \n"))
+(beginning-of-buffer))) 
+
+
 
 (add-hook 'org-mime-html-hook
 (lambda ()
@@ -4583,15 +4588,3 @@ into the main dumped emacs"
  (map 'list
     (lambda (file) (princ (format "(load \"%s\")\n" file)))
     (get-loads-from-*Messages*)))
-
-(require 'package)
-(setq package-check-signature nil
-  package-enable-at-startup nil) ;; Prevent double loading of libraries
-
-(add-to-list 'package-archives '("RSW-Packages" . "http://www.plasmas.biz/rswe/") t)
-
-(package-initialize)
-(unless (package-installed-p 'hyperbole)
- (package-refresh-contents)
- (package-install 'hyperbole))
-(require 'hyperbole)

@@ -5100,13 +5100,18 @@ After this, you should be able to add contacts using a o in the headers view and
 
 ** html reply---doesn't work yet 
 #+BEGIN_SRC emacs-lisp
+(defvar *gt-div-style* "border-left: 2px solid gray; padding-left: 4px;")
+
 (defun org-mime-replace-multy-gt ()
 (interactive)
 (beginning-of-buffer)
 (while (re-search-forward "\\(\\(^&gt;\\( *.*\\)?\n\\)+\\)" nil t)
-(replace-match (concat "<div style='border-left: 2px solid gray; padding-left: 6px;'>\n"
+(replace-match (concat "<div style='" *gt-div-style* "'>\n"
 (replace-regexp-in-string "^&gt; ?" "" (match-string 1))
-"</div>")))) 
+"</div> \n"))
+(beginning-of-buffer))) 
+
+
 
 (add-hook 'org-mime-html-hook
 (lambda ()
@@ -7010,7 +7015,7 @@ into the main dumped emacs"
 
 
 * hyperbole
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (require 'package)
 (setq package-check-signature nil
   package-enable-at-startup nil) ;; Prevent double loading of libraries
@@ -7022,4 +7027,6 @@ into the main dumped emacs"
  (package-refresh-contents)
  (package-install 'hyperbole))
 (require 'hyperbole) 
-#+END_SRC
+#+END_EXAMPLE
+
+
