@@ -98,11 +98,11 @@
 ;; (global-hl-line-mode t) ; turn it on for all modes by default
 ;; (global-hl-line-mode)
 (make-variable-buffer-local 'global-hl-line-mode)
-(add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
+;; (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 
-(auto-fill-mode -1)
+(auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
+
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-;; (add-hook 'org-mode-hook  '(lambda () (writegood-mode 1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
@@ -662,13 +662,11 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task)
 
 (add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
-
-;; (add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
+(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
+(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 ;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'org-mode-hook 'turn-on-font-lock)
 ;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
@@ -769,7 +767,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 '(org-support-shift-select (quote always))
 
 (use-package auto-capitalize)
-(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
+(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 
 (setq default-directory "~/Dropbox/writing/" )
 
@@ -3376,7 +3375,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  (if (and arg (= 0 (mod arg 4)))
    (vivovii-compose)
   (yale-compose)))
-(global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
+;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
 ;; go straight to my personal gmail inbox; bound to s-l
