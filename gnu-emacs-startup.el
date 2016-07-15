@@ -326,6 +326,8 @@
 (define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode) 
 
 
+(define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 (global-set-key (kbd "C-c m") 'compose-mail)

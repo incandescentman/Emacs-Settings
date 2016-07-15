@@ -3012,6 +3012,10 @@ Single Capitals as you type."
 ;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
 ) 
 
+(defun suppress-backquote-warnings ()
+(interactive) 
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
+  )
 
 ;;; Auto complete mode
 ;;; should be loaded after yasnippet so that they can work together
@@ -4593,3 +4597,7 @@ into the main dumped emacs"
  (map 'list
     (lambda (file) (princ (format "(load \"%s\")\n" file)))
     (get-loads-from-*Messages*)))
+
+;; Single key command execution when at beginning of a headline
+(setq org-use-speed-commands t) ; ? speed-key opens Speed Keys help
+(setq org-speed-commands-user '(("x" . org-mark-subtree)))
