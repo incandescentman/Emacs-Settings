@@ -3194,7 +3194,9 @@ Single Capitals as you type."
  (defun my-do-compose-stuff ()
   "My settings for message composition."
   (set-fill-column 72)
-  (flyspell-mode)))
+  (flyspell-mode)
+(turn-on-auto-capitalize-mode)
+))
 
 ;; add option to view html message in a browser
 ;; `aV` in view to activate
@@ -3459,7 +3461,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
 
-(defvar *gt-div-style* "border-left: 1px solid gray; padding-left: 12px;")
+(defvar *gt-div-style* "border-left: 1px solid #CCC; padding-left: 16px;")
 
 (defun org-mime-replace-multy-gt ()
 (interactive)
