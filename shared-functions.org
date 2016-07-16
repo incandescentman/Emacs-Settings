@@ -5100,7 +5100,7 @@ After this, you should be able to add contacts using a o in the headers view and
 
 ** html reply---doesn't work yet 
 #+BEGIN_SRC emacs-lisp
-(defvar *gt-div-style* "border-left: 2px solid gray; padding-left: 4px;")
+(defvar *gt-div-style* "border-left: 1px solid gray; padding-left: 12px;")
 
 (defun org-mime-replace-multy-gt ()
 (interactive)

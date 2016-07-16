@@ -3459,7 +3459,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
 
-(defvar *gt-div-style* "border-left: 2px solid gray; padding-left: 4px;")
+(defvar *gt-div-style* "border-left: 1px solid gray; padding-left: 12px;")
 
 (defun org-mime-replace-multy-gt ()
 (interactive)
