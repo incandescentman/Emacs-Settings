@@ -220,6 +220,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                                       ("h" . org-agenda-schedule)
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
+                                      ("s" . org-schedule)
                                       ("z" . org-add-note)
                                       ("m" . (lambda nil (interactive) (org-todo "MISSED")))
 
@@ -1807,21 +1808,6 @@ With prefix arg C-u, copy region instad of killing it."
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
 
-(defun prelude-rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file name new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
-
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
   (interactive)
@@ -1945,7 +1931,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (define-key orgstruct-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(global-set-key (kbd "M-`") 'prelude-swap-windows)
+(global-set-key (kbd "M-`") 'crux-swap-windows)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 
@@ -2044,10 +2030,10 @@ Including indent-buffer, which should not be called automatically on save."
 (define-super-key "j wf" 'workflowy-mode)
 (define-super-key "j st" 'small-type)
 (define-super-key "j mp" 'morning-pages)
-(define-super-key "j rf" 'prelude-rename-file-and-buffer)
+(define-super-key "j rf" 'crux-rename-file-and-buffer)
 (define-super-key "j lt" 'load-theme)
 (define-super-key "j mt" 'medium-type)
-(define-super-key "j df" 'prelude-delete-file-and-buffer)
+(define-super-key "j df" 'crux-delete-file-and-buffer)
 
 (define-super-key "j bl" 'blue-light)
 
@@ -2248,7 +2234,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay" "omg"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg"))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
 
@@ -2263,7 +2249,7 @@ searches all buffers."
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
 
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
@@ -2979,18 +2965,6 @@ Single Capitals as you type."
 
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
-
-(defun prelude-delete-file-and-buffer ()
-  "Kill the current buffer and deletes the file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (when filename
-      (if (vc-backend filename)
-          (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
-          (delete-file filename)
-          (message "Deleted file %s" filename)
-          (kill-buffer))))))
 
 (use-package yasnippet 
 :bind 

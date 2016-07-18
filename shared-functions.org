@@ -395,6 +395,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                                       ("h" . org-agenda-schedule)
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
+                                      ("s" . org-schedule)
                                       ("z" . org-add-note)
                                       ("m" . (lambda nil (interactive) (org-todo "MISSED")))
 
@@ -2611,25 +2612,6 @@ Useful for working with files and references:
       (message filename))))
 #+END_SRC
 
-** Rename file and buffer
-Source: [[http://steve.yegge.googlepages.com/my-dot-emacs-file][source]]
-#+BEGIN_SRC emacs-lisp
-(defun prelude-rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-	(filename (buffer-file-name)))
-    (if (not filename)
-	(message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-	  (message "A buffer named '%s' already exists!" new-name)
-	(progn
-	  (rename-file name new-name 1)
-	  (rename-buffer new-name)
-	  (set-visited-file-name new-name)
-	  (set-buffer-modified-p nil))))))
-#+END_SRC
-
 ** Recent files
 Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse)
 ~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened
@@ -2812,7 +2794,7 @@ Redefine help shortcut:
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (define-key orgstruct-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(global-set-key (kbd "M-`") 'prelude-swap-windows)
+(global-set-key (kbd "M-`") 'crux-swap-windows)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 #+END_SRC
@@ -2925,10 +2907,10 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (define-super-key "j wf" 'workflowy-mode)
 (define-super-key "j st" 'small-type)
 (define-super-key "j mp" 'morning-pages)
-(define-super-key "j rf" 'prelude-rename-file-and-buffer)
+(define-super-key "j rf" 'crux-rename-file-and-buffer)
 (define-super-key "j lt" 'load-theme)
 (define-super-key "j mt" 'medium-type)
-(define-super-key "j df" 'prelude-delete-file-and-buffer)
+(define-super-key "j df" 'crux-delete-file-and-buffer)
 
 (define-super-key "j bl" 'blue-light)
 
@@ -3219,7 +3201,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "eBay" "omg"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg"))
 #+END_SRC
 
 
@@ -3243,7 +3225,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
 
 #+END_SRC 
@@ -4247,24 +4229,6 @@ Single Capitals as you type."
 
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
-  #+END_SRC
-
-* delete file and buffer
-
-  #+BEGIN_SRC emacs-lisp
-(defun prelude-delete-file-and-buffer ()
-  "Kill the current buffer and deletes the file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (when filename
-      (if (vc-backend filename)
-          (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
-          (delete-file filename)
-          (message "Deleted file %s" filename)
-          (kill-buffer))))))
-
-
   #+END_SRC
 
 * yasnippet 
