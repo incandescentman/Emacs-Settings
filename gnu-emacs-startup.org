@@ -802,7 +802,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         (when (looking-back "^[[:space:]]+") (delete-horizontal-space)))
       (kill-region (point) (progn (my/forward-to-sentence-end) (point)))
       (just-one-space 0))
-(when (looking-at ".. ")
+
+;; don't leave two periods in a row
+(when 
+(or
+(looking-at "\\.\\. ")
+(and 
+(looking-at "\\.")
+(looking-back "\\.") 
+)
+)
 (delete-forward-char 1))
 )
 #+END_SRC
