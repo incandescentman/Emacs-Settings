@@ -1404,6 +1404,7 @@ margin-bottom: 1em;
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (add-to-list 'recentf-exclude ".git")
+(add-to-list 'recentf-exclude "init")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
@@ -2246,7 +2247,7 @@ searches all buffers."
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
                  (- (point) 20)))))))
 
 ;; (setq magit-last-seen-setup-instructions "1.4.0")
