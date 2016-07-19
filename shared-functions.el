@@ -1931,7 +1931,6 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (define-key orgstruct-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(global-set-key (kbd "M-`") 'crux-swap-windows)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 
@@ -2030,10 +2029,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-super-key "j wf" 'workflowy-mode)
 (define-super-key "j st" 'small-type)
 (define-super-key "j mp" 'morning-pages)
-(define-super-key "j rf" 'crux-rename-file-and-buffer)
 (define-super-key "j lt" 'load-theme)
 (define-super-key "j mt" 'medium-type)
-(define-super-key "j df" 'crux-delete-file-and-buffer)
 
 (define-super-key "j bl" 'blue-light)
 
@@ -4577,3 +4574,18 @@ into the main dumped emacs"
 ;; Single key command execution when at beginning of a headline
 (setq org-use-speed-commands t) ; ? speed-key opens Speed Keys help
 (setq org-speed-commands-user '(("x" . org-mark-subtree)))
+
+(use-package crux 
+:bind
+( "M-`" . crux-swap-windows)
+
+( "s-j rf" .  crux-rename-file-and-buffer)
+
+( "s-j df" . crux-delete-file-and-buffer)
+
+( "C-c d" . crux-duplicate-current-line-or-region)
+
+( "C-c i" . crux-find-user-init-file)
+
+;; ( "C-j") crux-top-join-line)
+)

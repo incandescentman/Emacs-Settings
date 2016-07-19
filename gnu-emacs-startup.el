@@ -348,9 +348,6 @@
 (define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)
 
 
-(define-key key-minor-mode-map (kbd "C-c d") 'crux-duplicate-current-line-or-region)
-
-(define-key key-minor-mode-map (kbd "C-c i") 'crux-find-user-init-file)
 
 ;; don't know why this stopped working
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
@@ -486,7 +483,6 @@
 
 ;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
 
-;; (define-key key-minor-mode-map (kbd "C-j") 'crux-top-join-line)
 
 
 (define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
