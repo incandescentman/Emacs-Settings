@@ -416,7 +416,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 #+END_SRC
 
 
-** TODO Custom keybindings
+** NOTE-TO-JAY TODO Custom keybindings
 
 #+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
@@ -434,6 +434,10 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+
+
+(define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
 
 (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
 
@@ -492,7 +496,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 

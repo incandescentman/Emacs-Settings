@@ -2232,7 +2232,7 @@ searches all buffers."
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
 
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk"))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
 
@@ -4589,4 +4589,15 @@ into the main dumped emacs"
 ( "C-c i" . crux-find-user-init-file)
 
 ;; ( "C-j") crux-top-join-line)
+)
+
+(defun em-dash ()
+(interactive) 
+(insert "---")
+  )
+
+(use-package undo-tree
+:bind (:map undo-tree-map
+("M-_" . nil)
+)
 )

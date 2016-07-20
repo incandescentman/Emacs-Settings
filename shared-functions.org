@@ -3199,7 +3199,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk"))
 #+END_SRC
 
 
@@ -7027,4 +7027,21 @@ into the main dumped emacs"
 
 ;; ( "C-j") crux-top-join-line)
 ) 
+#+END_SRC
+
+* typography
+#+BEGIN_SRC emacs-lisp
+(defun em-dash ()
+(interactive) 
+(insert "---")
+  ) 
+#+END_SRC
+
+* undo-tree-mode
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+:bind (:map undo-tree-map
+("M-_" . nil)
+)
+)
 #+END_SRC

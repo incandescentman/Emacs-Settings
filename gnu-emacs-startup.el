@@ -301,6 +301,10 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
+(define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
+
 (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
 
 (define-key key-minor-mode-map (kbd "C-v") 'kdm/html2org-clipboard)
@@ -358,7 +362,7 @@
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
