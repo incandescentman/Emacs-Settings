@@ -417,6 +417,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 ** NOTE-TO-JAY TODO Custom keybindings
+CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 #+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
@@ -497,6 +498,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
 (define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
+
+
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
@@ -585,7 +588,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
 ;; projectile
-(define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+;; (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)

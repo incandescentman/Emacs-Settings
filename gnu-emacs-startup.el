@@ -364,6 +364,8 @@
 
 (define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
 
+
+
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
 
 
@@ -451,7 +453,7 @@
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
 ;; projectile
-(define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+;; (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
