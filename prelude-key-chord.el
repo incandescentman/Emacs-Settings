@@ -40,7 +40,7 @@
 
 
 ;; (key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; 
-;; (key-chord-define-global "KK" 'helm-imenu) ; 
+(key-chord-define-global "KK" 'helm-imenu) ; 
 
 (key-chord-define-global "kk" 'helm-org-in-buffer-headings) ;
 
