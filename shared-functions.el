@@ -2193,7 +2193,11 @@ searches all buffers."
 (setq projectile-globally-ignored-directories
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
-(setq projectile-globally-ignored-files (quote ("TAGS" ".DS_Store")))
+
+
+(setq projectile-globally-ignored-files
+  (quote
+  ("TAGS" ".DS_Store" ".projectile" ".dropbox" ".tmp"))) 
 
 
 :bind (:map projectile-mode-map 

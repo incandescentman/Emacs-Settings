@@ -364,6 +364,8 @@
 
 (define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
 
+(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
+
 
 
 (define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
