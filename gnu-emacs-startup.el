@@ -301,6 +301,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
 
 (define-key key-minor-mode-map (kbd "M-_") 'em-dash) 

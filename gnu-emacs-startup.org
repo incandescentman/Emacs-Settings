@@ -436,6 +436,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
 
 (define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
