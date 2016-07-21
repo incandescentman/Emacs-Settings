@@ -89,6 +89,16 @@
 #+END_SRC
 
 ** Hunspell
+
+*** Needed to add this 
+#+BEGIN_SRC emacs-lisp
+(setq exec-path (append exec-path '("/usr/local/bin"))) 
+#+END_SRC
+Source: [[http://unix.stackexchange.com/questions/38916/how-do-i-configure-emacs-to-use-ispell-on-mac-os-x][osx - How do I configure Emacs to use 'ispell' on Mac OS X? - Unix & Linux Stack Exchange]]
+
+Similar but different path, which I didn't use, but maybe explains why that line is necessary. [[Http://vacuoustruth.com/blog/2013/09/15/spell-checking-in-emacs/][Spell Checking in Emacs]]
+
+*** previous config 
 #+BEGIN_SRC emacs-lisp
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 

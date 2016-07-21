@@ -40,6 +40,8 @@
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
