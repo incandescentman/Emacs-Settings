@@ -32,12 +32,6 @@
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
-;; (require 'org)
-;; (require 'org-mime)
-;; (require 'bind-key) 
-;; (require 'package)
-
 (add-to-list 'package-archives
              '("marmalade" .
                "http://marmalade-repo.org/packages/" ) t)
@@ -77,8 +71,9 @@
 ; (require 'org-fstree)
 #+END_SRC
 
-* Set up spellcheck 
-** Spellcheck add word
+* The Writing Environment
+** spellcheck 
+*** Spellcheck add word
 #+BEGIN_SRC emacs-lisp
 (defun add-word-to-personal-dictionary ()
   (interactive)
@@ -88,18 +83,10 @@
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 #+END_SRC
 
-** Hunspell
+*** Hunspell
 
-*** Needed to add this 
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '("/usr/local/bin"))) 
-#+END_SRC
-Source: [[http://unix.stackexchange.com/questions/38916/how-do-i-configure-emacs-to-use-ispell-on-mac-os-x][osx - How do I configure Emacs to use 'ispell' on Mac OS X? - Unix & Linux Stack Exchange]]
-
-Similar but different path, which I didn't use, but maybe explains why that line is necessary. [[Http://vacuoustruth.com/blog/2013/09/15/spell-checking-in-emacs/][Spell Checking in Emacs]]
-
-*** previous config 
-#+BEGIN_SRC emacs-lisp
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
@@ -119,8 +106,9 @@ Similar but different path, which I didn't use, but maybe explains why that line
 #+END_SRC
 
 
-* UI / customization of appearance and editing environment
-** Stop accidentally highlighting org-mode links all the time:
+** UI / customization of appearance and editing environment
+*** mouse 
+**** Stop accidentally highlighting org-mode links all the time:
 
 #+BEGIN_SRC emacs-lisp
 (setq mouse-highlight nil)
@@ -128,13 +116,14 @@ Similar but different path, which I didn't use, but maybe explains why that line
 
 #+END_SRC
 
-** Ask before exiting Emacs
+** quitting emacs 
+*** Ask before exiting Emacs
 
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
-** System alarms
+*** System alarms
 
 In some cases, you'd like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit C-g in the minibuffer or during an isearch:
 
@@ -156,36 +145,8 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 #+END_SRC
 
 
-** Red cursor mode
 
-This customization with the big blocky boxy red cursor makes me so happy.
-# #+BEGIN_SRC emacs-lisp
-;; (setq-default cursor-type 'box) 
-;; (setq-default cursor-type 'hbar)
-(set-cursor-color "red")
-(setq default-frame-alist
-      '((cursor-color . "red")))
-(add-to-list 'default-frame-alist '(cursor-color . "red"))
-# #+END_SRC
-
-And create a function to restore the red cursor in case a color-theme overwrites it:
-#+BEGIN_SRC emacs-lisp
-(defun  incarnadine-cursor ()
-  (interactive)
-  (set-cursor-color "red")
-  (setq default-frame-alist
-	'((cursor-color . "red"))) 
-  )
-
-(defun  magenta-cursor ()
-  (interactive)
-  (set-cursor-color "#DC8CC3")
-  (setq default-frame-alist
-	'((cursor-color . "#DC8CC3"))) 
-  ) 
-#+END_SRC
-
-** Split windows correctly
+*** Split windows correctly
 
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-indirect-buffer-display 'current-window)
@@ -193,7 +154,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (setq split-width-threshold 75)
 #+END_SRC
 
-** Use visual line mode whenever possible
+*** Use visual line mode whenever possible
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
@@ -202,7 +163,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (global-visual-line-mode t)
 #+END_SRC
 
-** Highlight current line
+*** Highlight current line
 
 #+BEGIN_SRC emacs-lisp
 ;; (global-hl-line-mode t) ; turn it on for all modes by default
@@ -211,7 +172,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 ;; (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
 #+END_SRC
 
-** Autofill mode
+*** Autofill mode
 
 #+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
@@ -221,7 +182,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 #+END_SRC
 
-** Sounds
+*** Sounds
 
 #+BEGIN_SRC emacs-lisp
 (unless (and (fboundp 'play-sound-internal)
@@ -233,30 +194,30 @@ And create a function to restore the red cursor in case a color-theme overwrites
 ;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
 #+END_SRC
 
-** Disable double spacing between sentences
+*** Disable double spacing between sentences
 
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
 #+END_SRC
 
-** Make typing override text selection
+*** Make typing override text selection
 
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode 1)
 #+END_SRC
 
-** Automatically pair parentheses
+*** Automatically pair parentheses
 #+BEGIN_SRC emacs-lisp
 
 (setq buffer-save-without-query nil)
 #+END_SRC
 
-** Search in Spotlight
+*** Search in Spotlight
 #+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
 #+END_SRC
 
-** Automatically open files in their correct modes
+*** Automatically open files in their correct modes
 
 #+BEGIN_SRC emacs-lisp
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
@@ -285,8 +246,8 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode)) 
 #+END_SRC
 
-** Typography
-*** TODO Replace smart quotes with straight quotes
+*** Typography
+**** TODO Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
 (defun replace-smart-quotes (beg end)
@@ -317,7 +278,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                           nil beg end))
 #+END_SRC
 
-*** Paste and replace quotes
+**** Paste and replace quotes
 Haven't used this next one:
 #+BEGIN_SRC emacs-lisp
 (defun paste-and-replace-quotes ()
@@ -328,7 +289,7 @@ Haven't used this next one:
 #+END_SRC
 
 
-** Indentation
+*** Indentation
 
 Automatically indenting yanked text if in programming-modes:
 #+BEGIN_SRC emacs-lisp
@@ -350,12 +311,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (indent-region beg end nil)))
 #+END_SRC
 
-** Miscellaneous
+*** Miscellaneous
 ;; (setq vc-handled-backends ())
 ;; (remove-hook 'find-file-hooks 'vc-find-file-hook) 
 (setq vc-handled-backends nil) 
 
-** Color themes
+*** Color themes
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/emacs/prelude/personal/sublime-themes-jay/")
@@ -1486,8 +1447,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 
-'(abbrev-all-caps nil)
-'(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
+''(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
 '(mail-kill-buffer-on-exit t)
   '(abbrev-all-caps nil)
 '(undo-limit 800000)
@@ -2266,7 +2226,13 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 #+END_SRC
 
 * Abbrevs
+#+BEGIN_SRC emacs-lisp
+(setq abbrev-all-caps nil)
+
+#+END_SRC
 ** Disable autocorrect in Smex
+
+
 #+BEGIN_SRC emacs-lisp
 (defun conditionally-disable-abbrev ()
   ""
@@ -7082,6 +7048,7 @@ into the main dumped emacs"
   ) 
 #+END_SRC
 
+
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
@@ -7091,10 +7058,12 @@ into the main dumped emacs"
 )
 #+END_SRC
 
-* double quote
+* typing / composing 
+** double quote
 #+BEGIN_SRC emacs-lisp
 (defun insert-one-double-quote ()
 (interactive) 
 (insert "\"")
   )
 #+END_SRC
+

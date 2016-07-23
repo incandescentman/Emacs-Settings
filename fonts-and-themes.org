@@ -1,5 +1,38 @@
+*** Red cursor mode
+
+This customization with the big blocky boxy red cursor makes me so happy.
+# #+BEGIN_SRC emacs-lisp
+;; (setq-default cursor-type 'box) 
+;; (setq-default cursor-type 'hbar)
+(set-cursor-color "red")
+(setq default-frame-alist
+   '((cursor-color . "red")))
+(add-to-list 'default-frame-alist '(cursor-color . "red"))
+# #+END_SRC
+
+And create a function to restore the red cursor in case a color-theme overwrites it:
+#+BEGIN_SRC emacs-lisp
+(defun incarnadine-cursor ()
+ (interactive)
+ (set-cursor-color "red")
+ (setq default-frame-alist
+	'((cursor-color . "red"))) 
+ )
+
+(defun magenta-cursor ()
+ (interactive)
+ (set-cursor-color "#DC8CC3")
+ (setq default-frame-alist
+	'((cursor-color . "#DC8CC3"))) 
+ ) 
+#+END_SRC
+
+
+
 * appearance-jay-custom-functions.el 
 #+BEGIN_SRC emacs-lisp
+
+
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()

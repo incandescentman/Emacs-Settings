@@ -1,9 +1,3 @@
-;; (add-to-list 'load-path "/Users/jay/emacs/prelude/elpa/org-plus-contrib-20150810/")
-;; (require 'org)
-;; (require 'org-mime)
-;; (require 'bind-key) 
-;; (require 'package)
-
 (add-to-list 'package-archives
              '("marmalade" .
                "http://marmalade-repo.org/packages/" ) t)
@@ -40,8 +34,7 @@
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
+(setq exec-path (append exec-path '("/usr/local/bin"))) 
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 
 (setq flyspell-default-dictionary "en_US")
@@ -73,20 +66,6 @@
 
 ;; turn off alarms completely
 (setq ring-bell-function 'ignore)
-
-(defun  incarnadine-cursor ()
-  (interactive)
-  (set-cursor-color "red")
-  (setq default-frame-alist
-        '((cursor-color . "red"))) 
-  )
-
-(defun  magenta-cursor ()
-  (interactive)
-  (set-cursor-color "#DC8CC3")
-  (setq default-frame-alist
-        '((cursor-color . "#DC8CC3"))) 
-  )
 
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
@@ -942,8 +921,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 
-'(abbrev-all-caps nil)
-'(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
+''(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
 '(mail-kill-buffer-on-exit t)
   '(abbrev-all-caps nil)
 '(undo-limit 800000)
@@ -1524,6 +1502,8 @@ margin-bottom: 1em;
   (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
   (kill-new (shell-command-to-string cmd))
   (yank))
+
+(setq abbrev-all-caps nil)
 
 (defun conditionally-disable-abbrev ()
   ""

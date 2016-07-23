@@ -1,3 +1,17 @@
+(defun incarnadine-cursor ()
+ (interactive)
+ (set-cursor-color "red")
+ (setq default-frame-alist
+	'((cursor-color . "red"))) 
+ )
+
+(defun magenta-cursor ()
+ (interactive)
+ (set-cursor-color "#DC8CC3")
+ (setq default-frame-alist
+	'((cursor-color . "#DC8CC3"))) 
+ ) 
+
 ;;;; functions to switch fonts and font-sizes in the editor
 
 (defun courier-font ()
