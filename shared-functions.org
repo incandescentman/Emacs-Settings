@@ -7090,3 +7090,11 @@ into the main dumped emacs"
 )
 )
 #+END_SRC
+
+* double quote
+#+BEGIN_SRC emacs-lisp
+(defun insert-one-double-quote ()
+(interactive) 
+(insert "\"")
+  )
+#+END_SRC

@@ -4633,3 +4633,8 @@ into the main dumped emacs"
 ("M-_" . nil)
 )
 )
+
+(defun insert-one-double-quote ()
+(interactive) 
+(insert "\"")
+  )

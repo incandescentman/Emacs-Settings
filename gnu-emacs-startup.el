@@ -303,6 +303,8 @@
 
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
+(define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote) 
+(define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
 
 (define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
 
