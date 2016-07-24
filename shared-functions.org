@@ -163,20 +163,12 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 (global-visual-line-mode t)
 #+END_SRC
 
-*** Highlight current line
-
-#+BEGIN_SRC emacs-lisp
-;; (global-hl-line-mode t) ; turn it on for all modes by default
-;; (global-hl-line-mode)
-(make-variable-buffer-local 'global-hl-line-mode)
-;; (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
-#+END_SRC
 
 *** Autofill mode
+is this still necessary?
 
 #+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
-
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
@@ -6886,8 +6878,8 @@ You can toggle it in necessary files by setting the local variables section at t
 
 #+END_EXAMPLE
 
-
-* next-subtree-and-narrow
+* own org-mode custom navigation functions 
+** next-subtree-and-narrow
 #+BEGIN_SRC emacs-lisp
 (defun next-subtree-and-narrow ()
  (interactive)
@@ -6905,8 +6897,8 @@ You can toggle it in necessary files by setting the local variables section at t
  ) 
 #+END_SRC
 
-
-* right command is hyper key
+* not in use 
+** right command is hyper key
 #+BEGIN_SRC emacs-lisp
 ;; (setq mac-right-command-modifier 'hyper) 
 #+END_SRC
@@ -6935,6 +6927,7 @@ You can toggle it in necessary files by setting the local variables section at t
     (tiny-expand)
     (buffer-string)))
 #+END_SRC
+
 
 * org-html-slideshow
 Set variables as safe
@@ -7040,7 +7033,7 @@ into the main dumped emacs"
 ) 
 #+END_SRC
 
-* typography
+* typography custom functions 
 #+BEGIN_SRC emacs-lisp
 (defun em-dash ()
 (interactive) 

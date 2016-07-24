@@ -76,13 +76,7 @@
 (visual-line-mode t)
 (global-visual-line-mode t)
 
-;; (global-hl-line-mode t) ; turn it on for all modes by default
-;; (global-hl-line-mode)
-(make-variable-buffer-local 'global-hl-line-mode)
-;; (add-hook 'message-mode-hook (lambda () (setq global-hl-line-mode nil)))
-
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
-
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
