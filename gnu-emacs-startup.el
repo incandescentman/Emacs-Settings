@@ -403,6 +403,11 @@
 (define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
 (define-key key-minor-mode-map (kbd "C-M-[") 'org-previous-subtree-and-narrow)
 
+(define-key key-minor-mode-map (kbd "C-]") 'org-next-subtree-same-level-and-narrow)
+
+(define-key key-minor-mode-map (kbd "ESC ESC") 'org-previous-subtree-same-level-and-narrow)
+
+
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 ;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)

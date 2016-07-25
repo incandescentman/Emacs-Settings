@@ -6880,7 +6880,25 @@ You can toggle it in necessary files by setting the local variables section at t
 #+END_EXAMPLE
 
 * own org-mode custom navigation functions 
-** next-subtree-and-narrow
+** next-subtree-same-level-and-narrow
+#+BEGIN_SRC emacs-lisp
+(defun org-next-subtree-same-level-and-narrow ()
+ (interactive)
+ (widen)
+ (org-forward-heading-same-level 1)
+ (org-narrow-to-subtree)
+ )
+
+(defun org-previous-subtree-same-level-and-narrow ()
+ (interactive)
+(org-previous-visible-heading 1) 
+ (widen)
+(org-backward-heading-same-level 1) 
+ (org-narrow-to-subtree)
+ ) 
+#+END_SRC
+
+** next-subtree-and-narrow - original
 #+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-and-narrow ()
  (interactive)

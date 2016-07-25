@@ -538,6 +538,11 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
 (define-key key-minor-mode-map (kbd "C-M-[") 'org-previous-subtree-and-narrow)
 
+(define-key key-minor-mode-map (kbd "C-]") 'org-next-subtree-same-level-and-narrow)
+
+(define-key key-minor-mode-map (kbd "ESC ESC") 'org-previous-subtree-same-level-and-narrow)
+
+
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 ;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
@@ -2390,8 +2395,15 @@ This version kill org-mode headings by 'kill-line'
 
 ;; below is my own hack to fix the ", , " issue
 (when
+
+(or
+
 (looking-back ", , ")
+(looking-back ",, ")
+)
 (new-org-delete-backward-char 2) 
+(my/fix-space)
+
 t))))
 
 #+END_EXAMPLE
