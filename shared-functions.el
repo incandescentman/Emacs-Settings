@@ -3767,7 +3767,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    (lambda (pair)
      (apply 'wrap-region-add-wrapper pair))
    '(
-     ;; ("\"" "\"")
+("\"" "\"")
      ;; ("'"  "'")
      ;; ("("  ")")
      ("{"  "}")
@@ -3779,6 +3779,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    '(
 ;;     ("*" "*" nil org-mode)
 ;;     ("/" "/" nil org-mode)
+("\"" "\"" nil org-mode)
      ("~" "~" nil org-mode)
      ("_" "_" nil org-mode)
      ("*" "*" nil (org-mode message-mode))
@@ -4510,14 +4511,14 @@ cmd)
 (pasteboard-copy)
 (set-mark nil))
 
-(defun next-subtree-and-narrow ()
+(defun org-next-subtree-and-narrow ()
  (interactive)
  (widen)
  (org-next-visible-heading 1)
  (org-narrow-to-subtree)
  )
 
-(defun previous-subtree-and-narrow ()
+(defun org-previous-subtree-and-narrow ()
  (interactive)
 (org-previous-visible-heading 1) 
  (widen)
