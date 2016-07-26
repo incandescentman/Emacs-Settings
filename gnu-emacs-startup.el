@@ -1147,8 +1147,8 @@ password: %s" userid password))
 )
 
 ;; Save point position between sessions
-(require 'saveplace)
-(setq-default save-place t)
+(use-package saveplace
+ :init (save-place-mode))
 
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
