@@ -2126,9 +2126,11 @@ searches all buffers."
   (goto-char (point-min))
   (isearch-forward))
 
-(use-package helm-config)
-;; (helm-mode t)
+(use-package helm-config 
+:config
+(helm-mode t)
 ;; (helm-adaptative-mode t)
+)
 
 (use-package helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
@@ -3826,13 +3828,16 @@ already narrowed."
          (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
 
-;; Add <p for python expansion
+(add-to-list 'org-structure-template-alist
+'("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") )
 
 (add-to-list 'org-structure-template-alist
-'("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") 
-'("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") 
-             ) 
-(add-to-list 'org-structure-template-alist 
+'("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") )
+
+(add-to-list 'org-structure-template-alist
+'("f" "#+BEGIN_SRC fountain\n?\n#+END_SRC" "<src lang=\"fountain\">\n?\n</src>") )
+
+(add-to-list 'org-structure-template-alist
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
 )
 

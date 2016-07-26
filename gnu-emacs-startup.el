@@ -44,7 +44,8 @@
     (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (autopair-mode 1))
+(autopair-global-mode) 
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")

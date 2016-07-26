@@ -80,7 +80,8 @@ Automatically load abbreviations table:
 
   #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'org-mode-hook (smartparens-mode 1))
+(add-hook 'org-mode-hook (autopair-mode 1))
+(autopair-global-mode) 
 (setq org-hierarchical-todo-statistics nil)
   #+END_SRC
 
@@ -931,7 +932,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 #+END_SRC
 
-This fucked up autopair mode so I'm turning it off again.
+
 
 
 ** my/fix-space
