@@ -4280,24 +4280,25 @@ Single Capitals as you type."
       (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
 
-
 #+END_SRC
 
 
 
+(add-hook 'org-mode-hook
+  (lambda ()
+  (org-set-local 'yas-trigger-key [tab])
+  (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
+
+
+(add-hook 'org-mode-hook
+  (lambda ()
+  (make-variable-buffer-local 'yas-trigger-key)
+  (setq yas-trigger-key [tab])
+  (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+  (define-key yas-keymap [tab] 'yas-next-field))) 
+
+
 ;; hopefully this doesn't break it 
-;; (add-hook 'org-mode-hook
-     (lambda ()
-      (org-set-local 'yas-trigger-key [tab])
-      (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
-
-
-;; (add-hook 'org-mode-hook
-     (lambda ()
-      (make-variable-buffer-local 'yas-trigger-key)
-      (setq yas-trigger-key [tab])
-      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-      (define-key yas-keymap [tab] 'yas-next-field)) 
 
 
 * flyspell
@@ -5588,7 +5589,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    (lambda (pair)
      (apply 'wrap-region-add-wrapper pair))
    '(
-("\"" "\"")
+;; ("\"" "\"")
      ;; ("'"  "'")
      ;; ("("  ")")
      ("{"  "}")
@@ -5600,7 +5601,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    '(
 ;;     ("*" "*" nil org-mode)
 ;;     ("/" "/" nil org-mode)
-("\"" "\"" nil org-mode)
+;; ("\"" "\"" nil org-mode)
      ("~" "~" nil org-mode)
      ("_" "_" nil org-mode)
      ("*" "*" nil (org-mode message-mode))

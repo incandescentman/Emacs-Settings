@@ -3767,7 +3767,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    (lambda (pair)
      (apply 'wrap-region-add-wrapper pair))
    '(
-("\"" "\"")
+;; ("\"" "\"")
      ;; ("'"  "'")
      ;; ("("  ")")
      ("{"  "}")
@@ -3779,7 +3779,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
    '(
 ;;     ("*" "*" nil org-mode)
 ;;     ("/" "/" nil org-mode)
-("\"" "\"" nil org-mode)
+;; ("\"" "\"" nil org-mode)
      ("~" "~" nil org-mode)
      ("_" "_" nil org-mode)
      ("*" "*" nil (org-mode message-mode))
