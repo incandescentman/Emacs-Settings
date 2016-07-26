@@ -1587,7 +1587,7 @@ t)))
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
 
-       (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
