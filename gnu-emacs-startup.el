@@ -1436,8 +1436,8 @@ t)))
   (smart-punctuation ",")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "*$")
+(looking-at "*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[ ]*\"")          ; beginning of a quote
 )
@@ -1476,8 +1476,8 @@ t)))
   (smart-punctuation ";")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "*$")
+(looking-at "*I\\b")          ; never downcase the word "I"
 )
 
 (save-excursion (downcase-word 1))))
@@ -1490,8 +1490,8 @@ t)))
   (smart-punctuation ":")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "*$")
+(looking-at "*I\\b")          ; never downcase the word "I"
 )
 
 (save-excursion (downcase-word 1))))
@@ -1575,13 +1575,13 @@ t)))
   (unless
 
       (or
-       (looking-at "\\W*I\\b")          ; never downcase the word "I"
-       (looking-at "\\W*OK\\b")          ; never downcase the word "OK"
+       (looking-at "*I\\b")          ; never downcase the word "I"
+       (looking-at "*OK\\b")          ; never downcase the word "OK"
        (looking-at "[ ]*I\'")          ; never downcase the word "I"
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
-       (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at "*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
