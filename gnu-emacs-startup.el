@@ -742,8 +742,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
 
-
-
        )
   (smart-expand))
 (insert "\ ")
@@ -1582,7 +1580,7 @@ t)))
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
-       (looking-at "*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
@@ -1599,7 +1597,7 @@ t)))
        (looking-at "[[:punct:]]*[\n\t ]*\\*")
        ;; (looking-at "\\* TODO"); redundant
        (let ((case-fold-search nil))
-         (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
+         (looking-at "[ ]*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
          (looking-at "[A-Z].*"))
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")

@@ -2566,7 +2566,7 @@ t)))
   (smart-punctuation ",")
 (unless
 (or
-(looking-at "*$")
+(looking-at "[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[ ]*\"")          ; beginning of a quote
@@ -2643,7 +2643,7 @@ t)))
   (smart-punctuation ":")
 (unless
 (or
-(looking-at "*$")
+(looking-at "[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
 )
 
@@ -2844,7 +2844,7 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
-       (looking-at "*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
@@ -2884,7 +2884,7 @@ Five six
        (looking-at "[[:punct:]]*[\n\t ]*\\*")
        ;; (looking-at "\\* TODO"); redundant
        (let ((case-fold-search nil))
-         (looking-at "*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
+         (looking-at "[ ]*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
          (looking-at "[A-Z].*"))
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
