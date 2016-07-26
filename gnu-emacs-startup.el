@@ -742,6 +742,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
 
+
+
        )
   (smart-expand))
 (insert "\ ")
@@ -1435,7 +1437,7 @@ t)))
   (smart-punctuation ",")
 (unless
 (or
-(looking-at "*$")
+(looking-at "[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[ ]*\"")          ; beginning of a quote
@@ -1489,7 +1491,7 @@ t)))
   (smart-punctuation ":")
 (unless
 (or
-(looking-at "*$")
+(looking-at "[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
 )
 
