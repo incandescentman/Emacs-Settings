@@ -1478,7 +1478,9 @@ t)))
 (unless
 (or
 (looking-at "[ ]*$")
-(looking-at "[ ]*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[ ]*\"")     ; beginning of a quote
 )
 
 (save-excursion (downcase-word 1))))
@@ -1492,7 +1494,9 @@ t)))
 (unless
 (or
 (looking-at "[ ]*$")
-(looking-at "[ ]*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[ ]*\"")     ; beginning of a quote
 )
 
 (save-excursion (downcase-word 1))))
@@ -1582,6 +1586,7 @@ t)))
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
+
        (looking-at "[ ]*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
@@ -1620,7 +1625,7 @@ t)))
   (interactive)
 (unless
 (or
-
+(looking-at "[ ]*$") 
 (looking-at "[ ]*I\\b") ; never downcase the word "I"
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
