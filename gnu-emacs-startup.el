@@ -960,7 +960,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
   (smart-expand)
   (if (or (re-search-forward "\\=[      ]*\n" nil t)
-          (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
+          (re-search-forward "\\=\\*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space))
@@ -1436,9 +1436,10 @@ t)))
   (smart-punctuation ",")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "\\*$")
+(looking-at "\\*I\\b")          ; never downcase the word "I"
 (looking-at "[ ]*I\'")          ; never downcase the word "I'
+(looking-at "\\*I'")     ; never downcase the word "I" 
 (looking-at "[ ]*\"")          ; beginning of a quote
 )
 
@@ -1476,8 +1477,9 @@ t)))
   (smart-punctuation ";")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "\\*$")
+(looking-at "\\*I\\b")          ; never downcase the word "I"
+(looking-at "\\*I'")          ; never downcase the word "I"
 )
 
 (save-excursion (downcase-word 1))))
@@ -1490,8 +1492,8 @@ t)))
   (smart-punctuation ":")
 (unless
 (or
-(looking-at "\\W*$")
-(looking-at "\\W*I\\b")          ; never downcase the word "I"
+(looking-at "\\*$")
+(looking-at "\\*I\\b")          ; never downcase the word "I"
 )
 
 (save-excursion (downcase-word 1))))
@@ -1504,7 +1506,7 @@ t)))
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
-  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+  (if (re-search-backward "\\>\\*[[:punct:]]+\\*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
   (my/fix-space)
@@ -1575,13 +1577,13 @@ t)))
   (unless
 
       (or
-       (looking-at "\\W*I\\b")          ; never downcase the word "I"
-       (looking-at "\\W*OK\\b")          ; never downcase the word "OK"
+       (looking-at "\\*I\\b")          ; never downcase the word "I"
+       (looking-at "\\*OK\\b")          ; never downcase the word "OK"
        (looking-at "[ ]*I\'")          ; never downcase the word "I"
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
-       (looking-at "\\W*$") ; hopefully this means "zero or more whitespace then end of line"
+       (looking-at "\\*$") ; hopefully this means "zero or more whitespace then end of line"
 (looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))

@@ -3552,7 +3552,8 @@ subsequent sends."
      (switch-function nil)
      (yank-action nil)
      (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
+;; (return-action '(email-heading-return))
+)
 
    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
    (message-goto-body)
