@@ -684,7 +684,7 @@ cursor position in the clone."
 '(org-startup-align-all-tables t)
 '(org-startup-folded showeverything)
 '(org-startup-indented nil)
-'(org-hide-leading-stars t)
+
 '(org-indent-mode-turns-off-org-adapt-indentation nil)
 '(org-indent-mode-turns-on-hiding-stars nil)
 '(org-insert-mode-line-in-empty-file t)
@@ -4263,6 +4263,11 @@ Single Capitals as you type."
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
   )
 
+
+
+#+END_SRC
+
+
 ;;; Auto complete mode
 ;;; should be loaded after yasnippet so that they can work together
 (use-package auto-complete-config
@@ -4278,12 +4283,8 @@ Single Capitals as you type."
 
 
 
-  (defun yas-org-very-safe-expand ()
-      (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
-
-
-#+END_SRC
-
+ (defun yas-org-very-safe-expand ()
+   (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
 
 (add-hook 'org-mode-hook
@@ -5295,7 +5296,7 @@ C-c q
 * org-element-debug
 
   #+BEGIN_SRC emacs-lisp
-;; (require 'org-element-debug)
+(require 'org-element-debug)
   #+END_SRC
 
 

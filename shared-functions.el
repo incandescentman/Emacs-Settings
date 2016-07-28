@@ -412,7 +412,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 '(org-startup-align-all-tables t)
 '(org-startup-folded showeverything)
 '(org-startup-indented nil)
-'(org-hide-leading-stars t)
+
 '(org-indent-mode-turns-off-org-adapt-indentation nil)
 '(org-indent-mode-turns-on-hiding-stars nil)
 '(org-insert-mode-line-in-empty-file t)
@@ -2997,24 +2997,6 @@ Single Capitals as you type."
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
   )
 
-;;; Auto complete mode
-;;; should be loaded after yasnippet so that they can work together
-(use-package auto-complete-config
-:init
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(ac-config-default)
-;;; Set the trigger key so that it can work together with yasnippet on tab key,
-;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
-;;; activate, otherwise, auto-complete will
-(ac-set-trigger-key "TAB")
-(ac-set-trigger-key "<tab>") 
-)
-
-
-
-  (defun yas-org-very-safe-expand ()
-      (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
-
 (use-package flyspell
 :config
 '(flyspell-abbrev-p t)
@@ -3568,7 +3550,7 @@ If FILE already exists, signal an error."
 ;; load org-opml
 ;; (load-library "org-opml")
 
-;; (require 'org-element-debug)
+(require 'org-element-debug)
 
 (progn
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit

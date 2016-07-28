@@ -44,8 +44,6 @@
     (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
 
 (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'org-mode-hook (autopair-mode 1))
-(autopair-global-mode) 
 (setq org-hierarchical-todo-statistics nil)
 
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
@@ -301,6 +299,8 @@
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-clipboard) 
 
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
