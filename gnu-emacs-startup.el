@@ -1422,8 +1422,8 @@ t)))
 (save-excursion
 (unless
 (or
-(looking-at "[ ]*$")
-(looking-at "\"[ ]*$")
+(looking-at "[[:punct:]][ ]*$")
+(looking-at "\"[[:punct:]][ ]*$")
 (looking-at "\)[ ]*$")
 )
 (capitalize-unless-org-heading))
@@ -1437,10 +1437,11 @@ t)))
   (smart-punctuation ",")
 (unless
 (or
-(looking-at "[ ]*$")
-(looking-at "[ ]*I\\b")          ; never downcase the word "I"
-(looking-at "[ ]*I\'")          ; never downcase the word "I'
-(looking-at "[ ]*\"")          ; beginning of a quote
+
+(looking-at "[[:punct:]][ ]*$")
+(looking-at "[[:punct:]][ ]*I\\b")          ; never downcase the word "I"
+(looking-at "[[:punct:]][ ]*I\'")          ; never downcase the word "I'
+(looking-at "[[:punct:]][ ]*\"")          ; beginning of a quote
 )
 
 (save-excursion (downcase-word 1)))
@@ -1477,10 +1478,10 @@ t)))
   (smart-punctuation ";")
 (unless
 (or
-(looking-at "[ ]*$")
-(looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
-(looking-at "[ ]*\"")     ; beginning of a quote
+(looking-at "[[:punct:]][ ]*$")
+(looking-at "[[:punct:]][ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[[:punct:]][ ]*I\'")     ; never downcase the word "I'
+(looking-at "[[:punct:]][ ]*\"")     ; beginning of a quote
 )
 
 (save-excursion (downcase-word 1))))
@@ -1493,10 +1494,10 @@ t)))
   (smart-punctuation ":")
 (unless
 (or
-(looking-at "[ ]*$")
-(looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
-(looking-at "[ ]*\"")     ; beginning of a quote
+(looking-at "[[:punct:]][ ]*$")
+(looking-at "[[:punct:]][ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[[:punct:]][ ]*I\'")     ; never downcase the word "I'
+(looking-at "[[:punct:]][ ]*\"")     ; beginning of a quote
 )
 
 (save-excursion (downcase-word 1))))
@@ -1580,15 +1581,15 @@ t)))
   (unless
 
       (or
-       (looking-at "[ ]*I\\b")          ; never downcase the word "I"
-       (looking-at "[ ]*OK\\b")          ; never downcase the word "OK"
-       (looking-at "[ ]*I\'")          ; never downcase the word "I"
+       (looking-at "[[:punct:]][ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]][ ]*OK\\b")          ; never downcase the word "OK"
+       (looking-at "[[:punct:]][ ]*I\'")          ; never downcase the word "I"
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
 
        (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
-(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\"[[:punct:]][ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
 
@@ -1625,11 +1626,11 @@ t)))
   (interactive)
 (unless
 (or
-(looking-at "[ ]*$") 
-(looking-at "[ ]*I\\b") ; never downcase the word "I"
+(looking-at "[[:punct:]][ ]*$") 
+(looking-at "[[:punct:]][ ]*I\\b") ; never downcase the word "I"
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
-(looking-at "\"[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\"[[:punct:]][ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
