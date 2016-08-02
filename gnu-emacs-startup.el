@@ -411,8 +411,6 @@
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
-;; (define-key key-minor-mode-map (kbd "M-\"") 'edit-abbrevs)
-
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
 (define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
@@ -443,8 +441,6 @@
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
-
-(define-key key-minor-mode-map (kbd "s-Z") 'unexpand-abbrev)
 
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 

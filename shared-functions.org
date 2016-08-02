@@ -2662,7 +2662,7 @@ Enable Google search:
 ** Google search through Gnugol
 #+HEADER: :comments noweb 
 #+BEGIN_SRC emacs-lisp
-;; (require 'gnugol)
+(require 'gnugol)
 
 (defun region-or-word-at-point ()
   (if (use-region-p)

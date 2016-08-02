@@ -1841,7 +1841,7 @@ With prefix arg C-u, copy region instad of killing it."
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
 
 ;; [[file:shared-functions.org::*Google%20search%20through%20Gnugol][Google\ search\ through\ Gnugol:1]]
-;; (require 'gnugol)
+(require 'gnugol)
 
 (defun region-or-word-at-point ()
   (if (use-region-p)
