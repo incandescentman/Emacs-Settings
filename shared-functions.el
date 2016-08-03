@@ -69,7 +69,7 @@
 
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
-(setq split-width-threshold 75)
+;; (setq split-width-threshold 75)
 
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
@@ -204,6 +204,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                                       ("Z" . ignore))))
 
 (setq org-export-with-smart-quotes t) 
+(setq org-export-exclude-tags (quote ("noexport" "extra")))
 
 ;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
 (setq org-export-time-stamp-file nil)
@@ -936,7 +937,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
  '(cua-mode nil)
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
+ '(delete-window-preserve-buffer (quote ("warm.org" "Current-book-research.txt" "accountability.txt")))
  '(dired-clean-up-buffers-too nil)
  '(dired-details-hidden-string "")
  '(dired-kept-versions 8)
@@ -1114,7 +1115,7 @@ ido-enter-matching-directory nil
                  (sixth (file-attributes (concat ido-current-directory b)))
                  (sixth (file-attributes (concat ido-current-directory a)))))))
   (ido-to-end  ;; move . files to end (again)
-   (delq nil (mapcar
+   (delq nil (mapc 
               (lambda (x) (and (char-equal (string-to-char x) ?.) x))
               ido-temp-list))))
 
@@ -1729,7 +1730,7 @@ Also converts full stops to commas."
 
 (defun my-org-files-list ()
  (delq nil
-  (mapcar (lambda (buffer)
+  (mapc (lambda (buffer)
    (buffer-file-name buffer))
    (org-buffer-list 'files t)))) 
 
@@ -1789,9 +1790,9 @@ With prefix arg C-u, copy region instad of killing it."
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list
-         (mapcar 'file-truename
-                 (remove nil (mapcar 'buffer-file-name (buffer-list)))))
-        (recent-files-names (delete-dups (mapcar 'file-truename recentf-list)))
+         (mapc 'file-truename
+                 (remove nil (mapc 'buffer-file-name (buffer-list)))))
+        (recent-files-names (delete-dups (mapc 'file-truename recentf-list)))
         most-recent-filename)
     (dolist (filename recent-files-names)
       (unless (member filename buffer-file-name-list)
@@ -1817,7 +1818,7 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-                          (mapcar (lambda (path)
+                          (mapc (lambda (path)
                                     (replace-regexp-in-string home "~" path))
                                   recentf-list)
                           nil t))))
@@ -1827,7 +1828,7 @@ With prefix arg C-u, copy region instad of killing it."
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-         (tocpl (mapcar (function
+         (tocpl (mapc (function
                          (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
          (prompt (append '("File name: ") tocpl))
          (fname (completing-read (car prompt) (cdr prompt) nil nil)))
@@ -3586,11 +3587,11 @@ event of an error or nonlocal exit."
   (declare (debug ((&rest (&rest form)) body))
            (indent 1))
   `(progn
-     ,@(mapcar (lambda (adform)
+     ,@(mapc (lambda (adform)
                  (cons 'advice-add adform))
                adlist)
      (unwind-protect (progn ,@body)
-       ,@(mapcar (lambda (adform)
+       ,@(mapc (lambda (adform)
                    `(advice-remove ,(car adform) ,(nth 2 adform)))
                  adlist))))
 
@@ -4163,7 +4164,7 @@ If FILE already exists, signal an error."
   (interactive)
   (let ((recent-dirs
          (delete-dups
-          (mapcar (lambda (file)
+          (mapc (lambda (file)
                     (if (file-directory-p file) file (file-name-directory file)))
                   recentf-list))))
 
@@ -4615,3 +4616,5 @@ into the main dumped emacs"
 (interactive) 
 (insert "\"")
   )
+
+(setq display-buffer-alist (quote (("" ignore (nil . reusable-frames)))))

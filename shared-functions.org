@@ -151,7 +151,7 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
-(setq split-width-threshold 75)
+;; (setq split-width-threshold 75)
 #+END_SRC
 
 *** Use visual line mode whenever possible
@@ -371,6 +371,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 #+BEGIN_SRC emacs-lisp 
 (setq org-export-with-smart-quotes t) 
+(setq org-export-exclude-tags (quote ("noexport" "extra")))
 
 ;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='http://dixit.ca/css/email.css'>")
 (setq org-export-time-stamp-file nil)
@@ -1460,7 +1461,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(cua-mode nil)
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(delete-window-preserve-buffer (quote ("*scratch*" "current-book-research.txt" "accountability.txt")))
+ '(delete-window-preserve-buffer (quote ("warm.org" "Current-book-research.txt" "accountability.txt")))
  '(dired-clean-up-buffers-too nil)
  '(dired-details-hidden-string "")
  '(dired-kept-versions 8)
@@ -1720,7 +1721,7 @@ modified files are at the front:
                  (sixth (file-attributes (concat ido-current-directory b)))
                  (sixth (file-attributes (concat ido-current-directory a)))))))
   (ido-to-end  ;; move . files to end (again)
-   (delq nil (mapcar
+   (delq nil (mapc 
               (lambda (x) (and (char-equal (string-to-char x) ?.) x))
               ido-temp-list))))
 #+END_SRC
@@ -2505,7 +2506,7 @@ A useful function: remove a hyperlink but leave the link description:
 
 (defun my-org-files-list ()
  (delq nil
-  (mapcar (lambda (buffer)
+  (mapc (lambda (buffer)
    (buffer-file-name buffer))
    (org-buffer-list 'files t)))) 
 
@@ -2585,9 +2586,9 @@ With prefix arg C-u, copy region instad of killing it."
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list
-         (mapcar 'file-truename
-                 (remove nil (mapcar 'buffer-file-name (buffer-list)))))
-        (recent-files-names (delete-dups (mapcar 'file-truename recentf-list)))
+         (mapc 'file-truename
+                 (remove nil (mapc 'buffer-file-name (buffer-list)))))
+        (recent-files-names (delete-dups (mapc 'file-truename recentf-list)))
         most-recent-filename)
     (dolist (filename recent-files-names)
       (unless (member filename buffer-file-name-list)
@@ -2627,7 +2628,7 @@ function I have a persistent buffer list available.
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-			  (mapcar (lambda (path)
+			  (mapc (lambda (path)
 				    (replace-regexp-in-string home "~" path))
 				  recentf-list)
 			  nil t))))
@@ -2640,7 +2641,7 @@ function I have a persistent buffer list available.
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-	 (tocpl (mapcar (function
+	 (tocpl (mapc (function
 			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
 	 (prompt (append '("File name: ") tocpl))
 	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
@@ -5403,11 +5404,11 @@ event of an error or nonlocal exit."
   (declare (debug ((&rest (&rest form)) body))
            (indent 1))
   `(progn
-     ,@(mapcar (lambda (adform)
+     ,@(mapc (lambda (adform)
                  (cons 'advice-add adform))
                adlist)
      (unwind-protect (progn ,@body)
-       ,@(mapcar (lambda (adform)
+       ,@(mapc (lambda (adform)
                    `(advice-remove ,(car adform) ,(nth 2 adform)))
                  adlist))))
 
@@ -6266,7 +6267,7 @@ Wow, this works.
   (interactive)
   (let ((recent-dirs
          (delete-dups
-          (mapcar (lambda (file)
+          (mapc (lambda (file)
                     (if (file-directory-p file) file (file-name-directory file)))
                   recentf-list))))
 
@@ -7086,3 +7087,10 @@ into the main dumped emacs"
   )
 #+END_SRC
 
+
+* Emacs 25 
+
+** don't create new frames
+#+BEGIN_SRC emacs-lisp
+(setq display-buffer-alist (quote (("" ignore (nil . reusable-frames))))) 
+#+END_SRC
