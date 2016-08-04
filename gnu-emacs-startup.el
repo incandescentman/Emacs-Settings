@@ -300,7 +300,7 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
-(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-clipboard) 
+(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
 
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
@@ -413,7 +413,7 @@
 
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
-(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-clipboard)
+(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-kill-ring)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -1501,8 +1501,7 @@ t)))
 (save-excursion (downcase-word 1))))
 
 
-
-;; (define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key org-mode-map (kbd ":") 'smart-colon)
 ;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
 
 (defun backward-kill-word-correctly ()
