@@ -69,7 +69,8 @@
 
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
-;; (setq split-width-threshold 75)
+(setq split-width-threshold 5)
+(setq split-height-threshold 5)
 
 (add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'message-mode-hook 'turn-on-visual-line-mode)
@@ -706,6 +707,12 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 ;; (require 'reveal-in-finder)
 
+(defun cycle-hyphenation-or-toggle-item ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'org-toggle-item)
+    (cycle-hyphenation)))
+
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
 
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
@@ -999,6 +1006,10 @@ margin-bottom: 1em;
         white-space:0;
   width:60%;
   word-wrap:normal!important;")))
+
+(use-package org-download)
+(setq-default org-download-image-dir "/Users/jay/Downloads")
+(setq org-download-method (quote directory))
 
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 ;; (require 'eshell-autojump)
@@ -1392,6 +1403,7 @@ ido-enter-matching-directory nil
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 
+(setq recentf-save-file "/Users/jay/emacs/medial/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
@@ -1858,6 +1870,43 @@ With prefix arg C-u, copy region instad of killing it."
       ((and buffer-file-name (eq major-mode 'sh-mode)))
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
+(defun oleh-ido-setup-hook ()
+  (define-key ido-file-dir-completion-map "~"
+    (lambda ()
+      (interactive)
+      (ido-set-current-directory "~/")
+      (setq ido-exit 'refresh)
+      (exit-minibuffer))))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+
+(defun ido-find-file-jump (dir)
+  "Return a command that sends DIR to `ido-find-file'."
+  `(lambda ()
+     (interactive)
+     (ido-set-current-directory ,dir)
+     (setq ido-exit 'refresh)
+     (exit-minibuffer)))
+
+
+
+(defvar oleh-ido-shortcuts
+  '(("~/" "~")
+    ("~/Dropbox/source/site-lisp/" "!")
+    ("~/git/lispy/" "@")))
+
+(mapc (lambda (x)
+        (setcar x (ido-find-file-jump (car x))))
+      oleh-ido-shortcuts)
+
+(defun oleh-ido-setup-hook ()
+  (mapc
+   (lambda (x)
+     (define-key ido-file-dir-completion-map (cadr x) (car x)))
+   oleh-ido-shortcuts))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+
 ;; (require 'engine-mode)
 ;; (engine-mode t)
 
@@ -2171,7 +2220,7 @@ searches all buffers."
 
 (setq helm-swoop-split-with-multiple-windows nil)
 
-(setq helm-swoop-split-direction 'split-window-vertically)
+;; (setq helm-swoop-split-direction 'split-window-vertically)
 
 (setq helm-swoop-speed-or-color nil)
 
@@ -2317,90 +2366,591 @@ searches all buffers."
 
 (setq custom-safe-themes t)
 
+(use-package key-seq)
+(key-seq-define-global "qd" 'dired)
+(key-seq-define text-mode-map "qf" 'flyspell-buffer)
+
+(key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
+(key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
+
+(defun org-toggle-heading-same-level ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*")
+        (setq is-heading t)))
+    (if is-heading
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+(org-do-promote)
+;        (org-todo 'nextset)
+)))) ; add TODO  #+END_SRC
+
+(defun org-toggle-todo-heading ()
+  "Toggles the current line between a non-heading and TODO heading."
+  (interactive)
+  (let ((is-heading))
+    (save-excursion
+      (forward-line 0)
+      (when (looking-at "^\\*")
+        (setq is-heading t)))
+    (if is-heading
+        (progn
+          (org-todo 'none) ; remove TODO
+          (org-toggle-heading)) ; remove heading
+      (progn
+        (org-toggle-heading) ; convert to heading
+(org-do-promote)
+        (org-todo 'nextset))))) ; add TODO  #+END_SRC
+
+(defun delete-extra-whitespace-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\s-+" nil t)
+        (replace-match "")))))
+
+(defun double-line-breaks-in-region (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["\r" "\n\n"]
+["\n" "\n\n"]
+)))
+
+(use-package xah-replace-pairs)
+(defun replace-html-chars-region (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["&" "&amp;"]
+ ["<" "&lt;"]
+ [">" "&gt;"]
+ )))
+
+(defun helm-do-grep-current-directory-tree ()
+  "Recursively search current directory.
+If a parent directory has a `dir-locals-file', use that as the
+root instead."
+  (interactive)
+  (let ((variables-file (dir-locals-find-file
+                         (or (buffer-file-name) default-directory))))
+    (helm-do-grep-1
+     (list
+      (cond
+       ((stringp variables-file)
+        (file-name-directory variables-file))
+       ((consp variables-file)
+        (nth 0 variables-file))
+       (t default-directory)))
+     t nil '("*"))))
+
+(defun contract-contractions (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+ '(
+ ["I have" "I've"]
+["I am" "I'm"] 
+)))
+
+(defun dcaps-to-scaps ()
+  "Convert word in DOuble CApitals to Single Capitals."
+  (interactive)
+  (and (= ?w (char-syntax (char-before)))
+       (save-excursion
+         (and (if (called-interactively-p)
+                  (skip-syntax-backward "w")
+                (= -3 (skip-syntax-backward "w")))
+              (let (case-fold-search)
+                (looking-at "\\b[[:upper:]]\\{2\\}[[:lower:]]"))
+              (capitalize-word 1)))))
+
+(add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
+
+(define-minor-mode dubcaps-mode
+  "Toggle `dubcaps-mode'.  Converts words in DOuble CApitals to
+Single Capitals as you type."
+  :init-value nil
+  :lighter (" DC")
+  (if dubcaps-mode
+      (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
+    (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
+
+(add-hook 'text-mode-hook #'dubcaps-mode)
+(add-hook 'org-mode-hook #'dubcaps-mode)
+
+(use-package yasnippet 
+:bind 
+("C-c e" . yas-load-snippet-buffer)
+:init
+(yas-global-mode 1) 
+
+:config 
+;; load yasnippet directories
+(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
+
+;; don't insert random spaces in my prose
+(setq yas-indent-line (quote none)) 
+
+;; take input word including hyphen.
+(setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
+
+;; suppress backquote warnings, whatever those are 
+;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
+) 
+
+(defun suppress-backquote-warnings ()
+(interactive) 
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
+  )
+
+(use-package flyspell
+:config
+'(flyspell-abbrev-p t)
+'(flyspell-use-global-abbrev-table-p t)
+'(global-flyspell-mode t)
+
+:bind
+(:map flyspell-mode-map 
+("C-." . nil)
+)
+)
+
+;; NO spell check for embedded snippets
+(defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
+  (let ((rlt ad-return-value)
+        (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
+        (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
+        old-flag
+        b e)
+    (when ad-return-value
+      (save-excursion
+        (setq old-flag case-fold-search)
+        (setq case-fold-search t)
+        (setq b (re-search-backward begin-regexp nil t))
+        (if b (setq e (re-search-forward end-regexp nil t)))
+        (setq case-fold-search old-flag))
+      (if (and b e (< (point) e)) (setq rlt nil)))
+    (setq ad-return-value rlt)))
+
+(use-package tiny)
+(tiny-setup-default) 
+
+(defun new-week ()
+  (interactive)
+(tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
+  )
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (make-local-variable 'outline-regexp)
+            (setq outline-regexp "^;;; ")
+            (make-local-variable 'outline-heading-end-regexp)
+            (setq outline-heading-end-regexp ":\n")
+            (outline-minor-mode 1)
+))
+
+;; (require 'which-key)
+;; (setq which-key-popup-type 'side-window) 
+;; (setq which-key-side-window-location 'bottom) 
+;; (which-key-mode)
+
+(defun accountability-open ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
+  )
+
+(define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
+
+(defun warm-open ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/warm.org")
+  )
+(define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
+
+;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
+
+(use-package re-builder)
+(setq reb-re-syntax 'string)
+
+;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
+
+;; note that this slows everything down 
+;; (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
+
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+
+(setq user-mail-address '("dixit@aya.yale.edu")) 
+
+;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
+; what is this?
+(use-package smtpmail) 
+(use-package mu4e)
+(setq mu4e-mu-binary "/usr/local/bin/mu") 
 (setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-(setq gnus-always-read-dribble-file t)
-(setq gnus-select-method '(nnml ""))
-(setq gnus-select-method '(nnimap "gmail"
-(nnimap-address "imap.gmail.com")
-(nnimap-server-port 993)
-(nnimap-stream ssl)))
-(setq gnus-use-cache t) 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+(setq user-full-name "Jay Dixit" )
+(setq mu4e-maildir "/Users/jay/Dropbox/mu") 
+(setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
+
+
+(setq mu4e-sent-folder "/sent")
+(setq mu4e-drafts-folder "/drafts")
+(setq mu4e-trash-folder "/trash") 
+;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
+
+(setq mu4e-get-mail-command "mbsync -a") 
+
+
+;; (setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
 
 
 
-
-(setq gnus-select-method
-   '(nnimap "gmail"
-            (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
-            (nnimap-server-port "imaps")
-            (nnimap-stream ssl)))
-
-
-
-
-;; store email in ~/gmail directory
-(setq nnml-directory "~/gmail")
-;; (setq message-directory "~/gmail") 
-
-;; define gnus directories
-;; (setq message-directory "~/emacs/gnus/mail/")
-(setq gnus-directory "~/emacs/gnus/news/")
-(setq nnfolder-directory "~/emacs/gnus/mail/archive") 
-
-;; How to read HTML mail
-(setq mm-text-html-renderer 'w3m)
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s | %&user-date; | %U\n")
-
-;; sort by most recent date
-(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
-(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
+;; display HTML email nicely
+(setq mu4e-html2text-command "w3m -T text/html") 
+;; works but better than the other one, html2text or whatever it's called 
+;; convert html emails properly
+;; Possible options:
+;; ---html2text -utf8 -width 72
+;; ---textutil -stdin -format html -convert txt -stdout
+;; ---html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
+;; ---w3m -dump -cols 80 -T text/html
+;; ---view in browser (provided below)
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
 
-;; More attractive Summary View
-;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
-(when window-system
- (setq gnus-sum-thread-tree-indent " ")
- (setq gnus-sum-thread-tree-root "") ;; "● ")
- (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
- (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
- (setq gnus-sum-thread-tree-vertical    "│")
- (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
- (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
-(setq gnus-summary-line-format
-   (concat
-    "%0{%U%R%z%}"
-    "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-    " "
-    "%4{%-20,20f%}"        ;; name
-    " "
-    "%3{│%}"
-    " "
-    "%1{%B%}"
-    "%s\n"))
-(setq gnus-summary-display-arrow t)
+;; collect email addresses
+;; only add email addresses of email sent directly to me 
+(setq mu4e-compose-complete-only-personal t)
+(setq mu4e-compose-complete-only-after "2015-01-01")
 
-;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
-(when window-system
- (setq gnus-sum-thread-tree-indent " ")
- (setq gnus-sum-thread-tree-root "") ;; "● ")
- (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
- (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
- (setq gnus-sum-thread-tree-vertical    "│")
- (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
- (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
-(setq gnus-summary-line-format
-   (concat
-    "%0{%U%R%z%}"
-    "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-    " "
-    "%4{%-20,20f%}"        ;; name
-    " "
-    "%3{│%}"
-    " "
-    "%1{%B%}"
-    "%s\n"))
-(setq gnus-summary-display-arrow t)
+;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
+;;(mu4e~proc-contacts t nil) 
+
+;; composing mail
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-in-new-frame nil)
+(setq mu4e-compose-signature-auto-include nil)
+
+;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; don't confirm before applying flags
+(setq mu4e-headers-leave-behavior 'apply) 
+
+;; allow for updating mail using 'U' in the main view:
+;; (setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-change-filenames-when-moving t)
+
+(setq mu4e-attachment-dir "~/Downloads") 
+
+
+
+;; show images
+(setq mu4e-show-images t)
+
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+ (imagemagick-register-types))
+
+
+;; spell check
+(add-hook 'mu4e-compose-mode-hook
+ (defun my-do-compose-stuff ()
+  "My settings for message composition."
+  (set-fill-column 72)
+  (flyspell-mode)
+(turn-on-auto-capitalize-mode)
+))
+
+;; add option to view html message in a browser
+;; `aV` in view to activate
+(add-to-list 'mu4e-view-actions
+ '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+;; fetch mail every 10 mins
+(setq mu4e-update-interval 600)
+
+
+;; Use fancy chars
+(setq mu4e-use-fancy-chars t) 
+
+
+(setq mu4e-confirm-quit nil
+ mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
+ mu4e-html2text-command "html2text -utf8 -width 72"
+ ) 
+
+;; maildirs
+;; (require 'mu4e-maildirs-extension)
+;; (mu4e-maildirs-extension) 
+;; (setq mu4e-maildirs-extension-title "Folders")
+
+;; shortcuts
+(setq mu4e-maildir-shortcuts
+'( 
+("/gmail/starred" . ?i) 
+("/vivovii/inbox" . ?v) 
+("/nywi/inbox" . ?n) 
+("/sent" . ?s)))
+
+
+;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
+
+
+;; start screen
+(define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-main-mode-map "g" 'mu4e-update-mail-and-index) 
+
+;; inbox
+(define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
+(define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+(define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
+(define-key mu4e-headers-mode-map "j" 'mu4e-headers-next) 
+
+
+;; message view ("mu4e-view-mode)")
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
+(define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
+(define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
+(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
+(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
+
+;; unset keys (worked!)
+(add-hook 'mu4e-headers-mode-hook 
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
+)) 
+
+(add-hook 'mu4e-view-mode-hook 
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
+))
+
+(setq mu4e-context-policy 'ask-if-none)
+(setq mu4e-compose-context-policy 'ask-if-none)
+
+
+(setq mu4e-contexts
+ `( 
+
+,(make-mu4e-context
+         :name "Sunjay E. Dixit"
+         :enter-func (lambda () 
+(mu4e-message "Switch to sunjaydixit@gmail.com context")
+;; switch to sendmail to send email through gmail 
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+;; open my starred gmail maildir
+(mu4e~headers-jump-to-maildir "/gmail/starred") 
+)
+:vars '
+(
+(user-mail-address . "dixit@aya.yale.edu")
+(mu4e-get-mail-command . "mbsync gmail") 
+(mu4e-compose-signature .
+                 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+,(make-mu4e-context
+         :name "New York Writers Intensive"
+         :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
+;; switch to smtp-mail in order to change send-from address
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+ smtpmail-auth-credentials
+ '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+ smtpmail-smtp-service 587) 
+;; open my newyorkwritersintensive inbox
+(mu4e~headers-jump-to-maildir "/nywi/inbox") 
+)
+         ;; leave-fun not defined 
+         :vars '(
+(user-mail-address . "jay@newyorkwritersintensive.com")
+(mu4e-get-mail-command . "mbsync nywi") 
+ ( mu4e-compose-signature .
+                 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
+
+
+,(make-mu4e-context
+         :name "Vivovii"
+         :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+;; switch to smtp-mail in order to change send-from address
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+ smtpmail-auth-credentials
+ '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587) 
+;; open my vivovii inbox
+(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
+)
+         ;; leave-fun not defined 
+         :vars '(
+(user-mail-address . "jay@vivovii.com")
+(mu4e-get-mail-command . "mbsync vivovii") 
+ ( mu4e-compose-signature .
+                 ("Jay Dixit\nvivovii.com\n")))) 
+
+
+))
+
+
+;; change send-from address interactively 
+(defun vivovii-compose ()
+  (interactive)
+  (setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii") 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+ smtpmail-smtp-service 587) 
+(setq user-mail-address "jay@vivovii.com") 
+(compose-mail)
+)
+
+;; change send-from address interactively 
+(defun nywi-compose ()
+ (interactive)
+ (setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+ smtpmail-smtp-service 587) 
+(setq user-mail-address "jay@newyorkwritersintensive.com") 
+(compose-mail)
+)
+
+
+;; change send-from address interactively 
+(defun yale-compose ()
+  (interactive)
+  (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
+(setq user-mail-address "dixit@aya.yale.edu") 
+(compose-mail) 
+  )
+
+(defun yale-or-vivovii-compose (arg)
+ (interactive "p")
+ (if (and arg (= 0 (mod arg 4)))
+   (vivovii-compose)
+  (yale-compose)))
+;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
+
+
+;; go straight to my personal gmail inbox; bound to s-l
+(defun mu4e-gmail ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/gmail/starred")
+ ) 
+
+;; go to Vivovii (work) inbox
+(defun mu4e-vivovii ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/vivovii/inbox")
+ ) 
+
+;; go to NYWI (my company) inbox
+(defun mu4e-nywi ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/nywi/inbox")
+ ) 
+
+
+
+(defun mu4e-context-label ()
+ "Propertized string with the current context name, or \"\" if
+ there is none."
+ (if (mu4e-context-current)
+  (concat "[" (propertize (mu4e~quote-for-modeline
+                           (mu4e-context-name (mu4e-context-current)))
+                 'face 'mode-line-buffer-id) "]") ""))
+
+;; (require 'gnus-dired)
+;; make the `gnus-dired-mail-buffers' function also work on
+;; message-mode derived modes, such as mu4e-compose-mode
+(defun gnus-dired-mail-buffers ()
+  "Return a list of active message buffers."
+  (let (buffers)
+    (save-current-buffer
+      (dolist (buffer (buffer-list t))
+        (set-buffer buffer)
+        (when (and (derived-mode-p 'message-mode)
+                   (null message-sent-message-via))
+          (push (buffer-name buffer) buffers))))
+    (nreverse buffers)))
+
+(setq gnus-dired-mail-mode 'mu4e-user-agent)
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
+(define-key gnus-summary-mode-map "c"
+  'compose-mail)
+ 
+(define-key gnus-summary-mode-map "a"
+  'gnus-summary-wide-reply)
+
+(use-package org-contacts) 
+;; (require 'org-vcard)
+(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
+
+(setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
+(add-to-list 'mu4e-headers-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+ '("org-contact-add" . mu4e-action-add-org-contact) t)
+
+(add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
+(setq nm-results-window-size 25)
+
+(defun kill-to-buffer-end-or-beginning (arg)
+  (interactive "p")
+  (if (and arg (= 0 (mod arg 4)))
+      (beginning-of-buffer)
+    (end-of-buffer))
+  (delete-region (mark) (point))
+  (recenter-top-bottom))
+
+(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
+
+(defvar *gt-div-style* "border-left: 1px solid #CCC; padding-left: 16px;")
+
+(defun org-mime-replace-multy-gt ()
+(interactive)
+(beginning-of-buffer)
+(while (re-search-forward "\\(\\(^&gt;\\( *.*\\)?\n\\)+\\)" nil t)
+(replace-match (concat "<div style='" *gt-div-style* "'>\n"
+(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
+"</div> \n"))
+(beginning-of-buffer))) 
+
+
+
+(add-hook 'org-mime-html-hook
+(lambda ()
+(org-mime-replace-multy-gt)))
 
 (defun new-email-from-subtree-with-signature ()
  "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -2793,103 +3343,6 @@ as the subject."
       (message-send)
       (message-kill-buffer))))
 
-(use-package key-seq)
-(key-seq-define-global "qd" 'dired)
-(key-seq-define text-mode-map "qf" 'flyspell-buffer)
-
-(key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
-(key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
-
-(defun org-toggle-heading-same-level ()
-  "Toggles the current line between a non-heading and TODO heading."
-  (interactive)
-  (let ((is-heading))
-    (save-excursion
-      (forward-line 0)
-      (when (looking-at "^\\*")
-        (setq is-heading t)))
-    (if is-heading
-        (progn
-          (org-todo 'none) ; remove TODO
-          (org-toggle-heading)) ; remove heading
-      (progn
-        (org-toggle-heading) ; convert to heading
-(org-do-promote)
-;        (org-todo 'nextset)
-)))) ; add TODO  #+END_SRC
-
-(defun org-toggle-todo-heading ()
-  "Toggles the current line between a non-heading and TODO heading."
-  (interactive)
-  (let ((is-heading))
-    (save-excursion
-      (forward-line 0)
-      (when (looking-at "^\\*")
-        (setq is-heading t)))
-    (if is-heading
-        (progn
-          (org-todo 'none) ; remove TODO
-          (org-toggle-heading)) ; remove heading
-      (progn
-        (org-toggle-heading) ; convert to heading
-(org-do-promote)
-        (org-todo 'nextset))))) ; add TODO  #+END_SRC
-
-(defun oleh-ido-setup-hook ()
-  (define-key ido-file-dir-completion-map "~"
-    (lambda ()
-      (interactive)
-      (ido-set-current-directory "~/")
-      (setq ido-exit 'refresh)
-      (exit-minibuffer))))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-
-(defun ido-find-file-jump (dir)
-  "Return a command that sends DIR to `ido-find-file'."
-  `(lambda ()
-     (interactive)
-     (ido-set-current-directory ,dir)
-     (setq ido-exit 'refresh)
-     (exit-minibuffer)))
-
-
-
-(defvar oleh-ido-shortcuts
-  '(("~/" "~")
-    ("~/Dropbox/source/site-lisp/" "!")
-    ("~/git/lispy/" "@")))
-
-(mapc (lambda (x)
-        (setcar x (ido-find-file-jump (car x))))
-      oleh-ido-shortcuts)
-
-(defun oleh-ido-setup-hook ()
-  (mapc
-   (lambda (x)
-     (define-key ido-file-dir-completion-map (cadr x) (car x)))
-   oleh-ido-shortcuts))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-
-(defun delete-extra-whitespace-region (beg end)
-  "replace all whitespace in the region with single spaces"
-  (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (while (re-search-forward "^\\s-+" nil t)
-        (replace-match "")))))
-
-(defun double-line-breaks-in-region (begin end)
-  (interactive "r")
-  (xah-replace-pairs-region begin end
- '(
- ["\r" "\n\n"]
-["\n" "\n\n"]
-)))
-
 (defun fixup-css-region (begin end)
 (interactive "r")
   (xah-replace-pairs-region begin end
@@ -2902,545 +3355,6 @@ as the subject."
 
 ))
 )
-
-(use-package xah-replace-pairs)
-(defun replace-html-chars-region (begin end)
-  (interactive "r")
-  (xah-replace-pairs-region begin end
- '(
- ["&" "&amp;"]
- ["<" "&lt;"]
- [">" "&gt;"]
- )))
-
-(use-package org-download)
-(setq-default org-download-image-dir "/Users/jay/Downloads")
-(setq org-download-method (quote directory))
-
-(defun helm-do-grep-current-directory-tree ()
-  "Recursively search current directory.
-If a parent directory has a `dir-locals-file', use that as the
-root instead."
-  (interactive)
-  (let ((variables-file (dir-locals-find-file
-                         (or (buffer-file-name) default-directory))))
-    (helm-do-grep-1
-     (list
-      (cond
-       ((stringp variables-file)
-        (file-name-directory variables-file))
-       ((consp variables-file)
-        (nth 0 variables-file))
-       (t default-directory)))
-     t nil '("*"))))
-
-(defun contract-contractions (begin end)
-(interactive "r")
-  (xah-replace-pairs-region begin end
- '(
- ["I have" "I've"]
-["I am" "I'm"] 
-)))
-
-(defun dcaps-to-scaps ()
-  "Convert word in DOuble CApitals to Single Capitals."
-  (interactive)
-  (and (= ?w (char-syntax (char-before)))
-       (save-excursion
-         (and (if (called-interactively-p)
-                  (skip-syntax-backward "w")
-                (= -3 (skip-syntax-backward "w")))
-              (let (case-fold-search)
-                (looking-at "\\b[[:upper:]]\\{2\\}[[:lower:]]"))
-              (capitalize-word 1)))))
-
-(add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
-
-(define-minor-mode dubcaps-mode
-  "Toggle `dubcaps-mode'.  Converts words in DOuble CApitals to
-Single Capitals as you type."
-  :init-value nil
-  :lighter (" DC")
-  (if dubcaps-mode
-      (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
-    (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
-
-(add-hook 'text-mode-hook #'dubcaps-mode)
-(add-hook 'org-mode-hook #'dubcaps-mode)
-
-(use-package yasnippet 
-:bind 
-("C-c e" . yas-load-snippet-buffer)
-:init
-(yas-global-mode 1) 
-
-:config 
-;; load yasnippet directories
-(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
-
-;; don't insert random spaces in my prose
-(setq yas-indent-line (quote none)) 
-
-;; take input word including hyphen.
-(setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
-
-;; suppress backquote warnings, whatever those are 
-;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
-) 
-
-(defun suppress-backquote-warnings ()
-(interactive) 
-(add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
-  )
-
-(use-package flyspell
-:config
-'(flyspell-abbrev-p t)
-'(flyspell-use-global-abbrev-table-p t)
-'(global-flyspell-mode t)
-
-:bind
-(:map flyspell-mode-map 
-("C-." . nil)
-)
-)
-
-;; NO spell check for embedded snippets
-(defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-  (let ((rlt ad-return-value)
-        (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
-        (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
-        old-flag
-        b e)
-    (when ad-return-value
-      (save-excursion
-        (setq old-flag case-fold-search)
-        (setq case-fold-search t)
-        (setq b (re-search-backward begin-regexp nil t))
-        (if b (setq e (re-search-forward end-regexp nil t)))
-        (setq case-fold-search old-flag))
-      (if (and b e (< (point) e)) (setq rlt nil)))
-    (setq ad-return-value rlt)))
-
-(use-package tiny)
-(tiny-setup-default) 
-
-(defun new-week ()
-  (interactive)
-(tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n") 
-  )
-
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (make-local-variable 'outline-regexp)
-            (setq outline-regexp "^;;; ")
-            (make-local-variable 'outline-heading-end-regexp)
-            (setq outline-heading-end-regexp ":\n")
-            (outline-minor-mode 1)
-))
-
-;; (require 'which-key)
-;; (setq which-key-popup-type 'side-window) 
-;; (setq which-key-side-window-location 'bottom) 
-;; (which-key-mode)
-
-(defun accountability-open ()
-  (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
-  )
-
-(define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
-
-(defun warm-open ()
-  (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/warm.org")
-  )
-(define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
-
-;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
-
-(use-package re-builder)
-(setq reb-re-syntax 'string)
-
-;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
-
-;; note that this slows everything down 
-;; (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
-
-;; (global-fasd-mode 1)
-;; (setq fasd-enable-initial-prompt nil)
-
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
-
-(setq user-mail-address '("dixit@aya.yale.edu")) 
-
-;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
-; what is this?
-(use-package smtpmail) 
-(use-package mu4e)
-(setq mu4e-mu-binary "/usr/local/bin/mu") 
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
-(setq user-full-name "Jay Dixit" )
-(setq mu4e-maildir "/Users/jay/Dropbox/mu") 
-(setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
-
-
-(setq mu4e-sent-folder "/sent")
-(setq mu4e-drafts-folder "/drafts")
-(setq mu4e-trash-folder "/trash") 
-;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
-
-(setq mu4e-get-mail-command "mbsync -a") 
-
-
-;; (setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail") 
-
-
-
-;; display HTML email nicely
-(setq mu4e-html2text-command "w3m -T text/html") 
-;; works but better than the other one, html2text or whatever it's called 
-;; convert html emails properly
-;; Possible options:
-;; ---html2text -utf8 -width 72
-;; ---textutil -stdin -format html -convert txt -stdout
-;; ---html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
-;; ---w3m -dump -cols 80 -T text/html
-;; ---view in browser (provided below)
-;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
-
-
-;; collect email addresses
-;; only add email addresses of email sent directly to me 
-(setq mu4e-compose-complete-only-personal t)
-(setq mu4e-compose-complete-only-after "2015-01-01")
-
-;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
-;;(mu4e~proc-contacts t nil) 
-
-;; composing mail
-(setq mu4e-compose-dont-reply-to-self t)
-(setq mu4e-compose-in-new-frame nil)
-(setq mu4e-compose-signature-auto-include nil)
-
-;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-(setq mu4e-sent-messages-behavior 'delete)
-
-;; don't confirm before applying flags
-(setq mu4e-headers-leave-behavior 'apply) 
-
-;; allow for updating mail using 'U' in the main view:
-;; (setq mu4e-get-mail-command "offlineimap")
-(setq mu4e-get-mail-command "mbsync -a")
-(setq mu4e-change-filenames-when-moving t)
-
-(setq mu4e-attachment-dir "~/Downloads") 
-
-
-
-;; show images
-(setq mu4e-show-images t)
-
-;; use imagemagick, if available
-(when (fboundp 'imagemagick-register-types)
- (imagemagick-register-types))
-
-
-;; spell check
-(add-hook 'mu4e-compose-mode-hook
- (defun my-do-compose-stuff ()
-  "My settings for message composition."
-  (set-fill-column 72)
-  (flyspell-mode)
-(turn-on-auto-capitalize-mode)
-))
-
-;; add option to view html message in a browser
-;; `aV` in view to activate
-(add-to-list 'mu4e-view-actions
- '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-
-;; fetch mail every 10 mins
-(setq mu4e-update-interval 600)
-
-
-;; Use fancy chars
-(setq mu4e-use-fancy-chars t) 
-
-
-(setq mu4e-confirm-quit nil
- mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
- mu4e-html2text-command "html2text -utf8 -width 72"
- ) 
-
-;; maildirs
-;; (require 'mu4e-maildirs-extension)
-;; (mu4e-maildirs-extension) 
-;; (setq mu4e-maildirs-extension-title "Folders")
-
-;; shortcuts
-(setq mu4e-maildir-shortcuts
-'( 
-("/gmail/starred" . ?i) 
-("/vivovii/inbox" . ?v) 
-("/nywi/inbox" . ?n) 
-("/sent" . ?s)))
-
-
-;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
-
-
-;; start screen
-(define-key mu4e-main-mode-map "r" 'mu4e-compose-reply) 
-(define-key mu4e-main-mode-map "c" 'mu4e-compose-new) 
-(define-key mu4e-main-mode-map "g" 'mu4e-update-mail-and-index) 
-
-;; inbox
-(define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
-(define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
-(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
-(define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
-;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
-(define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
-(define-key mu4e-headers-mode-map "j" 'mu4e-headers-next) 
-
-
-;; message view ("mu4e-view-mode)")
-(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
-(define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
-(define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
-(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
-(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
-
-;; unset keys (worked!)
-(add-hook 'mu4e-headers-mode-hook 
-  (lambda ()
-  (local-unset-key (kbd "<M-right>"))
-  (local-unset-key (kbd "<M-left>"))
-)) 
-
-(add-hook 'mu4e-view-mode-hook 
-  (lambda ()
-  (local-unset-key (kbd "<M-right>"))
-  (local-unset-key (kbd "<M-left>"))
-))
-
-(setq mu4e-context-policy 'ask-if-none)
-(setq mu4e-compose-context-policy 'ask-if-none)
-
-
-(setq mu4e-contexts
- `( 
-
-,(make-mu4e-context
-         :name "Sunjay E. Dixit"
-         :enter-func (lambda () 
-(mu4e-message "Switch to sunjaydixit@gmail.com context")
-;; switch to sendmail to send email through gmail 
-(setq message-send-mail-function (quote message-send-mail-with-sendmail))
-;; open my starred gmail maildir
-(mu4e~headers-jump-to-maildir "/gmail/starred") 
-)
-:vars '
-(
-(user-mail-address . "dixit@aya.yale.edu")
-(mu4e-get-mail-command . "mbsync gmail") 
-(mu4e-compose-signature .
-                 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
-
-
-,(make-mu4e-context
-         :name "New York Writers Intensive"
-         :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
-;; switch to smtp-mail in order to change send-from address
-(setq message-send-mail-function 'smtpmail-send-it
- smtpmail-stream-type 'starttls
- smtpmail-default-smtp-server "smtp.gmail.com"
- smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
- '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
- smtpmail-smtp-service 587) 
-;; open my newyorkwritersintensive inbox
-(mu4e~headers-jump-to-maildir "/nywi/inbox") 
-)
-         ;; leave-fun not defined 
-         :vars '(
-(user-mail-address . "jay@newyorkwritersintensive.com")
-(mu4e-get-mail-command . "mbsync nywi") 
- ( mu4e-compose-signature .
-                 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
-
-
-,(make-mu4e-context
-         :name "Vivovii"
-         :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
-;; switch to smtp-mail in order to change send-from address
-(setq message-send-mail-function 'smtpmail-send-it
- smtpmail-stream-type 'starttls
- smtpmail-default-smtp-server "smtp.gmail.com"
- smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
- '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
- smtpmail-smtp-service 587) 
-;; open my vivovii inbox
-(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
-)
-         ;; leave-fun not defined 
-         :vars '(
-(user-mail-address . "jay@vivovii.com")
-(mu4e-get-mail-command . "mbsync vivovii") 
- ( mu4e-compose-signature .
-                 ("Jay Dixit\nvivovii.com\n")))) 
-
-
-))
-
-
-;; change send-from address interactively 
-(defun vivovii-compose ()
-  (interactive)
-  (setq message-send-mail-function 'smtpmail-send-it
- smtpmail-stream-type 'starttls
- smtpmail-default-smtp-server "smtp.gmail.com"
- smtpmail-smtp-server "smtp.gmail.com"
-smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
- smtpmail-smtp-service 587) 
-(setq user-mail-address "jay@vivovii.com") 
-(compose-mail)
-)
-
-;; change send-from address interactively 
-(defun nywi-compose ()
- (interactive)
- (setq message-send-mail-function 'smtpmail-send-it
- smtpmail-stream-type 'starttls
- smtpmail-default-smtp-server "smtp.gmail.com"
- smtpmail-smtp-server "smtp.gmail.com"
-smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
- smtpmail-smtp-service 587) 
-(setq user-mail-address "jay@newyorkwritersintensive.com") 
-(compose-mail)
-)
-
-
-;; change send-from address interactively 
-(defun yale-compose ()
-  (interactive)
-  (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
-(setq user-mail-address "dixit@aya.yale.edu") 
-(compose-mail) 
-  )
-
-(defun yale-or-vivovii-compose (arg)
- (interactive "p")
- (if (and arg (= 0 (mod arg 4)))
-   (vivovii-compose)
-  (yale-compose)))
-;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
-
-
-;; go straight to my personal gmail inbox; bound to s-l
-(defun mu4e-gmail ()
- (interactive)
-(mu4e)
- (mu4e~headers-jump-to-maildir "/gmail/starred")
- ) 
-
-;; go to Vivovii (work) inbox
-(defun mu4e-vivovii ()
- (interactive)
-(mu4e)
- (mu4e~headers-jump-to-maildir "/vivovii/inbox")
- ) 
-
-;; go to NYWI (my company) inbox
-(defun mu4e-nywi ()
- (interactive)
-(mu4e)
- (mu4e~headers-jump-to-maildir "/nywi/inbox")
- ) 
-
-
-
-(defun mu4e-context-label ()
- "Propertized string with the current context name, or \"\" if
- there is none."
- (if (mu4e-context-current)
-  (concat "[" (propertize (mu4e~quote-for-modeline
-                           (mu4e-context-name (mu4e-context-current)))
-                 'face 'mode-line-buffer-id) "]") ""))
-
-;; (require 'gnus-dired)
-;; make the `gnus-dired-mail-buffers' function also work on
-;; message-mode derived modes, such as mu4e-compose-mode
-(defun gnus-dired-mail-buffers ()
-  "Return a list of active message buffers."
-  (let (buffers)
-    (save-current-buffer
-      (dolist (buffer (buffer-list t))
-        (set-buffer buffer)
-        (when (and (derived-mode-p 'message-mode)
-                   (null message-sent-message-via))
-          (push (buffer-name buffer) buffers))))
-    (nreverse buffers)))
-
-(setq gnus-dired-mail-mode 'mu4e-user-agent)
-(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-
-(define-key gnus-summary-mode-map "c"
-  'compose-mail)
- 
-(define-key gnus-summary-mode-map "a"
-  'gnus-summary-wide-reply)
-
-(use-package org-contacts) 
-;; (require 'org-vcard)
-(setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
-
-(setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
-(add-to-list 'mu4e-headers-actions
- '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions
- '("org-contact-add" . mu4e-action-add-org-contact) t)
-
-(add-hook 'nm-mode-hook 'turn-on-olivetti-mode 'append) 
-(setq nm-results-window-size 25)
-
-(defun kill-to-buffer-end-or-beginning (arg)
-  (interactive "p")
-  (if (and arg (= 0 (mod arg 4)))
-      (beginning-of-buffer)
-    (end-of-buffer))
-  (delete-region (mark) (point))
-  (recenter-top-bottom))
-
-(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
-
-(defvar *gt-div-style* "border-left: 1px solid #CCC; padding-left: 16px;")
-
-(defun org-mime-replace-multy-gt ()
-(interactive)
-(beginning-of-buffer)
-(while (re-search-forward "\\(\\(^&gt;\\( *.*\\)?\n\\)+\\)" nil t)
-(replace-match (concat "<div style='" *gt-div-style* "'>\n"
-(replace-regexp-in-string "^&gt; ?" "" (match-string 1))
-"</div> \n"))
-(beginning-of-buffer))) 
-
-
-
-(add-hook 'org-mime-html-hook
-(lambda ()
-(org-mime-replace-multy-gt)))
-
-(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
-
-;; (setq zone-programs [zone-pgm-drip]) 
-;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
-(setq zone-programs [zone-pgm-putz-with-case])
 
 (defun unbind-orgstruct-keys ()
   (interactive)
@@ -3660,9 +3574,7 @@ event of an error or nonlocal exit."
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 )
 
-(defcustom ivy-height 50
-  "Number of lines for the minibuffer window."
-  :type 'integer) 
+(setq ivy-height 25)
 (global-set-key (kbd "C-s") 'swiper)
 ;; (setq ivy-display-style 'fancy)
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
@@ -4009,14 +3921,6 @@ The full path into relative path and insert it as a local file link in org-mode"
   ("r" mc/mark-all-in-region-regexp :exit t)
   ("q" nil)) )
 
-;; (require 'sunrise-commander)
-
-(defun cycle-hyphenation-or-toggle-item ()
-  (interactive)
-  (if (region-active-p)
-      (call-interactively 'org-toggle-item)
-    (cycle-hyphenation)))
-
 ;; define list-title face 
 (defface list-title-face
   '((t (:foreground "red" :weight bold)))
@@ -4119,15 +4023,6 @@ If FILE already exists, signal an error."
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
-
-(setq org-icalendar-include-todo nil) 
-(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
-(setq org-icalendar-alarm-time 60)
- (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
- (setq org-icalendar-combined-name "Org-Mode")
-(setq org-icalendar-store-UID nil)
-(setq org-icalendar-timezone "(-18000 \"EST\") ")
-(setq org-agenda-default-appointment-duration '15)
 
 (add-hook 'before-save-hook
           (lambda ()
@@ -4351,9 +4246,6 @@ minibuffer."
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
 
-;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
-;; (require 'helm-org-rifle)
-
 (defun up-by-degrees ()
  (interactive)
        (previous-line 6)
@@ -4368,6 +4260,34 @@ minibuffer."
 (define-key mc/keymap (kbd ".") 'insert-period) 
 (define-key mc/keymap (kbd ",") 'insert-comma) 
 (define-key mc/keymap (kbd "SPC") 'insert-space)
+
+(defun epub-mode ()
+ (interactive)
+ (org-mode)
+ (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+ )
+
+;; (global-fasd-mode 1)
+;; (setq fasd-enable-initial-prompt nil)
+
+(add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
+
+;; (setq zone-programs [zone-pgm-drip]) 
+;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
+(setq zone-programs [zone-pgm-putz-with-case])
+
+;; (require 'sunrise-commander)
+
+(setq org-icalendar-include-todo nil) 
+(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID nil)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")
+(setq org-agenda-default-appointment-duration '15)
 
 ; (setq zone-programs [zone-pgm-dissolve])
 
@@ -4393,13 +4313,8 @@ minibuffer."
 ;; (setq zone-programs [zone-matrix])
 ;; (zone-when-idle 300)
 
-(defun epub-mode ()
- (interactive)
- (org-mode)
- (setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
- )
+;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
+;; (require 'helm-org-rifle)
 
 (defun eval-subtree ()
  (interactive)

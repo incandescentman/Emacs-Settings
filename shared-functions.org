@@ -151,7 +151,8 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq undo-limit 100000)
-;; (setq split-width-threshold 75)
+(setq split-width-threshold 5)
+(setq split-height-threshold 5)
 #+END_SRC
 
 *** Use visual line mode whenever possible
@@ -1125,6 +1126,19 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ;; (require 'reveal-in-finder)
 #+END_SRC
 
+** cycle-hyphenation-or-toggle-item
+
+#+BEGIN_SRC emacs-lisp
+(defun cycle-hyphenation-or-toggle-item ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'org-toggle-item)
+    (cycle-hyphenation)))
+
+#+END_SRC
+
+
+
 * Browsing
 ** Make URLs in comments/strings clickable
 
@@ -1524,6 +1538,14 @@ margin-bottom: 1em;
   width:60%;
   word-wrap:normal!important;")))
 #+END_SRC
+
+** org-download 
+  #+BEGIN_SRC emacs-lisp
+(use-package org-download)
+(setq-default org-download-image-dir "/Users/jay/Downloads")
+(setq org-download-method (quote directory))
+  #+END_SRC
+
 
 * ~eshell~
 
@@ -2075,6 +2097,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ** recentf
 #+BEGIN_SRC emacs-lisp
+(setq recentf-save-file "/Users/jay/emacs/medial/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit 
@@ -2680,6 +2703,49 @@ function I have a persistent buffer list available.
       ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
 
+** find-file tricks
+[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
+
+#+BEGIN_SRC emacs-lisp
+(defun oleh-ido-setup-hook ()
+  (define-key ido-file-dir-completion-map "~"
+    (lambda ()
+      (interactive)
+      (ido-set-current-directory "~/")
+      (setq ido-exit 'refresh)
+      (exit-minibuffer))))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+
+(defun ido-find-file-jump (dir)
+  "Return a command that sends DIR to `ido-find-file'."
+  `(lambda ()
+     (interactive)
+     (ido-set-current-directory ,dir)
+     (setq ido-exit 'refresh)
+     (exit-minibuffer)))
+
+
+
+(defvar oleh-ido-shortcuts
+  '(("~/" "~")
+    ("~/Dropbox/source/site-lisp/" "!")
+    ("~/git/lispy/" "@")))
+
+(mapc (lambda (x)
+        (setcar x (ido-find-file-jump (car x))))
+      oleh-ido-shortcuts)
+
+(defun oleh-ido-setup-hook ()
+  (mapc
+   (lambda (x)
+     (define-key ido-file-dir-completion-map (cadr x) (car x)))
+   oleh-ido-shortcuts))
+
+(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
+#+END_SRC
+
+
 * Extra functionality
 ** Google search
 Enable Google search:
@@ -3103,7 +3169,7 @@ If this value is ~t~, split window inside the current window:
 
 Split direcion. ~split-window-vertically~ or ~split-window-horizontally~:
 #+BEGIN_SRC emacs-lisp
-(setq helm-swoop-split-direction 'split-window-vertically)
+;; (setq helm-swoop-split-direction 'split-window-vertically)
 #+END_SRC
 
 If ~nil~, you can slightly boost invoke speed in exchange for text color:
@@ -3375,572 +3441,6 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 
-* email
-
-** gnus
-#+BEGIN_SRC emacs-lisp
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
-(setq gnus-always-read-dribble-file t)
-(setq gnus-select-method '(nnml ""))
-(setq gnus-select-method '(nnimap "gmail"
-(nnimap-address "imap.gmail.com")
-(nnimap-server-port 993)
-(nnimap-stream ssl)))
-(setq gnus-use-cache t) 
-
-
-
-
-(setq gnus-select-method
-   '(nnimap "gmail"
-	    (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
-	    (nnimap-server-port "imaps")
-	    (nnimap-stream ssl)))
-
-
-
-
-;; store email in ~/gmail directory
-(setq nnml-directory "~/gmail")
-;; (setq message-directory "~/gmail") 
-
-;; define gnus directories
-;; (setq message-directory "~/emacs/gnus/mail/")
-(setq gnus-directory "~/emacs/gnus/news/")
-(setq nnfolder-directory "~/emacs/gnus/mail/archive") 
-
-;; How to read HTML mail
-(setq mm-text-html-renderer 'w3m)
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s | %&user-date; | %U\n")
-
-;; sort by most recent date
-(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
-(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
-
-
-;; More attractive Summary View
-;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
-(when window-system
- (setq gnus-sum-thread-tree-indent " ")
- (setq gnus-sum-thread-tree-root "") ;; "● ")
- (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
- (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
- (setq gnus-sum-thread-tree-vertical    "│")
- (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
- (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
-(setq gnus-summary-line-format
-   (concat
-    "%0{%U%R%z%}"
-    "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-    " "
-    "%4{%-20,20f%}"        ;; name
-    " "
-    "%3{│%}"
-    " "
-    "%1{%B%}"
-    "%s\n"))
-(setq gnus-summary-display-arrow t)
-#+END_SRC
-
-
-*** More attractive Summary View
-  :PROPERTIES:
-  :CUSTOM_ID: pretty-summary
-  :END:
-Thanks to Dan Davison.
-
-#+begin_src emacs-lisp
- ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
- (when window-system
-  (setq gnus-sum-thread-tree-indent " ")
-  (setq gnus-sum-thread-tree-root "") ;; "● ")
-  (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
-  (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
-  (setq gnus-sum-thread-tree-vertical    "│")
-  (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
-  (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
- (setq gnus-summary-line-format
-    (concat
-     "%0{%U%R%z%}"
-     "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-     " "
-     "%4{%-20,20f%}"        ;; name
-     " "
-     "%3{│%}"
-     " "
-     "%1{%B%}"
-     "%s\n"))
- (setq gnus-summary-display-arrow t)
-#+end_src
-
-
-*** modified email-heading function
-
-**** org-mime-htmlcize - no longer works.
-#+BEGIN_EXAMPLE emacs-lisp
-
-(defun org-mime-htmlize (&optional arg)
-"Export a portion of an email body composed using `mml-mode' to
-html using `org-mode'. If called with an active region only
-export that region, otherwise export the entire body."
- (interactive "P")
- (require 'ox-org)
- (require 'ox-html)
- (let* ((region-p (org-region-active-p))
-     (html-start (or (and region-p (region-beginning))
-             (save-excursion
-              (goto-char (point-min))
-              (search-forward mail-header-separator)
-              (+ (point) 1))))
-     (html-end (or (and region-p (region-end))
-            ;; TODO: should catch signature...
-            (point-max)))
-     (raw-body (concat org-mime-default-header
-			  (buffer-substring html-start html-end)))
-     (tmp-file (make-temp-name (expand-file-name
-				  "mail" temporary-file-directory)))
-     (body (org-export-string-as raw-body 'org t))
-     ;; because we probably don't want to export a huge style file
-     (org-export-htmlize-output-type 'inline-css)
-     ;; makes the replies with ">"s look nicer
-     (org-export-preserve-breaks org-mime-preserve-breaks)
-	 ;; dvipng for inline latex because MathJax doesn't work in mail
-	 (org-html-with-latex 'dvipng)
-     ;; to hold attachments for inline html images
-     (html-and-images
-     (org-mime-replace-images
-	  (org-export-string-as raw-body 'html t) tmp-file))
-     (html-images (unless arg (cdr html-and-images)))
-     (html (org-mime-apply-html-hook
-        (if arg
-          (format org-mime-fixedwith-wrap body)
-         (car html-and-images)))))
-  (delete-region html-start html-end)
-  (save-excursion
-   (goto-char html-start)
-   (insert (org-mime-multipart
-	    body html (mapconcat 'identity html-images "\n"))))))
-#+END_EXAMPLE
-
-*** new-email-from-subtree-with-signature 
-
-#+BEGIN_SRC emacs-lisp 
-
-(defun new-email-from-subtree-with-signature ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
- ; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO (org-entry-get (point) "TO" t))
-     (CC (org-entry-get (point) "CC" t))
-     (BCC (org-entry-get (point) "BCC" t))
-     (SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-(end-of-buffer)
-(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
-(646) 355-8001
-[[http://jaydixit.com/][jaydixit.com]]
-\n")
-(message-goto-to))
-))
-
-
-(defun new-email-from-subtree-no-signature ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
- ; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO (org-entry-get (point) "TO" t))
-     (CC (org-entry-get (point) "CC" t))
-     (BCC (org-entry-get (point) "BCC" t))
-     (SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-;; (end-of-buffer)
-)
-))
-#+END_SRC
-
-*** erika-send-mail
-#+BEGIN_SRC emacs-lisp
-(defun erika-send-email ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
-; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO "\"Erika Casriel\" <erika.casriel@comcast.net>")
-     (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <luke.haseloff@gmail.com>") 
-     (SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-) 
-))
-#+END_SRC
-
-**** erika-send-email-styled
-
-#+BEGIN_SRC emacs-lisp
-(defun erika-send-email-styled ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
-                    ; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO "Erika Casriel <erika.casriel@comcast.net>")
-     (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
-(SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-   )
-  (let ((org-mime-html-hook
-      (list* (lambda ()
-          (goto-char (point-min))
-          (while (re-search-forward "</?\\(h2\\)" nil t)
-           (replace-match "li" nil t nil 1)))
-         (lambda ()
-          (goto-char (point-min))
-          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-
-(goto-char (point-min))
-          (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
-
-        (goto-char (point-min))
-          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
-          (goto-char (point-min))
-
-(org-mime-change-class-style "off" "list-style-type: none;")
-          (goto-char (point-min)) 
-
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
-          (goto-char (point-min))
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
-         org-mime-html-hook)))
-(message-send-and-exit)
-))
-)
-#+END_SRC
-
-**** adrien-send-email-styled 
-
-#+BEGIN_SRC emacs-lisp
-(defun adrien-send-email-styled ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
-                    ; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO "Adrien Behn <adrien.behn@gmail.com>")
-     (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
-(SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-   )
-  (let ((org-mime-html-hook
-      (list* (lambda ()
-          (goto-char (point-min))
-          (while (re-search-forward "</?\\(h2\\)" nil t)
-           (replace-match "li" nil t nil 1)))
-         (lambda ()
-          (goto-char (point-min))
-          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-
-(goto-char (point-min))
-          (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
-
-        (goto-char (point-min))
-          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
-          (goto-char (point-min))
-
-(org-mime-change-class-style "off" "list-style-type: none;")
-          (goto-char (point-min)) 
-
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
-          (goto-char (point-min))
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
-         org-mime-html-hook)))
-(message-send-and-exit)
-))
-)
-#+END_SRC
-
-**** erika-send-email-test---clone of erika-send-email-styled
-This function should be kept exactly the same as the one above, except the emails should go only to myself or Rúdi. Used for testing purposes.
-
-#+BEGIN_SRC emacs-lisp
-(defun erika-send-email-test ()
- "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-CC
-BCC
-OTHER-HEADERS is an alist specifying additional
-header fields. Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-Save when it was sent as a SENT property. this is overwritten on
-subsequent sends."
- (interactive)
-                    ; store location.
- (setq *email-heading-point* (set-marker (make-marker) (point)))
- (save-excursion
-  (let ((content (progn
-           (unless (org-on-heading-p) (outline-previous-heading))
-           (let ((headline (org-element-at-point)))
-            (buffer-substring
-            (org-element-property :contents-begin headline)
-            (org-element-property :contents-end headline)))))
-     (TO "Erika Casriel <sunjaydixit@gmail.com>")
-     (CC (org-entry-get (point) "CC" t))
-(BCC "Luke Haseloff <sunjaydixit@gmail.com>")
-(SUBJECT (nth 4 (org-heading-components)))
-     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-     (continue nil)
-     (switch-function nil)
-     (yank-action nil)
-     (send-actions '((email-send-action . nil)))
-     (return-action '(email-heading-return)))
-
-   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-   (message-goto-body)
-   (insert content)
-   (when CC
-    (message-goto-cc)
-    (insert CC))
-   (when BCC
-    (message-goto-bcc)
-    (insert BCC))
-   (if TO
-     (message-goto-body)
-    (message-goto-to))
-   )
-  (let ((org-mime-html-hook
-      (list* (lambda ()
-          (goto-char (point-min))
-          (while (re-search-forward "</?\\(h2\\)" nil t)
-           (replace-match "li" nil t nil 1)))
-         (lambda ()
-          (goto-char (point-min))
-          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
-          (goto-char (point-min))
-          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
-          (goto-char (point-min))
-
-(org-mime-change-class-style "off" "list-style-type: none;")
-          (goto-char (point-min)) 
-
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
-          (goto-char (point-min))
-          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
-         org-mime-html-hook)))
-(message-send-and-exit)
-))
-)
-#+END_SRC
-
-
-* Automatic send email to myself
-
-#+BEGIN_SRC emacs-lisp
-(defun email-heading-to-me ()
-  "Send the current org-mode heading as the body of an email, with headline
-as the subject."
-  (interactive)
-  (save-excursion
-    (org-mark-subtree)
-    (let ((content (buffer-substring (point) (mark)))
-          (SUBJECT (nth 4 (org-heading-components))))
-
-      (compose-mail "your@email.here" SUBJECT)
-      (message-goto-body)
-      (insert content)
-      (message-send)
-      (message-kill-buffer))))
-#+END_SRC
-
-
 * key-seq
 key-seq.el provides a way to map pairs of sequentially but quickly pressed keys to commands. It includes two interactive functions: key-seq-define-global and key-seq-define which are complementary to key-chord-* functions found in key-chord.el. The difference is that key-seq-* functions produce bindings only in a defined key order while bindings defined with key-chord-* are symmetrical.
 
@@ -3997,49 +3497,6 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
         (org-todo 'nextset))))) ; add TODO  #+END_SRC
 #+END_SRC
 
-* find-file tricks
-[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
-
-#+BEGIN_SRC emacs-lisp
-(defun oleh-ido-setup-hook ()
-  (define-key ido-file-dir-completion-map "~"
-    (lambda ()
-      (interactive)
-      (ido-set-current-directory "~/")
-      (setq ido-exit 'refresh)
-      (exit-minibuffer))))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-
-(defun ido-find-file-jump (dir)
-  "Return a command that sends DIR to `ido-find-file'."
-  `(lambda ()
-     (interactive)
-     (ido-set-current-directory ,dir)
-     (setq ido-exit 'refresh)
-     (exit-minibuffer)))
-
-
-
-(defvar oleh-ido-shortcuts
-  '(("~/" "~")
-    ("~/Dropbox/source/site-lisp/" "!")
-    ("~/git/lispy/" "@")))
-
-(mapc (lambda (x)
-        (setcar x (ido-find-file-jump (car x))))
-      oleh-ido-shortcuts)
-
-(defun oleh-ido-setup-hook ()
-  (mapc
-   (lambda (x)
-     (define-key ido-file-dir-completion-map (cadr x) (car x)))
-   oleh-ido-shortcuts))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-#+END_SRC
-
-
 * delete-extra-whitespace-region
 
 
@@ -4065,23 +3522,6 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["\r" "\n\n"]
 ["\n" "\n\n"]
 )))
-  #+END_SRC
-
-* fixup-css-region
-
-  #+BEGIN_SRC emacs-lisp
-(defun fixup-css-region (begin end)
-(interactive "r")
-  (xah-replace-pairs-region begin end
-                          '(["h2" "li"]
-["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
-
-["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"]
-
-["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
-
-))
-)
   #+END_SRC
 
 * xah-replace-pairs
@@ -4160,16 +3600,6 @@ The trick is to not use different colored delimiters! The reason I need the rain
 
 * Chords
 Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evil-mode is the best VIM). Chords are so much more comfortable! For example I press j and x together instead of M-x. Just be careful when choosing chords that they are combinations you will never type normally. I mainly use chords for switching buffers, navigating windows, opening files, and transposing expressions.
-
-* org-download
-
-
-  #+BEGIN_SRC emacs-lisp
-(use-package org-download)
-(setq-default org-download-image-dir "/Users/jay/Downloads")
-(setq org-download-method (quote directory))
-  #+END_SRC
-
 
 * helm search current directory 
 
@@ -4424,13 +3854,6 @@ Single Capitals as you type."
 
   #+END_SRC
 
-* fasd
-
-  #+BEGIN_SRC emacs-lisp
-;; (global-fasd-mode 1)
-;; (setq fasd-enable-initial-prompt nil)
-  #+END_SRC
- 
 * email 
 ** mu4e 
 *** mu4e setup
@@ -5094,6 +4517,594 @@ After this, you should be able to add contacts using a o in the headers view and
 (org-mime-replace-multy-gt))) 
 #+END_SRC 
 
+* email
+
+** gnus
+#+BEGIN_SRC emacs-lisp
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit")
+
+
+#+END_SRC emacs-lisp
+
+
+#+BEGIN_EXAMPLE emacs-lisp 
+(setq gnus-always-read-dribble-file t)
+(setq gnus-select-method '(nnml ""))
+(setq gnus-select-method '(nnimap "gmail"
+(nnimap-address "imap.gmail.com")
+(nnimap-server-port 993)
+(nnimap-stream ssl)))
+(setq gnus-use-cache t) 
+
+
+
+
+(setq gnus-select-method
+   '(nnimap "gmail"
+	    (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
+	    (nnimap-server-port "imaps")
+	    (nnimap-stream ssl)))
+
+
+
+
+;; store email in ~/gmail directory
+(setq nnml-directory "~/gmail")
+;; (setq message-directory "~/gmail") 
+
+;; define gnus directories
+;; (setq message-directory "~/emacs/gnus/mail/")
+(setq gnus-directory "~/emacs/gnus/news/")
+(setq nnfolder-directory "~/emacs/gnus/mail/archive") 
+
+;; How to read HTML mail
+(setq mm-text-html-renderer 'w3m)
+(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s | %&user-date; | %U\n")
+
+;; sort by most recent date
+(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
+(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
+
+
+;; More attractive Summary View
+;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
+(when window-system
+ (setq gnus-sum-thread-tree-indent " ")
+ (setq gnus-sum-thread-tree-root "") ;; "● ")
+ (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
+ (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
+ (setq gnus-sum-thread-tree-vertical    "│")
+ (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
+ (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
+(setq gnus-summary-line-format
+   (concat
+    "%0{%U%R%z%}"
+    "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
+    " "
+    "%4{%-20,20f%}"        ;; name
+    " "
+    "%3{│%}"
+    " "
+    "%1{%B%}"
+    "%s\n"))
+(setq gnus-summary-display-arrow t)
+#+END_EXAMPLE 
+
+
+*** More attractive Summary View
+  :PROPERTIES:
+  :CUSTOM_ID: pretty-summary
+  :END:
+Thanks to Dan Davison.
+
+#+begin_example emacs-lisp
+ ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
+ (when window-system
+  (setq gnus-sum-thread-tree-indent " ")
+  (setq gnus-sum-thread-tree-root "") ;; "● ")
+  (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
+  (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
+  (setq gnus-sum-thread-tree-vertical    "│")
+  (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
+  (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
+ (setq gnus-summary-line-format
+    (concat
+     "%0{%U%R%z%}"
+     "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
+     " "
+     "%4{%-20,20f%}"        ;; name
+     " "
+     "%3{│%}"
+     " "
+     "%1{%B%}"
+     "%s\n"))
+ (setq gnus-summary-display-arrow t)
+#+END_EXAMPLE 
+
+
+*** modified email-heading function
+
+**** org-mime-htmlcize - no longer works.
+#+BEGIN_EXAMPLE emacs-lisp
+
+(defun org-mime-htmlize (&optional arg)
+"Export a portion of an email body composed using `mml-mode' to
+html using `org-mode'. If called with an active region only
+export that region, otherwise export the entire body."
+ (interactive "P")
+ (require 'ox-org)
+ (require 'ox-html)
+ (let* ((region-p (org-region-active-p))
+     (html-start (or (and region-p (region-beginning))
+             (save-excursion
+              (goto-char (point-min))
+              (search-forward mail-header-separator)
+              (+ (point) 1))))
+     (html-end (or (and region-p (region-end))
+            ;; TODO: should catch signature...
+            (point-max)))
+     (raw-body (concat org-mime-default-header
+			  (buffer-substring html-start html-end)))
+     (tmp-file (make-temp-name (expand-file-name
+				  "mail" temporary-file-directory)))
+     (body (org-export-string-as raw-body 'org t))
+     ;; because we probably don't want to export a huge style file
+     (org-export-htmlize-output-type 'inline-css)
+     ;; makes the replies with ">"s look nicer
+     (org-export-preserve-breaks org-mime-preserve-breaks)
+	 ;; dvipng for inline latex because MathJax doesn't work in mail
+	 (org-html-with-latex 'dvipng)
+     ;; to hold attachments for inline html images
+     (html-and-images
+     (org-mime-replace-images
+	  (org-export-string-as raw-body 'html t) tmp-file))
+     (html-images (unless arg (cdr html-and-images)))
+     (html (org-mime-apply-html-hook
+        (if arg
+          (format org-mime-fixedwith-wrap body)
+         (car html-and-images)))))
+  (delete-region html-start html-end)
+  (save-excursion
+   (goto-char html-start)
+   (insert (org-mime-multipart
+	    body html (mapconcat 'identity html-images "\n"))))))
+#+END_EXAMPLE
+
+*** new-email-from-subtree-with-signature 
+
+#+BEGIN_SRC emacs-lisp 
+
+(defun new-email-from-subtree-with-signature ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+ ; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO (org-entry-get (point) "TO" t))
+     (CC (org-entry-get (point) "CC" t))
+     (BCC (org-entry-get (point) "BCC" t))
+     (SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+(end-of-buffer)
+(insert "\nWarm regards,\nJay Dixit\n\n---\nJay Dixit
+(646) 355-8001
+[[http://jaydixit.com/][jaydixit.com]]
+\n")
+(message-goto-to))
+))
+
+
+(defun new-email-from-subtree-no-signature ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+ ; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO (org-entry-get (point) "TO" t))
+     (CC (org-entry-get (point) "CC" t))
+     (BCC (org-entry-get (point) "BCC" t))
+     (SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+;; (end-of-buffer)
+)
+))
+#+END_SRC
+
+*** erika-send-mail
+#+BEGIN_SRC emacs-lisp
+(defun erika-send-email ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO "\"Erika Casriel\" <erika.casriel@comcast.net>")
+     (CC (org-entry-get (point) "CC" t))
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>") 
+     (SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+) 
+))
+#+END_SRC
+
+**** erika-send-email-styled
+
+#+BEGIN_SRC emacs-lisp
+(defun erika-send-email-styled ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+                    ; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO "Erika Casriel <erika.casriel@comcast.net>")
+     (CC (org-entry-get (point) "CC" t))
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
+(SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+   )
+  (let ((org-mime-html-hook
+      (list* (lambda ()
+          (goto-char (point-min))
+          (while (re-search-forward "</?\\(h2\\)" nil t)
+           (replace-match "li" nil t nil 1)))
+         (lambda ()
+          (goto-char (point-min))
+          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+
+(goto-char (point-min))
+          (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
+
+        (goto-char (point-min))
+          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+          (goto-char (point-min))
+
+(org-mime-change-class-style "off" "list-style-type: none;")
+          (goto-char (point-min)) 
+
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+          (goto-char (point-min))
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
+         org-mime-html-hook)))
+(message-send-and-exit)
+))
+)
+#+END_SRC
+
+**** adrien-send-email-styled 
+
+#+BEGIN_SRC emacs-lisp
+(defun adrien-send-email-styled ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+                    ; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO "Adrien Behn <adrien.behn@gmail.com>")
+     (CC (org-entry-get (point) "CC" t))
+(BCC "Luke Haseloff <luke.haseloff@gmail.com>")
+(SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+   )
+  (let ((org-mime-html-hook
+      (list* (lambda ()
+          (goto-char (point-min))
+          (while (re-search-forward "</?\\(h2\\)" nil t)
+           (replace-match "li" nil t nil 1)))
+         (lambda ()
+          (goto-char (point-min))
+          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+
+(goto-char (point-min))
+          (org-mime-change-class-style "todo STARTED" "color:red;font-weight:bold")
+
+        (goto-char (point-min))
+          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+          (goto-char (point-min))
+
+(org-mime-change-class-style "off" "list-style-type: none;")
+          (goto-char (point-min)) 
+
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+          (goto-char (point-min))
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
+         org-mime-html-hook)))
+(message-send-and-exit)
+))
+)
+#+END_SRC
+
+**** erika-send-email-test---clone of erika-send-email-styled
+This function should be kept exactly the same as the one above, except the emails should go only to myself or Rúdi. Used for testing purposes.
+
+#+BEGIN_SRC emacs-lisp
+(defun erika-send-email-test ()
+ "Send the current org-mode heading as the body of an email, with headline as the subject.
+
+use these properties
+TO
+CC
+BCC
+OTHER-HEADERS is an alist specifying additional
+header fields. Elements look like (HEADER . VALUE) where both
+HEADER and VALUE are strings.
+
+Save when it was sent as a SENT property. this is overwritten on
+subsequent sends."
+ (interactive)
+                    ; store location.
+ (setq *email-heading-point* (set-marker (make-marker) (point)))
+ (save-excursion
+  (let ((content (progn
+           (unless (org-on-heading-p) (outline-previous-heading))
+           (let ((headline (org-element-at-point)))
+            (buffer-substring
+            (org-element-property :contents-begin headline)
+            (org-element-property :contents-end headline)))))
+     (TO "Erika Casriel <sunjaydixit@gmail.com>")
+     (CC (org-entry-get (point) "CC" t))
+(BCC "Luke Haseloff <sunjaydixit@gmail.com>")
+(SUBJECT (nth 4 (org-heading-components)))
+     (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+     (continue nil)
+     (switch-function nil)
+     (yank-action nil)
+     (send-actions '((email-send-action . nil)))
+     (return-action '(email-heading-return)))
+
+   (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+   (message-goto-body)
+   (insert content)
+   (when CC
+    (message-goto-cc)
+    (insert CC))
+   (when BCC
+    (message-goto-bcc)
+    (insert BCC))
+   (if TO
+     (message-goto-body)
+    (message-goto-to))
+   )
+  (let ((org-mime-html-hook
+      (list* (lambda ()
+          (goto-char (point-min))
+          (while (re-search-forward "</?\\(h2\\)" nil t)
+           (replace-match "li" nil t nil 1)))
+         (lambda ()
+          (goto-char (point-min))
+          (org-mime-change-class-style "todo TODO" "color:red;font-weight:bold")
+          (goto-char (point-min))
+          (org-mime-change-class-style "todo MISSED" "color:red;font-weight:bold")
+          (goto-char (point-min))
+
+(org-mime-change-class-style "off" "list-style-type: none;")
+          (goto-char (point-min)) 
+
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold")
+          (goto-char (point-min))
+          (org-mime-change-class-style "done DONE" "color:green;font-weight:bold"))
+         org-mime-html-hook)))
+(message-send-and-exit)
+))
+)
+#+END_SRC
+
+
+** Automatic send email to myself
+
+#+BEGIN_SRC emacs-lisp
+(defun email-heading-to-me ()
+  "Send the current org-mode heading as the body of an email, with headline
+as the subject."
+  (interactive)
+  (save-excursion
+    (org-mark-subtree)
+    (let ((content (buffer-substring (point) (mark)))
+          (SUBJECT (nth 4 (org-heading-components))))
+
+      (compose-mail "your@email.here" SUBJECT)
+      (message-goto-body)
+      (insert content)
+      (message-send)
+      (message-kill-buffer))))
+#+END_SRC
+
+** fixup-css-region
+
+  #+BEGIN_SRC emacs-lisp
+(defun fixup-css-region (begin end)
+(interactive "r")
+  (xah-replace-pairs-region begin end
+                          '(["h2" "li"]
+["<span class=\"todo DONE\">" "<span class=\"todo DONE\" style=\"color:green;font-weight:bold\">"]
+
+["<span class=\"todo MISSED\">" "<span class=\"todo MISSED\" style=\"color:red;font-weight:bold\">"]
+
+["<span class=\"todo TODO\">" "<span class=\"todo TODO\" style=\"color:red;font-weight:bold\">"]
+
+))
+)
+  #+END_SRC
+
 
 * insert slash no abbrev
 
@@ -5108,19 +5119,7 @@ After this, you should be able to add contacts using a o in the headers view and
 * poetry
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
 
-* zone
-
-  #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
-
-;; (setq zone-programs [zone-pgm-drip]) 
-;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
-(setq zone-programs [zone-pgm-putz-with-case]) 
-
-  #+END_SRC
-
-* TODO unbind orgstruct navigation keys                                :rudi:
-Can we make this happen automatically at startup? Or maybe a message-mode hook? This doesn't work unless I invoke it manually.
+* TODO unbind orgstruct navigation keys 
 
   #+BEGIN_SRC emacs-lisp 
 (defun unbind-orgstruct-keys ()
@@ -5502,9 +5501,7 @@ event of an error or nonlocal exit."
 
 ** ivy height
   #+BEGIN_SRC emacs-lisp
-(defcustom ivy-height 50
-  "Number of lines for the minibuffer window."
-  :type 'integer) 
+(setq ivy-height 25)
 (global-set-key (kbd "C-s") 'swiper)
 ;; (setq ivy-display-style 'fancy)
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
@@ -5997,25 +5994,6 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+END_SRC
 
 
-* sunrise commander
-#+BEGIN_SRC emacs-lisp
-;; (require 'sunrise-commander)
-#+END_SRC
-
-
-* cycle-hyphenation-or-toggle-item
-
-#+BEGIN_SRC emacs-lisp
-(defun cycle-hyphenation-or-toggle-item ()
-  (interactive)
-  (if (region-active-p)
-      (call-interactively 'org-toggle-item)
-    (cycle-hyphenation)))
-
-#+END_SRC
-
-
-
 * fontify list titles
 #+BEGIN_SRC emacs-lisp
 
@@ -6183,20 +6161,6 @@ It will open the link in Emacs with typing C-c C-o.
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t))) 
 #+END_SRC
-
-* iCal
-#+BEGIN_SRC emacs-lisp
-(setq org-icalendar-include-todo nil) 
-(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
-(setq org-icalendar-alarm-time 60)
- (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
- (setq org-icalendar-combined-name "Org-Mode")
-(setq org-icalendar-store-UID nil)
-(setq org-icalendar-timezone "(-18000 \"EST\") ")
-(setq org-agenda-default-appointment-duration '15)
-#+END_SRC
-
-
 
 * create directories when necessary 
 
@@ -6617,15 +6581,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 
 
 
-* rifle
-#+BEGIN_SRC emacs-lisp
-;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
-;; (require 'helm-org-rifle)
-
-#+END_SRC
-
-
-
 * non working contexts
 #+BEGIN_EXAMPLE emacs-lisp
 (setq mu4e-contexts
@@ -6684,7 +6639,71 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 * games / fun 
 
 
-* zone
+* not in use 
+
+** deft-turbo
+
+ #+BEGIN_EXAMPLE emacs-lisp 
+;; (require 'deft)
+(setq deft-extensions '("org" "md" "txt"))
+(setq deft-default-extension "org")
+(setq deft-directory "~/nd/")
+(setq deft-use-filename-as-title t) 
+ #+END_EXAMPLE
+** epub-mode
+define a minor mode epub-mode
+
+SPC is "wrap region in block quote tag"
+
+#+BEGIN_SRC emacs-lisp
+(defun epub-mode ()
+ (interactive)
+ (org-mode)
+ (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+ )
+#+END_SRC
+
+
+** fasd
+
+  #+BEGIN_SRC emacs-lisp
+;; (global-fasd-mode 1)
+;; (setq fasd-enable-initial-prompt nil)
+  #+END_SRC
+ 
+** zone
+
+  #+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/Users/jay/emacs/prelude/personal/zone-matrix/")  
+
+;; (setq zone-programs [zone-pgm-drip]) 
+;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
+(setq zone-programs [zone-pgm-putz-with-case]) 
+
+  #+END_SRC
+
+** sunrise commander
+#+BEGIN_SRC emacs-lisp
+;; (require 'sunrise-commander)
+#+END_SRC
+
+
+** iCal
+#+BEGIN_SRC emacs-lisp
+(setq org-icalendar-include-todo nil) 
+(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID nil)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")
+(setq org-agenda-default-appointment-duration '15)
+#+END_SRC
+
+
+** zone
 
 #+BEGIN_SRC emacs-lisp
 ; (setq zone-programs [zone-pgm-dissolve])
@@ -6714,31 +6733,14 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+END_SRC
 
 
-* not in use 
 
-** deft-turbo
-
- #+BEGIN_EXAMPLE emacs-lisp 
-;; (require 'deft)
-(setq deft-extensions '("org" "md" "txt"))
-(setq deft-default-extension "org")
-(setq deft-directory "~/nd/")
-(setq deft-use-filename-as-title t) 
- #+END_EXAMPLE
-** epub-mode
-define a minor mode epub-mode
-
-SPC is "wrap region in block quote tag"
-
+** rifle
 #+BEGIN_SRC emacs-lisp
-(defun epub-mode ()
- (interactive)
- (org-mode)
- (setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
- )
+;; (load "/Users/jay/emacs/prelude/personal/helm-org-rifle.el")
+;; (require 'helm-org-rifle)
+
 #+END_SRC
+
 
 
 * eval-subtree

@@ -3129,9 +3129,6 @@ doesn't work.
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
-(defcustom ivy-height 50
-  "Number of lines for the minibuffer window."
-  :type 'integer)
 #+END_SRC
 
 

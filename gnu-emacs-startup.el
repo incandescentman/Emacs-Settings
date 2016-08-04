@@ -1752,10 +1752,6 @@ t)))
 (setq smex-completion-method 'ivy)
 (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
-(defcustom ivy-height 50
-  "Number of lines for the minibuffer window."
-  :type 'integer)
-
 (defun embolden-or-bold (arg)
   (interactive "p")
   (if (region-active-p)

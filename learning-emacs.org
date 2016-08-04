@@ -512,3 +512,12 @@ C-x SPC (pop-global-mark) has your back. C-x r SPC (point-to-register) and C-x r
 - [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/misc/emacs_abbrev_shell_elisp.html][Emacs: Interactive Abbrev in Shell]]
 - [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://xahlee.info/linux/linux_common_commands.html][Linux Tutorial by Example: Most Frequently Used Shell Commands]]
 - [[chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri%3Dhttp://ergoemacs.org/emacs/emacs_shell_vs_term_vs_ansi-term_vs_eshell.html][Emacs: What's the difference between {shell, term, ansi-term, eshell}?]]
+
+* documentation
+
+2
+down vote
+accepted
+See the variable display-time-default-load-average
+
+n.b. I found that very quickly using C-hd to search for "load average". 
