@@ -885,6 +885,121 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 (work-on-book)
 )
 
+(require 'org-mime)
+
+(setq org-mime-default-header "")
+
+;; put a div tag around the whole message to put it in Georgia font.
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (goto-char (point-min))
+            (insert "<div style=\"font-family:Georgia,serif\">")
+            (goto-char (point-max))
+            (insert "</div>"))) 
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-class-style 
+"example" "
+        background:rgba(255,0,0,0.05);
+        border:1px solid rgba(255,0,0,0.2);
+        border-radius:8px;
+        color:#3f3f3f;
+  font-family:Garamond, serif;
+        line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+margin-left:2em;
+        text-align:left;
+        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+        white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "li" "font-family:Georgia,serif")))
+
+(add-hook 'org-mime-html-hook
+     (lambda ()
+      (org-mime-change-element-style
+       "strong" "color:#00ADEF;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "h2" "color:#C92228;
+    font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-transition:all .5s linear;
+    border-bottom:2px dotted #CCC;
+text-transform:capitalize; font-weight:bold;"))) 
+
+(add-hook 'message-mode-hook
+          (lambda ()
+;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+(local-set-key "\M-p" 'org-mime-htmlize)))
+
+(defun mime-send-mail ()
+      "org-mime-subtree and HTMLize"
+      (interactive)
+(org-narrow-to-subtree)
+(end-of-buffer)
+(insert "\n\n---\nJay Dixit
+[[http://jaydixit.com/][jaydixit.com]]
+(646) 355-8001\n")
+(widen)
+(org-mime-subtree)
+(org-mime-htmlize)
+)
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "pre" "color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+width:80%;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "
+        background:rgba(255,0,0,0.05);
+        border:1px solid rgba(255,0,0,0.2);
+        border-radius:8px;
+        color:#3f3f3f;
+  font-family:Garamond, serif;
+        line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+        text-align:left;
+        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+        white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
+
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 ;; (require 'eshell-autojump)
 
@@ -1183,121 +1298,6 @@ ido-enter-matching-directory nil
           (add-to-list 'symbol-names name)
           (add-to-list 'name-and-pos (cons name position))))))))
 
-(require 'org-mime)
-
-(setq org-mime-default-header "")
-
-;; put a div tag around the whole message to put it in Georgia font.
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (goto-char (point-min))
-            (insert "<div style=\"font-family:Georgia,serif\">")
-            (goto-char (point-max))
-            (insert "</div>"))) 
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-class-style 
-"example" "
-        background:rgba(255,0,0,0.05);
-        border:1px solid rgba(255,0,0,0.2);
-        border-radius:8px;
-        color:#3f3f3f;
-  font-family:Garamond, serif;
-        line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-margin-left:2em;
-        text-align:left;
-        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-        white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "li" "font-family:Georgia,serif")))
-
-(add-hook 'org-mime-html-hook
-     (lambda ()
-      (org-mime-change-element-style
-       "strong" "color:#00ADEF;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "h2" "color:#C92228;
-    font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-    -webkit-transition:all .5s linear;
-    border-bottom:2px dotted #CCC;
-text-transform:capitalize; font-weight:bold;"))) 
-
-(add-hook 'message-mode-hook
-          (lambda ()
-;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-(local-set-key "\M-p" 'org-mime-htmlize)))
-
-(defun mime-send-mail ()
-      "org-mime-subtree and HTMLize"
-      (interactive)
-(org-narrow-to-subtree)
-(end-of-buffer)
-(insert "\n\n---\nJay Dixit
-[[http://jaydixit.com/][jaydixit.com]]
-(646) 355-8001\n")
-(widen)
-(org-mime-subtree)
-(org-mime-htmlize)
-)
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "pre" "color: #777;
-    quotes: none;
-    border-radius: 15px;
-    font-weight: 400;
-    color: #87ceeb;
-    line-height: 1.3em;
-width:80%;
-    background: none repeat scroll 0% 0% rgb(61, 61, 61);
-    padding: 20px;
-quotes: '«' '»';
-font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "
-        background:rgba(255,0,0,0.05);
-        border:1px solid rgba(255,0,0,0.2);
-        border-radius:8px;
-        color:#3f3f3f;
-  font-family:Garamond, serif;
-        line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-        text-align:left;
-        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-        white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-
 (define-key org-mode-map
   (kbd "RET")
   (lambda()
@@ -1456,13 +1456,8 @@ margin-bottom: 1em;
 
 (setq grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "#*")))
 
-
-
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-
-(use-package ls-lisp)
-(setq ls-lisp-ignore-case 't)
 
 (defun org-mac-chrome-insert-frontmost-url-with-quotes ()
   "with quotes"
@@ -1711,17 +1706,6 @@ Also converts full stops to commas."
         (message "Moved %s words" count))
     (message "No region selected")))
 
-(defun remove-link ()
-    "Replace an org link by its description or if empty its address"
-  (interactive)
-  (if (org-in-regexp org-bracket-link-regexp 1)
-      (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3)
-                 (org-match-string-no-properties 3)
-                 (org-match-string-no-properties 1))))
-    (apply 'delete-region remove)
-    (insert description))))
-
 (setq org-outline-path-complete-in-steps nil) ; Refile in a single go 
 (setq org-completion-use-ido nil) 
 (setq org-refile-use-outline-path t) ; Show full paths for refiling 
@@ -1786,6 +1770,17 @@ With prefix arg C-u, copy region instad of killing it."
     (org-mark-subtree))
   (call-interactively 'move-region-to-other-window))
 
+(defun remove-link ()
+    "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((remove (list (match-beginning 0) (match-end 0)))
+        (description (if (match-end 3)
+                 (org-match-string-no-properties 3)
+                 (org-match-string-no-properties 1))))
+    (apply 'delete-region remove)
+    (insert description))))
+
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
@@ -1835,6 +1830,33 @@ With prefix arg C-u, copy region instad of killing it."
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
+
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'fundamental-mode)))
+((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode))) 
+((and buffer-file-name (eq major-mode 'conf-mode)))
+((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
+((and buffer-file-name (eq major-mode 'python-mode)))
+((and buffer-file-name (eq major-mode 'text-mode)))
+((and buffer-file-name (eq major-mode 'snippet-mode))) 
+((and buffer-file-name (eq major-mode 'css-mode))) 
+((and buffer-file-name (eq major-mode 'xml-mode))) 
+((and buffer-file-name (eq major-mode 'nxml-mode))) 
+((and buffer-file-name (eq major-mode 'fountain-mode))) 
+((and buffer-file-name (eq major-mode 'nmxml-mode)))
+((and buffer-file-name (eq major-mode 'web-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode)))
+((and buffer-file-name (eq major-mode 'gitconfig-mode)))
+((and buffer-file-name (eq major-mode 'gitignore-mode)))
+      ((and buffer-file-name (eq major-mode 'sh-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 ;; (require 'engine-mode)
 ;; (engine-mode t)
@@ -2290,33 +2312,6 @@ searches all buffers."
 
 (advice-add #'org-remove-angle-brackets :before-until
             (lambda (s) (if (string-prefix-p "mailto:" s) s)))
-
-(defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-((and buffer-file-name (eq major-mode 'fundamental-mode)))
-((and buffer-file-name (eq major-mode 'markdown-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode))) 
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
-((and buffer-file-name (eq major-mode 'python-mode)))
-((and buffer-file-name (eq major-mode 'text-mode)))
-((and buffer-file-name (eq major-mode 'snippet-mode))) 
-((and buffer-file-name (eq major-mode 'css-mode))) 
-((and buffer-file-name (eq major-mode 'xml-mode))) 
-((and buffer-file-name (eq major-mode 'nxml-mode))) 
-((and buffer-file-name (eq major-mode 'fountain-mode))) 
-((and buffer-file-name (eq major-mode 'nmxml-mode)))
-((and buffer-file-name (eq major-mode 'web-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'gitconfig-mode)))
-((and buffer-file-name (eq major-mode 'gitignore-mode)))
-      ((and buffer-file-name (eq major-mode 'sh-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 
 (setq set-mark-command-repeat-pop t)
 

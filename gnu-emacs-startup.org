@@ -2653,11 +2653,20 @@ t)))
 (save-excursion (downcase-word 1))))
 
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
-;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
-
-
+(define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
+;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon) 
 #+END_SRC
+
+** colon-or-smart-colon
+#+BEGIN_SRC emacs-lisp
+(defun colon-or-smart-colon ()
+(interactive) 
+(if (bolp)
+(insert ": ") 
+(smart-colon))
+) 
+#+END_SRC
+
 
 * TESTING [#C] Parentheses, quotations, and auto-capitalize mode
 OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.

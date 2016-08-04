@@ -1362,7 +1362,9 @@ when replying, look kind of like gmail
 ;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
 #+END_SRC
 
-* org-pomodoro
+* org-mode other packages
+
+** org-pomodoro
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
@@ -1393,6 +1395,134 @@ when replying, look kind of like gmail
 (work-on-book)
 )
 
+#+END_SRC
+
+** ~org-mime~
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-mime)
+
+(setq org-mime-default-header "")
+
+;; put a div tag around the whole message to put it in Georgia font.
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (goto-char (point-min))
+            (insert "<div style=\"font-family:Georgia,serif\">")
+            (goto-char (point-max))
+            (insert "</div>"))) 
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-class-style 
+"example" "
+	background:rgba(255,0,0,0.05);
+	border:1px solid rgba(255,0,0,0.2);
+	border-radius:8px;
+	color:#3f3f3f;
+  font-family:Garamond, serif;
+	line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+margin-left:2em;
+	text-align:left;
+	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+	white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "li" "font-family:Georgia,serif")))
+
+(add-hook 'org-mime-html-hook
+     (lambda ()
+      (org-mime-change-element-style
+       "strong" "color:#00ADEF;")))
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "h2" "color:#C92228;
+    font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-transition:all .5s linear;
+    border-bottom:2px dotted #CCC;
+text-transform:capitalize; font-weight:bold;"))) 
+
+(add-hook 'message-mode-hook
+          (lambda ()
+;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
+(local-set-key "\M-p" 'org-mime-htmlize)))
+
+(defun mime-send-mail ()
+      "org-mime-subtree and HTMLize"
+      (interactive)
+(org-narrow-to-subtree)
+(end-of-buffer)
+(insert "\n\n---\nJay Dixit
+[[http://jaydixit.com/][jaydixit.com]]
+(646) 355-8001\n")
+(widen)
+(org-mime-subtree)
+(org-mime-htmlize)
+)
+#+END_SRC
+
+
+*** org-mime blockquote hacker style
+#+BEGIN_SRC emacs-lisp
+
+
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "pre" "color: #777;
+    quotes: none;
+    border-radius: 15px;
+    font-weight: 400;
+    color: #87ceeb;
+    line-height: 1.3em;
+width:80%;
+    background: none repeat scroll 0% 0% rgb(61, 61, 61);
+    padding: 20px;
+quotes: '«' '»';
+font-family: Courier, 'Courier New', monospace;
+    font-weight: 400 !important;")))
+#+END_SRC
+
+*** org-mime blockquote literary style
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "
+	background:rgba(255,0,0,0.05);
+	border:1px solid rgba(255,0,0,0.2);
+	border-radius:8px;
+	color:#3f3f3f;
+  font-family:Garamond, serif;
+	line-height:1.2;
+  padding: 1em 1em 1em 1em;
+margin-bottom: 1em;
+	text-align:left;
+	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+	white-space:0;
+  width:60%;
+  word-wrap:normal!important;")))
 #+END_SRC
 
 * ~eshell~
@@ -1802,134 +1932,6 @@ Disable IDO faces to see flx highlights:
           (add-to-list 'name-and-pos (cons name position))))))))
 #+END_SRC
 
-* ~org-mime~
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-mime)
-
-(setq org-mime-default-header "")
-
-;; put a div tag around the whole message to put it in Georgia font.
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (goto-char (point-min))
-            (insert "<div style=\"font-family:Georgia,serif\">")
-            (goto-char (point-max))
-            (insert "</div>"))) 
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "p" "font-family:Georgia,serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "a" "font-family:Georgia,serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-class-style 
-"example" "
-	background:rgba(255,0,0,0.05);
-	border:1px solid rgba(255,0,0,0.2);
-	border-radius:8px;
-	color:#3f3f3f;
-  font-family:Garamond, serif;
-	line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-margin-left:2em;
-	text-align:left;
-	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-	white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "li" "font-family:Georgia,serif")))
-
-(add-hook 'org-mime-html-hook
-     (lambda ()
-      (org-mime-change-element-style
-       "strong" "color:#00ADEF;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "h2" "color:#C92228;
-    font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-    -webkit-transition:all .5s linear;
-    border-bottom:2px dotted #CCC;
-text-transform:capitalize; font-weight:bold;"))) 
-
-(add-hook 'message-mode-hook
-          (lambda ()
-;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-(local-set-key "\M-p" 'org-mime-htmlize)))
-
-(defun mime-send-mail ()
-      "org-mime-subtree and HTMLize"
-      (interactive)
-(org-narrow-to-subtree)
-(end-of-buffer)
-(insert "\n\n---\nJay Dixit
-[[http://jaydixit.com/][jaydixit.com]]
-(646) 355-8001\n")
-(widen)
-(org-mime-subtree)
-(org-mime-htmlize)
-)
-#+END_SRC
-
-
-** org-mime blockquote hacker style
-#+BEGIN_SRC emacs-lisp
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "pre" "color: #777;
-    quotes: none;
-    border-radius: 15px;
-    font-weight: 400;
-    color: #87ceeb;
-    line-height: 1.3em;
-width:80%;
-    background: none repeat scroll 0% 0% rgb(61, 61, 61);
-    padding: 20px;
-quotes: '«' '»';
-font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important;")))
-#+END_SRC
-
-** org-mime blockquote literary style
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "
-	background:rgba(255,0,0,0.05);
-	border:1px solid rgba(255,0,0,0.2);
-	border-radius:8px;
-	color:#3f3f3f;
-  font-family:Garamond, serif;
-	line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-	text-align:left;
-	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-	white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-#+END_SRC
-
 * Things that I don't know what they're for 
 
 ** I forgot what this is but it looks important
@@ -2150,23 +2152,21 @@ Make it so that recentf does not record the following uninteresting file types:
 (setq grep-find-ignored-files (quote (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.pfsl" "*.dfsl" "*.p64fsl" "*.d64fsl" "*.dx64fsl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js" "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "#*"))) 
 #+END_SRC
 
-* Garbage characters
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 * Word count
 #+BEGIN_SRC emacs-lisp
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 #+END_SRC
 
-* ~ls-lisp~
+
+* unused packages 
+** ~ls-lisp~
 
 I think this is correct:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package ls-lisp)
 (setq ls-lisp-ignore-case 't)
-#+END_SRC
+#+END_EXAMPLE 
 
 * Web research functions
 ** Sourcing / Citing / Attributing
@@ -2462,6 +2462,7 @@ Transpose windows, useful:
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 #+END_SRC
 
+* move stuff around 
 ** Move region to other window, very useful:
 #+BEGIN_SRC emacs-lisp
 (defun move-region-to-other-window (start end)
@@ -2480,23 +2481,7 @@ Transpose windows, useful:
     (message "No region selected")))
 #+END_SRC
 
-** Remove hyperlink
-A useful function: remove a hyperlink but leave the link description:
-#+BEGIN_SRC emacs-lisp
-(defun remove-link ()
-    "Replace an org link by its description or if empty its address"
-  (interactive)
-  (if (org-in-regexp org-bracket-link-regexp 1)
-      (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3)
-                 (org-match-string-no-properties 3)
-                 (org-match-string-no-properties 1))))
-    (apply 'delete-region remove)
-    (insert description))))
-#+END_SRC
-
-
-* org-refile
+** org-refile
 #+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil) ; Refile in a single go 
 (setq org-completion-use-ido nil) 
@@ -2566,7 +2551,7 @@ With prefix arg C-u, copy region instad of killing it."
 #+END_SRC
 
 
-* move-region-or-subtree-to-other-window
+** move-region-or-subtree-to-other-window
 
 #+BEGIN_SRC emacs-lisp
 (defun move-region-or-subtree-to-other-window ()
@@ -2576,6 +2561,21 @@ With prefix arg C-u, copy region instad of killing it."
          (not (region-active-p)))
     (org-mark-subtree))
   (call-interactively 'move-region-to-other-window))
+#+END_SRC
+
+* Remove hyperlink
+A useful function: remove a hyperlink but leave the link description:
+#+BEGIN_SRC emacs-lisp
+(defun remove-link ()
+    "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((remove (list (match-beginning 0) (match-end 0)))
+        (description (if (match-end 3)
+                 (org-match-string-no-properties 3)
+                 (org-match-string-no-properties 1))))
+    (apply 'delete-region remove)
+    (insert description))))
 #+END_SRC
 
 
@@ -2648,6 +2648,36 @@ function I have a persistent buffer list available.
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
+#+END_SRC
+
+** save some buffers
+#+BEGIN_SRC emacs-lisp
+(defun jay/save-some-buffers ()
+(interactive)
+  (save-some-buffers 'no-confirm (lambda ()
+    (cond
+      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
+      ((and buffer-file-name (eq major-mode 'latex-mode)))
+((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
+((and buffer-file-name (eq major-mode 'fundamental-mode)))
+((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode))) 
+((and buffer-file-name (eq major-mode 'conf-mode)))
+((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
+((and buffer-file-name (eq major-mode 'python-mode)))
+((and buffer-file-name (eq major-mode 'text-mode)))
+((and buffer-file-name (eq major-mode 'snippet-mode))) 
+((and buffer-file-name (eq major-mode 'css-mode))) 
+((and buffer-file-name (eq major-mode 'xml-mode))) 
+((and buffer-file-name (eq major-mode 'nxml-mode))) 
+((and buffer-file-name (eq major-mode 'fountain-mode))) 
+((and buffer-file-name (eq major-mode 'nmxml-mode)))
+((and buffer-file-name (eq major-mode 'web-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode)))
+((and buffer-file-name (eq major-mode 'gitconfig-mode)))
+((and buffer-file-name (eq major-mode 'gitignore-mode)))
+      ((and buffer-file-name (eq major-mode 'sh-mode)))
+      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
 #+END_SRC
 
 * Extra functionality
@@ -3209,14 +3239,16 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+END_SRC
 
 
-* words to never downcase
+
+* capitalization
+
+
+** words to never downcase
 #+BEGIN_SRC emacs-lisp
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
 #+END_SRC
 
-
-
-* auto-capitalize-predicate 
+** auto-capitalize-predicate 
 #+BEGIN_SRC emacs-lisp
 (setq auto-capitalize-predicate
       (lambda ()
@@ -3234,9 +3266,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 #+END_SRC 
 
-
-
-** Load my LaTeX files
+* Load my LaTeX files
 
 ;; (load "~/elisp/latex.el")
 (load "~/elisp/signal-flare.el")
@@ -3260,7 +3290,9 @@ magit
 ;; (monaco-font)
 #+END_SRC
 
-* Tell isearch that curly apostrophes are the same as straight ones
+* searching 
+
+** Tell isearch that curly apostrophes are the same as straight ones
 Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
 
 #+BEGIN_SRC emacs-lisp
@@ -3291,7 +3323,7 @@ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and 
 
 
 
-* new stuff
+* org-links
 ** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'?
 #+BEGIN_SRC emacs-lisp
 (advice-add #'org-remove-angle-brackets :before-until
@@ -3302,36 +3334,6 @@ source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert
 
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade)
-
-* save some buffers
-#+BEGIN_SRC emacs-lisp
-(defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-((and buffer-file-name (eq major-mode 'fundamental-mode)))
-((and buffer-file-name (eq major-mode 'markdown-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode))) 
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
-((and buffer-file-name (eq major-mode 'python-mode)))
-((and buffer-file-name (eq major-mode 'text-mode)))
-((and buffer-file-name (eq major-mode 'snippet-mode))) 
-((and buffer-file-name (eq major-mode 'css-mode))) 
-((and buffer-file-name (eq major-mode 'xml-mode))) 
-((and buffer-file-name (eq major-mode 'nxml-mode))) 
-((and buffer-file-name (eq major-mode 'fountain-mode))) 
-((and buffer-file-name (eq major-mode 'nmxml-mode)))
-((and buffer-file-name (eq major-mode 'web-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'gitconfig-mode)))
-((and buffer-file-name (eq major-mode 'gitignore-mode)))
-      ((and buffer-file-name (eq major-mode 'sh-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
-#+END_SRC
 
 * stuff that I moved from custom.el
 #+BEGIN_EXAMPLE emacs-lisp
@@ -3373,7 +3375,9 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 
-* gnus
+* email
+
+** gnus
 #+BEGIN_SRC emacs-lisp
 (setq user-mail-address "dixit@aya.yale.edu")
 (setq user-full-name "Jay Dixit")
@@ -3440,7 +3444,7 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 
-** More attractive Summary View
+*** More attractive Summary View
   :PROPERTIES:
   :CUSTOM_ID: pretty-summary
   :END:
@@ -3471,9 +3475,9 @@ Thanks to Dan Davison.
 #+end_src
 
 
-** modified email-heading function
+*** modified email-heading function
 
-*** org-mime-htmlcize - no longer works.
+**** org-mime-htmlcize - no longer works.
 #+BEGIN_EXAMPLE emacs-lisp
 
 (defun org-mime-htmlize (&optional arg)
@@ -3519,7 +3523,7 @@ export that region, otherwise export the entire body."
 	    body html (mapconcat 'identity html-images "\n"))))))
 #+END_EXAMPLE
 
-** new-email-from-subtree-with-signature 
+*** new-email-from-subtree-with-signature 
 
 #+BEGIN_SRC emacs-lisp 
 
@@ -3629,7 +3633,7 @@ subsequent sends."
 ))
 #+END_SRC
 
-** erika-send-mail
+*** erika-send-mail
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email ()
  "Send the current org-mode heading as the body of an email, with headline as the subject.
@@ -3681,7 +3685,7 @@ subsequent sends."
 ))
 #+END_SRC
 
-*** erika-send-email-styled
+**** erika-send-email-styled
 
 #+BEGIN_SRC emacs-lisp
 (defun erika-send-email-styled ()
@@ -3761,7 +3765,7 @@ subsequent sends."
 )
 #+END_SRC
 
-*** adrien-send-email-styled 
+**** adrien-send-email-styled 
 
 #+BEGIN_SRC emacs-lisp
 (defun adrien-send-email-styled ()
@@ -3841,7 +3845,7 @@ subsequent sends."
 )
 #+END_SRC
 
-*** erika-send-email-test---clone of erika-send-email-styled
+**** erika-send-email-test---clone of erika-send-email-styled
 This function should be kept exactly the same as the one above, except the emails should go only to myself or Rúdi. Used for testing purposes.
 
 #+BEGIN_SRC emacs-lisp

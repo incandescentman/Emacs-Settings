@@ -1501,8 +1501,15 @@ t)))
 (save-excursion (downcase-word 1))))
 
 
-(define-key org-mode-map (kbd ":") 'smart-colon)
+(define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
 ;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon)
+
+(defun colon-or-smart-colon ()
+(interactive) 
+(if (bolp)
+(insert ": ") 
+(smart-colon))
+)
 
 (defun backward-kill-word-correctly ()
   "Kill word."
