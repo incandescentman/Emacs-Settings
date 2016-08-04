@@ -1403,7 +1403,6 @@ ido-enter-matching-directory nil
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
 
-(setq recentf-save-file "/Users/jay/emacs/medial/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
@@ -4528,3 +4527,52 @@ into the main dumped emacs"
   )
 
 (setq display-buffer-alist (quote (("" ignore (nil . reusable-frames)))))
+
+(defun hrs/find-file-as-sudo ()
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+   (when file-name
+    (find-alternate-file (concat "/sudo::" file-name)))))
+
+(global-prettify-symbols-mode t)
+
+(setq lispy-mode-hooks
+    '(clojure-mode-hook
+     emacs-lisp-mode-hook
+     lisp-mode-hook
+     scheme-mode-hook))
+
+ (dolist (hook lispy-mode-hooks)
+  (add-hook hook (lambda ()
+           (setq show-paren-style 'expression)
+;; (paredit-mode)
+           (rainbow-delimiters-mode))))
+
+(defun hrs/search-project-for-symbol-at-point ()
+ "Use `projectile-ag' to search the current project for `symbol-at-point'."
+ (interactive)
+ (projectile-ag (projectile-symbol-at-point)))
+
+(global-set-key (kbd "C-c v") 'projectile-ag)
+(global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
+
+(add-hook 'web-mode-hook
+     (lambda ()
+      (rainbow-mode)
+      (rspec-mode)
+      (setq web-mode-markup-indent-offset 2)))
+
+(defun hrs/add-auto-mode (mode &rest patterns)
+  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  (dolist (pattern patterns)
+   (add-to-list 'auto-mode-alist (cons pattern mode))))
+
+
+ (hrs/add-auto-mode
+  'web-mode
+  "\\.erb$"
+  "\\.html$"
+  "\\.php$"
+  "\\.rhtml$")
+
+(setq org-src-window-setup 'current-window)

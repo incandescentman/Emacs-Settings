@@ -2097,7 +2097,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ** recentf
 #+BEGIN_SRC emacs-lisp
-(setq recentf-save-file "/Users/jay/emacs/medial/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit 
@@ -7100,3 +7099,106 @@ into the main dumped emacs"
 #+BEGIN_SRC emacs-lisp
 (setq display-buffer-alist (quote (("" ignore (nil . reusable-frames))))) 
 #+END_SRC
+
+* from Harry Schwartz
+
+** find file as sudo 
+#+BEGIN_SRC emacs-lisp
+(defun hrs/find-file-as-sudo ()
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+   (when file-name
+    (find-alternate-file (concat "/sudo::" file-name))))) 
+#+END_SRC
+
+
+** Use fancy lambdas
+
+Why not?
+
+#+BEGIN_SRC emacs-lisp
+ (global-prettify-symbols-mode t)
+#+END_SRC
+
+
+
+** Lisps
+
+All the lisps have some shared features, so we want to do the same things for
+all of them. That includes using =paredit-mode= to balance parentheses (and
+more!), =rainbow-delimiters= to color matching parentheses, and highlighting the
+whole expression when point is on a paren.
+
+#+BEGIN_SRC emacs-lisp
+ (setq lispy-mode-hooks
+    '(clojure-mode-hook
+     emacs-lisp-mode-hook
+     lisp-mode-hook
+     scheme-mode-hook))
+
+ (dolist (hook lispy-mode-hooks)
+  (add-hook hook (lambda ()
+           (setq show-paren-style 'expression)
+;; (paredit-mode)
+           (rainbow-delimiters-mode))))
+#+END_SRC
+
+
+** Projectile
+
+Projectile's default binding of =projectile-ag= to =C-c p s s= is clunky enough
+that I rarely use it (and forget it when I need it). This binds the
+easier-to-type =C-c C-v= and =C-c v= to useful searches.
+
+#+BEGIN_SRC emacs-lisp
+ (defun hrs/search-project-for-symbol-at-point ()
+  "Use `projectile-ag' to search the current project for `symbol-at-point'."
+  (interactive)
+  (projectile-ag (projectile-symbol-at-point)))
+
+ (global-set-key (kbd "C-c v") 'projectile-ag)
+ (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
+#+END_SRC
+
+
+** =web-mode=
+
+If I'm in =web-mode=, I'd like to:
+
+- Color color-related words with =rainbow-mode=.
+- Still be able to run RSpec tests from =web-mode= buffers.
+- Indent everything with 2 spaces.
+
+#+BEGIN_SRC emacs-lisp
+ (add-hook 'web-mode-hook
+      (lambda ()
+       (rainbow-mode)
+       (rspec-mode)
+       (setq web-mode-markup-indent-offset 2)))
+#+END_SRC
+
+Use =web-mode= with embedded Ruby files, regular HTML, and PHP.
+
+#+BEGIN_SRC emacs-lisp
+(defun hrs/add-auto-mode (mode &rest patterns)
+  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  (dolist (pattern patterns)
+   (add-to-list 'auto-mode-alist (cons pattern mode))))
+
+
+ (hrs/add-auto-mode
+  'web-mode
+  "\\.erb$"
+  "\\.html$"
+  "\\.php$"
+  "\\.rhtml$")
+#+END_SRC
+
+
+When editing a code snippet, use the current window rather than popping open a
+new one (which shows the same information).
+
+#+BEGIN_SRC emacs-lisp
+ (setq org-src-window-setup 'current-window)
+#+END_SRC
+
