@@ -3673,6 +3673,7 @@ Single Capitals as you type."
 
 
 (use-package yasnippet 
+:ensure t 
 :bind 
 ("C-c e" . yas-load-snippet-buffer)
 :init
@@ -7139,7 +7140,7 @@ whole expression when point is on a paren.
  (dolist (hook lispy-mode-hooks)
   (add-hook hook (lambda ()
            (setq show-paren-style 'expression)
-;; (paredit-mode)
+(paredit-mode)
            (rainbow-delimiters-mode))))
 #+END_SRC
 

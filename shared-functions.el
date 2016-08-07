@@ -2487,6 +2487,7 @@ Single Capitals as you type."
 (add-hook 'org-mode-hook #'dubcaps-mode)
 
 (use-package yasnippet 
+:ensure t 
 :bind 
 ("C-c e" . yas-load-snippet-buffer)
 :init
@@ -4545,7 +4546,7 @@ into the main dumped emacs"
  (dolist (hook lispy-mode-hooks)
   (add-hook hook (lambda ()
            (setq show-paren-style 'expression)
-;; (paredit-mode)
+(paredit-mode)
            (rainbow-delimiters-mode))))
 
 (defun hrs/search-project-for-symbol-at-point ()
