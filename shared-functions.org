@@ -3695,13 +3695,24 @@ Single Capitals as you type."
 (defun suppress-backquote-warnings ()
 (interactive) 
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
-  )
-
-
-
+  ) 
 #+END_SRC
 
+* fix yasnippet org-mode conflict
+#+BEGIN_SRC emacs-lisp
+(defun yas-org-very-safe-expand ()
+   (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
+(add-hook 'org-mode-hook
+     (lambda ()
+      (make-variable-buffer-local 'yas--trigger-key)
+      (setq yas-trigger-key [tab])
+      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+      (define-key yas-keymap [tab] 'yas-next-field))) 
+#+END_SRC
+
+* auto-complete-mode
+#+BEGIN_EXAMPLE emacs-lisp
 ;;; Auto complete mode
 ;;; should be loaded after yasnippet so that they can work together
 (use-package auto-complete-config
@@ -3711,11 +3722,9 @@ Single Capitals as you type."
 ;;; Set the trigger key so that it can work together with yasnippet on tab key,
 ;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
 ;;; activate, otherwise, auto-complete will
-(ac-set-trigger-key "TAB")
-(ac-set-trigger-key "<tab>") 
-)
-
-
+(ac-set-trigger-key "TAB") 
+) 
+#+END_EXAMPLE 
 
  (defun yas-org-very-safe-expand ()
    (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
@@ -7219,3 +7228,10 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
     (format-time-string "%d-%m-%Y")
    (format-time-string "%Y-%m-%d")))) 
 #+END_EXAMPLE
+
+
+** org-agenda files
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
+
+#+END_SRC

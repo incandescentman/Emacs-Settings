@@ -2511,6 +2511,16 @@ Single Capitals as you type."
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change)) 
   )
 
+(defun yas-org-very-safe-expand ()
+   (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
+
+(add-hook 'org-mode-hook
+     (lambda ()
+      (make-variable-buffer-local 'yas--trigger-key)
+      (setq yas-trigger-key [tab])
+      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+      (define-key yas-keymap [tab] 'yas-next-field)))
+
 (use-package flyspell
 :config
 '(flyspell-abbrev-p t)
@@ -4576,3 +4586,5 @@ into the main dumped emacs"
   "\\.rhtml$")
 
 (setq org-src-window-setup 'current-window)
+
+(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
