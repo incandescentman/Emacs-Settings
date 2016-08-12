@@ -72,7 +72,8 @@
 
   (global-set-key (kbd "<f13>") 'toggle-fullscreen)
 
-;; (require 'dired-details+)
+(require 'dired-details+)
+
 
 (defun mydired-sort ()
   "Sort dired listings with directories first."

@@ -361,7 +361,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun iterm-mode ()
 (interactive)
 ;; (spacemacs/toggle-highlight-current-line-globally-off)
-(setq menu-bar-mode-1)
+(setq menu-bar-mode -1)
 )
 
 (defun beach-mode ()

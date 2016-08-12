@@ -7203,3 +7203,20 @@ new one (which shows the same information).
  (setq org-src-window-setup 'current-window)
 #+END_SRC
 
+
+** how to do an argument
+
+Insert today's date
+Ben Maughan
+
+Here's a simple bit of code from the Emacs wiki to insert the current date. I've set the default to be in the format YYYY-MM-DD, but if you use a prefix C-u then you get DD-MM-YYYY.
+
+;; from http://bit.ly/2aBY92J
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun insert-todays-date (arg)
+ (interactive "P")
+ (insert (if arg
+    (format-time-string "%d-%m-%Y")
+   (format-time-string "%Y-%m-%d")))) 
+#+END_EXAMPLE
