@@ -343,7 +343,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (interactive)
 (setq-default cursor-type 'hbar)
 (setq cursor-type 'hbar)
-;; (set-cursor-color "black")
 (set-cursor-color "red")
 (setq blink-cursor-blinks 10)
 (setq blink-cursor-mode t)

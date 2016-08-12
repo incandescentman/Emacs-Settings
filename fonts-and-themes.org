@@ -2,8 +2,8 @@
 
 This customization with the big blocky boxy red cursor makes me so happy.
 # #+BEGIN_SRC emacs-lisp
-;; (setq-default cursor-type 'box) 
-;; (setq-default cursor-type 'hbar)
+
+(setq-default cursor-type 'hbar)
 (set-cursor-color "red")
 (setq default-frame-alist
    '((cursor-color . "red")))
@@ -364,7 +364,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (interactive)
 (setq-default cursor-type 'hbar)
 (setq cursor-type 'hbar)
-;; (set-cursor-color "black")
 (set-cursor-color "red")
 (setq blink-cursor-blinks 10)
 (setq blink-cursor-mode t)

@@ -2119,7 +2119,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'recentf-exclude ".git")
-(add-to-list 'recentf-exclude "init")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")

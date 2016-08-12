@@ -58,9 +58,9 @@
 
 (setq ring-bell-function
       (lambda ()
-        (unless (memq this-command
-                      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
-          (ding))))
+  (unless (memq this-command
+          '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
+    (ding))))
 
 ;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
@@ -83,7 +83,7 @@
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
 
 (unless (and (fboundp 'play-sound-internal)
-             (subrp (symbol-function 'play-sound-internal)))
+       (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
 
 
@@ -263,9 +263,9 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ")
 
 (setq safe-local-variable-values (quote    ((eval when
-           (fboundp
-            (quote rainbow-mode))
-           (rainbow-mode 1)))))
+     (fboundp
+      (quote rainbow-mode))
+     (rainbow-mode 1)))))
 
 (setq org-html-footnotes-section "<div id=\"footnotes\">
 <h2 class=\"footnotes\">%s </h2>
@@ -432,53 +432,53 @@ Only modes that don't derive from `prog-mode' should be listed here.")
       (quote
        (
 
-        ("g" "gratitude" entry (file "gratitude.txt")
-         "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+  ("g" "gratitude" entry (file "gratitude.txt")
+   "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-        ("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+  ("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-        ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+  ("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
+   "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
 
-        ("n" "note" entry (file org-default-notes-file)
-         "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+  ("n" "note" entry (file org-default-notes-file)
+   "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-        ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-         "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+  ("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+   "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
-        ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-         "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+  ("v" "visualness and visual actions" entry (file "visual-actions.txt")
+   "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
 ("a" "article ideas" entry (file "article-ideas.txt")
-         "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
+   "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
 
 
 ("e" "expression" entry (file "expression.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
-         "\n\n* wm%?\n" :prepend t :kill-buffer t)
+   "\n\n* wm%?\n" :prepend t :kill-buffer t)
 
-        ("e" "expression" entry (file "expression.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+  ("e" "expression" entry (file "expression.txt")
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-         "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+   "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
 
-        ("h" "historical interest" entry (file "historical-lifestream.txt")
-         "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+  ("h" "historical interest" entry (file "historical-lifestream.txt")
+   "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
-        ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+  ("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-        ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+  ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
-        ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-         "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
+  ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+   "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-        ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-         "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+  ("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
+   "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
@@ -488,8 +488,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
 ;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
 
-        ("f" "flowy" entry (file "flowy.org")
-         "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+  ("f" "flowy" entry (file "flowy.org")
+   "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
@@ -525,8 +525,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   (when (equal major-mode 'org-mode)
     (save-excursion
       (ignore-errors
-        (org-back-to-heading)
-        (org-update-parent-todo-statistics)))))
+  (org-back-to-heading)
+  (org-update-parent-todo-statistics)))))
 
 (defadvice org-kill-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
@@ -575,7 +575,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
-           (call-interactively 'org-agenda-schedule)))
+     (call-interactively 'org-agenda-schedule)))
 
 (defun my-org-archive-done-tasks ()
   (interactive)
@@ -835,7 +835,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
     (message-mail to subject)
     (message-goto-body)
     (insert (save-excursion (set-buffer orig-buffer)
-                            (buffer-substring-no-properties b e)))
+          (buffer-substring-no-properties b e)))
     (message-send-and-exit)))
 
 (add-to-list 'completion-styles 'initials t)
@@ -919,18 +919,18 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
           (lambda ()
             (org-mime-change-class-style 
 "example" "
-        background:rgba(255,0,0,0.05);
-        border:1px solid rgba(255,0,0,0.2);
-        border-radius:8px;
-        color:#3f3f3f;
+  background:rgba(255,0,0,0.05);
+  border:1px solid rgba(255,0,0,0.2);
+  border-radius:8px;
+  color:#3f3f3f;
   font-family:Garamond, serif;
-        line-height:1.2;
+  line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
 margin-left:2em;
-        text-align:left;
-        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-        white-space:0;
+  text-align:left;
+  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+  white-space:0;
   width:60%;
   word-wrap:normal!important;")))
 
@@ -993,17 +993,17 @@ font-family: Courier, 'Courier New', monospace;
           (lambda ()
             (org-mime-change-element-style
              "blockquote" "
-        background:rgba(255,0,0,0.05);
-        border:1px solid rgba(255,0,0,0.2);
-        border-radius:8px;
-        color:#3f3f3f;
+  background:rgba(255,0,0,0.05);
+  border:1px solid rgba(255,0,0,0.2);
+  border-radius:8px;
+  color:#3f3f3f;
   font-family:Garamond, serif;
-        line-height:1.2;
+  line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
-        text-align:left;
-        text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-        white-space:0;
+  text-align:left;
+  text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
+  white-space:0;
   width:60%;
   word-wrap:normal!important;")))
 
@@ -1188,15 +1188,15 @@ margin-bottom: 1em;
 (key-chord-mode 1)
 
 (add-hook 'ido-setup-hook
-          (lambda ()
-            ;; Go straight home
-            (define-key ido-file-completion-map
-              (kbd "~")
-              (lambda ()
-                (interactive)
-                (if (looking-back "/")
-                    (insert "~/")
-                  (call-interactively 'self-insert-command))))))
+    (lambda ()
+      ;; Go straight home
+      (define-key ido-file-completion-map
+        (kbd "~")
+        (lambda ()
+    (interactive)
+    (if (looking-back "/")
+        (insert "~/")
+      (call-interactively 'self-insert-command))))))
 
 (use-package ido)
 
@@ -1416,7 +1416,6 @@ ido-enter-matching-directory nil
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 (add-to-list 'recentf-exclude ".git")
-(add-to-list 'recentf-exclude "init")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
@@ -1696,10 +1695,10 @@ Also converts full stops to commas."
   (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
     (while (/= arg 0)
       (let ((this-win (window-buffer))
-            (next-win (window-buffer (funcall selector))))
-        (set-window-buffer (selected-window) next-win)
-        (set-window-buffer (funcall selector) this-win)
-        (select-window (funcall selector)))
+      (next-win (window-buffer (funcall selector))))
+  (set-window-buffer (selected-window) next-win)
+  (set-window-buffer (funcall selector) this-win)
+  (select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (defun move-region-to-other-window (start end)
@@ -1824,20 +1823,20 @@ With prefix arg C-u, copy region instad of killing it."
   (let ((home (expand-file-name (getenv "HOME"))))
     (find-file
      (ido-completing-read ""
-                          (mapc (lambda (path)
-                                    (replace-regexp-in-string home "~" path))
-                                  recentf-list)
-                          nil t))))
+        (mapc (lambda (path)
+            (replace-regexp-in-string home "~" path))
+          recentf-list)
+        nil t))))
 
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
-         (tocpl (mapc (function
-                         (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-         (prompt (append '("File name: ") tocpl))
-         (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+   (tocpl (mapc (function
+       (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+   (prompt (append '("File name: ") tocpl))
+   (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
@@ -2134,19 +2133,19 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my-isearch-yank-word-hook ()
   (when (equal this-command 'my-isearch-word-at-point)
     (let ((string (concat "\\<"
-                          (buffer-substring-no-properties
-                           (progn (skip-syntax-backward "w_") (point))
-                           (progn (skip-syntax-forward "w_") (point)))
-                          "\\>")))
+        (buffer-substring-no-properties
+         (progn (skip-syntax-backward "w_") (point))
+         (progn (skip-syntax-forward "w_") (point)))
+        "\\>")))
       (if (and isearch-case-fold-search
-               (eq 'not-yanks search-upper-case))
-          (setq string (downcase string)))
+         (eq 'not-yanks search-upper-case))
+    (setq string (downcase string)))
       (setq isearch-string string
-            isearch-message
-            (concat isearch-message
-                    (mapconcat 'isearch-text-char-description
-                               string ""))
-            isearch-yank-flag t)
+      isearch-message
+      (concat isearch-message
+        (mapconcat 'isearch-text-char-description
+             string ""))
+      isearch-yank-flag t)
       (isearch-search-and-update))))
 
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
@@ -2750,8 +2749,8 @@ Single Capitals as you type."
  `( 
 
 ,(make-mu4e-context
-         :name "Sunjay E. Dixit"
-         :enter-func (lambda () 
+   :name "Sunjay E. Dixit"
+   :enter-func (lambda () 
 (mu4e-message "Switch to sunjaydixit@gmail.com context")
 ;; switch to sendmail to send email through gmail 
 (setq message-send-mail-function (quote message-send-mail-with-sendmail))
@@ -2763,12 +2762,12 @@ Single Capitals as you type."
 (user-mail-address . "dixit@aya.yale.edu")
 (mu4e-get-mail-command . "mbsync gmail") 
 (mu4e-compose-signature .
-                 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+     ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
 
 
 ,(make-mu4e-context
-         :name "New York Writers Intensive"
-         :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
+   :name "New York Writers Intensive"
+   :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
 ;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -2780,17 +2779,17 @@ Single Capitals as you type."
 ;; open my newyorkwritersintensive inbox
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
 )
-         ;; leave-fun not defined 
-         :vars '(
+   ;; leave-fun not defined 
+   :vars '(
 (user-mail-address . "jay@newyorkwritersintensive.com")
 (mu4e-get-mail-command . "mbsync nywi") 
  ( mu4e-compose-signature .
-                 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
+     ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
 
 
 ,(make-mu4e-context
-         :name "Vivovii"
-         :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+   :name "Vivovii"
+   :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
 ;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
@@ -2802,12 +2801,12 @@ Single Capitals as you type."
 ;; open my vivovii inbox
 (mu4e~headers-jump-to-maildir "/vivovii/inbox") 
 )
-         ;; leave-fun not defined 
-         :vars '(
+   ;; leave-fun not defined 
+   :vars '(
 (user-mail-address . "jay@vivovii.com")
 (mu4e-get-mail-command . "mbsync vivovii") 
  ( mu4e-compose-signature .
-                 ("Jay Dixit\nvivovii.com\n")))) 
+     ("Jay Dixit\nvivovii.com\n")))) 
 
 
 ))
@@ -2886,8 +2885,8 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  there is none."
  (if (mu4e-context-current)
   (concat "[" (propertize (mu4e~quote-for-modeline
-                           (mu4e-context-name (mu4e-context-current)))
-                 'face 'mode-line-buffer-id) "]") ""))
+         (mu4e-context-name (mu4e-context-current)))
+     'face 'mode-line-buffer-id) "]") ""))
 
 ;; (require 'gnus-dired)
 ;; make the `gnus-dired-mail-buffers' function also work on
@@ -3862,41 +3861,41 @@ The full path into relative path and insert it as a local file link in org-mode"
 ))
 
 (defhydra hydra-helm (:hint nil :color pink)
-        "
-                                                                          ╭──────┐
+  "
+                    ╭──────┐
    Navigation   Other  Sources     Mark             Do             Help   │ Helm │
   ╭───────────────────────────────────────────────────────────────────────┴──────╯
-        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
-        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+  ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+  ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
     _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
-        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
-        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+  ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+  ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
   --------------------------------------------------------------------------------
-        "
-        ("<tab>" helm-keyboard-quit "back" :exit t)
-        ("<escape>" nil "quit")
-        ("\\" (insert "\\") "\\" :color blue)
-        ("h" helm-beginning-of-buffer)
-        ("j" helm-next-line)
-        ("k" helm-previous-line)
-        ("l" helm-end-of-buffer)
-        ("g" helm-beginning-of-buffer)
-        ("G" helm-end-of-buffer)
-        ("n" helm-next-source)
-        ("p" helm-previous-source)
-        ("K" helm-scroll-other-window-down)
-        ("J" helm-scroll-other-window)
-        ("c" helm-recenter-top-bottom-other-window)
-        ("m" helm-toggle-visible-mark)
-        ("t" helm-toggle-all-marks)
-        ("u" helm-unmark-all)
-        ("H" helm-help)
-        ("s" helm-buffer-help)
-        ("v" helm-execute-persistent-action)
-        ("d" helm-persistent-delete-marked)
-        ("y" helm-yank-selection)
-        ("w" helm-toggle-resplit-and-swap-windows)
-        ("f" helm-follow-mode))
+  "
+  ("<tab>" helm-keyboard-quit "back" :exit t)
+  ("<escape>" nil "quit")
+  ("\\" (insert "\\") "\\" :color blue)
+  ("h" helm-beginning-of-buffer)
+  ("j" helm-next-line)
+  ("k" helm-previous-line)
+  ("l" helm-end-of-buffer)
+  ("g" helm-beginning-of-buffer)
+  ("G" helm-end-of-buffer)
+  ("n" helm-next-source)
+  ("p" helm-previous-source)
+  ("K" helm-scroll-other-window-down)
+  ("J" helm-scroll-other-window)
+  ("c" helm-recenter-top-bottom-other-window)
+  ("m" helm-toggle-visible-mark)
+  ("t" helm-toggle-all-marks)
+  ("u" helm-unmark-all)
+  ("H" helm-help)
+  ("s" helm-buffer-help)
+  ("v" helm-execute-persistent-action)
+  ("d" helm-persistent-delete-marked)
+  ("y" helm-yank-selection)
+  ("w" helm-toggle-resplit-and-swap-windows)
+  ("f" helm-follow-mode))
 
 (global-set-key
  (kbd "C-8")
@@ -4469,8 +4468,8 @@ cmd)
 (setq safe-local-variable-values
   (quote
   ((eval define-key key-minor-mode-map
-          (kbd "SPC")
-          (quote insert-space)))))
+    (kbd "SPC")
+    (quote insert-space)))))
 
 (defun loadup-gen ()
  "Generate the lines to include in the lisp/loadup.el file
@@ -4480,14 +4479,14 @@ into the main dumped emacs"
  (defun get-loads-from-*Messages* ()
   (save-excursion
    (let ((retval ()))
-        (set-buffer "*Messages*")
-        (beginning-of-buffer)
-        (while (search-forward-regexp "^Loading " nil t)
-         (let ((start (point)))
-          (search-forward "...")
-          (backward-char 3)
-          (setq retval (cons (buffer-substring-no-properties start (point)) retval))))
-        retval)))
+  (set-buffer "*Messages*")
+  (beginning-of-buffer)
+  (while (search-forward-regexp "^Loading " nil t)
+   (let ((start (point)))
+    (search-forward "...")
+    (backward-char 3)
+    (setq retval (cons (buffer-substring-no-properties start (point)) retval))))
+  retval)))
  (map 'list
     (lambda (file) (princ (format "(load \"%s\")\n" file)))
     (get-loads-from-*Messages*)))
