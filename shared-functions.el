@@ -1791,18 +1791,29 @@ With prefix arg C-u, copy region instad of killing it."
     (apply 'delete-region remove)
     (insert description))))
 
+(defun recentf-open-files-compl ()
+  (interactive)
+  (let* ((all-files recentf-list)
+         (tocpl (mapcar (function
+                         (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
+         (prompt (append '("File name: ") tocpl))
+         (fname (completing-read (car prompt) (cdr prompt) nil nil)))
+    (find-file (cdr (assoc-string fname tocpl)))))
+
+(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
+
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
   (interactive)
   (let ((buffer-file-name-list
-         (mapc 'file-truename
-                 (remove nil (mapc 'buffer-file-name (buffer-list)))))
-        (recent-files-names (delete-dups (mapc 'file-truename recentf-list)))
+         (mapcar 'file-truename
+                 (remove nil (mapcar 'buffer-file-name (buffer-list)))))
+        (recent-files-names (delete-dups (mapcar 'file-truename recentf-list)))
         most-recent-filename)
     (dolist (filename recent-files-names)
       (unless (member filename buffer-file-name-list)
         (setq most-recent-filename filename)
-        (return)))
+        (cl-return)))
     (ignore-errors (find-file most-recent-filename))))
 
 (defun path-copy-full-path-to-clipboard ()
