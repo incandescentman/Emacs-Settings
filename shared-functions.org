@@ -1,11 +1,11 @@
 # Local Variables:
- # org-config-files-local-mode: t
- # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
- # End: 
+# org-config-files-local-mode: t
+# eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space) 
+# End: 
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
 ;;; (abbrev-mode)
-(user-full-name)
+;; (user-full-name)
 
 
 * file settings                                                     :ARCHIVE:
@@ -1622,7 +1622,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
 '(grep-highlight-matches (quote always))
- '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*"))) 
+ '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*" ".git"))) 
  '(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/warm.org")
@@ -1832,7 +1832,7 @@ ido-enter-matching-directory nil
       ido-use-faces t
       ido-use-url-at-point t
       ido-max-prospects 10)
-(setq ido-everywhere t)
+(ido-everywhere t)
 
 (setq confirm-nonexistent-file-or-buffer nil)
 (ido-everywhere 1)
@@ -2081,7 +2081,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 
 (setq-default dired-omit-files-p t) ; this is buffer-local variable 
-(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon") 
+(setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$|\\Icon|\\.git") 
 
 
 
@@ -7252,6 +7252,5 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 ** org-agenda files
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
-
+(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"))) 
 #+END_SRC
