@@ -102,7 +102,8 @@ emacs-settings)))
 "Work on my book! :-)"
 (interactive)
 ;; (book-dired)
-(book-load-current)
+;; (book-load-current)
+(org-cycle-agenda-files)
 )
 
 

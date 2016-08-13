@@ -961,7 +961,19 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
           (re-search-forward "\\=\\W*?[[:punct:]]+" nil t)) ; IF there's a sequence of punctuation marks at point
       (kill-region (match-beginning 0) (match-end 0)) ; THEN just kill the punctuation marks
     (kill-word 1))                                    ; ELSE kill word
-  (my/fix-space))
+  (my/fix-space)
+;; don't leave two periods in a row
+(when 
+(or
+(looking-at "\\,\\, ")
+
+(and 
+(looking-at "\\,")
+(looking-back "\\,") 
+)
+)
+(delete-forward-char 1))
+)
 
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
@@ -1750,8 +1762,7 @@ t)))
   )
 
 ;; (require 'smex)
-(setq smex-completion-method 'ivy)
-(setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+;; (setq smex-completion-method 'ivy)
 
 (defun embolden-or-bold (arg)
   (interactive "p")

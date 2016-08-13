@@ -123,6 +123,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 `(org-tag ((t (:bold t :weight bold :background "#3F3F3F"))))
 
 `(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F")))) 
+(scrollbar-init)
 )
 
 (org-mode)

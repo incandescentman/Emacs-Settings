@@ -5505,15 +5505,23 @@ event of an error or nonlocal exit."
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 )
 #+END_SRC 
-* swiper
+* swiper 
 
-** ivy height
+** ivy 
   #+BEGIN_SRC emacs-lisp
 (setq ivy-height 25)
+(setq ivy-display-style 'fancy)
+#+END_SRC
+
+** swiper
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'swiper)
-;; (setq ivy-display-style 'fancy)
+(setq ivy-re-builders-alist
+ '((t . ivy--regex-plus))) 
+
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
-  #+END_SRC
+
+#+END_SRC
 
 ** swiper hydra
 #+BEGIN_SRC emacs-lisp
