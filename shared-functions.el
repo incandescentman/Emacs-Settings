@@ -4608,5 +4608,3 @@ into the main dumped emacs"
 (setq org-src-window-setup 'current-window)
 
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
-
-(setq package-archives '(("elpaclone" . "~/elpaclone")))

@@ -5762,7 +5762,7 @@ execute speed commands."
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>"))
 
 (add-to-list 'org-structure-template-alist
-'("le" "#+BEGIN_EXAMPLE emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")) 
+'("le" "#+BEGIN_EXAMPLE emacs-lisp\n?\n#+END_EXAMPLE" "<src lang=\"emacs-lisp\">\n?\n</src>")) 
 
 #+END_SRC
 
@@ -7277,8 +7277,8 @@ Usage is simple.
 
 Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq package-archives '(("elpaclone" . "~/elpaclone"))) 
-#+END_SRC
+#+END_EXAMPLE 
 
 This solution also works for MELPA. 
