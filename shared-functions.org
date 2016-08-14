@@ -7278,7 +7278,7 @@ Usage is simple.
 Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
 
 #+BEGIN_SRC emacs-lisp
-(setq package-archives '(("elpaclone- . "~/elpaclone"))) 
+(setq package-archives '(("elpaclone" . "~/elpaclone"))) 
 #+END_SRC
 
 This solution also works for MELPA. 
