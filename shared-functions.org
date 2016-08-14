@@ -5753,11 +5753,16 @@ execute speed commands."
 '("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") )
 
 (add-to-list 'org-structure-template-alist
-'("f" "#+BEGIN_SRC fountain\n?\n#+END_SRC" "<src lang=\"fountain\">\n?\n</src>") )
+'("f" "#+BEGIN_SRC fountain\n?\n#+END_SRC" "<src lang=\"fountain\">\n?\n</src>"))
 
 (add-to-list 'org-structure-template-alist
-'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>") 
-)
+'("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" "<src lang=\"sh\">\n?\n</src>") )
+
+(add-to-list 'org-structure-template-alist
+'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>"))
+
+(add-to-list 'org-structure-template-alist
+'("le" "#+BEGIN_EXAMPLE emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>")) 
 
 #+END_SRC
 
@@ -7254,3 +7259,26 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"))) 
 #+END_SRC
+
+
+** No worries when elpa is down
+Chen Bin
+
+I use one liner shell command to clone Emacs Lisp Package Archive (ELPA):
+
+#+BEGIN_SRC sh
+mkdir -p ~/elpaclone ...... cd ~/elpaclone ...... curl -L http://bit.ly/2brTy2S | sed 's/^(1//g' | sed ':a;N;$!ba;s/\n/ /g' | sed 's/\])/])\n/g' | sed 's/^ *(\([a-z0-9A-Z-]*\).*\[(\([0-9 ]*\).*\(single\|tar\).*/\1-\2.\3/g' | sed 's/ /./g' | sed 's/single/el/g' | tr --delete ')' | xargs -i{} curl -L -O http://bit.ly/2b8fRa1{} ...... curl -L -O http://bit.ly/2brTy2S 
+#+END_SRC 
+
+
+The http://bit.ly/2brTy2S is contains all the information of packages. I re-organize it content to make sure every line contains one package's information. Then I use curl to download everything.
+
+Usage is simple.
+
+Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
+
+#+BEGIN_SRC emacs-lisp
+(setq package-archives '(("elpaclone- . "~/elpaclone"))) 
+#+END_SRC
+
+This solution also works for MELPA. 
