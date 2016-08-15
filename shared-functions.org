@@ -55,7 +55,13 @@
 
 ** Require some packages
 #+BEGIN_SRC emacs-lisp
-;; (require 'org)
+(use-package org
+ :mode (("\\.org$" . org-mode))
+ :ensure org-plus-contrib
+ :config
+ (progn
+  ;; config stuff
+  )) 
 #+END_SRC
    
 * Require some org packages
@@ -1622,8 +1628,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(edit-server-new-frame t)
  '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
 '(grep-highlight-matches (quote always))
- '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*" ".git"))) 
- '(ido-use-faces t)
+'(ido-use-faces t)
  '(ido-use-url-at-point t)
  '(initial-buffer-choice "~/Dropbox/writing/notationaldata/warm.org")
  '(initial-major-mode (quote org-mode))
@@ -1802,7 +1807,7 @@ Newer version of ~ac-define-source~ would provide us an
 
 #+END_EXAMPLE
 
-* ~ido~
+* ido 
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'ido-setup-hook
@@ -1816,7 +1821,11 @@ Newer version of ~ac-define-source~ would provide us an
 		    (insert "~/")
 		  (call-interactively 'self-insert-command))))))
 
-(use-package ido)
+(use-package ido
+:config
+(setq ido-ignore-directories  '("\\`CVS/" "\\`\\.\\./" "\\`\\./" ".git"))
+(setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*" ".git"))
+)
 
 (ido-mode t)
 
@@ -3888,7 +3897,7 @@ Single Capitals as you type."
 (use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (setq user-mail-address "dixit@aya.yale.edu")
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jay@vivovii.com")) 
 (setq user-full-name "Jay Dixit" )
 (setq mu4e-maildir "/Users/jay/Dropbox/mu") 
 (setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
@@ -4044,6 +4053,30 @@ Single Capitals as you type."
  Wouldn't it be awesome to be able to send files from dired using your mail client?
 
  I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
+
+*** mu4e don't reply all
+So talk about super hacky. I've spent a while and i've come up with something that works, even if it's far from being beautiful.
+
+[[https://www.bountysource.com/issues/7054870-option-for-automatically-reply-to-sender-vs-reply-to-all][Option for automatically reply-to-sender vs. reply-to-all -]]
+
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; The ...-false version is omitted because of verbosity, 
+;; as is the pd:reply-to-all helper, which simply does the inverse.
+(defun pd:reply-to-all-ask-intercept-true (orig-fun &rest args)
+ ; true == reply to all. See mu4e~draft-user-wants-reply-all for inspiration,
+ ; in mu/mu4e/mu4e-draft.el
+ t)
+
+(defun pd:reply-to-sender ()
+ (interactive)
+ (advice-remove 'mu4e~draft-user-wants-reply-all #'pd:reply-to-all-ask-intercept-true)
+ (advice-add 'mu4e~draft-user-wants-reply-all :around #'pd:reply-to-all-ask-intercept-false)
+ (mu4e-compose-reply)
+ )
+
+(define-key mu4e-headers-mode-map "r" 'pd:reply-to-sender) 
+#+END_EXAMPLE
 
 *** gmail starred 
 The remaining problem is to propagate to Gmail that I've refiled 
@@ -7122,8 +7155,7 @@ into the main dumped emacs"
 #+BEGIN_SRC emacs-lisp
 (defun insert-one-double-quote ()
 (interactive) 
-(insert "\"")
-  )
+(insert "\"")) 
 #+END_SRC
 
 
@@ -7174,7 +7206,8 @@ whole expression when point is on a paren.
   (add-hook hook (lambda ()
            (setq show-paren-style 'expression)
 (paredit-mode)
-           (rainbow-delimiters-mode))))
+;; (rainbow-delimiters-mode)
+)))
 #+END_SRC
 
 
@@ -7267,7 +7300,7 @@ Chen Bin
 I use one liner shell command to clone Emacs Lisp Package Archive (ELPA):
 
 #+BEGIN_SRC sh
-mkdir -p ~/elpaclone ...... cd ~/elpaclone ...... curl -L http://bit.ly/2brTy2S | sed 's/^(1//g' | sed ':a;N;$!ba;s/\n/ /g' | sed 's/\])/])\n/g' | sed 's/^ *(\([a-z0-9A-Z-]*\).*\[(\([0-9 ]*\).*\(single\|tar\).*/\1-\2.\3/g' | sed 's/ /./g' | sed 's/single/el/g' | tr --delete ')' | xargs -i{} curl -L -O http://bit.ly/2b8fRa1{} ...... curl -L -O http://bit.ly/2brTy2S 
+mkdir -p ~/elpaclone && cd ~/elpaclone && curl -L https://elpa.gnu.org/packages/archive-contents | perl -pe 's/(^\(1|\n)//g' | perl -pe 's/\]\)/])\n/g' | perl -pe 's/^ *\(([a-z0-9A-Z-]*).*\[\(([0-9 ]*).*(single|tar).*/\1-\2.\3/g' | perl -pe 's/ /./g' | perl -pe 's/single/el/g' | perl -pe 's/\)//g' | xargs -I {} curl -L -O https://elpa.gnu.org/packages/{} && curl -L -O https://elpa.gnu.org/packages/archive-contents 
 #+END_SRC 
 
 
@@ -7282,3 +7315,9 @@ Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
 #+END_EXAMPLE 
 
 This solution also works for MELPA. 
+
+** ido-ignore
+#+BEGIN_SRC emacs-lisp
+
+
+#+END_SRC
