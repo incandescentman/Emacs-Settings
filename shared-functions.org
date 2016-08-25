@@ -274,7 +274,11 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ;; ("- " . "") ; also remove stray spac- es
 ;; ("­ " . "") ; also remove stray spac- es
 )
-                          nil beg end))
+                          nil beg end)
+
+(while (search-forward-regexp "\\b- " nil t) 
+ (replace-match "" t nil)) 
+)
 #+END_SRC
 
 **** Paste and replace quotes
@@ -1226,7 +1230,7 @@ To enable Edit with Emacs in Chrome:
 
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2015/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2016/bin/universal-darwin")
   )
 #+END_SRC
 
@@ -2117,7 +2121,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|sent\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|hours" (buffer-name buffer))
+  (not (or (string-match "\\Help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|temp\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|*emacs*\\|*gnugol*\\|*guide-key*\\|*scratch*\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|wordnik\\|trace\\|log\\|sent\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
@@ -2128,6 +2132,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'recentf-exclude ".git")
+(add-to-list 'recentf-exclude "paths")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
@@ -5448,7 +5453,7 @@ This is especially useful with a command that searches current word. See: Emacs:
 
 
 * Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 
@@ -5471,14 +5476,14 @@ event of an error or nonlocal exit."
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice to move to next list item on checkbox toggle."
   (my/with-advice 
-      ((#'org-update-checkbox-count-maybe
+      ((#'org-update-checkbox-count-maybe 
         :after (lambda ()
                  (ignore-errors (org-next-item)))))
     (apply orig-fn args)))
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
-#+END_SRC
+#+END_EXAMPLE 
 
 * cut-subtree
 
@@ -7170,11 +7175,22 @@ into the main dumped emacs"
 
 ** find file as sudo 
 #+BEGIN_SRC emacs-lisp
-(defun hrs/find-file-as-sudo ()
+(defun edit-this-file-as-sudo ()
   (interactive)
   (let ((file-name (buffer-file-name)))
    (when file-name
     (find-alternate-file (concat "/sudo::" file-name))))) 
+
+(defun sudo-find-file ()
+ (interactive)
+ (let ((file-name (buffer-file-name)))
+  (when file-name
+  (find-file (concat "/sudo::" file-name))))) 
+
+(defun sudo-edit-paths ()
+ (interactive)
+(find-file "/sudo::/etc/paths"))
+
 #+END_SRC
 
 
@@ -7228,7 +7244,7 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
 #+END_SRC
 
 
-** =web-mode=
+* =web-mode=
 
 If I'm in =web-mode=, I'd like to:
 
@@ -7270,7 +7286,7 @@ new one (which shows the same information).
 #+END_SRC
 
 
-** how to do an argument
+* how to do an argument
 
 Insert today's date
 Ben Maughan
@@ -7315,9 +7331,3 @@ Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
 #+END_EXAMPLE 
 
 This solution also works for MELPA. 
-
-** ido-ignore
-#+BEGIN_SRC emacs-lisp
-
-
-#+END_SRC

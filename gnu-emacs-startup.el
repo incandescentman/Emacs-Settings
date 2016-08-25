@@ -301,6 +301,11 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+;; working with an external monitor
+(define-key key-minor-mode-map (kbd "s-n") 'make-frame)
+(define-key key-minor-mode-map (kbd "s-~") 'other-frame)
+
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
@@ -879,7 +884,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
 
 (defun smart-return ()
   (interactive)
@@ -1608,8 +1613,15 @@ t)))
        (looking-at (sentence-end))
 
        (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
+
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+
+(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+
+(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line 
+
+
        (looking-at (user-full-name))
 
        )

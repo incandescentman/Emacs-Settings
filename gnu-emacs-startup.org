@@ -436,6 +436,11 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+;; working with an external monitor
+(define-key key-minor-mode-map (kbd "s-n") 'make-frame)
+(define-key key-minor-mode-map (kbd "s-~") 'other-frame)
+
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
@@ -1100,8 +1105,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
-
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
  #+END_SRC
 
 
@@ -2840,24 +2844,6 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 #+END_SRC
 
 
-* TODO [#A] Change "defadvice capitalize-word" so that capitalize word doesn't downcase past a line break
-Rúdi: I wanted make auto-capitalize-mode downcase next word upon auto-capitalization (I wrote this part already) but WITHOUT capitalizing any words that are past a line break (I need you to add this part).
-
-Suppose I have a sentence:
-
-: Two three four.
-
-Suppose I put the point on the "T" in "Two" and enter the text "one" followed by a space. Auto-capitalize-mode will recognize that the point is at the beginning of a line or sentence, and will automatically capitalize the "O" in "One."
-
-Current output:
-: One Two three four.
-But since "Two" is no longer the beginning of the sentence, I want to direct auto-capitalize-mode to automatically downcase the next word in the sentence if there is one.
-
-Desired output:
-: One two three four.
-
-In other words, I want to instruct auto-capitalize-mode to downcase the next word whenever it auto-capitalizes. That's what I've done here:
-
 * defadvice capitalize-word
 #+BEGIN_SRC emacs-lisp
 (defadvice capitalize-word (after capitalize-word-advice activate)
@@ -2874,8 +2860,15 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
        (looking-at (sentence-end))
 
        (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
+
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+
+(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+
+(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line 
+
+
        (looking-at (user-full-name))
 
        )
@@ -2885,24 +2878,6 @@ In other words, I want to instruct auto-capitalize-mode to downcase the next wor
 #+END_SRC
 
 I tried to add exceptions for "line-end" and also for user-full name.
-
-** NOTE-TO-JAY Clarification
-
-   Can you give me an example where it *doesn't* work? I tried:
-
-#+BEGIN_EXAMPLE
-One two three four. ^
-Five six
-#+END_EXAMPLE
-
-   And then type "seven ", and the output, as I expected, was:
-
-#+BEGIN_EXAMPLE
-One two three four. Seven ^
-Five six
-#+END_EXAMPLE
-
-   So, it didn't downcase past the line break. In which case is it not working for you?
 
 * capitalize-unless-org-heading
   #+BEGIN_SRC emacs-lisp
