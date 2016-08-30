@@ -6612,7 +6612,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 * recenter top bottom
 #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
-(setq recenter-positions (quote (top middle bottom))) 
+;; (setq recenter-positions (quote (top middle bottom))) 
 #+END_SRC
 
 
@@ -6906,6 +6906,8 @@ Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html
 #+BEGIN_SRC emacs-lisp
 (defun insert-right-bracket ()
   (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point))))) 
   (insert "\]")
   )
 #+END_SRC 
@@ -7141,6 +7143,9 @@ into the main dumped emacs"
 #+BEGIN_SRC emacs-lisp
 (defun em-dash ()
 (interactive) 
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+
 (insert "---")
   ) 
 #+END_SRC
@@ -7159,7 +7164,9 @@ into the main dumped emacs"
 ** double quote
 #+BEGIN_SRC emacs-lisp
 (defun insert-one-double-quote ()
-(interactive) 
+(interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point))))) 
 (insert "\"")) 
 #+END_SRC
 

@@ -990,6 +990,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
 ;;  (let ((last-command-event ? ))
   ;;    (call-interactively 'self-insert-command))
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+
   (insert " ")
 ;; (unexpand-abbrev)
 )
@@ -998,27 +1001,23 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun insert-period ()
 "Inserts a fuckin' period!"
  (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+
  (insert ".")
 )
 
 
 (defun insert-comma ()
  (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+
  (insert ",")
 )
 
 
 #+END_SRC
-
-** self insert space - old
-#+BEGIN_EXAMPLE emacs-lisp
-(defun insert-space ()
-  (interactive)
-  (let ((last-command-event ? ))
-    (call-interactively 'self-insert-command))
-;; (unexpand-abbrev)
-) 
-#+END_EXAMPLE 
 
 ** smart insertion of headings and subheadings
 *** smart-org-meta-return-dwim
