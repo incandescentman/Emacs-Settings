@@ -910,9 +910,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Insert space and then clean up whitespace."
   (interactive)
 (if (org-at-heading-p)
-(insert-space) 
-  (unless
-
+    (insert-normal-space-in-org-heading) 
+  (unless 
       (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
 (looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra spaces to ie.
@@ -922,14 +921,31 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (looking-back ">") ; don't expand days of the week inside timestamps
 
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
-
-
-
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ] 
        )
   (smart-expand))
 (insert "\ ")
   (just-one-space)))
+
+(defun jay/insert-smart-space-in-org-heading ()
+ "Insert space and then clean up whitespace."
+ (interactive)
+(unless 
+   (or
+(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back "\\be\.\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
+
+(looking-back "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines---brilliant!
+
+(looking-back ">") ; don't expand days of the week inside timestamps
+
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ] 
+    )
+ (smart-expand))
+(insert "\ ")
+ (just-one-space))
+
 
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
@@ -988,19 +1004,25 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (delete-horizontal-space)))
 #+END_SRC
 
-
-** self insert space
+. This.        
+** insert-space 
 #+BEGIN_SRC emacs-lisp
+(defun insert-normal-space-in-org-heading ()
+ (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point))))) 
+ (insert " ")
+)
+
+
 (defun insert-space ()
-  (interactive)
-;;  (let ((last-command-event ? ))
-  ;;    (call-interactively 'self-insert-command))
+  (interactive) 
+(if (org-at-heading-p)
+(jay/insert-smart-space-in-org-heading)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
-
   (insert " ")
-;; (unexpand-abbrev)
-)
+)) 
 
 
 (defun insert-period ()
