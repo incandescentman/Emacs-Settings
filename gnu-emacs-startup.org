@@ -904,9 +904,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 * spacecraft-mode - superior handling of whitespace for writing and editing prose
 
-** jay/insert-space
+** smart-space
 #+BEGIN_SRC emacs-lisp
-(defun jay/insert-space ()
+(defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
 (if (org-at-heading-p)
@@ -927,7 +927,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\ ")
   (just-one-space)))
 
-(defun jay/insert-smart-space-in-org-heading ()
+
+
+
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading 
+(defun insert-smart-space-in-org-heading ()
  "Insert space and then clean up whitespace."
  (interactive)
 (unless 
@@ -948,8 +952,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
-(define-key orgstruct-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'smart-space)
+(define-key orgstruct-mode-map (kbd "<SPC>") 'smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space) 
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 (define-key orgstruct-mode-map (kbd "<M-SPC>") 'insert-space)
@@ -1007,22 +1011,25 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 . This.        
 ** insert-space 
 #+BEGIN_SRC emacs-lisp
-(defun insert-normal-space-in-org-heading ()
- (interactive)
-(cond (mark-active
-  (progn (delete-region (mark) (point))))) 
- (insert " ")
-)
 
 
 (defun insert-space ()
   (interactive) 
 (if (org-at-heading-p)
-(jay/insert-smart-space-in-org-heading)
+(insert-smart-space-in-org-heading)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert " ")
 )) 
+
+(defun insert-normal-space-in-org-heading ()
+ (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+ (insert " ")
+)
+
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
 
 
 (defun insert-period ()
@@ -2764,7 +2771,7 @@ OK great. To answer your question, here are a few ways a sentence might look:
 
 ** NOTE-TO-JAY Question
 
-   My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~jay/insert-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
+   My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~smart-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
 
 ** NOTE-TO-SERJ Yes, #2 is working.
 You're right, #2 works. Not sure why it wasn't working for me before... I must have done something when I was playing with autopair-mode. But yes, #2 works.
@@ -2798,14 +2805,14 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 (not (looking-back "^"))) ; I added this
 ;; I added this ↑↑↑ #######################
 
-(jay/insert-space)
+(smart-space)
 )
 )
 #+END_SRC
 
 ** NOTE-TO-JAY Question
 
-   Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~jay/insert-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
+   Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~smart-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
 
 ** NOTE-TO-SERJ Answer
 Good question. The answer is that there should never be a space after "---"
@@ -3294,7 +3301,7 @@ s-i
 (local-set-key (kbd ".") 'smart-period) 
 (local-set-key (kbd ",") 'smart-comma) 
 (local-set-key (kbd "\`") 'flyspell-auto-correct-word)
-(local-set-key (kbd "<SPC>") 'jay/insert-space) 
+(local-set-key (kbd "<SPC>") 'smart-space) 
 
 
 ))

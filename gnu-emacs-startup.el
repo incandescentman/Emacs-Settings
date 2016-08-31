@@ -733,7 +733,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
                        :username "petersalazar")
 
-(defun jay/insert-space ()
+(defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
 (if (org-at-heading-p)
@@ -754,7 +754,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (insert "\ ")
   (just-one-space)))
 
-(defun jay/insert-smart-space-in-org-heading ()
+
+
+
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading 
+(defun insert-smart-space-in-org-heading ()
  "Insert space and then clean up whitespace."
  (interactive)
 (unless 
@@ -775,8 +779,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
-(define-key orgstruct-mode-map (kbd "<SPC>") 'jay/insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'smart-space)
+(define-key orgstruct-mode-map (kbd "<SPC>") 'smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space) 
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 (define-key orgstruct-mode-map (kbd "<M-SPC>") 'insert-space)
@@ -822,22 +826,23 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 )
     (delete-horizontal-space)))
 
-(defun insert-normal-space-in-org-heading ()
- (interactive)
-(cond (mark-active
-  (progn (delete-region (mark) (point))))) 
- (insert " ")
-)
-
-
 (defun insert-space ()
   (interactive) 
 (if (org-at-heading-p)
-(jay/insert-smart-space-in-org-heading)
+(insert-smart-space-in-org-heading)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert " ")
 )) 
+
+(defun insert-normal-space-in-org-heading ()
+ (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+ (insert " ")
+)
+
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
 
 
 (defun insert-period ()
@@ -1598,7 +1603,7 @@ t)))
 (not (looking-back "^"))) ; I added this
 ;; I added this ↑↑↑ #######################
 
-(jay/insert-space)
+(smart-space)
 )
 )
 
