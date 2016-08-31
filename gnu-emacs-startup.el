@@ -301,6 +301,8 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
+
 
 ;; working with an external monitor
 (define-key key-minor-mode-map (kbd "s-n") 'make-frame)
@@ -734,7 +736,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun jay/insert-space ()
   "Insert space and then clean up whitespace."
   (interactive)
+(if (org-at-heading-p)
+(insert-space) 
   (unless
+
       (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
 (looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra spaces to ie.
@@ -751,8 +756,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
        )
   (smart-expand))
 (insert "\ ")
-  (just-one-space)
-)
+  (just-one-space)))
+
 
 (define-key org-mode-map (kbd "<SPC>") 'jay/insert-space)
 (define-key orgstruct-mode-map (kbd "<SPC>") 'jay/insert-space)
@@ -829,6 +834,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
    (progn (delete-region (mark) (point)))))
 
  (insert ",")
+)
+
+
+(defun insert-colon ()
+"Insert a goodamn colon!"
+ (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point)))))
+
+ (insert ":")
 )
 
 (setq org-blank-before-new-entry
@@ -1518,6 +1533,8 @@ t)))
 
 (defun smart-colon ()
   (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point))))) 
   (smart-punctuation ":")
 (unless
 (or
@@ -1535,7 +1552,12 @@ t)))
 
 (defun colon-or-smart-colon ()
 (interactive) 
-(if (bolp)
+(if 
+(or
+(bolp)
+(org-at-heading-p)
+)
+
 (insert ": ") 
 (smart-colon))
 )

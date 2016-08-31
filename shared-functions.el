@@ -156,8 +156,6 @@
 )
                           nil beg end)
 
-(while (search-forward-regexp "\\b- " nil t) 
- (replace-match "" t nil)) 
 )
 
 (defun paste-and-replace-quotes ()
@@ -888,8 +886,8 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 
 
-;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
+(add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
 ;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
 ;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
 ;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)

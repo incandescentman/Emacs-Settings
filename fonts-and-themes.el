@@ -304,9 +304,9 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   '(org-link ((t (:underline nil))))) 
   )
 
-(defun garamond-premier-pro ()
+(defun garamond-web-font ()
   (interactive)
-(set-face-attribute 'default nil :font "Garamond Premier Pro" :height 260)
+(set-face-attribute 'default nil :font "Garamond" :height 260)
 )
 
 (defun adobe-garamond-pro ()
@@ -314,6 +314,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (set-face-attribute 'default nil :font "Adobe Garamond Pro" :height 260)
 )
 
+
+(defun adobe-caslon-pro ()
+ (interactive)
+(set-face-attribute 'default nil :font "Adobe Caslon Pro" :height 260))
 
 
 (make-face 'hard-to-read-font)

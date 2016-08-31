@@ -276,8 +276,6 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 )
                           nil beg end)
 
-(while (search-forward-regexp "\\b- " nil t) 
- (replace-match "" t nil)) 
 )
 #+END_SRC
 
@@ -1405,8 +1403,8 @@ when replying, look kind of like gmail
 
 
 
-;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo "STARTED")))
-;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (org-todo 'done)))
+(add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
+(add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
 ;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
 ;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
 ;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
