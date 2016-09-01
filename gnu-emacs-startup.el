@@ -1666,7 +1666,7 @@ t)))
   (unless
 
       (or
-       (looking-at "[ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
        (looking-at "[ ]*I\'")          ; never downcase the word "I"
 
