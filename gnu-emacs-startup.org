@@ -904,13 +904,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 * spacecraft-mode - superior handling of whitespace for writing and editing prose
 
+
 ** smart-space
 #+BEGIN_SRC emacs-lisp
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(if (org-at-heading-p)
-    (insert-normal-space-in-org-heading) 
+
+;; (if (org-at-heading-p)
+ ;;    (insert-normal-space-in-org-heading) 
+
   (unless 
       (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
@@ -925,7 +928,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
        )
   (smart-expand))
 (insert "\ ")
-  (just-one-space)))
+  (just-one-space))
+
+; )
 
 
 
@@ -2729,9 +2734,8 @@ t)))
 (or
 (bolp)
 (org-at-heading-p)
-)
-
-(insert ": ") 
+) 
+(insert ":") 
 (smart-colon))
 ) 
 #+END_SRC
@@ -2901,7 +2905,7 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
   (unless
 
       (or
-       (looking-at "[ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
        (looking-at "[ ]*I\'")          ; never downcase the word "I"
 

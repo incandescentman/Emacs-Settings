@@ -736,8 +736,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(if (org-at-heading-p)
-    (insert-normal-space-in-org-heading) 
+
+;; (if (org-at-heading-p)
+ ;;    (insert-normal-space-in-org-heading) 
+
   (unless 
       (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
@@ -752,7 +754,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
        )
   (smart-expand))
 (insert "\ ")
-  (just-one-space)))
+  (just-one-space))
+
+; )
 
 
 
@@ -1583,9 +1587,8 @@ t)))
 (or
 (bolp)
 (org-at-heading-p)
-)
-
-(insert ": ") 
+) 
+(insert ":") 
 (smart-colon))
 )
 

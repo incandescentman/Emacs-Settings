@@ -2281,6 +2281,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (interactive)
 (smart-org-meta-return-dwim) 
   (org-insert-time-stamp (current-time))
+(insert "\n")
 )
 
 

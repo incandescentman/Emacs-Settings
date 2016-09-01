@@ -1534,6 +1534,7 @@ ido-enter-matching-directory nil
   (interactive)
 (smart-org-meta-return-dwim) 
   (org-insert-time-stamp (current-time))
+(insert "\n")
 )
 
 
