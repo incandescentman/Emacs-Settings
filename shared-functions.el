@@ -4357,25 +4357,6 @@ minibuffer."
  (add-hook 'after-save-hook
       'executable-make-buffer-file-executable-if-script-p)
 
-(defun my-org-inline-css-hook (exporter)
- "Insert custom inline css"
- (when (eq exporter 'html)
-  (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
-      (path (concat dir "style.css"))
-      (homestyle (or (null dir) (null (file-exists-p path))))
-      (final (if homestyle "/Users/jay/Dropbox/web-design/custom-css/email.css" path))) ;; <- set your own style file path
-   (setq org-html-head-include-default-style nil)
-   (setq org-html-head (concat
-              "<style type=\"text/css\">\n"
-              "<!--/*--><![CDATA[/*><!--*/\n"
-              (with-temp-buffer
-               (insert-file-contents final)
-               (buffer-string))
-              "/*]]>*/-->\n"
-              "</style>\n")))))
-
-(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
-
 (defun org-latex-filter-fancyvrb (text backend info)
  "Convert begin/end{verbatim} to begin/end{Verbatim}.
 Allows use of the fancyvrb latex package."
@@ -4608,3 +4589,5 @@ into the main dumped emacs"
 (setq org-src-window-setup 'current-window)
 
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
+
+(require 'poly-org)

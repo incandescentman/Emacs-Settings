@@ -1415,6 +1415,8 @@ when replying, look kind of like gmail
 (previous-line)
 (org-pomodoro)
 (work-on-book)
+(toggle-fullscreen)
+(toggle-fullscreen)
 )
 
 #+END_SRC
@@ -6854,7 +6856,7 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
 
 
 * inline CSS on org-export
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-org-inline-css-hook (exporter)
  "Insert custom inline css"
  (when (eq exporter 'html)
@@ -6873,7 +6875,9 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
               "</style>\n")))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook) 
-#+END_SRC
+
+(setq org-export-htmlize-output-type 'inline-css) 
+#+END_EXAMPLE
 
 
 * fix latex verbatim 
@@ -7337,3 +7341,8 @@ Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
 #+END_EXAMPLE 
 
 This solution also works for MELPA. 
+
+** poly mode
+#+BEGIN_SRC emacs-lisp
+(require 'poly-org) 
+#+END_SRC

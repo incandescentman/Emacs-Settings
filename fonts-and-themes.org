@@ -56,7 +56,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco"))
+  (set-face-attribute 'default nil :font "Monaco" :height 150))
 
 (defun vera-font ()
   (interactive)
