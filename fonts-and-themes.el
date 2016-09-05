@@ -35,7 +35,8 @@
 
 (defun monaco-font ()
   (interactive)
-  (set-face-attribute 'default nil :font "Monaco"))
+  (set-face-attribute 'default nil :font "Monaco" :height 120))
+
 
 (defun vera-font ()
   (interactive)
@@ -306,13 +307,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun garamond-web-font ()
   (interactive)
-(set-face-attribute 'default nil :font "Garamond" :height 260)
+(set-face-attribute 'default nil :font "Garamond" :height 200)
 )
 
 (defun adobe-garamond-pro ()
  (interactive)
 (set-face-attribute 'default nil :font "Adobe Garamond Pro" :height 260)
 )
+
 
 
 (defun adobe-caslon-pro ()

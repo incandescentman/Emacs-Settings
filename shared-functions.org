@@ -1416,7 +1416,6 @@ when replying, look kind of like gmail
 (org-pomodoro)
 (work-on-book)
 (toggle-fullscreen)
-(toggle-fullscreen)
 )
 
 #+END_SRC

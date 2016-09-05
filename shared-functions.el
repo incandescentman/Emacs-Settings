@@ -898,6 +898,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 (previous-line)
 (org-pomodoro)
 (work-on-book)
+(toggle-fullscreen)
 )
 
 (require 'org-mime)

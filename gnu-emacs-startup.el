@@ -1928,5 +1928,3 @@ t)))
 (define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
-
-(def)
