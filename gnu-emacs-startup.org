@@ -3033,7 +3033,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 * fountain
 
   #+BEGIN_SRC emacs-lisp
-(load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
+;; (load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
 ;; (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
