@@ -1,6 +1,0 @@
-^blah
-* TODO this American Life?
-
-Scenario: go to blah and run my/kill-line-dwim twice to kill (1) the text "blah" and (2) the empty line. 
-
-Output: Notice how TODO gets transformed to Todo? Can we make an exception to my/kill-line-dwim so that it doesn't affect org-mode headings? Thanks!
