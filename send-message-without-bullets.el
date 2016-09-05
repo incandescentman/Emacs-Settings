@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 (defvar *sent-emails-org-file* "/Users/jay/Dropbox/writing/notationaldata/sent-emails.org")
-=======
+
 (defvar *mail-signature* "\n---\nJay Dixit\n(646) 355-8001\njaydixit.com")
 (defun sign-current-email ()
   (save-excursion
     (end-of-buffer)
     (insert *mail-signature*)))
 
-(defvar *sent-emails-org-file* "~/sent-emails.org")
->>>>>>> aa92f6bed2c6c6190fed3703be60cef95ecc3617
 (defun save-buffer-to-sent-emails-org-file ()
   ;; header
   (write-region
