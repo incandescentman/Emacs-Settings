@@ -467,8 +467,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
 
-(define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
-(define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
+;; (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
+;; (define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
 
 
 (define-key key-minor-mode-map (kbd "M-s b") 'book-search)
@@ -2598,7 +2598,8 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
-
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
 (unless
       (or
 (looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
@@ -2627,6 +2628,9 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-comma ()
   (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+
   (smart-punctuation ",")
 (unless
 (or
@@ -2650,6 +2654,9 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-question-mark ()
   (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+
   (smart-punctuation "?")
 (save-excursion
 (unless (looking-at "[ ]*$")
@@ -2664,6 +2671,9 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-exclamation-point ()
   (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+
   (smart-punctuation "!")
 (save-excursion
 (unless (looking-at "[ ]*$")
@@ -2688,6 +2698,8 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-semicolon ()
   (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
   (smart-punctuation ";")
 (unless
 (or
