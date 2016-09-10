@@ -1840,7 +1840,9 @@ With prefix arg C-u, copy region instad of killing it."
       (with-temp-buffer
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
+      (message filename)))
+  (push-kill-ring-to-pasteboard)
+)
 
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"

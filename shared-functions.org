@@ -2657,7 +2657,9 @@ Useful for working with files and references:
       (with-temp-buffer
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
+      (message filename)))
+  (push-kill-ring-to-pasteboard)
+)
 #+END_SRC
 
 ** Recent files

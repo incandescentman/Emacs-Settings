@@ -54,9 +54,6 @@ And create a function to restore the red cursor in case a color-theme overwrites
   (set-face-attribute 'default nil :font "Hack"))
 
 
-(defun monaco-font ()
-  (interactive)
-  (set-face-attribute 'default nil :font "Monaco" :height 120))
 
 
 (defun vera-font ()
@@ -326,15 +323,39 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   '(org-link ((t (:underline nil))))) 
   )
 
-(defun garamond-web-font ()
-  (interactive)
-(set-face-attribute 'default nil :font "Garamond" :height 200)
+;; (defun garamond-web-font ()
+;;   (interactive)
+;; (set-face-attribute 'default nil :font "Garamond" :height 200)
+;; )
+
+
+(defun monaco-font ()
+ (interactive)
+ (set-face-attribute 'default nil :font "Monaco" :height 120)
+;; (horizontal-cursor)
+(custom-set-faces
+;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
+'(italic ((t (:family "Garamond" :slant italic :height 1.3))))
+ '(org-link ((t (:underline nil)))))
+
+
 )
+
 
 (defun adobe-garamond-pro ()
  (interactive)
 (set-face-attribute 'default nil :font "Adobe Garamond Pro" :height 260)
+;; (box-cursor)
+(custom-set-faces
+;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(bold ((t (:family "Sans Serif" :foreground "red" weight bold :height 0.9))))
+'(italic ((t (:family "Garamond" :slant italic :height 1.3))))
+  '(org-link ((t (:underline nil)))))
+
 )
+
+
 
 
 
