@@ -4,3 +4,6 @@ ido.hist
 recent-addresses
 .elc
 archive/
+shared-functions.el
+
+gnu-emacs-startup.el

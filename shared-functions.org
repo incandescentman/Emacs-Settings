@@ -7382,3 +7382,28 @@ This solution also works for MELPA.
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key read-expression-map (kbd "C-r") 'counsel-expression-history) 
+
+
+* toggle-between-src-and-example-block 
+#+BEGIN_SRC emacs-lisp
+(defun toggle-between-src-and-example-block ()
+(interactive)
+(save-excursion
+(let* ((elt (org-element-at-point))
+(elt-sym (car elt))
+(bgn (plist-get (cadr elt) :begin)))
+(cond
+((eq elt-sym 'src-block)
+(goto-char (+ bgn 8))
+(delete-char 3)
+(insert "EXAMPLE")
+(when (re-search-forward "#\\+END_SRC" nil t)
+(replace-match "#+END_EXAMPLE")))
+((eq elt-sym 'example-block)
+(goto-char (+ bgn 8))
+(delete-char 7)
+(insert "SRC")
+(when (re-search-forward "#\\+END_EXAMPLE" nil t)
+(replace-match "#+END_SRC")))
+(t (message "It isn't src/example block!")))))) 
+#+END_SRC
