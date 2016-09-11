@@ -743,7 +743,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 '(ns-right-command-modifier (quote meta))
 '(ns-tool-bar-display-mode (quote both) t)
 '(ns-tool-bar-size-mode nil t)
-'(standard-indent 3)
+;; '(standard-indent 3)
 '(ns-function-modifier (quote meta))
 (transient-mark-mode t)
 (tooltip-mode -1)
@@ -1131,7 +1131,7 @@ margin-bottom: 1em;
  '(org-indent-mode-turns-off-org-adapt-indentation nil)
  '(org-indent-mode-turns-on-hiding-stars nil)
  '(org-insert-mode-line-in-empty-file t)
- '(org-list-indent-offset 3)
+;; '(org-list-indent-offset 3)
  '(org-log-done nil)
 
 '(org-mac-Skim-highlight-selection-p t)
@@ -1432,6 +1432,8 @@ ido-enter-matching-directory nil
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
 (add-to-list 'recentf-exclude "org-clock-save.el")
+(add-to-list 'recentf-exclude "accountability")
+(add-to-list 'recentf-exclude "hours")
 (add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude ".emacs.d")
 (add-to-list 'recentf-exclude "/var/") 
@@ -4513,7 +4515,7 @@ into the main dumped emacs"
 (interactive) 
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
-
+(expand-abbrev)
 (insert "---")
   )
 
@@ -4594,3 +4596,9 @@ into the main dumped emacs"
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt")))
 
 (require 'poly-org)
+
+(use-package counsel
+ :bind
+ (("M-y" . counsel-yank-pop)
+  :map ivy-minibuffer-map
+  ("M-y" . ivy-next-line)))

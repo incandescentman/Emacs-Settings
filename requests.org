@@ -1,3 +1,26 @@
+* replace smart quotes
+
+I have this defun: http://pastebin.com/bPtAM940
+
+I would like to add a line to it so that if ALSO finds strings like this: =spac- es= and changes them to this: =spaces= 
+
+In other words, I want it to find and remove the string =- = but ONLY when it occurs inside a word, i.e. only if there is an alphabetic character preceding the =-=
+
+In other words, a string like this, where the hyphen is at the beginning of the line, would remain intact:
+
+=- this is the first point of a plain-text list=
+
+But in a string like this...
+
+=This is a sente- nce.=
+ 
+...the hyphen and space would be removed and the result would be this:
+
+=This is a sentence.=
+
+Can he do this? 
+
+
 * make my/beginning-of-sentence-p return t if there is a quotation marks at beginning of 
 (defun my/beginning-of-sentence-p ()
  "Return t if point is at the beginning of a sentence."
