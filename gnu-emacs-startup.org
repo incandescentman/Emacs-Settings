@@ -130,13 +130,6 @@ well.
 (require 'dired-details+)
 
 
-(defun mydired-sort ()
-  "Sort dired listings with directories first."
-  (save-excursion
-    (let (buffer-read-only)
-      (forward-line 2) ;; beyond dir. header
-      (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
-    (set-buffer-modified-p nil)))
 
 (defadvice dired-readin
     (after dired-after-updating-hook first () activate)
@@ -3049,7 +3042,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 * fountain
 
   #+BEGIN_SRC emacs-lisp
-;; (load-file "/Users/jay/emacs/prelude/personal/fountain-mode.el")
+;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
 ;; (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
