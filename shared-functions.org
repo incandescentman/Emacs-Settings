@@ -25,8 +25,13 @@
 
 * About
   - System: Mac OSX Yosemite
-  - Emacs version: 24.5.1
-  - Use case: I use this file with both GNU Emacs for OSX and for Aquamacs.
+  - Emacs version: GNU Emacs 25.1.1 (Carbon Version) 
+  - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
+  - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's emacs-mac port, available here:
+    - =brew tap railwaycat/emacsmacport= 
+    - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
+    - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
+
 
 * packages
 ** Load the proper repositories
