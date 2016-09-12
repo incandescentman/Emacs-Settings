@@ -3360,7 +3360,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R"
                  (- (point) 20)))))))
 
 #+END_SRC 
@@ -7406,4 +7406,9 @@ This solution also works for MELPA.
 (when (re-search-forward "#\\+END_EXAMPLE" nil t)
 (replace-match "#+END_SRC")))
 (t (message "It isn't src/example block!")))))) 
+#+END_SRC
+
+* dired-quick-sort 
+#+BEGIN_SRC emacs-lisp
+(require 'dired-quick-sort) 
 #+END_SRC

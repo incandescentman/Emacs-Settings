@@ -131,11 +131,11 @@ well.
 
 
 
-(defadvice dired-readin
-    (after dired-after-updating-hook first () activate)
-  "Sort dired listings with directories first before adding marks."
-  (mydired-sort)
-  (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
+;; (defadvice dired-readin
+;;     (after dired-after-updating-hook first () activate)
+;;   "Sort dired listings with directories first before adding marks."
+;;   (mydired-sort)
+;;   (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
 
 (defcustom dired-details-hidden-string ""
   "*This string will be shown in place of file details and symbolic links."
@@ -431,6 +431,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
 
 (define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
 
