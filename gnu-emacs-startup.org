@@ -2924,7 +2924,11 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
        (looking-at (sentence-end))
 
        (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
-       (looking-at "[[:punct:]]*[ ]*http") ; don't capitalize past line break 
+
+       (looking-at "[[:punct:]]*[ ]*\"$") ; don't capitalize past quotation then line break 
+       (looking-at "[[:punct:]]*[ ]*)$") ; don't capitalize past a right paren then line break 
+
+       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http 
 
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 

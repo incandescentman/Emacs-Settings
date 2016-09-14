@@ -373,6 +373,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
                                       ("s" . org-schedule)
+                                      ("x" . org-mark-subtree) 
                                       ("z" . org-add-note)
                                       ("m" . (lambda nil (interactive) (org-todo "MISSED")))
 
@@ -3334,7 +3335,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking"))
 #+END_SRC
 
 
@@ -3360,7 +3361,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
                  (- (point) 20)))))))
 
 #+END_SRC 
@@ -7123,13 +7124,6 @@ into the main dumped emacs"
 
 
 
-
-* mark subtree
-#+BEGIN_SRC emacs-lisp
-;; Single key command execution when at beginning of a headline
-(setq org-use-speed-commands t) ; ? speed-key opens Speed Keys help
-(setq org-speed-commands-user '(("x" . org-mark-subtree))) 
-#+END_SRC
 
 * crux
 #+BEGIN_SRC emacs-lisp

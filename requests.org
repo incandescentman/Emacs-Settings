@@ -1,3 +1,15 @@
+* delete spaces between one-letter words
+
+[fn:: Manson, J. E., Willet, W. C., Stampfer, M. J., Colditz, G. A., Hunter, D. J., Hankinson, S. E., Hennekens, C. H., & Speizer, F. E. (1995). Body weight and mortality among women. The New England Journal of Medicine, 333, 677–685.]
+
+
+→ 
+
+[fn:: Manson, J.E., Willet, W.C., Stampfer, M.J., Colditz, G.A., Hunter, D. J., Hankinson, S. E., Hennekens, C. H., & Speizer, F. E. (1995). Body weight and mortality among women. The New England Journal of Medicine, 333, 677–685.]
+
+
+
+
 * replace smart quotes
 
 I have this defun: http://pastebin.com/bPtAM940
