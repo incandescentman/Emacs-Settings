@@ -435,6 +435,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
 
 (define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-j ag") 'adobe-garamond-pro)
 
 (define-key key-minor-mode-map (kbd "s-j t t") 'toggle-between-src-and-example-block)
 
@@ -2917,6 +2918,7 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 
       (or
        (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*\"I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
        (looking-at "[ ]*I\'")          ; never downcase the word "I"
 

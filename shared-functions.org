@@ -3345,7 +3345,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 ** words to never downcase
 #+BEGIN_SRC emacs-lisp
-(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd"))
+(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd" "OK"))
 #+END_SRC
 
 ** auto-capitalize-predicate 
