@@ -348,7 +348,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
 *** Load my org modules
 #+BEGIN_SRC emacs-lisp
-(setq org-modules (quote (org-mac-link org-mime )))
+(setq org-modules (quote (org-mime )))
 #+END_SRC
 
 ** org custom functions
@@ -1426,11 +1426,15 @@ when replying, look kind of like gmail
 
 #+END_SRC
 
+** org-mac-link
+#+BEGIN_SRC emacs-lisp
+(require 'org-mac-link) 
+#+END_SRC
+
 ** ~org-mime~
 
 #+BEGIN_SRC emacs-lisp
 (require 'org-mime)
-
 (setq org-mime-default-header "")
 
 ;; put a div tag around the whole message to put it in Georgia font.
