@@ -181,7 +181,7 @@ Manually remove the scrollbar if default setting fails when creating a new frame
 #+BEGIN_SRC emacs-lisp
 (defun scrollbar-init ()
   (interactive)
-  (scroll-bar-mode -1)
+  (scroll-bar-mode 1)
   )
 #+END_SRC
 

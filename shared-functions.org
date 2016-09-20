@@ -7322,7 +7322,9 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 ** org-agenda files
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org" "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt" "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"))) 
+(setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org"
+;; "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt"
+ "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"))) 
 #+END_SRC
 
 
