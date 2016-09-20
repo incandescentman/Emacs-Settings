@@ -436,6 +436,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
 (define-key key-minor-mode-map (kbd "s-j ag") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-j mf") 'monaco-font)
 
 (define-key key-minor-mode-map (kbd "s-j t t") 'toggle-between-src-and-example-block)
 
