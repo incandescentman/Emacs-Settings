@@ -2674,6 +2674,24 @@ Useful for working with files and references:
 )
 #+END_SRC
 
+** Copy path with quotes
+Useful for working with files and references:
+#+BEGIN_SRC emacs-lisp
+(defun path-copy-full-path-to-clipboard-with-quotes ()
+  "Copy the full current filename and path to the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename)))
+  (push-kill-ring-to-pasteboard)
+)
+#+END_SRC
+
 ** Recent files
 Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse)
 ~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened
@@ -7324,6 +7342,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org"
 ;; "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt"
+"/Users/jay/Dropbox/writing/book/feb-18/50-shades.txt"
  "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"))) 
 #+END_SRC
 

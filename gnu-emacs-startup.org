@@ -911,6 +911,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
 
 ;; (if (org-at-heading-p)
  ;;    (insert-normal-space-in-org-heading) 
@@ -2916,20 +2918,25 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
 
   (unless
-
+ 
       (or
        (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
+       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd 
+
+(looking-at "[ ]*I\'")   ; never downcase the word "I'
+
        (looking-at "[[:punct:]]*[ ]*\"I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
-       (looking-at "[ ]*I\'")          ; never downcase the word "I"
 
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
 
-       (looking-at "[[:punct:]]*[ ]*$") ; don't capitalize past line break 
+       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break 
 
-       (looking-at "[[:punct:]]*[ ]*\"$") ; don't capitalize past quotation then line break 
-       (looking-at "[[:punct:]]*[ ]*)$") ; don't capitalize past a right paren then line break 
+       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break 
+       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break 
+       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break 
 
        (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http 
 
@@ -2970,6 +2977,8 @@ I tried to add exceptions for "line-end" and also for user-full name.
        (looking-at "[\n\t ]*)$")
        (looking-at "\"[\n\t ]*$")
 (looking-at "[[:punct:]]*[ ]*http")
+(looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past 
+(looking-at "[ ]*I\'") 
        (looking-at
         (concat
          "\\("
