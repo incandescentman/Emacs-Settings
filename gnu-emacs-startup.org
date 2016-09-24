@@ -432,6 +432,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
 (define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
 
 (define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
@@ -559,7 +561,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
-(define-key key-minor-mode-map (kbd "s-\"") 'path-copy-full-path-to-kill-ring)
+(define-key key-minor-mode-map (kbd "s-|") 'path-copy-full-path-to-clipboard)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
@@ -3087,6 +3089,34 @@ Don't expand past certain delimiters, e.g. line break, ), and "
          (file (shell-quote-argument (buffer-file-name buffer)))
          (command (format fountain-export-shell-script file)))
     (async-shell-command command "*Fountain Export Process*")))
+
+(setq fountain-export-include-title-page nil)
+(setq fountain-export-html-replace-alist
+   (quote
+    (("&" "&amp;")
+     ("<" "&lt;")
+     (">" "&gt;")
+     ("\\\\ " "&nbsp;")
+     ("^\\\\$" "<br>")
+     ("\\\\_" "&#95;")
+     ("\\\\\\*" "&#42;")
+     ("\\\\`" "&#96;")
+     ("\\\\'" "&apos;")
+     ("``" "&ldquo;")
+     ("''" "&rdquo;")
+     ("`" "&lsquo;")
+     ("'" "&rsquo;")
+     ("\\*\\*\\*\\(.+?\\)\\*\\*\\*" "<span class=\"underline\">\\1</span>")
+     ("\\*\\*\\(.+?\\)\\*\\*" "<span class=\"underline\">\\1</span>")
+     ("\\*\\(.+?\\)\\*" "<span class=\"underline\">\\1</span>")
+     ("^~ *\\(.+?\\)$\\*\\*" "<i>\\1</i>")
+     ("_\\(.+?\\)_" "<span class=\"underline\">\\1</span>")
+     ("
+
++" "<br><br>")
+     ("
+" "<br>"))))
+
 
   #+END_SRC
 

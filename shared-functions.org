@@ -4580,7 +4580,7 @@ After this, you should be able to add contacts using a o in the headers view and
   (if (and arg (= 0 (mod arg 4)))
       (beginning-of-buffer)
     (end-of-buffer))
-  (delete-region (mark) (point))
+  (kill-region (mark) (point))
   (recenter-top-bottom))
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
