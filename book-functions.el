@@ -102,7 +102,9 @@ emacs-settings)))
 "Work on my book! :-)"
 (interactive)
 ;; (book-dired)
-;; (book-load-current)
+(condition-case nil
+  (kill-buffer "warm.org")
+  (error nil))
 (org-cycle-agenda-files)
 )
 

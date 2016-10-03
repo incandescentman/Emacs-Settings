@@ -1272,6 +1272,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
+(when (looking-at "[ ]")
+         (forward-char 1)
+          )
+;; capitalize correctly if there's point is before the space at the beginning of a sentence 
+ 
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
@@ -2897,7 +2902,21 @@ No space. Does that make sense? Thanks!
   (my/fix-space))))
     (when (and capitalize (my/beginning-of-sentence-p))
       (save-excursion
-        (capitalize-unless-org-heading)))))
+        (capitalize-unless-org-heading))))
+(when
+
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+) 
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
+)
+)
 #+END_SRC
 
 * PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
@@ -3030,6 +3049,8 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 (looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
 (looking-back ":t[ ]*")
 (looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+
+(looking-back ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
 
 
 ;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash

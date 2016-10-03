@@ -3733,12 +3733,18 @@ Single Capitals as you type."
 :ensure t 
 :bind 
 ("C-c e" . yas-load-snippet-buffer)
+("." . insert-period)
 :init
 (yas-global-mode 1) 
 
 :config 
 ;; load yasnippet directories
 (setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
+
+(add-hook 'yas-before-expand-snippet-hook (key-minor-mode nil))
+(add-hook 'yas-after-exit-snippet-hook (key-minor-mode 1))
+
+
 
 ;; don't insert random spaces in my prose
 (setq yas-indent-line (quote none)) 
@@ -6290,7 +6296,7 @@ Simply put this in your .emacs somewhere and use C-x C-f as usual.
 ** create intermediate dirs when saving a file 
 
 Wow, this works.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'before-save-hook
           (lambda ()
             (when buffer-file-name
@@ -6298,7 +6304,7 @@ Wow, this works.
                 (when (and (not (file-exists-p dir))
                            (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
                   (make-directory dir t)))))) 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * org-twbs
@@ -7431,3 +7437,22 @@ This solution also works for MELPA.
 #+BEGIN_SRC emacs-lisp
 (require 'dired-quick-sort) 
 #+END_SRC
+
+
+* eww 
+#+BEGIN_SRC emacs-lisp
+(setq eww-search-prefix "https://www.google.com/search?q=") 
+#+END_SRC
+
+
+I love that I can search for whatever region is active by pressing M-s M-w in Emacs 25 --- this is something I never even knew I wanted!
+But it just throws an error if region isn't active. So I advised it to prompt for a search string if region isn't active:
+#+BEGIN_SRC emacs-lisp
+(defun jab/eww-search (orig-fun &rest args)
+ (if (region-active-p) (apply orig-fun args)
+ (eww (read-string "Query: "))))
+(advice-add 'eww-search-words :around #'jab/eww-search) 
+
+#+END_SRC
+
+
