@@ -60,6 +60,9 @@
 \\DeclareTextFontCommand{\\textit}{\\\itshape\\color{electricblue}}
 
 
+% suppress table numbering http://tex.stackexchange.com/questions/28392/how-to-suppress-caption-numbering-in-a-table
+\\usepackage{caption}
+\\captionsetup[table]{labelformat=empty}
 
 \\usepackage{textcase}
 

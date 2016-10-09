@@ -5607,8 +5607,20 @@ event of an error or nonlocal exit."
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus))) 
 
+
+
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
 
+#+END_SRC
+
+** ivy add actions
+[[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
+
+[[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
+#+BEGIN_SRC emacs-lisp
+(ivy-add-actions t
+ '(("W" kill-new "save to kill ring")
+  ("I" insert "insert in buffer"))) 
 #+END_SRC
 
 ** swiper hydra
@@ -7456,3 +7468,19 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 #+END_SRC
 
 
+
+* podcaster
+#+BEGIN_SRC emacs-lisp
+(setq podcaster-feeds-urls
+  (quote
+  ("http://sachachua.com/blog/tag/emacs-chat/podcast")))
+
+(setq podcaster-mp3-player "VLC")
+
+#+END_SRC
+
+* bongo
+#+BEGIN_SRC emacs-lisp
+'(bongo-default-directory "~/Dropbox/")
+
+#+END_SRC

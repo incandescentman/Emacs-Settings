@@ -91,12 +91,12 @@
 \\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
 \\begin{raggedright}
 \\vfill
-{\\myauthorfont\\Large \\bfseries{CONFIDENTIAL}}
+{\\myauthorfont\\Large \\bfseries{New York Writers' Intensive}}
     \\newline
     \\newline
-{\\myauthorfont\\Large © 2015 \\@author}
+{\\myauthorfont\\Large © 2016 \\@author}
     \\newline
-          {\\myauthorfont\\Large \\href{mailto:dixit@aya.yale.edu}{dixit@aya.yale.edu}}
+          {\\myauthorfont\\Large \\href{mailto:jay@newyorkwritersintensive.com}{jay@newyorkwritersintensive.com}}
         \\newline
           %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree}}
         \\newline
