@@ -1279,9 +1279,8 @@ Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-
 
 ** Make backups:
 #+BEGIN_SRC emacs-lisp
-;; store all backup and autosave files in the tmp dir 
-;; (setq backup-directory-alist `(("." . "~/emacs/.saves")))
-
+;; Default and per-save backups go here:
+(setq backup-directory-alist '(("" . "~/emacs/backup/per-save")))
 
 (setq make-backup-files t        ; backup of a file the first time it is saved.
    backup-by-copying t        ; don't clobber symlinks
@@ -1299,8 +1298,6 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 ** backing up on every save and backing up versioned files. 
 #+BEGIN_SRC emacs-lisp
-;; Default and per-save backups go here:
-(setq backup-directory-alist '(("" . "~/emacs/backup/per-save")))
 
 (defun force-backup-of-buffer ()
  ;; Make a special "per session" backup at the first save of each
