@@ -2,9 +2,9 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(setq user-init-file "/Users/jay/emacs/starship/init.el")
+(setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
-(setq recentf-save-file "/Users/jay/emacs/starship/.savefile/recentf")
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 
 
 (defun dotspacemacs/layers ()
@@ -528,8 +528,8 @@ layers configuration. You are free to put any user code."
 
 (setq global-auto-complete-mode -1)
 
-(setq ido-save-directory-list-file "/Users/jay/emacs/starship/.savefile/ido.hist")
-(setq recentf-save-file "/Users/jay/emacs/starship/.savefile/recentf")
+(setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 
 
 (setq evil-emacs-state-cursor '("red" (hbar . 2))) 
