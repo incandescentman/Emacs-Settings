@@ -3354,7 +3354,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 * words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking"))
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or"))
 #+END_SRC
 
 
@@ -5841,7 +5841,7 @@ execute speed commands."
 '("f" "#+BEGIN_SRC fountain\n?\n#+END_SRC" "<src lang=\"fountain\">\n?\n</src>"))
 
 (add-to-list 'org-structure-template-alist
-'("sh" "#+BEGIN_SRC sh\n?\n#+END_SRC" "<src lang=\"sh\">\n?\n</src>") )
+'("hh" "#+BEGIN_HTML\n?\n#+END_HTML" "<src lang=\"HTML\">\n?\n</src>") )
 
 (add-to-list 'org-structure-template-alist
 '("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>"))

@@ -2671,14 +2671,26 @@ t)))
 #+BEGIN_SRC emacs-lisp
 (defun smart-question-mark ()
   (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point))))) 
+  (cond (mark-active
+         (progn (delete-region (mark) (point))))) 
 
   (smart-punctuation "?")
-(save-excursion
-(unless (looking-at "[ ]*$")
-(capitalize-unless-org-heading))
-))
+  (save-excursion
+    (unless
+        (or
+         (looking-at "[ ]*$")
+         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "[[:punct:]]*[ ]*$")
+         (looking-at "\"[[:punct:]]*[ ]*$")
+         (looking-at "\)[ ]*$")
+         (looking-at "\)")
+         ) ; or
+    (capitalize-unless-org-heading)
+      ) ; unless
+    ) ; save excursion
+  ) ; defun
+
+;; works!!
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 (define-key orgstruct-mode-map (kbd "?") 'smart-question-mark)
