@@ -5394,7 +5394,7 @@ C-c q
 * org-element-debug
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-element-debug)
+;; (require 'org-element-debug)
   #+END_SRC
 
 

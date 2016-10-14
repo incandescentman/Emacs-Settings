@@ -347,7 +347,7 @@ layers configuration. You are free to put any user code."
   (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
   (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
-  (load "/Users/jay/emacs/emacs-settings/email.el")
+;;  (load "/Users/jay/emacs/emacs-settings/email.el")
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
