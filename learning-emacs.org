@@ -593,3 +593,12 @@ Any conditional construct can be expressed with cond or with if. Therefore, the 
 (cond (a b) (t c))
 - Pattern matching case statement:	 	
 Next: Combining Conditions, Previous: Sequencing, Up: Control Structures  [Contents][Index] 
+
+* word boundaries
+Whole words only
+
+: \bfoo\b 
+
+
+
+

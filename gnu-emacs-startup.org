@@ -2625,17 +2625,21 @@ t)))
 
        )
   (smart-punctuation "."))
+  (save-excursion
+    (unless
+        (or
+         (looking-at "[ ]*$")
+         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "[[:punct:]]*[ ]*$")
+         (looking-at "\"[[:punct:]]*[ ]*$")
+         (looking-at "\)[ ]*$")
+         (looking-at "\)")
+         ) ; or
+    (capitalize-unless-org-heading)
+      ) ; unless
+    ) ; save excursion
+  ) ; defun
 
-(save-excursion
-(unless
-(or
-(looking-at "\][[:punct:]]*[ ]*$")
-(looking-at "[[:punct:]]*[ ]*$")
-(looking-at "\"[[:punct:]]*[ ]*$")
-(looking-at "\)[ ]*$")
-)
-(capitalize-unless-org-heading))
-))
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 (define-key orgstruct-mode-map (kbd ".") 'smart-period)
