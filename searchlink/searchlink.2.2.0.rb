@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 SILENT = ENV['SL_SILENT'] =~ /false/i ? false : true || true
-VERSION = '2.2.3'
-# SearchLink by Brett Terpstra 2015 <http://brettterpstra.com/projects/searchlink/>
+VERSION = '2.2.0'
+# SearchLink by Brett Terpstra 2014 <http://brettterpstra.com/projects/searchlink/>
 # MIT License, please maintain attribution
 require 'net/https'
 require 'rexml/document'
@@ -21,13 +21,6 @@ end
 class String
   def clean
     gsub(/\n+/,' ').gsub(/"/,"&quot").gsub(/\|/,"-").gsub(/([&\?]utm_[scm].+=[^&\s!,\.\)\]]++?)+(&.*)/, '\2').sub(/\?&/,'').strip
-  end
-
-  def to_am # convert itunes to apple music link
-    input = self.dup
-    input.sub!(/\/itunes\.apple\.com/,'geo.itunes.apple.com')
-    append = input =~ /\?[^\/]+=/ ? '&app=music' : '?app=music'
-    input + append
   end
 end
 
@@ -79,10 +72,13 @@ validate_links: false
 # itunes_affiliate = "&at=10l4tL&ct=searchlink"
 itunes_affiliate: "&at=10l4tL&ct=searchlink"
 
-# to create Amazon affiliate links, set amazon_partner to your amazon
-# affiliate tag
-#    amazon_partner: "bretttercom-20"
-amazon_partner: "bretttercom-20"
+# to create Amazon affiliate links, set amazon_partner to:
+# [tag, camp, creative]
+# Use the amazon link tool to create any affiliate link and examine
+# to find the needed parts. Set to false to return regular amazon links
+# example:
+#    amazon_partner: ["bretttercom-20","1789","390957"]
+amazon_partner: ["brettterpstra-20", "1789", "9325"]
 
 # To create custom abbreviations for Google Site Searches,
 # add to (or replace) the hash below.
@@ -158,10 +154,12 @@ ENDCONFIG
     # $itunes_affiliate = "&at=10l4tL&ct=searchlink"
     @cfg['itunes_affiliate'] ||= "&at=10l4tL&ct=searchlink"
 
-    # to create Amazon affiliate links, set amazon_partner to your amazon
-    # affiliate tag
-    #    amazon_partner: "bretttercom-20"
-    @cfg['amazon_partner'] ||= ''
+    # to create Amazon affiliate links, set amazon_partner to:
+    # [tag, camp, creative]
+    # Use the amazon link tool to create any affiliate link and examine
+    # to find the needed parts. Set to [] to return regular amazon links
+    # example: amazon_partner = ["bretttercom-20","1789","390957"]
+    @cfg['amazon_partner'] ||= []
 
     # To create custom abbreviations for Google Site Searches,
     # add to (or replace) the hash below.
@@ -185,94 +183,6 @@ ENDCONFIG
     @match_length = nil;
   end
 
-  def available_searches
-    searches = [
-      ["a", "Amazon"],
-      ["g", "Google"],
-      ["b", "Bing"],
-      ["wiki", "Wikipedia"],
-      ["s", "Software search (Google)"],
-      ["@t", "Twitter user link"],
-      ["@adn", "App.net user link"],
-      ["am", "Apple Music"],
-      ["amart", "Apple Music Artist"],
-      ["amalb", "Apple Music Album"],
-      ["amsong", "Apple Music Song"],
-      ["ampod", "Apple Music Podcast"],
-      ["ipod", "iTunes podcast"],
-      ["isong", "iTunes song"],
-      ["iart", "iTunes artist"],
-      ["ialb", "iTunes album"],
-      ["lsong", "Last.fm song"],
-      ["lart", "Last.fm artist"],
-      ["mas", "Mac App Store"],
-      ["masd", "Mac App Store developer link"],
-      ["itu", "iTunes App Store"],
-      ["itud", "iTunes App Store developer link"],
-      ["def", "Dictionary definition"],
-      ["sp", "Spelling"],
-      ["h", "Web history"],
-      ["hs[hb]", "Safari [history, bookmarks]"],
-      ["hc[hb]", "Chrome [history, bookmarks]"]
-    ]
-    out = ""
-    searches.each {|s|
-      out += "!#{s[0]}#{spacer(s[0])}#{s[1]}\n"
-    }
-    out
-  end
-
-  def spacer(str)
-    len = str.length
-    str.scan(/[mwv]/).each do |tt|
-      len += 1
-    end
-    str.scan(/[t]/).each do |tt|
-      len -= 1
-    end
-    spacer = case len
-    when 0..3
-      "\t\t"
-    when 4..12
-      " \t"
-    end
-    spacer
-  end
-
-  def get_help_text
-    help_text =<<EOHELP
--- [Available searches] -------------------
-#{available_searches}
-EOHELP
-
-    if @cfg['custom_site_searches']
-      help_text += "\n-- [Custom Searches] ----------------------\n"
-      @cfg['custom_site_searches'].each {|label, site|
-        help_text += "!#{label}#{spacer(label)} #{site}\n"
-      }
-    end
-    help_text
-  end
-
-  def help_dialog
-    help_text = "[SearchLink v#{VERSION}]\n\n"
-    help_text += get_help_text
-    help_text += "\nClick \\\"More Help\\\" for additional information"
-    res = %x{osascript <<'APPLESCRIPT'
-set _res to display dialog "#{help_text.gsub(/\n/,'\\\n')}" buttons {"OK", "More help"} default button "OK" with title "SearchLink Help"
-
-return button returned of _res
-APPLESCRIPT
-    }.strip
-    if res == "More help"
-      %x{open http://brettterpstra.com/projects/searchlink}
-    end
-  end
-
-  def help_cli
-    $stdout.puts get_help_text
-  end
-
   def parse(input)
     @output = ''
     return false unless input && input.length > 0
@@ -281,12 +191,11 @@ APPLESCRIPT
 
     if input.strip =~ /^help$/i
       if SILENT
-        help_dialog # %x{open http://brettterpstra.com/projects/searchlink/}
+        %x{open http://brettterpstra.com/projects/searchlink/}
       else
         $stdout.puts "SearchLink v#{VERSION}"
         $stdout.puts "See http://brettterpstra.com/projects/searchlink/ for help"
       end
-      print input
       Process.exit
     end
 
@@ -558,9 +467,7 @@ APPLESCRIPT
 
               if url
                 link_text = title if link_text == '' && title
-
-                if link_only || search_type =~ /sp(ell)?/ || url == 'embed'
-                  url = title if url == 'embed'
+                if link_only || search_type =~ /sp(ell)?/
                   cursor_difference = cursor_difference + (@match_length - url.length)
                   @match_length = url.length
                   add_report("#{match_string} => #{url}")
@@ -649,7 +556,7 @@ APPLESCRIPT
 
       reference_link = input =~ /:([!\^\s~]*)$/
 
-      # if end of input contains ~, pull url from clipboard
+      # if input starts with ~, pull url from clipboard
       if input =~ /~[:\^!\s]*$/
         input.sub!(/[:!\^\s~]*$/,'')
         clipboard = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
@@ -752,9 +659,6 @@ APPLESCRIPT
           add_error('Invalid search', input)
           counter_errors += 1
         end
-      elsif input =~ /^@(\S+)\s*$/
-        link_text = input
-        url, title = social_handle('twitter', link_text)
       else
         link_text = input unless link_text
         url, title = google(input)
@@ -1020,7 +924,7 @@ APPLESCRIPT
 
   def valid_search?(term)
     valid = false
-    valid = true if term =~ /(^h(([sc])([hb])?)*|^a$|^g$|^b$|^wiki$|^def$|^masd?$|^itud?$|^s$|^(i|am)(art|alb|song|pod)e?$|^lart|^@(t|adn|fb)|^r$|^sp(ell)?$)/
+    valid = true if term =~ /(^h(([sc])([hb])?)*|a$|^g$|^b$|^wiki$|^def$|^masd?$|^itud?$|^s$|^isong$|^iart$|^ialb$|^lsong$|^lart|^@(t|adn)|^ipod$|^r$|^sp(ell)?$)/
     valid = true if @cfg['custom_site_searches'].keys.include? term
     notify("Invalid search", term) unless valid
     valid
@@ -1189,11 +1093,11 @@ APPLESCRIPT
   end
 
   def wiki(terms)
-    uri = URI.parse("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&inprop=url&titles=#{CGI.escape(terms)}")
+    uri = URI.parse("http://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&inprop=url&titles=#{CGI.escape(terms)}")
     req = Net::HTTP::Get.new(uri.request_uri)
     req['Referer'] = "http://brettterpstra.com"
     req['User-Agent'] = "SearchLink (http://brettterpstra.com)"
-    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
+    res = Net::HTTP.start(uri.host, uri.port) {|http|
       http.request(req)
     }
     if RUBY_VERSION.to_f > 1.9
@@ -1201,17 +1105,13 @@ APPLESCRIPT
     else
       body = res.body
     end
-
     result = JSON.parse(body)
 
     if result
       result['query']['pages'].each do |page,info|
-        unless info.key? "missing"
-          return [info['fullurl'],info['title']]
-        end
+        return [info['fullurl'],info['title']]
       end
     end
-    return false
   end
 
   def zero_click(terms)
@@ -1231,57 +1131,10 @@ APPLESCRIPT
     end
   end
 
-  # Search apple music
-  # terms => search terms (unescaped)
-  # media => music, podcast
-  # entity => optional: artist, song, album, podcast
-  # returns {:type=>,:id=>,:url=>,:title}
-  def applemusic(terms, media='music', entity='')
-    aff = @cfg['itunes_affiliate']
-    output = {}
-
-    url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&media=#{media}&entity=#{entity}")
-    res = Net::HTTP.get_response(url).body
-    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
-    json = JSON.parse(res)
-    if json['resultCount'] && json['resultCount'] > 0
-      result = json['results'][0]
-
-      case result['wrapperType']
-      when 'track'
-        if result['kind'] == 'podcast'
-          output[:type] = 'podcast'
-          output[:id] = result['collectionId']
-          output[:url] = result['collectionViewUrl'].to_am + aff
-          output[:title] = result['collectionName']
-        else
-          output[:type] = 'song'
-          output[:id] = result['trackId']
-          output[:url] = result['trackViewUrl'].to_am + aff
-          output[:title] = result['trackName'] + " by " + result['artistName']
-        end
-      when 'collection'
-        output[:type] = 'album'
-        output[:id] = result['collectionId']
-        output[:url] = result['collectionViewUrl'].to_am + aff
-        output[:title] = result['collectionName'] + " by " + result['artistName']
-      when 'artist'
-        output[:type] = 'artist'
-        output[:id] = result['artistId']
-        output[:url] = result['artistLinkUrl'].to_am + aff
-        output[:title] = result['artistName']
-      end
-      return false if output.empty?
-      output
-    else
-      return false
-    end
-  end
-
   def itunes(entity, terms, dev, aff='')
     aff = @cfg['itunes_affiliate']
 
-    url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&entity=#{entity}")
+    url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&entity=#{entity}&attribute=allTrackTerm")
     res = Net::HTTP.get_response(url).body
     res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
 
@@ -1345,7 +1198,7 @@ APPLESCRIPT
     end
   end
 
-  def bing(terms, define = false)
+  def bing(terms, define = false) # actually bing due to deprecated Google API
     uri = URI.parse(%Q{https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27#{CGI.escape(terms)}%27&$format=json})
     req = Net::HTTP::Get.new(uri)
     req.basic_auth '2b0c04b5-efa5-4362-9f4c-8cae5d470cef', 'M+B8HkyFfCAcdvh1g8bYST12R/3i46zHtVQRfx0L/6s'
@@ -1402,54 +1255,6 @@ APPLESCRIPT
     end
   end
 
-  def ddg(terms)
-    begin
-      body = %x{/usr/bin/curl -sSL 'http://duckduckgo.com/?q=%5C#{CGI.escape(terms)}&t=hn&ia=web'}
-
-      url = body.match(/uddg=(.*?)'/)
-
-      if url && url[1]
-        result = url[1] rescue false
-        return false unless result
-        output_url = URI.unescape(result)
-        if @cfg['include_titles']
-          output_title = titleize(output_url) rescue ''
-        else
-          output_title = ''
-        end
-        return [output_url, output_title]
-      else
-        return false
-      end
-    end
-  end
-
-  def titleize(url)
-
-    whitespace = url.match(/(\s*$)/)[0] || ''
-    title = nil
-    begin
-      source = %x{/usr/bin/curl -sSL '#{url.strip}'}
-      title = source.match(/<title>(.*)<\/title>/im)
-
-      title = title.nil? ? nil : title[1].strip
-
-      orig_title = false
-
-      if title.nil? || title =~ /^\s*$/
-        $stderr.puts "Warning: missing title for #{url.strip}" if $cfg['debug']
-        title = url.gsub(/(^https?:\/\/|\/.*$)/,'').strip
-      else
-        title = title.gsub(/\n/, ' ').gsub(/\s+/,' ').strip # .sub(/[^a-z]*$/i,'')
-      end
-
-      title
-    rescue Exception => e
-      $stderr.puts "Error retrieving title for #{url.strip}"
-      raise e
-    end
-  end
-
   def spell(terms)
     caps = []
     terms.split(" ").each {|w|
@@ -1485,35 +1290,16 @@ APPLESCRIPT
   end
 
   def amazon_affiliatize(url, amazon_partner)
-    return url if amazon_partner.nil? || amazon_partner.length == 0
+    return url unless amazon_partner.length == 3
 
-    if url =~ /https?:\/\/(?:.*?)amazon.com\/(?:(.*?)\/)?([dg])p\/([^\?]+)/
+    if url =~ /http:\/\/www.amazon.com\/(?:(.*?)\/)?dp\/([^\?]+)/
       title = $1
-      type = $2
-      id = $3
-      az_url = "http://www.amazon.com/#{type}p/product/#{id}/ref=as_li_ss_tl?ie=UTF8&linkCode=ll1&tag=#{amazon_partner}"
+      id = $2
+      az_url = "http://www.amazon.com/gp/product/#{id}/ref=as_li_ss_tl?ie=UTF8&camp=#{amazon_partner[1]}&creative=#{amazon_partner[2]}&creativeASIN=#{id}&linkCode=as2&tag=#{amazon_partner[0]}"
       return [az_url, title]
     else
       return [url,'']
     end
-  end
-
-  def social_handle(type, term)
-    handle = term.sub(/^@/,'').strip
-    case type
-    when /twitter/
-      url = "https://twitter.com/#{handle}"
-      title = "@#{handle} on Twitter"
-    when /adn/
-      url = "https://alpha.app.net/#{handle}"
-      title = "@#{handle} on App.net"
-    when /fb/
-      url = "https://www.facebook.com/#{handle}"
-      title = "@#{handle} on Facebook"
-    else
-      [false, term, link_text]
-    end
-    [url, title]
   end
 
   def do_search(search_type, search_terms, link_text='')
@@ -1531,24 +1317,22 @@ APPLESCRIPT
       return [search_terms, link_text, link_text]
     when /^@t/ # twitterify username
       if search_terms.strip =~ /^@?[0-9a-z_$]+$/i
-        url, title = social_handle('twitter', search_terms)
-        link_text = search_terms
+
+        handle = search_terms.sub(/^@/,'').strip
+        url = "https://twitter.com/#{handle}"
+        title = "@#{handle} on Twitter"
+        link_text = handle if link_text == ''
       else
         return [false, "#{search_terms} is not a valid Twitter handle", link_text]
       end
     when /^@adn/ # adnify username
       if search_terms.strip =~ /^@?[0-9a-z_]+$/i
-        url, title = social_handle('adn', search_terms)
-        link_text = search_terms if link_text == ''
+        handle = search_terms.sub(/^@/,'').strip
+        url = "https://alpha.app.net/#{handle}"
+        title = "@#{handle} on App.net"
+        link_text = handle if link_text == ''
       else
         return [false, "#{search_terms} is not a valid App.net handle", link_text]
-      end
-    when /^@fb/ # adnify username
-      if search_terms.strip =~ /^@?[0-9a-z_]+$/i
-        url, title = social_handle('fb', search_terms)
-        link_text = search_terms if link_text == ''
-      else
-        return [false, "#{search_terms} is not a valid Facebook username", link_text]
       end
     when /^sp(ell)?$/ # replace with spelling suggestion
       res = spell(search_terms)
@@ -1582,11 +1366,14 @@ APPLESCRIPT
       end
       url, title = search_history(search_terms, types)
     when /^a$/
-      az_url, title = ddg(%Q{site:amazon.com #{search_terms}})
+      az_url, title = google(%Q{site:amazon.com #{search_terms}}, false)
       url, title = amazon_affiliatize(az_url, @cfg['amazon_partner'])
 
     when /^g$/ # google lucky search
-      url, title = ddg(search_terms)
+      url, title = google(search_terms)
+    # When Google API search finally stops working
+    # when /^g$/
+    #   url, title = bing(search_terms)
 
     when /^b$/ # bing
       url, title = bing(search_terms)
@@ -1620,43 +1407,13 @@ APPLESCRIPT
     #when /^masd?$/
     # url, title = google("site:itunes.apple.com Mac App Store #{search_terms}")
     # url += $itunes_affiliate
-
     when /^itud?$/ # iTunes app search
       dev = search_type =~ /d$/
       url, title = itunes('iPadSoftware',search_terms, dev, @cfg['itunes_affiliate'])
 
     when /^s$/ # software search (google)
-      url, title = ddg(%Q{(software OR app OR mac) #{search_terms}})
+      url, title = google(%Q{(software OR app OR mac) #{search_terms}})
       link_text = title if link_text == ''
-
-    when /^am/ # apple music search
-      stype = search_type.downcase.sub(/^am/,'')
-      otype = 'link'
-      if stype =~ /e$/
-        otype = 'embed'
-        stype.sub!(/e$/,'')
-      end
-      case stype
-      when /^pod$/
-        result = applemusic(search_terms, 'podcast')
-      when /^art$/
-        result = applemusic(search_terms, 'music', 'musicArtist')
-      when /^alb$/
-        result = applemusic(search_terms, 'music', 'album')
-      when /^song$/
-        result = applemusic(search_terms, 'music', 'musicTrack')
-      else
-        result = applemusic(search_terms)
-      end
-
-      # {:type=>,:id=>,:url=>,:title=>}
-      if otype == 'embed' && result[:type] =~ /(album|song)/
-        url = 'embed'
-        title = %Q{<iframe src="//tools.applemusic.com/embed/v1/#{result[:type]}/#{result[:id]}?country=#{@cfg['country_code']}#{@cfg['itunes_affiliate']}" height="500px" width="100%" frameborder="0"></iframe>}
-      else
-        url = result[:url]
-        title = result[:title]
-      end
 
     when /^ipod$/
       url, title = itunes('podcast', search_terms, false)
@@ -1678,9 +1435,9 @@ APPLESCRIPT
     else
       if search_terms
         if search_type =~ /.+?\.\w{2,4}$/
-          url, title = ddg(%Q{site:#{search_type} #{search_terms}})
+          url, title = google(%Q{site:#{search_type} #{search_terms}})
         else
-          url, title = ddg(search_terms)
+          url, title = google(search_terms)
         end
       end
     end
@@ -1885,7 +1642,6 @@ if ARGV.length > 0
   ARGV.each {|arg|
     if arg =~ /^(--?)?(h(elp)?|v(ersion)?)$/
       $stdout.puts "SearchLink v#{VERSION}"
-      sl.help_cli
       $stdout.puts "See http://brettterpstra.com/projects/searchlink/ for help"
       Process.exit
     elsif arg =~ /^--?(stdout)$/

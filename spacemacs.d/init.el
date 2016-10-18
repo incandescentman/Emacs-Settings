@@ -9,7 +9,8 @@
 (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org"
 ;; "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt"
 "/Users/jay/Dropbox/writing/book/feb-18/50-shades.txt"
-;; "/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"
+"/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt"
+;; "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"
 )))
 
 
@@ -546,6 +547,8 @@ layers configuration. You are free to put any user code."
 (horizontal-cursor)
 (scroll-bar-mode 1)
 (defun package--save-selected-packages (&rest opt) nil)
+
+(require 'mu4e-send-delay)
 
 )
 

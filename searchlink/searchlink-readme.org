@@ -1,3 +1,9 @@
+* Introduction
+SearchLink by Brett Terpstra 2014 http://brettterpstra.com/projects/searchlink/ 
+MIT License, please maintain attribution
+
+SearchLink is a System Service for OS X which handles searching multiple sources and automatically generating Markdown links for text. 
+
 Searchlink works in a few ways:
 
 - Run a quick search on a single selection, and have the selection replaced with the resulting url (and optional title) as a Markdown inline link, a Markdown reference, or just a plain url.
@@ -150,3 +156,13 @@ In the last version I made it possible to select any text and treat it as a Goog
 Updates the link with the results of the search terms, using the title of the located page as the text for the link.
 [me]("brett terpstra")
 The word "me" will be replaced with the results of the search for "brett terpstra," keeping "me" as the link text. 
+
+** Social Handles
+Now, if you select just an @username and run SearchLink on it, it will automatically turn it into a link to a Twitter profile. So @ttscoff becomes [[https://twitter.com/ttscoff][@ttscoff]].
+
+I also added quick conversions for Facebook profiles, using !@fb. So you can type !@fb ttscoff to create [[https://www.facebook.com/ttscoff][ttscoff]] (or [[!@fb][ttscoff]]). 
+
+* clipboard
+To search Google for a link to MailMate and copy it to your clipboard, you just use:
+
+mailmate app !!^ 
