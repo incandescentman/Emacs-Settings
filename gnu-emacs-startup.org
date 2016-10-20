@@ -433,6 +433,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; mk - mykeybindings
 
 
+(define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
 
 (define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
 
@@ -2637,7 +2638,22 @@ t)))
          ) ; or
     (capitalize-unless-org-heading)
       ) ; unless
-    ) ; save excursion
+) ; save excursion
+
+;; if two periods or two commas in a row, delete the second one 
+(when 
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+) 
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
+)
+
   ) ; defun
 
 
@@ -2664,6 +2680,21 @@ t)))
 )
 
 (save-excursion (downcase-word 1)))
+(when
+
+;; if two periods or two commas in a row, delete the second one
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+) 
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
+)
+
 )
 
 
