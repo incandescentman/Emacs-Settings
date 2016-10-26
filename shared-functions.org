@@ -2051,6 +2051,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (use-package dired
 :bind (:map dired-mode-map 
 ("C-o" . dired-omit-mode)
+("M-o" . dired-omit-mode)
  (  "s-o" . tmtxt/dired-do-shell-mac-open)
 ("s-O" . reveal-in-finder)
 ("C-c n" . my-dired-create-file)
@@ -3368,7 +3369,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 ** words to never downcase
 #+BEGIN_SRC emacs-lisp
-(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "I'm" "I'll" "I've" "I'd" "OK"))
+(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
 #+END_SRC
 
 ** auto-capitalize-predicate 
@@ -3384,7 +3385,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|al\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
                  (- (point) 20)))))))
 
 #+END_SRC 
@@ -7475,4 +7476,18 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 #+BEGIN_SRC emacs-lisp
 '(bongo-default-directory "~/Dropbox/")
 
+#+END_SRC
+
+* ediff
+#+BEGIN_SRC emacs-lisp
+(setq ediff-diff-options "-w") 
+#+END_SRC
+
+* kill whole paragraph
+#+BEGIN_SRC emacs-lisp
+(defun kill-paragraph-from-beginning (b e)
+  (interactive)
+  (mark-paragraph)
+  (kill-region)
+  )
 #+END_SRC

@@ -508,3 +508,52 @@ How to do
 But in most of the big cities in the United States, it's straight women who are in the majority---meaning that single straight guys are a scarce commodity. To potential heterosexual men. So what happens when there aren't enough men to go around? Psychologist Sarah Hill has spent the last few years studying this very question. 
 
 Test: kill "To potential heterosexual men."
+
+
+* TESTING [#C] Parentheses, quotations, and auto-capitalize mode
+OK, I think when we modified kill-clause to recognize parentheses as punctuation, it had an unintended consequence: auto-capitalize-mode now counts parentheses as periods. This behavior just started.
+
+Let's say I enter the text:
+
+: Alice (who was very curious indeed) was beginning to get very tired.
+
+Now let's say I enter it with auto-capitalize-mode on.
+
+Current output:
+Alice (who was very curious indeed) Was beginning to get very tired.
+
+Desired output:
+Alice (who was very curious indeed) was beginning to get very tired.
+
+Can we fix? Thanks!
+
+** NOTE-TO-JAY Try it now
+
+  ~kill-clause~ doesn't seem to have been responsible for the behaviour you describe; I did however, upon changing ~kill-clause~, notice that the value of ~sentence-end-base~ was strange -- i.e. malformed regexp that by "chance" worked as apparently intended -- and took the liberty of changing it, without warning you. Sorry for that. In any case, a sentence should never end after a ')' character, right? (Or should it...?) Anyway, for now I removed the ')' character (and several other characters that should either be end-of-sentence markers, such as " ' "), but if this example makes sense to you, we can also handle it.
+
+** NOTE-TO-SERJ Answer
+OK great. To answer your question, here are a few ways a sentence might look:
+
+#+BEGIN_QUOTE
+1. Alice (who was very curious) was tired.
+2. Alice was tired. (Because she'd been running all day.)
+3. Alice said: "This is the last time." But the next day it happened again.
+#+END_QUOTE
+
+#1 is now working as desired. Is it possible/feasible/practical to make auto-capitalize mode work correctly in cases #2 and #3 above, auto-capitalizing the B in each one?
+
+** NOTE-TO-JAY Question
+
+  My Emacs is reacting well with #2... are you sure it's not working as intended for you? I do suspect our Emacs are behaving somewhat differently. I get this feeling from the fact that I cannot get auto-capitalize to work correctly *unless* the spacebar is bound to ~self-insert-command~ (which, I suppose, is not your case, since you seem to be binding it to ~smart-space~). Do you confirm auto-capitalize is working correctly for most cases, except #2 and #3 above?
+
+** NOTE-TO-SERJ Yes, #2 is working.
+You're right, #2 works. Not sure why it wasn't working for me before... I must have done something when I was playing with autopair-mode. But yes, #2 works.
+
+#3 definitely still doesn't work. And yes, auto-capitalize seems to work correctly in most other cases. Thanks!
+
+** NOTE-TO-JAY I think it works now
+
+  Please also check if sentence commands (killing sentences, etc.) are working as you intend, since I changed the ~sentence-end-base~ variable.
+
+** NOTE-TO-SERJ Great!
+Looks great! I will keep testing.
