@@ -4182,8 +4182,10 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
- '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
+
  smtpmail-smtp-service 587) 
 ;; open my newyorkwritersintensive inbox
 (mu4e~headers-jump-to-maildir "/nywi/inbox") 
