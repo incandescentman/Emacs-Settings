@@ -2124,7 +2124,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 * Ignore / Exclude Uninteresting Things
 
-** buffer-stack ignore uninteresting buffers
+** buffer-stack untrack / ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
@@ -3291,7 +3291,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 (setq projectile-globally-ignored-files
   (quote
-  ("TAGS" ".DS_Store" ".projectile" ".dropbox" ".tmp"))) 
+  ("TAGS" ".DS_Store" ".projectile" ".dropbox"))) 
+
+(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp")))
 
 
 :bind (:map projectile-mode-map 
@@ -4297,6 +4299,13 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 #+END_SRC
 
+
+*** mu4e-send-delay 
+#+BEGIN_SRC emacs-lisp
+(require 'mu4e-send-delay) 
+(mu4e-send-delay-setup) 
+(add-hook 'mu4e-main-mode-hook 'mu4e-send-delay-initialize-send-queue-timer) 
+#+END_SRC
 
 
 ** gnus
@@ -7490,4 +7499,9 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
   (mark-paragraph)
   (kill-region)
   )
+#+END_SRC
+
+* case fold search
+#+BEGIN_SRC emacs-lisp
+(setq case-fold-search t)
 #+END_SRC
