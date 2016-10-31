@@ -737,7 +737,7 @@ This is working correctly:
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-	("L" "Later" checkitem (file+headline "warm.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "momentum.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
 	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -1630,7 +1630,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  '(cua-mode nil)
  '(debug-on-error t)
  '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(delete-window-preserve-buffer (quote ("warm.org" "Current-book-research.txt" "accountability.txt")))
+ '(delete-window-preserve-buffer (quote ("momentum.org" "Current-book-research.txt" "accountability.txt")))
  '(dired-clean-up-buffers-too nil)
  '(dired-details-hidden-string "")
  '(dired-kept-versions 8)
@@ -1641,7 +1641,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 '(grep-highlight-matches (quote always))
 '(ido-use-faces t)
  '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/warm.org")
+ '(initial-buffer-choice "~/Dropbox/writing/notationaldata/momentum.org")
  '(initial-major-mode (quote org-mode))
 ;; '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
@@ -3901,7 +3901,7 @@ Single Capitals as you type."
 
 (defun warm-open ()
   (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/warm.org")
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/momentum.org")
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
