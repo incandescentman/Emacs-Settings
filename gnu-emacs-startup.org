@@ -446,7 +446,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 ;; working with an external monitor
 (define-key key-minor-mode-map (kbd "s-n") 'make-frame)
-(define-key key-minor-mode-map (kbd "s-~") 'other-frame)
+(define-key key-minor-mode-map (kbd "s-~") 'other-window)
+(define-key key-minor-mode-map (kbd "s-`") 'other-frame)
 
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
