@@ -5854,7 +5854,7 @@ execute speed commands."
 '("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") )
 
 (add-to-list 'org-structure-template-alist
-'("f" "#+BEGIN_SRC fountain\n?\n#+END_SRC" "<src lang=\"fountain\">\n?\n</src>"))
+'("f" "#+BEGIN_EXPORT fountain\n?\n#+END_EXPORT" "<src lang=\"fountain\">\n?\n</src>"))
 
 (add-to-list 'org-structure-template-alist
 '("hh" "#+BEGIN_HTML\n?\n#+END_HTML" "<src lang=\"HTML\">\n?\n</src>") )
@@ -7503,7 +7503,37 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
   )
 #+END_SRC
 
-* case fold search
+
+* correct org-mode
 #+BEGIN_SRC emacs-lisp
-(setq case-fold-search t)
+(defun org-repair-export-blocks ()
+ "Repair export blocks and INCLUDE keywords in current buffer."
+ (interactive)
+ (when (eq major-mode 'org-mode)
+  (let ((case-fold-search t)
+     (back-end-re (regexp-opt
+            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
+             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
+            t)))
+   (org-with-wide-buffer
+    (goto-char (point-min))
+    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
+     (save-excursion
+      (while (re-search-forward block-re nil t)
+       (let ((element (save-match-data (org-element-at-point))))
+        (when (eq (org-element-type element) 'special-block)
+         (save-excursion
+          (goto-char (org-element-property :end element))
+          (save-match-data (search-backward "_"))
+          (forward-char)
+          (insert "EXPORT")
+          (delete-region (point) (line-end-position)))
+         (replace-match "EXPORT \\1" nil nil nil 1))))))
+    (let ((include-re
+       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
+     (while (re-search-forward include-re nil t)
+      (let ((element (save-match-data (org-element-at-point))))
+       (when (and (eq (org-element-type element) 'keyword)
+            (string= (org-element-property :key element) "INCLUDE"))
+        (replace-match "EXPORT \\1" nil nil nil 1))))))))) 
 #+END_SRC
