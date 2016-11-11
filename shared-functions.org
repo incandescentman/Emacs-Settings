@@ -829,7 +829,7 @@ e.g. nvALT
   (setq org-bullets-bullet-list (quote ("• ")))
   (zin/org-outline-mode)
 (org-bullets-mode)
-  (boss-mode)
+(define-key key-minor-mode-map (kbd ",") 'insert-comma) 
   (incarnadine-cursor)
   (define-key org-mode-map (kbd "DEL")
     'new-org-delete-backward-char)
