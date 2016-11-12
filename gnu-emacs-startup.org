@@ -2981,6 +2981,8 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
 (looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
 (looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line 
 
+(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line 
+
 
        (looking-at (user-full-name))
 
