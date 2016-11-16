@@ -1,14 +1,14 @@
 *** Red cursor mode
 
 This customization with the big blocky boxy red cursor makes me so happy.
-# #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
 (setq-default cursor-type 'hbar)
 (set-cursor-color "red")
 (setq default-frame-alist
    '((cursor-color . "red")))
 (add-to-list 'default-frame-alist '(cursor-color . "red"))
-# #+END_SRC
+#+END_SRC
 
 And create a function to restore the red cursor in case a color-theme overwrites it:
 #+BEGIN_SRC emacs-lisp
@@ -471,5 +471,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 This worked when nothing else would:
 (setq cursor-type '(hbar . 5) )
 
+As did this:
 
-
+(setq evil-emacs-state-cursor '("red")) ; for box cursor

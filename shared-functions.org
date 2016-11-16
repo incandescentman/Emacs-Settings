@@ -2204,6 +2204,7 @@ Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+(add-hook 'org-mode-hook 'wc-mode) 
 #+END_SRC
 
 
@@ -6834,6 +6835,8 @@ SPC is "wrap region in block quote tag"
 (setq org-icalendar-store-UID nil)
 (setq org-icalendar-timezone "(-18000 \"EST\") ")
 (setq org-agenda-default-appointment-duration '15)
+
+(defun org-icalendar-open-ics-file (file) (start-process "org-icalendar-open-ics-file-process" nil "open" "-a" "/Applications/Calendar.app" file)) (add-hook 'org-icalendar-after-save-hook 'org-icalendar-open-ics-file) 
 #+END_SRC
 
 

@@ -538,16 +538,15 @@ layers configuration. You are free to put any user code."
 (setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 
 
-;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) 
-
-;; (setq evil-emacs-state-cursor '("red" (box . 2)))
+;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
+(setq evil-emacs-state-cursor '("red")) ; for box cursor
 
 
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
 ;; (horizontal-cursor)
 (box-cursor)
-
+(incarnadine-cursor)
 (scroll-bar-mode 1)
 (defun package--save-selected-packages (&rest opt) nil)
 
@@ -557,7 +556,7 @@ layers configuration. You are free to put any user code."
 )
 
 ;; theend
-;; 
+;;
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 ;;
