@@ -538,12 +538,16 @@ layers configuration. You are free to put any user code."
 (setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 
 
-(setq evil-emacs-state-cursor '("red" (hbar . 2))) 
+;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) 
+
+;; (setq evil-emacs-state-cursor '("red" (box . 2)))
 
 
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
-(horizontal-cursor)
+;; (horizontal-cursor)
+(box-cursor)
+
 (scroll-bar-mode 1)
 (defun package--save-selected-packages (&rest opt) nil)
 
