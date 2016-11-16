@@ -2204,7 +2204,7 @@ Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-(add-hook 'org-mode-hook 'wc-mode) 
+;; (add-hook 'org-mode-hook 'wc-mode) 
 #+END_SRC
 
 
