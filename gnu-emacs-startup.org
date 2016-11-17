@@ -621,7 +621,19 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
-(define-key minibuffer-local-map (kbd "s-c") 'pasteboard-copy)
+(define-key minibuffer-local-map (kbd "s-c") 'copy-minibuffer-contents)
+(define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
+
+(defun copy-minibuffer-contents (arg)
+ (interactive "p")
+(beginning-of-visual-line) 
+  (end-of-buffer) 
+ (copy-region-as-kill (mark) (point))
+(push-kill-ring-to-pasteboard)
+)
+
+
+
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 

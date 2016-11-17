@@ -1,0 +1,393 @@
+;; create a custom minor mode to override other keybindings and use mine instead
+(defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+(define-minor-mode key-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " key" 'key-minor-mode-map)
+(key-minor-mode 1)
+(defun my-minibuffer-setup-hook ()
+  (key-minor-mode 0))
+(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+
+;; unbind some existing keybindings
+;; (define-key undo-tree-map (kbd "C-x r") nil)
+
+;; and the keybindings
+;; mk - mykeybindings
+
+(define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-paragraph-from-beginning)
+
+(define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
+
+(define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
+
+(define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-j ag") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-j mf") 'monaco-font)
+
+(define-key key-minor-mode-map (kbd "s-j t t") 'toggle-between-src-and-example-block)
+
+;; working with an external monitor
+(define-key key-minor-mode-map (kbd "s-n") 'make-frame)
+(define-key key-minor-mode-map (kbd "s-~") 'other-window)
+(define-key key-minor-mode-map (kbd "s-`") 'other-frame)
+
+(define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
+
+(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
+
+(define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
+
+(define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote) 
+(define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
+
+(define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
+
+(define-key key-minor-mode-map (kbd "s-/") 'rgrep)
+
+(define-key key-minor-mode-map (kbd "C-v") 'kdm/html2org-clipboard)
+
+
+(define-key key-minor-mode-map (kbd "s-r") 'counsel-recentf)
+
+(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
+(define-key key-minor-mode-map (kbd "M-,") 'insert-comma)
+
+
+(define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
+
+;; (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
+;; (define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
+
+
+(define-key key-minor-mode-map (kbd "M-s b") 'book-search)
+(define-key key-minor-mode-map (kbd "M-s c") 'current-buffers-search)
+
+
+(define-key key-minor-mode-map (kbd "s-;") 'helm-resume) 
+(define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
+(define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
+(define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode) 
+
+
+(define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
+
+(define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
+
+(global-set-key (kbd "C-c m") 'compose-mail)
+;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
+
+
+(define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
+
+(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
+
+(define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
+
+
+;; mu4e-gmail
+(define-key key-minor-mode-map (kbd "s-l") 'mu4e-gmail)
+(define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)
+
+
+
+;; don't know why this stopped working
+(define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
+(define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
+
+
+(define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
+
+(define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
+
+(define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
+
+(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
+
+
+
+(define-key key-minor-mode-map (kbd "<C-s-left>") 'work-on-book)
+
+
+
+(define-key key-minor-mode-map (kbd "s-j t d") 'jd-org-today)
+(define-key key-minor-mode-map (kbd "s-j c i") 'jd-clock-in)
+
+
+
+(define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
+(define-key key-minor-mode-map (kbd "C-.") 'searchlink)
+
+(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
+
+;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
+
+(define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
+
+(define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
+; org-narrow-to-subtree
+
+(define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+
+(define-key key-minor-mode-map (kbd "s-H") 'replace-inner)
+
+(define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
+
+(define-key key-minor-mode-map (kbd "M-q") 'unfill-region)
+
+(define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
+(define-key key-minor-mode-map (kbd "C-M-[") 'org-previous-subtree-and-narrow)
+
+(define-key key-minor-mode-map (kbd "C-]") 'org-next-subtree-same-level-and-narrow)
+
+(define-key key-minor-mode-map (kbd "ESC ESC") 'org-previous-subtree-same-level-and-narrow)
+
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+
+(define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
+
+(define-key key-minor-mode-map (kbd "s-|") 'path-copy-full-path-to-clipboard)
+
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
+
+;; (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(global-set-key (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+(define-key orgstruct-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+
+;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key key-minor-mode-map (kbd "C-s-v") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "M-v") 'kdm/html2org-clipboard)
+
+
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
+
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+
+
+(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
+
+(global-unset-key (kbd "C-S-r"))
+(define-key key-minor-mode-map (kbd "C-S-r") nil)
+(define-key org-mode-map (kbd "C-S-r") nil)
+
+(define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
+(define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
+
+
+(define-key key-minor-mode-map (kbd "s-:") 'reveal-in-finder)
+
+;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
+
+
+(define-key org-mode-map (kbd "s-O") 'reveal-in-finder)
+
+
+;; pop mark
+(define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
+
+;; projectile
+;; (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+
+;; and make it work in the minibuffer too
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
+(define-key minibuffer-local-map (kbd "s-c") 'copy-minibuffer-contents)
+
+(defun copy-minibuffer-contents (arg)
+ (interactive "p")
+(beginning-of-visual-line) 
+  (end-of-buffer) 
+ (copy-region-as-kill (mark) (point))
+(push-kill-ring-to-pasteboard)
+)
+
+
+(define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
+
+
+(define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
+
+(define-key key-minor-mode-map (kbd "s-0") 'widen)
+(define-key key-minor-mode-map (kbd "s-W") 'widen)
+(define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
+(define-key org-mode-map (kbd "C-c e") 'eval-subtree)
+
+(define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
+
+
+(define-key key-minor-mode-map (kbd "C-9") 'goto-last-change-reverse) ; super useful when editing
+(define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
+
+(define-key key-minor-mode-map (kbd "s-=") 'zoom-in-and-disable-menu-bar-mode)
+
+(define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
+(define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
+; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+; replaced it with multiple-cursors-hydra/body for now
+
+;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
+
+
+
+(define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
+;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
+
+;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
+
+
+
+(define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
+;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
+
+
+(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
+;; (define-key key-minor-mode-map (kbd "\|") 'deft)
+
+(define-key org-mode-map (kbd "M-K") 'kill-clause)
+(define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
+
+(define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading
+
+
+(define-key key-minor-mode-map (kbd "M-8") 'org-toggle-heading-same-level)
+(define-key key-minor-mode-map (kbd "M-*") 'org-toggle-todo-heading)
+;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
+
+
+(define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
+
+(define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
+
+(define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
+
+(define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
+(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r
+(define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
+(define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books
+(define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
+(define-key key-minor-mode-map (kbd "M-b M-b") 'work-on-book) ;
+
+(define-key key-minor-mode-map (kbd "M-b M-w") 'work-on-book) ;
+
+(define-key key-minor-mode-map (kbd "M-b lc") 'book-load-current) ;
+
+;; (define-key key-minor-mode-map (kbd "M-b ho") 'spacemacs/toggle-highlight-current-line-globally)
+
+
+;; book bindings
+(define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
+(define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
+
+(define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
+
+;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
+(define-key key-minor-mode-map (kbd "s-D") 'diredp-dired-recent-dirs)
+
+;; recent directories... but how to populate it?
+(define-key key-minor-mode-map (kbd "C-S-d") 'diredp-dired-recent-dirs)
+
+;; own structure editing
+(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
+
+
+
+;; For extracting content from my browser
+
+(define-key key-minor-mode-map (kbd "s-I") 'web-research-quotes)
+;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
+
+
+;; indirect buffer
+(define-key key-minor-mode-map (kbd "s-i") 'clone-indirect-buffer-other-window)
+
+
+
+;; and the keybinding
+(define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)
+(define-key key-minor-mode-map (kbd "C-k") 'my/kill-line-dwim)
+
+;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
+(define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
+(define-key key-minor-mode-map [s-down] 'end-of-buffer)
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "s-_") 'avy-pop-mark)
+;; use OSX standard keybinding for "Redo"
+(define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
+
+;; use OSX standard keybinding to increase or decrease font size
+(define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
+(define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
+
+;; rebind global help command so that I can use C-h for backspace
+(define-key key-minor-mode-map (kbd "M-h") 'help-command)
+
+;; very useful when encountering names and other unfamiliar words
+(define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
+
+(define-key key-minor-mode-map (kbd "s-j l a") 'jay-load-latex)
+(define-key key-minor-mode-map (kbd "s-j l t") 'jay-load-latex)
+
+(define-key key-minor-mode-map (kbd "M-s-v") 'kdm/html2org-clipboard)
+
+(define-key key-minor-mode-map (kbd "s-j o l") 'olivetti-mode)
+
+;; navigate between buffers, including uninteresting ones that are hidden by default
+(define-key key-minor-mode-map (kbd "M-s-<right>") 'switch-to-next-buffer)
+(define-key key-minor-mode-map (kbd "M-s-<left>") 'previous-buffer)
+
+;; deleting things
+;; (define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward)
+(define-key key-minor-mode-map (kbd "<backspace>") 'my/delete-backward-and-capitalize)
+
+;; a keybinding for "delete" in addition to "backspace"
+(define-key key-minor-mode-map (kbd "C-<backspace>") 'delete-char)
+(define-key key-minor-mode-map (kbd "M-<backspace>") 'backward-kill-word-correctly-and-capitalize)
+
+;; pomodoro
+(define-key key-minor-mode-map (kbd "C-c C-x pi") 'pomodoro-start)
+(define-key key-minor-mode-map (kbd "C-c C-x po") 'pomodoro-stop)
+
+;; find files using helm
+(define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
+
+;; search using helm-swoop
+(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+(global-set-key (kbd "M-i") 'helm-multi-swoop-all)
+
+;; edit Emacs preferences using standard OSX keybinding for preferences
+(define-key key-minor-mode-map (kbd "s-,") 'customize-group)
+
+;; grep, using current project as default
+(define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
+
+;; ag, using current folder as default 
+;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
+;; does that keyvinding work?
+
+;; some custom functions
+
+(define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
+
+;; org-mime
+;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
+;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
+
+
