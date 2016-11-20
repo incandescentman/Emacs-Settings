@@ -7592,3 +7592,11 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 ) 
 #+END_SRC
 
+
+* mouse scrolling
+#+BEGIN_SRC emacs-lisp
+(setq mac-wheel-button-is-mouse-2 nil) 
+;; so that the middle button works 
+
+
+#+END_SRC

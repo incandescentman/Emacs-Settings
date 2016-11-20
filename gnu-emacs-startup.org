@@ -594,7 +594,6 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -2517,7 +2516,7 @@ t))))
 #+END_EXAMPLE
 
 
-This version leaves a rogue comma:
+This old version leaves a rogue comma:
 #+BEGIN_EXAMPLE emacs-lisp
 
 ;; Identify the end of sentences globally.
@@ -2541,8 +2540,6 @@ This version leaves a rogue comma:
 
 Old version that I retrieved:
 #+BEGIN_SRC emacs-lisp
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+[\"”]?")
 (defun kill-clause ()
   (interactive)
   (smart-expand)
@@ -2564,10 +2561,13 @@ Old version that I retrieved:
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading)))
 (when
-(looking-back ", , ")
-(new-org-delete-backward-char 2) 
-t)))
-
+(or    (looking-back ", , ")
+     (looking-back ":: ")
+     )
+(new-org-delete-backward-char 2)
+(my/fix-space)
+t)
+))
 #+END_SRC
 
 
