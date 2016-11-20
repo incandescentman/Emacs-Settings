@@ -7543,5 +7543,61 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 
 * weather
 #+BEGIN_SRC emacs-lisp
+(use-package  
+ :commands 
+ :bind (
 
+     :map
+
+     )
+ :init
+(setq yahoo-weather-location "New York " 
+setq yahoo-weather-mode t 
+setq yahoo-weather-temperture-format "%d " 
+setq yahoo-weather-use-F t 
+setq yahoo-weather-format "[New York - %(weather) - %(temperature)F]"
+)
+
+ :config
+
+
+) 
+#+END_SRC
+
+* weather
+#+BEGIN_SRC emacs-lisp
+(use-package wttrin
+ :ensure t
+ :commands (wttrin)
+ :init
+ (setq wttrin-default-cities '("Toronto"
+                "New York"))) 
+
+
+;; function to open wttrin with first city on list
+(defun bjm/wttrin ()
+  "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
+  (interactive)
+  ;; save window arrangement to register 
+  (window-configuration-to-register :pre-wttrin)
+  (delete-other-windows)
+  ;; save frame setup
+  (save-frame-config)
+  (set-frame-width (selected-frame) 130)
+  (set-frame-height (selected-frame) 48)
+  ;; call wttrin
+  (wttrin-query (car wttrin-default-cities))
+  ) 
+#+END_SRC
+
+* forecast
+#+BEGIN_SRC emacs-lisp
+ (require 'forecast)
+ (setq forecast-latitude 41.168602
+    forecast-longitude 29.047024
+    forecast-city "New York"
+    forecast-country "United States"
+forecast-api-key "<49916b926e46b156d9e7e6ba4e058811>"
+    )
+ 
 #+END_SRC
