@@ -92,7 +92,8 @@ jay-packages
   zenburn-theme
   zone
 yahoo-weather
-  ))
+wttrin
+))
 
 
 
@@ -229,6 +230,8 @@ adaptive-wrap
 (defun jay/init-rspec-mode () (use-package rspec-mode))
 (defun jay/init-js2-mode () (use-package js2-mode))
 (defun jay/init-yahoo-weather () (use-package yahoo-weather))
+
+(defun jay/init-wttrin () (use-package wttrin))
 
 
 

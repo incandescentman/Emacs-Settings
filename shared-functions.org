@@ -7542,27 +7542,6 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 #+END_SRC
 
 * weather
-#+BEGIN_SRC emacs-lisp
-(use-package  
- :commands 
- :bind (
-
-     :map
-
-     )
- :init
-(setq yahoo-weather-location "New York " 
-setq yahoo-weather-mode t 
-setq yahoo-weather-temperture-format "%d " 
-setq yahoo-weather-use-F t 
-setq yahoo-weather-format "[New York - %(weather) - %(temperature)F]"
-)
-
- :config
-
-
-) 
-#+END_SRC
 
 * weather
 #+BEGIN_SRC emacs-lisp
@@ -7590,14 +7569,26 @@ setq yahoo-weather-format "[New York - %(weather) - %(temperature)F]"
   ) 
 #+END_SRC
 
-* forecast
+* yahoo weather
 #+BEGIN_SRC emacs-lisp
- (require 'forecast)
- (setq forecast-latitude 41.168602
-    forecast-longitude 29.047024
-    forecast-city "New York"
-    forecast-country "United States"
-forecast-api-key "<49916b926e46b156d9e7e6ba4e058811>"
-    )
- 
+(use-package 
+ :commands 
+ :bind (
+
+  :map
+
+  )
+ :init
+(setq yahoo-weather-location "New York " 
+yahoo-weather-mode t 
+yahoo-weather-temperture-format "%d " 
+yahoo-weather-use-F t 
+yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
+)
+
+ :config
+
+
+) 
 #+END_SRC
+
