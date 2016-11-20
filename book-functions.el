@@ -143,7 +143,7 @@ emacs-settings)))
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "warm.org")
+  (kill-buffer "momentum.org")
   (error nil))
 
 (org-cycle-agenda-files)

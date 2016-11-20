@@ -3287,7 +3287,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
 (setq projectile-globally-ignored-directories
    (quote
-    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "archived-work" "images" "excel-mindnode-omni"))) 
+    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn"".tmp" "archived-work" "images" "excel-mindnode-omni"))) 
 
 
 (setq projectile-globally-ignored-files
@@ -7539,4 +7539,9 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
        (when (and (eq (org-element-type element) 'keyword)
             (string= (org-element-property :key element) "INCLUDE"))
         (replace-match "EXPORT \\1" nil nil nil 1))))))))) 
+#+END_SRC
+
+* weather
+#+BEGIN_SRC emacs-lisp
+
 #+END_SRC

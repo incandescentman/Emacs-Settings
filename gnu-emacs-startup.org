@@ -289,6 +289,8 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (looking-back "=")
 (looking-at "<")
 (looking-at ">")
+(looking-at "{")
+(looking-at "}")
 )
 ;; end if
 
@@ -2463,7 +2465,8 @@ Oleh
           (beginning-of-line)
           (search-forward hl-text (point-at-eol))
           (replace-match (format "%s - original" hl-text) nil t)
-          (org-align-tags-here org-tags-column))))))
+;; (org-align-tags-here org-tags-column)
+)))))
 #+END_SRC
 
 * smart punctuation

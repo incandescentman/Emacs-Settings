@@ -91,7 +91,7 @@ jay-packages
   xml-rpc
   zenburn-theme
   zone
-
+yahoo-weather
 mu4e-send-delay
   ))
 
@@ -229,7 +229,8 @@ adaptive-wrap
 (defun jay/init-dired-quick-sort () (use-package dired-quick-sort))
 (defun jay/init-rspec-mode () (use-package rspec-mode))
 (defun jay/init-js2-mode () (use-package js2-mode))
-(defun jay/mu4e-send-delay () (use-package mu4e-send-delay))
+(defun jay/init-mu4e-send-delay () (use-package mu4e-send-delay))
+(defun jay/init-yahoo-weather () (use-package yahoo-weather))
 
 
 
