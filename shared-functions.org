@@ -7598,5 +7598,6 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (setq mac-wheel-button-is-mouse-2 nil) 
 ;; so that the middle button works 
 
+(setq scroll-conservatively 1000) ; seems nice
 
 #+END_SRC
