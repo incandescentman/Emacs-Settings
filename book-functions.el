@@ -103,7 +103,7 @@ emacs-settings)))
 (interactive)
 ;; (book-dired)
 (condition-case nil
-  (kill-buffer "warm.org")
+  (kill-buffer "momentum.org")
   (error nil))
 (org-cycle-agenda-files)
 )

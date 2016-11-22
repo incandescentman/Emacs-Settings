@@ -439,6 +439,9 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+(define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-paragraph-from-beginning)
 
 (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
@@ -1087,8 +1090,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun insert-comma ()
  (interactive)
 (cond (mark-active
-   (progn (delete-region (mark) (point)))))
-
+   (progn (delete-region (mark) (point))))) 
  (insert ",")
 )
 
@@ -1097,10 +1099,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 "Insert a goodamn colon!"
  (interactive)
 (cond (mark-active
-  (progn (delete-region (mark) (point)))))
-
+  (progn (delete-region (mark) (point))))) 
  (insert ":")
 ) 
+
+(defun insert-question-mark ()
+"Insert a freaking question mark!!"
+ (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point))))) 
+ (insert "?")
+) 
+
 
 #+END_SRC
 

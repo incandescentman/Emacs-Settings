@@ -7601,3 +7601,11 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (setq scroll-conservatively 1000) ; seems nice
 
 #+END_SRC
+
+* ignore secret headlines tagged with "ignore"
+#+BEGIN_SRC emacs-lisp
+(require 'ox-extra)
+(ox-extras-activate '(ignore-headlines)) 
+#+END_SRC
+
+Works!
