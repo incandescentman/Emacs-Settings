@@ -2517,6 +2517,8 @@ This version kill org-mode headings by 'kill-line'
 
 (looking-back ", , ")
 (looking-back ",, ")
+(looking-back ",, ")
+(looking-back ": : ")
 )
 (new-org-delete-backward-char 2) 
 (my/fix-space)
