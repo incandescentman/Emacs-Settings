@@ -2647,7 +2647,8 @@ t)
                     (save-excursion (my/fix-space))))))))))
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
-      (org-align-tags-here org-tags-column)))
+; (org-align-tags-here org-tags-column)
+))
 #+END_SRC
 
 ** smart-period
@@ -2985,6 +2986,8 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
   (unless
  
       (or
+       (looking-at "[ ]*\"")          ; if looking at a quote? Might not work
+
        (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
        (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd 
