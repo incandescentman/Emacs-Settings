@@ -463,7 +463,12 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
 
+
+(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree) 
+(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree) 
+
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
+
 
 (define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote) 
 (define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
@@ -545,7 +550,6 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
 (define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
-(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
 
