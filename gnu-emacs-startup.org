@@ -515,6 +515,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
 (define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
+(define-key key-minor-mode-map (kbd "s-j i c") 'org-table-insert-column)
+(define-key key-minor-mode-map (kbd "s-j i r") 'org-table-insert-row)
 
 
 ;; mu4e-gmail

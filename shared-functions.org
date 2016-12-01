@@ -2307,6 +2307,21 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 )
 
 
+(defun jd-org-approach () 
+ "insert a new heading with today's date"
+ (interactive)
+(insert "\n** ") 
+ (org-insert-time-stamp (current-time))
+(insert "\n")
+(insert "*** TODO morning pages\n") 
+(insert "*** TODO meditate\n") 
+(insert "*** TODO work on book\n") 
+(insert "**** TODO pomodoro #1\n") 
+(insert "**** TODO pomodoro #2\n") 
+(insert "*** TODO an approach\n") 
+)
+
+
 (defun jd-org-today-and-accountability ()
   "insert a new heading with today's date"
   (interactive)
