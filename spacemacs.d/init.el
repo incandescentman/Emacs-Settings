@@ -86,8 +86,6 @@ smex
 evil-mode evil-escape evil-local evil-org
 evil-search-highlight-persist evil-surround eyebrowse global-undo-tree-mode
 evil-unimpaired
-auto-revert
-
 
 ;; didn't work
 auto-encryption-mode
@@ -431,8 +429,6 @@ layers configuration. You are free to put any user code."
 
   (toggle-menu-bar-mode-from-frame)
 
-  (setq auto-revert-interval 1)
-
   (setq org-hide-leading-stars nil)
 
   (smartparens-global-mode 1)
@@ -453,9 +449,6 @@ layers configuration. You are free to put any user code."
     )
 
   (iterm-mode)
-
-  (setq global-auto-revert-mode 1)
-
 
   (setq org-emphasis-alist
         (quote

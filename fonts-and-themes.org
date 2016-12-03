@@ -353,7 +353,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 '(bold ((t (:inherit font-lock-warning-face :weight bold :height 0.8 :family "Sans Serif" :foreground "red"))))
 '(italic ((t (:family "Garamond" :foreground "darkgreen" slant italic :height 1.0))))
 '(org-link ((t (:underline nil))))
-'(org-code ((t (:family "Courier" :height 0.8))))
+'(org-code ((t (:family "Monaco" :height 0.65))))
 ))
 
 

@@ -1029,12 +1029,15 @@ Make org-capture open in full window! :-)
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task) 
 #+END_SRC
 
+** no autorevert
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode -1)
+#+END_SRC
 
 ** org-mode hooks 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-flyspell) 
 (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
-(add-hook 'org-mode-hook (lambda () (palimpsest-mode 1)))
 ;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
