@@ -14,6 +14,13 @@
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+(define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
+
+(define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point) 
+
+(define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-paragraph-from-beginning)
 
 (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
@@ -35,7 +42,12 @@
 
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
 
+
+(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree) 
+(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree) 
+
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
+
 
 (define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote) 
 (define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
@@ -82,6 +94,8 @@
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
 (define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
+(define-key key-minor-mode-map (kbd "s-j i c") 'org-table-insert-column)
+(define-key key-minor-mode-map (kbd "s-j i r") 'org-table-insert-row)
 
 
 ;; mu4e-gmail
@@ -117,7 +131,6 @@
 (define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
 (define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
-(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
 
@@ -169,7 +182,6 @@
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
-(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
 
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 ;; (define-key rebuilder-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -203,6 +215,7 @@
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'copy-minibuffer-contents)
+(define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
 
 (defun copy-minibuffer-contents (arg)
  (interactive "p")
@@ -213,7 +226,6 @@
 )
 
 
-(define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
 
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)

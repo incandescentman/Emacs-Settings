@@ -540,7 +540,7 @@ layers configuration. You are free to put any user code."
 ;; (horizontal-cursor)
 (box-cursor)
 (incarnadine-cursor)
-;; (scroll-bar-mode 1)
+(scroll-bar-mode -1)
 (defun package--save-selected-packages (&rest opt) nil)
 
 (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")

@@ -181,6 +181,16 @@ Manually remove the scrollbar if default setting fails when creating a new frame
 #+BEGIN_SRC emacs-lisp
 (defun scrollbar-init ()
   (interactive)
+  (scroll-bar-mode -1)
+  )
+
+(defun scrollbar-mode-turn-off-scrollbar ()
+  (interactive)
+  (scroll-bar-mode -1)
+  )
+
+(defun scrollbar-mode-turn-on-scrollbar ()
+  (interactive)
   (scroll-bar-mode 1)
   )
 #+END_SRC
@@ -439,6 +449,10 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+(define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
+
+(define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point) 
 
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
 
