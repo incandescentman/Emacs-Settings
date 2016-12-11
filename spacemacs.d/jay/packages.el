@@ -17,7 +17,7 @@ jay-packages
 ;; that's the value (it is a list of packages)
 '(
   auto-capitalize
-  auto-complete
+;;  auto-complete
   bongo
   buffer-stack
   caps-lock
@@ -29,9 +29,9 @@ jay-packages
   cyberpunk-theme
   dired+
   dired-details+
-  dired-hacks-utils
+;;  dired-hacks-utils
   dired-quick-sort
-  dired-single
+;;  dired-single
   dired-sort-menu
   discover-my-major
   expand-region
@@ -43,21 +43,21 @@ jay-packages
   frame-restore
   fuzzy
   gist
-  graphviz-dot-mode
-  helm
+  ;; graphviz-dot-mode
+;;  helm
   helm-cmd-t
-  helm-projectile
+;;  helm-projectile
   ido-hacks
   imenu-list
-  js2
+  ;; js2
   key-chord
-  magit
-  markdown-mode
+  ;; magit
+;;  markdown-mode
   maxframe
   multicolumn
   multiple-cursors
   nm
-  notmuch
+;;  notmuch
   olivetti
   openwith
   org-bookmark-heading
@@ -70,7 +70,7 @@ jay-packages
   polymode
   popup
   project-explorer
-  projectile
+;;  projectile
   rainbow-mode
   recentf
   rspec-mode
@@ -113,6 +113,8 @@ adaptive-wrap
 ;;   "Initialize my package"
 
 (defun jay/init-autopair () (use-package autopair))
+(defun jay/init-bongo () (use-package autopair))
+(defun jay/init-cyberpunk-theme () (use-package cyberpunk-theme))
 (defun jay/init-buffer-stack () (use-package buffer-stack))
 (defun jay/init-org-fstree () (use-package org-fstree))
 (defun jay/init-auto-capitalize () (use-package auto-capitalize))
@@ -120,6 +122,13 @@ adaptive-wrap
 (defun jay/init-ido-hacks () (use-package ido-hacks))
 (defun jay/init-openwith () (use-package openwith))
 (defun jay/init-wc-mode () (use-package wc-mode))
+(defun jay/init-frame-restore () (use-package frame-restore))
+(defun jay/init-frame-cmds () (use-package frame-cmds))
+
+
+
+
+(defun jay/init-popup () (use-package popup))
 (defun jay/init-discover () (use-package discover))
 (defun jay/init-engine-mode () (use-package engine-mode))
 (defun jay/init-point-stack  () (use-package point-stack))
