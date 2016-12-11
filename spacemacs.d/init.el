@@ -56,7 +56,9 @@ values."
 ;;      emacs-lisp
 git
      ;; markdown
-     org
+
+org :variables
+org-enable-bootstrap-support t
 ;;     osx
      ;;   xkcd
 smex
@@ -607,6 +609,9 @@ layers configuration. You are free to put any user code."
 
 (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
 (require 'mu4e-send-delay)
+
+;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
+  (setq spaceline-org-clock-p t)
 
 )
 

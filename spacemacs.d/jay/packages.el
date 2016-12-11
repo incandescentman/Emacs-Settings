@@ -76,10 +76,10 @@ jay-packages
   rspec-mode
   scratch
   scratch-message
-  smex
-  solarized-theme
+  ;; smex
+  ;; solarized-theme
   stripe-buffer
-  sublime-themes
+  ;; sublime-themes
   tabbar
   tiny
   unfill
@@ -88,8 +88,8 @@ jay-packages
   wrap-region
   writeroom-mode
   xah-replace-pairs
-  xml-rpc
-  zenburn-theme
+  ;; xml-rpc
+  ;; zenburn-theme
   zone
 yahoo-weather
 wttrin
