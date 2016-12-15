@@ -1268,7 +1268,7 @@ To enable Edit with Emacs in Chrome:
 (defun jay-load-latex ()
 (interactive) 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
+;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el") 
 (use-package blue-ruin) 
@@ -1410,7 +1410,7 @@ when replying, look kind of like gmail
 
 
 
-(add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
+;; (add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
 (add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
 ;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
 ;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
@@ -1421,7 +1421,7 @@ when replying, look kind of like gmail
 (org-todo 'done) 
 (previous-line)
 (org-pomodoro)
-(work-on-book)
+;; (work-on-book)
 (toggle-fullscreen)
 )
 

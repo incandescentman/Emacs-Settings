@@ -105,6 +105,7 @@ emacs-settings)))
 (condition-case nil
   (kill-buffer "momentum.org")
   (error nil))
+(adobe-garamond-pro)
 (org-cycle-agenda-files)
 )
 

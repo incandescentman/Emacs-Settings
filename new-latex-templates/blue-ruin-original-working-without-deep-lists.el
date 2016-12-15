@@ -59,6 +59,7 @@
 \\DeclareTextFontCommand{\\textit}{\\\itshape\\color{electricblue}}
 
 
+
 \\usepackage{textcase}
 
 \\pagenumbering{arabic}
@@ -82,7 +83,7 @@
     \\vskip 1cm
   {\\mytitlefont\\fontsize{75}{85}\\bfseries{\\@title}\\par}
     \\vskip 1cm
-    
+
     %{\\myauthorfont\\fontsize{30}{40}{{\\bfseries{\\@degree}\\par}}}
 
 \\vfill
