@@ -788,6 +788,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; very useful when encountering names and other unfamiliar words
 (define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
 
+(define-key key-minor-mode-map (kbd "s-j s w") 'crux-swap-windows)
+
 (define-key key-minor-mode-map (kbd "s-j l a") 'jay-load-latex)
 (define-key key-minor-mode-map (kbd "s-j l t") 'jay-load-latex)
 

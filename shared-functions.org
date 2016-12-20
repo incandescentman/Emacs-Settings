@@ -1268,7 +1268,7 @@ To enable Edit with Emacs in Chrome:
 (defun jay-load-latex ()
 (interactive) 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
-;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el") 
 (use-package blue-ruin) 
@@ -1421,8 +1421,7 @@ when replying, look kind of like gmail
 (org-todo 'done) 
 (previous-line)
 (org-pomodoro)
-;; (work-on-book)
-(toggle-fullscreen)
+;; (work-on-book) 
 )
 
 #+END_SRC
@@ -7650,3 +7649,16 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 Works!
+
+* screenflow
+#+BEGIN_SRC emacs-lisp
+(defun screenflick-mode ()
+(interactive) 
+ (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
+(horizontal-cursor)
+(spacemacs/toggle-highlight-current-line-globally-off)
+(adobe-garamond-pro)
+(toggle-fullscreen)
+(writeroom-mode)
+) 
+#+END_SRC

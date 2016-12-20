@@ -113,7 +113,7 @@ adaptive-wrap
 ;;   "Initialize my package"
 
 (defun jay/init-autopair () (use-package autopair))
-(defun jay/init-bongo () (use-package autopair))
+(defun jay/init-bongo () (use-package bongo))
 (defun jay/init-cyberpunk-theme () (use-package cyberpunk-theme))
 (defun jay/init-buffer-stack () (use-package buffer-stack))
 (defun jay/init-org-fstree () (use-package org-fstree))

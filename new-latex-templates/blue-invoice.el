@@ -1,4 +1,4 @@
-(provide 'blue-invoicetitle)
+(provide 'blue-invoice)
 
 (add-to-list 'org-latex-classes
   '("blue-invoice"
