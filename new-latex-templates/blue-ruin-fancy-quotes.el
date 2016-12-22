@@ -185,7 +185,7 @@
 
 
 
-\\definecolor{azure}{HTML}{f2feff}
+
 
 \\usepackage{lipsum}
 \\usepackage{tikz}
@@ -203,7 +203,7 @@
   fancy quotes width/.initial={.8\\linewidth},
   fancy quotes marks/.style={
     scale=8,
-    text=black,
+    text=white,
     inner sep=0pt,
   },
   fancy quotes opening/.style={
@@ -216,7 +216,7 @@
     show background rectangle,
     inner frame xsep=0pt,
     background rectangle/.style={
-      fill=azure,
+      fill=gray!25,
       rounded corners,
     },
   }
@@ -232,6 +232,7 @@
 {\\egroup;
 \\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
 \\endtikzpicture}
+
 \\makeatother
 
 
