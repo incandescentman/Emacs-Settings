@@ -661,7 +661,10 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** imenu-list
 #+BEGIN_SRC emacs-lisp
-;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+(require 'imenu-list)
+(add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+(setq imenu-list-position (quote left))
+
 #+END_SRC
 
 Edit: in response to your comment, here's a simple command that, when invoked from the buffer clone, will switch to the base buffer and move point to wherever the cursor was in the buffer clone:
@@ -7661,4 +7664,15 @@ Works!
 (toggle-fullscreen)
 (writeroom-mode)
 ) 
+#+END_SRC
+
+
+* narrow
+#+BEGIN_SRC emacs-lisp
+(spaceline-define-segment narrow
+ "Display Narrowed when buffer is narrowed."
+ (when (buffer-narrowed-p)
+ "Narrowed")) 
+
+(spaceline-spacemacs-theme 'narrow) 
 #+END_SRC
