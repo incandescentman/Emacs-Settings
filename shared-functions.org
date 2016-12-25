@@ -2953,6 +2953,16 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 #+END_SRC
 
+** cut-subtree
+   :PROPERTIES:
+   :ID:       D283A971-F9C3-4683-A419-82F7D9816F72
+   :END:
+
+   #+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
+(define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
+   #+END_SRC
+
 * Searching for things
 ** isearch
 *** isearch settings
@@ -3187,6 +3197,82 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
       (interactive)
       (helm-ag (projectile-project-root))))
    #+END_SRC 
+
+** isearch
+   :PROPERTIES:
+   :ID:       646E722F-EEEE-4986-9DFA-A0A11068ECAD
+   :END:
+*** isearch current word
+  isearch Current Word
+
+  Buy Xah Emacs Tutorial. Master emacs benefits for life.
+  PayPal
+  Xah Lee, 2010-05-29, …, 2015-09-03
+  Here's a command that will do isearch of the word under cursor.
+
+  (defun xah-search-current-word ()
+    "Call `isearch' on current word or text selection.
+  "word" here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
+  URL `http://ergoemacs.org/emacs/modernization_isearch.html'
+  Version 2015-04-09"
+    (interactive)
+    (let ( ξp1 ξp2 )
+      (if (use-region-p)
+          (progn
+            (setq ξp1 (region-beginning))
+            (setq ξp2 (region-end)))
+        (save-excursion
+          (skip-chars-backward "-_A-Za-z0-9")
+          (setq ξp1 (point))
+          (right-char)
+          (skip-chars-forward "-_A-Za-z0-9")
+          (setq ξp2 (point))))
+      (setq mark-active nil)
+      (when (< ξp1 (point))
+        (goto-char ξp1))
+      (isearch-mode t)
+      (isearch-yank-string (buffer-substring-no-properties ξp1 ξp2))))
+
+  (define-key key-minor-mode-map (kbd "M-o") 'xah-search-current-word)
+
+  You need to give it a easy key. Such as 【Ctrl+3】. 〔➤ Emacs: How to Define Keys〕 Note: if you use the key 【Ctrl+⇧ Shift+s】, it won't work if emacs runs in terminal.
+
+
+
+
+
+*** isearch arrow keys
+
+  Here's very convenient keys for isearch. Put it in your emacs init.
+
+
+  #+BEGIN_SRC emacs-lisp
+
+(progn
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
+
+;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+ )
+
+  #+END_SRC
+
+
+  when in isearch, the arrow keys will:
+
+  → next occurrence.
+  ← previous occurrence.
+  ↑ previous search term.
+  ↓ next search term.
+  Enter ↵ exit isearch.
+
+  This way, searching forward/backward is just one single key press, no key combination.
+
+  This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
+
 
 * these seem to need to go at the end
 
@@ -3691,12 +3777,15 @@ Single Capitals as you type."
   #+END_SRC
 
 * email 
+
 ** mu4e 
 *** mu4e setup
  #+BEGIN_SRC emacs-lisp 
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
-(setq user-mail-address '("dixit@aya.yale.edu")) 
+(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-full-name "Jay Dixit") 
+
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
@@ -4070,45 +4159,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 #+END_SRC
 
 
-** gnus
-
-
-  #+BEGIN_SRC emacs-lisp
-;; (require 'gnus-dired)
-;; make the `gnus-dired-mail-buffers' function also work on
-;; message-mode derived modes, such as mu4e-compose-mode
-(defun gnus-dired-mail-buffers ()
-  "Return a list of active message buffers."
-  (let (buffers)
-    (save-current-buffer
-      (dolist (buffer (buffer-list t))
-        (set-buffer buffer)
-        (when (and (derived-mode-p 'message-mode)
-                   (null message-sent-message-via))
-          (push (buffer-name buffer) buffers))))
-    (nreverse buffers)))
-
-(setq gnus-dired-mail-mode 'mu4e-user-agent)
-(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode) 
-  #+END_SRC
-
-  With this, I can attach a file as an attachment to a new email message by entering C-c RET C-a, and I'm good to go. 
-
-
-*** gnus keybindings
-
-    #+BEGIN_SRC emacs-lisp
-(define-key gnus-summary-mode-map "c"
-  'compose-mail)
- 
-(define-key gnus-summary-mode-map "a"
-  'gnus-summary-wide-reply) 
-
-
-    #+END_SRC
-
-
-
+* 
 ** org-contacts
 
   #+BEGIN_SRC emacs-lisp
@@ -4158,15 +4209,8 @@ After this, you should be able to add contacts using a o in the headers view and
 (org-mime-replace-multy-gt))) 
 #+END_SRC 
 
-* email
-
-** gnus
-#+BEGIN_SRC emacs-lisp
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq user-full-name "Jay Dixit")
 
 
-#+END_SRC emacs-lisp
 
 
 *** new-email-from-subtree-with-signature 
@@ -4604,16 +4648,6 @@ as the subject."
   #+END_SRC
 
 
-* insert slash no abbrev
-
-  #+BEGIN_EXAMPLE emacs-lisp
-(defun jay/insert-slash ()
-  (interactive)
-  (insert "/")
-  )
-  #+END_EXAMPLE 
-
-
 * poetry
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
 
@@ -4744,16 +4778,6 @@ C-c q
 
   #+END_SRC
 
-* mobile-org
-
-  #+BEGIN_SRC emacs-lisp
-;; Set to the location of your Org files on your local system
-(setq org-directory "/Users/jay/Dropbox/writing/notationaldata")
-;; Set to the name of the file where new notes will be stored
-(setq org-mobile-inbox-for-pull "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
-;; Set to <your Dropbox root directory>/MobileOrg.
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg") 
-  #+END_SRC
 
 * bold-region-or-point
 #+BEGIN_SRC emacs-lisp
@@ -4773,82 +4797,10 @@ C-c q
 
 
 
+* org todo stuff
+** move point to next TODO heading upon DONE state change 
 
-* isearch current word
-isearch Current Word
-
-Buy Xah Emacs Tutorial. Master emacs benefits for life.
-PayPal
-Xah Lee, 2010-05-29, …, 2015-09-03
-Here's a command that will do isearch of the word under cursor.
-
-(defun xah-search-current-word ()
-  "Call `isearch' on current word or text selection.
-"word" here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
-URL `http://ergoemacs.org/emacs/modernization_isearch.html'
-Version 2015-04-09"
-  (interactive)
-  (let ( ξp1 ξp2 )
-    (if (use-region-p)
-        (progn
-          (setq ξp1 (region-beginning))
-          (setq ξp2 (region-end)))
-      (save-excursion
-        (skip-chars-backward "-_A-Za-z0-9")
-        (setq ξp1 (point))
-        (right-char)
-        (skip-chars-forward "-_A-Za-z0-9")
-        (setq ξp2 (point))))
-    (setq mark-active nil)
-    (when (< ξp1 (point))
-      (goto-char ξp1))
-    (isearch-mode t)
-    (isearch-yank-string (buffer-substring-no-properties ξp1 ξp2))))
-
-(define-key key-minor-mode-map (kbd "M-o") 'xah-search-current-word)
-
-You need to give it a easy key. Such as 【Ctrl+3】. 〔➤ Emacs: How to Define Keys〕 Note: if you use the key 【Ctrl+⇧ Shift+s】, it won't work if emacs runs in terminal.
-
-
-
-
-
-* isearch arrow keys
-
-Here's very convenient keys for isearch. Put it in your emacs init.
-
-
-#+BEGIN_SRC emacs-lisp
-
-(progn
-  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
-;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
-;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
-
-;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
- )
-
-#+END_SRC
-
-
-when in isearch, the arrow keys will:
-
-→ next occurrence.
-← previous occurrence.
-↑ previous search term.
-↓ next search term.
-Enter ↵ exit isearch.
-
-This way, searching forward/backward is just one single key press, no key combination.
-
-This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
-
-
-* move point to next TODO heading upon DONE state change 
-
-  #+BEGIN_SRC emacs-lisp 
+   #+BEGIN_SRC emacs-lisp 
 (defun bb/next-heading (&rest args) 
 (when 
 
@@ -4861,11 +4813,11 @@ This is especially useful with a command that searches current word. See: Emacs:
 
 
 (advice-add 'org-todo :after 'bb/next-heading) 
-  #+END_SRC
+   #+END_SRC
 
 
-* Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_EXAMPLE emacs-lisp
+** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
+ #+BEGIN_EXAMPLE emacs-lisp
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 
@@ -4895,14 +4847,7 @@ event of an error or nonlocal exit."
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
-#+END_EXAMPLE 
-
-* cut-subtree
-
-  #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
-(define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
-  #+END_SRC
+ #+END_EXAMPLE 
 
 * multiple cursors
 
@@ -5671,13 +5616,14 @@ Wow, this works.
 #+END_EXAMPLE
 
 
-* org-twbs
-#+BEGIN_SRC emacs-lisp
+* exporting 
+** org-twbs
+ #+BEGIN_SRC emacs-lisp
 '(org-twbs-head-include-default-style t)
  '(org-twbs-htmlize-output-type (quote inline-css))
  '(org-twbs-indent t)
 
-#+END_SRC
+ #+END_SRC
 
 
 * no inline images
@@ -5976,75 +5922,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 
 #+END_EXAMPLE 
 
-* navigation 
-** up by degrees
-#+BEGIN_SRC emacs-lisp
-(defun up-by-degrees ()
- (interactive)
-       (previous-line 6)
- )
-
-
-(defun down-by-degrees ()
- (interactive)
-       (next-line 6)
- )
-#+END_SRC
-
-;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
-;; any line that ends with a colon 
-
-** next-subtree-same-level-and-narrow
-#+BEGIN_SRC emacs-lisp
-(defun org-next-subtree-same-level-and-narrow ()
- (interactive)
- (widen)
- (org-forward-heading-same-level 1)
- (org-narrow-to-subtree)
- )
-
-(defun org-previous-subtree-same-level-and-narrow ()
- (interactive)
-(org-previous-visible-heading 1) 
- (widen)
-(org-backward-heading-same-level 1) 
- (org-narrow-to-subtree)
- ) 
-#+END_SRC
-
-** next-subtree-and-narrow - original
-#+BEGIN_SRC emacs-lisp
-(defun org-next-subtree-and-narrow ()
- (interactive)
- (widen)
- (org-next-visible-heading 1)
- (org-narrow-to-subtree)
- )
-
-(defun org-previous-subtree-and-narrow ()
- (interactive)
-(org-previous-visible-heading 1) 
- (widen)
- (org-previous-visible-heading 1)
- (org-narrow-to-subtree)
- ) 
-#+END_SRC
-
-** filing
-   :PROPERTIES:
-   :ID:       8DEDEA6E-ED28-46E7-8277-588FE1048EA6
-   :END:
-*** refile active region or subtree
-
-  #+BEGIN_SRC emacs-lisp
-(defun refile-region-or-subtree ()
-  (interactive)
-  (if (region-active-p)
-      (call-interactively 'jay-refile-region)
-    (org-refile)))
-  #+END_SRC
-
-
 * multiple-cursors-mode-map
 #+BEGIN_SRC emacs-lisp 
  (define-key mc/keymap (kbd ".") 'insert-period) 
@@ -6310,6 +6187,75 @@ cmd)
      #+END_SRC
 
 
+** navigation 
+*** up by degrees
+ #+BEGIN_SRC emacs-lisp
+(defun up-by-degrees ()
+ (interactive)
+       (previous-line 6)
+ )
+
+
+(defun down-by-degrees ()
+ (interactive)
+       (next-line 6)
+ )
+ #+END_SRC
+
+ ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
+ ;; any line that ends with a colon 
+
+*** next-subtree-same-level-and-narrow
+ #+BEGIN_SRC emacs-lisp
+(defun org-next-subtree-same-level-and-narrow ()
+ (interactive)
+ (widen)
+ (org-forward-heading-same-level 1)
+ (org-narrow-to-subtree)
+ )
+
+(defun org-previous-subtree-same-level-and-narrow ()
+ (interactive)
+(org-previous-visible-heading 1) 
+ (widen)
+(org-backward-heading-same-level 1) 
+ (org-narrow-to-subtree)
+ ) 
+ #+END_SRC
+
+*** next-subtree-and-narrow - original
+ #+BEGIN_SRC emacs-lisp
+(defun org-next-subtree-and-narrow ()
+ (interactive)
+ (widen)
+ (org-next-visible-heading 1)
+ (org-narrow-to-subtree)
+ )
+
+(defun org-previous-subtree-and-narrow ()
+ (interactive)
+(org-previous-visible-heading 1) 
+ (widen)
+ (org-previous-visible-heading 1)
+ (org-narrow-to-subtree)
+ ) 
+ #+END_SRC
+
+*** filing
+    :PROPERTIES:
+    :ID:       8DEDEA6E-ED28-46E7-8277-588FE1048EA6
+    :END:
+**** refile active region or subtree
+
+   #+BEGIN_SRC emacs-lisp
+(defun refile-region-or-subtree ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'jay-refile-region)
+    (org-refile)))
+   #+END_SRC
+
+
 * Make Messages Buffer modifiable in Emacs 24.4
 Chen Bin
 
@@ -6460,6 +6406,19 @@ into the main dumped emacs"
   (insert "\]")
   )
  #+END_SRC 
+
+** insert slash no abbrev
+   :PROPERTIES:
+   :ID:       D2AC465A-336E-4DCD-979C-6484FDF969C6
+   :END:
+
+   #+BEGIN_EXAMPLE emacs-lisp
+(defun jay/insert-slash ()
+  (interactive)
+  (insert "/")
+  )
+   #+END_EXAMPLE 
+
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
