@@ -2730,26 +2730,6 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 #+END_SRC
 
-** Point stack
-For popping around the buffer. I need to review how this works again.
-#+BEGIN_SRC emacs-lisp
-;; (require 'point-stack)
-#+END_SRC
-
-** SMEX
-- ~smex-describe-function~
-- ~smex-find-function~
-- ~smex-where-is~
-
-** BBDB contacts database (not currently using this)
-
-#+BEGIN_SRC emacs-lisp
-;; (add-to-list 'load-path "~/elisp/bbdb/lisp")
-;; (require 'bbdb) ;; (3)
-;; (bbdb-initialize 'gnus 'message)   ;; (4)
-;; (setq bbdb-north-american-phone-numbers-p nil)   ;; (5)
-#+END_SRC
-
 * Keybindings
 
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
@@ -3346,30 +3326,6 @@ source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade)
 
-* stuff that I moved from custom.el
-#+BEGIN_EXAMPLE emacs-lisp
-
-;;;; autocomplete
-;; I don't know what I'm doing here but it seems to work
-;; auto-complete mode
-(use-package auto-complete)
-(dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode
-                                    sass-mode  csv-mode
-                                    html-mode sh-mode
-                                    lisp-mode  markdown-mode emacs-lisp-mode ))
-  (add-to-list 'ac-modes mode))
-
-
-;; tab completion
-(ac-set-trigger-key "TAB")
-
-;; haven't used these, not sure how to
-(define-key ac-completing-map (kbd "C-M-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
-(define-key ac-completing-map "\t" 'ac-complete)
-(define-key ac-completing-map (kbd "M-RET") 'ac-help)
-(define-key ac-completing-map "\r" 'nil) 
-#+END_EXAMPLE
 
 * Pop to mark
 
@@ -3482,52 +3438,6 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  [">" "&gt;"]
  )))
   #+END_SRC
-
-* openwith
-
-  #+BEGIN_EXAMPLE emacs-lisp
-(when (require 'openwith nil 'noerror)
-      (setq openwith-associations
-            (list
-             (list (openwith-make-extension-regexp
-                    '())
-                   "open"
-                   '(file))
-
-(list (openwith-make-extension-regexp
-                    '("mp3"))
-                   "open"
-                   '(file))
-
-(list (openwith-make-extension-regexp
-                    '("mp4" "mpg" "mpeg"
-                      "avi" "wmv" "wav" "mov" "flv"
-                      "ogm" "ogg" "mkv" "webm"))
-                   "open -a vlc"
-                   '(file))
-
-             (list (openwith-make-extension-regexp
-                    '("xbm" "pbm" "pgm" "ppm" "pnm"
-                      "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-                   "open"
-                   '(file))
-
-             (list (openwith-make-extension-regexp
-                    '("doc" "docx" "xls" "xlsx" "ppt" "odt" "ods" "odg" "odp"))
-                   "open"
-                   '(file))
-             '("\\.lyx" "lyx" (file))
-             '("\\.chm" "kchmviewer" (file))
-             (list (openwith-make-extension-regexp
-                    '("pdf"))
-                   "open"
-                   '(file))
-             ))
-      (openwith-mode 1))
-
-(setq org-startup-with-inline-images nil)
-
-  #+END_EXAMPLE 
 
 * Monochrome rainbows are the best way to reveal unbalanced delimiters
 I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters.
@@ -3663,41 +3573,6 @@ Single Capitals as you type."
       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
       (define-key yas-keymap [tab] 'yas-next-field))) 
 #+END_SRC
-
-* auto-complete-mode
-#+BEGIN_EXAMPLE emacs-lisp
-;;; Auto complete mode
-;;; should be loaded after yasnippet so that they can work together
-(use-package auto-complete-config
-:init
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(ac-config-default)
-;;; Set the trigger key so that it can work together with yasnippet on tab key,
-;;; if the word exists in yasnippet, pressing tab will cause yasnippet to
-;;; activate, otherwise, auto-complete will
-(ac-set-trigger-key "TAB") 
-) 
-#+END_EXAMPLE 
-
- (defun yas-org-very-safe-expand ()
-   (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
-
-
-(add-hook 'org-mode-hook
-  (lambda ()
-  (org-set-local 'yas-trigger-key [tab])
-  (define-key yas-keymap [tab] 'yas-next-field-or-maybe-expand))) 
-
-
-(add-hook 'org-mode-hook
-  (lambda ()
-  (make-variable-buffer-local 'yas-trigger-key)
-  (setq yas-trigger-key [tab])
-  (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-  (define-key yas-keymap [tab] 'yas-next-field))) 
-
-
-;; hopefully this doesn't break it 
 
 
 * flyspell
@@ -5195,16 +5070,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   #+END_SRC
 
 
-* save every 30 seconds? 
-
-  #+BEGIN_SRC emacs-lisp
-;; (run-at-time nil 30 'jay/save-some-buffers) 
-  #+END_SRC
-but how to make it stop saying "no files need saving"?
-
-* unbound keys
-;; (require 'unbound)
-
+* access config files
 #+BEGIN_SRC emacs-lisp
 (defun load-shared-functions ()
   (interactive)
@@ -5277,25 +5143,6 @@ C-c q
 #+END_SRC
 
 
-
-* org-opml
-
-  #+BEGIN_SRC emacs-lisp
-;; add org-opml directory to load-path
-;; (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/org-opml/")
-
-;; load org-opml
-;; (load-library "org-opml") 
-  #+END_SRC
-
-
-
-
-* org-element-debug
-
-  #+BEGIN_SRC emacs-lisp
-;; (require 'org-element-debug)
-  #+END_SRC
 
 
 * isearch current word
@@ -5491,16 +5338,18 @@ event of an error or nonlocal exit."
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 )
 #+END_SRC 
-* swiper 
 
-** ivy 
-  #+BEGIN_SRC emacs-lisp
+* searching 
+** swiper 
+
+*** ivy 
+   #+BEGIN_SRC emacs-lisp
 (setq ivy-height 25)
 (setq ivy-display-style 'fancy)
-#+END_SRC
+ #+END_SRC
 
-** swiper
-#+BEGIN_SRC emacs-lisp
+*** swiper
+ #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus))) 
@@ -5509,20 +5358,20 @@ event of an error or nonlocal exit."
 
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
 
-#+END_SRC
+ #+END_SRC
 
-** ivy add actions
-[[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
+*** ivy add actions
+ [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
 
-[[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
-#+BEGIN_SRC emacs-lisp
+ [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
+ #+BEGIN_SRC emacs-lisp
 (ivy-add-actions t
  '(("W" kill-new "save to kill ring")
   ("I" insert "insert in buffer"))) 
-#+END_SRC
+ #+END_SRC
 
-** swiper hydra
-#+BEGIN_SRC emacs-lisp
+*** swiper hydra
+ #+BEGIN_SRC emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -5586,7 +5435,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body) 
 
-#+END_SRC
+ #+END_SRC
 
 * wrap region
 
@@ -5762,16 +5611,6 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 (put 'if 'lisp-indent-function nil) 
 #+END_SRC 
 
-* org element debug
-#+BEGIN_SRC emacs-lisp
-;; (add-hook 'org-mode-hook '(lambda () '(element-debug-mode 1)))
-#+END_SRC
-
-* disable TAB to indent
-#+BEGIN_SRC emacs-lisp
-;; (setq org-cycle-emulate-tab t)
-#+END_SRC
-
 
 * convert from org-mode to Word
 #+BEGIN_SRC emacs-lisp
@@ -5847,17 +5686,6 @@ Hydras and key-chords.
 q is a good candidate for chords, since in words it has u after, and only a few letters ever come before a q. so I tap my two pinkie-fingers on qp to summon a project(ile)-related hydra.
 
 [[https://github.com/abo-abo/hydra][abo-abo/hydra]]
-
-
-* refile active region or subtree
-
-#+BEGIN_SRC emacs-lisp
-(defun refile-region-or-subtree ()
-  (interactive)
-  (if (region-active-p)
-      (call-interactively 'jay-refile-region)
-    (org-refile)))
-#+END_SRC
 
 
 * hydras experiments
@@ -6046,9 +5874,6 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2"))) 
 
 #+END_SRC
-
-* org-element use cache
-(setq org-element-use-cache t) 
 
 * downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
@@ -6575,6 +6400,21 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
  (org-narrow-to-subtree)
  ) 
 #+END_SRC
+
+** filing
+   :PROPERTIES:
+   :ID:       8DEDEA6E-ED28-46E7-8277-588FE1048EA6
+   :END:
+*** refile active region or subtree
+
+  #+BEGIN_SRC emacs-lisp
+(defun refile-region-or-subtree ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'jay-refile-region)
+    (org-refile)))
+  #+END_SRC
+
 
 * multiple-cursors-mode-map
 #+BEGIN_SRC emacs-lisp 
