@@ -4138,21 +4138,6 @@ After this, you should be able to add contacts using a o in the headers view and
 
 
 
-** kill to buffer end
-
-   #+BEGIN_SRC emacs-lisp
-(defun kill-to-buffer-end-or-beginning (arg)
-  (interactive "p")
-  (if (and arg (= 0 (mod arg 4)))
-      (beginning-of-buffer)
-    (end-of-buffer))
-  (kill-region (mark) (point))
-  (recenter-top-bottom))
-
-(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
-   #+END_SRC
-
-
 ** html reply---doesn't work yet 
 #+BEGIN_SRC emacs-lisp
 (defvar *gt-div-style* "border-left: 1px solid #CCC; padding-left: 16px;")
@@ -4183,149 +4168,6 @@ After this, you should be able to add contacts using a o in the headers view and
 
 #+END_SRC emacs-lisp
 
-
-#+BEGIN_EXAMPLE emacs-lisp 
-(setq gnus-always-read-dribble-file t)
-(setq gnus-select-method '(nnml ""))
-(setq gnus-select-method '(nnimap "gmail"
-(nnimap-address "imap.gmail.com")
-(nnimap-server-port 993)
-(nnimap-stream ssl)))
-(setq gnus-use-cache t) 
-
-
-
-
-(setq gnus-select-method
-   '(nnimap "gmail"
-	    (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
-	    (nnimap-server-port "imaps")
-	    (nnimap-stream ssl)))
-
-
-
-
-;; store email in ~/gmail directory
-(setq nnml-directory "~/gmail")
-;; (setq message-directory "~/gmail") 
-
-;; define gnus directories
-;; (setq message-directory "~/emacs/gnus/mail/")
-(setq gnus-directory "~/emacs/gnus/news/")
-(setq nnfolder-directory "~/emacs/gnus/mail/archive") 
-
-;; How to read HTML mail
-(setq mm-text-html-renderer 'w3m)
-(setq gnus-summary-line-format "%-6,6B%-15,15f |%* %-40,40s | %&user-date; | %U\n")
-
-;; sort by most recent date
-(setq gnus-article-sort-functions (quote ((not gnus-article-sort-by-date))))
-(setq gnus-thread-sort-functions (quote ((not gnus-thread-sort-by-date))))
-
-
-;; More attractive Summary View
-;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
-(when window-system
- (setq gnus-sum-thread-tree-indent " ")
- (setq gnus-sum-thread-tree-root "") ;; "● ")
- (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
- (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
- (setq gnus-sum-thread-tree-vertical    "│")
- (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
- (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
-(setq gnus-summary-line-format
-   (concat
-    "%0{%U%R%z%}"
-    "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-    " "
-    "%4{%-20,20f%}"        ;; name
-    " "
-    "%3{│%}"
-    " "
-    "%1{%B%}"
-    "%s\n"))
-(setq gnus-summary-display-arrow t)
-#+END_EXAMPLE 
-
-
-*** More attractive Summary View
-  :PROPERTIES:
-  :CUSTOM_ID: pretty-summary
-  :END:
-Thanks to Dan Davison.
-
-#+begin_example emacs-lisp
- ;; http://groups.google.com/group/gnu.emacs.gnus/browse_thread/thread/a673a74356e7141f
- (when window-system
-  (setq gnus-sum-thread-tree-indent " ")
-  (setq gnus-sum-thread-tree-root "") ;; "● ")
-  (setq gnus-sum-thread-tree-false-root "") ;; "◯ ")
-  (setq gnus-sum-thread-tree-single-indent "") ;; "◎ ")
-  (setq gnus-sum-thread-tree-vertical    "│")
-  (setq gnus-sum-thread-tree-leaf-with-other "├─► ")
-  (setq gnus-sum-thread-tree-single-leaf   "╰─► "))
- (setq gnus-summary-line-format
-    (concat
-     "%0{%U%R%z%}"
-     "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-     " "
-     "%4{%-20,20f%}"        ;; name
-     " "
-     "%3{│%}"
-     " "
-     "%1{%B%}"
-     "%s\n"))
- (setq gnus-summary-display-arrow t)
-#+END_EXAMPLE 
-
-
-*** modified email-heading function
-
-**** org-mime-htmlcize - no longer works.
-#+BEGIN_EXAMPLE emacs-lisp
-
-(defun org-mime-htmlize (&optional arg)
-"Export a portion of an email body composed using `mml-mode' to
-html using `org-mode'. If called with an active region only
-export that region, otherwise export the entire body."
- (interactive "P")
- (require 'ox-org)
- (require 'ox-html)
- (let* ((region-p (org-region-active-p))
-     (html-start (or (and region-p (region-beginning))
-             (save-excursion
-              (goto-char (point-min))
-              (search-forward mail-header-separator)
-              (+ (point) 1))))
-     (html-end (or (and region-p (region-end))
-            ;; TODO: should catch signature...
-            (point-max)))
-     (raw-body (concat org-mime-default-header
-			  (buffer-substring html-start html-end)))
-     (tmp-file (make-temp-name (expand-file-name
-				  "mail" temporary-file-directory)))
-     (body (org-export-string-as raw-body 'org t))
-     ;; because we probably don't want to export a huge style file
-     (org-export-htmlize-output-type 'inline-css)
-     ;; makes the replies with ">"s look nicer
-     (org-export-preserve-breaks org-mime-preserve-breaks)
-	 ;; dvipng for inline latex because MathJax doesn't work in mail
-	 (org-html-with-latex 'dvipng)
-     ;; to hold attachments for inline html images
-     (html-and-images
-     (org-mime-replace-images
-	  (org-export-string-as raw-body 'html t) tmp-file))
-     (html-images (unless arg (cdr html-and-images)))
-     (html (org-mime-apply-html-hook
-        (if arg
-          (format org-mime-fixedwith-wrap body)
-         (car html-and-images)))))
-  (delete-region html-start html-end)
-  (save-excursion
-   (goto-char html-start)
-   (insert (org-mime-multipart
-	    body html (mapconcat 'identity html-images "\n"))))))
-#+END_EXAMPLE
 
 *** new-email-from-subtree-with-signature 
 
@@ -6449,6 +6291,24 @@ cmd)
                 (my/update-lines bunches pos continue))))
   (delete-overlay selection))) 
    #+END_EXAMPLE 
+
+**** kill to buffer end
+     :PROPERTIES:
+     :ID:       49820CA2-490C-4DA0-9036-F16B262F712E
+     :END:
+
+     #+BEGIN_SRC emacs-lisp
+(defun kill-to-buffer-end-or-beginning (arg)
+  (interactive "p")
+  (if (and arg (= 0 (mod arg 4)))
+      (beginning-of-buffer)
+    (end-of-buffer))
+  (kill-region (mark) (point))
+  (recenter-top-bottom))
+
+(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
+     #+END_SRC
+
 
 * Make Messages Buffer modifiable in Emacs 24.4
 Chen Bin
