@@ -19,3 +19,6 @@
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
 (setq mac-pass-command-to-system nil)
+
+
+;; (setq mac-right-command-modifier 'hyper); right command is hyper key
