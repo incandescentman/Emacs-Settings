@@ -1228,50 +1228,6 @@ To enable Edit with Emacs in Chrome:
 (setq default-directory "~/Dropbox/writing/" )
 #+END_SRC
 
-* LaTeX
-** Find LaTeX on my system
-
-#+BEGIN_SRC emacs-lisp
-(if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2016/bin/universal-darwin")
-  )
-#+END_SRC
-
-** XeLaTeX customisations
-
-~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
-#+BEGIN_SRC emacs-lisp
-(setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
- org-latex-pdf-process               ; for regular export
-
- '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-(setq org-export-preserve-breaks nil) 
-
-;; add padding to numbered lists and bulleted lists (set to t)
-;; (setq org-export-preserve-breaks t) 
-#+END_SRC
-
-** load my custom latex templates
-
-   #+BEGIN_SRC emacs-lisp
-(load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
-
-(defun jay-load-latex ()
-(interactive) 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el") 
-(use-package blue-ruin) 
-(use-package blue-invoice) 
-(use-package blue-ruin-no-cover) 
-  )
-   #+END_SRC 
-
 * Backups
 Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][How do I control how Emacs makes backup files? - Stack Overflow]]
 
@@ -3274,6 +3230,143 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
 
 
+** searching 
+   :PROPERTIES:
+   :ID:       37637C3F-0CB1-48CE-8CD0-4436182F212A
+   :END:
+*** swiper 
+
+**** ivy 
+    #+BEGIN_SRC emacs-lisp
+(setq ivy-height 25)
+(setq ivy-display-style 'fancy)
+  #+END_SRC
+
+**** swiper
+  #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-s") 'swiper)
+(setq ivy-re-builders-alist
+ '((t . ivy--regex-plus))) 
+
+
+
+(define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
+
+  #+END_SRC
+
+**** ivy add actions
+  [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
+
+  [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
+  #+BEGIN_SRC emacs-lisp
+(ivy-add-actions t
+ '(("W" kill-new "save to kill ring")
+  ("I" insert "insert in buffer"))) 
+  #+END_SRC
+
+**** swiper hydra
+  #+BEGIN_SRC emacs-lisp
+(defun ivy-dired-mark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-mark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-dired-unmark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-unmark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-replace ()
+ (interactive)
+ (let ((from (with-selected-window swiper--window
+        (move-beginning-of-line nil)
+        (when (re-search-forward
+            (ivy--regex ivy-text) (line-end-position) t)
+         (match-string 0)))))
+  (if (null from)
+    (user-error "No match")
+   (let ((rep (read-string (format "Replace [%s] with: " from))))
+    (with-selected-window swiper--window
+     (undo-boundary)
+     (replace-match rep t t))))))
+
+(defun ivy-undo ()
+ (interactive)
+ (with-selected-window swiper--window
+  (undo))) 
+
+
+(defhydra hydra-ivy (:hint nil
+           :color pink)
+ "
+^^^^^^     ^Actions^  ^Dired^   ^Quit^
+^^^^^^--------------------------------------------
+^ ^ _l_ ^ ^   _._ repeat  _m_ark   _i_: cancel
+_j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
+^ ^ _k_ ^ ^   _u_ndo 
+"
+ ;; arrows
+ ("j" ivy-beginning-of-buffer)
+ ("k" ivy-next-line)
+ ("l" ivy-previous-line)
+ (";" ivy-end-of-buffer)
+ ;; actions
+ ("." hydra-repeat)
+ ("r" ivy-replace)
+ ("u" ivy-undo)
+ ;; dired
+ ("m" ivy-dired-mark)
+ ("," ivy-dired-unmark)
+ ;; exit
+ ("o" keyboard-escape-quit :exit t)
+ ("i" nil)) 
+
+(define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body) 
+
+  #+END_SRC
+
+** searching 
+   :PROPERTIES:
+   :ID:       B637F4A7-B467-4273-8394-535DC3BF9C9C
+   :END:
+
+*** Tell isearch that curly apostrophes are the same as straight ones
+ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
+
+ #+BEGIN_SRC emacs-lisp
+ ;;; Tell ispell.el that ’ can be part of a word.
+(setq ispell-local-dictionary-alist
+      `((nil "[[:alpha:]]" "[^[:alpha:]]"
+             "['\x2019]" nil ("-B") nil utf-8)))
+
+;;; Don't send ’ to the subprocess.
+(defun endless/replace-apostrophe (args)
+  (cons (replace-regexp-in-string
+         "’" "'" (car args))
+        (cdr args)))
+(advice-add #'ispell-send-string :filter-args
+            #'endless/replace-apostrophe)
+
+;;; Convert ' back to ’ from the subprocess.
+(defun endless/replace-quote (args)
+  (if (not (derived-mode-p 'org-mode))
+      args
+    (cons (replace-regexp-in-string
+           "'" "’" (car args))
+          (cdr args))))
+(advice-add #'ispell-parse-output :filter-args
+            #'endless/replace-quote)
+ #+END_SRC
+
+
+
+
 * these seem to need to go at the end
 
 ** Palimpsest - best ever
@@ -3343,62 +3436,12 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 #+END_SRC 
 
-* Load my LaTeX files
-
-;; (load "~/elisp/latex.el")
-(load "~/elisp/signal-flare.el")
-(load "~/elisp/signal-flare-wide.el")
-;; (load "~/elisp/signal-flare-wide-different-image.el")
-(load "~/elisp/jay-dixit-latex.el")
-(load "~/elisp/signal-flare-smaller-fonts.el")
-
-magit
-
-#+BEGIN_SRC emacs-lisp
-;; (setq magit-last-seen-setup-instructions "1.4.0")
-#+END_SRC
-
-
-
 * startup
 #+BEGIN_SRC emacs-lisp
 ;; (load-theme 'leuven)
 ;; (incarnadine-cursor)
 ;; (monaco-font)
 #+END_SRC
-
-* searching 
-
-** Tell isearch that curly apostrophes are the same as straight ones
-Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
-
-#+BEGIN_SRC emacs-lisp
- ;;; Tell ispell.el that ’ can be part of a word.
-(setq ispell-local-dictionary-alist
-      `((nil "[[:alpha:]]" "[^[:alpha:]]"
-             "['\x2019]" nil ("-B") nil utf-8)))
-
-;;; Don't send ’ to the subprocess.
-(defun endless/replace-apostrophe (args)
-  (cons (replace-regexp-in-string
-         "’" "'" (car args))
-        (cdr args)))
-(advice-add #'ispell-send-string :filter-args
-            #'endless/replace-apostrophe)
-
-;;; Convert ' back to ’ from the subprocess.
-(defun endless/replace-quote (args)
-  (if (not (derived-mode-p 'org-mode))
-      args
-    (cons (replace-regexp-in-string
-           "'" "’" (car args))
-          (cdr args))))
-(advice-add #'ispell-parse-output :filter-args
-            #'endless/replace-quote)
-#+END_SRC
-
-
-
 
 * org-links
 ** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'?
@@ -4159,7 +4202,6 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 #+END_SRC
 
 
-* 
 ** org-contacts
 
   #+BEGIN_SRC emacs-lisp
@@ -4913,104 +4955,6 @@ event of an error or nonlocal exit."
 )
 #+END_SRC 
 
-* searching 
-** swiper 
-
-*** ivy 
-   #+BEGIN_SRC emacs-lisp
-(setq ivy-height 25)
-(setq ivy-display-style 'fancy)
- #+END_SRC
-
-*** swiper
- #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-s") 'swiper)
-(setq ivy-re-builders-alist
- '((t . ivy--regex-plus))) 
-
-
-
-(define-key key-minor-mode-map (kbd "C-7") 'swiper-mc) 
-
- #+END_SRC
-
-*** ivy add actions
- [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
-
- [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
- #+BEGIN_SRC emacs-lisp
-(ivy-add-actions t
- '(("W" kill-new "save to kill ring")
-  ("I" insert "insert in buffer"))) 
- #+END_SRC
-
-*** swiper hydra
- #+BEGIN_SRC emacs-lisp
-(defun ivy-dired-mark (arg)
- (interactive "p")
- (dotimes (_i arg)
-  (with-selected-window swiper--window
-   (dired-mark 1))
-  (ivy-next-line 1)
-  (ivy--exhibit)))
-
-(defun ivy-dired-unmark (arg)
- (interactive "p")
- (dotimes (_i arg)
-  (with-selected-window swiper--window
-   (dired-unmark 1))
-  (ivy-next-line 1)
-  (ivy--exhibit)))
-
-(defun ivy-replace ()
- (interactive)
- (let ((from (with-selected-window swiper--window
-        (move-beginning-of-line nil)
-        (when (re-search-forward
-            (ivy--regex ivy-text) (line-end-position) t)
-         (match-string 0)))))
-  (if (null from)
-    (user-error "No match")
-   (let ((rep (read-string (format "Replace [%s] with: " from))))
-    (with-selected-window swiper--window
-     (undo-boundary)
-     (replace-match rep t t))))))
-
-(defun ivy-undo ()
- (interactive)
- (with-selected-window swiper--window
-  (undo))) 
-
-
-(defhydra hydra-ivy (:hint nil
-           :color pink)
- "
-^^^^^^     ^Actions^  ^Dired^   ^Quit^
-^^^^^^--------------------------------------------
-^ ^ _l_ ^ ^   _._ repeat  _m_ark   _i_: cancel
-_j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
-^ ^ _k_ ^ ^   _u_ndo 
-"
- ;; arrows
- ("j" ivy-beginning-of-buffer)
- ("k" ivy-next-line)
- ("l" ivy-previous-line)
- (";" ivy-end-of-buffer)
- ;; actions
- ("." hydra-repeat)
- ("r" ivy-replace)
- ("u" ivy-undo)
- ;; dired
- ("m" ivy-dired-mark)
- ("," ivy-dired-unmark)
- ;; exit
- ("o" keyboard-escape-quit :exit t)
- ("i" nil)) 
-
-(define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body) 
-
- #+END_SRC
-
 * wrap region
 
   #+BEGIN_SRC emacs-lisp
@@ -5473,12 +5417,6 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 #+END_SRC
 
 
-* trying to stop org crashes
-#+BEGIN_SRC emacs-lisp
-;; (setq org-element-use-cache nil)
-#+END_SRC
-
-
 * use dired for directory links
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'org-file-apps '(directory . emacs)) 
@@ -5625,6 +5563,74 @@ Wow, this works.
 
  #+END_SRC
 
+
+
+** LaTeX
+*** Find LaTeX on my system
+
+ #+BEGIN_SRC emacs-lisp
+(if (eq window-system 'mac)
+    (add-to-list 'exec-path "/usr/local/texlive/2016/bin/universal-darwin")
+  )
+ #+END_SRC
+
+*** XeLaTeX customisations
+
+ ~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
+ #+BEGIN_SRC emacs-lisp
+(setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
+ org-latex-pdf-process               ; for regular export
+
+ '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; don't add extra lines to numbered lists and bulleted lists (set to nil)
+(setq org-export-preserve-breaks nil) 
+
+;; add padding to numbered lists and bulleted lists (set to t)
+;; (setq org-export-preserve-breaks t) 
+ #+END_SRC
+
+*** load my custom latex templates
+
+    #+BEGIN_SRC emacs-lisp
+(load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
+
+(defun jay-load-latex ()
+(interactive) 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el") 
+(use-package blue-ruin) 
+(use-package blue-invoice) 
+(use-package blue-ruin-no-cover) 
+  )
+    #+END_SRC 
+
+*** fix latex verbatim 
+  You can use a filter function that will replace default "verbatim" with
+  whatever you want.
+
+  Here's my fancyvrb filter for when such a place is created.
+
+  Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
+  #+BEGIN_SRC emacs-lisp
+
+ (defun org-latex-filter-fancyvrb (text backend info)
+  "Convert begin/end{verbatim} to begin/end{Verbatim}.
+ Allows use of the fancyvrb latex package."
+  (when 
+    (org-export-derived-backend-p backend 'latex) 
+  (replace-regexp-in-string
+   "\\\\\\(begin\\|end\\){verbatim}"
+   "\\\\\\1{quote}"
+   text)))
+
+ (add-to-list 'org-export-filter-final-output-functions
+     'org-latex-filter-fancyvrb) 
+  #+END_SRC
 
 * no inline images
 #+BEGIN_SRC emacs-lisp
@@ -5997,30 +6003,6 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
 (setq org-export-htmlize-output-type 'inline-css) 
 #+END_EXAMPLE
 
-
-* latex
-** fix latex verbatim 
- You can use a filter function that will replace default "verbatim" with
- whatever you want.
-
- Here's my fancyvrb filter for when such a place is created.
-
- Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
- #+BEGIN_SRC emacs-lisp
-
- (defun org-latex-filter-fancyvrb (text backend info)
-  "Convert begin/end{verbatim} to begin/end{Verbatim}.
- Allows use of the fancyvrb latex package."
-  (when 
-    (org-export-derived-backend-p backend 'latex) 
-  (replace-regexp-in-string
-   "\\\\\\(begin\\|end\\){verbatim}"
-   "\\\\\\1{quote}"
-   text)))
-
- (add-to-list 'org-export-filter-final-output-functions
-     'org-latex-filter-fancyvrb) 
- #+END_SRC
 
 * repeat-last-command
 #+BEGIN_SRC emacs-lisp
