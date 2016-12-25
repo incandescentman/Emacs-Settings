@@ -53,7 +53,7 @@
 (package-initialize)
 #+END_SRC
 
-*** Load some of my packages:
+** Load some of my packages:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/emacs/emacs-settings/")
 #+END_SRC
@@ -69,8 +69,8 @@
   )) 
 #+END_SRC
    
-* Require some org packages
-#+BEGIN_SRC emacs-lisp
+** Require some org packages
+ #+BEGIN_SRC emacs-lisp
 ;; (require 'org-bullets)
 (use-package ox-latex) 
 ;; (require 'ox-latex)
@@ -80,7 +80,7 @@
 (use-package ox-html)
 ;; (require 'ox-md)
 ; (require 'org-fstree)
-#+END_SRC
+ #+END_SRC
 
 * The Writing Environment
 ** spellcheck 
@@ -155,16 +155,6 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 (setq ring-bell-function 'ignore)
 #+END_SRC
 
-
-
-*** Split windows correctly
-
-#+BEGIN_SRC emacs-lisp
-;; (setq org-indirect-buffer-display 'current-window)
-(setq undo-limit 100000)
-(setq split-width-threshold 5)
-(setq split-height-threshold 5)
-#+END_SRC
 
 *** Use visual line mode whenever possible
 
@@ -332,17 +322,19 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 ** org setup
 *** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
-; (setq org-use-property-inheritance t)
-(setq org-ctrl-k-protect-subtree t)
-(setq org-fontify-quote-and-verse-blocks t)
-;; blank lines before new headings
-(setq org-blank-before-new-entry
-      '((heading . always)
-       (plain-list-item . nil)))
-(setq org-return-follows-link t)
+  ; (setq org-use-property-inheritance t)
+  (setq org-ctrl-k-protect-subtree t)
+  (setq org-fontify-quote-and-verse-blocks t)
+  ;; blank lines before new headings
+  (setq org-blank-before-new-entry
+        '((heading . always)
+         (plain-list-item . nil)))
+  (setq org-return-follows-link t)
 
-;; leave an empty line between folded subtrees
-(setq org-cycle-separator-lines 1)
+  ;; leave an empty line between folded subtrees
+  (setq org-cycle-separator-lines 1)
+
+  (setq org-support-shift-select (quote always))
 
 #+END_SRC
 
@@ -1612,157 +1604,6 @@ Defines ~ibuffer-do-replace-string~:
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-#+END_SRC
-
-* Setting variables
-I should probably eventually break these out of custom-set-variables and organize them according to their function.
-#+BEGIN_SRC emacs-lisp
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
-''(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*")))
-'(mail-kill-buffer-on-exit t)
-  '(abbrev-all-caps nil)
-'(undo-limit 800000)
-  '(user-full-name "Jay Dixit")
-
- '(blink-cursor-mode nil)
- '(buffer-stack-show-position nil)
- '(buffer-stack-untracked (quote    ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- '(buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*"  "*Warnings*" "*prolific*" "*750words*" "Calendar")))
- '(calendar-latitude 40.7)
- '(case-fold-search t)
- '(ccm-recenter-at-end-of-file t)
- '(clean-buffer-list-delay-general 1)
- '(column-number-mode nil)
- '(compose-mail-user-agent-warnings nil)
- '(cua-highlight-region-shift-only t)
- '(cua-mode nil nil (cua-base))
- '(cua-mode nil)
- '(debug-on-error t)
- '(deft-directory "~/Dropbox/writing/notationaldata/")
- '(delete-window-preserve-buffer (quote ("momentum.org" "Current-book-research.txt" "accountability.txt")))
- '(dired-clean-up-buffers-too nil)
- '(dired-details-hidden-string "")
- '(dired-kept-versions 8)
- '(display-time-mode t)
- '(edit-server-default-major-mode (quote org-mode))
- '(edit-server-new-frame t)
- '(eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
-'(grep-highlight-matches (quote always))
-'(ido-use-faces t)
- '(ido-use-url-at-point t)
- '(initial-buffer-choice "~/Dropbox/writing/notationaldata/momentum.org")
- '(initial-major-mode (quote org-mode))
-;; '(mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-
- '(make-backup-files t)
- '(message-draft-headers (quote (From References Date)))
-
- '(message-required-headers (quote (From (optional . References))))
- '(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- '(org-M-RET-may-split-line (quote ((item . t))))
- '(org-activate-links (quote (bracket plain radio tag date footnote)))
-; '(org-agenda-jump-prefer-future t)
-; '(org-agenda-skip-scheduled-if-done t)
-; '(org-agenda-timegrid-use-ampm t)
- '(org-archive-location "archive/%s_archive::")
- '(org-ascii-headline-spacing (quote (1 . 1)))
- '(org-ascii-table-use-ascii-art t)
- '(org-ascii-table-use-ascii-art t)
- '(org-catch-invisible-edits (quote error))
- '(org-catch-invisible-edits (quote smart))
- '(org-ctrl-k-protect-subtree t)
- '(org-custom-properties (quote (">")))
- '(org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
- '(org-display-custom-times nil)
- '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
- '(org-edit-src-content-indentation 4)
- '(org-ellipsis (quote org-warning))
- '(org-enable-fixed-width-editor nil)
- '(org-enforce-todo-checkbox-dependencies t)
- '(org-enforce-todo-dependencies t)
-'(org-extend-today-until 8)
- '(org-fontify-done-headline t)
- '(org-fontify-emphasized-text t)
- '(org-footnote-define-inline t)
- '(org-footnote-section "Footnotes")
- '(org-footnote-tag-for-non-org-mode-files "Footnotes:")
- '(org-headline-done ((t (:strike-through t))))
- '(org-hide-block-startup nil)
- '(org-hide-emphasis-markers t)
- '(org-hide-leading-stars t)
- '(org-html-container-element "div")
- '(org-html-head-include-scripts nil)
- '(org-html-html5-fancy t)
- '(org-html-postamble nil)
- '(org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
- '(org-indent-mode-turns-off-org-adapt-indentation nil)
- '(org-indent-mode-turns-on-hiding-stars nil)
- '(org-insert-mode-line-in-empty-file t)
-;; '(org-list-indent-offset 3)
- '(org-log-done nil)
-
-'(org-mac-Skim-highlight-selection-p t)
- '(org-mac-grab-Firefox+Vimperator-p nil)
- '(org-mac-grab-Firefox-app-p nil)
- '(org-mac-grab-Mail-app-p nil)
- '(org-mac-grab-Safari-app-p nil)
- '(org-mac-grab-Together-app-p nil)
- '(org-n-level-faces 9)
- '(org-odd-levels-only nil)
-'(org-provide-checkbox-statistics t)
- '(org-replace-disputed-keys nil)
- '(org-return-follows-link t)
- '(org-special-ctrl-a/e t)
- '(org-src-preserve-indentation t)
- '(org-startup-align-all-tables t)
- '(org-startup-folded nil)
- '(org-startup-indented t)
- '(org-support-shift-select (quote always))
- '(org-use-speed-commands t)
- '(org-yank-adjusted-subtrees t)
- '(org2blog/wp-confirm-post nil)
- '(org2blog/wp-default-categories (quote ("inspiration" "personal growth" "miscellany")))
- '(org2blog/wp-keep-new-lines t)
- '(org2blog/wp-show-post-in-browser t)
- '(org2blog/wp-use-tags-as-categories t)
- '(osx-browse-prefer-background nil)
- '(osx-browse-prefer-browser "com.google.Chrome")
- '(osx-browse-prefer-new-window t)
-'(reb-re-syntax (quote string))
-'(smex-prompt-string "I love you. ")
- '(standard-indent 3)
- '(tooltip-mode nil)
-;; '(tramp-default-method "ssh")
- '(undo-limit 800000)
- '(user-full-name "Jay Dixit")
-
- '(visual-line-mode nil t)
- '(web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
-'(completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"  ".tex" ".mm" "Icon" ".html" ".zip")))
-
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-;; '(openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
-'(org-export-latex-image-default-option "width=20.5cm")
-'(org-export-time-stamp-file nil)
-'(org-export-with-clocks t)
-'(org-hide-block-startup nil)
-'(org-html-head-include-default-style nil)
-'(org-html-toplevel-hlevel 2)
-'(org-indent-indentation-per-level 2)
-'(org-list-allow-alphabetical t)
-'(org-priority-faces nil)
-'(safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
-'(send-mail-function (quote sendmail-send-it))
-
-
-;; end
-)
 #+END_SRC
 
 * Key chords
@@ -6619,23 +6460,15 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
  (delete-duplicate-lines (region-beginning) (region-end) nil nil t)) 
 #+END_SRC
 
-* recenter top bottom
-#+BEGIN_SRC emacs-lisp
+* display
+
+** recenter top bottom
+ #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
 ;; (setq recenter-positions (quote (top middle bottom))) 
-#+END_SRC
+ #+END_SRC
 
 
-
-
-* zoom and menu bar mode
-#+BEGIN_SRC emacs-lisp
-(defun zoom-in-and-disable-menu-bar-mode ()
-  (interactive)
-  (setq menu-bar-mode -1)
-  (text-scale-increase 1)
-  )
-#+END_SRC
 
 
 * org-clock
@@ -6690,7 +6523,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+END_EXAMPLE 
 
 * navigation 
-
 ** up by degrees
 #+BEGIN_SRC emacs-lisp
 (defun up-by-degrees ()
@@ -6715,54 +6547,8 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
  (define-key mc/keymap (kbd "SPC") 'insert-space) 
 #+END_SRC
 
-* not in use 
 
-** deft 
-
- #+BEGIN_EXAMPLE emacs-lisp 
-(use-package deft)
-(setq deft-extensions '("org" "md" "txt"))
-(setq deft-default-extension "org")
-(setq deft-directory "~/nd/")
-(setq deft-directory "/Users/jay/Dropbox/Apps/Nebulous/") 
-(setq deft-use-filename-as-title t) 
- #+END_EXAMPLE
-
-** epub-mode
-define a minor mode epub-mode
-
-SPC is "wrap region in block quote tag"
-
-#+BEGIN_SRC emacs-lisp
-(defun epub-mode ()
- (interactive)
- (org-mode)
- (setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
- )
-#+END_SRC
-
-
-** fasd
-
-  #+BEGIN_SRC emacs-lisp
-;; (global-fasd-mode 1)
-;; (setq fasd-enable-initial-prompt nil)
-  #+END_SRC
- 
-** zone
-
-  #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/zone-matrix/")  
-
-;; (setq zone-programs [zone-pgm-drip]) 
-;; (setq zone-programs [zone-pgm-five-oclock-swan-dive]) 
-(setq zone-programs [zone-pgm-putz-with-case]) 
-
-  #+END_SRC
-
-** iCal
+* iCal
 #+BEGIN_SRC emacs-lisp
 (setq org-icalendar-include-todo nil) 
 (setq org-icalendar-use-scheduled (quote (event-if-todo todo-start))) 
@@ -6775,47 +6561,6 @@ SPC is "wrap region in block quote tag"
 
 (defun org-icalendar-open-ics-file (file) (start-process "org-icalendar-open-ics-file-process" nil "open" "-a" "/Applications/Calendar.app" file)) (add-hook 'org-icalendar-after-save-hook 'org-icalendar-open-ics-file) 
 #+END_SRC
-
-
-** zone
-
-#+BEGIN_SRC emacs-lisp
-; (setq zone-programs [zone-pgm-dissolve])
-
-; (setq zone-programs [zone-pgm-whack-characters])
-; (setq zone-programs [zone-pgm-rotate])
-; (setq zone-programs [zone-pgm-rotate-LR-lockstep])
-; (setq zone-programs [zone-pgm-rotate-RL-lockstep])
-; (setq zone-programs [zone-pgm-rotate-LR-variable])
-; (setq zone-programs [zone-pgm-rotate-RL-variable])
-; (setq zone-programs [zone-pgm-drip])
-; (setq zone-programs [zone-pgm-drip-fretfully])
-; (setq zone-programs [zone-pgm-five-oclock-swan-dive])
-; (setq zone-programs [zone-pgm-martini-swan-dive])
-
-
-; (setq zone-programs [zone-pgm-stress])
-; (setq zone-programs [zone-pgm-stress-destress])
-
-;; (require 'zone-matrix)
-;; (require 'zone-matrix-settings)
-;; (require 'zone-settings)
-
-;; (setq zone-programs [zone-matrix])
-;; (zone-when-idle 300) 
-
-#+END_SRC
-
-
-
-** rifle
-#+BEGIN_SRC emacs-lisp
-;; (load "/Users/jay/emacs/emacs-settings/helm-org-rifle.el")
-;; (require 'helm-org-rifle)
-
-#+END_SRC
-
-
 
 * sensible defaults
 Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el/sensible-defaults.el at master · hrs/sensible-defaults.el 🔊]]
@@ -6908,6 +6653,123 @@ cmd)
 (call-interactively (intern cmd)))) 
 #+END_SRC
 
+* org
+
+
+** lines 
+*** org-copy-line
+  #+BEGIN_SRC emacs-lisp
+(defun org-select-line ()
+ "Select the current line"
+ (interactive)
+ (org-beginning-of-line) ; move to end of line
+ (set-mark (line-end-position)))
+
+(defun org-copy-line ()
+ (interactive)
+(org-select-line)
+(pasteboard-copy)
+(set-mark nil)) 
+  #+END_SRC
+** subtrees 
+*** eval-subtree
+    :PROPERTIES:
+    :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
+    :END:
+  #+BEGIN_SRC emacs-lisp
+(defun eval-subtree ()
+ (interactive)
+ (org-edit-src-code)
+ (eval-buffer)
+ (org-edit-src-exit)
+ ) 
+  #+END_SRC
+
+** document 
+*** my/delete-duplicate-lines
+    :PROPERTIES:
+    :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
+    :END:
+  #+BEGIN_EXAMPLE emacs-lisp
+(defun my/update-lines (bunches pos keep)
+ (cl-loop with dec = (if keep 0 1)
+      for line being the hash-key of bunches
+      using (hash-value positions) do
+      (puthash
+      line
+      (cl-loop for p in positions
+           if (< p pos) collect p
+           else if (> p pos) collect (- p dec))
+      bunches)))
+
+(defun my/suggest-delete-line (line)
+ (let ((len (length line)))
+  (move-overlay selection (point) (+ (point) len))
+  (let* ((inhibit-quit t)
+      (answer 
+      (with-local-quit
+       (read-key
+        (format "Delete '%s%s'? [y]es/[n]o"
+            (substring line 0 (min len 13))
+            (cond
+            ((> len 16) "...")
+            ((> len 13) (substring line 13 len))
+            (t "")))))))
+   (when (= answer ?y)
+    (delete-region
+     (point)
+     (progn
+      (move-end-of-line 1)
+      (forward-char)
+      (point))))
+   answer)))
+
+(defun my/delete-duplicate-lines (beg end)
+ (interactive
+  (if (region-active-p)
+    (list (region-beginning) (region-end))
+   (list (point-min) (point-max))))
+ (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
+    (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
+    (bunches (make-hash-table :test 'equal))
+    (selection (make-overlay 1 1)))
+  (overlay-put selection 'face 'secondary-selection)
+  (save-excursion
+   (goto-char beg)
+   (move-beginning-of-line 1)
+   (cl-loop for lnum = (count-lines (point-min) beg)
+        then (1+ lnum)
+        for line = (buffer-substring-no-properties
+              (point)
+              (progn
+               (move-end-of-line 1)
+               (point)))
+        while (< (point) end) do
+        (forward-char)
+        (unless
+          (or (and (string-match "[ \t]+" line) ignore-white)
+            (and (string-match "^$" line) ignore-blank))
+         (puthash line (cons lnum (gethash line bunches)) bunches))))
+  (cl-loop for line being the hash-key of bunches 
+       using (hash-value positions)
+       unless (cdr positions) do
+       (remhash line bunches))
+  (cl-loop named :outer for line being the hash-key of bunches do
+       (cl-loop for positions = (gethash line bunches)
+           while positions do
+           (cl-loop with continue = t
+                for pos in positions
+                while continue do
+                (goto-char (point-min))
+                (forward-line pos)
+                (recenter)
+                (cl-case (my/suggest-delete-line line)
+                 (?\C-g (cl-return-from :outer))
+                 (?y)
+                 (otherwise (setf continue nil)))
+                (my/update-lines bunches pos continue))))
+  (delete-overlay selection))) 
+  #+END_EXAMPLE 
 
 * Make Messages Buffer modifiable in Emacs 24.4
 Chen Bin
@@ -6921,123 +6783,6 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
  (add-hook 'messages-buffer-mode-hook 'messages-buffer-mode-hook-setup)) 
 #+END_SRC
 
-* own custom editing funtions 
-** org-copy-line
- #+BEGIN_SRC emacs-lisp
-(defun org-select-line ()
- "Select the current line"
- (interactive)
- (org-beginning-of-line) ; move to end of line
- (set-mark (line-end-position)))
-
-(defun org-copy-line ()
- (interactive)
-(org-select-line)
-(pasteboard-copy)
-(set-mark nil)) 
- #+END_SRC
-
-
-** eval-subtree
-   :PROPERTIES:
-   :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
-   :END:
- #+BEGIN_SRC emacs-lisp
-(defun eval-subtree ()
- (interactive)
- (org-edit-src-code)
- (eval-buffer)
- (org-edit-src-exit)
- ) 
- #+END_SRC
-
-
-** my/delete-duplicate-lines
-   :PROPERTIES:
-   :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
-   :END:
- #+BEGIN_EXAMPLE emacs-lisp
-(defun my/update-lines (bunches pos keep)
-  (cl-loop with dec = (if keep 0 1)
-           for line being the hash-key of bunches
-           using (hash-value positions) do
-           (puthash
-            line
-            (cl-loop for p in positions
-                     if (< p pos) collect p
-                     else if (> p pos) collect (- p dec))
-            bunches)))
-
-(defun my/suggest-delete-line (line)
-  (let ((len (length line)))
-    (move-overlay selection (point) (+ (point) len))
-    (let* ((inhibit-quit t)
-           (answer 
-            (with-local-quit
-              (read-key
-               (format "Delete '%s%s'? [y]es/[n]o"
-                       (substring line 0 (min len 13))
-                       (cond
-                        ((> len 16) "...")
-                        ((> len 13) (substring line 13 len))
-                        (t "")))))))
-      (when (= answer ?y)
-        (delete-region
-         (point)
-         (progn
-           (move-end-of-line 1)
-           (forward-char)
-           (point))))
-      answer)))
-
-(defun my/delete-duplicate-lines (beg end)
-  (interactive
-   (if (region-active-p)
-       (list (region-beginning) (region-end))
-     (list (point-min) (point-max))))
-  (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
-        (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
-        (bunches (make-hash-table :test 'equal))
-        (selection (make-overlay 1 1)))
-    (overlay-put selection 'face 'secondary-selection)
-    (save-excursion
-      (goto-char beg)
-      (move-beginning-of-line 1)
-      (cl-loop for lnum = (count-lines (point-min) beg)
-               then (1+ lnum)
-               for line = (buffer-substring-no-properties
-                           (point)
-                           (progn
-                             (move-end-of-line 1)
-                             (point)))
-               while (< (point) end) do
-               (forward-char)
-               (unless
-                   (or (and (string-match "[ \t]+" line) ignore-white)
-                       (and (string-match "^$" line) ignore-blank))
-                 (puthash line (cons lnum (gethash line bunches)) bunches))))
-    (cl-loop for line being the hash-key of bunches 
-             using (hash-value positions)
-             unless (cdr positions) do
-             (remhash line bunches))
-    (cl-loop named :outer for line being the hash-key of bunches do
-             (cl-loop for positions = (gethash line bunches)
-                      while positions do
-                      (cl-loop with continue = t
-                               for pos in positions
-                               while continue do
-                               (goto-char (point-min))
-                               (forward-line pos)
-                               (recenter)
-                               (cl-case (my/suggest-delete-line line)
-                                 (?\C-g (cl-return-from :outer))
-                                 (?y)
-                                 (otherwise (setf continue nil)))
-                               (my/update-lines bunches pos continue))))
-    (delete-overlay selection))) 
- #+END_EXAMPLE 
-
-
 * org-config-files-mode
 #+BEGIN_EXAMPLE emacs-lisp
 (define-minor-mode org-config-files-local-mode
@@ -7050,7 +6795,7 @@ You can toggle it in necessary files by setting the local variables section at t
 
 #+END_EXAMPLE
 
-* own org-mode custom navigation functions 
+* navigation
 ** next-subtree-same-level-and-narrow
 #+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-same-level-and-narrow ()
@@ -7110,12 +6855,12 @@ You can toggle it in necessary files by setting the local variables section at t
     (goto-char (point-max)) ; tiny-expand works on text preceding point
     (tiny-expand)
     (buffer-string)))
-#+END_SRC
+#+END_SRC 
 
-
-* org-html-slideshow
-Set variables as safe
-#+BEGIN_SRC emacs-lisp
+* presentations 
+** org-html-slideshow
+ Set variables as safe
+ #+BEGIN_SRC emacs-lisp
 (put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t)) 
  
 (put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t)) 
@@ -7130,13 +6875,8 @@ Set variables as safe
 	  (kbd "SPC")
 	  (quote insert-space)))))
 
-#+END_SRC
+ #+END_SRC
 
-
-* Auto-complete stuff 
-'(ac-auto-show-menu 2.0)
-            '(ac-auto-start 4)
-            '(ac-candidate-menu-min 3)
 
 * optimize emacs load time
 #+BEGIN_SRC emacs-lisp
@@ -7160,27 +6900,6 @@ into the main dumped emacs"
     (lambda (file) (princ (format "(load \"%s\")\n" file)))
     (get-loads-from-*Messages*))) 
 #+END_SRC
-
-* autoload
-(if (locate-library "ediff-trees")
-  (autoload 'ediff-trees "ediff-trees" "Start an tree ediff" t)) 
-
-(autoload 'identica-mode "identica-mode.el" "Mode for Updating Identi.ca Microblog" t) 
-
-* hyperbole
-#+BEGIN_EXAMPLE emacs-lisp
-(require 'package)
-(setq package-check-signature nil
-  package-enable-at-startup nil) ;; Prevent double loading of libraries
-
-(add-to-list 'package-archives '("RSW-Packages" . "http://www.plasmas.biz/rswe/") t)
-
-(package-initialize)
-(unless (package-installed-p 'hyperbole)
- (package-refresh-contents)
- (package-install 'hyperbole))
-(require 'hyperbole) 
-#+END_EXAMPLE 
 
 * crux
 #+BEGIN_SRC emacs-lisp
@@ -7327,7 +7046,6 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
  (global-set-key (kbd "C-c v") 'projectile-ag)
  (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
 #+END_SRC
-
 
 * =web-mode=
 
@@ -7638,13 +7356,169 @@ Works!
 ) 
 #+END_SRC
 
-
-* narrow
-#+BEGIN_SRC emacs-lisp
+* modeline
+** narrow
+ #+BEGIN_SRC emacs-lisp
 (spaceline-define-segment narrow
  "Display Narrowed when buffer is narrowed."
  (when (buffer-narrowed-p)
  "Narrowed")) 
 
 (spaceline-spacemacs-theme 'narrow) 
+ #+END_SRC
+
+* Windows 
+*** Split windows correctly
+
+#+BEGIN_SRC emacs-lisp
+;; (setq org-indirect-buffer-display 'current-window)
+(setq undo-limit 100000)
+(setq split-width-threshold 5)
+(setq split-height-threshold 5)
 #+END_SRC
+
+
+* Setting variables
+I should probably eventually break these out of custom-set-variables and organize them according to their function.
+#+BEGIN_SRC emacs-lisp
+
+  (setq mail-kill-buffer-on-exit t)
+  (setq abbrev-all-caps nil)
+  (setq undo-limit 800000)
+  (setq user-full-name "Jay Dixit")
+
+  (setq blink-cursor-mode nil)
+  (setq buffer-stack-show-position nil)
+  (setq buffer-stack-untracked (quote  ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
+  (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar")))
+  (setq calendar-latitude 40.7)
+  (setq case-fold-search t)
+  (setq ccm-recenter-at-end-of-file t)
+  (setq clean-buffer-list-delay-general 1)
+  (setq column-number-mode nil)
+  (setq compose-mail-user-agent-warnings nil)
+  (setq cua-highlight-region-shift-only t)
+  ;; (setq cua-mode nil nil (cua-base))
+  (setq cua-mode nil)
+  (setq debug-on-error t)
+  (setq deft-directory "~/Dropbox/writing/notationaldata/")
+  (setq delete-window-preserve-buffer (quote ("momentum.org" "Current-book-research.txt" "accountability.txt")))
+  (setq dired-clean-up-buffers-too nil)
+  (setq dired-details-hidden-string "")
+  (setq dired-kept-versions 8)
+  (setq display-time-mode t)
+  (setq edit-server-default-major-mode (quote org-mode))
+  (setq edit-server-new-frame t)
+  (setq eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+  (setq grep-highlight-matches (quote always))
+  (setq ido-use-faces t)
+  (setq ido-use-url-at-point t)
+  (setq initial-buffer-choice "~/Dropbox/writing/notationaldata/momentum.org")
+  (setq initial-major-mode (quote org-mode))
+  ;; (setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+
+  (setq make-backup-files t)
+  (setq message-draft-headers (quote (From References Date)))
+
+  (setq message-required-headers (quote (From (optional . References))))
+  (setq mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+  (setq org-M-RET-may-split-line (quote ((item . t))))
+  (setq org-activate-links (quote (bracket plain radio tag date footnote)))
+                      ; (setq org-agenda-jump-prefer-future t)
+                      ; (setq org-agenda-skip-scheduled-if-done t)
+                      ; (setq org-agenda-timegrid-use-ampm t)
+  (setq org-archive-location "archive/%s_archive::")
+  (setq org-ascii-headline-spacing (quote (1 . 1)))
+  (setq org-ascii-table-use-ascii-art t)
+  (setq org-ascii-table-use-ascii-art t)
+  (setq org-catch-invisible-edits (quote error))
+  (setq org-catch-invisible-edits (quote smart))
+  (setq org-ctrl-k-protect-subtree t)
+  (setq org-custom-properties (quote (">")))
+  (setq org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
+  (setq org-display-custom-times nil)
+  (setq org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
+  (setq org-edit-src-content-indentation 4)
+  (setq org-ellipsis (quote org-warning))
+  (setq org-enable-fixed-width-editor nil)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-enforce-todo-dependencies t)
+  (setq org-extend-today-until 8)
+  (setq org-fontify-done-headline t)
+  (setq org-fontify-emphasized-text t)
+  (setq org-footnote-define-inline t)
+  (setq org-footnote-section "Footnotes")
+  (setq org-footnote-tag-for-non-org-mode-files "Footnotes:")
+  ;; (setq org-headline-done ((t (:strike-through t))))
+  (setq org-hide-block-startup nil)
+  (setq org-hide-emphasis-markers t)
+  (setq org-hide-leading-stars t)
+  (setq org-html-container-element "div")
+  (setq org-html-head-include-scripts nil)
+  (setq org-html-html5-fancy t)
+  (setq org-html-postamble nil)
+  (setq org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<blockquote>%s</blockquote>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
+  (setq org-indent-mode-turns-off-org-adapt-indentation nil)
+  (setq org-indent-mode-turns-on-hiding-stars nil)
+  (setq org-insert-mode-line-in-empty-file t)
+  ;; (setq org-list-indent-offset 3)
+  (setq org-log-done nil)
+
+  (setq org-mac-Skim-highlight-selection-p t)
+  (setq org-mac-grab-Firefox+Vimperator-p nil)
+  (setq org-mac-grab-Firefox-app-p nil)
+  (setq org-mac-grab-Mail-app-p nil)
+  (setq org-mac-grab-Safari-app-p nil)
+  (setq org-mac-grab-Together-app-p nil)
+  (setq org-n-level-faces 9)
+  (setq org-odd-levels-only nil)
+  (setq org-provide-checkbox-statistics t)
+  (setq org-replace-disputed-keys nil)
+  (setq org-return-follows-link t)
+  (setq org-special-ctrl-a/e t)
+  (setq org-src-preserve-indentation t)
+  (setq org-startup-align-all-tables t)
+  (setq org-startup-folded nil)
+  (setq org-startup-indented t)
+
+  (setq org-use-speed-commands t)
+  (setq org-yank-adjusted-subtrees t)
+  (setq org2blog/wp-confirm-post nil)
+  (setq org2blog/wp-default-categories (quote ("inspiration" "personal growth" "miscellany")))
+  (setq org2blog/wp-keep-new-lines t)
+  (setq org2blog/wp-show-post-in-browser t)
+  (setq org2blog/wp-use-tags-as-categories t)
+  (setq osx-browse-prefer-background nil)
+  (setq osx-browse-prefer-browser "com.google.Chrome")
+  (setq osx-browse-prefer-new-window t)
+  (setq reb-re-syntax (quote string))
+  (setq smex-prompt-string "I love you. ")
+  (setq standard-indent 3)
+  (setq tooltip-mode nil)
+  ;; (setq tramp-default-method "ssh")
+  (setq undo-limit 800000)
+  (setq user-full-name "Jay Dixit")
+
+  ;; (setq visual-line-mode nil t)
+
+  (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+
+  (setq completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
+
+  (setq message-send-mail-function (quote message-send-mail-with-sendmail))
+  (setq mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+  ;; (setq openwith-associations (quote (("\\.pdf\\'" "open" (file)) ("\\.mp3\\'" "xmms" (file)) ("\\.\\(?:mpe?g\\|avi\\|wmv\\)\\'" "mplayer" ("-idx" file)) ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))))
+  (setq org-export-latex-image-default-option "width=20.5cm")
+  (setq org-export-time-stamp-file nil)
+  (setq org-export-with-clocks t)
+  (setq org-hide-block-startup nil)
+  (setq org-html-head-include-default-style nil)
+  (setq org-html-toplevel-hlevel 2)
+  (setq org-indent-indentation-per-level 2)
+  (setq org-list-allow-alphabetical t)
+  (setq org-priority-faces nil)
+  (setq safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
+  (setq send-mail-function (quote sendmail-send-it))
+
+#+END_SRC
+
