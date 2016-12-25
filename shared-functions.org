@@ -6540,6 +6540,42 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
 ;; any line that ends with a colon 
 
+** next-subtree-same-level-and-narrow
+#+BEGIN_SRC emacs-lisp
+(defun org-next-subtree-same-level-and-narrow ()
+ (interactive)
+ (widen)
+ (org-forward-heading-same-level 1)
+ (org-narrow-to-subtree)
+ )
+
+(defun org-previous-subtree-same-level-and-narrow ()
+ (interactive)
+(org-previous-visible-heading 1) 
+ (widen)
+(org-backward-heading-same-level 1) 
+ (org-narrow-to-subtree)
+ ) 
+#+END_SRC
+
+** next-subtree-and-narrow - original
+#+BEGIN_SRC emacs-lisp
+(defun org-next-subtree-and-narrow ()
+ (interactive)
+ (widen)
+ (org-next-visible-heading 1)
+ (org-narrow-to-subtree)
+ )
+
+(defun org-previous-subtree-and-narrow ()
+ (interactive)
+(org-previous-visible-heading 1) 
+ (widen)
+ (org-previous-visible-heading 1)
+ (org-narrow-to-subtree)
+ ) 
+#+END_SRC
+
 * multiple-cursors-mode-map
 #+BEGIN_SRC emacs-lisp 
  (define-key mc/keymap (kbd ".") 'insert-period) 
@@ -6653,12 +6689,11 @@ cmd)
 (call-interactively (intern cmd)))) 
 #+END_SRC
 
-* org
-
-
-** lines 
-*** org-copy-line
-  #+BEGIN_SRC emacs-lisp
+* org 
+** editing
+*** lines 
+**** org-copy-line
+   #+BEGIN_SRC emacs-lisp
 (defun org-select-line ()
  "Select the current line"
  (interactive)
@@ -6670,27 +6705,44 @@ cmd)
 (org-select-line)
 (pasteboard-copy)
 (set-mark nil)) 
-  #+END_SRC
-** subtrees 
-*** eval-subtree
-    :PROPERTIES:
-    :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
-    :END:
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+
+*** lines
+
+*** paragraphs 
+**** kill whole paragraph
+     :PROPERTIES:
+     :ID:       4DCE53D0-0D37-464B-B398-BD5B4BE18492
+     :END:
+   #+BEGIN_SRC emacs-lisp
+(defun kill-paragraph-from-beginning (b e)
+  (interactive)
+  (mark-paragraph)
+  (kill-region)
+  )
+   #+END_SRC
+
+
+*** subtrees 
+**** eval-subtree
+     :PROPERTIES:
+     :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
+     :END:
+   #+BEGIN_SRC emacs-lisp
 (defun eval-subtree ()
  (interactive)
  (org-edit-src-code)
  (eval-buffer)
  (org-edit-src-exit)
  ) 
-  #+END_SRC
+   #+END_SRC
 
-** document 
-*** my/delete-duplicate-lines
-    :PROPERTIES:
-    :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
-    :END:
-  #+BEGIN_EXAMPLE emacs-lisp
+*** document 
+**** my/delete-duplicate-lines
+     :PROPERTIES:
+     :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
+     :END:
+   #+BEGIN_EXAMPLE emacs-lisp
 (defun my/update-lines (bunches pos keep)
  (cl-loop with dec = (if keep 0 1)
       for line being the hash-key of bunches
@@ -6769,7 +6821,7 @@ cmd)
                  (otherwise (setf continue nil)))
                 (my/update-lines bunches pos continue))))
   (delete-overlay selection))) 
-  #+END_EXAMPLE 
+   #+END_EXAMPLE 
 
 * Make Messages Buffer modifiable in Emacs 24.4
 Chen Bin
@@ -6794,43 +6846,6 @@ Insert below code into the beginning of ~/.emacs because any part of .emacs may 
 You can toggle it in necessary files by setting the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
 
 #+END_EXAMPLE
-
-* navigation
-** next-subtree-same-level-and-narrow
-#+BEGIN_SRC emacs-lisp
-(defun org-next-subtree-same-level-and-narrow ()
- (interactive)
- (widen)
- (org-forward-heading-same-level 1)
- (org-narrow-to-subtree)
- )
-
-(defun org-previous-subtree-same-level-and-narrow ()
- (interactive)
-(org-previous-visible-heading 1) 
- (widen)
-(org-backward-heading-same-level 1) 
- (org-narrow-to-subtree)
- ) 
-#+END_SRC
-
-** next-subtree-and-narrow - original
-#+BEGIN_SRC emacs-lisp
-(defun org-next-subtree-and-narrow ()
- (interactive)
- (widen)
- (org-next-visible-heading 1)
- (org-narrow-to-subtree)
- )
-
-(defun org-previous-subtree-and-narrow ()
- (interactive)
-(org-previous-visible-heading 1) 
- (widen)
- (org-previous-visible-heading 1)
- (org-narrow-to-subtree)
- ) 
-#+END_SRC
 
 * yasnippet fixes
 
@@ -7232,17 +7247,7 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 (setq ediff-diff-options "-w") 
 #+END_SRC
 
-* kill whole paragraph
-#+BEGIN_SRC emacs-lisp
-(defun kill-paragraph-from-beginning (b e)
-  (interactive)
-  (mark-paragraph)
-  (kill-region)
-  )
-#+END_SRC
-
-
-* correct org-mode
+* correct org-mode export
 #+BEGIN_SRC emacs-lisp
 (defun org-repair-export-blocks ()
  "Repair export blocks and INCLUDE keywords in current buffer."
