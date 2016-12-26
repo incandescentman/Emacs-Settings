@@ -609,7 +609,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "STRATEGY" "|")
         (sequence "TIP" "|")
         (sequence "NOTES" "RESEARCH" "POINT" "NARRATIVE" "ANECDOTE" "WRITING" "|")
-        (sequence "PART" "HED" "|")
+        (sequence "PART" "HED" "HEDTK" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
         ))

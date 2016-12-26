@@ -100,7 +100,11 @@ smex
                                     adaptive-wrap
 				    vi-tilde-fringe
             exec-path-from-shell
-
+winner
+hl-line-mode
+xterm-mouse
+popwin
+global-git-commit
 evil-mode evil-escape evil-local evil-org
 evil-search-highlight-persist evil-surround eyebrowse global-undo-tree-mode
 evil-unimpaired
