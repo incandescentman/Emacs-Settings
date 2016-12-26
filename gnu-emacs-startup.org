@@ -452,6 +452,9 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
 
+(define-key key-minor-mode-map (kbd "s-j i l") 'imenu-list)
+(define-key key-minor-mode-map (kbd "s-j i m") 'imenu-list)
+
 (define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point) 
 
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
