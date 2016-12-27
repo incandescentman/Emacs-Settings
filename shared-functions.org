@@ -3697,7 +3697,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
   #+BEGIN_SRC emacs-lisp
 (use-package xah-replace-pairs)
-(defun replace-html-chars-region (begin end)
+(defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
  '(
@@ -3705,6 +3705,17 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["<" "&lt;"]
  [">" "&gt;"]
  )))
+
+(use-package xah-replace-pairs)
+(defun xah-convert-html-chars-to-entities-region (begin end)
+ (interactive "r")
+ (xah-replace-pairs-region begin end
+ '(
+ ["&amp;" "&"]
+ ["&lt;" "<"]
+ ["&gt;" ">"]
+ )))
+
   #+END_SRC
 
 * Monochrome rainbows are the best way to reveal unbalanced delimiters
@@ -6955,3 +6966,4 @@ Works!
 #+BEGIN_SRC emacs-lisp
 (setq org-cycle-emulate-tab nil)
 #+END_SRC
+
