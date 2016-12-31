@@ -793,7 +793,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 ** imenu-list
 #+BEGIN_SRC emacs-lisp
 (require 'imenu-list)
-(add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
 (setq imenu-list-position (quote left))
 
 #+END_SRC
@@ -6964,6 +6964,6 @@ Works!
 
 * disable TAB to indent
 #+BEGIN_SRC emacs-lisp
-(setq org-cycle-emulate-tab nil)
+(setq org-cycle-emulate-tab t)
 #+END_SRC
 

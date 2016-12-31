@@ -450,6 +450,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; mk - mykeybindings
 
 
+(define-key key-minor-mode-map (kbd "s-j r b") 'revert-buffer)
+
 (define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
 
 (define-key key-minor-mode-map (kbd "s-j i l") 'imenu-list)
@@ -3164,6 +3166,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 ;; (require 'fountain-mode)
 
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'fountain-mode-hook '(lambda () (orgstruct-mode 1)))
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
 (defcustom fountain-export-default-command
