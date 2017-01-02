@@ -450,6 +450,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; mk - mykeybindings
 
 
+(define-key key-minor-mode-map (kbd "s-j h l") 'spacemacs/toggle-highlight-current-line-globally-off)
+
 (define-key key-minor-mode-map (kbd "s-j r b") 'revert-buffer)
 
 (define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
@@ -555,6 +557,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
+(define-key key-minor-mode-map (kbd "s-p") 'zin/org-checkbox-next)
+
 (define-key key-minor-mode-map (kbd "s-P") 'pomodoro-start-jay)
 
 (define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
@@ -579,7 +583,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key key-minor-mode-map (kbd "M-0") 'move-region-to-other-window)
 
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
-; org-narrow-to-subtree
+                                        ; org-narrow-to-subtree
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
@@ -661,12 +665,12 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 (define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
 
 (defun copy-minibuffer-contents (arg)
- (interactive "p")
-(beginning-of-visual-line) 
+  (interactive "p")
+  (beginning-of-visual-line) 
   (end-of-buffer) 
- (copy-region-as-kill (mark) (point))
-(push-kill-ring-to-pasteboard)
-)
+  (copy-region-as-kill (mark) (point))
+  (push-kill-ring-to-pasteboard)
+  )
 
 
 
@@ -688,8 +692,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
-; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
-; replaced it with multiple-cursors-hydra/body for now
+;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
+;; replaced it with multiple-cursors-hydra/body for now
 
 ;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 

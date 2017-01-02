@@ -605,38 +605,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 
    #+END_SRC 
 
-
-
-;; '(org-agenda-export-html-style "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://dixit.ca/css/email.css\" />")
-;; '(org-html-container-element "div")
-;;  '(org-html-footnotes-section
-;;    "<div id=\"footnotes\">
-;; <h2 class=\"footnotes\">%s </h2>
-;; <div id=\"footnote\">
-;; %s
-;; </div>
-;; </div>")
-
-
-
-
-
-;; (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")) t)
-;; (setq org-export-html-style-include-default t) 
-;; (setq org-export-allow-bind-keywords t)
-;; (setq org-export-blocks-witheld (quote (hidden)))
-;; '(org-export-latex-date-format "%d %B %Y." t)
-;;  '(org-export-latex-emphasis-alist
-;;    (quote
-;;     (("*" "\\emph{%s}" nil)
-;;      ("/" "\\textit{%s}" nil)
-;;      ("_" "\\underline{%s}" nil)
-;;      ("+" "\\st{%s}" nil)
-;;      ("=" "\\verb" t)
-;;      ("~" "\\verb" t))) t)
-;;  '(org-export-latex-image-default-option "width=20.5cm")
-
-
 *** Change section numbering depending on what export format I use
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
@@ -2998,7 +2966,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "j cf" 'customize-face) 
 
-(define-super-key "j h" 'org-export-dispatch)
+;; (define-super-key "j h" 'org-export-dispatch)
 
 
 
@@ -5040,6 +5008,15 @@ event of an error or nonlocal exit."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
  #+END_EXAMPLE 
+
+** a temporary hack
+#+BEGIN_SRC emacs-lisp
+(defun zin/org-checkbox-next ()
+ (interactive)
+ (when (org-at-item-checkbox-p)
+ (org-toggle-checkbox))
+ (org-next-item)) 
+#+END_SRC
 
 * multiple cursors
 
