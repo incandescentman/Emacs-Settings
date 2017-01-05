@@ -4933,9 +4933,13 @@ C-c q
 * org-ellipsis
 
   #+BEGIN_SRC emacs-lisp
-(setq org-ellipsis " ◦◦◦ ") 
-; (set-face-attribute org-ellipsis '(((:foreground "violet" :underline t))))
+;; (setq org-ellipsis " ◦◦◦ ") 
+;; (set-face-attribute org-ellipsis '(((:background "white" :underline nil))))
 
+;; (setq org-ellipsis "⤵")
+;; other interesting characters are ▼, ↴, ⬎, ⤷, and ⋱ 
+
+(setq org-ellipsis "…")
   #+END_SRC
 
 
