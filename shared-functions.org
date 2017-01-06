@@ -2338,7 +2338,21 @@ Also converts full stops to commas."
       (call-interactively 'upcase-region)
     (call-interactively 'upcase-word)))
 
-(global-set-key "\M-c" 'endless/capitalize)
+(defun capitalize-or-endless/capitalize ()
+(interactive)
+(if
+
+; If
+(or
+(looking-back "^")
+)
+    (call-interactively 'capitalize-word); then
+    (call-interactively 'endless/capitalize); else
+
+)
+)
+
+(global-set-key "\M-c" 'capitalize-or-endless/capitalize)
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key (kbd "M-u") 'endless/upcase)
 (global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!

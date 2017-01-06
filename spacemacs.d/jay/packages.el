@@ -40,7 +40,7 @@ jay-packages
   flyspell-lazy
   fountain-mode
   frame-cmds
-  frame-restore
+;;  frame-restore
   fuzzy
   gist
   ;; graphviz-dot-mode
@@ -122,7 +122,7 @@ adaptive-wrap
 (defun jay/init-ido-hacks () (use-package ido-hacks))
 (defun jay/init-openwith () (use-package openwith))
 (defun jay/init-wc-mode () (use-package wc-mode))
-(defun jay/init-frame-restore () (use-package frame-restore))
+;; (defun jay/init-frame-restore () (use-package frame-restore))
 (defun jay/init-frame-cmds () (use-package frame-cmds))
 
 
