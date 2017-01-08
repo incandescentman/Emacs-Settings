@@ -266,6 +266,43 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 #+END_SRC
 
+*** disable TAB to indent
+:PROPERTIES:
+:ID:       2128D5F5-F979-4E5E-8742-D0E61BF06A7F
+:END:
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-emulate-tab t)
+#+END_SRC
+
+*** Windows 
+:PROPERTIES:
+:ID:       B02E7409-F743-4FCB-A1D7-E0F3B65BBD67
+:END:
+**** Split windows correctly
+
+#+BEGIN_SRC emacs-lisp
+;; (setq org-indirect-buffer-display 'current-window)
+(setq undo-limit 100000)
+(setq split-width-threshold 5)
+(setq split-height-threshold 5)
+#+END_SRC
+
+
+
+*** modeline
+:PROPERTIES:
+:ID:       830F0916-D929-4644-B46F-742D6B58D2A7
+:END:
+**** narrow
+ #+BEGIN_SRC emacs-lisp
+(spaceline-define-segment narrow
+ "Display Narrowed when buffer is narrowed."
+ (when (buffer-narrowed-p)
+ "Narrowed")) 
+
+(spaceline-spacemacs-theme 'narrow) 
+ #+END_SRC
+
 ** quitting emacs 
 *** Ask before exiting Emacs
 
@@ -457,6 +494,112 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (add-to-list 'custom-theme-load-path "~/emacs/emacs-settings/sublime-themes-jay/")
 #+END_SRC
 
+* My custom functions/settings
+** Buffers
+*** Buffer-stack
+I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
+#+BEGIN_SRC emacs-lisp
+;; (require 'buffer-stack)
+#+END_SRC
+
+GNU Emacs:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(s-right)] 'buffer-stack-down)
+(global-set-key [(s-left)] 'buffer-stack-up)
+#+END_SRC
+
+Aquamacs:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [(A-right)] 'buffer-stack-down)
+(global-set-key [(A-left)] 'buffer-stack-up)
+#+END_SRC
+
+*** Uniqify buffers
+#+BEGIN_SRC emacs-lisp
+;; meaningful names for buffers with the same name
+;; from prelude
+;; http://bit.ly/1Woabxz
+(use-package uniquify)
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers 
+#+END_SRC
+
+*** Uniqify new buffers
+Open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
+#+BEGIN_SRC emacs-lisp
+(defvar new-buffer-count 0)
+
+(defun new-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (org-mode))
+;; (global-set-key (kbd "s-T") 'new-buffer)
+;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
+
+(defun new-lisp-buffer ()
+  (interactive)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (emacs-lisp-mode))
+
+#+END_SRC
+
+*** new scratch buffer
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; multiple scratch buffers                                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; uses package "scratch"
+(autoload 'scratch "scratch" nil t) 
+(global-set-key (kbd "s-T") 'scratch) 
+
+#+END_SRC
+
+*** Create new buffer as org-mode subtree in current file
+#+BEGIN_SRC emacs-lisp
+(defun org-new-scratch-buffer ()
+  (interactive)
+  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
+;; (org-tree-to-indirect-buffer 'current-window)
+(org-narrow-to-subtree)
+
+  )
+#+END_SRC
+
+*** Don't autocorrect in minibuffer
+#+BEGIN_SRC emacs-lisp
+(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
+(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
+(add-hook 'minibuffer-setup-hook (lambda ()
+                                   (abbrev-mode -1)))
+#+END_SRC
+
+*** Ignore case when reading buffer and file names
+#+BEGIN_SRC emacs-lisp
+(setq read-buffer-completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+#+END_SRC
+
+** Reveal in finder
+
+#+BEGIN_SRC emacs-lisp
+;; (require 'reveal-in-finder)
+#+END_SRC
+
+** cycle-hyphenation-or-toggle-item
+
+#+BEGIN_SRC emacs-lisp
+(defun cycle-hyphenation-or-toggle-item ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'org-toggle-item)
+    (cycle-hyphenation)))
+
+#+END_SRC
+
 * org-mode
 ** org setup
 *** Some favorite ~org~ settings:
@@ -632,6 +775,54 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
 
 #+END_SRC 
+
+*** ignore secret headlines tagged with "ignore"
+:PROPERTIES:
+:ID:       EA8DFF1F-F89F-4B5E-AC56-28EED76EE68C
+:END:
+#+BEGIN_SRC emacs-lisp
+(require 'ox-extra)
+(ox-extras-activate '(ignore-headlines)) 
+#+END_SRC
+
+Works!
+
+*** correct org-mode export
+:PROPERTIES:
+:ID:       08203F72-2C72-4E41-816A-D26984A8862B
+:END:
+#+BEGIN_SRC emacs-lisp
+(defun org-repair-export-blocks ()
+ "Repair export blocks and INCLUDE keywords in current buffer."
+ (interactive)
+ (when (eq major-mode 'org-mode)
+  (let ((case-fold-search t)
+     (back-end-re (regexp-opt
+            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
+             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
+            t)))
+   (org-with-wide-buffer
+    (goto-char (point-min))
+    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
+     (save-excursion
+      (while (re-search-forward block-re nil t)
+       (let ((element (save-match-data (org-element-at-point))))
+        (when (eq (org-element-type element) 'special-block)
+         (save-excursion
+          (goto-char (org-element-property :end element))
+          (save-match-data (search-backward "_"))
+          (forward-char)
+          (insert "EXPORT")
+          (delete-region (point) (line-end-position)))
+         (replace-match "EXPORT \\1" nil nil nil 1))))))
+    (let ((include-re
+       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
+     (while (re-search-forward include-re nil t)
+      (let ((element (save-match-data (org-element-at-point))))
+       (when (and (eq (org-element-type element) 'keyword)
+            (string= (org-element-property :key element) "INCLUDE"))
+        (replace-match "EXPORT \\1" nil nil nil 1))))))))) 
+#+END_SRC
 
 ** org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
@@ -1151,304 +1342,6 @@ Make org-capture open in full window! :-)
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
 
-* My custom functions/settings
-** Buffers
-*** Buffer-stack
-I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
-#+BEGIN_SRC emacs-lisp
-;; (require 'buffer-stack)
-#+END_SRC
-
-GNU Emacs:
-#+BEGIN_SRC emacs-lisp
-(global-set-key [(s-right)] 'buffer-stack-down)
-(global-set-key [(s-left)] 'buffer-stack-up)
-#+END_SRC
-
-Aquamacs:
-#+BEGIN_SRC emacs-lisp
-(global-set-key [(A-right)] 'buffer-stack-down)
-(global-set-key [(A-left)] 'buffer-stack-up)
-#+END_SRC
-
-*** Uniqify buffers
-#+BEGIN_SRC emacs-lisp
-;; meaningful names for buffers with the same name
-;; from prelude
-;; http://bit.ly/1Woabxz
-(use-package uniquify)
-(setq uniquify-buffer-name-style 'forward)
-(setq uniquify-separator "/")
-(setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
-(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers 
-#+END_SRC
-
-*** Uniqify new buffers
-Open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
-#+BEGIN_SRC emacs-lisp
-(defvar new-buffer-count 0)
-
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (org-mode))
-;; (global-set-key (kbd "s-T") 'new-buffer)
-;; (define-key key-minor-mode-map "\s-\S-T" 'new-buffer)
-
-(defun new-lisp-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (emacs-lisp-mode))
-
-#+END_SRC
-
-*** new scratch buffer
-#+BEGIN_SRC emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; multiple scratch buffers                                               ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; uses package "scratch"
-(autoload 'scratch "scratch" nil t) 
-(global-set-key (kbd "s-T") 'scratch) 
-
-#+END_SRC
-
-*** Create new buffer as org-mode subtree in current file
-#+BEGIN_SRC emacs-lisp
-(defun org-new-scratch-buffer ()
-  (interactive)
-  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-;; (org-tree-to-indirect-buffer 'current-window)
-(org-narrow-to-subtree)
-
-  )
-#+END_SRC
-
-*** Don't autocorrect in minibuffer
-#+BEGIN_SRC emacs-lisp
-(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
-(add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
-(add-hook 'minibuffer-setup-hook (lambda ()
-                                   (abbrev-mode -1)))
-#+END_SRC
-
-*** Ignore case when reading buffer and file names
-#+BEGIN_SRC emacs-lisp
-(setq read-buffer-completion-ignore-case t)
-(setq read-file-name-completion-ignore-case t)
-#+END_SRC
-
-** Reveal in finder
-
-#+BEGIN_SRC emacs-lisp
-;; (require 'reveal-in-finder)
-#+END_SRC
-
-** cycle-hyphenation-or-toggle-item
-
-#+BEGIN_SRC emacs-lisp
-(defun cycle-hyphenation-or-toggle-item ()
-  (interactive)
-  (if (region-active-p)
-      (call-interactively 'org-toggle-item)
-    (cycle-hyphenation)))
-
-#+END_SRC
-
-
-
-* Browsing
-** Make URLs in comments/strings clickable
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hooks 'goto-address-prog-mode)
-#+END_SRC
-
-** Set the default browser
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-#+END_SRC
-
-** Edit with Emacs
-
-To enable Edit with Emacs in Chrome:
-#+BEGIN_SRC emacs-lisp
-;; (require 'edit-server)
-;; (edit-server-start)
-#+END_SRC
-
-* Miscellaneous/unsorted settings
-
-#+BEGIN_SRC emacs-lisp
-'(cua-enable-cua-keys (quote shift))
-'(cua-highlight-region-shift-only t)
-'(cua-mode nil nil (cua-base))
-'(send-mail-function (quote sendmail-send-it))
-'(shift-select-mode nil)
-'(transient-mark-mode t)
-
-'(global-flyspell-mode t)
-'(message-send-mail-function (quote message-send-mail-with-sendmail))
-'(mail-send-mail-function (quote message-send-mail-with-sendmail))
-'(setq mail-user-agent 'message-user-agent)
-'(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
-'(ns-right-command-modifier (quote meta))
-'(ns-tool-bar-display-mode (quote both) t)
-'(ns-tool-bar-size-mode nil t)
-;; '(standard-indent 3)
-'(ns-function-modifier (quote meta))
-(transient-mark-mode t)
-(tooltip-mode -1)
-(setq ns-function-modifier 'hyper)
-;; open files in an existing frame instead of a new frame
-(setq ns-pop-up-frames nil)
-#+END_SRC
-
-** Open everything in its right mode; use ~org-mode~ whenever possible
-
-#+BEGIN_SRC emacs-lisp
-(setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
-;; is this the best mode for editing HTML?
-(setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
-#+END_SRC
-
-** Enable highlighting of text similar to standard word processors
-
-#+BEGIN_SRC emacs-lisp
-'(org-support-shift-select (quote always))
-#+END_SRC
-
-** message-mode hooks
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-capitalize)
-(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
-;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
-#+END_SRC
-
-** Define my default directory:
-
-#+BEGIN_SRC emacs-lisp
-(setq default-directory "~/Dropbox/writing/" )
-#+END_SRC
-
-* Backups
-Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][How do I control how Emacs makes backup files? - Stack Overflow]]
-
-
-** Make backups:
-#+BEGIN_SRC emacs-lisp
-;; Default and per-save backups go here:
-(setq backup-directory-alist '(("" . "~/emacs/backup/per-save")))
-
-(setq make-backup-files t        ; backup of a file the first time it is saved.
-   backup-by-copying t        ; don't clobber symlinks
-   version-control t         ; version numbers for backup files
-   delete-old-versions t       ; delete excess backup files silently
-   delete-by-moving-to-trash t
-   kept-old-versions 6        ; oldest versions to keep when a new numbered backup is made (default: 2)
-   kept-new-versions 9        ; newest versions to keep when a new numbered backup is made (default: 2)
-   auto-save-default t        ; auto-save every buffer that visits a file
-   auto-save-timeout 20       ; number of seconds idle time before auto-save (default: 30)
-   auto-save-interval 200      ; number of keystrokes between auto-saves (default: 300) 
-vc-make-backup-files t ; Make backups of files, even when they're in version control 
-   ) 
-#+END_SRC
-
-** backing up on every save and backing up versioned files. 
-#+BEGIN_SRC emacs-lisp
-
-(defun force-backup-of-buffer ()
- ;; Make a special "per session" backup at the first save of each
- ;; emacs session.
- (when (not buffer-backed-up)
-  ;; Override the default parameters for per-session backups.
-  (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
-     (kept-new-versions 3))
-   (backup-buffer)))
- ;; Make a "per save" backup on each save. The first save results in
- ;; both a per-session and a per-save backup, to keep the numbering
- ;; of per-save backups consistent.
- (let ((buffer-backed-up nil))
-  (backup-buffer)))
-
-(add-hook 'before-save-hook 'force-backup-of-buffer) 
-
-#+END_SRC
-
-
-* Message mode
-
-** Report problems with the SMTP server
-
-#+BEGIN_SRC emacs-lisp
-(setq smtpmail-debug-info t)
-#+END_SRC
-
-** Add Cc and Bcc headers to the message buffer
-
-#+BEGIN_SRC emacs-lisp
-;; (setq message-default-mail-headers "Cc: \nBcc: \n")
-(setq mail-user-agent 'message-user-agent)
-(setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
-#+END_SRC
-
-** Wrapper for ~message-mail~ that prompts for the 'to' and 'subject' lines
-
-#+BEGIN_SRC emacs-lisp
-(defun mail-region (b e to subject)
-  "Send the current region in an email"
-  (interactive "r\nsRecipient: \nsSubject: ")
-  (let ((orig-buffer (current-buffer)))
-    (message-mail to subject)
-    (message-goto-body)
-    (insert (save-excursion (set-buffer orig-buffer)
-			    (buffer-substring-no-properties b e)))
-    (message-send-and-exit)))
-#+END_SRC
-
-** Forgot what this is
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'completion-styles 'initials t)
-#+END_SRC
-
-** orgstruct mode
-#+BEGIN_SRC emacs-lisp
-;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-(add-hook 'message-mode-hook 'orgstruct-mode 'append)
-; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
-(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-#+END_SRC
-
-** Remember recent email addresses 
-#+BEGIN_SRC emacs-lisp
-;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
-;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
-;; (require 'recent-addresses)
-;; (recent-addresses-mode 1)
-;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
-
-;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-(setq mail-kill-buffer-on-exit nil)
-(setq make-backup-files t)
-(setq message-draft-headers (quote (From References Date)))
-(setq message-kill-buffer-on-exit nil)
-(setq message-required-headers (quote (From (optional . References))))
-;; (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize)))
-#+END_SRC
-
-when replying, look kind of like gmail 
-
-#+BEGIN_SRC emacs-lisp
-(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
-;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
-#+END_SRC
-
 * org-mode other packages
 
 ** org-pomodoro
@@ -1632,6 +1525,193 @@ margin-bottom: 1em;
 (setq org-download-method (quote directory))
   #+END_SRC
 
+* Browsing
+** Make URLs in comments/strings clickable
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'find-file-hooks 'goto-address-prog-mode)
+#+END_SRC
+
+** Set the default browser
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+#+END_SRC
+
+** Edit with Emacs
+
+To enable Edit with Emacs in Chrome:
+#+BEGIN_SRC emacs-lisp
+;; (require 'edit-server)
+;; (edit-server-start)
+#+END_SRC
+
+* Miscellaneous/unsorted settings
+
+#+BEGIN_SRC emacs-lisp
+'(cua-enable-cua-keys (quote shift))
+'(cua-highlight-region-shift-only t)
+'(cua-mode nil nil (cua-base))
+'(send-mail-function (quote sendmail-send-it))
+'(shift-select-mode nil)
+'(transient-mark-mode t)
+
+'(global-flyspell-mode t)
+'(message-send-mail-function (quote message-send-mail-with-sendmail))
+'(mail-send-mail-function (quote message-send-mail-with-sendmail))
+'(setq mail-user-agent 'message-user-agent)
+'(global-set-key [(A-W)]  'buffer-stack-bury-and-kill)
+'(ns-right-command-modifier (quote meta))
+'(ns-tool-bar-display-mode (quote both) t)
+'(ns-tool-bar-size-mode nil t)
+;; '(standard-indent 3)
+'(ns-function-modifier (quote meta))
+(transient-mark-mode t)
+(tooltip-mode -1)
+(setq ns-function-modifier 'hyper)
+;; open files in an existing frame instead of a new frame
+(setq ns-pop-up-frames nil)
+#+END_SRC
+
+** Open everything in its right mode; use ~org-mode~ whenever possible
+
+#+BEGIN_SRC emacs-lisp
+(setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
+;; is this the best mode for editing HTML?
+(setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
+#+END_SRC
+
+** Enable highlighting of text similar to standard word processors
+
+#+BEGIN_SRC emacs-lisp
+'(org-support-shift-select (quote always))
+#+END_SRC
+
+** message-mode hooks
+
+#+BEGIN_SRC emacs-lisp
+(use-package auto-capitalize)
+(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
+;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
+#+END_SRC
+
+** Define my default directory:
+
+#+BEGIN_SRC emacs-lisp
+(setq default-directory "~/Dropbox/writing/" )
+#+END_SRC
+
+* Backups
+Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][How do I control how Emacs makes backup files? - Stack Overflow]]
+
+** Make backups:
+#+BEGIN_SRC emacs-lisp
+;; Default and per-save backups go here:
+(setq backup-directory-alist '(("" . "~/emacs/backup/per-save")))
+
+(setq make-backup-files t        ; backup of a file the first time it is saved.
+   backup-by-copying t        ; don't clobber symlinks
+   version-control t         ; version numbers for backup files
+   delete-old-versions t       ; delete excess backup files silently
+   delete-by-moving-to-trash t
+   kept-old-versions 6        ; oldest versions to keep when a new numbered backup is made (default: 2)
+   kept-new-versions 9        ; newest versions to keep when a new numbered backup is made (default: 2)
+   auto-save-default t        ; auto-save every buffer that visits a file
+   auto-save-timeout 20       ; number of seconds idle time before auto-save (default: 30)
+   auto-save-interval 200      ; number of keystrokes between auto-saves (default: 300) 
+vc-make-backup-files t ; Make backups of files, even when they're in version control 
+   ) 
+#+END_SRC
+
+** backing up on every save and backing up versioned files. 
+#+BEGIN_SRC emacs-lisp
+
+(defun force-backup-of-buffer ()
+ ;; Make a special "per session" backup at the first save of each
+ ;; emacs session.
+ (when (not buffer-backed-up)
+  ;; Override the default parameters for per-session backups.
+  (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+     (kept-new-versions 3))
+   (backup-buffer)))
+ ;; Make a "per save" backup on each save. The first save results in
+ ;; both a per-session and a per-save backup, to keep the numbering
+ ;; of per-save backups consistent.
+ (let ((buffer-backed-up nil))
+  (backup-buffer)))
+
+(add-hook 'before-save-hook 'force-backup-of-buffer) 
+
+#+END_SRC 
+
+* message mode
+
+** Report problems with the SMTP server
+
+#+BEGIN_SRC emacs-lisp
+(setq smtpmail-debug-info t)
+#+END_SRC
+
+** Add Cc and Bcc headers to the message buffer
+
+#+BEGIN_SRC emacs-lisp
+;; (setq message-default-mail-headers "Cc: \nBcc: \n")
+(setq mail-user-agent 'message-user-agent)
+(setq auto-mode-alist (cons '("\\.email" . message-mode) auto-mode-alist))
+#+END_SRC
+
+** Wrapper for ~message-mail~ that prompts for the 'to' and 'subject' lines
+
+#+BEGIN_SRC emacs-lisp
+(defun mail-region (b e to subject)
+  "Send the current region in an email"
+  (interactive "r\nsRecipient: \nsSubject: ")
+  (let ((orig-buffer (current-buffer)))
+    (message-mail to subject)
+    (message-goto-body)
+    (insert (save-excursion (set-buffer orig-buffer)
+			    (buffer-substring-no-properties b e)))
+    (message-send-and-exit)))
+#+END_SRC
+
+** Forgot what this is
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'completion-styles 'initials t)
+#+END_SRC
+
+** orgstruct mode
+#+BEGIN_SRC emacs-lisp
+;; orgstruct++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
+(add-hook 'message-mode-hook 'orgstruct-mode 'append)
+; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
+(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
+#+END_SRC
+
+** Remember recent email addresses 
+#+BEGIN_SRC emacs-lisp
+;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
+;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
+;; (require 'recent-addresses)
+;; (recent-addresses-mode 1)
+;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+
+;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit nil)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit nil)
+(setq message-required-headers (quote (From (optional . References))))
+;; (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (org-mime-htmlize)))
+#+END_SRC
+
+when replying, look kind of like gmail 
+
+#+BEGIN_SRC emacs-lisp
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line) 
+#+END_SRC
 
 * ~eshell~
 
@@ -2129,9 +2209,7 @@ dired-omit-extensions
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 ;; (add-hook 'org-mode-hook 'wc-mode) 
-#+END_SRC
-
-* word count
+** count words
 #+BEGIN_SRC emacs-lisp
 (defun word-count (arg)
 (interactive "r") 
@@ -2148,7 +2226,7 @@ I think this is correct:
 (setq ls-lisp-ignore-case 't)
 #+END_EXAMPLE 
 
-* Web research functions
+* web research functions
 ** Sourcing / Citing / Attributing
 *** Copy link from Chrome
 #+BEGIN_SRC emacs-lisp
@@ -6635,7 +6713,7 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
  (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
 #+END_SRC
 
-* =web-mode=
+* web-mode 
 
 If I'm in =web-mode=, I'd like to:
 
@@ -6820,40 +6898,6 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 (setq ediff-diff-options "-w") 
 #+END_SRC
 
-* correct org-mode export
-#+BEGIN_SRC emacs-lisp
-(defun org-repair-export-blocks ()
- "Repair export blocks and INCLUDE keywords in current buffer."
- (interactive)
- (when (eq major-mode 'org-mode)
-  (let ((case-fold-search t)
-     (back-end-re (regexp-opt
-            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
-             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
-            t)))
-   (org-with-wide-buffer
-    (goto-char (point-min))
-    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
-     (save-excursion
-      (while (re-search-forward block-re nil t)
-       (let ((element (save-match-data (org-element-at-point))))
-        (when (eq (org-element-type element) 'special-block)
-         (save-excursion
-          (goto-char (org-element-property :end element))
-          (save-match-data (search-backward "_"))
-          (forward-char)
-          (insert "EXPORT")
-          (delete-region (point) (line-end-position)))
-         (replace-match "EXPORT \\1" nil nil nil 1))))))
-    (let ((include-re
-       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
-     (while (re-search-forward include-re nil t)
-      (let ((element (save-match-data (org-element-at-point))))
-       (when (and (eq (org-element-type element) 'keyword)
-            (string= (org-element-property :key element) "INCLUDE"))
-        (replace-match "EXPORT \\1" nil nil nil 1))))))))) 
-#+END_SRC
-
 * weather
 #+BEGIN_SRC emacs-lisp
 (use-package wttrin
@@ -6913,14 +6957,6 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 #+END_SRC
 
-* ignore secret headlines tagged with "ignore"
-#+BEGIN_SRC emacs-lisp
-(require 'ox-extra)
-(ox-extras-activate '(ignore-headlines)) 
-#+END_SRC
-
-Works!
-
 * screenflow
 #+BEGIN_SRC emacs-lisp
 (defun screenflick-mode ()
@@ -6932,33 +6968,5 @@ Works!
 (toggle-fullscreen)
 (writeroom-mode)
 ) 
-#+END_SRC
-
-* modeline
-** narrow
- #+BEGIN_SRC emacs-lisp
-(spaceline-define-segment narrow
- "Display Narrowed when buffer is narrowed."
- (when (buffer-narrowed-p)
- "Narrowed")) 
-
-(spaceline-spacemacs-theme 'narrow) 
- #+END_SRC
-
-* Windows 
-*** Split windows correctly
-
-#+BEGIN_SRC emacs-lisp
-;; (setq org-indirect-buffer-display 'current-window)
-(setq undo-limit 100000)
-(setq split-width-threshold 5)
-(setq split-height-threshold 5)
-#+END_SRC
-
-
-
-* disable TAB to indent
-#+BEGIN_SRC emacs-lisp
-(setq org-cycle-emulate-tab t)
 #+END_SRC
 

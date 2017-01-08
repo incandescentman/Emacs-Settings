@@ -56,6 +56,7 @@ jay-packages
   maxframe
   multicolumn
   multiple-cursors
+  neopastebin
   nm
 ;;  notmuch
   olivetti
@@ -173,6 +174,9 @@ adaptive-wrap
 (defun jay/init-discover-my-major () (use-package discover-my-major))
 
 (defun jay/init-direx () (use-package direx))
+
+
+(defun jay/init-neopastebin () (use-package neopastebin))
 
 ;; (defun jay/init-org-vcard () (use-package org-vcard))
 
