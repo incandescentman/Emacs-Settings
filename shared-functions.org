@@ -2276,21 +2276,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (yank))
 #+END_SRC
 
-* Abbrevs
-#+BEGIN_SRC emacs-lisp
-(setq abbrev-all-caps nil)
-
-#+END_SRC
-** Disable autocorrect in Smex
-
-
-#+BEGIN_SRC emacs-lisp
-(defun conditionally-disable-abbrev ()
-  ""
-  (if (string-match "smex-" (format "%s" this-command))
-      (abbrev-mode -1)))
-#+END_SRC
-
 * My custom functions for working with dates and times
 
 #+BEGIN_SRC emacs-lisp
@@ -2533,7 +2518,6 @@ traditional word processors, highlighting whole words at a time:
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
 #+END_SRC
 
-* Prose editing functions
 ** Working with windows
 Transpose windows, useful:
 #+BEGIN_SRC emacs-lisp
@@ -2665,7 +2649,6 @@ A useful function: remove a hyperlink but leave the link description:
     (apply 'delete-region remove)
     (insert description))))
 #+END_SRC
-
 
 * Working with files
 ** Reopen last closed file, very useful:
@@ -2843,7 +2826,6 @@ function I have a persistent buffer list available.
 #+END_SRC
 
 
-* Extra functionality
 ** Google search
 Enable Google search:
 #+BEGIN_SRC emacs-lisp
@@ -3602,16 +3584,8 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 #+END_SRC
 
 
-* words to never upcase (always downcase)
-#+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
-#+END_SRC
 
-
-
-* capitalization
-
-
+* capitalization 
 ** words to never downcase
 #+BEGIN_SRC emacs-lisp
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
@@ -3635,11 +3609,9 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 #+END_SRC 
 
-* startup
+** words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-;; (load-theme 'leuven)
-;; (incarnadine-cursor)
-;; (monaco-font)
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 #+END_SRC
 
 * org-links
@@ -3654,9 +3626,7 @@ source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade)
 
-
-* Pop to mark
-
+* pop to mark
 Handy way of getting back to previous places.
 
 #+BEGIN_SRC emacs-lisp
@@ -3912,7 +3882,6 @@ Single Capitals as you type."
       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
       (define-key yas-keymap [tab] 'yas-next-field))) 
 #+END_SRC
-
 
 * flyspell
 
