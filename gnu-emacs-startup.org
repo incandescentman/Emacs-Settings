@@ -14,6 +14,7 @@
     - =brew tap railwaycat/emacsmacport= 
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
+
 * Environment settings
 ** Handle Emacs UTF-8 input
 
@@ -966,7 +967,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 * Pastebin
-
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/gnulisp/emacs-pastebin-master/")
 (require 'neopastebin)
@@ -2890,7 +2890,7 @@ t)
 #+END_SRC
 
 
-* TODO [#A] check my changes to backward-kill-word-correctly?          :rudi:
+* TODO [#A] check my changes to backward-kill-word-correctly? 
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
 I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
@@ -2998,9 +2998,7 @@ No space. Does that make sense? Thanks!
 )
 #+END_SRC
 
-* PLEASE-CHECK-MY-INEPT-CODE [#C] backward-kill-word-correctly-and-capitalize :rudi:
-I wrote this by imitating the format of kill-word-correctly-and-capitalize. I think it's OK. Can you make sure? Thanks!
-
+* backward-kill-word-correctly-and-capitalize 
 #+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
@@ -3010,7 +3008,6 @@ I wrote this by imitating the format of kill-word-correctly-and-capitalize. I th
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
 #+END_SRC
-
 
 * defadvice capitalize-word
 #+BEGIN_SRC emacs-lisp
@@ -3164,7 +3161,6 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 )
 
 * fountain
-
   #+BEGIN_SRC emacs-lisp
 ;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
 ;; (require 'fountain-mode)
@@ -3220,9 +3216,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 +" "<br><br>")
      ("
-" "<br>"))))
-
-
+" "<br>")))) 
   #+END_SRC
 
 * display file name
@@ -3418,6 +3412,7 @@ s-i
             (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
 
 #+END_SRC
+
 * sign current email
 #+BEGIN_SRC emacs-lisp
 (defvar *mail-signature* "\n---\nJay Dixit\n(646) 355-8001\njaydixit.com")
@@ -3427,6 +3422,7 @@ s-i
     (end-of-buffer)
     (insert *mail-signature*)))
 #+END_SRC
+
 * custom-send-message
 #+BEGIN_SRC emacs-lisp
 (defun custom-send-message (arg)
@@ -3436,6 +3432,7 @@ s-i
   (save-buffer-to-sent-emails-org-file)
   (send-message-without-bullets))
 #+END_SRC
+
 * orgstruct-mode-map
 
 #+BEGIN_SRC emacs-lisp
