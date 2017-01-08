@@ -15,7 +15,7 @@
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
-* Environment settings
+* environment settings
 ** Handle Emacs UTF-8 input
 
 #+BEGIN_SRC emacs-lisp
@@ -37,7 +37,7 @@
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
 #+END_SRC
 
-* Abbreviations
+* abbreviations
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
@@ -88,7 +88,7 @@ Automatically load abbreviations table:
   #+END_SRC
 
 
-* Fullscreen settings
+* fullscreen settings
 
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
@@ -121,7 +121,7 @@ Automatically load abbreviations table:
 
 #+END_SRC
 
-* Directory settings
+* directory settings
 
 There is probably a lot of redundancy here, I don't understand this stuff too
 well.
@@ -175,7 +175,7 @@ well.
 ;;(require 'dired-details+)
 #+END_SRC
 
-* Other functions
+* other functions
 
 Manually remove the scrollbar if default setting fails when creating a new frame:
 
@@ -205,7 +205,7 @@ autosaves?
     ad-do-it))
 #+END_SRC
 
-* Isolate Emacs kill ring from the OSX system pasteboard (clipboard).
+* isolate Emacs kill ring from the OSX system pasteboard (clipboard).
 
 Very important, I use this all the time.  These are custom functions to separate
 the OSX clipboard from Emacs' kill ring, effectively giving me two separate
@@ -411,7 +411,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   )
   #+END_SRC
 
-* Keybindings
+* keybindings
 
 ** Create custom keybinding prefix
 
@@ -856,7 +856,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 #+END_SRC
 
 
-* Sentences
+* sentences
 
 Make ~kill-sentence~ work in a more intuitive way:
 #+BEGIN_SRC emacs-lisp
@@ -966,7 +966,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 #+END_SRC
 
-* Pastebin
+* pastebin
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/gnulisp/emacs-pastebin-master/")
 (require 'neopastebin)
