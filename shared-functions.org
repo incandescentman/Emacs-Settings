@@ -569,8 +569,13 @@ Open new buffers without prompting me for a filename global counter to ensure ev
   )
 #+END_SRC
 
-*** Don't autocorrect in minibuffer
+*** Disable autocorrect in minibuffer
 #+BEGIN_SRC emacs-lisp
+(defun conditionally-disable-abbrev ()
+  ""
+  (if (string-match "smex-" (format "%s" this-command))
+      (abbrev-mode -1)))
+
 (add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
 (add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
 (add-hook 'minibuffer-setup-hook (lambda ()
