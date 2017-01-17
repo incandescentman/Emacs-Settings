@@ -267,11 +267,8 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 
 *** disable TAB to indent
-:PROPERTIES:
-:ID:       2128D5F5-F979-4E5E-8742-D0E61BF06A7F
-:END:
 #+BEGIN_SRC emacs-lisp
-(setq org-cycle-emulate-tab t)
+(setq org-cycle-emulate-tab nil)
 #+END_SRC
 
 *** Windows 
@@ -6944,3 +6941,8 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 ) 
 #+END_SRC
 
+
+* ws-butler
+#+BEGIN_SRC emacs-lisp
+(setq ws-butler-global-mode t)
+#+END_SRC

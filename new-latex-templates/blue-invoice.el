@@ -80,7 +80,7 @@
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{\\@title\\  {\\nouppercase{\\the\\rightheader}}}
+\\rhead{\\@title:\\  {\\nouppercase{\\the\\rightheader}}}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
