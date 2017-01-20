@@ -44,7 +44,7 @@ jay-packages
   fuzzy
   gist
   ;; graphviz-dot-mode
-;;  helm
+helm
   helm-cmd-t
 ;;  helm-projectile
   ido-hacks

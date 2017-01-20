@@ -20,19 +20,22 @@
 )
 
 
-(push "~/.emacs.d/helm-cmd-t" load-path)
+(push "/Users/jay/.emacs.d/helm-cmd-t" load-path)
+(push "/Users/jay/emacs/spacemacs/elpa/helm-cmd-t-20150823.1157/" load-path)
+
 (require 'helm-config)
 (require 'helm-cmd-t)
 (global-set-key (kbd "M-t") 'helm-cmd-t)
 
-(setq book-source (helm-cmd-t-get-create-source-dir "~/Dropbox/writing/book"))
+(setq book-source (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/writing/book"))
+(setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/devonthink-databases/PDF-books.dtBase2/Files.noindex/pdf/"))
 
-(setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/Music/iTunes/iTunes Media/Books"))
-(setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "~/iBooks2"))
+;; (setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/Music/iTunes/iTunes Media/Books"))
+;; (setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "/Users/jay/iBooks2"))
 
-(setq jays-library-public (helm-cmd-t-get-create-source-dir "~/Dropbox/Public/library"))
+(setq jays-library-public (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/Public/library"))
 
-(setq emacs-settings (helm-cmd-t-get-create-source-dir "~/gnulisp"))
+(setq emacs-settings (helm-cmd-t-get-create-source-dir "/Users/jay/gnulisp"))
 
 
 
@@ -71,7 +74,7 @@ emacs-settings)))
 
 
 
-(defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "~/iBooks2")
+(defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "/Users/jay/iBooks2")
   "my permanent folders for helm-mini")
 
 (defun read-jd (&optional arg)
@@ -93,8 +96,8 @@ emacs-settings)))
 ;; (cyberpunk-jay)
  ;; (toggle-fullscreen)
  (org-mode)
-;;  (dired "~/b/"))
-(dired "~/b/12-mistakes/"))
+;;  (dired "/Users/jay/b/"))
+(dired "/Users/jay/b/12-mistakes/"))
 
 
 
@@ -121,13 +124,13 @@ emacs-settings)))
   (interactive)
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
-  (dired "~/b/proposal"))
+  (dired "/Users/jay/b/proposal"))
 
 (defun book-mistakes-directory()
   (interactive)
 ;; (cyberpunk-jay)
 ;; (toggle-fullscreen)
-  (dired "~/b/12-mistakes"))
+  (dired "/Users/jay/b/12-mistakes"))
 
 
 (defun book-search (args)

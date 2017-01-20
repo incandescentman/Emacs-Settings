@@ -6945,4 +6945,13 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 * ws-butler
 #+BEGIN_SRC emacs-lisp
 (setq ws-butler-global-mode t)
+(ws-butler-global-mode) 
+#+END_SRC
+
+* fix image links
+#+BEGIN_SRC emacs-lisp
+(defun fix-image-links ()
+(interactive)
+
+)
 #+END_SRC
