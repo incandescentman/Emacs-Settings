@@ -2320,12 +2320,12 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (insert " [0%]\n")
 
 (insert "*** TODO wake up by 8:30am\n") 
-(insert "*** TODO blue light therapy\n") 
-(insert "*** TODO meditate\n") 
+(insert "*** TODO blue light\n")
 (insert "*** TODO morning pages\n")
-(insert "*** TODO work on book\n") 
-(insert "*** TODO \n") 
-(left-char)
+(insert "*** TODO work on book\n")
+(insert "*** TODO work on book\n")
+(insert "*** TODO ")
+; (left-char)
   )
 
 (defun jd-clock-in ()
