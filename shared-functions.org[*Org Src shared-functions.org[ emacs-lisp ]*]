@@ -1,0 +1,21 @@
+(defun contract-contractions (begin end)
+ (interactive "r")
+ (xah-replace-pairs-region begin end
+ '(
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+ ["" ""]
+
+ )))

@@ -450,6 +450,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j w s") 'isearch-forward-word)
+
 (define-key key-minor-mode-map (kbd "s-j w m") 'whitespace-mode)
 
 (define-key key-minor-mode-map (kbd "s-j h l") 'spacemacs/toggle-highlight-current-line-globally-off)

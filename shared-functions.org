@@ -735,6 +735,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 (setq org-html-head-include-default-style nil)
 (setq org-html-head-include-scripts nil)
 (setq org-html-html5-fancy t)
+(setq org-html-doctype "html5")
 (setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
 (setq org-html-postamble nil)
 (setq org-html-text-markup-alist
@@ -3738,7 +3739,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  [">" "&gt;"]
  )))
 
-(use-package xah-replace-pairs)
+
 (defun xah-convert-html-chars-to-entities-region (begin end)
  (interactive "r")
  (xah-replace-pairs-region begin end
@@ -3749,6 +3750,31 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  )))
 
   #+END_SRC
+
+* contract contractions
+#+BEGIN_SRC emacs-lisp
+(defun contract-contractions (begin end)
+ (interactive "r")
+ (xah-replace-pairs-region begin end
+ '(
+ ["do not" "don't"]
+ ["I would" "I'd"]
+ ["I had" "I'd"]
+ ["did not" "didn't"]
+ ["you would" "you'd"]
+ ["I have" "I've"]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+ ;; ["" ""]
+
+ )))
+#+END_SRC
 
 * Monochrome rainbows are the best way to reveal unbalanced delimiters
 I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters.
