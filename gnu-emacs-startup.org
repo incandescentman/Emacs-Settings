@@ -3520,3 +3520,15 @@ s-i
 #+END_SRC
 
 
+* fix image links
+#+BEGIN_SRC emacs-lisp
+(defun fix-image-links ()
+(interactive)
+(goto-char 1)
+(while (search-forward-regexp "[[\(.*?\).jpg][\(.*?\).jpg]]" nil t)
+  (replace-match "[[" (match-string 1) ".jpg]]"  t nil))
+
+(while (search-forward-regexp "[[\(.*?\).png][\(.*?\).png]]" nil t)
+  (replace-match "[[" (match-string 1) ".png]]"  t nil))
+)
+#+END_SRC

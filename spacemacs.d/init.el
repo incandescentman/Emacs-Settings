@@ -539,7 +539,7 @@ layers configuration. You are free to put any user code."
 
 (custom-set-faces
  '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
- '(italic ((t (:family "Garamond" :slant italic :height 1.3))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(org-code ((t (:family "Courier" :height 1.4))))

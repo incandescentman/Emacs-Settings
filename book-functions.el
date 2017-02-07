@@ -2,7 +2,7 @@
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "disciplined.org")
+  (kill-buffer "top-performer.org")
   (error nil))
 
 ;; (find-file "/Users/jay/b/proposal/12-mistakes-real-headings.txt")
@@ -147,7 +147,7 @@ emacs-settings)))
   (interactive)
   (jay/save-some-buffers)
 (condition-case nil
-  (kill-buffer "momentum.org")
+  (kill-buffer "top-performer.org")
   (error nil))
 
 (org-cycle-agenda-files)

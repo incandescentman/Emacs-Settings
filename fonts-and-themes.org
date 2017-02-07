@@ -318,7 +318,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (custom-set-faces
 ;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.05))))
-'(italic ((t (:foreground "#1F8DD6" :family "Garamond" :slant italic :height 1.1))))
+'(italic ((t (:foreground "DarkViolet" :family "Garamond" :slant italic :height 1.3))))
 '(org-level-1 ((t (:family "Courier" :weight normal))))
   '(org-link ((t (:underline nil))))) 
 
@@ -340,7 +340,8 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 '(bold ((t (:inherit error :weight bold :height 1.1 :family "Sans Serif" :foreground "red"))))
 
-'(italic ((t (:family "Garamond" :slant italic :height 1.3))))
+'(italic ((t (:foreground "DarkViolet" :slant italic :height 1.3 :family "Garamond"))))
+
  '(org-link ((t (:underline nil))))) 
 )
 
