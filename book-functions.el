@@ -106,7 +106,7 @@ emacs-settings)))
 (interactive)
 ;; (book-dired)
 (condition-case nil
-  (kill-buffer "momentum.org")
+  (kill-buffer "top-performer.org")
   (error nil))
 (adobe-garamond-pro)
 (org-cycle-agenda-files)
