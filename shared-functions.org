@@ -5829,6 +5829,16 @@ Wow, this works.
   )
     #+END_SRC 
 
+
+*** koma letter
+#+BEGIN_SRC emacs-lisp
+(defun load-koma-letter ()
+ (interactive)
+ (load "/Users/jay/emacs/emacs-settings/ox-koma-letter.el")
+ (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
+ )
+#+END_SRC
+
 *** fix latex verbatim 
   You can use a filter function that will replace default "verbatim" with
   whatever you want.

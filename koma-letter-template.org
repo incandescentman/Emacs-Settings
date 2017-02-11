@@ -9,10 +9,10 @@
 #+AUTHOR: Jay Dixit
 #+PLACE: New York City
 #+CLOSING: Best,
-#+PHONE_NUMBER: (555) 555-5555
-#+EMAIL: email@email.com 
+#+PHONE_NUMBER: (646) 355-8001
+#+EMAIL: jay@newyorkwritersintensive.com
 #+LCO: DINmtext
-#+OPTIONS: after-closing-order:(ps cc encl) ':t backaddress:nil phone:t email:t subject:t place:to
+#+OPTIONS: after-closing-order:(ps cc encl) ':t backaddress:nil phone:t email:t subject:t place:t
 * To-address of the lovely Juliet                                        :to:
 Juliet
 House of Capulet
