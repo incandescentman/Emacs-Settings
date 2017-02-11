@@ -628,3 +628,28 @@ layers configuration. You are free to put any user code."
 ;;
 ;;
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(safe-local-variable-values
+   (quote
+    ((org-export-allow-bind-keywords . t)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           (quote insert-space))))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+ '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(org-code ((t (:family "Courier" :height 1.4))))
+ '(org-level-1 ((t (:family "Courier" :weight normal))))
+ '(org-link ((t (:underline nil))))
+ '(org-quote ((t (:inherit default)))))

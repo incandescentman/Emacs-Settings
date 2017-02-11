@@ -575,8 +575,8 @@ holding export options."
 					    (org-export-data author info)))
       (when from-address (format "\\setkomavar{fromaddress}{%s}\n" from-address))
       (when phone-number
-	(format "\\setkomavar{fromphone}{%s}\n" phone-number))
-      (when (and email email-set) (format "\\setkomavar{fromemail}{%s}\n" email))
+	(format "\\setkomavar{fromphone}[]{%s}\n" phone-number))
+      (when (and email email-set) (format "\\setkomavar{fromemail}[]{%s}\n" email))
       (when signature (format "\\setkomavar{signature}{%s}\n" signature))))
    ;; Date.
    (format "\\date{%s}\n" (org-export-data (org-export-get-date info) info))
