@@ -3297,7 +3297,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
-(setq projectile-globally-ignored-file-suffixes (quote ("docx ")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf")))
 (setq projectile-globally-ignored-directories
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn"".tmp" "archived-work" "images" "excel-mindnode-omni"))) 
@@ -4978,7 +4978,9 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   #+BEGIN_SRC emacs-lisp
 (setq olivetti-body-width 120)
 (unbind-key (kbd "C-c [") olivetti-mode-map)
-(unbind-key (kbd "C-c ]") olivetti-mode-map) 
+(unbind-key (kbd "C-c ]") olivetti-mode-map)
+(setq org-tags-column 40)
+
   #+END_SRC
 
 
