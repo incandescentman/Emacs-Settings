@@ -755,7 +755,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
    ((equal backend 'html)
@@ -766,7 +766,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_SRC
+#+END_EXAMPLE
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp
@@ -3306,8 +3306,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-globally-ignored-files
   (quote
   ("TAGS" ".DS_Store" ".projectile" ".dropbox"))) 
-
-(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp")))
 
 
 :bind (:map projectile-mode-map 
