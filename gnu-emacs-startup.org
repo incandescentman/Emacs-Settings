@@ -450,6 +450,8 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+;; (define-key key-minor-mode-map (kbd "=") 'insert-equals-sign)
+
 (define-key key-minor-mode-map (kbd "s-j w s") 'isearch-forward-word)
 
 (define-key key-minor-mode-map (kbd "s-j w m") 'whitespace-mode)
@@ -2776,8 +2778,8 @@ t)
 )
 
 
-(define-key org-mode-map (kbd ",") 'smart-comma)
-(define-key orgstruct-mode-map (kbd ",") 'smart-comma)
+(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
+(define-key orgstruct-mode-map (kbd ",") 'comma-or-smart-comma)
 #+END_SRC
 
 ** smart-question-mark
@@ -2877,21 +2879,38 @@ t)
 
 
 (define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
+(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
 ;; (define-key orgstruct-mode-map (kbd ":") 'smart-colon) 
 #+END_SRC
 
-** colon-or-smart-colon
+** comma-or-smart-comma
 #+BEGIN_SRC emacs-lisp
-(defun colon-or-smart-colon ()
+(defun comma-or-smart-comma ()
 (interactive) 
 (if 
 (or
 (bolp)
 (org-at-heading-p)
+(looking-at " \"")
 ) 
-(insert ":") 
+(insert ",")
+(smart-comma))
+) 
+#+END_SRC
+
+
+** colon-or-smart-colon
+#+BEGIN_SRC emacs-lisp
+(defun colon-or-smart-colon ()
+(interactive)
+(if
+(or
+(bolp)
+(org-at-heading-p)
+)
+(insert ":")
 (smart-colon))
-) 
+)
 #+END_SRC
 
 

@@ -6630,6 +6630,16 @@ into the main dumped emacs"
   )
  #+END_SRC 
 
+** insert equals sign
+ #+BEGIN_SRC emacs-lisp
+(defun insert-equals-sign ()
+  (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+  (insert "=")
+  )
+ #+END_SRC
+
 ** insert slash no abbrev
    :PROPERTIES:
    :ID:       D2AC465A-336E-4DCD-979C-6484FDF969C6
