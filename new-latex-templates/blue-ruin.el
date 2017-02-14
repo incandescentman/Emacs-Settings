@@ -159,28 +159,28 @@
 \\newlist{mylist}{enumerate}{10} 
 %\\setlist{nolistsep}
 \\setlist{topsep=0pt}
-\\renewcommand{\\labelitemi}{$\\bullet$}
-\\renewcommand{\\labelitemii}{$\\bullet$}
-\\renewcommand{\\labelitemiii}{$\\bullet$}
-\\renewcommand{\\labelitemiv}{$\\bullet$}
-\\renewcommand{\\labelitemv}{$\\bullet$}
-\\renewcommand{\\labelitemvi}{$\\bullet$}
-\\renewcommand{\\labelitemvii}{$\\bullet$}
-\\renewcommand{\\labelitemviii}{$\\bullet$}
-\\renewcommand{\\labelitemix}{$\\bullet$}
-\\renewcommand{\\labelitemx}{$\\bullet$}
+\\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
 \\setlistdepth{10}
-\\setlist[itemize,1]{label=$\\bullet$}
-\\setlist[itemize,2]{label=$\\bullet$}
-\\setlist[itemize,3]{label=$\\bullet$}
-\\setlist[itemize,4]{label=$\\bullet$}
-\\setlist[itemize,5]{label=$\\bullet$}
-\\setlist[itemize,6]{label=$\\bullet$}
-\\setlist[itemize,7]{label=$\\bullet$}
-\\setlist[itemize,8]{label=$\\bullet$}
-\\setlist[itemize,9]{label=$\\bullet$}
-\\setlist[itemize,10]{label=$\\bullet$}
+\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
 \\renewlist{itemize}{itemize}{10}
 
 
