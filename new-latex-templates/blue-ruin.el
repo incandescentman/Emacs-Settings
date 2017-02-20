@@ -18,6 +18,7 @@
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \\setromanfont{Garamond Premier Pro}
+%  \\setromanfont{Adobe Caslon Pro}
  \\setsansfont{ChunkFive}
   \\setmonofont{Myriad Pro}
 \\else
@@ -57,8 +58,8 @@
 \\newfontfamily\\mytitlefont[Color={FB782C}]{ChunkFive}
 \\newfontfamily\\myauthorfont[Color={FB782C}]{Gill Sans Display MT Pro}
 \\newfontfamily\\mybluefont[Color=electricblue]{Gill Sans Display MT Pro}
-\\DeclareTextFontCommand{\\textbf}{\\rmfamily\\color{electricblue}}
-\\DeclareTextFontCommand{\\textit}{\\\itshape\\color{electricblue}}
+\\DeclareTextFontCommand{\\textbf}{\\bfseries\\color{electricblue}}
+\\DeclareTextFontCommand{\\textit}{\\itshape}
 
 
 \\usepackage{textcase}
