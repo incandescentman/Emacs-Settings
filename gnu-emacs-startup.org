@@ -2620,6 +2620,16 @@ Old version that I retrieved:
 (new-org-delete-backward-char 2)
 (my/fix-space)
 t)
+
+;; fix a bug that leaves this: " : "
+(when (looking-back " : ")
+(progn
+(left-char 2)
+(new-org-delete-backward-char 1)
+(right-char 2)
+) )
+
+
 ))
 #+END_SRC
 
