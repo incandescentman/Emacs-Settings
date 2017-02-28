@@ -904,7 +904,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
         (sequence "COMMITTED" "RESULTS" "|")
-(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|") 
+(sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|")
         (sequence "QUESTION" "|" "ANSWERED")
         (sequence "QUESTIONS" "|" "ANSWERS")
         (sequence "STRATEGY" "|")
@@ -913,6 +913,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "PART" "HED" "HEDTK" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
+(sequence "Practice:" "Demo:" "Debrief:" "Critique:" "Workshop:" "|" "Lecture")
         ))
 #+END_SRC
 
