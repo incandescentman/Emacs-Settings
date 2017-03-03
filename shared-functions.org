@@ -7013,3 +7013,9 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 )
 #+END_SRC
+
+
+* org-reveal
+#+BEGIN_SRC emacs-lisp
+(setq org-reveal-root "file:///Users/jay/Dropbox/github/reveal.js")
+#+END_SRC
