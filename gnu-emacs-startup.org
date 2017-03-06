@@ -600,7 +600,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
 (define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
 
-(define-key key-minor-mode-map (kbd "M-q") 'unfill-region)
+(define-key key-minor-mode-map (kbd "M-q") 'prelude-switch-to-previous-buffer)
 
 (define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
 (define-key key-minor-mode-map (kbd "C-M-[") 'org-previous-subtree-and-narrow)
