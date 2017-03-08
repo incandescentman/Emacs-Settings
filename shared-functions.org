@@ -755,7 +755,9 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
-#+BEGIN_EXAMPLE emacs-lisp
+Note: disable this when trying to export to org-html-themes!
+
+#+BEGIN_SRC emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
    ((equal backend 'html)
@@ -766,7 +768,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
+#+END_SRC
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp
@@ -6522,19 +6524,33 @@ You can toggle it in necessary files by setting the local variables section at t
 ** org-html-slideshow
  Set variables as safe
  #+BEGIN_SRC emacs-lisp
-(put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t)) 
- 
-(put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t)) 
+(put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t))
 
-(put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t)) 
+(put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t))
 
-(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t)) 
+(put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t))
+
+(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
 
 (setq safe-local-variable-values
+
+
   (quote
-  ((eval define-key key-minor-mode-map
+  (
+(eval define-key key-minor-mode-map
 	  (kbd "SPC")
-	  (quote insert-space)))))
+	  (quote insert-space))
+
+(eval define-key org-mode-map
+      (kbd ":")
+      (quote insert-colon))
+
+
+(org-html-head-include-scripts)
+   (org-export-allow-bind-keywords . t)
+   (eval define-key key-minor-mode-map
+      (kbd "SPC")
+      (quote insert-space)))))
 
  #+END_SRC
 
