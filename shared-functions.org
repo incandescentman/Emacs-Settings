@@ -957,8 +957,12 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 ** imenu-list
 #+BEGIN_SRC emacs-lisp
 (require 'imenu-list)
-;; (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1))) 
 (setq imenu-list-position (quote left))
+
+(defun imenu-list-amazing-mode ()
+(interactive)
+(add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1)))
+)
 
 #+END_SRC
 
@@ -3010,7 +3014,6 @@ Key bindings I don't use much and should remember to learn:
 (define-super-key "6" 'point-stack-pop)
 (define-super-key "7" 'point-stack-forward-stack-pop)
 (define-super-key "8" 'search-open-buffers)
-(define-super-key "B" 'clone-indirect-buffer-other-window)
 ;; (define-super-key "o" 'eval-buffer)
 (define-super-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-super-key "(" 'org-velocity)
