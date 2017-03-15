@@ -1138,6 +1138,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  (insert ",")
 )
 
+(defun insert-exclamation-point ()
+ (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point)))))
+ (insert "!")
+)
+
 
 (defun insert-colon ()
 "Insert a goodamn colon!"
@@ -2616,6 +2623,7 @@ Old version that I retrieved:
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading)))
+
 (when
 (or    (looking-back ", , ")
      (looking-back ":: ")
@@ -2630,7 +2638,16 @@ t)
 (left-char 2)
 (new-org-delete-backward-char 1)
 (right-char 2)
-) )
+))
+
+
+;; fix a bug that leaves this: " , "
+(when (looking-back " , ")
+(progn
+(left-char 2)
+(my/fix-space)
+(right-char 2)
+))
 
 
 ))
