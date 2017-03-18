@@ -2329,8 +2329,8 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (insert "*** TODO wake up by 8:30am\n") 
 (insert "*** TODO blue light\n")
 (insert "*** TODO morning pages\n")
-(insert "*** TODO work on book\n")
-(insert "*** TODO work on book\n")
+(insert "*** TODO bookwriting\n")
+(insert "*** TODO bookwriting\n")
 (insert "*** TODO ")
 ; (left-char)
   )
@@ -5051,6 +5051,25 @@ C-c q
     (backward-char)))
 
 (define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
+#+END_SRC
+
+
+* italicize-region-or-point
+#+BEGIN_SRC emacs-lisp
+(defun italicize-region-or-point ()
+  (interactive)
+  (if (region-active-p)
+      (progn
+        (goto-char (region-end))
+        (insert "/")
+        (goto-char (region-beginning))
+        (insert "/"))
+(insert "//")
+    (backward-char)))
+
+
+
+(define-key key-minor-mode-map (kbd "C-\\") 'italicize-region-or-point)
 #+END_SRC
 
 
