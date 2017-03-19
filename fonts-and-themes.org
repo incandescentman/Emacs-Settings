@@ -188,6 +188,13 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (incarnadine-cursor)
   )
 
+(defun spacemacs-light ()
+ (interactive)
+(load-theme 'spacemacs-light)
+(incarnadine-cursor)
+ )
+
+
 (defun whiteboard ()
   "Open my own customized version of the Solarized color theme."
   (interactive)

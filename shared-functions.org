@@ -3062,7 +3062,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "j cw" 'cyberpunk-writeroom)
 (define-super-key "j wb" 'whiteboard)
-(define-super-key "j sl" 'solarized-light)
+(define-super-key "j sl" '((spacemacs-light) ))
+
 (define-super-key "j sd" 'solarized-dark)
 (define-super-key "j ri" 'ritchie)
 (define-super-key "j sp" 'spolsky)
@@ -5037,9 +5038,9 @@ C-c q
   #+END_SRC
 
 
-* bold-region-or-point
+* embolden-region-or-point
 #+BEGIN_SRC emacs-lisp
-(defun bold-region-or-point ()
+(defun embolden-region-or-point ()
   (interactive)
   (if (region-active-p)
       (progn
@@ -5050,7 +5051,7 @@ C-c q
     (insert "**")
     (backward-char)))
 
-(define-key key-minor-mode-map (kbd "M-s-b") 'bold-region-or-point)
+(define-key key-minor-mode-map (kbd "M-s-b") 'embolden-region-or-point)
 #+END_SRC
 
 
@@ -5067,9 +5068,7 @@ C-c q
 (insert "//")
     (backward-char)))
 
-
-
-(define-key key-minor-mode-map (kbd "C-\\") 'italicize-region-or-point)
+(define-key key-minor-mode-map (kbd "<C-i>") 'italicize-region-or-point)
 #+END_SRC
 
 
