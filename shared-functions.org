@@ -3062,7 +3062,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "j cw" 'cyberpunk-writeroom)
 (define-super-key "j wb" 'whiteboard)
-(define-super-key "j sl" '((spacemacs-light) ))
+(define-super-key "j sl" 'spacemacs-light)
 
 (define-super-key "j sd" 'solarized-dark)
 (define-super-key "j ri" 'ritchie)

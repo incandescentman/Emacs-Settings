@@ -108,7 +108,7 @@ smex
 				    vi-tilde-fringe
             exec-path-from-shell
 winner
-hl-line-mode
+;; hl-line-mode
 xterm-mouse
 popwin
 global-git-commit

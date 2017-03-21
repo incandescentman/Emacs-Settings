@@ -3591,6 +3591,16 @@ s-i
 
 
 * replace garbage characters
+
+Òembedding-
+
+→
+
+"embedding"
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (defun replace-garbage-chars ()
 "Replace goofy MS and other garbage characters with latin1 equivalents."
@@ -3628,5 +3638,16 @@ s-i
   (replace-string "È" "\"" nil (point-min) (point-max))
   (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
   (replace-string "ó" "-" nil (point-min) (point-max))
+
+
+  (replace-string "á" "-" nil (point-min) (point-max))
+(replace-string "     " "" nil (point-min) (point-max))
+(replace-string "    " "" nil (point-min) (point-max))
+(replace-string " " " " nil (point-min) (point-max))
+
+
+(replace-string "Õ" "'" nil (point-min) (point-max))
+
+
 ))
 #+END_SRC
