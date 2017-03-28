@@ -5653,7 +5653,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 ; ("[\(.*?\)]" . 'anki-clozure-face); fontify any word followed by a colon if it begins the line
 
-("[[]\\(.*?\\)[]]" . 'bold); this fontifies whatevers in square brackets, including the brackets
+; ("[[]\\(.*?\\)[]]" . 'bold); this fontifies whatevers in square brackets, including the brackets
 
 
 ; ("\\[\\[\\(.*\\)\\]\\]" . 'bold); this fontifies whatevers in square brackets, not including the brackets; doesn't work
@@ -7108,6 +7108,10 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (use-package org-drill)
 ; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
 ; (setq org-drill-add-random-noise-to-intervals-p t)
+
+(setq org-drill-use-visible-cloze-face-p t)
+
+
 #+END_SRC
 
 * ox-clip
