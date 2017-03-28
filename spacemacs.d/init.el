@@ -108,7 +108,6 @@ smex
 				    vi-tilde-fringe
             exec-path-from-shell
 winner
-;; hl-line-mode
 xterm-mouse
 popwin
 global-git-commit
@@ -122,7 +121,7 @@ clean-aiindent-mode
 diff-auto-refine-mode
 electric-indent-mode
 evil-mode
-hl-line-mode
+
 hs-mode
 volatile-highlights
 winner-mode-enable
@@ -541,7 +540,11 @@ layers configuration. You are free to put any user code."
   (menu-bar-mode -1)
 
 (setq org-hide-leading-stars nil)
-(setq hl-line-mode -1)
+
+
+(add-hook 'org-mode-hook (lambda ()
+                                    (setq-local global-hl-line-mode
+                                                nil)))
 
 (custom-set-faces
  '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
