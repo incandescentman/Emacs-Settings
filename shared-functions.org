@@ -7109,3 +7109,8 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 ; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
 ; (setq org-drill-add-random-noise-to-intervals-p t)
 #+END_SRC
+
+* ox-clip
+#+BEGIN_SRC emacs-lisp
+(use-package ox-clip)
+#+END_SRC

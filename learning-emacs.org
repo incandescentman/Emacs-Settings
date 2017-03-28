@@ -602,3 +602,27 @@ Whole words only
 
 
 
+
+* command line learning
+
+<ctrl>-R to reverse search through history,
+
+cd -
+It's the command-line equivalent of the back button (takes you to the previous directory you were in).
+
+prefer to use pushd and popd to maintain a directory stack, myself.
+
+
+^U and ^K to delete before and after the cursor, respectively.
+
+
+
+* escape the alias
+I often have aliases for vi, ls, etc. but sometimes you want to escape the alias. Just add a back slash to the command in front:
+
+Eg:
+
+$ alias vi=vim
+$ # To escape the alias for vi:
+$ \vi # This doesn't open VIM
+Cool, isn't it?

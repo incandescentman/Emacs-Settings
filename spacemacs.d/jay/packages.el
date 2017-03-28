@@ -62,6 +62,7 @@ helm
   openwith
   org-bookmark-heading
   org-fstree
+  ox-clip
   ox-twbs
   palimpsest
   paredit
@@ -82,6 +83,7 @@ helm
   ;; sublime-themes
   tabbar
   tiny
+  tldr
   unfill
   wc-mode
   web-mode
@@ -242,6 +244,10 @@ adaptive-wrap
 (defun jay/init-yahoo-weather () (use-package yahoo-weather))
 
 (defun jay/init-wttrin () (use-package wttrin))
+
+(defun jay/init-tldr () (use-package tldr))
+
+(defun jay/init-ox-clip () (use-package ox-clip))
 
 
 
