@@ -1053,7 +1053,7 @@ This is working correctly:
 	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
 	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\n" :prepend t :kill-buffer t)
+	 "\n\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
@@ -3065,7 +3065,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "j dd" 'delete-duplicate-lines-keep-blanks) 
 
-(define-super-key "j cw" 'cyberpunk-writeroom)
+(define-super-key "j cw" 'count-words)
 (define-super-key "j wb" 'whiteboard)
 (define-super-key "j sl" 'spacemacs-light)
 
@@ -4076,7 +4076,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 (use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
 (setq user-mail-address "dixit@aya.yale.edu")
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jay@vivovii.com")) 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
 (setq user-full-name "Jay Dixit" )
 (setq mu4e-maildir "/Users/jay/Dropbox/mu") 
 (setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
@@ -4095,7 +4095,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 
 ;; display HTML email nicely
-(setq mu4e-html2text-command "w3m -T text/html") 
+; (setq mu4e-html2text-command "w3m -T text/html")
 ;; works but better than the other one, html2text or whatever it's called 
 ;; convert html emails properly
 ;; Possible options:
@@ -4104,8 +4104,14 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ;; ---html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
 ;; ---w3m -dump -cols 80 -T text/html
 ;; ---view in browser (provided below)
-;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
 
+
+  ;; convert org mode to HTML automatically
+; (setq org-mu4e-convert-to-html t); I think this is redundant? Maybe?
+
+  ;; need this to convert some e-mails properly
+  (setq mu4e-html2text-command "html2text -utf8 -width 72")
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
@@ -4184,7 +4190,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 (setq mu4e-maildir-shortcuts
 '( 
 ("/gmail/starred" . ?i) 
-("/vivovii/inbox" . ?v) 
+("/nli/inbox" . ?l)
 ("/nywi/inbox" . ?n) 
 ("/sent" . ?s)))
 
@@ -4331,41 +4337,41 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 
 ,(make-mu4e-context
-	 :name "Vivovii"
-	 :enter-func (lambda () (mu4e-message "Switch to Vivovii context")
+	 :name "Leadership"
+	 :enter-func (lambda () (mu4e-message "Switch to Leadership context")
 ;; switch to smtp-mail in order to change send-from address
 (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
- smtpmail-auth-credentials
- '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
- smtpmail-smtp-service 587) 
-;; open my vivovii inbox
-(mu4e~headers-jump-to-maildir "/vivovii/inbox") 
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nli")
+
+smtpmail-smtp-service 587)
+;; open my neuroleadership inbox
+(mu4e~headers-jump-to-maildir "/neuroleadership/inbox")
 )
 	 ;; leave-fun not defined 
 	 :vars '(
-(user-mail-address . "jay@vivovii.com")
-(mu4e-get-mail-command . "mbsync vivovii") 
+(user-mail-address . "jaydixit@neuroleadership.com")
+(mu4e-get-mail-command . "mbsync neuroleadership")
  ( mu4e-compose-signature .
-		 ("Jay Dixit\nvivovii.com\n")))) 
+		 ("Jay Dixit\nneuroleadership.com\n"))))
 
 
 ))
 
 
 ;; change send-from address interactively 
-(defun vivovii-compose ()
+(defun neuroleadership-compose ()
   (interactive)
   (setq message-send-mail-function 'smtpmail-send-it
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
-smtpmail-auth-credentials (expand-file-name "~/.authinfo-vivovii") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@vivovii.com" nil))
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-neuroleadership")
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jaydixit@neuroleadership.com" nil))
  smtpmail-smtp-service 587) 
-(setq user-mail-address "jay@vivovii.com") 
+(setq user-mail-address "jaydixit@neuroleadership.com")
 (compose-mail)
 )
 
@@ -4392,12 +4398,12 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 (compose-mail) 
   )
 
-(defun yale-or-vivovii-compose (arg)
+(defun yale-or-neuroleadership-compose (arg)
  (interactive "p")
  (if (and arg (= 0 (mod arg 4)))
-   (vivovii-compose)
+   (neuroleadership-compose)
   (yale-compose)))
-;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
+;; (global-set-key (kbd "C-c m") 'yale-or-neuroleadership-compose)
 
 
 ;; go straight to my personal gmail inbox; bound to s-l
@@ -4407,11 +4413,11 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
  (mu4e~headers-jump-to-maildir "/gmail/starred")
  ) 
 
-;; go to Vivovii (work) inbox
-(defun mu4e-vivovii ()
+;; go to Neuroleadership (work) inbox
+(defun mu4e-neuroleadership ()
  (interactive)
 (mu4e)
- (mu4e~headers-jump-to-maildir "/vivovii/inbox")
+ (mu4e~headers-jump-to-maildir "/nli/inbox")
  ) 
 
 ;; go to NYWI (my company) inbox
@@ -6199,33 +6205,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 
 
 
-
-* non working contexts
-#+BEGIN_EXAMPLE emacs-lisp
-(setq mu4e-contexts
-  `( ,(make-mu4e-context
-   :name "Sunjay"
-:enter-func (lambda () (mu4e-message "Sunjay gmail")) 
-:match-func (lambda (msg)
-  		  (when msg (mu4e-message-contact-field-matches msg :to "dixit@aya.yale.edu"))) 
-   :leave-func (lambda () (mu4e-clear-caches))
-   :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-home/starred")
-     (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-home/starred")
-     (mu4e-get-mail-command . "mbsync gmail")
-))
-   ,(make-mu4e-context
-   :name "vivovii"
-:enter-func (lambda () (mu4e-message "vivovii")) 
-:match-func (lambda (msg)
-  		  (when msg (mu4e-message-contact-field-matches msg :to "jay@vivovii.com"))) 
-   :leave-func (lambda () (mu4e-clear-caches))
-   :vars '((mu4e-maildir . "/Users/jay/Dropbox/mumail/maildir-vivovii")
-     (mu4e-mu-home . "/Users/jay/Dropbox/mumail/mu-vivovii")
-     (mu4e-get-mail-command . "mbsync vivovii")
-)))) 
-
-
-#+END_EXAMPLE 
 
 * multiple-cursors-mode-map
 #+BEGIN_SRC emacs-lisp 

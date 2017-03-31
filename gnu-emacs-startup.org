@@ -920,15 +920,25 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
       (just-one-space 0))
 
 ;; don't leave two periods in a row
-(when 
+(when
 (or
 (looking-at "\\.\\. ")
-(and 
+(and
 (looking-at "\\.")
-(looking-back "\\.") 
+(looking-back "\\.")
 )
 )
 (delete-forward-char 1))
+
+(when
+    (and
+     (looking-at ".")
+     (looking-back ",")
+     )
+  (delete-backward-char 1)
+  (forward-char 1)
+  )
+
 )
 #+END_SRC
 
@@ -2657,6 +2667,25 @@ t)
 (my/fix-space)
 (right-char 2)
 ))
+
+
+;; fix a bug that leaves this: ",."
+(when (looking-back ",. ")
+(left-char 2)
+(delete-backward-char 1)
+(right-char 2)
+)
+
+
+;; fix a bug that leaves this: ", . "
+(when (looking-back ", . ")
+(left-char 2)
+(delete-backward-char 2)
+(right-char 2)
+)
+
+
+
 
 
 ))
