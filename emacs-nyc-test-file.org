@@ -1,0 +1,4 @@
+* This
+- one
+- two
+- place point at end of file and do ~M-<return>~. Desired behavior is to add an org-heading. Current behavior is to add a hyphen with plain text list.
