@@ -32,18 +32,12 @@ values."
    dotspacemacs-configuration-layers
    '(
      csv
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
      helm
-      spacemacs-ivy
+     spacemacs-ivy
      auto-completion
-     ;; better-defaults
      emacs-lisp
-     ;; git
-     ;; markdown
+     ;;   git
+     ;;   markdown
      python
 
      (org
@@ -52,21 +46,21 @@ values."
       ;; org-enable-reveal-js-support t
       )
 
-     ;;     osx
+     ;;   osx
      ;;   xkcd
 
      smex
-     ;; (shell :variables
+     ;;   (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;;   spell-checking
      ;;   syntax-checking
-     ;; version-control
-     ;;  html
+     ;;   version-control
+     ;;   html
      mu4e
      ;;   shell
      ;;   shell-scripts
-     jay
+     ;;     jay
      ;;     speed-reading
      ;;     emoji
      ;;     typography
@@ -78,124 +72,120 @@ values."
      themes-megapack
      ;;    ibuffer
      )
+
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
 
-                                    auto-capitalize
-                                    ;;  auto-complete
-                                    bongo
-                                    buffer-stack
-                                    caps-lock
-                                    change-inner
-                                    cheatsheet
-                                    command-log-mode
-                                    counsel
-                                    crux
-                                    cyberpunk-theme
-                                    dired+
-                                    dired-details+
-                                    ;;  dired-hacks-utils
-                                    dired-quick-sort
-                                    ;;  dired-single
-                                    dired-sort-menu
-                                    discover-my-major
-                                    expand-region
-                                    fancy-narrow
-                                    fastdef
-                                    flyspell-lazy
-                                    fountain-mode
-                                    frame-cmds
-                                    ;;  frame-restore
-                                    fuzzy
-                                    gist
-                                    ;; graphviz-dot-mode
-                                    helm
-                                    helm-cmd-t
-                                    ;;  helm-projectile
-                                    ido-hacks
-                                    imenu-list
-                                    ;; js2
-                                    key-chord
-                                    ;; magit
-                                    ;;  markdown-mode
-                                    maxframe
-                                    multicolumn
-                                    multiple-cursors
-                                    nm
-                                    ;;  notmuch
-                                    olivetti
-                                    openwith
-                                    org-bookmark-heading
-                                    org-fstree
-                                    ox-clip
-                                    ox-twbs
-                                    palimpsest
-                                    paredit
-                                    peg
-                                    point-stack
-                                    polymode
-                                    popup
-                                    project-explorer
-                                    ;;  projectile
-                                    rainbow-mode
-                                    recentf
-                                    rspec-mode
-                                    scratch
-                                    scratch-message
-                                    ;; smex
-                                    ;; solarized-theme
-                                    stripe-buffer
-                                    ;; sublime-themes
-                                    tabbar
-                                    tiny
-                                    tldr
-                                    unfill
-                                    wc-mode
-                                    web-mode
-                                    wrap-region
-                                    writeroom-mode
-                                    xah-replace-pairs
-                                    ;; xml-rpc
-                                    ;; zenburn-theme
-                                    zone
-                                    yahoo-weather
-                                    wttrin
-)
+
+                                      ;;  auto-complete
+                                      ;;  dired-hacks-utils
+                                      ;;  dired-single
+                                      ;;  frame-restore
+                                      ;;  helm-projectile
+                                      ;;  markdown-mode
+                                      ;;  notmuch
+                                      ;;  projectile
+                                      ;; graphviz-dot-mode
+                                      ;; js2
+                                      ;; magit
+                                      ;; smex
+                                      ;; solarized-theme
+                                      ;; sublime-themes
+                                      ;; xml-rpc
+                                      ;; zenburn-theme
+
+                                      auto-capitalize
+                                      bongo
+                                      buffer-stack
+                                      caps-lock
+                                      change-inner
+                                      cheatsheet
+                                      command-log-mode
+                                      counsel
+                                      crux
+                                      cyberpunk-theme
+                                      dired+
+                                      dired-details+
+                                      dired-quick-sort
+                                      dired-sort-menu
+                                      discover-my-major
+                                      expand-region
+                                      fancy-narrow
+                                      fastdef
+                                      flyspell-lazy
+                                      fountain-mode
+                                      frame-cmds
+                                      fuzzy
+                                      gist
+                                      helm
+                                      helm-cmd-t
+                                      ido-hacks
+                                      imenu-list
+                                      key-chord
+                                      maxframe
+                                      multicolumn
+                                      multiple-cursors
+                                      nm
+                                      olivetti
+                                      openwith
+                                      org-bookmark-heading
+                                      org-fstree
+                                      ox-clip
+                                      ox-twbs
+                                      palimpsest
+                                      paredit
+                                      peg
+                                      point-stack
+                                      polymode
+                                      popup
+                                      project-explorer
+                                      rainbow-mode
+                                      recentf
+                                      rspec-mode
+                                      scratch
+                                      scratch-message
+                                      stripe-buffer
+                                      tabbar
+                                      tiny
+                                      tldr
+                                      unfill
+                                      wc-mode
+                                      web-mode
+                                      wrap-region
+                                      writeroom-mode
+                                      wttrin
+                                      xah-replace-pairs
+                                      yahoo-weather
+                                      zone
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
-
-                                    company
-                                    ;;                    ws-butler
                                     adaptive-wrap
-                                    vi-tilde-fringe
-                                    exec-path-from-shell
-                                    winner
-                                    xterm-mouse
-                                    popwin
-                                    global-git-commit
-                                    evil-mode evil-escape evil-local evil-org
-                                    evil-search-highlight-persist evil-surround eyebrowse global-undo-tree-mode
-                                    evil-unimpaired
-
-                                    ;; didn't work
                                     auto-encryption-mode
                                     clean-aiindent-mode
+                                    company
                                     diff-auto-refine-mode
                                     electric-indent-mode
                                     evil-mode
-
-                                    hs-mode
-                                    volatile-highlights
-                                    winner-mode-enable
-                                    xterm-mouse-mode
-
+                                    evil-mode evil-escape evil-local evil-org
+                                    evil-search-highlight-persist evil-surround eyebrowse global-undo-tree-mode
+                                    evil-unimpaired
+                                    exec-path-from-shell
+                                    global-git-commit
                                     highlight-indentation
-
+                                    hs-mode
+                                    popwin
+                                    vi-tilde-fringe
+                                    volatile-highlights
+                                    winner
+                                    winner-mode-enable
+                                    xterm-mouse
+                                    xterm-mouse-mode
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
