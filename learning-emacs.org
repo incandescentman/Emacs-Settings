@@ -1,3 +1,22 @@
+* use-package
+
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package foo
+
+ :init
+ (setq foo-variable t)
+
+ :config
+ (foo-mode 1)
+
+:bind
+(("M-o l" . highlight-lines-matching-regexp)
+     ("M-o r" . highlight-regexp)
+     ("M-o w" . highlight-phrase))
+
+
+)
+#+END_EXAMPLE
 
 ** use-package
 

@@ -2128,9 +2128,13 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ** recentf
 #+BEGIN_SRC emacs-lisp
+(use-package recentf
+
+:config
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
-(run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit 
+(run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
+)
 #+END_SRC
 
 * Ignore / Exclude Uninteresting Things
@@ -3423,17 +3427,27 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   This is especially useful with a command that searches current word. See: Emacs: isearch Current Word. 
 
 
+
 ** searching 
    :PROPERTIES:
    :ID:       37637C3F-0CB1-48CE-8CD0-4436182F212A
    :END:
 *** swiper 
 
-**** ivy 
-    #+BEGIN_SRC emacs-lisp
+**** ivy
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+
+
+ :config
+
+(define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
+(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (setq ivy-height 25)
 (setq ivy-display-style 'fancy)
-  #+END_SRC
+
+)
+#+END_SRC
 
 **** swiper
   #+BEGIN_SRC emacs-lisp
@@ -5017,11 +5031,14 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 
 * olivetti
   #+BEGIN_SRC emacs-lisp
+(use-package olivetti
+
+:config
 (setq olivetti-body-width 120)
 (unbind-key (kbd "C-c [") olivetti-mode-map)
 (unbind-key (kbd "C-c ]") olivetti-mode-map)
 (setq org-tags-column 40)
-
+)
   #+END_SRC
 
 
@@ -5222,18 +5239,6 @@ event of an error or nonlocal exit."
   #'mc/edit-ends-of-lines)
   #+END_SRC
 
-
-* ivy
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
-
-
- :config
-
-(define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
-(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-)
-#+END_SRC 
 
 * wrap region
 
