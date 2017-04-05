@@ -2856,7 +2856,7 @@ Enable Google search:
 ** Google search through Gnugol
 #+HEADER: :comments noweb 
 #+BEGIN_SRC emacs-lisp
-(require 'gnugol)
+;; (require 'gnugol)
 
 (defun region-or-word-at-point ()
   (if (use-region-p)
@@ -2866,9 +2866,9 @@ Enable Google search:
     (substring-no-properties
      (thing-at-point 'word))))
 
- (defun gnugol-word-at-point ()
-   (interactive) 
-  (gnugol-search-google (region-or-word-at-point)))
+ ;; (defun gnugol-word-at-point ()
+ ;;   (interactive)
+ ;;  (gnugol-search-google (region-or-word-at-point)))
 
 #+END_SRC
 
@@ -4206,7 +4206,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ("/gmail/starred" . ?i) 
 ("/nli/inbox" . ?l)
 ("/nywi/inbox" . ?n) 
-("/sent" . ?s)))
+("/nywi/sent" . ?s)))
 
 
 ;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)

@@ -479,7 +479,7 @@ layers configuration. You are free to put any user code."
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
   (load "/Users/jay/emacs/emacs-settings/skeletons.el")
-  ;;  (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
+(load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
   (load "/Users/jay/emacs/emacs-settings/jay-osx.el")

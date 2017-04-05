@@ -104,6 +104,7 @@ emacs-settings)))
 (defun work-on-book ()
 "Work on my book! :-)"
 (interactive)
+(jay/save-some-buffers)
 ;; (book-dired)
 (condition-case nil
   (kill-buffer "top-performer.org")
