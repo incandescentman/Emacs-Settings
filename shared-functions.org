@@ -2131,6 +2131,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (use-package recentf
 
 :config
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100) 
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
