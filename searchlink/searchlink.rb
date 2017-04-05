@@ -2,10 +2,11 @@
 # encoding: utf-8
 
 SILENT = ENV['SL_SILENT'] =~ /false/i ? false : true || true
-VERSION = '2.2.3'
+VERSION = '2.2.5'
 # SearchLink by Brett Terpstra 2015 <http://brettterpstra.com/projects/searchlink/>
 # MIT License, please maintain attribution
 require 'net/https'
+require 'uri'
 require 'rexml/document'
 require 'shellwords'
 require 'yaml'
@@ -113,7 +114,7 @@ custom_site_searches:
   man: http://man.cx/$term
   dev: developer.apple.com
   nq: http://nerdquery.com/?media_only=0&query=$term&search=1&category=-1&catid=&type=and&results=50&db=0&prefix=0
-
+  gs: http://scholar.google.com/scholar?btnI&hl=en&q=$term&btnG=&as_sdt=80006
 # Remove or comment (with #) history searches you don't want
 # performed by `!h`. You can force-enable them per search, e.g.
 # `!hsh` (Safari History only), `!hcb` (Chrome Bookmarks only),
@@ -757,7 +758,7 @@ APPLESCRIPT
         url, title = social_handle('twitter', link_text)
       else
         link_text = input unless link_text
-        url, title = google(input)
+        url, title = ddg(input)
       end
 
       if url
@@ -1188,30 +1189,54 @@ APPLESCRIPT
     urls
   end
 
+
+
   def wiki(terms)
-    uri = URI.parse("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&inprop=url&titles=#{CGI.escape(terms)}")
-    req = Net::HTTP::Get.new(uri.request_uri)
-    req['Referer'] = "http://brettterpstra.com"
-    req['User-Agent'] = "SearchLink (http://brettterpstra.com)"
-    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) {|http|
-      http.request(req)
-    }
-    if RUBY_VERSION.to_f > 1.9
-      body = res.body.force_encoding('utf-8')
-    else
-      body = res.body
-    end
-
-    result = JSON.parse(body)
-
-    if result
-      result['query']['pages'].each do |page,info|
-        unless info.key? "missing"
-          return [info['fullurl'],info['title']]
-        end
+    ## Hack to scrape wikipedia result
+    body = %x{/usr/bin/curl -sSL 'https://en.wikipedia.org/wiki/Special:Search?search=#{CGI.escape(terms)}&go=Go'}
+    if body
+      if RUBY_VERSION.to_f > 1.9
+        body = body.force_encoding('utf-8')
       end
+
+      begin
+        title = body.match(/"wgTitle":"(.*?)"/)[1]
+        url = body.match(/<link rel="canonical" href="(.*?)"/)[1]
+      rescue
+        return false
+      end
+      return [url, title]
     end
-    return false
+    ## Removed because Ruby 2.0 does not like https connection to wikipedia without using gems?
+    # uri = URI.parse("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&inprop=url&titles=#{CGI.escape(terms)}")
+    # req = Net::HTTP::Get.new(uri.path)
+    # req['Referer'] = "http://brettterpstra.com"
+    # req['User-Agent'] = "SearchLink (http://brettterpstra.com)"
+
+    # res = Net::HTTP.start(uri.host, uri.port,
+    #   :use_ssl => true,
+    #   :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
+    #     https.request(req)
+    #   end
+
+
+
+    # if RUBY_VERSION.to_f > 1.9
+    #   body = res.body.force_encoding('utf-8')
+    # else
+    #   body = res.body
+    # end
+
+    # result = JSON.parse(body)
+
+    # if result
+    #   result['query']['pages'].each do |page,info|
+    #     unless info.key? "missing"
+    #       return [info['fullurl'],info['title']]
+    #     end
+    #   end
+    # end
+    # return false
   end
 
   def zero_click(terms)
@@ -1243,6 +1268,7 @@ APPLESCRIPT
     url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&media=#{media}&entity=#{entity}")
     res = Net::HTTP.get_response(url).body
     res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
+    res.gsub!(/(?mi)[\x00-\x08\x0B-\x0C\x0E-\x1F]/,'')
     json = JSON.parse(res)
     if json['resultCount'] && json['resultCount'] > 0
       result = json['results'][0]
@@ -1283,9 +1309,15 @@ APPLESCRIPT
 
     url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&country=#{@cfg['country_code']}&entity=#{entity}")
     res = Net::HTTP.get_response(url).body
-    res = res.force_encoding('utf-8') if RUBY_VERSION.to_f > 1.9
+    res = res.force_encoding('utf-8').encode # if RUBY_VERSION.to_f > 1.9
 
-    json = JSON.parse(res)
+    begin
+      json = JSON.parse(res)
+    rescue => e
+      add_error('Invalid response', "Search for #{terms}: (#{e})")
+      return false
+    end
+    return false unless json
     if json['resultCount'] && json['resultCount'] > 0
       result = json['results'][0]
       case entity
@@ -1402,9 +1434,12 @@ APPLESCRIPT
     end
   end
 
-  def ddg(terms)
+  def ddg(terms,type=false)
+
+    prefix = type ? "#{type.sub(/^!?/,'!')} " : "%5C"
+
     begin
-      body = %x{/usr/bin/curl -sSL 'http://duckduckgo.com/?q=%5C#{CGI.escape(terms)}&t=hn&ia=web'}
+      body = %x{/usr/bin/curl -sSL 'http://duckduckgo.com/?q=#{prefix}#{CGI.escape(terms)}&t=hn&ia=web'}
 
       url = body.match(/uddg=(.*?)'/)
 
@@ -1698,10 +1733,10 @@ end
 
 ## Stupid small pure Ruby JSON parser & generator.
 #
-# Copyright © 2013 Mislav Marohnić
+# Copyright © 2013 Mislav Marohnic
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this
-# software and associated documentation files (the “Software”), to deal in the Software
+# software and associated documentation files (the "Software"), to deal in the Software
 # without restriction, including without limitation the rights to use, copy, modify,
 # merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
 # permit persons to whom the Software is furnished to do so, subject to the following
@@ -1710,7 +1745,7 @@ end
 # The above copyright notice and this permission notice shall be included in all copies or
 # substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 # INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
@@ -1920,7 +1955,7 @@ if ARGV.length > 0
   }
 else
   if RUBY_VERSION.to_f > 1.9
-    input = STDIN.read.force_encoding('utf-8')
+    input = STDIN.read.force_encoding('utf-8').encode
   else
     input = STDIN.read
   end

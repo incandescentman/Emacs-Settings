@@ -450,6 +450,12 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
+(global-unset-key (kbd "C-;"))
+
+(define-key key-minor-mode-map (kbd "C-;") 'org-def)
+
 (define-key key-minor-mode-map (kbd "s-j u p") 'unfill-paragraph)
 
 (define-key key-minor-mode-map (kbd "C-w") 'copy-region-as-kill)

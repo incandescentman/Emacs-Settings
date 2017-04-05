@@ -7109,3 +7109,14 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+BEGIN_SRC emacs-lisp
 (use-package ox-clip)
 #+END_SRC
+
+* org-def
+#+BEGIN_SRC emacs-lisp
+(defun org-def ()
+(interactive)
+(save-excursion
+(beginning-of-line)
+ (insert "- "))
+(insert " :: ")
+)
+#+END_SRC
