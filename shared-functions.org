@@ -2061,9 +2061,13 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 
 (use-package dired
+
+:config
+(setq dired-omit-mode t)
+
   :bind (:map dired-mode-map 
               ("C-o" . dired-omit-mode)
-              ("M-o" . dired-omit-mode)
+              ("o" . dired-omit-mode)
               ("s-o" . tmtxt/dired-do-shell-mac-open)
               ("s-O" . reveal-in-finder)
               ("C-c n" . my-dired-create-file)
@@ -2075,6 +2079,9 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (add-hook 'dired-mode-hook 'hl-line-mode)
 
 (use-package dired-x)
+;; Load Dired X when Dired is loaded.
+;; (add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
+
 
 (setq-default dired-omit-files-p t) ; Buffer-local variable
 
@@ -2112,10 +2119,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
 
 
-(setq-default dired-omit-files-p t) ; this is buffer-local variable 
-
-
-
+(setq-default dired-omit-files-p t) ; this is buffer-local variable
 #+END_SRC
 
 
@@ -2219,9 +2223,12 @@ dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|Icon*"
 
 dired-omit-extensions
   (quote
-  (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs" ".html" ".pdf" ".tex" ".git")) 
+  (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs" ".html" ".pdf" ".tex" ".git" ".skim" "docx"))
+)
 
-) 
+
+;; (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon*\\|\\*.html")
+
 #+END_SRC
 * Word count
 #+BEGIN_SRC emacs-lisp
