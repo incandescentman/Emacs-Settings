@@ -3664,3 +3664,11 @@ s-i
 
 ))
 #+END_SRC
+
+* delete html blocks
+#+BEGIN_SRC emacs-lisp
+(defun delete-html-blocks ()
+(interactive)
+(replace-regexp "#\\+BEGIN_HTML\\(?:.*\\|\n\\)*#\\+END_HTML" "")
+)
+#+END_SRC
