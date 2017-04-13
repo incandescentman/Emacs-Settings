@@ -645,3 +645,20 @@ $ alias vi=vim
 $ # To escape the alias for vi:
 $ \vi # This doesn't open VIM
 Cool, isn't it?
+
+* beginning and ending words in regex lists
+
+\' (or escaped \\') is a regular expression for a word's end. So
+
+
+    "\\.t\\(ex\\|xt\\)\\'"
+
+stands for all words which end in '.tex' or '.txt'.
+
+
+A way to make recentf ignore some files is to add appropriate regexps to recentf-exclude list:
+
+(add-to-list 'recentf-exclude "\\.windows\\'")
+(add-to-list 'recentf-exclude "\\.revive\\'")
+
+: "\\'" just marks the end of the string

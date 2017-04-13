@@ -446,6 +446,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  (require 'recentf)
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
+
   (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
@@ -551,8 +554,10 @@ layers configuration. You are free to put any user code."
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
-  (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
+;;  (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
   ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
+
+  (setq org-bullets-bullet-list (quote ("• ")))
 
   ;; (load "/Users/jay/emacs/emacs-settings/gnugol.el")
   ;; (use-package gnugol)

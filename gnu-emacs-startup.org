@@ -425,6 +425,7 @@ CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 ;; mk - mykeybindings
 
 
+(define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
 
 (define-key key-minor-mode-map (kbd "C-;") 'org-def)
 (require 'flyspell)
@@ -3669,12 +3670,4 @@ s-i
 
 
 ))
-#+END_SRC
-
-* delete html blocks
-#+BEGIN_SRC emacs-lisp
-(defun delete-html-blocks ()
-(interactive)
-(replace-regexp "#\\+BEGIN_HTML\\(?:.*\\|\n\\)*#\\+END_HTML" "")
-)
 #+END_SRC
