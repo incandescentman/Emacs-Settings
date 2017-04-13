@@ -1183,11 +1183,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (interactive)
 
 (if
-(looking-back "\n\n")
-(smart-org-insert-heading-respect-content-dwim)
-
-
-(if
 
     (and
      (looking-back "^")
@@ -1196,7 +1191,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (org-toggle-heading-same-level) ; then
  (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else
 )
-)
+
 
 #+END_SRC
 
