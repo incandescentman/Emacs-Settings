@@ -407,6 +407,11 @@ Use ⌘-m as prefix for my own custom keybindings:
 ** NOTE-TO-JAY TODO Custom keybindings
 CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
 
+
+Eventually replace these with this? https://github.com/noctuid/general.el
+
+
+
 #+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
@@ -3662,6 +3667,9 @@ s-i
 
 
 (replace-string "Õ" "'" nil (point-min) (point-max))
+(replace-string "Ò" "\"" nil (point-min) (point-max))
+(replace-string "Ó" "\"" nil (point-min) (point-max))
+
 
 
 ))
