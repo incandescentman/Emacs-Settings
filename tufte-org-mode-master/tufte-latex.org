@@ -1,0 +1,1180 @@
+#+TITLE: Tufte Org Mode
+#+AUTHOR: Thomas S. Dye
+#+FULLNAME: Thomas Stuart Dye
+#+PUBLISHER: Tufte Org Mode Press
+#+PRINT-DATE: March 2016
+#+COPYRIGHT-DATE: 2015
+#+WEB-SITE: http://www.tsdye.com
+#+MARGIN-NOTE-FONT: \itshape\footnotesize
+#+LATEX_CLASS: tufte-book
+
+* How to use this document                                         :noexport:
+This Org mode document contains three exportable documents:
+ - a template for writing a Tufte style book
+ - the [[*A Tufte Org Mode Handout][source code for a handout]] that describes how to use Tufte Org Mode
+ - the [[*Tufte Org Mode README][source code for the README]] for github.
+
+You can directly export the book template with org-export-dispatch and
+then choosing Export to Tufte LaTeX and As PDF and open.  For me,
+this yields a 14 page document with mostly blank pages (it is a
+template).
+
+You can export the handout subtree by:
+ 1. changing the #+LATEX_CLASS from tufte-book to tufte-handout
+ 2. renewing the setup by pressing C-c C-c somewhere in the header
+ 3. exporting the subtree in the usual way with org-export-dispatch
+    and then choosing Export to Tufte LaTeX and As PDF and open.
+
+Finally, you can export the README file using the github flavored
+markdown exporter.
+
+* Front matter                                                       :ignore:
+** Tufte-LaTeX settings                                              :ignore:
+#+name: tl-book-settings
+#+header: :var publisher=(jk-org-kwd "PUBLISHER")
+#+header: :var marginnote-font=(jk-org-kwd "MARGIN-NOTE-FONT")
+#+header: :results raw :exports results
+#+begin_src emacs-lisp
+(format "\\publisher{%s}
+\\setmarginnotefont{%s}" publisher marginnote-font)
+#+end_src
+
+** Title page                                                        :ignore:
+#+LaTeX: \frontmatter\maketitle
+
+** Copyright page                                                    :ignore:
+#+header: :var right-holder=(jk-org-kwd "FULLNAME")
+#+header: :var publisher=(jk-org-kwd "PUBLISHER")
+#+header: :var web-site=(jk-org-kwd "WEB-SITE")
+#+header: :var print-date=(jk-org-kwd "PRINT-DATE")
+#+header: :var copyright-date=(jk-org-kwd "COPYRIGHT-DATE")
+#+header: :results raw :exports results
+#+begin_src emacs-lisp
+(format "#+begin_export LATEX
+%% \\newpage
+\\begin{fullwidth}
+~\\vfill
+\\thispagestyle{empty}
+\\setlength{\\parindent}{0pt}
+\\setlength{\\parskip}{\\baselineskip}
+Copyright \\copyright\\ %s %s
+
+\\par\\smallcaps{Published by %s}
+
+\\par\\smallcaps{%s}
+
+\\par\\textit{First printing, %s}
+\\end{fullwidth}
+#+end_export" copyright-date right-holder publisher web-site print-date)
+#+end_src
+
+** Lists                                                             :ignore:
+
+#+TOC: headlines 0
+#+TOC: listings
+#+TOC: tables
+
+* Main matter                                                        :ignore:
+#+LaTeX: \mainmatter
+
+** Chapter 1
+
+** Chapter 2
+
+** Chapter N
+
+* Back matter                                                        :ignore:
+#+begin_export LATEX
+\newpage
+\backmatter
+% \bibliographystyle{chicago.bst}
+% \bibliography{local}
+\printbibliography
+#+end_export
+
+
+* A Tufte Org Mode Handout                                         :noexport:
+:PROPERTIES:
+:EXPORT_FILE_NAME: tufte-org-mode-handout
+:MARGIN-NOTE-FONT: \itshape\footnotesize
+:END:
+
+#+name: tl-handout-settings
+#+header: :var marginnote-font=(jk-org-kwd "MARGIN-NOTE-FONT")
+#+header: :results raw :exports results
+#+begin_src emacs-lisp
+(format "\\setmarginnotefont{%s}" marginnote-font)
+#+end_src
+
+\maketitle
+
+This document is intended to display the features of Tufte Org Mode
+handouts. In what follows, elements of a document are typeset
+according to the Tufte style followed by the Tufte Org Mode
+representation of the element.
+
+** Text
+
+{{{newthought(This is a new thought)}}} at the start of a paragraph,
+introduced with an Org mode macro, and containing a footnote created
+in the usual Org mode way.[fn:3]
+
+#+begin_example
+{{{newthought(This is a new thought)}}} at the start of a 
+paragraph, introduced with an Org mode macro.
+#+end_example
+
+[[latex-opt:marginnote][Unnumbered notes can be placed in the margin.;-1\baselineskip]]
+
+#+begin_example
+[[latex-opt:marginnote][Unnumbered notes can be placed in 
+the margin.;-1\baselineskip]]
+#+end_example
+
+[[latex:newthought][This is a new thought]] at the start of another paragraph, introduced
+with an Org mode link, and containing a footnote.[fn:2]
+
+#+begin_example
+[[latex:newthought][This is a new thought]] at the start 
+of another paragraph, introduced with an Org mode link,
+and containing a footnote.[fn:2]
+
+,* Footnotes
+,#+attr_latex: :offset 24pt
+[fn:2] This footnote is shifted down.
+#+end_example
+
+#+begin_fullwidth
+This is some longish text that will spill over the right edge of the
+text block and into the right margin.  It will be set ragged right
+with respect to the right edge of the margin.
+#+end_fullwidth
+
+#+begin_example
+,#+begin_fullwidth
+This is some longish text that will spill over the right 
+edge of the text block and into the right margin.  It 
+will be set ragged right with respect to the right edge 
+of the margin.
+,#+end_fullwidth
+#+end_example
+
+** Citations
+
+Edward R. Tufte's distinctive book design was based at least partially
+on the work of the physicist Richard Feynman and was first displayed
+in the landmark book, /The Visual Display of Quantitative
+Information/.[[footcite:tufte83][;;Tufte 1983]]  The citation in the margin was created with
+the =footcite= link, which means that its position is determined solely
+by the LaTeX engine.  Note that the marginal citation is placed close
+to the note number in the text.
+
+#+begin_example
+in the landmark book, /The Visual Display of Quantitative
+Information/.[[footcite:tufte83][;;Tufte 1983]]  The 
+citation in the margin was created with
+#+end_example
+
+The design was modified a bit in later books, starting with
+/Envisioning Information/, which appeared seven years later.[[sidecite:tufte90][;;1in;Tufte
+1990]] The citation in the margin was created with the =sidecite= link,
+with an optional argument of =1in=, which shifts the citation an inch
+down the margin.  Any valid LaTeX length can be used to move the
+=sidecite= around.  For example, =10pt=, =2cm=, =12mm=, and =2\baselineskip= are
+all valid arguments.  Note that the citation in the margin is removed
+from the position of the note number in the text.
+
+#+begin_example
+/Envisioning Information/, which appeared seven years 
+later.[[sidecite:tufte90][;;1in;Tufte 1990]] The citation 
+in the margin was created with the =sidecite= link, with 
+an optional argument of =1in=, which shifts the citation
+#+end_example
+
+** Figures
+
+Figures can be set in three widths.  Figure [[fig:text-block]] is the
+width of the text block, Figure [[fig:full-width]] is the width of the
+text block and the margin, and Figure [[fig:marginal]] appears in the
+margin. 
+
+#+name: fig:text-block
+#+caption[Hilbert curves]: Hilbert curves of various degrees /n/.  
+#+caption: Note that this figure only takes up the main text block width.
+#+caption: Note also that the caption in the margin is aligned with the bottom of the image.
+#+attr_latex: :vertical-alignment b
+[[file:hilbertcurves.pdf]]
+
+#+begin_example
+,#+name: fig:text-block
+,#+caption[Hilbert curves]: Hilbert curves of various 
+,#+caption: Note that this figure only takes up the main
+,#+caption: Note also that the caption in the margin is
+,#+attr_latex: :vertical-alignment b
+[[file:hilbertcurves.pdf]]
+#+end_example
+
+#+name: fig:full-width
+#+caption[Sine wave]: This graph shows a sine wave.
+#+caption: Note that the figure takes up the full page width.
+#+attr_latex: :float multicolumn
+[[file:sine.pdf]]
+
+#+begin_example
+,#+name: fig:full-width
+,#+caption[Sine wave]: This graph shows a sine wave.
+,#+caption: Note that the figure takes up the full page
+,#+attr_latex: :float multicolumn
+[[file:sine.pdf]]
+#+end_example
+
+#+name: fig:marginal
+#+caption[Helix in the margin]: Helix in the margin.
+#+caption: Note that this figure fits in the margin.
+#+attr_latex: :float margin :width 2in
+[[file:helix.pdf]]
+
+#+begin_example
+,#+name: fig:marginal
+,#+caption[Helix in the margin]: Helix in the margin.
+,#+caption: Note that this figure fits in the margin.
+,#+attr_latex: :float margin :width 2in
+[[file:helix.pdf]]
+#+end_example
+
+** Tables
+Tables come in three widths, as well.  Table [[tab:text-block]] is
+centered in the text block, Table [[tab:full-width]] is centered in the
+text-block plus margin, and Table [[tab:marginal]] is placed in the margin.
+
+#+name: tab:text-block
+#+caption[Example in-text table]: Example table in the text.
+#+caption: Note that the caption is placed in the margin.
+#+attr_latex: :font \footnotesize
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+|       |        |       |        |       |       |
+
+
+#+begin_example
+,#+name: tab:text-block
+,#+caption[Example in-text table]: Example table in the text.
+,#+caption: Note that the caption is placed in the margin.
+,#+attr_latex: :font \footnotesize
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+|       |        |       |        |       |       |
+#+end_example
+
+#+name: tab:marginal
+#+caption[Example marginal table]: Example marginal table.
+#+caption: Note that the table and the caption are placed in the margin.
+#+attr_latex: :font \footnotesize :float margin :offset 72pt
+| First | Second | Third |
+|-------+--------+-------|
+| One   | Two    | Three |
+| Six   | Seven  | Eight |
+|       |        |       |
+
+
+#+begin_example
+,#+name: tab:marginal
+,#+caption[Example marginal table]: Example marginal table.
+,#+caption: Note that the table and the caption are placed
+,#+attr_latex: :font \footnotesize :float margin :offset [72pt]
+| First | Second | Third |
+|-------+--------+-------|
+| One   | Two    | Three |
+| Six   | Seven  | Eight |
+|       |        |       |
+#+end_example
+
+#+name: tab:full-width
+#+caption[Example full width table]: Example full width table.
+#+caption: Note that the caption is placed in the margin.
+#+attr_latex: :font \footnotesize :float multicolumn 
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+|       |        |       |        |       |       |
+
+#+begin_example
+,#+name: tab:full-width
+,#+caption[Example full width table]: Example full width
+,#+caption: Note that the caption is placed in the margin.
+,#+attr_latex: :font \footnotesize :float multicolumn 
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+|       |        |       |        |       |       |
+#+end_example
+
+\printbibliography
+
+* Tufte Org Mode README                                            :noexport:
+:PROPERTIES:
+:EXPORT_FILE_NAME: README
+:EXPORT_TITLE: Tufte Org Mode
+:END:
+
+# #+TOC: headlines 1
+
+** Introduction to Tufte Org Mode
+Tufte Org Mode is designed to provide an Org mode environment for
+writing books and handouts in a style developed and made famous by
+[[http://www.edwardtufte.com/tufte/index][Edward R. Tufte]].  A characteristic of Tufte's style is a page layout
+with a wide margin on one side (typically the right side) in which
+notes, references, small tables, and small figures are placed.  The
+style is widely admired, and it was a matter of time until the LaTeX
+community produced the [[https://tufte-latex.github.io/tufte-latex/][{{{tl}}} classes]] to typeset books and handouts in
+Tufte's style.
+
+Tufte Org Mode consists of two files:
+ - an Org mode file, =tufte-latex.org=, that contains documentation and
+   setups for the {{{tl}}} book and {{{tl}}} handout classes, and
+ - an Emacs Lisp file, =ox-tufte-latex.el=, derived from the =ox-latex.el=
+   exporter written by Nicolas Goaziou, that implements an Org mode
+   export backend for the {{{tl}}} classes.
+
+The {{{tl}}} classes implement several non-standard LaTeX commands to
+achieve a Tufte style page layout, including =marginfigure=,
+=margintable=, and =sidenote=.  =Ox-tufte-latex.el= implements these
+commands and =tufte-latex.org= gives examples of their use.
+
+*** The {{{tl}}} package
+Most standard LaTeX distributions ship an older version of the {{{tl}}}
+package.  Tufte Org Mode requires version 3.5.2 of the package, which at
+the time of this writing was the version available from [[https://tufte-latex.github.io/tufte-latex/][the
+Tufte-LaTeX web site]].  In particular, the {{{tl}}} package must support the
+=nobib= option, which instructs the package not to load =natbib= support.
+The =natbib= support in older versions of the {{{tl}}} package clashed with
+=biblatex=, which is very useful in a Tufte-style document.
+
+You'll need to install the latest version of the {{{tl}}} classes where your
+LaTeX distribution can find them.  Please consult the documentation
+for your LaTeX distribution for the best place to install local
+packages. If all else fails, put them in the folder with your Tufte
+Org Mode document, which is typically the first place LaTeX will look
+for them.
+
+**** Other Required LaTeX Packages
+In addition to the LaTeX packages required by the {{{tl}}} package,
+Tufte Org Mode tries to load the following packages:
+ - =etex=
+ - =biblatex=
+ - =booktabs=
+ - =graphicx=
+ - =microtype=
+ - =hyphenat=
+ - =marginfix=
+ - =amsmath=
+ - =morefloats=
+ - =xparse=  (distributed as part of the l3packages bundle)
+ - =xpatch= 
+These packages are all loaded in =#+LATEX_HEADER= lines.
+
+**** Patches to =biblatex=
+The {{{tl}}} package was written while =biblatex= was under development and it
+was not yet clear that it would be able to replace the venerable
+=bibtex= package.  Accordingly, the developers of {{{tl}}} chose to base the
+package's citation handling on the popular =natbib= package, which is
+based on =bibtex=.
+
+However, since that time =biblatex= has emerged as a more powerful and
+flexible alternative to =bibtex=, and its facilities are very useful for
+the humanities style citations used by Tufte.
+
+If the {{{tl}}} classes are loaded with the =nobib= option, and =biblatex= is
+also loaded, then the =footcite= command defined by =biblatex= can be used
+out of the box to place citations in the document margin.  For many
+documents, especially those with sparse marginal material, this might
+represent a complete solution.  However, when there are many citations
+or an abundance of other marginal material, items in the margin might
+be placed incorrectly, leading most often to collisions where one item
+is typeset over another.
+
+A clever piece of code that addresses this problem was posted to the
+[[http://tex.stackexchange.com/questions/238661/is-it-possible-to-fine-tune-the-citation-positions-in-tufte-biblatex-combination?lq=1][StackExchange TeX-LaTeX community]] by moewe.  It defines a =sidecite=
+command that takes an optional parameter that can be used to shift a
+citation up or down in the margin.  This code is loaded by
+=tufte-latex.org= using =#+LATEX_HEADER:= lines:
+#+begin_example
+,#+LATEX_HEADER: \usepackage{xparse}
+,#+LATEX_HEADER: \usepackage{xpatch}
+,#+LATEX_HEADER: 
+,#+LATEX_HEADER: \makeatletter
+,#+LATEX_HEADER: \xpatchcmd{\@footnotetext}%
+,#+LATEX_HEADER:       {\color@begingroup}
+,#+LATEX_HEADER:       {\color@begingroup\toggletrue{blx@footnote}}
+,#+LATEX_HEADER:       {}
+,#+LATEX_HEADER:       {}
+,#+LATEX_HEADER: \makeatother
+,#+LATEX_HEADER: 
+,#+LATEX_HEADER: \DeclareCiteCommand{\sidecitehelper}
+,#+LATEX_HEADER:   {\usebibmacro{prenote}}
+,#+LATEX_HEADER:   {\usebibmacro{citeindex}%
+,#+LATEX_HEADER:    \usebibmacro{cite}}
+,#+LATEX_HEADER:   {\multicitedelim}
+,#+LATEX_HEADER:   {\usebibmacro{cite:postnote}}
+,#+LATEX_HEADER: 
+,#+LATEX_HEADER: \ExplSyntaxOn
+,#+LATEX_HEADER: \NewDocumentCommand\sidecite{D<>{}O{}om}{%
+,#+LATEX_HEADER:   \iftoggle{blx@footnote}
+,#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\mkbibparens{##2}}}
+,#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\sidenote[][##1]{##2}}}
+,#+LATEX_HEADER:     {\IfNoValueTF{#3}
+,#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2]{#4}}}
+,#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2][#3]{#4}}}}
+,#+LATEX_HEADER: }
+,#+LATEX_HEADER: \ExplSyntaxOff
+#+end_example
+
+*** The =ox-tufte-latex.el= Exporter
+
+The =ox-tufte-latex.el= exporter is currently under review as a
+contribution to Org mode.  If it passes muster, then it will be
+distributed with Org mode in the =contrib= folder and Emacs will be able
+to find it in the same way it finds other files in =contrib=.
+
+In the event =ox-tufte-latex.el= does not pass muster, then you will
+have to make certain that Emacs can find it.  Typically, this means
+that your installation location must appear in the list of directories
+in the =load-path= variable.  To add your installation location to
+=load-path= you will need to execute a command something like the
+following example, perhaps in an initialization file:
+
+#+begin_example
+(add-to-list 'load-path "path/to/installation/location")
+#+end_example
+
+**** Other Emacs Packages
+
+The =tufte-latex.org= examples require two Emacs packages -- the =[[http://joostkremers.github.io/ebib/][Ebib=
+package]] by Joost Kremers for managing a =biblatex= database, and [[http://orgmode.org/cgit.cgi/org-mode.git/plain/contrib/lisp/ox-extra.el][the
+=ox-extra= package]] by Aaron Ecay to control which Org mode headlines are
+exported.
+
+The =Ebib= package provides a facility for formatting text that can be
+populated with information from a =biblatex= database and inserted into
+an Org mode buffer.  This facility is leveraged by Tufte Org Mode to
+insert Org mode links that are exported as =biblatex= citation commands.
+Six of these are [[id:71FB9961-D9D8-49BA-BA4A-03FF51E9DAC3][defined]] -- =footcite=, =sidecite=, =cite=, =textcite=,
+=parencite=, and =multicite=.  In practice, the Tufte Org Mode user calls
+the function =ebib-insert-bibtex-key=, selects an entry from the
+bibliographic database and a citation type, and then answers three or
+four prompts.  When the final prompt is answered, =Ebib= inserts the
+=biblatex= key into the Org mode buffer.
+
+The =ox-extra= package implements a headline tag, =:ignore:=, that
+activates a filter to remove the headline from export.  The =:ignore:=
+tag is especially handy when writing a Tufte book that lacks Parts,
+which are associated with first level headlines in Org Mode.  In this
+case, the user simply tags first level headlines with =:ignore:=
+#+begin_example
+,* This headline will not be exported                                 :ignore:
+#+end_example
+
+These two packages are loaded with =# eval:= lines in the Emacs local
+variables list.
+
+**** Other Emacs Lisp Source Code Blocks
+
+Three other Emacs Lisp source code blocks are evaluated as Emacs local
+variables -- =user-entities=, =pdf-process-bibtex=, and =jk-keywords=.
+
+The =user-entities= source code block adds entities commonly used in my
+work to the =org-entities-user= list.  These are unlikely to be useful
+for many users and they are included here as an example.  
+
+The =pdf-process-bibtex= source code block defines the sequence of
+commands that LaTeX will use to process the Tufte Org Mode document.
+An alternative, =pdf-process-biber=, is also provided, in case you would
+like to use [[http://biblatex-biber.sourceforge.net/][the modern =biber= package]], which intends to be a
+replacement for =bibtex= that offers support for UTF-8, remote data
+sources, and many other sophisticated facilities.
+
+The =jk-keywords= source code block contains [[http://kitchingroup.cheme.cmu.edu/blog/2013/05/05/Getting-keyword-options-in-org-files/][two functions contributed
+by John Kitchin]] that are used to retrieve keyword options in Org mode
+files.
+
+** Keywords
+
+Tufte Org Mode defines several keywords that it uses primarily to
+construct the front matter of a book:
+ - FULLNAME :: the full name of the copyright holder;
+ - PUBLISHER :: the book publisher;
+ - PRINT-DATE :: the month and date of printing;
+ - COPYRIGHT-DATE :: the copyright year; and
+ - WEB-SITE :: the URL for the book.
+
+In addition, the keyword =MARGIN-NOTE-FONT= can be used to select a font
+for margin notes, which are unnumbered notes that can appear in the
+margin. 
+
+** Macros
+Org mode macros are most useful for small bits of text because they
+don't work across line breaks.  Macros that potentially deal with
+longer pieces of text have counterparts among the [[id:D9E61623-249D-4919-85A6-ACB3BF4E4875][links]], which are
+capable of handling text with line breaks.
+
+Tufte Org mode defines several Org mode macros for convenience.
+ - newthought :: The first few words of each section are identified as
+      a new thought and typeset in small caps.
+ - sidenote :: This macro takes three arguments:
+   - the text of the note
+   - optionally, a number for the note (if none is given, one will be assigned)
+   - an offset expressed as a LaTeX length, where positive values move
+     the note down in the margin and negative values move it up.
+ - marginnote :: this macro puts an unnumbered note in the margin, and
+      takes two arguments:
+   - the text of the note
+   - an offset expressed as a LaTeX length, where positive values move
+     the note down in the margin and negative values move it up.
+ - tl :: a convenience macro that will result in a properly typeset
+      package name, {{{tl}}}.
+
+** Links
+:PROPERTIES:
+:ID:       D9E61623-249D-4919-85A6-ACB3BF4E4875
+:END:
+I think Org mode links are an outstanding feature.  They make it very
+easy to extend Org mode and at least [[https://lists.gnu.org/archive/html/emacs-orgmode/2010-08/msg00404.html][one user has proposed to make
+them more extensible]].  This document uses links for citations and for
+inserting arbitrary LaTeX commands.
+
+*** Citation Links
+:PROPERTIES:
+:ID:       71FB9961-D9D8-49BA-BA4A-03FF51E9DAC3
+:END:
+Citation links are inserted by Ebib.  The =footcite= link will place a
+citation in the margin at a location chosen by LaTeX.  You won't be
+able to move it if it collides with something else.  [[http://tex.stackexchange.com/questions/238661/is-it-possible-to-fine-tune-the-citation-positions-in-tufte-biblatex-combination?lq=1][The =sidecite= link]]
+has an =offset= option that lets you move the citation up or down as you
+wish.  The other citation links -- =cite=, =textcite=, and =parencite= --
+are most useful in notes.
+
+The biblatex package offers a =footcites= command with an unusual
+syntax.  This is implemented in Tufte Org mode by placing the ƒ
+character (alt-f on my keyboard) in the text where the footnote number
+should be placed and following it with two or more =multicite= links.
+If you use the ƒ character in your work, then you'll want to change
+the character used in the filter.
+
+One current limitation of Tufte Org mode is the [[http://tex.stackexchange.com/questions/290446/sidecites-command-for-biblatex-and-tufte-latex?lq=1][lack of an analogous
+=sidecites= command]].  In practical terms, this limitation means that if
+you are citing multiple works, each with pre- and/or post-notes, then
+you'll need to use =footcites= and hope for the best.  Alternatively,
+the =sidecite= link can handle multiple bibliography keys, you just
+won't be able to add pre- or post-notes to them individually.
+
+*** Links for LaTeX commands
+There are two general purpose links that can be used for inserting
+arbitrary LaTeX commands.  The =latex= link is useful for commands
+without optional arguments.  For example, it can be used for the
+=newthought= command, which introduces the first few words of the first
+paragraph in a section:
+#+begin_example
+ [[latex:newthought][The first few words]] of the sentence.
+#+end_example
+There is also a =newthought= macro that accomplishes the same thing.
+
+The =latex-opt= link is useful for commands that have one optional
+argument.  The optional argument is taken from the description part of
+the link.  It is separated by a semi-colon from the required argument
+that starts the description.  This is useful for things like long
+marginnotes that would break an Org mode macro:
+#+begin_example
+[[latex-opt:marginnote][This is a long margin note that is going to babble on and on until it
+extends past the point that it could be handled easily by an Org mode
+macro.;1in]]
+#+end_example
+Note that the use of =;= to separate the arguments means that this
+character shouldn't appear in the note.  If your notes need
+semi-colons, then you'll want to edit the link definition to use some
+other separator character.
+
+Note, too, that Org mode will recognize LaTeX fragments, so it is
+possible to enter the raw LaTeX directly, rather than relying on
+links.  I like to use links because the buffer looks cleaner and less
+cluttered, which helps me concentrate on the text and flow of an
+argument. 
+
+** Headings
+The [[id:F50B84E7-0E99-4867-A4E7-0AD4AEA3312C][Tufte book class]] defines headings for Part, Chapter, Section,
+Subsection, and Paragraph.  Part maps to first level Org mode headlines,
+Chapter to second level Org mode headlines, and so on.
+
+If you don't want a book with Parts, then you can use the =:ignore:= tag
+implemented in the =ox-extra= library by Aaron Ecay with your first
+level headers:
+
+#+begin_example
+,* First level headline is a Part                                     :ignore:
+,** Second level headline is a Chapter
+,*** Third level headline is a Section
+,**** Fourth level headline is a Subsection
+,***** Fifth level headline is a Paragraph
+#+end_example
+
+The [[id:9F2201A7-4622-4611-AACC-5010B06BBD53][Tufte handout class]] defines headings for Section and Subsection
+and these are mapped to first and second level Org mode headings,
+respectively. 
+
+#+begin_example
+,* First level headline is a Section
+,** Second level headline is a Subsection
+#+end_example
+
+** Text
+
+It is sometimes the case that you'll want a block of text to run wider
+than usual and extend into the margin.  This is done with the
+=fullwidth= environment, which you can create with the standard Org mode
+solution of a =#+begin_fullwidth= =#+end_fullwidth= pair.
+
+#+begin_example
+,#+begin_fullwidth
+Some long text that you want to run into the margin.
+,#+end_fullwidth
+#+end_example
+
+** Tables
+
+The Tufte LaTeX classes support three table sizes: one that fits in
+the text block, another that fits in the margin, and a third that
+spans the text block and the margin.  Which kind you get is determined
+by the =:float= attribute.
+
+This example shows a table that will be placed in the text block.
+#+begin_example
+,#+name: tab:text-block
+,#+caption[Example in-text table]: Example table in the text.
+,#+caption: Note that the caption is placed in the margin.
+,#+attr_latex: :font \footnotesize
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+#+end_example
+
+
+Here is an example of a table placed in the margin.  Note =:float
+margin= in the =#+attr_latex:= line.
+#+begin_example
+,#+name: tab:marginal
+,#+caption[Example marginal table]: Example marginal table.
+,#+caption: Note that the table and the caption are placed in the margin.
+,#+attr_latex: :booktabs nil :font \footnotesize :float margin :offset -2in
+| First | Second | Third |
+|-------+--------+-------|
+| One   | Two    | Three |
+| Six   | Seven  | Eight |
+#+end_example
+
+Here is an example of a table that can span the text block and
+margin.  Note =:float multicolumn= in the =#+attr_latex:= line.
+
+#+begin_example
+,#+name: tab:full-width
+,#+caption[Example full width table]: Example full width table.
+,#+caption: Note that the caption is placed in the margin.
+,#+attr_latex: :font \footnotesize :float multicolumn
+| First | Second | Third | Fourth | Fifth | Sixth |
+|-------+--------+-------+--------+-------+-------|
+| One   | Two    | Three | Four   | Five  | Stop  |
+| Six   | Seven  | Eight | Nine   | Ten   | Here  |
+#+end_example
+
+** Figures
+
+Figures also come in three widths, just like tables.  However, figures
+have two additional attributes that adjust the alignment of the
+caption: =vertical-alignment= and =horizontal-alignment=.  The
+=vertical-alignment= attribute can be set to =t=, to align the caption
+with the top of the figure, or =b=, to align it with the bottom.
+Sometimes, a figure will be placed on one page and its caption will
+appear on another.  In this case, the =horizontal-alignment= attribute
+can be set to =l=, to make the float verso, or =r=, to make the float
+recto.
+
+The default text-width figure is 4.375 in. wide.
+
+#+begin_example
+,#+name: fig:text-block
+,#+caption[Hilbert curves]: Hilbert curves of various degrees /n/.  
+,#+caption: Note that this figure only takes up the main text block width.
+,#+caption: Note also that the caption in the margin is aligned with the bottom of the image.
+,#+attr_latex: :vertical-alignment b
+[[file:hilbertcurves.pdf]]
+#+end_example
+
+A figure that spans the text block and the margin is 6.75 in. wide.
+Note =:float multicolumn= in the =#+attr_latex:= line.
+
+#+begin_example
+,#+name: fig:full-width
+,#+caption[Sine wave]: This graph shows a sine wave.
+,#+caption: Note that the figure takes up the full page width.
+,#+attr_latex: :float multicolumn
+[[file:sine.pdf]]
+#+end_example
+
+A figure placed in the margin can be 2 in. wide.  A margin figure is
+specified by =:float margin= in the =#+attr_latex:= line.  The position of
+the figure in the margin can be adjusted up or down using the =:offset=
+attribute, which takes a LaTeX length.  A negative length will move
+the figure up in the margin and a positive length will move the figure
+down.
+
+#+begin_example
+,#+name: fig:marginal
+,#+caption[Helix in the margin]: Helix in the margin.
+,#+caption: Note that this figure fits in the margin.
+,#+attr_latex: :float margin :width 2in :offset -2.5in 
+[[file:helix.pdf]]
+#+end_example
+
+* Notes                                                            :noexport:
+** Overview of commands
+The =marginfigure= command is controlled by a new LaTeX attribute
+=:float margin=.  In addition, there are attributes to: set the offset,
+e.g., =:offset 1in=, which adjusts the position of the figure up or
+down in the margin; the vertical alignment of float captions, e.g.,
+=:vertical-alignment t|b=, so they align with either the top or bottom
+of the float; and =:horizontal-alignment l|r= in case a figure and its
+caption end up on different pages. 
+
+The =margintable= command is controlled by the LaTeX attribute =:float
+margin= associated with a table.
+
+The Org mode footnote mechanism has been hijacked to produce
+=sidenote= commands, instead of =footnote= commands.  The =sidenote=
+command takes an optional parameter for the offset, and this is
+implemented as a LaTeX attribute associated with the Org mode footnote
+definition, e.g.,
+#+begin_example
+#+attr_latex: :offset 36pt
+[fn:1] Cook referred to Koa`a as Koah.
+#+end_example
+
+
+
+* Footnotes
+
+[fn:3] This is the first footnote.
+
+#+attr_latex: :offset 72pt
+[fn:2] This footnote is shifted down.
+
+[fn:1] Some footnote text. In-footnote citations appear not to work.
+
+
+* Setup                                                            :noexport:
+** Document source code
+The source code blocks defined below are loaded into the user's
+session using the Emacs =#+eval:= method.  You should look at the code
+closely to convince yourself that none of it is malicious.
+
+*** General purpose LaTeX links
+
+**** Link for command with no options
+The latex link creates a LaTeX command with the path and passes desc
+to it.
+
+It can be used for the =newthought= command, which introduces the
+first few words of the first paragraph in a section,
+e.g.
+#+begin_example
+ [[latex:newthought][First few words]]
+#+end_example
+
+There is also a newthought macro that accomplishes the same thing.
+
+#+name: latex-link
+#+begin_src emacs-lisp
+(org-add-link-type
+"latex" nil
+(lambda (path desc format)
+  (when(eq format 'latex)
+    (format "\\%s{%s}" path desc))))
+#+end_src
+
+**** Link for a command with one option
+The option is placed after a ; in the link description.
+#+name: latex-opt-link
+#+begin_src emacs-lisp
+(org-add-link-type
+ "latex-opt" nil
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (opt (nth 1 desc-list))
+            (arg (nth 0 desc-list)))
+       (format "\\%s%s{%s}" path
+               (if (equal "" opt) opt (format "[%s]" opt))
+               arg)))))
+#+end_src
+
+#+results: latex-opt-link
+| lambda | (path desc format) | (when (eq format (quote latex)) (let* ((desc-list (split-string desc ;)) (opt (nth 1 desc-list)) (arg (nth 0 desc-list))) (format \%s%s{%s} path (if (equal  opt) opt (format [%s] opt)) arg))) |
+
+*** Citation links
+:PROPERTIES:
+:ID:       D86EC2AF-4659-4C32-9B7D-B93F46D5FF78
+:END:
+There are many ways to manage citations in Org mode. My preference is
+to manage the bibliography database with [[http://joostkremers.github.io/ebib/][Ebib: a BibTeX database
+manager for Emacs]] and insert citations using a custom Org mode link. I
+find the work flow convenient and the look of the Org mode buffer
+"good enough."
+
+The source code block named =tufte-ebib-setup= defines a cite commands
+that [[http://joostkremers.github.io/ebib/][Ebib]] will use to insert citations in an Org mode buffer. It
+inserts the BibTeX key as the path part of the link and then offers
+the user three or four prompts. The first prompt holds the post-note
+text, typically a page number for a quotation.  I put this first
+because it is the one I use most often.  The second prompt holds the
+pre-note text, which is usually something like "see" or "c.f.".  The
+third prompt is usually a description of the citation, e.g., "Tufte
+1983", that is the part of the link that shows up in the Org mode
+buffer when links are displayed as descriptive links.  In the case of
+=sidecite=, the third prompt takes a LaTeX length that shifts the
+citation up in the margin if the length is negative and down in the
+margin if the length is positive.
+
+
+#+name: tufte-ebib-setup
+#+begin_src emacs-lisp :results silent
+(setq ebib-citation-commands
+      (quote ((org-mode (("footcite" "[[footcite:%K][%A;%A;%D]]")
+                         ("multicite" "[[multicite:%K][%A;%A;%D]]")
+                         ("parencite" "[[parencite:%K][%A;%A;%D]]")
+                         ("textcite" "[[textcite:%K][%A;%A;%D]]")
+                         ("cite" "[[cite:%K][%A;%A;%D]]")
+                         ("sidecite" "[[sidecite:%K][%A;%A;%A;%D]]"))))))
+#+end_src
+
+#+name: tufte-cite-link
+#+begin_src emacs-lisp :results silent
+(org-add-link-type
+ "cite-tufte" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (format "\\cite[%s\\baselineskip]{%s}"
+             (nth 0 (split-string desc ";"))
+             path))))
+#+end_src
+
+#+name: biblatex-cite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "cite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (pre (nth 1 desc-list))
+            (post (nth 0 desc-list)))
+       (format "\\cite%s%s{%s}"
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (equal "" post) post (format "[%s]" post))
+               path)))))
+#+end_src
+
+#+name: biblatex-parencite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "parencite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (pre (nth 1 desc-list))
+            (post (nth 0 desc-list)))
+       (format "\\parencite%s%s{%s}"
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (equal "" post) post (format "[%s]" post))
+               path)))))
+#+end_src
+
+#+name: biblatex-textcite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "textcite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (pre (nth 1 desc-list))
+            (post (nth 0 desc-list)))
+       (format "\\textcite%s%s{%s}"
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (and (equal "" pre) (equal "" post)) post
+                   (format "[%s]" post))
+               path)))))
+#+end_src
+
+#+name: biblatex-footcite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "footcite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (pre (nth 1 desc-list))
+            (post (nth 0 desc-list)))
+       (format "\\footcite%s%s{%s}"
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (and (equal "" pre) (equal "" post)) post
+                   (format "[%s]" post))
+               path)))))
+#+end_src
+
+#+name: biblatex-multicite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "multicite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (pre (nth 1 desc-list))
+            (post (nth 0 desc-list)))
+       (format "%s%s{%s}"
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (and (equal "" pre) (equal "" post)) post
+                   (format "[%s]" post))
+               path)))))
+#+end_src
+
+#+name: biblatex-sidecite-link
+#+begin_src emacs-lisp :results silent :exports none
+(org-add-link-type
+ "sidecite" 'ebib-open-org-link
+ (lambda (path desc format)
+   (when (eq format 'latex)
+     (let* ((desc-list (split-string desc ";"))
+            (post (nth 0 desc-list))
+            (pre (nth 1 desc-list))
+            (offset (nth 2 desc-list)))
+       (format "\\sidecite%s%s%s{%s}"
+               (if (equal "" offset) offset (format "<%s>" offset))
+               (if (equal "" pre) pre (format "[%s]" pre))
+               (if (and (equal "" pre) (equal "" post)) post (format "[%s]" post))
+               path)))))
+#+end_src
+
+<<latex-filter-footcites>>
+
+#+name: latex-filter-footcites
+#+begin_src emacs-lisp :results silent
+  (defun tsd-latex-filter-footcites (text backend info)
+    "Replace footcites placeholders in Beamer/LaTeX export."
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "ƒ" "\\footcites" text nil t)))
+  (add-to-list 'org-export-filter-plain-text-functions
+               'tsd-latex-filter-footcites)
+  (add-to-list 'org-export-filter-headline-functions
+               'tsd-latex-filter-footcites)
+#+end_src
+
+*** Tufte handout class
+:PROPERTIES:
+:ID:       9F2201A7-4622-4611-AACC-5010B06BBD53
+:END:
+#+name: tufte-handout
+#+begin_src emacs-lisp :results silent
+;; tufte-handout class for writing classy handouts and papers
+(add-to-list 'org-latex-classes
+'("tufte-handout"
+"\\documentclass[twoside,nobib]{tufte-handout}
+   [NO-DEFAULT-PACKAGES]"
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")))
+#+end_src
+
+
+*** Tufte book class
+:PROPERTIES:
+:ID:       F50B84E7-0E99-4867-A4E7-0AD4AEA3312C
+:END:
+#+name: tufte-book
+#+begin_src emacs-lisp :results silent
+(add-to-list 'org-latex-classes
+'("tufte-book"
+"\\documentclass[twoside,nobib]{tufte-book}
+  [NO-DEFAULT-PACKAGES]"
+("\\part{%s}" . "\\part*{%s}")
+("\\chapter{%s}" . "\\chapter*{%s}")
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")
+("\\paragraph{%s}" . "\\paragraph*{%s}")))
+#+end_src
+
+*** Nicolas Goaziou's filter for non-breaking spaces
+
+You may add _ to "pre" part of `org-emphasis-regexp-components' in
+order to typeset constructs such as /Genus/ cf. /species/.
+
+This filter looks for " ", which is replaced by "~", the character for
+non-breaking space.
+
+Make the non-breaking space with =alt-space=.
+
+#+name: ngz-nbsp
+#+begin_src emacs-lisp :results silent
+(defun ngz-latex-filter-nobreaks (text backend info)
+  "Ensure \"_\" are properly handled in Beamer/LaTeX export."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string " " "~" text)))
+(add-to-list 'org-export-filter-plain-text-functions
+             'ngz-latex-filter-nobreaks)
+#+end_src
+
+*** User Entities
+The following source code block sets up user entities that are used
+frequently in my work. I use the various =.*macron= commands to typeset
+Hawaiian language words with what is known in Hawaiian as a
+/kahak\omacron{}/.
+
+#+name: user-entities
+#+begin_src emacs-lisp
+  (add-to-list 'org-entities-user '("amacron" "\\={a}" nil "&#0257" "a" "a" "ā"))
+  (add-to-list 'org-entities-user '("emacron" "\\={e}" nil "&#0275" "e" "e" "ē"))
+  (add-to-list 'org-entities-user '("imacron" "\\={\\i}" nil "&#0299" "i" "i" "ī"))
+  (add-to-list 'org-entities-user '("omacron" "\\={o}" nil "&#0333" "o" "o" "ō"))
+  (add-to-list 'org-entities-user '("umacron" "\\={u}" nil "&#0363" "u" "u" "ū"))
+  (add-to-list 'org-entities-user '("Amacron" "\\={A}" nil "&#0256" "A" "A" "Ā"))
+  (add-to-list 'org-entities-user '("Emacron" "\\={E}" nil "&#0274" "E" "E" "Ē"))
+  (add-to-list 'org-entities-user '("Imacron" "\\={I}" nil "&#0298" "I" "I" "Ī"))
+  (add-to-list 'org-entities-user '("Omacron" "\\={O}" nil "&#0332" "O" "O" "Ō"))
+  (add-to-list 'org-entities-user '("Umacron" "\\={U}" nil "&#0362" "U" "U" "Ū"))
+#+end_src
+
+*** PDF process
+
+#+name: pdf-process-bibtex
+#+header: :results silent
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+          "bibtex %b"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"))
+#+end_src
+
+#+name: pdf-process-biber
+#+header: :results silent
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process
+        '("pdflatex -interaction nonstopmode -output-directory %o %f"
+          "biber %b"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -interaction nonstopmode -output-directory %o %f"))
+#+end_src
+
+*** Access keyword values
+
+This is taken from [[http://jkitchin.github.io/blog/2013/05/05/Getting-keyword-options-in-org-files/][John Kitchin's blog]].  It has been modified so
+=org-element-map= returns node properties in addition to keywords. 
+
+#+name: jk-keywords
+#+header: :results silent
+#+begin_src emacs-lisp
+(defun jk-org-kwds ()
+  "parse the buffer and return a cons list of (property . value)
+from lines like: #+PROPERTY: value"
+  (org-element-map (org-element-parse-buffer 'element) '(keyword node-property)
+                   (lambda (keyword) (cons (org-element-property :key keyword)
+                                           (org-element-property :value keyword)))))
+
+(defun jk-org-kwd (KEYWORD)
+  "get the value of a KEYWORD in the form of #+KEYWORD: value"
+  (or (cdr (assoc KEYWORD (jk-org-kwds))) ""))
+#+end_src
+
+** Configuration
+#+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:{} arch:headline
+#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:nil
+#+OPTIONS: tags:t tasks:nil tex:t timestamp:nil title:t toc:nil todo:t |:t
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+STARTUP: noinlineimages
+#+STARTUP: entitiespretty
+#+MACRO: newthought \newthought{$1}
+#+MACRO: sidenote \sidenote[$2][$3]{$1}
+#+MACRO: marginnote \marginnote[$2]{$1}
+#+MACRO: tl Tufte-LaTeX
+#+LATEX_HEADER: \usepackage{etex}
+#+LATEX_HEADER: \reserveinserts{36}
+#+LATEX_HEADER: \usepackage[maxfloats=48]{morefloats}
+#+LATEX_HEADER: \usepackage[style=verbose-trad1, backend=bibtex]{biblatex}
+#+LATEX_HEADER: \addbibresource{local.bib}
+#+LATEX_HEADER: \usepackage{booktabs,graphicx,microtype,hyphenat,marginfix,amsmath}
+#+LATEX_HEADER: \geometry{paperheight=10.5in,paperwidth=8.5in,textwidth=4.375in}
+#+LATEX_HEADER: \titleformat{\part}[display]{\relax\itshape\huge}{}{0pt}{\huge\rmfamily\itshape}[]
+#+LATEX_HEADER: \usepackage{xparse}
+#+LATEX_HEADER: \usepackage{xpatch}
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \xpatchcmd{\@footnotetext}%
+#+LATEX_HEADER:       {\color@begingroup}
+#+LATEX_HEADER:       {\color@begingroup\toggletrue{blx@footnote}}
+#+LATEX_HEADER:       {}
+#+LATEX_HEADER:       {}
+#+LATEX_HEADER: \makeatother
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \DeclareCiteCommand{\sidecitehelper}
+#+LATEX_HEADER:   {\usebibmacro{prenote}}
+#+LATEX_HEADER:   {\usebibmacro{citeindex}%
+#+LATEX_HEADER:    \usebibmacro{cite}}
+#+LATEX_HEADER:   {\multicitedelim}
+#+LATEX_HEADER:   {\usebibmacro{cite:postnote}}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \ExplSyntaxOn
+#+LATEX_HEADER: \NewDocumentCommand\sidecite{D<>{}O{}om}{%
+#+LATEX_HEADER:   \iftoggle{blx@footnote}
+#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\mkbibparens{##2}}}
+#+LATEX_HEADER:     {\cs_set_protected_nopar:Npn \__sct_wrapper:nn ##1 ##2 {\sidenote[][##1]{##2}}}
+#+LATEX_HEADER:     {\IfNoValueTF{#3}
+#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2]{#4}}}
+#+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2][#3]{#4}}}}
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \ExplSyntaxOff
+
+
+** Local variables
+
+# Local Variables: 
+# eval: (require 'ox-tufte-latex)
+# eval: (require 'ox-extra)
+# eval: (require 'ox-gfm)
+# eval: (ox-extras-activate '(ignore-headlines))
+# eval: (org-sbe "user-entities")
+# eval: (org-sbe "tufte-book")
+# eval: (org-sbe "tufte-handout")
+# eval: (org-sbe "tufte-ebib-setup")
+# eval: (org-sbe "biblatex-footcite-link") 
+# eval: (org-sbe "biblatex-multicite-link") 
+# eval: (org-sbe "biblatex-sidecite-link")
+# eval: (org-sbe "biblatex-parencite-link")
+# eval: (org-sbe "biblatex-textcite-link")
+# eval: (org-sbe "biblatex-cite-link")
+# eval: (org-sbe "latex-filter-footcites")
+# eval: (org-sbe "ngz-nbsp")
+# eval: (org-sbe "pdf-process-bibtex")
+# eval: (org-sbe "jk-keywords")
+# eval: (org-sbe "latex-opt-link")
+# eval: (org-sbe "latex-link")
+# org-fontify-quote-and-verse-blocks: t
+# org-hide-macro-markers: t
+# org-hide-emphasis-markers: t 
+# org-latex-title-command: ""
+# org-latex-caption-above: nil
+# org-inline-image-overlays: nil
+# End:
+
+

@@ -5923,7 +5923,10 @@ Wow, this works.
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el") 
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
+
+(load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+ 
 (use-package blue-ruin) 
 (use-package blue-invoice) 
 (use-package blue-ruin-no-cover) 
