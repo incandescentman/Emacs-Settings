@@ -9,3 +9,4 @@ shared-functions.el
 gnu-emacs-startup.el
 
 fonts-and-themes.el
+*emacs-lisp*

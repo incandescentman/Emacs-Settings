@@ -451,7 +451,8 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ("Ò" . "\"")
 ("Ó" . "\"")
 
-
+("―" . "\"")
+("‖" . "\"")
 
 ;; ("- " . "") ; also remove stray spac- es
 ;; ("­ " . "") ; also remove stray spac- es
@@ -2178,8 +2179,8 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "\\hours")
 (add-to-list 'recentf-exclude "\\message")
 (add-to-list 'recentf-exclude ".emacs.d")
-(add-to-list 'recentf-exclude "/var/") 
-(add-to-list 'recentf-exclude "*Org tags*") 
+(add-to-list 'recentf-exclude "/var/")
+(add-to-list 'recentf-exclude "*Org tags*")
 (add-to-list 'recentf-exclude "\\persp-auto")
 (add-to-list 'recentf-exclude "\\ido.hist")
 (add-to-list 'recentf-exclude ".tex\\")
@@ -2212,7 +2213,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "\\.png")
 (add-to-list 'recentf-exclude "\\contacts")
 
-(add-to-list 'recentf-exclude '(".doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.html\\" "\\.tex\\" "\\message\\" "\\org-clock-save.el\\" "\\recent-addresses\\'\\" "\\ido.last\\'\\" "\\[/\\]\\.elpa/\\" "\\.bmk\\" "\\.jabber\\" "\\helm\\" "\\Calendar"))
+(add-to-list 'recentf-exclude '(".doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.html\\" "\\.tex\\" "\\message\\" "\\org-clock-save.el\\" "\\recent-addresses\\'\\" "\\ido.last\\'\\" "\\[/\\]\\elpa/\\" "\\.bmk\\" "\\.jabber\\" "\\helm\\" "\\Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4\\" "\\.mpg\\" "\\.mpeg"
 ".avi\\" "\\.wmv\\" "\\.wav\\" "\\.mov\\" "\\.flv\\" "\\.ogm\\" "\\.ogg\\" "\\.mkv"
@@ -7177,4 +7178,9 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+BEGIN_SRC emacs-lisp
 (use-package org-sticky-header)
 (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
+#+END_SRC
+
+* Tufte
+#+BEGIN_SRC emacs-lisp
+(use-package ox-tufte)
 #+END_SRC
