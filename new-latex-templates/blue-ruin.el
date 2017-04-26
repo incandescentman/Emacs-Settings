@@ -246,9 +246,9 @@
 
 
 \\usepackage[sc]{titlesec}
-\\titlespacing*{\\section}{0pt}{6pt}{-7pt}
-\\titlespacing*{\\subsection}{0pt}{0pt}{-7pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{-5pt}
+\\titlespacing*{\\section}{0pt}{6pt}{7pt}
+\\titlespacing*{\\subsection}{0pt}{0pt}{7pt}
+\\titlespacing*{\\subsubsection}{0pt}{6pt}{5pt}
 
 \\titleformat*{\\section}{\\normalfont\\fontsize{36}{36}\\raggedright\\sffamily\\color{pinterestred}}
 \\titleformat*{\\subsection}{\\normalfont\\fontsize{20}{20}\\scshape\\color{electricblue}}

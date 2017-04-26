@@ -662,3 +662,29 @@ A way to make recentf ignore some files is to add appropriate regexps to recentf
 (add-to-list 'recentf-exclude "\\.revive\\'")
 
 : "\\'" just marks the end of the string
+
+
+
+
+* css learning
+[[http://stackoverflow.com/questions/19928722/how-to-target-devices-smaller-than-a-certain-screen-size][html - How to target devices smaller than a certain screen size - Stack Overflow]]
+
+@media all and (max-width: 750px) {
+/* this CSS targets only screens lower than 750px */
+
+.some-class
+{
+display: none;
+}
+
+}
+
+@media all and (min-width: 750px) {
+/* this CSS targets only screens above 750px */
+
+.some-class
+{
+display: none;
+}
+
+}

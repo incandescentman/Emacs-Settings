@@ -429,6 +429,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
 
 (define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
 

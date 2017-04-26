@@ -930,7 +930,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "PART" "HED" "HEDTK" "|")
         (sequence "IF" "THEN" "|")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
-(sequence "Practice:" "Demo:" "Debrief:" "Critique:" "Workshop:" "|" "Lecture")
+(sequence "Practice:" "Demo:" "Debrief:" "Breakout:" "Critique:" "Workshop:" "|" "Lecture")
         ))
 #+END_SRC
 
@@ -3332,7 +3332,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
-(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf" "pptx")))
 (setq projectile-globally-ignored-directories
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn"".tmp" "archived-work" "images" "excel-mindnode-omni" "archive")))
@@ -5060,6 +5060,10 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (unbind-key (kbd "C-c ]") olivetti-mode-map)
 (setq org-tags-column 40)
 )
+
+(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
+
+
   #+END_SRC
 
 
