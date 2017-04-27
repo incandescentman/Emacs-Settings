@@ -1,3 +1,4 @@
+* Org plain list bug
 Org-mode defines a plain list items as lines beginning with a hyphen and then a space, like this:
 
 - item 1
@@ -6,34 +7,33 @@ Org-mode defines a plain list items as lines beginning with a hyphen and then a 
 
 ^
 
-My setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space, and to behave differently accordingly.
+A while back I asked this programmer on upwork.com to write some code for me. Among other things, I asked him to change the way org-mode handles line breaks after headings and lists, and the way org-mode behaves in plain lists.
 
-When org-mode detects that the cursor is on a line that's a plain-text list item, a certain behavior is desired:
-- <RET> inserts a return and then automatically adds a hyphen and space on the next line, i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
+For instance, my current setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space. If I am in a plain list and hit RET, org-mode inserts a return and then automatically adds a hyphen and space on the next line---i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
 
 This works correctly.
 
-However, I'm experiencing undesired behavior in the case where the cursor is on a blank line two lines after the last plain list item---in other words, if you imagine that the carat character above ^ is not a character at all, but rather represents the cursor.
+However, I'm experiencing undesired behavior in the case where the cursor is on a blank line two lines after the last plain list item. In other words, if you imagine that the carat character above ^ is not a character at all, but rather represents the cursor.
 
 So let's go through two scenarios. Again let's say the carat ^ represents the cursor, not an actual character.
 
 Scenario A: the cursor is on a blank line after the last plain list item:
+
 - item 1
 - item 2
 - item 3
 ^
 
-In this first scenario...
+This first scenario works as desired:
 - current behavior: RET inserts a plain list item on the current line
-- desired behavior: same same
+- desired behavior: same
 - current behavior: M-RET inserts a plain list item on the current line
 - desired behavior: same
 - current behavior: RET RET adds two blank lines
 - desired behavior: same
 
-Now let's consider the problematic scenario.
+Now let's consider the problematic Scenario B, where the cursor is on a blank line after the last plain list item:
 
-Scenario B: the cursor is on a blank line after the last plain list item:
 - item 1
 - item 2
 - item 3
@@ -48,4 +48,4 @@ In this second scenario...
 - current behavior: RET RET first inserts a plain list item, then removes it again
 - desired behavior: RET RET inserts two line breaks
 
-I see a couple mentions of org-mode's so called plain-text list in my Emacs configuration, [[https://github.com/incandescentman/emacs-settings/blob/master/shared-functions.org#org-setup][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#org-predicates][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], and [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]].
+I think it may be as simple as org-mode incorrectly thinking the cursor is in a plain list item in scenario B? I see a couple mentions of org-mode's so called plain-text list in my Emacs configuration, [[https://github.com/incandescentman/emacs-settings/blob/master/shared-functions.org#org-setup][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#org-predicates][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], and [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], so I presume the answer lies somewhere in there.
