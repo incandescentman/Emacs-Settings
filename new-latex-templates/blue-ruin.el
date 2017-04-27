@@ -96,7 +96,7 @@
 {\\myauthorfont\\Large \\bfseries{New York Writers' Intensive}}
     \\newline
     \\newline
-{\\myauthorfont\\Large © 2016 \\@author}
+{\\myauthorfont\\Large © 2017 \\@author}
     \\newline
           {\\myauthorfont\\Large \\href{mailto:jay@newyorkwritersintensive.com}{jay@newyorkwritersintensive.com}}
         \\newline

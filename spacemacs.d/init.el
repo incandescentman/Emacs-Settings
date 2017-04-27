@@ -140,7 +140,6 @@ values."
                                       org-fstree
                                       org-sticky-header
                                       ox-clip
-                                      ox-extra
                                       ox-twbs
                                       ox-tufte
                                       palimpsest
