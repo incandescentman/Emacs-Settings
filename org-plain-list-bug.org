@@ -26,9 +26,9 @@ Scenario A: the cursor is on a blank line after the last plain list item:
 ^
 
 This first scenario works as desired:
-- current behavior: RET inserts a plain list item on the current line
+- current behavior: RET (smart-return) inserts a plain list item on the current line
 - desired behavior: same
-- current behavior: M-RET inserts a plain list item on the current line
+- current behavior: M-RET (smart-org-meta-return-dwim) inserts a plain list item on the current line
 - desired behavior: same
 - current behavior: RET RET adds two blank lines
 - desired behavior: same
@@ -42,11 +42,11 @@ Now let's consider the problematic Scenario B, where the cursor is on a blank li
 ^
 
 In this second scenario...
-- current behavior: RET goes *up* one line and adds a plain list item
+- current behavior: RET (smart-return) goes *up* one line and adds a plain list item
 - desired behavior: insert line break
-- current behavior: m-RET goes *up* one line and adds a plain list item
-- desired behavior: m-RET inserts an org-heading
-- current behavior: RET RET first inserts a plain list item, then removes it again
+- current behavior: m-RET (smart-org-meta-return-dwim) goes *up* one line and adds a plain list item
+- desired behavior: m-RET (smart-org-meta-return-dwim) inserts an org-heading
+- current behavior: RET RET (smart-return smart-return) first inserts a plain list item, then removes it again
 - desired behavior: RET RET inserts two line breaks
 
 I think it may be as simple as org-mode incorrectly thinking the cursor is in a plain list item in scenario B? I see a couple mentions of org-mode's so called plain-text list in my Emacs configuration, [[https://github.com/incandescentman/emacs-settings/blob/master/shared-functions.org#org-setup][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#org-predicates][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], and [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], so I presume the answer lies somewhere in there.
