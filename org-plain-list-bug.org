@@ -1,4 +1,5 @@
-* Org plain list bug
+Link to this file: https://raw.githubusercontent.com/incandescentman/Emacs-Settings/master/org-plain-list-bug.org
+
 Org-mode defines a plain list items as lines beginning with a hyphen and then a space, like this:
 
 - item 1
