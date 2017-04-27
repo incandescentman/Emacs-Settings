@@ -5919,6 +5919,8 @@ Wow, this works.
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 (setq org-export-preserve-breaks nil) 
 
+(setq org-latex-to-pdf-process "pdflatex --shell-escape --batch %f")
+
 ;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t) 
  #+END_SRC

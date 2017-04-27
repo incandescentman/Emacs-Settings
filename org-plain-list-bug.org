@@ -10,7 +10,7 @@ Org-mode defines a plain list items as lines beginning with a hyphen and then a 
 
 A while back I asked this programmer on upwork.com to write some code for me. Among other things, I asked him to change the way org-mode handles line breaks after headings and lists, and the way org-mode behaves in plain lists.
 
-For instance, my current setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space. If I am in a plain list and hit RET, org-mode inserts a return and then automatically adds a hyphen and space on the next line---i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
+For instance, my current setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space. If I am in a plain list and hit RET (smart-return), org-mode inserts a return and then automatically adds a hyphen and space on the next line---i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
 
 This works correctly.
 
