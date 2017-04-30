@@ -10,3 +10,4 @@ gnu-emacs-startup.el
 
 fonts-and-themes.el
 *emacs-lisp*
+gnu-emacs-startup.org[*Org Src gnu-emacs-startup.org[ emacs-lisp ]*]

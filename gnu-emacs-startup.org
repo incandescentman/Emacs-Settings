@@ -1261,6 +1261,16 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  #+END_SRC
 
 
+*** length of previous line
+#+BEGIN_SRC emacs-lisp
+
+(defun length-of-previous-line ()
+ (save-excursion
+  (forward-line -1)
+  (end-of-line)
+  (current-column)))
+#+END_SRC
+
 *** smart-return
 #+BEGIN_SRC emacs-lisp
 (defun smart-return ()
@@ -1316,6 +1326,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (kill-line))
          (newline))
         ((and (org-or-orgtsruct-p)
+    (> (length-of-previous-line) 0)
               (let ((el (org-element-at-point)))
                 (and el
                      (or (member (first el) '(item plain-list))
