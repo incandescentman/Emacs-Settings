@@ -1326,7 +1326,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (kill-line))
          (newline))
         ((and (org-or-orgtsruct-p)
-    (> (length-of-previous-line) 0)
+;; (> (length-of-previous-line) 0)
               (let ((el (org-element-at-point)))
                 (and el
                      (or (member (first el) '(item plain-list))
