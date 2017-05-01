@@ -5912,14 +5912,10 @@ Wow, this works.
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
  org-latex-pdf-process               ; for regular export
 
- '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-   "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+ '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 (setq org-export-preserve-breaks nil) 
-
-(setq org-latex-to-pdf-process "pdflatex --shell-escape --batch %f")
 
 ;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t) 

@@ -6,17 +6,26 @@ Org-mode defines a plain list items as lines beginning with a hyphen and then a 
 - item 2
 - item 3
 
-^
+A while back a programmer wrote some code for me. Among other things, I asked him to change the way org-mode handles line breaks after headings and lists, and the way org-mode behaves in plain lists.
 
-A while back I asked this programmer on upwork.com to write some code for me. Among other things, I asked him to change the way org-mode handles line breaks after headings and lists, and the way org-mode behaves in plain lists.
+For instance, my current setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space.
 
-For instance, my current setup is designed to detect whether the cursor is on a plain-text list item or not, i.e. whether the current line begins with a hyphen followed by a space. If I am in a plain list and hit RET (smart-return), org-mode inserts a return and then automatically adds a hyphen and space on the next line---i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
+- item 1
+- item 2 ^
 
-This works correctly.
+If the cursor is in a plain list like above and I hit RET (smart-return), org-mode inserts a return and then automatically adds a hyphen and space on the next line---i.e. it automatically adds another plain list item. (Hitting RET again exits out of the plain list and takes you to a blank line.)
 
-However, I'm experiencing undesired behavior in the case where the cursor is on a blank line two lines after the last plain list item. In other words, if you imagine that the carat character above ^ is not a character at all, but rather represents the cursor.
+So in other words, if you imagine that the carat character above ^ is not a character at all, but rather represents the cursor, then the desired output from smart-return is this:
 
-So let's go through two scenarios. Again let's say the carat ^ represents the cursor, not an actual character.
+- item 1
+- item 2
+- ^
+
+This already works correctly.
+
+However, I'm experiencing undesired behavior in the case where the cursor is on a blank line two lines after the last plain list item.
+
+So let's go through two scenarios. Again let's say the carat ^ below represents the cursor, not an actual character.
 
 Scenario A: the cursor is on a blank line after the last plain list item:
 
