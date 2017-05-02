@@ -1,5 +1,3 @@
-Link to this file: https://raw.githubusercontent.com/incandescentman/Emacs-Settings/master/org-plain-list-bug.org
-
 Org-mode defines a plain list items as lines beginning with a hyphen and then a space, like this:
 
 - item 1
@@ -48,14 +46,34 @@ Now let's consider the problematic Scenario B, where the cursor is on a blank li
 - item 2
 - item 3
 
-^
+- [ ] item
+
+- [ ] this
+
+- [ ]
+
 
 In this second scenario...
 - current behavior: RET (smart-return) goes *up* one line and adds a plain list item
 - desired behavior: insert line break
 - current behavior: m-RET (smart-org-meta-return-dwim) goes *up* one line and adds a plain list item
-- desired behavior: m-RET (smart-org-meta-return-dwim) inserts an org-heading
+: desired behavior: m-RET (smart-org-meta-return-dwim) inserts an org-heading
 - current behavior: RET RET (smart-return smart-return) first inserts a plain list item, then removes it again
 - desired behavior: RET RET inserts two line breaks
 
 I think it may be as simple as org-mode incorrectly thinking the cursor is in a plain list item in scenario B? I see a couple mentions of org-mode's so called plain-text list in my Emacs configuration, [[https://github.com/incandescentman/emacs-settings/blob/master/shared-functions.org#org-setup][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#org-predicates][here]], [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], and [[https://github.com/incandescentman/Emacs-Settings/blob/master/gnu-emacs-startup.org#smart-org-meta-return-dwim][here]], so I presume the answer lies somewhere in there.
+
+- this
+
+Tskjksd
+
+
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-in-item-p ()
+  (interactive)
+  (message "%s" (org-in-item-p))
+  )
+#+END_SRC
+
+It's giving a number, it should be nil

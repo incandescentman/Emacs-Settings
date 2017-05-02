@@ -460,7 +460,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
 
-(define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-paragraph-from-beginning)
 
 (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
 
@@ -524,8 +523,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
-
-(define-key key-minor-mode-map (kbd "<s-backspace>") 'delete-backward-char)
 
 (global-set-key (kbd "C-c m") 'compose-mail)
 ;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
@@ -1176,7 +1173,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  #+BEGIN_SRC emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
-       (plain-list-item . nil)))
+       (plain-list-item . always)))
 
 (defun call-rebinding-org-blank-behaviour (fn)
   (let ((org-blank-before-new-entry
@@ -1313,7 +1310,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (progn (forward-char 2)
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
-        ((and (org-or-orgtsruct-p)
+
+   ((and (org-or-orgtsruct-p)
               (let ((el (org-element-at-point)))
                 (and el
                      ;; point is at an item
@@ -1321,7 +1319,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                      ;; item is empty
                      (eql (getf (second el) :contents-begin)
                           (getf (second el) :contents-end)))))
-         (beginning-of-line)
+    (message "at 1")
+    (beginning-of-line)
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
