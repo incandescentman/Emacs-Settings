@@ -638,7 +638,7 @@ layers configuration. You are free to put any user code."
    '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
    '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
    '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-   '(org-code ((t (:family "Courier" :height 1.4))))
+   '(org-code ((t (:family "Courier"))))
    '(org-link ((t (:underline nil)))))
 
 
