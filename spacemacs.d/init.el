@@ -140,8 +140,9 @@ values."
                                       org-fstree
                                       org-sticky-header
                                       ox-clip
+                                      ox-gfm
                                       ox-twbs
-;                                      ox-tufte
+                                      ox-tufte
                                       palimpsest
                                       paredit
                                       peg
@@ -483,6 +484,8 @@ layers configuration. You are free to put any user code."
       (emacs-lisp . t)
       ))
 
+(load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
   (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
@@ -547,6 +550,16 @@ layers configuration. You are free to put any user code."
        ;;       (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
+
+
+
+;; display "Narrowed" when buffer is narrowed
+(spaceline-define-segment narrow
+ "Display Narrowed when buffer is narrowed."
+ (when (buffer-narrowed-p)
+ "Narrowed")) 
+
+(spaceline-spacemacs-theme 'narrow) 
 
 
 

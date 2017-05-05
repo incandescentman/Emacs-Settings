@@ -3165,10 +3165,11 @@ I tried to add exceptions for "line-end" and also for user-full name.
        (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
        (looking-at "[\n\t ]*\\[fn")
        (looking-at "[\n\t ]*)$")
+       (looking-at "[\n\t ]*\"$")
        (looking-at "\"[\n\t ]*$")
-(looking-at "[[:punct:]]*[ ]*http")
-(looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past 
-(looking-at "[ ]*I\'") 
+       (looking-at "[[:punct:]]*[ ]*http")
+       (looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past
+       (looking-at "[ ]*I\'")
        (looking-at
         (concat
          "\\("

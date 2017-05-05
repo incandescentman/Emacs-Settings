@@ -290,20 +290,6 @@ Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-hori
 (setq undo-limit 100000)
 #+END_SRC
 
-*** modeline
-:PROPERTIES:
-:ID:       830F0916-D929-4644-B46F-742D6B58D2A7
-:END:
-**** narrow
- #+BEGIN_SRC emacs-lisp
-(spaceline-define-segment narrow
- "Display Narrowed when buffer is narrowed."
- (when (buffer-narrowed-p)
- "Narrowed")) 
-
-(spaceline-spacemacs-theme 'narrow) 
- #+END_SRC
-
 ** quitting emacs 
 *** Ask before exiting Emacs
 
@@ -5933,8 +5919,6 @@ Wow, this works.
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
 
-(load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
- 
 (use-package blue-ruin) 
 (use-package blue-invoice) 
 (use-package blue-ruin-no-cover) 

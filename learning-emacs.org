@@ -1,3 +1,11 @@
+* most useful emacs features
+- search for string across multiple files
+- faster switching between files
+- move text from one file to the next automatically
+- search and replace across files
+- goto last change
+- export to PDF and to HTML
+
 * use-package
 
 #+BEGIN_EXAMPLE emacs-lisp
@@ -688,3 +696,8 @@ display: none;
 }
 
 }
+
+* Spotify
+** go to current track
+
+You should be able to go to the location of the current playing track by clicking on the album artwork in the bottom left corner of the client.
