@@ -54,30 +54,12 @@ representation of the element.
 introduced with an Org mode macro, and containing a footnote created
 in the usual Org mode way.[fn:3]
 
-#+begin_example
-{{{newthought(This is a new thought)}}} at the start of a 
-paragraph, introduced with an Org mode macro.
-#+end_example
+Also.
 
 [[latex-opt:marginnote][Unnumbered notes can be placed in the margin.;-1\baselineskip]]
 
-#+begin_example
-[[latex-opt:marginnote][Unnumbered notes can be placed in 
-the margin.;-1\baselineskip]]
-#+end_example
-
 [[latex:newthought][This is a new thought]] at the start of another paragraph, introduced
 with an Org mode link, and containing a footnote.[fn:2]
-
-#+begin_example
-[[latex:newthought][This is a new thought]] at the start 
-of another paragraph, introduced with an Org mode link,
-and containing a footnote.[fn:2]
-
-,* Footnotes
-,#+attr_latex: :offset 24pt
-[fn:2] This footnote is shifted down.
-#+end_example
 
 #+begin_fullwidth
 This is some longish text that will spill over the right edge of the
@@ -85,46 +67,11 @@ text block and into the right margin.  It will be set ragged right
 with respect to the right edge of the margin.
 #+end_fullwidth
 
-#+begin_example
-,#+begin_fullwidth
-This is some longish text that will spill over the right 
-edge of the text block and into the right margin.  It 
-will be set ragged right with respect to the right edge 
-of the margin.
-,#+end_fullwidth
-#+end_example
-
 ** Citations
 
-Edward R. Tufte's distinctive book design was based at least partially
-on the work of the physicist Richard Feynman and was first displayed
-in the landmark book, /The Visual Display of Quantitative
-Information/.[[footcite:tufte83][;;Tufte 1983]]  The citation in the margin was created with
-the =footcite= link, which means that its position is determined solely
-by the LaTeX engine.  Note that the marginal citation is placed close
-to the note number in the text.
+Edward R. Tufte's distinctive book design was based at least partially on the work of the physicist Richard Feynman and was first displayed in the landmark book, /The Visual Display of Quantitative Information/.[[footcite:tufte83][;;Tufte 1983]] The citation in the margin was created with the =footcite= link, which means that its position is determined solely by the LaTeX engine. Note that the marginal citation is placed close to the note number in the text.
 
-#+begin_example
-in the landmark book, /The Visual Display of Quantitative
-Information/.[[footcite:tufte83][;;Tufte 1983]]  The 
-citation in the margin was created with
-#+end_example
-
-The design was modified a bit in later books, starting with
-/Envisioning Information/, which appeared seven years later.[[sidecite:tufte90][;;1in;Tufte
-1990]] The citation in the margin was created with the =sidecite= link,
-with an optional argument of =1in=, which shifts the citation an inch
-down the margin.  Any valid LaTeX length can be used to move the
-=sidecite= around.  For example, =10pt=, =2cm=, =12mm=, and =2\baselineskip= are
-all valid arguments.  Note that the citation in the margin is removed
-from the position of the note number in the text.
-
-#+begin_example
-/Envisioning Information/, which appeared seven years 
-later.[[sidecite:tufte90][;;1in;Tufte 1990]] The citation 
-in the margin was created with the =sidecite= link, with 
-an optional argument of =1in=, which shifts the citation
-#+end_example
+The design was modified a bit in later books, starting with /Envisioning Information/, which appeared seven years later.[[sidecite:tufte90][;;1in;Tufte 1990]] The citation in the margin was created with the =sidecite= link, with an optional argument of =1in=, which shifts the citation an inch down the margin. Any valid LaTeX length can be used to move the =sidecite= around. For example, =10pt=, =2cm=, =12mm=, and =2\baselineskip= are all valid arguments. Note that the citation in the margin is removed from the position of the note number in the text.
 
 ** Figures
 
@@ -140,42 +87,17 @@ margin.
 #+attr_latex: :vertical-alignment b
 [[file:hilbertcurves.pdf]]
 
-#+begin_example
-,#+name: fig:text-block
-,#+caption[Hilbert curves]: Hilbert curves of various 
-,#+caption: Note that this figure only takes up the main
-,#+caption: Note also that the caption in the margin is
-,#+attr_latex: :vertical-alignment b
-[[file:hilbertcurves.pdf]]
-#+end_example
-
 #+name: fig:full-width
 #+caption[Sine wave]: This graph shows a sine wave.
 #+caption: Note that the figure takes up the full page width.
 #+attr_latex: :float multicolumn
 [[file:sine.pdf]]
 
-#+begin_example
-,#+name: fig:full-width
-,#+caption[Sine wave]: This graph shows a sine wave.
-,#+caption: Note that the figure takes up the full page
-,#+attr_latex: :float multicolumn
-[[file:sine.pdf]]
-#+end_example
-
 #+name: fig:marginal
 #+caption[Helix in the margin]: Helix in the margin.
 #+caption: Note that this figure fits in the margin.
 #+attr_latex: :float margin :width 2in
 [[file:helix.pdf]]
-
-#+begin_example
-,#+name: fig:marginal
-,#+caption[Helix in the margin]: Helix in the margin.
-,#+caption: Note that this figure fits in the margin.
-,#+attr_latex: :float margin :width 2in
-[[file:helix.pdf]]
-#+end_example
 
 ** Tables
 Tables come in three widths, as well.  Table [[tab:text-block]] is
@@ -193,18 +115,6 @@ text-block plus margin, and Table [[tab:marginal]] is placed in the margin.
 |       |        |       |        |       |       |
 
 
-#+begin_example
-,#+name: tab:text-block
-,#+caption[Example in-text table]: Example table in the text.
-,#+caption: Note that the caption is placed in the margin.
-,#+attr_latex: :font \footnotesize
-| First | Second | Third | Fourth | Fifth | Sixth |
-|-------+--------+-------+--------+-------+-------|
-| One   | Two    | Three | Four   | Five  | Stop  |
-| Six   | Seven  | Eight | Nine   | Ten   | Here  |
-|       |        |       |        |       |       |
-#+end_example
-
 #+name: tab:marginal
 #+caption[Example marginal table]: Example marginal table.
 #+caption: Note that the table and the caption are placed in the margin.
@@ -215,19 +125,6 @@ text-block plus margin, and Table [[tab:marginal]] is placed in the margin.
 | Six   | Seven  | Eight |
 |       |        |       |
 
-
-#+begin_example
-,#+name: tab:marginal
-,#+caption[Example marginal table]: Example marginal table.
-,#+caption: Note that the table and the caption are placed
-,#+attr_latex: :font \footnotesize :float margin :offset [72pt]
-| First | Second | Third |
-|-------+--------+-------|
-| One   | Two    | Three |
-| Six   | Seven  | Eight |
-|       |        |       |
-#+end_example
-
 #+name: tab:full-width
 #+caption[Example full width table]: Example full width table.
 #+caption: Note that the caption is placed in the margin.
@@ -237,18 +134,6 @@ text-block plus margin, and Table [[tab:marginal]] is placed in the margin.
 | One   | Two    | Three | Four   | Five  | Stop  |
 | Six   | Seven  | Eight | Nine   | Ten   | Here  |
 |       |        |       |        |       |       |
-
-#+begin_example
-,#+name: tab:full-width
-,#+caption[Example full width table]: Example full width
-,#+caption: Note that the caption is placed in the margin.
-,#+attr_latex: :font \footnotesize :float multicolumn 
-| First | Second | Third | Fourth | Fifth | Sixth |
-|-------+--------+-------+--------+-------+-------|
-| One   | Two    | Three | Four   | Five  | Stop  |
-| Six   | Seven  | Eight | Nine   | Ten   | Here  |
-|       |        |       |        |       |       |
-#+end_example
 
 \printbibliography
 
@@ -949,8 +834,7 @@ margin if the length is positive.
 You may add _ to "pre" part of `org-emphasis-regexp-components' in
 order to typeset constructs such as /Genus/ cf. /species/.
 
-This filter looks for " ", which is replaced by "~", the character for
-non-breaking space.
+This filter looks for " ", which is replaced by "~", the character for non-breaking space.
 
 Make the non-breaking space with =alt-space=.
 
@@ -1009,7 +893,7 @@ Hawaiian language words with what is known in Hawaiian as a
 *** Access keyword values
 
 This is taken from [[http://jkitchin.github.io/blog/2013/05/05/Getting-keyword-options-in-org-files/][John Kitchin's blog]].  It has been modified so
-=org-element-map= returns node properties in addition to keywords. 
+~org-element-map~ returns node properties in addition to keywords.
 
 #+name: jk-keywords
 #+header: :results silent
@@ -1075,6 +959,11 @@ from lines like: #+PROPERTY: value"
 #+LATEX_HEADER:       {\__sct_wrapper:nn{#1}{\sidecitehelper[#2][#3]{#4}}}}
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \ExplSyntaxOff
+
+# mine own
+
+#+LATEX_HEADER: \usepackage{parskip}
+
 
 
 ** Local variables
