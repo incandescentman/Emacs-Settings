@@ -696,6 +696,8 @@ layers configuration. You are free to put any user code."
   (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
 
 
+(display-time)
+
   ;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
   (setq evil-emacs-state-cursor '("red")) ; for box cursor
 
