@@ -482,6 +482,7 @@ layers configuration. You are free to put any user code."
       (sh . t)
       (python . t)
       (emacs-lisp . t)
+      (ditaa . t)
       ))
 
 (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")

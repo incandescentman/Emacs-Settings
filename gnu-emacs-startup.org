@@ -429,6 +429,26 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-M") 'visit-messages-buffer)
+
+(defun visit-messages-buffer ()
+(interactive)
+()
+  (interactive)
+  (view-echo-area-messages)
+(other-window 1)
+)
+
+
+(define-key key-minor-mode-map (kbd "s-p") 'move-region-to-other-window)
+
+(defun visit-messages-buffer-full-screen ()
+  (interactive)
+  (with-current-buffer (messages-buffer)
+  (goto-char (point-max))
+  (switch-to-buffer (current-buffer)))
+  )
+
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
 
 (define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
@@ -456,7 +476,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j i l") 'imenu-list)
 (define-key key-minor-mode-map (kbd "s-j i m") 'imenu-list)
 
-(define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point) 
+(define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point)
 
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
 
@@ -480,20 +500,20 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
-(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring) 
+(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring)
 
 
-(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree) 
-(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree) 
-(define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree) 
-(define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree) 
+(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
+(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree)
+(define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree)
+(define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
 
-(define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote) 
+(define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote)
 (define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
 
-(define-key key-minor-mode-map (kbd "M-_") 'em-dash) 
+(define-key key-minor-mode-map (kbd "M-_") 'em-dash)
 
 (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
 
@@ -516,10 +536,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-s c") 'current-buffers-search)
 
 
-(define-key key-minor-mode-map (kbd "s-;") 'helm-resume) 
+(define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
 (define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
-(define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode) 
+(define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode)
 
 
 (define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
@@ -532,7 +552,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
 
-(define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column) 
+(define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column)
 (define-key key-minor-mode-map (kbd "s-j i c") 'org-table-insert-column)
 (define-key key-minor-mode-map (kbd "s-j i r") 'org-table-insert-row)
 
@@ -548,7 +568,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
 
 
-(define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region) 
+(define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region)
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
@@ -665,8 +685,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (defun copy-minibuffer-contents (arg)
   (interactive "p")
-  (beginning-of-visual-line) 
-  (end-of-buffer) 
+  (beginning-of-visual-line)
+  (end-of-buffer)
   (copy-region-as-kill (mark) (point))
   (push-kill-ring-to-pasteboard)
   )
@@ -784,9 +804,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
-(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
 (define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
-(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command) 
+(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
 (define-key key-minor-mode-map (kbd "s-_") 'avy-pop-mark)
 ;; use OSX standard keybinding for "Redo"
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
@@ -843,7 +863,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; grep, using current project as default
 (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
-;; ag, using current folder as default 
+;; ag, using current folder as default
 ;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
 ;; does that keyvinding work?
 
