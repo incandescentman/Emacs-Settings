@@ -429,6 +429,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
+
 (define-key key-minor-mode-map (kbd "s-M") 'visit-messages-buffer)
 
 (defun visit-messages-buffer ()
@@ -1458,7 +1460,8 @@ provided the (transient) mark is active."
  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
  (global-set-key (kbd "C-c s") 'org-copy-subtree)
  (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
- (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+(define-key key-minor-mode-map (kbd "C-c C-l") 'org-insert-link)
  (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
  (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
  (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
@@ -3519,7 +3522,9 @@ s-i
 
 (add-hook 'message-mode-hook
           (lambda ()
-            (local-set-key "\C-c\C-c" 'send-message-without-bullets)))
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)
+            (local-set-key "\C-c\C-l" 'org-insert-link)
+))
 
 #+END_SRC
 
