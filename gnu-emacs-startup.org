@@ -1018,37 +1018,39 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   "Insert space and then clean up whitespace."
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
+
+
 
 ;; (if (org-at-heading-p)
- ;;    (insert-normal-space-in-org-heading) 
+ ;;    (insert-normal-space-in-org-heading)
 
-  (unless 
+  (unless
       (or
+(let ((case-fold-search nil)
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+)
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra spaces to ie.
 (looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
 (looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
 (looking-back ">") ; don't expand days of the week inside timestamps
 
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ] 
-       )
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
+       ))
   (smart-expand))
 (insert "\ ")
   (just-one-space))
 
-; )
 
 
 
-
-;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading 
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
 (defun insert-smart-space-in-org-heading ()
  "Insert space and then clean up whitespace."
  (interactive)
-(unless 
+(unless
    (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
 (looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
@@ -1058,7 +1060,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (looking-back ">") ; don't expand days of the week inside timestamps
 
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ] 
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
     )
  (smart-expand))
 (insert "\ ")
@@ -1068,7 +1070,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<SPC>") 'smart-space)
 (define-key orgstruct-mode-map (kbd "<SPC>") 'smart-space)
-(global-set-key (kbd "M-SPC") 'insert-space) 
+(global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 (define-key orgstruct-mode-map (kbd "<M-SPC>") 'insert-space)
 
