@@ -2176,6 +2176,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "\\persp-auto")
 (add-to-list 'recentf-exclude "\\ido.hist")
 (add-to-list 'recentf-exclude ".tex\\")
+(add-to-list 'recentf-exclude "mu2\\")
 (add-to-list 'recentf-exclude "\\recentf")
 (add-to-list 'recentf-exclude "\\.html")
 (add-to-list 'recentf-exclude "\\.Icon")
@@ -3074,7 +3075,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 
-(define-super-key "j nm" 'notmuch-hello) 
+;(define-super-key "j nm" 'notmuch-hello)
 (define-super-key "j mu" 'mu4e)
 
 ;; (define-super-key "j cl" 'cyberpunk-large)
@@ -7171,7 +7172,13 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 * org sticky header
 #+BEGIN_SRC emacs-lisp
-(use-package org-sticky-header)
+(use-package org-sticky-header
+
+:config
+(setq org-sticky-header-always-show-header nil)
+
+
+)
 (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
 #+END_SRC
 
