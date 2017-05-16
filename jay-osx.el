@@ -1,3 +1,15 @@
+;; create a custom minor mode to override other keybindings and use mine instead
+(defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+(define-minor-mode key-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " key" 'key-minor-mode-map)
+(key-minor-mode 1)
+(defun my-minibuffer-setup-hook ()
+  (key-minor-mode 0))
+(add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+
+
+
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 

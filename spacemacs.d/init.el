@@ -487,7 +487,7 @@ layers configuration. You are free to put any user code."
       ))
 
 (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
-
+  (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
   (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
@@ -497,8 +497,7 @@ layers configuration. You are free to put any user code."
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
-  (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
-  (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   (load "/Users/jay/emacs/emacs-settings/define-word.el")
   (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
