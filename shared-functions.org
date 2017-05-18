@@ -1061,9 +1061,11 @@ This is working correctly:
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
 	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
-("a" "article ideas" entry (file "article-ideas.txt")
+("i" "article ideas" entry (file "article-ideas.txt")
 	 "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
 
+("a" "alexander technique" entry (file "alexander-technique-belinda.txt")
+"\n\n* %U\n %i\n %?\nEntered on %U %i\n" :prepend t :kill-buffer t)
 
 ("e" "expression" entry (file "expression.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -1075,7 +1077,7 @@ This is working correctly:
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-	 "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t) 
+	 "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
 
 	("h" "historical interest" entry (file "historical-lifestream.txt")
 	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
@@ -3952,13 +3954,18 @@ Single Capitals as you type."
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+
 :config
 '(flyspell-abbrev-p t)
 '(flyspell-use-global-abbrev-table-p t)
 '(global-flyspell-mode t)
+'(flyspell-mark-duplications-exceptions
+  (quote
+  ((nil "that" "had" "really" "very")
+   ("\\`francais" "nous" "vous"))))
 
 :bind
-(:map flyspell-mode-map 
+(:map flyspell-mode-map
 ("C-." . nil)
 )
 )
@@ -4235,18 +4242,18 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 (define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-headers-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag) 
-(define-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
+(define-key mu4e-headers-mode-map "j" 'mu4e-update-mail-and-index)
 ;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index) 
-(define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
-(define-key mu4e-headers-mode-map "j" 'mu4e-headers-next) 
+;; (define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
+;; (define-key mu4e-headers-mode-map "j" 'mu4e-headers-next)
 
 
 ;; message view ("mu4e-view-mode)")
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
-(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev) 
-(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next) 
+;; (define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev)
+;; (define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next)
 
 ;; unset keys (worked!)
 (add-hook 'mu4e-headers-mode-hook 
@@ -7186,3 +7193,36 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+BEGIN_SRC emacs-lisp
 (use-package ox-tufte)
 #+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(defun ignore-case-in-searches ()
+ (interactive)
+ (setq case-fold-search t)
+ )
+#+END_SRC
+
+* timestamp export format
+
+Remove the remove <> surrounding timestamps
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-export-filter-timestamp-functions
+       #'endless/filter-timestamp)
+(defun endless/filter-timestamp (trans back _comm)
+ "Remove <> around time-stamps."
+ (pcase back
+  ((or `jekyll `html)
+   (replace-regexp-in-string "&[lg]t;" "" trans))
+  (`latex
+   (replace-regexp-in-string "[<>]" "" trans))))
+#+END_SRC
+
+we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
+#+BEGIN_SRC emacs-lisp
+(setq-default org-display-custom-times t)
+;;; Before you ask: No, removing the <> here doesn't work.
+(setq org-time-stamp-custom-formats
+   '("<%b %d, %y>" . "<%d/%m/%y %a %H:%M>"))
+#+END_SRC
+
+Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs · Endless Parentheses]]
