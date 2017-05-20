@@ -388,6 +388,7 @@ is this still necessary?
 (add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
@@ -1414,7 +1415,28 @@ Make org-capture open in full window! :-)
             (goto-char (point-min))
             (insert "<div style=\"font-family:Georgia,serif\">")
             (goto-char (point-max))
-            (insert "</div>"))) 
+            (insert "<font face='georgia, serif'>
+<br>
+<br>
+--<br>
+<a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>Jay Dixit</a><br>
+<a href='http://jaydixit.com/' style='text-decoration:none;' target='_blank'>
+  jaydixit.com</a>
+<br>
+<a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>storytelling.nyc</a><br>
+<a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>(646) 355-8001</a><br>
+<a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>
+<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-high.jpg' alt='Storytelling NYC' width='96' height='55'>
+</a>
+<a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
+<img src='http://dixit.ca/assets/icons/social-facebook-box-blue-icon.png' height=16 width=16 alt='New York Writers on Facebook'>
+</a>
+<a href='https://twitter.com/jaydixit' style='text-decoration:none;' target='_blank'>
+<img src='http://dixit.ca/assets/icons/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
+</a>
+<br>
+</font>
+</div>"))) 
 
 (add-hook 'org-mime-html-hook
           (lambda ()
