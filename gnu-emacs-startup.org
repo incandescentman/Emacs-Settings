@@ -41,10 +41,10 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "~/elisp/.abbrev_defs")
-(setq abbrev-file-name "~/elisp/.abbrev_defs")
+(read-abbrev-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
+(setq abbrev-file-name "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 
-(set (make-local-variable 'abbrev-file-name) (expand-file-name "~/elisp/own-abbrevs.abbrev_defs"))
+;; (set (make-local-variable 'abbrev-file-name) (expand-file-name "/Users/jay/emacs/aquamacs-jay/own-abbrevs.abbrev_defs"))
 (setq save-abbrevs t)
 (setq only-global-abbrevs t)
 #+END_SRC
@@ -255,6 +255,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (if
 (or
 (looking-back "'")
+(looking-back ":")
 (looking-at "'")
 (looking-back "(")
 (looking-back "'")

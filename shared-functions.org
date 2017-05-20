@@ -4099,18 +4099,18 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 *** mu4e setup
  #+BEGIN_SRC emacs-lisp 
 
-(setq user-mail-address "dixit@aya.yale.edu")
+(setq user-mail-address "jay@storytelling.nyc")
 (setq user-full-name "Jay Dixit") 
 
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com")) 
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@storytelling.nyc"))
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path)) 
 ; what is this?
 (use-package smtpmail) 
 (use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/bin/mu") 
-(setq user-mail-address "dixit@aya.yale.edu")
-(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
+(setq user-mail-address "jay@storytelling.nyc")
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@storytelling.nyc" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
 (setq user-full-name "Jay Dixit" )
 (setq mu4e-maildir "/Users/jay/Dropbox/mu2")
 (setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
@@ -4341,7 +4341,7 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
 )
 :vars '
 (
-(user-mail-address . "dixit@aya.yale.edu")
+(user-mail-address . "jay@storytelling.nyc")
 (mu4e-get-mail-command . "mbsync gmail") 
 (mu4e-compose-signature .
 		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
@@ -5645,7 +5645,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key
- (kbd "C-8")
+ (kbd "C-2")
 
 (defhydra multiple-cursors-hydra (:hint nil)
   "
@@ -7219,13 +7219,14 @@ Remove the remove <> surrounding timestamps
 
 we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
 #+BEGIN_SRC emacs-lisp
-(setq-default org-display-custom-times t)
+; (setq-default org-display-custom-times t)
 ;;; Before you ask: No, removing the <> here doesn't work.
-(setq org-time-stamp-custom-formats
-   '("<%b %d, %y>" . "<%d/%m/%y %a %H:%M>"))
+; (setq org-time-stamp-custom-formats '("<%b %d, %Y>" . "<%d/%m/%Y %a %H:%M>"))
 #+END_SRC
 
 Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs · Endless Parentheses]]
+
+Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
 
 * add YouTube link type yt:
 #+BEGIN_SRC emacs-lisp
