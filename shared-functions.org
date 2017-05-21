@@ -1423,20 +1423,21 @@ Make org-capture open in full window! :-)
 <a href='http://jaydixit.com/' style='text-decoration:none;' target='_blank'>
   jaydixit.com</a>
 <br>
-<a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>storytelling.nyc</a><br>
-<a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>(646) 355-8001</a><br>
+<span style='text-decoration:none;'><a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>storytelling.nyc</a><br></span>
+<span style='text-decoration:none;'><a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>(646) 355-8001</a><br></span>
 <a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-high.jpg' alt='Storytelling NYC' width='96' height='55'>
+<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-lady-mic-font.png' alt='Storytelling NYC' width='96' height='55'>
 </a>
 <a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
-<img src='http://dixit.ca/assets/icons/social-facebook-box-blue-icon.png' height=16 width=16 alt='New York Writers on Facebook'>
+<img src='http://incandescentman.github.io/assets/images/facebook.png' height=16 width=16 alt='New York Writers on Facebook'>
 </a>
 <a href='https://twitter.com/jaydixit' style='text-decoration:none;' target='_blank'>
-<img src='http://dixit.ca/assets/icons/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
+<img src='http://incandescentman.github.io/assets/images/twitter.png' height=16 width=16 alt='New York Writers on Twitter'>
 </a>
 <br>
+<p style='color:#FFF;' target='_blank'>Jay Dixit</p>
 </font>
-</div>"))) 
+</div>")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
@@ -4377,7 +4378,7 @@ Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9D
  smtpmail-stream-type 'starttls
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@storytelling.nyc" Nil))
 
 smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
 
@@ -4387,7 +4388,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 )
 	 ;; leave-fun not defined 
 	 :vars '(
-(user-mail-address . "jay@newyorkwritersintensive.com")
+(user-mail-address . "jay@storytelling.nyc")
 (mu4e-get-mail-command . "mbsync nywi") 
  ( mu4e-compose-signature .
 		 ("Jay Dixit\nnewyorkwritersintensive.com\n")))) 
@@ -4440,9 +4441,9 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-neuroleadership")
  smtpmail-default-smtp-server "smtp.gmail.com"
  smtpmail-smtp-server "smtp.gmail.com"
 smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi") 
-;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@newyorkwritersintensive.com" nil))
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@storytelling.nyc" Nil))
  smtpmail-smtp-service 587) 
-(setq user-mail-address "jay@newyorkwritersintensive.com") 
+(setq user-mail-address "jay@storytelling.nyc")
 (compose-mail)
 )
 
