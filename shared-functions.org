@@ -1426,13 +1426,13 @@ Make org-capture open in full window! :-)
 <span style='text-decoration:none;'><a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>storytelling.nyc</a><br></span>
 <span style='text-decoration:none;'><a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>(646) 355-8001</a><br></span>
 <a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-lady-mic-font.png' alt='Storytelling NYC' width='96' height='55'>
+<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png' alt='Storytelling NYC' height='55'>
 </a>
 <a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/facebook.png' height=16 width=16 alt='New York Writers on Facebook'>
+<img src='http://incandescentman.github.io/assets/images/facebook-512.png' height=16 width=16 alt='New York Writers on Facebook'>
 </a>
 <a href='https://twitter.com/jaydixit' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/twitter.png' height=16 width=16 alt='New York Writers on Twitter'>
+<img src='http://incandescentman.github.io/assets/images/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
 </a>
 <br>
 <p style='color:#FFF;' target='_blank'>Jay Dixit</p>
