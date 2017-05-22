@@ -201,7 +201,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 
  ;; (setq visual-line-mode nil t)
 
- (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
 
  (setq completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
 
@@ -388,7 +387,7 @@ is this still necessary?
 (add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
+
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
@@ -6864,11 +6863,6 @@ If I'm in =web-mode=, I'd like to:
 - Indent everything with 2 spaces.
 
 #+BEGIN_SRC emacs-lisp
- (add-hook 'web-mode-hook
-      (lambda ()
-       (rainbow-mode)
-       (rspec-mode)
-       (setq web-mode-markup-indent-offset 2)))
 #+END_SRC
 
 Use =web-mode= with embedded Ruby files, regular HTML, and PHP.

@@ -3713,3 +3713,25 @@ s-i
 
 ))
 #+END_SRC
+
+* web-mode
+#+BEGIN_SRC emacs-lisp
+
+    (use-package web-mode
+
+:init
+ (add-hook 'web-mode-hook
+      (lambda ()
+       (rainbow-mode)
+       (rspec-mode)
+       (setq web-mode-markup-indent-offset 2)))
+
+;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+
+(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
+
+    :bind (:map web-mode-map 
+
+
+  ("s-O" . prelude-open-with)))
+#+END_SRC
