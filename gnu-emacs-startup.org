@@ -372,7 +372,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ** push kill ring to OSX pasteboard
   #+BEGIN_SRC emacs-lisp
 (setq x-select-enable-clipboard t)
-(defun push-kill-ring-to-pasteboard ()
+(defun push-kill-ring-pasteboard-to-clipboard ()
   (interactive)
   (x-select-text (current-kill 0)))
   #+END_SRC
@@ -2616,7 +2616,18 @@ This version kill org-mode headings by 'kill-line'
 (new-org-delete-backward-char 2) 
 (my/fix-space)
 
-t))))
+
+(when
+(and
+(looking-back "----")
+(looking-at "-"))
+
+(delete-backward-char 4)
+(delete-char 1)
+(insert-space))
+
+
+t)))
 
 #+END_EXAMPLE
 
@@ -2707,7 +2718,14 @@ t)
 (right-char 2)
 )
 
+(when
+(and
+(looking-back "----")
+(looking-at "-"))
 
+(delete-backward-char 4)
+(delete-char 1)
+(insert-space))
 
 
 
