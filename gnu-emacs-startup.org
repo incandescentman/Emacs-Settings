@@ -431,7 +431,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; mk - mykeybindings
 
 
-(define-key key-minor-mode-map (kbd "s-i") 'org-export-dispatch)
+(define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
 
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
@@ -3479,7 +3479,6 @@ doesn't work.
 
 * available keybindings
 
-s-p
 s-i
 s-N
 s-:
