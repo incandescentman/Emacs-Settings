@@ -561,7 +561,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; mu4e-gmail
-(define-key key-minor-mode-map (kbd "s-l") 'mu4e-gmail)
+(define-key key-minor-mode-map (kbd "s-L") 'mu4e-gmail)
 (define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)
 
 
@@ -700,7 +700,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "s-0") 'widen)
-(define-key key-minor-mode-map (kbd "s-W") 'widen)
+
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key org-mode-map (kbd "C-c e") 'eval-subtree)
 
@@ -788,7 +788,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; For extracting content from my browser
 
-(define-key key-minor-mode-map (kbd "s-W") 'web-research-quotes)
+(define-key key-minor-mode-map (kbd "s-W") 'org-mac-chrome-insert-frontmost-url)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
 
@@ -1472,7 +1472,7 @@ provided the (transient) mark is active."
 
  (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
  (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
- (define-key key-minor-mode-map (kbd "s-L") 'org-mac-chrome-insert-frontmost-url)
+ (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
 
  (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
  (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
@@ -3487,6 +3487,10 @@ s-u
 m-,
 
 s-i
+C->
+C-<
+M-1 to 9
+
 
 
 * keep cursor at same position when scrolling
