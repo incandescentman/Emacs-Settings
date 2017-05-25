@@ -719,7 +719,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
-
+(define-key key-minor-mode-map (kbd "s-j r e") 'set-rectangular-region-anchor)
 
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 ;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)

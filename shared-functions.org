@@ -5579,22 +5579,26 @@ q is a good candidate for chords, since in words it has u after, and only a few 
 * hydras experiments
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defhydra email (global-map "s-]")
-  "email"
-  ("a" erika-send-email)
-  ("i" notmuch "inbox")
-  ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
-  ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
+ "email"
+ ("a" erika-send-email)
+ ("i" notmuch "inbox")
+ ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
+ ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
 )
 
 
 (defhydra hydra-zoom (global-map "s-[")
-  "email"
-  ("e" erika-send-mail)
-  ("n" notmuch)
+ "email"
+ ("e" erika-send-mail)
+ ("n" notmuch)
 )
 
+
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
 
 
 (global-set-key
@@ -7292,3 +7296,19 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 To use this, just write your org links in the following way (optionally adding a description).
 
 [[yt:A3JAlWM8qRM]]
+
+* help-mode
+#+BEGIN_SRC emacs-lisp
+(use-package help-mode
+
+:bind (:help-mode-map
+("s-]" . help-go-forward)
+("s-[" . help-go-back)
+)
+
+
+)
+#+END_SRC
+
+
+(define-key key-minor-mode-map (kbd "s-[") ')
