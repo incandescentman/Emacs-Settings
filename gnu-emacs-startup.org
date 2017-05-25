@@ -430,6 +430,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+(define-key key-minor-mode-map (kbd "s-i") 'org-export-dispatch)
+
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
 (define-key key-minor-mode-map (kbd "s-M") 'visit-messages-buffer)
@@ -665,7 +668,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
-(define-key key-minor-mode-map (kbd "s-:") 'reveal-in-finder)
 (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
 
 ;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
@@ -785,6 +787,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
+(define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
 
 ;; For extracting content from my browser
 
@@ -793,10 +796,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; indirect buffer
-(define-key key-minor-mode-map (kbd "s-i") 'clone-indirect-buffer-other-window)
-
-
-;; (define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-other-window)
+(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-other-window)
 
 
 
@@ -1472,7 +1472,7 @@ provided the (transient) mark is active."
 
  (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
  (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
- (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+
 
  (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
  (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
@@ -3479,7 +3479,8 @@ doesn't work.
 
 * available keybindings
 
-s-P
+s-p
+s-i
 s-N
 s-:
 s-. searchlink 
