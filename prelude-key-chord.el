@@ -66,7 +66,7 @@
 (key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 (key-chord-define-global "FF" 'isearch-forward-regexp)
-(key-chord-define-global "HH" 'helm-M-x)
+(key-chord-define-global "HH" 'cheatsheet-show)
 
 ;; (key-chord-define-global "nm" 'new-email-from-subtree-no-signature)
 
