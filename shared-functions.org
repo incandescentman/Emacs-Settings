@@ -623,6 +623,18 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
 #+END_SRC
 
+
+*** fontify item checklists
+
+[[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
+
+#+BEGIN_SRC emacs-lisp
+(font-lock-add-keywords
+ 'org-mode
+ `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
+ 'append)
+#+END_SRC
+
 *** Load my org modules
 #+BEGIN_SRC emacs-lisp
 (setq org-modules (quote (org-mime )))
@@ -7312,3 +7324,18 @@ To use this, just write your org links in the following way (optionally adding a
 
 
 (define-key key-minor-mode-map (kbd "s-[") ')
+
+
+#+BEGIN_SRC emacs-lisp
+(defun swiper-mc ()
+(interactive)
+(unless (require 'multiple-cursors nil t)
+(error "multiple-cursors isn't installed")) (let ((cands (nreverse ivy--old-cands)))
+(unless (string= ivy-text "") (ivy-set-action
+(lambda (_) (let (cand)
+(while (setq cand (pop cands)) (swiper--action cand)
+(when cands
+               (mc/create-fake-cursor-at-point))))
+         (mc/maybe-multiple-cursors-mode)))
+(setq ivy-exit 'done) (exit-minibuffer))))
+#+END_SRC
