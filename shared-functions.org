@@ -1645,7 +1645,7 @@ To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
 (use-package auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
-;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append) 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 #+END_SRC
 
 ** Define my default directory:
@@ -7339,3 +7339,43 @@ To use this, just write your org links in the following way (optionally adding a
          (mc/maybe-multiple-cursors-mode)))
 (setq ivy-exit 'done) (exit-minibuffer))))
 #+END_SRC
+
+* display and copy emacs version info
+#+BEGIN_SRC emacs-lisp
+(defun emacs-version-display-and-copy ()
+ "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
+ (interactive)
+(setq system-version
+ (substring
+ (shell-command-to-string "defaults read loginwindow SystemVersionStampAsString")
+ 0 -1))
+ (kill-new
+   (message "Mac OSX Sierra version %s, Spacemacs version %s, Emacs version %s, org-mode version %s"
+       system-version spacemacs-version emacs-version org-version))
+ (push-kill-ring-pasteboard-to-clipboard)
+)
+#+END_SRC
+
+See also spacemacs/describe-system-info
+
+* shell command on region
+#+BEGIN_SRC emacs-lisp
+(defun tidy-html ()
+ "Tidies the HTML content in the buffer using `tidy'"
+ (interactive)
+ (shell-command-on-region
+  ;; beginning and end of buffer
+  (point-min)
+  (point-max)
+  ;; command and parameters
+  "tidy -i -w 120 -q"
+  ;; output buffer
+  (current-buffer)
+  ;; replace?
+  t
+  ;; name of the error buffer
+  "*Tidy Error Buffer*"
+  ;; show error buffer?
+  t))
+#+END_SRC
+[[https://www.masteringemacs.org/article/executing-shell-commands-emacs][Executing Shell Commands in Emacs - Mastering Emacs]]
