@@ -382,7 +382,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (defun gist-buffer-to-pasteboard ()
   (interactive)
   (gist-buffer)
-  (push-kill-ring-to-pasteboard)
+  (push-kill-ring-pasteboard-to-clipboard)
   )
   #+END_SRC
 
@@ -694,7 +694,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
   (beginning-of-visual-line)
   (end-of-buffer)
   (copy-region-as-kill (mark) (point))
-  (push-kill-ring-to-pasteboard)
+  (push-kill-ring-pasteboard-to-clipboard)
   )
 
 

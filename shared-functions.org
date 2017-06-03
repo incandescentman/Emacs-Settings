@@ -87,6 +87,8 @@
 I should probably eventually break these out of custom-set-variables and organize them according to their function.
 #+BEGIN_SRC emacs-lisp
 
+
+
  (setq mail-kill-buffer-on-exit t)
  (setq abbrev-all-caps nil)
  (setq undo-limit 800000)
@@ -2761,7 +2763,7 @@ Useful for working with files and references:
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename)))
-  (push-kill-ring-to-pasteboard)
+  (push-kill-ring-pasteboard-to-clipboard)
 )
 #+END_SRC
 
@@ -2779,7 +2781,7 @@ Useful for working with files and references:
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename)))
-  (push-kill-ring-to-pasteboard)
+  (push-kill-ring-pasteboard-to-clipboard)
 )
 #+END_SRC
 
@@ -5743,21 +5745,20 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (font-lock-add-keywords 'org-mode
                         '(
-;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
+("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
                           ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
-
-; ("[\(.*?\)]" . 'anki-clozure-face); fontify any word followed by a colon if it begins the line
 
 ; ("[[]\\(.*?\\)[]]" . 'bold); this fontifies whatevers in square brackets, including the brackets
 
 
-; ("\\[\\[\\(.*\\)\\]\\]" . 'bold); this fontifies whatevers in square brackets, not including the brackets; doesn't work
-
-
       ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line
+
 ;; ("^\\*+[ ]*[a-Za-z]+:" . 'heading-title-face); fontify any heading that starts with a word followed by a colon. But how to make this face supersede the other one?
                           )
                         ) 
+
+
+
 #+END_SRC
 
 ** and on export
@@ -5767,6 +5768,10 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*"))) 
 
 (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2"))) 
+
+(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
+ ;; any line that ends with a colon
+
 
 #+END_SRC
 
@@ -6539,10 +6544,10 @@ cmd)
  (interactive)
        (next-line 6)
  )
+
+
  #+END_SRC
 
- ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*"))) 
- ;; any line that ends with a colon 
 
 *** next-subtree-same-level-and-narrow
  #+BEGIN_SRC emacs-lisp
