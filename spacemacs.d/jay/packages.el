@@ -233,7 +233,7 @@ adaptive-wrap
 
 (defun jay/init-crux () (use-package crux))
 
-(defun jay/init-paredit () (use-package paredit))
+; (defun jay/init-paredit () (use-package paredit))
 (defun jay/init-web-mode () (use-package web-mode))
 
 (defun jay/init-fancy-narrow () (use-package fancy-narrow))
