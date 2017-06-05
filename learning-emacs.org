@@ -701,3 +701,24 @@ display: none;
 ** go to current track
 
 You should be able to go to the location of the current playing track by clicking on the album artwork in the bottom left corner of the client.
+
+
+* install packages using use package
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+ (package-refresh-contents)
+ (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+; then define packages you use
+(use-package ace-jump-mode
+ :bind ("M-SPC" . ace-jump-mode))
+etc
+#+END_SRC
+
+[[https://www.reddit.com/r/emacs/comments/4fqu0a/automatically_install_packages_on_startup/][Automatically Install Packages On Startup : emacs]]
+
+[[https://emacs.stackexchange.com/questions/28932/how-to-automatically-install-all-packages-loaded-by-my-emacs-file-in-the-minimu][How to automatically install all packages loaded by my .emacs file in the minimum of lines? - Emacs Stack Exchange]]
