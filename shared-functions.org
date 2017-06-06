@@ -658,7 +658,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 #+BEGIN_SRC emacs-lisp
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (
-                                      ("k" . org-kill-note-or-show-branches)
+; ("k" . org-kill-note-or-show-branches)
                                       ("q" . bh/show-org-agenda)
                                       ("h" . org-agenda-schedule)
                                       ("d" . org-deadline)
@@ -669,6 +669,8 @@ Open new buffers without prompting me for a filename global counter to ensure ev
                                       ("m" . (lambda nil (interactive) (org-todo "MISSED")))
 
                                       ("A" . org-archive-subtree-default-with-confirmation)
+                                      ("N" . org-forward-heading-same-level)
+                                      ("P" . org-backward-heading-same-level)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
 #+END_SRC

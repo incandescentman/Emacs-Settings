@@ -78,7 +78,7 @@
 
 
 ;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)
-(key-chord-define-global "NN" 'org-narrow-to-subtree)
+;; (key-chord-define-global "NN" 'org-narrow-to-subtree)
 
 (key-chord-define-global "II" 'god-mode-all)
 
