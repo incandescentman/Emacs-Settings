@@ -1,3 +1,5 @@
 -/.git
 -/emacs-pastebin-master
 -/archive
+-shared-functions.el
+-gnu-emacs-startup.el
