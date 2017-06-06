@@ -430,6 +430,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 
 (define-key key-minor-mode-map (kbd "s-i") 'avy-goto-char)
 (define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
@@ -2469,7 +2470,7 @@ regards,
 Oleh
 (Source: http://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg01134.html)
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
     (defgroup helm-org-wiki nil
       "Simple jump-to-org-file package."
       :group 'org
@@ -2507,7 +2508,7 @@ Oleh
               helm-source-org-wiki-not-found)))
     (provide 'helm-org-wiki)
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * Emacs Lisp Mode

@@ -558,9 +558,9 @@ layers configuration. You are free to put any user code."
 (spaceline-define-segment narrow
  "Display Narrowed when buffer is narrowed."
  (when (buffer-narrowed-p)
- "Narrowed")) 
+ "Narrowed"))
 
-(spaceline-spacemacs-theme 'narrow) 
+(spaceline-spacemacs-theme 'narrow)
 
 
 

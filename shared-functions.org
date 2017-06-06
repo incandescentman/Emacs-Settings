@@ -2244,6 +2244,9 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "\\.png")
 (add-to-list 'recentf-exclude "\\contacts")
 
+(add-to-list 'recentf-exclude "\\ssh")
+(add-to-list 'recentf-exclude "\\scp")
+
 (add-to-list 'recentf-exclude '(".doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.html\\" "\\.tex\\" "\\message\\" "\\org-clock-save.el\\" "\\recent-addresses\\'\\" "\\ido.last\\'\\" "\\[/\\]\\elpa/\\" "\\.bmk\\" "\\.jabber\\" "\\helm\\" "\\Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4\\" "\\.mpg\\" "\\.mpeg"
@@ -3063,7 +3066,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "t" 'new-buffer)
 (define-super-key "T" 'org-new-scratch-buffer)
 (define-super-key "g" 'isearch-repeat-forward)
-(define-super-key "k" 'ido-kill-buffer)
+(define-super-key "k" 'kill-buffer)
 (define-super-key "K" 'org-cut-subtree)
 (define-super-key "d" 'org-todo)
 (define-super-key "L" 'org-mac-chrome-insert-frontmost-url)
@@ -5750,7 +5753,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (font-lock-add-keywords 'org-mode
                         '(
-			  ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
+			  ;; ("^.*:[ ]*$" . 'list-title-face) ; fontify any line that ends with a colon
                           ("^Q\\(UESTION\\|uestion\\):" . 'list-title-face) ; fontify "Question:" and "QUESTION:"
 
 			  ("^[A-Za-z]+:" . 'list-title-face); fontify any word followed by a colon if it begins the line
@@ -5771,7 +5774,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 
 (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2"))) 
 
-(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
+;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
  ;; any line that ends with a colon
 
 
@@ -7442,4 +7445,10 @@ See also spacemacs/describe-system-info
   (end-of-line))
 
 (setq message-tab-body-function (quote message-mode-next-field))
+#+END_SRC
+
+
+* tramp
+#+BEGIN_SRC emacs-lisp
+(setq tramp-default-method "ssh")
 #+END_SRC
