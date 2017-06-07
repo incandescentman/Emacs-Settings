@@ -1369,7 +1369,6 @@ Make org-capture open in full window! :-)
 ;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
-;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode)
 #+END_SRC
 
 *** globally enable palimpsest-mode
@@ -5112,6 +5111,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 
 
+(add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
   #+END_SRC
 
 
@@ -7453,4 +7453,35 @@ See also spacemacs/describe-system-info
 * tramp
 #+BEGIN_SRC emacs-lisp
 (setq tramp-default-method "ssh")
+#+END_SRC
+
+
+* smart question mark
+#+BEGIN_SRC emacs-lisp
+(defun qm-maybe ()
+(interactive)
+(when
+(not
+(looking-back "$")
+)
+(smart-question-mark)
+)
+)
+
+;; (define-key key-minor-mode-map (kbd "?") 'qm-maybe)
+#+END_SRC
+
+
+* flycheck
+#+BEGIN_SRC emacs-lisp
+
+;; turn on flychecking globally
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
+
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
 #+END_SRC
