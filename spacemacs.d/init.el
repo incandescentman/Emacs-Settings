@@ -640,7 +640,7 @@ layers configuration. You are free to put any user code."
    '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
    '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
    '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-   '(org-code ((t (:family "Courier"))))
+   '(org-code ((t (:family "Courier" :height 1.1))))
    '(org-link ((t (:underline nil)))))
 
 
@@ -817,4 +817,4 @@ layers configuration. You are free to put any user code."
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))) t))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))

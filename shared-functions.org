@@ -2390,9 +2390,10 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 
-(insert "*** TODO wake up by 8:30am\n") 
-(insert "*** TODO blue light\n")
-(insert "*** TODO morning pages\n")
+(insert "** TODO wake up by 8:30am\n")
+(insert "** TODO blue light\n")
+(insert "** TODO morning pages\n")
+(insert "** TODO bookwriting [0/8]\n")
 (insert "*** TODO bookwriting #1\n")
 (insert "*** TODO bookwriting #2\n")
 (insert "*** TODO bookwriting #3\n")
@@ -2401,8 +2402,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (insert "*** TODO bookwriting #6\n")
 (insert "*** TODO bookwriting #7\n")
 (insert "*** TODO bookwriting #8\n")
-
-(insert "*** TODO ")
+(insert "** TODO ")
 ; (left-char)
   )
 
@@ -5308,6 +5308,11 @@ event of an error or nonlocal exit."
 (define-key endless/mc-map "\C-e"
   #'mc/edit-ends-of-lines)
 
+(setq mc/always-run-for-all t)
+;; always run for all cursors
+
+(setq mc/insert-numbers-default 1)
+;; start counting from 0
 
 (global-set-key
  (kbd "C-2")
