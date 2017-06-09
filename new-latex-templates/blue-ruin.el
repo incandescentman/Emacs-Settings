@@ -97,7 +97,8 @@
     \\newline
     \\newline
 {\\myauthorfont\\Large © 2017 \\@author}
-{\\myauthorfont\\Personal and Confidential}
+    \\newline
+{\\myauthorfont\\Large Private and Confidential}
     \\newline
           {\\myauthorfont\\Large \\href{mailto:jay@newyorkwritersintensive.com}{jay@newyorkwritersintensive.com}}
         \\newline
