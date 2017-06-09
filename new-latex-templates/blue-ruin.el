@@ -93,19 +93,19 @@
 \\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
 \\begin{raggedright}
 \\vfill
-{\\myauthorfont\\Large \\bfseries{\\@author}}
+{\\myauthorfont\\Large {\\@author}}
     \\newline
-{\\myauthorfont\\Large \\bfseries{Storytelling NYC}}
+          {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
+        \\newline
+{\\myauthorfont\\Large {Storytelling NYC}}
+        \\newline
+    {\\myauthorfont\\Large \\@date\\par}
     \\newline
 {\\myauthorfont\\Large © 2017 \\@author}
     \\newline
 {\\myauthorfont\\Large Private and Confidential}
     \\newline
-          {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
-        \\newline
-          %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree}}
-        \\newline
-    {\\myauthorfont\\Large \\@date\\par}
+%{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree }}
 \\end{raggedright}
 }};
 \\end{tikzpicture}
