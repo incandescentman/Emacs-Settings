@@ -98,13 +98,13 @@
           {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
         \\newline
 {\\myauthorfont\\Large {Storytelling NYC}}
-        \\newline
-    {\\myauthorfont\\Large \\@date\\par}
-    \\newline
+\\newline
 {\\myauthorfont\\Large © 2017 \\@author}
     \\newline
 {\\myauthorfont\\Large Private and Confidential}
     \\newline
+        \\newline
+    {\\myauthorfont\\Large \\@date\\par}
 %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree }}
 \\end{raggedright}
 }};
