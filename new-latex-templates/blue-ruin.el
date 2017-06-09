@@ -19,7 +19,7 @@
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \\setromanfont{Garamond Premier Pro}
 %  \\setromanfont{Adobe Caslon Pro}
- \\setsansfont{Helvetica Neue}
+ \\setsansfont{Gotham Narrow Bold}
   \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
@@ -55,9 +55,9 @@
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={FB782C}]{Helvetica Neue}
-\\newfontfamily\\myauthorfont[Color={FB782C}]{Gill Sans Display MT Pro}
-\\newfontfamily\\mybluefont[Color=electricblue]{Gill Sans Display MT Pro}
+\\newfontfamily\\mytitlefont[Color={FB782C}]{Gotham Narrow Bold}
+\\newfontfamily\\myauthorfont[Color={FB782C}]{Gotham Narrow Bold}
+\\newfontfamily\\mybluefont[Color=electricblue]{Gotham Narrow Bold}
 \\DeclareTextFontCommand{\\textbf}{\\bfseries\\color{electricblue}}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
@@ -93,14 +93,14 @@
 \\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
 \\begin{raggedright}
 \\vfill
-{\\myauthorfont\\Large \\bfseries{New York Writers' Intensive}}
+{\\myauthorfont\\Large \\bfseries{Storytelling NYC}}
     \\newline
     \\newline
 {\\myauthorfont\\Large © 2017 \\@author}
     \\newline
 {\\myauthorfont\\Large Private and Confidential}
     \\newline
-          {\\myauthorfont\\Large \\href{mailto:jay@newyorkwritersintensive.com}{jay@newyorkwritersintensive.com}}
+          {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
         \\newline
           %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree}}
         \\newline
