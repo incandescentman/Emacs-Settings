@@ -93,8 +93,9 @@
 \\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
 \\begin{raggedright}
 \\vfill
-{\\myauthorfont\\Large \\bfseries{Storytelling NYC}}
+{\\myauthorfont\\Large \\bfseries{\\@author}}
     \\newline
+{\\myauthorfont\\Large \\bfseries{Storytelling NYC}}
     \\newline
 {\\myauthorfont\\Large © 2017 \\@author}
     \\newline
