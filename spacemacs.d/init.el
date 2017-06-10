@@ -48,6 +48,7 @@ values."
      (org
       :variables
       org-enable-bootstrap-support t
+      org-enable-github-support t
       ;; org-enable-reveal-js-support t
       )
 
@@ -743,6 +744,7 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
+ '(org-confirm-babel-evaluate nil)
  '(org-latex-active-timestamp-format "{%s}")
  '(package-selected-packages
    (quote
@@ -752,6 +754,7 @@ layers configuration. You are free to put any user code."
     ((org-inline-image-overlays)
      (org-latex-caption-above)
      (org-hide-emphasis-markers . t)
+     (org-latex-title-command . "")
      (org-hide-macro-markers . t)
      (org-fontify-quote-and-verse-blocks . t)
      (eval org-sbe "latex-link")

@@ -207,6 +207,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
 
  (setq message-send-mail-function (quote message-send-mail-with-sendmail))
+
 (setq org-export-latex-image-default-option "width=20.5cm")
  (setq org-export-time-stamp-file nil)
  (setq org-export-with-clocks t) 
@@ -2390,19 +2391,19 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 
-(insert "** TODO wake up by 8:30am\n")
-(insert "** TODO blue light\n")
-(insert "** TODO morning pages\n")
-(insert "** TODO bookwriting [0/8]\n")
-(insert "*** TODO bookwriting #1\n")
-(insert "*** TODO bookwriting #2\n")
-(insert "*** TODO bookwriting #3\n")
-(insert "*** TODO bookwriting #4\n")
-(insert "*** TODO bookwriting #5\n")
-(insert "*** TODO bookwriting #6\n")
-(insert "*** TODO bookwriting #7\n")
-(insert "*** TODO bookwriting #8\n")
-(insert "** TODO ")
+(insert "*** TODO wake up by 8:30am\n")
+(insert "*** TODO blue light\n")
+(insert "*** TODO morning pages\n")
+(insert "*** TODO bookwriting [0/8]\n")
+(insert "**** TODO bookwriting #1\n")
+(insert "**** TODO bookwriting #2\n")
+(insert "**** TODO bookwriting #3\n")
+(insert "**** TODO bookwriting #4\n")
+(insert "**** TODO bookwriting #5\n")
+(insert "**** TODO bookwriting #6\n")
+(insert "**** TODO bookwriting #7\n")
+(insert "**** TODO bookwriting #8\n")
+(insert "*** TODO ")
 ; (left-char)
   )
 
@@ -2970,8 +2971,8 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (define-key key-minor-mode-map (kbd "M-[") 'org-previous-visible-heading)
 (define-key key-minor-mode-map (kbd "M-]") 'org-next-visible-heading)
 
-(global-set-key (kbd "s-p") 'projectile-commander)
-(define-key key-minor-mode-map (kbd "s-p") 'projectile-commander)
+(global-set-key (kbd "s-p") 'org-export-dispatch)
+(define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
 
 (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
@@ -5990,8 +5991,9 @@ Wow, this works.
 (load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
 
 (defun jay-load-latex ()
-(interactive) 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el") 
+(interactive)
+
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
