@@ -3869,7 +3869,8 @@ The trick is to not use different colored delimiters! The reason I need the rain
 
 #+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 (use-package rainbow-delimiters)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
@@ -6918,7 +6919,7 @@ whole expression when point is on a paren.
 #+BEGIN_SRC emacs-lisp
  (setq lispy-mode-hooks
     '(clojure-mode-hook
-     emacs-lisp-mode-hook
+     emacs-lispmode-hook
      lisp-mode-hook
      scheme-mode-hook))
 
