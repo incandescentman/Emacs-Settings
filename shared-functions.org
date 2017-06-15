@@ -5114,6 +5114,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 
 
 (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'css-mode-hook 'turn-on-olivetti-mode)
   #+END_SRC
 
 
@@ -6291,7 +6292,7 @@ minibuffer."
 * proselint 
 Source: http://unconj.ca/blog/linting-prose-in-emacs.html 
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (flycheck-define-checker proselint
   "A linter for prose."
   :command ("proselint" source-inplace)
@@ -6302,7 +6303,7 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
   :modes (text-mode markdown-mode gfm-mode org-mode))
 
 (add-to-list 'flycheck-checkers 'proselint) 
-#+END_EXAMPLE
+#+END_SRC
 
 
 * query-replace-duplicate-lines-keep-blanks
@@ -7491,5 +7492,7 @@ See also spacemacs/describe-system-info
   :ensure t
   :init (global-flycheck-mode))
 
-(setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
+;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
+
+(add-hook 'org-mode-hook #'flycheck-mode)
 #+END_SRC
