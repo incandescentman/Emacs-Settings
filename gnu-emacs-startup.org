@@ -686,6 +686,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; projectile
 ;; (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
 
+(define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
+
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)

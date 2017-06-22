@@ -1111,6 +1111,10 @@ This is working correctly:
 	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
 	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
 
+
+	("t" "Taper" entry (file "taper.txt")
+	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+
 ("M" "Memorize" entry
                (file+headline (concat org-directory "org-drill-jays-decks.org")
                               "Vocabulary")
@@ -1501,7 +1505,7 @@ margin-left:2em;
 (add-hook 'org-mime-html-hook
      (lambda ()
       (org-mime-change-element-style
-       "strong" "color:#00ADEF;")))
+       "strong" "font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;color:#00ADEF;")))
 
 
 (add-hook 'org-mime-html-hook
@@ -2202,7 +2206,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** recentf-exclude
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'recentf-exclude ".git")
+(add-to-list 'recentf-exclude "\\.git\\")
 (add-to-list 'recentf-exclude "\\paths")
 (add-to-list 'recentf-exclude "\\ido.last\\'")
 (add-to-list 'recentf-exclude "\\recent-addresses\\'")
@@ -2218,7 +2222,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude ".tex\\")
 (add-to-list 'recentf-exclude "mu2\\")
 (add-to-list 'recentf-exclude "\\recentf")
-(add-to-list 'recentf-exclude "\\.html")
+(add-to-list 'recentf-exclude "\\.html\\")
 (add-to-list 'recentf-exclude "\\.Icon")
 (add-to-list 'recentf-exclude "\\.gz")
 (add-to-list 'recentf-exclude "\\System")
@@ -2249,7 +2253,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "\\ssh")
 (add-to-list 'recentf-exclude "\\scp")
 
-(add-to-list 'recentf-exclude '(".doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.html\\" "\\.tex\\" "\\message\\" "\\org-clock-save.el\\" "\\recent-addresses\\'\\" "\\ido.last\\'\\" "\\[/\\]\\elpa/\\" "\\.bmk\\" "\\.jabber\\" "\\helm\\" "\\Calendar"))
+(add-to-list 'recentf-exclude '(".doc\\" "\\.docx\\" "\\.xls\\" "\\.xlsx\\" "\\.ppt\\" "\\.odt\\" "\\.ods\\" "\\.odg\\" "\\.odp\\" "\\.tex\\" "\\message\\" "\\org-clock-save.el\\" "\\recent-addresses\\'\\" "\\ido.last\\'\\" "\\[/\\]\\elpa/\\" "\\.bmk\\" "\\.jabber\\" "\\helm\\" "\\Calendar"))
 
 (add-to-list 'recentf-exclude '(".mp4\\" "\\.mpg\\" "\\.mpeg"
 ".avi\\" "\\.wmv\\" "\\.wav\\" "\\.mov\\" "\\.flv\\" "\\.ogm\\" "\\.ogg\\" "\\.mkv"
@@ -3737,8 +3741,10 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 (key-seq-define-global "qd" 'dired)
 (key-seq-define text-mode-map "qf" 'flyspell-buffer)
 
-(key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
-(key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
+;; (key-seq-define-global "mn" 'new-email-from-subtree-no-signature)
+;; (key-seq-define-global "nm" 'new-email-from-subtree-with-signature)
+
+;; these got hit accidentally via typos
 
 #+END_SRC
 
@@ -4008,16 +4014,18 @@ Single Capitals as you type."
 '(flyspell-abbrev-p t)
 '(flyspell-use-global-abbrev-table-p t)
 '(global-flyspell-mode t)
-'(flyspell-mark-duplications-exceptions
-  (quote
-  ((nil "that" "had" "really" "very")
-   ("\\`francais" "nous" "vous"))))
 
 :bind
 (:map flyspell-mode-map
 ("C-." . nil)
 )
 )
+
+(setq flyspell-mark-duplications-exceptions
+ (quote
+ ((nil "that" "had" "really" "very")
+  ("\\`francais" "nous" "vous"))))
+
 #+END_SRC
 
 ** flyspell skip source blocks
