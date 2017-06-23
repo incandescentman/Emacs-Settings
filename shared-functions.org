@@ -3124,7 +3124,7 @@ Key bindings I don't use much and should remember to learn:
 (define-super-key "j j" 'helm-imenu-anywhere)
 ;; (define-super-key ";" 'ido-goto-symbol)
 ;; (define-super-key ";" 'helm-resume)
-(define-super-key "D" 'diredp-dired-recent-dirs)
+;; (define-super-key "D" 'diredp-dired-recent-dirs)
 
 #+END_SRC
 
