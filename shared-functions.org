@@ -2659,6 +2659,25 @@ Transpose windows, useful:
     (message "No region selected")))
 #+END_SRC
 
+** copy region to other window
+#+BEGIN_SRC emacs-lisp
+(defun copy-region-to-other-window (start end)
+ "Move selected text to other window"
+ (interactive "r")
+ (if (use-region-p)
+   (let ((count (count-words-region start end)))
+    (save-excursion
+     (copy-region-as-kill start end)
+(other-window 1)
+     (yank)
+     (newline))
+    (other-window -1)
+    (message "Moved %s words" count))
+  (message "No region selected")))
+
+#+END_SRC
+
+
 ** org-refile
 #+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil) ; Refile in a single go 
