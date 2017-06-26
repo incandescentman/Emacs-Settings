@@ -790,7 +790,13 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
+(define-key key-minor-mode-map (kbd "s-j o e") 'olivetti-expand)
+
+(define-key key-minor-mode-map (kbd "s-+") 'olivetti-expand)
+(define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
+
 (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+
 
 ;; For extracting content from my browser
 

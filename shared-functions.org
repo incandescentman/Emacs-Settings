@@ -4480,7 +4480,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nli")
 
 smtpmail-smtp-service 587)
 ;; open my neuroleadership inbox
-(mu4e~headers-jump-to-maildir "/neuroleadership/inbox")
+(mu4e~headers-jump-to-maildir "/nli/inbox")
 )
 	 ;; leave-fun not defined 
 	 :vars '(
@@ -7542,4 +7542,34 @@ See also spacemacs/describe-system-info
 ;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
 
 (add-hook 'org-mode-hook #'flycheck-mode)
+#+END_SRC
+
+
+* convert to chat format
+
+#+BEGIN_SRC emacs-lisp
+(defun intern-convert-to-chat-format (begin end)
+ (interactive "r")
+ (xah-replace-pairs-region begin end
+ '(
+ ["Mary Dean: " "** Mary Dean\n"]
+ ["Ricky DeSantis: " "** Ricky DeSantis\n"]
+ ["Jay Dixit: " "** Jay Dixit\n"]
+ ["me: " "** Jay Dixit\n"]
+ ["Benjamin: " "** Benjamin Carp\n"]
+ )))
+
+#+END_SRC
+
+
+* pcre-regexp-from-list-of-words
+[[http://emacsfodder.github.io/blog/easy-regexp-generation-with-emacs/][Easy regexp generation with Emacs - Emacs Fodder]]
+
+#+BEGIN_SRC emacs-lisp
+(defun pcre-regexp-from-list-of-words (words)
+ "insert a pcre regexp to match a list of words"
+ (interactive "sList of words for regexp: ")
+ (insert
+  (pcre-to-elisp
+  (regexp-opt (split-string words)))))
 #+END_SRC

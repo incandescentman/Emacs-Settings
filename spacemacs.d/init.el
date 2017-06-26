@@ -154,6 +154,7 @@ values."
                                       project-explorer
                                       rainbow-mode
                                       recentf
+                                      regex-tool
                                       rspec-mode
                                       scratch
                                       scratch-message
