@@ -722,3 +722,11 @@ etc
 [[https://www.reddit.com/r/emacs/comments/4fqu0a/automatically_install_packages_on_startup/][Automatically Install Packages On Startup : emacs]]
 
 [[https://emacs.stackexchange.com/questions/28932/how-to-automatically-install-all-packages-loaded-by-my-emacs-file-in-the-minimu][How to automatically install all packages loaded by my .emacs file in the minimum of lines? - Emacs Stack Exchange]]
+
+
+
+* tramp
+- syntax: ~/username@hostname.com:~
+- start with slash, end with colon
+- don't have to go to beginning of line and kill it. Just type slash
+- M-x shell works even on remote machines

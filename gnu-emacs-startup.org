@@ -575,6 +575,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; mu4e-gmail
 (define-key key-minor-mode-map (kbd "s-L") 'mu4e-gmail)
 (define-key key-minor-mode-map (kbd "]gi") 'mu4e-gmail)
+(define-key key-minor-mode-map (kbd "]gm") 'mu4e-gmail)
 
 
 
