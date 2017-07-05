@@ -4063,7 +4063,7 @@ Single Capitals as you type."
 
 (setq flyspell-mark-duplications-exceptions
  (quote
- ((nil "that" "had" "really" "very")
+ ((nil "that" "had" "really" "very" "much")
   ("\\`francais" "nous" "vous"))))
 
 #+END_SRC
@@ -4349,8 +4349,12 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 (define-key mu4e-view-mode-map "r" 'mu4e-compose-reply) 
 (define-key mu4e-view-mode-map "c" 'mu4e-compose-new) 
 (define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag) 
-;; (define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev)
-;; (define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next)
+(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev)
+(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next)
+
+(define-key mu4e-view-mode-map "g" 'mu4e-update-mail-and-index)
+
+
 
 ;; unset keys (worked!)
 (add-hook 'mu4e-headers-mode-hook 
@@ -4365,6 +4369,27 @@ Argument REPLACE String used to replace the matched strings in the buffer.
   (local-unset-key (kbd "<M-left>"))
 )) 
  #+END_SRC
+
+*** gmail emulation
+#+BEGIN_SRC emacs-lisp
+(defun archive-and-previous ()
+  (interactive)
+  (mu4e-view-mark-for-unflag)
+(mu4e-view-headers-prev)
+)
+
+
+(defun archive-and-next ()
+  (interactive)
+  (mu4e-view-mark-for-unflag)
+(mu4e-view-headers-next)
+)
+
+(define-key mu4e-view-mode-map "]" 'mu4e-view-headers-prev)
+(define-key mu4e-view-mode-map "[" 'mu4e-view-headers-next)
+
+#+END_SRC
+
 
 *** mu4e attachments
  Wouldn't it be awesome to be able to send files from dired using your mail client?
