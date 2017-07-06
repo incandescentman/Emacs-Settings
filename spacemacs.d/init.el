@@ -810,7 +810,7 @@ layers configuration. This is the place where most of your configurations should
  '(org-code ((t (:family "Courier" :height 1.4))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :slant normal)))))
+ '(org-quote ((t (:inherit default :slant normal))))
 
 '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
@@ -820,4 +820,4 @@ layers configuration. This is the place where most of your configurations should
 '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
 '(org-level-1 ((t (:family "Courier" :weight normal))))
 '(org-link ((t (:underline nil))))
-'(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+'(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
