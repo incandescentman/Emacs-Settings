@@ -496,7 +496,7 @@ layers configuration. This is the place where most of your configurations should
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
-  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
+;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
@@ -557,19 +557,10 @@ layers configuration. This is the place where most of your configurations should
 
 
 
-  ;; display "Narrowed" when buffer is narrowed
-  ;; (spaceline-define-segment narrow
-  ;;  "Display Narrowed when buffer is narrowed."
-  ;;  (when (buffer-narrowed-p)
-  ;;  "Narrowed"))
-
-  ;; (spaceline-spacemacs-theme 'narrow)
+;; (spaceline-spacemacs-theme 'narrow)
 
 
-
-  ;;  (define-key key-minor-mode-map (kbd "C-c d") 'prelude-duplicate-current-line-or-region)
-
-  (setq helm-echo-input-in-header-line nil)
+(setq helm-echo-input-in-header-line nil)
 
   (add-hook 'helm-after-initialize-hook
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
@@ -814,4 +805,4 @@ layers configuration. This is the place where most of your configurations should
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
  '(org-quote ((t (:inherit default :slant normal))))
  ;;  '(beacon ((t (:inherit  highlight))))
-)
+ )
