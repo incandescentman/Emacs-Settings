@@ -628,13 +628,6 @@ layers configuration. This is the place where most of your configurations should
                              (setq-local global-hl-line-mode
                                          nil)))
 
-  (custom-set-faces
-   '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
-   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
-   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
-   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-   '(org-code ((t (:family "Courier" :height 1.1))))
-   '(org-link ((t (:underline nil)))))
 
 
 
@@ -794,15 +787,16 @@ layers configuration. This is the place where most of your configurations should
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 
- '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(beacon ((t (:inherit  highlight))))
+ '(bold ((t (:inherit font-lock-warning-face :family "Sans Serif" :weight bold :height 1.1))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+;; '(org-code ((t (:family "Courier" :height 1.1))))
  '(org-code ((t (:family "Courier" :height 1.4))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
- '(org-quote ((t (:inherit default :slant normal))))
- ;;  '(beacon ((t (:inherit  highlight))))
+;; '(org-quote ((t (:inherit default :slant normal))))
  )
