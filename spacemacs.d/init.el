@@ -31,7 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-;;     csv
+     ;;     csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -43,7 +43,7 @@ values."
      emacs-lisp
      ;;   git
      ;;   markdown
- ;;    python
+     ;;    python
 
      (org
       :variables
@@ -75,7 +75,7 @@ values."
      ;;     floobits
      ;;    deft
      ;;     chrome
-  ;;   themes-megapack
+     ;;   themes-megapack
      ;;    ibuffer
      )
    ;; List of additional packages that will be installed without being
@@ -453,10 +453,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
-layers configuration. You are free to put any user code."
+layers configuration. This is the place where most of your configurations should be done. Unless it is explicitly specified that a variable should be set before a package is loaded, you should place your code here."
 
   (require 'recentf)
-(setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
+  (setq recentf-save-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/recentf")
 
   (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
     (normal-top-level-add-subdirs-to-load-path))
@@ -489,7 +489,7 @@ layers configuration. You are free to put any user code."
       (ditaa . t)
       ))
 
-(load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+  (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
   (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
   (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
@@ -497,10 +497,10 @@ layers configuration. You are free to put any user code."
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
   (load "/Users/jay/emacs/emacs-settings/skeletons.el")
-(load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
+  (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
-(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+  (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   (load "/Users/jay/emacs/emacs-settings/define-word.el")
   (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
@@ -557,13 +557,13 @@ layers configuration. You are free to put any user code."
 
 
 
-;; display "Narrowed" when buffer is narrowed
-;; (spaceline-define-segment narrow
-;;  "Display Narrowed when buffer is narrowed."
-;;  (when (buffer-narrowed-p)
-;;  "Narrowed"))
+  ;; display "Narrowed" when buffer is narrowed
+  ;; (spaceline-define-segment narrow
+  ;;  "Display Narrowed when buffer is narrowed."
+  ;;  (when (buffer-narrowed-p)
+  ;;  "Narrowed"))
 
-;; (spaceline-spacemacs-theme 'narrow)
+  ;; (spaceline-spacemacs-theme 'narrow)
 
 
 
@@ -575,7 +575,7 @@ layers configuration. You are free to put any user code."
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
-;;  (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
+  ;;  (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
   ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
 
   (setq org-bullets-bullet-list (quote ("• ")))
@@ -700,7 +700,7 @@ layers configuration. You are free to put any user code."
   (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
 
 
-(display-time)
+  (display-time)
 
   ;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
   (setq evil-emacs-state-cursor '("red")) ; for box cursor
@@ -718,7 +718,7 @@ layers configuration. You are free to put any user code."
   (require 'mu4e-send-delay)
 
   ;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
-;; (setq spaceline-org-clock-p t)
+  ;; (setq spaceline-org-clock-p t)
 
   (setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
@@ -802,22 +802,22 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-;;  '(beacon ((t (:inherit  highlight))))
-  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
-  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
-  '(org-code ((t (:family "Courier" :height 1.4))))
-  '(org-level-1 ((t (:family "Courier" :weight normal))))
-  '(org-link ((t (:underline nil))))
-  '(org-quote ((t (:inherit default :slant normal)))))
-
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ ;;  '(beacon ((t (:inherit  highlight))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-code ((t (:family "Courier" :height 1.4))))
- '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+ '(org-quote ((t (:inherit default :slant normal)))))
+
+'(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+'(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+'(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+'(org-code ((t (:family "Courier" :height 1.4))))
+'(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+'(org-level-1 ((t (:family "Courier" :weight normal))))
+'(org-link ((t (:underline nil))))
+'(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
