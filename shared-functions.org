@@ -109,7 +109,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq cua-mode nil)
  (setq debug-on-error t)
  (setq deft-directory "~/Dropbox/writing/notationaldata/")
- (setq delete-window-preserve-buffer (quote ("top-performer.org" "Current-book-research.txt" "accountability.txt")))
+; (setq delete-window-preserve-buffer (quote ("top-performer.org" "current-book-research.txt" "accountability.txt")))
  (setq dired-clean-up-buffers-too nil)
 ;; (setq dired-details-hidden-string "")
  (setq dired-kept-versions 8)
@@ -155,7 +155,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq org-footnote-define-inline t)
  (setq org-footnote-section "Footnotes")
  (setq org-footnote-tag-for-non-org-mode-files "Footnotes:")
- ;; (setq org-headline-done ((t (:strike-through t))))
  (setq org-hide-block-startup nil)
  (setq org-hide-emphasis-markers t)
  (setq org-hide-leading-stars t)
@@ -4128,12 +4127,12 @@ Single Capitals as you type."
 * a keybinding to open my accountability file
 
   #+BEGIN_SRC emacs-lisp
-(defun accountability-open ()
-  (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
-  )
+;; (defun accountability-open ()
+;;   (interactive)
+;;   (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
+;;   )
 
-(define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
+;; (define-key key-minor-mode-map (kbd "<s-S-right>") 'accountability-open)
 
 (defun warm-open ()
   (interactive)
@@ -6365,6 +6364,7 @@ minibuffer."
 Source: http://unconj.ca/blog/linting-prose-in-emacs.html 
 
 #+BEGIN_SRC emacs-lisp
+(require 'flycheck)
 (flycheck-define-checker proselint
   "A linter for prose."
   :command ("proselint" source-inplace)

@@ -31,7 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     csv
+;;     csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -43,7 +43,7 @@ values."
      emacs-lisp
      ;;   git
      ;;   markdown
-     python
+ ;;    python
 
      (org
       :variables
@@ -75,7 +75,7 @@ values."
      ;;     floobits
      ;;    deft
      ;;     chrome
-     themes-megapack
+  ;;   themes-megapack
      ;;    ibuffer
      )
    ;; List of additional packages that will be installed without being
@@ -267,8 +267,8 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         zenburn
                          leuven
-                         ;;                         zenburn
                          spacemacs-dark
                          spacemacs-light
                          solarized-light
@@ -417,7 +417,7 @@ values."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis all
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -794,13 +794,16 @@ layers configuration. You are free to put any user code."
      (eval define-key key-minor-mode-map
            (kbd "SPC")
            (quote insert-space))))))
-'(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+
+
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-  '(beacon ((t (:inherit  highlight))))
+;;  '(beacon ((t (:inherit  highlight))))
   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
@@ -808,11 +811,7 @@ layers configuration. You are free to put any user code."
   '(org-level-1 ((t (:family "Courier" :weight normal))))
   '(org-link ((t (:underline nil))))
   '(org-quote ((t (:inherit default :slant normal)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
@@ -821,4 +820,4 @@ layers configuration. You are free to put any user code."
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
