@@ -506,6 +506,7 @@ layers configuration. This is the place where most of your configurations should
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
   (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
   (load "/Users/jay/emacs/emacs-settings/email.el")
+(load "/Users/jay/gnulisp/org-image.el")
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
