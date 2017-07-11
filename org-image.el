@@ -1,8 +1,7 @@
 ;; Source: https://gist.github.com/nico202/1c645c2a0a6cfb5a06bf2f6717d0cf54
 ;; [[elfeed:pragmaticemacs.com#http://pragmaticemacs.com/?p=752][A workflow to quickly add photos to org-mode notes]]
-
 ;; use case is taking a photo of a slide in a conference and uploading
-;; it to syncthing and get it on your computer. You then want to embed
+;; it to iphone and get it on your computer. You then want to embed
 ;; it in an org-mode document by moving it to the subfolder and
 ;; renaming according to the current section of the org file, avoiding
 ;; name clashes
@@ -13,23 +12,40 @@
 (require 's)
 (require 'f)
 
-(defun nx/insert-screenshot (arg)
+;; This defaults to copy: move with prefix (C-u)
+(defun org-insert-screenshot (arg)
   (interactive "P")
-  (bjm/insert-image "~/Downloads/Screenshots/" arg))
+  (bjm/insert-image "~/Downloads/Screenshots/" not arg))
 
-(defun nx/insert-test (arg)
+;; This defaults to copy: move with prefix (C-u)
+(defun org-insert-iphone-photo (arg)
   (interactive "P")
-  (bjm/insert-image "~/Downloads/" arg))
+  (bjm/insert-image "/Users/jay/Dropbox/Pics/saved-from-iPhone/" (not arg)))
 
-(defun nx/insert-syncthing-photo (arg)
+;; Always copy, ignore prefix
+(defun org-copy-iphone-photo (arg)
+  (interactive "P")
+  (bjm/insert-image "/Users/jay/Dropbox/Pics/saved-from-iPhone/" t))
+
+;; Always copy, ignore prefix
+(defun org-move-iphone-photo (arg)
   (interactive "P")
   (bjm/insert-image "/Users/jay/Dropbox/Pics/saved-from-iPhone/" arg))
 
-(defun bjm/insert-image (image-dir copy)
-  "Insert image from conference directory, rename and add link in current file.
 
-The file is taken from a start directory set by `image-dir' and moved to the current directory, renamed and embedded at the point as an org-mode link. The user is presented with a list of files in the start directory, from which to select the file to move, sorted by most recent first."
-  (let (file-list target-dir file-list-sorted start-file start-file-full file-ext end-file end-file-base end-file-full file-number subfolder)
+(defun bjm/insert-image (image-dir copy)
+  "Insert image from conference directory, rename and add link in
+  current file.
+The file is taken from a start directory set by `image-dir' and
+copied/moved to the img subdirectory, renamed and embedded at the
+point as an org-mode link. The user is presented with a list of files
+in the start directory, from which to select the file to move, sorted
+by most recent first. The `copy` argument decides if it will be copied
+or moved"'
+  (interactive)
+  (let (file-list target-dir file-list-sorted start-file
+                  start-file-full file-ext end-file end-file-base end-file-full
+                  file-number subfolder)
     (setq subfolder "img")
     ;; clean directories from list but keep times
     (setq file-list
