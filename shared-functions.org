@@ -461,6 +461,64 @@ Haven't used this next one:
 #+END_SRC
 
 
+*** Typography - new
+**** TODO Replace smart quotes with straight quotes
+Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
+#+BEGIN_EXAMPLE emacs-lisp
+(defun replace-smart-quotes-new-experiment-doesn't-work (begin end)
+  (interactive "r")
+  (xah-replace-pairs-region begin end
+			    '(
+			      ["do not" "don't"]
+
+			      ["\x201C"  "\""]
+			      ["\x201D"  "\""]
+			      ["\x2018"  "'"]
+			      ["\x2019"  "'"]
+			      ["’"  "'"]
+			      [" — "  "---"]
+			      [" - "  "---"]
+			      ["—"  "---"]
+			      ["''"  "\""]
+			      [" – "  "---"]
+			      ["​"  ""]
+			      ["…"  ""]
+			      ["• "  "- "]
+			      [" "  ""]
+			      ["  "  " "]
+
+			      ["ó"  "-"]
+			      ["á"  "-"]
+			      ["Õ"  "'"]
+			      ["Õ"  "'"]
+			      ["Ò"  "\""]
+			      ["Ó"  "\""]
+
+			      ["―"  "\""]
+			      ["‖"  "\""]
+			      ;; ("- " . "") ; also remove stray spac- es
+			      ;; ("­ " . "") ; also remove stray spac- es
+			      ))
+  (xah-replace-regexp-pairs-region begin end
+                                   		      [".+ - "  "\1---"]
+
+)
+)
+
+
+#+END_EXAMPLE
+
+**** Paste and replace quotes
+Haven't used this next one:
+#+BEGIN_SRC emacs-lisp
+(defun paste-and-replace-quotes ()
+  "Yank (paste) and replace smart quotes from the source with ascii quotes."
+  (interactive)
+  (clipboard-yank)
+  (replace-smart-quotes (mark) (point)))
+#+END_SRC
+
+
 *** Indentation
 
 Automatically indenting yanked text if in programming-modes:
