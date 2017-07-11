@@ -1,0 +1,41 @@
+Hi Serj,
+
+Can you take a look at the function replace-smart-quotes
+
+This is mostly working as I want it to, except for two things:
+
+First, this line:
+
+: (" - " . "---")
+
+
+This works correctly most of the time. For instance, if I have a sentence like this:
+
+: This is the most important thing - to be a good person.
+
+It correctly changes it to this:
+
+: This is the most important thing---to be a good person.
+
+However, I want to make it do this ONLY when it is NOT at the beginning of a line.
+
+Currently, if I have a line like this:
+
+:   - this is a bullet item
+
+It incorrectly gets replaced with this:
+:  ---this is a bullet item
+
+That's not what I want.
+
+Can you adjust the function so that it replaces " - " with "---" ONLY when there is other text at the beginning of the line?
+
+Also, can you add a that deletes the string "- " but ONLY IF it comes in the middle of a word, like this:
+: spac- es
+
+So that again, bullet items like this:
+: - this is a bullet item
+
+...are unaffected?
+
+Thanks!!
