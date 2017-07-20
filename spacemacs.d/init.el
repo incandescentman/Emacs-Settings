@@ -794,7 +794,7 @@ layers configuration. This is the place where most of your configurations should
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
 ;; '(org-code ((t (:family "Courier" :height 1.1))))
- '(org-code ((t (:family "Courier" :height 1.4))))
+
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))

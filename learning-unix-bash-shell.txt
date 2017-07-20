@@ -1,3 +1,5 @@
+* SED
+
 find . -type f -name '*.html' -exec sed -i '' 's/foo/bar/g' {} + 
 
 
@@ -6,3 +8,40 @@ A; B  Run A and then B, regardless of success of A
 A && B Run B if A succeeded
 A || B Run B if A failed
 A &   Run A in background. 
+
+
+* Google Maps
+
+https://google.com/maps/search/your search string
+
+You can use the new URL for Google Maps: https://www.google.com/maps/@39.774769,-74.86084,18z equivalent to
+
+39.774769 is the latitude and -74.86084 is longitude and 18z is 18 zoom level.
+
+
+** Place/Address
+The most basic is a simple destination. This will link directly to an address.
+
+: https://www.google.com/maps/place/760+West+Genesee+Street+Syracuse+NY+13204
+
+** Directions (detect user's current location as starting point)
+By simply including "Current Location" in the starting point input field, Google will detect the user's location and automatically generate directions based on where they are right now. The string "My Location" can also work, but "Current Location" seems to have a higher success rate.
+
+: https://www.google.com/maps/dir/Current+Location/760+West+Genesee+Street+Syracuse+NY+13204
+
+** Query Search
+You could link to a search query of nearby places of an address or in this case coordinates. Change the "q=food" to whatever search you'd like. You can control the default zoom level with ",14z" or "&z=14 at the end of the URL (Zoom range is 0–19. 0 = Furthest Away, 19 = Closest In).
+
+: https://www.google.com/maps/search/food/43.12345,-76.12345,14z
+
+
+** parameters
+These are the parameters to add at the end of the directions URL for the different modes of transportation
+
+Car              /data=!4m2!4m1!3e0
+Bicycling        /data=!4m2!4m1!3e1
+Walking          /data=!4m2!4m1!3e2
+Public Transit   /data=!4m2!4m1!3e3
+Airplane         /data=!4m2!4m1!3e4
+
+For example https://www.google.com/maps/dir/747+Howard+St,+San+Francisco,+CA/55+Music+Concourse+Dr,+San+Francisco,+CA/data=!4m2!4m1!3e3

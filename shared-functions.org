@@ -928,6 +928,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
+        (sequence "|" "CANCELED" )
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|")
         (sequence "QUESTION" "|" "ANSWERED")
@@ -1652,7 +1653,6 @@ To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
 (use-package auto-capitalize)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode) 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 #+END_SRC
 
 ** Define my default directory:
@@ -5185,8 +5185,12 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 
 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'css-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
+
+
   #+END_SRC
 
 

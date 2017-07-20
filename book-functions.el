@@ -33,7 +33,7 @@
 ;; (setq jays-library-source-1 (helm-cmd-t-get-create-source-dir "/Users/jay/Music/iTunes/iTunes Media/Books"))
 ;; (setq jays-library-source-2 (helm-cmd-t-get-create-source-dir "/Users/jay/iBooks2"))
 
-(setq jays-library-public (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/Public/library"))
+;; (setq jays-library-public (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/Public/library"))
 
 (setq emacs-settings (helm-cmd-t-get-create-source-dir "/Users/jay/gnulisp"))
 
