@@ -730,3 +730,21 @@ etc
 - start with slash, end with colon
 - don't have to go to beginning of line and kill it. Just type slash
 - M-x shell works even on remote machines
+
+* use-package
+
+[[https://github.com/jwiegley/use-package/issues/121][How to bind keys with use-package bind in mode maps? · Issue #121 · jwiegley/use-package]]
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package term
+ :bind (:map term-mode-map
+     ("M-p" . term-send-up)
+     ("M-n" . term-send-down)
+     :map term-raw-map
+     ("M-o" . other-window)
+     ("M-p" . term-send-up)
+     ("M-n" . term-send-down)))
+
+
+#+END_SRC

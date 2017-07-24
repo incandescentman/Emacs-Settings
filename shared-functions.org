@@ -1390,12 +1390,12 @@ Make org-capture open in full window! :-)
 (setq org-pomodoro-length 25)
 (setq org-pomodoro-short-break-length 5) 
 (setq org-pomodoro-long-break-length 30) 
-(setq org-pomodoro-long-break-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
+(setq org-pomodoro-long-break-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
 (setq org-pomodoro-short-break-sound "/Users/jay/Dropbox/audio/sounds/beach-05.mp3")
 
-(setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
+(setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
 
 
@@ -5427,6 +5427,8 @@ event of an error or nonlocal exit."
  (define-key mc/keymap (kbd ".") 'insert-period)
  (define-key mc/keymap (kbd ",") 'insert-comma)
  (define-key mc/keymap (kbd "SPC") 'insert-space)
+(define-key mc/keymap (kbd "<return>") 'smart-return)
+(define-key mc/keymap (kbd "<backspace>") 'my/delete-backward)
 #+END_SRC
 
 
@@ -7454,15 +7456,17 @@ To use this, just write your org links in the following way (optionally adding a
 
 * help-mode
 #+BEGIN_SRC emacs-lisp
+
 (use-package help-mode
 
-:bind (:help-mode-map
-("s-]" . help-go-forward)
+:bind (:help-map
 ("s-[" . help-go-back)
-)
+("s-]" . help-go-forward)))
 
+;; doesn't work
 
-)
+(define-key help-mode-map (kbd "s-[") 'help-go-back)
+
 #+END_SRC
 
 

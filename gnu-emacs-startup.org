@@ -435,7 +435,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j n s") 'yas/new-snippet)
+
 (define-key key-minor-mode-map (kbd "s-j c m") 'css-mode)
+(define-key key-minor-mode-map (kbd "s-j s h") 'sh-mode)
+(define-key key-minor-mode-map (kbd "s-j s m") 'sh-mode)
 
 (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 
