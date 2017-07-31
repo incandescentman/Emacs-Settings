@@ -1395,7 +1395,10 @@ Make org-capture open in full window! :-)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
 (setq org-pomodoro-short-break-sound "/Users/jay/Dropbox/audio/sounds/beach-05.mp3")
 
-(setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
+;; (setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
+
+(setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/Horse-Gallop.mp3")
+
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a") 
 
 

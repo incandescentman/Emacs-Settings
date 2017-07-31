@@ -436,8 +436,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; mk - mykeybindings
 
 (define-key key-minor-mode-map (kbd "s-j n s") 'yas/new-snippet)
+(define-key key-minor-mode-map (kbd "s-j y n") 'yas/new-snippet)
 
 (define-key key-minor-mode-map (kbd "s-j c m") 'css-mode)
+;; (define-key css-mode-map (kbd "s-j c s") 'css-mode)
 (define-key key-minor-mode-map (kbd "s-j s h") 'sh-mode)
 (define-key key-minor-mode-map (kbd "s-j s m") 'sh-mode)
 
@@ -521,7 +523,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring)
 
 
-(define-key key-minor-mode-map (kbd "s-j c s") 'org-clone-subtree)
+(define-key org-mode-map (kbd "s-j c s") 'org-clone-subtree)
 (define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree)
 (define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree)
 (define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree)
@@ -3737,6 +3739,8 @@ M-1 to 9
   (replace-string "È" "\"" nil (point-min) (point-max))
   (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
   (replace-string "ó" "-" nil (point-min) (point-max))
+
+  (replace-string " Ñ " "---" nil (point-min) (point-max))
 
 
   (replace-string "á" "-" nil (point-min) (point-max))
