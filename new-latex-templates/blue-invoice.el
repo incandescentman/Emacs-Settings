@@ -128,6 +128,10 @@
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
 
+\\setlength{\\tabcolsep}{10pt} % Default value: 6pt
+\\renewcommand{\\arraystretch}{1.6} % Default value: 1
+
+
 \\renewcommand\\maketitle{}
 
 

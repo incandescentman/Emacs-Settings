@@ -748,3 +748,11 @@ etc
 
 
 #+END_SRC
+
+
+* changing the case in regex search and replace
+
+
+<h2 class="calibre27"><span class="calibre28">\(.*?\)</span></h2>
+
+<h2 class="calibre27"><span class="calibre28">\,(capitalize \1)</span></h2>

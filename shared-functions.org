@@ -1085,31 +1085,31 @@ This is working correctly:
 "\n\n* %U\n %i\n %?\nEntered on %U %i\n" :prepend t :kill-buffer t)
 
 ("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
 ("W" "Wise Mind" entry (file "wisemind.txt")
 	 "\n\n* wm%?\n" :prepend t :kill-buffer t)
 
 	("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
 ("k" "nika" entry (file "nika-capture.txt")
-	 "\n\n* %U\n %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* %U\n %i\n %?\n" :prepend t :kill-buffer t)
 
 	("h" "historical interest" entry (file "historical-lifestream.txt")
-	 "\n\n* %U\n  %i\n %?\nEntered on %U  %i\n" :prepend t :kill-buffer t)
+	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
 	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
 	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	 "\n\n\n\n* %U\n\n%?" :prepend t :kill-buffer t)
 
 	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
 	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
 	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U  %i\n\n" :prepend t :kill-buffer t)
+	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
 
 	("t" "Taper" entry (file "taper.txt")
@@ -7492,7 +7492,7 @@ To use this, just write your org links in the following way (optionally adding a
 
 * display and copy emacs version info
 #+BEGIN_SRC emacs-lisp
-(defun emacs-version-display-and-copy ()
+(defun spacemacs-version-display-and-copy ()
  "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
  (interactive)
 (setq system-version
@@ -7502,6 +7502,24 @@ To use this, just write your org links in the following way (optionally adding a
  (kill-new
    (message "Mac OSX Sierra version %s, Spacemacs version %s, Emacs version %s, org-mode version %s"
        system-version spacemacs-version emacs-version org-version))
+ (push-kill-ring-pasteboard-to-clipboard)
+)
+#+END_SRC
+
+See also spacemacs/describe-system-info
+
+* display and copy emacs version info
+#+BEGIN_SRC emacs-lisp
+(defun emacs-version-display-and-copy ()
+ "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
+ (interactive)
+(setq system-version
+ (substring
+ (shell-command-to-string "defaults read loginwindow SystemVersionStampAsString")
+ 0 -1))
+ (kill-new
+   (message "Mac OSX Sierra version %s, Emacs version %s, org-mode version %s"
+       system-version emacs-version org-version))
  (push-kill-ring-pasteboard-to-clipboard)
 )
 #+END_SRC
@@ -7609,3 +7627,54 @@ See also spacemacs/describe-system-info
   (pcre-to-elisp
   (regexp-opt (split-string words)))))
 #+END_SRC
+
+
+* message-mode tab
+
+#+BEGIN_SRC emacs-lisp
+(autoload 'mail-hist-forward-header "mail-hist")
+(autoload 'mail-text-start  "sendmail")
+
+(defun my-message-signature-start ()
+ "Return value of point at start of message signature."
+ (save-mark-and-excursion
+ (message-goto-signature)
+ (point)))
+
+(defun my-message-field-forward ()
+ "Move point to next \"field\" in a `message-mode' buffer.
+With each invocation, point is moved to the next field of
+interest amongst header values, message body and message
+signature, in that order."
+ (interactive)
+ (cond ((message-point-in-header-p)
+  (unless (mail-hist-forward-header 1)
+  (message-goto-body) (point)))
+ ((>= (point) (my-message-signature-start))
+  (message "No further field"))
+ ((message-in-body-p)
+  (message-goto-signature))
+ (t ; Probably on `mail-header-separator' line
+  (message-goto-body) (point))))
+
+(defun my-message-field-backward ()
+ "Like `my-message-field-forward', but in opposite direction."
+ (interactive)
+ (cond ((or (message-point-in-header-p)
+  (<= (point) (mail-text-start)))
+  (unless (mail-hist-forward-header
+   (if (message-point-in-header-p) -1 0))
+  (message "No further field")))
+ ((<= (point) (my-message-signature-start))
+  (message-goto-body) (point))
+ (t ; Beyond start of signature
+  (message-goto-signature))))
+
+
+
+#+END_SRC
+
+(with-eval-after-load 'message
+ (define-key message-mode-map "\t" #'my-message-field-forward)
+ (dolist (key '(message-tab backtab S-tab S-iso-lefttab))
+ (define-key message-mode-map (vector key) #'my-message-field-backward)))
