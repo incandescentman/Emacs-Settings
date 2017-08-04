@@ -3421,7 +3421,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
 (setq projectile-globally-ignored-buffers (quote ("docx ")))
-(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf" "pptx")))
+(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf" "pptx" "tmp")))
 (setq projectile-globally-ignored-directories
    (quote
     (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn"".tmp" "archived-work" "images" "excel-mindnode-omni" "archive")))
@@ -7611,7 +7611,7 @@ See also spacemacs/describe-system-info
  ["Jay Dixit: " "** Jay Dixit\n"]
  ["me: " "** Jay Dixit\n"]
  ["Benjamin: " "** Benjamin Carp\n"]
- ["Benjamin: " "** Benjamin Carp\n"]
+ ["Benjamin: " "** Ben Bechar\n"]
  )))
 
 #+END_SRC

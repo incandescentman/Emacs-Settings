@@ -682,7 +682,7 @@ layers configuration. This is the place where most of your configurations should
 
 (leuven)
   ;; (spacemacs-light)
-(zenburn)
+;; (zenburn)
 
 
   (setq global-auto-complete-mode -1)
