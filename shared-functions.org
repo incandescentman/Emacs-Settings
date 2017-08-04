@@ -7611,6 +7611,7 @@ See also spacemacs/describe-system-info
  ["Jay Dixit: " "** Jay Dixit\n"]
  ["me: " "** Jay Dixit\n"]
  ["Benjamin: " "** Benjamin Carp\n"]
+ ["Benjamin: " "** Benjamin Carp\n"]
  )))
 
 #+END_SRC
