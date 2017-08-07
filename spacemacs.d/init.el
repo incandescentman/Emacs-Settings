@@ -801,3 +801,78 @@ layers configuration. This is the place where most of your configurations should
  '(org-level-1 ((t (:family "Courier" :weight normal))))
  '(org-link ((t (:underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))) t))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-confirm-babel-evaluate nil)
+ '(org-latex-active-timestamp-format "{%s}")
+ '(package-selected-packages
+   (quote
+    (symon string-inflection password-generator org-brain helm-purpose window-purpose evil-lion editorconfig org-mac-link request regex-tool ox-gfm beacon org-projectile-helm org-category-capture spaceline powerline flycheck-pos-tip pos-tip flycheck notmuch spotify dash s winum ag ox-tufte org-sticky-header f visual-fill-column es-windows es-lib peg gh marshal logito pcache makey dired-details macrostep elisp-slime-nav auto-compile packed solarized-theme ht log4e gntp madhat2r-theme gitignore-mode autothemer auto-complete ox-clip avy hydra tldr yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode anaconda-mode pythonic ox-reveal frame-fns highlight smartparens alert projectile w3m company async web-mode use-package tango-plus-theme spacemacs-theme polymode org-download multiple-cursors mu4e-maildirs-extension move-text imenu-list gotham-theme git-link evil-ediff darktooth-theme counsel swiper apropospriate-theme expand-region evil ivy yasnippet helm helm-core magit magit-popup git-commit zonokai-theme zenburn-theme zen-and-art-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region with-editor window-numbering which-key wc-mode uuidgen unfill undo-tree underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tiny tao-theme tangotango-theme tango-2-theme tabbar sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle seti-theme scratch-message scratch rspec-mode reverse-theme restart-emacs rainbow-mode rainbow-delimiters railscasts-theme quelpa purple-haze-theme project-explorer professional-theme point-stack planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pastels-on-dark-theme paredit paradox palimpsest ox-twbs orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-fstree org-bullets org-bookmark-heading openwith open-junk-file omtose-phellack-theme olivetti oldlace-theme occidental-theme obsidian-theme noctilux-theme nm niflheim-theme neotree naquadah-theme mustang-theme multicolumn mu4e-alert monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme maxframe material-theme majapahit-theme magit-gitflow lush-theme lorem-ipsum linum-relative link-hint light-soap-theme key-chord jbeans-theme jazz-theme ir-black-theme inkpot-theme info+ indent-guide ido-vertical-mode ido-hacks hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers hide-comnt heroku-theme hemisu-theme help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme goto-chg google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gist gandalf-theme fuzzy frame-cmds fountain-mode flyspell-lazy flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fastdef farmhouse-theme fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-args evil-anzu eval-sexp-fu espresso-theme dumb-jump dracula-theme django-theme discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme csv-mode crux company-statistics command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode cherry-blossom-theme cheatsheet change-inner caps-lock busybee-theme buffer-stack bubbleberry-theme bongo birds-of-paradise-plus-theme bind-key badwolf-theme auto-yasnippet auto-highlight-symbol auto-capitalize anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((org-inline-image-overlays)
+     (org-latex-caption-above)
+     (org-hide-emphasis-markers . t)
+     (org-latex-title-command . "")
+     (org-hide-macro-markers . t)
+     (org-fontify-quote-and-verse-blocks . t)
+     (eval org-sbe "latex-link")
+     (eval org-sbe "latex-opt-link")
+     (eval org-sbe "jk-keywords")
+     (eval org-sbe "pdf-process-bibtex")
+     (eval org-sbe "ngz-nbsp")
+     (eval org-sbe "latex-filter-footcites")
+     (eval org-sbe "biblatex-cite-link")
+     (eval org-sbe "biblatex-textcite-link")
+     (eval org-sbe "biblatex-parencite-link")
+     (eval org-sbe "biblatex-sidecite-link")
+     (eval org-sbe "biblatex-multicite-link")
+     (eval org-sbe "biblatex-footcite-link")
+     (eval org-sbe "tufte-ebib-setup")
+     (eval org-sbe "tufte-handout")
+     (eval org-sbe "tufte-book")
+     (eval org-sbe "user-entities")
+     (eval ox-extras-activate
+           (quote
+            (ignore-headlines)))
+     (eval require
+           (quote ox-gfm))
+     (eval require
+           (quote ox-extra))
+     (eval require
+           (quote ox-tufte-latex))
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           (quote insert-space))
+     (eval define-key org-mode-map
+           (kbd ":")
+           (quote insert-colon))
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           (quote insert-space))))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(beacon ((t (:inherit highlight))))
+ '(bold ((t (:inherit font-lock-warning-face :family "Sans Serif" :weight bold :height 1.1))))
+ '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+ '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+ '(org-level-1 ((t (:family "Courier" :weight normal))))
+ '(org-link ((t (:underline nil))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
+)

@@ -1404,7 +1404,7 @@ Make org-capture open in full window! :-)
 
 
 ;; (add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
-(add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
+;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
 ;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
 ;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
 ;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
@@ -2387,27 +2387,27 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   )
 
 
-(defun jd-org-today () 
+(defun jd-org-today ()
   "insert a new heading with today's date"
   (interactive)
-(smart-org-meta-return-dwim) 
+(smart-org-meta-return-dwim)
   (org-insert-time-stamp (current-time))
 (insert "\n")
 )
 
 
-(defun jd-org-approach () 
+(defun jd-org-approach ()
  "insert a new heading with today's date"
  (interactive)
-(insert "\n** ") 
+(insert "\n** ")
  (org-insert-time-stamp (current-time))
 (insert "\n")
-(insert "*** TODO morning pages\n") 
-(insert "*** TODO meditate\n") 
-(insert "*** TODO work on book\n") 
-(insert "**** TODO pomodoro #1\n") 
-(insert "**** TODO pomodoro #2\n") 
-(insert "*** TODO an approach\n") 
+(insert "*** TODO morning pages\n")
+(insert "*** TODO meditate\n")
+(insert "*** TODO work on book\n")
+(insert "**** TODO pomodoro #1\n")
+(insert "**** TODO pomodoro #2\n")
+(insert "*** TODO an approach\n")
 )
 
 
@@ -2418,8 +2418,9 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 
-(insert "*** TODO wake up by 8:30am\n")
-(insert "*** TODO blue light\n")
+;; (insert "*** TODO wake up by 8:30am\n")
+;; (insert "*** TODO blue light\n")
+
 (insert "*** TODO morning pages\n")
 (insert "*** TODO bookwriting [0/8]\n")
 (insert "**** TODO bookwriting #1\n")
