@@ -520,7 +520,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
-(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-full-path-to-kill-ring)
+(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-path-to-kill-ring)
 
 
 (define-key org-mode-map (kbd "s-j c s") 'org-clone-subtree)
@@ -644,7 +644,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
-(define-key key-minor-mode-map (kbd "s-|") 'path-copy-full-path-to-clipboard)
+(define-key key-minor-mode-map (kbd "s-|") 'path-copy-path-to-clipboard)
 
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 

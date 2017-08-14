@@ -2811,7 +2811,7 @@ A useful function: remove a hyperlink but leave the link description:
 ** Copy path
 Useful for working with files and references:
 #+BEGIN_SRC emacs-lisp
-(defun path-copy-full-path-to-clipboard ()
+(defun path-copy-path-to-clipboard ()
   "Copy the full current filename and path to the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
@@ -2829,7 +2829,7 @@ Useful for working with files and references:
 ** Copy path with quotes
 Useful for working with files and references:
 #+BEGIN_SRC emacs-lisp
-(defun path-copy-full-path-to-clipboard-with-quotes ()
+(defun path-copy-path-to-clipboard-with-quotes ()
   "Copy the full current filename and path to the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
@@ -3136,8 +3136,8 @@ Key bindings I don't use much and should remember to learn:
 ;; (define-super-key "o" 'eval-buffer)
 (define-super-key "F" 'pasteboard-search-for-clipboard-contents)
 (define-super-key "(" 'org-velocity)
-(define-super-key "{" 'path-copy-full-path-to-clipboard)
-(define-super-key "}" 'path-copy-full-path-to-clipboard)
+(define-super-key "{" 'path-copy-path-to-clipboard)
+(define-super-key "}" 'path-copy-path-to-clipboard)
 ;; why not use N and P here? TODO
 
 
