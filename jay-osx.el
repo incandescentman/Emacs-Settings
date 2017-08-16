@@ -29,6 +29,10 @@
 (define-key key-minor-mode-map (kbd "s-q") 'save-buffers-kill-terminal)
 (define-key key-minor-mode-map (kbd "s-f") 'isearch-forward)
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
+(define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer)
+
+(delete-selection-mode 1)
+
 
 (setq mac-pass-command-to-system nil)
 
