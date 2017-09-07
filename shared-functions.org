@@ -1525,18 +1525,6 @@ text-transform:capitalize; font-weight:bold;")))
 ;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
 (local-set-key "\M-p" 'org-mime-htmlize)))
 
-(defun mime-send-mail ()
-      "org-mime-subtree and HTMLize"
-      (interactive)
-(org-narrow-to-subtree)
-(end-of-buffer)
-(insert "\n\n---\nJay Dixit
-[[http://jaydixit.com/][jaydixit.com]]
-(646) 355-8001\n")
-(widen)
-(org-mime-subtree)
-(org-mime-htmlize)
-)
 #+END_SRC
 
 
@@ -3421,7 +3409,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 :config
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
-(setq projectile-globally-ignored-buffers (quote ("docx ")))
+;; (setq projectile-globally-ignored-buffers (quote ("docx ")))
 (setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf" "pptx" "tmp")))
 (setq projectile-globally-ignored-directories
    (quote
