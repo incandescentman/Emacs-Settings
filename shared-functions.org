@@ -1427,7 +1427,7 @@ Make org-capture open in full window! :-)
 ** ~org-mime~
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-mime)
+;; (require 'org-mime)
 (setq org-mime-default-header "")
 
 ;; put a div tag around the whole message to put it in Georgia font.
