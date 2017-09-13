@@ -774,6 +774,21 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
    #+END_SRC 
 
+** org-html-export-to-html-and-open
+I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
+
+ (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
+
+The post-processing step is handed the path to your new file; you could use something as straight-forward as `find-file`:
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-html-export-to-html-and-open
+   (&optional async subtreep visible-only body-only ext-plist)
+   (interactive)
+   (let ((outfile (org-export-output-file-name ".html" subtreep)))
+    (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
+#+END_SRC
+
 *** Change section numbering depending on what export format I use
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.

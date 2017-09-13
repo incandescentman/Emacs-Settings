@@ -446,7 +446,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 
 (define-key key-minor-mode-map (kbd "s-i") 'avy-goto-char)
-(define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
+(define-key key-minor-mode-map (kbd "s-p") 'org-html-export-to-html-and-open)
+
+
 
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
