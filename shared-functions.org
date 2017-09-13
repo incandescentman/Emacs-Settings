@@ -5874,7 +5874,8 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
 (looking-back "e.g.[ ]*") 
 (looking-back "vs.[ ]*") 
 (looking-back "U.K.[ ]*") 
-(looking-back "vs.[ ]*") 
+(looking-back "vs.[ ]*")
+(looking-back "^")
 )
     (call-interactively 'downcase-word); then
     (call-interactively 'endless/downcase); else
