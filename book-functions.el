@@ -110,7 +110,7 @@ emacs-settings)))
   (kill-buffer "top-performer.org")
   (error nil))
 ;; (adobe-garamond-pro)
-;; (org-cycle-agenda-files)
+(org-cycle-agenda-files)
 )
 
 
