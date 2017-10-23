@@ -1037,6 +1037,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ** smart-space
 #+BEGIN_SRC emacs-lisp
+(defun smart-period-or-smart-space ()
+"double space adds a period!"
+(interactive)
+  (if
+(looking-back "[A-Za-z0-9] ")
+(smart-period)
+(smart-space)
+))
+
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
@@ -1062,13 +1071,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
        ))
   (smart-expand))
 
-(if
-(looking-back "[A-Za-z0-9] ")
-(smart-period)
-;; double space adds a period!
-
 (insert "\ ")
-(just-one-space))
+(just-one-space)
 )
 
 
@@ -1096,8 +1100,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'smart-space)
-(define-key orgstruct-mode-map (kbd "<SPC>") 'smart-space)
+(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+(define-key orgstruct-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 (define-key orgstruct-mode-map (kbd "<M-SPC>") 'insert-space)
