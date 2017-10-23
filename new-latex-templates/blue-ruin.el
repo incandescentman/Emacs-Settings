@@ -38,6 +38,7 @@
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
 \\definecolor{signalflare}{HTML}{FB782C}
 \\definecolor{niceorange}{HTML}{77CC6D}
+\\definecolor{highlighteryellow}{HTML}{FFFF01}
 \\definecolor{ghostlygrey}{HTML}{000000}
 \\definecolor{firstcolor}{HTML}{00ADEF}
 \\definecolor{secondcolor}{HTML}{DD3E74}
@@ -55,8 +56,8 @@
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={FB782C}]{Gotham Narrow Bold}
-\\newfontfamily\\myauthorfont[Color={FB782C}]{Gotham Narrow Bold}
+\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Gotham Narrow Bold}
+\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Gotham Narrow Bold}
 \\newfontfamily\\mybluefont[Color=electricblue]{Gotham Narrow Bold}
 \\DeclareTextFontCommand{\\textbf}{\\bfseries\\color{electricblue}}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
@@ -97,12 +98,13 @@
     \\newline
           {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
         \\newline
-{\\myauthorfont\\Large {Storytelling NYC}}
+{\\myauthorfont\\Large
+\\href{http://storytelling.nyc}{Storytelling.NYC}}
 \\newline
 {\\myauthorfont\\Large © 2017 \\@author}
     \\newline
-{\\myauthorfont\\Large Private and Confidential}
-    \\newline
+%{\\myauthorfont\\Large Private and Confidential}
+ %   \\newline
         \\newline
     {\\myauthorfont\\Large \\@date\\par}
 %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree }}

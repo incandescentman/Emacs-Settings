@@ -1043,8 +1043,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (cond (mark-active
  (progn (delete-region (mark) (point)))))
 
-
-
 ;; (if (org-at-heading-p)
  ;;    (insert-normal-space-in-org-heading)
 
@@ -1063,8 +1061,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
        ))
   (smart-expand))
+
+(if
+(looking-back "[A-Za-z0-9] ")
+(smart-period)
+;; double space adds a period!
+
 (insert "\ ")
-  (just-one-space))
+(just-one-space))
+)
 
 
 

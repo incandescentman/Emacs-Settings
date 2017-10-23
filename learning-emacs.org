@@ -756,3 +756,49 @@ etc
 <h2 class="calibre27"><span class="calibre28">\(.*?\)</span></h2>
 
 <h2 class="calibre27"><span class="calibre28">\,(capitalize \1)</span></h2>
+
+
+* org table
+
+
+
+** sum
+The last row of a table is @> For example to get the sum for the third column in the last line, you can use the formula
+
+@>$3=vsum(@2..@-1)
+
+
+** math
+#+TBLFM: $3=$2/300;%.0f
+
+;%.0f means number of decimal places. 0
+;%.2f would be 2
+
+
+* add Emacs to open-with for .html files
+
+Add this to the CFBundleDocumentTypes array in file:///usr/local/Cellar/emacs-mac/emacs-25.1-rc1-mac-5.90/Emacs.app/Contents/Info.plist
+
+
+#+BEGIN_EXPORT xml
+<dict>
+ <key>CFBundleTypeExtensions</key>
+ <array>
+  <string>html</string>
+ </array>
+</dict>
+#+END_EXPORT
+
+Then do this:
+
+#+BEGIN_SRC sh
+/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /usr/local/Cellar/emacs-mac/emacs-25.1-rc1-mac-5.90/Emacs.app/
+
+killall Finder
+#+END_SRC
+
+
+* web design
+
+Image result for facebook og image size aspect ratio
+Facebook recommends 1200 x 630 pixels for the og:image dimensions (info), which is an approximate aspect ratio of 1.91:1.Aug 19, 2014

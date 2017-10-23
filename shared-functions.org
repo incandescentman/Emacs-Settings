@@ -774,6 +774,15 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 
    #+END_SRC 
 
+
+** Highlight latex text in org mode
+Ben Maughan
+Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appear in a different colour in an org-mode file to help it stand out.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-highlight-latex-and-related '(latex))
+#+END_SRC
+
 ** org-html-export-to-html-and-open
 I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
 
@@ -953,6 +962,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "NOTES" "RESEARCH" "POINT" "NARRATIVE" "ANECDOTE" "WRITING" "|")
         (sequence "PART" "HED" "HEDTK" "|")
         (sequence "IF" "THEN" "|")
+        (sequence "COWRITE" "|" "DONE")
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
 (sequence "Practice:" "Demo:" "Debrief:" "Breakout:" "Critique:" "Workshop:" "|" "Lecture")
         ))
@@ -2424,8 +2434,8 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (org-insert-time-stamp (current-time))
   (insert " [0%]\n")
 
-;; (insert "*** TODO wake up by 8:30am\n")
-;; (insert "*** TODO blue light\n")
+(insert "*** TODO wake up by 8:30am\n")
+(insert "*** TODO blue light\n")
 
 (insert "*** TODO morning pages\n")
 (insert "*** TODO bookwriting [0/8]\n")
@@ -2897,7 +2907,10 @@ function I have a persistent buffer list available.
       ((and buffer-file-name (eq major-mode 'latex-mode)))
 ((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
 ((and buffer-file-name (eq major-mode 'fundamental-mode)))
+((and buffer-file-name (eq major-mode 'conf-mode)))
 ((and buffer-file-name (eq major-mode 'markdown-mode)))
+((and buffer-file-name (eq major-mode 'js2-mode)))
+((and buffer-file-name (eq major-mode 'json-mode)))
 ((and buffer-file-name (eq major-mode 'conf-mode))) 
 ((and buffer-file-name (eq major-mode 'conf-mode)))
 ((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
@@ -3746,7 +3759,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
                  (- (point) 20)))))))
 
 #+END_SRC 
@@ -4560,7 +4573,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 (defun yale-compose ()
   (interactive)
   (setq message-send-mail-function (quote message-send-mail-with-sendmail)) 
-(setq user-mail-address "dixit@aya.yale.edu") 
+(setq user-mail-address "jay@storytelling.nyc")
 (compose-mail) 
   )
 
@@ -5199,6 +5212,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'css-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
 
 
   #+END_SRC
