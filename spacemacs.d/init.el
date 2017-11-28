@@ -57,9 +57,9 @@ This function should only modify configuration layer settings."
      ;;   xkcd
 
      smex
-     ;;   (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+       (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
      ;;   spell-checking
      syntax-checking ; this is the layer with flycheck
      ;;   version-control
@@ -141,7 +141,6 @@ This function should only modify configuration layer settings."
                                       openwith
                                       org-bookmark-heading
                                       org-fstree
-                                      org-mac-link
                                       org-mime
                                       org-projectile
                                       org-projectile-helm
@@ -747,7 +746,7 @@ layers configuration. This is the place where most of your configurations should
   ;; (horizontal-cursor)
   (box-cursor)
   (incarnadine-cursor)
-  (scroll-bar-mode -1)
+  (scroll-bar-mode 1)
   (defun package--save-selected-packages (&rest opt) nil)
 
   (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
@@ -786,101 +785,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(fci-rule-color "#383838" t)
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
- '(org-agenda-files
-   (quote
-    ("~/Dropbox/writing/book/feb-18/ovulatory-shift-discards.txt" "~/Dropbox/writing/book/feb-18/ovulatory-shift.txt" "~/Dropbox/writing/notationaldata/accountability.org")))
- '(org-confirm-babel-evaluate nil)
- '(org-latex-active-timestamp-format "{%s}")
- '(org-pomodoro-ask-upon-killing nil)
  '(package-selected-packages
    (quote
-    (js2-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js-doc coffee-mode org-mime iedit sunshine symon string-inflection password-generator org-brain helm-purpose window-purpose evil-lion editorconfig org-mac-link request regex-tool ox-gfm beacon org-projectile-helm org-category-capture spaceline powerline flycheck-pos-tip pos-tip flycheck notmuch spotify dash s winum ag ox-tufte org-sticky-header f visual-fill-column es-windows es-lib peg gh marshal logito pcache makey dired-details macrostep elisp-slime-nav auto-compile packed solarized-theme ht log4e gntp madhat2r-theme gitignore-mode autothemer auto-complete ox-clip avy hydra tldr yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode anaconda-mode pythonic ox-reveal frame-fns highlight smartparens alert projectile w3m company async web-mode use-package tango-plus-theme spacemacs-theme polymode org-download multiple-cursors mu4e-maildirs-extension move-text imenu-list gotham-theme git-link evil-ediff darktooth-theme counsel swiper apropospriate-theme expand-region evil ivy yasnippet helm helm-core magit magit-popup git-commit zonokai-theme zenburn-theme zen-and-art-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region with-editor window-numbering which-key wc-mode uuidgen unfill undo-tree underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tiny tao-theme tangotango-theme tango-2-theme tabbar sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle seti-theme scratch-message scratch rspec-mode reverse-theme restart-emacs rainbow-mode rainbow-delimiters railscasts-theme quelpa purple-haze-theme project-explorer professional-theme point-stack planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pastels-on-dark-theme paredit paradox palimpsest ox-twbs orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-fstree org-bullets org-bookmark-heading openwith open-junk-file omtose-phellack-theme olivetti oldlace-theme occidental-theme obsidian-theme noctilux-theme nm niflheim-theme neotree naquadah-theme mustang-theme multicolumn mu4e-alert monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme maxframe material-theme majapahit-theme magit-gitflow lush-theme lorem-ipsum linum-relative link-hint light-soap-theme key-chord jbeans-theme jazz-theme ir-black-theme inkpot-theme info+ indent-guide ido-vertical-mode ido-hacks hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers hide-comnt heroku-theme hemisu-theme help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme goto-chg google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger gist gandalf-theme fuzzy frame-cmds fountain-mode flyspell-lazy flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fastdef farmhouse-theme fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-args evil-anzu eval-sexp-fu espresso-theme dumb-jump dracula-theme django-theme discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme csv-mode crux company-statistics command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode cherry-blossom-theme cheatsheet change-inner caps-lock busybee-theme buffer-stack bubbleberry-theme bongo birds-of-paradise-plus-theme bind-key badwolf-theme auto-yasnippet auto-highlight-symbol auto-capitalize anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-window ace-link ace-jump-helm-line ac-ispell)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(safe-local-variable-values
-   (quote
-    ((eval text-scale-increase 3)
-     (poetry-mode . t)
-     (org-inline-image-overlays)
-     (org-latex-caption-above)
-     (org-hide-emphasis-markers . t)
-     (org-latex-title-command . "")
-     (org-hide-macro-markers . t)
-     (org-fontify-quote-and-verse-blocks . t)
-     (eval org-sbe "latex-link")
-     (eval org-sbe "latex-opt-link")
-     (eval org-sbe "jk-keywords")
-     (eval org-sbe "pdf-process-bibtex")
-     (eval org-sbe "ngz-nbsp")
-     (eval org-sbe "latex-filter-footcites")
-     (eval org-sbe "biblatex-cite-link")
-     (eval org-sbe "biblatex-textcite-link")
-     (eval org-sbe "biblatex-parencite-link")
-     (eval org-sbe "biblatex-sidecite-link")
-     (eval org-sbe "biblatex-multicite-link")
-     (eval org-sbe "biblatex-footcite-link")
-     (eval org-sbe "tufte-ebib-setup")
-     (eval org-sbe "tufte-handout")
-     (eval org-sbe "tufte-book")
-     (eval org-sbe "user-entities")
-     (eval ox-extras-activate
-           (quote
-            (ignore-headlines)))
-     (eval require
-           (quote ox-gfm))
-     (eval require
-           (quote ox-extra))
-     (eval require
-           (quote ox-tufte-latex))
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           (quote insert-space))
-     (eval define-key org-mode-map
-           (kbd ":")
-           (quote insert-colon))
-     (org-html-head-include-scripts)
-     (org-export-allow-bind-keywords . t)
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           (quote insert-space)))))
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3"))
+    (use-package mu4e-maildirs-extension gist gh fountain-mode dumb-jump counsel evil ivy company helm helm-core projectile org-plus-contrib hydra f imenu-list zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen unfill undo-tree toc-org tldr tiny tabbar symon swiper stripe-buffer string-inflection solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements persp-mode pcre2el pcache password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectile-helm org-present org-pomodoro org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-alert move-text monokai-theme maxframe marshal macrostep lorem-ipsum logito livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag goto-chg google-translate golden-ratio gnuplot fuzzy frame-cmds flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cython-mode cyberpunk-theme crux company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo bind-key beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
- '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
- '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
- '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-level-1 ((t (:family "Courier" :weight normal))))
- '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
+ )
 )

@@ -46,6 +46,7 @@ Automatically load abbreviations table:
 
 ;; (set (make-local-variable 'abbrev-file-name) (expand-file-name "/Users/jay/emacs/aquamacs-jay/own-abbrevs.abbrev_defs"))
 (setq save-abbrevs t)
+(setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
 #+END_SRC
 
@@ -634,6 +635,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-q") 'prelude-switch-to-previous-buffer)
 
+(define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
+
+
 (define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
 (define-key key-minor-mode-map (kbd "C-M-[") 'org-previous-subtree-and-narrow)
 
@@ -769,7 +774,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
-(define-key key-minor-mode-map (kbd "C-t") 'transpose-words)
+(define-key key-minor-mode-map (kbd "M-t") 'transpose-words)
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
 
@@ -3718,6 +3723,7 @@ M-1 to 9
 "Replace goofy MS and other garbage characters with latin1 equivalents."
 (interactive)
 (save-excursion				;save the current point
+  (replace-string "  " " " nil (point-min) (point-max))
   (replace-string "΄" "\"" nil (point-min) (point-max))
   (replace-string "“" "\"" nil (point-min) (point-max))
   (replace-string "’" "'" nil (point-min) (point-max))
