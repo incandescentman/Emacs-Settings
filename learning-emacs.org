@@ -344,7 +344,8 @@ The below works!!!
 19:05 *** nocd JOIN
 19:06 <Guest53541> but instead of getting "foobar" like I would expect, it
           gets replaced just just "bar"
-19:06 <ham-peas> to substitute the entire match, use \&
+
+: to substitute the entire match, use \&
 
 
 
