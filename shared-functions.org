@@ -2279,7 +2279,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "elpa")
 (add-to-list 'recentf-exclude "gnugol")
 (add-to-list 'recentf-exclude "helm")
-(add-to-list 'recentf-exclude "-hours")
+;; (add-to-list 'recentf-exclude "-hours")
 (add-to-list 'recentf-exclude "ido")
 (add-to-list 'recentf-exclude "ido.hist")
 (add-to-list 'recentf-exclude "ido.last'")
@@ -7717,7 +7717,7 @@ signature, in that order."
 #+END_SRC
 
 
-* abbrev autocorrect and add to dictionary
+* abbrev autocorrect and add to dictionary (doesn't work yet)
 #+BEGIN_SRC emacs-lisp
 (define-key ctl-x-map "\C-i"
  #'endless/ispell-word-then-abbrev)
