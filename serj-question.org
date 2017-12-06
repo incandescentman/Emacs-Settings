@@ -1,5 +1,5 @@
 
-* task 1
+* DONE task 1A
 Hi Serj,
 
 Can you take a look at the function replace-smart-quotes
@@ -32,18 +32,33 @@ That's not what I want.
 
 Can you adjust the function so that it replaces " - " with "---" ONLY when there is other text at the beginning of the line?
 
+
+
+* TODO task 1B
 Also, can you add a line of code that deletes the string "- " but ONLY IF it comes in the middle of a word, like this:
 : spac- es
 
-So that again, bullet items like this:
+So that
+
+: spac- es
+
+would become:
+
+: spaces
+
+but again, in a way so that bullet items like this:
 : - this is a bullet item
 
 ...are unaffected?
 
+I am guessing it will involve some kind of regex search for a string that looks like:
+
+"[:alphanumeric:]- "
+
 Thanks!!
 
 
-* task 2
+* TODO task 2
 I use flyspell-auto-correct-word to quickly correct typos. I use like the flyspell-auto-correct-word command (which I have bound to the ~`~ key) because I invoke it once to get a spelling suggestion, then invoke it again to get the next suggestion, and so on. In this way, I can scroll through various spelling suggestions by hitting the  ~`~ key several times. This works well.
 
 However, I would like to make it so that the correction that I choose automatically gets added to my abbrev-list in abbrev-mode. This used to work automatically, but no longer does.
