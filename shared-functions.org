@@ -409,6 +409,24 @@ is this still necessary?
 **** TODO Replace smart quotes with straight quotes
 Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 #+BEGIN_SRC emacs-lisp
+
+(setq smart-quote-regexp-replacements
+'(
+("\\(\\w\\)- " . "\\1")
+("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")
+
+))
+
+(defun replace-smart-quotes-regexp (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (mapcar
+   (lambda (r)
+     (save-excursion
+       (replace-regexp (car r) (cdr r) nil beg end)))
+   smart-quote-regexp-replacements)
+  )
+
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
@@ -416,16 +434,13 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ;; (replace-match "") nil t)
 ;; add alpha. And replace the alpha.
 
+  (replace-smart-quotees-regexp beg end)
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
                             ("\x2019" . "'")
                             ("’" . "'")
-(" — " . "---")
-(" - " . "---")
-("—" . "---")
 ("''" . "\"")
-(" – " . "---")
 ("​" . "")
 ("…" . "...")
 ("• " . "- ")
