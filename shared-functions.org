@@ -434,7 +434,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ;; (replace-match "") nil t)
 ;; add alpha. And replace the alpha.
 
-  (replace-smart-quotees-regexp beg end)
+  (replace-smart-quotes-regexp beg end)
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
