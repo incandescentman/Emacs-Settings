@@ -2148,7 +2148,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
   :bind (:map dired-mode-map 
               ("C-o" . dired-omit-mode)
               ("o" . dired-omit-mode)
-              ("s-o" . tmtxt/dired-do-shell-mac-open)
+	      ("s-o" . tmtxt/dired-do-shell-mac-open)
               ("s-O" . reveal-in-finder)
               ("C-c n" . my-dired-create-file)
               ("c" . touch-file) 
@@ -7274,7 +7274,7 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 #+END_SRC
 
 * yahoo weather
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package 
  :commands 
  :bind (
@@ -7294,7 +7294,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 
 ) 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * mouse scrolling
@@ -7495,7 +7495,7 @@ To use this, just write your org links in the following way (optionally adding a
 [[yt:A3JAlWM8qRM]]
 
 * help-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 (use-package help-mode
 
@@ -7507,7 +7507,7 @@ To use this, just write your org links in the following way (optionally adding a
 
 (define-key help-mode-map (kbd "s-[") 'help-go-back)
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 (define-key key-minor-mode-map (kbd "s-[") ')
