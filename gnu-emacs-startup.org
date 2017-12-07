@@ -3796,3 +3796,10 @@ M-1 to 9
 
   ("s-O" . prelude-open-with)))
 #+END_SRC
+
+
+* d
+#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "`") 'endless/ispell-word-then-abbrev)
+
+#+END_SRC
