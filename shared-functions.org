@@ -7735,7 +7735,7 @@ signature, in that order."
 
 
 * abbrev autocorrect and add to dictionary (doesn't work yet)
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (define-key ctl-x-map "\C-i"
  #'endless/ispell-word-then-abbrev)
 
@@ -7777,4 +7777,4 @@ abort completely with `C-g'."
 
 (setq save-abbrevs 'silently)
 (setq-default abbrev-mode t)
-#+END_SRC
+#+END_EXAMPLE

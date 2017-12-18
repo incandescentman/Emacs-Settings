@@ -3797,9 +3797,9 @@ M-1 to 9
   ("s-O" . prelude-open-with)))
 #+END_SRC
 
-
-* d
+* flyspell fix
 #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "`") 'endless/ispell-word-then-abbrev)
-
+(setq flyspell-abbrev-p t)
+(setq flyspell-use-global-abbrev-table-p t)
+(setq global-flyspell-mode t)
 #+END_SRC
