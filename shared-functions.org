@@ -2145,8 +2145,8 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 :config
 (setq dired-omit-mode t)
 
-  :bind (:map dired-mode-map 
-              ("C-o" . dired-omit-mode)
+  :bind (:map dired-mode-map
+              ("M-o" . dired-omit-mode)
               ("o" . dired-omit-mode)
 	      ("s-o" . tmtxt/dired-do-shell-mac-open)
               ("s-O" . reveal-in-finder)

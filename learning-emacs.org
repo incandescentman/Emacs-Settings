@@ -803,3 +803,29 @@ killall Finder
 
 Image result for facebook og image size aspect ratio
 Facebook recommends 1200 x 630 pixels for the og:image dimensions (info), which is an approximate aspect ratio of 1.91:1.Aug 19, 2014
+
+
+
+* magic emacs button - edit search and replace history
+
+[[http://endlessparentheses.com/new-in-emacs-25-1-query-replace-history-is-enhanced.html][New in Emacs 25.1: Query-replace history is enhanced. · Endless Parentheses]]
+
+** M-p
+Yah, try ~M-p~!
+
+Thank you! M-p was indeed the magic button I did not know about. Experiment and emacswiki confirm that M-p gives the previous command in the minibuffer history---so by varying the number of "M-p"'s it is possible to edit the query, replacement string or both.---Alice Lesser May 2 '13 at 15:24
+
+
+M-p brings back the minibuffer history for past invocations of the specific command you're executing. It can be any of a number of commands, not just query-replace. So using it with ido-find-file brings back only strings that were used with ido-find-file, etc. Even more magic!---Alan Oct 8
+
+** C-r
+I can also use C-r. It shows me all the entries in minibuffer and I can select from that. I have C-r binded to M-x anything-minibuffer-history. After M-x query-replace, hit C-h b and search for major-mode in the Help buffer. That will give full list of command. Here is my bindings.
+
+
+* YouTube embeds
+
+#+BEGIN_SRC
+&rel=0
+
+?end=20&autoplay=1&
+#+END_SRC
