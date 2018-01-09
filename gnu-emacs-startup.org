@@ -53,7 +53,7 @@ Automatically load abbreviations table:
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
-"One sentence summary of what this command do."
+"Fix spacing on the screen."
   (interactive)
   (org-indent-mode 1)
 (recenter-top-bottom)
@@ -438,6 +438,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-j n s") 'yas/new-snippet)
 (define-key key-minor-mode-map (kbd "s-j y n") 'yas/new-snippet)
+
+(define-key help-mode-map (kbd "C-s-]") 'help-go-back)
+(define-key key-minor-mode-map (kbd "C-s-]") 'help-go-forward)
+
 
 (define-key key-minor-mode-map (kbd "s-j c m") 'css-mode)
 ;; (define-key css-mode-map (kbd "s-j c s") 'css-mode)

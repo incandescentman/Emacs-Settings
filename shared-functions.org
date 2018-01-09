@@ -6088,7 +6088,7 @@ Wow, this works.
 
  #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2016/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2017/bin/x86_64-darwin")
   )
  #+END_SRC
 
@@ -7309,7 +7309,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 #+END_SRC
 
-* screenflow
+* screenflick
 #+BEGIN_SRC emacs-lisp
 (defun screenflick-mode ()
 (interactive) 
@@ -7324,16 +7324,15 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 
 * ws-butler
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq ws-butler-global-mode t)
 (ws-butler-global-mode) 
-#+END_SRC
+#+END_EXAMPLE
 
 * fix image links
 #+BEGIN_SRC emacs-lisp
 (defun fix-image-links ()
 (interactive)
-
 )
 #+END_SRC
 
@@ -7343,12 +7342,11 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (setq org-reveal-root "file:///Users/jay/Dropbox/github/reveal.js")
 #+END_SRC
 
-* pomidor
+* pomidor - a pomodoro timer
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "/Users/jay/gnulisp/pomidor")
 (use-package pomidor)
 #+END_SRC
-
 
 
 * org-drill
@@ -7388,7 +7386,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 )
 #+END_SRC
 
-* delete properties
+* delete properties blocks
 #+BEGIN_SRC emacs-lisp
 (defun delete-properties-blocks ()
 (interactive)
@@ -7417,7 +7415,6 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 :config
 (setq org-sticky-header-always-show-header nil)
 
-
 )
 (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
 #+END_SRC
@@ -7427,7 +7424,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (use-package ox-tufte)
 #+END_SRC
 
-
+* ignore case in searches
 #+BEGIN_SRC emacs-lisp
 (defun ignore-case-in-searches ()
  (interactive)
@@ -7438,6 +7435,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 * timestamp export format
 
 Remove the remove <> surrounding timestamps
+
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'org-export-filter-timestamp-functions
        #'endless/filter-timestamp)
@@ -7499,23 +7497,14 @@ To use this, just write your org links in the following way (optionally adding a
 
 * help-mode
 #+BEGIN_EXAMPLE emacs-lisp
-
 (use-package help-mode
 
 :bind (:help-map
-("s-[" . help-go-back)
-("s-]" . help-go-forward)))
-
-;; doesn't work
-
-(define-key help-mode-map (kbd "s-[") 'help-go-back)
-
+("C-s-]" . help-go-back)
+("s-ESC" . help-go-forward)))
 #+END_EXAMPLE
 
-
-(define-key key-minor-mode-map (kbd "s-[") ')
-
-
+* swiper-mc
 #+BEGIN_SRC emacs-lisp
 (defun swiper-mc ()
 (interactive)
@@ -7530,7 +7519,7 @@ To use this, just write your org links in the following way (optionally adding a
 (setq ivy-exit 'done) (exit-minibuffer))))
 #+END_SRC
 
-* display and copy emacs version info
+* display and copy spacemacs version info
 #+BEGIN_SRC emacs-lisp
 (defun spacemacs-version-display-and-copy ()
  "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
@@ -7624,11 +7613,6 @@ See also spacemacs/describe-system-info
 
 * flycheck
 #+BEGIN_SRC emacs-lisp
-
-;; turn on flychecking globally
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
-
-
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
@@ -7655,19 +7639,6 @@ See also spacemacs/describe-system-info
  ["Benjamin: " "** Ben Bechar\n"]
  )))
 
-#+END_SRC
-
-
-* pcre-regexp-from-list-of-words
-[[http://emacsfodder.github.io/blog/easy-regexp-generation-with-emacs/][Easy regexp generation with Emacs - Emacs Fodder]]
-
-#+BEGIN_SRC emacs-lisp
-(defun pcre-regexp-from-list-of-words (words)
- "insert a pcre regexp to match a list of words"
- (interactive "sList of words for regexp: ")
- (insert
-  (pcre-to-elisp
-  (regexp-opt (split-string words)))))
 #+END_SRC
 
 
@@ -7735,47 +7706,3 @@ signature, in that order."
 #+END_SRC
 
 
-* abbrev autocorrect and add to dictionary (doesn't work yet)
-#+BEGIN_EXAMPLE emacs-lisp
-(define-key ctl-x-map "\C-i"
- #'endless/ispell-word-then-abbrev)
-
-(defun endless/simple-get-word ()
- (car-safe (save-excursion (ispell-get-word nil))))
-
-(defun endless/ispell-word-then-abbrev (p)
- "Call `ispell-word', then create an abbrev for it.
-With prefix P, create local abbrev. Otherwise it will
-be global.
-If there's nothing wrong with the word at point, keep
-looking for a typo until the beginning of buffer. You can
-skip typos you don't want to fix with `SPC', and you can
-abort completely with `C-g'."
- (interactive "P")
- (let (bef aft)
-  (save-excursion
-   (while (if (setq bef (endless/simple-get-word))
-         ;; Word was corrected or used quit.
-         (if (ispell-word nil 'quiet)
-           nil ; End the loop.
-          ;; Also end if we reach `bob'.
-          (not (bobp)))
-        ;; If there's no word at point, keep looking
-        ;; until `bob'.
-        (not (bobp)))
-    (backward-word)
-    (backward-char))
-   (setq aft (endless/simple-get-word)))
-  (if (and aft bef (not (equal aft bef)))
-    (let ((aft (downcase aft))
-       (bef (downcase bef)))
-     (define-abbrev
-      (if p local-abbrev-table global-abbrev-table)
-      bef aft)
-     (message "\"%s\" now expands to \"%s\" %sally"
-          bef aft (if p "loc" "glob")))
-   (user-error "No typo at or before point"))))
-
-(setq save-abbrevs 'silently)
-(setq-default abbrev-mode t)
-#+END_EXAMPLE

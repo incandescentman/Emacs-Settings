@@ -101,7 +101,7 @@
 {\\myauthorfont\\Large
 \\href{http://storytelling.nyc}{Storytelling.NYC}}
 \\newline
-{\\myauthorfont\\Large © 2017 \\@author}
+{\\myauthorfont\\Large © 2018 \\@author}
     \\newline
 %{\\myauthorfont\\Large Private and Confidential}
  %   \\newline

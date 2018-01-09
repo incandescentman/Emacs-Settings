@@ -729,7 +729,7 @@ layers configuration. This is the place where most of your configurations should
                                  "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"
                                  )))
 
-
+(setq case-fold-search t)
   )
 
 ;; theend
