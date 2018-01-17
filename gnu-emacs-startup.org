@@ -3779,6 +3779,32 @@ M-1 to 9
 ))
 #+END_SRC
 
+* replace missing PDF ligatures
+
+different → different 
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun replace-missing-ligatures ()
+"Replace goofy MS and other garbage characters with latin1 equivalents."
+(interactive)
+(save-excursion				; save the current point
+
+  (replace-string "de cit" "deficit" nil (point-min) (point-max))
+  (replace-string "di eren" "differen" nil (point-min) (point-max))
+  (replace-string "nd" "find" nil (point-min) (point-max)); whole word only
+  (replace-string "e ective" "effective" nil (point-min) (point-max))
+  (replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
+  (replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
+  (replace-string "scientifc" "scientific" nil (point-min) (point-max))
+
+
+
+))
+#+END_SRC
+
 * web-mode
 #+BEGIN_SRC emacs-lisp
 
