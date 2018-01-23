@@ -2705,7 +2705,9 @@ Transpose windows, useful:
     (save-excursion
      (copy-region-as-kill start end)
 (other-window 1)
+(newline) 
      (yank)
+(newline) 
      (newline))
     (other-window -1)
     (message "Moved %s words" count))
