@@ -1,7 +1,8 @@
 flycheck
-.savefile
+
 ido.hist
 recent-addresses
+.savefile
 .elc
 archive/
 shared-functions.el
