@@ -143,6 +143,7 @@ values."
                                       org-bookmark-heading
                                       org-fstree
                                       org-mime
+                                      org-projectile
                                       org-projectile-helm
                                       org-sticky-header
                                       ox-clip
@@ -199,7 +200,6 @@ values."
                                     exec-path-from-shell
                                     global-git-commit
                                     highlight-indentation
-                                    org-projectile
                                     hs-mode
                                     popwin
                                     spaceline
@@ -777,4 +777,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(beacon ((t (:inherit highlight))))
+ '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+ '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+ '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+ '(org-level-1 ((t (:family "Courier" :weight normal))))
+ '(org-link ((t (:underline nil))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
+ 
