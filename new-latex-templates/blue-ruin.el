@@ -141,7 +141,7 @@
 \\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{12pt plus 2pt minus 1pt} %Space between paragraphs
+\\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
@@ -162,9 +162,15 @@
 \\newcommand{\\textsubscr}[1]{\\ensuremath{_{\\scriptsize\\textrm{#1}}}}
 
 \\usepackage{enumitem}
-\\newlist{mylist}{enumerate}{10} 
-%\\setlist{nolistsep}
-\\setlist{topsep=0pt}
+
+% \\newlist{mylist}{enumerate}{10} 
+\\newlist{mylist}{enumerate}{nosep} 
+
+% control line spacing in bulleted list
+\\setlist{noitemsep, topsep=-12pt} % for no spacing between list items 
+%\\setlist{topsep=0pt} % for a line between list items
+
+
 \\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}

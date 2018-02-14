@@ -1113,7 +1113,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak 
+(define-key org-mode-map (kbd "<SPC>") 'smart-space)
 (define-key orgstruct-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
