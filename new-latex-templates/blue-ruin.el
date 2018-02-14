@@ -10,7 +10,6 @@
 % \\usepackage[includeheadfoot,margin=2.0in,hmargin=2.0in,vmargin=0.5in]{geometry} % for insanely wide margins
 \\usepackage{float}
 
-
 \\usepackage{algorithm}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
@@ -163,8 +162,8 @@
 
 \\usepackage{enumitem}
 
-% \\newlist{mylist}{enumerate}{10} 
-\\newlist{mylist}{enumerate}{nosep} 
+\\newlist{mylist}{enumerate}{10} 
+
 
 % control line spacing in bulleted list
 \\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
@@ -262,11 +261,11 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{7pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{5pt}
 
-\\titleformat*{\\section}{\\normalfont\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{pinterestred}}
-\\titleformat*{\\subsection}{\\normalfont\\fontsize{20}{20}\\scshape\\color{electricblue}}
-\\titleformat*{\\subsubsection}{\\normalfont\\fontsize{12}{8}\\raggedright\\bfseries\\rmfamily\\color{pinterestred}}
-\\titleformat*{\\paragraph}{\\normalfont\\normalsize\\raggedright\\bfseries\\rmfamily\\color{electricblue}}
-\\titleformat*{\\subparagraph}{\\normalfont\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{pinterestred}}
+\\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{pinterestred}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{20}{20}\\scshape\\color{electricblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{12}{8}\\raggedright\\bfseries\\rmfamily\\color{pinterestred}}
+\\titleformat*{\\paragraph}{\\sffamily\\sanssize\\raggedright\\bfseries\\rmfamily\\color{electricblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{pinterestred}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
