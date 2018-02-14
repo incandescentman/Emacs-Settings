@@ -167,7 +167,8 @@
 \\newlist{mylist}{enumerate}{nosep} 
 
 % control line spacing in bulleted list
-\\setlist{noitemsep, topsep=-6pt, after=\\vspace{\\baselineskip}} % for no spacing between list items 
+\\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
+% see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
 %\\setlist{topsep=0pt} % for a line between list items
 
 
