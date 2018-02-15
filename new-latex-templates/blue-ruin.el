@@ -141,6 +141,13 @@
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
+
+% spacing: how to read {12pt plus 4pt minus 2pt}
+%           12pt is what we would like the spacing to be
+%           plus 4pt means that TeX can stretch it by at most 4pt
+%           minus 2pt means that TeX can shrink it by at most 2pt
+%       This is one example of the concept of, 'glue', in TeX
+
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
@@ -257,13 +264,14 @@
 
 
 \\usepackage[sc]{titlesec}
-\\titlespacing*{\\section}{0pt}{6pt}{7pt}
-\\titlespacing*{\\subsection}{0pt}{0pt}{7pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{5pt}
+% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 \\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{pinterestred}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{20}{20}\\scshape\\color{electricblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{12}{8}\\raggedright\\bfseries\\rmfamily\\color{pinterestred}}
+\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{16}{12}\\raggedright\\bfseries\\color{pinterestred}}
 \\titleformat*{\\paragraph}{\\sffamily\\sanssize\\raggedright\\bfseries\\rmfamily\\color{electricblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{pinterestred}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
