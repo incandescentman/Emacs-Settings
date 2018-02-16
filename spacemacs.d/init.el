@@ -79,7 +79,7 @@ This function should only modify configuration layer settings."
      ;;     floobits
      ;;    deft
      ;;     chrome
-     ;;   themes-megapack
+     ;; themes-megapack
      ;;    ibuffer
      )
 
@@ -105,10 +105,10 @@ This function should only modify configuration layer settings."
                                       ;; js2
                                       ;; magit
                                       ;; smex
-                                      ;; solarized-theme
+                                      solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
-                                      ;; zenburn-theme
+                                      zenburn-theme
 
                                       ag
                                       auto-capitalize
@@ -567,7 +567,16 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil))
+   dotspacemacs-whitespace-cleanup nil
+
+   ;; Either nil or a number of seconds. If non-nil zone out after the specified
+   ;; number of seconds. (default nil)
+   dotspacemacs-zone-out-when-idle nil
+
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
