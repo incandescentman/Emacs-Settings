@@ -7132,9 +7132,9 @@ Chen Bin
 
 I use one liner shell command to clone Emacs Lisp Package Archive (ELPA):
 
-#+BEGIN_SRC sh
+#+BEGIN_EXAMPLE sh
 mkdir -p ~/elpaclone && cd ~/elpaclone && curl -L https://elpa.gnu.org/packages/archive-contents | perl -pe 's/(^\(1|\n)//g' | perl -pe 's/\]\)/])\n/g' | perl -pe 's/^ *\(([a-z0-9A-Z-]*).*\[\(([0-9 ]*).*(single|tar).*/\1-\2.\3/g' | perl -pe 's/ /./g' | perl -pe 's/single/el/g' | perl -pe 's/\)//g' | xargs -I {} curl -L -O https://elpa.gnu.org/packages/{} && curl -L -O https://elpa.gnu.org/packages/archive-contents 
-#+END_SRC 
+#+END_EXAMPLE 
 
 
 The http://bit.ly/2brTy2S is contains all the information of packages. I re-organize it content to make sure every line contains one package's information. Then I use curl to download everything.
