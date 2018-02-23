@@ -2888,14 +2888,10 @@ Useful for working with files and references:
 #+END_SRC
 
 ** Recent files
-Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse)
-~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened
-file.  The nice thing, using that function is, that it does not matter, if I
-have the buffer already opened, or if the file must be opened now.  With that
-function I have a persistent buffer list available.
+Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) ~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened file. The nice thing, using that function is, that it does not matter, if I have the buffer already opened, or if the file must be opened now. With that function I have a persistent buffer list available.
 
 *** Ido recent files
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun xsteve-ido-choose-from-recentf ()
   "Use ido to select a recently opened file from the 'recentf-list'"
   (interactive)
@@ -2906,10 +2902,10 @@ function I have a persistent buffer list available.
 				    (replace-regexp-in-string home "~" path))
 				  recentf-list)
 			  nil t))))
-#+END_SRC
+#+END_EXAMPLE
 
 *** Enable recent files without using Ido mode via C-x C-r:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (recentf-mode 1) ; recentf
 
 (defun recentf-open-files-compl ()
@@ -2922,7 +2918,7 @@ function I have a persistent buffer list available.
     (find-file (cdr (assoc-string fname tocpl)))))
 
 (global-set-key [(control x)(control r)] 'recentf-open-files-compl)
-#+END_SRC
+#+END_EXAMPLE
 
 ** save some buffers
 #+BEGIN_SRC emacs-lisp
