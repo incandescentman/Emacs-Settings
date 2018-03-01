@@ -3388,7 +3388,7 @@ When doing isearch, hand the word over to ~helm-swoop~:
 
 From ~helm-swoop~ to ~helm-multi-swoop-all~:
 #+BEGIN_SRC emacs-lisp
-(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+;; (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
 #+END_SRC
 
 When doing evil-search, hand the word over to ~helm-swoop~:
