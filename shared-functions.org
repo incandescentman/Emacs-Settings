@@ -1147,7 +1147,7 @@ This is working correctly:
 	("h" "historical interest" entry (file "historical-lifestream.txt")
 	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
-	("p" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	("P" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
 	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
 	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
