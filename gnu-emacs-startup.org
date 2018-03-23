@@ -3799,10 +3799,16 @@ different → different
 
   (replace-string "de cit" "deficit" nil (point-min) (point-max))
   (replace-string "di eren" "differen" nil (point-min) (point-max))
-  (replace-string "nd" "find" nil (point-min) (point-max)); whole word only
   (replace-string "e ective" "effective" nil (point-min) (point-max))
-  (replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
-  (replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
+  (replace-string "de ne" "define" nil (point-min) (point-max))
+  (replace-string "re ect" "reflect" nil (point-min) (point-max))
+  (replace-string "o er" "offer" nil (point-min) (point-max))
+  (replace-string "con den" "confiden" nil (point-min) (point-max))
+  (replace-string "con ict" "conflict" nil (point-min) (point-max))
+;(replace-string "nd" "find" nil (point-min) (point-max)); whole word only
+;(replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
+; (replace-string "ve" "they" nil (point-min) (point-max)); this one should be whole word only 
+; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only 
   (replace-string "scientifc" "scientific" nil (point-min) (point-max))
 
 
