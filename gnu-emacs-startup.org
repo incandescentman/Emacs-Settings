@@ -3029,7 +3029,8 @@ t)
 (looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
 )
 
-(save-excursion (downcase-word 1))))
+;; (save-excursion (downcase-word 1))
+))
 
 
 (define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
