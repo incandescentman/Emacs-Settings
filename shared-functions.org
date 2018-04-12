@@ -3090,7 +3090,7 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 
 Make ^H delete rather than help:
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-h") 'delete-backward-char)
+;; (global-set-key (kbd "C-h") 'delete-backward-char)
 #+END_SRC
 
 Redefine help shortcut:
