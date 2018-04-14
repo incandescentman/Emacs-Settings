@@ -7730,3 +7730,13 @@ signature, in that order."
   (push (org-projectile-project-todo-entry) org-capture-templates))
  :ensure t) 
 #+END_SRC
+
+
+* fix case
+#+BEGIN_SRC emacs-lisp
+(defun isearch-forward-ignore-case ()
+(interactive) 
+(ignore-case-in-searches)
+(isearch-forward)
+)
+#+END_SRC
