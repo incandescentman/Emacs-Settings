@@ -829,3 +829,27 @@ I can also use C-r. It shows me all the entries in minibuffer and I can select f
 
 ?end=20&autoplay=1&
 #+END_SRC
+
+
+* Shell
+
+Sustitute last argument
+
+: !$
+
+#+BEGIN_SRC sh
+e .jay-scripts.sh 
+. $!
+#+END_SRC
+
+
+** other 
+!!	previous command
+!$	last argument of previous command
+!^	first argument of previous command
+!*	all arguments of previous command
+!0	previous command without arguments
+
+** Lots of good shell jiu jitsu
+[[https://www.icloud.com/keynote/0DJ8qlqoWv6fYwmSuHwv6GdsQ#MacAD.UK_-_AB_-_Witchcraft][MacAD.UK - AB - Witchcraft]]
+

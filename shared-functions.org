@@ -7740,3 +7740,16 @@ signature, in that order."
 (isearch-forward)
 )
 #+END_SRC
+
+
+* counsel-Spotify
+#+BEGIN_SRC emacs-lisp 
+(use-package spotify
+:init
+'(spotify-oauth2-client-id 83e2e6567ee2416e8943de8c83c525cb)
+'(spotify-oauth2-client-secret c5305ef7fe3f4e2cab9d2abec2070688)
+
+)
+#+END_SRC
+
+

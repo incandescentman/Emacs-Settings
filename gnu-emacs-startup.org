@@ -456,6 +456,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-p") 'org-html-export-to-html-and-open)
 
 
+(define-key key-minor-mode-map (kbd "M-y") 'helm-show-kill-ring)
 
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
