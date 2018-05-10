@@ -1120,7 +1120,7 @@ This is working correctly:
 	("n" "note" entry (file org-default-notes-file)
 	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-	("b" "book" entry (file "../book/book-capture.txt" :prepend t :kill-buffer t)
+	("b" "book" entry (file "/Users/jay/Dropbox/writing/book/book-capture.txt" :prepend t :kill-buffer t)
 	 "\n\n\n* %i%?\n\n" :prepend t :kill-buffer t)
 
 	("v" "visualness and visual actions" entry (file "visual-actions.txt")
