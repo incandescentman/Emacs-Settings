@@ -1040,14 +1040,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 #+END_SRC
 
-* pastebin
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/gnulisp/emacs-pastebin-master/")
-(require 'neopastebin)
-(pastebin-create-login :dev-key "e5ccb53890f16065d90ebd6064a381d0"
-                       :username "petersalazar")
-#+END_SRC
-
 * spacecraft-mode - superior handling of whitespace for writing and editing prose
 
 
@@ -3177,7 +3169,13 @@ No space. Does that make sense? Thanks!
 ))
 (delete-char 1)
 )
-)
+) 
+#+END_SRC
+
+** make this work with multiple cursors
+#+BEGIN_SRC emacs-lisp
+(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
 #+END_SRC
 
 * backward-kill-word-correctly-and-capitalize 
