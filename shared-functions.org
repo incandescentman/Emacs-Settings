@@ -1441,7 +1441,7 @@ Make org-capture open in full window! :-)
 (setq org-pomodoro-long-break-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
 ;; (setq org-pomodoro-short-break-format "Short Break: %s")
-(setq org-pomodoro-short-break-sound "/Users/jay/Dropbox/audio/sounds/beach-05.mp3")
+(setq org-pomodoro-short-break-sound "/Users/jay/Dropbox/audio/sounds/Metal_Gong-Dianakc-109711828.mp3")
 
 ;; (setq org-pomodoro-finished-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
 
