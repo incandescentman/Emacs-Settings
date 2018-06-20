@@ -3846,3 +3846,13 @@ different → different
 (setq flyspell-use-global-abbrev-table-p t)
 (setq global-flyspell-mode t)
 #+END_SRC
+
+
+
+
+* mw-thesaurus
+#+BEGIN_SRC emacs-lisp
+;; (require 'mw-thesaurus)
+(load "/Users/jay/emacs/emacs-settings/secret-codes.el")
+(define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus--lookup-at-point)
+#+END_SRC

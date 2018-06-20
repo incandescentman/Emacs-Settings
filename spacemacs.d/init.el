@@ -29,7 +29,7 @@ This function should only modify configuration layer settings."
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("/Users/jay/starship/layers/")
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
@@ -58,7 +58,8 @@ This function should only modify configuration layer settings."
 
      ;;   osx
      ;;   xkcd
-
+     ag-general
+     ag-lang-tools
      smex
        (shell :variables
             shell-default-height 30
@@ -109,8 +110,7 @@ This function should only modify configuration layer settings."
                                       ;; sublime-themes
                                       ;; xml-rpc
                                       zenburn-theme
-
-                                      ag
+                                      ;;                                      ag
                                       auto-capitalize
                                       beacon
                                       bongo
@@ -229,7 +229,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -598,7 +598,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
   (require 'auto-capitalize)
   (require 'recentf)
   (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
@@ -909,7 +908,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (evil-goggles emms counsel-projectile multiple-cursors memoize async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements persp-mode pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (ibuffer-projectile helpful shut-up elisp-refs dash-functional loop helm-pages edit-indirect async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements persp-mode pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
