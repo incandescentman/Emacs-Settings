@@ -846,9 +846,18 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; use OSX standard keybindings ⌘-up and ⌘-down to go to top or bottom of buffer
 (define-key key-minor-mode-map [s-up] 'beginning-of-buffer)
 (define-key key-minor-mode-map [s-down] 'end-of-buffer)
+
 (define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
+
+;; mark commands 
+(define-key key-minor-mode-map (kbd "C-M-SPC") 'set-mark-command)
+(define-key key-minor-mode-map (kbd "C-M-x") 'exchange-point-and-mark)
+
+
+(define-key key-minor-mode-map (kbd "C-s-SPC") 'helm-all-mark-rings)
+
 ; (define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
-(define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
+
 (define-key key-minor-mode-map (kbd "s-_") 'avy-pop-mark)
 ;; use OSX standard keybinding for "Redo"
 (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
