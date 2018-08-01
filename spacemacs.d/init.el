@@ -179,6 +179,7 @@ This function should only modify configuration layer settings."
                                       tldr
                                       transcribe
                                       unfill
+                                      visible-mark
                                       wc-mode
                                       web-mode
                                       wrap-region
@@ -337,6 +338,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         whiteboard
                          leuven
                          zenburn
                          spacemacs-dark
@@ -898,6 +900,10 @@ before packages are loaded."
 
 (counsel-mode 1)
 
+
+(setq global-hl-line-mode nil)
+
+
   )
 
 ;; theend
@@ -920,21 +926,21 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (evil-goggles emms skewer-mode spaceline hydra async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements persp-mode pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (yasnippet-snippets xterm-color visual-fill-column tern spotify spaceline-all-the-icons spaceline all-the-icons memoize powerline es-windows es-lib overseer org-projectile-helm org-category-capture org-mime peg nameless log4e gntp skewer-mode simple-httpd key-seq json-navigator hierarchy json-snatcher json-reformat multiple-cursors htmlize parent-mode helm-xref window-purpose helm-mu gh logito pcache pos-tip flx iedit evil-goggles evil-cleverparens anzu highlight emms dash s makey counsel-projectile pkg-info epl centered-cursor-mode packed auto-complete popup hydra dotenv-mode bind-map async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements persp-mode pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "red" :weight bold :height 1.1 :family "Sans Serif"))))
+ '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-level-1 ((t (:family "Courier" :weight normal))))
- '(org-link ((t (:underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))) t))
+ '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
+ '(org-link ((t (:inherit link :underline nil))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
 )
 
 (custom-set-variables
@@ -956,7 +962,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-level-1 ((t (:family "Courier" :weight normal))))
+ '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
  '(org-link ((t (:underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
 

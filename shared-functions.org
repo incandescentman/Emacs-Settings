@@ -7801,3 +7801,20 @@ If UNSAFE is non-nil, assume point is on headline."
        while pos
        do (goto-char pos))) 
 #+END_SRC
+
+
+* visible mark 
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; visible mark - show where mark is                   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defface visible-mark-active ;; put this before (require 'visible-mark)
+ '((((type tty) (class mono)))
+  (t (:background "magenta"))) "")
+(require 'visible-mark)
+(global-visible-mark-mode 1) ;; or add (visible-mark-mode) to specific hooks
+(setq visible-mark-max 2)
+(setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
+
+(setq set-mark-command-repeat-pop t) 
+#+END_SRC
