@@ -3185,6 +3185,11 @@ No space. Does that make sense? Thanks!
 #+BEGIN_SRC emacs-lisp
 (delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
+
+
+(delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
+
 #+END_SRC
 
 * backward-kill-word-correctly-and-capitalize 
