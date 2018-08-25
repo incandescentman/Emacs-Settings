@@ -7804,7 +7804,7 @@ If UNSAFE is non-nil, assume point is on headline."
 
 
 * visible mark 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; visible mark - show where mark is                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7817,7 +7817,7 @@ If UNSAFE is non-nil, assume point is on headline."
 (setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
 
 (setq set-mark-command-repeat-pop t) 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * transcribmode
