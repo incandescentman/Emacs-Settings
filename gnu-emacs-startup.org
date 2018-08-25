@@ -44,7 +44,6 @@ Automatically load abbreviations table:
 (read-abbrev-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 (setq abbrev-file-name "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 
-;; (set (make-local-variable 'abbrev-file-name) (expand-file-name "/Users/jay/emacs/aquamacs-jay/own-abbrevs.abbrev_defs"))
 (setq save-abbrevs t)
 (setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
