@@ -7821,3 +7821,14 @@ If UNSAFE is non-nil, assume point is on headline."
 
 
 * transcribmode
+
+* time stamps
+#+BEGIN_SRC emacs-lisp
+(setq 
+ time-stamp-active t     ; do enable time-stamps
+time-stamp-pattern "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>";
+ time-stamp-line-limit 50; check first 10 buffer lines for Time-stamp: 
+ time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S (%u)") ; date format 
+
+(add-hook 'write-file-hooks 'time-stamp) ; update when saving 
+#+END_SRC
