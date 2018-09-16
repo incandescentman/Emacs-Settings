@@ -7159,7 +7159,7 @@ This solution also works for MELPA.
 
 ** poly mode
 #+BEGIN_SRC emacs-lisp
-(require 'poly-org) 
+;; (require 'poly-org) 
 #+END_SRC
 
 * ivy counsel
@@ -7826,9 +7826,12 @@ If UNSAFE is non-nil, assume point is on headline."
 #+BEGIN_SRC emacs-lisp
 (setq 
  time-stamp-active t     ; do enable time-stamps
-time-stamp-pattern "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>";
- time-stamp-line-limit 50; check first 10 buffer lines for Time-stamp: 
- time-stamp-format "%04y-%02m-%02d %02H:%02M:%02S (%u)") ; date format 
+time-stamp-line-limit 50; check first 50 lines 
+time-stamp-format "%04y-%02m-%02d"; date format 
+time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$" 
+) 
 
-(add-hook 'write-file-hooks 'time-stamp) ; update when saving 
+;; (add-hook 'write-file-hooks 'time-stamp) ; update when saving 
+
+(add-hook 'before-save-hook 'time-stamp) 
 #+END_SRC
