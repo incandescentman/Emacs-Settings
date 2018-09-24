@@ -70,61 +70,6 @@
 \\pagenumbering{arabic}
 \\makeatletter
 
-%This macro now controls the position of the background pic
-%Please do not change from here
-\\newcommand\\BackgroundPic{%
-\\put(0,0){%
-\\parbox[b][\\paperheight]{\\paperwidth}{%
-\\vfill
-\\centering
-%inside the tikzpicture environment, you can do anything you want with the image
-\\begin{tikzpicture}
-
-\\node [inner sep=0pt,outer sep=0pt] at (0,0) {\\includegraphics[width=\\paperwidth,height=\\paperheight]{\\the\\coverimage}};
-
-\\node at  (0,5) [opacity=1.0] {\\parbox[b][0.5\\textheight]{\\textwidth}{%
-  \\begin{raggedright}
-  \\leavevmode
-    \\vskip 1cm
-  {\\mytitlefont\\fontsize{75}{85}\\bfseries{\\@title}\\par}
-    \\vskip 1cm
-    
-    %{\\myauthorfont\\fontsize{30}{40}{{\\bfseries{\\@degree}\\par}}}
-
-\\vfill
-\\end{raggedright}}};
-\\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
-\\begin{raggedright}
-\\vfill
-{\\myauthorfont\\Large {\\@author}}
-    \\newline
-          {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
-        \\newline
-{\\myauthorfont\\Large
-\\href{http://storytelling.nyc}{Storytelling.NYC}}
-\\newline
-{\\myauthorfont\\Large © 2018 \\@author}
-    \\newline
-%{\\myauthorfont\\Large Private and Confidential}
- %   \\newline
-        \\newline
-    {\\myauthorfont\\Large \\@date\\par}
-%{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree }}
-\\end{raggedright}
-}};
-\\end{tikzpicture}
-%Don't change
-\\vfill
-}}}
-%This macro executes a hook at the beginning of the document that  puts the background correctly. 
-\\AtBeginDocument{\\AddToShipoutPicture*{\\BackgroundPic}}
-\\AtBeginDocument{\\globalcolor{ghostlygrey}}
-
-
-
-%The maketitle macro now only includes the titling and not the background. 
-\\def\\maketitle{ \\newgeometry{margin=1in} \\thispagestyle{empty} \\vfill \\null \\cleardoublepage\\restoregeometry}
-
 
 
 \\setcounter{secnumdepth}{0}
@@ -280,6 +225,7 @@
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
+\\renewcommand\\maketitle{}
 
 
       [NO-DEFAULT-PACKAGES]

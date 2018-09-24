@@ -834,7 +834,8 @@ Note: disable this when trying to export to org-html-themes!
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-    (plist-put plist :with-toc t)
+;; (plist-put plist :with-toc t); for TOC in latex
+    (plist-put plist :with-toc nil); no TOC in latex
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
