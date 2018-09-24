@@ -1,12 +1,12 @@
-(provide 'blue-ruin)
+(provide 'resonate)
 
 (add-to-list 'org-latex-classes
-  '("blue-ruin"
+  '("resonate"
 "
 
 \\documentclass[12pt]{article}
-% \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry} % for normal margins
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for insanely wide margins
+\\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry} % for normal margins
+
 % \\usepackage[includeheadfoot,margin=2.0in,hmargin=2.0in,vmargin=0.5in]{geometry} % for insanely wide margins
 \\usepackage{float}
 
@@ -18,7 +18,7 @@
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \\setromanfont{Garamond Premier Pro}
 %  \\setromanfont{Adobe Caslon Pro}
- \\setsansfont{Gotham Narrow Bold}
+ \\setsansfont{Helvetica Neue}
   \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
@@ -44,6 +44,9 @@
 \\definecolor{periodblue}{HTML}{12239e}
 \\definecolor{denimblue}{HTML}{3A5F90}
 \\definecolor{electricblue}{HTML}{05ADF3}
+\\definecolor{resonateblue}{HTML}{005778}
+\\definecolor{resonateorange}{HTML}{da7635}
+\\definecolor{resonategrey}{HTML}{4d4d4c}
 
 
 \\newtoks\\leftheader 
@@ -55,10 +58,10 @@
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Gotham Narrow Bold}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Gotham Narrow Bold}
-\\newfontfamily\\mybluefont[Color=electricblue]{Gotham Narrow Bold}
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\large\\bfseries\\color{electricblue}}
+\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mybluefont[Color=electricblue]{Arial}
+\\DeclareTextFontCommand{\\textbf}{\\sffamily\\large\\bfseries\\color{resonateorange}}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 
@@ -270,14 +273,14 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
-\\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{pinterestred}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{20}{20}\\scshape\\color{electricblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{16}{12}\\raggedright\\bfseries\\color{pinterestred}}
-\\titleformat*{\\paragraph}{\\sffamily\\sanssize\\raggedright\\bfseries\\color{electricblue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{pinterestred}}
+\\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{resonateblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{30}{30}\\bfseries\\scshape\\color{resonateblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
+\\titleformat*{\\subsubsubsection}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{resonateorange}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
-
 
 
 
