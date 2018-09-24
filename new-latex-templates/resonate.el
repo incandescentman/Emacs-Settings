@@ -7,7 +7,7 @@
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry} % for normal margins
 
-% \\usepackage[includeheadfoot,margin=2.0in,hmargin=2.0in,vmargin=0.5in]{geometry} % for insanely wide margins
+
 \\usepackage{float}
 
 \\usepackage{algorithm}
@@ -272,11 +272,9 @@
 \\titlespacing*{\\section}{0pt}{6pt}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
-
 \\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{resonateblue}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{30}{30}\\bfseries\\scshape\\color{resonateblue}}
 \\titleformat*{\\subsubsection}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
-\\titleformat*{\\subsubsubsection}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{resonateorange}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
