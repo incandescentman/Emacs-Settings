@@ -5,7 +5,7 @@
 "
 
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry} % for normal margins
+\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
 
 \\usepackage{float}
@@ -53,7 +53,7 @@
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-
+\\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
@@ -61,7 +61,8 @@
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\mybluefont[Color=electricblue]{Arial}
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\large\\bfseries\\color{resonateorange}}
+%Define Bold face 
+\\DeclareTextFontCommand{\\textbf}{\\sffamily\\fontsize{13}{10}\\bfseries\\color{resonateorange}}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 
@@ -217,10 +218,10 @@
 \\titlespacing*{\\section}{0pt}{6pt}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
-\\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{resonateblue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{30}{30}\\bfseries\\scshape\\color{resonateblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{14}{12}\\raggedright\\bfseries\\color{resonateblue}}
+\\titleformat*{\\section}{\\sffamily\\fontsize{24}{20}\\raggedright\\bfseries\\sffamily\\color{resonateblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{16}{15}\\bfseries\\scshape\\color{resonateblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\color{resonateorange}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{resonateblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{resonateorange}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
