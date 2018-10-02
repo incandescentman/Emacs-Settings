@@ -62,10 +62,12 @@
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\mybluefont[Color=nliblue]{Arial}
-%Define Bold face 
+
+%Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries\\color{nliblue}}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{24}{30}\\raggedright\\sffamily\\color{nliblue}}
 
 \\usepackage{textcase}
 
@@ -226,7 +228,12 @@
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{14}\\raggedright\\color{nliblue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{nliblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{nliblue}}
-\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
+
+\\titleformat*{\\nonsection}{\\sffamily\\fontsize{24}{20}\\raggedright\\sffamily\\color{nliblue}}
+
+
+
+\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
 \\renewcommand\\maketitle{}
