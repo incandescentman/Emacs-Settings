@@ -9,6 +9,7 @@
 
 
 \\usepackage{float}
+\\usepackage{changepage}
 
 \\usepackage{algorithm}
 \\usepackage{amsmath}
@@ -27,6 +28,7 @@
 \\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
+\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -64,10 +66,8 @@
 \\newfontfamily\\mybluefont[Color=nliblue]{Arial}
 
 %Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries\\color{nliblue}}
+\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
-
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{24}{30}\\raggedright\\sffamily\\color{nliblue}}
 
 \\usepackage{textcase}
 
@@ -209,6 +209,12 @@
 \\makeatother
 
 
+
+\\newenvironment{indentedsection}
+  {\\adjustwidth{1em}{0pt}}
+  {\\endadjustwidth}
+
+
 \\usepackage{setspace}
 \\usepackage{lipsum}
 \\usepackage{etoolbox}
@@ -217,24 +223,38 @@
 
 
 \\usepackage[sc]{titlesec}
+
+
+\\newlength\\TitleOverhang
+\\setlength\\TitleOverhang{1.5cm}
+
+\\newcommand\\Overhang[1]{%
+ \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
+}
+
+
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{0pt}{6pt}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{24}{20}\\raggedright\\sffamily\\color{nliblue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{16}{15}\\raggedright\\scshape\\color{nliblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{14}\\raggedright\\color{nliblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{26}{20}\\raggedright\\sffamily\\color{nliblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{nliblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{15}{16}\\raggedright\\sffamily\\color{nliblue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{nliblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{nliblue}}
 
-\\titleformat*{\\nonsection}{\\sffamily\\fontsize{24}{20}\\raggedright\\sffamily\\color{nliblue}}
+
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{22}{22}\\raggedright\\sffamily\\color{nliblue}}
+
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{nliblue}}
+
 
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
+\\hypersetup{colorlinks, citecolor=nliblue,filecolor=nliblue,linkcolor=nliblue,urlcolor=nliblue}
 
 \\renewcommand\\maketitle{}
 
