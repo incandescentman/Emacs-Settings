@@ -50,7 +50,7 @@
 \\definecolor{resonateorange}{HTML}{da7635}
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
-
+\\definecolor{elegantblue}{HTML}{4380b9}
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
@@ -63,7 +63,7 @@
 %This macro is to make cleaner the specification of the titling font
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=nliblue]{Arial}
+\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
@@ -211,7 +211,7 @@
 
 
 \\newenvironment{indentedsection}
-  {\\adjustwidth{1em}{0pt}}
+  {\\adjustwidth{2em}{0pt}}
   {\\endadjustwidth}
 
 
@@ -239,22 +239,22 @@
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{26}{20}\\raggedright\\sffamily\\color{nliblue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{nliblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{15}{16}\\raggedright\\sffamily\\color{nliblue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{nliblue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{nliblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\color{elegantblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{elegantblue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{elegantblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{22}{22}\\raggedright\\sffamily\\color{nliblue}}
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{22}{22}\\raggedright\\sffamily\\color{elegantblue}}
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{nliblue}}
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 
 
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=nliblue,filecolor=nliblue,linkcolor=nliblue,urlcolor=nliblue}
+\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
 \\renewcommand\\maketitle{}
 
