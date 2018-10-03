@@ -798,6 +798,13 @@ Open new buffers without prompting me for a filename global counter to ensure ev
    #+END_SRC 
 
 
+** latex images 
+#+BEGIN_SRC emacs-lisp
+
+  (setq org-latex-image-default-width "180pt");
+(setq   org-export-allow-bind-keywords t) 
+#+END_SRC 
+
 ** Highlight latex text in org mode
 Ben Maughan
 Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appear in a different colour in an org-mode file to help it stand out.
@@ -834,8 +841,8 @@ Note: disable this when trying to export to org-html-themes!
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-;; (plist-put plist :with-toc t); for TOC in latex
-    (plist-put plist :with-toc nil); no TOC in latex
+(plist-put plist :with-toc t); for TOC in latex
+;; (plist-put plist :with-toc nil); no TOC in latex
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
@@ -6128,6 +6135,7 @@ Wow, this works.
 (interactive)
 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
@@ -7837,3 +7845,4 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 (add-hook 'before-save-hook 'time-stamp) 
 #+END_SRC
+

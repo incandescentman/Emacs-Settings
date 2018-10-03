@@ -208,7 +208,7 @@
 \\endtikzpicture}
 \\makeatother
 
-
+%\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
 \\newenvironment{indentedsection}
   {\\adjustwidth{2em}{0pt}}
@@ -239,14 +239,14 @@
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\color{elegantblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{elegantblue}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{elegantblue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{elegantblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{22}{22}\\raggedright\\sffamily\\color{elegantblue}}
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\color{elegantblue}}
 
 \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 
