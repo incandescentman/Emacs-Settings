@@ -250,7 +250,7 @@
 
 \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 
-
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
