@@ -79,7 +79,7 @@
 \\setcounter{secnumdepth}{0}
 
 
-
+\\usepackage[labelformat=empty]{caption}
 
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
@@ -246,7 +246,7 @@
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\color{elegantblue}}
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{elegantblue} }
 
 \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 
