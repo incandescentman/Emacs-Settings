@@ -50,7 +50,9 @@
 \\definecolor{resonateorange}{HTML}{da7635}
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
-\\definecolor{elegantblue}{HTML}{4380b9}
+%\\definecolor{dullerelegantblue}{HTML}{4380b9}
+\\definecolor{elegantblue}{HTML}{1792d1}
+
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
@@ -89,7 +91,7 @@
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 \\lfoot{}
-\\cfoot{}
+\\cfoot{\\thepage}
 \\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
@@ -234,8 +236,8 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
-\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
+\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
