@@ -7,7 +7,7 @@
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry}
 \\usepackage{float}
-
+\\usepackage{changepage}
 
 \\usepackage{algorithm}
 \\usepackage{amsmath}
@@ -15,8 +15,9 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-  \\setromanfont{Garamond Premier Pro}
- \\setsansfont{Helvetica Neue}
+%  \\setromanfont{Garamond Premier Pro}
+\\setromanfont{Helvetica Neue Light}
+ \\setsansfont{Helvetica Neue Light}
   \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
@@ -25,6 +26,7 @@
 \\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
+\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -41,6 +43,11 @@
 \\definecolor{periodblue}{HTML}{12239e}
 \\definecolor{denimblue}{HTML}{3A5F90}
 \\definecolor{electricblue}{HTML}{05ADF3}
+\\definecolor{resonateblue}{HTML}{005778}
+\\definecolor{resonateorange}{HTML}{da7635}
+\\definecolor{resonategrey}{HTML}{4d4d4c}
+\\definecolor{nliblue}{HTML}{2f9ed3}
+\\definecolor{elegantblue}{HTML}{1792d1}
 
 
 \\newtoks\\leftheader 
@@ -48,21 +55,18 @@
 \\newtoks\\coverimage
 \\newtoks\\rightheader
 
-
+\\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={FB782C}]{ChunkFive}
-\\newfontfamily\\myauthorfont[Color={FB782C}]{Gill Sans Display MT Pro}
-\\newfontfamily\\mybluefont[Color=electricblue]{Gill Sans Display MT Pro}
-\\DeclareTextFontCommand{\\textbf}{\\rmfamily\\color{electricblue}}
-\\DeclareTextFontCommand{\\textit}{\\\itshape\\color{electricblue}}
+\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
-
-% suppress table numbering http://tex.stackexchange.com/questions/28392/how-to-suppress-caption-numbering-in-a-table
-\\usepackage{caption}
-\\captionsetup[table]{labelformat=empty}
+%Define Bold face
+\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+\\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{textcase}
 
@@ -73,7 +77,7 @@
 \\setcounter{secnumdepth}{0}
 
 
-
+\\usepackage[labelformat=empty]{caption}
 
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
@@ -86,7 +90,14 @@
 \\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{12pt plus 2pt minus 1pt} %Space between paragraphs
+\\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
+
+% spacing: how to read {12pt plus 4pt minus 2pt}
+%           12pt is what we would like the spacing to be
+%           plus 4pt means that TeX can stretch it by at most 4pt
+%           minus 2pt means that TeX can shrink it by at most 2pt
+%       This is one example of the concept of, 'glue', in TeX
+
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
@@ -107,33 +118,142 @@
 \\newcommand{\\textsubscr}[1]{\\ensuremath{_{\\scriptsize\\textrm{#1}}}}
 
 \\usepackage{enumitem}
-%\\setlist{nolistsep}
-\\setlist{topsep=0pt}
-\\renewcommand{\\labelitemi}{$\\bullet$}
-\\renewcommand{\\labelitemii}{$\\bullet$}
-\\renewcommand{\\labelitemiii}{$\\bullet$}
-\\renewcommand{\\labelitemiv}{$\\bullet$}
+
+\\newlist{mylist}{enumerate}{10} 
+
+
+% control line spacing in bulleted list
+\\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
+% see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
+%\\setlist{topsep=0pt} % for a line between list items
+
+
+\\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+
+\\setlistdepth{10}
+\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\renewlist{itemize}{itemize}{10}
+
+
+
+
+
+\\definecolor{azure}{HTML}{f2feff}
+
+\\usepackage{lipsum}
+\\usepackage{tikz}
+\\usetikzlibrary{backgrounds}
+\\makeatletter
+
+\\tikzset{%
+  fancy quotes/.style={
+    text width=\\fq@width pt,
+    align=justify,
+    inner sep=1em,
+    anchor=north west,
+    minimum width=\\linewidth,
+  },
+  fancy quotes width/.initial={.8\\linewidth},
+  fancy quotes marks/.style={
+    scale=8,
+    text=black,
+    inner sep=0pt,
+  },
+  fancy quotes opening/.style={
+    fancy quotes marks,
+  },
+  fancy quotes closing/.style={
+    fancy quotes marks,
+  },
+  fancy quotes background/.style={
+    show background rectangle,
+    inner frame xsep=0pt,
+    background rectangle/.style={
+      fill=azure,
+      rounded corners,
+    },
+  }
+}
+
+\\newenvironment{fancyquotes}[1][]{%
+\\noindent
+\\tikzpicture[fancy quotes background]
+\\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
+\\tikz@scan@one@point\\pgfutil@firstofone(fq@ul.east)
+\\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
+\\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \\bgroup}
+{\\egroup;
+\\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
+\\endtikzpicture}
+\\makeatother
+
+%\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
+
+\\newenvironment{indentedsection}
+  {\\adjustwidth{2em}{0pt}}
+  {\\endadjustwidth}
+
+
+\\usepackage{setspace}
+\\usepackage{lipsum}
+\\usepackage{etoolbox}
+\\AtBeginEnvironment{quote}{\\singlespace\\vspace{-\\topsep}\\small}
+\\AtEndEnvironment{quote}{\\vspace{-\\topsep}\\endsinglespace}
+
 
 \\usepackage[sc]{titlesec}
-\\titlespacing*{\\section}{0pt}{6pt}{-7pt}
-\\titlespacing*{\\subsection}{0pt}{0pt}{-7pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{-5pt}
-
-\\titleformat*{\\section}{\\normalfont\\bfseries\\fontsize{36}{36}\\raggedright\\sffamily\\color{pinterestred}}
-\\titleformat*{\\subsection}{\\normalfont\\fontsize{20}{20}\\scshape\\color{electricblue}}
-\\titleformat*{\\subsubsection}{\\normalfont\\fontsize{12}{8}\\raggedright\\bfseries\\rmfamily\\color{pinterestred}}
-\\titleformat*{\\paragraph}{\\normalfont\\normalsize\\raggedright\\bfseries\\rmfamily\\color{pinterestred}}
-\\titleformat*{\\subparagraph}{\\normalfont\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{electricblue}}
-\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
-\\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
 
-\\setlength{\\tabcolsep}{10pt} % Default value: 6pt
-\\renewcommand{\\arraystretch}{1.6} % Default value: 1
+\\newlength\\TitleOverhang
+\\setlength\\TitleOverhang{1.5cm}
 
+\\newcommand\\Overhang[1]{%
+ \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
+}
+
+
+% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+
+
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{elegantblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{elegantblue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{elegantblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
+
+
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{elegantblue} }
+
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
+
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
+
+
+\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
 \\renewcommand\\maketitle{}
-
 
 
       [NO-DEFAULT-PACKAGES]
