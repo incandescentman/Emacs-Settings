@@ -3748,6 +3748,7 @@ M-1 to 9
 (interactive)
 (save-excursion				;save the current point
   (replace-string "  " " " nil (point-min) (point-max))
+  (replace-string "" "" nil (point-min) (point-max))
   (replace-string "΄" "\"" nil (point-min) (point-max))
   (replace-string "“" "\"" nil (point-min) (point-max))
   (replace-string "’" "'" nil (point-min) (point-max))
@@ -3788,6 +3789,7 @@ M-1 to 9
 (replace-string "     " "" nil (point-min) (point-max))
 (replace-string "    " "" nil (point-min) (point-max))
 (replace-string " " " " nil (point-min) (point-max))
+(replace-string " " "" nil (point-min) (point-max))
 
 
 (replace-string "Õ" "'" nil (point-min) (point-max))
