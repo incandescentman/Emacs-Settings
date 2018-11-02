@@ -615,6 +615,29 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+
+
+;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
+(defun ambrevar/reset-gc-cons-threshold ()
+  (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
+(setq gc-cons-threshold (* 64 1024 1024))
+(add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
+
+;;; Temporarily disable the file name handler.
+(setq default-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(defun ambrevar/reset-file-name-handler-alist ()
+  (setq file-name-handler-alist
+	(append default-file-name-handler-alist
+		file-name-handler-alist))
+  (cl-delete-duplicates file-name-handler-alist :test 'equal))
+(add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
+
+                                        ; Source: https://ambrevar.xyz/emacs2/
+
+
+
   (require 'auto-capitalize)
   (require 'recentf)
   (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
@@ -659,6 +682,9 @@ before packages are loaded."
       (emacs-lisp . t)
       (ditaa . t)
       ))
+
+(load "/Users/jay/emacs/emacs-settings/zones.el")
+(require 'zones)
 
 (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
   (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
@@ -929,7 +955,50 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (doom-modeline async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (org-mime doom-modeline async goto-chg marshal yasnippet projectile f expand-region pythonic evil w3m avy ht alert notmuch swiper bind-key smartparens ivy flycheck company helm helm-core js2-mode org-projectile org-plus-contrib imenu-list diminish shell-pop multi-term eshell-z eshell-prompt-extras esh-help zenburn-theme yapfify yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode uuidgen use-package unfill toc-org tldr tiny tabbar symon stripe-buffer string-inflection solarized-theme smex scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters pyvenv pytest pyenv-mode py-isort project-explorer polymode point-stack pip-requirements pcre2el password-generator paredit paradox palimpsest ox-twbs ox-tufte ox-gfm ox-clip org-sticky-header org-projectilec-helm org-present org-pomodoro org-mac-link org-fstree org-download org-bullets org-brain org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn mu4e-maildirs-extension mu4e-alert move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc info+ indent-guide ido-hacks hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ define-word cython-mode cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize anaconda-mode aggressive-indent ag ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((org-inline-image-overlays)
+     (org-latex-caption-above)
+     (org-hide-emphasis-markers . t)
+     (org-hide-macro-markers . t)
+     (org-fontify-quote-and-verse-blocks . t)
+     (eval org-sbe "latex-link")
+     (eval org-sbe "latex-opt-link")
+     (eval org-sbe "jk-keywords")
+     (eval org-sbe "pdf-process-bibtex")
+     (eval org-sbe "ngz-nbsp")
+     (eval org-sbe "latex-filter-footcites")
+     (eval org-sbe "biblatex-cite-link")
+     (eval org-sbe "biblatex-textcite-link")
+     (eval org-sbe "biblatex-parencite-link")
+     (eval org-sbe "biblatex-sidecite-link")
+     (eval org-sbe "biblatex-multicite-link")
+     (eval org-sbe "biblatex-footcite-link")
+     (eval org-sbe "tufte-ebib-setup")
+     (eval org-sbe "tufte-handout")
+     (eval org-sbe "tufte-book")
+     (eval org-sbe "user-entities")
+     (eval ox-extras-activate
+           (quote
+            (ignore-headlines)))
+     (eval require
+           (quote ox-gfm))
+     (eval require
+           (quote ox-extra))
+     (eval require
+           (quote ox-tufte-latex))
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           (quote insert-space))
+     (eval define-key org-mode-map
+           (kbd ":")
+           (quote insert-colon))
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           (quote insert-space))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -943,7 +1012,8 @@ This function is called at the very end of Spacemacs initialization."
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
  '(org-link ((t (:underline nil :inherit link))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+ '(zz-fringe-for-narrowing ((t (:box (:line-width 2 :color "grey75" :style released-button))))))
 )
 
 (custom-set-variables
