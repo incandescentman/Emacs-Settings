@@ -1,0 +1,118 @@
+#! /bin/bash
+
+# Shell options: -o = on, +o = off
+
+set -o errexit # exit on first error
+set -o nounset # report unset variables
+set +o xtrace  # show commands
+
+PACKAGE="tufte-latex"
+
+CLS_FILES="tufte-handout.cls tufte-book.cls"
+DEF_FILES="tufte-common.def"
+BST_FILES="tufte.bst"
+SOURCE_FILES="sample-handout.pdf sample-handout.tex sample-handout.bib sample-book.pdf sample-book.tex"
+
+if test $# -ne 1 ; then echo "Usage: $0 3.5.2 (version number)" ; exit 1 ; fi
+
+VERSION=$1
+DATE=$(date +"%Y/%m/%d")
+
+if ! echo $VERSION | egrep -q "^[0-9]+\.[0-9]+\.[0-9]+$" ; then
+  echo "Error: version should be of the form 1.2.5 (major.minor.revision)."
+  exit 1
+fi
+
+# TODO: instead of all this checking, just sed values into the appropriate files
+
+DATE_VERSION="$DATE v$VERSION"
+for file in $CLS_FILES $DEF_FILES ; do
+  if ! grep -q "$DATE_VERSION" $file ; then
+    echo "Error: $file does not contain '$DATE_VERSION':"
+    egrep 'Provides(Class|File)' $file
+    exit 1
+  fi
+done
+
+VERSION_DATE="$VERSION - $DATE"
+if ! grep -q "$VERSION_DATE" History.txt ; then
+  echo "Error: no release notes for '$VERSION_DATE' found in History.txt"
+  exit 1
+fi
+
+# Refresh sample documents
+
+echo "Building sample-handout ..."
+pdflatex sample-handout >  refresh-sample.log
+bibtex   sample-handout >> refresh-sample.log
+pdflatex sample-handout >> refresh-sample.log
+pdflatex sample-handout >> refresh-sample.log
+rm -f sample-handout.{aux,blg,bbl,log,out} refresh-sample.log
+echo "Success"
+
+echo "Building sample-book ..."
+pdflatex sample-book >  refresh-book.log
+bibtex   sample-book >> refresh-book.log
+texindy --language english sample-book.idx >> refresh-book.log
+pdflatex sample-book >> refresh-book.log
+pdflatex sample-book >> refresh-book.log
+rm -f sample-book.{aux,blg,bbl,idx,ind,lof,log,lot,out,toc} refresh-book.log
+echo "Success"
+
+# To ease Google Code upload, make a distinct version of samples:
+
+cp sample-handout.pdf sample-handout-$VERSION.pdf
+cp sample-book.pdf    sample-book-$VERSION.pdf
+
+# Make bundle for Google Code release
+
+echo "Creating zip bundle for Google Code release ..."
+mkdir -p pkg/$PACKAGE-$VERSION
+tar -cf - $(cat Manifest.txt) | tar -C pkg/$PACKAGE-$VERSION -xf -
+( cd pkg && zip -rq $PACKAGE-$VERSION.zip $PACKAGE-$VERSION )
+echo "Complete"
+
+# Make bundle for CTAN release
+
+TDS_DIR=pkg/$PACKAGE/tds/
+TDS_TEX_DIR=$TDS_DIR/tex/latex/$PACKAGE/
+TDS_DOC_DIR=$TDS_DIR/doc/latex/$PACKAGE/
+TDS_SRC_DIR=$TDS_DIR/source/latex/$PACKAGE/
+
+echo "Creating zip bundle for CTAN release ..."
+mkdir -p $TDS_DIR $TDS_TEX_DIR $TDS_DOC_DIR $TDS_SRC_DIR
+
+cp $CLS_FILES $DEF_FILES $BST_FILES $TDS_TEX_DIR/
+
+cp History.txt README.txt sample-handout.{pdf,tex,bib} sample-book.{pdf,tex} $TDS_DOC_DIR/
+cp -a graphics $TDS_DOC_DIR/
+
+cp $CLS_FILES $DEF_FILES $BST_FILES $SOURCE_FILES $TDS_SRC_DIR/
+
+( cd $TDS_DIR && zip -rq ../../$PACKAGE-$VERSION/$PACKAGE.tds.zip * )
+rm -fr pkg/$PACKAGE
+mv pkg/$PACKAGE-$VERSION pkg/$PACKAGE
+( cd pkg && zip -rq $PACKAGE.zip $PACKAGE )
+echo "Complete"
+
+# TODO: test release (unpack and build sample-*.tex files)
+
+# Remove our temporary files
+rm -rf pkg/$PACKAGE
+
+# Provide some cut-n-paste material for manual steps:
+
+cat << MESSAGE
+
+`openssl dgst -sha1 pkg/$PACKAGE-$VERSION.zip`
+
+Don't forget to create an SVN tag (after committing changes),
+
+  git tag -a v$VERSION -m 'Tufte-LaTeX v$VERSION'
+
+And upload the zip file:
+
+  https://github.com/Tufte-LaTeX/tufte-latex/releases
+  http://ctan.org/upload
+
+MESSAGE
