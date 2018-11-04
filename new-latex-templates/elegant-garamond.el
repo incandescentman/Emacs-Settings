@@ -19,7 +19,7 @@
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
-  \\setmonofont{Myriad Pro}
+  \\setmonofont{TeX Gyre Heros}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -232,23 +232,49 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
+%\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
+%\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
+%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+
+
+% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\\titlespacing*{\\section}{0pt}{1.5ex}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\itshape\\fontsize{30}{20}\\raggedright\\sffamily}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright}
-\\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{14}{16}\\raggedright\\sffamily}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\itshape}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\itshape\\ttfamily}
+\\usepackage{textcase} % provides \\MakeTextUppercase and \\MakeTextLowercase
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{elegantblue} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\color{elegantblue}}
+\\usepackage{letterspace}
+  % Set up letterspacing (using microtype package) -- requires pdfTeX v1.40+
+  \\renewcommand{\\allcapsspacing}[1]{\\textls[200]{##1}}%
+  \\renewcommand{\\smallcapsspacing}[1]{\\textls[50]{##1}}%
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
+
+\\newcommand{\\allcaps}[1]{\\allcapsspacing{\\MakeTextUppercase{#1}}}
+\\newcommand{\\smallcaps}[1]{\\smallcapsspacing{\\MakeTextLowercase{#1}}}
+
+\\renewcommand{\\allcaps}[1]{\\allcapsspacing{\\MakeTextUppercase{##1}}}%
+  \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{##1}}}%
+  \\renewcommand{\\textsc}[1]{\\sotextsc{##1}}%
+}
+
+
+
+\\titleformat*{\\section}{\\allcaps\\ttfamily\\fontsize{30}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{18}{16}\\raggedright\\sffamily}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{15}{14}\\raggedright\\itshape\\ttfamily}
+
+
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
+
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright}
+
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily}
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
