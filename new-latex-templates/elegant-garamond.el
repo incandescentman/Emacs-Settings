@@ -17,7 +17,7 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-\\setromanfont{Garamond Premier Pro}
+\\setromanfont{TeX Gyre Pagella}
  \\setsansfont{TeX Gyre Pagella}
   \\setmonofont{TeX Gyre Heros}
 \\else
@@ -260,11 +260,12 @@
 
 
 
-\\titleformat*{\\section}{\\ttfamily\\fontsize{50}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{50}{36}\\raggedright\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{18}{16}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{16}{16}\\raggedright\\sffamily}
+
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{15}{14}\\raggedright\\itshape\\ttfamily}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{15}{14}\\raggedright\\bfseries\\ttfamily}
 
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
