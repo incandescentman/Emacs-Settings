@@ -26,7 +26,6 @@
 \\fi
 \\usepackage{url}
 \\usepackage{paralist}
-\\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
@@ -81,16 +80,31 @@
 
 \\usepackage[labelformat=empty]{caption}
 
+
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
+
+
+
+
+
+
+
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\sffamily\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\sffamily{\\leftmark}}}
+\\rhead{{\\scshape{\\leftmark}}}
 % \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
 \\cfoot{\\thepage}
 \\rfoot{}
+
+
+
+
+
+
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
@@ -246,7 +260,7 @@
 
 
 
-\\titleformat*{\\section}{\\ttfamily\\addfontfeature{LetterSpace=45}\\fontsize{50}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\fontsize{50}{36}\\raggedright\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{18}{16}\\raggedright\\sffamily}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}
