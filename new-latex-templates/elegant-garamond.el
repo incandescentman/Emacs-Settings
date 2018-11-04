@@ -67,7 +67,9 @@
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
-\\usepackage{textcase}
+\\usepackage{letterspace}
+\\usepackage{microtype}
+
 
 \\pagenumbering{arabic}
 \\makeatletter
@@ -243,27 +245,8 @@
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\usepackage{textcase} % provides \\MakeTextUppercase and \\MakeTextLowercase
 
-
-
-\\usepackage{letterspace}
-  % Set up letterspacing (using microtype package) -- requires pdfTeX v1.40+
-  \\renewcommand{\\allcapsspacing}[1]{\\textls[200]{##1}}%
-  \\renewcommand{\\smallcapsspacing}[1]{\\textls[50]{##1}}%
-
-
-\\newcommand{\\allcaps}[1]{\\allcapsspacing{\\MakeTextUppercase{#1}}}
-\\newcommand{\\smallcaps}[1]{\\smallcapsspacing{\\MakeTextLowercase{#1}}}
-
-\\renewcommand{\\allcaps}[1]{\\allcapsspacing{\\MakeTextUppercase{##1}}}%
-  \\renewcommand{\\smallcaps}[1]{\\smallcapsspacing{\\scshape\\MakeTextLowercase{##1}}}%
-  \\renewcommand{\\textsc}[1]{\\sotextsc{##1}}%
-}
-
-
-
-\\titleformat*{\\section}{\\allcaps\\ttfamily\\fontsize{30}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\addfontfeature{LetterSpace=15}\\fontsize{30}{36}\\raggedright\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{18}{16}\\raggedright\\sffamily}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}

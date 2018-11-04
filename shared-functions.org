@@ -6137,6 +6137,7 @@ Wow, this works.
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/modest-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-garamond.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
