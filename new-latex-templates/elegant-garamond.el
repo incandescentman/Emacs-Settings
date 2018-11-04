@@ -84,12 +84,12 @@
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\ttfamily\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\sffamily\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\ttfamily\\nouppercase{\\leftmark}}}
-% \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
+\\rhead{{\\sffamily{\\leftmark}}}
+% \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
-\\cfoot{}
+\\cfoot{\\thepage}
 \\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
