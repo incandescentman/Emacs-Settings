@@ -84,9 +84,9 @@
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\ttfamily\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\nouppercase{\\leftmark}}}
+\\rhead{{\\ttfamily\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 \\lfoot{}
 \\cfoot{}
@@ -240,13 +240,13 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{1.5ex}{-6pt}
+\\titlespacing*{\\section}{0pt}{1.5ex}{1ex}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
 
-\\titleformat*{\\section}{\\ttfamily\\addfontfeature{LetterSpace=15}\\fontsize{30}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\addfontfeature{LetterSpace=45}\\fontsize{50}{36}\\raggedright\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\sffamily\\itshape\\fontsize{18}{16}\\raggedright\\sffamily}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}
