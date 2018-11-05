@@ -10,7 +10,6 @@
 
 \\usepackage{float}
 \\usepackage{changepage}
-
 \\usepackage{algorithm}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
@@ -57,10 +56,6 @@
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
-%This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
@@ -266,7 +261,7 @@
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright}
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright}
 
 \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily}
 
@@ -275,6 +270,7 @@
 \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
 \\renewcommand\\maketitle{}
+
 
 
       [NO-DEFAULT-PACKAGES]
