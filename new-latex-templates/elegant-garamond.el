@@ -11,6 +11,7 @@
 \\usepackage{float}
 \\usepackage{changepage}
 \\usepackage{algorithm}
+\\usepackage{pdfpages}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
 \\ifxetex
