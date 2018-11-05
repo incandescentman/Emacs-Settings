@@ -83,6 +83,8 @@
 
 
 \\usepackage{fancyhdr}
+\\fancyhf{} % sets both header and footer to nothing
+\\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
 
 
@@ -248,24 +250,18 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-%\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
+\\titlespacing*{\\section}{0pt}{150pt}{40pt}
 %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 %\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{1.5ex}{1ex}
-\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
-
-
-\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{50}{36}\\raggedright\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{16}{16}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{17}{16}\\raggedright\\sffamily}
 
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\itshape}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{15}{14}\\raggedright\\bfseries\\ttfamily}
+\\titleformat*{\\paragraph}{\\ttfamily\\fontsize{15}{12}\\raggedright\\bfseries}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{12}{12}\\raggedright\\bfseries\\ttfamily}
 
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
