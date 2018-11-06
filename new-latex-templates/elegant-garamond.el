@@ -58,6 +58,10 @@
 \\tolerance=1000
 
 
+
+\\usepackage{magaz}
+
+
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
@@ -267,7 +271,7 @@
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright}
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
 
 \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily}
 
