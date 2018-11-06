@@ -17,7 +17,7 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-\\setromanfont{TeX Gyre Pagella}
+\\setromanfont{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
   \\setmonofont{TeX Gyre Heros}
 \\else
@@ -112,6 +112,11 @@
 %           plus 4pt means that TeX can stretch it by at most 4pt
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
+
+
+\\usepackage{setspace}
+\\onehalfspacing
+\\setstretch{1.2} 
 
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
