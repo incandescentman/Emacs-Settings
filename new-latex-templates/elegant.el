@@ -17,7 +17,6 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-%  \\setromanfont{Garamond Premier Pro}
 \\setromanfont{Helvetica Neue Light}
  \\setsansfont{Helvetica Neue Light}
   \\setmonofont{Myriad Pro}
@@ -241,9 +240,9 @@
 %\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{1.5ex}{16pt}{-6pt}
-\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
 \\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{elegantblue}}

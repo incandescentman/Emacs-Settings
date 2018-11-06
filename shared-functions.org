@@ -117,7 +117,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq cua-mode nil)
  (setq debug-on-error t)
  (setq deft-directory "~/Dropbox/writing/notationaldata/")
-; (setq delete-window-preserve-buffer (quote ("top-performer.org" "current-book-research.txt" "accountability.txt")))
+; (setq delete-window-preserve-buffer (quote ("fearless.org" "current-book-research.txt" "accountability.txt")))
  (setq dired-clean-up-buffers-too nil)
 ;; (setq dired-details-hidden-string "")
  (setq dired-kept-versions 8)
@@ -128,7 +128,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq grep-highlight-matches (quote always))
  (setq ido-use-faces t)
  (setq ido-use-url-at-point t)
- (setq initial-buffer-choice "~/Dropbox/writing/notationaldata/top-performer.org")
+ (setq initial-buffer-choice "~/Dropbox/writing/notationaldata/fearless.org")
  (setq initial-major-mode (quote org-mode))
  ;; (setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
@@ -1120,7 +1120,7 @@ This is working correctly:
 	("g" "gratitude" entry (file "gratitude.txt")
 	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
 
-	("L" "Later" checkitem (file+headline "top-performer.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+	("L" "Later" checkitem (file+headline "fearless.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
 	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
 	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
@@ -1471,7 +1471,7 @@ Make org-capture open in full window! :-)
 (org-todo 'done) 
 (previous-line)
 (condition-case nil
- (kill-buffer "top-performer.org")
+ (kill-buffer "fearless.org")
  (error nil))
 (org-pomodoro)
 
@@ -4191,7 +4191,7 @@ Single Capitals as you type."
 
 (defun warm-open ()
   (interactive)
-  (find-file "/Users/jay/Dropbox/writing/notationaldata/top-performer.org")
+  (find-file "/Users/jay/Dropbox/writing/notationaldata/fearless.org")
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 

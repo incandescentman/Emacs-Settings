@@ -753,7 +753,7 @@ before packages are loaded."
 
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
-       (find-file "~/nd/top-performer.org")
+       (find-file "~/nd/fearless.org")
        ;;       (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
@@ -844,7 +844,7 @@ before packages are loaded."
   (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
   ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
 
-  (find-file "~/nd/top-performer.org")
+  (find-file "~/nd/fearless.org")
 
 
 
