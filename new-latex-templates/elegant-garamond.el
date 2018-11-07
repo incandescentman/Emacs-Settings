@@ -276,10 +276,10 @@
 
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{17}{16}\\raggedright\\sffamily}
 
-\\titleformat*{\\paragraph}{\\ttfamily\\fontsize{15}{12}\\raggedright\\bfseries}
+\\titleformat*{\\paragraph}{\\ttfamily\\fontsize{14}{12}\\raggedright\\bfseries}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{12}{12}\\raggedright\\bfseries\\ttfamily}
 
 
@@ -291,13 +291,13 @@
 
 \\newenvironment{tagline}% environment name 
 {% begin code
-\\vspace{-12pt}
-\\large
+\\vspace{-36pt}
+\\Large
 \\begin{itshape}% 
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces 
+  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
 }% 
 {% end code 
-  \\end{itshape}\\ignorespacesafterend 
+  \\end{itshape}\\vspace{24pt}\\ignorespacesafterend
 }
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
