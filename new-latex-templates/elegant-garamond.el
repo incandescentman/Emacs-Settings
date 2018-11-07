@@ -317,14 +317,14 @@
 
 \\newenvironment{fauxcenter}% environment name 
 {% begin code
-\\vspace{-24pt}
+
 \\Large
 \\begin{bfseries}% 
 \\begin{center}
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+
 }% 
 {% end code 
-\\end{center}\\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
+\\end{center}\\end{bfseries}\\ignorespacesafterend
 }
 
 
