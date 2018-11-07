@@ -246,9 +246,9 @@
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
 \\newenvironment{indentedsection}
-  {\\adjustwidth{2em}{0pt}}
+{  {\\adjustwidth{2em}{0pt}}
   {\\endadjustwidth}
-
+}
 
 \\usepackage{setspace}
 \\usepackage{lipsum}
@@ -276,7 +276,7 @@
 
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily}
-\\titleformat*{\\subsection}{\\sffamily\\itshape\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{17}{16}\\raggedright\\sffamily}
 
 \\titleformat*{\\paragraph}{\\ttfamily\\fontsize{15}{12}\\raggedright\\bfseries}
@@ -287,8 +287,18 @@
 
 \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily}
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
 
+\\newenvironment{tagline}% environment name 
+{% begin code
+\\vspace{-12pt}
+\\large
+\\begin{itshape}% 
+  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces 
+}% 
+{% end code 
+  \\end{itshape}\\ignorespacesafterend 
+}
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
 \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
