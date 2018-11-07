@@ -801,7 +801,8 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ** latex images 
 #+BEGIN_SRC emacs-lisp
 
-  (setq org-latex-image-default-width "180pt");
+  (setq org-latex-image-default-width "340pt");; new value just for book export
+;; (setq org-latex-image-default-width "180pt") good value, works for QIAGEN for example 
 (setq   org-export-allow-bind-keywords t) 
 #+END_SRC 
 
