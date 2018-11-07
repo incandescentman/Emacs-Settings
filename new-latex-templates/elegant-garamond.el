@@ -300,6 +300,36 @@
   \\end{itshape}\\vspace{24pt}\\ignorespacesafterend
 }
 
+
+
+\\newenvironment{fauxtitle}% environment name 
+{% begin code
+%\\vspace{12pt}
+\\Large
+\\begin{bfseries}% 
+  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+}% 
+{% end code 
+  \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
+}
+
+
+
+\\newenvironment{fauxcenter}% environment name 
+{% begin code
+\\vspace{-24pt}
+\\Large
+\\begin{bfseries}% 
+\\begin{center}
+  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+}% 
+{% end code 
+\\end{center}\\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
+}
+
+
+
+
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
 \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
