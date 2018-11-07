@@ -271,13 +271,13 @@
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{0pt}{150pt}{40pt}
 %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
 
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{17}{16}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{17}{16}\\raggedright\\ttfamily}
 
 \\titleformat*{\\paragraph}{\\ttfamily\\fontsize{14}{12}\\raggedright\\bfseries}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{12}{12}\\raggedright\\bfseries\\ttfamily}
