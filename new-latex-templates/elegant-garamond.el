@@ -49,6 +49,7 @@
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
 \\definecolor{elegantblue}{HTML}{4380b9}
+\\definecolor{spacegrey}{HTML}{434346}
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
@@ -275,7 +276,7 @@
 
 
 
-\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily}
+\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{17}{16}\\raggedright\\ttfamily}
 
@@ -319,12 +320,11 @@
 {% begin code
 
 \\Large
-\\begin{bfseries}% 
 \\begin{center}
 
 }% 
 {% end code 
-\\end{center}\\end{bfseries}\\ignorespacesafterend
+\\end{center}\\ignorespacesafterend
 }
 
 
