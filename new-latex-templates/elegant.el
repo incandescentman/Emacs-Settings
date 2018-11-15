@@ -50,7 +50,8 @@
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
-\\definecolor{elegantblue}{HTML}{1792d1}
+%\\definecolor{elegantblue}{HTML}{1792d1}
+\\definecolor{elegantblue}{HTML}{1587CB}
 
 
 \\newtoks\\leftheader 
