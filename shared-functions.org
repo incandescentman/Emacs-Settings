@@ -244,6 +244,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 *** Hunspell
 
 #+BEGIN_SRC emacs-lisp
+(flyspell-mode)
 (setq exec-path (append exec-path '("/usr/local/bin"))) 
 (setq-default ispell-program-name (executable-find "hunspell")) 
 (setq ispell-really-hunspell t) 
