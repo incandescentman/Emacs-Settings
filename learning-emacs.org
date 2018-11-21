@@ -52,7 +52,7 @@ bind keys
 #+END_EXAMPLE 
 
 
-* search and replace across files
+* multi file search and replace across files
 1. ~M-x find-name-dired~: you will be prompted for a root directory and a filename pattern.
 2. Press ~t~ to "toggle mark" for all files found.
 3. Press ~Q~ for "Query-Replace in Files...": you will be prompted for query/substitution regexps.
@@ -861,3 +861,18 @@ e .jay-scripts.sh
 
 
 #+END_EXPORT
+
+
+* SEDusage
+
+#+BEGIN_SRC sh
+
+LC_ALL=C find . -type f -exec sed -i " s/SO\ \-\ //g {} + 
+
+
+LC_ALL=C find . -type f -exec sed -i " s/title\ =\ \"/title\ =\ \"z_/g {} + 
+
+
+#+END_SRC 
+
+
