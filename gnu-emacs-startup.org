@@ -574,6 +574,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
+(define-key key-minor-mode-map (kbd "s-j o c") 'org-wc-count-subtrees)
+(define-key key-minor-mode-map (kbd "s-j o c") 'org-wc-display)
 
 (global-set-key (kbd "C-c m") 'compose-mail)
 ;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
