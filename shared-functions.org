@@ -1492,15 +1492,12 @@ Make org-capture open in full window! :-)
 ;; (require 'org-mime)
 (setq org-mime-default-header "")
 
-;; put a div tag around the whole message to put it in Sans-Serif font.
+;; add signature 
 
 (add-hook 'org-mime-html-hook
           (lambda ()
-            (goto-char (point-min))
-            (insert "<div style=\"font-family:Sans-Serif\">")
             (goto-char (point-max))
-            (insert "<font face='georgia, serif'>
-<br>
+            (insert "<br>
 <br>
 --<br>
 <a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>Jay Dixit</a><br>
@@ -1519,9 +1516,7 @@ Make org-capture open in full window! :-)
 <img src='http://incandescentman.github.io/assets/images/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
 </a>
 <br>
-<p style='color:#FFF;' target='_blank'>Jay Dixit</p>
-</font>
-</div>")))
+<p style='color:#FFF;' target='_blank'>Jay Dixit</p>")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
