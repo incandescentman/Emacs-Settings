@@ -151,6 +151,7 @@ This function should only modify configuration layer settings."
                                       nm
                                       olivetti
                                       openwith
+				      orgalist
                                       org-bookmark-heading
                                       org-fstree
                                       org-mime
