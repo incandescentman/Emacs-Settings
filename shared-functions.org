@@ -3785,7 +3785,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
          (not (org-checkbox-p))
          (save-match-data
            (not (and
-                 (org-or-orgtsruct-p)
+                 (org-or-orgalist-p)
                  (looking-back
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
@@ -7860,13 +7860,11 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 * poet-mode
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-mode-hook
-        (lambda ()
-        (variable-pitch-mode 1))) 
+;; (add-hook 'org-mode-hook
+;;         (lambda ()
+;;         (variable-pitch-mode 1))) 
 
-(set-face-attribute 'default nil :family "Iosevka" :height 130)
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka")
-  (set-face-attribute 'variable-pitch nil :family "Baskerville") 
+(set-face-attribute 'variable-pitch nil :family "Baskerville") 
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . light)) 
@@ -7874,4 +7872,10 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 ;;  (typo-mode 1)      ;; Good for symbols like em-dash 
 
+(defun poet-mode ()
+(interactive) 
+(set-face-attribute 'default nil :family "Iosevka" :height 130)
+(set-face-attribute 'fixed-pitch nil :family "Iosevka") 
+        (variable-pitch-mode 1)
+)
 #+END_SRC
