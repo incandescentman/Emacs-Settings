@@ -77,6 +77,7 @@
 \\makeatletter
 
 
+\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
