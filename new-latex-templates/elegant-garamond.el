@@ -192,6 +192,7 @@
 \\renewlist{itemize}{itemize}{10}
 
 
+\\renewcommand{\\contentsname}{Table of Contents}
 
 
 

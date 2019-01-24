@@ -47,6 +47,9 @@
 \\definecolor{electricblue}{HTML}{05ADF3}
 
 
+\\renewcommand{\\contentsname}{Table of Contents}
+
+
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
