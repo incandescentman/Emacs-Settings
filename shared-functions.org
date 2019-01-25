@@ -5637,24 +5637,21 @@ execute speed commands."
 
 ** org insert easy template source blocks 
    #+BEGIN_SRC emacs-lisp
-(add-to-list 'org-structure-template-alist
-'("p" "#+BEGIN_SRC python\n?\n#+END_SRC" "<src lang=\"python\">\n?\n</src>") )
+(require 'org-tempo)
 
-(add-to-list 'org-structure-template-alist
-'("a" "#+BEGIN_LaTeX\n?\n#+END_LaTeX"  "<literal style=\"latex\">\n?\n</literal>") )
+(add-to-list 'org-structure-template-alist '("s" . "src"))
 
-(add-to-list 'org-structure-template-alist
-'("f" "#+BEGIN_EXPORT fountain\n?\n#+END_EXPORT" "<src lang=\"fountain\">\n?\n</src>"))
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
 
-(add-to-list 'org-structure-template-alist
-'("hh" "#+BEGIN_HTML\n?\n#+END_HTML" "<src lang=\"HTML\">\n?\n</src>") )
+(add-to-list 'org-structure-template-alist '("h" . "export html"))
 
-(add-to-list 'org-structure-template-alist
-'("l" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src lang=\"emacs-lisp\">\n?\n</src>"))
+(add-to-list 'org-structure-template-alist '("p" . "src python"))
 
-(add-to-list 'org-structure-template-alist
-'("le" "#+BEGIN_EXAMPLE emacs-lisp\n?\n#+END_EXAMPLE" "<src lang=\"emacs-lisp\">\n?\n</src>")) 
+(add-to-list 'org-structure-template-alist '("le" . "example"))
 
+(add-to-list 'org-structure-template-alist '("l" . "export latex"))
+
+(add-to-list 'org-structure-template-alist '("v" . "export verse"))
 #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
