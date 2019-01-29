@@ -863,16 +863,30 @@ e .jay-scripts.sh
 #+END_EXPORT
 
 
-* SEDusage
+* SEDusage 
+
+[[https://stackoverflow.com/questions/9704020/recursive-search-and-replace-in-text-files-on-mac-and-linux/19861378][macos - Recursive search and replace in text files on Mac and Linux - Stack Overflow]]
 
 #+BEGIN_SRC sh
 
-LC_ALL=C find . -type f -exec sed -i " s/SO\ \-\ //g {} + 
+LC_ALL=C find . -type f -exec sed -i '' s/search/replace/g {} +
+
+LC_ALL=C find . -type f -exec sed -i '' s/Preset/GR_Preset/g {} +
+
+LC_ALL=C find . -type f -exec sed -i '' s/GR_Preset/GR_Skin_Retouching/g {} +
+
+LC_ALL=C find . -type f -exec sed -i '' s/Skin_Retouching/Pro_Portrait/g {} +
 
 
-LC_ALL=C find . -type f -exec sed -i " s/title\ =\ \"/title\ =\ \"z_/g {} + 
+LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"Skin_Retouching/title = \"Nightlife_/g {} +
 
+LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"Nightlife_/g {} +
+
+LC_ALL=C find . -type f -exec sed -i '' s/SO\ \-\ //g {} + 
+
+
+LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"z_/g {} + 
 
 #+END_SRC 
-
+[[https://stackoverflow.com/questions/11392478/how-to-replace-a-string-in-multiple-files-in-linux-command-line][How to replace a string in multiple files in linux command line - Stack Overflow]]
 
