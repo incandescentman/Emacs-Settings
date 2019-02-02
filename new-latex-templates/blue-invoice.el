@@ -59,6 +59,11 @@
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
+
+\\renewcommand{\\contentsname}{Invoice}
+
+
+
 %This macro is to make cleaner the specification of the titling font
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
