@@ -5649,7 +5649,9 @@ execute speed commands."
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-(add-to-list 'org-structure-template-alist '("l" . "export latex"))
+(add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
+
+(add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
 (add-to-list 'org-structure-template-alist '("v" . "export verse"))
 #+END_SRC
@@ -7876,3 +7878,27 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
         (variable-pitch-mode 1)
 )
 #+END_SRC
+
+
+* default org-css
+
+#+begin_EXAMPLE emacs-lisp
+(defun my-org-inline-css-hook (exporter)
+ "Insert custom inline css"
+ (when (eq exporter 'html)
+  (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
+      (path (concat dir "style.css"))
+      (homestyle (or (null dir) (null (file-exists-p path))))
+      (final (if homestyle "/Users/jay/Dropbox/web-design/custom-css/google-docs.css" path))) ;; <- set your own style file path
+   (setq org-html-head-include-default-style nil)
+   (setq org-html-head (concat
+              "<style type=\"text/css\">\n"
+              "<!--/*--><![CDATA[/*><!--*/\n"
+              (with-temp-buffer
+               (insert-file-contents final)
+               (buffer-string))
+              "/*]]>*/-->\n"
+              "</style>\n")))))
+
+(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook) 
+#+END_EXAMPLE
