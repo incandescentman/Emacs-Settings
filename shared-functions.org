@@ -7882,7 +7882,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 * default org-css
 
-#+begin_EXAMPLE emacs-lisp
+#+begin_SRC emacs-lisp
 (defun my-org-inline-css-hook (exporter)
  "Insert custom inline css"
  (when (eq exporter 'html)
@@ -7901,4 +7901,4 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
               "</style>\n")))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook) 
-#+END_EXAMPLE
+#+END_SRC
