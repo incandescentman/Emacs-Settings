@@ -210,6 +210,8 @@ values."
                                     exec-path-from-shell
                                     global-git-commit
                                     highlight-indentation
+                                    hl-line
+                                    diff-hl
                                     hs-mode
                                     persp-mode
                                     popwin
@@ -758,7 +760,7 @@ before packages are loaded."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil
+;;   dotspacemacs-pretty-docs nil
 
   (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
   ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
