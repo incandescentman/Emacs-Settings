@@ -4296,7 +4296,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ; (setq org-mu4e-convert-to-html t); I think this is redundant? Maybe?
 
   ;; need this to convert some e-mails properly
-  (setq mu4e-html2text-command "html2text -utf8 -width 72")
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
 
 ;; collect email addresses
 ;; only add email addresses of email sent directly to me 
