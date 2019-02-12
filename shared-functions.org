@@ -351,7 +351,7 @@ is this still necessary?
 
 *** Sounds
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (unless (and (fboundp 'play-sound-internal)
 	     (subrp (symbol-function 'play-sound-internal)))
   (require 'play-sound))
@@ -359,7 +359,7 @@ is this still necessary?
 
 ;; (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
 ;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
-#+END_SRC
+#+END_EXAMPLE
 
 *** Disable double spacing between sentences
 
@@ -4662,7 +4662,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 ** org-contacts
 
   #+BEGIN_SRC emacs-lisp
-(use-package org-contacts) 
+;; (use-package org-contacts) 
 ;; (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
@@ -7729,7 +7729,7 @@ signature, in that order."
 
 
 * org-projectile
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package org-projectile
  :bind (
 
@@ -7741,7 +7741,7 @@ signature, in that order."
   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
   (push (org-projectile-project-todo-entry) org-capture-templates))
  :ensure t) 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * fix case
