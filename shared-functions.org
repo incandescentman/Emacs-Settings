@@ -268,7 +268,11 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 (setq ispell-local-dictionary-alist '(("en_US" "[[:alpha:][:alpha:]]" "[^[:alpha:]]" "[']" nil nil nil utf-8))) 
 
-(setq ispell-extra-args '("-d en_US"))
+;; (setq ispell-extra-args '("-d en_US"))
+
+(setq ispell-program-name "aspell")
+ ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
+;;  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US") 
 
 #+END_SRC
 
