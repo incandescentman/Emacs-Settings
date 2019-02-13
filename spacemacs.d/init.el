@@ -587,6 +587,8 @@ before packages are loaded."
           (height . 42) ; lines
           ))
 
+(flyspell-mode)
+
   (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
