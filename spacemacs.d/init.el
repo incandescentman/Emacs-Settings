@@ -941,7 +941,19 @@ This function is called at the very end of Spacemacs initialization."
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
  '(org-link ((t (:underline nil :inherit link))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
- '(zz-fringe-for-narrowing ((t (:box (:line-width 2 :color "grey75" :style released-button))))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal)))))
 )
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(zz-fringe-for-narrowing ((t nil))))
