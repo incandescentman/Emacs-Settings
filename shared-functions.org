@@ -7423,7 +7423,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+BEGIN_SRC emacs-lisp
 (defun delete-properties-blocks ()
 (interactive)
-(replace-regexp "   :PROPERTIES:\\(?:.*\\|\n\\)*   :END:" "")
+(replace-regexp ":PROPERTIES:\\(?:.*\\|\n\\)*:END:" "")
 )
 #+END_SRC
 
