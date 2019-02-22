@@ -892,9 +892,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(bold ((t (:inherit font-lock-warning-face :weight bold))))
- '(zz-fringe-for-narrowing ((t (:background "white"))))
-  '(beacon ((t (:inherit highlight))))
+ '(beacon ((t (:inherit highlight))))
  '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
@@ -916,4 +914,4 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
- '(org-agenda-current-time ((t (:inherit org-time-grid :background "white")))))
+ '(zz-fringe-for-narrowing ((t (:background "white")))))
