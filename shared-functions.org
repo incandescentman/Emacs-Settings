@@ -270,7 +270,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 ;; (setq ispell-extra-args '("-d en_US"))
 
-(setq ispell-program-name "aspell")
  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
 ;;  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US") 
 
@@ -5649,23 +5648,23 @@ execute speed commands."
 
 
 ** org insert easy template source blocks 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_EXAMPLE emacs-lisp
 (require 'org-tempo)
 
-(add-to-list 'org-structure-template-alist '("sr" . "src"))
+;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
 
-(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+;; (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
 
-(add-to-list 'org-structure-template-alist '("p" . "src python"))
+;; (add-to-list 'org-structure-template-alist '("p" . "src python"))
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+;; (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
 ;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
 (add-to-list 'org-structure-template-alist '("v" . "export verse"))
-#+END_SRC
+#+END_EXAMPLE 
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
 
