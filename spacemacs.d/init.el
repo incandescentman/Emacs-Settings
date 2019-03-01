@@ -702,7 +702,7 @@ before packages are loaded."
 
   (use-package reveal-in-finder)
 
-  (recenter-top-bottom)
+;;   (recenter-top-bottom)
   (setq case-fold-search t)
 
   (setq company-global-modes '(not org-mode))
@@ -767,7 +767,7 @@ before packages are loaded."
   (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
   ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
 
-  (find-file "~/nd/fearless.org")
+;;  (find-file "~/nd/fearless.org")
 
 
 

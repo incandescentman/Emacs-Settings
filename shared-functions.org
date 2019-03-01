@@ -128,7 +128,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq grep-highlight-matches (quote always))
  (setq ido-use-faces t)
  (setq ido-use-url-at-point t)
- (setq initial-buffer-choice "~/Dropbox/writing/notationaldata/fearless.org")
+;; (setq initial-buffer-choice "~/Dropbox/writing/notationaldata/fearless-2.org")
  (setq initial-major-mode (quote org-mode))
  ;; (setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
@@ -5652,19 +5652,17 @@ execute speed commands."
    #+BEGIN_SRC emacs-lisp
 (require 'org-tempo)
 
-(add-to-list 'org-structure-template-alist '("s" . "src"))
+(add-to-list 'org-structure-template-alist '("sr" . "src"))
 
 (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-
-(add-to-list 'org-structure-template-alist '("h" . "export html"))
 
 (add-to-list 'org-structure-template-alist '("p" . "src python"))
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-(add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
-(add-to-list 'org-structure-template-alist '("la" . "Export latex"))
+;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
 (add-to-list 'org-structure-template-alist '("v" . "export verse"))
 #+END_SRC
