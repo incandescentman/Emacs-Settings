@@ -250,18 +250,63 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; can add more if needed, since it's appending 
 #+end_src
 
-*** hunspell - new new 
+*** hunspell - workaround 
 
-#+BEGIN_EXAMPLE emacs-lisp 
-#+END_EXAMPLE 
+#+BEGIN_SRC emacs-lisp
+;; Work around for Hunspell 1.7.0 
+(defun manage-hunspell-1.7 (old-function-ispell &rest arguments)
+ "Add null-device when calling \"hunspell -D\"."
+ (if (equal "-D" (nth 4 arguments))
+  (funcall old-function-ispell "hunspell" null-device t nil "-D" null-device)
+  (apply old-function-ispell arguments)))
+(advice-add 'ispell-call-process :around #'manage-hunspell-1.7) 
 
-*** hunspell - new 
+(setenv "DICTIONARY" "en_US") 
+;; (setenv "LANG" "en_US.UTF-8")
+;; (setq ispell-program-name "hunspell")
+(setq ispell-dictionary "en_US") 
+
+(when (executable-find "hunspell")
+ (setq-default ispell-program-name "/usr/local/bin/hunspell")
+ (setq ispell-really-hunspell t))
+
+;; Activate flyspell
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'message-mode-hook 'flyspell-mode)
+(setq flyspell-issue-message-flag nil) 
+
+(setq ispell-program-name "/usr/local/bin/hunspell")
+
+(executable-find "hunspell")
+;; (setq ispell-program-name "hunspell")
+;; (setq ispell-local-dictionary "en_US")
+
+ (setq ispell-local-dictionary-alist
+    ;; Please note the list `("-d" "en_US")` contains ACTUAL parameters passed to hunspell
+    ;; You could use `("-d" "en_US,en_US-med")` to check with multiple dictionaries
+    '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
+     ))
+
+(setq ispell-program-name "hunspell")
+;; below two lines reset the the hunspell to it STOPS querying locale!
+(setq ispell-local-dictionary "en_US") ; "en_US" is key to lookup in `ispell-local-dictionary-alist`
+(setq ispell-local-dictionary-alist
+   '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))) 
+
+(flyspell-mode 1)
+(add-hook 'org-mode-hook 'turn-on-flyspell) 
+(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
+
+
+#+END_SRC 
+
+*** hunspell - patch
 
 This is a patch from here:
 
 https://github.com/emacs-mirror/emacs/commit/2925ce5a7ec1424cfaea9f2f86bd3cab27832584 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ispell-find-hunspell-dictionaries ()
  "Look for installed Hunspell dictionaries.
 Will initialize `ispell-hunspell-dictionary-alist' according
@@ -396,7 +441,7 @@ dictionary from that list was found."
 (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
 
 
-#+END_SRC 
+#+END_EXAMPLE 
 
 *** Hunspell
 
