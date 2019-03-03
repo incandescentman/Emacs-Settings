@@ -916,4 +916,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(italic ((t (:foreground "darkgreen" :slant italic :height 1.3 :family "Garamond"))))
  '(zz-fringe-for-narrowing ((t (:background "white")))))
