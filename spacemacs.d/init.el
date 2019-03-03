@@ -534,6 +534,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
 
+  (setq message-log-max t)
 
 ;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
 (defun ambrevar/reset-gc-cons-threshold ()
@@ -607,7 +608,7 @@ before packages are loaded."
 
 ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
-(load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
 
@@ -831,8 +832,8 @@ before packages are loaded."
   (scroll-bar-mode 1)
   (defun package--save-selected-packages (&rest opt) nil)
 
-  (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
-  (require 'mu4e-send-delay)
+  ;; (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
+  ;; (require 'mu4e-send-delay)
 
   ;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
   ;; (setq spaceline-org-clock-p t)
