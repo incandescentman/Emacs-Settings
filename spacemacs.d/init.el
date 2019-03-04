@@ -110,6 +110,7 @@ values."
                                       ;;                                      ag
                                       auto-capitalize
                                       beacon
+                                      benchmark-init
                                       blimp
                                       bongo
                                       buffer-stack
@@ -536,6 +537,12 @@ before packages are loaded."
 
   (setq message-log-max t)
 
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 ;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
 (defun ambrevar/reset-gc-cons-threshold ()
   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
@@ -620,7 +627,7 @@ before packages are loaded."
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-  (load "/Users/jay/gnulisp/book-functions.el")
+;;  (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   (load "/Users/jay/emacs/emacs-settings/define-word.el")
@@ -677,7 +684,7 @@ before packages are loaded."
 
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
-       (find-file "~/nd/fearless.org")
+       (find-file-literally "~/nd/fearless.org")
        ;;       (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
