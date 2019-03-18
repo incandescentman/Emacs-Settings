@@ -5859,7 +5859,7 @@ execute speed commands."
 
 
 ** org insert easy template source blocks 
-   #+BEGIN_EXAMPLE emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (require 'org-tempo)
 
 ;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
@@ -5870,12 +5870,12 @@ execute speed commands."
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-;; (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
 
 ;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
 (add-to-list 'org-structure-template-alist '("v" . "export verse"))
-#+END_EXAMPLE 
+#+END_SRC 
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
 
@@ -8123,3 +8123,26 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook) 
 #+END_SRC
+
+* hashtags
+
+#+begin_src emacs-lisp
+(defun show-duplicate-words (&optional alphabetical)
+ "Collect all of the unique words in the current buffer and
+display them in a new buffer. With prefix, alphabetize the
+list."
+ (interactive "P")
+ (let ((buf (buffer-name))
+    (new (get-buffer-create "*Unique Words*"))
+    (txt (delete-dups (mapcar #'downcase
+                 (split-string (buffer-string)
+                        nil nil
+                        "[^[:alnum:]]+")))))
+  (with-current-buffer new
+   (delete-region (point-min) (point-max))
+   (insert (format "%d unique words in the <%s> buffer:\n\n"
+           (length txt) buf))
+   (cl-dolist (word (if alphabetical (sort txt #'string<) txt))
+    (insert (concat word "\n"))))
+  (pop-to-buffer new))) 
+#+end_src
