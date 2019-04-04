@@ -8146,3 +8146,28 @@ list."
     (insert (concat word "\n"))))
   (pop-to-buffer new))) 
 #+end_src
+
+
+* suppress org-tempo warning 
+Redefine org-tempo-add-templates 
+
+#+begin_src emacs-lisp
+
+(defun org-tempo-add-templates ()
+ "Update all Org Tempo templates.
+
+Go through `org-structure-template-alist' and
+`org-tempo-keywords-alist' and update tempo templates."
+ (mapc 'org--check-org-structure-template-alist '(org-structure-template-alist
+						  org-tempo-keywords-alist))
+ (let ((keys (org-tempo--keys)))
+  ;; Check for duplicated snippet keys and warn if any are found.
+  (when (> (length keys) (length (delete-dups keys)))
+)
+  ;; Remove any keys already defined in case they have been updated.
+  (setq org-tempo-tags
+	 (cl-remove-if (lambda (tag) (member (car tag) keys)) org-tempo-tags))
+  (mapc #'org-tempo-add-block org-structure-template-alist)
+  (mapc #'org-tempo-add-keyword org-tempo-keywords-alist)))
+
+#+end_src
