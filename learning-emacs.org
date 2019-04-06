@@ -892,6 +892,21 @@ LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"z_/g {} +
 #+END_SRC 
 [[https://stackoverflow.com/questions/11392478/how-to-replace-a-string-in-multiple-files-in-linux-command-line][How to replace a string in multiple files in linux command line - Stack Overflow]]
 
+* Google docs
+#+begin_src emacs-lisp
+
+\*\*\*\*\(.*?\)$
+<h4>****\1<\\h4>
+
+\*\*\*\(.*?\)$
+<h3>****\1<\\h3>
+
+#+end_src
+
+[[http://pythontesting.net/python/regex-search-replace-examples/#in_python][regex search and replace example scripts - Python Testing]]
+
+[[https://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python][How to search and replace text in a file using Python? - Stack Overflow]]
+
 
 
 * sed cheat sheet
