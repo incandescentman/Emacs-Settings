@@ -4481,7 +4481,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ; what is this?
 (use-package smtpmail) 
 (use-package mu4e)
-(setq mu4e-mu-binary "/usr/local/bin/mu") 
+(setq mu4e-mu-binary "/usr/local/Cellar/mu/1.0_1/bin/mu") 
 (setq user-mail-address "jay@storytelling.nyc")
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@storytelling.nyc" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
 (setq user-full-name "Jay Dixit" )
@@ -4502,7 +4502,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 
 ;; display HTML email nicely
-; (setq mu4e-html2text-command "w3m -T text/html")
+;; (setq mu4e-html2text-command "w3m -T text/html")
 ;; works but better than the other one, html2text or whatever it's called 
 ;; convert html emails properly
 ;; Possible options:
@@ -5467,6 +5467,8 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'css-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
 
 
   #+END_SRC
@@ -7591,7 +7593,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 
 * org-drill
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package org-drill)
 ; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
 ; (setq org-drill-add-random-noise-to-intervals-p t)
@@ -7599,7 +7601,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (setq org-drill-use-visible-cloze-face-p t)
 
 
-#+END_SRC
+#+END_EXAMPLE
 
 * ox-clip
 #+BEGIN_SRC emacs-lisp

@@ -3194,6 +3194,16 @@ No space. Does that make sense? Thanks!
 (delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
 
+
+(delete 'my/delete-backward mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward) 
+
+
+(delete 'delete-backward-char mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
+
+
+
 #+END_SRC
 
 * backward-kill-word-correctly-and-capitalize 
