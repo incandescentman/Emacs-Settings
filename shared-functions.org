@@ -5459,17 +5459,22 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (setq org-tags-column 40)
 )
 
-(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-
-
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'css-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
+;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
+;; (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'css-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
 ;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
 
+
+(add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'text-mode-hook #'turn-on-olivetti-mode) 
 
   #+END_SRC
 
@@ -5620,134 +5625,13 @@ event of an error or nonlocal exit."
  (org-next-item)) 
 #+END_SRC
 
-* multiple cursors
-
-** endless multiple cursors keybindings
-  #+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors) 
-(use-package multiple-cursors-core)
-;; This is globally useful, so it goes under `C-x', and `m'
-;; for "multiple-cursors" is easy to remember.
-(define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
-;; Usually, both `C-x C-m' and `C-x RET' invoke the
-;; `mule-keymap', but that's a waste of keys. Here we put it
-;; _just_ under `C-x RET'.
-(define-key ctl-x-map (kbd "<return>") mule-keymap)
-
-;; Remember `er/expand-region' is bound to M-2!
-;; (define-key key-minor-mode-map (kbd "M-#") 'mc/mark-all-dwim)
-;; (global-set-key (kbd "M-2") #'mc/mark-all-dwim)
-(define-key key-minor-mode-map (kbd "M-2") 'mc/mark-all-dwim)
-
-;; (global-set-key (kbd "M-3") #'mc/mark-next-like-this)
-;; (global-set-key (kbd "M-4") #'mc/mark-previous-like-this)
-(define-key key-minor-mode-map (kbd "C-3") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-M-3") #'mc/unmark-previous-like-this)
-
-(define-key key-minor-mode-map (kbd "C-4") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-M-4") #'mc/unmark-next-like-this)
-
-(define-prefix-command 'endless/mc-map)
-(define-key ctl-x-map "m" 'endless/mc-map)
-(define-key key-minor-mode-map (kbd "C-8") 'endless/mc-map)
-
-;;; Really really nice!
-(define-key endless/mc-map "i" #'mc/insert-numbers)
-(define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
-(define-key endless/mc-map "a" #'mc/mark-all-like-this)
-
-(global-set-key (kbd "s-<mouse-1>") 'mc/add-cursor-on-click) 
-
-
-;;; Occasionally useful
-(define-key endless/mc-map (kbd "<backspace>") 'delete-backward-char) 
-(define-key endless/mc-map "d" #'mc/mark-all-symbols-like-this-in-defun)
-(define-key endless/mc-map "r" #'mc/reverse-regions)
-(define-key endless/mc-map "s" #'mc/sort-regions)
-(define-key endless/mc-map "l" #'mc/edit-lines)
-(define-key endless/mc-map "\C-a"
-  #'mc/edit-beginnings-of-lines)
-(define-key endless/mc-map "\C-e"
-  #'mc/edit-ends-of-lines)
-
-(setq mc/always-run-for-all t)
-;; always run for all cursors
-
-(setq mc/insert-numbers-default 1)
-;; start counting from 0
-
-(global-set-key
- (kbd "C-2")
-
-(defhydra multiple-cursors-hydra (:hint nil)
- "
-   ^Up^      ^Down^    ^Other^
-----------------------------------------------
-[_p_]  previous  [_n_]  next  [_l_] Edit lines
-[_P_]  Skip  [_N_]  Skip  [_a_] Mark all
-[_M-p_] Unmark [_M-n_] Unmark [_r_] Mark by regexp
-[_h_] Hide unmatched lines
-^ ^       ^ ^       [_q_] Quit
-"
- ("l" mc/edit-lines :exit t)
- ("a" mc/mark-all-like-this :exit t)
- ("n" mc/mark-next-like-this)
- ("N" mc/skip-to-next-like-this)
- ("M-n" mc/unmark-next-like-this)
- ("p" mc/mark-previous-like-this)
- ("P" mc/skip-to-previous-like-this)
- ("M-p" mc/unmark-previous-like-this)
- ("h" mc/hide-unmatched-lines-mode)
-;; don't know why this doesn't work
- ("r" mc/mark-all-in-region-regexp :exit t)
- ("q" nil)) )
-
-  #+END_SRC
-
-
-** multiple-cursors-mode-map
-#+BEGIN_SRC emacs-lisp
- (define-key mc/keymap (kbd ".") 'insert-period)
- (define-key mc/keymap (kbd ",") 'insert-comma)
- (define-key mc/keymap (kbd "SPC") 'insert-space)
-(define-key mc/keymap (kbd "<return>") 'smart-return)
-(define-key mc/keymap (kbd "<backspace>") 'my/delete-backward)
-#+END_SRC
-
-** multiple cursors work for all keys
-
-
-** make this work with multiple cursors
-
-#+BEGIN_SRC emacs-lisp 
-
-(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
-
-
-(delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
-
-
-(delete 'my/delete-backward mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward) 
-
-
-(delete 'delete-backward-char mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
-
-#+END_SRC
-
-
-
-
 * wrap region
 
   #+BEGIN_SRC emacs-lisp
 ;; (require 'wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
-;; (add-hook 'org-mode-hook 'wrap-region-mode)
+
 
 ;; wrap-region
 (use-package wrap-region
@@ -7304,7 +7188,7 @@ all of them. That includes using =paredit-mode= to balance parentheses (and
 more!), =rainbow-delimiters= to color matching parentheses, and highlighting the
 whole expression when point is on a paren.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
  (setq lispy-mode-hooks
     '(clojure-mode-hook
      emacs-lispmode-hook
@@ -7317,7 +7201,7 @@ whole expression when point is on a paren.
 ; (paredit-mode)
 ;; (rainbow-delimiters-mode)
 )))
-#+END_SRC
+#+END_EXAMPLE 
 
 
 ** Projectile
@@ -8197,3 +8081,121 @@ Go through `org-structure-template-alist' and
 
 #+END_SRC
 
+
+* multiple cursors
+
+** endless multiple cursors keybindings
+ #+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors) 
+(use-package multiple-cursors-core)
+;; This is globally useful, so it goes under `C-x', and `m'
+;; for "multiple-cursors" is easy to remember.
+(define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
+;; Usually, both `C-x C-m' and `C-x RET' invoke the
+;; `mule-keymap', but that's a waste of keys. Here we put it
+;; _just_ under `C-x RET'.
+(define-key ctl-x-map (kbd "<return>") mule-keymap)
+
+;; Remember `er/expand-region' is bound to M-2!
+;; (define-key key-minor-mode-map (kbd "M-#") 'mc/mark-all-dwim)
+;; (global-set-key (kbd "M-2") #'mc/mark-all-dwim)
+(define-key key-minor-mode-map (kbd "M-2") 'mc/mark-all-dwim)
+
+;; (global-set-key (kbd "M-3") #'mc/mark-next-like-this)
+;; (global-set-key (kbd "M-4") #'mc/mark-previous-like-this)
+(define-key key-minor-mode-map (kbd "C-3") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-M-3") #'mc/unmark-previous-like-this)
+
+(define-key key-minor-mode-map (kbd "C-4") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-M-4") #'mc/unmark-next-like-this)
+
+(define-prefix-command 'endless/mc-map)
+(define-key ctl-x-map "m" 'endless/mc-map)
+(define-key key-minor-mode-map (kbd "C-8") 'endless/mc-map)
+
+;;; Really really nice!
+(define-key endless/mc-map "i" #'mc/insert-numbers)
+(define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
+(define-key endless/mc-map "a" #'mc/mark-all-like-this)
+
+(global-set-key (kbd "s-<mouse-1>") 'mc/add-cursor-on-click) 
+
+
+;;; Occasionally useful
+(define-key endless/mc-map (kbd "<backspace>") 'delete-backward-char) 
+(define-key endless/mc-map "d" #'mc/mark-all-symbols-like-this-in-defun)
+(define-key endless/mc-map "r" #'mc/reverse-regions)
+(define-key endless/mc-map "s" #'mc/sort-regions)
+(define-key endless/mc-map "l" #'mc/edit-lines)
+(define-key endless/mc-map "\C-a"
+ #'mc/edit-beginnings-of-lines)
+(define-key endless/mc-map "\C-e"
+ #'mc/edit-ends-of-lines)
+
+(setq mc/always-run-for-all t)
+;; always run for all cursors
+
+(setq mc/insert-numbers-default 1)
+;; start counting from 0
+
+(global-set-key
+ (kbd "C-2")
+
+(defhydra multiple-cursors-hydra (:hint nil)
+ "
+  ^Up^   ^Down^  ^Other^
+----------------------------------------------
+[_p_] previous [_n_] next [_l_] Edit lines
+[_P_] Skip [_N_] Skip [_a_] Mark all
+[_M-p_] Unmark [_M-n_] Unmark [_r_] Mark by regexp
+[_h_] Hide unmatched lines
+^ ^    ^ ^    [_q_] Quit
+"
+ ("l" mc/edit-lines :exit t)
+ ("a" mc/mark-all-like-this :exit t)
+ ("n" mc/mark-next-like-this)
+ ("N" mc/skip-to-next-like-this)
+ ("M-n" mc/unmark-next-like-this)
+ ("p" mc/mark-previous-like-this)
+ ("P" mc/skip-to-previous-like-this)
+ ("M-p" mc/unmark-previous-like-this)
+ ("h" mc/hide-unmatched-lines-mode)
+;; don't know why this doesn't work
+ ("r" mc/mark-all-in-region-regexp :exit t)
+ ("q" nil)) )
+
+ #+END_SRC
+
+
+** multiple-cursors-mode-map
+#+BEGIN_SRC emacs-lisp
+ (define-key mc/keymap (kbd ".") 'insert-period)
+ (define-key mc/keymap (kbd ",") 'insert-comma)
+ (define-key mc/keymap (kbd "SPC") 'insert-space)
+(define-key mc/keymap (kbd "<return>") 'smart-return)
+(define-key mc/keymap (kbd "<backspace>") 'my/delete-backward)
+#+END_SRC
+
+** multiple cursors work for all keys
+
+** make this work with multiple cursors
+
+#+begin_src emacs-lisp
+
+(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
+
+
+(delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
+
+
+(delete 'my/delete-backward mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward) 
+
+
+(delete 'delete-backward-char mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
+
+
+#+end_src 
