@@ -5714,6 +5714,29 @@ event of an error or nonlocal exit."
 (define-key mc/keymap (kbd "<backspace>") 'my/delete-backward)
 #+END_SRC
 
+** multiple cursors work for all keys
+
+
+** make this work with multiple cursors
+
+#+BEGIN_SRC emacs-lisp 
+
+(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
+
+
+(delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
+
+
+(delete 'my/delete-backward mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward) 
+
+
+(delete 'delete-backward-char mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
+
+#+END_SRC
 
 
 
@@ -8172,4 +8195,5 @@ Go through `org-structure-template-alist' and
   (mapc #'org-tempo-add-block org-structure-template-alist)
   (mapc #'org-tempo-add-keyword org-tempo-keywords-alist)))
 
-#+end_src
+#+END_SRC
+
