@@ -2567,7 +2567,6 @@ Oleh
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-(add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
 #+END_EXAMPLE 
 
 * Reference for cleaning up whitespace around sentences:

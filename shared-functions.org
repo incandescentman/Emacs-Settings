@@ -271,7 +271,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq ispell-really-hunspell t))
 
 ;; Activate flyspell
-(add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'flyspell-mode)
 (setq flyspell-issue-message-flag nil) 
 
@@ -294,8 +293,6 @@ I should probably eventually break these out of custom-set-variables and organiz
    '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))) 
 
 (flyspell-mode 1)
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
 
 
 #+END_SRC 
@@ -414,7 +411,6 @@ dictionary from that list was found."
  (setq ispell-really-hunspell t))
 
 ;; Activate flyspell
-(add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'flyspell-mode)
 (setq flyspell-issue-message-flag nil) 
 
@@ -437,8 +433,6 @@ dictionary from that list was found."
    '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))) 
 
 (flyspell-mode 1)
-(add-hook 'org-mode-hook 'turn-on-flyspell) 
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
 
 
 #+END_EXAMPLE 
@@ -566,12 +560,12 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 *** Autofill mode
 is this still necessary?
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
-#+END_SRC
+#+END_EXAMPLE 
 
 *** Sounds
 
@@ -1255,15 +1249,10 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (org-delete-backward-char N)
 )))
 
-(add-hook
- 'org-mode-hook
- (lambda ()
-   (define-key org-mode-map (kbd "DEL")
-     'new-org-delete-backward-char)))
 #+END_SRC
 
 ** imenu-list
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (require 'imenu-list)
 (setq imenu-list-position (quote left))
 
@@ -1272,7 +1261,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1)))
 )
 
-#+END_SRC
+#+END_EXAMPLE 
 
 Edit: in response to your comment, here's a simple command that, when invoked from the buffer clone, will switch to the base buffer and move point to wherever the cursor was in the buffer clone:
 
@@ -1581,7 +1570,6 @@ Make org-capture open in full window! :-)
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
-;; (add-hook 'org-capture-mode-hook '(setq olivetti-body-width 80)); doesn't work 
 #+END_SRC 
 
 ** org-levels 
@@ -1649,13 +1637,6 @@ Make org-capture open in full window! :-)
 ** no autorevert
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode -1)
-#+END_SRC
-
-** org-mode hooks 
-#+BEGIN_SRC emacs-lisp
-;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 #+END_SRC
 
 *** globally enable palimpsest-mode
@@ -2395,7 +2376,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
               ) 
   )
 
-(add-hook 'dired-mode-hook 'hl-line-mode)
+;; (add-hook 'dired-mode-hook 'hl-line-mode)
 
 (use-package dired-x)
 ;; Load Dired X when Dired is loaded.
@@ -4266,9 +4247,7 @@ Single Capitals as you type."
       (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
     (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
 
-(add-hook 'text-mode-hook #'dubcaps-mode)
-(add-hook 'org-mode-hook #'dubcaps-mode)
-  #+END_SRC
+#+END_SRC
 
 * yasnippet 
 #+BEGIN_SRC emacs-lisp 
@@ -4308,7 +4287,7 @@ Single Capitals as you type."
 #+END_SRC
 
 * fix yasnippet org-mode conflict
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun yas-org-very-safe-expand ()
    (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
@@ -4318,7 +4297,7 @@ Single Capitals as you type."
       (setq yas-trigger-key [tab])
       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
       (define-key yas-keymap [tab] 'yas-next-field))) 
-#+END_SRC
+#+END_EXAMPLE 
 
 * flyspell
 
@@ -5460,7 +5439,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 )
 
 ;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
+;; (add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
 ;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
 ;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
 ;; (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
@@ -5471,10 +5450,9 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 ;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
 
 
-(add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
-(add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
-(add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
-(add-hook 'text-mode-hook #'turn-on-olivetti-mode) 
+;; (add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
+;; (add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
+;; (add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
 
   #+END_SRC
 
@@ -5651,7 +5629,7 @@ event of an error or nonlocal exit."
      ("{"  "}")
      ;; ("["  "]")
      ("<"  ">"))))
-
+)
 
   (wrap-region-add-wrappers
    '(
@@ -5664,8 +5642,7 @@ event of an error or nonlocal exit."
      ("/" "/" nil (org-mode message-mode))
       ("$" "$" nil (org-mode latex-mode))
       ))
-  (add-hook 'org-mode-hook 'wrap-region-mode)
-  (add-hook 'latex-mode-hook 'wrap-region-mode))
+
   #+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
@@ -7566,7 +7543,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 (setq org-sticky-header-always-show-header nil)
 
 )
-(add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
+
 #+END_SRC
 
 * Tufte
@@ -7769,7 +7746,7 @@ See also spacemacs/describe-system-info
 
 ;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
 
-(add-hook 'org-mode-hook #'flycheck-mode)
+
 #+END_SRC
 
 
@@ -8199,3 +8176,48 @@ Go through `org-structure-template-alist' and
 
 
 #+end_src 
+
+
+
+* org-mode-hooks and text-mode-hooks
+
+** text-mode-hooks
+
+;; (add-hook 'text-mode-hook 'flyspell-mode)
+
+
+#+begin_src emacs-lisp
+;; (add-hook 'text-mode-hook #'dubcaps-mode)
+;; (add-hook 'org-mode-hook #'dubcaps-mode)
+
+(add-hook 'text-mode-hook #'turn-on-olivetti-mode) 
+;; (add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
+
+;; (add-hook 'org-mode-hook 'turn-on-flyspell) 
+;; (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
+
+;; (add-hook 'org-mode-hook #'flycheck-mode)
+;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1))) 
+
+#+end_src
+
+** org-mode-hooks 
+
+;; (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+;; (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+
+
+#+BEGIN_SRC emacs-lisp
+;; (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+#+END_SRC
+
+
+(add-hook 'org-mode-hook 'wrap-region-mode)
+ (add-hook 'latex-mode-hook 'wrap-region-mode)) 
+
+(add-hook
+ 'org-mode-hook
+ (lambda ()
+  (define-key org-mode-map (kbd "DEL")
+   'new-org-delete-backward-char)))
+)
