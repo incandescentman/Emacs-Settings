@@ -3185,27 +3185,6 @@ No space. Does that make sense? Thanks!
 ) 
 #+END_SRC
 
-** make this work with multiple cursors
-#+BEGIN_SRC emacs-lisp
-(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
-
-
-(delete 'pasteboard-paste-spaces-maybe mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'pasteboard-paste-spaces-maybe) 
-
-
-(delete 'my/delete-backward mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward) 
-
-
-(delete 'delete-backward-char mc/cmds-to-run-once)
-(add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
-
-
-
-#+END_SRC
-
 * backward-kill-word-correctly-and-capitalize 
 #+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly-and-capitalize ()
@@ -3374,7 +3353,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 ;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
 ;; (require 'fountain-mode)
 
-(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook '(lambda () (orgalist-mode 1)))
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
