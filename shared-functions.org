@@ -4287,7 +4287,7 @@ Single Capitals as you type."
 #+END_SRC
 
 * fix yasnippet org-mode conflict
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun yas-org-very-safe-expand ()
    (let ((yas-fallback-behavior 'return-nil)) (yas-expand))) 
 
@@ -4297,7 +4297,7 @@ Single Capitals as you type."
       (setq yas-trigger-key [tab])
       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
       (define-key yas-keymap [tab] 'yas-next-field))) 
-#+END_EXAMPLE 
+#+END_SRC
 
 * flyspell
 
@@ -5437,6 +5437,8 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (unbind-key (kbd "C-c ]") olivetti-mode-map)
 (setq org-tags-column 40)
 )
+
+;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 
 ;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 ;; (add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
