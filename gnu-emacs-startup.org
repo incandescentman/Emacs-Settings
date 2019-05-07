@@ -63,12 +63,6 @@ Automatically load abbreviations table:
 
   #+BEGIN_SRC emacs-lisp
 (require 'org-element) 
-(require 'orgalist)
-
-  (defun org-or-orgalist-p ()
-    (or (eq major-mode 'org-mode)
-        (and (bound-and-true-p orgalist-mode)
-             (org-context-p 'headline 'item))))
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -672,7 +666,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key orgalist-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (global-set-key (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-(define-key orgalist-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key orgalist-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
 ;; (define-key fundamental-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
 ;; (define-key markdown-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
@@ -1123,10 +1117,10 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 ; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak 
 (define-key org-mode-map (kbd "<SPC>") 'smart-space)
-(define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+;; (define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
-(define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
+;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
 
 
 #+END_SRC
@@ -1422,7 +1416,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         (t (newline))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
-(define-key orgalist-mode-map (kbd "<return>") 'smart-return)
+;; (define-key orgalist-mode-map (kbd "<return>") 'smart-return)
 #+END_SRC
 
 
@@ -2899,7 +2893,7 @@ t)
 
 
 (define-key org-mode-map (kbd ".") 'smart-period)
-(define-key orgalist-mode-map (kbd ".") 'smart-period)
+;; (define-key orgalist-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
 ** smart-comma
@@ -2940,7 +2934,7 @@ t)
 
 
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
-(define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
+;; (define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
 #+END_SRC
 
 ** smart-question-mark
@@ -2969,7 +2963,7 @@ t)
 ;; works!!
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
-(define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
+;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
 ** smart-exclamation-point
@@ -2986,7 +2980,7 @@ t)
 ))
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
-(define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
+;; (define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
 ** smart-hyphen
@@ -2995,7 +2989,7 @@ t)
   (smart-punctuation "-"))
 
 (define-key org-mode-map (kbd "-") 'smart-hyphen)
-(define-key orgalist-mode-map (kbd "-") 'smart-hyphen)
+;; (define-key orgalist-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
 ** smart-semicolon
@@ -3017,7 +3011,7 @@ t)
 (save-excursion (downcase-word 1))))
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
-(define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
+;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
 #+END_SRC
 
 ** smart-colon
@@ -3628,7 +3622,7 @@ M-1 to 9
 
 * orgalist-mode-map
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (define-key orgalist-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
 (define-key mu4e-compose-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
 ; (define-key orgalist-mode-map (kbd "<return>") 'message-mode-smart-return)
@@ -3638,7 +3632,7 @@ M-1 to 9
 
 (define-key orgalist-mode-map (kbd "C-c .") 'org-time-stamp)
 
-#+END_SRC
+#+END_EXAMPLE
 
 * message-mode-map
 #+BEGIN_EXAMPLE emacs-lisp
