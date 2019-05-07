@@ -1993,14 +1993,71 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 #+END_SRC
 
 ** orgalist mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (require 'orgalist)
 
 ;; orgalist++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
 (add-hook 'message-mode-hook 'orgalist-mode 'append)
 ; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-#+END_SRC
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE emacs-lisp
+(cl-dolist (map '(message-mode-map orgalist-mode-map))
+ (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+  (define-key (eval map) (kbd key) nil)))
+
+
+(define-key orgalist-mode-map (kbd "`") 'flyspell-auto-correct-word)
+
+#+END_EXAMPLE
+
+* TODO unbind orgalist navigation keys 
+
+ #+BEGINEXAMPLEC emacs-lisp 
+(defun unbind-orgalist-keys ()
+ (interactive)
+    (cl-dolist (map '(message-mode-map orgalist-mode-map))
+ (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
+          "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+  (define-key (eval map) (kbd key) nil)))
+ )
+
+(defun unbind-orgalist-keys-in-message-mode ()
+ (interactive)
+ (when (and (eq 'message-mode major-mode)
+       (bound-and-true-p orgalist-mode))
+  (unbind-orgalist-keys)))
+
+(defun unbind-orgalist-keys-in-mu4e-compose-mode ()
+ (interactive)
+ (when (and (eq 'mu4e-compose-mode major-mode)
+    (bound-and-true-p orgalist-mode))
+ (unbind-orgalist-keys)))
+
+
+(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-message-mode)
+(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-mu4e-compose-mode)
+
+
+
+;;(add-hook 'message-mode-hook 'unbind-orgalist-keys) 
+ #+END_EXAMPLE
+
+
+* org or orgalist
+
+#+begin_src emacs-lisp
+(require 'orgalist)
+
+ (defun org-or-orgalist-p ()
+  (or (eq major-mode 'org-mode)
+    (and (bound-and-true-p orgalist-mode)
+       (org-context-p 'headline 'item))))
+
+#+end_src
+
+
 
 ** Remember recent email addresses 
 #+BEGIN_SRC emacs-lisp
@@ -3320,17 +3377,11 @@ Redefine help shortcut:
 - [C-n] Move to next helm suggestion.
 - [C-p] Move to previous helm suggestion.
 
-#+BEGIN_SRC emacs-lisp
-(cl-dolist (map '(message-mode-map orgalist-mode-map))
-  (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-    (define-key (eval map) (kbd key) nil)))
-#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(define-key orgalist-mode-map (kbd "`") 'flyspell-auto-correct-word)
 ;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
@@ -5352,38 +5403,6 @@ as the subject."
 
 * poetry
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
-
-* TODO unbind orgalist navigation keys 
-
-  #+BEGIN_SRC emacs-lisp 
-(defun unbind-orgalist-keys ()
-  (interactive)
-       (cl-dolist (map '(message-mode-map orgalist-mode-map))
-  (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
-                    "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-    (define-key (eval map) (kbd key) nil)))
-  )
-
-(defun unbind-orgalist-keys-in-message-mode ()
-  (interactive)
-  (when (and (eq 'message-mode major-mode)
-             (bound-and-true-p orgalist-mode))
-    (unbind-orgalist-keys)))
-
-(defun unbind-orgalist-keys-in-mu4e-compose-mode ()
- (interactive)
- (when (and (eq 'mu4e-compose-mode major-mode)
-       (bound-and-true-p orgalist-mode))
-  (unbind-orgalist-keys)))
-
-
-(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-message-mode)
-(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-mu4e-compose-mode)
-
-
-
-;;(add-hook 'message-mode-hook 'unbind-orgalist-keys)
-  #+END_SRC
 
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this:
