@@ -67,13 +67,13 @@ Automatically load abbreviations table:
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
     (and
-      (org-or-orgalist-p)
+;; (org-or-orgalist-p)
       (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
 
   (defun org-plain-text-list-p ()
   "Predicate: Checks whether the current line org-plain-text-list"
     (and
-      (org-or-orgalist-p)
+;; (org-or-orgalist-p)
       (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
   #+END_SRC
 
@@ -1365,7 +1365,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                 (newline)))
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and (org-or-orgalist-p)
+        ((and 
+;; (org-or-orgalist-p)
               org-return-follows-link
               (org-in-regexp org-any-link-re))
          (cond
@@ -1383,7 +1384,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
 
-   ((and (org-or-orgalist-p)
+   ((and 
+;; (org-or-orgalist-p)
               (let ((el (org-element-at-point)))
                 (and el
                      ;; point is at an item
@@ -1396,7 +1398,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
-        ((and (org-or-orgalist-p)
+        ((and 
+;; (org-or-orgalist-p)
               (let ((el (org-element-at-point)))
                 (and el
                      (or (member (first el) '(item plain-list))
@@ -1408,7 +1411,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
            (when is-org-chbs
              (insert "[ ] "))))
         ((and
-          (org-or-orgalist-p)
+;; (org-or-orgalist-p)
           (not (and
                 org-return-follows-link
                 (looking-back ">"))))
