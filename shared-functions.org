@@ -1992,9 +1992,13 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 (add-to-list 'completion-styles 'initials t)
 #+END_SRC
 
+** require orgalist
+#+begin_src emacs-lisp
+(require 'orgalist) 
+#+end_src
+
 ** orgalist mode
 #+BEGIN_EXAMPLE emacs-lisp
-(require 'orgalist)
 
 ;; orgalist++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
 (add-hook 'message-mode-hook 'orgalist-mode 'append)
@@ -2047,7 +2051,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 * org or orgalist
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (require 'orgalist)
 
  (defun org-or-orgalist-p ()
@@ -2055,7 +2059,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
     (and (bound-and-true-p orgalist-mode)
        (org-context-p 'headline 'item))))
 
-#+end_src
+#+END_EXAMPLE
 
 
 
@@ -4040,7 +4044,7 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
          (not (org-checkbox-p))
          (save-match-data
            (not (and
-                 (org-or-orgalist-p)
+;; (org-or-orgalist-p)
                  (looking-back
                  "\\[\\[.*\\]\\][^.\n]*\\.?"))))
          (save-match-data
