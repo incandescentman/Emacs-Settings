@@ -32,8 +32,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     python
-     graphviz
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -269,7 +267,7 @@ values."
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
    dotspacemacs-editing-style 'emacs
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
+   ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -290,11 +288,6 @@ values."
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'org-mode
-
-   ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
-   ;; (default nil)
-   dotspacemacs-initial-scratch-message nil
-
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -326,9 +319,9 @@ values."
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13
                                :weight normal
-                               :width normal)
-
-   ;; The leader key (default "SPC")
+                               :width normal
+                               :powerline-scale 1.1)
+   ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
    ;; (default "SPC")
