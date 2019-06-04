@@ -560,12 +560,12 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 *** Autofill mode
 is this still necessary?
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
 (add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
-#+END_EXAMPLE
+#+END_SRC
 
 *** Sounds
 
@@ -1713,12 +1713,15 @@ Make org-capture open in full window! :-)
 <a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>
 <img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png' alt='Storytelling NYC' height='55'>
 </a>
-<a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/facebook-512.png' height=16 width=16 alt='New York Writers on Facebook'>
-</a>
 <a href='https://twitter.com/jaydixit' style='text-decoration:none;' target='_blank'>
 <img src='http://incandescentman.github.io/assets/images/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
 </a>
+<a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
+<img src='http://incandescentman.github.io/assets/images/facebook-512.png' height=16 width=16 alt='New York Writers on Facebook'>
+</a> 
+<a href='https://instagram.com/jaydixit' style='text-decoration:none;' target='_blank'>
+<img src='http://incandescentman.github.io/assets/images/instagram-icon-128.png' height=16 width=16 alt='Jay Dixit on Instagram'>
+</a> 
 <br>
 <p style='color:#FFF;' target='_blank'>Jay Dixit</p>")))
 
@@ -3300,6 +3303,16 @@ Enable Google search:
 * Things I want to learn
 ** Need to add "cleanup buffer safe" here from whattheemacsd.com
 #+BEGIN_SRC emacs-lisp
+
+(defun cleanup-buffer-safe ()
+ "Perform a bunch of safe operations on the whitespace content of a buffer.
+Does not indent buffer, because it is used for a before-save-hook, and that
+might be bad."
+ (interactive)
+ (untabify-buffer)
+ (delete-trailing-whitespace)
+ (set-buffer-file-coding-system 'utf-8)) 
+
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
@@ -4515,7 +4528,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ; what is this?
 (use-package smtpmail) 
 (use-package mu4e)
-(setq mu4e-mu-binary "/usr/local/Cellar/mu/1.0_1/bin/mu") 
+(setq mu4e-mu-binary "/usr/local/Cellar/mu/1.2.0/bin/mu") 
 (setq user-mail-address "jay@storytelling.nyc")
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@storytelling.nyc" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
 (setq user-full-name "Jay Dixit" )
@@ -4918,7 +4931,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 ** org-contacts
 
   #+BEGIN_SRC emacs-lisp
-;; (use-package org-contacts) 
+(use-package org-contacts) 
 ;; (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
@@ -5461,23 +5474,24 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (setq org-tags-column 40)
 )
 
-;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 
-;; (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-;; (add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
-;; (add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
-;; (add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
-;; (add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'css-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
+(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'css-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'help-mode-hook 'turn-on-olivetti-mode)
 
 
-;; (add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
-;; (add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
-;; (add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
 
   #+END_SRC
 
@@ -8246,3 +8260,65 @@ Go through `org-structure-template-alist' and
   'new-org-delete-backward-char)))
 
 #+END_SRC
+
+
+* wide-screen 
+#+begin_src emacs-lisp
+(defun wide-screen ()
+(interactive) 
+(setq olivetti-body-width 72)
+)
+#+end_src
+
+
+* hide blank lines only in heading mode
+In collapsed view, hide empty lines between subtrees 
+
+#+begin_src emacs-lisp
+(setq org-cycle-separator-lines 0) 
+#+end_src
+
+* Demote sequence for list bullets
+
+#+begin_src emacs-lisp
+
+(setq org-list-demote-modify-bullet '(("-" . "+") ("-" . "+")))
+#+end_src
+
+
+* embiggen text
+#+begin_src emacs-lisp
+
+(defun embiggen-text ()
+ (interactive)
+ (text-scale-increase 1) 
+ (olivetti-expand)
+ )
+
+(defun ensmallen-text ()
+ (interactive)
+ (text-scale-decrease 1)
+ (olivetti-shrink)
+ ) 
+
+(defun olivetti-expand (&optional arg)
+ "Incrementally increase the value of `olivetti-body-width'.
+
+If prefixed with ARG, incrementally decrease."
+ (interactive "P")
+ (let* ((p (if arg -1 1))
+     (n (cond ((integerp olivetti-body-width)
+          (+ olivetti-body-width (* 1 p)))
+         ((floatp olivetti-body-width)
+          (+ olivetti-body-width (+1 p))))))
+  (setq olivetti-body-width (olivetti-safe-width n (selected-window))))
+ (olivetti-set-all-margins)
+ (message "Text body width set to %s" olivetti-body-width)
+ (set-transient-map
+  (let ((map (make-sparse-keymap)))
+   (define-key map "]" 'olivetti-expand)
+   (define-key map "[" 'olivetti-shrink) map)))
+
+
+#+end_src
+

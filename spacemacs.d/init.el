@@ -213,6 +213,7 @@ values."
                                     highlight-indentation
                                     hl-line
                                     diff-hl
+				    org-projectile
                                     hs-mode
                                     persp-mode
                                     popwin
@@ -826,6 +827,8 @@ before packages are loaded."
 (setq org-twbs-preamble nil)
 
 
+(triplicate-font)
+
   )
 
 ;; theend
@@ -880,4 +883,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(italic ((t (:foreground "darkgreen" :slant italic :height 1.3 :family "Garamond"))))
+ '(org-link ((t (:inherit link :underline nil))))
  '(zz-fringe-for-narrowing ((t (:background "white")))))
