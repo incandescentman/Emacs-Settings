@@ -8009,7 +8009,8 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;;         (lambda ()
 ;;         (variable-pitch-mode 1))) 
 
-(set-face-attribute 'variable-pitch nil :family "Baskerville") 
+;; (set-face-attribute 'variable-pitch nil :family "Baskerville") 
+(set-face-attribute 'variable-pitch nil :family "Triplicate T3") 
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . light)) 
@@ -8322,3 +8323,8 @@ If prefixed with ARG, incrementally decrease."
 
 #+end_src
 
+
+* hyperbole
+#+begin_src emacs-lisp
+(setq hyperbole-web-search-browser-function 'eww-browse-url) 
+#+end_src
