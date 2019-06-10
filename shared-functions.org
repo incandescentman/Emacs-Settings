@@ -1704,7 +1704,8 @@ Make org-capture open in full window! :-)
             (insert "<br>
 <br>
 --<br>
-<a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>Jay Dixit</a><br>
+<strong><a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>Jay Dixit</a></strong><br>
+Founder, <a href='http://storytelling.nyc/' style='text-decoration:none; color:#000;' target='_blank'> Storytelling.NYC</a><br> 
 <a href='http://jaydixit.com/' style='text-decoration:none;' target='_blank'>
   jaydixit.com</a>
 <br>
@@ -5789,7 +5790,7 @@ execute speed commands."
 
 ;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
 
-;; (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
 
 ;; (add-to-list 'org-structure-template-alist '("p" . "src python"))
 
@@ -8328,3 +8329,25 @@ If prefixed with ARG, incrementally decrease."
 #+begin_src emacs-lisp
 (setq hyperbole-web-search-browser-function 'eww-browse-url) 
 #+end_src
+
+
+* yesterday 
+#+begin_src emacs-lisp
+
+(defun yesterday ()
+  (interactive)
+  
+    (insert (shell-command-to-string "echo -n $(date -v -1d +%F)"))
+  ) 
+#+end_src
+
+
+
+For bash: 
+
+#+begin_src sh
+
+yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday 
+
+#+end_src
+
