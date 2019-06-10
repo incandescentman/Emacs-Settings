@@ -874,7 +874,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
+;; '(org-level-1 ((t (:family "Gotham Narrow" :weight bold))))
  '(org-link ((t (:inherit link :underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
  '(zz-fringe-for-narrowing ((t (:background "white")))))
