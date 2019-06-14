@@ -8351,3 +8351,12 @@ yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday
 
 #+end_src
 
+* today
+#+begin_src emacs-lisp
+
+(defun today ()
+  (interactive) 
+    (insert (shell-command-to-string "echo -n $(date +%F)"))
+  ) 
+#+end_src
+
