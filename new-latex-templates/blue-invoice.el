@@ -15,10 +15,21 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-%  \\setromanfont{Garamond Premier Pro}
-\\setromanfont{Helvetica Neue Light}
- \\setsansfont{Helvetica Neue Light}
-  \\setmonofont{Myriad Pro}
+
+
+% define Helvetica Now font weights
+\\setmainfont{EBGaramond}[
+  Path = /Users/jay/Library/Fonts/,
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
+\\setromanfont{HelveticaNowText-Light}
+\\setsansfont{HelveticaNowDisplay-Regular}
+\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}

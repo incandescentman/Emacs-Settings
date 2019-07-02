@@ -18,6 +18,7 @@
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 
+% define Helvetica Now font weights
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
@@ -62,7 +63,7 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 %\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{elegantblue}{HTML}{1587CB} 
+\\definecolor{ideablue}{HTML}{55C1E7} 
 
 
 \\newtoks\\leftheader 
@@ -258,22 +259,22 @@
 \\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{elegantblue}}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{elegantblue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{elegantblue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{elegantblue} }
+\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\rmfamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
+\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\rmfamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
+\\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
 
 \\renewcommand\\maketitle{}
 
