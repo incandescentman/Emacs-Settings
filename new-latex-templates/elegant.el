@@ -17,8 +17,19 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-\\setromanfont{Helvetica Neue Light}
- \\setsansfont{Helvetica Neue Light}
+
+\\setmainfont{EBGaramond}[
+  Path = /Users/jay/Library/Fonts/,
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
+\\setromanfont{HelveticaNowText-Light}
+\\setsansfont{HelveticaNowDisplay-Regular}
+\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+
   \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
@@ -51,14 +62,14 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 %\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{elegantblue}{HTML}{1587CB}
+\\definecolor{elegantblue}{HTML}{1587CB} 
 
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-\\raggedright
+% \\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
@@ -254,11 +265,11 @@
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{elegantblue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{elegantblue} }
+\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{elegantblue} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
+\\DeclareTextFontCommand{\\nonsubsection}{\\rmfamily\\fontsize{18}{15}\\raggedright\\scshape\\color{elegantblue}}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\rmfamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{elegantblue} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
