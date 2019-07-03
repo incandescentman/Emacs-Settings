@@ -1679,9 +1679,27 @@ Make org-capture open in full window! :-)
 (condition-case nil
  (kill-buffer "fearless.org")
  (error nil))
-(org-pomodoro)
 
+(do-applescript (format "
+ignoring application responses
+	tell application \"System Events\"
+		key code {118} -- press F4 to toggle do not disturb
+		keystroke \"P\" using {command down, shift down, option down, control down} -- start Pomodoro One
+	end tell
+end ignoring")) 
+(org-pomodoro) 
 )
+
+
+(add-hook 'org-pomodoro-finished-hook #'(lambda () 
+
+(do-applescript (format "
+ignoring application responses
+	tell application \"System Events\"
+		key code {118}
+	end tell
+end ignoring")) 
+)) 
 
 #+END_SRC
 
@@ -8205,7 +8223,9 @@ Go through `org-structure-template-alist' and
 
 #+begin_src emacs-lisp
 
-(delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
+(defun multiple-cursors-reflash ()
+(interactive) 
+  (delete 'my/delete-backward-and-capitalize mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward-and-capitalize) 
 
 
@@ -8219,7 +8239,7 @@ Go through `org-structure-template-alist' and
 
 (delete 'delete-backward-char mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
-
+)
 
 #+end_src 
 
