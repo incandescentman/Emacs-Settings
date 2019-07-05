@@ -1697,8 +1697,24 @@ end ignoring"))
 ignoring application responses
 	tell application \"System Events\"
 		key code {118}
+keystroke \"P\" using {command down, shift down, option down, control down} -- start Pomodoro One 
 	end tell
-end ignoring")) 
+end ignoring
+
+
+set now to current date
+set nowTime to (hours of now) & \":\" & (minutes of now)
+set pomodoroStart to (current date) - 25 * minutes
+set pStartTime to (hours of pomodoroStart) & \":\" & (minutes of pomodoroStart)
+set achieved to text returned of (display dialog \"What did you achieve in this Pomodoro?\" default answer \"\")
+set entry_text to \"# Pomodoro session \" & (pStartTime) & \"-\" & (nowTime) & \"
+
+\" & achieved & \"
+
+#pomodoro #log\"
+
+do shell script \"/usr/local/bin/dayone2 new \" & quoted form of entry_text 
+")) 
 )) 
 
 #+END_SRC
@@ -6297,13 +6313,14 @@ Wow, this works.
 (defun jay-load-latex ()
 (interactive)
 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/modest-ruin.el")
+;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
+;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/modest-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/beautiful-racket.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-garamond.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")
+;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
+;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
 
 (use-package blue-ruin) 
@@ -7201,11 +7218,15 @@ into the main dumped emacs"
 
 (defun sudo-edit-paths ()
  (interactive)
-(find-file "/sudo::/etc/paths"))
+(find-file "/etc/paths")
+(sudo-edit) 
+)
 
 (defun sudo-edit-hosts ()
  (interactive)
-(find-file "/sudo::/private/etc/hosts"))
+(find-file "/private/etc/hosts")
+(sudo-edit) 
+)
 
 
 #+END_SRC
