@@ -10,22 +10,35 @@
 
 \\usepackage{float}
 \\usepackage{changepage}
+
 \\usepackage{algorithm}
-\\usepackage{pdfpages}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+
+% define Helvetica Now font weights
+\\setmainfont{EBGaramond}[
+  Path = /Users/jay/Library/Fonts/,
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
 \\setromanfont{Garamond Premier Pro}
- \\setsansfont{TeX Gyre Pagella}
-  \\setmonofont{TeX Gyre Heros}
+\\setsansfont{HelveticaNowDisplay-Regular}
+\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+
+  \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
 \\usepackage{url}
 \\usepackage{paralist}
+\\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
@@ -48,80 +61,51 @@
 \\definecolor{resonateorange}{HTML}{da7635}
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
-\\definecolor{elegantblue}{HTML}{4380b9}
-\\definecolor{spacegrey}{HTML}{434346}
+%\\definecolor{dullerelegantblue}{HTML}{4380b9}
+%\\definecolor{elegantblue}{HTML}{1792d1}
+\\definecolor{ideablue}{HTML}{55C1E7} 
+
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
+% \\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
-
-
-\\usepackage{magaz}
-
+%This macro is to make cleaner the specification of the titling font
+\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
-\\usepackage{letterspace}
-\\usepackage{microtype}
-
+\\usepackage{textcase}
 
 \\pagenumbering{arabic}
 \\makeatletter
 
 
+\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
 
 \\usepackage[labelformat=empty]{caption}
 
-
-
 \\usepackage{fancyhdr}
-\\fancyhf{} % sets both header and footer to nothing
-\\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
-
-
-% doesn't work
-% source: https://tex.stackexchange.com/questions/236705/how-do-i-show-the-subsection-name-and-the-subsubsection-number-and-name-in-a-fan
-% https://tex.stackexchange.com/questions/310046/fancyhdr-and-redefinition-of-leftmark-rightmark
-%\\usepackage{blindtext}
-%\\let\\Sectionmark\\sectionmark
-%\\def\\sectionmark#1{\\def\\Sectionname{#1}\\Sectionmark{#1}}
-%\\let\\Subsectionmark\\subsectionmark
-%\\def\\subsectionmark#1{\\def\\Subsectionname{#1}\\Subsectionmark{#1}}
-%\\let\\Subsubsectionmark\\subsubsectionmark
-%\\def\\subsubsectionmark#1{\\def\\Subsubsectionname{#1}\\Subsubsectionmark{#1}}
-
-
-% \\fancyhf{}
-% \\fancyhead[L]{\\thesection.\\ \\Sectionname} % displays the section (1. SECTION NAME)
-% \\fancyhead[R]{\\thesubsection.\\ \\Subsectionname} % displays the subsection (1.1 SUBSECTION NAME)
-% \\fancyfoot[R]{\\thesubsubsection.\\ \\Subsubsectionname}
-
-
-
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\scshape{\\leftmark}}}
-% \\rhead{\\@title: {{\\leftmark}}}
+\\rhead{{\\nouppercase{\\leftmark}}}
+% \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 \\lfoot{}
 \\cfoot{\\thepage}
 \\rfoot{}
-
-
-
-
-
-
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
@@ -131,11 +115,6 @@
 %           plus 4pt means that TeX can stretch it by at most 4pt
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
-
-
-\\usepackage{setspace}
-\\onehalfspacing
-\\setstretch{1.2} 
 
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
@@ -192,7 +171,6 @@
 \\renewlist{itemize}{itemize}{10}
 
 
-\\renewcommand{\\contentsname}{Table of Contents}
 
 
 
@@ -248,9 +226,9 @@
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
 \\newenvironment{indentedsection}
-{  {\\adjustwidth{2em}{0pt}}
+  {\\adjustwidth{2em}{0pt}}
   {\\endadjustwidth}
-}
+
 
 \\usepackage{setspace}
 \\usepackage{lipsum}
@@ -271,70 +249,34 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{150pt}{40pt}
-%\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
+%\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+%\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
+%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+
+% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
-
-\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{17}{16}\\raggedright\\ttfamily}
-
-\\titleformat*{\\paragraph}{\\ttfamily\\fontsize{14}{12}\\raggedright\\bfseries}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{12}{12}\\raggedright\\bfseries\\ttfamily}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
+\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
+\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
-
-\\newenvironment{tagline}% environment name 
-{% begin code
-\\vspace{-36pt}
-\\Large
-\\begin{itshape}% 
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}% 
-{% end code 
-  \\end{itshape}\\vspace{24pt}\\ignorespacesafterend
-}
-
-
-
-\\newenvironment{fauxtitle}% environment name 
-{% begin code
-%\\vspace{12pt}
-\\Large
-\\begin{bfseries}% 
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}% 
-{% end code 
-  \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
-}
-
-
-
-\\newenvironment{fauxcenter}% environment name 
-{% begin code
-
-\\Large
-\\begin{center}
-
-}% 
-{% end code 
-\\end{center}\\ignorespacesafterend
-}
-
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
+\\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
 
 \\renewcommand\\maketitle{}
-
 
 
       [NO-DEFAULT-PACKAGES]

@@ -1,7 +1,7 @@
 (provide 'beautiful-racket)
 
 (add-to-list 'org-latex-classes
-  '("elegant-garamond"
+  '("beautiful-racket"
 "
 
 \\documentclass[12pt]{article}

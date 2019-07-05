@@ -6323,9 +6323,9 @@ Wow, this works.
 ;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
 
-(use-package blue-ruin) 
+;; (use-package blue-ruin) 
 (use-package blue-invoice) 
-(use-package blue-ruin-no-cover) 
+;; (use-package blue-ruin-no-cover) 
   )
     #+END_SRC 
 
