@@ -805,13 +805,6 @@ before packages are loaded."
 
   (setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
-  (setq org-agenda-files (quote ("~/Dropbox/writing/notationaldata/accountability.org"
-                                 ;; "/Users/jay/Dropbox/writing/book/feb-18/narcs.txt"
-                                 ;; "/Users/jay/Dropbox/writing/book/feb-18/50-shades.txt"
-                                 ;;"/Users/jay/Dropbox/writing/book/feb-18/ovulatory-shift.txt"
-                                 "/Users/jay/Dropbox/writing/book/feb-18/0-why-I-wrote-this-book.txt"
-                                 )))
-
 (setq case-fold-search t)
 
 ; (cyberpunk-jay) 
