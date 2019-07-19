@@ -70,7 +70,7 @@
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-% \\raggedright
+\\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
@@ -260,7 +260,7 @@
 
 
 \\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
