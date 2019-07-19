@@ -1218,6 +1218,17 @@ Defining stuck projects as todos that do not contain "scheduled" or
         (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
 (sequence "Practice:" "Demo:" "Debrief:" "Breakout:" "Critique:" "Workshop:" "|" "Lecture")
         ))
+
+;; Set todo keyword colors
+(setq org-todo-keyword-faces
+ '(("NEXT" :background "medium sea green" :foreground "white" :weight bold)
+  ("ACTION" :foreground "medium sea green" :weight bold)
+  ("WAIT" :background "yellow" :foreground "purple" :weight bold)
+  ("EVENT" :background "gray25" :foreground "white" :weight bold)
+  ("PROJECT" :background "firebrick" :foreground "white" :weight bold)
+  ("STARTED" :background "dodger blue" :foreground "white" :weight bold)
+  ("DONE" :background "white" :foreground "black" :weight bold))) 
+
 #+END_SRC
 
 ** org priorities
@@ -8406,3 +8417,25 @@ yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday
   ) 
 #+end_src
 
+
+* show unique words
+#+begin_src emacs-lisp
+(defun show-unique-words (&optional alphabetical)
+ "Collect all of the unique words in the current buffer and
+display them in a new buffer. With prefix, alphabetize the
+list."
+ (interactive "P")
+ (let ((buf (buffer-name))
+    (new (get-buffer-create "*Unique Words*"))
+    (txt (delete-dups (mapcar #'downcase
+                 (split-string (buffer-string)
+                        nil nil
+                        "[^[:alnum:]]+")))))
+  (with-current-buffer new
+   (delete-region (point-min) (point-max))
+   (insert (format "%d unique words in the <%s> buffer:\n\n"
+           (length txt) buf))
+   (cl-dolist (word (if alphabetical (sort txt #'string<) txt))
+    (insert (concat word "\n"))))
+  (pop-to-buffer new))) 
+#+end_src
