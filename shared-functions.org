@@ -1231,6 +1231,32 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 #+END_SRC
 
+** hl-todo 
+
+#+begin_src emacs-lisp
+(setq hl-todo-keyword-faces
+ '(("HOLD" . "#d0bf8f")
+  ("TODO" . "#cc9393")
+  ("NEXT" . "#dca3a3")
+  ("THEM" . "#dc8cc3")
+  ("PROG" . "#7cb8bb")
+  ("OKAY" . "#7cb8bb")
+  ("DONT" . "#5f7f5f")
+  ("FAIL" . "#8c5353")
+  ("DONE" . "#afd8af")
+  ("NOTE"  . "#d0bf8f")
+  ("STARTED" . "#d0bf8f")
+  ("HACK"  . "#d0bf8f")
+  ("FIXME" . "#cc9393")
+  ("XXX"  . "#cc9393")
+  ("XXXX"  . "#cc9393")
+  ("\\?\\?\\?"  . "#cc9393"))
+ )
+
+
+
+#+end_src
+
 ** org priorities
 Make it so that the command =org-priority-up= goes straight to #A
 #+BEGIN_SRC emacs-lisp
