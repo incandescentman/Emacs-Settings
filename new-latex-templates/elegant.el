@@ -11,6 +11,8 @@
 \\usepackage{float}
 \\usepackage{changepage}
 
+\\usepackage{wrapfig}
+
 \\usepackage{algorithm}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
@@ -251,7 +253,7 @@
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 %\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
 %\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
-%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+%\\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
