@@ -8367,7 +8367,7 @@ In collapsed view, hide empty lines between subtrees
 
 #+begin_src emacs-lisp
 
-(setq org-list-demote-modify-bullet '(("-" . "+") ("-" . "+")))
+(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+")))
 #+end_src
 
 
