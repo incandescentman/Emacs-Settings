@@ -112,9 +112,9 @@ Automatically load abbreviations table:
 (unless (fboundp 'toggle-frame-fullscreen)
   (global-set-key (kbd "<f11>") 'toggle-fullscreen))
 (unless (fboundp 'toggle-frame-fullscreen)
-  (global-set-key (kbd "<f13>") 'toggle-fullscreen))
+  (global-set-key (kbd "<f17>") 'toggle-fullscreen))
 
-  (global-set-key (kbd "<f13>") 'toggle-fullscreen)
+  (global-set-key (kbd "<f17>") 'toggle-fullscreen)
 
 #+END_SRC
 
