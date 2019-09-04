@@ -6353,6 +6353,7 @@ Wow, this works.
 ;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/modest-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/beautiful-racket.el")
 (load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-garamond.el")
 ;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")

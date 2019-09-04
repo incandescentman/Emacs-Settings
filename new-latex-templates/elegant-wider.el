@@ -9,6 +9,13 @@
 
 
 \\usepackage{float}
+
+\\setlength{\\floatsep}{2pt plus 2pt minus 2pt}
+\\setlength{\\textfloatsep}{5pt plus 2pt minus 2pt}
+\\setlength{\\intextsep}{5pt plus 2pt minus 2pt}
+\\setlength{\\abovecaptionskip}{-11pt}
+\\setlength{\\belowcaptionskip}{-8pt}
+
 \\usepackage{changepage}
 
 \\usepackage{wrapfig}
