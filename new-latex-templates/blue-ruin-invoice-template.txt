@@ -56,4 +56,4 @@ Please make check payable to Sunjay E. Dixit. Thank you!
 #+LATEX_HEADER: \setcounter{secnumdepth}{0}
 #+LATEX_HEADER: \setcounter{tocdepth}{3}
 #+LATEX_HEADER: \leftheader{Jay Dixit} 
-#+LATEX_HEADER: \leftheaderurl{http://jaydixit.com} 
+#+LATEX_HEADER: \leftheaderurl{https://jaydixit.com} 

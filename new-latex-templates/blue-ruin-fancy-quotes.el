@@ -97,7 +97,7 @@
     \\newline
           {\\myauthorfont\\Large \\href{mailto:jay@newyorkwritersintensive.com}{jay@newyorkwritersintensive.com}}
         \\newline
-          %{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree}}
+          %{\\myauthorfont\\Large \\href{https://jaydixit.com}{\\@degree}}
         \\newline
     {\\myauthorfont\\Large \\@date\\par}
 \\end{raggedright}
