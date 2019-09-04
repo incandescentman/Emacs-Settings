@@ -1,0 +1,600 @@
+% Intended LaTeX compiler: pdflatex
+
+
+\documentclass[12pt]{article}
+\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
+
+
+\usepackage{float}
+\usepackage{changepage}
+
+\usepackage{wrapfig}
+
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec,xltxtra,xunicode}
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+
+% define Helvetica Now font weights
+\setmainfont{EBGaramond}[
+  Path = /Users/jay/Library/Fonts/,
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
+\setromanfont{HelveticaNowText-Light}
+\setsansfont{HelveticaNowDisplay-Regular}
+\newfontfamily{\thindisplayfont}{HelveticaNowDisplay-Light}
+
+  \setmonofont{Myriad Pro}
+\else
+  \usepackage[mathletters]{ucs}
+  \usepackage[utf8x]{inputenc}
+\fi
+\usepackage{url}
+\usepackage{paralist}
+\usepackage{graphicx}
+\setkeys{Gin}{resolution=72}
+\usepackage{tikz}
+\usepackage{calc}
+\usepackage{eso-pic}
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\PassOptionsToPackage{hyperref,x11names}{xcolor}
+\definecolor{pinterestred}{HTML}{C92228}
+\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
+\definecolor{signalflare}{HTML}{FB782C}
+\definecolor{niceorange}{HTML}{77CC6D}
+\definecolor{highlighteryellow}{HTML}{FFFF01}
+\definecolor{ghostlygrey}{HTML}{000000}
+\definecolor{firstcolor}{HTML}{00ADEF}
+\definecolor{secondcolor}{HTML}{DD3E74}
+\definecolor{periodblue}{HTML}{12239e}
+\definecolor{denimblue}{HTML}{3A5F90}
+\definecolor{electricblue}{HTML}{05ADF3}
+\definecolor{resonateblue}{HTML}{005778}
+\definecolor{resonateorange}{HTML}{da7635}
+\definecolor{resonategrey}{HTML}{4d4d4c}
+\definecolor{nliblue}{HTML}{2f9ed3}
+%\definecolor{dullerelegantblue}{HTML}{4380b9}
+%\definecolor{elegantblue}{HTML}{1792d1}
+\definecolor{ideablue}{HTML}{55C1E7} 
+
+
+\newtoks\leftheader 
+\newtoks\leftheaderurl
+\newtoks\coverimage
+
+\raggedright
+\hyphenpenalty=5000 
+\tolerance=1000
+
+%This macro is to make cleaner the specification of the titling font
+\newfontfamily\mytitlefont[Color={highlighteryellow}]{Arial}
+\newfontfamily\myauthorfont[Color={highlighteryellow}]{Arial}
+\newfontfamily\mybluefont[Color=elegantblue]{Arial}
+
+%Define Bold face
+\DeclareTextFontCommand{\textbf}{\sffamily\bfseries}
+\DeclareTextFontCommand{\textit}{\itshape}
+
+\usepackage{textcase}
+
+\pagenumbering{arabic}
+\makeatletter
+
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\setcounter{secnumdepth}{0}
+
+
+\usepackage[labelformat=empty]{caption}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\lhead{\href{\the\leftheaderurl}{\the\leftheader}}
+\chead{}
+\rhead{{\nouppercase{\leftmark}}}
+% \rhead{\@title: {\nouppercase{\leftmark}}}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+\usepackage{listings}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
+
+% spacing: how to read {12pt plus 4pt minus 2pt}
+%           12pt is what we would like the spacing to be
+%           plus 4pt means that TeX can stretch it by at most 4pt
+%           minus 2pt means that TeX can shrink it by at most 2pt
+%       This is one example of the concept of, 'glue', in TeX
+
+\usepackage{fancyvrb}
+\usepackage{enumerate}
+\usepackage{ctable}
+\setlength{\paperwidth}{8.5in}
+\setlength{\paperheight}{11in}
+  \tolerance=1000
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\usepackage[normalem]{ulem}
+
+
+\makeatletter
+\newcommand{\globalcolor}[1]{%
+  \color{#1}\global\let\default@color\current@color
+}
+\makeatother
+
+\newcommand{\textsubscr}[1]{\ensuremath{_{\scriptsize\textrm{#1}}}}
+
+\usepackage{enumitem}
+
+\newlist{mylist}{enumerate}{10} 
+
+
+% control line spacing in bulleted list
+\setlist{noitemsep, topsep=-8pt, after=\vspace{12pt}} % for no spacing between list items
+% see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
+%\setlist{topsep=0pt} % for a line between list items
+
+
+\renewcommand{\labelitemi}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemii}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemiii}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemiv}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemv}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemvi}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemvii}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemviii}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemix}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+\renewcommand{\labelitemx}{\raise 0.25ex\hbox{\tiny$\bullet$}}
+
+\setlistdepth{10}
+\setlist[itemize,1]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,2]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,3]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,4]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,5]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,6]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,7]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,8]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,9]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\setlist[itemize,10]{label=\raise 0.25ex\hbox\tiny$\bullet$}
+\renewlist{itemize}{itemize}{10}
+
+
+
+
+
+\definecolor{azure}{HTML}{f2feff}
+
+\usepackage{lipsum}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
+\makeatletter
+
+\tikzset{%
+  fancy quotes/.style={
+    text width=\fq@width pt,
+    align=justify,
+    inner sep=1em,
+    anchor=north west,
+    minimum width=\linewidth,
+  },
+  fancy quotes width/.initial={.8\linewidth},
+  fancy quotes marks/.style={
+    scale=8,
+    text=black,
+    inner sep=0pt,
+  },
+  fancy quotes opening/.style={
+    fancy quotes marks,
+  },
+  fancy quotes closing/.style={
+    fancy quotes marks,
+  },
+  fancy quotes background/.style={
+    show background rectangle,
+    inner frame xsep=0pt,
+    background rectangle/.style={
+      fill=azure,
+      rounded corners,
+    },
+  }
+}
+
+\newenvironment{fancyquotes}[1][]{%
+\noindent
+\tikzpicture[fancy quotes background]
+\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
+\tikz@scan@one@point\pgfutil@firstofone(fq@ul.east)
+\pgfmathsetmacro{\fq@width}{\linewidth - 2*\pgf@x}
+\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \bgroup}
+{\egroup;
+\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
+\endtikzpicture}
+\makeatother
+
+%\setlength{\intextsep}{10pt plus 1.0pt minus 2.0pt}
+
+\newenvironment{indentedsection}
+  {\adjustwidth{2em}{0pt}}
+  {\endadjustwidth}
+
+
+\usepackage{setspace}
+\usepackage{lipsum}
+\usepackage{etoolbox}
+\AtBeginEnvironment{quote}{\singlespace\vspace{-\topsep}\small}
+\AtEndEnvironment{quote}{\vspace{-\topsep}\endsinglespace}
+
+
+\usepackage[sc]{titlesec}
+
+
+\newlength\TitleOverhang
+\setlength\TitleOverhang{1.5cm}
+
+\newcommand\Overhang[1]{%
+ \llap{\makebox[\TitleOverhang][l]{#1}}%
+}
+
+
+% \titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+%\titlespacing*{\section}{0pt}{16pt}{-6pt}
+%\titlespacing*{\subsection}{0pt}{16pt}{-6pt}
+%\titlespacing*{\subsubsection}{0pt}{16pt}{-6pt}
+
+% \titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\titlespacing*{\section}{1.5ex}{24pt}{-6pt}
+\titlespacing*{\subsection}{0pt}{24pt}{-6pt}
+\titlespacing*{\subsubsection}{0pt}{24pt}{-6pt}
+
+
+\titleformat*{\section}{\sffamily\bfseries\fontsize{30}{20}\raggedright\sffamily\scshape\color{ideablue}}
+\titleformat*{\subsection}{\sffamily\bfseries\fontsize{18}{15}\raggedright\scshape\color{black}}
+\titleformat*{\subsubsection}{\sffamily\bfseries\fontsize{14}{16}\raggedright\sffamily\color{ideablue}}
+\titleformat*{\paragraph}{\sffamily\fontsize{13}{12}\raggedright\bfseries\color{ideablue}}
+\titleformat*{\subparagraph}{\sffamily\fontsize{14}{14}\raggedright\bfseries\ttfamily\color{ideablue}}
+
+
+\DeclareTextFontCommand{\nonsection}{\thindisplayfont\fontsize{19}{19}\raggedright\thindisplayfont\textlf\color{ideablue} }
+
+\DeclareTextFontCommand{\nonsubsection}{\thindisplayfont\fontsize{18}{15}\raggedright\scshape\color{ideablue}}
+
+\DeclareTextFontCommand{\nonsubsubsection}{\thindisplayfont\itshape\fontsize{14}{14}\raggedright\sffamily\color{ideablue} }
+
+
+\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
+
+\renewcommand\maketitle{}
+\author{Jay Dixit}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={Jay Dixit},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.2.5)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+\newpage
+(provide 'elegant-wider)
+
+(add-to-list 'org-latex-classes
+  '(``elegant-wider''
+``
+
+$\backslash$\documentclass[12pt]{article}
+$\backslash$\usepackage[includeheadfoot,margin=1.25in,hmargin=1.25in,vmargin=0.5in]{geometry} \% for normal margins
+
+
+$\backslash$\usepackage{float}
+
+$\backslash$\setlength{\\floatsep}{2pt plus 2pt minus 2pt}
+$\backslash$\setlength{\\textfloatsep}{5pt plus 2pt minus 2pt}
+$\backslash$\setlength{\\intextsep}{5pt plus 2pt minus 2pt}
+$\backslash$\setlength{\\abovecaptionskip}{-11pt}
+$\backslash$\setlength{\\belowcaptionskip}{-8pt}
+
+$\backslash$\usepackage{changepage}
+
+$\backslash$\usepackage{wrapfig}
+
+$\backslash$\usepackage{algorithm}
+$\backslash$\usepackage{amsmath}
+$\backslash$\usepackage{ifxetex}
+$\backslash$\ifxetex
+  $\backslash$\usepackage{fontspec,xltxtra,xunicode}
+  $\backslash$\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+
+\% define Helvetica Now font weights
+$\backslash$\setmainfont{EBGaramond}[
+  Path = \textit{Users/jay/Library/Fonts},
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
+$\backslash$\setromanfont{HelveticaNowText-Light}
+$\backslash$\setsansfont{HelveticaNowDisplay-Regular}
+$\backslash$\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+
+$\backslash$\setmonofont{HelveticaNowDisplay-ExtLt}
+$\backslash$\else
+  $\backslash$\usepackage[mathletters]{ucs}
+  $\backslash$\usepackage[utf8x]{inputenc}
+$\backslash$\fi
+$\backslash$\usepackage{url}
+$\backslash$\usepackage{paralist}
+$\backslash$\usepackage{graphicx}
+$\backslash$\setkeys{Gin}{resolution=72}
+$\backslash$\usepackage{tikz}
+$\backslash$\usepackage{calc}
+$\backslash$\usepackage{eso-pic}
+$\backslash$\usepackage{etoolbox}
+$\backslash$\usepackage{xcolor}
+$\backslash$\PassOptionsToPackage{hyperref,x11names}{xcolor}
+$\backslash$\definecolor{pinterestred}{HTML}{C92228}
+$\backslash$\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
+$\backslash$\definecolor{signalflare}{HTML}{FB782C}
+$\backslash$\definecolor{niceorange}{HTML}{77CC6D}
+$\backslash$\definecolor{highlighteryellow}{HTML}{FFFF01}
+$\backslash$\definecolor{ghostlygrey}{HTML}{000000}
+$\backslash$\definecolor{firstcolor}{HTML}{00ADEF}
+$\backslash$\definecolor{secondcolor}{HTML}{DD3E74}
+$\backslash$\definecolor{periodblue}{HTML}{12239e}
+$\backslash$\definecolor{denimblue}{HTML}{3A5F90}
+$\backslash$\definecolor{electricblue}{HTML}{05ADF3}
+$\backslash$\definecolor{resonateblue}{HTML}{005778}
+$\backslash$\definecolor{resonateorange}{HTML}{da7635}
+$\backslash$\definecolor{resonategrey}{HTML}{4d4d4c}
+$\backslash$\definecolor{nliblue}{HTML}{2f9ed3}
+\%$\backslash$\definecolor{dullerelegantblue}{HTML}{4380b9}
+\%$\backslash$\definecolor{elegantblue}{HTML}{1792d1}
+$\backslash$\definecolor{ideablue}{HTML}{55C1E7} 
+
+
+$\backslash$\newtoks$\backslash$\leftheader 
+$\backslash$\newtoks$\backslash$\leftheaderurl
+$\backslash$\newtoks$\backslash$\coverimage
+
+\%\% $\backslash$\raggedright
+$\backslash$\hyphenpenalty=5000 
+$\backslash$\tolerance=1000
+
+\%This macro is to make cleaner the specification of the titling font
+$\backslash$\newfontfamily$\backslash$\mytitlefont[Color=\{highlighteryellow\}]\{Arial\}
+$\backslash$\newfontfamily$\backslash$\myauthorfont[Color=\{highlighteryellow\}]\{Arial\}
+$\backslash$\newfontfamily$\backslash$\mybluefont[Color=elegantblue]{Arial}
+
+\%Define Bold face
+$\backslash$\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+$\backslash$\DeclareTextFontCommand{\\textit}{\\itshape}
+
+$\backslash$\usepackage{textcase}
+
+$\backslash$\pagenumbering{arabic}
+$\backslash$\makeatletter
+
+
+$\backslash$\renewcommand{\\contentsname}{Table of Contents}
+
+$\backslash$\setcounter{secnumdepth}{0}
+
+
+$\backslash$\usepackage[labelformat=empty]{caption}
+
+$\backslash$\usepackage{fancyhdr}
+$\backslash$\pagestyle{fancy}
+$\backslash$\renewcommand{\\sectionmark}[1]\{$\backslash$\markboth{#1}{}\}
+$\backslash$\lhead\{$\backslash$\href{\\the\\leftheaderurl}{\\the\\leftheader}\}
+$\backslash$\chead{}
+$\backslash$\rhead\{\{$\backslash$\nouppercase{\\leftmark}\}\}
+\% $\backslash$\rhead\{$\backslash$\@title: \{$\backslash$\nouppercase{\\leftmark}\}\}
+$\backslash$\lfoot{}
+$\backslash$\cfoot{\\thepage}
+$\backslash$\rfoot{}
+$\backslash$\usepackage{listings}
+$\backslash$\setlength{\\parindent}{0pt}
+$\backslash$\setlength{\\parskip}{12pt plus 2pt minus 1pt} \% space between paragraphs
+
+\% spacing: how to read \{12pt plus 4pt minus 2pt\}
+\%           12pt is what we would like the spacing to be
+\%           plus 4pt means that \TeX{} can stretch it by at most 4pt
+\%           minus 2pt means that \TeX{} can shrink it by at most 2pt
+\%       This is one example of the concept of, 'glue', in \TeX{}
+
+$\backslash$\usepackage{fancyvrb}
+$\backslash$\usepackage{enumerate}
+$\backslash$\usepackage{ctable}
+$\backslash$\setlength{\\paperwidth}{8.5in}
+$\backslash$\setlength{\\paperheight}{11in}
+  $\backslash$\tolerance=1000
+$\backslash$\usepackage{tocloft}
+$\backslash$\renewcommand{\\cftsecleader}\{$\backslash$\cftdotfill{\\cftdotsep}\}
+$\backslash$\usepackage[normalem]{ulem}
+
+
+$\backslash$\makeatletter
+$\backslash$\newcommand{\\globalcolor}[1]\{\%
+  $\backslash$\color{#1}$\backslash$\global$\backslash$\let$\backslash$\default@color$\backslash$\current@color
+\}
+$\backslash$\makeatother
+
+$\backslash$\newcommand{\\textsubscr}[1]\{$\backslash$\ensuremath\{\textsubscript{$\backslash$\scriptsize$\backslash$\textrm{#1}}\}\}
+
+$\backslash$\usepackage{enumitem}
+
+$\backslash$\newlist{mylist}{enumerate}{10} 
+
+
+\% control line spacing in bulleted list
+$\backslash$\setlist\{noitemsep, topsep=-8pt, after=$\backslash$\vspace{12pt}\} \% for no spacing between list items
+\% see: \url{https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package}
+\%$\backslash$\setlist{topsep=0pt} \% for a line between list items
+
+
+$\backslash$\renewcommand{\\labelitemi}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemii}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemiii}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemiv}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemv}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemvi}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemvii}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemviii}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemix}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+$\backslash$\renewcommand{\\labelitemx}\{$\backslash$\raise 0.25ex$\backslash$\hbox{\\tiny$\\bullet$}\}
+
+$\backslash$\setlistdepth{10}
+$\backslash$\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+$\backslash$\renewlist{itemize}{itemize}{10}
+
+
+
+
+
+$\backslash$\definecolor{azure}{HTML}{f2feff}
+
+$\backslash$\usepackage{lipsum}
+$\backslash$\usepackage{tikz}
+$\backslash$\usetikzlibrary{backgrounds}
+$\backslash$\makeatletter
+
+$\backslash$\tikzset\{\%
+  fancy quotes/.style=\{
+    text width=$\backslash$\fq@width pt,
+    align=justify,
+    inner sep=1em,
+    anchor=north west,
+    minimum width=$\backslash$\linewidth,
+  \},
+  fancy quotes width/.initial=\{.8$\backslash$\linewidth\},
+  fancy quotes marks/.style=\{
+    scale=8,
+    text=black,
+    inner sep=0pt,
+  \},
+  fancy quotes opening/.style=\{
+    fancy quotes marks,
+  \},
+  fancy quotes closing/.style=\{
+    fancy quotes marks,
+  \},
+  fancy quotes background/.style=\{
+    show background rectangle,
+    inner frame xsep=0pt,
+    background rectangle/.style=\{
+      fill=azure,
+      rounded corners,
+    \},
+  \}
+\}
+
+$\backslash$\newenvironment{fancyquotes}[1][]\{\%
+$\backslash$\noindent
+$\backslash$\tikzpicture[fancy quotes background]
+$\backslash$\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) \{``\};
+$\backslash$\tikz@scan@one@point$\backslash$\pgfutil@firstofone(fq@ul.east)
+$\backslash$\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
+$\backslash$\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) $\backslash$\bgroup\}
+\{$\backslash$\egroup;
+$\backslash$\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) \{''\};
+$\backslash$\endtikzpicture\}
+$\backslash$\makeatother
+
+\%$\backslash$\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
+
+$\backslash$\newenvironment{indentedsection}
+  \{$\backslash$\adjustwidth{2em}{0pt}\}
+  \{$\backslash$\endadjustwidth\}
+
+
+$\backslash$\usepackage{setspace}
+$\backslash$\usepackage{lipsum}
+$\backslash$\usepackage{etoolbox}
+$\backslash$\AtBeginEnvironment{quote}\{$\backslash$\singlespace$\backslash$\vspace{-\\topsep}$\backslash$\small\}
+$\backslash$\AtEndEnvironment{quote}\{$\backslash$\vspace{-\\topsep}$\backslash$\endsinglespace\}
+
+
+$\backslash$\usepackage[sc]{titlesec}
+
+
+$\backslash$\newlength$\backslash$\TitleOverhang
+$\backslash$\setlength$\backslash$\TitleOverhang{1.5cm}
+
+$\backslash$\newcommand$\backslash$\Overhang[1]\{\%
+ $\backslash$\llap\{$\backslash$\makebox[\\TitleOverhang][l]{#1}\}\%
+\}
+
+
+\% $\backslash$\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\%$\backslash$\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+\%$\backslash$\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
+\%$\backslash$\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
+
+\% $\backslash$\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+$\backslash$\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
+$\backslash$\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
+$\backslash$\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
+
+
+$\backslash$\titleformat*{\\section}\{$\backslash$\sffamily$\backslash$\bfseries$\backslash$\fontsize{30}{20}$\backslash$\raggedright$\backslash$\sffamily$\backslash$\scshape$\backslash$\color{ideablue}\}
+$\backslash$\titleformat*{\\subsection}\{$\backslash$\bfseries$\backslash$\fontsize{18}{15}$\backslash$\raggedright$\backslash$\scshape$\backslash$\color{black}\}
+$\backslash$\titleformat*{\\subsubsection}\{$\backslash$\sffamily$\backslash$\bfseries$\backslash$\fontsize{14}{16}$\backslash$\raggedright$\backslash$\sffamily$\backslash$\color{ideablue}\}
+$\backslash$\titleformat*{\\paragraph}\{$\backslash$\sffamily$\backslash$\fontsize{13}{12}$\backslash$\raggedright$\backslash$\bfseries$\backslash$\color{ideablue}\}
+$\backslash$\titleformat*{\\subparagraph}\{$\backslash$\sffamily$\backslash$\fontsize{14}{14}$\backslash$\raggedright$\backslash$\bfseries$\backslash$\ttfamily$\backslash$\color{ideablue}\}
+
+
+$\backslash$\DeclareTextFontCommand{\\nonsection}\{$\backslash$\thindisplayfont$\backslash$\fontsize{19}{19}$\backslash$\raggedright$\backslash$\thindisplayfont$\backslash$\textlf$\backslash$\color{ideablue} \}
+
+$\backslash$\DeclareTextFontCommand{\\nonsubsection}\{$\backslash$\thindisplayfont$\backslash$\fontsize{18}{15}$\backslash$\raggedright$\backslash$\scshape$\backslash$\color{ideablue}\}
+
+$\backslash$\DeclareTextFontCommand{\\nonsubsubsection}\{$\backslash$\thindisplayfont$\backslash$\itshape$\backslash$\fontsize{14}{14}$\backslash$\raggedright$\backslash$\sffamily$\backslash$\color{ideablue} \}
+
+
+$\backslash$\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+$\backslash$\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
+
+\% this emboldens all links 
+$\backslash$\let$\backslash$\oldhref$\backslash$\href
+$\backslash$\renewcommand{\\href}[2]\{$\backslash$\oldhref{#1}{\\bfseries#2}\}
+
+
+$\backslash$\renewcommand$\backslash$\maketitle{}
+
+
+ [NO-DEFAULT-PACKAGES]
+ [NO-PACKAGES]"
+("$\backslash$\section{%s}`` . ''$\backslash$\section*{%s}``)
+(''$\backslash$\subsection{%s}`` . ''$\backslash$\subsection*{%s}``)
+(''$\backslash$\subsubsection{%s}`` . ''$\backslash$\subsubsection*{%s}``)
+(''$\backslash$\paragraph{%s}`` . ''$\backslash$\paragraph*{%s}``)
+(''$\backslash$\subparagraph{%s}`` . ''$\backslash$\subparagraph*{%s}``)))
+
+
+(setq org-latex-to-pdf-process 
+  '(``xelatex -interaction nonstopmode \%f''
+     ``xelatex -interaction nonstopmode \%f'')) ;; for multiple passes
+\end{document}
