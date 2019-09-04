@@ -40,7 +40,7 @@
 \\setsansfont{HelveticaNowDisplay-Regular}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
-  \\setmonofont{HelveticaNowDisplay-ExtLt}
+\\setmonofont{HelveticaNowDisplay-ExtLt}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -79,7 +79,7 @@
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-\\raggedright
+%% \\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
