@@ -45,7 +45,7 @@
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\pagenumbering{arabic}
-\\lhead{\\href{http://jaydixit.com}{Jay Dixit}}
+\\lhead{\\href{https://jaydixit.com}{Jay Dixit}}
 \\chead{\\itshape}
 \\rhead{\\itshape{\\nouppercase{$title$}: {\\nouppercase\\leftmark}}}
 \\lfoot{$version$}
@@ -87,7 +87,7 @@
  \\newline
    {\\Large \\href{mailto:dixit@aya.yale.edu}{dixit@aya.yale.edu}}%
  \\newline
-   {\\Large \\href{http://jaydixit.com/}{jaydixit.com} }%
+   {\\Large \\href{https://jaydixit.com/}{jaydixit.com} }%
  \\newline
  {\\Large \\@date\\par}%
  \\null

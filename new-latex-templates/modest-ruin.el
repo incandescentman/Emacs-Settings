@@ -107,7 +107,7 @@
  %   \\newline
         \\newline
     {\\myauthorfont\\Large \\@date\\par}
-%{\\myauthorfont\\Large \\href{http://jaydixit.com}{\\@degree }}
+%{\\myauthorfont\\Large \\href{https://jaydixit.com}{\\@degree }}
 \\end{raggedright}
 }};
 \\end{tikzpicture}

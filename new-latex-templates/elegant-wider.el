@@ -1,14 +1,17 @@
-(provide 'blue-ruin)
+(provide 'elegant-wider)
 
 (add-to-list 'org-latex-classes
-  '("blue-ruin"
+  '("elegant-wider"
 "
 
 \\documentclass[12pt]{article}
-% \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry} % for normal margins
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for insanely wide margins
-% \\usepackage[includeheadfoot,margin=2.0in,hmargin=2.0in,vmargin=0.5in]{geometry} % for insanely wide margins
+\\usepackage[includeheadfoot,margin=1.25in,hmargin=1.25in,vmargin=0.5in]{geometry} % for normal margins
+
+
 \\usepackage{float}
+\\usepackage{changepage}
+
+\\usepackage{wrapfig}
 
 \\usepackage{algorithm}
 \\usepackage{amsmath}
@@ -16,10 +19,21 @@
 \\ifxetex
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-  \\setromanfont{Garamond Premier Pro}
-%  \\setromanfont{Adobe Caslon Pro}
- \\setsansfont{Gotham Narrow Bold}
-  \\setmonofont{Myriad Pro}
+
+% define Helvetica Now font weights
+\\setmainfont{EBGaramond}[
+  Path = /Users/jay/Library/Fonts/,
+        UprightFont = HelveticaNowText-Light,
+        BoldFont = HelveticaNowDisplay-Bold, 
+        ItalicFont = HelveticaNowText-LightItalic,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+  Extension = .ttf
+
+\\setromanfont{HelveticaNowText-Light}
+\\setsansfont{HelveticaNowDisplay-Regular}
+\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+
+  \\setmonofont{HelveticaNowDisplay-ExtLt}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -27,7 +41,7 @@
 \\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
-% \\usepackage{grffile}
+\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -45,93 +59,44 @@
 \\definecolor{periodblue}{HTML}{12239e}
 \\definecolor{denimblue}{HTML}{3A5F90}
 \\definecolor{electricblue}{HTML}{05ADF3}
-
-
-\\renewcommand{\\contentsname}{Table of Contents}
+\\definecolor{resonateblue}{HTML}{005778}
+\\definecolor{resonateorange}{HTML}{da7635}
+\\definecolor{resonategrey}{HTML}{4d4d4c}
+\\definecolor{nliblue}{HTML}{2f9ed3}
+%\\definecolor{dullerelegantblue}{HTML}{4380b9}
+%\\definecolor{elegantblue}{HTML}{1792d1}
+\\definecolor{ideablue}{HTML}{55C1E7} 
 
 
 \\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-
+\\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Gotham Narrow Bold}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Gotham Narrow Bold}
-\\newfontfamily\\mybluefont[Color=electricblue]{Gotham Narrow Bold}
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\large\\bfseries\\color{electricblue}}
-\\DeclareTextFontCommand{\\textit}{\\itshape}
+\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
+%Define Bold face
+\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+\\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{textcase}
 
 \\pagenumbering{arabic}
 \\makeatletter
 
-%This macro now controls the position of the background pic
-%Please do not change from here
-\\newcommand\\BackgroundPic{%
-\\put(0,0){%
-\\parbox[b][\\paperheight]{\\paperwidth}{%
-\\vfill
-\\centering
-%inside the tikzpicture environment, you can do anything you want with the image
-\\begin{tikzpicture}
 
-\\node [inner sep=0pt,outer sep=0pt] at (0,0) {\\includegraphics[width=\\paperwidth,height=\\paperheight]{\\the\\coverimage}};
-
-\\node at  (0,5) [opacity=1.0] {\\parbox[b][0.5\\textheight]{\\textwidth}{%
-  \\begin{raggedright}
-  \\leavevmode
-    \\vskip 1cm
-  {\\mytitlefont\\fontsize{75}{85}\\bfseries{\\@title}\\par}
-    \\vskip 1cm
-    
-    %{\\myauthorfont\\fontsize{30}{40}{{\\bfseries{\\@degree}\\par}}}
-
-\\vfill
-\\end{raggedright}}};
-\\node at (0,-8) [opacity=1] {\\parbox[b][0.3\\textheight]{\\textwidth}{%
-\\begin{raggedright}
-\\vfill
-{\\myauthorfont\\Large {\\@author}}
-    \\newline
-          {\\myauthorfont\\Large \\href{mailto:jay@storytelling.nyc}{jay@storytelling.nyc}}
-        \\newline
-{\\myauthorfont\\Large
-\\href{http://storytelling.nyc}{Storytelling.NYC}}
-\\newline
-{\\myauthorfont\\Large © 2018 \\@author}
-    \\newline
-%{\\myauthorfont\\Large Private and Confidential}
- %   \\newline
-        \\newline
-    {\\myauthorfont\\Large \\@date\\par}
-%{\\myauthorfont\\Large \\href{https://jaydixit.com}{\\@degree }}
-\\end{raggedright}
-}};
-\\end{tikzpicture}
-%Don't change
-\\vfill
-}}}
-%This macro executes a hook at the beginning of the document that  puts the background correctly. 
-\\AtBeginDocument{\\AddToShipoutPicture*{\\BackgroundPic}}
-\\AtBeginDocument{\\globalcolor{ghostlygrey}}
-
-
-
-%The maketitle macro now only includes the titling and not the background. 
-\\def\\maketitle{ \\newgeometry{margin=1in} \\thispagestyle{empty} \\vfill \\null \\cleardoublepage\\restoregeometry}
-
-
+\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
 
-
+\\usepackage[labelformat=empty]{caption}
 
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
@@ -141,7 +106,7 @@
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 \\lfoot{}
-\\cfoot{}
+\\cfoot{\\thepage}
 \\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
@@ -260,6 +225,12 @@
 \\endtikzpicture}
 \\makeatother
 
+%\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
+
+\\newenvironment{indentedsection}
+  {\\adjustwidth{2em}{0pt}}
+  {\\endadjustwidth}
+
 
 \\usepackage{setspace}
 \\usepackage{lipsum}
@@ -269,20 +240,50 @@
 
 
 \\usepackage[sc]{titlesec}
+
+
+\\newlength\\TitleOverhang
+\\setlength\\TitleOverhang{1.5cm}
+
+\\newcommand\\Overhang[1]{%
+ \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
+}
+
+
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{6pt}{-6pt}
-\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+%\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+%\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
+%\\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
 
-\\titleformat*{\\section}{\\sffamily\\fontsize{36}{36}\\raggedright\\bfseries\\sffamily\\color{pinterestred}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{20}{20}\\scshape\\color{electricblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\fontsize{16}{12}\\raggedright\\bfseries\\color{pinterestred}}
-\\titleformat*{\\paragraph}{\\sffamily\\sanssize\\raggedright\\bfseries\\color{electricblue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{pinterestred}}
-\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
-\\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
+% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
+\\titleformat*{\\subsection}{\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+
+
+\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
+
+\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
+
+
+\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
+
+% this emboldens all links 
+\\let\\oldhref\\href
+\\renewcommand{\\href}[2]{\\oldhref{#1}{\\bfseries#2}}
+
+
+\\renewcommand\\maketitle{}
 
 
       [NO-DEFAULT-PACKAGES]
