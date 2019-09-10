@@ -8468,13 +8468,12 @@ list."
 #+end_src
 
 
-* org ellipsis
+* minimalist org ellipsis
+
 #+begin_src emacs-lisp
-(custom-set-faces
-
- '(org-ellipsis ((t (:family "Iosevka Nerd Font Regular" :foreground "DarkGoldenrod" :underline nil))))) 
-
-(setq org-ellipsis "") 
-
-
+(custom-set-faces 
+ '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))) 
+(setq org-ellipsis " ") 
 #+end_src
+
+Courtesy of Mike Goldenberg
