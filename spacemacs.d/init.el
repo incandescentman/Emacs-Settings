@@ -132,6 +132,7 @@ values."
                                       fancy-narrow
                                       fastdef
                                       flyspell-lazy
+                                      focus
                                       fountain-mode
                                       frame-cmds
                                       fuzzy
@@ -591,7 +592,7 @@ before packages are loaded."
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
 ;;  (load "/Users/jay/gnulisp/book-functions.el")
   (load "/Users/jay/gnulisp/reveal-in-finder.el")
-;;  (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   (load "/Users/jay/emacs/emacs-settings/define-word.el")
   (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
@@ -798,6 +799,10 @@ before packages are loaded."
   (defun package--save-selected-packages (&rest opt) nil)
 
   ;; (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
+
+
+  (load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
+
   ;; (require 'mu4e-send-delay)
 
   ;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
@@ -872,6 +877,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+ '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
  '(org-link ((t (:inherit link :underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
  '(zz-fringe-for-narrowing ((t (:background "white")))))

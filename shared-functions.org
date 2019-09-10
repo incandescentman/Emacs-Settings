@@ -8466,3 +8466,15 @@ list."
     (insert (concat word "\n"))))
   (pop-to-buffer new))) 
 #+end_src
+
+
+* org ellipsis
+#+begin_src emacs-lisp
+(custom-set-faces
+
+ '(org-ellipsis ((t (:family "Iosevka Nerd Font Regular" :foreground "DarkGoldenrod" :underline nil))))) 
+
+(setq org-ellipsis "") 
+
+
+#+end_src
