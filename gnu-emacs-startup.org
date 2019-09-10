@@ -432,6 +432,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j m c") 'multiple-cursors-reflash)
+
 (define-key key-minor-mode-map (kbd "s-J") 'dired-jump)
 
 (define-key key-minor-mode-map (kbd "s-j n s") 'yas/new-snippet)

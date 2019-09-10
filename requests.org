@@ -1,3 +1,19 @@
+org-in-item-p 
+
+
+* change the behavior of org-smart-meta-return/dwim
+
+For plain-text lists 
+* after a list
+Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
+
+Right now it creates another item. I want just a newline, or in the case of smart-org-insert-todo-heading-dwim, a todo heading.
+
+
+
+* old
+
+
 Delete and get this ".," 
 
 * delete spaces between one-letter words
@@ -59,9 +75,6 @@ Or M-- cycles to numbered list before it cycles back
 
 * when cursor is on blank line and insert-heading, add heading to current line don't add line break 
 
-* change the behavior of org-smart-meta-return/dwim
-
-For plain-text lists 
 
 * make emacs work more like Workflowy 
 
@@ -73,11 +86,6 @@ Complete word, then add completion to abbrev list.
 realiz realized realizing 
 
 mend mended mending 
-
-* after a list
-Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
-
-Right now it creates another item. I want just a newline, or in the case of smart-org-insert-todo-heading-dwim, a todo heading.
 
 
 * region or thing
