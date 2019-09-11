@@ -8474,6 +8474,7 @@ list."
 (custom-set-faces 
  '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))) 
 (setq org-ellipsis " ") 
+;; (setq org-ellipsis " ▶") 
 #+end_src
 
 Courtesy of Mike Goldenberg
