@@ -432,6 +432,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-j r t") 'org-render-table-at-point)
+
 (define-key key-minor-mode-map (kbd "s-j m c") 'multiple-cursors-reflash)
 
 (define-key key-minor-mode-map (kbd "s-J") 'dired-jump)
@@ -469,7 +471,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 )
 
 
-(define-key key-minor-mode-map (kbd "s-p") 'move-region-to-other-window)
+;; (define-key key-minor-mode-map (kbd "s-p") 'move-region-to-other-window)
 
 (defun visit-messages-buffer-full-screen ()
   (interactive)
@@ -605,7 +607,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
 
-(define-key key-minor-mode-map (kbd "s-p") 'zin/org-checkbox-next)
+;; (define-key key-minor-mode-map (kbd "s-p") 'zin/org-checkbox-next)
 
 (define-key key-minor-mode-map (kbd "<f20>") 'pomodoro-start-jay)
 (define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
