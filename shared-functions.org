@@ -8534,3 +8534,11 @@ Courtesy of Mike Goldenberg
   (org-element-map (org-element-parse-buffer) 'table 'org-render-table))) 
 
 #+end_src
+
+
+* org-sidebar-tree
+#+begin_src emacs-lisp 
+(use-package org-sidebar)
+(add-hook 'org-mode-hook 'org-sidebar-tree)
+(setq org-sidebar-tree-side (quote left)) 
+#+end_src
