@@ -104,8 +104,8 @@ I should probably eventually break these out of custom-set-variables and organiz
 
  (setq blink-cursor-mode nil)
  (setq buffer-stack-show-position nil)
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda*")))
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar")))
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda* *Tree:*")))
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" *Tree:*)))
  (setq calendar-latitude 40.7)
  (setq case-fold-search t)
  (setq ccm-recenter-at-end-of-file t)
@@ -2823,6 +2823,19 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (insert "*** TODO ")
 ; (left-char)
   )
+
+
+(defun jd-org-book-and-accountability ()
+ "insert a new heading with today's date"
+ (interactive)
+(insert "\n** ")
+ (org-insert-time-stamp (current-time))
+(insert "\n") 
+(insert "*** TODO bookwriting [0/2]\n")
+(insert "**** TODO bookwriting #1\n")
+(insert "**** TODO bookwriting #2\n")
+(left-char)
+ ) 
 
 (defun jd-clock-in ()
   "insert a new heading with today's date, and then clock in"
@@ -8537,8 +8550,11 @@ Courtesy of Mike Goldenberg
 
 
 * org-sidebar-tree
-#+begin_src emacs-lisp 
+#+begin_SRC emacs-lisp 
 (use-package org-sidebar)
-(add-hook 'org-mode-hook 'org-sidebar-tree)
 (setq org-sidebar-tree-side (quote left)) 
-#+end_src
+#+END_SRC
+
+#+begin_EXAMPLE emacs-lisp
+(add-hook 'org-mode-hook 'org-sidebar-tree) 
+#+END_EXAMPLE

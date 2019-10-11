@@ -19,7 +19,7 @@
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
-  \\setmonofont{TeX Gyre Heros}
+  \\setmonofont{HelveticaNowDisplay-Bold}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -279,10 +279,11 @@
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{17}{16}\\raggedright\\ttfamily}
+\\titleformat*{\\subsubsection}{\\ttfamily\\fontsize{17}{16}\\raggedright\\ttfamily}
 
 \\titleformat*{\\paragraph}{\\ttfamily\\fontsize{17}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily}
+
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 
