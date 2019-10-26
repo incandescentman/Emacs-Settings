@@ -105,7 +105,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq blink-cursor-mode nil)
  (setq buffer-stack-show-position nil)
  (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Agenda* *Tree:*")))
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" *Tree:*)))
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*" "*alert*")))
  (setq calendar-latitude 40.7)
  (setq case-fold-search t)
  (setq ccm-recenter-at-end-of-file t)
@@ -1223,7 +1223,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq org-todo-keyword-faces
  '(("NEXT" :background "medium sea green" :foreground "white" :weight bold)
   ("ACTION" :foreground "medium sea green" :weight bold)
-  ("WAIT" :background "yellow" :foreground "purple" :weight bold)
+  ("WAITING" :background "yellow" :foreground "purple" :weight bold)
   ("EVENT" :background "gray25" :foreground "white" :weight bold)
   ("PROJECT" :background "firebrick" :foreground "white" :weight bold)
   ("STARTED" :background "dodger blue" :foreground "white" :weight bold)
@@ -1733,9 +1733,9 @@ end ignoring"))
 (do-applescript (format "
 ignoring application responses
 	tell application \"System Events\"
-		key code {118}
 keystroke \"P\" using {command down, shift down, option down, control down} -- start Pomodoro One 
-	end tell
+key code {118}
+end tell
 end ignoring
 
 
@@ -1744,11 +1744,11 @@ set nowTime to (hours of now) & \":\" & (minutes of now)
 set pomodoroStart to (current date) - 25 * minutes
 set pStartTime to (hours of pomodoroStart) & \":\" & (minutes of pomodoroStart)
 set achieved to text returned of (display dialog \"What did you achieve in this Pomodoro?\" default answer \"\")
-set entry_text to \"# Pomodoro session \" & (pStartTime) & \"-\" & (nowTime) & \"
+set entry_text to \"# Book writing\" & time string of now & \"-\" & (nowTime) & \"
 
 \" & achieved & \"
 
-#pomodoro #log\"
+#pomodoro \"
 
 do shell script \"/usr/local/bin/dayone2 new \" & quoted form of entry_text 
 ")) 
@@ -8313,6 +8313,10 @@ Go through `org-structure-template-alist' and
 (add-to-list 'mc/cmds-to-run-for-all 'delete-backward-char) 
 )
 
+
+(delete 'delete-backward-char mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'crux-kill-line-backwards) 
+
 #+end_src 
 
 
@@ -8552,9 +8556,7 @@ Courtesy of Mike Goldenberg
 * org-sidebar-tree
 #+begin_SRC emacs-lisp 
 (use-package org-sidebar)
+;; (add-hook 'org-mode-hook 'org-sidebar-tree) 
 (setq org-sidebar-tree-side (quote left)) 
 #+END_SRC
 
-#+begin_EXAMPLE emacs-lisp
-(add-hook 'org-mode-hook 'org-sidebar-tree) 
-#+END_EXAMPLE
