@@ -281,8 +281,8 @@
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{17}{16}\\raggedright\\ttfamily}
 
-\\titleformat*{\\paragraph}{\\ttfamily\\fontsize{17}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily}
+\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{17}{12}\\raggedright}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 
