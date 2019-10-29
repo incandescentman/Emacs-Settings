@@ -604,6 +604,9 @@ before packages are loaded."
 
 
 (load "/Users/jay/emacs/org-mime.el")
+
+(load "/Users/jay/tramp-settings.el")
+
 (require 'org-mime)
 
   ;; automatically display any prefix
@@ -828,7 +831,7 @@ before packages are loaded."
 (setq org-twbs-postamble-format nil)
 (setq org-twbs-preamble nil)
 
-
+(server-reflash)
 (triplicate-font)
 (embiggen-text)
   )
