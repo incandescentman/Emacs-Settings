@@ -8560,3 +8560,20 @@ Courtesy of Mike Goldenberg
 (setq org-sidebar-tree-side (quote left)) 
 #+END_SRC
 
+
+* org-brain
+#+begin_src emacs-lisp
+(use-package org-brain :ensure t
+ :init
+ (setq org-brain-path "/Users/jay/dropbox/writing/org-brain") 
+ :config
+ (setq org-id-track-globally t)
+ (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
+ (push '("b" "Brain" plain (function org-brain-goto-end)
+     "* %i%?" :empty-lines 1)
+    org-capture-templates)
+ (setq org-brain-visualize-default-choices 'all)
+ (setq org-brain-title-max-length 12)
+ (setq org-brain-include-file-entries nil
+    org-brain-file-entries-use-title nil)) 
+#+end_src
