@@ -1357,13 +1357,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (when
       (or
        (looking-back "\\[")
-       ;; (looking-back "\* ")
        (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
        (looking-back "^# ")
        ;; (looking-back "* TODO ") ; actually I don't think I want this
        ;; (looking-back "^*+")
        ;; (looking-back "- ")
-
        )
     (beginning-of-line)
     )
@@ -1371,12 +1369,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (cond (mark-active
          (progn (delete-region (mark) (point))
                 (newline)))
-        ;; Shamefully lifted from `org-return'. Why isn't there an
+        ;; Lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
         ((and 
-;; (org-or-orgalist-p)
-              org-return-follows-link
-              (org-in-regexp org-any-link-re))
+          org-return-follows-link
+          (org-in-regexp org-any-link-re))
          (cond
           ((or
             ;;(looking-at "\\[\\[.*")
@@ -1392,35 +1389,32 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
 
-   ((and 
-;; (org-or-orgalist-p)
-              (let ((el (org-element-at-point)))
-                (and el
-                     ;; point is at an item
-                     (eq (first el) 'item)
-                     ;; item is empty
-                     (eql (getf (second el) :contents-begin)
-                          (getf (second el) :contents-end)))))
-    (message "at 1")
-    (beginning-of-line)
+        ((and 
+          (let ((el (org-element-at-point)))
+            (and el
+                 ;; point is at an item
+                 (eq (first el) 'item)
+                 ;; item is empty
+                 (eql (getf (second el) :contents-begin)
+                      (getf (second el) :contents-end)))))
+         (message "at 1")
+         (beginning-of-line)
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
         ((and 
-;; (org-or-orgalist-p)
           (let ((el (org-element-at-point)))
             (and (not (org--line-empty-p 1))
-                (and el
-                     (or (member (first el) '(item plain-list))
-                         (let ((parent (getf (second el) :parent)))
-                           (and parent
-                                (member (first parent) '(item plain-list)))))))))
+                 (and el
+                      (or (member (first el) '(item plain-list))
+                          (let ((parent (getf (second el) :parent)))
+                            (and parent
+                                 (member (first parent) '(item plain-list)))))))))
          (let ((is-org-chbs (org-checkbox-p)))
            (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
            (when is-org-chbs
              (insert "[ ] "))))
         ((and
-;; (org-or-orgalist-p)
           (not (and
                 org-return-follows-link
                 (looking-back ">"))))
