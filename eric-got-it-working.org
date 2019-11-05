@@ -1,33 +1,8 @@
-* file settings                                                     :ARCHIVE:
-#+OPTIONS: f:t
-#+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
-#+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
-#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
-
-#+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup
-#+TITLE: Jay Dixit's GNU Emacs setup
-* About
-  - System: Mac OSX Yosemite
-  - Emacs version: GNU Emacs 25.1.1 (Carbon Version) 
-  - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
-  - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's emacs-mac port, available here:
-    - =brew tap railwaycat/emacsmacport= 
-    - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-    - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
-
-* environment settings
-** Handle Emacs UTF-8 input
-
-#+BEGIN_SRC emacs-lisp
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (setenv "LANG" "en_US.UTF-8")
-#+END_SRC
 
-** Sticky windows
-
-#+BEGIN_SRC emacs-lisp
 (global-set-key [(control x) (?0)] 'delete-other-windows)
 (global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-0") 'delete-window)
@@ -35,11 +10,7 @@
 (global-set-key  (kbd "s-9") 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-2") 'split-window-vertically)
 (global-set-key  (kbd "s-3") 'split-window-horizontally)
-#+END_SRC
 
-* abbreviations
-Automatically load abbreviations table:
-#+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
 (read-abbrev-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 (setq abbrev-file-name "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
@@ -47,21 +18,14 @@ Automatically load abbreviations table:
 (setq save-abbrevs t)
 (setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
-#+END_SRC
 
-* reflash-indentation
-#+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
 "Fix spacing on the screen."
   (interactive)
   (org-indent-mode 1)
 (recenter-top-bottom)
   )
-#+END_SRC
 
-* org predicates
-
-  #+BEGIN_SRC emacs-lisp
 (require 'org-element) 
 
   (defun org-checkbox-p ()
@@ -75,21 +39,9 @@ Automatically load abbreviations table:
     (and
 ;; (org-or-orgalist-p)
       (string-match "^\s*\\([-+]\\|\s[*]\\|[0-9]+[.\\)]\\)\s" (or (thing-at-point 'line) ""))))
-  #+END_SRC
-
-* org-mode hooks
-
-  #+BEGIN_SRC emacs-lisp
 
 (setq org-hierarchical-todo-statistics nil)
-  #+END_SRC
 
-
-* fullscreen settings
-
-[[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
-
-#+BEGIN_SRC emacs-lisp
 (defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
 
 (defun toggle-maxframe ()
@@ -116,15 +68,6 @@ Automatically load abbreviations table:
 
   (global-set-key (kbd "<f17>") 'toggle-fullscreen)
 
-#+END_SRC
-
-* directory settings
-
-There is probably a lot of redundancy here, I don't understand this stuff too
-well.
-
-#+BEGIN_SRC emacs-lisp
-
 ;; (require 'dired-details+)
 
 
@@ -144,13 +87,7 @@ well.
   "*Hide dired details on entry to dired buffers."
   :group 'dired-details
   :type 'boolean)
-#+END_SRC
 
-* other functions
-
-Manually remove the scrollbar if default setting fails when creating a new frame:
-
-#+BEGIN_SRC emacs-lisp
 (defun scrollbar-init ()
   (interactive)
   (scroll-bar-mode -1)
@@ -165,33 +102,15 @@ Manually remove the scrollbar if default setting fails when creating a new frame
   (interactive)
   (scroll-bar-mode 1)
   )
-#+END_SRC
 
-Forgot what this does, I think it's in case Emacs crashes maybe to recover
-autosaves?
-#+BEGIN_SRC emacs-lisp
 (defadvice recover-session (around disable-dired-omit-for-recover activate)
   (let ((dired-mode-hook dired-mode-hook))
     (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
     ad-do-it))
-#+END_SRC
 
-* isolate Emacs kill ring from the OSX system pasteboard (clipboard).
-
-Very important, I use this all the time.  These are custom functions to separate
-the OSX clipboard from Emacs' kill ring, effectively giving me two separate
-clipboards to work from. The below are the traditional OSX keybindings for
-cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop functions still work, and use the Emacs kill ring instead.
-
-
-** pasteboard setup
-#+BEGIN_SRC emacs-lisp
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
-#+END_SRC
 
-** pasteboard-copy
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
   (interactive)
@@ -207,12 +126,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ;; (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
      (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
-#+END_SRC
 
-** pasteboard-paste
-
-*** pasteboard-paste (with smart quotes by default)
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -237,20 +151,14 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
      (goto-char start)
      (my/fix-space)))
   ; (reflash-indentation)
-  ) 
-#+END_SRC
+  )
 
-*** pasteboard-paste-without-smart-quotes (and without spaces)
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-without-smart-quotes ()
   (interactive)
   (let ((beg (point)))
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
-#+END_SRC
 
-*** pasteboard-paste-spaces-maybe
-    #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-spaces-maybe ()
 (interactive)
 ;; begin if
@@ -289,14 +197,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (pasteboard-paste-no-spaces) ; then
   (pasteboard-paste-without-smart-quotes))   ; else
   )
-    #+END_SRC
 
-    #+RESULTS:
-    : pasteboard-paste-spaces-maybe
-
-
-*** pasteboard-paste-no-spaces - original working version
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
@@ -309,11 +210,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 			     nil t)
     (save-excursion
       )))
-#+END_SRC 
 
-** pasteboard-cut
-
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
   (interactive)
@@ -331,10 +228,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (save-excursion
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
-#+END_SRC
-
-** wrapped-search-forward
-#+BEGIN_SRC emacs-lisp
 
 (defvar-local failed-search nil)
 
@@ -357,9 +250,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
         (setq-local failed-search (cons (point) str))
         (message "Search: Not found.")))))
 
-#+END_SRC
-** pasteboard-search-for-clipboard-contents
-#+BEGIN_SRC emacs-lisp
 (defun pasteboard-search-for-clipboard-contents ()
   (interactive)
   (let ((search-term
@@ -368,54 +258,23 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
-#+END_SRC
-
-* kill ring to pasteboard functions
-** push kill ring to OSX pasteboard
-  #+BEGIN_SRC emacs-lisp
 (setq x-select-enable-clipboard t)
 (defun push-kill-ring-pasteboard-to-clipboard ()
   (interactive)
   (x-select-text (current-kill 0)))
-  #+END_SRC
 
-** gist-buffer-to-pasteboard
-  #+BEGIN_SRC emacs-lisp
 (defun gist-buffer-to-pasteboard ()
   (interactive)
   (gist-buffer)
   (push-kill-ring-pasteboard-to-clipboard)
   )
-  #+END_SRC
 
-* keybindings
-
-** Create custom keybinding prefix
-
-#+BEGIN_QUOTE
-I have an unconventional approach to this that I recommend highly. I have redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my favorite commands. This key is very easy to type and it is bound to a function ('recenter) that isn't used that much. Well, I don't use 'recenter much, but even if you did, it can be assigned to C-l C-l which is almost as easy to type, and a small price to pay for the possibilities opened up by the Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the place of honor.)
-#+END_QUOTE
-Source: [[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs/5682737#5682737][ LenW's answer on keyboard - What are good custom keybindings in emacs? - Stack Overflow]]
-
-Use ⌘-m as prefix for my own custom keybindings:
-#+BEGIN_SRC emacs-lisp
 (global-unset-key (kbd "s-j"))
 (defvar s-j-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
 (define-key global-map (kbd "s-j") 's-j-prefix)
 (fset 's-j-prefix s-j-map)
-#+END_SRC
 
-
-** NOTE-TO-JAY TODO Custom keybindings
-CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
-
-
-Eventually replace these with this? https://github.com/noctuid/general.el
-
-
-
-#+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
 (defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
 (define-minor-mode key-minor-mode
@@ -930,14 +789,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
 ;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
-
-#+END_SRC
-
-
-* sentences
-
-Make ~kill-sentence~ work in a more intuitive way:
-#+BEGIN_SRC emacs-lisp
 (defun kill-sentence-to-period ()
   "Leave the period in there."
   (interactive)
@@ -946,11 +797,7 @@ Make ~kill-sentence~ work in a more intuitive way:
   (insert ".")
   (backward-char)
 )
-#+END_SRC
 
-[[http://emacs.stackexchange.com/questions/12266/how-change-behavior-of-kill-sentence-based-on-position-in-sentence/12321?iemail=1&noredirect=1#12321][Source]]
-
-#+BEGIN_SRC emacs-lisp
 (defun my/forward-to-sentence-end ()
   "Move point to just before the end of the current sentence."
   (forward-sentence)
@@ -999,12 +846,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   )
 
 )
-#+END_SRC
-
-* my/kill-line-dwim
-
-#+BEGIN_SRC emacs-lisp
-
 
 (defun my/kill-line-dwim ()
   "Kill the current line."
@@ -1027,12 +868,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;;    (when (my/beginning-of-sentence-on)
 ;;      (capitalize-unless-org-heading)))
 )
-#+END_SRC
 
-* kill-sentence-maybe-else-kill-line
-
-
-  #+BEGIN_SRC emacs-lisp
 (defun kill-sentence-maybe-else-kill-line ()
   (interactive)
 (when
@@ -1045,20 +881,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 ;; and the keybinding
 (global-set-key (kbd "M-k") 'kill-sentence-maybe-else-kill-line)
 
-  #+END_SRC
-
-
-* Browsing
-
-#+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-#+END_SRC
 
-* spacecraft-mode - superior handling of whitespace for writing and editing prose
-
-
-** smart-space
-#+BEGIN_SRC emacs-lisp
 (defun smart-period-or-smart-space ()
 "double space adds a period!"
 (interactive)
@@ -1129,14 +953,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 ;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
 
-
-#+END_SRC
-
-
-
-
-** my/fix-space
-#+BEGIN_SRC emacs-lisp
 ;;; I changed this a)) bunch, not sure if it still works correctly.
 ;; (defun my/fix-space ()
 ;;   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
@@ -1177,12 +993,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 )
     (delete-horizontal-space)))
-#+END_SRC
-
-. This.        
-** insert-space 
-#+BEGIN_SRC emacs-lisp
-
 
 (defun insert-space ()
   (interactive) 
@@ -1242,14 +1052,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (cond (mark-active
  (progn (delete-region (mark) (point))))) 
  (insert "?")
-) 
+)
 
-
-#+END_SRC
-
-** smart insertion of headings and subheadings
-*** smart-org-meta-return-dwim
- #+BEGIN_SRC emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
        (plain-list-item . always)))
@@ -1274,19 +1078,11 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
  (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else
 )
 
-
-#+END_SRC
-
-*** smart-org-insert-heading-respect-content-dwim
-#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-heading-respect-content-dwim ()
 (interactive)
   (call-rebinding-org-blank-behaviour 'org-insert-heading-respect-content)
 )
-#+END_SRC
 
-*** smart-org-insert-todo-heading-dwim
-#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-todo-heading-dwim ()
   (interactive)
   (let ((listitem-or-checkbox (org-plain-text-list-p)))
@@ -1296,35 +1092,22 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
         (insert "TODO ")))
 )
 
-#+END_SRC
-
-*** smart-org-insert-todo-heading-respect-content-dwim
-#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-todo-heading-respect-content-dwim ()
   (interactive)
   (call-rebinding-org-blank-behaviour 'org-insert-todo-heading-respect-content)
 )
-#+END_SRC
 
-*** smart-org-insert-subheading
-#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-subheading ()
   (interactive)
 (call-rebinding-org-blank-behaviour 'org-meta-return)
 (org-demote-subtree)
 )
-#+END_SRC
 
-*** smart-org-insert-todo-subheading
-#+BEGIN_SRC emacs-lisp
 (defun smart-org-insert-todo-subheading ()
   (interactive)
 (call-rebinding-org-blank-behaviour 'org-insert-todo-subheading)
 )
-#+END_SRC
 
-*** keybindings
-#+BEGIN_SRC emacs-lisp
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim)
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim)
 (define-key org-mode-map (kbd "C-<return>") 'return-insert-blank-line-before)
@@ -1333,22 +1116,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
- #+END_SRC
-
-
-*** length of previous line
-#+BEGIN_SRC emacs-lisp
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (defun length-of-previous-line ()
  (save-excursion
   (forward-line -1)
   (end-of-line)
   (current-column)))
-#+END_SRC
-
-*** smart-return
-#+BEGIN_SRC emacs-lisp
 
 (defun smart-return ()
   (interactive)
@@ -1429,12 +1203,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
 ;; (define-key orgalist-mode-map (kbd "<return>") 'smart-return)
-#+END_SRC
 
-
-** kill word correctly
-
-#+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -1457,11 +1226,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (delete-forward-char 1))
 )
 
-#+END_SRC
-
-** kill word correctly and capitalize
-
-#+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly-and-capitalize ()
   "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
@@ -1474,11 +1238,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
-#+END_SRC
-
-
-* character movement
-#+BEGIN_SRC emacs-lisp
 
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
@@ -1515,41 +1274,6 @@ provided the (transient) mark is active."
 (define-key org-mode-map (kbd "<left>") 'jay/left-char)
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
 
-#+END_SRC
-
-* code not currently in use
-*** keybindings not currently in use
- (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
- (global-set-key (kbd "C-c s") 'org-copy-subtree)
- (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
-;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
-(define-key key-minor-mode-map (kbd "C-c C-l") 'org-insert-link)
- (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
- (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
- (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
- (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
-
- (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
- (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
-
-
- (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
- (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
- (define-key key-minor-mode-map (kbd "s-R") 'web-research)
-
-
-;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
-
-* experiments - tested
-** words - some interesting utilities for text in Emacs
-The idea is a command called words that will be run interactively. It will grab the word at point, or operate on a selected region, and then offer a menu to lookup the definition, find it in a thesaurus, google it, etc.
-
-We structure the code so you can add functions to it later, without directly modifying this code. The only limitation of this code is that the functions must have a signature with no arguments. That does not seem terribly limiting, as we can check for a region, and use it if we want (see the words-google function).
-
-#+BEGIN_SRC emacs-lisp
 (defun words-dictionary ()
   (interactive)
   (browse-url
@@ -1599,14 +1323,7 @@ We structure the code so you can add functions to it later, without directly mod
        (assoc
 	(char-to-string input) words-funcs)
        2))))
-#+END_SRC
 
-#+RESULTS:
-: words
-
-This works nicely. Now, let us add a new function that looks up the word or selection on twitter. We just define a new function, and add the menu selection to the words-func variable.
-
-#+BEGIN_SRC emacs-lisp
 (defun words-twitter ()
   (interactive)
   (browse-url
@@ -1621,17 +1338,6 @@ This works nicely. Now, let us add a new function that looks up the word or sele
   '("w" "twitter" words-twitter)
   t) ; append
 
-#+END_SRC
-
-#+RESULTS:
-| d | ictionary | words-dictionary |
-| t | hesaurus  | words-thesaurus  |
-| g | oogle     | words-google     |
-| w | twitter   | words-twitter    |
-
-Finally, the most complicated idea: spelling and grammar. I know there is flyspell, and such, but they are build on an ancient dictionary. Here, for fun, we explore a web api. This next function is not a trivial one, and I will not explain it here beyond saying it sends a selection of text to a url, gets an xml response back, and that response is parsed and printed to a buffer by this function. The main point is to illustrate we can do interesting things with a selection of text!
-
-#+BEGIN_SRC emacs-lisp
 (defun words-atd ()
   "Send paragraph at point to After the deadline for spell and grammar checking."
   (interactive)
@@ -1676,318 +1382,7 @@ Suggestions: %s
 (add-to-list 'words-funcs
   '("s" "spell/grammar" words-atd)
   t) ; append
-#+END_SRC
 
-#+RESULTS:
-: words-atd
-
-My final words menu looks like:
-#+attr_html: :width 400
-[[./images/final-menu.png]]
-
-If I have the cursor in the previous paragraph, run the words command and select "s" I get a buffer with these contents:
-
-#+BEGIN_EXAMPLE
-*** flyspell ** (spelling)
-Description: (Spelling)
-Suggestions: flywheel flyball
-
-*** are build on ** (grammar)
-Description: (Auxiliary Verb Agreement)
-Suggestions: are built on
-
-*** api ** (spelling)
-Description: (Spelling)
-Suggestions: app ape apt ai ami
-
-*** url ** (spelling)
-Description: (Spelling)
-Suggestions: urn ure curl hurl burl
-
-*** xml ** (spelling)
-Description: (Spelling)
-Suggestions: xl ml
-
-*** selection ** (suggestion)
-Description: (Complex Expression)
-Suggestions: choice
-
-*** an xml ** (grammar)
-Description: (Wrong article)
-Suggestions: a xml
-
-*** a selection of ** (grammar)
-Description: (Hidden Verbs)
-Suggestions:
-
-*** is parsed ** (grammar)
-Description: (Passive voice)
-Suggestions:
-
-*** selection ** (suggestion)
-Description: (Complex Expression)
-Suggestions: choice
-
-*** a selection of ** (grammar)
-Description: (Hidden Verbs)
-Suggestions:
-#+END_EXAMPLE
-
-It might be nice to link back to those words, so you could click on them and fix them, but that is a beyond today's goal. In summary, today we looked at a framework to create a user-modifiable menu of commands that are launched from a single command. Here we called the command words, and then built up some different things we might want to do with the word or selection at point. While you can of course just remember the individual commands, remembering one command and then being prompted might have some advantages.
-
-Source: tk
-
-** invisible text in Emacs
-Source:    [[http://kitchingroup.cheme.cmu.edu/blog/2014/02/06/Invisible-text-in-Emacs/][invisible text in Emacs]]
-
-** Making org-mode links to files in Emacs packages
-#+BEGIN_EXAMPLE
-Today I will make a new org-mode link that lets me make links to files inside of Emacs packages. These files may be installed in different places on different systems (e.g. in the system directory, in ELPA directories, or in custom directories), so we need a way to construct paths to them. The application of this is eventually I hope to have some emacs packages of documentation, and I would like to have links between the packages that work no matter how they are installed.
-
-I want a syntax that looks like pkg:rainbow-mode==rainbow-mode-pkg.el. We will have a function that parses that to get the package, and the path to the file in the package. Emacs has a function to find the path to the file that defines a library. I chose == because it seems unlikely that would be a string in a package or path.
-
-#+BEGIN_SRC emacs-lisp :results value
-(locate-library "rainbow-mode")
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/rainbow-mode-0.9/rainbow-mode.elc
-
-We can use that to construct the path to where we want. Say we want the file named "rainbow-mode-pkg.el"
-
-#+BEGIN_SRC emacs-lisp :results value
-(expand-file-name
- "rainbow-mode-pkg.el"
- (file-name-directory (locate-library "rainbow-mode")))
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/rainbow-mode-0.9/rainbow-mode-pkg.el
-
-In org-mode links, the link path gets passed to a function. We can split the string like this to get the package and relative path we are referring to.
-
-#+BEGIN_SRC emacs-lisp :results value
-(split-string "rainbow-mode==rainbow-mode-pkg.el" "==")
-#+END_SRC
-
-#+RESULTS:
-| rainbow-mode | rainbow-mode-pkg.el |
-
-That is all of the pieces we need to construct the link function. Here it is.
-
-#+BEGIN_SRC emacs-lisp
-(org-add-link-type
- "pkg"
- (lambda (path)
-   (let ((pkg) (relpath)
-	 (splitpath (split-string path "==")))
-     (setq pkg (car splitpath))
-     (setq relpath (nth 1 splitpath))
-     (find-file (expand-file-name
-		 relpath
-		 (file-name-directory (locate-library pkg)))))))
-#+END_SRC
-
-#+RESULTS:
-
-pkg:rainbow-mode==rainbow-mode-pkg.el
-
-This works too, but you have to use auctex-pkg as the package name.
-
-pkg:auctex-pkg==doc/intro.texi
-
-I think that is because locate-library looks for the /file/ a library is defined in. That is not quite the same as the root directory of a package. It turns out to be a little more complicated to find that. Below is some code I hacked up looking at the package.el code. First let us examine some pieces.
-
-This gives us information about an installed package.
-
-#+BEGIN_SRC emacs-lisp :results value
-(assq 'auctex package-alist)
-#+END_SRC
-
-#+RESULTS:
-: (auctex . [(11 87 2) nil Integrated environment for *TeX*])
-
-We can get the version of the package like this
-
-#+BEGIN_SRC emacs-lisp :results value
-(package-version-join (package-desc-vers (cdr (assq 'auctex package-alist))))
-#+END_SRC
-
-#+RESULTS:
-: 11.87.2
-
-Ok, finally, we get the directory where it is installed like this:
-
-#+BEGIN_SRC emacs-lisp :results value
-(package--dir "auctex" "11.87.2")
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
-
-Note that in some places we use a package symbol, and in other places a string name.Putting that together, we have this block to get the install-dir of a package. If we have a package symbol we can get the path like this.
-
-#+BEGIN_SRC emacs-lisp :results value
-(let* ((pkg 'auctex)
-       (pkg-name (symbol-name pkg)) ; convert symbol to string
-       (desc (cdr (assq pkg package-alist)))
-       (version (package-version-join (package-desc-vers desc)))
-       (pkg-dir (package--dir pkg-name version)))
-  pkg-dir)
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
-
-Usually, we will have a string though. We just have to make it a symbol with the =intern= function.
-
-#+BEGIN_SRC emacs-lisp :results value
-(setq pkg-name "auctex")
-(setq pkg (intern pkg-name))
-(setq desc (cdr (assq pkg package-alist)))
-#+END_SRC
-
-#+RESULTS:
-: [(11 87 2) nil "Integrated environment for *TeX*"]
-
-Now, we have all the pieces to get the path from a package name in a string:
-
-#+BEGIN_SRC emacs-lisp :results value
-(let* ((pkg-name "auctex")
-       (pkg (intern pkg-name))
-       (desc (cdr (assq pkg package-alist)))
-       (version (package-version-join (package-desc-vers desc)))
-       (pkg-dir (package--dir pkg-name version)))
-  pkg-dir)
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
-
-Let us use that to rewrite the link, and address a few other limitations. We will  use =org-open-link-from-string= so we can use org-link syntax in the path part of the link, e.g. to open a file at a line, or headline. Here is our new link.
-
-#+BEGIN_SRC emacs-lisp
-(org-add-link-type
- "pkg2"
- (lambda (path)
-   (let ((pkg) (relpath) (pkg-dir) (link-string)
-	 (splitpath (split-string path "==")))
-     (setq pkg-name (car splitpath))
-     (setq relpath (nth 1 splitpath))
-     (setq pkg-dir (let* ((pkg-symbol (intern pkg-name)) ;convert string to pkg
-			  (desc (cdr (assq pkg-symbol package-alist)))
-			  (version (package-version-join (package-desc-vers desc)))
-			  (pkg-dir (package--dir pkg-name version)))
-		     pkg-dir))
-     (setq link-string (format "[[file:%s/%s]]" pkg-dir relpath))
-     (message "link: %s" link-string)
-     (org-open-link-from-string link-string))))
-#+END_SRC
-
-Now, we can do all of these:
-pkg2:auctex==doc/faq.texi
-pkg2:auctex==doc/faq.texi::should
-pkg2:auctex==doc/faq.texi::10
-[[pkg2:auctex==doc/faq.texi::first place]]
-
-Awesome!
-
-Just for fun, I made a toy package called =package1= in my elpa directory. That package has an org file in it. Now, I can test out the following links:
-
-pkg2:package1==intro.org
-
-pkg2:package1==intro.org::*Miscellaneous
-
-[[pkg2:package1==intro.org::*subheading with words]]
-
-pkg2:package1==intro.org::#install-section
-
-pkg2:package1==intro.org::intro-target
-
-They all work! That works for packages installed via the package manager. However, when I try this with my custom installed org-mode, it does not work. If I run (describe-package 'org) I see that org is a build in package, and that there is an alternate version avalable. It does not point to my org-installation.
-
-pkg2:org==doc/library-of-babel.org
-
-#+BEGIN_SRC emacs-lisp
-(princ (locate-library "org"))
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/org-mode/lisp/org.elc
-
-#+BEGIN_SRC emacs-lisp
-(princ (package-installed-p "org"))
-#+END_SRC
-
-#+RESULTS:
-: nil
-
-Obviously, we need to check if the package is installed via package.el, or if we should look somewhere else. Let us take a final stab at this. Let us review the challenge.
-
-#+BEGIN_SRC emacs-lisp
-(print (locate-library "auctex"))
-(print (locate-library "auctex-autoloads"))
-#+END_SRC
-
-#+RESULTS:
-:
-: nil
-:
-: "c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2/auctex-autoloads.el"
-
-We may have to check for a package-autoloads. Ww can wrap that in an =or= macro, which will return the first non-nil result.
-
-#+BEGIN_SRC emacs-lisp :results value
-(let ((pkg-name "auctex"))
-   (file-name-directory
-    (or (locate-library pkg-name)
-	(locate-library (format "%s-autoloads" pkg-name)))))
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2/
-
-Doing this on the org package shows that this points to a lisp directory.
-#+BEGIN_SRC emacs-lisp :results value
-(let ((pkg-name "org"))
-   (file-name-directory
-    (or (locate-library pkg-name)
-	(locate-library (format "%s-autoloads" pkg-name)))))
-#+END_SRC
-
-#+RESULTS:
-: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/org-mode/lisp/
-
-So, let's try a final link function.
-
-#+BEGIN_SRC emacs-lisp
-(org-add-link-type
- "pkg3"
- (lambda (path)
-   (let ((pkg-name) (relpath)(pkg-dir) (link-string)
-	 (splitpath (split-string path "==")))
-     (setq pkg-name (car splitpath))
-     (setq relpath (nth 1 splitpath))
-     (setq pkg-dir (file-name-directory
-		    (or (locate-library pkg-name)
-			(locate-library (format "%s-autoloads" pkg-name)))))
-(setq link-string (format "[[file:%s/%s]]" pkg-dir relpath))
-     (message "link: %s" link-string)
-     (org-open-link-from-string link-string))))
-#+END_SRC
-
-#+RESULTS:
-
-Now, we just have to make sure to use the right relative path. This link opens up an org-file in my installed version of org-mode: pkg3:org==../doc/library-of-babel.org
-
-I don't know if there is a more clever way to create these links. There are two parts to them: 1) the package, and 2) the relative path. The link syntax isn't that rich to do it without parsing the linkpath.
-
-#+END_EXAMPLE
-
-** Send email to a list of users
-I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapc to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
-
-#+BEGIN_SRC emacs-lisp
 (defun send-mail (userid password)
   "send email to sunjaydixit@gmail.com containing their password"
   (interactive)
@@ -2004,91 +1399,23 @@ password: %s" userid password))
   (mail-send-and-exit))
 
 ;; (send-mail "jkitchin" "trustme99")
-#+END_SRC
 
-#+RESULTS:
-
-That worked well. I ran the block and got the email.
-
-Now, suppose I have this data:
-#+tblname: users
-| userid | password  |
-|--------+-----------|
-| user1  | trustme99 |
-| user2  | foolme99  |
-| user3  | blameme99 |
-
-We can pass that to a source block as a list of lists that will look like this:
-#+BEGIN_EXAMPLE
- ((user1 trustme99) (user2 foolme99) (user3 blameme99))
-#+END_EXAMPLE
-
-Then, we can use a mapc to process each element. Here I use a dummy function with two arguments. If I substitute the function above, each of these users would get an email.
-
-#+BEGIN_SRC emacs-lisp :var data=users
+(let ((data (quote (("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
 ;; (mapc (lambda (x) (fun (car x) (cadr x))) data)
-#+END_SRC
+)
 
-#+RESULTS:
-: user: user1
-: password: trustme99
-: user: user2
-: password: foolme99
-: user: user3
-: password: blameme99
-
-I am not sure that is the best way to get the first and second elements in the list element. It looks funny to me, but it works fine. the alternative is not much prettier:
-
-#+BEGIN_SRC emacs-lisp :var data=users
+(let ((data (quote (("user1" "trustme99") ("user2" "foolme99") ("user3" "blameme99")))))
 ;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
 
 ;; (mapc (lambda (x) (fun (nth 0 x) (nth 1 x))) data)
-#+END_SRC
+)
 
-#+RESULTS:
-: user: user1
-: password: trustme99
-: user: user2
-: password: foolme99
-: user: user3
-: password: blameme99
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list-of-users/][The Kitchin Research Group]]
-
-
-** videos
-- [[https://www.youtube.com/watch?v%3D6W82EdwQhxU][Hack Emacs - An Overview of Org Mode - YouTube]]
-- [[https://www.youtube.com/watch?v%3DoJTwQvgfgMM][Emacs Org-mode - a system for note-taking and project planning - YouTube]]
-- [[https://www.youtube.com/watch?v%3DnsGYet02bEk][Hack Emacs - Org Mode In Depth: Managing Structure - YouTube]]
-- [[https://www.youtube.com/watch?v%3DfgizHHd7nOo][Kitchin - org mode is awesome - YouTube]]
-
-** macro to create defuns?
-
-(defmacro make-my-function (name)
-  (list 'defun (intern (format "my-%s-function" name)) ()
-        (list 'interactive)
-        (list (intern (format "mark-%s" name)))
-        (list 'do-more-stuff)
-        (list (intern (format "modify-%s" name)))))
-
-** saveplace
-;; Save point position between sessions
-
-#+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
 (use-package saveplace
- :init (save-place-mode)) 
-#+END_SRC
+ :init (save-place-mode))
 
-The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
-
-The last line sets the path to where saveplace stores your position data. Change it at your peril!
-
-** embolden next word
-
-   #+BEGIN_SRC emacs-lisp
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
   nil
@@ -2117,12 +1444,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 (global-set-key "\C-o" 'embolden-or-bold)
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
-   #+END_SRC
 
-** no-abbrev-slash
-Doesn't work.
-
-      #+BEGIN_SRC emacs-lisp
 (define-minor-mode insert-slash-no-abbrev
     "Make the next word you type bold."
   nil
@@ -2138,45 +1460,6 @@ Doesn't work.
     (set-register 'p nil)))
 ;; (global-set-key "/" 'insert-slash-no-abbrev)
 
-      #+END_SRC
-
-** ideas
-C-d on an empty line in the shell terminates the process.
-
-(defun comint-delchar-or-eof-or-kill-buffer (arg)
-  (interactive "p")
-  (if (null (get-buffer-process (current-buffer)))
-      (kill-buffer)
-    (comint-delchar-or-maybe-eof arg)))
-
-(add-hook 'shell-mode-hook
-          (lambda ()
-            (define-key shell-mode-map
-              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
-With this snippet, another press of C-d will kill the buffer.
-
-It's pretty nice, since you then just tap C-d twice to get rid of the shell and go on about your merry way.
-
-
-
-Do you program any elisp, at all, ever?
-
-;; Elisp go-to-definition with M-. and back again with M-,
-(autoload 'elisp-slime-nav-mode "elisp-slime-nav")
-(add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
-(eval-after-load 'elisp-slime-nav '(diminish 'elisp-slime-nav-mode))
-Then you need to M-x package-install elisp-slime-nav-mode.
-
-It lets you jump to the definition of a function with M-., and back again afterwards with M-,.
-
-That last line says that we want elisp-slime-nav-mode to continue doing its work for us, but we no longer want to be reminded of it.
-
-
-** source code blocks: org-insert-src-block
-[[http://wenshanren.org/?p%3D334][Emacs：insert source code block in org-mode | 肉山博客 (Wenshan's Blog)]]
-
-
-#+BEGIN_SRC emacs-lisp
 (defun org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
@@ -2194,282 +1477,29 @@ That last line says that we want elisp-slime-nav-mode to continue doing its work
 (local-set-key (kbd "C-c v e")
                'org-edit-src-code)
 ;; keybinding for inserting code blocks
-#+END_SRC
 
-* experiments - new/untested
-
-** include the output of a shell command in org-mode source code block?
-[[http://emacs.stackexchange.com/questions/3219/how-to-include-the-output-of-a-shell-command-in-org-mode-source-code-block?rq%3D1][org export - How to include the output of a shell command in org-mode source code block? - Emacs Stack Exchange]]
-
-
-** play mp3
-
-   #+BEGIN_SRC emacs-lisp
 (defun play-mp3 ()
   (interactive)
   (let ((file (buffer-file-name)))
     (kill-buffer (current-buffer))
     (ora-dired-start-process (format "rhythmbox \"%s\"" file))))
 (add-to-list 'auto-mode-alist '("\\.mp3\\'" . ora-mp3))
-   #+END_SRC
 
-Source: [[http://emacs.stackexchange.com/questions/13561/whats-a-good-way-to-run-a-command-instead-of-opening-a-file][elisp - What's a good way to run a command instead of opening a file? - Emacs Stack Exchange]]
-
-
-shareeditflag
-answered 6 hours ago
-
-sds
-6258
-
-
-Thanks, I already bound "r" in dired to do that years ago. My interest is in making it work everywhere, for example from a locate or a find-file completion session, or from a bookmark etc. –  abo-abo 5 hours ago
-add a comment
-
-
-I stopped using openwith when I started using Helm, as I find typing C-c C-x from helm-find-files convenient enough. (Also nowadays, I only unconditionally open audio and video files outside of Emacs, so most of the time I like being able to either open a file in Emacs or in an external program.)
-
-** openwith
-
-#+BEGIN_QUOTE
-;; (require 'openwith)
-(openwith-mode t)
-(setq openwith-associations '(("\\.pdf\\'" "Skim.app" (file))))
-#+END_QUOTE
-Source: [[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
-
-** PDF-tools
-
-[[http://emacs.stackexchange.com/questions/3105/how-to-use-an-external-program-as-the-default-way-to-open-pdfs-from-emacs][find file - How to use an external program as the default way to open PDFs from Emacs? - Emacs Stack Exchange]]
-
-http://tuhdo.github.io/static/emacs-read-pdf.gif
-
-** defun syntax
-A Lisp function becomes a [[command]] when its body contains, at top level, a form that calls the special form `<code>(interactive...)</code>'. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
-
-*** Here is a simple example defining a command that displays a message:
-
-#+BEGIN_SRC emacs-lisp
 (defun hello ()
       "Hello World and you can call it via M-x hello."
       (interactive)
       (message "Hello World!"))
-#+END_SRC
 
-*** Example of a command that reads a string argument:
-
-#+BEGIN_SRC emacs-lisp
 (defun hello (someone)
       "Say hello to SOMEONE via M-x hello."
       (interactive "sWho do you want to say hello to? ")
       (message "Hello %s!" someone))
-#+END_SRC
 
-*** To use multiple arguments, separate their `interactive' entries with a newline:
-
-#+BEGIN_SRC emacs-lisp
 (defun multiple-hello (someone num)
       "Say hello to SOMEONE via M-x hello, for NUM times."
       (interactive "sWho do you want to say hello to? \nnHow many times? ")
       (dotimes (i num)
         (insert (format "Hello %s!\n" someone))))
-#+END_SRC
-
-Instead of passing a literal string argument to `interactive', you can pass it an EmacsLisp [[sexp]] that is evaluated when the [[command]] is called, to produce a list of the actual arguments.
-
-This is useful when you need to do more than is offered by the predefined `interactive' string constructs.
-
-To get the effect of the string constructs `P' and `p', respectively, use [[variable]] `current-prefix-arg' and function `prefix-numeric-value' applied to that variable.
-
-To get the effect of `interactive' string codes that read user input, use Lisp functions that read input, such as `read-buffer', `read-string', and `completing-read'.
-
-The following pairs of `interactive' specs are equivalent:
-
-  (defun bar (arg)
-    (interactive "p")
-    ...)
-
-  (defun bar (arg)
-    (interactive
-      (list (prefix-numeric-value current-prefix-arg))
-    ...)
-
-  (defun foo (arg buf)
-    (interactive "P\nbBuffer: ")
-    ...)
-
-  (defun foo (arg buf)
-    (interactive
-      (list current-prefix-arg
-            (read-buffer "Buffer: " (current-buffer) t)))
-    ...)
-
-
-
-
-* lisp functions from John Kitchin
-** helm actions when there is no match
-
-Sometimes you run out of matches in a helm selection buffer, and all that is left is the pattern you have typed in. It turns out you can perform some action on that pattern! Why would you do that? Suppose you are searching your bibliography, and you do not find what you are looking for. Then, you may want to send the pattern to Google, or some other search engine to see what comes up.
-
-The key to handling this situation is to use /two/ sources in your helm session. One that works on the candidates and deals with actions on them, and one that has no candidates, and works on the pattern. The variable helm-pattern contains what you typed in. We call the second source the Fallback option. The second source has no candidates, and we use (dummy) in place of the candidates.
-
-It easy to add two sources. Here we define the sources as variables, and use the variables in the :sources list to the helm command.
-
-# #+BEGIN_EXAMPLE emacs-lisp
-(defun some-action (arg)
-  (message-box "%s\n%s"
-    (helm-get-selection)
-    (helm-marked-candidates)))
-
-(defun default-action (candidate)
-  (browse-url
-   (format
-    "http://www.google.com/search?q=%s" (url-hexify-string helm-pattern))))
-
-(defvar source1 '((name . "HELM")
-		  (candidates . (1 2 3 4))
-		  (action . (("open" . some-action)))))
-
-(defvar fallback-source '((name . "fallback")
-			  (dummy)
-			  (action . (("Google" . default-action)))))
-
-(helm :sources '(source1 fallback-source))
-# #+END_EXAMPLE
-
-#+RESULTS:
-: #<process open http://www.google.com/search?q=addtion%20pul>
-
-When you run this, if you run out of search candidates, all that will be left is the fallback option, and when you press enter, it will launch a browser pointing to the google search for your pattern.
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2015/02/02/helm-actions-when-there-is-no-match/][ helm actions when there is no match]]
-
-** how to write helm functions
-   [[http://wikemacs.org/wiki/How_to_write_helm_extensions][How to write helm extensions - WikEmacs]]
-   [[http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/][Anatomy of a helm source]]
-
-
-** dwiw-auto-capitalize
-I have been using auto-capitalize.el for a short time to automatically capitalize the beginning of sentences. I mostly like what it does, but in org-mode I tend to write short code blocks while still in org-mode, and it is pretty irritating for auto-capitalize to "fix" the capitalization of your code. Of course, I can type C-c ' to edit the block in its native mode, but I do not always want to do that.
-
-Below, I illustrate an approach to turn off auto-capitalize-mode when the cursor is inside a code-block. Basically, we write a function that checks if you are in a src-block, and if auto-capitalize is on, turn it off. If you are not in the code-block, we turn auto-capitalize on if it is not on. Then we hook the function into post-command-hook, which will run it after every emacs command, including cursor movements.
-
-Here is that code:
-#+BEGIN_EXAMPLE emacs-lisp
-(defun dwiw-auto-capitalize ()
-  (if (org-in-block-p '("src"))
-      (when auto-capitalize
-	(auto-capitalize-mode -1))
-    (unless auto-capitalize
-      (auto-capitalize-mode 1))))
-
-;; (add-hook 'post-command-hook dwiw-auto-capitalize)
-#+END_EXAMPLE
-
-#+RESULTS:
-| dwiw-auto-capitalize |
-
-It works! Now the minor mode turns on and off depending on where the cursor is in my org document.
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/12/03/Selective-auto-capitalization-in-org-buffers/][auto capitalization in org buffers]]
-
-** Better integration of org-mode and email
-I like to email org-mode headings and content to people. It would be nice to have some records of when a heading was sent, and to whom. We store this information in a heading. It is pretty easy to write a simple function that emails a selected region.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun email-region (start end)
-  "Send region as the body of an email."
-  (interactive "r")
-  (let ((content (buffer-substring start end)))
-    (compose-mail)
-    (message-goto-body)
-    (insert content)
-    (message-goto-to)))
-#+END_EXAMPLE
-
-that function is not glamorous, and you still have to fill in the email fields, and unless you use gnus and org-contacts, the only record keeping is through the email provider.
-
-What I would like is to send a whole heading in an email. The headline should be the subject, and if there are TO, CC or BCC properties, those should be used. If there is /no TO/, then I want to grab the TO from the email after you enter it and store it as a property. You should be able to set OTHER-HEADERS as a property (this is just for fun. There is no practical reason for this yet). After you send the email, it should record in the heading when it was sent.
-
-It turned out that is a relatively tall order. While it is easy to setup the email if you have everything in place, it is tricky to get the information on TO and the time sent /after/ the email is sent. Past lispers had a lot of ideas to make this possible, and a day of digging got me to the answer. You can specify some "action" functions that get called at various times, e.g. after sending, and a return action when the compose window is done. Unfortunately, I could not figure out any way to do things except to communicate through some global variables.
-
-So here is the code that lets me send org-headings, with the TO, CC, BCC properties, and that records when I sent the email after it is sent.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defvar *email-heading-point* nil
-  "global variable to store point in for returning")
-
-(defvar *email-to-addresses* nil
-  "global variable to store to address in email")
-
-(defun email-heading-return ()
-  "after returning from compose do this"
-  (switch-to-buffer (marker-buffer  *email-heading-point*))
-  (goto-char (marker-position  *email-heading-point*))
-  (setq *email-heading-point* nil)
-  (org-set-property "SENT-ON" (current-time-string))
-  ;; reset this incase you added new ones
-  (org-set-property "TO" *email-to-addresses*)
-  )
-
-(defun email-send-action ()
-  "send action for compose-mail"
-  (setq *email-to-addresses* (mail-fetch-field "To")))
-
-(defun email-heading ()
-  "Send the current org-mode heading as the body of an email, with headline as the subject.
-
-use these properties
-TO
-OTHER-HEADERS is an alist specifying additional
-header fields.  Elements look like (HEADER . VALUE) where both
-HEADER and VALUE are strings.
-
-save when it was sent as s SENT property. this is overwritten on
-subsequent sends. could save them all in a logbook?
-"
-  (interactive)
-  ; store location.
-  (setq *email-heading-point* (set-marker (make-marker) (point)))
-  (org-mark-subtree)
-  (let ((content (buffer-substring (point) (mark)))
-	(TO (org-entry-get (point) "TO" t))
-	(CC (org-entry-get (point) "CC" t))
-	(BCC (org-entry-get (point) "BCC" t))
-	(SUBJECT (nth 4 (org-heading-components)))
-	(OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-	(continue nil)
-	(switch-function nil)
-	(yank-action nil)
-	(send-actions '((email-send-action . nil)))
-	(return-action '(email-heading-return)))
-
-    (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-    (message-goto-body)
-    (insert content)
-    (when CC
-      (message-goto-cc)
-      (insert CC))
-    (when BCC
-      (message-goto-bcc)
-      (insert BCC))
-    (if TO
-	(message-goto-body)
-      (message-goto-to))
-    ))
-#+END_EXAMPLE
-
-This works pretty well for me. Since I normally use this to send tasks to people, it keeps the task organized where I want it, and I can embed an org-id in the email so if the person replies to it telling me the task is done, I can easily navigate to the task to mark it off. Pretty handy.
-
-Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-of-org-mode-and-email/][better integration of org-mode and email]]
-
-
-** pandoc
-   [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
-
-* new stuff / experimental
-#+BEGIN_SRC emacs-lisp
 
 ;; Also auto refresh dired, but be quiet about it
 ;; (setq global-auto-revert-non-file-buffers t)
@@ -2478,120 +1508,14 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/06/08/Better-integration-o
 
 ;; Move files to trash when deleting
 (setq delete-by-moving-to-trash t)
-#+END_SRC
 
-
-* Helm Org Wiki
-
-I'm using an extremely simplistic approach: just dump all the org
-files into one directory.  The name of each org file should be concise
-but descriptive, e.g. Makefile.org describes Makefiles, and git.org
-describes git.
-
-This simplicity completely alleviates organization effort: there's
-nothing to organize, since there's only one directory to put the files in.
-At the same time, it's very accessible by means of two `helm` wrappers:
-
-- globally, "C-0" runs the command helm-org-wiki (the code is below)
-- in org-mode, "g" runs the command wspecial-worf-goto (the code is at
-https://github.com/abo-abo/worf)
-
-It's like a two-stage personal Google: the first stage is to find an org-file,
-the second stage is to search within an org-file.
-
-For example, here's the sequence of key bindings when I want to look
-up how git bisect works, assuming that I'm in some random buffer, like
-`ansi-term`:
-
-        C-0 gi RET g bis RET
-
-Done. Note that "gi" was enough to match "git.org", since all my other
-pages don't contain "gi".  Same thing for "bis" being able to match
-uniquely the heading "git bisect".  I think that it's quite optimal
-that I'm able to find the topic "git bisect" by using only 10 key
-presses, which is the same as the amount of characters in "git
-bisect".  Compare this to `helm-google-suggest` (bound to "C-p g"):
-
-        C-p g git bi RET TAB RET
-
-That's 12 key presses (10 in Emacs, 2 in Firefox).
-
-New wiki pages can be created with "C-0" as well, just type in the
-name of the new file and hit RET.
-
-That's it, the code is below. It's very similar to `org-switchb`,
-except that the files need not be opened to appear in the completion
-list, and new files are created if there's no match.
-
-regards,
-Oleh
-(Source: http://lists.gnu.org/archive/html/emacs-orgmode/2014-04/msg01134.html)
-
-#+BEGIN_EXAMPLE emacs-lisp
-    (defgroup helm-org-wiki nil
-      "Simple jump-to-org-file package."
-      :group 'org
-      :prefix "helm-org-wiki-")
-    (defcustom helm-org-wiki-directory "~/nd/"
-      "Directory where files for `helm-org-wiki' are stored."
-      :group 'helm-org-wiki
-      :type 'directory)
-    (defun helm-org-wiki-files ()
-      "Return .org files in `helm-org-wiki-directory'."
-      (let ((default-directory helm-org-wiki-directory))
-        (mapc #'file-name-sans-extension
-                (file-expand-wildcards "*.txt"))))
-    (defvar helm-source-org-wiki
-      `((name . "Projects")
-        (candidates . helm-org-wiki-files)
-        (action . ,(lambda (x)
-                      (find-file (expand-file-name
-                                  (format "%s.txt" x)
-                                  helm-org-wiki-directory))))))
-    (defvar helm-source-org-wiki-not-found
-      `((name . "Create org-wiki")
-        (dummy)
-        (action . (lambda (x)
-                    (helm-switch-to-buffer
-                     (find-file
-                      (format "%s/%s.org"
-                              helm-org-wiki-directory x)))))))
-    ;;;###autoload
-    (defun helm-org-wiki ()
-      "Select an org-file to jump to."
-      (interactive)
-      (helm :sources
-            '(helm-source-org-wiki
-              helm-source-org-wiki-not-found)))
-    (provide 'helm-org-wiki)
-
-#+END_EXAMPLE
-
-
-* Emacs Lisp Mode
-#+BEGIN_EXAMPLE emacs-lisp
-(defun turn-on-autocomplete-mode ()
-   (auto-complete-mode 1))
-(add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-#+END_EXAMPLE 
-
-* Reference for cleaning up whitespace around sentences:
-[[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
-
-* cycle-hyphenation
-
-#+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation ()
   (interactive)
   (cond ((re-search-forward "\\=\\w*\\(-\\)\\w+" nil t)
          (save-excursion (replace-match " " t t nil 1)))
         ((re-search-forward "\\=\\w*\\( +\\)\\w+" nil t)
          (save-excursion (replace-match "-" t t nil 1)))))
-#+END_SRC
 
-* cycle-punctuation
-
-#+BEGIN_SRC emacs-lisp
 (defvar *punctuation-markers-to-cycle-between*  ".?!")
 
 (defun cycle-punctuation ()
@@ -2609,10 +1533,7 @@ Oleh
         (replace-match (format "%c" next) t t nil 1)))))
 
 ;; (define-key key-minor-mode-map (kbd "M-.") 'cycle-punctuation)
-#+END_SRC
 
-* clone subtree
-#+BEGIN_SRC emacs-lisp
 (defun org-clone-subtree ()
   (interactive)
   (org-clone-subtree-with-time-shift 1)
@@ -2631,89 +1552,7 @@ Oleh
           (replace-match (format "%s" hl-text) nil t)
 ;; (org-align-tags-here org-tags-column)
 )))))
-#+END_SRC
 
-* smart punctuation
-
-** kill-clause
-
-This version kill org-mode headings by 'kill-line'
-#+BEGIN_EXAMPLE emacs-lisp
-
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+[\"”]?")
-(defun kill-clause ()
-  (interactive)
-  (smart-expand)
-  (if (let ((sm (string-match "[*]+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
-    (progn
-      (let ((old-point (point))
-            (kill-punct (my/beginning-of-sentence-p)))
-        (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-          (kill-region old-point
-                       (if kill-punct
-                           (match-end 0)
-                         (match-beginning 0)))))
-
-      (my/fix-space)
-      (save-excursion
-        (when (my/beginning-of-sentence-p)
-          (capitalize-unless-org-heading)))
-
-;; below is my own hack to fix the ", , " issue
-(when
-
-(or
-
-(looking-back ", , ")
-(looking-back ",, ")
-(looking-back ",, ")
-(looking-back ": : ")
-)
-(new-org-delete-backward-char 2) 
-(my/fix-space)
-
-
-(when
-(and
-(looking-back "----")
-(looking-at "-"))
-
-(delete-backward-char 4)
-(delete-char 1)
-(insert-space))
-
-
-t)))
-
-#+END_EXAMPLE
-
-
-This old version leaves a rogue comma:
-#+BEGIN_EXAMPLE emacs-lisp
-
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+[\"”]?")
-(defun kill-clause ()
-  (interactive)
-  (smart-expand)
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
-
-#+END_EXAMPLE
-
-Old version that I retrieved:
-#+BEGIN_SRC emacs-lisp
 (defun kill-clause ()
   (interactive)
   (smart-expand)
@@ -2788,13 +1627,7 @@ t)
 
 
 ))
-#+END_SRC
 
-
-
-** smart-punctuation exceptions
-
-   #+BEGIN_SRC emacs-lisp
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 
@@ -2804,13 +1637,7 @@ t)
 ;; How do I add an exception for ") ; "?
 ;; e.g. if I want to add a comment after a line of lisp?
 
-   #+END_SRC
-
-
-** smart-punctuation (auxiliary)
-
-#+BEGIN_SRC emacs-lisp
-  (defun smart-punctuation (new-punct &optional not-so-smart)
+(defun smart-punctuation (new-punct &optional not-so-smart)
     (smart-expand)
     (save-restriction
       (when (and (eql major-mode 'org-mode)
@@ -2836,7 +1663,7 @@ t)
             (let ((was-after-space (and (< (point) old-point)
                                         (find ?  (buffer-substring (point) old-point)))))
               (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                         ,*smart-punctuation-marks*)
+                                         *smart-punctuation-marks*)
                                  nil t)
               (let* ((old-punct (match-string 2))
                      (was-after-punct (>= old-point (point))))
@@ -2846,7 +1673,7 @@ t)
                                      (let ((potential-new-punct (concat old-punct new-punct)))
                                        (find-if (lambda (exception)
                                                   (search potential-new-punct exception))
-                                                ,*smart-punctuation-exceptions*)))
+                                                *smart-punctuation-exceptions*)))
                                    new-punct)
                                nil t nil 2)
                 (if was-after-space
@@ -2857,10 +1684,7 @@ t)
                (org-at-heading-p))
 ; (org-align-tags-here org-tags-column)
 ))
-#+END_SRC
 
-** smart-period
-#+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
 (cond (mark-active
@@ -2906,10 +1730,7 @@ t)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 ;; (define-key orgalist-mode-map (kbd ".") 'smart-period)
-#+END_SRC
 
-** smart-comma
-#+BEGIN_SRC emacs-lisp
 (defun smart-comma ()
   (interactive)
 (cond (mark-active
@@ -2947,10 +1768,7 @@ t)
 
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
 ;; (define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
-#+END_SRC
 
-** smart-question-mark
-#+BEGIN_SRC emacs-lisp
 (defun smart-question-mark ()
   (interactive)
   (cond (mark-active
@@ -2976,10 +1794,7 @@ t)
 
 (define-key org-mode-map (kbd "?") 'smart-question-mark)
 ;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
-#+END_SRC
 
-** smart-exclamation-point
-#+BEGIN_SRC emacs-lisp
 (defun smart-exclamation-point ()
   (interactive)
 (cond (mark-active
@@ -2993,20 +1808,7 @@ t)
 
 (define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 ;; (define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
-#+END_SRC
 
-** smart-hyphen
-(defun smart-hyphen ()
-  (interactive)
-  (smart-punctuation "-"))
-
-(define-key org-mode-map (kbd "-") 'smart-hyphen)
-;; (define-key orgalist-mode-map (kbd "-") 'smart-hyphen)
-#+END_SRC
-
-** smart-semicolon
-
-#+BEGIN_SRC emacs-lisp
 (defun smart-semicolon ()
   (interactive)
 (cond (mark-active
@@ -3024,11 +1826,7 @@ t)
 
 (define-key org-mode-map (kbd ";") 'smart-semicolon)
 ;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
-#+END_SRC
 
-** smart-colon
-
-#+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
   (interactive)
 (cond (mark-active
@@ -3048,11 +1846,8 @@ t)
 
 (define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
-;; (define-key orgalist-mode-map (kbd ":") 'smart-colon) 
-#+END_SRC
+;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 
-** comma-or-smart-comma
-#+BEGIN_SRC emacs-lisp
 (defun comma-or-smart-comma ()
 (interactive) 
 (if 
@@ -3063,12 +1858,8 @@ t)
 ) 
 (insert ",")
 (smart-comma))
-) 
-#+END_SRC
+)
 
-
-** colon-or-smart-colon
-#+BEGIN_SRC emacs-lisp
 (defun colon-or-smart-colon ()
 (interactive)
 (if
@@ -3079,15 +1870,7 @@ t)
 (insert ":")
 (smart-colon))
 )
-#+END_SRC
 
-
-* TODO [#A] check my changes to backward-kill-word-correctly? 
-Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
-
-I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
-
-#+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
@@ -3105,30 +1888,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 (smart-space)
 )
 )
-#+END_SRC
 
-** NOTE-TO-JAY Question
-
-   Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~smart-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
-
-** NOTE-TO-SERJ Answer
-Good question. The answer is that there should never be a space after "---"
-
-Example:
-: Alice was tired---tired as hell. ^
-
-Say the point is the carat, and I invoke backward-kill-word-correctly 4 times.
-
-Output if I remove the whole ~(when ...)~ block:
-: Alice was tired--- ^
-Note the space after "---"
-
-Desired output:
-: Alice was tired---^
-No space. Does that make sense? Thanks!
-
-* DONE [#B] my-delete-backward                                         :rudi:
-#+BEGIN_SRC emacs-lisp
 (defun my/delete-backward ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
@@ -3140,11 +1900,7 @@ No space. Does that make sense? Thanks!
               (looking-back "[[:space:]]"))
 (unless (looking-back "\\w ")
       (my/fix-space)))))
-#+END_SRC
 
-** my-delete-backward-and-capitalize
-
-#+BEGIN_SRC emacs-lisp
 (defcustom capitalize-after-deleting-single-char nil
   "Determines whether capitalization should occur after deleting a single character.")
 
@@ -3187,11 +1943,8 @@ No space. Does that make sense? Thanks!
 ))
 (delete-char 1)
 )
-) 
-#+END_SRC
+)
 
-* backward-kill-word-correctly-and-capitalize 
-#+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
@@ -3199,10 +1952,7 @@ No space. Does that make sense? Thanks!
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (when fix-capitalization
       (save-excursion (capitalize-unless-org-heading)))))
-#+END_SRC
 
-* defadvice capitalize-word
-#+BEGIN_SRC emacs-lisp
 (defadvice capitalize-word (after capitalize-word-advice activate)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
 
@@ -3247,12 +1997,7 @@ No space. Does that make sense? Thanks!
 
     (save-excursion
       (downcase-word 1))))
-#+END_SRC
 
-I tried to add exceptions for "line-end" and also for user-full name.
-
-* capitalize-unless-org-heading
-  #+BEGIN_SRC emacs-lisp
 (defun capitalize-unless-org-heading ()
   (interactive)
   (unless
@@ -3280,11 +2025,7 @@ I tried to add exceptions for "line-end" and also for user-full name.
                  auto-capitalize-words)
          "\\)")))
     (capitalize-word 1)))
-  #+END_SRC
 
-* downcase-save-excursion
-
-  #+BEGIN_SRC emacs-lisp
 (defun downcase-save-excursion ()
   (interactive)
 (unless
@@ -3303,14 +2044,6 @@ I tried to add exceptions for "line-end" and also for user-full name.
   (save-excursion
       (downcase-word 1))
   ))
-  #+END_SRC
-
-
-* smart-expand
-Don't expand past certain delimiters, e.g. line break, ), and "
-
-
-#+BEGIN_SRC emacs-lisp
 
 (defun smart-expand ()
   (interactive)
@@ -3332,29 +2065,6 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 )
 )
 
-#+END_SRC
-
-
-
-
-(defun smart-expand ()
-  (interactive)
-
-  (unless
-
-    (or
-       (looking-back "\)\n*")
-(looking-back "\)[ ]*")
-(looking-back ":t[ ]*")
-
-;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
-)
-    (expand-abbrev)
-)
-)
-
-* fountain
-  #+BEGIN_SRC emacs-lisp
 ;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
 ;; (require 'fountain-mode)
 
@@ -3409,35 +2119,13 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 +" "<br><br>")
      ("
-" "<br>")))) 
-  #+END_SRC
+" "<br>"))))
 
-* display file name
-How can I modify the titlebar to contain the current file name?
-
-The contents of an Emacs frame's titlebar is controlled by the variable frame-title-format, which has the same structure as the variable mode-line-format. (Use C-h v or M-x describe-variable to get information about one or both of these variables.)
-
-By default, the titlebar for a frame does contain the name of the buffer currently being visited, except if there is a single frame. In such a case, the titlebar contains Emacs invocation name and the name of the machine at which Emacs was invoked. This is done by setting frame-title-format to the default value of
-
-(multiple-frames "%b" ("" invocation-name "@" system-name))
-To modify the behavior such that frame titlebars contain the buffer's name regardless of the number of existing frames, include the following in your .emacs:
-
-
-#+BEGIN_SRC emacs-lisp
 (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
-#+END_SRC
 
-
-
-* keybindings for terminal
-#+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "M-(") 'backward-word)
 (define-key key-minor-mode-map (kbd "M-)") 'forward-word)
-#+END_SRC
 
-
-* capitalize sentence
-#+BEGIN_SRC emacs-lisp
 (defun capitalize-sentence ()
   (interactive)
 (unless (my/beginning-of-sentence-p)
@@ -3448,10 +2136,6 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 )
 (define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
 
-#+END_SRC
-
-* downcase sentence
-#+BEGIN_SRC emacs-lisp
 (defun downcase-sentence ()
   (interactive)
 (unless (my/beginning-of-sentence-p)
@@ -3463,27 +2147,15 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 (define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
 
-#+END_SRC
-
-* return-insert-blank-line-before
-
-#+BEGIN_SRC emacs-lisp
 (defun return-insert-blank-line-before ()
   (interactive)
   (beginning-of-line)
 (newline)
   )
-#+END_SRC
 
-
-* disable color themes
-#+BEGIN_SRC emacs-lisp
 (defadvice load-theme (before theme-dont-propagate activate)
  (mapc #'disable-theme custom-enabled-themes))
-#+END_SRC
 
-* toggle item or hyphenation
-#+BEGIN_SRC emacs-lisp
 (defun toggle-item-or-hyphenation ()
 (interactive "P")
 (if
@@ -3493,78 +2165,21 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
     (cycle-hyphenation); else
 )
 )
-#+END_SRC
 
-* my-forward-sentence
-#+BEGIN_SRC emacs-lisp
 (defun smart-forward-sentence ()
   (interactive)
   (org-forward-sentence)
   (my/fix-space)
   )
-#+END_SRC
 
-
-
-* replace-inner
-#+BEGIN_SRC emacs-lisp
 (defun replace-inner ()
   (interactive)
 (change-inner)
   (pasteboard-paste-no-spaces)
   )
-#+END_SRC
 
-doesn't work.
-
-
-* smex
-#+BEGIN_SRC emacs-lisp
 ;; (require 'smex)
-;; (setq smex-completion-method 'ivy) 
-#+END_SRC
-
-
-* bjm-swiper
-
-#+BEGIN_EXAMPLE emacs-lisp
-;;advise swiper to recenter on exit
-(defun bjm-swiper-recenter (&rest args)
-  "recenter display after swiper"
-  (recenter)
-  )
-(advice-add 'swiper :after #'bjm-swiper-recenter)
-#+END_EXAMPLE 
-
-* available keybindings
-
-s-i
-s-N
-s-:
-s-. searchlink 
-s-u
-m-,
-
-s-i
-C->
-C-<
-M-1 to 9
-
-
-
-* keep cursor at same position when scrolling
-#+BEGIN_EXAMPLE
-(setq scroll-preserve-screen-position 1)
-;;scroll window up/down by one line
-(define-key key-minor-mode-map (kbd "M-n") (kbd "C-u 1 C-v"))
-(define-key key-minor-mode-map (kbd "M-p") (kbd "C-u 1 M-v"))
-
-#+END_EXAMPLE
-
-* embolden-or-bold
-
-*
-#+BEGIN_SRC emacs-lisp
+;; (setq smex-completion-method 'ivy)
 
 (defun embolden-or-bold (arg)
   (interactive "p")
@@ -3577,10 +2192,6 @@ M-1 to 9
         (insert "*"))
     (embolden-next-word)))
 
-#+END_SRC
-
-* save buffer to sent-emails-org-file
-#+BEGIN_SRC emacs-lisp
 (defvar *sent-emails-org-file* "/Users/jay/Dropbox/writing/notationaldata/sent-emails.org")
 
 (defun save-buffer-to-sent-emails-org-file ()
@@ -3593,10 +2204,7 @@ M-1 to 9
    0 *sent-emails-org-file* t)
   ;; buffer
   (write-region nil 0 *sent-emails-org-file* t))
-#+END_SRC
 
-* send message without bullets
-#+BEGIN_SRC emacs-lisp
 (defun send-message-without-bullets ()
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
@@ -3610,84 +2218,32 @@ M-1 to 9
             (local-set-key "\C-c\C-l" 'org-insert-link)
 ))
 
-#+END_SRC
-
-* sign current email
-#+BEGIN_SRC emacs-lisp
 (defvar *mail-signature* "\n---\nJay Dixit\n(646) 355-8001\njaydixit.com")
 
 (defun sign-current-email ()
   (save-excursion
     (end-of-buffer)
     (insert *mail-signature*)))
-#+END_SRC
 
-* custom-send-message
-#+BEGIN_SRC emacs-lisp
 (defun custom-send-message (arg)
   (interactive "p")
   (when (and arg (= 0 (mod arg 4)))
     (sign-current-email))
   (save-buffer-to-sent-emails-org-file)
   (send-message-without-bullets))
-#+END_SRC
 
-* orgalist-mode-map
-
-#+BEGIN_EXAMPLE emacs-lisp
-(define-key orgalist-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
-(define-key mu4e-compose-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
-; (define-key orgalist-mode-map (kbd "<return>") 'message-mode-smart-return)
-(define-key orgalist-mode-map (kbd "\C-c\C-c") 'custom-send-message)
-(define-key mu4e-compose-mode-map (kbd "\C-c\C-c") 'custom-send-message)
-
-
-(define-key orgalist-mode-map (kbd "C-c .") 'org-time-stamp)
-
-#+END_EXAMPLE
-
-* message-mode-map
-#+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'message-mode-hook
-          (lambda ()
-            (local-set-key "\C-c\C-c" 'custom-send-message)
-; (local-set-key (kbd "<return>") 'orgalist-mode-smart-return)
-))
-#+END_EXAMPLE
-
-
-* fountain-mode-map
-#+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'fountain-mode-hook
-     (lambda ()
-(local-set-key (kbd ".") 'smart-period) 
-(local-set-key (kbd ",") 'smart-comma) 
-(local-set-key (kbd "\`") 'flyspell-auto-correct-word)
-(local-set-key (kbd "<SPC>") 'smart-space) 
-
-
-))
-#+END_EXAMPLE
-
-
-* color theme advice
-#+BEGIN_SRC emacs-lisp
-  (defadvice load-theme (after load-theme-advice activate)
-  (custom-set-faces
-  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-  '(org-quote ((t (:inherit default))))
-  ;; '(org-link ((t (:underline nil))))
-  '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
+(defadvice load-theme (after load-theme-advice activate)
+(custom-set-faces
+'(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(org-quote ((t (:inherit default))))
+;; '(org-link ((t (:underline nil))))
+'(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
 
 
 
-  (org-mode)
-    ))
-#+END_SRC
+(org-mode)
+  ))
 
-
-* reformat email
-#+BEGIN_SRC emacs-lisp
 (defun reformat-email (begin end)
   (interactive "r")
 (xah-replace-pairs-region begin end
@@ -3701,23 +2257,11 @@ M-1 to 9
  ["\n" "\n> "]
 )))
 
-#+END_SRC
-
-
-
-* leader key, doesn't need a special mode
-
-#+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
 (define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
 
-#+END_SRC
-
-
-* fix image links
-#+BEGIN_SRC emacs-lisp
 (defun fix-image-links ()
 (interactive)
 (goto-char 1)
@@ -3727,21 +2271,9 @@ M-1 to 9
 (while (search-forward-regexp "[[\(.*?\).png][\(.*?\).png]]" nil t)
   (replace-match "[[" (match-string 1) ".png]]"  t nil))
 )
-#+END_SRC
 
 
-* replace garbage characters
 
-Òembedding-
-
-→
-
-"embedding"
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 (defun replace-garbage-chars ()
 "Replace goofy MS and other garbage characters with latin1 equivalents."
 (interactive)
@@ -3798,16 +2330,9 @@ M-1 to 9
 
 
 ))
-#+END_SRC
 
-* replace missing PDF ligatures
 
-different → different 
 
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 (defun replace-missing-ligatures ()
 "Replace goofy MS and other garbage characters with latin1 equivalents."
 (interactive)
@@ -3830,12 +2355,8 @@ different → different
 
 
 ))
-#+END_SRC
 
-* web-mode
-#+BEGIN_SRC emacs-lisp
-
-    (use-package web-mode
+(use-package web-mode
 
 :init
  (add-hook 'web-mode-hook
@@ -3852,21 +2373,11 @@ different → different
 
 
   ("s-O" . prelude-open-with)))
-#+END_SRC
 
-* flyspell fix
-#+BEGIN_SRC emacs-lisp
 (setq flyspell-abbrev-p t)
 (setq flyspell-use-global-abbrev-table-p t)
 (setq global-flyspell-mode t)
-#+END_SRC
 
-
-
-
-* mw-thesaurus
-#+BEGIN_SRC emacs-lisp
 ;; (require 'mw-thesaurus)
 (load "/Users/jay/emacs/emacs-settings/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus--lookup-at-point)
-#+END_SRC
