@@ -479,10 +479,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun monokai ()
   (interactive)
-  (load-theme 'monokai) 
-  (custom-set-faces
-   '(italic ((t (:foreground "pink")))) 
-   '(zz-fringe-for-narrowing ((t (:background "black")))))
+  (color-theme-monokai) 
+;(custom-set-faces
+; '(italic ((t (:foreground "pink")))) 
+; '(zz-fringe-for-narrowing ((t (:background "black")))))
   (org-mode) 
   )
 
