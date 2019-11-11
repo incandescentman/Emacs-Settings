@@ -3418,10 +3418,23 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 
 #+BEGIN_SRC emacs-lisp
-(setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
+;; (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
+;; Changing this for Hook app compatibility per https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/5 
 #+END_SRC
 
+* Hook app 
+[[https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/10][Integrating Emacs and Hook, with org-mode - Discussion & Help - Hook Productivity Forum]]
 
+#+begin_src emacs-lisp
+
+(setq frame-title-format '((:eval buffer-file-name))) 
+
+(defun my/hook (hook)
+ "Create an org-link target string using `hook://` url scheme."
+ (shell-command (concat "open \"" hook "\"")))
+
+ (org-add-link-type "hook" 'my/hook) 
+#+end_src
 
 * keybindings for terminal
 #+BEGIN_SRC emacs-lisp
