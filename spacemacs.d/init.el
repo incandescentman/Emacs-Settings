@@ -807,7 +807,7 @@ before packages are loaded."
   ;; (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
 
 
-;;  (load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
+(load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
 
   ;; (require 'mu4e-send-delay)
 
