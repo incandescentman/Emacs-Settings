@@ -8113,12 +8113,18 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 
 ;;  (typo-mode 1)      ;; Good for symbols like em-dash 
+(add-hook 'poetry-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'poetry-mode-hook 'turn-on-olivetti-mode)
 
 (defun poet-mode ()
 (interactive) 
 (set-face-attribute 'default nil :family "Iosevka" :height 130)
 (set-face-attribute 'fixed-pitch nil :family "Iosevka") 
         (variable-pitch-mode 1)
+(poetry-mode)
+(turn-on-olivetti-mode)
+(turn-off-auto-capitalize-mode)
+
 )
 #+END_SRC
 
