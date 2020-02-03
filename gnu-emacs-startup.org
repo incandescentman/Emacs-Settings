@@ -3356,6 +3356,8 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 (add-hook 'fountain-mode-hook '(lambda () (orgalist-mode 1)))
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
+(add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+
 (defcustom fountain-export-default-command
   'fountain-export-shell-script
   "\\<fountain-mode-map>Default function to call with \\[fountain-export-default]."
@@ -3873,7 +3875,7 @@ different → different
 
 * mw-thesaurus
 #+BEGIN_SRC emacs-lisp
-;; (require 'mw-thesaurus)
+(require 'mw-thesaurus)
 (load "/Users/jay/emacs/emacs-settings/secret-codes.el")
-(define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus--lookup-at-point)
+(define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC
