@@ -8563,11 +8563,11 @@ Courtesy of Mike Goldenberg
 
 
 * org-sidebar-tree
-#+begin_SRC emacs-lisp 
+#+begin_EXAMPLE emacs-lisp 
 (use-package org-sidebar)
 ;; (add-hook 'org-mode-hook 'org-sidebar-tree) 
 (setq org-sidebar-tree-side (quote left)) 
-#+END_SRC
+#+END_EXAMPLE 
 
 
 * org-brain
