@@ -24,7 +24,7 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold, 
+        BoldFont = HelveticaNowDisplay-Light, 
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta, 
   Extension = .ttf
@@ -256,7 +256,7 @@
 %\\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
+\\titlespacing*{\\section}{1.5ex}{24pt}{6pt}
 \\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
