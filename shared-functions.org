@@ -2326,9 +2326,7 @@ Use the current window when visiting files and buffers with IDO:
 (setq ido-default-buffer-method 'selected-window)
 #+END_SRC
 
-Sort ido filelist by mtime instead of alphabetically.  Why would anyone want an
-alphabetically sorted list? You can save keystrokes if the most recently
-modified files are at the front:
+Sort ido filelist by mtime instead of alphabetically. Why would anyone want an alphabetically sorted list? You can save keystrokes if the most recently modified files are at the front:
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
@@ -8593,4 +8591,25 @@ Courtesy of Mike Goldenberg
 (defun org-show-inline-images ()
  (interactive)
 (org-toggle-inline-images)) 
+#+end_src
+
+* ido-vertical-mode
+Pretty cool here:
+[[https://github.com/creichert/ido-vertical-mode.el][creichert/ido-vertical-mode.el: makes ido-mode display vertically]]
+
+
+#+begin_src emacs-lisp
+(require 'ido-vertical-mode)
+(ido-mode 1)
+(ido-vertical-mode 1)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only) 
+
+(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right) 
+
+;; optionally
+(setq ido-use-faces nil) 
+
+;; (setq ido-use-faces t)
+;; (set-face-attribute 'ido-vertical-first-match-face nil :foreground "orange")
+
 #+end_src
