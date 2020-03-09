@@ -105,6 +105,10 @@
 \\chead{}
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
+
+\\lhead{\\@title}}} % title of the document as left header
+
+
 \\lfoot{}
 \\cfoot{\\thepage}
 \\rfoot{}
