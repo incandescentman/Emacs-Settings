@@ -38,7 +38,10 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
-\\usepackage{url}
+
+\\usepackage[obeyspaces]{url}
+\\PassOptionsToPackage{obeyspaces}{url}
+
 \\usepackage{paralist}
 \\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
