@@ -1824,7 +1824,7 @@ Founder, <a href='http://storytelling.nyc/' style='text-decoration:none; color:#
 	border:1px solid rgba(255,0,0,0.2);
 	border-radius:8px;
 	color:#3f3f3f;
-  font-family:Garamond, serif;
+  font-family:monospace;
 	line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
@@ -1851,9 +1851,7 @@ margin-left:2em;
           (lambda ()
             (org-mime-change-element-style
              "h2" "color:#55C1E7;
-    font-family:Sans-Serif;
-    -webkit-transition:all .5s linear;
-    border-bottom:2px dotted #CCC;
+    font-family:Sans-Serif; 
 text-transform:capitalize; font-weight:bold;"))) 
 
 (add-hook 'message-mode-hook
@@ -1895,7 +1893,7 @@ font-family: Courier, 'Courier New', monospace;
 	border:1px solid rgba(255,0,0,0.2);
 	border-radius:8px;
 	color:#3f3f3f;
-  font-family:Garamond, serif;
+  font-family:monospace;
 	line-height:1.2;
   padding: 1em 1em 1em 1em;
 margin-bottom: 1em;
