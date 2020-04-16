@@ -905,6 +905,8 @@ Open new buffers without prompting me for a filename global counter to ensure ev
                                       ("h" . org-agenda-schedule)
                                       ("d" . org-deadline)
                                       ("w" . org-refile)
+                                      ("y" . org-archive-subtree-default-with-confirmation)
+                                      ("a" . org-archive-subtree)
                                       ("s" . org-schedule)
                                       ("x" . org-mark-subtree) 
                                       ("z" . org-add-note)
@@ -8422,7 +8424,7 @@ If prefixed with ARG, incrementally decrease."
          ((floatp olivetti-body-width)
           (+ olivetti-body-width (+1 p))))))
   (setq olivetti-body-width (olivetti-safe-width n (selected-window))))
- (olivetti-set-all-margins)
+;; (olivetti-set-all-margins)
  (message "Text body width set to %s" olivetti-body-width)
  (set-transient-map
   (let ((map (make-sparse-keymap)))
@@ -8667,4 +8669,22 @@ want to use in the modeline *in lieu of* the original.")
   (setq mode-line (concat mode-line flymake-mode-line-status))
   (setq flymake-mode-line mode-line)
   (force-mode-line-update)))
+#+end_src
+
+* org-timesheet
+Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-insert-a-clock-entry][org mode - How to conveniently insert a clock entry? - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+(defun timesheet_insert-custom-clock-entry ()
+ (interactive)
+ (insert "CLOCK: ")
+ (org-time-stamp-inactive)
+ (insert "--")
+ ;; Inserts the current time by default.
+ (let ((current-prefix-arg '(4))) (call-interactively 'org-time-stamp-inactive))
+ (org-ctrl-c-ctrl-c))
+
+; Shortcut
+(define-key evil-normal-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
+(define-key evil-insert-state-map (kbd "C-'") 'jx/insert-custom-clock-entry) 
 #+end_src
