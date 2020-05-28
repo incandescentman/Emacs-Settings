@@ -329,6 +329,22 @@
 
 
 
+
+\\newenvironment{causationstatement}% environment name 
+{% begin code
+\\vspace{-30pt}
+\\ttfamily
+\\bfseries
+\\begin{center}
+
+}% 
+{% end code 
+\\end{center}\\ignorespacesafterend
+}
+
+
+
+
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
 \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 

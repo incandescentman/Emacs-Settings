@@ -880,7 +880,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
    (quote
-    ("~/Dropbox/writing/notationaldata/accountability.org")))
+    ("~/Dropbox/writing/notationaldata/adulting.txt" "~/Dropbox/writing/notationaldata/accountability.org")))
  '(org-export-preserve-breaks nil)
  '(org-sidebar-jump-indirect t)
  '(org-sidebar-tree-jump-fn (quote org-sidebar-tree-jump-source))

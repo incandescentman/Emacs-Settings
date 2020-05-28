@@ -2848,6 +2848,25 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (next-line)
   )
 
+
+
+(defun jd-org-book-and-adulting ()
+ "insert a new heading with today's date"
+ (interactive)
+(insert "\n** ")
+ (org-insert-time-stamp (current-time))
+(insert "\n") 
+(insert "*** TODO bookwriting \n")
+(insert "*** TODO adulting") 
+(previous-line)
+(previous-line)
+(previous-line)
+(previous-line)
+(previous-line)
+(previous-line)
+ ) 
+
+
 #+END_SRC
 
 * Prose editing settings
