@@ -500,6 +500,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-f") 'isearch-forward-ignore-case)
 
+; (define-key key-minor-mode-map (kbd "s-f") 'avy-goto-char-timer)
+
 (define-key key-minor-mode-map (kbd "s-j w m") 'whitespace-mode)
 
 (define-key key-minor-mode-map (kbd "s-j h l") 'spacemacs/toggle-highlight-current-line-globally-off)

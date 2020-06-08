@@ -4624,7 +4624,9 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 *** mu4e setup
  #+BEGIN_SRC emacs-lisp 
 
-(setq user-mail-address "jay@storytelling.nyc")
+;; (setq user-mail-address "jay@storytelling.nyc")
+(setq user-mail-address "dixit@aya.yale.edu")
+
 (setq user-full-name "Jay Dixit") 
 
 (setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@storytelling.nyc"))
@@ -5197,6 +5199,32 @@ subsequent sends."
 )
 ))
 #+END_SRC
+
+*** request PDF
+#+begin_src emacs-lisp
+(defun request-pdf ()
+  (interactive)
+  (message-goto-subject)
+  (insert "request for PDF")
+(message-goto-body) 
+(insert
+"Dear Professor,
+
+I'm a psychology writer (New York Times, Psychology Today), currently at work on a book. I recently discovered your paper ")
+(org-mac-chrome-insert-frontmost-url) 
+(insert " and I'm very interested in reading it. 
+
+I see that the paper is behind a paywall. Do you by chance have a PDF you could send me?
+
+Thanks in advance!
+
+Warm regards,
+Jay Dixit
+
+"
+)
+  )
+#+end_src
 
 *** erika-send-mail
 #+BEGIN_SRC emacs-lisp
