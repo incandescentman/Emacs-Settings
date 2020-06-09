@@ -1347,3 +1347,17 @@ This file will also available in other languages:
  Spanish   - (pending)
 
 #+end_src
+
+
+* launch emacs custom init file
+
+
+#+begin_src sh
+/Applications/Emacs.app/Contents/MacOS/Emacs -Q path-to-your-init.el &
+
+
+/Applications/Emacs.app/Contents/MacOS/Emacs -Q /Users/jay/Downloads/bible-org-roam.el &
+
+
+
+#+end_src
