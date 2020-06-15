@@ -1751,7 +1751,7 @@ set entry_text to \"# Book writing\" & time string of now & \"-\" & (nowTime) & 
 
 #pomodoro \"
 
-do shell script \"/usr/local/bin/dayone2 new \" & quoted form of entry_text 
+do shell script \"/usr/local/bin/dayone new \" & quoted form of entry_text 
 ")) 
 )) 
 
@@ -2826,7 +2826,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   )
 
 
-(defun jd-org-book-and-accountability ()
+(defun jd-org-2-book-and-accountability ()
  "insert a new heading with today's date"
  (interactive)
 (insert "\n** ")
@@ -2837,6 +2837,18 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (insert "**** TODO bookwriting #2\n")
 (left-char)
  ) 
+
+
+(defun jd-org-book-and-accountability ()
+ "insert a new heading with today's date"
+ (interactive)
+(insert "\n** ")
+ (org-insert-time-stamp (current-time))
+(insert "\n") 
+(insert "*** TODO bookwriting")
+(pomodoro-start-jay) 
+ ) 
+
 
 (defun jd-clock-in ()
   "insert a new heading with today's date, and then clock in"
