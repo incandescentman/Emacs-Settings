@@ -9,7 +9,7 @@
 #+LATEX_HEADER: \setcounter{tocdepth}{3}
 #+LATEX_HEADER: \leftheader{Jay Dixit} 
 #+LATEX_HEADER: \leftheaderurl{https://jaydixit.com} 
-#+LATEX_HEADER: \coverimage{/Users/jay/Dropbox/emacs/prelude/personal/new-latex-templates/images/image1.jpg} 
+#+LATEX_HEADER: \coverimage{/Users/jay/Dropbox/emacs/prelude/personal/latex-templates/images/image1.jpg} 
 
 
 * Executive summary

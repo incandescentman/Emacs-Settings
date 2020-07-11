@@ -1689,7 +1689,7 @@ Make org-capture open in full window! :-)
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
 (setq org-pomodoro-length 25)
-(setq org-pomodoro-short-break-length 5) 
+(setq org-pomodoro-short-break-length 0.5) 
 (setq org-pomodoro-long-break-length 30) 
 (setq org-pomodoro-long-break-sound "/Users/jay/Dropbox/audio/sounds/InkSoundStroke3.mp3")
  (setq org-pomodoro-play-ticking-sounds nil)
@@ -1745,17 +1745,32 @@ set nowTime to (hours of now) & \":\" & (minutes of now)
 set pomodoroStart to (current date) - 25 * minutes
 set pStartTime to (hours of pomodoroStart) & \":\" & (minutes of pomodoroStart)
 set achieved to text returned of (display dialog \"What did you achieve in this Pomodoro?\" default answer \"\")
-set entry_text to \"# Book writing\" & time string of now & \"-\" & (nowTime) & \"
+set entry_text to \"# Bookwriting:\" & pStartTime & \" - \" & time string of now & \"
 
 \" & achieved & \"
 
 #pomodoro \"
 
-do shell script \"/usr/local/bin/dayone new \" & quoted form of entry_text 
+do shell script \"echo \" & (quoted form of entry_text) & \" | /usr/local/bin/dayone new\" 
+
+
 ")) 
 )) 
 
 #+END_SRC
+
+Old one:
+do shell script \"/usr/local/bin/dayone new \" & quoted form of entry_text 
+
+Almost worked:
+do shell script \"echo \" & quoted form of entry_text & \" | /usr/local/bin/dayone new\" 
+
+
+
+From this site ([[https://gist.github.com/judismith/3315418][AppleScript to create Day One entry for hours logged in TaskPaper - Based on the AppleScript from Brett Terpstra to log TaskPaper completed tasks to Day One. This script does both]])
+
+do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/local/bin/dayone new" 
+
 
 ** org-mac-link
 #+BEGIN_SRC emacs-lisp
@@ -2839,16 +2854,24 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  ) 
 
 
-(defun jd-org-book-and-accountability ()
+(defun jd-org-today-and-book ()
  "insert a new heading with today's date"
  (interactive)
 (insert "\n** ")
  (org-insert-time-stamp (current-time))
 (insert "\n") 
-(insert "*** TODO bookwriting")
+(insert "*** TODO bookwriting\n")
 (pomodoro-start-jay) 
  ) 
 
+
+(defun jd-org-book-pomodoro ()
+ "insert a new heading with today's date"
+ (interactive)
+(insert "*** TODO bookwriting")
+(insert "\n") 
+(pomodoro-start-jay) 
+ ) 
 
 (defun jd-clock-in ()
   "insert a new heading with today's date, and then clock in"
@@ -6425,16 +6448,16 @@ Wow, this works.
 (defun jay-load-latex ()
 (interactive)
 
-;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin.el")
-;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/modest-ruin.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-wider.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/beautiful-racket.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant-garamond.el")
-;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/resonate.el")
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-invoice.el") 
-;; (load "/Users/jay/emacs/emacs-settings/new-latex-templates/blue-ruin_no_cover.el") 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/jay-latex-yosemite-setup.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el") 
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el") 
+(load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
 
 ;; (use-package blue-ruin) 
 (use-package blue-invoice) 
@@ -7711,6 +7734,13 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 * delete properties blocks
+Doesn't work. use the command line tool. or figure out how to run shell script on current file
+
+[[https://stackoverflow.com/questions/4697322/elisp-call-command-on-current-file][emacs - elisp: call command on current file - Stack Overflow]]
+
+[[https://stackoverflow.com/questions/25929694/executing-shell-command-on-emacs-file-opening][elisp - Executing shell command on emacs file opening - Stack Overflow]]
+
+
 #+BEGIN_SRC emacs-lisp
 (defun delete-properties-blocks ()
 (interactive)
@@ -7733,7 +7763,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 * org sticky header
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package org-sticky-header
 
 :config
@@ -7741,7 +7771,7 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 
 )
 
-#+END_SRC
+#+END_EXAMPLE
 
 * Tufte
 #+BEGIN_SRC emacs-lisp
@@ -8409,7 +8439,7 @@ Go through `org-structure-template-alist' and
 (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1))) 
 
 (add-hook 'org-mode-hook #'flycheck-mode)
-(add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1))) 
+;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1))) 
 
 #+end_src
 

@@ -595,7 +595,7 @@ you should place your code here."
 
 ;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
 
-(load "/Users/jay/emacs/emacs-settings/new-latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
