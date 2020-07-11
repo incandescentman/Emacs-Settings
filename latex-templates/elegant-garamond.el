@@ -1,17 +1,17 @@
-(provide 'elegant)
+(provide 'elegant-garamond)
 
 (add-to-list 'org-latex-classes
-  '("elegant"
+  '("elegant-garamond"
 "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
+\\linespread{1.3} 
+
 
 \\usepackage{float}
 \\usepackage{changepage}
-
-\\usepackage{wrapfig}
 
 \\usepackage{algorithm}
 \\usepackage{amsmath}
@@ -24,13 +24,15 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Light, 
+        BoldFont = HelveticaNowDisplay-Bold, 
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta, 
   Extension = .ttf
 
-\\setromanfont{HelveticaNowText-Light}
-\\setsansfont{HelveticaNowDisplay-Regular}
+\\setromanfont{Garamond Premier Pro}
+\\setromanfont{Adobe Caslon Pro}
+; \\setsansfont{HelveticaNowDisplay-Regular}
+\\setsansfont{Garamond Premier Pro}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
   \\setmonofont{Myriad Pro}
@@ -38,10 +40,7 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
-
-\\usepackage[obeyspaces]{url}
-\\PassOptionsToPackage{obeyspaces}{url}
-
+\\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
@@ -75,7 +74,7 @@
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-\\raggedright
+% \\raggedright
 \\hyphenpenalty=5000 
 \\tolerance=1000
 
@@ -108,10 +107,6 @@
 \\chead{}
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
-
-\\lhead{\\@title}}} % title of the document as left header
-
-
 \\lfoot{}
 \\cfoot{\\thepage}
 \\rfoot{}
@@ -260,19 +255,19 @@
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 %\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
 %\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
-%\\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
+%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{1.5ex}{24pt}{6pt}
+\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\}
 
 
 \\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
