@@ -1816,12 +1816,12 @@ Founder, <a href='http://storytelling.nyc/' style='text-decoration:none; color:#
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "p" "font-family:Sans-Serif; margin-bottom: 1em;")))
+             "p" "font-family:Helvetica,sans-serif; margin-bottom: 1em;")))
 
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "a" "font-family:Sans-Serif; margin-bottom: 1em;")))
+             "a" "font-family:Helvetica,sans-serif; margin-bottom: 1em;")))
 
 (add-hook 'org-mime-html-hook
      (lambda ()
@@ -1855,12 +1855,12 @@ margin-left:2em;
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "li" "font-family:Sans-Serif")))
+             "li" "font-family:sans-serif")))
 
 (add-hook 'org-mime-html-hook
      (lambda ()
       (org-mime-change-element-style
-       "strong" "font-family:Sans-Serif;color:#00ADEF;")))
+       "strong" "font-family:sans-serif;color:#00ADEF;")))
 
 
 (add-hook 'org-mime-html-hook
