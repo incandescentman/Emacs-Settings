@@ -225,7 +225,8 @@ values."
                                     highlight-indentation
                                     hl-line
                                     diff-hl
-				    org-projectile
+                                    hl-todo
+                                    org-projectile
                                     hs-mode
                                     persp-mode
                                     popwin
