@@ -1,5 +1,6 @@
 (provide 'elegant)
 
+(with-eval-after-load 'ox-latex
 (add-to-list 'org-latex-classes
   '("elegant"
 "
@@ -296,7 +297,7 @@
      ("\\subsection{%s}" . "\\subsection*{%s}")
      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 
 (setq org-latex-to-pdf-process 
