@@ -1205,6 +1205,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
         (sequence "|" "CANCELED" )
+        (sequence "EXPOSURE ACTIVITY" "|")
         (sequence "MSG" "MESSAGE" "|" "CALLED" )
         (sequence "COMMITTED" "RESULTS" "|")
 (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|")
@@ -8798,3 +8799,69 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
        :map org-mode-map
        (("C-c n i" . org-roam-insert)))) 
 #+END_SRC
+
+* PDF tools
+
+#+begin_src emacs-lisp
+
+(use-package pdf-tools
+ :pin manual ;; manually update
+ :config
+ ;; initialise
+ (pdf-tools-install)
+
+ ;; open pdfs scaled to fit page
+ (setq-default pdf-view-display-size 'fit-page)
+
+ ;; don't automatically annotate highlights
+ (setq pdf-annot-activate-created-annotations nil)
+
+ ;; use normal isearch
+ (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+
+ ;; turn off cua so copy works
+ (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+
+ ;; more fine-grained zooming
+ (setq pdf-view-resize-factor 1.1)
+
+ ;; keyboard shortcuts
+ (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+ (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+ (define-key pdf-view-mode-map (kbd "g") 'pdf-view-goto-page)
+ (define-key pdf-view-mode-map (kbd "<") 'pdf-view-first-page)
+ (define-key pdf-view-mode-map (kbd ">") 'pdf-view-last-page)
+ (define-key pdf-view-mode-map (kbd "C-s") 'pdf-occur)
+ (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)) 
+
+#+end_src 
+
+* org pdftools
+Not sure what this does 
+
+#+begin_EXAMPLE emacs-lisp
+(use-package org-pdftools
+ :hook (org-load . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+ :after org-noter
+ :config
+ (with-eval-after-load 'pdf-annot
+  (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))) 
+#+END_EXAMPLE
+
+* org-noter
+
+#+begin_src emacs-lisp
+(use-package org-noter
+ :after org
+ :ensure t) 
+
+(use-package org-noter
+  :after org
+  :ensure t
+  :config (setq org-noter-default-notes-file-names '("org-noter-notes.org")
+         org-noter-notes-search-path '("~/nd/org-noter")
+         org-noter-separate-notes-from-heading t)) 
+
+#+end_src
