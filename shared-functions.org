@@ -7697,17 +7697,6 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 
-* org-drill
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package org-drill)
-; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
-; (setq org-drill-add-random-noise-to-intervals-p t)
-
-(setq org-drill-use-visible-cloze-face-p t)
-
-
-#+END_EXAMPLE
-
 * ox-clip
 #+BEGIN_SRC emacs-lisp
 (use-package ox-clip)
@@ -8865,3 +8854,15 @@ Not sure what this does
          org-noter-separate-notes-from-heading t)) 
 
 #+end_src
+
+* org-drill
+#+BEGIN_SRC emacs-lisp
+(use-package org-drill)
+; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
+; (setq org-drill-add-random-noise-to-intervals-p t)
+
+(setq org-drill-use-visible-cloze-face-p t)
+
+
+#+END_SRC
+
