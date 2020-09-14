@@ -8861,8 +8861,16 @@ Not sure what this does
 ; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
 ; (setq org-drill-add-random-noise-to-intervals-p t)
 
-(setq org-drill-use-visible-cloze-face-p t)
-
-
+(setq org-drill-use-visible-cloze-face-p t) 
 #+END_SRC
+
+
+
+* custom time format
+#+begin_src emacs-lisp
+(setq-default org-display-custom-times t)
+(setq org-time-stamp-custom-formats '("<%B %e, %Y>" . "<%B %e, %Y. %I:%M %p>")) 
+#+end_src
+
+
 
