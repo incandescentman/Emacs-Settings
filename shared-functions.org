@@ -789,7 +789,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 #+END_SRC
 
 *** new scratch buffer
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; multiple scratch buffers                                               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -797,7 +797,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 (autoload 'scratch "scratch" nil t) 
 (global-set-key (kbd "s-T") 'scratch) 
 
-#+END_SRC
+#+END_EXAMPLE
 
 *** Create new buffer as org-mode subtree in current file
 #+BEGIN_SRC emacs-lisp
@@ -8868,8 +8868,8 @@ Not sure what this does
 
 * custom time format
 #+begin_src emacs-lisp
-(setq-default org-display-custom-times t)
-(setq org-time-stamp-custom-formats '("<%B %e, %Y>" . "<%B %e, %Y. %I:%M %p>")) 
+;; (setq-default org-display-custom-times nil)
+(setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>")) 
 #+end_src
 
 
