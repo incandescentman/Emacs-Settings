@@ -833,6 +833,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
 
 
+(define-key key-minor-mode-map (kbd "s-T") 'words-thesaurus)
+
 ;; For extracting content from my browser
 
 (define-key key-minor-mode-map (kbd "s-W") 'org-mac-chrome-insert-frontmost-url)
