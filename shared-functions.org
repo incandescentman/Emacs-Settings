@@ -2712,17 +2712,17 @@ dired-omit-extensions
 
 
 * Word count
-#+BEGIN_SRC emacs-lisp
+
+#+begin_src emacs-lisp 
 (use-package wc-mode)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 ;; (add-hook 'org-mode-hook 'wc-mode) 
-** count words
-#+BEGIN_SRC emacs-lisp
+
 (defun word-count (arg)
 (interactive "r") 
 (count-words arg)
-  )
-#+END_SRC
+ ) 
+#+end_src
 
 * unused packages 
 ** ~ls-lisp~
@@ -4893,7 +4893,7 @@ doesn't immediately mean the message is starred on the Gmail side. With
 the recently added ~mu4e-mark-execute-pre-hook~ it becomes possible to 
 whip Gmail into doing my bidding :) 
 
-# #+BEGIN_SRC elisp 
+# #+BEGIN_SRC emacs-lisp 
 (add-hook 'mu4e-mark-execute-pre-hook 
   (lambda (mark msg) 
   (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\Inbox")) 
@@ -7726,9 +7726,9 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 * delete properties blocks
 Doesn't work. use the command line tool. or figure out how to run shell script on current file
 
-[[https://stackoverflow.com/questions/4697322/elisp-call-command-on-current-file][emacs - elisp: call command on current file - Stack Overflow]]
+[[https://stackoverflow.com/questions/4697322/elisp-call-command-on-current-file][emacs - emacs-lisp: call command on current file - Stack Overflow]]
 
-[[https://stackoverflow.com/questions/25929694/executing-shell-command-on-emacs-file-opening][elisp - Executing shell command on emacs file opening - Stack Overflow]]
+[[https://stackoverflow.com/questions/25929694/executing-shell-command-on-emacs-file-opening][emacs-lisp - Executing shell command on emacs file opening - Stack Overflow]]
 
 
 #+BEGIN_SRC emacs-lisp
@@ -8822,7 +8822,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
  (define-key pdf-view-mode-map (kbd ">") 'pdf-view-last-page)
  (define-key pdf-view-mode-map (kbd "C-s") 'pdf-occur)
  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)) 
-
 #+end_src 
 
 * org pdftools
@@ -8852,7 +8851,6 @@ Not sure what this does
   :config (setq org-noter-default-notes-file-names '("org-noter-notes.org")
          org-noter-notes-search-path '("~/nd/org-noter")
          org-noter-separate-notes-from-heading t)) 
-
 #+end_src
 
 * org-drill
