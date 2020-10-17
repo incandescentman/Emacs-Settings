@@ -1204,6 +1204,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
         (sequence "MISSED" "|" "DONE")
+        (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
         (sequence "|" "CANCELED" )
         (sequence "EXPOSURE ACTIVITY" "|")
         (sequence "MSG" "MESSAGE" "|" "CALLED" )
@@ -5656,6 +5657,9 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'web-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'help-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'srecode-template-mode-hook 'turn-on-olivetti-mode)
+
+;; (add-hook 'help-mode-hook 'turn-on-olivetti-mode)
 
 
 (add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
