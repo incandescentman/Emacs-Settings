@@ -600,6 +600,7 @@ you should place your code here."
 
 ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
+(load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
 (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
 
