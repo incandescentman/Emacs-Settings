@@ -643,7 +643,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
-(define-key key-minor-mode-map (kbd "s-H") 'hyperbole)
+;; (define-key key-minor-mode-map (kbd "s-H") 'hyperbole)
 
 (define-key key-minor-mode-map (kbd "M-e") 'smart-forward-sentence)
 
