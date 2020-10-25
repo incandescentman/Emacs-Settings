@@ -80,7 +80,7 @@
 \\setcounter{secnumdepth}{0}
 
 
-\\usepackage[labelformat=empty]{caption}
+\\usepackage[font={small,tt}]{caption}
 
 
 
