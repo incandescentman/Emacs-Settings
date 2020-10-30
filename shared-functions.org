@@ -1898,7 +1898,7 @@ width:80%;
     padding: 20px;
 quotes: '«' '»';
 font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important;")))
+    font-weight: 400 !important; font-size:small;")))
 #+END_SRC
 
 *** org-mime blockquote literary style
