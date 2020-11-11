@@ -8,6 +8,7 @@
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
 
+\\usepackage{wrapfig}
 \\usepackage{float}
 \\usepackage{changepage}
 \\usepackage{algorithm}
@@ -119,6 +120,14 @@
 \\rfoot{}
 
 
+
+
+\\newenvironment{fauxsubtitle}
+{
+
+\\Large
+\\itshape
+}
 
 
 
@@ -342,6 +351,12 @@
 {% end code 
 \\end{center}\\ignorespacesafterend
 }
+
+
+
+
+
+
 
 
 
