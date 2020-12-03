@@ -8657,7 +8657,7 @@ Courtesy of Mike Goldenberg
 
 
 * org-brain
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-brain :ensure t
  :init
  (setq org-brain-path "/Users/jay/dropbox/writing/org-brain") 
@@ -8671,7 +8671,7 @@ Courtesy of Mike Goldenberg
  (setq org-brain-title-max-length 12)
  (setq org-brain-include-file-entries nil
     org-brain-file-entries-use-title nil)) 
-#+end_src
+#+END_EXAMPLE
 
 
 * org-show-inline-images
