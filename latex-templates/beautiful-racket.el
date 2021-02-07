@@ -17,11 +17,12 @@
 \\usepackage{ifxetex}
 \\usepackage{setspace}
 \\ifxetex
-  \\usepackage{fontspec,xltxtra,xunicode}
-  \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\\usepackage{fontspec,xltxtra,xunicode}
+\\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
   \\setmonofont{TeX Gyre Heros}
+
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -57,9 +58,6 @@
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-\\hyphenpenalty=5000 
-\\tolerance=1000
-
 
 
 \\usepackage{magaz}
@@ -72,6 +70,13 @@
 \\usepackage{letterspace}
 \\usepackage{microtype}
 
+;; \\hyphenpenalty=5000 
+;; \\tolerance=1000
+;;
+https://tex.stackexchange.com/questions/31301/how-to-reduce-the-number-of-hyphenation/335088
+
+\\righthyphenmin=4
+\\lefthyphenmin=4
 
 \\pagenumbering{arabic}
 \\makeatletter

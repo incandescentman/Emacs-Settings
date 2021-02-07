@@ -1203,6 +1203,8 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq org-todo-keywords
       '(
 (sequence "TODO" "STARTED" "|" "DONE")
+(sequence "|" "SKIPPING")
+
         (sequence "MISSED" "|" "DONE")
         (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
         (sequence "|" "CANCELED" )
@@ -6470,16 +6472,6 @@ Wow, this works.
   )
     #+END_SRC 
 
-
-*** koma letter
-#+BEGIN_SRC emacs-lisp
-(defun load-koma-letter ()
- (interactive)
- (load "/Users/jay/emacs/emacs-settings/ox-koma-letter.el")
- (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
- )
-#+END_SRC
-
 *** fix latex verbatim 
   You can use a filter function that will replace default "verbatim" with
   whatever you want.
@@ -8876,3 +8868,61 @@ Not sure what this does
 
 
 
+* clean up tex files
+[[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))) 
+#+end_src
+
+
+* Better time-stamps in org-export
+#+begin_src emacs-lisp
+(add-to-list 'org-export-filter-timestamp-functions
+             #'endless/filter-timestamp)
+(defun endless/filter-timestamp (trans back _comm)
+  "Remove <> around time-stamps."
+  (pcase back
+    ((or `jekyll `html)
+     (replace-regexp-in-string "&[lg]t;" "" trans))
+    (`latex
+     (replace-regexp-in-string "[<>]" "" trans))))
+
+(setq-default org-display-custom-times t)
+;;; Before you ask: No, removing the <> here doesn't work.
+(setq org-time-stamp-custom-formats
+   '("<%B %e, %Y>" . "<%d/%m/%y %a %H:%M>")) 
+
+#+end_src
+
+
+* koma letter
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-classes
+    '("my-letter"
+     "\\documentclass\[%
+ DIV=14,
+ fontsize=12pt,
+ parskip=half,
+ subject=titled,
+ backaddress=false,
+ fromalign=left,
+ fromemail=true,
+ fromphone=true\]\{scrlttr2\}
+ \[DEFAULT-PACKAGES]
+ \[PACKAGES]
+ \[EXTRA]"))
+
+#+end_src
+
+
+
+
+* koma letter
+#+BEGIN_SRC emacs-lisp
+(defun load-koma-letter ()
+ (interactive)
+ (load "/Users/jay/emacs/emacs-settings/ox-koma-letter.el")
+ (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
+ )
+#+END_SRC
