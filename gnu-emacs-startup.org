@@ -3885,3 +3885,4 @@ different → different
 (load "/Users/jay/emacs/emacs-settings/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC
+

@@ -9,7 +9,7 @@
   '(progn
      (add-to-list 'org-latex-classes
                   '("my-letter"
-                    "\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=12pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
+                    "\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=10pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
      \\usepackage[english]{babel}
      \\usepackage{utopia}
      \\setkomavar{frombank}{(1234)\\,567\\,890}
