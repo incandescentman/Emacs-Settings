@@ -5682,11 +5682,10 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (find-file "/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org")) 
 
 (defun open-abbrevs ()
-  (interactive)
-(edit-abbrevs)
-(turn-on-olivetti-mode)
+  (interactive) 
+(find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs") 
+;; (turn-on-olivetti-mode)
 ) 
-
 #+END_SRC
 
 
@@ -8877,7 +8876,7 @@ Not sure what this does
 
 
 * Better time-stamps in org-export
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (add-to-list 'org-export-filter-timestamp-functions
              #'endless/filter-timestamp)
 (defun endless/filter-timestamp (trans back _comm)
@@ -8891,9 +8890,9 @@ Not sure what this does
 (setq-default org-display-custom-times t)
 ;;; Before you ask: No, removing the <> here doesn't work.
 (setq org-time-stamp-custom-formats
-   '("<%B %e, %Y>" . "<%d/%m/%y %a %H:%M>")) 
+   '("<%A %b %e, %Y>" . "<%d/%m/%y %a %H:%M>")) 
 
-#+end_src
+#+END_EXAMPLE
 
 
 * koma letter
