@@ -70,11 +70,6 @@
 \\usepackage{letterspace}
 \\usepackage{microtype}
 
-;; \\hyphenpenalty=5000 
-;; \\tolerance=1000
-;;
-https://tex.stackexchange.com/questions/31301/how-to-reduce-the-number-of-hyphenation/335088
-
 \\righthyphenmin=4
 \\lefthyphenmin=4
 
@@ -356,10 +351,6 @@ https://tex.stackexchange.com/questions/31301/how-to-reduce-the-number-of-hyphen
 {% end code 
 \\end{center}\\ignorespacesafterend
 }
-
-
-
-
 
 
 
