@@ -70,8 +70,14 @@
 \\usepackage{letterspace}
 \\usepackage{microtype}
 
-\\righthyphenmin=4
-\\lefthyphenmin=4
+
+\\hyphenpenalty=1000 
+\\tolerance=1000
+\\exhyphenpenalty=100
+\\pretolerance=150
+\\emergencystretch=10pt
+
+
 
 \\pagenumbering{arabic}
 \\makeatletter
@@ -152,7 +158,6 @@
 \\usepackage{ctable}
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
-  \\tolerance=1000
 \\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
