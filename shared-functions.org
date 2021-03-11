@@ -6449,7 +6449,7 @@ Wow, this works.
 *** load my custom latex templates
 
     #+BEGIN_SRC emacs-lisp
-(load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
+;; (load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
 
 (defun jay-load-latex ()
 (interactive)
