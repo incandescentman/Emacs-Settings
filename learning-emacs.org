@@ -865,6 +865,10 @@ e .jay-scripts.sh
 
 * SEDusage 
 
+Remove all occurrences of a string
+
+sed -i -e 's/goodbye//g' filename 
+
 [[https://stackoverflow.com/questions/9704020/recursive-search-and-replace-in-text-files-on-mac-and-linux/19861378][macos - Recursive search and replace in text files on Mac and Linux - Stack Overflow]]
 
 #+BEGIN_SRC sh
