@@ -7726,12 +7726,14 @@ Doesn't work. use the command line tool. or figure out how to run shell script o
 [[https://stackoverflow.com/questions/25929694/executing-shell-command-on-emacs-file-opening][emacs-lisp - Executing shell command on emacs file opening - Stack Overflow]]
 
 
-#+BEGIN_SRC emacs-lisp
+
+I'm deactivating this because it doesn't work. Use delete-properties-blocks from command line instead. 
+#+BEGIN_EXAMPLE emacs-lisp
 (defun delete-properties-blocks ()
 (interactive)
 (replace-regexp ":PROPERTIES:\\(?:.*\\|\n\\)*:END:" "")
 )
-#+END_SRC
+#+END_EXAMPLE
 
 
 
@@ -8186,7 +8188,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;;         (variable-pitch-mode 1))) 
 
 ;; (set-face-attribute 'variable-pitch nil :family "Baskerville") 
-(set-face-attribute 'variable-pitch nil :family "Triplicate T3") 
+(set-face-attribute 'variable-pitch nil :family "Triplicate B") 
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . light)) 
