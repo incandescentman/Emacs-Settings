@@ -1368,3 +1368,14 @@ This file will also available in other languages:
 
 
 * org-noter
+
+
+* local file variables executing lisp code on file open 
+#+BEGIN_QUOTE
+;; Local Variables:
+;; eval: (eldoc-mode)
+;; eval: (font-lock-mode -1)
+;; End: 
+#+END_QUOTE
+
+
