@@ -6748,11 +6748,17 @@ minibuffer."
 #+END_SRC
 
 
+* flycheck
+
+#+BEGIN_SRC emacs-lisp
+(require 'flycheck)
+#+END_SRC
+
+
 * proselint 
 Source: http://unconj.ca/blog/linting-prose-in-emacs.html 
 
 #+BEGIN_SRC emacs-lisp
-(require 'flycheck)
 (flycheck-define-checker proselint
   "A linter for prose."
   :command ("proselint" source-inplace)
@@ -6763,6 +6769,7 @@ Source: http://unconj.ca/blog/linting-prose-in-emacs.html
   :modes (text-mode markdown-mode gfm-mode org-mode))
 
 (add-to-list 'flycheck-checkers 'proselint) 
+
 #+END_SRC
 
 
@@ -8932,3 +8939,11 @@ Not sure what this does
  (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
  )
 #+END_SRC
+
+
+
+* proselint fix
+ 
+#+begin_EXAMPLE emacs-lisp
+;; (setq flycheck-disabled-checkers '(proselint)) 
+#+END_EXAMPLE
