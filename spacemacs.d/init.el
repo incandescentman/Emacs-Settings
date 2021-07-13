@@ -905,9 +905,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
-'(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
-'(flycheck-disabled-checkers '(proselint)) 
-'(org-export-preserve-breaks nil)
+ '(flycheck-disabled-checkers '(proselint))
+ '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+ '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
  '(org-sidebar-jump-indirect t)
