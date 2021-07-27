@@ -8960,3 +8960,9 @@ Not sure what this does
 #+begin_EXAMPLE emacs-lisp
 ;; (setq flycheck-disabled-checkers '(proselint)) 
 #+END_EXAMPLE
+
+
+* allow file local custom code
+#+begin_src emacs-lisp
+(setq enable-local-eval t) 
+#+end_src
