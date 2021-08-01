@@ -8966,3 +8966,15 @@ Not sure what this does
 #+begin_src emacs-lisp
 (setq enable-local-eval t) 
 #+end_src
+
+* saveplace
+#+begin_src emacs-lisp
+(require 'saveplace)
+(setq-default save-place t) 
+#+end_src
+
+
+* org export preserve line breaks
+#+begin_src emacs-lisp
+(setq org-export-preserve-breaks t)
+#+end_src
