@@ -1022,7 +1022,7 @@ you should place your code here."
 
 (server-reflash)
 (triplicate-font)
-(embiggen-text)
+;; (embiggen-text)
 (scrollbar-init)
   )
 
