@@ -54,7 +54,7 @@ values."
 
       :location built-in
       )
-     
+
      ;;   osx
      ;;   xkcd
      ;;     ag-general
@@ -564,7 +564,7 @@ you should place your code here."
 (require 'multiple-cursors)
 
 
-  
+
   (setq vc-follow-symlinks t)
   (setq global-flyspell-mode t)
 
@@ -772,7 +772,6 @@ you should place your code here."
   ;;
 
 
-
   ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
   ;; I've been wanting to do this for so long. :-)
   ;; this works correctly!!
@@ -838,7 +837,7 @@ you should place your code here."
 
 (setq case-fold-search t)
 
-; (cyberpunk-jay) 
+; (cyberpunk-jay)
 
 (counsel-mode 1)
 
@@ -892,10 +891,16 @@ This function is called at the very end of Spacemacs initialization."
  '(org-sidebar-jump-indirect t)
  '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
  '(package-selected-packages
-   '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company notmuch projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-download org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete hl-todo highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(tern org-bullets doom-modeline shrink-path counsel-projectile magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company notmuch projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-download org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete hl-todo highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
  '(plain-org-wiki-directory "~/book/sending-the-proposal/")
  '(safe-local-variable-values
-   '((eval triplicate-code)
+   '((eval define-key key-minor-mode-map
+           (kbd "C-s-v")
+           'html2text-clipboard)
+     (eval define-key key-minor-mode-map
+           (kbd "C-v")
+           'html2text-clipboard)
+     (eval triplicate-code)
      (eval define-key key-minor-mode-map
            (kbd "SPC")
            'insert-space)
