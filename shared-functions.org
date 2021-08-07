@@ -5667,24 +5667,24 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 
 (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'text-mode-hook 'turn-on-olivetti-mode) 
-(add-hook 'org-mode-hook 'turn-on-olivetti-mode) 
-(add-hook 'message-mode-hook 'turn-on-olivetti-mode 'append)
-(add-hook 'emacs-lisp-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'css-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'sh-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'fundamental-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'web-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'help-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'srecode-template-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'text-mode-hook 'olivetti-mode 1) 
+(add-hook 'org-mode-hook 'olivetti-mode 1) 
+(add-hook 'message-mode-hook 'olivetti-mode 1 'append)
+(add-hook 'emacs-lisp-mode-hook 'olivetti-mode 1)
+(add-hook 'css-mode-hook 'olivetti-mode 1)
+(add-hook 'sh-mode-hook 'olivetti-mode 1)
+(add-hook 'web-mode-hook 'olivetti-mode 1)
+(add-hook 'fundamental-mode-hook 'olivetti-mode 1)
+(add-hook 'web-mode-hook 'olivetti-mode 1)
+(add-hook 'help-mode-hook 'olivetti-mode 1)
+(add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
 
-;; (add-hook 'help-mode-hook 'turn-on-olivetti-mode)
+;; (add-hook 'help-mode-hook 'olivetti-mode 1)
 
 
-(add-hook 'prog-mode-hook #'turn-on-olivetti-mode)
-(add-hook 'magit-status-mode-hook #'turn-on-olivetti-mode)
-(add-hook 'dired-mode-hook #'turn-on-olivetti-mode)
+(add-hook 'prog-mode-hook #'olivetti-mode 1)
+(add-hook 'magit-status-mode-hook #'olivetti-mode 1)
+(add-hook 'dired-mode-hook #'olivetti-mode 1)
 
   #+END_SRC
 
@@ -5702,7 +5702,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (defun open-abbrevs ()
   (interactive) 
 (find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs") 
-;; (turn-on-olivetti-mode)
+;; (olivetti-mode 1)
 ) 
 #+END_SRC
 
@@ -8220,8 +8220,8 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 
 ;;  (typo-mode 1)      ;; Good for symbols like em-dash 
-(add-hook 'poetry-mode-hook 'turn-on-olivetti-mode)
-;; (add-hook 'poetry-mode-hook 'turn-on-olivetti-mode)
+(add-hook 'poetry-mode-hook 'olivetti-mode 1)
+;; (add-hook 'poetry-mode-hook 'olivetti-mode 1)
 
 (defun poet-mode ()
 (interactive) 
@@ -8229,7 +8229,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 (set-face-attribute 'fixed-pitch nil :family "Iosevka") 
         (variable-pitch-mode 1)
 (poetry-mode)
-(turn-on-olivetti-mode)
+(olivetti-mode 1)
 (turn-off-auto-capitalize-mode)
 
 )
@@ -8444,7 +8444,7 @@ Go through `org-structure-template-alist' and
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
 
-(add-hook 'text-mode-hook #'turn-on-olivetti-mode) 
+(add-hook 'text-mode-hook #'olivetti-mode 1) 
 ;; (add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
 
 (add-hook 'org-mode-hook 'turn-on-flyspell) 
@@ -8504,6 +8504,10 @@ In collapsed view, hide empty lines between subtrees
 
 * embiggen text
 #+begin_src emacs-lisp
+#+end_src
+
+#+begin_EXAMPLE emacs-lisp 
+
 
 (defun embiggen-text ()
  (interactive)
@@ -8516,6 +8520,7 @@ In collapsed view, hide empty lines between subtrees
  (text-scale-decrease 1)
  (olivetti-shrink)
  ) 
+
 
 (defun olivetti-expand (&optional arg)
  "Incrementally increase the value of `olivetti-body-width'.
@@ -8536,7 +8541,7 @@ If prefixed with ARG, incrementally decrease."
    (define-key map "[" 'olivetti-shrink) map)))
 
 
-#+end_src
+#+END_EXAMPLE
 
 
 * hyperbole
