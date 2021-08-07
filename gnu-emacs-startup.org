@@ -873,8 +873,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
 ;; (define-key key-minor-mode-map (kbd "s--") 'text-scale-decrease)
 
-(define-key key-minor-mode-map (kbd "s-=") 'embiggen-text)
-(define-key key-minor-mode-map (kbd "s--") 'ensmallen-text)
+;; (define-key key-minor-mode-map (kbd "s-=") 'embiggen-text)
+;; (define-key key-minor-mode-map (kbd "s--") 'ensmallen-text)
 
 
 ;; rebind global help command so that I can use C-h for backspace
