@@ -1446,6 +1446,7 @@ In this version, I removed this line:
 
 ... it seems to work. But not knowing what that line does, or what I'm doing more generally, I don't know what unexpected effects this redaction may have... 
 
+Also, the refreshing of the buffer still seems to happen when I hit smart-return when I'm in a bulleted list. also it seems to be replacing the hyphen (-) with an n dash (-)
 
 #+BEGIN_SRC emacs-lisp
 

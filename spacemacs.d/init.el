@@ -150,6 +150,7 @@ values."
                                       imenu-list
                                       key-chord
                                       key-seq
+                                      markdown-mode
                                       maxframe
                                       mpv
                                       multicolumn
@@ -160,7 +161,7 @@ values."
                                       openwith
                                       orgalist
                                       org-bookmark-heading
-;;                                      org-brain
+                                      ;; org-brain
                                       org-drill
                                       org-fstree
                                       org-mime
