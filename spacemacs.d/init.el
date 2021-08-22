@@ -239,7 +239,6 @@ values."
                                     persp-mode
                                     popwin
                                     spaceline
-                                    treemacs-icons
                                     treemacs-icons-dired
                                     vi-tilde-fringe
                                     volatile-highlights
