@@ -233,12 +233,14 @@ values."
                                     highlight-indentation
                                     hl-line
                                     diff-hl
-;;                                    hl-todo
+                                    ;; hl-todo
                                     org-projectile
                                     hs-mode
                                     persp-mode
                                     popwin
                                     spaceline
+                                    treemacs-icons
+                                    treemacs-icons-dired
                                     vi-tilde-fringe
                                     volatile-highlights
                                     winner
