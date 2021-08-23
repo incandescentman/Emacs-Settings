@@ -8501,41 +8501,6 @@ In collapsed view, hide empty lines between subtrees
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+")))
 #+end_src
 
-* Olivetti-safe-width
-Olivetti internals now use pixels instead of points.
-
-olivetti-safe-width is no longer a function.
-
-Defining it using the old code below works, but throws an error. 
-
-
-#+begin_src emacs-lisp
-(defun olivetti-safe-width (n)
-"Parse N to a safe value for `olivetti-body-width'."
-(let ((window-width (- (window-total-width)
-(% (window-total-width) 2)))
-(min-width (+ olivetti-minimum-body-width
-(% olivetti-minimum-body-width 2))))
-(cond ((integerp n)
-(let ((width (min n window-width)))
-(max width min-width)))
-((floatp n)
-(let ((min-width
-(string-to-number (format "%0.2f"
-(/ (float min-width)
-window-width))))
-(width
-(string-to-number (format "%0.2f"
-(min n 1.0)))))
-(max width min-width)))
-((message "`olivetti-body-width' must be an integer or a float")
-(setq olivetti-body-width
-(car (get 'olivetti-body-width 'standard-value))))))) 
-#+end_src
-
-
-Source: https://searchcode.com/file/104597508/site-lisp/olivetti/olivetti.el/
-
 
 * embiggen text
 #+begin_src emacs-lisp

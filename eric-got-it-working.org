@@ -682,8 +682,6 @@
 (define-key key-minor-mode-map (kbd "s-j o l") 'olivetti-mode)
 (define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
 (define-key key-minor-mode-map (kbd "s-j o e") 'olivetti-expand)
-(define-key key-minor-mode-map (kbd "s-+") 'olivetti-expand)
-(define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
 
 (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
 
