@@ -8547,13 +8547,11 @@ Source: https://searchcode.com/file/104597508/site-lisp/olivetti/olivetti.el/
 (defun embiggen-text ()
  (interactive)
  (text-scale-increase 1) 
- (olivetti-expand)
  )
 
 (defun ensmallen-text ()
  (interactive)
  (text-scale-decrease 1)
- (olivetti-shrink)
  ) 
 
 
