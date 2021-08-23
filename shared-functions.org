@@ -8546,33 +8546,13 @@ Source: https://searchcode.com/file/104597508/site-lisp/olivetti/olivetti.el/
 
 (defun embiggen-text ()
  (interactive)
- (text-scale-increase 1) 
+ (text-scale-increase 1)
  )
 
 (defun ensmallen-text ()
  (interactive)
  (text-scale-decrease 1)
  ) 
-
-
-(defun olivetti-expand (&optional arg)
- "Incrementally increase the value of `olivetti-body-width'.
-
-If prefixed with ARG, incrementally decrease."
- (interactive "P")
- (let* ((p (if arg -1 1))
-     (n (cond ((integerp olivetti-body-width)
-          (+ olivetti-body-width (* 1 p)))
-         ((floatp olivetti-body-width)
-          (+ olivetti-body-width (+1 p))))))
-  (setq olivetti-body-width (olivetti-safe-width n (selected-window))))
-;; (olivetti-set-all-margins)
- (message "Text body width set to %s" olivetti-body-width)
- (set-transient-map
-  (let ((map (make-sparse-keymap)))
-   (define-key map "]" 'olivetti-expand)
-   (define-key map "[" 'olivetti-shrink) map)))
-
 
 #+END_SRC
 
