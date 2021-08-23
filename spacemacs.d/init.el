@@ -55,12 +55,11 @@ values."
       :location built-in
       )
      
-     ;;   osx
-     ;;   xkcd
-     ;;     ag-general
-     ;;     ag-lang-tools
- ;;    pdf
-     pdf-tools
+     ;; osx
+     ;; xkcd
+     ;; ag-general
+     ;; ag-lang-tools
+     ;; pdf
      smex
        (shell :variables
             shell-default-height 30
@@ -70,20 +69,19 @@ values."
      ;;   version-control
      ;;   html
      mu4e
-;;     org-roam
-     ;;   shell
-     ;;   shell-scripts
-     ;;     jay
-     ;;     speed-reading
-     ;;     emoji
-     ;;     typography
+     ;; org-roam
+     ;; shell
+     ;; shell-scripts
+     ;; jay
+     ;; speed-reading
+     ;; emoji
+     ;; typography
      javascript
-
-     ;;     floobits
-     ;;    deft
-     ;;     chrome
+     ;; floobits
+     ;; deft
+     ;; chrome
      ;; themes-megapack
-     ;;    ibuffer
+     ;; ibuffer
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
