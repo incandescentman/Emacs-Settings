@@ -8961,3 +8961,9 @@ Not sure what this does
 #+begin_src emacs-lisp
 (setq org-export-preserve-breaks t)
 #+end_src
+
+
+* calc
+#+begin_src emacs-lisp
+(define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
+#+end_src

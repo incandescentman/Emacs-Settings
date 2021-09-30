@@ -31,7 +31,6 @@
 
 \\setromanfont{Garamond Premier Pro}
 \\setromanfont{Adobe Caslon Pro}
-; \\setsansfont{HelveticaNowDisplay-Regular}
 \\setsansfont{Garamond Premier Pro}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
