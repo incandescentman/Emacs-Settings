@@ -164,8 +164,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq org-footnote-tag-for-non-org-mode-files "Footnotes:")
  (setq org-hide-block-startup nil)
  (setq org-hide-emphasis-markers t)
- (setq org-hide-leading-stars t)
- (setq org-html-container-element "div")
+(setq org-html-container-element "div")
  (setq org-html-head-include-scripts nil)
  (setq org-html-html5-fancy t)
  (setq org-html-postamble nil)
@@ -8966,4 +8965,11 @@ Not sure what this does
 * calc
 #+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
+#+end_src
+
+
+* leading stars
+#+begin_src emacs-lisp
+(setq org-hide-leading-stars t)
+
 #+end_src
