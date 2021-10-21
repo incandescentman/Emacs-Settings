@@ -711,7 +711,7 @@ you should place your code here."
 
   (toggle-menu-bar-mode-from-frame)
 
-  (setq org-hide-leading-stars nil)
+  (setq org-hide-leading-stars t)
 
   (smartparens-global-mode 1)
 

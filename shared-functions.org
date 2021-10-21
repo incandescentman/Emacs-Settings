@@ -8967,9 +8967,3 @@ Not sure what this does
 (define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
 #+end_src
 
-
-* leading stars
-#+begin_src emacs-lisp
-(setq org-hide-leading-stars t)
-
-#+end_src
