@@ -531,8 +531,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; working with an external monitor
 (define-key key-minor-mode-map (kbd "s-n") 'make-frame)
-(define-key key-minor-mode-map (kbd "s-~") 'other-frame)
-;; (define-key key-minor-mode-map (kbd "s-`") 'other-window)
+;; (define-key key-minor-mode-map (kbd "s-~") 'other-frame)
+
 
 (define-key key-minor-mode-map (kbd "s-`") 'other-window-or-frame)
 
