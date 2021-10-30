@@ -3605,7 +3605,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "S" 'org-mac-skim-insert-page)
 (define-super-key "a" 'mark-whole-buffer) ; select all
 (define-super-key "w" 'delete-window) ; close
-(define-super-key "`" 'other-window)
+;; (define-super-key "`" 'other-window-or-frame)
 (define-super-key "s" 'jay/save-some-buffers ) ; save all
 #+END_SRC
 
