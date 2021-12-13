@@ -1,4 +1,9 @@
-org-in-item-p 
+
+* narrow-or-widen-dwim
+narrow-or-widen-dwim deactivates electric-pair mode for quotation marks
+
+
+
 
 
 * change the behavior of org-smart-meta-return/dwim

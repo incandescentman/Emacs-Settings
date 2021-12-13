@@ -105,7 +105,7 @@ graphviz
                                       ;; js2
                                       ;; magit
                                       ;; smex
-                                      solarized-theme
+                                      ;; solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
                                       zenburn-theme
@@ -713,7 +713,8 @@ you should place your code here."
 
   (setq org-hide-leading-stars t)
 
-  (smartparens-global-mode 1)
+;;  (smartparens-global-mode 1)
+(electric-pair-mode 1)
 
   (add-hook 'ido-setup-hook (lambda ()
                               (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
@@ -746,7 +747,6 @@ you should place your code here."
 
   (menu-bar-mode -1)
 
-  (setq org-hide-leading-stars nil)
 
 
 
@@ -866,6 +866,7 @@ you should place your code here."
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
+(setq hl-todo-mode t)
 (setq global-hl-todo-mode t)
 
 ;; theend
