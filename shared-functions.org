@@ -38,23 +38,26 @@
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'package-archives
-             '("marmalade" .
-               "http://marmalade-repo.org/packages/" ) t)
+'("marmalade" .
+"http://marmalade-repo.org/packages/" ) t)
 
 
-; (add-to-list 'package-archives
-  ;           '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(setq package-archives '(
+
+("gnu" . "https://elpa.gnu.org/packages/")
+
+("melpa" . "https://melpa.org/packages/")
+
+("nongnu" . "https://elpa.nongnu.org/nongnu/")
+("tromey" . "http://tromey.com/elpa/") 
+)) 
 
 
-(add-to-list 'package-archives
-'("melpa" . "https://melpa.org/packages/"))
-
-;; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 
 
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+
 
 
 

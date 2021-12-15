@@ -32,7 +32,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-graphviz
+     graphviz
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -45,16 +45,15 @@ graphviz
      ;;   git
      ;;   markdown
      ;;    python
+;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
+     ;; (org
+     ;;  :variables
+     ;;  org-enable-bootstrap-support t
+     ;;  org-enable-github-support t
+     ;;  ;; org-enable-reveal-js-support t
 
-     (org
-      :variables
-      org-enable-bootstrap-support t
-      org-enable-github-support t
-      ;; org-enable-reveal-js-support t
-
-      :location built-in
-      )
-     
+     ;;  :location built-in
+     ;;  )
      ;; osx
      ;; xkcd
      ;; ag-general
@@ -160,6 +159,7 @@ graphviz
                                       orgalist
                                       org-bookmark-heading
                                       ;; org-brain
+                                      org-download
                                       org-drill
                                       org-fstree
                                       org-mime
