@@ -565,7 +565,14 @@ you should place your code here."
 (require 'multiple-cursors)
 
 
-  
+(use-package org
+:load-path "/Users/jay/emacs/spacemacs/elpa/develop/org-9.5.1"
+:ensure nil
+:config
+(org-reload))
+;; ....
+
+
   (setq vc-follow-symlinks t)
   (setq global-flyspell-mode t)
 
