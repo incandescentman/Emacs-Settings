@@ -68,7 +68,7 @@ values."
      ;;   version-control
      ;;   html
      mu4e
-     ;; org-roam
+     org-roam
      ;; shell
      ;; shell-scripts
      ;; jay
