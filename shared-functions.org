@@ -8970,3 +8970,10 @@ Not sure what this does
 (define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
 #+end_src
 
+
+
+* org-roam
+#+begin_src emacs-lisp
+(setq org-roam-directory (file-truename "~/Dropbox/org-roam"))
+(org-roam-db-autosync-mode) 
+#+end_src 
