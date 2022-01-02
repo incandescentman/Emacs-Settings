@@ -547,6 +547,7 @@ It should only modify the values of Spacemacs settings."
    ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -554,14 +555,23 @@ It should only modify the values of Spacemacs settings."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers nil
-   ;; Code folding method. Possible values are `evil' and `origami'.
+
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
-   ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
+
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
+
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
