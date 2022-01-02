@@ -45,7 +45,7 @@ values."
      ;;   git
      ;;   markdown
      ;;    python
-;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
+     ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
      ;; (org
      ;;  :variables
      ;;  org-enable-bootstrap-support t
@@ -158,11 +158,11 @@ values."
                                       openwith
                                       orgalist
                                       org-bookmark-heading
-                                      ;; org-brain
                                       org-download
                                       org-drill
                                       org-fstree
                                       org-mime
+                                      org-pomodoro
                                       org-sticky-header
                                       ox-clip
                                       ox-epub
@@ -555,6 +555,10 @@ you should place your code here."
   ;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
   ;; (package-initialize)
   ;; -----------------------------THIS EXISTS IN DEFAULT SPACEMACS config
+
+
+
+
 
 
 
