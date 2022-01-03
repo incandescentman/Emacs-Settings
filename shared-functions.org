@@ -8975,5 +8975,5 @@ Not sure what this does
 * org-roam
 #+begin_src emacs-lisp
 (setq org-roam-directory (file-truename "~/Dropbox/org-roam"))
-(org-roam-db-autosync-mode) 
+;; (org-roam-db-autosync-mode) 
 #+end_src 
