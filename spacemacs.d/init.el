@@ -993,6 +993,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first.")
   ;;
 
 
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called only while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included in the
+dump.")
 
   ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
   ;; I've been wanting to do this for so long. :-)
@@ -1021,6 +1026,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first.")
        (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
        ))
 
+(defun dotspacemacs/user-config ()
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded.")
 
 ;;(leuven)
   ;; (spacemacs-light)
@@ -1089,8 +1100,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first.")
 (setq hl-todo-mode t)
 (setq global-hl-todo-mode t)
 
-;; theend
-;;
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 ;;
