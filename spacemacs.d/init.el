@@ -47,14 +47,17 @@ This function should only modify configuration layer settings."
      ;;   markdown
      ;;    python
      ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
-     ;; (org
-     ;;  :variables
-     ;;  org-enable-bootstrap-support t
-     ;;  org-enable-github-support t
-     ;;  ;; org-enable-reveal-js-support t
+          (org
+            :ensure org-plus-contrib
+            :mode (("\\.org$" . org-mode))
+            
+      :variables
+      org-enable-bootstrap-support t
+      org-enable-github-support t
+      ;; org-enable-reveal-js-support t
 
-     ;;  :location built-in
-     ;;  )
+      :location built-in
+      )
      ;; osx
      ;; xkcd
      ;; ag-general
@@ -727,16 +730,6 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-  ;; (require 'package)
-  ;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-  ;; (package-initialize)
-  ;; -----------------------------THIS EXISTS IN DEFAULT SPACEMACS config
-
-
-
-
-
-
 
 (require 'helm)
 (require 'ivy)
@@ -744,10 +737,10 @@ you should place your code here."
 (require 're-builder)
 (require 'multiple-cursors)
 
-
+;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
-:load-path "/Users/jay/emacs/spacemacs/elpa/develop/org-9.5.1"
-:ensure nil
+:load-path "/Users/jay/emacs/org-9.5.2/"
+:ensure org-plus-contrib
 :config
 (org-reload))
 ;; ....
@@ -1128,7 +1121,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-sidebar-jump-indirect t)
  '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
  '(package-selected-packages
-   '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company notmuch projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-download org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete hl-todo highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company notmuch projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-download org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete hl-todo highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
  '(plain-org-wiki-directory "~/book/sending-the-proposal/")
  '(safe-local-variable-values
    '((eval triplicate-code)
