@@ -752,6 +752,9 @@ you should place your code here."
 (org-reload))
 ;; ....
 
+(use-package org)
+(use-package org-contrib)
+
 
   (setq vc-follow-symlinks t)
   (setq global-flyspell-mode t)
