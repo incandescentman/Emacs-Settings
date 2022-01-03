@@ -418,7 +418,6 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
-
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
@@ -966,8 +965,22 @@ you should place your code here."
    dotspacemacs-home-shorten-agenda-source nil
 
    ;; If non-nil then byte-compile some of Spacemacs files.
+   ;;   dotspacemacs-byte-compile nil))
 
+;; (defun dotspacemacs/user-env ()
+;;   "Environment variables setup.
+;; This function defines the environment variables for your Emacs session. By
+;; default it calls `spacemacs/load-spacemacs-env' which loads the environment
+;; variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+;; See the header of this file for more information."
+;;   (spacemacs/load-spacemacs-env))
 
+(defun dotspacemacs/user-init ()
+  "Initialization for user code:
+This function is called immediately after `dotspacemacs/init', before layer
+configuration.
+It is mostly for variables that should be set before packages are loaded.
+If you are unsure, try setting them in `dotspacemacs/user-config' first.")
 
 ;;  (find-file "~/nd/fearless.org")
 
