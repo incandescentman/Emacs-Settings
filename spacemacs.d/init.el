@@ -162,6 +162,7 @@ dotspacemacs-additional-packages '(
                                       olivetti
                                       openwith
                                       orgalist
+                                      org-contrib
                                       org-bookmark-heading
                                       org-download
                                       org-drill
