@@ -43,10 +43,8 @@
 
 \\setromanfont{Garamond Premier Pro}
 \\setromanfont{Adobe Caslon Pro}
-\\setsansfont{Garamond Premier Pro}
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
-
-  \\setmonofont{Myriad Pro}
+\\setsansfont{TeX Gyre Pagella}
+\\setmonofont{TeX Gyre Heros}
 
 
 \\else
@@ -115,7 +113,7 @@
 
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
-\\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
+\\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
 \\rhead{{\\nouppercase{\\leftmark}}}
@@ -276,11 +274,12 @@
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
-\\titleformat*{\\subsection}{\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedright\\ttfamily\\color{spacegrey}}
+\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}}
+
+\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{17}{12}\\raggedright}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
 
 \\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
