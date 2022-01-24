@@ -183,6 +183,7 @@ dotspacemacs-additional-packages '(
                                       palimpsest
                                       paredit
                                       peg
+                                      persp-mode
                                       plain-org-wiki
                                       point-stack
                                       polymode
@@ -242,7 +243,6 @@ dotspacemacs-additional-packages '(
                                     hs-mode
                                     org-projectile
                                     org-superstar
-                                    persp-mode
                                     popwin
                                     spaceline
                                     treemacs-icons-dired
