@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -50,7 +50,7 @@ This function should only modify configuration layer settings."
           (org
             :ensure org-plus-contrib
             :mode (("\\.org$" . org-mode))
-            
+
       :variables
       org-enable-bootstrap-support t
       org-enable-github-support t
@@ -1067,7 +1067,7 @@ before packages are loaded.")
 
 (setq case-fold-search t)
 
-; (cyberpunk-jay) 
+; (cyberpunk-jay)
 
 (counsel-mode 1)
 
