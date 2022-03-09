@@ -36,20 +36,20 @@ config blocks run AFTER the package is loaded
 (projectile-global-mode)
 
 :bind
-("s-l". whatever) 
+("s-l". whatever)
 )
 
 #+END_SRC
 
-this means it only runs the config block AFTER projectile is loaded 
+this means it only runs the config block AFTER projectile is loaded
 
 bind keys
 
 * Spacemacs
-** Search for a package: 
+** Search for a package:
 #+BEGIN_EXAMPLE
-] h SPC and search 
-#+END_EXAMPLE 
+] h SPC and search
+#+END_EXAMPLE
 
 
 * multi file search and replace across files
@@ -60,12 +60,12 @@ bind keys
 
 * regexp
 Let Emacs Create Your Regexp
-One can use the function 'regexp-opt' to create elisp regexps. Suppose you want to find out the syntax for a regexp that matches both "end" and "endif". Enter the following in an elisp buffer, say *scratch*: 
+One can use the function 'regexp-opt' to create elisp regexps. Suppose you want to find out the syntax for a regexp that matches both "end" and "endif". Enter the following in an elisp buffer, say *scratch*:
 (regexp-opt '("end" "endif") t)
 Then put the cursor after the last parentesis and give the command 'C-x C-e'. The result "\\(end\\(?:if\\)?\\)" should appear in the minibuffer, and also in the buffer *Messages*.
 
 
-* org for academics 
+* org for academics
 From: John Kitchin <jkitchin <at> andrew.cmu.edu>
 Subject: Re: Organizing and taming hectic Academia work (faculty	viewpoint)? Tips or a good guides sought after :)
 
@@ -81,15 +81,15 @@ by solving lots of little problems, and building up to bigger
 problems. A lot of those are documented in my blog. Read the emacs and
 emacs-lisp manuals (read them in Emacs or in a browser). They take some
 time, so skip the stuff that doesn't make sense and come back to it
-later if you need to. 
+later if you need to.
 
 Consider getting the book at
 https://www.masteringemacs.org. It isn't about org-mode, but it will
-make you better at using Emacs. 
+make you better at using Emacs.
 
 Consider reading Land of Lisp. It isn't
 about Emacs or Emacs-lisp, but it might interest you in programming in a
-lispy language, and it is a fun read. 
+lispy language, and it is a fun read.
 
 * word export
 With ox-pandoc you can export to .docx directly.  No need to go through
@@ -108,11 +108,11 @@ Filtering text through a shell command in Emacs
 
 In vi[m] there is the ! command which lets me pipe text through a shell command -- like sort or indent -- and get the filtered text back into the buffer. Is there an equivalent in emacs?
 
-You can select a region and type `C-u M-| command RET', and it replaces the region with the command output in the same buffer due to the interactive prefix argument of shell-command-on-region. 
+You can select a region and type `C-u M-| command RET', and it replaces the region with the command output in the same buffer due to the interactive prefix argument of shell-command-on-region.
 
 I wrote this a few years back, it might help you:
 
-#+BEGIN_EXAMPLE emacs-lisp 
+#+BEGIN_EXAMPLE emacs-lisp
 (defun generalized-shell-command (command arg)
   "Unifies `shell-command' and `shell-command-on-region'. If no region is
 selected, run a shell command just like M-x shell-command (M-!).  If
@@ -135,9 +135,9 @@ buffer instead of replacing the text in region."
       ;; Active region
       (if (eq arg nil)
           (shell-command-on-region p m command t t)
-        (shell-command-on-region p m command))))) 
+        (shell-command-on-region p m command)))))
 
-(global-set-key [f3] 'generalized-shell-command) 
+(global-set-key [f3] 'generalized-shell-command)
 #+END_EXAMPLE
 
 I've found this function to be very helpful. If you find it useful as well, I suggest binding it to some function key for convenience, personally I use F3:
@@ -146,7 +146,7 @@ I've found this function to be very helpful. If you find it useful as well, I su
 
 * links to directories
 
-[[file+emacs:~/Downloads/]] 
+[[file+emacs:~/Downloads/]]
 
 * Emacs allows you to build your own text editor
 [[http://mbork.pl/2014-07-25_What_is_Emacs%252c_really][Marcin Borkowski: 2014-07-25 What is Emacs, really]]
@@ -157,7 +157,7 @@ So, basically, some time ago I had a kind of revelation and I understood what Em
 
 What is Emacs, then? It is a DIY kit for building Your Personal Text Editor™. It comes with a default one, which is decent (but not phenomenal, unless you tweak it a bit/a lot, depending on your preferences), but it's neither the only, nor necessarily the best one (there exists one other really good – maybe even better – editor, which we shall not name here). The real power of Emacs is that you can build your custom editor on top of it. And this is going to be the awesomest one, because, you know, it is the only one really suited to your needs.
 
-Pretty obvious, I know. But I guess it's important that you get that when you make the decision about which editor to choose, so maybe someone will find this post useful. 
+Pretty obvious, I know. But I guess it's important that you get that when you make the decision about which editor to choose, so maybe someone will find this post useful.
 
 * org-one-to-many
 
@@ -176,18 +176,18 @@ files.
 (setq dired-guess-shell-alist-user
       '(("\\.pdf\\'" "evince")
 	("\\.tex\\'" "pdflatex")
-	("\\.ods\\'\\|\\.xlsx?\\'\\|\\.docx?\\'\\|\\.csv\\'" "libreoffice"))) 
+	("\\.ods\\'\\|\\.xlsx?\\'\\|\\.docx?\\'\\|\\.csv\\'" "libreoffice")))
 
 
 * dired omit
-Another nice thing to know is the variable completion-ignored-extensions. It is a set of strings (not regexen!) which are "uninteresting" from completion point of view. (For example, it might be a good idea to put ".o" or ".aux" etc. there.) One might argue that this has little to do with Dired. Enter Dired-X, a built-in library enhancing Dired. One of the features of Dired-X is dired-omit-mode, which turns off displaying of "uninteresting" files. (Remember to set completion-ignored-extensions before you (require 'dired-x)!) You can turn it on and off with C-x M-o in Dired (assuming that you require 'dired-x in your init.el). (Notice: it used to be just M-o in older Emacsen.) 
+Another nice thing to know is the variable completion-ignored-extensions. It is a set of strings (not regexen!) which are "uninteresting" from completion point of view. (For example, it might be a good idea to put ".o" or ".aux" etc. there.) One might argue that this has little to do with Dired. Enter Dired-X, a built-in library enhancing Dired. One of the features of Dired-X is dired-omit-mode, which turns off displaying of "uninteresting" files. (Remember to set completion-ignored-extensions before you (require 'dired-x)!) You can turn it on and off with C-x M-o in Dired (assuming that you require 'dired-x in your init.el). (Notice: it used to be just M-o in older Emacsen.)
 
-* define-word 
+* define-word
 Here is a version of the use-package expression that will load define-word only when necessary and not at emacs load time:
 
 (use-package define-word
   :bind (("H-d" . define-word-at-point)
-         ("H-D" . define-word))) 
+         ("H-D" . define-word)))
 
 
 
@@ -197,40 +197,40 @@ Here is a version of the use-package expression that will load define-word only 
 [[http://emacs.stackexchange.com/questions/2288/how-do-i-create-a-dynamic-regexp-with-rx?rq=1][regular expressions - How do I create a dynamic regexp with rx? - Emacs Stack Exchange]]
 
 
-* packages to check out 
+* packages to check out
 https://github.com/larstvei/Focus/blob/master/README.md
 
 
 
 * if-then-else
 
-More info: 
+More info:
 - [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Conditionals.html][GNU Emacs Lisp Reference Manual: Conditionals]]
 - [[http://emacswiki.org/emacs/WhenToUseIf][EmacsWiki: When To Use If]]
-- 
+-
 
 ** basic structure
 
 #+BEGIN_SRC emacs-lisp
 
-(if (> 4 5)                               ; if 
+(if (> 4 5)                               ; if
     (message "4 falsely greater than 5!") ; then
     (message "4 is not greater than 5!"))   ; else
 
 #+END_SRC
 
 
-** How to execute several expressions in 'else' block? 
-You don't need progn for this, as this is already the default behaviour: 
+** How to execute several expressions in 'else' block?
+You don't need progn for this, as this is already the default behaviour:
 
  (if COND THEN ELSE...)
 
  If COND yields non-nil, do THEN, else do ELSE...
  Returns the value of THEN or the value of the last of the ELSE's.
  THEN must be one expression, but ELSE... can be zero or more expressions.
- If COND yields nil, and there are no ELSE's, the value is nil. 
+ If COND yields nil, and there are no ELSE's, the value is nil.
 
-You would, of course, use progn if you wished to evaluate multiple expressions in the THEN form. 
+You would, of course, use progn if you wished to evaluate multiple expressions in the THEN form.
 
  #+BEGIN_SRC emacs-lisp
 (if (> 1 2)
@@ -239,7 +239,7 @@ You would, of course, use progn if you wished to evaluate multiple expressions i
   (message "I repeat, completely false"))
  #+END_SRC
 
-** How can you write multiple statements in elisp 'if' statement? 
+** How can you write multiple statements in elisp 'if' statement?
 
 Use progn:
 
@@ -247,11 +247,11 @@ Use progn:
 (if condition
     (progn
         (do-something)
-        (do-something-else))) 
+        (do-something-else)))
 #+END_EXAMPLE
 
 ** unless
-(unless condition a b c) 
+(unless condition a b c)
 
 Unless A, do B and C.
 
@@ -277,8 +277,8 @@ C-x C-b") 'ibuffer
     (insert "l")))
 #+END_SRC
 
-* Hunspell personal dictionaries 
-file://~/.hunspell_en_US 
+* Hunspell personal dictionaries
+file://~/.hunspell_en_US
 file:///users/jay/.aspell.en.pws
 file:///~/Library/Spelling/LocalDictionary
 
@@ -308,17 +308,17 @@ The below works!!!
 
 * cond otherwise
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (defun query-user (x y)
  "..."
  (interactive "sEnter friend's name: \nnEnter friend's age: ")
  (message "Name is: %s, Age is: %d" x y)
- ) 
+ )
 
 
 
 (defun test-input-func (value)
- (interactive "sEnter Message: ") 
+ (interactive "sEnter Message: ")
 (cond
  ((equal value "foo") ; case #1---notice it's a function call to `equal' so it's in parens
  (message "got foo") ; action 1
@@ -326,8 +326,8 @@ The below works!!!
  ((equal value "bar") ; case #2---also a function call (to `+')
  nil)     ; return value for case 2
  (t     ; default case---not a function call, just literal true
- (message "Your message was: %s" value)))    ; return symbol 'hello 
-) 
+ (message "Your message was: %s" value)))    ; return symbol 'hello
+)
 #+END_SRC
 
 * replace-regexp
@@ -356,7 +356,7 @@ The below works!!!
  [:alnum:] a letter or adigit (an alphanumeric character ()
  [:upper:] a letter in uppercase
  [[:space:]]+ a whitespace character, as defined by the syntax table
-[[:digit:]+] Any digit 
+[[:digit:]+] Any digit
 
 #+END_EXAMPLE
 
@@ -410,7 +410,7 @@ This matches any upper-case letter, as determined by the current case table (see
 This matches any character that has word syntax (see Syntax Class Table).
 
 '[:xdigit:]'
-This matches the hexadecimal digits: '0' through '9', 'a' through 'f' and 'A' through 'F'. 
+This matches the hexadecimal digits: '0' through '9', 'a' through 'f' and 'A' through 'F'.
 
 * Special Characters in Regular Expressions
 
@@ -486,12 +486,12 @@ has two functions: it quotes the special characters (including '\'), and it intr
 
 Because '\' quotes special characters, '\$' is a regular expression that matches only '$', and '\[' is a regular expression that matches only '[', and so on.
 
-Note that '\' also has special meaning in the read syntax of Lisp strings (see String Type), and must be quoted with '\'. For example, the regular expression that matches the '\' character is '\\'. To write a Lisp string that contains the characters '\\', Lisp syntax requires you to quote each '\' with another '\'. Therefore, the read syntax for a regular expression matching '\' is "\\\\". 
+Note that '\' also has special meaning in the read syntax of Lisp strings (see String Type), and must be quoted with '\'. For example, the regular expression that matches the '\' character is '\\'. To write a Lisp string that contains the characters '\\', Lisp syntax requires you to quote each '\' with another '\'. Therefore, the read syntax for a regular expression matching '\' is "\\\\".
 
 
 
 
-("anydigit" "\\([0-9]\\)+" nil 10) 
+("anydigit" "\\([0-9]\\)+" nil 10)
 ("anydigit" "[[:digit:]+]" nil 1)
 
 
@@ -499,11 +499,11 @@ Note that '\' also has special meaning in the read syntax of Lisp strings (see S
 * lisp cookbook
 
 This worked:
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
  (while (re-search-forward "Tip:" nil t)
 (goto-char (match-end 0))
 (endless/capitalize)
-) 
+)
 #+END_SRC
 
 As did this, same thing.
@@ -513,12 +513,12 @@ As did this, same thing.
 (kill-word-correctly-and-capitalize)
 (end-of-line)
 (delete-backward-char 1)
-) 
+)
 #+END_SRC
 
 
 
-* Emacs learning 
+* Emacs learning
 <<<radio targets>>>
 Jumping back with pop-mark
 
@@ -548,7 +548,7 @@ down vote
 accepted
 See the variable display-time-default-load-average
 
-n.b. I found that very quickly using C-hd to search for "load average". 
+n.b. I found that very quickly using C-hd to search for "load average".
 
 * conditionals
 Next: Combining Conditions, Previous: Sequencing, Up: Control Structures  [Contents][Index]
@@ -619,13 +619,13 @@ Any conditional construct can be expressed with cond or with if. Therefore, the 
 (if a b c)
 ≡
 (cond (a b) (t c))
-- Pattern matching case statement:	 	
-Next: Combining Conditions, Previous: Sequencing, Up: Control Structures  [Contents][Index] 
+- Pattern matching case statement:
+Next: Combining Conditions, Previous: Sequencing, Up: Control Structures  [Contents][Index]
 
 * word boundaries
 Whole words only
 
-: \bfoo\b 
+: \bfoo\b
 
 
 
@@ -838,12 +838,12 @@ Sustitute last argument
 : !$
 
 #+BEGIN_SRC sh
-e .jay-scripts.sh 
+e .jay-scripts.sh
 . $!
 #+END_SRC
 
 
-** other 
+** other
 !!	previous command
 !$	last argument of previous command
 !^	first argument of previous command
@@ -855,7 +855,7 @@ e .jay-scripts.sh
 
 
 
-* learning html 
+* learning html
 #+BEGIN_EXPORT html
 <a href="javascript:void(0)" class="btn btn-default" data-toggle="tooltip" title="Preview" onclick="aud_play_pause()"><i id="stateicon" class="fa fa-play"></i></a>
 
@@ -863,11 +863,11 @@ e .jay-scripts.sh
 #+END_EXPORT
 
 
-* SEDusage 
+* SEDusage
 
 Remove all occurrences of a string
 
-sed -i -e 's/goodbye//g' filename 
+sed -i -e 's/goodbye//g' filename
 
 [[https://stackoverflow.com/questions/9704020/recursive-search-and-replace-in-text-files-on-mac-and-linux/19861378][macos - Recursive search and replace in text files on Mac and Linux - Stack Overflow]]
 
@@ -886,14 +886,14 @@ LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"Skin_Retouching/title = \"
 
 LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"Nightlife_/g {} +
 
-LC_ALL=C find . -type f -exec sed -i '' s/SO\ \-\ //g {} + 
+LC_ALL=C find . -type f -exec sed -i '' s/SO\ \-\ //g {} +
 
 
-LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"z_/g {} + 
+LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"z_/g {} +
 
 
 
-#+END_SRC 
+#+END_SRC
 [[https://stackoverflow.com/questions/11392478/how-to-replace-a-string-in-multiple-files-in-linux-command-line][How to replace a string in multiple files in linux command line - Stack Overflow]]
 
 * Google docs
@@ -914,7 +914,7 @@ LC_ALL=C find . -type f -exec sed -i '' s/title\ =\ \"/title\ =\ \"z_/g {} +
 
 
 * sed cheat sheet
-#+begin_src 
+#+begin_src
 
 FILE SPACING:
 
@@ -1370,12 +1370,20 @@ This file will also available in other languages:
 * org-noter
 
 
-* local file variables executing lisp code on file open 
+* local file variables executing lisp code on file open
 #+BEGIN_QUOTE
 ;; Local Variables:
 ;; eval: (eldoc-mode)
 ;; eval: (font-lock-mode -1)
-;; End: 
+;; End:
 #+END_QUOTE
 
 
+
+
+* exiftool
+Set PDF metadata
+
+exiftool -Title="Change This Title" -Subject="Fun and PDF" change_my_meta.PDF
+
+exiftool -Author="Todd Shackelford" "/Users/jay/Downloads/Encyclopedia of Evolutionary Psychological Science.pdf"
