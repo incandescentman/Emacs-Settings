@@ -1,14 +1,13 @@
-
-
-
-(provide 'elegant-garamond-wider)
+(provide 'elegant-garamond-wider-with-headers)
 
 (add-to-list 'org-latex-classes
-  '("elegant-garamond-wider"
+ '("elegant-garamond-wider-with-headers"
 "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.25in,hmargin=1.25in,vmargin=0.5in]{geometry} % for normal margins
+
+
 
 
 \\usepackage{float}
@@ -30,21 +29,24 @@
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 
+
 % define Helvetica Now font weights
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold,
+        BoldFont = HelveticaNowDisplay-Bold, 
         ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
+        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
   Extension = .ttf
+
+
 
 \\setromanfont{Garamond Premier Pro}
 \\setromanfont{Adobe Caslon Pro}
-\\setsansfont{TeX Gyre Heros}
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setsansfont{TeX Gyre Pagella}
+\\setmonofont{TeX Gyre Heros}
 
-\\setmonofont{HelveticaNowDisplay-ExtLt}
+
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -76,15 +78,15 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 %\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{ideablue}{HTML}{55C1E7}
+\\definecolor{ideablue}{HTML}{55C1E7} 
 
 
-\\newtoks\\leftheader
+\\newtoks\\leftheader 
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
 %% \\raggedright
-\\hyphenpenalty=5000
+\\hyphenpenalty=5000 
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
@@ -98,7 +100,7 @@
 
 \\usepackage{textcase}
 
-\\pagenumbering{arabic}
+\\pagenumbering{gobble}
 \\makeatletter
 
 
@@ -108,7 +110,17 @@
 
 
 \\usepackage[labelformat=empty]{caption}
-\\pagenumbering{gobble}
+
+\\usepackage{fancyhdr}
+\\pagestyle{fancy}
+\\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}}
+\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\chead{}
+\\rhead{{\\nouppercase{\\leftmark}}}
+% \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
+\\lfoot{}
+\\cfoot{\\thepage}
+\\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
@@ -140,7 +152,7 @@
 
 \\usepackage{enumitem}
 
-\\newlist{mylist}{enumerate}{10}
+\\newlist{mylist}{enumerate}{10} 
 
 
 % control line spacing in bulleted list
@@ -262,11 +274,12 @@
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{black}}
-\\titleformat*{\\subsection}{\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedright\\ttfamily\\color{spacegrey}}
+\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}}
+
+\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{17}{12}\\raggedright}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
 
 \\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
@@ -279,7 +292,7 @@
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
 \\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
 
-% this emboldens all links
+% this emboldens all links 
 \\let\\oldhref\\href
 \\renewcommand{\\href}[2]{\\oldhref{#1}{\\bfseries#2}}
 
@@ -296,6 +309,6 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process
+(setq org-latex-to-pdf-process 
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes

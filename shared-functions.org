@@ -1064,8 +1064,8 @@ Note: disable this when trying to export to org-html-themes!
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-(plist-put plist :with-toc t) ; for TOC in latex
-;; (plist-put plist :with-toc nil); no TOC in latex
+;;(plist-put plist :with-toc t) ; for TOC in latex
+(plist-put plist :with-toc nil); no TOC in latex
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
@@ -8975,3 +8975,8 @@ Not sure what this does
 #+begin_src emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
+
+* trailing
+#+begin_src emacs-lisp
+(setq delete-trailing-lines nil)
+#+end_src>
