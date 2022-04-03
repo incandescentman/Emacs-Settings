@@ -732,7 +732,7 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-(global-topspace-mode 1)
+  ;; (global-topspace-mode 1)
 (require 'helm)
 (require 'ivy)
 (require 'tiny)
