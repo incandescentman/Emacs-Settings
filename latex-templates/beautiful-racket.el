@@ -54,7 +54,7 @@
 \\definecolor{elegantblue}{HTML}{4380b9}
 \\definecolor{spacegrey}{HTML}{434346}
 
-\\newtoks\\leftheader 
+\\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
@@ -71,7 +71,7 @@
 \\usepackage{microtype}
 
 
-\\hyphenpenalty=1000 
+\\hyphenpenalty=1000
 \\tolerance=1000
 \\exhyphenpenalty=100
 \\pretolerance=150
@@ -151,7 +151,7 @@
 
 \\usepackage{setspace}
 \\onehalfspacing
-\\setstretch{1.2} 
+\\setstretch{1.2}
 
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
@@ -173,7 +173,7 @@
 
 \\usepackage{enumitem}
 
-\\newlist{mylist}{enumerate}{10} 
+\\newlist{mylist}{enumerate}{10}
 
 
 % control line spacing in bulleted list
@@ -305,55 +305,55 @@
 
 \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
 
-\\newenvironment{tagline}% environment name 
+\\newenvironment{tagline}% environment name
 {% begin code
 \\vspace{-36pt}
 \\Large
-\\begin{itshape}% 
+\\begin{itshape}%
   \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}% 
-{% end code 
+}%
+{% end code
   \\end{itshape}\\vspace{24pt}\\ignorespacesafterend
 }
 
 
 
-\\newenvironment{fauxtitle}% environment name 
+\\newenvironment{fauxtitle}% environment name
 {% begin code
 %\\vspace{12pt}
 \\Large
-\\begin{bfseries}% 
+\\begin{bfseries}%
   \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}% 
-{% end code 
+}%
+{% end code
   \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
 }
 
 
 
-\\newenvironment{fauxcenter}% environment name 
+\\newenvironment{fauxcenter}% environment name
 {% begin code
 
 \\Large
 \\begin{center}
 
-}% 
-{% end code 
+}%
+{% end code
 \\end{center}\\ignorespacesafterend
 }
 
 
 
 
-\\newenvironment{causationstatement}% environment name 
+\\newenvironment{causationstatement}% environment name
 {% begin code
 \\vspace{-30pt}
 \\ttfamily
 \\bfseries
 \\begin{center}
 
-}% 
-{% end code 
+}%
+{% end code
 \\end{center}\\ignorespacesafterend
 }
 
@@ -378,6 +378,6 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process 
+(setq org-latex-to-pdf-process
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes
