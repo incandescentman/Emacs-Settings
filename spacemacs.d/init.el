@@ -173,6 +173,7 @@ dotspacemacs-additional-packages '(
                                       ox-clip
                                       ox-epub
                                       ox-gfm
+                                      org-modern
                                       org-noter
                                       org-noter-pdftools
                                       org-pdftools
