@@ -8983,3 +8983,11 @@ Not sure what this does
 
 
 
+
+* don't lock files
+
+#+begin_src emacs-lisp
+(setq create-lockfiles nil)
+
+(run-with-idle-timer 300 t 'org-save-all-org-buffers)
+#+end_src

@@ -290,6 +290,7 @@
 %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
+\\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}

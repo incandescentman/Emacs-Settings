@@ -629,7 +629,7 @@ more...")
    `(org-document-info ((,class (:foreground "#484848"))))
    `(org-document-info-keyword ((,class (:foreground "#008ED1" :background "#EAEAFF"))))
    `(org-document-title ((,class (:family "Sans Serif" :height 1.8 :weight bold :foreground "black"))))
-   `(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "#F0F0F0"))))
+   `(org-done ((,class (:weight bold :box (:line-width 1 :color "#Green") :foreground "#BBBBBB" :background "#F0F0F0"))))
    `(org-drawer ((,class (:foreground "light sky blue"))))
    `(org-ellipsis ((,class (:underline nil :box (:line-width 1 :color "#999999") :foreground "#999999" :background "#FFF8C0")))) ; #FFEE62
    `(org-example ((,class (:foreground "blue" :background "#EAFFEA"))))

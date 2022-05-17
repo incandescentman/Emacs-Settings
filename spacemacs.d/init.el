@@ -1117,7 +1117,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
- '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+ '(org-agenda-files
+   '("~/Dropbox/Kings/pre-residency/pre-residency-assignments.txt" "/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
@@ -1145,8 +1146,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
-;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold))))
+ '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
