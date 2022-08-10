@@ -27,9 +27,9 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Light, 
+        BoldFont = HelveticaNowDisplay-Light,
         ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+        BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 
 \\setromanfont{HelveticaNowText-Light}
@@ -71,15 +71,15 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 %\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{ideablue}{HTML}{55C1E7} 
+\\definecolor{ideablue}{HTML}{55C1E7}
 
 
-\\newtoks\\leftheader 
+\\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
 \\raggedright
-\\hyphenpenalty=5000 
+\\hyphenpenalty=5000
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
@@ -149,7 +149,7 @@
 
 \\usepackage{enumitem}
 
-\\newlist{mylist}{enumerate}{10} 
+\\newlist{mylist}{enumerate}{10}
 
 
 % control line spacing in bulleted list
@@ -267,7 +267,7 @@
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{24pt}{6pt}
-\\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
+\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
 
 
@@ -300,6 +300,6 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 
-(setq org-latex-to-pdf-process 
+(setq org-latex-to-pdf-process
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes
