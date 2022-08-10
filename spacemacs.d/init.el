@@ -241,7 +241,6 @@ dotspacemacs-additional-packages '(
                                     global-git-commit
                                     highlight-indentation
                                     hl-line
-                                    ;; hl-todo
                                     hs-mode
                                     org-projectile
                                     org-superstar
@@ -1097,7 +1096,7 @@ before packages are loaded.")
 (setq gc-cons-threshold (* 2 1000 1000))
 
 (setq hl-todo-mode t)
-(setq global-hl-todo-mode t)
+(setq global-hl-todo-mode 1)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -1146,9 +1145,10 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(org-code ((t (:inherit shadow :underline nil))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
@@ -1198,7 +1198,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
