@@ -47,17 +47,17 @@ This function should only modify configuration layer settings."
      ;;   markdown
      ;;    python
      ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
-          (org
-            :ensure org-plus-contrib
-            :mode (("\\.org$" . org-mode))
+      ;;     (org
+      ;;       :ensure org-plus-contrib
+      ;;       :mode (("\\.org$" . org-mode))
 
-      :variables
-      org-enable-bootstrap-support t
-      org-enable-github-support t
-      ;; org-enable-reveal-js-support t
+      ;; :variables
+      ;; org-enable-bootstrap-support t
+      ;; org-enable-github-support t
+      ;; ;; org-enable-reveal-js-support t
 
-      :location built-in
-      )
+      ;; :location built-in
+      ;; )
      ;; osx
      ;; xkcd
      ;; ag-general
@@ -741,7 +741,7 @@ you should place your code here."
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
-:load-path "/Users/jay/emacs/org-mode-9.6/"
+:load-path "/Users/jay/emacs/org-9.5.5/"
 :ensure org-plus-contrib
 :config
 (org-reload))
