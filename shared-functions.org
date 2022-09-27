@@ -2797,6 +2797,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (defun html2text-clipboard ()
  "Convert clipboard contents from HTML to plain text and paste."
  (interactive)
+;; (jd-org-today)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t plain")
  (kill-new (shell-command-to-string cmd))
  (yank))
