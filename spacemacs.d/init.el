@@ -137,7 +137,7 @@ dotspacemacs-additional-packages '(
                                       fancy-narrow
                                       fastdef
                                       flyspell-lazy
-                                      focus
+;;                                      focus
                                       ;; fountain-mode
                                       frame-cmds
                                       fuzzy
@@ -764,15 +764,15 @@ you should place your code here."
 ;;  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '( (perl . t)
-      (ruby . t)
-      (shell . t)
-      (python . t)
-      (emacs-lisp . t)
-      (ditaa . t)
-      ))
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '( (perl . t)
+  ;;     (ruby . t)
+  ;;     (shell . t)
+  ;;     (python . t)
+  ;;     (emacs-lisp . t)
+  ;;     (ditaa . t)
+  ;;     ))
 
 (load "/Users/jay/emacs/emacs-settings/zones.el")
 (require 'zones)
