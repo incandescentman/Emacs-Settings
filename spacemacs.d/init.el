@@ -966,13 +966,13 @@ you should place your code here."
    ;; If non-nil then byte-compile some of Spacemacs files.
    ;; dotspacemacs-byte-compile nil))
 
-   ;; (defun dotspacemacs/user-env ()
-   ;; "Environment variables setup.
-   ;; This function defines the environment variables for your Emacs session. By
-   ;; default it calls `spacemacs/load-spacemacs-env' which loads the environment
-   ;; variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
-   ;; See the header of this file for more information."
-   ;; (spacemacs/load-spacemacs-env))
+(defun dotspacemacs/user-env ()
+  "Environment variables setup.
+This function defines the environment variables for your Emacs session. By
+default it calls `spacemacs/load-spacemacs-env' which loads the environment
+variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+See the header of this file for more information."
+  (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -981,7 +981,6 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first.")
 
-;;  (find-file "~/nd/fearless.org")
 
 (setq default-tab-width 4) ; for graphviz
 
@@ -1032,9 +1031,6 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded.")
 
-;;(leuven)
-  ;; (spacemacs-light)
-;; (zenburn)
 
 
   (setq global-auto-complete-mode -1)
