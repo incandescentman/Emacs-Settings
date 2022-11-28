@@ -2469,11 +2469,11 @@ Disable IDO faces to see flx highlights:
 ** Chrome
 *** Emacs Server
 Don't start the server unless we can verify that it isn't running.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package server)
 (when (and (functionp 'server-running-p) (not (server-running-p)))
   (server-start))
-#+END_SRC
+#+END_EXAMPLE
 
 *** ~osx-browse~
 
@@ -4688,7 +4688,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 ** mu4e
 *** mu4e setup
- #+BEGIN_SRC emacs-lisp
+ #+BEGINEXAMPLEC emacs-lisp
 
 ;; (setq user-mail-address "jay@storytelling.nyc")
 (setq user-mail-address "dixit@aya.yale.edu")
@@ -4699,7 +4699,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path))
 ; what is this?
-(use-package smtpmail)
+;(use-package smtpmail)
 (use-package mu4e)
 (setq mu4e-mu-binary "/usr/local/Cellar/mu/1.2.0/bin/mu")
 (setq user-mail-address "jay@storytelling.nyc")
@@ -4808,7 +4808,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ;; (mu4e-maildirs-extension)
 ;; (setq mu4e-maildirs-extension-title "Folders")
 
- #+END_SRC
+ #+END_EXAMPLE
 
 *** mu4e keybindings
  #+BEGIN_SRC emacs-lisp
@@ -7628,7 +7628,7 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 #+END_SRC
 
 * weather
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package wttrin
  :ensure t
  :commands (wttrin)
@@ -7651,7 +7651,7 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
   ;; call wttrin
   (wttrin-query (car wttrin-default-cities))
   )
-#+END_SRC
+#+END_EXAMPLE
 
 * yahoo weather
 #+BEGIN_EXAMPLE emacs-lisp
@@ -7720,10 +7720,10 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 * pomidor - a pomodoro timer
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-to-list 'load-path "/Users/jay/gnulisp/pomidor")
 (use-package pomidor)
-#+END_SRC
+#+END_EXAMPLE
 
 
 * ox-clip
