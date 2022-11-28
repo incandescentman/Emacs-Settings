@@ -1938,11 +1938,11 @@ margin-bottom: 1em;
 #+END_SRC
 
 ** org-download
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIEXAMPLERC emacs-lisp
 (use-package org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
-  #+END_SRC
+  #+END_EXAMPLE
 
 * Browsing
 ** Make URLs in comments/strings clickable

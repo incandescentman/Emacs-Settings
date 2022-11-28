@@ -142,13 +142,13 @@ dotspacemacs-additional-packages '(
                                       frame-cmds
                                       fuzzy
                                       gcmh
-                                      gist
+                                      ;; gist
                                       helm
                                       helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
                                       imenu-list
-                                      key-chord
+                                      ;; key-chord
                                       key-seq
                                       markdown-mode
                                       maxframe
@@ -156,13 +156,13 @@ dotspacemacs-additional-packages '(
                                       multicolumn
                                       multiple-cursors
                                       mw-thesaurus
-                                      nm
+                              ;;        nm
                                       olivetti
                                       openwith
                                       orgalist
                                       org-contrib
                                       org-bookmark-heading
-                                      org-download
+;;                                      org-download
                                       org-drill
                                       org-fstree
                                       org-mac-link
