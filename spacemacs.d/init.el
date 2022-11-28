@@ -159,7 +159,7 @@ dotspacemacs-additional-packages '(
                               ;;        nm
                                       olivetti
                                       openwith
-                                      orgalist
+;;                                      orgalist
                                       org-contrib
                                       org-bookmark-heading
 ;;                                      org-download
