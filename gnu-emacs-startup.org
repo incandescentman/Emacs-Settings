@@ -491,7 +491,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
 
 (define-key key-minor-mode-map (kbd "C-;") 'org-def)
-;; (require 'flyspell)
+
 (define-key flyspell-mode-map (kbd "C-;") 'org-def)
 
 (define-key key-minor-mode-map (kbd "s-j u p") 'unfill-paragraph)

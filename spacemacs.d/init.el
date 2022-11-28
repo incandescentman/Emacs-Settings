@@ -725,8 +725,8 @@ you should place your code here."
 (setq frame-inhibit-implied-resize t)
 (setq initial-major-mode 'fundamental-mode)
 
-  (require 'auto-capitalize)
-  (require 'recentf)
+  (use-package auto-capitalize)
+  (use-package recentf)
   (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
 
   (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
@@ -734,11 +734,11 @@ you should place your code here."
   (use-package mu4e)
 
   ;; (global-topspace-mode 1)
-(require 'helm)
-(require 'ivy)
-(require 'tiny)
-;; (require 're-builder)
-(require 'multiple-cursors)
+(use-package helm)
+(use-package ivy)
+(use-package tiny)
+;; (use-package re-builder)
+(use-package multiple-cursors)
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
@@ -775,8 +775,8 @@ you should place your code here."
   ;;     (ditaa . t)
   ;;     ))
 
-(load "/Users/jay/emacs/emacs-settings/zones.el")
-(require 'zones)
+;; (load "/Users/jay/emacs/emacs-settings/zones.el")
+;; (use-package zones)
 
 ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
@@ -817,7 +817,7 @@ you should place your code here."
 
 (load "/Users/jay/tramp-settings.el")
 
-(require 'org-mime)
+(use-package org-mime)
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
@@ -1057,7 +1057,7 @@ before packages are loaded.")
 
 
 
-  ;; (require 'mu4e-send-delay)
+  ;; (use-package mu4e-send-delay)
 
   ;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
   ;; (setq spaceline-org-clock-p t)

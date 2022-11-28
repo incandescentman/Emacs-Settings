@@ -69,7 +69,7 @@
 (add-to-list 'load-path "~/emacs/emacs-settings/")
 #+END_SRC
 
-** Require some packages
+** don't require packages
 #+BEGIN_EXAMPLE emacs-lisp
 (use-package org
  :mode (("\\.org$" . org-mode))
@@ -86,17 +86,17 @@
 (setq use-package-verbose t)
 #+end_src
 
-** Require some org packages
+** don't Rquire some org packages
  #+BEGIN_SRC emacs-lisp
-;; (require 'org-bullets)
+;; (use-package org-bullets)
 (use-package ox-latex)
-;; (require 'ox-latex)
-;; (require 'ox-org)
+;; (use-package ox-latex)
 ;; (use-package ox-org)
-;; (require 'ox-html)
+;; (use-package ox-org)
+;; (use-package ox-html)
 (use-package ox-html)
-;; (require 'ox-md)
-; (require 'org-fstree)
+;; (use-package ox-md)
+; (use-package org-fstree)
  #+END_SRC
 
 
@@ -2158,7 +2158,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 * org or orgalist
 
 #+begin_EXAMPLE emacs-lisp
-(require 'orgalist)
+(use-package orgalist)
 
  (defun org-or-orgalist-p ()
   (or (eq major-mode 'org-mode)
@@ -7526,7 +7526,7 @@ This solution also works for MELPA.
 
 ** poly mode
 #+BEGIN_SRC emacs-lisp
-;; (require 'poly-org)
+;; (use-package poly-org)
 #+END_SRC
 
 * ivy counsel
@@ -7584,7 +7584,7 @@ This solution also works for MELPA.
 
 * dired-quick-sort
 #+BEGIN_SRC emacs-lisp
-(require 'dired-quick-sort)
+(use-package dired-quick-sort)
 #+END_SRC
 
 
@@ -8176,7 +8176,7 @@ If UNSAFE is non-nil, assume point is on headline."
 (defface visible-mark-active ;; put this before (require 'visible-mark)
  '((((type tty) (class mono)))
   (t (:background "magenta"))) "")
-(require 'visible-mark)
+(use-package visible-mark)
 (global-visible-mark-mode 1) ;; or add (visible-mark-mode) to specific hooks
 (setq visible-mark-max 2)
 (setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
@@ -8697,7 +8697,7 @@ Pretty cool here:
 
 
 #+begin_src emacs-lisp
-(require 'ido-vertical-mode)
+(use-package ido-vertical-mode)
 (ido-mode 1)
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -8961,7 +8961,7 @@ Not sure what this does
 
 * saveplace
 #+begin_src emacs-lisp
-(require 'saveplace)
+(use-package saveplace)
 (setq-default save-place t)
 #+end_src
 
@@ -9010,7 +9010,7 @@ Not sure what this does
 
 * openAI
 #+begin_src emacs-lisp
-(require 'aide)
+(use-package aide)
 
 (setq openai-api-key "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")
 
