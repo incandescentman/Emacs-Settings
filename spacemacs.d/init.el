@@ -245,6 +245,7 @@ dotspacemacs-additional-packages '(
                                     org-projectile
                                     org-superstar
                                     popwin
+                                    server
                                     spaceline
                                     treemacs-icons-dired
                                     vi-tilde-fringe
@@ -1083,7 +1084,7 @@ before packages are loaded.")
 
 ;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
 
-(server-reflash)
+;; (server-reflash)
 (triplicate-font)
 ;; (embiggen-text)
 (scrollbar-init)
