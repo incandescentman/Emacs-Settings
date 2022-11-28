@@ -2336,7 +2336,7 @@ I stopped using openwith when I started using Helm, as I find typing C-c C-x fro
 ** openwith
 
 #+BEGIN_QUOTE
-;; (require 'openwith)
+;; (use-package openwith)
 (openwith-mode t)
 (setq openwith-associations '(("\\.pdf\\'" "Skim.app" (file))))
 #+END_QUOTE

@@ -2100,7 +2100,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 ** require orgalist
 #+begin_src emacs-lisp
-(use-package orgalist)
+;; (use-package orgalist)
 #+end_src
 
 ** orgalist mode
