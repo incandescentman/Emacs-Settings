@@ -147,7 +147,7 @@ dotspacemacs-additional-packages '(
                                       helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
-                                      imenu-list
+  ;;                                    imenu-list
                                       ;; key-chord
                                       key-seq
                                       markdown-mode
@@ -200,18 +200,18 @@ dotspacemacs-additional-packages '(
                                       sudo-edit
                                       tabbar
                                       tiny
-                                      tldr
+    ;;                                  tldr
                                       topspace
-                                      transcribe
+    ;;                                  transcribe
                                       unfill
                                       visible-mark
                                       wc-mode
-                                      web-mode
+;;                                      web-mode
                                       wrap-region
-                                      writeroom-mode
-                                      wttrin
+      ;;                                writeroom-mode
+  ;;                                    wttrin
                                       xah-replace-pairs
-                                      yahoo-weather
+       ;;                               yahoo-weather
                                       zone
                                       )
    ;; A list of packages that cannot be updated.
