@@ -165,6 +165,7 @@ dotspacemacs-additional-packages '(
                                       org-download
                                       org-drill
                                       org-fstree
+org-mac-link
                                       org-mime
                                       org-pomodoro
                                       org-sticky-header
@@ -175,7 +176,7 @@ dotspacemacs-additional-packages '(
                                       ;; org-noter
                                       ;; org-noter-pdftools
 ;;                                    org-pdftools
-                                      org-roam
+                                      ;; org-roam
                                       org-sidebar
                                       ox-twbs
                                       ox-tufte
