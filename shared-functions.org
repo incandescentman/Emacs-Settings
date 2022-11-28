@@ -8992,3 +8992,40 @@ Not sure what this does
 
 (run-with-idle-timer 300 t 'org-save-all-org-buffers)
 #+end_src
+
+
+* <2022-10-26 Wed>
+#+begin_src emacs-lisp
+(defun iloveyou (args)
+ (interactive "P")
+(message "%s" (propertize "I love you! ❤️" 'Face '(:foreground "red")))
+ )
+#+end_src
+
+* openAI
+#+begin_src emacs-lisp
+(require 'aide)
+
+(setq openai-api-key "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")
+
+(defun aide-openai-complete-buffer-insert ()
+ "Send the ENTIRE buffer to OpenAI and insert the result to the end of buffer."
+ (interactive)
+ (let (region
+    result
+    original-point)
+  (setq region (buffer-substring-no-properties (point-min) (point-max)))
+  (setq result (aide--openai-complete-string region))
+  (goto-char (point-max))
+  (setq original-point (point))
+  (if result
+    (progn
+     (insert "\n" result)
+     (fill-paragraph)
+     (let ((x (make-overlay original-point (point-max))))
+      (overlay-put x 'face '(:foreground "orange red")))
+     result)
+   (message "Empty result"))))
+
+#+end_src
+

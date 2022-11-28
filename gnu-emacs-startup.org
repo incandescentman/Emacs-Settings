@@ -8,10 +8,10 @@
 #+TITLE: Jay Dixit's GNU Emacs setup
 * About
   - System: Mac OSX Yosemite
-  - Emacs version: GNU Emacs 25.1.1 (Carbon Version) 
+  - Emacs version: GNU Emacs 25.1.1 (Carbon Version)
   - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
   - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's emacs-mac port, available here:
-    - =brew tap railwaycat/emacsmacport= 
+    - =brew tap railwaycat/emacsmacport=
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
@@ -62,7 +62,7 @@ Automatically load abbreviations table:
 * org predicates
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-element) 
+(require 'org-element)
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -237,7 +237,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
      (goto-char start)
      (my/fix-space)))
   ; (reflash-indentation)
-  ) 
+  )
 #+END_SRC
 
 *** pasteboard-paste-without-smart-quotes (and without spaces)
@@ -309,7 +309,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 			     nil t)
     (save-excursion
       )))
-#+END_SRC 
+#+END_SRC
 
 ** pasteboard-cut
 
@@ -431,6 +431,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; and the keybindings
 ;; mk - mykeybindings
+
+(define-key key-minor-mode-map [mouse-2] 'iloveyou)
+
+(define-key key-minor-mode-map (kbd "M-j") 'aide-openai-complete-buffer-insert)
 
 (define-key key-minor-mode-map (kbd "C-c C-x C-r") 'org-clock-report)
 
@@ -638,6 +642,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-0") 'copy-region-to-other-window)
 
+
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
                                         ; org-narrow-to-subtree
 
@@ -742,9 +747,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 
-;; (define-key key-minor-mode-map (kbd "s-0") 'widen)
-
-(define-key key-minor-mode-map (kbd "s-0") 'copy-region-to-other-window)
+;; (define-key key-minor-mode-map (kbd "s-0") 'copy-region-to-other-window)
+(define-key key-minor-mode-map (kbd "s-0") 'move-region-to-other-window)
 
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
 (define-key org-mode-map (kbd "C-c e") 'eval-subtree)
@@ -825,8 +829,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-D") 'bjm/ivy-dired-recent-dirs)
 
 ;; own structure editing
-(define-key key-minor-mode-map (kbd "s-o") 'copy-region-to-other-window) ; very useful when working with a split frame
-(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
+(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+;; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
 (define-key key-minor-mode-map (kbd "s-j o l") 'olivetti-mode)
@@ -861,7 +865,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
 
-;; mark commands 
+;; mark commands
 (define-key key-minor-mode-map (kbd "C-M-SPC") 'set-mark-command)
 (define-key key-minor-mode-map (kbd "C-M-x") 'exchange-point-and-mark)
 
@@ -1133,7 +1137,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak 
+; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak
 (define-key org-mode-map (kbd "<SPC>") 'smart-space)
 ;; (define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
@@ -1190,24 +1194,24 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (delete-horizontal-space)))
 #+END_SRC
 
-. This.        
-** insert-space 
+. This.
+** insert-space
 #+BEGIN_SRC emacs-lisp
 
 
 (defun insert-space ()
-  (interactive) 
+  (interactive)
 (if (org-at-heading-p)
 (insert-smart-space-in-org-heading)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert " ")
-)) 
+))
 
 (defun insert-normal-space-in-org-heading ()
  (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
  (insert " ")
 )
 
@@ -1227,7 +1231,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun insert-comma ()
  (interactive)
 (cond (mark-active
-   (progn (delete-region (mark) (point))))) 
+   (progn (delete-region (mark) (point)))))
  (insert ",")
 )
 
@@ -1243,17 +1247,17 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 "Insert a goodamn colon!"
  (interactive)
 (cond (mark-active
-  (progn (delete-region (mark) (point))))) 
+  (progn (delete-region (mark) (point)))))
  (insert ":")
-) 
+)
 
 (defun insert-question-mark ()
 "Insert a freaking question mark!!"
  (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
  (insert "?")
-) 
+)
 
 
 #+END_SRC
@@ -1344,7 +1348,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen) 
+(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
  #+END_SRC
 
 
@@ -1389,7 +1393,7 @@ I'm going to try to create a version of this function without org-run-like-in-or
                 (newline)))
         ;; Lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and 
+        ((and
           org-return-follows-link
           (org-in-regexp org-any-link-re))
          (cond
@@ -1407,7 +1411,7 @@ I'm going to try to create a version of this function without org-run-like-in-or
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
 
-        ((and 
+        ((and
           (let ((el (org-element-at-point)))
             (and el
                  ;; point is at an item
@@ -1420,7 +1424,7 @@ I'm going to try to create a version of this function without org-run-like-in-or
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
-        ((and 
+        ((and
           (let ((el (org-element-at-point)))
             (and (not (org--line-empty-p 1))
                  (and el
@@ -1444,12 +1448,12 @@ I'm going to try to create a version of this function without org-run-like-in-or
 #+END_EXAMPLE
 
 
-*** smart-return - without org-run-like-in-org-mode 
+*** smart-return - without org-run-like-in-org-mode
 In this version, I removed this line:
 
-(org-run-like-in-org-mode (lambda () (interactive) 
+(org-run-like-in-org-mode (lambda () (interactive)
 
-... it seems to work. But not knowing what that line does, or what I'm doing more generally, I don't know what unexpected effects this redaction may have... 
+... it seems to work. But not knowing what that line does, or what I'm doing more generally, I don't know what unexpected effects this redaction may have...
 
 Also, the refreshing of the buffer still seems to happen when I hit smart-return when I'm in a bulleted list. also it seems to be replacing the hyphen (-) with an n dash (-)
 
@@ -1476,7 +1480,7 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
                 (newline)))
         ;; Lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and 
+        ((and
           org-return-follows-link
           (org-in-regexp org-any-link-re))
          (cond
@@ -1494,7 +1498,7 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
 
-        ((and 
+        ((and
           (let ((el (org-element-at-point)))
             (and el
                  ;; point is at an item
@@ -1507,7 +1511,7 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
-        ((and 
+        ((and
           (let ((el (org-element-at-point)))
             (and (not (org--line-empty-p 1))
                  (and el
@@ -1545,13 +1549,13 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space)
 ;; don't leave two periods in a row
-(when 
+(when
 (or
 (looking-at "\\,\\, ")
 
-(and 
+(and
 (looking-at "\\,")
-(looking-back "\\,") 
+(looking-back "\\,")
 )
 )
 (delete-forward-char 1))
@@ -1568,8 +1572,8 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
 (when (looking-at "[ ]")
          (forward-char 1)
           )
-;; capitalize correctly if there's point is before the space at the beginning of a sentence 
- 
+;; capitalize correctly if there's point is before the space at the beginning of a sentence
+
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
@@ -2179,7 +2183,7 @@ Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
 (use-package saveplace
- :init (save-place-mode)) 
+ :init (save-place-mode))
 #+END_SRC
 
 The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
@@ -2673,7 +2677,7 @@ Oleh
 (defun turn-on-autocomplete-mode ()
    (auto-complete-mode 1))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
-#+END_EXAMPLE 
+#+END_EXAMPLE
 
 * Reference for cleaning up whitespace around sentences:
 [[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
@@ -2771,7 +2775,7 @@ This version kill org-mode headings by 'kill-line'
 (looking-back ",, ")
 (looking-back ": : ")
 )
-(new-org-delete-backward-char 2) 
+(new-org-delete-backward-char 2)
 (my/fix-space)
 
 
@@ -2964,7 +2968,7 @@ t)
 (defun smart-period ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 (unless
       (or
 (looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
@@ -2987,13 +2991,13 @@ t)
       ) ; unless
 ) ; save excursion
 
-;; if two periods or two commas in a row, delete the second one 
-(when 
+;; if two periods or two commas in a row, delete the second one
+(when
 (or
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
@@ -3013,7 +3017,7 @@ t)
 (defun smart-comma ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 
   (smart-punctuation ",")
 (unless
@@ -3034,7 +3038,7 @@ t)
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
@@ -3054,7 +3058,7 @@ t)
 (defun smart-question-mark ()
   (interactive)
   (cond (mark-active
-         (progn (delete-region (mark) (point))))) 
+         (progn (delete-region (mark) (point)))))
 
   (smart-punctuation "?")
   (save-excursion
@@ -3083,7 +3087,7 @@ t)
 (defun smart-exclamation-point ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 
   (smart-punctuation "!")
 (save-excursion
@@ -3110,7 +3114,7 @@ t)
 (defun smart-semicolon ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
   (smart-punctuation ";")
 (unless
 (or
@@ -3132,7 +3136,7 @@ t)
 (defun smart-colon ()
   (interactive)
 (cond (mark-active
-  (progn (delete-region (mark) (point))))) 
+  (progn (delete-region (mark) (point)))))
   (smart-punctuation ":")
 (unless
 (or
@@ -3148,22 +3152,22 @@ t)
 
 (define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
-;; (define-key orgalist-mode-map (kbd ":") 'smart-colon) 
+;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
 ** comma-or-smart-comma
 #+BEGIN_SRC emacs-lisp
 (defun comma-or-smart-comma ()
-(interactive) 
-(if 
+(interactive)
+(if
 (or
 (bolp)
 (org-at-heading-p)
 (looking-at " \"")
-) 
+)
 (insert ",")
 (smart-comma))
-) 
+)
 #+END_SRC
 
 
@@ -3182,7 +3186,7 @@ t)
 #+END_SRC
 
 
-* TODO [#A] check my changes to backward-kill-word-correctly? 
+* TODO [#A] check my changes to backward-kill-word-correctly?
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
 
 I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
@@ -3280,17 +3284,17 @@ No space. Does that make sense? Thanks!
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
 ))
 (delete-char 1)
 )
-) 
+)
 #+END_SRC
 
-* backward-kill-word-correctly-and-capitalize 
+* backward-kill-word-correctly-and-capitalize
 #+BEGIN_SRC emacs-lisp
 (defun backward-kill-word-correctly-and-capitalize ()
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
@@ -3307,13 +3311,13 @@ No space. Does that make sense? Thanks!
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
 
   (unless
- 
+
       (or
        (looking-at "[ ]*\"")          ; if looking at a quote? Might not work
 
        (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
-       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd 
+       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd
 
 (looking-at "[ ]*I\'")   ; never downcase the word "I'
 
@@ -3323,22 +3327,22 @@ No space. Does that make sense? Thanks!
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
 
-       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break 
+       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break
 
-       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break 
-       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break 
-       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break 
+       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break
+       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break
+       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break
 
-       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http 
+       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http
 
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 
-(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
 
-(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
-(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
 
-(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line 
+(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line
 
 
        (looking-at (user-full-name))
@@ -3389,7 +3393,7 @@ I tried to add exceptions for "line-end" and also for user-full name.
   (interactive)
 (unless
 (or
-(looking-at "[[:punct:]]*[ ]*$") 
+(looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b") ; never downcase the word "I"
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
@@ -3462,7 +3466,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 (add-hook 'fountain-mode-hook '(lambda () (orgalist-mode 1)))
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
-(add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1))) 
+(add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
 (defcustom fountain-export-default-command
   'fountain-export-shell-script
@@ -3511,7 +3515,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 +" "<br><br>")
      ("
-" "<br>")))) 
+" "<br>"))))
   #+END_SRC
 
 * display file name
@@ -3527,21 +3531,21 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 
 #+BEGIN_SRC emacs-lisp
 ;; (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
-;; Changing this for Hook app compatibility per https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/5 
+;; Changing this for Hook app compatibility per https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/5
 #+END_SRC
 
-* Hook app 
+* Hook app
 [[https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/10][Integrating Emacs and Hook, with org-mode - Discussion & Help - Hook Productivity Forum]]
 
 #+begin_src emacs-lisp
 
-(setq frame-title-format '((:eval buffer-file-name))) 
+(setq frame-title-format '((:eval buffer-file-name)))
 
 (defun my/hook (hook)
  "Create an org-link target string using `hook://` url scheme."
  (shell-command (concat "open \"" hook "\"")))
 
- (org-add-link-type "hook" 'my/hook) 
+ (org-add-link-type "hook" 'my/hook)
 #+end_src
 
 * keybindings for terminal
@@ -3636,7 +3640,7 @@ doesn't work.
 * smex
 #+BEGIN_SRC emacs-lisp
 ;; (require 'smex)
-;; (setq smex-completion-method 'ivy) 
+;; (setq smex-completion-method 'ivy)
 #+END_SRC
 
 
@@ -3649,14 +3653,14 @@ doesn't work.
   (recenter)
   )
 (advice-add 'swiper :after #'bjm-swiper-recenter)
-#+END_EXAMPLE 
+#+END_EXAMPLE
 
 * available keybindings
 
 s-i
 s-N
 s-:
-s-. searchlink 
+s-. searchlink
 s-u
 m-,
 
@@ -3716,7 +3720,7 @@ M-1 to 9
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
 ;; (notmuch-mua-send-and-exit)
-(message-send-and-exit) 
+(message-send-and-exit)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
@@ -3775,10 +3779,10 @@ M-1 to 9
 #+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'fountain-mode-hook
      (lambda ()
-(local-set-key (kbd ".") 'smart-period) 
-(local-set-key (kbd ",") 'smart-comma) 
+(local-set-key (kbd ".") 'smart-period)
+(local-set-key (kbd ",") 'smart-comma)
 (local-set-key (kbd "\`") 'flyspell-auto-correct-word)
-(local-set-key (kbd "<SPC>") 'smart-space) 
+(local-set-key (kbd "<SPC>") 'smart-space)
 
 
 ))
@@ -3823,7 +3827,7 @@ M-1 to 9
 * leader key, doesn't need a special mode
 
 #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
+(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task)
 (define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
@@ -3917,7 +3921,7 @@ M-1 to 9
 
 * replace missing PDF ligatures
 
-different → different 
+different → different
 
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
@@ -3937,9 +3941,9 @@ different → different
   (replace-string "con den" "confiden" nil (point-min) (point-max))
   (replace-string "con ict" "conflict" nil (point-min) (point-max))
 ;(replace-string "nd" "find" nil (point-min) (point-max)); whole word only
-;(replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
-; (replace-string "ve" "they" nil (point-min) (point-max)); this one should be whole word only 
-; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only 
+;(replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only
+; (replace-string "ve" "they" nil (point-min) (point-max)); this one should be whole word only
+; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only
   (replace-string "scientifc" "scientific" nil (point-min) (point-max))
 
 
@@ -3963,7 +3967,7 @@ different → different
 
 (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
 
-    :bind (:map web-mode-map 
+    :bind (:map web-mode-map
 
 
   ("s-O" . prelude-open-with)))

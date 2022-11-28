@@ -71,7 +71,7 @@ This function should only modify configuration layer settings."
      syntax-checking ; this is the layer with flycheck
      ;;   version-control
      ;;   html
-     mu4e
+;;     mu4e
      ;;     org-roam
      ;; shell
      ;; shell-scripts
@@ -79,7 +79,7 @@ This function should only modify configuration layer settings."
      ;; speed-reading
      ;; emoji
      ;; typography
-     javascript
+  ;;   javascript
      ;; floobits
      ;; deft
      ;; chrome
@@ -788,6 +788,8 @@ you should place your code here."
 
 ;; (load "/Users/jay/Dropbox/github/emacs-grammarly/emacs-grammarly.el")
 
+
+(load "/Users/jay/emacs/emacs-settings/aide.el")
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
