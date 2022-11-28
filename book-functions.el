@@ -23,8 +23,8 @@
 (push "/Users/jay/.emacs.d/helm-cmd-t" load-path)
 (push "/Users/jay/emacs/spacemacs/elpa/helm-cmd-t-20150823.1157/" load-path)
 
-(require 'helm-config)
-(require 'helm-cmd-t)
+(use-package helm-config)
+(use-package helm-cmd-t)
 (global-set-key (kbd "M-t") 'helm-cmd-t)
 
 (setq book-source (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/writing/book"))

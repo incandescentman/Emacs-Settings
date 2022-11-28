@@ -127,7 +127,7 @@
 
 
 
-(require 'ox-latex)
+(use-package ox-latex)
 
 
 ;;; User-Configurable Variables
@@ -591,7 +591,7 @@ holding export options."
    (let ((with-backaddress (plist-get info :with-backaddress))
 	 (with-backaddress-set (plist-get info :with-backaddress-changed-in-buffer-p))
 	 (with-foldmarks (plist-get info :with-foldmarks))
-	 (with-foldmarks-set 
+	 (with-foldmarks-set
 	  (not (string-equal (plist-get info :with-foldmarks-changed-in-buffer-p)
 			     "foldmarks-not-set")))
 	 (with-phone (plist-get info :with-phone))
