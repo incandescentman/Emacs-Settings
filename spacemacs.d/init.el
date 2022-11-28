@@ -165,20 +165,20 @@ dotspacemacs-additional-packages '(
                                       org-download
                                       org-drill
                                       org-fstree
-org-mac-link
+                                      org-mac-link
                                       org-mime
                                       org-pomodoro
                                       org-sticky-header
                                       ox-clip
-                                      ox-epub
+                                      ;; ox-epub
                                       ox-gfm
                                       org-modern
                                       ;; org-noter
                                       ;; org-noter-pdftools
 ;;                                    org-pdftools
                                       ;; org-roam
-                                      org-sidebar
-                                      ox-twbs
+                                      ;;org-sidebar
+                                      ;; ox-twbs
                                       ox-tufte
                                       palimpsest
                                       paredit
@@ -241,6 +241,7 @@ org-mac-link
                                     highlight-indentation
                                     hl-line
                                     hs-mode
+                                    notmuch
                                     org-projectile
                                     org-superstar
                                     popwin
