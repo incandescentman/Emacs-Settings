@@ -77,7 +77,9 @@
  :config
  (progn
   ;; config stuff
-  ))
+   )
+(setq use-package-verbose t)
+ )
 #+END_SRC
 
 ** Require some org packages
@@ -5097,14 +5099,14 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 ** org-contacts
 
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIEXAMPLERC emacs-lisp
 (use-package org-contacts)
 ;; (require 'org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 
 
-  #+END_SRC
+  #+END_EXAMPLE
 
 *** Maintaining an address-book with org-contacts
 
@@ -8103,14 +8105,14 @@ signature, in that order."
 
 
 * counsel-Spotify
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package spotify
 :init
 '(spotify-oauth2-client-id 83e2e6567ee2416e8943de8c83c525cb)
 '(spotify-oauth2-client-secret c5305ef7fe3f4e2cab9d2abec2070688)
 
 )
-#+END_SRC
+#+END_EXAMPLE
 
 
 * org count words
@@ -8799,7 +8801,7 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 * PDF tools
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (use-package pdf-tools
  :pin manual ;; manually update
@@ -8830,7 +8832,7 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
  (define-key pdf-view-mode-map (kbd ">") 'pdf-view-last-page)
  (define-key pdf-view-mode-map (kbd "C-s") 'pdf-occur)
  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
-#+end_src
+#+END_EXAMPLE
 
 * org pdftools
 Not sure what this does
@@ -8848,7 +8850,7 @@ Not sure what this does
 
 * org-noter
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-noter
  :after org
  :ensure t)
@@ -8859,7 +8861,7 @@ Not sure what this does
   :config (setq org-noter-default-notes-file-names '("org-noter-notes.org")
          org-noter-notes-search-path '("~/nd/org-noter")
          org-noter-separate-notes-from-heading t))
-#+end_src
+#+END_EXAMPLE
 
 * org-drill
 #+BEGIN_SRC emacs-lisp
