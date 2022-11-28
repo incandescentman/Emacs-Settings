@@ -1093,7 +1093,7 @@ Note: disable this when trying to export to org-html-themes!
 :ID:       EA8DFF1F-F89F-4B5E-AC56-28EED76EE68C
 :END:
 #+BEGIN_SRC emacs-lisp
-(require 'ox-extra)
+(use-package ox-extra)
 (ox-extras-activate '(ignore-headlines))
 #+END_SRC
 
