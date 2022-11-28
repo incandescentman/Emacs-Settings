@@ -1,22 +1,22 @@
 * evil leader keybindings
 #+BEGIN_SRC emacs-lisp
-(spacemacs/set-leader-keys "gx" 'forward-char) 
+(spacemacs/set-leader-keys "gx" 'forward-char)
 ;; works
 
-;; global, I think? 
+;; global, I think?
 (evil-leader/set-key
-"gp" 'forward-char 
-) 
+"gp" 'forward-char
+)
 ;; works
 
 
 (evil-leader/set-key-for-mode 'org-mode
     "gl"  'ledger-delete-current-transaction
-) 
-;; doesn't work 
+)
+;; doesn't work
 
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char) 
-;; doesn't work 
+(spacemacs/set-leader-keys-for-major-mode 'org-mode "gd" 'forward-char)
+;; doesn't work
 
 
 #+END_SRC
@@ -29,20 +29,20 @@
 (define-key key-minor-mode-map (kbd "}rf") 'prelude-rename-file-and-buffer)
 (define-key key-minor-mode-map (kbd "}vi") 'org-insert-src-block)
 (define-key key-minor-mode-map (kbd "}nl") 'new-lisp-buffer)
-(require 'wn-org)
+(use-package wn-org)
 ;; (define-key key-minor-mode-map (kbd "]d") 'wn-org)
   #+END_SRC
 
 
-** Spacemacs keybindings 
+** Spacemacs keybindings
 
-Available leader keybindings 
+Available leader keybindings
 - d
 - g
 - v
 
 #+BEGIN_SRC emacs-lisp
-;; (spacemacs/set-leader-keys "d" 'forward-char) 
+;; (spacemacs/set-leader-keys "d" 'forward-char)
 
 #+END_SRC
 
@@ -52,7 +52,7 @@ Available leader keybindings
 "c[" 'load-shared-functions
 "c]" 'load-gnu-startup
 "gb" 'gist-buffer-to-pasteboard
-"]" 'insert-right-bracket 
-) 
+"]" 'insert-right-bracket
+)
 #+END_SRC
 

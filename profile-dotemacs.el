@@ -72,8 +72,8 @@
 
 ;;; Code:
 
-(require 'thingatpt)
-(require 'benchmark)
+(use-package thingatpt)
+(use-package benchmark)
 
 ;; User variables
 
