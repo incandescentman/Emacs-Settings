@@ -725,7 +725,7 @@ you should place your code here."
 (setq frame-inhibit-implied-resize t)
 (setq initial-major-mode 'fundamental-mode)
 
-  (use-package auto-capitalize)
+(use-package auto-capitalize)
   (use-package recentf)
   (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
 

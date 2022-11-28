@@ -87,7 +87,7 @@
 #+end_src
 
 ** don't Rquire some org packages
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (use-package org-bullets)
 (use-package ox-latex)
 ;; (use-package ox-latex)
@@ -1147,7 +1147,7 @@ Works!
 ** org agenda
 *** agenda display settings
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -1628,7 +1628,7 @@ Make org-capture open in full window! :-)
 #+END_SRC
 
 ** org-levels
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
  (defun org-show-level-1 ()
   (interactive)
  (org-content 1))
@@ -2124,7 +2124,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 * TODO unbind orgalist navigation keys
 
- #+BEGINEXAMPLEC emacs-lisp
+ #+BEGIN_EXAMPLE emacs-lisp
 (defun unbind-orgalist-keys ()
  (interactive)
     (cl-dolist (map '(message-mode-map orgalist-mode-map))
@@ -3716,7 +3716,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
    :ID:       D283A971-F9C3-4683-A419-82F7D9816F72
    :END:
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
    #+END_SRC
@@ -3908,7 +3908,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** projectile
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package projectile
 
 :config
@@ -3935,7 +3935,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** helm projectile
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
 
 (setq ad-redefinition-action 'accept)
@@ -4002,7 +4002,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   Here's very convenient keys for isearch. Put it in your emacs init.
 
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
 (progn
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
@@ -4053,7 +4053,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_SRC
 
 **** swiper
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
@@ -4068,14 +4068,14 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
 
   [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (ivy-add-actions t
  '(("W" kill-new "save to kill ring")
   ("I" insert "insert in buffer")))
   #+END_SRC
 
 **** swiper hydra
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -4149,7 +4149,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 *** Tell isearch that curly apostrophes are the same as straight ones
  Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
 
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
  ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
@@ -4286,7 +4286,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * org-toggle-heading-same-level
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
@@ -4308,7 +4308,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * org-toggle-todo-heading
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
@@ -4330,7 +4330,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 * delete-extra-whitespace-region
 
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun delete-extra-whitespace-region (beg end)
   "replace all whitespace in the region with single spaces"
   (interactive "r")
@@ -4344,7 +4344,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * double-line-breaks-in-region
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun double-line-breaks-in-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -4356,7 +4356,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 
 * xah-replace-pairs
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package xah-replace-pairs)
 (defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
@@ -4424,7 +4424,7 @@ Emacs key-strokes are pretty gnarly. Especially for a VIM guy like me (Emacs evi
 
 * helm search current directory
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun helm-do-grep-current-directory-tree ()
   "Recursively search current directory.
 If a parent directory has a `dir-locals-file', use that as the
@@ -4447,7 +4447,7 @@ root instead."
 * contract-contractions
 
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
 (defun contract-contractions (begin end)
 (interactive "r")
@@ -4462,7 +4462,7 @@ root instead."
 * fix double capitals
 Source: [[http://endlessparentheses.com/fixing-double-capitals-as-you-type.html?source%3Drss][Fixing DOuble CApitals as you type · Endless Parentheses]]
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun dcaps-to-scaps ()
   "Convert word in DOuble CApitals to Single Capitals."
   (interactive)
@@ -4564,7 +4564,7 @@ Single Capitals as you type."
 
 ** flyspell skip source blocks
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; NO spell check for embedded snippets
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
   (let ((rlt ad-return-value)
@@ -4600,7 +4600,7 @@ Single Capitals as you type."
 
 
 * outline mode
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
             (make-local-variable 'outline-regexp)
@@ -4612,7 +4612,7 @@ Single Capitals as you type."
   #+END_SRC
 
 * which-key mode
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (use-package which-key)
 ;; (setq which-key-popup-type 'side-window)
 ;; (setq which-key-side-window-location 'bottom)
@@ -4621,7 +4621,7 @@ Single Capitals as you type."
 
 * a keybinding to open my accountability file
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (defun accountability-open ()
 ;;   (interactive)
 ;;   (find-file "/Users/jay/Dropbox/writing/notationaldata/accountability.org")
@@ -4639,14 +4639,14 @@ Single Capitals as you type."
 
 * dictionary look up
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
   #+END_SRC
 
 
 * re-builder
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package re-builder)
 (setq reb-re-syntax 'string)
   #+END_SRC
@@ -4676,7 +4676,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 #+END_SRC
 
 * stripe buffer
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;;(add-hook 'dired-mode-hook 'turn-on-stripe-buffer-mode)
 
 ;; note that this slows everything down
@@ -4688,7 +4688,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 ** mu4e
 *** mu4e setup
- #+BEGINEXAMPLEC emacs-lisp
+ #+BEGIN_EXAMPLE emacs-lisp
 
 ;; (setq user-mail-address "jay@storytelling.nyc")
 (setq user-mail-address "dixit@aya.yale.edu")
@@ -4811,7 +4811,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
  #+END_EXAMPLE
 
 *** mu4e keybindings
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 ;; shortcuts
 (setq mu4e-maildir-shortcuts
@@ -4864,7 +4864,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
   (local-unset-key (kbd "<M-right>"))
   (local-unset-key (kbd "<M-left>"))
 ))
- #+END_SRC
+ #+END_EXAMPLE
 
 *** gmail emulation
 #+BEGIN_SRC emacs-lisp
@@ -4923,7 +4923,7 @@ doesn't immediately mean the message is starred on the Gmail side. With
 the recently added ~mu4e-mark-execute-pre-hook~ it becomes possible to
 whip Gmail into doing my bidding :)
 
-# #+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
 (add-hook 'mu4e-mark-execute-pre-hook
   (lambda (mark msg)
   (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\Inbox"))
@@ -5601,7 +5601,7 @@ as the subject."
 
 ** fixup-css-region
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun fixup-css-region (begin end)
 (interactive "r")
   (xah-replace-pairs-region begin end
@@ -5624,7 +5624,7 @@ as the subject."
 * If you want Emacs to treat all new files as modified, you can automate the solution like this:
 
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
@@ -5663,7 +5663,7 @@ Here's an adaptation of dired-create-directory. It works the same way, so as wel
 Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
 
 * olivetti
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package olivetti
 
 :config
@@ -5730,7 +5730,7 @@ C-c q
 
 * org-agenda skip keywords
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS")))
 
 
@@ -5738,7 +5738,7 @@ C-c q
 
 * org-ellipsis
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (setq org-ellipsis " ◦◦◦ ")
 ;; (set-face-attribute org-ellipsis '(((:background "white" :underline nil))))
 
@@ -5787,7 +5787,7 @@ C-c q
 * org todo stuff
 ** move point to next TODO heading upon DONE state change
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun bb/next-heading (&rest args)
 (when
 
@@ -5847,7 +5847,7 @@ event of an error or nonlocal exit."
 
 * wrap region
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (use-package wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
@@ -5892,7 +5892,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 * faces
 ** bold
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -5926,7 +5926,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 ** C-c C-c to exit source code blocks
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-src
   '(define-key org-src-mode-map
      "\C-c\C-c" #'org-edit-src-exit))
@@ -5935,7 +5935,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 ** narrow or widen
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun narrow-or-widen-dwim (p)
   "Widen if buffer is narrowed, narrow-dwim otherwise.
 Dwim means: region, org-src-block, org-subtree, or defun,
@@ -5987,7 +5987,7 @@ execute speed commands."
 
 
 ** org insert easy template source blocks
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-tempo)
 
 ;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
@@ -6439,7 +6439,7 @@ Wow, this works.
 
 * exporting
 ** org-twbs
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 '(org-twbs-head-include-default-style t)
  '(org-twbs-htmlize-output-type (quote inline-css))
  '(org-twbs-indent t)
@@ -6451,7 +6451,7 @@ Wow, this works.
 ** LaTeX
 *** Find LaTeX on my system
 
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2022/bin/universal-darwin")
   )
@@ -6460,7 +6460,7 @@ Wow, this works.
 *** XeLaTeX customisations
 
  ~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
  org-latex-pdf-process               ; for regular export
 
@@ -6475,7 +6475,7 @@ Wow, this works.
 
 *** load my custom latex templates
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
 
 (defun jay-load-latex ()
@@ -6505,7 +6505,7 @@ Wow, this works.
   Here's my fancyvrb filter for when such a place is created.
 
   Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 
  (defun org-latex-filter-fancyvrb (text backend info)
   "Convert begin/end{verbatim} to begin/end{Verbatim}.
@@ -6808,7 +6808,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 * display
 
 ** recenter top bottom
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
 ;; (setq recenter-positions (quote (top middle bottom)))
  #+END_SRC
@@ -6927,7 +6927,7 @@ cmd)
 ** editing
 *** lines
 **** org-copy-line
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-select-line ()
  "Select the current line"
  (interactive)
@@ -6948,7 +6948,7 @@ cmd)
      :PROPERTIES:
      :ID:       4DCE53D0-0D37-464B-B398-BD5B4BE18492
      :END:
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun kill-paragraph-from-beginning (b e)
   (interactive)
   (mark-paragraph)
@@ -6962,7 +6962,7 @@ cmd)
      :PROPERTIES:
      :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
      :END:
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun eval-subtree ()
  (interactive)
  (org-edit-src-code)
@@ -7062,7 +7062,7 @@ cmd)
      :ID:       49820CA2-490C-4DA0-9036-F16B262F712E
      :END:
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
   (if (and arg (= 0 (mod arg 4)))
@@ -7077,7 +7077,7 @@ cmd)
 
 ** navigation
 *** up by degrees
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun up-by-degrees ()
  (interactive)
        (previous-line 6)
@@ -7094,7 +7094,7 @@ cmd)
 
 
 *** next-subtree-same-level-and-narrow
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-same-level-and-narrow ()
  (interactive)
  (widen)
@@ -7112,7 +7112,7 @@ cmd)
  #+END_SRC
 
 *** next-subtree-and-narrow - original
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-and-narrow ()
  (interactive)
  (widen)
@@ -7135,7 +7135,7 @@ cmd)
     :END:
 **** refile active region or subtree
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree ()
   (interactive)
   (if (region-active-p)
@@ -7203,7 +7203,7 @@ You can toggle it in necessary files by setting the local variables section at t
 * presentations
 ** org-html-slideshow
  Set variables as safe
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t))
 
 (put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t))
@@ -7280,7 +7280,7 @@ into the main dumped emacs"
 * typography custom functions
 
 ** em dash
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun em-dash ()
 (interactive)
 (cond (mark-active
@@ -7291,7 +7291,7 @@ into the main dumped emacs"
  #+END_SRC
 
 ** true em dash
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun true-em-dash ()
 (interactive)
 (cond (mark-active
@@ -7318,7 +7318,7 @@ into the main dumped emacs"
    :PROPERTIES:
    :ID:       C6D2D34A-628B-4DB2-9082-DECEBB5D8F9F
    :END:
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun insert-right-bracket ()
   (interactive)
 (cond (mark-active
@@ -7328,7 +7328,7 @@ into the main dumped emacs"
  #+END_SRC
 
 ** insert equals sign
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun insert-equals-sign ()
   (interactive)
 (cond (mark-active
@@ -8320,7 +8320,7 @@ Go through `org-structure-template-alist' and
 * multiple cursors
 
 ** endless multiple cursors keybindings
- #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors)
 (use-package multiple-cursors-core)
 ;; This is globally useful, so it goes under `C-x', and `m'
