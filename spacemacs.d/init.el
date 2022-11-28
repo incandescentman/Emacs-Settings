@@ -41,21 +41,19 @@ This function should only modify configuration layer settings."
      auto-completion
      ;; better-defaults
      emacs-lisp
-     ;;   git
+     ;; git
           helm
      ;; lsp
-     ;;   markdown
-     ;;    python
+     ;; markdown
+     ;;  python
      ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
-      ;;     (org
-      ;;       :ensure org-plus-contrib
-      ;;       :mode (("\\.org$" . org-mode))
-
+      ;;   (org
+      ;;     :ensure org-plus-contrib
+      ;;     :mode (("\\.org$" . org-mode))
       ;; :variables
       ;; org-enable-bootstrap-support t
       ;; org-enable-github-support t
       ;; ;; org-enable-reveal-js-support t
-
       ;; :location built-in
       ;; )
      ;; osx
@@ -67,19 +65,19 @@ This function should only modify configuration layer settings."
        (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     ;;   spell-checking
+     ;; spell-checking
      syntax-checking ; this is the layer with flycheck
-     ;;   version-control
-     ;;   html
-;;     mu4e
-     ;;     org-roam
+     ;; version-control
+     ;; html
+     ;; mu4e
+     ;; org-roam
      ;; shell
      ;; shell-scripts
      ;; jay
      ;; speed-reading
      ;; emoji
      ;; typography
-  ;;   javascript
+     ;; javascript
      ;; floobits
      ;; deft
      ;; chrome
@@ -112,42 +110,42 @@ dotspacemacs-additional-packages '(
                                       ;; solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
-;;                                      zenburn-theme
+                                      ;; zenburn-theme
                                       ;; ag
                                       auto-capitalize
                                       beacon
                                       benchmark-init
                                       ;; blimp
-                                      ;;                                    bongo
+                                      ;;                                  bongo
                                       buffer-stack
                                       caps-lock
                                       change-inner
                                       cheatsheet
                                       command-log-mode
                                       counsel
-                                      spotify
+                                      ;; spotify
                                       crux
-                                      cyberpunk-theme
+                                      ;; cyberpunk-theme
                                       dired+
                                       dired-details+
                                       dired-quick-sort
                                       dired-sort-menu
                                       discover-my-major
                                       ;; early-init
-                                      emms
+                                      ;; emms
                                       expand-region
                                       fancy-narrow
                                       fastdef
                                       flyspell-lazy
                                       focus
-                                      fountain-mode
+                                      ;; fountain-mode
                                       frame-cmds
                                       fuzzy
                                       gcmh
                                       gist
                                       helm
                                       helm-cmd-t
-                                      hyperbole
+                                      ;; hyperbole
                                       ido-hacks
                                       imenu-list
                                       key-chord
@@ -174,9 +172,9 @@ dotspacemacs-additional-packages '(
                                       ox-epub
                                       ox-gfm
                                       org-modern
-                                      org-noter
-                                      org-noter-pdftools
-                                      org-pdftools
+                                      ;; org-noter
+                                      ;; org-noter-pdftools
+;;                                    org-pdftools
                                       org-roam
                                       org-sidebar
                                       ox-twbs
@@ -286,7 +284,7 @@ It should only modify the values of Spacemacs settings."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
    ;; (default (format "spacemacs-%s.pdmp" emacs-version))
    dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
@@ -390,7 +388,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
    ;; *scratch* buffer will be saved and restored automatically.
-   ;;   dotspacemacs-scratch-buffer-persistent nil
+   ;; dotspacemacs-scratch-buffer-persistent nil
 
    ;; If non-nil, `kill-buffer' on *scratch* buffer
    ;; will bury it instead of killing.
@@ -419,7 +417,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-;;   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -576,14 +574,14 @@ It should only modify the values of Spacemacs settings."
    ;; counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
-   ;;   :visual nil
-   ;;   :disabled-for-modes dired-mode
-   ;;                       doc-view-mode
-   ;;                       markdown-mode
-   ;;                       org-mode
-   ;;                       pdf-view-mode
-   ;;                       text-mode
-   ;;   :size-limit-kb 1000)
+   ;; :visual nil
+   ;; :disabled-for-modes dired-mode
+   ;;                     doc-view-mode
+   ;;                     markdown-mode
+   ;;                     org-mode
+   ;;                     pdf-view-mode
+   ;;                     text-mode
+   ;; :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers nil
@@ -698,7 +696,7 @@ you should place your code here."
 
 ;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
 ;; (defun ambrevar/reset-gc-cons-threshold ()
-;;   (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
+;; (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
 ;; (setq gc-cons-threshold (* 64 1024 1024))
 ;; (add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
 
@@ -862,8 +860,8 @@ you should place your code here."
 
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
-;;       (find-file-literally "~/nd/fearless.org")
-       ;;       (imenu-list-minor-mode)
+;;     (find-file-literally "~/nd/fearless.org")
+       ;;     (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
 
@@ -888,7 +886,7 @@ you should place your code here."
 
   (use-package reveal-in-finder)
 
-;;   (recenter-top-bottom)
+;; (recenter-top-bottom)
   (setq case-fold-search t)
 
   (setq company-global-modes '(not org-mode))
@@ -965,15 +963,15 @@ you should place your code here."
    dotspacemacs-home-shorten-agenda-source nil
 
    ;; If non-nil then byte-compile some of Spacemacs files.
-   ;;   dotspacemacs-byte-compile nil))
+   ;; dotspacemacs-byte-compile nil))
 
-;; (defun dotspacemacs/user-env ()
-;;   "Environment variables setup.
-;; This function defines the environment variables for your Emacs session. By
-;; default it calls `spacemacs/load-spacemacs-env' which loads the environment
-;; variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
-;; See the header of this file for more information."
-;;   (spacemacs/load-spacemacs-env))
+   ;; (defun dotspacemacs/user-env ()
+   ;; "Environment variables setup.
+   ;; This function defines the environment variables for your Emacs session. By
+   ;; default it calls `spacemacs/load-spacemacs-env' which loads the environment
+   ;; variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+   ;; See the header of this file for more information."
+   ;; (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
