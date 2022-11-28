@@ -742,12 +742,11 @@ you should place your code here."
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
 :load-path "/Users/jay/emacs/org-9.5.5/"
-:ensure org-plus-contrib
+;; :ensure org-plus-contrib
 :config
 (org-reload))
-;; ....
 
-(use-package org)
+
 (use-package org-contrib)
 
 
