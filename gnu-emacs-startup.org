@@ -491,7 +491,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
 
 (define-key key-minor-mode-map (kbd "C-;") 'org-def)
-(require 'flyspell)
+;; (require 'flyspell)
 (define-key flyspell-mode-map (kbd "C-;") 'org-def)
 
 (define-key key-minor-mode-map (kbd "s-j u p") 'unfill-paragraph)
@@ -3985,7 +3985,7 @@ different → different
 
 * mw-thesaurus
 #+BEGIN_SRC emacs-lisp
-(require 'mw-thesaurus)
+(use-package mw-thesaurus)
 (load "/Users/jay/emacs/emacs-settings/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC

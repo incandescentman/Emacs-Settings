@@ -1791,7 +1791,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 
 ** org-mac-link
 #+BEGIN_SRC emacs-lisp
-(require 'org-mac-link)
+(use-package org-mac-link)
 #+END_SRC
 
 ** ~org-mime~
