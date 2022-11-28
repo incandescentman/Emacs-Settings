@@ -70,17 +70,21 @@
 #+END_SRC
 
 ** Require some packages
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package org
  :mode (("\\.org$" . org-mode))
- :ensure org-plus-contrib
+;; ensure org-plus-contrib
  :config
  (progn
   ;; config stuff
    )
-(setq use-package-verbose t)
+
  )
-#+END_SRC
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp
+(setq use-package-verbose t)
+#+end_src
 
 ** Require some org packages
  #+BEGIN_SRC emacs-lisp
