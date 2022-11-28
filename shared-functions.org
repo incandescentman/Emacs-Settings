@@ -748,7 +748,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-;; (require 'buffer-stack)
+;; (use-package buffer-stack)
 #+END_SRC
 
 GNU Emacs:
@@ -840,7 +840,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ** Reveal in finder
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'reveal-in-finder)
+;; (use-package reveal-in-finder)
 #+END_SRC
 
 ** cycle-hyphenation-or-toggle-item
@@ -1308,7 +1308,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** imenu-list
 #+BEGIN_EXAMPLE emacs-lisp
-(require 'imenu-list)
+(use-package imenu-list)
 (setq imenu-list-position (quote left))
 
 (defun imenu-list-amazing-mode ()
@@ -1797,7 +1797,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 ** ~org-mime~
 
 #+BEGIN_SRC emacs-lisp
-;; (require 'org-mime)
+;; (use-package org-mime)
 (setq org-mime-default-header "")
 
 ;; add signature
@@ -1960,7 +1960,7 @@ margin-bottom: 1em;
 
 To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
-;; (require 'edit-server)
+;; (use-package edit-server)
 ;; (edit-server-start)
 #+END_SRC
 
@@ -2100,7 +2100,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 ** require orgalist
 #+begin_src emacs-lisp
-(require 'orgalist)
+(use-package orgalist)
 #+end_src
 
 ** orgalist mode
@@ -2173,7 +2173,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 #+BEGIN_SRC emacs-lisp
 ;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
 ;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
-;; (require 'recent-addresses)
+;; (use-package recent-addresses)
 ;; (recent-addresses-mode 1)
 ;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
 
@@ -2198,7 +2198,7 @@ when replying, look kind of like gmail
 
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
-;; (require 'eshell-autojump)
+;; (use-package eshell-autojump)
 #+END_SRC
 
 * ~ibuffer~
@@ -2234,7 +2234,7 @@ Defines ~ibuffer-do-replace-string~:
 
 Use key chord
 #+BEGIN_SRC emacs-lisp
-;; (require 'key-chord)
+;; (use-package key-chord)
 (key-chord-mode 1)
 #+END_SRC
 
@@ -2377,7 +2377,7 @@ Sort ido filelist by mtime instead of alphabetically. Why would anyone want an a
 
 Add superior flex matching to ~ido-mode~:
 #+BEGIN_SRC emacs-lisp
-;; (require 'flx-ido)
+;; (use-package flx-ido)
 ;; (ido-mode 1)
 ;; (ido-everywhere 1)
 (flx-ido-mode 1)
@@ -2482,7 +2482,7 @@ Don't start the server unless we can verify that it isn't running.
 ** PDFs
 *** Open PDFs in Skim
 #+BEGIN_SRC emacs-lisp
-;; (require 'openwith)
+;; (use-package openwith)
 ;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
 ;; (openwith-mode t)
 #+END_SRC
@@ -3446,7 +3446,7 @@ Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) ~xstev
 ** Google search
 Enable Google search:
 #+BEGIN_SRC emacs-lisp
-;; (require 'engine-mode)
+;; (use-package engine-mode)
 ;; (engine-mode t)
 
 ;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
@@ -3455,7 +3455,7 @@ Enable Google search:
 ** Google search through Gnugol
 #+HEADER: :comments noweb
 #+BEGIN_SRC emacs-lisp
-;; (require 'gnugol)
+;; (use-package gnugol)
 
 (defun region-or-word-at-point ()
   (if (use-region-p)
@@ -4181,7 +4181,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
-;; (require 'palimpsest)
+;; (use-package palimpsest)
 (palimpsest-mode 1)
 (define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)
 #+END_SRC
@@ -4613,7 +4613,7 @@ Single Capitals as you type."
 
 * which-key mode
   #+BEGIN_SRC emacs-lisp
-;; (require 'which-key)
+;; (use-package which-key)
 ;; (setq which-key-popup-type 'side-window)
 ;; (setq which-key-side-window-location 'bottom)
 ;; (which-key-mode)
@@ -4728,7 +4728,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ;; Possible options:
 ;; ---html2text -utf8 -width 72
 ;; ---textutil -stdin -format html -convert txt -stdout
-;; ---html2markdown | grep -v '&nbsp_place_holder;' (Requires html2text pypi)
+;; ---html2markdown | grep -v '&nbsp_place_holder;' (Rquires html2text pypi)
 ;; ---w3m -dump -cols 80 -T text/html
 ;; ---view in browser (provided below)
 ; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
@@ -4804,7 +4804,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
  )
 
 ;; maildirs
-;; (require 'mu4e-maildirs-extension)
+;; (use-package mu4e-maildirs-extension)
 ;; (mu4e-maildirs-extension)
 ;; (setq mu4e-maildirs-extension-title "Folders")
 
@@ -5095,7 +5095,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 *** mu4e-send-delay
 #+BEGIN_SRC emacs-lisp
-(require 'mu4e-send-delay)
+(use-package mu4e-send-delay)
 (mu4e-send-delay-setup)
 (add-hook 'mu4e-main-mode-hook 'mu4e-send-delay-initialize-send-queue-timer)
 #+END_SRC
@@ -5105,7 +5105,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
   #+BEGIEXAMPLERC emacs-lisp
 (use-package org-contacts)
-;; (require 'org-vcard)
+;; (use-package org-vcard)
 (setq org-contacts-files (quote ("/Users/jay/nd/contacts-org-jay.txt")))
 
 
@@ -5848,7 +5848,7 @@ event of an error or nonlocal exit."
 * wrap region
 
   #+BEGIN_SRC emacs-lisp
-;; (require 'wrap-region)
+;; (use-package wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")
 ;; (wrap-region-add-wrapper "\/" "\/" "\/")
 
@@ -5906,7 +5906,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 ** god mode
 
    #+BEGIN_EXAMPLE emacs-lisp
-;; (require 'god-mode)
+;; (use-package god-mode)
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'bar
@@ -5916,7 +5916,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 ;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
 
-             (require 'god-mode-isearch)
+             (use-package god-mode-isearch)
 (define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
 (define-key god-local-mode-map (kbd ".") 'repeat)
@@ -5988,7 +5988,7 @@ execute speed commands."
 
 ** org insert easy template source blocks
    #+BEGIN_SRC emacs-lisp
-(require 'org-tempo)
+(use-package org-tempo)
 
 ;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
 
@@ -6529,7 +6529,7 @@ Wow, this works.
 
 * reuse directory buffers
 #+BEGIN_SRC emacs-lisp
-;; (require ''dired+)
+;; (use-package 'dired+)
 (toggle-diredp-find-file-reuse-dir 1)
 (add-hook 'dired-mode-hook
  (lambda ()
@@ -6542,7 +6542,7 @@ Wow, this works.
 
 * open recent directories
 #+BEGIN_SRC emacs-lisp
-;; open recent directory, requires ivy (part of swiper)
+;; open recent directory, rquires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
  "Present a list of recently used directories and open the selected one in dired"
@@ -6764,7 +6764,7 @@ minibuffer."
 
 * mouse-copy
 #+BEGIN_SRC emacs-lisp
-;; (require 'mouse-copy)
+;; (use-package mouse-copy)
 ;; (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
 ;; (global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving)
 #+END_SRC
@@ -6773,7 +6773,7 @@ minibuffer."
 * flycheck
 
 #+BEGIN_SRC emacs-lisp
-(require 'flycheck)
+(use-package flycheck)
 #+END_SRC
 
 
