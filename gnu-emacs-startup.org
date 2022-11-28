@@ -62,7 +62,7 @@ Automatically load abbreviations table:
 * org predicates
 
   #+BEGIN_SRC emacs-lisp
-(require 'org-element)
+(use-package org-element)
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -125,7 +125,7 @@ well.
 
 #+BEGIN_SRC emacs-lisp
 
-;; (require 'dired-details+)
+;; (use-package dired-details+)
 
 
 
@@ -3460,7 +3460,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 * fountain
   #+BEGIN_SRC emacs-lisp
 ;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
-;; (require 'fountain-mode)
+;; (use-package fountain-mode)
 
 ;; (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook '(lambda () (orgalist-mode 1)))
@@ -3639,7 +3639,7 @@ doesn't work.
 
 * smex
 #+BEGIN_SRC emacs-lisp
-;; (require 'smex)
+;; (use-package smex)
 ;; (setq smex-completion-method 'ivy)
 #+END_SRC
 
