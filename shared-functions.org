@@ -92,7 +92,7 @@
 (use-package ox-latex)
 ;; (require 'ox-latex)
 ;; (require 'ox-org)
-(use-package ox-org)
+;; (use-package ox-org)
 ;; (require 'ox-html)
 (use-package ox-html)
 ;; (require 'ox-md)
@@ -2477,7 +2477,7 @@ Don't start the server unless we can verify that it isn't running.
 
 *** ~osx-browse~
 
-(use-package osx-browse)
+;; (use-package osx-browse)
 
 ** PDFs
 *** Open PDFs in Skim
