@@ -112,13 +112,13 @@ dotspacemacs-additional-packages '(
                                       ;; solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
-                                      zenburn-theme
+;;                                      zenburn-theme
                                       ;; ag
                                       auto-capitalize
                                       beacon
                                       benchmark-init
-                                      blimp
-                                      bongo
+                                      ;; blimp
+                                      ;;                                    bongo
                                       buffer-stack
                                       caps-lock
                                       change-inner
@@ -736,7 +736,7 @@ you should place your code here."
 (require 'helm)
 (require 'ivy)
 (require 'tiny)
-(require 're-builder)
+;; (require 're-builder)
 (require 'multiple-cursors)
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
@@ -762,7 +762,7 @@ you should place your code here."
 
 ;; (flyspell-mode)
 
-  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+;;  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
   (org-babel-do-load-languages
