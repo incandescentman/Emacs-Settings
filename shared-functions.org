@@ -51,16 +51,6 @@
 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
 ("tromey" . "http://tromey.com/elpa/")
 ))
-
-
-
-
-
-
-
-
-
-
 (package-initialize)
 #+END_SRC
 
@@ -97,7 +87,7 @@
 (use-package ox-html)
 ;; (use-package ox-md)
 ; (use-package org-fstree)
- #+END_SRC
+#+END_SRC
 
 
 * Setting variables
@@ -1023,7 +1013,7 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 (setq org-html-toplevel-hlevel 2)
 
 
-   #+END_SRC
+#+END_SRC
 
 
 ** latex images
@@ -1157,7 +1147,7 @@ Works!
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-    #+END_SRC
+#+END_SRC
 
 *** Stop mouse cursor from highlighting lines in org-agenda
 #+BEGIN_SRC emacs-lisp
@@ -1681,7 +1671,7 @@ Make org-capture open in full window! :-)
 (define-key key-minor-mode-map (kbd "C-s-a") 'show-all)
 
 
-   #+END_SRC
+#+END_SRC
 
 
 ** org-mode inline tasks
@@ -1942,7 +1932,7 @@ margin-bottom: 1em;
 (use-package org-download)
 (setq-default org-download-image-dir "/Users/jay/Downloads")
 (setq org-download-method (quote directory))
-  #+END_EXAMPLE
+#+END_EXAMPLE
 
 * Browsing
 ** Make URLs in comments/strings clickable
@@ -2124,7 +2114,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 * TODO unbind orgalist navigation keys
 
- #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun unbind-orgalist-keys ()
  (interactive)
     (cl-dolist (map '(message-mode-map orgalist-mode-map))
@@ -2152,7 +2142,7 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 
 ;;(add-hook 'message-mode-hook 'unbind-orgalist-keys)
- #+END_EXAMPLE
+#+END_EXAMPLE
 
 
 * org or orgalist
@@ -3719,7 +3709,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
-   #+END_SRC
+#+END_SRC
 
 * Searching for things
 ** isearch
@@ -3931,7 +3921,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ))
 
 
-   #+END_SRC
+#+END_SRC
 
 ** helm projectile
 
@@ -3952,7 +3942,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   #'(lambda ()
       (interactive)
       (helm-ag (projectile-project-root))))
-   #+END_SRC
+#+END_SRC
 
 ** isearch
    :PROPERTIES:
@@ -4014,7 +4004,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
-  #+END_SRC
+#+END_SRC
 
 
   when in isearch, the arrow keys will:
@@ -4062,7 +4052,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
-  #+END_SRC
+#+END_SRC
 
 **** ivy add actions
   [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
@@ -4072,7 +4062,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (ivy-add-actions t
  '(("W" kill-new "save to kill ring")
   ("I" insert "insert in buffer")))
-  #+END_SRC
+#+END_SRC
 
 **** swiper hydra
 #+BEGIN_SRC emacs-lisp
@@ -4139,7 +4129,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-  #+END_SRC
+#+END_SRC
 
 ** searching
    :PROPERTIES:
@@ -4172,7 +4162,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
             #'endless/replace-quote)
- #+END_SRC
+#+END_SRC
 
 
 
@@ -4303,7 +4293,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
         (org-toggle-heading) ; convert to heading
 (org-do-promote)
 ;        (org-todo 'nextset)
-)))) ; add TODO  #+END_SRC
+)))) ; add TODO#+END_SRC
 #+END_SRC
 
 * org-toggle-todo-heading
@@ -4324,7 +4314,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
       (progn
         (org-toggle-heading) ; convert to heading
 (org-do-promote)
-        (org-todo 'nextset))))) ; add TODO  #+END_SRC
+        (org-todo 'nextset))))) ; add TODO#+END_SRC
 #+END_SRC
 
 * delete-extra-whitespace-region
@@ -4340,7 +4330,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
       (goto-char (point-min))
       (while (re-search-forward "^\\s-+" nil t)
         (replace-match "")))))
-  #+END_SRC
+#+END_SRC
 
 * double-line-breaks-in-region
 
@@ -4352,7 +4342,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["\r" "\n\n"]
 ["\n" "\n\n"]
 )))
-  #+END_SRC
+#+END_SRC
 
 * xah-replace-pairs
 
@@ -4377,7 +4367,7 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
  ["&gt;" ">"]
  )))
 
-  #+END_SRC
+#+END_SRC
 
 * contract contractions
 #+BEGIN_SRC emacs-lisp
@@ -4441,7 +4431,7 @@ root instead."
         (nth 0 variables-file))
        (t default-directory)))
      t nil '("*"))))
-  #+END_SRC
+#+END_SRC
 
 
 * contract-contractions
@@ -4457,7 +4447,7 @@ root instead."
 ["I am" "I'm"]
 )))
 
-  #+END_SRC
+#+END_SRC
 
 * fix double capitals
 Source: [[http://endlessparentheses.com/fixing-double-capitals-as-you-type.html?source%3Drss][Fixing DOuble CApitals as you type · Endless Parentheses]]
@@ -4581,7 +4571,7 @@ Single Capitals as you type."
         (setq case-fold-search old-flag))
       (if (and b e (< (point) e)) (setq rlt nil)))
     (setq ad-return-value rlt)))
-  #+END_SRC
+#+END_SRC
 
 * tiny-expand
 
@@ -4609,7 +4599,7 @@ Single Capitals as you type."
             (setq outline-heading-end-regexp ":\n")
             (outline-minor-mode 1)
 ))
-  #+END_SRC
+#+END_SRC
 
 * which-key mode
 #+BEGIN_SRC emacs-lisp
@@ -4617,7 +4607,7 @@ Single Capitals as you type."
 ;; (setq which-key-popup-type 'side-window)
 ;; (setq which-key-side-window-location 'bottom)
 ;; (which-key-mode)
-  #+END_SRC
+#+END_SRC
 
 * a keybinding to open my accountability file
 
@@ -4635,13 +4625,13 @@ Single Capitals as you type."
   )
 (define-key key-minor-mode-map (kbd "<s-S-left>") 'playful-open)
 
-  #+END_SRC
+#+END_SRC
 
 * dictionary look up
 
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'load-path "/Users/jay/Downloads/dictionary-el-master")
-  #+END_SRC
+#+END_SRC
 
 
 * re-builder
@@ -4649,7 +4639,7 @@ Single Capitals as you type."
 #+BEGIN_SRC emacs-lisp
 (use-package re-builder)
 (setq reb-re-syntax 'string)
-  #+END_SRC
+#+END_SRC
 
 * re-builder "Query Replace This"
 [[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder “Query Replace This” - Dev and Such]]
@@ -4682,13 +4672,13 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ;; note that this slows everything down
 ;; (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
 
-  #+END_SRC
+#+END_SRC
 
 * email
 
 ** mu4e
 *** mu4e setup
- #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 ;; (setq user-mail-address "jay@storytelling.nyc")
 (setq user-mail-address "dixit@aya.yale.edu")
@@ -4808,7 +4798,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 ;; (mu4e-maildirs-extension)
 ;; (setq mu4e-maildirs-extension-title "Folders")
 
- #+END_EXAMPLE
+#+END_EXAMPLE
 
 *** mu4e keybindings
 #+BEGIN_EXAMPLE emacs-lisp
@@ -4864,7 +4854,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
   (local-unset-key (kbd "<M-right>"))
   (local-unset-key (kbd "<M-left>"))
 ))
- #+END_EXAMPLE
+#+END_EXAMPLE
 
 *** gmail emulation
 #+BEGIN_SRC emacs-lisp
@@ -4929,7 +4919,7 @@ whip Gmail into doing my bidding :)
   (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\Inbox"))
    ((equal mark 'flag) (mu4e-action-retag-message msg "\\Starred"))
    ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\Starred")))))
-# #+END_SRC
+##+END_SRC
 
 I've been using this for about a week now and I'm rather liking this setup so far.
 
@@ -5110,7 +5100,7 @@ smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
 
 
 
-  #+END_EXAMPLE
+#+END_EXAMPLE
 
 *** Maintaining an address-book with org-contacts
 
@@ -5614,7 +5604,7 @@ as the subject."
 
 ))
 )
-  #+END_SRC
+#+END_SRC
 
 
 * poetry
@@ -5629,7 +5619,7 @@ as the subject."
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
-  #+END_SRC
+#+END_SRC
 
 Here's an adaptation of dired-create-directory. It works the same way, so as well as a plain filename, you can also specify new parent directories (to be created under the current directory) for the file (e.g. foo/bar/filename).
 
@@ -5695,7 +5685,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'magit-status-mode-hook #'olivetti-mode 1)
 (add-hook 'dired-mode-hook #'olivetti-mode 1)
 
-  #+END_SRC
+#+END_SRC
 
 
 * access config files
@@ -5734,7 +5724,7 @@ C-c q
 ;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS")))
 
 
-  #+END_SRC
+#+END_SRC
 
 * org-ellipsis
 
@@ -5746,7 +5736,7 @@ C-c q
 ;; other interesting characters are ▼, ↴, ⬎, ⤷, and ⋱
 
 (setq org-ellipsis "…")
-  #+END_SRC
+#+END_SRC
 
 
 * embolden-region-or-point
@@ -5800,11 +5790,11 @@ C-c q
 
 
 (advice-add 'org-todo :after 'bb/next-heading)
-   #+END_SRC
+#+END_SRC
 
 
 ** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
- #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 
@@ -5834,7 +5824,7 @@ event of an error or nonlocal exit."
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
- #+END_EXAMPLE
+#+END_EXAMPLE
 
 ** a temporary hack
 #+BEGIN_SRC emacs-lisp
@@ -5885,7 +5875,7 @@ event of an error or nonlocal exit."
       ("$" "$" nil (org-mode latex-mode))
       ))
 
-  #+END_SRC
+#+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
 
@@ -5900,12 +5890,12 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
-   #+END_SRC
+#+END_SRC
 
 
 ** god mode
 
-   #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (use-package god-mode)
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
@@ -5922,7 +5912,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 (define-key god-local-mode-map (kbd ".") 'repeat)
 
 
-   #+END_EXAMPLE
+#+END_EXAMPLE
 
 ** C-c C-c to exit source code blocks
 
@@ -5930,7 +5920,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 (eval-after-load 'org-src
   '(define-key org-src-mode-map
      "\C-c\C-c" #'org-edit-src-exit))
-   #+END_SRC
+#+END_SRC
 
 
 ** narrow or widen
@@ -5960,7 +5950,7 @@ already narrowed."
         ((derived-mode-p 'latex-mode)
          (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
-   #+END_SRC
+#+END_SRC
 
 
 ** org go speed
@@ -6444,7 +6434,7 @@ Wow, this works.
  '(org-twbs-htmlize-output-type (quote inline-css))
  '(org-twbs-indent t)
 
- #+END_SRC
+#+END_SRC
 
 
 
@@ -6455,7 +6445,7 @@ Wow, this works.
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2022/bin/universal-darwin")
   )
- #+END_SRC
+#+END_SRC
 
 *** XeLaTeX customisations
 
@@ -6471,7 +6461,7 @@ Wow, this works.
 
 ;; add padding to numbered lists and bulleted lists (set to t)
 ;; (setq org-export-preserve-breaks t)
- #+END_SRC
+#+END_SRC
 
 *** load my custom latex templates
 
@@ -6496,7 +6486,7 @@ Wow, this works.
 (use-package blue-invoice)
 ;; (use-package blue-ruin-no-cover)
   )
-    #+END_SRC
+#+END_SRC
 
 *** fix latex verbatim
   You can use a filter function that will replace default "verbatim" with
@@ -6519,7 +6509,7 @@ Wow, this works.
 
  (add-to-list 'org-export-filter-final-output-functions
      'org-latex-filter-fancyvrb)
-  #+END_SRC
+#+END_SRC
 
 * no inline images
 #+BEGIN_SRC emacs-lisp
@@ -6811,7 +6801,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
 ;; (setq recenter-positions (quote (top middle bottom)))
- #+END_SRC
+#+END_SRC
 
 
 
@@ -6939,7 +6929,7 @@ cmd)
 (org-select-line)
 (pasteboard-copy)
 (set-mark nil))
-   #+END_SRC
+#+END_SRC
 
 *** lines
 
@@ -6954,7 +6944,7 @@ cmd)
   (mark-paragraph)
   (kill-region)
   )
-   #+END_SRC
+#+END_SRC
 
 
 *** subtrees
@@ -6969,14 +6959,14 @@ cmd)
  (eval-buffer)
  (org-edit-src-exit)
  )
-   #+END_SRC
+#+END_SRC
 
 *** document
 **** my/delete-duplicate-lines
      :PROPERTIES:
      :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
      :END:
-   #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my/update-lines (bunches pos keep)
  (cl-loop with dec = (if keep 0 1)
       for line being the hash-key of bunches
@@ -7055,7 +7045,7 @@ cmd)
                  (otherwise (setf continue nil)))
                 (my/update-lines bunches pos continue))))
   (delete-overlay selection)))
-   #+END_EXAMPLE
+#+END_EXAMPLE
 
 **** kill to buffer end
      :PROPERTIES:
@@ -7072,7 +7062,7 @@ cmd)
   (recenter-top-bottom))
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
-     #+END_SRC
+#+END_SRC
 
 
 ** navigation
@@ -7090,7 +7080,7 @@ cmd)
  )
 
 
- #+END_SRC
+#+END_SRC
 
 
 *** next-subtree-same-level-and-narrow
@@ -7109,7 +7099,7 @@ cmd)
 (org-backward-heading-same-level 1)
  (org-narrow-to-subtree)
  )
- #+END_SRC
+#+END_SRC
 
 *** next-subtree-and-narrow - original
 #+BEGIN_SRC emacs-lisp
@@ -7127,7 +7117,7 @@ cmd)
  (org-previous-visible-heading 1)
  (org-narrow-to-subtree)
  )
- #+END_SRC
+#+END_SRC
 
 *** filing
     :PROPERTIES:
@@ -7141,7 +7131,7 @@ cmd)
   (if (region-active-p)
       (call-interactively 'jay-refile-region)
     (org-refile)))
-   #+END_SRC
+#+END_SRC
 
 
 * Make Messages Buffer modifiable in Emacs 24.4
@@ -7232,7 +7222,7 @@ You can toggle it in necessary files by setting the local variables section at t
       (kbd "SPC")
       (quote insert-space)))))
 
- #+END_SRC
+#+END_SRC
 
 
 * optimize emacs load time
@@ -7288,7 +7278,7 @@ into the main dumped emacs"
 (expand-abbrev)
 (insert "---")
   )
- #+END_SRC
+#+END_SRC
 
 ** true em dash
 #+BEGIN_SRC emacs-lisp
@@ -7299,7 +7289,7 @@ into the main dumped emacs"
 (expand-abbrev)
 (insert "—")
   )
- #+END_SRC
+#+END_SRC
 
 ** double quote
    :PROPERTIES:
@@ -7325,7 +7315,7 @@ into the main dumped emacs"
    (progn (delete-region (mark) (point)))))
   (insert "\]")
   )
- #+END_SRC
+#+END_SRC
 
 ** insert equals sign
 #+BEGIN_SRC emacs-lisp
@@ -7335,19 +7325,19 @@ into the main dumped emacs"
    (progn (delete-region (mark) (point)))))
   (insert "=")
   )
- #+END_SRC
+#+END_SRC
 
 ** insert slash no abbrev
    :PROPERTIES:
    :ID:       D2AC465A-336E-4DCD-979C-6484FDF969C6
    :END:
 
-   #+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun jay/insert-slash ()
   (interactive)
   (insert "/")
   )
-   #+END_EXAMPLE
+#+END_EXAMPLE
 
 
 * undo-tree-mode
@@ -8399,7 +8389,7 @@ Go through `org-structure-template-alist' and
  ("r" mc/mark-all-in-region-regexp :exit t)
  ("q" nil)) )
 
- #+END_SRC
+#+END_SRC
 
 
 ** multiple-cursors-mode-map
@@ -9032,6 +9022,5 @@ Not sure what this does
       (overlay-put x 'face '(:foreground "orange red")))
      result)
    (message "Empty result"))))
-
 #+end_src
 

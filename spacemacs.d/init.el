@@ -116,7 +116,7 @@ dotspacemacs-additional-packages '(
                                       beacon
                                       benchmark-init
                                       ;; blimp
-                                      ;;                                  bongo
+                                      ;; bongo
                                       buffer-stack
                                       caps-lock
                                       change-inner
@@ -137,7 +137,7 @@ dotspacemacs-additional-packages '(
                                       fancy-narrow
                                       fastdef
                                       flyspell-lazy
-;;                                      focus
+                                      ;; focus
                                       ;; fountain-mode
                                       frame-cmds
                                       fuzzy
@@ -245,7 +245,6 @@ dotspacemacs-additional-packages '(
                                     org-projectile
                                     org-superstar
                                     popwin
-                                    server
                                     spaceline
                                     treemacs-icons-dired
                                     vi-tilde-fringe
