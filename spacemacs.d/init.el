@@ -41,7 +41,7 @@ This function should only modify configuration layer settings."
      auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
+;; git
           helm
      ;; lsp
      ;; markdown
@@ -56,7 +56,7 @@ This function should only modify configuration layer settings."
       ;; ;; org-enable-reveal-js-support t
       ;; :location built-in
       ;; )
-     ;; osx
+osx
      ;; xkcd
      ;; ag-general
      ;; ag-lang-tools
@@ -73,7 +73,7 @@ This function should only modify configuration layer settings."
      ;; org-roam
      ;; shell
      ;; shell-scripts
-     ;; jay
+;; jay
      ;; speed-reading
      ;; emoji
      ;; typography
@@ -759,9 +759,9 @@ you should place your code here."
           (height . 42) ; lines
           ))
 
-;; (flyspell-mode)
+(flyspell-mode)
 
-;;  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+(setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
   ;; (org-babel-do-load-languages
@@ -796,9 +796,9 @@ you should place your code here."
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
-;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
+(load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-;;  (load "/Users/jay/gnulisp/book-functions.el")
+(load "/Users/jay/gnulisp/book-functions.el")
 ;  (load "/Users/jay/gnulisp/reveal-in-finder.el")
 ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/define-word.el")
