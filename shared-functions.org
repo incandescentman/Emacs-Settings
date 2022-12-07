@@ -174,7 +174,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  ;; (setq org-list-indent-offset 3)
  (setq org-log-done nil)
 
- (setq org-mac-Skim-highlight-selection-p t)
+ (setq org-mac-link-skim-highlight-selection-p t)
  (setq org-mac-grab-Firefox+Vimperator-p nil)
  (setq org-mac-grab-Firefox-app-p nil)
  (setq org-mac-grab-Mail-app-p nil)
@@ -3602,7 +3602,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "K" 'org-cut-subtree)
 (define-super-key "d" 'org-todo)
 (define-super-key "L" 'org-mac-link-chrome-insert-frontmost-url)
-(define-super-key "S" 'org-mac-skim-insert-page)
+(define-super-key "S" 'org-mac-link-skim-insert-page)
 (define-super-key "a" 'mark-whole-buffer) ; select all
 (define-super-key "w" 'delete-window) ; close
 ;; (define-super-key "`" 'other-window-or-frame)
