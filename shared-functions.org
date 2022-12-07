@@ -2743,11 +2743,11 @@ I think this is correct:
 ** Sourcing / Citing / Attributing
 *** Copy link from Chrome
 #+BEGIN_SRC emacs-lisp
-(defun org-mac-chrome-insert-frontmost-url-with-quotes ()
+(defun org-mac-link-chrome-insert-frontmost-url-with-quotes ()
   "with quotes"
   (interactive)
   (insert "\"")
-  (org-mac-chrome-insert-frontmost-url)
+  (org-mac-link-chrome-insert-frontmost-url)
   (insert ",\"")
   )
 #+END_SRC
@@ -2759,7 +2759,7 @@ I think this is correct:
   (insert "#+BEGIN_QUOTE\n")
   (let ((p (point)))
     (insert "\n#+END_QUOTE\nSource: ")
-    (org-mac-chrome-insert-frontmost-url)
+    (org-mac-link-chrome-insert-frontmost-url)
     (goto-char p))
   (pasteboard-paste)
   (next-line)
@@ -2773,7 +2773,7 @@ I think this is correct:
 (defun web-research-quotes ()
   (interactive)
   (insert "\"")
-    (org-mac-chrome-insert-frontmost-url)
+    (org-mac-link-chrome-insert-frontmost-url)
        (insert "\,\" "))
 #+END_SRC
 
@@ -3601,7 +3601,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "k" 'kill-buffer)
 (define-super-key "K" 'org-cut-subtree)
 (define-super-key "d" 'org-todo)
-(define-super-key "L" 'org-mac-chrome-insert-frontmost-url)
+(define-super-key "L" 'org-mac-link-chrome-insert-frontmost-url)
 (define-super-key "S" 'org-mac-skim-insert-page)
 (define-super-key "a" 'mark-whole-buffer) ; select all
 (define-super-key "w" 'delete-window) ; close
@@ -5267,7 +5267,7 @@ subsequent sends."
 "Dear Professor,
 
 I'm a psychology writer (New York Times, Psychology Today), currently at work on a book. I recently discovered your paper ")
-(org-mac-chrome-insert-frontmost-url)
+(org-mac-link-chrome-insert-frontmost-url)
 (insert " and I'm very interested in reading it.
 
 I see that the paper is behind a paywall. Do you by chance have a PDF you could send me?
