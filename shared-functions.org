@@ -8420,8 +8420,6 @@ Go through `org-structure-template-alist' and
 (define-key mc/keymap (kbd "<backspace>") 'my/delete-backward)
 #+END_SRC
 
-** multiple cursors work for all keys
-
 ** make this work with multiple cursors
 
 #+begin_src emacs-lisp
@@ -8476,7 +8474,6 @@ Go through `org-structure-template-alist' and
 ** org-mode-hooks
 
 
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
@@ -8515,14 +8512,11 @@ In collapsed view, hide empty lines between subtrees
 * Demote sequence for list bullets
 
 #+begin_src emacs-lisp
-
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+")))
 #+end_src
 
 
 * embiggen text
-#+begin_src emacs-lisp
-#+end_src
 
 #+begin_SRC emacs-lisp
 
@@ -8542,7 +8536,7 @@ In collapsed view, hide empty lines between subtrees
 
 * hyperbole
 #+begin_src emacs-lisp
-(setq hyperbole-web-search-browser-function 'eww-browse-url)
+;; (setq hyperbole-web-search-browser-function 'eww-browse-url)
 #+end_src
 
 
@@ -8551,7 +8545,6 @@ In collapsed view, hide empty lines between subtrees
 
 (defun yesterday ()
   (interactive)
-
     (insert (shell-command-to-string "echo -n $(date -v -1d +%F)"))
   )
 #+end_src
@@ -8675,24 +8668,6 @@ Courtesy of Mike Goldenberg
 #+END_EXAMPLE
 
 
-* org-brain
-#+begin_EXAMPLE emacs-lisp
-(use-package org-brain :ensure t
- :init
- (setq org-brain-path "/Users/jay/dropbox/writing/org-brain")
- :config
- (setq org-id-track-globally t)
- (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
- (push '("b" "Brain" plain (function org-brain-goto-end)
-     "* %i%?" :empty-lines 1)
-    org-capture-templates)
- (setq org-brain-visualize-default-choices 'all)
- (setq org-brain-title-max-length 12)
- (setq org-brain-include-file-entries nil
-    org-brain-file-entries-use-title nil))
-#+END_EXAMPLE
-
-
 * org-show-inline-images
 #+begin_src emacs-lisp
 (defun org-show-inline-images ()
@@ -8796,7 +8771,7 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 
 * org-roam
-#+begin_SRC emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-roam
    :hook
    (after-init . org-roam-mode)
@@ -8810,7 +8785,7 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
         ("C-c n g" . org-roam-graph))
        :map org-mode-map
        (("C-c n i" . org-roam-insert))))
-#+END_SRC
+#+END_EXAMPLE
 
 * PDF tools
 
@@ -8878,11 +8853,11 @@ Not sure what this does
 
 * org-drill
 #+BEGIN_SRC emacs-lisp
-(use-package org-drill)
+;; (use-package org-drill)
 ; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
 ; (setq org-drill-add-random-noise-to-intervals-p t)
 
-(setq org-drill-use-visible-cloze-face-p t)
+;; (setq org-drill-use-visible-cloze-face-p t)
 #+END_SRC
 
 
@@ -8992,7 +8967,7 @@ Not sure what this does
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
-* trailing
+* trailing lines
 #+begin_src emacs-lisp
 (setq delete-trailing-lines nil)
 #+end_SRC
@@ -9006,10 +8981,10 @@ Not sure what this does
 (setq create-lockfiles nil)
 
 (run-with-idle-timer 300 t 'org-save-all-org-buffers)
-#+end_src
+#+end_SRC
 
 
-* <2022-10-26 Wed>
+* I love you
 #+begin_src emacs-lisp
 (defun iloveyou (args)
  (interactive "P")
@@ -9017,11 +8992,29 @@ Not sure what this does
  )
 #+end_src
 
+* set OpenAI API key
+
+Rewrite this emacs-lisp function to retrieve the API key from an external file: (setq openai-api-key "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")
+
+Here is an example of how you might rewrite the function to retrieve the API key from an external file:
+
+#+begin_src emacs-lisp
+(defun get-openai-api-key ()
+ "Retrieve the OpenAI API key from an external file."
+ (let ((api-key-file "~/.openai-api-key"))
+ (when (file-exists-p api-key-file)
+  (with-temp-buffer
+  (insert-file-contents api-key-file)
+  (buffer-string)))))
+
+(setq openai-api-key (get-openai-api-key))
+#+end_src
+
+This function will look for a file named ~/.openai/api-key, read the contents of the file, and return the API key as a string. The openai-api-key variable will then be set to this value.
+
 * openAI
 #+begin_src emacs-lisp
 (use-package aide)
-
-(setq openai-api-key "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")
 
 (defun aide-openai-complete-buffer-insert ()
  "Send the ENTIRE buffer to OpenAI and insert the result to the end of buffer."
@@ -9042,4 +9035,5 @@ Not sure what this does
      result)
    (message "Empty result"))))
 #+end_src
+
 

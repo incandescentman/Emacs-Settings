@@ -1114,7 +1114,8 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
  '(org-agenda-files
-   '("~/Dropbox/Kings/pre-residency/pre-residency-assignments.txt" "/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
+   '(
+     "/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
