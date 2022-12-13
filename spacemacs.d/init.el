@@ -144,7 +144,7 @@ dotspacemacs-additional-packages '(
                                       gcmh
                                       ;; gist
                                       helm
-                                      helm-cmd-t
+;;                                      helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
                                       ;; imenu-list
@@ -798,7 +798,7 @@ you should place your code here."
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-(load "/Users/jay/gnulisp/book-functions.el")
+;; (load "/Users/jay/gnulisp/book-functions.el")
 ;  (load "/Users/jay/gnulisp/reveal-in-finder.el")
 ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/define-word.el")
