@@ -45,11 +45,11 @@ This function should only modify configuration layer settings."
      helm
      ;; lsp
      ;; markdown
-     ;;  python
+     ;; python
      ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
-      ;;   (org
-      ;;     :ensure org-plus-contrib
-      ;;     :mode (("\\.org$" . org-mode))
+      ;;  (org
+      ;;    :ensure org-plus-contrib
+      ;;    :mode (("\\.org$" . org-mode))
       ;; :variables
       ;; org-enable-bootstrap-support t
       ;; org-enable-github-support t
@@ -95,14 +95,14 @@ This function should only modify configuration layer settings."
 dotspacemacs-additional-packages '(
 
 
-                                      ;;  auto-complete
-                                      ;;  dired-hacks-utils
-                                      ;;  dired-single
-                                      ;;  frame-restore
-                                      ;;  helm-projectile
-                                      ;;  markdown-mode
-                                      ;;  notmuch
-                                      ;;  projectile
+                                      ;; auto-complete
+                                      ;; dired-hacks-utils
+                                      ;; dired-single
+                                      ;; frame-restore
+                                      ;; helm-projectile
+                                      ;; markdown-mode
+                                      ;; notmuch
+                                      ;; projectile
                                       ;; graphviz-dot-mode
                                       ;; js2
                                       ;; magit
@@ -144,7 +144,7 @@ dotspacemacs-additional-packages '(
                                       gcmh
                                       ;; gist
                                       helm
-;;                                      helm-cmd-t
+;;                                     helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
                                       ;; imenu-list
@@ -156,13 +156,13 @@ dotspacemacs-additional-packages '(
                                       multicolumn
                                       multiple-cursors
                                       mw-thesaurus
-                                      ;;        nm
+                                      ;;       nm
                                       olivetti
                                       openwith
-                                      ;;   orgalist
+                                      ;;  orgalist
                                       org-contrib
                                       org-bookmark-heading
-                                      ;;   org-download
+                                      ;;  org-download
                                       org-drill
                                       org-fstree
                                       org-mac-link
@@ -578,11 +578,11 @@ It should only modify the values of Spacemacs settings."
    ;; '(:relative nil
    ;; :visual nil
    ;; :disabled-for-modes dired-mode
-   ;;                     doc-view-mode
-   ;;                     markdown-mode
-   ;;                     org-mode
-   ;;                     pdf-view-mode
-   ;;                     text-mode
+   ;;                    doc-view-mode
+   ;;                    markdown-mode
+   ;;                    org-mode
+   ;;                    pdf-view-mode
+   ;;                    text-mode
    ;; :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
@@ -765,14 +765,14 @@ you should place your code here."
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
   ;; (org-babel-do-load-languages
-  ;;  'org-babel-load-languages
-  ;;  '( (perl . t)
-  ;;     (ruby . t)
-  ;;     (shell . t)
-  ;;     (python . t)
-  ;;     (emacs-lisp . t)
-  ;;     (ditaa . t)
-  ;;     ))
+  ;; 'org-babel-load-languages
+  ;; '( (perl . t)
+  ;;    (ruby . t)
+  ;;    (shell . t)
+  ;;    (python . t)
+  ;;    (emacs-lisp . t)
+  ;;    (ditaa . t)
+  ;;    ))
 
 ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
 ;; (use-package zones)
@@ -798,13 +798,13 @@ you should place your code here."
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-;; (load "/Users/jay/gnulisp/book-functions.el")
-;  (load "/Users/jay/gnulisp/reveal-in-finder.el")
+(load "/Users/jay/gnulisp/book-functions.el")
+;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
 ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
-;;  (load "/Users/jay/emacs/emacs-settings/define-word.el")
-;;  (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
-;;  (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
+;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
+;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
+;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
+;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/emacs/emacs-settings/email.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
 
@@ -861,8 +861,8 @@ you should place your code here."
 
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
-;;     (find-file-literally "~/nd/fearless.org")
-       ;;     (imenu-list-minor-mode)
+;;    (find-file-literally "~/nd/fearless.org")
+       ;;    (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
 
@@ -877,8 +877,8 @@ you should place your code here."
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
-  ;;  (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
-  ;;  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
+  ;; (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
+  ;; (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
 
   (setq org-bullets-bullet-list (quote ("• ")))
 
@@ -899,7 +899,7 @@ you should place your code here."
 
   (setq org-hide-leading-stars t)
 
-;;  (smartparens-global-mode 1)
+;; (smartparens-global-mode 1)
 (electric-pair-mode 1)
 
   (add-hook 'ido-setup-hook (lambda ()
