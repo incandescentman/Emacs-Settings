@@ -21,7 +21,7 @@
 
 
 ;; (push "/Users/jay/.emacs.d/helm-cmd-t" load-path)
-(push "/Users/jay/emacs/spacemacs/elpa/helm-cmd-t-20150823.1157/" load-path)
+;; (push "/Users/jay/emacs/spacemacs/elpa/helm-cmd-t-20150823.1157/" load-path)
 
 
 ;;(use-package helm-cmd-t)
@@ -35,7 +35,7 @@
 
 ;; (setq jays-library-public (helm-cmd-t-get-create-source-dir "/Users/jay/Dropbox/Public/library"))
 
-(setq emacs-settings (helm-cmd-t-get-create-source-dir "/Users/jay/gnulisp"))
+;; (setq emacs-settings (helm-cmd-t-get-create-source-dir "/Users/jay/gnulisp"))
 
 
 
@@ -74,21 +74,21 @@ emacs-settings)))
 
 
 
-(defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "/Users/jay/iBooks2")
-  "my permanent folders for helm-mini")
+;; (defvar my-org-folders (list  "/Users/jay/Music/iTunes/iTunes Media/Books" "/Users/jay/iBooks2")
+;;   "my permanent folders for helm-mini")
 
-(defun read-jd (&optional arg)
-  ""
-  (interactive "P")
-  (if (consp arg)
-      (call-interactively 'helm-cmd-t-repos)
-    (let ((helm-ff-transformer-show-only-basename nil))
-      (helm :sources (mapcar (lambda (dir)
-                               (helm-cmd-t-get-create-source-dir dir))
-                             my-org-folders)
-            :candidate-number-limit 20
-            :buffer "*helm-my-org:*"
-            :input "_JD "))))
+;; (defun read-jd (&optional arg)
+;;   ""
+;;   (interactive "P")
+;;   (if (consp arg)
+;;       (call-interactively 'helm-cmd-t-repos)
+;;     (let ((helm-ff-transformer-show-only-basename nil))
+;;       (helm :sources (mapcar (lambda (dir)
+;;                                (helm-cmd-t-get-create-source-dir dir))
+;;                              my-org-folders)
+;;             :candidate-number-limit 20
+;;             :buffer "*helm-my-org:*"
+;;             :input "_JD "))))
 
 
 (defun book-dired()
