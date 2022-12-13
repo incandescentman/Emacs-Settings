@@ -6,38 +6,29 @@ narrow-or-widen-dwim deactivates electric-pair mode for quotation marks
 
 
 
-* change the behavior of org-smart-meta-return/dwim
-
-For plain-text lists 
-* after a list
-Can we change the behavior of smart-return, smart-org-meta-return-dwim, and smart-org-insert-todo-heading-dwim for when point is on the line AFTER a list (plain-text, checkbox, or numbered)?
-
-Right now it creates another item. I want just a newline, or in the case of smart-org-insert-todo-heading-dwim, a todo heading.
-
-
 
 * old
 
 
-Delete and get this ".," 
+Delete and get this ".,"
 
 * delete spaces between one-letter words
 
 [fn:: Manson, J. E., Willet, W. C., Stampfer, M. J., Colditz, G. A., Hunter, D. J., Hankinson, S. E., Hennekens, C. H., & Speizer, F. E. (1995). Body weight and mortality among women. The New England Journal of Medicine, 333, 677–685.]
 
 
-→ 
+→
 
 [fn:: Manson, J.E., Willet, W.C., Stampfer, M.J., Colditz, G.A., Hunter, D. J., Hankinson, S. E., Hennekens, C. H., & Speizer, F. E. (1995). Body weight and mortality among women. The New England Journal of Medicine, 333, 677–685.]
 
 
 
 
-* replace smart quotes
+* DONE replace smart quotes
 
 I have this defun: http://pastebin.com/bPtAM940
 
-I would like to add a line to it so that if ALSO finds strings like this: =spac- es= and changes them to this: =spaces= 
+I would like to add a line to it so that if ALSO finds strings like this: =spac- es= and changes them to this: =spaces=
 
 In other words, I want it to find and remove the string =- = but ONLY when it occurs inside a word, i.e. only if there is an alphabetic character preceding the =-=
 
@@ -48,15 +39,63 @@ In other words, a string like this, where the hyphen is at the beginning of the 
 But in a string like this...
 
 =This is a sente- nce.=
- 
+
 ...the hyphen and space would be removed and the result would be this:
 
 =This is a sentence.=
 
-Can he do this? 
+Can he do this?
 
 
-* make my/beginning-of-sentence-p return t if there is a quotation marks at beginning of 
+Add a sentence to this function so that if ALSO finds strings like this: =spaces= and changes them to this: =spaces=
+
+In other words, I want it to find and remove the string =- = but ONLY when it occurs inside a word, i.e. only if there is an alphabetic character preceding the =-=
+
+In other words, a string like this, where the hyphen is at the beginning of the line, would remain intact:
+
+=- this is the first point of a plain-text list=
+
+But in a string like this...
+
+=This is a sentence.=
+
+...the hyphen and space would be removed and the result would be this:
+
+=This is a sentence.=
+Here is an updated version of the function that includes the additional functionality:
+
+Copy code
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+
+  ;; Replace occurrences of "- " and "- " inside words with "-"
+  (while (search-forward-regexp "\\b-\\s" nil t)
+    (replace-match "-" nil t))
+
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'")
+                            ("’" . "'")
+                            (" — " . "---")
+                            (" - " . "---")
+                            ("—" . "---")
+                            ("''" . "\"")
+                            (" – " . "---")
+                            ("​" . "")
+                            ("…" . "...")
+                            ("• " . "- ")
+                            (" " . "")
+                            ("  " . " "))
+                          nil beg end)
+
+)
+The added code uses the search-forward-regexp function to search for occurrences of the string - that are preceded by a word boundary (i.e. an alphabetic character). When it finds a match, it uses the replace-match function to replace the matched string with a single hyphen (-) character. This ensures that only occurrences of - inside words are replaced, while occurrences at the beginning of a line (like in the example provided) are left intact.
+
+To use this function, the user can select a region of the buffer and call the function using M-x replace-smart-quotes, or the user can call the function without selecting a region to replace all occurrences of smart quotes and hyphen+space strings in the entire buffer.
+
+* make my/beginning-of-sentence-p return t if there is a quotation marks at beginning of
 (defun my/beginning-of-sentence-p ()
  "Return t if point is at the beginning of a sentence."
  (let ((start (point))
@@ -64,46 +103,38 @@ Can he do this?
   (eq start beg)))
 
 
-* mu4e unstar in gmail web interface
-- and reflected in mu4e 
 
-
-* convert to numbered list 
+* convert to numbered list
 (define-key key-minor-mode-map (kbd "M-#") 'convert-to-numbered-list)
 
-Or M-- cycles to numbered list before it cycles back 
+Or M-- cycles to numbered list before it cycles back
 
-* create a do not downcase list 
+* create a do not downcase list
 
 * don't capitalize words that already begin with a capital
 
 
-* when cursor is on blank line and insert-heading, add heading to current line don't add line break 
+* when cursor is on blank line and insert-heading, add heading to current line don't add line break
 
 
-* make emacs work more like Workflowy 
+* make emacs work more like Workflowy
 
 * relig
 
 Complete word, then add completion to abbrev list.
 
-* cycle case
-realiz realized realizing 
-
-mend mended mending 
-
 
 * region or thing
 
 ** highlighted region or thing at point
- I use several functions that do dictionary lookups of the "thing at point." 
+ I use several functions that do dictionary lookups of the "thing at point."
 1. gnugol-word-at-point, which is a function that does (defun gnugol-word-at-point ()
   (interactive)
 (gnugol-search-google (thing-at-point 'word))
-) 
+)
 gnugol-search-google is defined in gnugol.el
 2. define-word-at-point, which is an interactive autoloaded
-Lisp closure in define-word.el' 
+Lisp closure in define-word.el'
 
 These both work fine. However, I'd like to be able to highlight a 2-word or 3-word PHRASE (i.e. select the region) and THEN invoke gnugol-word-at-point or define-word-at-point and have gnugol or define-word look up the entire phrase.
 
@@ -111,11 +142,11 @@ Can you implement a functionality for these two functions that allows me to do "
 
 Thanks!
 
-So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query. 
+So that I have two words highlighted and I run gnugol-word-at-point, it first takes the highlighted region as the entire query.
 
 
 
-** define word 
+** define word
 
 
 
@@ -123,13 +154,13 @@ So that I have two words highlighted and I run gnugol-word-at-point, it first ta
 (define-key key-minor-mode-map (kbd "M-E") 'forward-clause)
 
 * file settings                                                     :ARCHIVE:
-#+OPTIONS: f:t 
+#+OPTIONS: f:t
 #+TODO: TODO PLEASE-CLARIFY PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
 #+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE | TRY-THIS
-#+TITLE: 
-#+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup 
-* smart punctuation behavior 
+#+TITLE:
+#+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup
+* DONE smart punctuation behavior
 
 Example: Don't use an adverb word. ^
 scenario: I hit comma
@@ -152,7 +183,7 @@ I mean total Emacs crashes, where I have to force quit Emacs itself. It's happen
 - promoting/demoting org-headings
 - moving subtree up or down (i.e. using org-metadown org org-metaup)
 
-I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug. 
+I've tried reinstalling org-plus-contrib... I have also enabled org-element-debug.
 
 * TODO another capitalization error
 Open another-capitalization-error.org to see another capitalization error I introduced when I was messing around with the code. I'd like to make it so that my/kill-line-dwim capitalizes the first character of the next line IF it's lowercase; but if it's in uppercase (as with org-todo-keywords) then leave it alone. Thanks!
@@ -163,19 +194,19 @@ Smart-punctuation is working as desired in plain text.
 Example #1 (works as desired):
 
 Input: Thinking is harder than it sounds ^
-Scenario: add semicolon 
+Scenario: add semicolon
 Output: Thinking is harder than it sounds; ^
 
-However, this doesn't work in an org-heading. 
+However, this doesn't work in an org-heading.
 
-Example #2 (doesn't work as desired): 
+Example #2 (doesn't work as desired):
 
 Input: * Thinking is harder than it sounds ^
-Scenario: add semicolon 
-Output: Thinking is harder than it sounds;^ 
+Scenario: add semicolon
+Output: Thinking is harder than it sounds;^
 
 
-* TODO how include plain-text URLs and image links in org-mime? 
+* TODO how include plain-text URLs and image links in org-mime?
 This: [[http://emacs.stackexchange.com/questions/14874/how-include-plain-text-urls-and-image-links-in-org-mime][org export - how include plain-text URLs and image links in org-mime? - Emacs Stack Exchange]]
 
    #+BEGIN_SRC emacs-lisp
@@ -204,7 +235,7 @@ Debugger entered--Lisp error: (args-out-of-range 0 0)
   ad-Advice-call-interactively(#<subr call-interactively> message-send-and-exit nil nil)
   apply(ad-Advice-call-interactively #<subr call-interactively> (message-send-and-exit nil nil))
   call-interactively(message-send-and-exit nil nil)
-  command-execute(message-send-and-exit) 
+  command-execute(message-send-and-exit)
    #+END_SRC
 
 
@@ -212,25 +243,25 @@ Debugger entered--Lisp error: (args-out-of-range 0 0)
 I can't seem to reproduce the reported bugs/undesired behaviours. Perhaps they went away when I refactored the ~smart-punctuation~ function? Are you still getting them?
 
 ** NOTE-TO-RÚDI still getting the error
-I still get an error when I follow the directions [[file:smart-punctuation-error.org::*how%20to%20induce%20the%20error:][here]]. It's when I try to place a comma in the heading at the bottom of the file. Can you try doing this and tell me if you can reproduce the error? Thanks! 
+I still get an error when I follow the directions [[file:smart-punctuation-error.org::*how%20to%20induce%20the%20error:][here]]. It's when I try to place a comma in the heading at the bottom of the file. Can you try doing this and tell me if you can reproduce the error? Thanks!
 
 * TODO make erika-send-mail-styled respect the "COMMITTED" org-todo-keyword
 See the test file here: [[file:~/gnulisp/erika-send-mail-test-file.org::*<2015-09-18%20Fri>][erika-send-mail-test-file.org]]
 
-I want to send only the subtree, heading ** COMMITTED <2015-09-18 Fri> 
+I want to send only the subtree, heading ** COMMITTED <2015-09-18 Fri>
 
-If I place the point at the beginning of ** COMMITTED <2015-09-18 Fri>, it successfully sends the styled + formatted email. But the org-todo-keyword "COMMITTED" is omitted from the subject header. Can we make it so it's included? Thanks! 
+If I place the point at the beginning of ** COMMITTED <2015-09-18 Fri>, it successfully sends the styled + formatted email. But the org-todo-keyword "COMMITTED" is omitted from the subject header. Can we make it so it's included? Thanks!
 
 * TODO don't autocapitalize checklist items
 - [ ] This
 - [ ] That
-- [ ] And this 
+- [ ] And this
 
 These get autocapitalized... can we disable that?
 
 
 * TODO kill-clause
-** NOTE-TO-JAY Questions 
+** NOTE-TO-JAY Questions
      Regarding ~pasteboard-cut~, I think it's rather straightforward. Please give it a go.
 
      As for ~kill-line~, there's something I should clarify: this is a builtin command (comes with Emacs), so it's not something I can easily change. Except that Emacs Lisp has a nice little functionality called "advicing", which allows dynamically adding behaviour to functions without having access to their code. I could do this to ~kill-line~. However, this is usually not recommended, since it could mess up other functionalities that might depend on the default ~kill-line~ implementation. Anyway, since you have the ~my/kill-line-dwim~ function, isn't that the one you use?
@@ -281,7 +312,7 @@ This is a test sentence, ^nothing to see here. And then another.
 
 This is a test sentence^. And then another.
 
-: Yes! Confirmed, that is what it should yield. 
+: Yes! Confirmed, that is what it should yield.
 
      Now, going back to the current result of ~kill-clause~:
 
@@ -309,28 +340,28 @@ This is a test sentence, nothing to see here.^<EOB>
 
      Correct?
 
-: Correct! Thanks for thoroughly thinking through these cases, much appreciated! 
+: Correct! Thanks for thoroughly thinking through these cases, much appreciated!
 
-** NOTE-TO-RÚDI Comments about my edits to kill-clause-test-file.el 
+** NOTE-TO-RÚDI Comments about my edits to kill-clause-test-file.el
 What a brilliant approach, to create the test file! Here are some notes about my edits to the file.
 
 Kill-clause should only kill one clause, which I think means it should only ever kill one comma, not two. So for the example below, it should leave the second comma in. I edited the desired output in kill-clause-test-file.el.
 
-Input: We should consider^, for completeness, comma separated clauses. 
+Input: We should consider^, for completeness, comma separated clauses.
 Your suggested output: We should consider^ comma separated clauses.
-My desired output: We should consider^, comma separated clauses. 
+My desired output: We should consider^, comma separated clauses.
 
 Same for this one:
 
 Input: We should consider,^ for completeness, comma separated clauses.
 Your suggested output: We should consider^ comma separated clauses.
-My desired output: We should consider,^ comma separated clauses. 
+My desired output: We should consider,^ comma separated clauses.
 
 And this one:
 
 Input: We should consider, ^for completeness, comma separated clauses.
 Your suggested output: We should consider^ comma separated clauses.
-My desired output: We should consider, ^comma separated clauses. 
+My desired output: We should consider, ^comma separated clauses.
 
 With the example below, it should kill the question mark and leave the period. And the point should be before the period.
 
@@ -338,84 +369,84 @@ Input: And what about two consecutive sentences^? That's important too.
 Your suggested output: And what about two consecutive sentences?^
 My desired output: And what about two consecutive sentences^.
 
-With the example below, I probably would never have the input you mentioned. I changed the syntax of the input to match the case I'm more likely to encounter. 
+With the example below, I probably would never have the input you mentioned. I changed the syntax of the input to match the case I'm more likely to encounter.
 
 Your suggested input: ^Let's not forget parenthesis (those are extremely important!)
-My more likely input: ^Let's not forget parenthesis (those are extremely important)! 
-Output: (^Those are extremely important)! 
+My more likely input: ^Let's not forget parenthesis (those are extremely important)!
+Output: (^Those are extremely important)!
 
 Same for this one:
 
-Your suggested input: Let's not forget parenthesis ^(those are extremely important!) 
-My more likely input: Let's not forget parenthesis ^(those are extremely important)! 
-Output: Let's not forget parenthesis^! 
+Your suggested input: Let's not forget parenthesis ^(those are extremely important!)
+My more likely input: Let's not forget parenthesis ^(those are extremely important)!
+Output: Let's not forget parenthesis^!
 
-Thanks! 
+Thanks!
 
-* TODO [#C] a tweak to my/kill-sentence-dwim 
+* TODO [#C] a tweak to my/kill-sentence-dwim
 I created a test file my-kill-sentence-dwim-test-file.elt to illustrate input and desired output for an edge case I discovered. Thanks!
 *
 * TESTING [#B] a smart-space exception for org-mode tags
 
 Example:
 #+BEGIN_EXAMPLE
-* Is this a viable^                                                   :slide: 
+* Is this a viable^                                                   :slide:
 #+END_EXAMPLE
 
 Let's say the point is on the carat and I type "business?"
 
-Current output: 
+Current output:
 #+BEGIN_EXAMPLE
-* Is this a viable business ?slide: 
+* Is this a viable business ?slide:
 #+END_EXAMPLE
 
 Desired output:
 #+BEGIN_EXAMPLE
-* Is this a viable business?^                                          :slide: 
+* Is this a viable business?^                                          :slide:
 #+END_EXAMPLE
 
 *** NOTE-TO-RÚDI Question about spaces?
-It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag. 
+It works! Now, next question. Currently, when I type spaces between words in the heading, the space between the words and the tag gets collapsed. (Obviously it does, since I have <SPC> bound to jay/insert-space.) Is it easy to make it so that I can type spaces in the heading with collapsing the spaces between the heading and the tag? If it's too complicated, I can solve this problem on the "user side" by trying to remember to use M-SPC (insert-space) whenever I'm in an org-mode heading with a tag.
 
 * TODO capitalize after ellipsis and line breaks
 
-e.g. 
+e.g.
 
 This is the end...
 
-but this is a new beginning. 
+but this is a new beginning.
 
-But should be autocapitalized. 
+But should be autocapitalized.
 
-* TODO an edge case for kill-word-correctly-and-capitalize 
+* TODO an edge case for kill-word-correctly-and-capitalize
 
-Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+Input: The 16/8 doesn't appeal to me as much.^ And also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days
 
 Scenario: kill-word-correctly-and-capitalize
 
-Current output: The 16/8 doesn't appeal to me as much. also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+Current output: The 16/8 doesn't appeal to me as much. also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days
 
-Desired output: The 16/8 doesn't appeal to me as much. Also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days 
+Desired output: The 16/8 doesn't appeal to me as much. Also based on what Varady hypothesized about reduced caloric intake being mediated by stomach shrinkage on fast days
 
 
-* TODO a change to endless downcase 
+* TODO a change to endless downcase
 In [[file:shared-functions.org::*Intelligently%20change%20punctuation%20of%20sentences%20when%20I%20change%20the%20capitalization][endless/downcase]], don't convert "..." to "..,"
 
 Input: The only thing we have to fear... ^Is fear itself.
 Scenario: invoke ~endless/downcase~
-Current output: The only thing we have to fear.., is^ fear itself. 
+Current output: The only thing we have to fear.., is^ fear itself.
 Desired output: The only thing we have to fear... is^ fear itself.
 
-* TODO pasteboard-paste-without-smart-quotes 
+* TODO pasteboard-paste-without-smart-quotes
 I'm finding that pasteboard-paste-without-smart-quotes inserts rogue spaces in the pasted contents. Doesn't happen every time... but it happens often. Can you reproduce / debug? Thank you!!
 
 * TODO smart comma
 When point is on a period, exclamation point, or question mark and it hit "," then next word should also be downcased. Basically, if I'm changing a period to a comma, next word should be downcased.
 
 Input: I'd like to stay^. But I'm late.
-Scenario: Point is on the period and I type a comma (",") 
-Current output: I'd like to stay,^ But I'm late. 
-Desired output: I'd like to stay,^ but I'm late. 
+Scenario: Point is on the period and I type a comma (",")
+Current output: I'd like to stay,^ But I'm late.
+Desired output: I'd like to stay,^ but I'm late.
 
 
 * TODO message-goto-to
@@ -424,27 +455,27 @@ In new-email-from-subtree and new-email-from-subtree-no-signature, can we add ~(
 Also, after I insert the name and tab to complete the email address from org-contacts, is there an easy way to then get to the message body without using movement keys to get there (e.g. by tabbing again or something else)?
 
 * TODO downcase next word on invocation of third period (but not past line break)
-Example: Something that's just weird more than funny..^ And having to explain how it got that way. 
+Example: Something that's just weird more than funny..^ And having to explain how it got that way.
 Scenario: Having already hit "." twice, I hit it a third time so that you'll have three dots.
-Current output: Something that's just weird more than funny...^ And having to explain how it got that way. 
-Desired output: Something that's just weird more than funny...^ and having to explain how it got that way. 
+Current output: Something that's just weird more than funny...^ And having to explain how it got that way.
+Desired output: Something that's just weird more than funny...^ and having to explain how it got that way.
 
 * TODO make org-agenda not display tasks scheduled for future days?
 This:
-http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of 
+http://emacs.stackexchange.com/questions/16571/in-org-mode-how-to-delay-the-display-of-some-scheduled-tasks-until-the-day-of
 
 *** TODO [#C] make smart-org-meta-return work with SCHEDULED and DEADLINE
 
 #+BEGIN_EXAMPLE
-TODO work out with Luke 
+TODO work out with Luke
    SCHEDULED: <2015-07-13 Mon 17:00> ^
 #+END_EXAMPLE
 
-Say the point is at the carat and I hit smart-org-meta-return 
+Say the point is at the carat and I hit smart-org-meta-return
 
-Current output: 
+Current output:
 #+BEGIN_EXAMPLE
-TODO work out with Luke 
+TODO work out with Luke
    SCHEDULED: <2015-07-13 Mon 17:00> ^
 
 * TODO
@@ -452,13 +483,13 @@ TODO work out with Luke
 
 Desired output:
 #+BEGIN_EXAMPLE
-TODO work out with Luke 
-   SCHEDULED: <2015-07-13 Mon 17:00> ^ 
+TODO work out with Luke
+   SCHEDULED: <2015-07-13 Mon 17:00> ^
 * TODO
 #+END_EXAMPLE
 
 Same thing for scheduled:
-#+BEGIN_EXAMPLE 
+#+BEGIN_EXAMPLE
 *** DONE send July priorities to Erika
     DEADLINE: <2015-07-10 Fri> ^
 
@@ -490,7 +521,7 @@ We would define each long-form-phrase and its contraction as a list of pairs, ma
 (("could not") ("couldn't"))
 ))
 
-What do you think? 
+What do you think?
 
 * how to find function within my init files?
 I often want to do this:
@@ -518,7 +549,7 @@ How to do
 
 * kill-sentence bug
 
-But in most of the big cities in the United States, it's straight women who are in the majority---meaning that single straight guys are a scarce commodity. To potential heterosexual men. So what happens when there aren't enough men to go around? Psychologist Sarah Hill has spent the last few years studying this very question. 
+But in most of the big cities in the United States, it's straight women who are in the majority---meaning that single straight guys are a scarce commodity. To potential heterosexual men. So what happens when there aren't enough men to go around? Psychologist Sarah Hill has spent the last few years studying this very question.
 
 Test: kill "To potential heterosexual men."
 

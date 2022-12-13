@@ -41,8 +41,8 @@ This function should only modify configuration layer settings."
      auto-completion
      ;; better-defaults
      emacs-lisp
-;; git
-          helm
+     ;; git
+     helm
      ;; lsp
      ;; markdown
      ;;  python
@@ -56,7 +56,7 @@ This function should only modify configuration layer settings."
       ;; ;; org-enable-reveal-js-support t
       ;; :location built-in
       ;; )
-osx
+     osx
      ;; xkcd
      ;; ag-general
      ;; ag-lang-tools
@@ -73,7 +73,7 @@ osx
      ;; org-roam
      ;; shell
      ;; shell-scripts
-;; jay
+     ;; jay
      ;; speed-reading
      ;; emoji
      ;; typography
@@ -147,7 +147,7 @@ dotspacemacs-additional-packages '(
                                       helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
-  ;;                                    imenu-list
+                                      ;; imenu-list
                                       ;; key-chord
                                       key-seq
                                       markdown-mode
@@ -156,13 +156,13 @@ dotspacemacs-additional-packages '(
                                       multicolumn
                                       multiple-cursors
                                       mw-thesaurus
-                              ;;        nm
+                                      ;;        nm
                                       olivetti
                                       openwith
-;;                                      orgalist
+                                      ;;   orgalist
                                       org-contrib
                                       org-bookmark-heading
-;;                                      org-download
+                                      ;;   org-download
                                       org-drill
                                       org-fstree
                                       org-mac-link
@@ -175,7 +175,7 @@ dotspacemacs-additional-packages '(
                                       org-modern
                                       ;; org-noter
                                       ;; org-noter-pdftools
-;;                                    org-pdftools
+                                      ;; org-pdftools
                                       ;; org-roam
                                       ;;org-sidebar
                                       ;; ox-twbs
@@ -200,18 +200,18 @@ dotspacemacs-additional-packages '(
                                       sudo-edit
                                       tabbar
                                       tiny
-    ;;                                  tldr
+                                      ;; tldr
                                       topspace
-    ;;                                  transcribe
+                                      ;; transcribe
                                       unfill
                                       visible-mark
                                       wc-mode
-;;                                      web-mode
+                                      ;; web-mode
                                       wrap-region
-      ;;                                writeroom-mode
-  ;;                                    wttrin
+                                      ;; writeroom-mode
+                                      ;; wttrin
                                       xah-replace-pairs
-       ;;                               yahoo-weather
+                                      ;; yahoo-weather
                                       ;; zone
                                       )
    ;; A list of packages that cannot be updated.
