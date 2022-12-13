@@ -1,3 +1,4 @@
+
 # Local Variables:
 # org-config-files-local-mode: t
 # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space)
@@ -659,6 +660,15 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 ;; add alpha. And replace the alpha.
 
   (replace-smart-quotes-regexp beg end)
+
+;; These lines added by ChatGPT, they didn't work
+;; Replace occurrences of "- " and "- " inside words with "-"
+  ;; (while (search-forward-regexp "\\b-\\s" nil t)
+  ;;   (replace-match "-" nil t))
+;; up until here
+;; can delete this section if necessary
+
+
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
@@ -9036,4 +9046,82 @@ This function will look for a file named ~/.openai/api-key, read the contents of
    (message "Empty result"))))
 #+end_src
 
+
+
+
+* cycle contractions
+Doesn't work
+
+Written by ChatGPT
+#+begin_EXAMPLE emacs-lisp
+(defun cycle-contraction (contraction-pairs)
+  "Cycles between the long-form-phrase and its contraction for a two-word phrase.
+
+CONTRACTION-PAIRS is a list of cons cells containing the long-form-phrase and its contraction, e.g. (('do not') ('don't')).
+
+If the point is on a long-form-phrase, this function replaces it with its contraction.
+If the point is on a contraction, this function replaces it with the corresponding long-form-phrase."
+  (interactive)
+  (let ((current-phrase (thing-at-point 'word)))
+    (dolist (pair contraction-pairs)
+      (if (member current-phrase pair)
+          (let ((long-form-phrase (car pair))
+                (contraction (cdr pair)))
+            (if (string= current-phrase long-form-phrase)
+                (progn
+                  (delete-region (point) (+ (point) (length current-phrase)))
+                  (insert contraction))
+              (progn
+                (delete-region (point) (+ (point) (length current-phrase)))
+                (insert long-form-phrase))))))))
+
+(setq contraction-pairs
+        (
+         (("do not") ("don't"))
+         (("will not") ("won't"))
+         (("could not") ("couldn't"))
+         )))
+#+end_EXAMPLE
+
+Do not
+
+* playing
+#+begin_src emacs-lisp
+(defun write-name-100-times ()
+  "Prompts the user for their name and writes it 100 times in the buffer."
+  (interactive)
+  (let ((name (read-string "Enter your name: ")))
+    (dotimes (i 100)
+      (insert (concat name "\n")))))
+
+
+(defun start-pomodoro ()
+  "Starts a 25-minute pomodoro timer and logs the completed pomodoro in a file called `~/pomodori.txt`."
+  (interactive)
+  (run-at-time "25 min" nil
+               (lambda ()
+                 (with-current-buffer (find-file-noselect "~/pomodori.txt")
+                   (goto-char (point-max))
+                   (insert (concat (format-time-string "%Y-%m-%d %H:%M:%S")
+                                   ": Completed pomodoro\n"))
+                   (save-buffer))))
+  (message "Pomodoro timer started. Will log completed pomodoro in `~/pomodori.txt` at %s"
+           (format-time-string "%Y-%m-%d %H:%M:%S" (+ (float-time) (* 60 25)))))
+#+end_SRC
+
+* Warnings
+#+begin_src emacs-lisp
+(use-package warnings)
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+#+end_src
+
+* ChatGPT
+
+(require 'quelpa)
+(require 'quelpa-use-package)
+(use-package chatgpt
+ :quelpa ((chatgpt :fetcher git :url "https://github.com/joshcho/ChatGPT.el.git") :upgrade t)
+ :init
+ (setq chatgpt-repo-path (expand-file-name "ChatGPT.el" quelpa-build-dir))
+ :bind ("C-c q" . chatgpt-query))
 
