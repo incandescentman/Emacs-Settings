@@ -120,6 +120,7 @@ dotspacemacs-additional-packages '(
                                       buffer-stack
                                       caps-lock
                                       change-inner
+                                      chatgpt
                                       cheatsheet
                                       command-log-mode
                                       counsel
@@ -133,6 +134,7 @@ dotspacemacs-additional-packages '(
                                       discover-my-major
                                       ;; early-init
                                       ;; emms
+                                      epc
                                       expand-region
                                       fancy-narrow
                                       fastdef
@@ -144,7 +146,7 @@ dotspacemacs-additional-packages '(
                                       gcmh
                                       ;; gist
                                       helm
-;;                                     helm-cmd-t
+                                      ;; helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
                                       ;; imenu-list
@@ -156,7 +158,7 @@ dotspacemacs-additional-packages '(
                                       multicolumn
                                       multiple-cursors
                                       mw-thesaurus
-                                      ;;       nm
+                                      ;; nm
                                       olivetti
                                       openwith
                                       ;;  orgalist
@@ -177,7 +179,7 @@ dotspacemacs-additional-packages '(
                                       ;; org-noter-pdftools
                                       ;; org-pdftools
                                       ;; org-roam
-                                      ;;org-sidebar
+                                      ;; org-sidebar
                                       ;; ox-twbs
                                       ox-tufte
                                       palimpsest
@@ -189,6 +191,7 @@ dotspacemacs-additional-packages '(
                                       polymode
                                       popup
                                       project-explorer
+				      quelpa-use-package
                                       rainbow-mode
                                       re-builder
                                       recentf
@@ -206,7 +209,7 @@ dotspacemacs-additional-packages '(
                                       unfill
                                       visible-mark
                                       wc-mode
-                                      ;; web-mode
+                                      web-mode
                                       wrap-region
                                       ;; writeroom-mode
                                       ;; wttrin
@@ -741,7 +744,7 @@ you should place your code here."
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
-:load-path "/Users/jay/emacs/org-9.5.5/"
+:load-path "/Users/jay/emacs/org-9.6/"
 ;; :ensure org-plus-contrib
 :config
 (org-reload))
@@ -1088,6 +1091,11 @@ before packages are loaded.")
 ;; (embiggen-text)
 (scrollbar-init)
   )
+
+;; (setq max-lisp-eval-depth 10000)
+;;; When opening a file that is a symbolic link, don't ask whether I
+;;; want to follow the link. Just do it
+(setq find-file-visit-truename t)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
