@@ -9103,6 +9103,9 @@ Do not
 * ChatGPT
 
 #+begin_SRC emacs-lisp
+(setq python-interpreter "/usr/local/bin/python3")
+(setq chatgpt-python-interpreter "python3")
+
 (use-package quelpa-use-package)
 (use-package chatgpt
  :quelpa ((chatgpt :fetcher git :url "https://github.com/joshcho/ChatGPT.el.git") :upgrade t)
@@ -9120,3 +9123,19 @@ Do not
               ("my-custom-type" . "My custom prompt.\n\n%s")))
 
 #+end_SRC
+
+* org 9.6 suppress a weird error message
+[[https://github.com/nobiot/org-transclusion/issues/105][Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting · Issue #105 · nobiot/org-transclusion]]
+
+#+begin_src emacs-lisp
+(setq warning-suppress-types (append warning-suppress-types '((org-element-cache))))
+#+end_src
+
+
+* tabbar
+So Emacs text doesn't appear on the MacBook notch.
+
+#+begin_src emacs-lisp
+(use-package tab-bar)
+(tab-bar-mode 1)
+#+end_src
