@@ -191,7 +191,7 @@ dotspacemacs-additional-packages '(
                                       polymode
                                       popup
                                       project-explorer
-				      quelpa-use-package
+				                              quelpa-use-package
                                       rainbow-mode
                                       re-builder
                                       recentf
@@ -246,6 +246,7 @@ dotspacemacs-additional-packages '(
                                     hs-mode
                                     notmuch
                                     org-projectile
+                                    org-roam
                                     org-superstar
                                     popwin
                                     spaceline
@@ -1040,6 +1041,7 @@ before packages are loaded.")
 
   (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
 
+  ()
 
   (display-time)
 
@@ -1121,9 +1123,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
+ '(global-topspace-mode t)
  '(org-agenda-files
-   '(
-     "/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
+   '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
@@ -1144,14 +1146,16 @@ This function is called at the very end of Spacemacs initialization."
      (org-export-allow-bind-keywords . t)
      (eval define-key key-minor-mode-map
            (kbd "SPC")
-           'insert-space))))
+           'insert-space)))
+ '(tab-bar-close-button-show nil)
+ '(tab-bar-new-button-show nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
-;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
@@ -1161,6 +1165,8 @@ This function is called at the very end of Spacemacs initialization."
  '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
  '(org-link ((t (:inherit link :underline nil))))
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+ '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+ '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
  '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
 )
 (custom-set-variables
