@@ -204,7 +204,6 @@ dotspacemacs-additional-packages '(
                                       tabbar
                                       tiny
                                       ;; tldr
-                                      topspace
                                       ;; transcribe
                                       unfill
                                       visible-mark
@@ -736,7 +735,6 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-  ;; (global-topspace-mode 1)
 (use-package helm)
 (use-package ivy)
 (use-package tiny)
@@ -1123,7 +1121,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
- '(global-topspace-mode t)
  '(org-agenda-files
    '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
  '(org-export-preserve-breaks nil)
