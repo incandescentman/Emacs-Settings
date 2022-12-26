@@ -663,8 +663,8 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 
 ;; These lines added by ChatGPT, they didn't work
 ;; Replace occurrences of "- " and "- " inside words with "-"
-  ;; (while (search-forward-regexp "\\b-\\s" nil t)
-  ;;   (replace-match "-" nil t))
+  (while (search-forward-regexp "\\b-\\s" nil t)
+    (replace-match "-" nil t))
 ;; up until here
 ;; can delete this section if necessary
 
