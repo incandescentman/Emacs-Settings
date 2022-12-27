@@ -277,6 +277,9 @@
 \\usepackage[sc]{titlesec}
 
 
+\\setlist[description]{style=nextline}
+
+
 \\newlength\\TitleOverhang
 \\setlength\\TitleOverhang{1.5cm}
 
