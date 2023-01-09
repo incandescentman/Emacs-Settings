@@ -211,6 +211,13 @@
 
 
 
+\\renewcommand{\\descriptionlabel}[1]{%
+ {\\hspace{\\labelsep}\\bfseries\\textsc{#1}}}
+
+
+\\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
+
+
 \\definecolor{azure}{HTML}{f2feff}
 
 \\usepackage{lipsum}
@@ -276,8 +283,6 @@
 
 \\usepackage[sc]{titlesec}
 
-
-\\setlist[description]{style=nextline}
 
 
 \\newlength\\TitleOverhang
