@@ -9139,3 +9139,10 @@ So Emacs text doesn't appear on the MacBook notch.
 (use-package tab-bar)
 (tab-bar-mode 1)
 #+end_src
+
+* Export to .docx
+
+#+begin_src emacs-lisp
+(setq org-odt-preferred-output-format "docx")
+
+#+end_src

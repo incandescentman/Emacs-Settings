@@ -660,7 +660,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-icon-title-format nil
 
    ;; Show trailing whitespace (default t)
-   dotspacemacs-show-trailing-whitespace t
+   dotspacemacs-show-trailing-whitespace nil
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -932,6 +932,7 @@ you should place your code here."
            (:strike-through t)))))
 
   (setq org-adapt-indentation nil)
+
 
   (menu-bar-mode -1)
 
