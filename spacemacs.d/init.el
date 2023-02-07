@@ -772,9 +772,11 @@ you should place your code here."
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
 :load-path "/Users/jay/emacs/org-9.6.1/"
-;; :ensure org-plus-contrib
 :config
 (org-reload))
+;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
+
+
 
 (use-package org-contrib)
 
