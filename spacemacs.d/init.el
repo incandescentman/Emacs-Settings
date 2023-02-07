@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(perl5
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -47,6 +47,7 @@ This function should only modify configuration layer settings."
      ;; markdown
      ;; python
      ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
+     (org)
       ;;  (org
       ;;    :ensure org-plus-contrib
       ;;    :mode (("\\.org$" . org-mode))
@@ -203,6 +204,7 @@ dotspacemacs-additional-packages '(
                                       sudo-edit
                                       tabbar
                                       tiny
+                                      titlecase
                                       ;; tldr
                                       ;; transcribe
                                       unfill
@@ -250,6 +252,7 @@ dotspacemacs-additional-packages '(
                                     popwin
                                     spaceline
                                     treemacs-icons-dired
+                                    vterm
                                     vi-tilde-fringe
                                     volatile-highlights
                                     winner
@@ -714,6 +717,9 @@ you should place your code here."
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
+(load "/Users/jay/emacs/org-9.6.1/org-macs.el")
+
+
   (setq message-log-max t)
 
 (use-package benchmark-init
@@ -760,9 +766,13 @@ you should place your code here."
 
 (use-package helm)
 (use-package ivy)
-(use-package tiny)
+;; (use-package tiny)
 ;; (use-package re-builder)
 (use-package multiple-cursors)
+
+(load "/Users/jay/emacs/org-9.6.1/org-macs.el")
+;; trying to avert the errror Symbol’s function definition is void: org-assert-version
+
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
@@ -771,7 +781,7 @@ you should place your code here."
 :config
 (org-reload))
 
-
+(load "/Users/jay/emacs/org-9.6.1/ol.el")
 (use-package org-contrib)
 
 

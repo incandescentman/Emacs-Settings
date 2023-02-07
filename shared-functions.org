@@ -1063,7 +1063,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 Note: disable this when trying to export to org-html-themes!
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun my-org-export-change-options (plist backend)
   (cond
    ((equal backend 'html)
@@ -1075,7 +1075,36 @@ Note: disable this when trying to export to org-html-themes!
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_SRC
+#+END_EXAMPLE
+
+#+begin_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (backend)
+  (cond
+   ((equal backend 'html)
+    (setq org-html-with-toc nil)
+    (setq org-html-section-numbers nil))
+   ((equal backend 'latex)
+    (setq org-latex-with-toc nil)
+    (setq org-latex-section-numbers t)))
+  nil)
+
+(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp
+(defun my-org-export-change-options (plist backend)
+ (cond
+  ((equal backend 'html)
+  (plist-put plist :with-toc nil)
+  (plist-put plist :section-numbers nil))
+  ((equal backend 'latex)
+  (plist-put plist :with-toc nil)
+  (plist-put plist :section-numbers t)))
+ plist)
+
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+#+end_src
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp
@@ -3128,7 +3157,7 @@ Transpose windows, useful:
 	(set-window-buffer (selected-window) next-win)
 	(set-window-buffer (funcall selector) this-win)
 	(select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+      (setq arg (if (plusp arg) (1-arg) (1+ arg))))))
 #+END_SRC
 
 * move stuff around
@@ -6648,7 +6677,7 @@ minibuffer."
 
 
 (cheatsheet-add :group 'Mooovement
-                :key "C- -"
+                :key "C--"
                 :description "goto-last-edit")
 
 
@@ -6657,7 +6686,7 @@ minibuffer."
                 :description "helm-projectile-grep")
 
 (cheatsheet-add :group 'Mooovement
-                :key "C- drag"
+                :key "C-drag"
                 :description "mouse-copy")
 
 
@@ -9146,3 +9175,17 @@ So Emacs text doesn't appear on the MacBook notch.
 (setq org-odt-preferred-output-format "docx")
 
 #+end_src
+
+
+* Capitalize headings correctly
+#+begin_src emacs-lisp
+(defun org-titlecase-level-1 ()
+ "Convert all Level 1 org-mode headings to title case."
+ (interactive)
+ (save-excursion
+ (goto-char (point-min))
+ (while (re-search-forward "^\\* " nil t)
+  (titlecase-line))))
+#+end_src
+
+
