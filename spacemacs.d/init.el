@@ -718,12 +718,6 @@ you should place your code here."
 (setq gc-cons-threshold (* 50 1000 1000))
 
 
-;; (load "/Users/jay/emacs/emacs-settings/wrong-args-fix.el")
-
-;; (load "/Users/jay/emacs/org-9.6.1/org-macs.el")
-;; trying to avert the errror Symbol’s function definition is void: org-assert-version
-
-
   (setq message-log-max t)
 
 (use-package benchmark-init
