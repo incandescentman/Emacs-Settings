@@ -717,6 +717,9 @@ you should place your code here."
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
+
+;; (load "/Users/jay/emacs/emacs-settings/wrong-args-fix.el")
+
 (load "/Users/jay/emacs/org-9.6.1/org-macs.el")
 
 
@@ -1071,10 +1074,11 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded.")
 
 
+(setq package-archive-priorities nil)
 
-  (setq global-auto-complete-mode -1)
+(setq global-auto-complete-mode -1)
 
-  (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
+(setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
 
   ()
 
