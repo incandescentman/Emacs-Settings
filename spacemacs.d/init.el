@@ -721,6 +721,7 @@ you should place your code here."
 ;; (load "/Users/jay/emacs/emacs-settings/wrong-args-fix.el")
 
 (load "/Users/jay/emacs/org-9.6.1/org-macs.el")
+;; trying to avert the errror Symbol’s function definition is void: org-assert-version
 
 
   (setq message-log-max t)
@@ -772,9 +773,6 @@ you should place your code here."
 ;; (use-package tiny)
 ;; (use-package re-builder)
 (use-package multiple-cursors)
-
-(load "/Users/jay/emacs/org-9.6.1/org-macs.el")
-;; trying to avert the errror Symbol’s function definition is void: org-assert-version
 
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
@@ -920,10 +918,7 @@ you should place your code here."
 
   (setq org-bullets-bullet-list (quote ("• ")))
 
-  ;; (load "/Users/jay/emacs/emacs-settings/gnugol.el")
-  ;; (use-package gnugol)
-
-  (use-package reveal-in-finder)
+(use-package reveal-in-finder)
 
 ;; (recenter-top-bottom)
   (setq case-fold-search t)
