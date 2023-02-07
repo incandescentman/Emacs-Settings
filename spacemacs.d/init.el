@@ -720,7 +720,7 @@ you should place your code here."
 
 ;; (load "/Users/jay/emacs/emacs-settings/wrong-args-fix.el")
 
-(load "/Users/jay/emacs/org-9.6.1/org-macs.el")
+;; (load "/Users/jay/emacs/org-9.6.1/org-macs.el")
 ;; trying to avert the errror Symbol’s function definition is void: org-assert-version
 
 
