@@ -17,7 +17,7 @@ Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/shared-func
                (define-key isearch-mode-map "\C-h" 'isearch-mode-help)
                (define-key isearch-mode-map "\C-t" 'isearch-toggle-regexp)
                (define-key isearch-mode-map "\C-c" 'isearch-toggle-case-fold)
-               (define-key isearch-mode-map "\C-j" 'isearch-edit-string)))) 
+               (define-key isearch-mode-map "\C-j" 'isearch-edit-string))))
 #+END_SRC
 Source: [[http://emacswiki.org/emacs/CaseFoldSearch][EmacsWiki: Case Fold Search]]
 
@@ -25,7 +25,7 @@ Actually, it also adds some other ‘C-s’ bindings:
 
 isearch-mode-help – Provides help on incremental searching. Defined in library Lisp:isearch+.el.
 isearch-toggle-regexp – Toggles regexp searching on and off.
-isearch-edit-string – Edit the search string in the MiniBuffer. This also provides other isearch options, including word searches (C-w). 
+isearch-edit-string – Edit the search string in the MiniBuffer. This also provides other isearch options, including word searches (C-w).
 
 
 
@@ -84,5 +84,427 @@ isearch-edit-string – Edit the search string in the MiniBuffer. This also prov
 (global-set-key (kbd "M-h") 'help-command)
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
+
+
+
+* mu4e
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-07 Tue 02:45
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: email
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+** mu4e setup
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; (setq user-mail-address "jay@storytelling.nyc")
+(setq user-mail-address "dixit@aya.yale.edu")
+
+(setq user-full-name "Jay Dixit")
+
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@jaydixit.com" "jay@storytelling.nyc"))
+
+;; (let ((default-directory "/usr/local/share/emacs/site-lisp/")) (normal-top-level-add-subdirs-to-load-path))
+; what is this?
+;(use-package smtpmail)
+(use-package mu4e)
+(setq mu4e-mu-binary "/usr/local/Cellar/mu/1.2.0/bin/mu")
+(setq user-mail-address "jay@storytelling.nyc")
+(setq mu4e-user-mail-address-list '("sunjaydixit@gmail.com" "dixit@aya.yale.edu" "jay@storytelling.nyc" "jay@jaydixit.com" "jay@newyorkwritersintensive.com" "jaydixit@neuroleadership.com"))
+(setq user-full-name "Jay Dixit" )
+(setq mu4e-maildir "/Users/jay/Dropbox/mu2")
+(setq mu4e-compose-signature "\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n")
+
+
+(setq mu4e-sent-folder "/sent")
+(setq mu4e-drafts-folder "/drafts")
+(setq mu4e-trash-folder "/trash")
+;; (setq mu4e-org-contacts-file "/Users/jay/nd/contacts-org-jay.txt")
+
+(setq mu4e-get-mail-command "mbsync -a")
+
+
+;; (setq mu4e-mu-home "/Users/jay/Dropbox/mail/mu/gmail")
+
+
+
+;; display HTML email nicely
+;; (setq mu4e-html2text-command "w3m -T text/html")
+;; works but better than the other one, html2text or whatever it's called
+;; convert html emails properly
+;; Possible options:
+;; ---html2text -utf8 -width 72
+;; ---textutil -stdin -format html -convert txt -stdout
+;; ---html2markdown | grep -v '&nbsp_place_holder;' (Rquires html2text pypi)
+;; ---w3m -dump -cols 80 -T text/html
+;; ---view in browser (provided below)
+; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+
+
+  ;; convert org mode to HTML automatically
+; (setq org-mu4e-convert-to-html t); I think this is redundant? Maybe?
+
+  ;; need this to convert some e-mails properly
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+
+;; collect email addresses
+;; only add email addresses of email sent directly to me
+(setq mu4e-compose-complete-only-personal t)
+(setq mu4e-compose-complete-only-after "2015-01-01")
+
+;;(setq mu4e-contacts-func 'mu4e~fill-contacts)
+;;(mu4e~proc-contacts t nil)
+
+;; composing mail
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-in-new-frame nil)
+(setq mu4e-compose-signature-auto-include nil)
+
+;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; don't confirm before applying flags
+(setq mu4e-headers-leave-behavior 'apply)
+
+;; allow for updating mail using 'U' in the main view:
+;; (setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-change-filenames-when-moving t)
+
+(setq mu4e-attachment-dir "~/Downloads")
+
+
+
+;; show images
+(setq mu4e-show-images t)
+
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+ (imagemagick-register-types))
+
+
+;; spell check
+(add-hook 'mu4e-compose-mode-hook
+ (defun my-do-compose-stuff ()
+  "My settings for message composition."
+  (set-fill-column 72)
+  (flyspell-mode)
+(turn-on-auto-capitalize-mode)
+))
+
+;; add option to view html message in a browser
+;; `aV` in view to activate
+(add-to-list 'mu4e-view-actions
+ '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+;; fetch mail every 10 mins
+(setq mu4e-update-interval 600)
+
+
+;; Use fancy chars
+(setq mu4e-use-fancy-chars t)
+
+
+(setq mu4e-confirm-quit nil
+ mu4e-headers-date-format "%d/%b/%Y %H:%M" ; date format
+ mu4e-html2text-command "html2text -utf8 -width 72"
+ )
+
+;; maildirs
+;; (use-package mu4e-maildirs-extension)
+;; (mu4e-maildirs-extension)
+;; (setq mu4e-maildirs-extension-title "Folders")
+
+#+END_EXAMPLE
+
+** mu4e keybindings
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; shortcuts
+(setq mu4e-maildir-shortcuts
+'(
+("/gmail/starred" . ?i)
+("/nli/inbox" . ?l)
+("/nywi/inbox" . ?n)
+("/gmail/sent" . ?s)))
+
+
+;; (define-key mu4e-mode-map "r" 'mu4e-compose-reply)
+
+
+;; start screen
+(define-key mu4e-main-mode-map "r" 'mu4e-compose-reply)
+(define-key mu4e-main-mode-map "c" 'mu4e-compose-new)
+(define-key mu4e-main-mode-map "j" 'mu4e-update-mail-and-index)
+(define-key mu4e-main-mode-map "g" 'mu4e~headers-jump-to-maildir)
+
+;; inbox
+(define-key mu4e-headers-mode-map "r" 'mu4e-compose-reply)
+(define-key mu4e-headers-mode-map "c" 'mu4e-compose-new)
+(define-key mu4e-headers-mode-map "y" 'mu4e-headers-mark-for-unflag)
+(define-key mu4e-headers-mode-map "j" 'mu4e-update-mail-and-index)
+;; (local-unset-key mu4e-headers-mode-map "g" 'mu4e-update-mail-and-index)
+;; (define-key mu4e-headers-mode-map "k" 'mu4e-headers-prev)
+;; (define-key mu4e-headers-mode-map "j" 'mu4e-headers-next)
+
+
+;; message view ("mu4e-view-mode)")
+(define-key mu4e-view-mode-map "r" 'mu4e-compose-reply)
+(define-key mu4e-view-mode-map "c" 'mu4e-compose-new)
+(define-key mu4e-view-mode-map "y" 'mu4e-view-mark-for-unflag)
+(define-key mu4e-view-mode-map "k" 'mu4e-view-headers-prev)
+(define-key mu4e-view-mode-map "j" 'mu4e-view-headers-next)
+
+(define-key mu4e-view-mode-map "g" 'mu4e-update-mail-and-index)
+
+
+
+;; unset keys (worked!)
+(add-hook 'mu4e-headers-mode-hook
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
+))
+
+(add-hook 'mu4e-view-mode-hook
+  (lambda ()
+  (local-unset-key (kbd "<M-right>"))
+  (local-unset-key (kbd "<M-left>"))
+))
+#+END_EXAMPLE
+
+** gmail emulation
+#+BEGIN_SRC emacs-lisp
+(defun archive-and-previous ()
+  (interactive)
+  (mu4e-view-mark-for-unflag)
+(mu4e-view-headers-prev)
+)
+
+
+(defun archive-and-next ()
+  (interactive)
+  (mu4e-view-mark-for-unflag)
+(mu4e-view-headers-next)
+)
+
+(define-key mu4e-view-mode-map "]" 'mu4e-view-headers-prev)
+(define-key mu4e-view-mode-map "[" 'mu4e-view-headers-next)
+
+#+END_SRC
+
+
+** mu4e attachments
+ Wouldn't it be awesome to be able to send files from dired using your mail client?
+
+ I'll need a special version of the gnus-dired-mail-buffers function so it understands mu4e buffers as well:
+
+** mu4e don't reply all
+So talk about super hacky. I've spent a while and i've come up with something that works, even if it's far from being beautiful.
+
+[[https://www.bountysource.com/issues/7054870-option-for-automatically-reply-to-sender-vs-reply-to-all][Option for automatically reply-to-sender vs. reply-to-all -]]
+
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; The ...-false version is omitted because of verbosity,
+;; as is the pd:reply-to-all helper, which simply does the inverse.
+(defun pd:reply-to-all-ask-intercept-true (orig-fun &rest args)
+ ; true == reply to all. See mu4e~draft-user-wants-reply-all for inspiration,
+ ; in mu/mu4e/mu4e-draft.el
+ t)
+
+(defun pd:reply-to-sender ()
+ (interactive)
+ (advice-remove 'mu4e~draft-user-wants-reply-all #'pd:reply-to-all-ask-intercept-true)
+ (advice-add 'mu4e~draft-user-wants-reply-all :around #'pd:reply-to-all-ask-intercept-false)
+ (mu4e-compose-reply)
+ )
+
+(define-key mu4e-headers-mode-map "r" 'pd:reply-to-sender)
+#+END_EXAMPLE
+
+** gmail starred
+The remaining problem is to propagate to Gmail that I've refiled
+(archived) a message. I also noticed that flagging a message in /mu4e/
+doesn't immediately mean the message is starred on the Gmail side. With
+the recently added ~mu4e-mark-execute-pre-hook~ it becomes possible to
+whip Gmail into doing my bidding :)
+
+##+BEGIN_SRC emacs-lisp
+(add-hook 'mu4e-mark-execute-pre-hook
+  (lambda (mark msg)
+  (cond ((member mark '(refile trash)) (mu4e-action-retag-message msg "-\\Inbox"))
+   ((equal mark 'flag) (mu4e-action-retag-message msg "\\Starred"))
+   ((equal mark 'unflag) (mu4e-action-retag-message msg "-\\Starred")))))
+##+END_SRC
+
+I've been using this for about a week now and I'm rather liking this setup so far.
+
+It wasn't until after a couple of days that I realised this makes /mu4e/
+more like Gmail than it was with me first setup, i.e. all email is in a
+single folder and I use searching exclusively to find stuff :-)
+Source: [[https://groups.google.com/forum/#!msg/mu-discuss/BpGtwVHMd2E/Wf1rJdx9DgAJ][Mu4e and Gmail, my current setup---Google Groups]]
+
+** mu4e contexts
+#+BEGIN_SRC emacs-lisp
+
+(setq mu4e-context-policy 'ask-if-none)
+(setq mu4e-compose-context-policy 'ask-if-none)
+
+
+(setq mu4e-contexts
+ `(
+
+,(make-mu4e-context
+	 :name "Sunjay E. Dixit"
+	 :enter-func (lambda ()
+(mu4e-message "Switch to sunjaydixit@gmail.com context")
+;; switch to sendmail to send email through gmail
+(setq message-send-mail-function (quote message-send-mail-with-sendmail))
+;; open my starred gmail maildir
+(mu4e~headers-jump-to-maildir "/gmail/starred")
+)
+:vars '
+(
+(user-mail-address . "jay@storytelling.nyc")
+(mu4e-get-mail-command . "mbsync gmail")
+(mu4e-compose-signature .
+		 ("\n---\nJay Dixit\n[[http://jaydixit.com/][jaydixit.com]]\n"))))
+
+
+,(make-mu4e-context
+	 :name "New York Writers Intensive"
+	 :enter-func (lambda () (mu4e-message "Switch to New York Writers Intensive context")
+;; switch to smtp-mail in order to change send-from address
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@storytelling.nyc" Nil))
+
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
+
+ smtpmail-smtp-service 587)
+;; open my newyorkwritersintensive inbox
+(mu4e~headers-jump-to-maildir "/nywi/inbox")
+)
+	 ;; leave-fun not defined
+	 :vars '(
+(user-mail-address . "jay@storytelling.nyc")
+(mu4e-get-mail-command . "mbsync nywi")
+ ( mu4e-compose-signature .
+		 ("Jay Dixit\nnewyorkwritersintensive.com\n"))))
+
+
+,(make-mu4e-context
+	 :name "Leadership"
+	 :enter-func (lambda () (mu4e-message "Switch to Leadership context")
+;; switch to smtp-mail in order to change send-from address
+(setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nli")
+
+smtpmail-smtp-service 587)
+;; open my neuroleadership inbox
+(mu4e~headers-jump-to-maildir "/nli/inbox")
+)
+	 ;; leave-fun not defined
+	 :vars '(
+(user-mail-address . "jaydixit@neuroleadership.com")
+(mu4e-get-mail-command . "mbsync nli")
+ ( mu4e-compose-signature .
+		 ("Jay Dixit\nneuroleadership.com\n"))))
+
+
+))
+
+
+;; change send-from address interactively
+(defun neuroleadership-compose ()
+  (interactive)
+  (setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-neuroleadership")
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jaydixit@neuroleadership.com" nil))
+ smtpmail-smtp-service 587)
+(setq user-mail-address "jaydixit@neuroleadership.com")
+(compose-mail)
+)
+
+;; change send-from address interactively
+(defun nywi-compose ()
+ (interactive)
+ (setq message-send-mail-function 'smtpmail-send-it
+ smtpmail-stream-type 'starttls
+ smtpmail-default-smtp-server "smtp.gmail.com"
+ smtpmail-smtp-server "smtp.gmail.com"
+smtpmail-auth-credentials (expand-file-name "~/.authinfo-nywi")
+;; smtpmail-auth-credentials '(("smtp.gmail.com" 587 "jay@storytelling.nyc" Nil))
+ smtpmail-smtp-service 587)
+(setq user-mail-address "jay@storytelling.nyc")
+(compose-mail)
+)
+
+
+;; change send-from address interactively
+(defun yale-compose ()
+  (interactive)
+  (setq message-send-mail-function (quote message-send-mail-with-sendmail))
+(setq user-mail-address "jay@storytelling.nyc")
+(compose-mail)
+  )
+
+(defun yale-or-neuroleadership-compose (arg)
+ (interactive "p")
+ (if (and arg (= 0 (mod arg 4)))
+   (neuroleadership-compose)
+  (yale-compose)))
+;; (global-set-key (kbd "C-c m") 'yale-or-neuroleadership-compose)
+
+
+;; go straight to my personal gmail inbox; bound to s-l
+(defun mu4e-gmail ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/gmail/starred")
+ )
+
+;; go to Neuroleadership (work) inbox
+(defun mu4e-neuroleadership ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/nli/inbox")
+ )
+
+;; go to NYWI (my company) inbox
+(defun mu4e-nywi ()
+ (interactive)
+(mu4e)
+ (mu4e~headers-jump-to-maildir "/nywi/inbox")
+ )
+
+
+
+(defun mu4e-context-label ()
+ "Propertized string with the current context name, or \"\" if
+ there is none."
+ (if (mu4e-context-current)
+  (concat "[" (propertize (mu4e~quote-for-modeline
+			   (mu4e-context-name (mu4e-context-current)))
+		 'face 'mode-line-buffer-id) "]") ""))
+
+#+END_SRC
+
+
+** mu4e-send-delay
+#+BEGIN_SRC emacs-lisp
+(use-package mu4e-send-delay)
+(mu4e-send-delay-setup)
+(add-hook 'mu4e-main-mode-hook 'mu4e-send-delay-initialize-send-queue-timer)
+#+END_SRC
 
 

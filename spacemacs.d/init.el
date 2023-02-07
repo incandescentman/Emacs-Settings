@@ -229,6 +229,7 @@ dotspacemacs-additional-packages '(
                                     company
                                     diff-auto-refine-mode
                                     diff-hl
+                                    eldoc
                                     electric-indent-mode
                                     evil-mode
                                     evil-mode
