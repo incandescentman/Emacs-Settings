@@ -776,10 +776,6 @@ you should place your code here."
 :config
 (org-reload))
 
-(load "/Users/jay/emacs/org-9.6.1/ol.el")
-;; trying to avert the errror Symbol’s function definition is void: org-assert-version
-
-
 (use-package org-contrib)
 
 
