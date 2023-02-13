@@ -1729,7 +1729,7 @@ This works nicely. Now, let us add a new function that looks up the word or sele
 
 #+RESULTS:
 | d | ictionary | words-dictionary |
-| t | hesaurus  | words-thesaurus  |
+| t  | hesaurus  | words-thesaurus  |
 | g | oogle     | words-google     |
 | w | twitter   | words-twitter    |
 
@@ -2117,7 +2117,7 @@ That worked well. I ran the block and got the email.
 Now, suppose I have this data:
 #+tblname: users
 | userid | password  |
-|--------+-----------|
+|-------+-----------|
 | user1  | trustme99 |
 | user2  | foolme99  |
 | user3  | blameme99 |
@@ -3900,23 +3900,23 @@ M-1 to 9
     (replace-string "È" "\"" nil (point-min) (point-max))
     (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
     (replace-string "ó" "-" nil (point-min) (point-max))
-  
+
     (replace-string " Ñ " "---" nil (point-min) (point-max))
-  
-  
+
+
     (replace-string "á" "-" nil (point-min) (point-max))
   (replace-string "     " "" nil (point-min) (point-max))
   (replace-string "    " "" nil (point-min) (point-max))
   (replace-string " " " " nil (point-min) (point-max))
   (replace-string " " "" nil (point-min) (point-max))
-  
-  
+
+
   (replace-string "Õ" "'" nil (point-min) (point-max))
   (replace-string "Ò" "\"" nil (point-min) (point-max))
   (replace-string "Ó" "\"" nil (point-min) (point-max))
-  
-  
-  
+
+
+
   ))
 #+END_SRC
 

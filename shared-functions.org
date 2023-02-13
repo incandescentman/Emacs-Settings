@@ -1276,6 +1276,10 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** hl-todo
 
 #+begin_src emacs-lisp
+(use-package hl-todo
+ :init
+ (global-hl-todo-mode))
+
 (setq hl-todo-keyword-faces
  '(("HOLD" . "#d0bf8f")
   ("TODO" . "#cc9393")
@@ -8497,7 +8501,7 @@ Not sure what this does
 [[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
 
 #+begin_src emacs-lisp
-(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl")))
+(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl")))
 #+end_src
 
 
