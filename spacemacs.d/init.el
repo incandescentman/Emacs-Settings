@@ -1135,6 +1135,8 @@ before packages are loaded.")
 (setq hl-todo-mode t)
 (setq global-hl-todo-mode 1)
 
+
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 ;;
