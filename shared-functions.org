@@ -454,35 +454,47 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
+;;(while (search-forward-regexp "- " nil to)
+;; (replace-match "") nil t)
+;; add alpha. And replace the alpha.
+
   (replace-smart-quotes-regexp beg end)
 
-  ;; The following lines replace occurrences of "- " and "- " inside words with "-"
+;; These lines added by ChatGPT, they didn't work
+;; Replace occurrences of "- " and "- " inside words with "-"
   (while (search-forward-regexp "\\b- " nil t)
     (replace-match "-" nil t))
-  (while (search-forward-regexp " -\\b" nil t)
-    (replace-match "-" nil t))
+;; up until here
+;; can delete this section if necessary
+
 
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
                             ("\x2019" . "'")
                             ("’" . "'")
-                            ("''" . "\"")
-                            ("​" . "")
-                            ("…" . "...")
-                            ("• " . "- ")
-                            (" " . "")
-                            ("  " . " ")
-                            ("ó" . "-")
-                            ("á" . "-")
-                            ("Õ" . "'")
-                            ("Õ" . "'")
-                            ("Ò" . "\"")
-                            ("Ó" . "\"")
-                            ("―" . "\"")
-                            ("‖" . "\"")
-                            )
-                          nil   beg (min end (point-max)))
+("''" . "\"")
+("​" . "")
+("…" . "...")
+("• " . "- ")
+(" " . "")
+("  " . " ")
+
+("ó" . "-")
+("á" . "-")
+("Õ" . "'")
+("Õ" . "'")
+("Ò" . "\"")
+("Ó" . "\"")
+
+("―" . "\"")
+("‖" . "\"")
+
+;; ("- " . "") ; also remove stray spac- es
+;; ("­ " . "") ; also remove stray spac- es
+)
+                       nil   beg (min end (point-max)))
+
 )
 #+END_SRC
 
@@ -495,7 +507,6 @@ Haven't used this next one:
   (clipboard-yank)
   (replace-smart-quotes (mark) (point)))
 #+END_SRC
-
 
 *** Indentation
 
