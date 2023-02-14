@@ -6,15 +6,6 @@
 
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup
 #+TITLE: Jay Dixit's GNU Emacs setup
-* About
-  - System: Mac OSX Yosemite
-  - Emacs version: GNU Emacs 25.1.1 (Carbon Version)
-  - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
-  - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's emacs-mac port, available here:
-    - =brew tap railwaycat/emacsmacport=
-    - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-    - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
-
 * environment settings
 ** Handle Emacs UTF-8 input
 
@@ -26,7 +17,6 @@
 #+END_SRC
 
 ** Sticky windows
-
 #+BEGIN_SRC emacs-lisp
 (global-set-key [(control x) (?0)] 'delete-other-windows)
 (global-set-key [(control x) (?9)] 'sticky-window-keep-window-visible)
@@ -43,7 +33,6 @@ Automatically load abbreviations table:
 (setq-default abbrev-mode t)
 (read-abbrev-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 (setq abbrev-file-name "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
-
 (setq save-abbrevs t)
 (setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
@@ -52,15 +41,14 @@ Automatically load abbreviations table:
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
-"Fix spacing on the screen."
+  "Fix spacing on the screen."
   (interactive)
   (org-indent-mode 1)
-(recenter-top-bottom)
+  (recenter-top-bottom)
   )
 #+END_SRC
 
 * org predicates
-
   #+BEGIN_SRC emacs-lisp
 (use-package org-element)
 
@@ -78,9 +66,7 @@ Automatically load abbreviations table:
   #+END_SRC
 
 * org-mode hooks
-
   #+BEGIN_SRC emacs-lisp
-
 (setq org-hierarchical-todo-statistics nil)
   #+END_SRC
 
@@ -118,6 +104,28 @@ Automatically load abbreviations table:
 
 #+END_SRC
 
+
+* tabbar
+So Emacs text doesn't appear on the MacBook Pro notch.
+
+#+begin_src emacs-lisp
+(use-package tab-bar
+ :config
+ (tab-bar-mode 1))
+ #+end_src
+
+
+#+begin_src emacs-lisp
+(defun my-toggle-tab-bar-mode ()
+ "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
+ (if (frame-parameter nil 'fullscreen)
+  (tab-bar-mode 1)
+ (tab-bar-mode -1)))
+
+(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
+#+end_src
+
+
 * directory settings
 
 There is probably a lot of redundancy here, I don't understand this stuff too
@@ -153,12 +161,12 @@ Manually remove the scrollbar if default setting fails when creating a new frame
 #+BEGIN_SRC emacs-lisp
 (defun scrollbar-init ()
   (interactive)
-  (scroll-bar-mode -1)
+  (scroll-bar-mode-1)
   )
 
 (defun scrollbar-mode-turn-off-scrollbar ()
   (interactive)
-  (scroll-bar-mode -1)
+  (scroll-bar-mode-1)
   )
 
 (defun scrollbar-mode-turn-on-scrollbar ()
@@ -206,7 +214,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
            txt)))
 ;; (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
-     (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
+     (format "echo-n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 #+END_SRC
 
 ** pasteboard-paste
@@ -229,7 +237,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
                 (if (string= m1 m2)
                   (concat "[[" m1 "]]")
                   (concat "[[" m2 "][" m1 "]]"))))
-          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
+          (shell-command-to-string "pbpaste | perl-p-e 's/\r$//' | tr '\r' '\n'"))))
     (delete-region start end)
     (insert ins-text)
     (my/fix-space)
@@ -305,7 +313,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 		 (mark)
 	       (point))))
     (shell-command-on-region start end
-			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     "pbpaste | perl-p-e 's/\r$//' | tr '\r' '\n'"
 			     nil t)
     (save-excursion
       )))
@@ -408,8 +416,6 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 ** NOTE-TO-JAY TODO Custom keybindings
-CLOCK: [2016-07-20 Wed 11:14]--[2016-07-20 Wed 11:14] =>  0:00
-
 
 Eventually replace these with this? https://github.com/noctuid/general.el
 
@@ -976,7 +982,7 @@ Make ~kill-sentence~ work in a more intuitive way:
 (defun my/beginning-of-sentence-p ()
   "Return  t if point is at the beginning of a sentence."
   (let ((start (point))
-        (beg (save-excursion (forward-sentence) (forward-sentence -1))))
+        (beg (save-excursion (forward-sentence) (forward-sentence-1))))
     (eq start beg)))
 
 (defun my/kill-sentence-dwim ()
@@ -1143,8 +1149,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 ;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
-
-
 #+END_SRC
 
 
@@ -1207,14 +1211,12 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
    (progn (delete-region (mark) (point)))))
   (insert " ")
 ))
-
 (defun insert-normal-space-in-org-heading ()
  (interactive)
 (cond (mark-active
  (progn (delete-region (mark) (point)))))
  (insert " ")
 )
-
 ;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
 
 
@@ -1357,7 +1359,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun length-of-previous-line ()
  (save-excursion
-  (forward-line -1)
+  (forward-line-1)
   (end-of-line)
   (current-column)))
 #+END_SRC
@@ -1537,7 +1539,6 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
 
 
 ** kill word correctly
-
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
   "Kill word."
@@ -1583,7 +1584,6 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
 
 * character movement
 #+BEGIN_SRC emacs-lisp
-
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
  Like `backward-char', but moves point to the beginning of the region
@@ -1620,32 +1620,6 @@ provided the (transient) mark is active."
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
 
 #+END_SRC
-
-* code not currently in use
-*** keybindings not currently in use
- (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
- (global-set-key (kbd "C-c s") 'org-copy-subtree)
- (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
-;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
-(define-key key-minor-mode-map (kbd "C-c C-l") 'org-insert-link)
- (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
- (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
- (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
- (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
-
- (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
- (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
-
-
- (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
- (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
- (define-key key-minor-mode-map (kbd "s-R") 'web-research)
-
-
-;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
-;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
 
 * experiments - tested
 ** words - some interesting utilities for text in Emacs
@@ -2205,7 +2179,7 @@ The last line sets the path to where saveplace stores your position data. Change
                         (goto-char (get-register 'p))
                         (insert "*"))
                       (insert "* ")
-                      (embolden-next-word -1)))
+                      (embolden-next-word-1)))
         (define-key map (kbd ".") (lambda ()
                     (interactive)
                     (expand-abbrev)
@@ -2213,7 +2187,7 @@ The last line sets the path to where saveplace stores your position data. Change
                       (goto-char (get-register 'p))
                       (insert "*"))
                     (insert "*. ")
-                    (embolden-next-word -1)))
+                    (embolden-next-word-1)))
             map)
   (if embolden-next-word
       (set-register 'p (point))
@@ -2464,7 +2438,7 @@ Here is that code:
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-	(auto-capitalize-mode -1))
+	(auto-capitalize-mode-1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -3882,7 +3856,7 @@ M-1 to 9
     (replace-string "’" "'" nil (point-min) (point-max))
     (replace-string "¡\"" "\"" nil (point-min) (point-max))
     (replace-string "¡­" "..." nil (point
-				    -min) (point-max))
+				   -min) (point-max))
     (replace-string "" "..." nil (point-min) (point-max))
     (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
     (replace-string "" "`" nil (point-min) (point-max))  ; \221
@@ -3964,9 +3938,9 @@ different → different
        (rspec-mode)
        (setq web-mode-markup-indent-offset 2)))
 
-;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
+;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode-1)))))
 
-(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
+(add-hook 'web-mode-hook (lambda () (abbrev-mode-1)))
 
     :bind (:map web-mode-map
 

@@ -8426,27 +8426,6 @@ Doesn't work.
 #+end_src
 
 
-* tabbar
-So Emacs text doesn't appear on the MacBook Pro notch.
-
-#+begin_src emacs-lisp
-(use-package tab-bar
- :config
- (tab-bar-mode 1))
- #+end_src
-
-
-#+begin_src emacs-lisp
-(defun my-toggle-tab-bar-mode ()
- "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
- (if (frame-parameter nil 'fullscreen)
-   (tab-bar-mode 1)
-  (tab-bar-mode -1)))
-
-(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
-
-#+end_src
-
 * Export to .docx
 #+begin_src emacs-lisp
 (setq org-odt-preferred-output-format "docx")
@@ -8463,5 +8442,3 @@ So Emacs text doesn't appear on the MacBook Pro notch.
  (while (re-search-forward "^\\* " nil t)
   (titlecase-line))))
 #+end_src
-
-
