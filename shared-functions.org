@@ -25,14 +25,15 @@
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
-  - System: Mac OSX Yosemite
-  - Emacs version: GNU Emacs 25.1.1 (Carbon Version)
+  - System: Mac OSX Sierra version 13.1
+  - Emacs version: Emacs 28.2 (Carbon Version)
+  - Spacemacs version 0.999.0
+  - org-mode version 9.6.1
   - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
-  - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's emacs-mac port, available here:
+  - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
     - =brew tap railwaycat/emacsmacport=
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
-
 
 * packages
 ** Load the proper repositories
@@ -41,14 +42,9 @@
 (add-to-list 'package-archives
 '("marmalade" .
 "http://marmalade-repo.org/packages/" ) t)
-
-
 (setq package-archives '(
-
 ("gnu" . "https://elpa.gnu.org/packages/")
-
 ("melpa" . "https://melpa.org/packages/")
-
 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
 ("tromey" . "http://tromey.com/elpa/")
 ))
@@ -61,31 +57,19 @@
 #+END_SRC
 
 ** don't require packages
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package org
- :mode (("\\.org$" . org-mode))
-;; ensure org-plus-contrib
- :config
- (progn
-  ;; config stuff
-   )
-
- )
-#+END_EXAMPLE
-
 #+begin_src emacs-lisp
 (setq use-package-verbose t)
 #+end_src
 
 ** don't Rquire some org packages
 #+BEGIN_SRC emacs-lisp
-;; (use-package org-bullets)
 (use-package ox-latex)
+(use-package ox-html)
+;; (use-package org-bullets)
 ;; (use-package ox-latex)
 ;; (use-package ox-org)
 ;; (use-package ox-org)
 ;; (use-package ox-html)
-(use-package ox-html)
 ;; (use-package ox-md)
 ; (use-package org-fstree)
 #+END_SRC
