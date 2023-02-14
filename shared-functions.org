@@ -7945,12 +7945,6 @@ In collapsed view, hide empty lines between subtrees
 #+END_SRC
 
 
-* hyperbole
-#+begin_src emacs-lisp
-;; (setq hyperbole-web-search-browser-function 'eww-browse-url)
-#+end_src
-
-
 * yesterday
 #+begin_src emacs-lisp
 
@@ -8004,7 +7998,6 @@ list."
 
 
 * minimalist org ellipsis
-
 #+begin_src emacs-lisp
 (custom-set-faces
  '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil)))))
@@ -8181,87 +8174,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+end_src
 
 
-* org-roam
-#+begin_EXAMPLE emacs-lisp
-(use-package org-roam
-   :hook
-   (after-init . org-roam-mode)
-   :custom
-   (org-roam-directory "~/Dropbox/org-roam")
-   :bind (:map org-roam-mode-map
-       (("C-c n l" . org-roam)
-        ("C-c n f" . org-roam-find-file)
-        ("C-c n j" . org-roam-jump-to-index)
-        ("C-c n b" . org-roam-switch-to-buffer)
-        ("C-c n g" . org-roam-graph))
-       :map org-mode-map
-       (("C-c n i" . org-roam-insert))))
-#+END_EXAMPLE
-
-* PDF tools
-
-#+begin_EXAMPLE emacs-lisp
-
-(use-package pdf-tools
- :pin manual ;; manually update
- :config
- ;; initialise
- (pdf-tools-install)
-
- ;; open pdfs scaled to fit page
- (setq-default pdf-view-display-size 'fit-page)
-
- ;; don't automatically annotate highlights
- (setq pdf-annot-activate-created-annotations nil)
-
- ;; use normal isearch
- (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-
- ;; turn off cua so copy works
- (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
-
- ;; more fine-grained zooming
- (setq pdf-view-resize-factor 1.1)
-
- ;; keyboard shortcuts
- (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
- (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
- (define-key pdf-view-mode-map (kbd "g") 'pdf-view-goto-page)
- (define-key pdf-view-mode-map (kbd "<") 'pdf-view-first-page)
- (define-key pdf-view-mode-map (kbd ">") 'pdf-view-last-page)
- (define-key pdf-view-mode-map (kbd "C-s") 'pdf-occur)
- (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
-#+END_EXAMPLE
-
-* org pdftools
-Not sure what this does
-
-#+begin_EXAMPLE emacs-lisp
-(use-package org-pdftools
- :hook (org-load . org-pdftools-setup-link))
-
-(use-package org-noter-pdftools
- :after org-noter
- :config
- (with-eval-after-load 'pdf-annot
-  (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-#+END_EXAMPLE
-
-* org-noter
-
-#+begin_EXAMPLE emacs-lisp
-(use-package org-noter
- :after org
- :ensure t)
-
-(use-package org-noter
-  :after org
-  :ensure t
-  :config (setq org-noter-default-notes-file-names '("org-noter-notes.org")
-         org-noter-notes-search-path '("~/nd/org-noter")
-         org-noter-separate-notes-from-heading t))
-#+END_EXAMPLE
-
 * org-drill
 #+BEGIN_SRC emacs-lisp
 ;; (use-package org-drill)
@@ -8328,10 +8240,6 @@ Not sure what this does
 
 #+end_src
 
-
-
-
-* koma letter
 #+BEGIN_SRC emacs-lisp
 (defun load-koma-letter ()
  (interactive)
@@ -8339,15 +8247,6 @@ Not sure what this does
  (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
  )
 #+END_SRC
-
-
-
-* proselint fix
-
-#+begin_EXAMPLE emacs-lisp
-;; (setq flycheck-disabled-checkers '(proselint))
-#+END_EXAMPLE
-
 
 * allow file local custom code
 #+begin_src emacs-lisp
@@ -8387,10 +8286,8 @@ Not sure what this does
 
 
 * don't lock files
-
 #+begin_src emacs-lisp
 (setq create-lockfiles nil)
-
 (run-with-idle-timer 300 t 'org-save-all-org-buffers)
 #+end_SRC
 
@@ -8448,32 +8345,30 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+end_src
 
 
-won't
-will not
-* cycle contractions
-Doesn't work
-don't work
-Written by ChatGPT
+* Expand contractions
+Written by ChatGPT. Pretty pointless.
+
 #+begin_SRC emacs-lisp
-(defun cycle-contraction-at-point ()
-  "Cycles between the long-form-phrase and its contraction for a two-word phrase at point."
+(defun expand-contraction-at-point ()
+  "If the current word is a contraction, replace it with its long-form phrase."
   (interactive)
-  (let ((contraction-pairs
-         '(("do not" . "don't")
-           ("will not" . "won't")
-           ("could not" . "couldn't"))))
+  (let ((contraction-pairs '(("do not" "don't") ("will not" "won't") ("could not" "couldn't"))))
     (let ((current-phrase (current-word t t)))
       (dolist (pair contraction-pairs)
         (if (member current-phrase pair)
-            (let ((long-form-phrase (car pair))
-                  (contraction (cdr pair)))
+            (let ((long-form-phrase (car pair)) (contraction (cadr pair)))
               (if (string= current-phrase long-form-phrase)
                   (progn
                     (delete-region (point) (+ (point) (length current-phrase)))
                     (insert contraction))
                 (progn
                   (delete-region (point) (+ (point) (length current-phrase)))
-                  (insert long-form-phrase)))))))))
+                  (insert long-form-phrase)))))
+          )
+        )
+      )
+    )
+
 #+END_SRC
 
 * playing with ChatGTP

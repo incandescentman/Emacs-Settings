@@ -709,3 +709,120 @@ dictionary from that list was found."
 #+END_EXAMPLE
 
 
+
+* org pdftools
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 03:06
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+Not sure what this does
+
+#+begin_EXAMPLE emacs-lisp
+(use-package org-pdftools
+ :hook (org-load . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+ :after org-noter
+ :config
+ (with-eval-after-load 'pdf-annot
+  (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+END_EXAMPLE
+
+
+* org-noter
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 03:06
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+#+begin_EXAMPLE emacs-lisp
+(use-package org-noter
+ :after org
+ :ensure t)
+
+(use-package org-noter
+  :after org
+  :ensure t
+  :config (setq org-noter-default-notes-file-names '("org-noter-notes.org")
+         org-noter-notes-search-path '("~/nd/org-noter")
+         org-noter-separate-notes-from-heading t))
+#+END_EXAMPLE
+
+
+* PDF tools
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 03:06
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+#+begin_EXAMPLE emacs-lisp
+
+(use-package pdf-tools
+ :pin manual ;; manually update
+ :config
+ ;; initialise
+ (pdf-tools-install)
+
+ ;; open pdfs scaled to fit page
+ (setq-default pdf-view-display-size 'fit-page)
+
+ ;; don't automatically annotate highlights
+ (setq pdf-annot-activate-created-annotations nil)
+
+ ;; use normal isearch
+ (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+
+ ;; turn off cua so copy works
+ (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+
+ ;; more fine-grained zooming
+ (setq pdf-view-resize-factor 1.1)
+
+ ;; keyboard shortcuts
+ (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+ (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+ (define-key pdf-view-mode-map (kbd "g") 'pdf-view-goto-page)
+ (define-key pdf-view-mode-map (kbd "<") 'pdf-view-first-page)
+ (define-key pdf-view-mode-map (kbd ">") 'pdf-view-last-page)
+ (define-key pdf-view-mode-map (kbd "C-s") 'pdf-occur)
+ (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+#+END_EXAMPLE
+
+
+* org-roam
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 03:06
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+begin_EXAMPLE emacs-lisp
+(use-package org-roam
+   :hook
+   (after-init . org-roam-mode)
+   :custom
+   (org-roam-directory "~/Dropbox/org-roam")
+   :bind (:map org-roam-mode-map
+       (("C-c n l" . org-roam)
+        ("C-c n f" . org-roam-find-file)
+        ("C-c n j" . org-roam-jump-to-index)
+        ("C-c n b" . org-roam-switch-to-buffer)
+        ("C-c n g" . org-roam-graph))
+       :map org-mode-map
+       (("C-c n i" . org-roam-insert))))
+#+END_EXAMPLE
+
+
+* hyperbole
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 03:07
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+begin_src emacs-lisp
+;; (setq hyperbole-web-search-browser-function 'eww-browse-url)
+#+end_src
+
+
