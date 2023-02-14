@@ -826,3 +826,80 @@ Not sure what this does
 #+end_src
 
 
+
+* help-mode
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 14:16
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package help-mode
+
+:bind (:help-map
+("C-s-]" . help-go-back)
+("s-ESC" . help-go-forward)))
+#+END_EXAMPLE
+
+
+* org-projectile
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 14:18
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package org-projectile
+ :bind (
+
+     ("C-c c" . org-capture))
+ :config
+ (progn
+  (setq org-projectile-projects-file
+     "~/Dropbox/writing/notationaldata/projects.org")
+  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+  (push (org-projectile-project-todo-entry) org-capture-templates))
+ :ensure t)
+#+END_EXAMPLE
+
+
+
+* counsel-Spotify
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 14:18
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package spotify
+:init
+'(spotify-oauth2-client-id 83e2e6567ee2416e8943de8c83c525cb)
+'(spotify-oauth2-client-secret c5305ef7fe3f4e2cab9d2abec2070688)
+
+)
+#+END_EXAMPLE
+
+
+
+* visible mark
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 14:18
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; visible mark - show where mark is                   ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defface visible-mark-active ;; put this before (require 'visible-mark)
+ '((((type tty) (class mono)))
+  (t (:background "magenta"))) "")
+(use-package visible-mark)
+(global-visible-mark-mode 1) ;; or add (visible-mark-mode) to specific hooks
+(setq visible-mark-max 2)
+(setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
+
+(setq set-mark-command-repeat-pop t)
+#+END_EXAMPLE
+
+

@@ -7278,26 +7278,12 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
           path (or desc "video"))))))
 #+END_SRC
 
-#+BEGIN_EXAMPLE
-
-[[yt:A3JAlWM8qRM]]
-
-#+END_EXAMPLE
 
 [[http://endlessparentheses.com/embedding-youtube-videos-with-org-mode-links.html][Embedding Youtube videos with org-mode links · Endless Parentheses]]
 
 To use this, just write your org links in the following way (optionally adding a description).
 
 [[yt:A3JAlWM8qRM]]
-
-* help-mode
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package help-mode
-
-:bind (:help-map
-("C-s-]" . help-go-back)
-("s-ESC" . help-go-forward)))
-#+END_EXAMPLE
 
 * swiper-mc
 #+BEGIN_SRC emacs-lisp
@@ -7502,22 +7488,6 @@ signature, in that order."
 
 
 
-* org-projectile
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package org-projectile
- :bind (
-
-     ("C-c c" . org-capture))
- :config
- (progn
-  (setq org-projectile-projects-file
-     "~/Dropbox/writing/notationaldata/projects.org")
-  (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
-  (push (org-projectile-project-todo-entry) org-capture-templates))
- :ensure t)
-#+END_EXAMPLE
-
-
 * fix case
 #+BEGIN_SRC emacs-lisp
 (defun isearch-forward-ignore-case ()
@@ -7526,17 +7496,6 @@ signature, in that order."
 (isearch-forward)
 )
 #+END_SRC
-
-
-* counsel-Spotify
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package spotify
-:init
-'(spotify-oauth2-client-id 83e2e6567ee2416e8943de8c83c525cb)
-'(spotify-oauth2-client-secret c5305ef7fe3f4e2cab9d2abec2070688)
-
-)
-#+END_EXAMPLE
 
 
 * org count words
@@ -7586,23 +7545,6 @@ If UNSAFE is non-nil, assume point is on headline."
        while pos
        do (goto-char pos)))
 #+END_SRC
-
-
-* visible mark
-#+BEGIN_EXAMPLE emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; visible mark - show where mark is                   ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defface visible-mark-active ;; put this before (require 'visible-mark)
- '((((type tty) (class mono)))
-  (t (:background "magenta"))) "")
-(use-package visible-mark)
-(global-visible-mark-mode 1) ;; or add (visible-mark-mode) to specific hooks
-(setq visible-mark-max 2)
-(setq visible-mark-faces `(visible-mark-face1 visible-mark-face2))
-
-(setq set-mark-command-repeat-pop t)
-#+END_EXAMPLE
 
 
 * transcribmode
