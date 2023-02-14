@@ -214,7 +214,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
            txt)))
 ;; (message "Copied: %s" txt-updated-links)
     (shell-command-to-string
-     (format "echo-n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
 #+END_SRC
 
 ** pasteboard-paste
@@ -237,7 +237,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
                 (if (string= m1 m2)
                   (concat "[[" m1 "]]")
                   (concat "[[" m2 "][" m1 "]]"))))
-          (shell-command-to-string "pbpaste | perl-p-e 's/\r$//' | tr '\r' '\n'"))))
+          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
     (delete-region start end)
     (insert ins-text)
     (my/fix-space)
@@ -313,7 +313,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 		 (mark)
 	       (point))))
     (shell-command-on-region start end
-			     "pbpaste | perl-p-e 's/\r$//' | tr '\r' '\n'"
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
 			     nil t)
     (save-excursion
       )))
@@ -982,7 +982,7 @@ Make ~kill-sentence~ work in a more intuitive way:
 (defun my/beginning-of-sentence-p ()
   "Return  t if point is at the beginning of a sentence."
   (let ((start (point))
-        (beg (save-excursion (forward-sentence) (forward-sentence-1))))
+        (beg (save-excursion (forward-sentence) (forward-sentence -1))))
     (eq start beg)))
 
 (defun my/kill-sentence-dwim ()
@@ -1359,7 +1359,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 (defun length-of-previous-line ()
  (save-excursion
-  (forward-line-1)
+  (forward-line -1)
   (end-of-line)
   (current-column)))
 #+END_SRC
@@ -2179,7 +2179,7 @@ The last line sets the path to where saveplace stores your position data. Change
                         (goto-char (get-register 'p))
                         (insert "*"))
                       (insert "* ")
-                      (embolden-next-word-1)))
+                      (embolden-next-word -1)))
         (define-key map (kbd ".") (lambda ()
                     (interactive)
                     (expand-abbrev)
@@ -2187,7 +2187,7 @@ The last line sets the path to where saveplace stores your position data. Change
                       (goto-char (get-register 'p))
                       (insert "*"))
                     (insert "*. ")
-                    (embolden-next-word-1)))
+                    (embolden-next-word -1)))
             map)
   (if embolden-next-word
       (set-register 'p (point))
@@ -2438,7 +2438,7 @@ Here is that code:
 (defun dwiw-auto-capitalize ()
   (if (org-in-block-p '("src"))
       (when auto-capitalize
-	(auto-capitalize-mode-1))
+	(auto-capitalize-mode -1))
     (unless auto-capitalize
       (auto-capitalize-mode 1))))
 
@@ -3938,9 +3938,9 @@ different → different
        (rspec-mode)
        (setq web-mode-markup-indent-offset 2)))
 
-;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode-1)))))
+;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
 
-(add-hook 'web-mode-hook (lambda () (abbrev-mode-1)))
+(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
 
     :bind (:map web-mode-map
 
