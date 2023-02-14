@@ -8479,9 +8479,9 @@ If the point is on a contraction, this function replaces it with the correspondi
 
 
 (setq contraction-pairs
-   '(("do not" . "don't")
-    ("will not" . "won't")
-    ("could not" . "couldn't")))
+  '((("do not" . "don't"))
+    (("will not" . "won't"))
+    (("could not" . "couldn't"))))
 
 #+END_SRC
 
