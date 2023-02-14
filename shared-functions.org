@@ -35,6 +35,8 @@
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
+[[https://www.reddit.com/r/emacs/comments/cduuxb/opinions_on_railwaycats_emacsmacport/][Opinions on Railwaycat's Emacs-MacPort? : emacs]]
+
 * packages
 ** Load the proper repositories
 
@@ -452,47 +454,35 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
-;;(while (search-forward-regexp "- " nil to)
-;; (replace-match "") nil t)
-;; add alpha. And replace the alpha.
-
   (replace-smart-quotes-regexp beg end)
 
-;; These lines added by ChatGPT, they didn't work
-;; Replace occurrences of "- " and "- " inside words with "-"
+  ;; The following lines replace occurrences of "- " and "- " inside words with "-"
   (while (search-forward-regexp "\\b- " nil t)
     (replace-match "-" nil t))
-;; up until here
-;; can delete this section if necessary
-
+  (while (search-forward-regexp " -\\b" nil t)
+    (replace-match "-" nil t))
 
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
                             ("\x2019" . "'")
                             ("’" . "'")
-("''" . "\"")
-("​" . "")
-("…" . "...")
-("• " . "- ")
-(" " . "")
-("  " . " ")
-
-("ó" . "-")
-("á" . "-")
-("Õ" . "'")
-("Õ" . "'")
-("Ò" . "\"")
-("Ó" . "\"")
-
-("―" . "\"")
-("‖" . "\"")
-
-;; ("- " . "") ; also remove stray spac- es
-;; ("­ " . "") ; also remove stray spac- es
-)
-                       nil   beg (min end (point-max)))
-
+                            ("''" . "\"")
+                            ("​" . "")
+                            ("…" . "...")
+                            ("• " . "- ")
+                            (" " . "")
+                            ("  " . " ")
+                            ("ó" . "-")
+                            ("á" . "-")
+                            ("Õ" . "'")
+                            ("Õ" . "'")
+                            ("Ò" . "\"")
+                            ("Ó" . "\"")
+                            ("―" . "\"")
+                            ("‖" . "\"")
+                            )
+                          nil   beg (min end (point-max)))
 )
 #+END_SRC
 
@@ -8551,22 +8541,33 @@ Do not
 
 
 * tabbar
-So Emacs text doesn't appear on the MacBook notch.
+So Emacs text doesn't appear on the MacBook Pro notch.
 
 #+begin_src emacs-lisp
-(use-package tab-bar)
-(tab-bar-mode 1)
+(use-package tab-bar
+ :config
+ (tab-bar-mode 1))
+ #+end_src
+
+
+#+begin_src emacs-lisp
+(defun my-toggle-tab-bar-mode ()
+ "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
+ (if (frame-parameter nil 'fullscreen)
+   (tab-bar-mode 1)
+  (tab-bar-mode -1)))
+
+(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
+
 #+end_src
 
 * Export to .docx
-
 #+begin_src emacs-lisp
 (setq org-odt-preferred-output-format "docx")
-
 #+end_src
 
 
-* Capitalize headings correctly
+* Capitalize level 1 headings use correct rules of capitalizing titles
 #+begin_src emacs-lisp
 (defun org-titlecase-level-1 ()
  "Convert all Level 1 org-mode headings to title case."
