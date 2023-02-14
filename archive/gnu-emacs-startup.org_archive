@@ -12,16 +12,16 @@ Archived entries from file /Users/jay/Dropbox/emacs/prelude/personal/gnu-emacs-s
 
 
 
-: Lorem ipsum. 
+: Lorem ipsum.
 
 e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
 
 ...this:
-: Lorem dolor sit amet ipsum. 
+: Lorem dolor sit amet ipsum.
 
 ...NOT this:
 
-: Lorem  dolor sit amet ipsum. 
+: Lorem  dolor sit amet ipsum.
 
 ;;; old version; remove after testing new one (see below)
 ;; (defun pasteboard-paste()
@@ -63,16 +63,16 @@ e.g. in the example above, if I place the point on the "i" in "ipsum" and then p
 
 
 
-: Lorem ipsum. 
+: Lorem ipsum.
 
 e.g. in the example above, if I place the point on the "i" in "ipsum" and then paste the string " dolor sit amet" including the initial space in the string, I should get...
 
 ...this:
-: Lorem dolor sit amet ipsum. 
+: Lorem dolor sit amet ipsum.
 
 ...NOT this:
 
-: Lorem  dolor sit amet ipsum. 
+: Lorem  dolor sit amet ipsum.
 
 ;;; old version; remove after testing new one (see below)
 ;; (defun pasteboard-paste()
@@ -113,7 +113,7 @@ e.g. in the example above, if I place the point on the "i" in "ipsum" and then p
   :ARCHIVE_TODO: TODO
   :END:
 
-Take a look at the function kill-word-correctly above. I made it so that kill-word-correctly counts punctuation such as , . ; ? ! as a word. 
+Take a look at the function kill-word-correctly above. I made it so that kill-word-correctly counts punctuation such as , . ; ? ! as a word.
 
 : The quick brown brown, fox jumped.
 
@@ -124,7 +124,7 @@ I want to do the same for backward-kill-word-correctly.
 Now take this example:
 : The quick brown, fox ^ fox jumped.
 
-Goal: 
+Goal:
 Suppose the point is at the ^ caret above. I want to be able to invoke backward-kill-word-correctly, TWICE, such that...
 
 ...the first invocation should result in this:
@@ -138,17 +138,17 @@ Suppose the point is at the ^ caret above. I want to be able to invoke backward-
     The point of this question is that, in case it is part of the string, the
     first invocation deletes it, so it is not entirely a "backward" kill.  I
     think the semantics can get a bit convoluted here.
-*** DONE Clarification: The caret is NOT part of the string. 
+*** DONE Clarification: The caret is NOT part of the string.
 
-Sorry, maybe a better way to phrase it would be as follows: 
+Sorry, maybe a better way to phrase it would be as follows:
 
 Take the example below...
 
 : The quick brown, fox fox jumped.
 
-...and suppose the point is on the space between the first "fox" and the second one, or on the "f" in the second "fox". 
+...and suppose the point is on the space between the first "fox" and the second one, or on the "f" in the second "fox".
 
-I want to be able to invoke backward-kill-word-correctly, TWICE, such that it first deletes the word, then deletes the comma (but leaves one space) such that the result is this: 
+I want to be able to invoke backward-kill-word-correctly, TWICE, such that it first deletes the word, then deletes the comma (but leaves one space) such that the result is this:
 
 : The quick brown fox jumped.
 
@@ -157,9 +157,9 @@ Thanks!!
 *** DONE More follow-up questions                             :answer:rudi:
 
      - When you say that you want to invoke the command twice and have that
-       behaviour, are you expecting it to keep some sort of memory? 
+       behaviour, are you expecting it to keep some sort of memory?
 
-: No. No memory. 
+: No. No memory.
 
  Or, on the contrary, should the second invocation in your example kill *just* the comma regardless of the first invocation?
 
@@ -178,7 +178,7 @@ I will implement it like that (no memory) since not only it is the more logical 
           semantics, since ~delete-forward-char~ does not affect the kill-ring
           (neither does ~my/fix-space~, by the way).
 
-: No need to keep the comma once it is out of its context. The kill ring could have just "fox" if this is easy to implement. If it's time consuming then don't worry about it. 
+: No need to keep the comma once it is out of its context. The kill ring could have just "fox" if this is easy to implement. If it's time consuming then don't worry about it.
 
 **** TODO Reply
 
@@ -190,7 +190,7 @@ I will implement it like that (no memory) since not only it is the more logical 
 
       I will thus leave it as it is (include the killed punctuation in the kill-ring).
 
-: 
+:
 
 
 * DONE New note about the abbrevs file                                 :rudi:
@@ -203,10 +203,10 @@ Rúdi: As you can see from my abbrevs file, it contains two main kinds of abbrev
 
 1. Typographical error corrections
 
-Ghandi → Gandhi 
+Ghandi → Gandhi
 
-#+BEGIN_EXAMPLE 
-("Ghandi" "Gandhi" nil 0) 
+#+BEGIN_EXAMPLE
+("Ghandi" "Gandhi" nil 0)
 #+END_EXAMPLE
 
 These get created automatically through some code I found here:
@@ -214,10 +214,10 @@ These get created automatically through some code I found here:
 
 2. Expansion of text shortcuts
 
-bc → because 
+bc → because
 
-#+BEGIN_EXAMPLE 
-("bc" "because" nil 455) 
+#+BEGIN_EXAMPLE
+("bc" "because" nil 455)
 #+END_EXAMPLE
 
 These are my way of making typing faster, by creating text shortcuts that automatically expand into the full form of the word. These are all between 1 and 4 characters long, and expand to form longer words.
@@ -226,21 +226,21 @@ For ONLY the #2 "expansion of text shortcuts", I would like to:
 - [X] separate these out into their own separate abbrevs file, which I can then open-source on Github and share with other Emacs users, and
 - [X] also convert them to TextExpander format, which I can also open-source share with other people.
 
-Basically I want to offer these expansions in two formats. 
+Basically I want to offer these expansions in two formats.
 
-That's my goal for this latest task. Does that make sense? 
+That's my goal for this latest task. Does that make sense?
 
 Thanks,
 Jay
 
 
-* DONE [#A] a different kind of request 
+* DONE [#A] a different kind of request
   :PROPERTIES:
   :ARCHIVE_TIME: 2015-06-16 Tue 14:06
   :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
   :ARCHIVE_CATEGORY: gnu-emacs-startup
   :END:
-Hi Rúdi, 
+Hi Rúdi,
 
 Here's a different kind of request. If you're interested, maybe we could make it the top priority. However, it's not strictly speaking hacking in elisp, so feel free to turn it down if it doesn't interest you and we can just proceed with the Emacs functions.
 
@@ -253,7 +253,7 @@ This task involves programmatically converting an abbrevs file, which looks some
  ("qo" "without" nil 1)
  ("ty" "they" nil 3)
  ("tyr" "they're" nil 5)
-)) 
+))
 #+END_QUOTE
 
 ...into a TextExpander file, which looks something like this:
@@ -336,35 +336,35 @@ Let me know if this interests you, and if so, I'll send you my abbrev file. Agai
 
    Sure, I'll handle it. It sure is just hacking elisp...
 
-: Excellent. :-) 
+: Excellent. :-)
 
    Here's my proposal: a new function, say ~abbrev-table-export-to-text-expander~, which prompts you for the abbrev table name, and creates a new buffer with the result of converting to TextExpander, which you then can save in the location you desire. Does that look good?
 
-: It would be cool if I could just export all my existing abbrevs. Here's what I would like to do: export all my abbrevs where the abbrev is 4 characters or less. No confirmation, no prompt. 
-: e.g. ehrs → behaviors 
+: It would be cool if I could just export all my existing abbrevs. Here's what I would like to do: export all my abbrevs where the abbrev is 4 characters or less. No confirmation, no prompt.
+: e.g. ehrs → behaviors
 : anything longer than that, I don't need to export to TextExpander.
 : Is this feasible?
 
    Now, before I start, a question: is there information about the file format? I cannot deduce the meaning of all XML tags in your example. I have searched the web for the format, to no available.
 
-: Good question. The format is called TextExpander for OSX. 
+: Good question. The format is called TextExpander for OSX.
 
-http://smilesoftware.com/help/TextExpander/creating.html 
+http://smilesoftware.com/help/TextExpander/creating.html
 
-http://brettterpstra.com/2013/01/04/mass-creating-textexpander-snippets/ 
+http://brettterpstra.com/2013/01/04/mass-creating-textexpander-snippets/
 
-http://smilesoftware.com/help/TextExpander%204%20Help.pdf 
+http://smilesoftware.com/help/TextExpander%204%20Help.pdf
 
-http://smilesoftware.com/help/TextExpander/groups.html 
+http://smilesoftware.com/help/TextExpander/groups.html
 
 Take a look and let me know whether that's helpful. If not you may ask a question on StackExchange? Or if not I can contact Smile support.
 
-Thank you! Let me know. 
+Thank you! Let me know.
 
 Thanks,
 Jay
 
-* DONE Request 
+* DONE Request
   :PROPERTIES:
   :ARCHIVE_TIME: 2015-06-16 Tue 16:48
   :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
@@ -372,20 +372,20 @@ Jay
   :END:
 For the above whitespace and sentence functions, can we make it so that Emacs will recognize three hyphens in a row---as punctuation same as a comma?
 
-** DONE Request for clarification 
+** DONE Request for clarification
 
    Not sure which functions you mean. The ones in the "Sentences" Heading?
-** DONE Answer 
+** DONE Answer
 - my/fix-space
 - kill-clause
 - my-delete-backward
 - kill-word-correctly
 - backward-kill-word-correctly
 
-Basically I'd like to make it so that org-mode treats --- as a singles punctuation mark in any function that looks for :punct: 
+Basically I'd like to make it so that org-mode treats --- as a singles punctuation mark in any function that looks for :punct:
 
-*** Example 
-Take a look at the function kill-word-correctly. I want it so that kill-word-correctly counts --- as a word. 
+*** Example
+Take a look at the function kill-word-correctly. I want it so that kill-word-correctly counts --- as a word.
 
 Take this sentence below:
 
@@ -395,32 +395,32 @@ In the sentence above, if I place the point on the "h" in "high" and then do kil
 
 So the first invocation should result in this:
 
-: The quick brown fox jumped---high. 
+: The quick brown fox jumped---high.
 
 ...and second invocation should then delete the --- and fix the space so the result is this:
 
-: The quick brown fox jumped high. 
+: The quick brown fox jumped high.
 
 Thanks!
 
-*** DONE Note & question 
+*** DONE Note & question
 
     OK. But it is not straightforward. You see, [:punct:] denotes a set of characters; --- a *sequence* of characters. It is not simply a case of changing the meaning of [:punct:]. I don't see a way to do it other than changing each function individually.
 
-    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you? 
+    However, according to the syntax table of my org-mode, - is considered a punctuation. So if I ~kill-word-correctly~ over "open-source" (point on 'o'), I then get "-source", and if I do it again, I get "source". Is that the same for you?
 
-: Yes it is. 
+: Yes it is.
 
     If that is the case, then would killing all *consecutive* punctuation marks cover this case? What about "--", "?!", "...?" (and possibly other consecutive punctuation marks, like "--," - some authors like that style)? They would also be killed completely. Is that according to your requirements?
 
 : Yes, automatically killing all consecutive punctuation in cases like "---" "--", "?!", and "...?" would certainly be according to my requirements. So yes, I think that solves the problem! Thank you!
 
-** DONE More questions 
+** DONE More questions
 
    - ~my/fix-space~
      - What should be the difference here?
 
-: The difference is that there should be a space after ; : , ? ! or . but no space after --- 
+: The difference is that there should be a space after ; : , ? ! or . but no space after ---
 *or after -*
 
    - ~kill-clause~
@@ -446,10 +446,10 @@ Thanks!
 
    Would you like me to try to fix this or is the kill ring really not your concern?
 
-: Haha, no, this is not a problem! Thank you! 
+: Haha, no, this is not a problem! Thank you!
 
 
-* TODO [#B] smart-colon exception for smiley emoticon 
+* TODO [#B] smart-colon exception for smiley emoticon
   :PROPERTIES:
   :ARCHIVE_TIME: 2015-06-18 Thu 15:56
   :ARCHIVE_FILE: ~/Dropbox/emacs/prelude/personal/gnu-emacs-startup.org
@@ -457,7 +457,7 @@ Thanks!
   :ARCHIVE_TODO: TODO
   :END:
 I'd like to make it easy for me to type something like the above:
-: Thanks! :-) 
+: Thanks! :-)
 
 Currently if I type it the way it looks, I wind up with this:
 : Thanks!: -)
@@ -604,3 +604,32 @@ deprecated. use embolden next word, and bold words will be changed into italics 
 (define-key org-mode-map (kbd "M-<return>") 'smart-org-meta-return-dwim)
 (define-key org-mode-map (kbd "M-S-<return>") 'smart-org-insert-todo-heading-dwim)
  #+END_EXAMPLE
+
+* code not currently in use
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-14 Tue 12:47
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+*** keybindings not currently in use
+ (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+ (global-set-key (kbd "C-c s") 'org-copy-subtree)
+ (define-key key-minor-mode-map (kbd "C-v s") 'org-paste-subtree)
+;; (define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+(define-key key-minor-mode-map (kbd "C-c C-l") 'org-insert-link)
+ (define-key key-minor-mode-map (kbd "s-i") 'markdown-insert-image)
+ (define-key key-minor-mode-map (kbd "s-\\") 'org-ctrl-c-ctrl-c)
+ (define-key key-minor-mode-map (kbd "s-u") 'ido-dired)
+ (define-key key-minor-mode-map (kbd "H-n") 'org-narrow-to-subtree)
+ (define-key key-minor-mode-map (kbd "H-G") 'prelude-google)
+ (define-key key-minor-mode-map (kbd "s-G") 'osx-browse-guess)
+ (define-key key-minor-mode-map (kbd "s-") 'google-define-word-or-phrase)
+ (define-key key-minor-mode-map (kbd "C-c C-x C-o") 'org-pomodoro)
+ (define-key key-minor-mode-map (kbd "s-R") 'web-research)
+
+
+;; (define-key key-minor-mode-map (kbd "<right>") 'aquamacs-right-char)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
+;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
+
