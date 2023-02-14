@@ -8448,41 +8448,32 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+end_src
 
 
-
-
+won't
+will not
 * cycle contractions
 Doesn't work
 don't work
 Written by ChatGPT
 #+begin_SRC emacs-lisp
 (defun cycle-contraction-at-point ()
- "Cycles between the long-form-phrase and its contraction for a two-word phrase at point.
-
-The function uses the variable `contraction-pairs' to define the pairs of long-form-phrases and their contractions.
-
-If the point is on a long-form-phrase, this function replaces it with its contraction.
-If the point is on a contraction, this function replaces it with the corresponding long-form-phrase."
- (interactive)
- (let ((current-phrase (thing-at-point 'word)))
-  (dolist (pair contraction-pairs)
-   (if (consp pair) ; check if it's a cons cell
-     (if (member current-phrase pair)
-       (let ((long-form-phrase (car pair))
-          (contraction (cdr pair)))
-        (if (string= current-phrase long-form-phrase)
-          (progn
-           (delete-region (point) (+ (point) (length current-phrase)))
-           (insert contraction))
-         (progn
-          (delete-region (point) (+ (point) (length current-phrase)))
-          (insert long-form-phrase)))))))))
-
-
-(setq contraction-pairs
-  '((("do not" . "don't"))
-    (("will not" . "won't"))
-    (("could not" . "couldn't"))))
-
+  "Cycles between the long-form-phrase and its contraction for a two-word phrase at point."
+  (interactive)
+  (let ((contraction-pairs
+         '(("do not" . "don't")
+           ("will not" . "won't")
+           ("could not" . "couldn't"))))
+    (let ((current-phrase (current-word t t)))
+      (dolist (pair contraction-pairs)
+        (if (member current-phrase pair)
+            (let ((long-form-phrase (car pair))
+                  (contraction (cdr pair)))
+              (if (string= current-phrase long-form-phrase)
+                  (progn
+                    (delete-region (point) (+ (point) (length current-phrase)))
+                    (insert contraction))
+                (progn
+                  (delete-region (point) (+ (point) (length current-phrase)))
+                  (insert long-form-phrase)))))))))
 #+END_SRC
 
 * playing with ChatGTP
