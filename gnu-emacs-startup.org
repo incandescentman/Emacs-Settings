@@ -3855,8 +3855,7 @@ M-1 to 9
     (replace-string "‘" "\"" nil (point-min) (point-max))
     (replace-string "’" "'" nil (point-min) (point-max))
     (replace-string "¡\"" "\"" nil (point-min) (point-max))
-    (replace-string "¡­" "..." nil (point
-				   -min) (point-max))
+    (replace-string "¡­" "..." nil (point-min) (point-max))
     (replace-string "" "..." nil (point-min) (point-max))
     (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
     (replace-string "" "`" nil (point-min) (point-max))  ; \221
