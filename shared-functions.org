@@ -1277,32 +1277,37 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 #+begin_src emacs-lisp
 (use-package hl-todo
- :init
- (global-hl-todo-mode))
-
+  :hook (org-mode . hl-todo-mode)
+  :config
+(global-hl-todo-mode)
+(global-hl-todo-mode)
+ (setq hl-todo-include-modes '(org-mode))
 (setq hl-todo-keyword-faces
  '(("HOLD" . "#d0bf8f")
-  ("TODO" . "#cc9393")
-  ("NEXT" . "#dca3a3")
-  ("THEM" . "#dc8cc3")
-  ("REJECTED" . "Red")
-  ("PROG" . "#7cb8bb")
-  ("OKAY" . "#7cb8bb")
-  ("DONT" . "#5f7f5f")
-  ("FAIL" . "#8c5353")
-  ("DONE" . "#afd8af")
-  ("ADMITTED" . "DarkGreen")
-  ("NOTE"  . "#d0bf8f")
-  ("STARTED" . "#d0bf8f")
-  ("HACK"  . "#d0bf8f")
-  ("FIXME" . "#cc9393")
-  ("MAYBE" . "#cc9393")
-  ("ACTION" . "#cc9393")
-  ("PROJECT" . "#cc9393")
-  ("XXX"  . "#cc9393")
-  ("XXXX"  . "#cc9393")
-  ("\\?\\?\\?"  . "#cc9393"))
+ ("TODO" . "#cc9393")
+ ("NEXT" . "#dca3a3")
+ ("THEM" . "#dc8cc3")
+ ("REJECTED" . "Red")
+ ("PROG" . "#7cb8bb")
+ ("OKAY" . "#7cb8bb")
+ ("DONT" . "#5f7f5f")
+ ("FAIL" . "#8c5353")
+ ("DONE" . "#afd8af")
+ ("ADMITTED" . "DarkGreen")
+ ("NOTE" . "#d0bf8f")
+ ("STARTED" . "#d0bf8f")
+ ("HACK" . "#d0bf8f")
+ ("FIXME" . "#cc9393")
+ ("MAYBE" . "#cc9393")
+ ("ACTION" . "#cc9393")
+ ("PROJECT" . "#cc9393")
+ ("XXX" . "#cc9393")
+ ("XXXX" . "#cc9393")
+ ("\\?\\?\\?" . "#cc9393"))
  )
+ )
+
+
 
 
 
