@@ -828,9 +828,9 @@ you should place your code here."
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
-(load "/Users/jay/emacs/emacs-settings/skeletons.el")
+  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-(load "/Users/jay/gnulisp/book-functions.el")
+  (load "/Users/jay/gnulisp/book-functions.el")
 ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
 ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
@@ -853,7 +853,8 @@ you should place your code here."
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
 
-  ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
+  ;; use OSX standard keybindings for navigating word-by-word and selecting
+  ;; whole words at a time
   ;; I've been wanting to do this for so long. :-)
   ;; this works correctly!!
   (eval-after-load "org"
@@ -893,7 +894,6 @@ you should place your code here."
 
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
-;;    (find-file-literally "~/nd/fearless.org")
        ;;    (imenu-list-minor-mode)
        (menu-bar-mode -1)
        ))
@@ -914,7 +914,7 @@ you should place your code here."
 
   (setq org-bullets-bullet-list (quote ("• ")))
 
-(use-package reveal-in-finder)
+  (use-package reveal-in-finder)
 
 ;; (recenter-top-bottom)
   (setq case-fold-search t)
@@ -928,8 +928,7 @@ you should place your code here."
 
   (setq org-hide-leading-stars t)
 
-;; (smartparens-global-mode 1)
-(electric-pair-mode 1)
+  (electric-pair-mode 1)
 
   (add-hook 'ido-setup-hook (lambda ()
                               (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
@@ -1014,7 +1013,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 )
 
 
-(setq default-tab-width 4) ; for graphviz
+;; (setq default-tab-width 4) ; for graphviz
 
   ;; disable smooth scrolling
   (setq scroll-step 1)
@@ -1030,9 +1029,10 @@ This function is called only while dumping Spacemacs configuration. You can
 dump."
 )
 
-  ;; use OSX standard keybindings for navigating word-by-word and selecting whole words at a time
-  ;; I've been wanting to do this for so long. :-)
-  ;; this works correctly!!
+;; use OSX standard keybindings for navigating word-by-word and selecting
+;; whole words at a time
+;; I've been wanting to do this for so long. :-)
+;; this works correctly!!
   (eval-after-load "org"
     '(progn
        (define-key org-mode-map (kbd "<M-S-left>") nil)
