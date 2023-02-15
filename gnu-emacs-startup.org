@@ -275,10 +275,9 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (looking-back "\\[")
 (looking-at "\\]")
 (looking-at "\\/")
-(looking-at "\\/")
 (looking-at "\\\\")
 (looking-back "\\\\")
-(looking-back "\/")
+(looking-back "/")
 (looking-back "\"")
 (looking-at "\"")
 (looking-back "\"")
@@ -298,10 +297,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (pasteboard-paste-without-smart-quotes))   ; else
   )
     #+END_SRC
-
-    #+RESULTS:
-    : pasteboard-paste-spaces-maybe
-
 
 *** pasteboard-paste-no-spaces - original working version
 #+BEGIN_SRC emacs-lisp
