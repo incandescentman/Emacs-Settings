@@ -460,14 +460,6 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 
   (replace-smart-quotes-regexp beg end)
 
-;; These lines added by ChatGPT, they didn't work
-;; Replace occurrences of "- " and "- " inside words with "-"
-  (while (search-forward-regexp "\\b- " nil t)
-    (replace-match "-" nil t))
-;; up until here
-;; can delete this section if necessary
-
-
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
                             ("\x2018" . "'")
