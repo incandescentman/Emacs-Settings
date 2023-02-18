@@ -2714,40 +2714,34 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 
 (defun jd-org-book-pomodoro ()
- "insert a new heading with today's date"
+ "Insert a new heading with TODO bookwriting and start a pomodoro timer."
  (interactive)
-(insert "*** TODO bookwriting")
-(insert "\n")
-(pomodoro-start-jay)
- )
+ (org-insert-heading)
+ (insert "*** TODO bookwriting")
+ (insert "\n")
+ (pomodoro-start-jay))
+
+
 
 (defun jd-clock-in ()
-  "insert a new heading with today's date, and then clock in"
-  (interactive)
-  (org-insert-heading ())
-  (org-insert-time-stamp (current-time))
-  (org-clock-in)
-  (next-line)
-  (next-line)
-  )
+ "Insert a new heading with current time and clock in."
+ (interactive)
+ (org-insert-heading)
+ (org-insert-time-stamp (current-time))
+ (org-clock-in)
+ (next-line 2))
 
 
 
 (defun jd-org-book-and-adulting ()
- "insert a new heading with today's date"
+ "Insert a new heading with TODO bookwriting and TODO adulting."
  (interactive)
-(insert "\n** ")
+ (org-insert-heading)
  (org-insert-time-stamp (current-time))
-(insert "\n")
-(insert "*** TODO bookwriting \n")
-(insert "*** TODO adulting")
-(previous-line)
-(previous-line)
-(previous-line)
-(previous-line)
-(previous-line)
-(previous-line)
- )
+ (insert "\n*** TODO bookwriting \n")
+ (insert "*** TODO adulting\n")
+)
+
 
 
 #+END_SRC
@@ -5412,7 +5406,7 @@ execute speed commands."
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-(add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
+;; (add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
 
 ;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
@@ -5420,6 +5414,23 @@ execute speed commands."
 #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+(setq org-structure-template-alist
+ '(("a" . "export ascii")
+  ("c" . "center")
+  ("C" . "comment")
+  ("e" . "example")
+  ("le" . "example")
+  ("E" . "export")
+  ("h" . "export html")
+  ("l" . "src emacs-lisp")
+  ("la" . "export latex")
+  ("q" . "quote")
+  ("s" . "src")
+  ("s" . "src" sh)
+  ("v" . "export verse")))
+#+end_src
 
 
 
