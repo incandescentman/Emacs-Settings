@@ -5425,10 +5425,11 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("E" . "export")
   ("h" . "export html")
   ("l" . "src emacs-lisp")
+  ("el" . "src emacs-lisp")
   ("la" . "export latex")
   ("q" . "quote")
   ("s" . "src")
-  ("s" . "src" sh)
+  ("sh" . "src" sh)
   ("v" . "export verse")))
 #+end_src
 
@@ -8394,4 +8395,20 @@ Doesn't work.
  (goto-char (point-min))
  (while (re-search-forward "^\\* " nil t)
   (titlecase-line))))
-#+end_src
+#+end_SRC
+
+
+* extract hyperlinks
+#+begin_src emacs-lisp
+(defun extract-hyperlinks-from-file (file)
+ "Extracts all hyperlinks from the text file FILE."
+ (interactive "fEnter file to extract hyperlinks from: ")
+ (let ((hyperlinks '()))
+  (with-temp-buffer
+   (insert-file-contents file)
+   (goto-char (point-min))
+   (while (re-search-forward "\\(http\\|https\\)://[^[:space:]]+" nil t)
+    (push (match-string-no-properties 0) hyperlinks)))
+  (message "Hyperlinks extracted: %s" hyperlinks)
+  hyperlinks))
+#+end_src>
