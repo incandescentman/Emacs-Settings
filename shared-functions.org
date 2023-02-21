@@ -5429,7 +5429,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("la" . "export latex")
   ("q" . "quote")
   ("s" . "src")
-  ("sh" . "src" sh)
+  ("sh" . "src sh")
   ("v" . "export verse")))
 #+end_src
 
