@@ -892,7 +892,7 @@ Note: disable this when trying to export to org-html-themes!
   (plist-put plist :section-numbers t)))
  plist)
 
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
 
 #+end_src
 
@@ -1758,10 +1758,10 @@ margin-bottom: 1em;
 #+END_SRC
 
 ** org-download
-  #+BEGIEXAMPLERC emacs-lisp
-(use-package org-download)
-(setq-default org-download-image-dir "/Users/jay/Downloads")
-(setq org-download-method (quote directory))
+  #+BEGIN EXAMPLE SRC emacs-lisp
+;;(use-package org-download)
+;; (setq-default org-download-image-dir "/Users/jay/Downloads")
+;; (setq org-download-method (quote directory))
 #+END_EXAMPLE
 
 * Browsing
@@ -3424,7 +3424,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "h" 'replace-string)
 
 
-(define-super-key "m" 'mc/mark-all-like-this-dwim)
+(define-super-key "m" 'mc/mark-all-like-this)
 
 
 (define-super-key "\\" 'visit-most-recent-file)
@@ -6144,7 +6144,7 @@ minibuffer."
 
 (cheatsheet-add :group 'MultipleCursors
 		:key "s-m"
-		:description "mc/mark-all-like-this-dwim")
+		:description "mc/mark-all-like-this")
 
 
 (cheatsheet-add :group 'MultipleCursors

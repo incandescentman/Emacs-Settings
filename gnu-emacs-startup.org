@@ -596,7 +596,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
 
-(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this-dwim)
+(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this)
 
 (define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column)
 (define-key key-minor-mode-map (kbd "s-j i c") 'org-table-insert-column)
@@ -1698,7 +1698,7 @@ This works nicely. Now, let us add a new function that looks up the word or sele
 
 #+RESULTS:
 | d | ictionary | words-dictionary |
-| t  | hesaurus  | words-thesaurus  |
+| t | hesaurus  | words-thesaurus  |
 | g | oogle     | words-google     |
 | w | twitter   | words-twitter    |
 
@@ -2086,7 +2086,7 @@ That worked well. I ran the block and got the email.
 Now, suppose I have this data:
 #+tblname: users
 | userid | password  |
-|-------+-----------|
+|--------+-----------|
 | user1  | trustme99 |
 | user2  | foolme99  |
 | user3  | blameme99 |
