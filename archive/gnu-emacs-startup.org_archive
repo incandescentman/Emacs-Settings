@@ -1640,3 +1640,185 @@ Oleh
 #+END_EXAMPLE
 
 
+
+* Emacs Lisp Mode
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:43
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(defun turn-on-autocomplete-mode ()
+   (auto-complete-mode 1))
+(add-hook 'emacs-lisp-mode-hook 'turn-on-autocomplete-mode )
+#+END_EXAMPLE
+
+
+* smex
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:45
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_SRC emacs-lisp
+;; (use-package smex)
+;; (setq smex-completion-method 'ivy)
+#+END_SRC
+
+
+
+* keep cursor at same position when scrolling
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:45
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_EXAMPLE
+(setq scroll-preserve-screen-position 1)
+;;scroll window up/down by one line
+(define-key key-minor-mode-map (kbd "M-n") (kbd "C-u 1 C-v"))
+(define-key key-minor-mode-map (kbd "M-p") (kbd "C-u 1 M-v"))
+
+#+END_EXAMPLE
+
+
+* email stuff
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+** save buffer to sent-emails-org-file
+#+BEGIN_SRC emacs-lisp
+(defvar *sent-emails-org-file* "/Users/jay/Dropbox/writing/notationaldata/sent-emails.org")
+
+(defun save-buffer-to-sent-emails-org-file ()
+  ;; header
+
+(write-region
+   (concat "\n\n\n* "
+(format-time-string "%F %l:%M%P\n\n")
+           "\n\n")
+   0 *sent-emails-org-file* t)
+  ;; buffer
+  (write-region nil 0 *sent-emails-org-file* t))
+#+END_SRC
+
+** send message without bullets
+#+BEGIN_SRC emacs-lisp
+(defun send-message-without-bullets ()
+  (interactive)
+  (remove-hook 'org-mode-hook 'org-bullets-mode)
+;; (notmuch-mua-send-and-exit)
+(message-send-and-exit)
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'send-message-without-bullets)
+            (local-set-key "\C-c\C-l" 'org-insert-link)
+))
+
+#+END_SRC
+
+** sign current email
+#+BEGIN_SRC emacs-lisp
+(defvar *mail-signature* "\n---\nJay Dixit\n(646) 355-8001\njaydixit.com")
+
+(defun sign-current-email ()
+  (save-excursion
+    (end-of-buffer)
+    (insert *mail-signature*)))
+#+END_SRC
+
+** custom-send-message
+#+BEGIN_SRC emacs-lisp
+(defun custom-send-message (arg)
+  (interactive "p")
+  (when (and arg (= 0 (mod arg 4)))
+    (sign-current-email))
+  (save-buffer-to-sent-emails-org-file)
+  (send-message-without-bullets))
+#+END_SRC
+
+
+* orgalist-mode-map
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+
+#+BEGIN_EXAMPLE emacs-lisp
+(define-key orgalist-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
+(define-key mu4e-compose-mode-map (kbd "<M-return>") 'smart-org-meta-return-dwim)
+; (define-key orgalist-mode-map (kbd "<return>") 'message-mode-smart-return)
+(define-key orgalist-mode-map (kbd "\C-c\C-c") 'custom-send-message)
+(define-key mu4e-compose-mode-map (kbd "\C-c\C-c") 'custom-send-message)
+
+
+(define-key orgalist-mode-map (kbd "C-c .") 'org-time-stamp)
+
+#+END_EXAMPLE
+
+
+* message-mode-map
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(add-hook 'message-mode-hook
+          (lambda ()
+            (local-set-key "\C-c\C-c" 'custom-send-message)
+; (local-set-key (kbd "<return>") 'orgalist-mode-smart-return)
+))
+#+END_EXAMPLE
+
+
+
+* fountain-mode-map
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(add-hook 'fountain-mode-hook
+     (lambda ()
+(local-set-key (kbd ".") 'smart-period)
+(local-set-key (kbd ",") 'smart-comma)
+(local-set-key (kbd "\`") 'flyspell-auto-correct-word)
+(local-set-key (kbd "<SPC>") 'smart-space)
+
+
+))
+#+END_EXAMPLE
+
+
+
+* reformat email
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_SRC emacs-lisp
+(defun reformat-email (begin end)
+  (interactive "r")
+(xah-replace-pairs-region begin end
+ '(
+ ["> " ""]
+))
+  (unfill-region begin end)
+  (fill-region begin end)
+  (xah-replace-pairs-region begin end
+ '(
+ ["\n" "\n> "]
+)))
+
+#+END_SRC
+
+
+
