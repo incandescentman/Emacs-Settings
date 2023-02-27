@@ -7100,3 +7100,15 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 
 
 
+
+
+* Key chords
+
+Use key chord
+#+BEGIN_SRC emacs-lisp
+(use-package key-chord)
+(key-chord-mode 1)
+#+END_SRC
+
+
+

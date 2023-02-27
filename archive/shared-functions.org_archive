@@ -1107,7 +1107,7 @@ when replying, look kind of like gmail
 
 Use key chord
 #+BEGIN_SRC emacs-lisp
-;; (use-package key-chord)
+(use-package key-chord)
 (key-chord-mode 1)
 #+END_SRC
 
