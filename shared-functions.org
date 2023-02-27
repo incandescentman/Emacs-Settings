@@ -2359,15 +2359,6 @@ dired-omit-extensions
  )
 #+end_src
 
-* unused packages
-** ~ls-lisp~
-
-I think this is correct:
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package ls-lisp)
-(setq ls-lisp-ignore-case 't)
-#+END_EXAMPLE
-
 * web research functions
 ** Sourcing / Citing / Attributing
 *** Copy link from Chrome
@@ -2549,23 +2540,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 #+END_SRC
 
 * Prose editing settings
-** Tab Completion for Prose
-# haven't tried this yet
-
-Source: ([[http://endlessparentheses.com/tab-completion-for-prose.html][source]])
-#+BEGIN_EXAMPLE emacs-lisp
-(setq ac-auto-start 3)
-(setq company-minimum-prefix-length 3)
-
-(defun endless/config-prose-completion ()
-  "Make auto-complete less agressive in this buffer."
-  (setq-local company-minimum-prefix-length 6)
-  (setq-local ac-auto-start 6))
-
-(add-hook 'org-mode-hook
-  #'endless/config-prose-completion)
-#+END_EXAMPLE
-
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
 ([[http://endlessparentheses.com/super-smart-capitalization.html][source]]):
@@ -2966,40 +2940,7 @@ Useful for working with files and references:
 )
 #+END_SRC
 
-** Recent files
-Enable recent files using Ido mode COMMAND-R (then RIGHT-ARROW to browse) ~xsteve-ido-choose-from-recentf~ allows me to switch to any recently opened file. The nice thing, using that function is, that it does not matter, if I have the buffer already opened, or if the file must be opened now. With that function I have a persistent buffer list available.
-
-*** Ido recent files
-#+BEGIN_EXAMPLE emacs-lisp
-(defun xsteve-ido-choose-from-recentf ()
-  "Use ido to select a recently opened file from the 'recentf-list'"
-  (interactive)
-  (let ((home (expand-file-name (getenv "HOME"))))
-    (find-file
-     (ido-completing-read ""
-			  (mapc (lambda (path)
-				    (replace-regexp-in-string home "~" path))
-				  recentf-list)
-			  nil t))))
-#+END_EXAMPLE
-
-*** Enable recent files without using Ido mode via C-x C-r:
-#+BEGIN_EXAMPLE emacs-lisp
-(recentf-mode 1) ; recentf
-
-(defun recentf-open-files-compl ()
-  (interactive)
-  (let* ((all-files recentf-list)
-	 (tocpl (mapc (function
-			 (lambda (x) (cons (file-name-nondirectory x) x))) all-files))
-	 (prompt (append '("File name: ") tocpl))
-	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
-    (find-file (cdr (assoc-string fname tocpl)))))
-
-(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
-#+END_EXAMPLE
-
-** save some buffers
+* save some buffers
 #+BEGIN_SRC emacs-lisp
 (defun jay/save-some-buffers ()
 (interactive)
@@ -6822,94 +6763,10 @@ This solution also works for MELPA.
 #+END_SRC
 
 
-* eww
-#+BEGIN_SRC emacs-lisp
-(setq eww-search-prefix "https://www.google.com/search?q=")
-#+END_SRC
-
-
-I love that I can search for whatever region is active by pressing M-s M-w in Emacs 25 --- this is something I never even knew I wanted!
-But it just throws an error if region isn't active. So I advised it to prompt for a search string if region isn't active:
-#+BEGIN_SRC emacs-lisp
-(defun jab/eww-search (orig-fun &rest args)
- (if (region-active-p) (apply orig-fun args)
- (eww (read-string "Query: "))))
-(advice-add 'eww-search-words :around #'jab/eww-search)
-
-#+END_SRC
-
-
-
-* podcaster
-#+BEGIN_SRC emacs-lisp
-(setq podcaster-feeds-urls
-  (quote
-  ("http://sachachua.com/blog/tag/emacs-chat/podcast")))
-
-(setq podcaster-mp3-player "VLC")
-
-#+END_SRC
-
-* bongo
-#+BEGIN_SRC emacs-lisp
-'(bongo-default-directory "~/Dropbox/")
-
-#+END_SRC
-
 * ediff
 #+BEGIN_SRC emacs-lisp
 (setq ediff-diff-options "-w")
 #+END_SRC
-
-* weather
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package wttrin
- :ensure t
- :commands (wttrin)
- :init
- (setq wttrin-default-cities '("Toronto"
-                "New York")))
-
-
-;; function to open wttrin with first city on list
-(defun bjm/wttrin ()
-  "Open `wttrin' without prompting, using first city in `wttrin-default-cities'"
-  (interactive)
-  ;; save window arrangement to register
-  (window-configuration-to-register :pre-wttrin)
-  (delete-other-windows)
-  ;; save frame setup
-  (save-frame-config)
-  (set-frame-width (selected-frame) 130)
-  (set-frame-height (selected-frame) 48)
-  ;; call wttrin
-  (wttrin-query (car wttrin-default-cities))
-  )
-#+END_EXAMPLE
-
-* yahoo weather
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package
- :commands
- :bind (
-
-  :map
-
-  )
- :init
-(setq yahoo-weather-location "New York "
-yahoo-weather-mode t
-yahoo-weather-temperture-format "%d "
-yahoo-weather-use-F t
-yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
-)
-
- :config
-
-
-)
-#+END_EXAMPLE
-
 
 * mouse scrolling
 #+BEGIN_SRC emacs-lisp
@@ -6934,30 +6791,12 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 #+END_SRC
 
 
-* ws-butler
-#+BEGIN_EXAMPLE emacs-lisp
-(setq ws-butler-global-mode t)
-(ws-butler-global-mode)
-#+END_EXAMPLE
-
 * fix image links
 #+BEGIN_SRC emacs-lisp
 (defun fix-image-links ()
 (interactive)
 )
 #+END_SRC
-
-
-* org-reveal
-#+BEGIN_SRC emacs-lisp
-(setq org-reveal-root "file:///Users/jay/Dropbox/github/reveal.js")
-#+END_SRC
-
-* pomidor - a pomodoro timer
-#+BEGIN_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/Users/jay/gnulisp/pomidor")
-(use-package pomidor)
-#+END_EXAMPLE
 
 
 * ox-clip
@@ -6986,25 +6825,6 @@ yahoo-weather-format "[New York---%(weather)---%(temperature)F]"
 )
 #+END_SRC
 
-* delete properties blocks
-Doesn't work. use the command line tool. or figure out how to run shell script on current file
-
-[[https://stackoverflow.com/questions/4697322/elisp-call-command-on-current-file][emacs - emacs-lisp: call command on current file - Stack Overflow]]
-
-[[https://stackoverflow.com/questions/25929694/executing-shell-command-on-emacs-file-opening][emacs-lisp - Executing shell command on emacs file opening - Stack Overflow]]
-
-
-
-I'm deactivating this because it doesn't work. Use delete-properties-blocks from command line instead.
-#+BEGIN_EXAMPLE emacs-lisp
-(defun delete-properties-blocks ()
-(interactive)
-(replace-regexp ":PROPERTIES:\\(?:.*\\|\n\\)*:END:" "")
-)
-#+END_EXAMPLE
-
-
-
 * beacon
 #+BEGIN_SRC emacs-lisp
 (use-package beacon
@@ -7016,17 +6836,6 @@ I'm deactivating this because it doesn't work. Use delete-properties-blocks from
 (setq beacon-color "#FFF876")
  )
 #+END_SRC
-
-* org sticky header
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package org-sticky-header
-
-:config
-(setq org-sticky-header-always-show-header nil)
-
-)
-
-#+END_EXAMPLE
 
 * Tufte
 #+BEGIN_SRC emacs-lisp
@@ -7237,57 +7046,6 @@ See also spacemacs/describe-system-info
 #+END_SRC
 
 
-* message-mode tab
-
-#+BEGIN_SRC emacs-lisp
-(autoload 'mail-hist-forward-header "mail-hist")
-(autoload 'mail-text-start  "sendmail")
-
-(defun my-message-signature-start ()
- "Return value of point at start of message signature."
- (save-mark-and-excursion
- (message-goto-signature)
- (point)))
-
-(defun my-message-field-forward ()
- "Move point to next \"field\" in a `message-mode' buffer.
-With each invocation, point is moved to the next field of
-interest amongst header values, message body and message
-signature, in that order."
- (interactive)
- (cond ((message-point-in-header-p)
-  (unless (mail-hist-forward-header 1)
-  (message-goto-body) (point)))
- ((>= (point) (my-message-signature-start))
-  (message "No further field"))
- ((message-in-body-p)
-  (message-goto-signature))
- (t ; Probably on `mail-header-separator' line
-  (message-goto-body) (point))))
-
-(defun my-message-field-backward ()
- "Like `my-message-field-forward', but in opposite direction."
- (interactive)
- (cond ((or (message-point-in-header-p)
-  (<= (point) (mail-text-start)))
-  (unless (mail-hist-forward-header
-   (if (message-point-in-header-p) -1 0))
-  (message "No further field")))
- ((<= (point) (my-message-signature-start))
-  (message-goto-body) (point))
- (t ; Beyond start of signature
-  (message-goto-signature))))
-
-
-
-#+END_SRC
-
-(with-eval-after-load 'message
- (define-key message-mode-map "\t" #'my-message-field-forward)
- (dolist (key '(message-tab backtab S-tab S-iso-lefttab))
- (define-key message-mode-map (vector key) #'my-message-field-backward)))
-
-
 * shell-pop
 
 #+BEGIN_SRC emacs-lisp
@@ -7360,8 +7118,6 @@ If UNSAFE is non-nil, assume point is on headline."
        do (goto-char pos)))
 #+END_SRC
 
-
-* transcribmode
 
 * time stamps
 [[http://emacs-fu.blogspot.com/2008/12/automatic-timestamps.html][emacs-fu: automatic timestamps]]
@@ -7738,29 +7494,6 @@ yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday
 #+end_src
 
 
-* show unique words
-#+begin_src emacs-lisp
-(defun show-unique-words (&optional alphabetical)
- "Collect all of the unique words in the current buffer and
-display them in a new buffer. With prefix, alphabetize the
-list."
- (interactive "P")
- (let ((buf (buffer-name))
-    (new (get-buffer-create "*Unique Words*"))
-    (txt (delete-dups (mapcar #'downcase
-                 (split-string (buffer-string)
-                        nil nil
-                        "[^[:alnum:]]+")))))
-  (with-current-buffer new
-   (delete-region (point-min) (point-max))
-   (insert (format "%d unique words in the <%s> buffer:\n\n"
-           (length txt) buf))
-   (cl-dolist (word (if alphabetical (sort txt #'string<) txt))
-    (insert (concat word "\n"))))
-  (pop-to-buffer new)))
-#+end_src
-
-
 * minimalist org ellipsis
 #+begin_src emacs-lisp
 (custom-set-faces
@@ -7826,14 +7559,6 @@ Courtesy of Mike Goldenberg
   (org-element-map (org-element-parse-buffer) 'table 'org-render-table)))
 
 #+end_src
-
-
-* org-sidebar-tree
-#+begin_EXAMPLE emacs-lisp
-(use-package org-sidebar)
-;; (add-hook 'org-mode-hook 'org-sidebar-tree)
-(setq org-sidebar-tree-side (quote left))
-#+END_EXAMPLE
 
 
 * org-show-inline-images
@@ -7936,17 +7661,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 (define-key evil-normal-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
 (define-key evil-insert-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
 #+end_src
-
-
-* org-drill
-#+BEGIN_SRC emacs-lisp
-;; (use-package org-drill)
-; (add-hook 'org-drill-hook (lambda () (flyspell-lazy-mode -1)))
-; (setq org-drill-add-random-noise-to-intervals-p t)
-
-;; (setq org-drill-use-visible-cloze-face-p t)
-#+END_SRC
-
 
 
 * custom time format
@@ -8109,32 +7823,6 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+end_src
 
 
-* Expand contractions
-Written by ChatGPT. Pretty pointless.
-
-#+begin_SRC emacs-lisp
-(defun expand-contraction-at-point ()
-  "If the current word is a contraction, replace it with its long-form phrase."
-  (interactive)
-  (let ((contraction-pairs '(("do not" "don't") ("will not" "won't") ("could not" "couldn't"))))
-    (let ((current-phrase (current-word t t)))
-      (dolist (pair contraction-pairs)
-        (if (member current-phrase pair)
-            (let ((long-form-phrase (car pair)) (contraction (cadr pair)))
-              (if (string= current-phrase long-form-phrase)
-                  (progn
-                    (delete-region (point) (+ (point) (length current-phrase)))
-                    (insert contraction))
-                (progn
-                  (delete-region (point) (+ (point) (length current-phrase)))
-                  (insert long-form-phrase)))))
-          )
-        )
-      )
-    )
-
-#+END_SRC
-
 * playing with ChatGTP
 #+begin_src emacs-lisp
 (defun start-pomodoro ()
@@ -8156,31 +7844,6 @@ Written by ChatGPT. Pretty pointless.
 (use-package warnings)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 #+end_src
-
-* ChatGPT
-Doesn't work.
-
-#+begin_EXAMPLE emacs-lisp
-(setq python-interpreter "/usr/local/bin/python3")
-(setq chatgpt-python-interpreter "python3")
-
-(use-package quelpa-use-package)
-(use-package chatgpt
- :quelpa ((chatgpt :fetcher git :url "https://github.com/joshcho/ChatGPT.el.git") :upgrade t)
- :init
- (setq chatgpt-repo-path (expand-file-name "chatgpt/" quelpa-build-dir)
-    chatgpt-python-interpreter python-interpreter)
- :bind ("C-c q" . chatgpt-query))
-
-(setq chatgpt-query-types '(
-       ;; ChatGPT.el defaults
-       ("doc" . "Please write the documentation for the following function.\n\n%s")
-       ("bug" . "There is a bug in the following function, please help me fix it.\n\n%s")
-       ("understand" . "What does the following function do?\n\n%s")
-       ("improve" . "Please improve the following code.\n\n%s")
-       ;; your new prompt
-       ("my-custom-type" . "My custom prompt.\n\n%s")))
-#+END_EXAMPLE
 
 * org 9.6 suppress a weird error message
 [[https://github.com/nobiot/org-transclusion/issues/105][Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting · Issue #105 · nobiot/org-transclusion]]
