@@ -1662,19 +1662,6 @@ The last line sets the path to where saveplace stores your position data. Change
 (define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
    #+END_SRC
 
-* new stuff / experimental
-#+BEGIN_SRC emacs-lisp
-
-;; Also auto refresh dired, but be quiet about it
-;; (setq global-auto-revert-non-file-buffers t)
-;; (setq auto-revert-verbose nil)
-
-
-;; Move files to trash when deleting
-(setq delete-by-moving-to-trash t)
-#+END_SRC
-
-
 * cycle-hyphenation
 
 #+BEGIN_SRC emacs-lisp
