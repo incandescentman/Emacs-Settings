@@ -1862,3 +1862,22 @@ To modify the behavior such that frame titlebars contain the buffer's name regar
 ;; Changing this for Hook app compatibility per https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/5
 #+END_SRC
 
+
+* new stuff / experimental
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 01:03
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_SRC emacs-lisp
+
+;; Also auto refresh dired, but be quiet about it
+;; (setq global-auto-revert-non-file-buffers t)
+;; (setq auto-revert-verbose nil)
+
+
+;; Move files to trash when deleting
+(setq delete-by-moving-to-trash t)
+#+END_SRC
+
+

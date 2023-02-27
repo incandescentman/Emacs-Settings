@@ -1,4 +1,4 @@
-*** Red cursor mode
+* Red cursor mode
 
 This customization with the big blocky boxy red cursor makes me so happy.
 #+BEGIN_SRC emacs-lisp
@@ -16,20 +16,20 @@ And create a function to restore the red cursor in case a color-theme overwrites
  (interactive)
  (set-cursor-color "red")
  (setq default-frame-alist
-	'((cursor-color . "red"))) 
+	'((cursor-color . "red")))
  )
 
 (defun magenta-cursor ()
  (interactive)
  (set-cursor-color "#DC8CC3")
  (setq default-frame-alist
-	'((cursor-color . "#DC8CC3"))) 
- ) 
+	'((cursor-color . "#DC8CC3")))
+ )
 #+END_SRC
 
 
 
-* appearance-jay-custom-functions.el 
+* appearance-jay-custom-functions.el
 #+BEGIN_SRC emacs-lisp
 
 
@@ -75,7 +75,7 @@ And create a function to restore the red cursor in case a color-theme overwrites
 (defun inconsolata-font ()
   (interactive)
   (set-face-attribute 'default nil :font "Inconsolata":height 160)
-(set-face-attribute 'font-lock-type-face nil :weight 'light) 
+(set-face-attribute 'font-lock-type-face nil :weight 'light)
   )
 
 (defun last-words ()
@@ -143,10 +143,10 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (custom-set-faces
 ;; (spacemacs/toggle-fringe-off)
 '(minibuffer-prompt ((t (:weight bold :foreground "white" :background "black"))))
-'(org-ellipsis ((t (:foreground "#E0CF9F" :underline t)))) 
+'(org-ellipsis ((t (:foreground "#E0CF9F" :underline t))))
 `(org-tag ((t (:bold t :weight bold :background "#3F3F3F"))))
 
-`(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F")))) 
+`(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F"))))
 (scrollbar-init)
 )
 
@@ -235,7 +235,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
   (org-mode)
   (incarnadine-cursor)
-(scrollbar-init) 
+(scrollbar-init)
 )
 
 (defun cyberpunk-writeroom ()
@@ -280,7 +280,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value)
-  (load-theme 'cyberpunk) 
+  (load-theme 'cyberpunk)
   (toggle-frame-fullscreen)
   (toggle-frame-maximized)
   )
@@ -292,7 +292,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (set-frame-parameter (selected-frame) 'alpha '(40 40))
   (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-serenity.el")
 ;; (set-fringe-mode -1)
-(setq fringe-styles '("no-fringes" . 0)) 
+(setq fringe-styles '("no-fringes" . 0))
 )
 
 
@@ -329,14 +329,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (load-theme 'leuven)
 ;; (load-file "/Users/jay/gnulisp/jay-custom-color-themes/leuven-jay.el")
   (incarnadine-cursor)
-  (org-mode) 
+  (org-mode)
 (custom-set-faces
 ;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.05))))
 '(italic ((t (:foreground "DarkViolet" :family "Garamond" :slant italic :height 1.3))))
 '(org-level-1 ((t (:family "Courier" :weight normal))))
 ;; '(org-link ((t (:underline nil))))
-) 
+)
 
   )
 
@@ -351,7 +351,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
  (set-face-attribute 'default nil :font "Monaco" :height 150)
 ;; (horizontal-cursor)
 (custom-set-faces
-;; '(bold ((t (:inherit font-lock-warning-face :weight bold)))) 
+;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 ;; '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
 
 '(bold ((t (:inherit error :weight bold :height 1.1 :family "Sans Serif" :foreground "red"))))
@@ -359,7 +359,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.3 :family "Garamond"))))
 
 
-) 
+)
 )
 
 
@@ -368,13 +368,13 @@ The function is poorly named, didn't really want to 'load' it, just open it."
  (set-face-attribute 'default nil :font "Triplicate B Code" :height 150)
 ;; (horizontal-cursor)
 (custom-set-faces
-;; '(bold ((t (:inherit font-lock-warning-face :weight bold)))) 
+;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 ;; '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
 
 '(bold ((t (:inherit error :weight bold :height 1.1 :family "Sans Serif" :foreground "red"))))
 
 '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.3 :family "Garamond"))))
-) 
+)
 )
 
 (defun triplicate-font ()
@@ -382,13 +382,13 @@ The function is poorly named, didn't really want to 'load' it, just open it."
  (set-face-attribute 'default nil :font "Triplicate B" :height 150)
 ;; (horizontal-cursor)
 (custom-set-faces
-;; '(bold ((t (:inherit font-lock-warning-face :weight bold)))) 
+;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 ;; '(bold ((t (:family "Sans Serif" :weight bold :height 1.1))))
 
 '(bold ((t (:inherit error :weight bold :height 1.1 :family "Sans Serif" :foreground "red"))))
 
 '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.3 :family "Garamond"))))
-) 
+)
 )
 
 
@@ -450,7 +450,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (defun beach-mode ()
   (interactive)
   (transparency-set-value 50)
-(setq fringe-styles '("no-fringes" . 0)) 
+(setq fringe-styles '("no-fringes" . 0))
   (org-mode)
 (text-scale-increase 2)
   )
@@ -485,11 +485,11 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 (defun monokai ()
   (interactive)
-  (color-theme-monokai) 
+  (color-theme-monokai)
 ;(custom-set-faces
-; '(italic ((t (:foreground "pink")))) 
+; '(italic ((t (:foreground "pink"))))
 ; '(zz-fringe-for-narrowing ((t (:background "black")))))
-  (org-mode) 
+  (org-mode)
   )
 
 
@@ -498,14 +498,14 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 (load-theme 'spacemacs-light)
 ;; (load-file "/Users/jay/gnulisp/jay-custom-color-themes/leuven-jay.el")
  (incarnadine-cursor)
- (org-mode) 
+ (org-mode)
 (custom-set-faces
 ;; '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 '(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.1))))
 '(italic ((t (:foreground "#1F8DD6" :family "Garamond" :slant italic :height 1.3))))
 ;; '(org-link ((t (:underline nil))))
-) 
- ) 
+)
+ )
 
 
 #+END_SRC
