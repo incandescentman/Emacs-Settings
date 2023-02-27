@@ -633,3 +633,539 @@ deprecated. use embolden next word, and bold words will be changed into italics 
 ;; (define-key key-minor-mode-map (kbd "<right>") 'switch-to-next-buffer)
 ;; (define-key key-minor-mode-map (kbd "<down>") 'aquamacs-next-line)
 
+
+* experiments - tested
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:39
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+** words - some interesting utilities for text in Emacs
+The idea is a command called words that will be run interactively. It will grab the word at point, or operate on a selected region, and then offer a menu to lookup the definition, find it in a thesaurus, google it, etc.
+
+We structure the code so you can add functions to it later, without directly modifying this code. The only limitation of this code is that the functions must have a signature with no arguments. That does not seem terribly limiting, as we can check for a region, and use it if we want (see the words-google function).
+
+#+BEGIN_SRC emacs-lisp
+(defun words-dictionary ()
+  (interactive)
+  (browse-url
+   (format
+    "http://dictionary.reference.com/browse/%s?s=t"
+    (thing-at-point 'word))))
+
+(defun words-thesaurus ()
+  (interactive)
+  (browse-url
+   (format
+    "http://www.thesaurus.com/browse/%s"
+    (thing-at-point 'word))))
+
+(defun words-google ()
+  (interactive)
+  (browse-url
+   (format
+    "http://www.google.com/search?q=%s"
+    (if (region-active-p)
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
+      (thing-at-point 'word)))))
+
+
+(defvar words-funcs '()
+ "functions to run in `words'. Each entry is a list of (key menu-name function).")
+
+(setq words-funcs
+  '(("d" "ictionary" words-dictionary)
+    ("t" "hesaurus" words-thesaurus)
+    ("g" "oogle" words-google)))
+
+
+(defun words ()
+  (interactive)
+   (message
+   (concat
+    (mapconcat
+     (lambda (tup)
+       (concat "[" (elt tup 0) "]"
+	       (elt tup 1) " "))
+     words-funcs "") ": "))
+   (let ((input (read-char-exclusive)))
+     (funcall
+      (elt
+       (assoc
+	(char-to-string input) words-funcs)
+       2))))
+#+END_SRC
+
+#+RESULTS:
+: words
+
+This works nicely. Now, let us add a new function that looks up the word or selection on twitter. We just define a new function, and add the menu selection to the words-func variable.
+
+#+BEGIN_SRC emacs-lisp
+(defun words-twitter ()
+  (interactive)
+  (browse-url
+   (format
+    "https://twitter.com/search?q=%s"
+    (if (region-active-p)
+	(url-hexify-string (buffer-substring (region-beginning)
+					     (region-end)))
+      (thing-at-point 'word)))))
+
+(add-to-list 'words-funcs
+  '("w" "twitter" words-twitter)
+  t) ; append
+
+#+END_SRC
+
+#+RESULTS:
+| d | ictionary | words-dictionary |
+| t  | hesaurus  | words-thesaurus  |
+| g | oogle     | words-google     |
+| w | twitter   | words-twitter    |
+
+Finally, the most complicated idea: spelling and grammar. I know there is flyspell, and such, but they are build on an ancient dictionary. Here, for fun, we explore a web api. This next function is not a trivial one, and I will not explain it here beyond saying it sends a selection of text to a url, gets an xml response back, and that response is parsed and printed to a buffer by this function. The main point is to illustrate we can do interesting things with a selection of text!
+
+#+BEGIN_SRC emacs-lisp
+(defun words-atd ()
+  "Send paragraph at point to After the deadline for spell and grammar checking."
+  (interactive)
+
+  (let* ((url-request-method "POST")
+	 (url-request-data (format
+			    "key=some-random-text-&data=%s"
+			    (url-hexify-string
+			     (thing-at-point 'paragraph))))
+	 (xml  (with-current-buffer
+		   (url-retrieve-synchronously
+		    "http://service.afterthedeadline.com/checkDocument")
+		 (xml-parse-region url-http-end-of-headers (point-max))))
+	 (results (car xml))
+	 (errors (xml-get-children results 'error)))
+
+    (switch-to-buffer-other-frame "*ATD*")
+    (erase-buffer)
+    (dolist (err errors)
+      (let* ((children (xml-node-children err))
+	     ;; for some reason I could not get the string out, and had to do this.
+	     (s (car (last (nth 1 children))))
+	     ;; the last/car stuff doesn't seem right. there is probably
+	     ;; a more idiomatic way to get this
+	     (desc (last (car (xml-get-children children 'description))))
+	     (type (last (car (xml-get-children children 'type))))
+	     (suggestions (xml-get-children children 'suggestions))
+	     (options (xml-get-children (xml-node-name suggestions) 'option))
+	     (opt-string  (mapconcat
+			   (lambda (el)
+			     (when (listp el)
+			       (car (last el))))
+			   options
+			   " ")))
+
+	(insert (format "** %s ** %s
+Description: %s
+Suggestions: %s
+
+" s type desc opt-string))))))
+
+(add-to-list 'words-funcs
+  '("s" "spell/grammar" words-atd)
+  t) ; append
+#+END_SRC
+
+#+RESULTS:
+: words-atd
+
+My final words menu looks like:
+#+attr_html: :width 400
+[[./images/final-menu.png]]
+
+If I have the cursor in the previous paragraph, run the words command and select "s" I get a buffer with these contents:
+
+#+BEGIN_EXAMPLE
+*** flyspell ** (spelling)
+Description: (Spelling)
+Suggestions: flywheel flyball
+
+*** are build on ** (grammar)
+Description: (Auxiliary Verb Agreement)
+Suggestions: are built on
+
+*** api ** (spelling)
+Description: (Spelling)
+Suggestions: app ape apt ai ami
+
+*** url ** (spelling)
+Description: (Spelling)
+Suggestions: urn ure curl hurl burl
+
+*** xml ** (spelling)
+Description: (Spelling)
+Suggestions: xl ml
+
+*** selection ** (suggestion)
+Description: (Complex Expression)
+Suggestions: choice
+
+*** an xml ** (grammar)
+Description: (Wrong article)
+Suggestions: a xml
+
+*** a selection of ** (grammar)
+Description: (Hidden Verbs)
+Suggestions:
+
+*** is parsed ** (grammar)
+Description: (Passive voice)
+Suggestions:
+
+*** selection ** (suggestion)
+Description: (Complex Expression)
+Suggestions: choice
+
+*** a selection of ** (grammar)
+Description: (Hidden Verbs)
+Suggestions:
+#+END_EXAMPLE
+
+It might be nice to link back to those words, so you could click on them and fix them, but that is a beyond today's goal. In summary, today we looked at a framework to create a user-modifiable menu of commands that are launched from a single command. Here we called the command words, and then built up some different things we might want to do with the word or selection at point. While you can of course just remember the individual commands, remembering one command and then being prompted might have some advantages.
+
+Source: tk
+
+** invisible text in Emacs
+Source:    [[http://kitchingroup.cheme.cmu.edu/blog/2014/02/06/Invisible-text-in-Emacs/][invisible text in Emacs]]
+
+** Making org-mode links to files in Emacs packages
+#+BEGIN_EXAMPLE
+Today I will make a new org-mode link that lets me make links to files inside of Emacs packages. These files may be installed in different places on different systems (e.g. in the system directory, in ELPA directories, or in custom directories), so we need a way to construct paths to them. The application of this is eventually I hope to have some emacs packages of documentation, and I would like to have links between the packages that work no matter how they are installed.
+
+I want a syntax that looks like pkg:rainbow-mode==rainbow-mode-pkg.el. We will have a function that parses that to get the package, and the path to the file in the package. Emacs has a function to find the path to the file that defines a library. I chose == because it seems unlikely that would be a string in a package or path.
+
+#+BEGIN_SRC emacs-lisp :results value
+(locate-library "rainbow-mode")
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/rainbow-mode-0.9/rainbow-mode.elc
+
+We can use that to construct the path to where we want. Say we want the file named "rainbow-mode-pkg.el"
+
+#+BEGIN_SRC emacs-lisp :results value
+(expand-file-name
+ "rainbow-mode-pkg.el"
+ (file-name-directory (locate-library "rainbow-mode")))
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/rainbow-mode-0.9/rainbow-mode-pkg.el
+
+In org-mode links, the link path gets passed to a function. We can split the string like this to get the package and relative path we are referring to.
+
+#+BEGIN_SRC emacs-lisp :results value
+(split-string "rainbow-mode==rainbow-mode-pkg.el" "==")
+#+END_SRC
+
+#+RESULTS:
+| rainbow-mode | rainbow-mode-pkg.el |
+
+That is all of the pieces we need to construct the link function. Here it is.
+
+#+BEGIN_SRC emacs-lisp
+(org-add-link-type
+ "pkg"
+ (lambda (path)
+   (let ((pkg) (relpath)
+	 (splitpath (split-string path "==")))
+     (setq pkg (car splitpath))
+     (setq relpath (nth 1 splitpath))
+     (find-file (expand-file-name
+		 relpath
+		 (file-name-directory (locate-library pkg)))))))
+#+END_SRC
+
+#+RESULTS:
+
+pkg:rainbow-mode==rainbow-mode-pkg.el
+
+This works too, but you have to use auctex-pkg as the package name.
+
+pkg:auctex-pkg==doc/intro.texi
+
+I think that is because locate-library looks for the /file/ a library is defined in. That is not quite the same as the root directory of a package. It turns out to be a little more complicated to find that. Below is some code I hacked up looking at the package.el code. First let us examine some pieces.
+
+This gives us information about an installed package.
+
+#+BEGIN_SRC emacs-lisp :results value
+(assq 'auctex package-alist)
+#+END_SRC
+
+#+RESULTS:
+: (auctex . [(11 87 2) nil Integrated environment for *TeX*])
+
+We can get the version of the package like this
+
+#+BEGIN_SRC emacs-lisp :results value
+(package-version-join (package-desc-vers (cdr (assq 'auctex package-alist))))
+#+END_SRC
+
+#+RESULTS:
+: 11.87.2
+
+Ok, finally, we get the directory where it is installed like this:
+
+#+BEGIN_SRC emacs-lisp :results value
+(package--dir "auctex" "11.87.2")
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
+
+Note that in some places we use a package symbol, and in other places a string name.Putting that together, we have this block to get the install-dir of a package. If we have a package symbol we can get the path like this.
+
+#+BEGIN_SRC emacs-lisp :results value
+(let* ((pkg 'auctex)
+       (pkg-name (symbol-name pkg)) ; convert symbol to string
+       (desc (cdr (assq pkg package-alist)))
+       (version (package-version-join (package-desc-vers desc)))
+       (pkg-dir (package--dir pkg-name version)))
+  pkg-dir)
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
+
+Usually, we will have a string though. We just have to make it a symbol with the =intern= function.
+
+#+BEGIN_SRC emacs-lisp :results value
+(setq pkg-name "auctex")
+(setq pkg (intern pkg-name))
+(setq desc (cdr (assq pkg package-alist)))
+#+END_SRC
+
+#+RESULTS:
+: [(11 87 2) nil "Integrated environment for *TeX*"]
+
+Now, we have all the pieces to get the path from a package name in a string:
+
+#+BEGIN_SRC emacs-lisp :results value
+(let* ((pkg-name "auctex")
+       (pkg (intern pkg-name))
+       (desc (cdr (assq pkg package-alist)))
+       (version (package-version-join (package-desc-vers desc)))
+       (pkg-dir (package--dir pkg-name version)))
+  pkg-dir)
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2
+
+Let us use that to rewrite the link, and address a few other limitations. We will  use =org-open-link-from-string= so we can use org-link syntax in the path part of the link, e.g. to open a file at a line, or headline. Here is our new link.
+
+#+BEGIN_SRC emacs-lisp
+(org-add-link-type
+ "pkg2"
+ (lambda (path)
+   (let ((pkg) (relpath) (pkg-dir) (link-string)
+	 (splitpath (split-string path "==")))
+     (setq pkg-name (car splitpath))
+     (setq relpath (nth 1 splitpath))
+     (setq pkg-dir (let* ((pkg-symbol (intern pkg-name)) ;convert string to pkg
+			  (desc (cdr (assq pkg-symbol package-alist)))
+			  (version (package-version-join (package-desc-vers desc)))
+			  (pkg-dir (package--dir pkg-name version)))
+		     pkg-dir))
+     (setq link-string (format "[[file:%s/%s]]" pkg-dir relpath))
+     (message "link: %s" link-string)
+     (org-open-link-from-string link-string))))
+#+END_SRC
+
+Now, we can do all of these:
+pkg2:auctex==doc/faq.texi
+pkg2:auctex==doc/faq.texi::should
+pkg2:auctex==doc/faq.texi::10
+[[pkg2:auctex==doc/faq.texi::first place]]
+
+Awesome!
+
+Just for fun, I made a toy package called =package1= in my elpa directory. That package has an org file in it. Now, I can test out the following links:
+
+pkg2:package1==intro.org
+
+pkg2:package1==intro.org::*Miscellaneous
+
+[[pkg2:package1==intro.org::*subheading with words]]
+
+pkg2:package1==intro.org::#install-section
+
+pkg2:package1==intro.org::intro-target
+
+They all work! That works for packages installed via the package manager. However, when I try this with my custom installed org-mode, it does not work. If I run (describe-package 'org) I see that org is a build in package, and that there is an alternate version avalable. It does not point to my org-installation.
+
+pkg2:org==doc/library-of-babel.org
+
+#+BEGIN_SRC emacs-lisp
+(princ (locate-library "org"))
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/org-mode/lisp/org.elc
+
+#+BEGIN_SRC emacs-lisp
+(princ (package-installed-p "org"))
+#+END_SRC
+
+#+RESULTS:
+: nil
+
+Obviously, we need to check if the package is installed via package.el, or if we should look somewhere else. Let us take a final stab at this. Let us review the challenge.
+
+#+BEGIN_SRC emacs-lisp
+(print (locate-library "auctex"))
+(print (locate-library "auctex-autoloads"))
+#+END_SRC
+
+#+RESULTS:
+:
+: nil
+:
+: "c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2/auctex-autoloads.el"
+
+We may have to check for a package-autoloads. Ww can wrap that in an =or= macro, which will return the first non-nil result.
+
+#+BEGIN_SRC emacs-lisp :results value
+(let ((pkg-name "auctex"))
+   (file-name-directory
+    (or (locate-library pkg-name)
+	(locate-library (format "%s-autoloads" pkg-name)))))
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/elpa/auctex-11.87.2/
+
+Doing this on the org package shows that this points to a lisp directory.
+#+BEGIN_SRC emacs-lisp :results value
+(let ((pkg-name "org"))
+   (file-name-directory
+    (or (locate-library pkg-name)
+	(locate-library (format "%s-autoloads" pkg-name)))))
+#+END_SRC
+
+#+RESULTS:
+: c:/Users/jkitchin/Dropbox/kitchingroup/jmax/org-mode/lisp/
+
+So, let's try a final link function.
+
+#+BEGIN_SRC emacs-lisp
+(org-add-link-type
+ "pkg3"
+ (lambda (path)
+   (let ((pkg-name) (relpath)(pkg-dir) (link-string)
+	 (splitpath (split-string path "==")))
+     (setq pkg-name (car splitpath))
+     (setq relpath (nth 1 splitpath))
+     (setq pkg-dir (file-name-directory
+		    (or (locate-library pkg-name)
+			(locate-library (format "%s-autoloads" pkg-name)))))
+(setq link-string (format "[[file:%s/%s]]" pkg-dir relpath))
+     (message "link: %s" link-string)
+     (org-open-link-from-string link-string))))
+#+END_SRC
+
+#+RESULTS:
+
+Now, we just have to make sure to use the right relative path. This link opens up an org-file in my installed version of org-mode: pkg3:org==../doc/library-of-babel.org
+
+I don't know if there is a more clever way to create these links. There are two parts to them: 1) the package, and 2) the relative path. The link syntax isn't that rich to do it without parsing the linkpath.
+
+#+END_EXAMPLE
+
+** Send email to a list of users
+I have a need to send a lot of emails to users in my class. I have to send each student an email containing there userid and a password assigned to them. I have a list of these, so the strategy is to create a function that will email that information to one user, and then use mapc to apply the function to each pair in a list.  First, we work out a function that will send one email to one user.
+
+#+BEGIN_SRC emacs-lisp
+(defun send-mail (userid password)
+  "send email to sunjaydixit@gmail.com containing their password"
+  (interactive)
+  (mail)
+  (mail-to)
+  (insert (format "%s@jaydixit.com" userid))
+  (mail-subject)
+  (insert "[06-640] account information")
+  (mail-text)
+  (insert (format "
+An account has been created on jaydixit.com
+userid: %s
+password: %s" userid password))
+  (mail-send-and-exit))
+
+;; (send-mail "jkitchin" "trustme99")
+#+END_SRC
+
+#+RESULTS:
+
+That worked well. I ran the block and got the email.
+
+Now, suppose I have this data:
+#+tblname: users
+| userid | password  |
+|-------+-----------|
+| user1  | trustme99 |
+| user2  | foolme99  |
+| user3  | blameme99 |
+
+We can pass that to a source block as a list of lists that will look like this:
+#+BEGIN_EXAMPLE
+ ((user1 trustme99) (user2 foolme99) (user3 blameme99))
+#+END_EXAMPLE
+
+Then, we can use a mapc to process each element. Here I use a dummy function with two arguments. If I substitute the function above, each of these users would get an email.
+
+#+BEGIN_SRC emacs-lisp :var data=users
+;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
+
+;; (mapc (lambda (x) (fun (car x) (cadr x))) data)
+#+END_SRC
+
+#+RESULTS:
+: user: user1
+: password: trustme99
+: user: user2
+: password: foolme99
+: user: user3
+: password: blameme99
+
+I am not sure that is the best way to get the first and second elements in the list element. It looks funny to me, but it works fine. the alternative is not much prettier:
+
+#+BEGIN_SRC emacs-lisp :var data=users
+;; (defun fun (a b) (princ (format "user: %s\npassword: %s\n" a but)))
+
+;; (mapc (lambda (x) (fun (nth 0 x) (nth 1 x))) data)
+#+END_SRC
+
+#+RESULTS:
+: user: user1
+: password: trustme99
+: user: user2
+: password: foolme99
+: user: user3
+: password: blameme99
+
+Source: [[http://kitchingroup.cheme.cmu.edu/blog/2014/01/13/Send-email-to-a-list-of-users/][The Kitchin Research Group]]
+
+
+** videos
+- [[https://www.youtube.com/watch?v%3D6W82EdwQhxU][Hack Emacs - An Overview of Org Mode - YouTube]]
+- [[https://www.youtube.com/watch?v%3DoJTwQvgfgMM][Emacs Org-mode - a system for note-taking and project planning - YouTube]]
+- [[https://www.youtube.com/watch?v%3DnsGYet02bEk][Hack Emacs - Org Mode In Depth: Managing Structure - YouTube]]
+- [[https://www.youtube.com/watch?v%3DfgizHHd7nOo][Kitchin - org mode is awesome - YouTube]]
+
+** macro to create defuns?
+
+(defmacro make-my-function (name)
+  (list 'defun (intern (format "my-%s-function" name)) ()
+        (list 'interactive)
+        (list (intern (format "mark-%s" name)))
+        (list 'do-more-stuff)
+        (list (intern (format "modify-%s" name)))))
+
