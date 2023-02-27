@@ -1111,3 +1111,96 @@ Use key chord
 (key-chord-mode 1)
 #+END_SRC
 
+
+* Autocomplete
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:48
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package auto-complete)
+(defun ac-ispell-get-word ()
+  (format "\\(%s\\)" (car (ispell-get-word nil "\\*"))))
+
+(defun ac-ispell-get-candidates (prefix)
+  (let ((word prefix)
+        (interior-frag nil))
+    (lookup-words (concat (and interior-frag "*") word
+                          (if (or interior-frag (null ispell-look-p))
+                              "*"))
+                  ispell-complete-word-dict)))
+
+(ac-define-source ispell
+  '((prefix . ac-prefix)
+    (candidates . ac-ispell-get-candidates)))
+#+END_EXAMPLE
+
+It's not a good idea to add `ac-source-ispell' to `ac-sources', I'll recommend
+manual invoking.
+
+Newer version of ~ac-define-source~ would provide us an
+~ac-complete-ispell-word~.  In case it didn't:
+#+BEGIN_EXAMPLE emacs-lisp
+(defun ac-expand-ispell-word ()
+  (interactive)
+  (let ((ac-sources '(ac-source-ispell)))
+    (call-interactively 'ac-start)))
+
+(define-key global-map (kbd "s-/ s") 'ac-expand-ispell-word)
+
+(ac-flyspell-workaround)
+
+(load-file "~/Library/Preferences/Aquamacs Emacs/ac-ispell.el")
+;; Completion words longer than 4 characters
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun buffer-background-black ()
+  (interactive)
+  (setq buffer-face-mode-face `(:background "black" :foreground "LightSkyBlue"))
+  (buffer-face-mode 1))
+
+;;
+(defun my/enable-ac-ispell ()
+  (add-to-list 'ac-sources 'ac-source-ispell))
+;; (add-hook 'org-mode-hook 'my/enable-ac-ispell)
+;; (add-hook 'message-mode-hook 'my/enable-ac-ispell)
+;; (add-hook 'message-mode-hook 'buffer-background-black)
+
+(eval-after-load "auto-complete"
+  '(progn
+     (ac-ispell-setup)))
+
+#+END_EXAMPLE
+
+
+* Integration with other apps
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:48
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+** Chrome
+*** Emacs Server
+Don't start the server unless we can verify that it isn't running.
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package server)
+(when (and (functionp 'server-running-p) (not (server-running-p)))
+  (server-start))
+#+END_EXAMPLE
+
+*** ~osx-browse~
+
+;; (use-package osx-browse)
+
+** PDFs
+*** Open PDFs in Skim
+#+BEGIN_SRC emacs-lisp
+;; (use-package openwith)
+;;'(openwith-associations (quote (("\\.skim\\'" "open" (file)) ("\\.pdf\\'" "open" (file)))))
+;; (openwith-mode t)
+#+END_SRC
+
