@@ -1654,3 +1654,175 @@ But it just throws an error if region isn't active. So I advised it to prompt fo
 
 
 
+
+* presentations
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:55
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+** org-html-slideshow
+ Set variables as safe
+#+BEGIN_SRC emacs-lisp
+(put 'org-export-html-style-include-scripts 'safe-local-variable (lambda (xx) t))
+
+(put 'org-export-html-style-include-default 'safe-local-variable (lambda (xx) t))
+
+(put 'buffer-file-coding-system 'safe-local-variable (lambda (xx) t))
+
+(put 'my-org-buffer-local-mode 'safe-local-variable (lambda (xx) t))
+
+(setq safe-local-variable-values
+
+
+  (quote
+  (
+(eval define-key key-minor-mode-map
+	  (kbd "SPC")
+	  (quote insert-space))
+
+(eval define-key org-mode-map
+      (kbd ":")
+      (quote insert-colon))
+
+
+(org-html-head-include-scripts)
+   (org-export-allow-bind-keywords . t)
+   (eval define-key key-minor-mode-map
+      (kbd "SPC")
+      (quote insert-space)))))
+
+#+END_SRC
+
+
+
+* inline CSS on org-export
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:56
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(defun my-org-inline-css-hook (exporter)
+ "Insert custom inline css"
+ (when (eq exporter 'html)
+  (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
+      (path (concat dir "style.css"))
+      (homestyle (or (null dir) (null (file-exists-p path))))
+      (final (if homestyle "/Users/jay/Dropbox/web-design/custom-css/email.css" path))) ;; <- set your own style file path
+   (setq org-html-head-include-default-style nil)
+   (setq org-html-head (concat
+              "<style type=\"text/css\">\n"
+              "<!--/*--><![CDATA[/*><!--*/\n"
+              (with-temp-buffer
+               (insert-file-contents final)
+               (buffer-string))
+              "/*]]>*/-->\n"
+              "</style>\n")))))
+
+(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
+
+(setq org-export-htmlize-output-type 'inline-css)
+#+END_EXAMPLE
+
+
+
+* iCal
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:56
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_SRC emacs-lisp
+(setq org-icalendar-include-todo nil)
+(setq org-icalendar-use-scheduled (quote (event-if-todo todo-start)))
+(setq org-icalendar-alarm-time 60)
+ (setq org-icalendar-combined-description "Jay Dixit---Emacs ")
+ (setq org-icalendar-combined-name "Org-Mode")
+(setq org-icalendar-store-UID nil)
+(setq org-icalendar-timezone "(-18000 \"EST\") ")
+(setq org-agenda-default-appointment-duration '15)
+
+(defun org-icalendar-open-ics-file (file) (start-process "org-icalendar-open-ics-file-process" nil "open" "-a" "/Applications/Calendar.app" file)) (add-hook 'org-icalendar-after-save-hook 'org-icalendar-open-ics-file)
+#+END_SRC
+
+
+* proselint
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:56
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+Source: http://unconj.ca/blog/linting-prose-in-emacs.html
+
+#+BEGIN_SRC emacs-lisp
+(flycheck-define-checker proselint
+  "A linter for prose."
+  :command ("proselint" source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+        (id (one-or-more (not (any " "))))
+        (message) line-end))
+  :modes (text-mode markdown-mode gfm-mode org-mode))
+
+(add-to-list 'flycheck-checkers 'proselint)
+
+#+END_SRC
+
+
+
+* mouse-copy
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:56
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_SRC emacs-lisp
+;; (use-package mouse-copy)
+;; (global-set-key [C-down-mouse-1] 'mouse-drag-secondary-pasting)
+;; (global-set-key [C-S-down-mouse-1] 'mouse-drag-secondary-moving)
+#+END_SRC
+
+
+
+* create directories when necessary
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:57
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+** Can I create directories that don't exist while creating a new file in emacs?
+
+In emacs, I create a file by visiting it with C-x C-f. Let's say I'd like to create /home/myself/new_directory/file.txt.
+
+If new_directory does not exist yet, is there a way to have it get created during the creation of file.txt without any extra steps? (I'm thinking of something like using the -p flag to mkdir in Linux.)
+
+I feel like there's a different keystroke instead of C-x C-f that can do this, but I can't remember what it is.
+
+You can also advise function find-file to transparently create necessary directories.
+
+#+BEGIN_EXAMPLE
+(defadvice find-file (before make-directory-maybe (filename &optional wildcards) activate)
+  "Create parent directory if not exists while visiting file."
+  (unless (file-exists-p filename)
+    (let ((dir (file-name-directory filename)))
+      (unless (file-exists-p dir)
+        (make-directory dir)))))
+Simply put this in your .emacs somewhere and use C-x C-f as usual.
+#+END_EXAMPLE
+
+** create intermediate dirs when saving a file
+
+Wow, this works.
+#+BEGIN_EXAMPLE emacs-lisp
+(add-hook 'before-save-hook
+          (lambda ()
+            (when buffer-file-name
+              (let ((dir (file-name-directory buffer-file-name)))
+                (when (and (not (file-exists-p dir))
+                           (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                  (make-directory dir t))))))
+#+END_EXAMPLE
+
+
