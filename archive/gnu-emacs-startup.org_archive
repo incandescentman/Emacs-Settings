@@ -1822,3 +1822,43 @@ Oleh
 
 
 
+
+* pandoc
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 01:02
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+   [[http://kitchingroup.cheme.cmu.edu/blog/2014/07/17/Pandoc-does-org-mode-now/][org-mode does pandocc and word now! ]]
+
+
+* Reference for cleaning up whitespace around sentences:
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 01:02
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+[[http://stackoverflow.com/questions/4754547/redefining-sentence-in-emacs-single-space-between-sentences-but-ignoring-ab][regex - Redefining "sentence" in Emacs? (single space between sentences, but ignoring abbreviations) - Stack Overflow]]
+
+
+* display file name
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 01:02
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+How can I modify the titlebar to contain the current file name?
+
+The contents of an Emacs frame's titlebar is controlled by the variable frame-title-format, which has the same structure as the variable mode-line-format. (Use C-h v or M-x describe-variable to get information about one or both of these variables.)
+
+By default, the titlebar for a frame does contain the name of the buffer currently being visited, except if there is a single frame. In such a case, the titlebar contains Emacs invocation name and the name of the machine at which Emacs was invoked. This is done by setting frame-title-format to the default value of
+
+(multiple-frames "%b" ("" invocation-name "@" system-name))
+To modify the behavior such that frame titlebars contain the buffer's name regardless of the number of existing frames, include the following in your .emacs:
+
+
+#+BEGIN_SRC emacs-lisp
+;; (setq frame-title-format (concat "Hey bro, just FYI, this file is called %b or something like that."))
+;; Changing this for Hook app compatibility per https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/5
+#+END_SRC
+
