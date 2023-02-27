@@ -1301,24 +1301,6 @@ e.g. nvALT
 (global-set-key "\C-co" 'zin/org-outline-mode)
 #+END_SRC
 
-*** Workflowy mode
-
-#+BEGIN_SRC emacs-lisp
-(defun workflowy-mode ()
-  "workflowy"
-  (interactive)
-  (setq org-bullets-bullet-list (quote ("• ")))
-  (zin/org-outline-mode)
-(org-bullets-mode)
-(define-key key-minor-mode-map (kbd ",") 'insert-comma)
-  (incarnadine-cursor)
-  (define-key org-mode-map (kbd "DEL")
-    'new-org-delete-backward-char)
-  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
-  (insert "\n* "))
-
-#+END_SRC
-
 *** update parent cookie
 I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
@@ -1923,97 +1905,6 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 ;; (use-package orgalist)
 #+end_src
 
-** orgalist mode
-#+BEGIN_EXAMPLE emacs-lisp
-
-;; orgalist++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
-(add-hook 'message-mode-hook 'orgalist-mode 'append)
-; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
-(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE emacs-lisp
-(cl-dolist (map '(message-mode-map orgalist-mode-map))
- (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-  (define-key (eval map) (kbd key) nil)))
-
-
-(define-key orgalist-mode-map (kbd "`") 'flyspell-auto-correct-word)
-
-#+END_EXAMPLE
-
-* TODO unbind orgalist navigation keys
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun unbind-orgalist-keys ()
- (interactive)
-    (cl-dolist (map '(message-mode-map orgalist-mode-map))
- (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
-          "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
-  (define-key (eval map) (kbd key) nil)))
- )
-
-(defun unbind-orgalist-keys-in-message-mode ()
- (interactive)
- (when (and (eq 'message-mode major-mode)
-       (bound-and-true-p orgalist-mode))
-  (unbind-orgalist-keys)))
-
-(defun unbind-orgalist-keys-in-mu4e-compose-mode ()
- (interactive)
- (when (and (eq 'mu4e-compose-mode major-mode)
-    (bound-and-true-p orgalist-mode))
- (unbind-orgalist-keys)))
-
-
-(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-message-mode)
-(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-mu4e-compose-mode)
-
-
-
-;;(add-hook 'message-mode-hook 'unbind-orgalist-keys)
-#+END_EXAMPLE
-
-
-* org or orgalist
-
-#+begin_EXAMPLE emacs-lisp
-(use-package orgalist)
-
- (defun org-or-orgalist-p ()
-  (or (eq major-mode 'org-mode)
-    (and (bound-and-true-p orgalist-mode)
-       (org-context-p 'headline 'item))))
-
-#+END_EXAMPLE
-
-
-
-** Remember recent email addresses
-#+BEGIN_SRC emacs-lisp
-;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
-;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
-;; (use-package recent-addresses)
-;; (recent-addresses-mode 1)
-;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
-
-;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
-(setq mail-kill-buffer-on-exit nil)
-(setq make-backup-files t)
-(setq message-draft-headers (quote (From References Date)))
-(setq message-kill-buffer-on-exit nil)
-(setq message-required-headers (quote (From (optional . References))))
-;; (setq message-send-hook (quote (recent-addresses-add-headers)))
-(setq message-send-hook (quote (org-mime-htmlize)))
-#+END_SRC
-
-when replying, look kind of like gmail
-
-#+BEGIN_SRC emacs-lisp
-(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
-;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
-#+END_SRC
-
 * ~eshell~
 
 #+BEGIN_SRC emacs-lisp
@@ -2048,14 +1939,6 @@ Defines ~ibuffer-do-replace-string~:
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-#+END_SRC
-
-* Key chords
-
-Use key chord
-#+BEGIN_SRC emacs-lisp
-;; (use-package key-chord)
-(key-chord-mode 1)
 #+END_SRC
 
 * Autocomplete
@@ -7694,9 +7577,12 @@ Go through `org-structure-template-alist' and
 * multiple cursors
 
 ** endless multiple cursors keybindings
+Wow: This was amazing:
+[[https://stackoverflow.com/questions/58058182/multiple-cursors-in-emacs-does-not-modify-all-the-cursors][Multiple-cursors in Emacs does not modify all the cursors - Stack Overflow]]
+
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors)
-(use-package multiple-cursors-core)
+
 ;; This is globally useful, so it goes under `C-x', and `m'
 ;; for "multiple-cursors" is easy to remember.
 (define-key ctl-x-map "\C-m" #'mc/mark-all-dwim)
@@ -7801,6 +7687,11 @@ Go through `org-structure-template-alist' and
 
 (delete 'my/delete-backward mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'my/delete-backward)
+
+(delete 'my/kill-line-dwim mc/cmds-to-run-once)
+(add-to-list 'mc/cmds-to-run-for-all 'my/kill-line-dwim)
+
+(add-to-list 'mc/cmds-to-run-for-all 'kill-line)
 
 
 (delete 'delete-backward-char mc/cmds-to-run-once)
@@ -8412,3 +8303,6 @@ Doesn't work.
   (message "Hyperlinks extracted: %s" hyperlinks)
   hyperlinks))
 #+end_src>
+
+
+

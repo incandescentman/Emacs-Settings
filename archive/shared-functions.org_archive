@@ -903,3 +903,211 @@ Not sure what this does
 #+END_EXAMPLE
 
 
+
+* Workflowy mode
+:PROPERTIES:
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)
+(org-bullets-mode)
+(define-key key-minor-mode-map (kbd ",") 'insert-comma)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL")
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
+
+#+END_SRC
+
+
+* Workflowy mode
+:PROPERTIES:
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun workflowy-mode ()
+  "workflowy"
+  (interactive)
+  (setq org-bullets-bullet-list (quote ("• ")))
+  (zin/org-outline-mode)
+(org-bullets-mode)
+(define-key key-minor-mode-map (kbd ",") 'insert-comma)
+  (incarnadine-cursor)
+  (define-key org-mode-map (kbd "DEL")
+    'new-org-delete-backward-char)
+  (define-key key-minor-mode-map (kbd "DEL")  'new-org-delete-backward-char)
+  (insert "\n* "))
+
+#+END_SRC
+
+
+* Workflowy mode
+:PROPERTIES:
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun workflowy-mode ()
+ "workflowy"
+ (interactive)
+ (setq org-bullets-bullet-list (quote ("- ")))
+ (zin/org-outline-mode)
+(org-bullets-mode)
+(define-key key-minor-mode-map (kbd ",") 'insert-comma)
+ (incarnadine-cursor)
+ (define-key org-mode-map (kbd "DEL")
+  'new-org-delete-backward-char)
+ (define-key key-minor-mode-map (kbd "DEL") 'new-org-delete-backward-char)
+ (insert "\n* "))
+#+END_SRC
+
+* Workflowy mode
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:36
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun workflowy-mode ()
+ "workflowy"
+ (interactive)
+ (setq org-bullets-bullet-list (quote ("- ")))
+ (zin/org-outline-mode)
+(org-bullets-mode)
+(define-key key-minor-mode-map (kbd ",") 'insert-comma)
+ (incarnadine-cursor)
+ (define-key org-mode-map (kbd "DEL")
+  'new-org-delete-backward-char)
+ (define-key key-minor-mode-map (kbd "DEL") 'new-org-delete-backward-char)
+ (insert "\n* "))
+#+END_SRC
+
+* orgalist mode
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:37
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: message mode
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; orgalist++-mode is enabled in Gnus message buffers to aid in creating structured email messages.
+(add-hook 'message-mode-hook 'orgalist-mode 'append)
+; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
+(add-hook 'message-mode-hook 'turn-on-flyspell 'append)
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE emacs-lisp
+(cl-dolist (map '(message-mode-map orgalist-mode-map))
+ (cl-dolist (key '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>" "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+  (define-key (eval map) (kbd key) nil)))
+
+
+(define-key orgalist-mode-map (kbd "`") 'flyspell-auto-correct-word)
+
+#+END_EXAMPLE
+
+
+* TODO unbind orgalist navigation keys
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:37
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:ARCHIVE_TODO: TODO
+:END:
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun unbind-orgalist-keys ()
+ (interactive)
+    (cl-dolist (map '(message-mode-map orgalist-mode-map))
+ (cl-dolist (key '("S-<right>" "S-<left>" "S-<down>" "S-<up>" "<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
+          "<M-left>" "<M-right>" "<M-up>" "<M-down>"))
+  (define-key (eval map) (kbd key) nil)))
+ )
+
+(defun unbind-orgalist-keys-in-message-mode ()
+ (interactive)
+ (when (and (eq 'message-mode major-mode)
+       (bound-and-true-p orgalist-mode))
+  (unbind-orgalist-keys)))
+
+(defun unbind-orgalist-keys-in-mu4e-compose-mode ()
+ (interactive)
+ (when (and (eq 'mu4e-compose-mode major-mode)
+    (bound-and-true-p orgalist-mode))
+ (unbind-orgalist-keys)))
+
+
+(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-message-mode)
+(add-hook 'orgalist-mode-hook 'unbind-orgalist-keys-in-mu4e-compose-mode)
+
+
+
+;;(add-hook 'message-mode-hook 'unbind-orgalist-keys)
+#+END_EXAMPLE
+
+
+
+* org or orgalist
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:37
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+#+begin_EXAMPLE emacs-lisp
+(use-package orgalist)
+
+ (defun org-or-orgalist-p ()
+  (or (eq major-mode 'org-mode)
+    (and (bound-and-true-p orgalist-mode)
+       (org-context-p 'headline 'item))))
+
+#+END_EXAMPLE
+
+
+
+** Remember recent email addresses
+#+BEGIN_SRC emacs-lisp
+;; (setq recent-addresses-file "~/emacs/prelude/recent-addresses")
+;; (add-to-list 'load-path "~/gnulisp/recent-addresses-0.1/")
+;; (use-package recent-addresses)
+;; (recent-addresses-mode 1)
+;; (add-hook 'message-setup-hook 'recent-addresses-add-first-to)
+
+;;(setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
+(setq mail-kill-buffer-on-exit nil)
+(setq make-backup-files t)
+(setq message-draft-headers (quote (From References Date)))
+(setq message-kill-buffer-on-exit nil)
+(setq message-required-headers (quote (From (optional . References))))
+;; (setq message-send-hook (quote (recent-addresses-add-headers)))
+(setq message-send-hook (quote (org-mime-htmlize)))
+#+END_SRC
+
+when replying, look kind of like gmail
+
+#+BEGIN_SRC emacs-lisp
+(setq message-citation-line-format "On %e %B %Y at %R %Z, %f wrote:\not")
+;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
+#+END_SRC
+
+
+* Key chords
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-02-27 Mon 00:37
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+Use key chord
+#+BEGIN_SRC emacs-lisp
+;; (use-package key-chord)
+(key-chord-mode 1)
+#+END_SRC
+

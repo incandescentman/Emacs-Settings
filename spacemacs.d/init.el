@@ -768,7 +768,6 @@ you should place your code here."
 (use-package ivy)
 ;; (use-package tiny)
 ;; (use-package re-builder)
-(use-package multiple-cursors)
 
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
