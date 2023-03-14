@@ -46,24 +46,25 @@ This function should only modify configuration layer settings."
      ;; lsp
      ;; markdown
      ;; python
-     ;; i commented out the part below so that spacemacs wouldn't download its outdated Elpa version of org
      (org)
-      ;;  (org
-      ;;    :ensure org-plus-contrib
-      ;;    :mode (("\\.org$" . org-mode))
-      ;; :variables
-      ;; org-enable-bootstrap-support t
-      ;; org-enable-github-support t
-      ;; ;; org-enable-reveal-js-support t
-      ;; :location built-in
-      ;; )
+     ;; i commented out the part below so that spacemacs
+     ;; wouldn't download its outdated Elpa version of org
+     ;;  (org
+     ;;    :ensure org-plus-contrib
+     ;;    :mode (("\\.org$" . org-mode))
+     ;; :variables
+     ;; org-enable-bootstrap-support t
+     ;; org-enable-github-support t
+     ;; ;; org-enable-reveal-js-support t
+     ;; :location built-in
+     ;; )
      osx
      ;; xkcd
      ;; ag-general
      ;; ag-lang-tools
      ;; pdf
      smex
-       (shell :variables
+     (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
@@ -93,9 +94,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-dotspacemacs-additional-packages '(
-
-
+   dotspacemacs-additional-packages '(
                                       ;; auto-complete
                                       ;; dired-hacks-utils
                                       ;; dired-single
@@ -166,10 +165,10 @@ dotspacemacs-additional-packages '(
                                       org-contrib
                                       org-bookmark-heading
 				                              ;; org-download
-                                      org-drill
+                                      ;; org-drill
                                       org-fstree
                                       org-mac-link
-                                      org-mime
+                                      ;; org-mime
                                       org-pomodoro
                                       org-sticky-header
                                       ox-clip

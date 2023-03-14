@@ -7111,4 +7111,29 @@ Use key chord
 #+END_SRC
 
 
+* Add numbering
+Written by ChatGPT, worked the first time.
 
+Jay:
+
+Write an Emacs-lisp org-mode function to add numbering to a highlighted region.
+
+ChatGPT:
+
+Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a highlighted region:
+
+#+begin_src emacs-lisp
+(defun number-region (beg end)
+ "Add numbering to a highlighted region."
+ (interactive "r")
+ (let ((counter 1))
+  (save-excursion
+   (goto-char beg)
+   (while (and (< (point) end) (not (eobp)))
+    (beginning-of-line)
+    (insert (format "%d. " counter))
+    (setq counter (1+ counter))
+    (forward-line 1)))))
+#+end_src
+
+To use this function, highlight the region you want to add numbering to and then call the ~number-region~ function using M-x ~number-region~. This will add a number to the beginning of each line in the highlighted region. The numbering will start from 1 and increment by 1 for each line.
