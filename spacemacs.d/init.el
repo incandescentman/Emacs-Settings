@@ -850,7 +850,7 @@ you should place your code here."
 
 (load "/Users/jay/tramp-settings.el")
 
-(use-package org-mime)
+;; (use-package org-mime)
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)

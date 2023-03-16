@@ -7112,7 +7112,7 @@ Use key chord
 
 
 * Add numbering
-Written by ChatGPT, worked the first time.
+Written by ChatGPT 3.5 Worked the first time.
 
 Jay:
 
