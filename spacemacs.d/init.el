@@ -246,7 +246,7 @@ This function should only modify configuration layer settings."
                                     hl-line
                                     hs-mode
                                     notmuch
-				    org-download
+				                            org-download
                                     org-projectile
                                     org-roam
                                     org-superstar
@@ -442,7 +442,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   ;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -715,50 +715,50 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
-;; The default is 800 kilobytes.  Measured in bytes.
-(setq gc-cons-threshold (* 50 1000 1000))
+  ;; The default is 800 kilobytes.  Measured in bytes.
+  (setq gc-cons-threshold (* 50 1000 1000))
 
 
   (setq message-log-max t)
 
 
-(require 'org-macs)
+  (require 'org-macs)
 
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+  (use-package benchmark-init
+    :ensure t
+    :config
+    ;; To disable collection of benchmark data after init is done.
+    (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
-;; (defun ambrevar/reset-gc-cons-threshold ()
-;; (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
-;; (setq gc-cons-threshold (* 64 1024 1024))
-;; (add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
+  ;; (defun ambrevar/reset-gc-cons-threshold ()
+  ;; (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
+  ;; (setq gc-cons-threshold (* 64 1024 1024))
+  ;; (add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
 
 
 ;;; Temporarily disable the file name handler.
-(setq default-file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(defun ambrevar/reset-file-name-handler-alist ()
-  (setq file-name-handler-alist
-	(append default-file-name-handler-alist
-		file-name-handler-alist))
-  (cl-delete-duplicates file-name-handler-alist :test 'equal))
-(add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
+  (setq default-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
+  (defun ambrevar/reset-file-name-handler-alist ()
+    (setq file-name-handler-alist
+	        (append default-file-name-handler-alist
+		              file-name-handler-alist))
+    (cl-delete-duplicates file-name-handler-alist :test 'equal))
+  (add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
 
                                         ; Source: https://ambrevar.xyz/emacs2/
 
 
 
-(setq find-file-visit-truename nil)
-;; speed optimizations from
-;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
+  (setq find-file-visit-truename nil)
+  ;; speed optimizations from
+  ;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
 
-(setq frame-inhibit-implied-resize t)
-(setq initial-major-mode 'fundamental-mode)
+  (setq frame-inhibit-implied-resize t)
+  (setq initial-major-mode 'fundamental-mode)
 
-(use-package auto-capitalize)
+  (use-package auto-capitalize)
   (use-package recentf)
   (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
 
@@ -766,22 +766,22 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-(use-package helm)
-(use-package ivy)
-;; (use-package tiny)
-;; (use-package re-builder)
+  (use-package helm)
+  (use-package ivy)
+  ;; (use-package tiny)
+  ;; (use-package re-builder)
 
 
-;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
-(use-package org
-:load-path "/Users/jay/emacs/org-9.6.1/"
-:config
-(org-reload))
-;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
+  ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
+  (use-package org
+    :load-path "/Users/jay/emacs/org-9.6.1/"
+    :config
+    (org-reload))
+  ;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
 
 
 
-(use-package org-contrib)
+  (use-package org-contrib)
 
 
   (setq vc-follow-symlinks t)
@@ -793,9 +793,9 @@ you should place your code here."
           (height . 42) ; lines
           ))
 
-(flyspell-mode)
+  (flyspell-mode)
 
-(setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
   ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
   ;; (org-babel-do-load-languages
@@ -808,23 +808,23 @@ you should place your code here."
   ;;    (ditaa . t)
   ;;    ))
 
-;; (load "/Users/jay/emacs/emacs-settings/zones.el")
-;; (use-package zones)
+  ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
+  ;; (use-package zones)
 
-;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
-;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
 
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
 
-;; (load "/Users/jay/Dropbox/github/emacs-grammarly/emacs-grammarly.el")
+  ;; (load "/Users/jay/Dropbox/github/emacs-grammarly/emacs-grammarly.el")
 
 
-(load "/Users/jay/emacs/emacs-settings/aide.el")
+  (load "/Users/jay/emacs/emacs-settings/aide.el")
 
-(load "/Users/jay/emacs/emacs-settings/jay-osx.el")
+  (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
   (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
@@ -833,24 +833,24 @@ you should place your code here."
   (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
-;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
-;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
-;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
-;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
-;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
-;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
-;; (load "/Users/jay/emacs/emacs-settings/email.el")
-;; (load "/Users/jay/gnulisp/org-image.el")
+  ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/email.el")
+  ;; (load "/Users/jay/gnulisp/org-image.el")
 
 
-(jay-load-latex)
+  (jay-load-latex)
 
 
-(load "/Users/jay/emacs/org-mime.el")
+  (load "/Users/jay/emacs/org-mime.el")
 
-(load "/Users/jay/tramp-settings.el")
+  (load "/Users/jay/tramp-settings.el")
 
-;; (use-package org-mime)
+  ;; (use-package org-mime)
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
@@ -900,10 +900,10 @@ you should place your code here."
        (menu-bar-mode -1)
        ))
 
-;; (spaceline-spacemacs-theme 'narrow)
+  ;; (spaceline-spacemacs-theme 'narrow)
 
 
-(setq helm-echo-input-in-header-line nil)
+  (setq helm-echo-input-in-header-line nil)
 
   (add-hook 'helm-after-initialize-hook
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
@@ -916,7 +916,7 @@ you should place your code here."
 
   (use-package reveal-in-finder)
 
-;; (recenter-top-bottom)
+  ;; (recenter-top-bottom)
   (setq case-fold-search t)
 
   (setq company-global-modes '(not org-mode))
@@ -962,58 +962,58 @@ you should place your code here."
 
   (menu-bar-mode -1)
 
-   ;; If non-nil activate `clean-aindent-mode' which tries to correct
-   ;; virtual indentation of simple modes. This can interfere with mode specific
-   ;; indent handling like has been reported for `go-mode'.
-   ;; If it does deactivate it here.
-   ;; (default t)
-   dotspacemacs-use-clean-aindent-mode t
+  ;; If non-nil activate `clean-aindent-mode' which tries to correct
+  ;; virtual indentation of simple modes. This can interfere with mode specific
+  ;; indent handling like has been reported for `go-mode'.
+  ;; If it does deactivate it here.
+  ;; (default t)
+  dotspacemacs-use-clean-aindent-mode t
 
-   ;; Accept SPC as y for prompts if non-nil. (default nil)
-   dotspacemacs-use-SPC-as-y nil
+  ;; Accept SPC as y for prompts if non-nil. (default nil)
+  dotspacemacs-use-SPC-as-y nil
 
-   ;; If non-nil shift your number row to match the entered keyboard layout
-   ;; (only in insert state). Currently supported keyboard layouts are:
-   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
-   ;; New layouts can be added in `spacemacs-editing' layer.
-   ;; (default nil)
-   dotspacemacs-swap-number-row nil
+  ;; If non-nil shift your number row to match the entered keyboard layout
+  ;; (only in insert state). Currently supported keyboard layouts are:
+  ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+  ;; New layouts can be added in `spacemacs-editing' layer.
+  ;; (default nil)
+  dotspacemacs-swap-number-row nil
 
-   ;; Either nil or a number of seconds. If non-nil zone out after the specified
-   ;; number of seconds. (default nil)
-   dotspacemacs-zone-out-when-idle nil
+  ;; Either nil or a number of seconds. If non-nil zone out after the specified
+  ;; number of seconds. (default nil)
+  dotspacemacs-zone-out-when-idle nil
 
-   ;; Run `spacemacs/prettify-org-buffer' when
-   ;; visiting README.org files of Spacemacs.
-   ;; (default nil)
-   dotspacemacs-pretty-docs nil
+  ;; Run `spacemacs/prettify-org-buffer' when
+  ;; visiting README.org files of Spacemacs.
+  ;; (default nil)
+  dotspacemacs-pretty-docs nil
 
-   ;; If nil the home buffer shows the full path of agenda items
-   ;; and todos. If non-nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil
+  ;; If nil the home buffer shows the full path of agenda items
+  ;; and todos. If non-nil only the file name is shown.
+  dotspacemacs-home-shorten-agenda-source nil
 
-   ;; If non-nil then byte-compile some of Spacemacs files.
-   ;; dotspacemacs-byte-compile nil))
+  ;; If non-nil then byte-compile some of Spacemacs files.
+  ;; dotspacemacs-byte-compile nil))
 
-(defun dotspacemacs/user-env ()
-  "Environment variables setup.
+  (defun dotspacemacs/user-env ()
+    "Environment variables setup.
 This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
-)
+    (spacemacs/load-spacemacs-env)
+    )
 
-(defun dotspacemacs/user-init ()
-  "Initialization for user code:
+  (defun dotspacemacs/user-init ()
+    "Initialization for user code:
 This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-)
+    )
 
 
-;; (setq default-tab-width 4) ; for graphviz
+  ;; (setq default-tab-width 4) ; for graphviz
 
   ;; disable smooth scrolling
   (setq scroll-step 1)
@@ -1022,17 +1022,17 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;;
 
 
-(defun dotspacemacs/user-load ()
-  "Library to load while dumping.
+  (defun dotspacemacs/user-load ()
+    "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+    )
 
-;; use OSX standard keybindings for navigating word-by-word and selecting
-;; whole words at a time
-;; I've been wanting to do this for so long. :-)
-;; this works correctly!!
+  ;; use OSX standard keybindings for navigating word-by-word and selecting
+  ;; whole words at a time
+  ;; I've been wanting to do this for so long. :-)
+  ;; this works correctly!!
   (eval-after-load "org"
     '(progn
        (define-key org-mode-map (kbd "<M-S-left>") nil)
@@ -1057,19 +1057,19 @@ dump."
        (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
        ))
 
-(defun dotspacemacs/user-config ()
-  "Configuration for user code:
+  (defun dotspacemacs/user-config ()
+    "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded.")
 
 
-(setq package-archive-priorities nil)
+  (setq package-archive-priorities nil)
 
-(setq global-auto-complete-mode -1)
+  (setq global-auto-complete-mode -1)
 
-(setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
+  (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
 
   ()
 
@@ -1098,30 +1098,30 @@ before packages are loaded.")
 
   (setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
-(setq case-fold-search t)
+  (setq case-fold-search t)
 
-; (cyberpunk-jay)
+                                        ; (cyberpunk-jay)
 
-(counsel-mode 1)
+  (counsel-mode 1)
 
 
-(setq global-hl-line-mode nil)
-(setq hl-line-mode nil)
+  (setq global-hl-line-mode nil)
+  (setq hl-line-mode nil)
 
-(setq org-latex-default-class "elegant")
-(setq org-twbs-link-home "http://jaydixit.com")
-(setq org-twbs-postamble nil)
-(setq org-twbs-postamble-format nil)
-(setq org-twbs-preamble nil)
+  (setq org-latex-default-class "elegant")
+  (setq org-twbs-link-home "http://jaydixit.com")
+  (setq org-twbs-postamble nil)
+  (setq org-twbs-postamble-format nil)
+  (setq org-twbs-preamble nil)
 
-(load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
+  (load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
 
-;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
+  ;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
 
-;; (server-reflash)
-(triplicate-font)
-;; (embiggen-text)
-(scrollbar-init)
+  ;; (server-reflash)
+  (triplicate-font)
+  ;; (embiggen-text)
+  (scrollbar-init)
   )
 
 ;; (setq max-lisp-eval-depth 10000)
@@ -1146,63 +1146,63 @@ before packages are loaded.")
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(flycheck-disabled-checkers '(proselint))
- '(org-agenda-files
-   '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
- '(org-export-preserve-breaks nil)
- '(org-noter-auto-save-last-location t)
- '(org-noter-insert-note-no-questions t)
- '(org-sidebar-jump-indirect t)
- '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
- '(org-tempo-keywords-alist
-   '(("l " . "src emacs-lisp ")
-     ("H" . "html")
-     ("A" . "ascii")
-     ("i" . "index")))
- '(package-selected-packages
-   '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company  projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree  org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
- '(plain-org-wiki-directory "~/book/sending-the-proposal/")
- '(safe-local-variable-values
-   '((eval triplicate-code)
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           'insert-space)
-     (eval define-key org-mode-map
-           (kbd ":")
-           'insert-colon)
-     (org-html-head-include-scripts)
-     (org-export-allow-bind-keywords . t)
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           'insert-space)))
- '(tab-bar-close-button-show nil)
- '(tab-bar-new-button-show nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :weight bold))))
- '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
- '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
- '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
- '(org-code ((t (:inherit shadow :underline nil))))
- '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
- '(org-link ((t (:inherit link :underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
- '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
- '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
- '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(evil-want-Y-yank-to-eol nil)
+   '(flycheck-disabled-checkers '(proselint))
+   '(org-agenda-files
+     '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
+   '(org-export-preserve-breaks nil)
+   '(org-noter-auto-save-last-location t)
+   '(org-noter-insert-note-no-questions t)
+   '(org-sidebar-jump-indirect t)
+   '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+   '(org-tempo-keywords-alist
+     '(("l " . "src emacs-lisp ")
+       ("H" . "html")
+       ("A" . "ascii")
+       ("i" . "index")))
+   '(package-selected-packages
+     '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company  projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree  org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(plain-org-wiki-directory "~/book/sending-the-proposal/")
+   '(safe-local-variable-values
+     '((eval triplicate-code)
+       (eval define-key key-minor-mode-map
+             (kbd "SPC")
+             'insert-space)
+       (eval define-key org-mode-map
+             (kbd ":")
+             'insert-colon)
+       (org-html-head-include-scripts)
+       (org-export-allow-bind-keywords . t)
+       (eval define-key key-minor-mode-map
+             (kbd "SPC")
+             'insert-space)))
+   '(tab-bar-close-button-show nil)
+   '(tab-bar-new-button-show nil))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(beacon ((t (:inherit highlight))))
+   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+   '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
+   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+   '(org-code ((t (:inherit shadow :underline nil))))
+   '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+   '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
+   '(org-link ((t (:inherit link :underline nil))))
+   '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+   '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+   '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+   '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+  )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1244,7 +1244,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
-;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+ ;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
