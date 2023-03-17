@@ -126,6 +126,7 @@ This function should only modify configuration layer settings."
                                       counsel
                                       ;; spotify
                                       crux
+                                      cyberpunk-theme
                                       ;; cyberpunk-theme
                                       dired+
                                       dired-details+
@@ -210,6 +211,7 @@ This function should only modify configuration layer settings."
                                       visible-mark
                                       wc-mode
                                       web-mode
+                                      wp-goal-mode
                                       wrap-region
                                       ;; writeroom-mode
                                       ;; wttrin
@@ -811,6 +813,8 @@ you should place your code here."
   ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
   ;; (use-package zones)
 
+(load "/Users/jay/emacs/emacs-settings/org-panes.el")
+
   ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
   ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
@@ -834,7 +838,7 @@ you should place your code here."
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
   ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
@@ -909,10 +913,8 @@ you should place your code here."
             #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
-  ;; (setq org-bullets-bullet-list '("◉" "◉" "○" "○" "✸" "✸" "✿" "✿")) ; for oddlevelsonly mode
-  ;; (setq org-bullets-bullet-list '("◉" "○" "✸" "✿")) ; for SHOWSTARS:evenodd
 
-  (setq org-bullets-bullet-list (quote ("• ")))
+  (setq org-bullets-bullet-list '("• "))
 
   (use-package reveal-in-finder)
 

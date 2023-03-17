@@ -7137,3 +7137,31 @@ Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a
 #+end_src
 
 To use this function, highlight the region you want to add numbering to and then call the ~number-region~ function using M-x ~number-region~. This will add a number to the beginning of each line in the highlighted region. The numbering will start from 1 and increment by 1 for each line.
+
+* org-panes
+#+begin_src emacs-lisp
+
+(use-package org-panes
+ :ensure nil
+ :config (setq org-panes-split-overview-horizontally t)
+     (setq org-panes-main-size 70))
+
+; org-panes and olivetti don't play well together
+; because they both change window sizes. this function
+; turns olivetti-mode off first if it's on, so that
+; org-panes doesn't get confused about the window size
+(defun org-panes-check-olivetti ()
+ (interactive)
+ (if (bound-and-true-p olivetti-mode)
+   (progn (olivetti-mode -1)
+       (org-panes)
+       (olivetti-mode))
+    (org-panes)))
+
+
+     #+end_src
+
+* word count
+#+begin_src emacs-lisp
+(use-package wc-goal-mode)
+#+end_src
