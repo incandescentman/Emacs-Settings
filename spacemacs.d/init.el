@@ -97,10 +97,9 @@ This function should only modify configuration layer settings."
      ;; better-defaults
      emacs-lisp
      ;; git
-     org
-;;        (org)
+     (org)
      helm
-compleseus
+     compleseus
      ;; lsp
      ;; markdown
      ;; python
@@ -1206,63 +1205,64 @@ before packages are loaded.")
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(evil-want-Y-yank-to-eol nil)
-   '(flycheck-disabled-checkers '(proselint))
-   '(org-agenda-files
-     '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
-   '(org-export-preserve-breaks nil)
-   '(org-noter-auto-save-last-location t)
-   '(org-noter-insert-note-no-questions t)
-   '(org-sidebar-jump-indirect t)
-   '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
-   '(org-tempo-keywords-alist
-     '(("l " . "src emacs-lisp ")
-       ("H" . "html")
-       ("A" . "ascii")
-       ("i" . "index")))
-   '(package-selected-packages
-     '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company  projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree  org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
-   '(plain-org-wiki-directory "~/book/sending-the-proposal/")
-   '(safe-local-variable-values
-     '((eval triplicate-code)
-       (eval define-key key-minor-mode-map
-             (kbd "SPC")
-             'insert-space)
-       (eval define-key org-mode-map
-             (kbd ":")
-             'insert-colon)
-       (org-html-head-include-scripts)
-       (org-export-allow-bind-keywords . t)
-       (eval define-key key-minor-mode-map
-             (kbd "SPC")
-             'insert-space)))
-   '(tab-bar-close-button-show nil)
-   '(tab-bar-new-button-show nil))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(beacon ((t (:inherit highlight))))
-   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
-   '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
-   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
-   '(org-code ((t (:inherit shadow :underline nil))))
-   '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
-   '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
-   '(org-link ((t (:inherit link :underline nil))))
-   '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
-   '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
-   '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
-   '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(flycheck-disabled-checkers '(proselint))
+ '(org-agenda-files
+   '("/Users/jay/Dropbox/writing/notationaldata/accountability.org"))
+ '(org-export-preserve-breaks nil)
+ '(org-noter-auto-save-last-location t)
+ '(org-noter-insert-note-no-questions t)
+ '(org-sidebar-jump-indirect t)
+ '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+ '(org-tempo-keywords-alist
+   '(("l " . "src emacs-lisp ")
+     ("H" . "html")
+     ("A" . "ascii")
+     ("i" . "index")))
+ '(package-selected-packages
+   '(org-noter benchmark-init magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+ '(plain-org-wiki-directory "~/book/sending-the-proposal/")
+ '(safe-local-variable-values
+   '((eval triplicate-code)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           'insert-space)
+     (eval define-key org-mode-map
+           (kbd ":")
+           'insert-colon)
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           'insert-space)))
+ '(tab-bar-close-button-show nil)
+ '(tab-bar-new-button-show nil)
+ '(warning-suppress-log-types '((use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(beacon ((t (:inherit highlight))))
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+ '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(org-code ((t (:inherit shadow :underline nil))))
+ '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+ '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
+ '(org-link ((t (:inherit link :underline nil))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+ '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+ '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+ '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1312,5 +1312,5 @@ This function is called at the very end of Spacemacs initialization."
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
  '(org-link ((t (:inherit link :underline nil))))
- '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim gray" :slant normal))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim sgray" :slant normal))))
  '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
