@@ -840,7 +840,7 @@ you should place your code here."
   ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
 (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
+(load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
   ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
   ;; (load "/Users/jay/emacs/emacs-settings/email.el")
