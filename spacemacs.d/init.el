@@ -211,7 +211,6 @@ This function should only modify configuration layer settings."
                                       visible-mark
                                       wc-mode
                                       web-mode
-                                      wp-goal-mode
                                       wrap-region
                                       ;; writeroom-mode
                                       ;; wttrin
@@ -814,6 +813,7 @@ you should place your code here."
   ;; (use-package zones)
 
 (load "/Users/jay/emacs/emacs-settings/org-panes.el")
+(load "/Users/jay/emacs/emacs-settings/wc-goal-mode.el")
 
   ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
