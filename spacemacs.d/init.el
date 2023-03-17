@@ -43,6 +43,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; git
      helm
+;;     compleseus
      ;; lsp
      ;; markdown
      ;; python
