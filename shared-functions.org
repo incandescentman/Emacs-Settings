@@ -1,4 +1,4 @@
-
+h
 # Local Variables:
 # org-config-files-local-mode: t
 # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space)
@@ -2096,11 +2096,11 @@ Jump to a definition in the current file. (This is awesome.)
 ** Helm
 Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq helm-M-x-always-save-history t)
 (eval-after-load 'helm-grep
   '(setq helm-grep-default-command helm-grep-default-recurse-command))
-#+END_SRC
+#+END_EXAMPLE
 
 * Dired
 
@@ -3349,7 +3349,7 @@ AdrianKubala:
 ** Helm
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package helm-swoop)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
@@ -3383,13 +3383,13 @@ If this value is ~t~, split window inside the current window:
 #+END_SRC
 
 Split direcion. ~split-window-vertically~ or ~split-window-horizontally~:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (setq helm-swoop-split-direction 'split-window-vertically)
-#+END_SRC
+#+END_EXAMPLE
 
 If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+BEGIN_SRC emacs-lisp
-(setq helm-swoop-speed-or-color nil)
+;; (setq helm-swoop-speed-or-color nil)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -3399,9 +3399,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
-(global-set-key (kbd "M-y")     #'helm-show-kill-ring)
-(global-set-key (kbd "M-s /")   #'helm-multi-swoop)
+;; (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+;; (global-set-key (kbd "M-y")     #'helm-show-kill-ring)
+;; (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
 
 (setq helm-ff-transformer-show-only-basename nil
       helm-adaptive-history-file             "~/emacs/.savefile/helm-history"
@@ -3460,7 +3460,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 ** helm projectile
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 
 (setq ad-redefinition-action 'accept)
@@ -3477,7 +3477,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   #'(lambda ()
       (interactive)
       (helm-ag (projectile-project-root))))
-#+END_SRC
+#+END_EXAMPLE
 
 ** isearch
    :PROPERTIES:

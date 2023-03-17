@@ -580,7 +580,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-s c") 'current-buffers-search)
 
 
-(define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
+;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
 (define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
 (define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode)
@@ -647,7 +647,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
                                         ; org-narrow-to-subtree
 
-(define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
+;; (define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
 
 
 (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
@@ -784,7 +784,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
-(define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
+;; (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
 (define-key org-mode-map (kbd "M-K") 'kill-clause)
@@ -806,8 +806,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
 
-(define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
-(define-key key-minor-mode-map (kbd "C-x b") 'helm-mini) ; shows recent files; also bound to ⌘-r
+;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
+;; helm-mini) ; shows recent files; also bound to ⌘-r
 (define-key key-minor-mode-map (kbd "M-b M-d") 'book-dired) ; show directory of my book folder
 (define-key key-minor-mode-map (kbd "M-b r") 'read-a-book) ; show directory of my PDF books
 (define-key key-minor-mode-map (kbd "M-b j") 'read-jd) ; show PDF books I have annotated
@@ -824,7 +824,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
 (define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
 
-(define-key key-minor-mode-map (kbd "M-b M-r") 'book-helm-strict) ; this is a smart function, show recent files in my book folder
+;; helm-strict) ; this is a smart function, show recent files in my book folder
 
 ;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
 (define-key key-minor-mode-map (kbd "s-D") 'bjm/ivy-dired-recent-dirs)
@@ -871,7 +871,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-M-x") 'exchange-point-and-mark)
 
 
-(define-key key-minor-mode-map (kbd "C-s-SPC") 'helm-all-mark-rings)
+;; (define-key key-minor-mode-map (kbd "C-s-SPC") 'helm-all-mark-rings)
 
 ; (define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
 
@@ -920,19 +920,19 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-x po") 'pomodoro-stop)
 
 ;; find files using helm
-(define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
+;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
 
 ;; search using helm-swoop
-(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
-(global-set-key (kbd "M-i") 'helm-multi-swoop-all)
+;(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+;(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+;(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+;(global-set-key (kbd "M-i") 'helm-multi-swoop-all)
 
 ;; edit Emacs preferences using standard OSX keybinding for preferences
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 ;; grep, using current project as default
-(define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
+;; (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
 ;; ag, using current folder as default
 ;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
