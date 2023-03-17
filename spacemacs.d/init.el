@@ -812,8 +812,8 @@ you should place your code here."
   ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
   ;; (use-package zones)
 
-(load "/Users/jay/emacs/emacs-settings/org-panes.el")
-(load "/Users/jay/emacs/emacs-settings/wc-goal-mode.el")
+  (load "/Users/jay/emacs/emacs-settings/org-panes.el")
+  (load "/Users/jay/emacs/emacs-settings/wc-goal-mode.el")
 
   ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
 
@@ -838,9 +838,9 @@ you should place your code here."
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
-(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+  (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
   ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
-(load "/Users/jay/emacs/emacs-settings/searchlink/searchlink.el")
+  (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
   ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
   ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
   ;; (load "/Users/jay/emacs/emacs-settings/email.el")
