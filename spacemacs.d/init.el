@@ -904,6 +904,7 @@ you should place your code here."
   ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
   ;; (load "/Users/jay/emacs/emacs-settings/email.el")
   ;; (load "/Users/jay/gnulisp/org-image.el")
+  (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
 
   (jay-load-latex)
