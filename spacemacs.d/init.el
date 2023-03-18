@@ -97,7 +97,7 @@ This function should only modify configuration layer settings."
      ;; better-defaults
      emacs-lisp
      ;; git
-     (org)
+     org
      helm
      compleseus
      ;; lsp
@@ -129,7 +129,6 @@ This function should only modify configuration layer settings."
      ;; version-control
      ;; html
      ;; mu4e
-     ;; org-roam
      ;; shell
      ;; shell-scripts
      ;; jay
@@ -228,6 +227,8 @@ This function should only modify configuration layer settings."
                                       org-mac-link
                                       ;; org-mime
                                       org-pomodoro
+                                      org-roam
+                                      org-roam-ui
                                       org-sticky-header
                                       ox-clip
                                       ;; ox-epub
@@ -236,7 +237,6 @@ This function should only modify configuration layer settings."
                                       ;; org-noter
                                       ;; org-noter-pdftools
                                       ;; org-pdftools
-                                      ;; org-roam
                                       ;; org-sidebar
                                       ;; ox-twbs
                                       ox-tufte
@@ -306,7 +306,6 @@ This function should only modify configuration layer settings."
                                     notmuch
 				                            org-download
                                     org-projectile
-                                    org-roam
                                     org-superstar
                                     popwin
                                     spaceline
