@@ -7188,4 +7188,7 @@ To use this function, highlight the region you want to add numbering to and then
  (org-roam-db-autosync-mode)
  ;; If using org-roam-protocol
  (require 'org-roam-protocol))
-#+end_src
+#+end_SRC
+
+
+;; s-u (define-key key-minor-mode-map (kbd "s-u ") 'roam)
