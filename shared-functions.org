@@ -7283,8 +7283,8 @@ To use this function, highlight the region you want to add numbering to and then
 #+end_src
 
 
-* org-roam-using
-#+begin_src emacs-lisp
+* org-roam-ui
+  #+begin_EXAMPLE emacs-lisp
 (use-package org-roam-ui
  :straight
   (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
@@ -7299,4 +7299,4 @@ To use this function, highlight the region you want to add numbering to and then
      org-roam-ui-follow t
      org-roam-ui-update-on-save t
      org-roam-ui-open-on-start t))
-#+end_src
+#+end_EXAMPLE
