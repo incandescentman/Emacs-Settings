@@ -190,6 +190,9 @@ This function should only modify configuration layer settings."
                                       dired-sort-menu
                                       discover-my-major
                                       ;; early-init
+                                      emacsql
+                                      magit-section
+                                      embark
                                       ;; emms
                                       epc
                                       expand-region
