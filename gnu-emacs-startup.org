@@ -2158,21 +2158,18 @@ t)
 
 ** colon-or-smart-colon
 #+BEGIN_SRC emacs-lisp
-
-(defun kdm/line-starts-with-hash-p ()
+(defun line-starts-with-hash-p ()
  (save-excursion
   (beginning-of-line)
   (looking-at-p "#")))
 
 (defun colon-or-smart-colon ()
-(interactive)
-(if
-(or
-(bolp)
-(kdm/line-starts-with-hash-p))
-(insert ":")
-(smart-colon))
-)
+ (interactive)
+ (if (or (bolp)
+     (org-at-heading-p)
+     (line-starts-with-hash-p))
+   (insert ":")
+  (smart-colon)))
 #+END_SRC
 
 * TODO [#A] check my changes to backward-kill-word-correctly?
