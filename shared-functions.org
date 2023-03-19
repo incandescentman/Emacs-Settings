@@ -3593,14 +3593,14 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
   [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
 
   [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (ivy-add-actions t
  '(("W" kill-new "save to kill ring")
   ("I" insert "insert in buffer")))
-#+END_SRC
+#+END_EXAMPLE
 
 **** swiper hydra
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -3664,7 +3664,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** searching
    :PROPERTIES:
@@ -5028,7 +5028,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 
 * open recent directories
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; open recent directory, rquires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
@@ -5048,9 +5048,9 @@ It will open the link in Emacs with typing C-c C-o.
    (dired dir))))
 
 
-(define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
+;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
 ;; c-x C-d runs the command ido-list-directory
-#+END_SRC
+#+END_EXAMPLE
 
 
 * calc eval region
@@ -5917,13 +5917,13 @@ This solution also works for MELPA.
 #+END_SRC
 
 * ivy counsel
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package counsel
  :bind
  (("M-y" . counsel-yank-pop)
   :map ivy-minibuffer-map
   ("M-y" . ivy-next-line)))
-#+END_SRC
+#+END_EXAMPLE
 
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
@@ -6121,7 +6121,7 @@ To use this, just write your org links in the following way (optionally adding a
 [[yt:A3JAlWM8qRM]]
 
 * swiper-mc
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun swiper-mc ()
 (interactive)
 (unless (require 'multiple-cursors nil t)
@@ -6133,7 +6133,7 @@ To use this, just write your org links in the following way (optionally adding a
                (mc/create-fake-cursor-at-point))))
          (mc/maybe-multiple-cursors-mode)))
 (setq ivy-exit 'done) (exit-minibuffer))))
-#+END_SRC
+#+END_EXAMPLE
 
 * display and copy spacemacs version info
 #+BEGIN_SRC emacs-lisp
