@@ -233,6 +233,9 @@ This function should only modify configuration layer settings."
                                       org-pomodoro
                                       org-roam
                                       org-roam-ui
+                                      websocket
+                                      simple-httpd
+                                      f
                                       org-sticky-header
                                       ox-clip
                                       ;; ox-epub
@@ -329,7 +332,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 
 (defun dotspacemacs/init ()
   "Initialization:
