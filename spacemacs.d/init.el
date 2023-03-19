@@ -98,7 +98,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; git
      org
-     helm
+     ;; helm
      compleseus
      ;; lsp
      ;; markdown
@@ -179,7 +179,7 @@ This function should only modify configuration layer settings."
                                       chatgpt
                                       cheatsheet
                                       command-log-mode
-                                      counsel
+                                      ;; counsel
                                       ;; spotify
                                       crux
                                       cyberpunk-theme
@@ -830,8 +830,6 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-  (use-package helm)
-  (use-package ivy)
   ;; (use-package tiny)
   ;; (use-package re-builder)
 
