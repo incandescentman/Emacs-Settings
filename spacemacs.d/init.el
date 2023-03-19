@@ -120,7 +120,7 @@ This function should only modify configuration layer settings."
      ;; ag-general
      ;; ag-lang-tools
      ;; pdf
-     smex
+;;     smex
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -222,6 +222,7 @@ This function should only modify configuration layer settings."
                                       olivetti
                                       openwith
                                       ;;  orgalist
+                                      orderless
                                       org-contrib
                                       org-bookmark-heading
 				                              ;; org-download

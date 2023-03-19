@@ -84,27 +84,3 @@
    ))
 
 
- (use-package marginalia
-  :delight
-  :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
-  :init
-  (marginalia-mode))
-
- (use-package vertico
-  :init
-  (vertico-mode)
-
-  ;; Different scroll margin
-  ;; (setq vertico-scroll-margin 0)
-
-  ;; Show more candidates
-  ;; (setq vertico-count 20)
-
-  (setq vertico-resize t)
-
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  ;; (setq vertico-cycle t)
-  )
-

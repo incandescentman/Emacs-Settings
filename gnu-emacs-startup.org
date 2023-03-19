@@ -781,8 +781,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
 ;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
 
+(define-key key-minor-mode-map (kbd "s-E") 'embark-act)
 
-(define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+
+(define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
