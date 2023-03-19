@@ -2158,19 +2158,22 @@ t)
 
 ** colon-or-smart-colon
 #+BEGIN_SRC emacs-lisp
+
+(defun kdm/line-starts-with-hash-p ()
+ (save-excursion
+  (beginning-of-line)
+  (looking-at-p "#")))
+
 (defun colon-or-smart-colon ()
 (interactive)
 (if
 (or
 (bolp)
-(org-at-heading-p)
-((boundp 'org-roam-mode) org-roam-mode)
-)
+(kdm/line-starts-with-hash-p))
 (insert ":")
 (smart-colon))
 )
 #+END_SRC
-
 
 * TODO [#A] check my changes to backward-kill-word-correctly?
 Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
