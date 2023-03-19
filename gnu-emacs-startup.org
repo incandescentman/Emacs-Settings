@@ -433,6 +433,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "s-g") 'consult-grep)
+
 (define-key key-minor-mode-map [mouse-2] 'iloveyou)
 
 (define-key key-minor-mode-map (kbd "M-j") 'aide-openai-complete-buffer-insert)
@@ -635,7 +637,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 
-(define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
+;; (define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
 (define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
 
@@ -784,8 +786,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-E") 'embark-act)
 
 
-(define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
-;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "=") 'execute-extended-command) ; call any function with easiest keystroke possible
 ;; (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
@@ -933,8 +934,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; edit Emacs preferences using standard OSX keybinding for preferences
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
-;; grep, using current project as default
-;; (define-key key-minor-mode-map (kbd "s-G") 'helm-projectile-grep)
 
 ;; ag, using current folder as default
 ;; (define-key key-minor-mode-map (kbd "C-u s-g") 'helm-ag)
