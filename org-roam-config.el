@@ -80,6 +80,7 @@
    ;; ("C-c r d s" . org-schedule)
 ;; ("s-u t" . org-roam-dailies-goto-today)
 ("s-u t" . org-roam-dailies-capture-today)
+("s-<right>" . org-roam-dailies-capture-today)
 ("s-u d" . org-roam-dailies-goto-date)
    ))
 

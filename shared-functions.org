@@ -2361,11 +2361,11 @@ Paste HTML using proper org-mode format
 Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
 #+BEGIN_SRC emacs-lisp
 (defun kdm/html2org-clipboard ()
-  "Convert clipboard contents from HTML to Org and then paste (yank)."
-  (interactive)
-  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
-  (kill-new (shell-command-to-string cmd))
-  (yank))
+ "Convert clipboard contents from HTML to Org and then paste (yank)."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org | sed '/\\\\\\\\$/d'")
+ (kill-new (shell-command-to-string cmd))
+ (yank))
 
 
 
