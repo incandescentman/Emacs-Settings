@@ -3578,7 +3578,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_EXAMPLE
 
 **** swiper
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
@@ -3587,7 +3587,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
-#+END_SRC
+#+END_EXAMPLE
 
 **** ivy add actions
   [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]

@@ -26,7 +26,7 @@
 (recenter-top-bottom)
   )
 
-(require 'org-element) 
+(require 'org-element)
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -630,7 +630,6 @@
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
-;; (define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
 (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
@@ -707,7 +706,7 @@
 
 (define-key key-minor-mode-map (kbd "S-s-SPC") 'set-mark-command)
 
-;; mark commands 
+;; mark commands
 (define-key key-minor-mode-map (kbd "C-M-SPC") 'set-mark-command)
 (define-key key-minor-mode-map (kbd "C-M-x") 'exchange-point-and-mark)
 
@@ -944,7 +943,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 
-; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak 
+; (define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space) ; I disabled this for DragonSpeak
 (define-key org-mode-map (kbd "<SPC>") 'smart-space)
 ;; (define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
@@ -993,18 +992,18 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (delete-horizontal-space)))
 
 (defun insert-space ()
-  (interactive) 
+  (interactive)
 (if (org-at-heading-p)
 (insert-smart-space-in-org-heading)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert " ")
-)) 
+))
 
 (defun insert-normal-space-in-org-heading ()
  (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
  (insert " ")
 )
 
@@ -1024,7 +1023,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun insert-comma ()
  (interactive)
 (cond (mark-active
-   (progn (delete-region (mark) (point))))) 
+   (progn (delete-region (mark) (point)))))
  (insert ",")
 )
 
@@ -1040,15 +1039,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 "Insert a goodamn colon!"
  (interactive)
 (cond (mark-active
-  (progn (delete-region (mark) (point))))) 
+  (progn (delete-region (mark) (point)))))
  (insert ":")
-) 
+)
 
 (defun insert-question-mark ()
 "Insert a freaking question mark!!"
  (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
  (insert "?")
 )
 
@@ -1145,7 +1144,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                 (newline)))
         ;; Shamefully lifted from `org-return'. Why isn't there an
         ;; `org-at-link-p' function?!
-        ((and 
+        ((and
 ;; (org-or-orgalist-p)
               org-return-follows-link
               (org-in-regexp org-any-link-re))
@@ -1164,7 +1163,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
                   (newline)))
           (t (call-interactively 'org-open-at-point))))
 
-   ((and 
+   ((and
 ;; (org-or-orgalist-p)
               (let ((el (org-element-at-point)))
                 (and el
@@ -1178,7 +1177,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
          (let ((kill-whole-line nil))
            (kill-line))
          (newline))
-        ((and 
+        ((and
 ;; (org-or-orgalist-p)
           (let ((el (org-element-at-point)))
             (and (not (org--line-empty-p 1))
@@ -1212,13 +1211,13 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (kill-word 1))                                    ; ELSE kill word
   (my/fix-space)
 ;; don't leave two periods in a row
-(when 
+(when
 (or
 (looking-at "\\,\\, ")
 
-(and 
+(and
 (looking-at "\\,")
-(looking-back "\\,") 
+(looking-back "\\,")
 )
 )
 (delete-forward-char 1))
@@ -1230,8 +1229,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (when (looking-at "[ ]")
          (forward-char 1)
           )
-;; capitalize correctly if there's point is before the space at the beginning of a sentence 
- 
+;; capitalize correctly if there's point is before the space at the beginning of a sentence
+
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
     (call-interactively 'kill-word-correctly)
     (when fix-capitalization
@@ -1686,7 +1685,7 @@ t)
 (defun smart-period ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 (unless
       (or
 (looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
@@ -1709,13 +1708,13 @@ t)
       ) ; unless
 ) ; save excursion
 
-;; if two periods or two commas in a row, delete the second one 
-(when 
+;; if two periods or two commas in a row, delete the second one
+(when
 (or
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
@@ -1732,7 +1731,7 @@ t)
 (defun smart-comma ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 
   (smart-punctuation ",")
 (unless
@@ -1753,7 +1752,7 @@ t)
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
@@ -1770,7 +1769,7 @@ t)
 (defun smart-question-mark ()
   (interactive)
   (cond (mark-active
-         (progn (delete-region (mark) (point))))) 
+         (progn (delete-region (mark) (point)))))
 
   (smart-punctuation "?")
   (save-excursion
@@ -1796,7 +1795,7 @@ t)
 (defun smart-exclamation-point ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
 
   (smart-punctuation "!")
 (save-excursion
@@ -1810,7 +1809,7 @@ t)
 (defun smart-semicolon ()
   (interactive)
 (cond (mark-active
- (progn (delete-region (mark) (point))))) 
+ (progn (delete-region (mark) (point)))))
   (smart-punctuation ";")
 (unless
 (or
@@ -1828,7 +1827,7 @@ t)
 (defun smart-colon ()
   (interactive)
 (cond (mark-active
-  (progn (delete-region (mark) (point))))) 
+  (progn (delete-region (mark) (point)))))
   (smart-punctuation ":")
 (unless
 (or
@@ -1847,13 +1846,13 @@ t)
 ;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 
 (defun comma-or-smart-comma ()
-(interactive) 
-(if 
+(interactive)
+(if
 (or
 (bolp)
 (org-at-heading-p)
 (looking-at " \"")
-) 
+)
 (insert ",")
 (smart-comma))
 )
@@ -1934,7 +1933,7 @@ t)
 (and
 (looking-at "\\.")
 (looking-back "\\.")
-) 
+)
 (and
 (looking-at ",")
 (looking-back ",")
@@ -1955,13 +1954,13 @@ t)
   "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
 
   (unless
- 
+
       (or
        (looking-at "[ ]*\"")          ; if looking at a quote? Might not work
 
        (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
        (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
-       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd 
+       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd
 
 (looking-at "[ ]*I\'")   ; never downcase the word "I'
 
@@ -1971,22 +1970,22 @@ t)
        ;; (looking-at "\\") ; how do you search for a literal backslash?
        (looking-at (sentence-end))
 
-       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break 
+       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break
 
-       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break 
-       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break 
-       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break 
+       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break
+       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break
+       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break
 
-       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http 
+       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http
 
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 
-(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
 
-(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line 
-(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line 
+(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
 
-(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line 
+(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line
 
 
        (looking-at (user-full-name))
@@ -2028,7 +2027,7 @@ t)
   (interactive)
 (unless
 (or
-(looking-at "[[:punct:]]*[ ]*$") 
+(looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b") ; never downcase the word "I"
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
@@ -2207,7 +2206,7 @@ t)
   (interactive)
   (remove-hook 'org-mode-hook 'org-bullets-mode)
 ;; (notmuch-mua-send-and-exit)
-(message-send-and-exit) 
+(message-send-and-exit)
   (add-hook 'org-mode-hook 'org-bullets-mode))
 
 (add-hook 'message-mode-hook
@@ -2255,7 +2254,7 @@ t)
  ["\n" "\n> "]
 )))
 
-(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task) 
+(define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task)
 (define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
@@ -2345,9 +2344,9 @@ t)
   (replace-string "con den" "confiden" nil (point-min) (point-max))
   (replace-string "con ict" "conflict" nil (point-min) (point-max))
 ;(replace-string "nd" "find" nil (point-min) (point-max)); whole word only
-;(replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only 
-; (replace-string "ve" "they" nil (point-min) (point-max)); this one should be whole word only 
-; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only 
+;(replace-string "ve" "five" nil (point-min) (point-max)); this one should be whole word only
+; (replace-string "ve" "they" nil (point-min) (point-max)); this one should be whole word only
+; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only
   (replace-string "scientifc" "scientific" nil (point-min) (point-max))
 
 
@@ -2367,7 +2366,7 @@ t)
 
 (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
 
-    :bind (:map web-mode-map 
+    :bind (:map web-mode-map
 
 
   ("s-O" . prelude-open-with)))

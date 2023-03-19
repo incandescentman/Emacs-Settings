@@ -120,7 +120,7 @@ This function should only modify configuration layer settings."
      ;; ag-general
      ;; ag-lang-tools
      ;; pdf
-;;     smex
+     smex
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -291,6 +291,7 @@ This function should only modify configuration layer settings."
                                     auto-encryption-mode
                                     clean-aiindent-mode
                                     company
+                                    counsel
                                     diff-auto-refine-mode
                                     diff-hl
                                     eldoc
@@ -311,12 +312,14 @@ This function should only modify configuration layer settings."
                                     highlight-indentation
                                     hl-line
                                     hs-mode
+                                    ivy
                                     notmuch
 				                            org-download
                                     org-projectile
                                     org-superstar
                                     popwin
                                     spaceline
+                                    swiper
                                     treemacs-icons-dired
                                     vterm
                                     vi-tilde-fringe
@@ -896,7 +899,7 @@ you should place your code here."
   (org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
   (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
   (load "/Users/jay/emacs/prelude/core/prelude-core.el")
-  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
+;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
   (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
   (load "/Users/jay/gnulisp/book-functions.el")
   ;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
@@ -1167,7 +1170,7 @@ before packages are loaded.")
 
                                         ; (cyberpunk-jay)
 
-  (counsel-mode 1)
+;;  (counsel-mode 1)
 
 
   (setq global-hl-line-mode nil)
@@ -1259,7 +1262,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :family "Garamond"))))
  '(org-code ((t (:inherit shadow :underline nil))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
@@ -2311,7 +2314,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :family "Garamond"))))
  '(org-code ((t (:inherit shadow :underline nil))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-ellipsis ((t (:foreground "DarkGoldenrod" :underline nil))))
