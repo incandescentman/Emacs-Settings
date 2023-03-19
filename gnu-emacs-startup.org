@@ -2133,6 +2133,9 @@ t)
 
 
 (define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
+
+
+
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
 ;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
@@ -2161,6 +2164,7 @@ t)
 (or
 (bolp)
 (org-at-heading-p)
+((boundp 'org-roam-mode) org-roam-mode)
 )
 (insert ":")
 (smart-colon))
