@@ -3563,7 +3563,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 *** swiper
 
 **** ivy
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ivy
 
 
@@ -3575,10 +3575,10 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 (setq ivy-display-style 'fancy)
 
 )
-#+END_EXAMPLE
+#+END_SRC
 
 **** swiper
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
@@ -3587,20 +3587,20 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
-#+END_EXAMPLE
+#+END_SRC
 
 **** ivy add actions
   [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
 
   [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (ivy-add-actions t
  '(("W" kill-new "save to kill ring")
   ("I" insert "insert in buffer")))
-#+END_EXAMPLE
+#+END_SRC
 
 **** swiper hydra
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -3664,7 +3664,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-#+END_EXAMPLE
+#+END_SRC
 
 ** searching
    :PROPERTIES:
@@ -5028,7 +5028,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 
 * open recent directories
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; open recent directory, rquires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
@@ -5050,7 +5050,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 ;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
 ;; c-x C-d runs the command ido-list-directory
-#+END_EXAMPLE
+#+END_SRC
 
 
 * calc eval region
@@ -7382,4 +7382,25 @@ To use this function, highlight the region you want to add numbering to and then
  :ensure t ; only need to install it, embark loads it after consult if found
  :hook
  (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+
+* show duplicate lines
+
+#+begin_src emacs-lisp
+(defun show-duplicate-lines ()
+ "Display all duplicate lines in the current buffer."
+ (interactive)
+ (let ((lines (split-string (buffer-string) "\n" t))
+    (seen-lines '())
+    (dup-lines '()))
+  (dolist (line lines)
+   (if (member line seen-lines)
+     (setq dup-lines (cons line dup-lines))
+    (setq seen-lines (cons line seen-lines))))
+  (if dup-lines
+    (with-output-to-temp-buffer "*Duplicate Lines*"
+     (dolist (line (reverse dup-lines))
+      (princ (concat line "\n"))))
+   (message "No duplicate lines found."))))
 #+end_src
