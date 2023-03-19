@@ -205,7 +205,7 @@ This function should only modify configuration layer settings."
                                       fuzzy
                                       gcmh
                                       ;; gist
-                                      helm
+                                      ;; helm
                                       ;; helm-cmd-t
                                       ;; hyperbole
                                       ido-hacks
@@ -969,10 +969,10 @@ you should place your code here."
   ;; (spaceline-spacemacs-theme 'narrow)
 
 
-  (setq helm-echo-input-in-header-line nil)
+;;  (setq helm-echo-input-in-header-line nil)
 
-  (add-hook 'helm-after-initialize-hook
-            #'(lambda () (setq helm-echo-input-in-header-line nil)))
+  ;; (add-hook 'helm-after-initialize-hook
+  ;;           #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
 
@@ -1885,7 +1885,7 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-  (use-package helm)
+;;   (use-package helm)
   (use-package ivy)
   ;; (use-package tiny)
   ;; (use-package re-builder)
@@ -2026,10 +2026,6 @@ you should place your code here."
   ;; (spaceline-spacemacs-theme 'narrow)
 
 
-  (setq helm-echo-input-in-header-line nil)
-
-  (add-hook 'helm-after-initialize-hook
-            #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
 
 
