@@ -307,6 +307,7 @@ This function should only modify configuration layer settings."
                                     evil-unimpaired
                                     exec-path-from-shell
                                     global-git-commit
+                                    helm
                                     highlight-indentation
                                     hl-line
                                     hs-mode
@@ -1885,8 +1886,7 @@ you should place your code here."
     (normal-top-level-add-subdirs-to-load-path))
   (use-package mu4e)
 
-;;   (use-package helm)
-  (use-package ivy)
+;;   (use-package ivy)
   ;; (use-package tiny)
   ;; (use-package re-builder)
 
