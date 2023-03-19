@@ -7278,25 +7278,23 @@ To use this function, highlight the region you want to add numbering to and then
   ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
   ))
 
-(key-chord-define-global "ss" 'consult-line)
+(key-chord-define-global "SS" 'consult-line)
 
 #+end_src
 
 
 * org-roam-ui
-  #+begin_EXAMPLE emacs-lisp
+  #+begin_SRC emacs-lisp
 (use-package org-roam-ui
- :straight
-  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
 ;;     normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;;     a hookable mode anymore, you're advised to pick something yourself
 ;;     if you don't care about startup time, use
 ;; :hook (after-init . org-roam-ui-mode)
-  :bind (("C-c r s" . org-roam-ui-mode))
+  :bind (("s-u s" . org-roam-ui-mode))
   :config
   (setq org-roam-ui-sync-theme t
      org-roam-ui-follow t
      org-roam-ui-update-on-save t
      org-roam-ui-open-on-start t))
-#+end_EXAMPLE
+#+end_SRC

@@ -71,7 +71,8 @@
 
   ;; s-u (define-key key-minor-mode-map (kbd "s-u ") 'roam)
 
-  (("s-u f" . org-roam-node-find)
+  (
+   ("s-u f" . org-roam-node-find)
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
    ("s-u c" . org-roam-capture)
