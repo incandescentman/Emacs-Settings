@@ -2377,6 +2377,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (shell-command-to-string cmd))
  (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (kill-new org-content)
  (yank))
 
@@ -2387,10 +2388,10 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (shell-command-to-string cmd))
  (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (setq org-content (replace-regexp-in-string "^\\(.*\\?\\)$" "** \\1" org-content))
  (kill-new org-content)
  (yank))
-
 
 
 
