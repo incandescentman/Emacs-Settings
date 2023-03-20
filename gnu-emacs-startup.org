@@ -563,7 +563,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
 
-(define-key key-minor-mode-map (kbd "C-v") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "C-v") 'html2org-clipboard)
 
 
 (define-key key-minor-mode-map (kbd "s-r") 'counsel-recentf)
@@ -691,9 +691,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key sh-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-(define-key key-minor-mode-map (kbd "C-s-v") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
-(define-key key-minor-mode-map (kbd "M-v") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "M-v") 'html2org-clipboard)
 
 
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
@@ -851,7 +851,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; For extracting content from my browser
 
 (define-key key-minor-mode-map (kbd "s-W") 'org-mac-chrome-insert-frontmost-url)
-;; (define-key key-minor-mode-map (kbd "s-V") 'kdm/html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
+;; (define-key key-minor-mode-map (kbd "s-V") 'html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
 
 ;; indirect buffer
@@ -903,7 +903,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j k a") 'load-koma-letter)
 (define-key key-minor-mode-map (kbd "s-j k o") 'load-koma-letter)
 
-(define-key key-minor-mode-map (kbd "M-s-v") 'kdm/html2org-clipboard)
+(define-key key-minor-mode-map (kbd "M-s-v") 'html2org-clipboard)
 
 
 ;; navigate between buffers, including uninteresting ones that are hidden by default
