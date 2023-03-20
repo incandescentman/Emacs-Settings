@@ -2370,15 +2370,15 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 
 
-
-(defun html2text-clipboard ()
- "Convert clipboard contents from HTML to plain text and paste."
+(defun kdm/html2org-clipboard ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
-;; (jd-org-today)
- (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t plain")
- (kill-new (shell-command-to-string cmd))
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+ (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (kill-new org-content)
  (yank))
-
 
 (defun kdm/html2org-clipboard-with-questions ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank) with questions emphasized."
@@ -2386,9 +2386,11 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
  (setq org-content (shell-command-to-string cmd))
  (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "^\\(.*\\?\\)$" "** \\1" org-content))
  (kill-new org-content)
  (yank))
+
 
 
 
