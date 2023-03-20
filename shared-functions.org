@@ -2359,18 +2359,21 @@ dired-omit-extensions
 Paste HTML using proper org-mode format
 Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
 #+BEGIN_SRC emacs-lisp
-(defun kdm/html2org-clipboard ()
+(defun html2org-clipboard ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
- (setq org-content (shell-command-to-string cmd))
+(setq org-content (shell-command-to-string cmd))
  (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (kill-new org-content)
  (yank))
 
 
 
-(defun kdm/html2org-clipboard ()
+(defun html2org-clipboard ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
@@ -2381,7 +2384,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (kill-new org-content)
  (yank))
 
-(defun kdm/html2org-clipboard-with-questions ()
+(defun html2org-clipboard-with-questions ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank) with questions emphasized."
  (interactive)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
