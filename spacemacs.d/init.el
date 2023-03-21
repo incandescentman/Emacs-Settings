@@ -1187,7 +1187,7 @@ before packages are loaded.")
   ;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
 
   ;; (server-reflash)
-  (triplicate-font)
+  (triplicate-code)
   ;; (embiggen-text)
   (scrollbar-init)
   )
@@ -2343,7 +2343,7 @@ This function is called at the very end of Spacemacs initialization."
  '(safe-local-variable-values
    '((eval define-key key-minor-mode-map
            (kbd "C-s-v")
-           'html2text-clipboard)
+           'html2org-clipboard)
      (eval define-key key-minor-mode-map
            (kbd "C-v")
            'html2text-clipboard)
