@@ -104,15 +104,12 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; emoji
      ;; floobits
-     ;; git
      ;; helm
      ;; html
-     ;; ibuffer
-     ;; javascript
      ;; jay
-     ;; lsp
      ;; markdown
      ;; mu4e
+     (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
      :variables
      org-enable-roam-protocol t
@@ -126,9 +123,8 @@ This function should only modify configuration layer settings."
      ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
-     ;; themes-megapack
+     treemacs
      ;; typography
-     ;; version-control
      ;; xkcd
 
      )
@@ -821,7 +817,8 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
 (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
-  )
+
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
