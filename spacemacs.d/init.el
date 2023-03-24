@@ -102,7 +102,6 @@ This function should only modify configuration layer settings."
      compleseus
      ;; lsp
      ;; markdown
-     ;; multiple-cursors
      ;; python
 
      ;; i commented out the part below so that spacemacs
@@ -290,7 +289,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-excluded-packages '(
                                     adaptive-wrap
                                     auto-encryption-mode
-                                    clean-aiindent-mode
+                                    clean-aindent-mode
                                     company
                                     counsel
                                     diff-auto-refine-mode
@@ -337,7 +336,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-but-keep-unused))
+   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
   "Initialization:
