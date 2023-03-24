@@ -27,7 +27,7 @@
                   hl-line
                   hs-mode
                   notmuch
-				              org-download
+				          org-download
                   org-projectile
                   org-superstar
                   popwin

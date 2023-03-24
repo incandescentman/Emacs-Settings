@@ -1,0 +1,235 @@
+(setq auto-window-vscroll nil)
+(setq initial-major-mode 'fundamental-mode)
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
+(define-key org-mode-map [C-S-right] 'org-shiftmetaright)
+;; (setq default-tab-width 4) ; for graphviz
+;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
+This function is called at the very end of Spacemacs startup, after layer
+(add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
+(setq package-archive-priorities nil)
+;; (load "/Users/jay/emacs/emacs-settings/zones.el")
+(if (is-in-terminal)
+(add-hook 'ido-setup-hook (lambda ()
+;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
+; (cyberpunk-jay)
+(setq guide-key/recursive-key-sequence-flag t)
+;;          pdf-view-mode
+;; 'org-babel-load-languages
+(define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
+;; (setq spaceline-org-clock-p t)
+(setq case-fold-search t)
+;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
+"Initialization function for user code.
+(define-key org-mode-map [C-S-left] 'org-shiftmetaleft)
+;; (use-package zones)
+;; (load-theme 'zenburn)
+(use-package reveal-in-finder)
+(define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
+(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+;; (server-reflash)
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+(setq global-auto-complete-mode -1)
+;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
+(:strike-through t)))))
+(scroll-bar-mode 1)
+;; dotspacemacs-byte-compile nil))
+(defun package--save-selected-packages (&rest opt) nil)
+;; (load "/Users/jay/emacs/emacs-settings/email.el")
+(append default-file-name-handler-alist
+(define-key org-mode-map (kbd "<M-left>") nil)
+(load "/Users/jay/tramp-settings.el")
+(use-package recentf)
+(define-key org-mode-map [C-down] 'org-metadown)
+(define-key org-mode-map [C-up] 'org-metaup)
+(jay-load-latex)
+;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
+;;          markdown-mode
+(("*" bold)
+(load "/Users/jay/gnulisp/book-functions.el")
+;;  (use-package ivy)
+;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+(load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
+(setq scroll-step 1)
+;; formerly bound to C-return
+(setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
+;;  ))
+(setq scroll-conservatively 10000)
+(use-package org
+;; (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
+()
+;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
+("=" flyspell-incorrect)
+;;  (emacs-lisp . t)
+;; Make gc pauses faster by decreasing the threshold.
+(define-key org-mode-map (kbd "<M-S-up>") nil)
+;; (embiggen-text)
+(setq hl-line-mode nil)
+(triplicate-font)
+(org-mode)
+(define-key ido-completion-map (kbd "<right>") 'ido-next-match)
+;; this seems to break in Emacs 28, so I commented it
+(setq evil-emacs-state-cursor '("red")) ; for box cursor
+(kbd "C-s-v")
+;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
+;;; want to follow the link. Just do it
+(define-key key-minor-mode-map (kbd "<M-down>") 'down-by-degrees)
+;; (setq max-lisp-eval-depth 10000)
+(add-hook 'after-init-hook 'benchmark-init/deactivate))
+(define-key org-mode-map (kbd "<M-S-right>") nil)
+(normal-top-level-add-subdirs-to-load-path))
+;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
+(define-key org-mode-map [C-left] 'org-metaleft)
+(cl-delete-duplicates file-name-handler-alist :test 'equal))
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
+;; (recenter-top-bottom)
+(menu-bar-mode -1)
+;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
+:ensure t
+"Configuration for user code:
+;;          doc-view-mode
+;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
+;;; When opening a file that is a symbolic link, don't ask whether I
+before packages are loaded.")
+;; pair of numbers, e.g. `(recents-by-project . (7 . 5))', where the first
+(eval triplicate-code)
+executes.
+(load "/Users/jay/emacs/emacs-settings/jay-osx.el")
+;; (defun ambrevar/reset-gc-cons-threshold ()
+(define-key org-mode-map (kbd "<M-S-left>") nil)
+(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
+'(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam-ui json-snatcher org-drill persist org-noter-pdftools org-pdftools pdf-tools tablist auto-complete emacsql-sqlite3 emacsql goto-chg popup log4e gcmh map transient skewer-mode focus org-super-agenda org-mind-map pos-tip ov flx bind-key f htmlize plain-org-wiki ts hyperbole simple-httpd org-sidebar org-ql dash-functional evil sudo-edit smartparens async graphviz-dot-mode iedit yasnippet ht lv visual-fill-column avy hydra helm-core company projectile dash xterm-color swiper ivy flycheck js2-mode expand-region anzu helm alert paradox w3m multiple-cursors org-plus-contrib zenburn-theme yahoo-weather xah-replace-pairs wttrin ws-butler writeroom-mode wrap-region winum which-key web-mode web-beautify wc-mode visible-mark uuidgen use-package unfill transcribe toc-org tldr tiny tabbar stripe-buffer spotify spinner solarized-theme smex shell-pop scratch-message scratch rspec-mode restart-emacs request regex-tool rainbow-mode rainbow-delimiters project-explorer polymode point-stack pcre2el paredit palimpsest ox-twbs ox-tufte ox-gfm ox-clip orgalist org-sticky-header org-projectile org-present org-pomodoro org-mime org-fstree org-bookmark-heading openwith open-junk-file olivetti nm neotree multicolumn multi-term mu4e-maildirs-extension mu4e-alert mpv move-text monokai-theme maxframe macrostep lorem-ipsum livid-mode linum-relative link-hint key-seq json-mode js2-refactor js-doc indent-guide imenu-list ido-hacks hungry-delete highlight-parentheses highlight-numbers helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-cmd-t helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gist fuzzy frame-cmds fountain-mode flyspell-lazy flycheck-pos-tip flx-ido fill-column-indicator fastdef fancy-narrow fancy-battery evil-visualstar evil-visual-mark-mode evil-tutor evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emms elisp-slime-nav dumb-jump discover-my-major dired-sort-menu dired-quick-sort dired-details+ dired+ diminish define-word cyberpunk-theme crux counsel company-statistics command-log-mode column-enforce-mode coffee-mode clean-aindent-mode cheatsheet change-inner caps-lock buffer-stack bongo blimp beacon auto-yasnippet auto-highlight-symbol auto-compile auto-capitalize aggressive-indent ace-window ace-link ace-jump-helm-line ac-ispell))
+(define-key org-mode-map (kbd "<M-up>") 'up-by-degrees)
+(define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
+("~" org-code verbatim)
+(setq global-flyspell-mode t)
+Put your configuration code here, except for variables that should be set
+:config
+;; (org-babel-do-load-languages
+;;  (python . t)
+(load "/Users/jay/emacs/emacs-settings/skeletons.el")
+;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
+(setq file-name-handler-alist nil)
+'(progn
+(iterm-mode)
+(scrollbar-init)
+(define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
+(mapcar #'disable-theme custom-enabled-themes))
+(load "/Users/jay/emacs/emacs-settings/org-panes.el")
+(flyspell-mode)
+(define-key key-minor-mode-map (kbd "<M-S-up>") 'org-shiftup)
+;; disable smooth scrolling
+(setq org-adapt-indentation nil)
+;;; Temporarily disable the file name handler.
+(counsel-mode 1)
+(setq frame-inhibit-implied-resize t)
+(define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
+(setq find-file-visit-truename nil)
+;; (horizontal-cursor)
+(toggle-fullscreen)
+(display-time)
+(define-key org-mode-map (kbd "<M-right>") nil)
+(setq org-emphasis-alist
+("+"
+:load-path "/Users/jay/emacs/org-9.6.1/"
+;; '( (perl . t)
+; Source: https://ambrevar.xyz/emacs2/
+;; I've been wanting to do this for so long. :-)
+(load "/Users/jay/emacs/emacs-settings/aide.el")
+(define-key key-minor-mode-map (kbd "<M-S-down>") 'org-shiftdown)
+;;          org-mode
+file-name-handler-alist))
+;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
+(org-reload))
+It is called immediately after `dotspacemacs/init', before layer configuration
+;; (setq find-file-visit-truename t)
+(setq gc-cons-threshold (* 50 1000 1000))
+'insert-space))))
+;; if Emacs is running in terminal
+(kbd "C-v")
+;; (use-package mu4e-send-delay)
+(setq org-twbs-preamble nil)
+(incarnadine-cursor)
+("_" underline)
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+;; (spaceline-spacemacs-theme 'narrow)
+;;  (imenu-list-minor-mode)
+;; (load "/Users/jay/gnulisp/org-image.el")
+;; whole words at a time
+;; Removing the above causes the error: Symbol's function definition is void: org-assert-version
+;; (use-package tiny)
+(org-babel-load-file "~/emacs/emacs-settings/spacemacs-config.org")
+(define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
+(setq gc-cons-threshold (* 2 1000 1000))
+;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
+(setq org-hide-leading-stars t)
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
+(use-package auto-capitalize)
+(quote
+;; (setq gc-cons-threshold (* 64 1024 1024))
+(require 'org-macs)
+(setq company-global-modes '(not org-mode))
+(load "/Users/jay/emacs/prelude/core/prelude-core.el")
+(defun ambrevar/reset-file-name-handler-alist ()
+(setq global-hl-line-mode nil)
+(setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+;; '(bold ((t (:inherit font-lock-warning-face :foreground "Red" :weight bold :height 1.1 :family "Sans Serif"))))
+(electric-pair-mode 1)
+(load "/Users/jay/emacs/emacs-settings/wc-goal-mode.el")
+dotspacemacs-install-packages 'used-only))
+(define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
+(height . 42) ; lines
+(define-key key-minor-mode-map (kbd "<M-up>") 'up-by-degrees)
+;; speed optimizations from
+(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
+(setq vc-follow-symlinks t)
+'html2org-clipboard)
+(setq org-twbs-postamble-format nil)
+(setq file-name-handler-alist
+(org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
+(use-package org-contrib)
+(width . 160) ; character
+before packages are loaded. If you are unsure, you should try in setting them in
+;; (use-package org-mime)
+(use-package mu4e)
+`dotspacemacs/user-config' first."
+;;  (ruby . t)
+(setq org-bullets-bullet-list '("- "))
+;; this works correctly!!
+;; The default is 800 kilobytes. Measured in bytes.
+;; (add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
+(load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
+'html2text-clipboard)
+;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
+(box-cursor)
+(setq org-twbs-link-home "http://jaydixit.com")
+;;  (ditaa . t)
+(eval-after-load "org"
+(setq default-file-name-handler-alist file-name-handler-alist)
+;; (load "/Users/jay/Dropbox/github/emacs-grammarly/emacs-grammarly.el")
+(define-key org-mode-map (kbd "<M-down>") 'down-by-degrees)
+This function is mostly useful for variables that need to be set
+(defadvice load-theme (before theme-dont-propagate activate)
+;; use OSX standard keybindings for navigating word-by-word and selecting
+(define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
+(setq org-twbs-postamble nil)
+(setq message-log-max t)
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+(load "/Users/jay/emacs/org-mime.el")
+;;  (shell . t)
+(define-key org-mode-map (kbd "<M-S-down>") nil)
+;; (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
+("/" italic)
+(load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
+;; automatically display any prefix
+(setq org-latex-default-class "elegant")
+(setq default-frame-alist
+(define-key org-mode-map [C-right] 'org-metaright)
+;;          text-mode
+;; To disable collection of benchmark data after init is done.
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+(setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
+;; (use-package re-builder)
+(toggle-menu-bar-mode-from-frame)
+) t)
+'((eval define-key key-minor-mode-map
+(use-package benchmark-init
