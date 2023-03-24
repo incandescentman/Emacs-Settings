@@ -16,7 +16,7 @@
   (require 'org-roam-protocol)
   (require 'org-roam-export)
   (setq org-roam-capture-templates
-	'(("i" "individual" plain "%?"
+	'(("c" "contact" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			      "#+title: ${title}\n#+filetags: :person:\n\n\n
 * Description
@@ -39,9 +39,9 @@
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			      "#+title: ${title}\n#+filetags: :topic:\n")
 	   :unnarrowed t)
-	  ("b" "blog" plain "%?"
+	  ("i" "idea" plain "%?"
 	   :target (file+head "blog/${slug}.org"
-			      "#+title: ${title}\n#+filetags: :blog:\n")
+			      "#+title: ${title}\n#+filetags: :idea:\n")
 	   :unnarrowed t)
 	  ("a" "association" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -51,7 +51,7 @@
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			      "#+title: ${title}\n#+filetags: :research:\n")
 	   :unnarrowed t)
-	  ("c" "class" plain "%?"
+	  ("k" "Kings class" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			      "#+title: ${title}\n#+filetags: :class:\n
 * Week 1
