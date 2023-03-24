@@ -102,7 +102,7 @@ This function should only modify configuration layer settings."
      compleseus
      ;; lsp
      ;; markdown
-     multiple-cursors
+     ;; multiple-cursors
      ;; python
 
      ;; i commented out the part below so that spacemacs
@@ -315,7 +315,7 @@ This function should only modify configuration layer settings."
                                     hs-mode
                                     ivy
                                     notmuch
-				                            org-download
+				    org-download
                                     org-projectile
                                     org-superstar
                                     popwin
