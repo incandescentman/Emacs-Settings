@@ -16,66 +16,45 @@
   (require 'org-roam-protocol)
   (require 'org-roam-export)
   (setq org-roam-capture-templates
-	'(("c" "contact" plain "%?"
+	'(
+
+    ("c" "contact" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :person:\n\n\n
-* Description
-  - Position:
-  - Associations:
-  - Topics:
-  - Website(s):
-
-* Meetings
-
-* Notes
-
-* Projects
-
-* Publications
-
-")
+			                  "#+title: ${title}\n#+filetags: :person:\n\n\n")
 	   :unnarrowed t)
 	  ("t" "topic" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :topic:\n")
+			                  "#+title: ${title}\n#+filetags: :topic:\n")
 	   :unnarrowed t)
 	  ("d" "definition" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :topic:\n")
+			                  "#+title: ${title}\n#+filetags: :topic:\n")
+     :unnarrowed t)
 
 	  ("s" "sentence" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :topic:\n")
-
-
+			                  "#+title: ${title}\n#+filetags: :topic:\n")
 	   :unnarrowed t)
 	  ("i" "idea" plain "%?"
 	   :target (file+head "blog/${slug}.org"
-			      "#+title: ${title}\n#+filetags: :idea:\n")
+			                  "#+title: ${title}\n#+filetags: :idea:\n")
 	   :unnarrowed t)
 	  ("a" "association" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :association:\n")
+			                  "#+title: ${title}\n#+filetags: :association:\n")
 	   :unnarrowed t)
 	  ("r" "research" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :research:\n")
+			                  "#+title: ${title}\n#+filetags: :research:\n")
 	   :unnarrowed t)
 	  ("k" "Kings class" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :class:\n
-* Week 1
-** Readings
-
-** Lecture
-
-** Assignments
-
+			                  "#+title: ${title}\n#+filetags: :class:\n
 ")
 	   :unnarrowed t)
 	  ("d" "default" plain "%?"
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			      "#+title: ${title}\n#+filetags: :note:\n")
+			                  "#+title: ${title}\n#+filetags: :note:\n")
 	   :unnarrowed t)))
   :bind
 
@@ -99,4 +78,3 @@
    ))
 
 
-)
