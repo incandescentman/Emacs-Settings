@@ -93,54 +93,41 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
-     ;; better-defaults
-     emacs-lisp
-     ;; git
-     org
-     ;; helm
-     compleseus
-     ;; lsp
-     ;; markdown
-     ;; python
 
-     ;; i commented out the part below so that spacemacs
-     ;; wouldn't download its outdated Elpa version of org
-     ;;  (org
-     ;;    :ensure org-plus-contrib
-     ;;    :mode (("\\.org$" . org-mode))
-     ;; :variables
-     ;; org-enable-bootstrap-support t
-     ;; org-enable-github-support t
-     ;; ;; org-enable-reveal-js-support t
-     ;; :location built-in
-     ;; )
-     osx
-     ;; xkcd
      ;; ag-general
      ;; ag-lang-tools
-     ;; pdf
-     smex
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom)
-     ;; spell-checking
-     syntax-checking ; this is the layer with flycheck
-     ;; version-control
+     auto-completion
+     ;; better-defaults
+     ;; chrome
+     compleseus
+     ;; deft
+     emacs-lisp
+     ;; emoji
+     ;; floobits
+     ;; git
+     ;; helm
      ;; html
+     ;; ibuffer
+     ;; javascript
+     ;; jay
+     ;; lsp
+     ;; markdown
      ;; mu4e
+     org
+     osx
+     ;; pdf
+     ;; python
      ;; shell
      ;; shell-scripts
-     ;; jay
+     smex
      ;; speed-reading
-     ;; emoji
-     ;; typography
-     ;; javascript
-     ;; floobits
-     ;; deft
-     ;; chrome
+     ;; spell-checking
+     syntax-checking ; this is the layer with flycheck
      ;; themes-megapack
-     ;; ibuffer
+     ;; typography
+     ;; version-control
+     ;; xkcd
+
      )
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
