@@ -113,7 +113,10 @@ This function should only modify configuration layer settings."
      ;; lsp
      ;; markdown
      ;; mu4e
-     org
+     (org
+     :variables
+     org-enable-roam-protocol t
+       org-enable-roam-support t)
      osx
      ;; pdf
      ;; python
@@ -121,7 +124,7 @@ This function should only modify configuration layer settings."
      ;; shell-scripts
      smex
      ;; speed-reading
-     ;; spell-checking
+     spell-checking
      syntax-checking ; this is the layer with flycheck
      ;; themes-megapack
      ;; typography
