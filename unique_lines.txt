@@ -1,0 +1,336 @@
+winner-mode-enable
+
+before packages are loaded. If you are unsure, you should try in setting them in
+
+'(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+'(org-sidebar-jump-indirect t)
+
+
+
+
+
+
+evil-local
+
+
+'(plain-org-wiki-directory "~/book/sending-the-proposal/")
+dotspacemacs-install-packages 'used-only))
+dotspacemacs-read-process-output-max (* 1024 1024)
+
+(triplicate-font)
+'(package-selected-packages
+
+
+
+'(safe-local-variable-values
+dotspacemacs-elpa-https t
+
+
+
+dotspacemacs-startup-banner 'official
+monokai
+
+
+
+
+
+
+
+
+adaptive-wrap
+
+'(evil-want-Y-yank-to-eol nil)
+
+
+
+dotspacemacs-new-empty-buffer-major-mode 'org-mode
+'((eval define-key key-minor-mode-map
+
+
+
+
+
+
+
+
+
+
+
+;; Size (in MB) above which spacemacs will prompt to open the large file
+eldoc
+'(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-printscreen>" "C-M-m")
+;; %f - visited file name
+dotspacemacs-use-spacelpa nil
+;; `hybrid' is like `vim' except that `insert state' is replaced by the
+;; If non-nil show the version string in the Spacemacs buffer. It will
+dotspacemacs-activate-smartparens-mode t
+;; If non-nil unicode symbols are displayed in the mode line.
+;; file stored in the cache directory and `nil' to disable auto-saving.
+;; Name of executable file pointing to emacs 27+. This executable must be
+;; use different package directories for different Emacs versions, set this
+;; `hybrid state' with `emacs' key bindings. The value can also be a list
+(setq org-bullets-bullet-list '("- "))
+dotspacemacs-elpa-subdirectory nil
+dotspacemacs-smart-closing-parenthesis 't
+;; The key used for Emacs commands `M-x' (after pressing on the leader key).
+;; transparency level of a frame background when it's active or selected. Transparency
+;; possible. Set it to nil if you have no way to use HTTPS in your
+;; List of items to show in startup buffer or an association list of
+;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
+;; Default major mode for a new empty buffer. Possible values are mode
+dotspacemacs-elpa-timeout 5
+explicitly specified that a variable should be set before a package is loaded,
+org-download
+(kbd "C-v")
+"Initialization function for user code.
+;; (default "%I@%S")
+zenburn
+It should only modify the values of Spacemacs settings."
+spaceline
+dotspacemacs-undecorated-at-startup nil
+
+;; If non-nil then spacemacs will check for updates at startup
+;; by your Emacs build.
+
+;; Name of the default layout (default "Default")
+dotspacemacs-startup-buffer-show-version t
+;; A value from the range (0..100), in increasing opacity, which describes the
+;; Maximum number of rollback slots to keep in the cache. (default 5)
+;; when invoking Emacs 27.1 executable on the command line, for instance:
+vterm
+popwin
+;; List sizes may be nil, in which case
+dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+spacemacs-light
+;; paste something, pressing `C-j' and `C-k' several times cycles through the
+;; C-M-m also should work in terminal mode, but not in GUI mode.
+;; Scale factor controls the scaling (size) of the startup banner. Default
+;; Default major mode of the scratch buffer (default `text-mode')
+;; variable with `dotspacemacs-maximized-at-startup' to obtain fullscreen
+dotspacemacs-show-trailing-whitespace nil
+;; (default `text-mode')
+;; If nil, uses whatever the Emacs default is, otherwise a directory path
+;; True if the home buffer should respond to resize events. (default t)
+hl-line
+global-undo-tree-mode
+"Initialization:
+;; The leader key accessible in `emacs state' and `insert state'
+dotspacemacs-enable-emacs-pdumper nil
+;; `switch-to-buffer' displays the buffer in the current window even if
+;; (default "SPC")
+;; custom-set-faces was added by Custom.
+'html2org-clipboard)
+;; and TAB or `C-m' and `RET'.
+;; (default 5)
+dotspacemacs-frame-title-format "%I@%S"
+;; `trailing' to delete only the whitespace at end of lines, `changed'to
+(kbd "SPC")
+;; To load it when starting Emacs add the parameter `--dump-file'
+dotspacemacs-line-numbers nil
+diff-hl
+;; If non-nil show the titles of transient states. (default t)
+;; by setting this variable to a number. (default t)
+;; (default 'vim)
+'insert-colon)
+;; pair of numbers, e.g. `(recents-by-project . (7 . 5))', where the first
+;; List of search tool executable names. Spacemacs uses the first installed
+;; dotspacemacs-byte-compile nil))
+dotspacemacs-fullscreen-use-non-native nil
+;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
+dotspacemacs-auto-save-file-location 'cache
+'(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+;; `smartparens-strict-mode' will be enabled in programming modes.
+;; (default is `used-only')
+;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+;; may increase the boot time on some systems and emacs builds, set it to
+;; If non-nil, start an Emacs server if one is not already running.
+'(org-noter-insert-note-no-questions t)
+;; If non-nil show the color guide hint for transient state keys. (default t)
+exec-path-from-shell
+;; Set `read-process-output-max' when startup finishes.
+;; a non-negative integer (pixel size), or a floating-point (point size).
+dotspacemacs-ex-command-key ":"
+'(flycheck-disabled-checkers '(proselint))
+;; like \"~/.emacs.d/server\". It has no effect if
+dotspacemacs-folding-method 'evil
+;; If the value is nil then no banner is displayed. (default 'official)
+dotspacemacs-smooth-scrolling t
+(counsel-mode 1)
+;; right; if there is insufficient space it displays it at the bottom.
+;; `--insecure' which forces the value of this variable to nil.
+(org-export-allow-bind-keywords . t)
+evil-search-highlight-persist
+;; Name of the Spacemacs dump file. This is the file will be created by the
+;; auto-save the file in-place, `cache' to auto-save the file to another
+spacemacs-dark
+;; Thus M-RET should work as leader key in both GUI and terminal modes.
+This function is mostly useful for variables that need to be set
+;;          pdf-view-mode
+;; environment, otherwise it is strongly recommended to let it set to t.
+dotspacemacs-leader-key "SPC"
+;; %S - `system-name'
+dotspacemacs-startup-buffer-multi-digit-delay 0.4
+(custom-set-variables
+dotspacemacs-icon-title-format nil
+(load "/Users/jay/emacs/emacs-settings/skeletons.el")
+dotspacemacs-check-for-update nil
+;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+;; Transparency can be toggled through `toggle-transparency'. (default 90)
+;; the official spacemacs logo. An integer value is the index of text
+;; (default '(spacemacs :separator wave :separator-scale 1.5))
+;; scaling factor for the default logo size.
+;; Do not write anything past this comment. This is where Emacs will
+;; section of the documentation for details on available variables.
+;; If non-nil then verify the signature for downloaded Spacelpa archives.
+;; If you use Emacs as a daemon and wants unicode characters only in GUI set
+;; EXPERIMENTAL.org at to root of the git repository.
+org-superstar
+(custom-set-faces
+dotspacemacs-emacs-command-key "SPC"
+dotspacemacs-default-font '("Source Code Pro"
+;; Defines the behaviour of Spacemacs when installing packages.
+;; is not installed. (default nil)
+This function is called at the very end of Spacemacs initialization after
+;; value is `auto' for scaling the logo automatically to fit all buffer
+;; the commands bound to the current keystroke sequence. (default 0.4)
+'(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dim sgray" :slant normal))))
+dotspacemacs-large-file-size 1
+;; literally to avoid performance issues. Opening a file literally means that
+layers configuration.
+dotspacemacs-scratch-mode 'org-mode
+;; experimental state please use only for testing purposes.
+`dotspacemacs/user-config' first."
+'(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+
+;; If non-nil, `kill-buffer' on *scratch* buffer
+dotspacemacs-background-transparency 90
+dotspacemacs-which-key-delay 0.4
+;;  (emacs-lisp . t)
+dotspacemacs-which-key-position 'bottom
+;; the key pairs `C-i', `TAB' and `C-m', `RET'.
+;; The leader key (default "SPC")
+;;          org-mode
+dotspacemacs-smartparens-strict-mode nil
+;; in emacs 27.
+winner
+:weight normal
+;; delete only whitespace for changed lines or `nil' to disable cleanup.
+zenburn)
+(eval define-key key-minor-mode-map
+;; names such as `text-mode'; and `nil' to use Fundamental mode.
+;; spaceline theme. Value can be a symbol or list with additional properties.
+;; %U - contents of $USER
+dotspacemacs-server-socket-dir nil
+;; the transparency level of a frame when it's active or selected.
+;; This defines how much data is read from a foreign process.
+global-git-commit
+'(org-code ((t (:inherit shadow :underline nil))))
+;; Format specification for setting the frame title.
+volatile-highlights
+leuven
+;; (default "emacs")
+dotspacemacs-fullscreen-at-startup nil
+;; %F - frame name
+;; Setting this >= 1 MB should increase performance for lsp servers
+'(org-export-preserve-breaks nil)
+;; will bury it instead of killing.
+dotspacemacs-show-startup-list-numbers t
+dotspacemacs-startup-lists '((recents . 5)
+;; refer to the DOCUMENTATION.org for more info on how to create your own
+;; (default nil - same as frame-title-format)
+;; (default nil) (Emacs 24.4+ only)
+;; Which-key delay in seconds. The which-key buffer is the popup listing
+;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
+;; Control line numbers activation.
+(kbd "C-s-v")
+;; This has no effect in terminal or if "all-the-icons" package or the font
+dotspacemacs-default-layout-name "Default"
+dotspacemacs-maximized-at-startup nil
+whiteboard
+dotspacemacs-colorize-cursor-according-to-state t
+evil-surround
+dotspacemacs-enable-server nil
+dotspacemacs-switch-to-buffer-prefers-purpose nil
+eyebrowse
+dotspacemacs-distinguish-gui-tab nil
+electric-indent-mode
+dotspacemacs-show-transient-state-title t
+
+Diff-auto-refine-mode
+org-projectile
+'html2text-clipboard)
+dotspacemacs-whitespace-cleanup nil
+treemacs-icons-dired
+dotspacemacs-active-transparency 90
+dotspacemacs-mode-line-unicode-symbols t
+dotspacemacs-auto-resume-layouts nil
+dotspacemacs-startup-buffer-responsive t
+dotspacemacs-show-transient-state-color-guide t
+dotspacemacs-scroll-bar-while-scrolling t
+dotspacemacs-themes '(
+dotspacemacs-max-rollback-slots 5
+xterm-mouse-mode
+auto-encryption-mode
+dotspacemacs-display-default-layout nil
+dotspacemacs-excluded-packages '(
+dotspacemacs-loading-progress-bar t
+dotspacemacs-frozen-packages '()
+xterm-mouse
+highlight-indentation
+(projects . 7))
+dotspacemacs-gc-cons '(100000000 0.1)
+It is called immediately after `dotspacemacs/init', before layer configuration
+dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+(eval define-key org-mode-map
+dotspacemacs-startup-banner-scale 'auto
+
+before layer configuration.
+dotspacemacs-inactive-transparency 90
+dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
+"Configuration function for user code.
+company
+dotspacemacs-highlight-delimiters 'all
+(defun dotspacemacs/init ()
+
+
+dotspacemacs-emacs-pdumper-executable-file "emacs"
+
+
+
+evil-mode
+:size 10.0
+
+hs-mode
+clean-aiindent-mode
+
+
+evil-org
+
+
+
+
+'(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+
+
+
+
+
+
+
+
+
+evil-escape
+dotspacemacs-enable-paste-transient-state nil
+This is the place where most of your configurations should be done. Unless it is
+
+(eval triplicate-code)
+(org-html-head-include-scripts)
+
+
+
+
+
+
+
+

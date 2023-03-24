@@ -566,7 +566,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-v") 'html2org-clipboard)
 
 
-(define-key key-minor-mode-map (kbd "s-r") 'counsel-recentf)
+(define-key key-minor-mode-map (kbd "s-r") 'recentf-open-files-compl)
 
 (define-key key-minor-mode-map (kbd "M-.") 'insert-period)
 (define-key key-minor-mode-map (kbd "M-,") 'insert-comma)

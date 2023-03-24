@@ -180,7 +180,7 @@ This function should only modify configuration layer settings."
                                       chatgpt
                                       cheatsheet
                                       command-log-mode
-                                      ;; counsel
+                                      counsel
                                       ;; spotify
                                       crux
                                       cyberpunk-theme
@@ -315,7 +315,7 @@ This function should only modify configuration layer settings."
                                     hs-mode
                                     ivy
                                     notmuch
-				    org-download
+				                            org-download
                                     org-projectile
                                     org-superstar
                                     popwin
