@@ -166,7 +166,7 @@
 
 \\usepackage{setspace}
 \\onehalfspacing
-\\setstretch{1.25}
+\\setstretch{1.2}
 
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
