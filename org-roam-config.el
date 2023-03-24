@@ -39,6 +39,16 @@
 	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			      "#+title: ${title}\n#+filetags: :topic:\n")
 	   :unnarrowed t)
+	  ("d" "definition" plain "%?"
+	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			      "#+title: ${title}\n#+filetags: :topic:\n")
+
+	  ("s" "sentence" plain "%?"
+	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			      "#+title: ${title}\n#+filetags: :topic:\n")
+
+
+	   :unnarrowed t)
 	  ("i" "idea" plain "%?"
 	   :target (file+head "blog/${slug}.org"
 			      "#+title: ${title}\n#+filetags: :idea:\n")
@@ -89,3 +99,4 @@
    ))
 
 
+)

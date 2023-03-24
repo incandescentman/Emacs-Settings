@@ -7,9 +7,21 @@
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
+% Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
+
 
 \\usepackage{wrapfig}
+
+
+% To have more control over figure placement in your document, use the float package and its [H] option to place figures exactly where you want them in the text:
 \\usepackage{float}
+
+
+% \\usepackage{glossaries}
+% \\makeglossaries
+
+\\usepackage{todonotes}
+
 \\usepackage{changepage}
 \\usepackage{algorithm}
 \\usepackage{pdfpages}
@@ -68,7 +80,7 @@
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{letterspace}
-\\usepackage{microtype}
+\\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
 
 
 \\hyphenpenalty=1000
@@ -89,7 +101,9 @@
 
 \\usepackage[font={small,tt}]{caption}
 
+\\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
 
+% Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
 \\usepackage{fancyhdr}
 \\fancyhf{} % sets both header and footer to nothing
@@ -119,14 +133,15 @@
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\scshape{\\leftmark}}}
+\\rhead{{\\scshape{\\leftmark}}} % Add section heading
 % \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
-\\cfoot{\\thepage}
+\\cfoot{\\thepage} % Add page numbers
 \\rfoot{}
 
 
-
+% Ensure consistent spacing after periods in your document by using the xspace package:
+\\usepackage{xspace}
 
 \\newenvironment{fauxsubtitle}
 {
@@ -151,7 +166,7 @@
 
 \\usepackage{setspace}
 \\onehalfspacing
-\\setstretch{1.2}
+\\setstretch{1.25}
 
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
@@ -220,7 +235,6 @@
 
 \\definecolor{azure}{HTML}{f2feff}
 
-\\usepackage{lipsum}
 \\usepackage{tikz}
 \\usetikzlibrary{backgrounds}
 \\makeatletter
