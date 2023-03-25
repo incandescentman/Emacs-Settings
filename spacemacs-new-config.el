@@ -45,8 +45,8 @@
   )
 
 
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
+;; (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+;;   (normal-top-level-add-subdirs-to-load-path))
 
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
@@ -93,7 +93,6 @@
 ;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
 (load "/Users/jay/gnulisp/book-functions.el")
-;; (load "/Users/jay/gnulisp/reveal-in-finder.el")
 (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
 (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
@@ -103,13 +102,12 @@
 ;; (load "/Users/jay/gnulisp/org-image.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
-
 (jay-load-latex)
 
 
-(load "/Users/jay/emacs/org-mime.el")
+;; (load "/Users/jay/emacs/org-mime.el")
 
-(load "/Users/jay/tramp-settings.el")
+;; (load "/Users/jay/tramp-settings.el")
 
 ;; automatically display any prefix
 (setq guide-key/recursive-key-sequence-flag t)
@@ -133,7 +131,6 @@
      (define-key org-mode-map [C-left] 'org-metaleft)
      (define-key org-mode-map [C-up] 'org-metaup)
      (define-key org-mode-map [C-down] 'org-metadown)
-
      (define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
      (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
      (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
@@ -155,14 +152,10 @@
 
      ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
      ;; formerly bound to C-return
-     ;;    (imenu-list-minor-mode)
      ))
-
-;; (spaceline-spacemacs-theme 'narrow)
 
 
 ;;  (setq helm-echo-input-in-header-line nil)
-
 ;; (add-hook 'helm-after-initialize-hook
 ;;           #'(lambda () (setq helm-echo-input-in-header-line nil)))
 
@@ -181,17 +174,16 @@
 
 (toggle-fullscreen)
 (menu-bar-mode -1)
-
 (toggle-menu-bar-mode-from-frame)
 
 (setq org-hide-leading-stars t)
 
 (electric-pair-mode 1)
 
-(add-hook 'ido-setup-hook (lambda ()
-			                      (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
-			                      (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
-			                      ) t)
+;; (add-hook 'ido-setup-hook (lambda ()
+;; 			                      (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
+;; 			                      (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
+;; 			                      ) t)
 
 (defadvice load-theme (before theme-dont-propagate activate)
   (mapcar #'disable-theme custom-enabled-themes))
