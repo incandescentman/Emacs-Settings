@@ -55,8 +55,8 @@
   :config
   )
 
-(use-package org-contrib
-  :defer)
+;; (use-package org-contrib
+;;   :defer)
 
 
 (setq vc-follow-symlinks t)
@@ -64,14 +64,14 @@
 (use-package flyspell
   :ensure t
   :hook (prog-mode . flyspell-prog-mode))
+;; (flyspell-mode)
+
 
 (setq default-frame-alist
       '(
         (width . 160) ; character
         (height . 42) ; lines
         ))
-
-(flyspell-mode)
 
 (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
