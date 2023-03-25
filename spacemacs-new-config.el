@@ -5,13 +5,19 @@
 ;; --------------------
 ;; Performance optimizations
 ;; --------------------
-(setq gc-cons-threshold (* 50 1000 1000))
-(setq message-log-max t)
 
+(add-to-list 'load-path "/Users/jay/emacs/emacs-settings/gcmh.el")
+(gcmh-mode 1)
+;; (setq gc-cons-threshold (* 50 1000 1000))
+(setq message-log-max t)
 (use-package benchmark-init
   :ensure t
   :hook (after-init . benchmark-init/deactivate))
 
+
+;; --------------------
+;; Don't give org-assert-version error
+;; --------------------
 (require 'org-macs)
 
 ;;; Temporarily disable the file name handler.
@@ -33,11 +39,11 @@
 ;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
 
 (setq frame-inhibit-implied-resize t)
-(setq initial-major-mode 'fundamental-mode)
+;; (setq initial-major-mode 'fundamental-mode)
 
-(use-package auto-capitalize)
-(use-package recentf)
-(setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
+(use-package auto-capitalize
+  )
+
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
@@ -59,7 +65,10 @@
 
 
 (setq vc-follow-symlinks t)
-;; (global-flyspell-mode 1)
+
+(use-package flyspell
+  :ensure t
+  :hook (prog-mode . flyspell-prog-mode))
 
 (setq default-frame-alist
       '(
@@ -153,7 +162,6 @@
        ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
        ;; formerly bound to C-return
        ;;    (imenu-list-minor-mode)
-       (menu-bar-mode -1)
        ))
 
   ;; (spaceline-spacemacs-theme 'narrow)
@@ -215,8 +223,6 @@
 
   (setq org-adapt-indentation nil)
 
-
-  (menu-bar-mode -1)
 
   ;; If non-nil activate `clean-aindent-mode' which tries to correct
   ;; virtual indentation of simple modes. This can interfere with mode specific
