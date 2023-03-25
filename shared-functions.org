@@ -1200,71 +1200,45 @@ This is working correctly:
       (quote
        (
 
-	("g" "gratitude" entry (file "gratitude.txt")
-	 "\n\n\n\n* %U\n\n1. %?\n\n" :prepend t :kill-buffer t)
+        ("L" "Later" checkitem (file+headline "fearless.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
 
-	("L" "Later" checkitem (file+headline "fearless.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
+        ("n" "note" entry (file org-default-notes-file)
+	       "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-	("l" "learnings" entry (file "learnings.org" :prepend t :kill-buffer t)
-	 "\n\n* %i%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
+        ("b" "book" entry (file "~/Dropbox/writing/book/book-capture.txt")
+	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
-	("n" "note" entry (file org-default-notes-file)
-	 "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
+	      ("v" "visualness and visual actions" entry (file "visual-actions.txt")
+	       "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
 
-("b" "book" entry (file "~/Dropbox/writing/book/book-capture.txt")
-	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
+        ("i" "article ideas" entry (file "article-ideas.txt")
+	       "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
 
+        ("e" "expression" entry (file "expression.txt")
+	       "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
-	("v" "visualness and visual actions" entry (file "visual-actions.txt")
-	 "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
+        ("W" "Wise Mind" entry (file "wisemind.txt")
+	       "\n\n* wm%?\n" :prepend t :kill-buffer t)
 
-("i" "article ideas" entry (file "article-ideas.txt")
-	 "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
+	      ("h" "historical interest" entry (file "historical-lifestream.txt")
+	       "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
-("a" "alexander technique" entry (file "alexander-technique-belinda.txt")
-"\n\n* %U\n %i\n %?\nEntered on %U %i\n" :prepend t :kill-buffer t)
+	      ("P" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
-("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
+	      ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
+	       "\n\n\n\n* %U\n\n%?" :prepend t :kill-buffer t)
 
-("W" "Wise Mind" entry (file "wisemind.txt")
-	 "\n\n* wm%?\n" :prepend t :kill-buffer t)
+	      ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	       "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
-	("e" "expression" entry (file "expression.txt")
-	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
+        ("M" "Memorize" entry
+         (file+headline (concat org-directory "org-drill-jays-decks.org")
+                        "Vocabulary")
+         "* Word :drill:\n%^ \n** Answer \n%^")
 
-("k" "nika" entry (file "nika-capture.txt")
-	 "\n\n* %U\n %i\n %?\n" :prepend t :kill-buffer t)
-
-	("h" "historical interest" entry (file "historical-lifestream.txt")
-	 "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
-
-	("P" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
-
-	("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-	 "\n\n\n\n* %U\n\n%?" :prepend t :kill-buffer t)
-
-	("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-	 "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
-
-	("V" "Vegas journal" entry (file "vegas-journal-capture.txt")
-	 "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
-
-
-	("t" "Taper" entry (file "taper.txt")
-	 "\n\n\n\n* %U\n\n%?\n\nEntered on %U %i\n\n" :prepend t :kill-buffer t)
-
-("M" "Memorize" entry
-               (file+headline (concat org-directory "org-drill-jays-decks.org")
-                              "Vocabulary")
-               "* Word :drill:\n%^ \n** Answer \n%^")
-
-;; source: http://stackoverflow.com/questions/14666625/combine-org-mode-capture-and-drill-modules-to-learn-vocabulary
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2010-09/msg00924.html
-
-	("f" "flowy" entry (file "flowy.org")
-	 "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+	      ("f" "flowy" entry (file "flowy.org")
+	       "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 #+END_SRC
 
 ** another org-setting, not sure what this one does exactly
@@ -1382,6 +1356,8 @@ it as a default link description. Here is a way to accomplish this:
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 #+END_SRC
+
+;;youarehere
 
 *** org insert subtask
 
