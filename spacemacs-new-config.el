@@ -1,17 +1,18 @@
 ;; You are a supersmart emacs expert programmer, an expert in Spacemacs and emacs-lisp configuration. I am a user, using Mac OSX Sierra version 13.2.1, Spacemacs version 0.999.0, Emacs version 28.2, and org-mode version 9.6.1. Review my Spacemacs config file below and give me suggestions for improvement.
 
 ;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
-;; The default is 800 kilobytes.  Measured in bytes.
-(setq-default gc-cons-threshold (* 50 1000 1000))
 
-
+;; --------------------
+;; Performance optimizations
+;; --------------------
+(setq gc-cons-threshold (* 50 1000 1000))
 (setq message-log-max t)
-
-(require 'org-macs)
 
 (use-package benchmark-init
   :ensure t
   :hook (after-init . benchmark-init/deactivate))
+
+(require 'org-macs)
 
 ;;; Temporarily disable the file name handler.
 (setq default-file-name-handler-alist file-name-handler-alist)
