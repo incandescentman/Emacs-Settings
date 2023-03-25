@@ -87,7 +87,8 @@ I should probably eventually break these out of custom-set-variables and organiz
 
  (setq mail-kill-buffer-on-exit t)
  (setq abbrev-all-caps nil)
- (setq undo-limit 800000)
+(customize-set-variable 'undo-limit 800000)
+
  (setq user-full-name "Jay Dixit")
 
  (setq blink-cursor-mode nil)
@@ -140,7 +141,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
  (setq org-edit-src-content-indentation 4)
  (setq org-ellipsis (quote org-warning))
- (setq org-enable-fixed-width-editor nil)
  (setq org-enforce-todo-checkbox-dependencies t)
  (setq org-enforce-todo-dependencies t)
  (setq org-extend-today-until 8)
@@ -256,8 +256,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq ispell-really-hunspell t))
 
 ;; Activate flyspell
-(add-hook 'message-mode-hook 'flyspell-mode)
-(setq flyspell-issue-message-flag nil)
 
 (setq ispell-program-name "/usr/local/bin/hunspell")
 
@@ -404,15 +402,8 @@ is this still necessary?
 *** Automatically open files in their correct modes
 
 #+BEGIN_SRC emacs-lisp
-(setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("README$" . org-mode))
-(add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
+
+
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 
@@ -422,13 +413,7 @@ is this still necessary?
 (add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
-(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
+
 #+END_SRC
 
 *** Typography
@@ -1022,12 +1007,6 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq org-src-fontify-natively t)
 
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
-#+END_SRC
-
-*** Activate org-mode automatically
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 #+END_SRC
 
 ** org todo keywords
@@ -1804,9 +1783,28 @@ To enable Edit with Emacs in Chrome:
 ** Open everything in its right mode; use ~org-mode~ whenever possible
 
 #+BEGIN_SRC emacs-lisp
+(setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("README$" . org-mode))
+(add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
+
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
+
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
-;; is this the best mode for editing HTML?
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 #+END_SRC
 
