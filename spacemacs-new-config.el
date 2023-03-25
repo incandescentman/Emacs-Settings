@@ -1,94 +1,75 @@
-  ;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
-  ;; The default is 800 kilobytes.  Measured in bytes.
-  (setq gc-cons-threshold (* 50 1000 1000))
+;; You are a supersmart emacs expert programmer, an expert in Spacemacs and emacs-lisp configuration. I am a user, using Mac OSX Sierra version 13.2.1, Spacemacs version 0.999.0, Emacs version 28.2, and org-mode version 9.6.1. Review my Spacemacs config file below and give me suggestions for improvement.
+
+;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq-default gc-cons-threshold (* 50 1000 1000))
 
 
-  (setq message-log-max t)
+(setq message-log-max t)
 
+(require 'org-macs)
 
-  (require 'org-macs)
-
-  (use-package benchmark-init
-    :ensure t
-    :config
-    ;; To disable collection of benchmark data after init is done.
-    (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
-;;; Temporarily reduce garbage collection during startup. Inspect `gcs-done'.
-  ;; (defun ambrevar/reset-gc-cons-threshold ()
-  ;; (setq gc-cons-threshold (car (get 'gc-cons-threshold 'standard-value))))
-  ;; (setq gc-cons-threshold (* 64 1024 1024))
-  ;; (add-hook 'after-init-hook #'ambrevar/reset-gc-cons-threshold)
-
+(use-package benchmark-init
+  :ensure t
+  :hook (after-init . benchmark-init/deactivate))
 
 ;;; Temporarily disable the file name handler.
-  (setq default-file-name-handler-alist file-name-handler-alist)
-  (setq file-name-handler-alist nil)
-  (defun ambrevar/reset-file-name-handler-alist ()
-    (setq file-name-handler-alist
-	        (append default-file-name-handler-alist
-		              file-name-handler-alist))
-    (cl-delete-duplicates file-name-handler-alist :test 'equal))
-  (add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
+(setq default-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(defun ambrevar/reset-file-name-handler-alist ()
+  (setq file-name-handler-alist
+	      (append default-file-name-handler-alist
+		            file-name-handler-alist))
+  (cl-delete-duplicates file-name-handler-alist :test 'equal))
+(add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
 
                                         ; Source: https://ambrevar.xyz/emacs2/
 
 
 
-  (setq find-file-visit-truename nil)
-  ;; speed optimizations from
-  ;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
+(setq find-file-visit-truename nil)
+;; speed optimizations from
+;; https://www.reddit.com/r/emacs/comments/f3ed3r/how_is_doom_emacs_so_damn_fast/
 
-  (setq frame-inhibit-implied-resize t)
-  (setq initial-major-mode 'fundamental-mode)
+(setq frame-inhibit-implied-resize t)
+(setq initial-major-mode 'fundamental-mode)
 
-  (use-package auto-capitalize)
-  (use-package recentf)
-  (setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
+(use-package auto-capitalize)
+(use-package recentf)
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
 
-  (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
-  (use-package mu4e)
-
-  ;; (use-package tiny)
-  ;; (use-package re-builder)
-
-
-  ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
-  (use-package org
-    :load-path "/Users/jay/emacs/org-9.6.1/"
-    :config
-    (org-reload))
-  ;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
+(use-package mu4e)
 
 
 
-  (use-package org-contrib)
+;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
+(use-package org
+  :load-path "/Users/jay/emacs/org-9.6.1/"
+  :config
+  (org-reload))
+;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
 
 
-  (setq vc-follow-symlinks t)
-  (setq global-flyspell-mode t)
 
-  (setq default-frame-alist
-        '(
-          (width . 160) ; character
-          (height . 42) ; lines
-          ))
+(use-package org-contrib)
 
-  (flyspell-mode)
 
-  (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+(setq vc-follow-symlinks t)
+;; (global-flyspell-mode 1)
 
-  ;; ORG-BABEL: enable python, ruby, perl, sh, emacs-lisp
-  ;; (org-babel-do-load-languages
-  ;; 'org-babel-load-languages
-  ;; '( (perl . t)
-  ;;    (ruby . t)
-  ;;    (shell . t)
-  ;;    (python . t)
-  ;;    (emacs-lisp . t)
-  ;;    (ditaa . t)
-  ;;    ))
+(setq default-frame-alist
+      '(
+        (width . 160) ; character
+        (height . 42) ; lines
+        ))
+
+(flyspell-mode)
+
+(setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
+
+
 
   ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
   ;; (use-package zones)
@@ -215,9 +196,9 @@
   (electric-pair-mode 1)
 
   (add-hook 'ido-setup-hook (lambda ()
-                              (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
-                              (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
-                              ) t)
+			      (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
+			      (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
+			      ) t)
 
   (defadvice load-theme (before theme-dont-propagate activate)
     (mapcar #'disable-theme custom-enabled-themes))
@@ -232,14 +213,14 @@
   (iterm-mode)
 
   (setq org-emphasis-alist
-        (quote
-         (("*" bold)
-          ("/" italic)
-          ("_" underline)
-          ("~" org-code verbatim)
-          ("=" flyspell-incorrect)
-          ("+"
-           (:strike-through t)))))
+	(quote
+	 (("*" bold)
+	  ("/" italic)
+	  ("_" underline)
+	  ("~" org-code verbatim)
+	  ("=" flyspell-incorrect)
+	  ("+"
+	   (:strike-through t)))))
 
   (setq org-adapt-indentation nil)
 
