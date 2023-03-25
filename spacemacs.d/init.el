@@ -268,6 +268,8 @@ This function should only modify configuration layer settings."
                                       xah-replace-pairs
                                       ;; yahoo-weather
                                       ;; zone
+
+                                      stripes
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()

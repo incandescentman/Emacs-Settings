@@ -4963,24 +4963,23 @@ It will open the link in Emacs with typing C-c C-o.
 *** load my custom latex templates
 
 #+BEGIN_SRC emacs-lisp
-;; (load "/Users/jay/emacs/emacs-settings/mu4e-context.el")
 
 (defun jay-load-latex ()
 (interactive)
 
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
 
 ;; (use-package blue-ruin)
-(use-package blue-invoice)
+;; (use-package blue-invoice)
 ;; (use-package blue-ruin-no-cover)
   )
 #+END_SRC
@@ -7132,14 +7131,17 @@ Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a
 (defun number-region (beg end)
  "Add numbering to a highlighted region."
  (interactive "r")
- (let ((counter 1))
+ (let ((counter 1)
+    (end-marker (copy-marker end)))
   (save-excursion
    (goto-char beg)
-   (while (and (< (point) end) (not (eobp)))
-    (beginning-of-line)
+   (beginning-of-line)
+   (while (< (point) end-marker)
     (insert (format "%d. " counter))
     (setq counter (1+ counter))
-    (forward-line 1)))))
+    (forward-line 1))
+   (set-marker end-marker nil))))
+
 #+end_src
 
 To use this function, highlight the region you want to add numbering to and then call the ~number-region~ function using M-x ~number-region~. This will add a number to the beginning of each line in the highlighted region. The numbering will start from 1 and increment by 1 for each line.
