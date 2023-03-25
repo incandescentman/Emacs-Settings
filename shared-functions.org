@@ -1783,26 +1783,26 @@ To enable Edit with Emacs in Chrome:
 ** Open everything in its right mode; use ~org-mode~ whenever possible
 
 #+BEGIN_SRC emacs-lisp
+
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
+;; (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("README$" . org-mode))
 (add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 (add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 (setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
