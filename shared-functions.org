@@ -347,8 +347,9 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 *** Use visual line mode whenever possible
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'mail-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'message-mode-hook 'turn-on-visual-line-mode)
+(add-hook 'mail-mode-hook (lambda () (visual-line-mode 1)))
+(add-hook 'message-mode-hook (lambda () (visual-line-mode 1)))
+
 (visual-line-mode t)
 (global-visual-line-mode t)
 #+END_SRC
@@ -379,7 +380,7 @@ is this still necessary?
 *** Disable double spacing between sentences
 
 #+BEGIN_SRC emacs-lisp
-(setq sentence-end-double-space nil)
+(setq-default sentence-end-double-space nil)
 #+END_SRC
 
 *** Make typing override text selection
@@ -546,11 +547,13 @@ Aquamacs:
 ;; from prelude
 ;; http://bit.ly/1Woabxz
 (use-package uniquify
-  :defer)
+:defer
+:init
 (setq uniquify-buffer-name-style 'forward)
 (setq uniquify-separator "/")
-(setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
+(setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
 (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+)
 #+END_SRC
 
 *** Uniqify new buffers
