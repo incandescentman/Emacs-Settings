@@ -1,7 +1,7 @@
 (use-package org-roam
   :delight
   :custom
-  (org-roam-directory (file-truename "~/Dropbox/org-roam/"))
+  (org-roam-directory (file-truename "~/Dropbox/roam/"))
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
@@ -74,9 +74,10 @@
    ("s-u c" . org-roam-capture)
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
+("s-D" . org-roam-dailies-goto-today)
 ;; ("s-u t" . org-roam-dailies-goto-today)
 ("s-u t" . org-roam-dailies-capture-today)
-("S-s-<left>" . org-roam-dailies-capture-today)
+("S-s-<left>" .  org-roam-node-insert)
 ("S-s-<right>" . org-roam-node-find)
 ("s-u d" . org-roam-dailies-goto-date)
 
