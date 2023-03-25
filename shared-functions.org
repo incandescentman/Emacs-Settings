@@ -1816,14 +1816,6 @@ To enable Edit with Emacs in Chrome:
 '(org-support-shift-select (quote always))
 #+END_SRC
 
-** message-mode hooks
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-capitalize
-  :defer)
-(add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
-#+END_SRC
-
 ** Define my default directory:
 
 #+BEGIN_SRC emacs-lisp
@@ -2192,7 +2184,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 :defer
 :config
 
-
+(setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100)
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
@@ -7196,14 +7188,16 @@ To use this function, highlight the region you want to add numbering to and then
 
 * word count
 #+begin_src emacs-lisp
-(use-package wc-goal-mode)
+(use-package wc-goal-mode
+:defer)
 #+end_src
 
 
 * org-roam
 #+begin_src emacs-lisp
 (use-package org-roam
- :ensure t
+:defer
+  :ensure t
  :custom
  (org-roam-directory (file-truename "~/Dropbox/org-roam"))
  :bind (
@@ -7342,6 +7336,8 @@ To use this function, highlight the region you want to add numbering to and then
 * orderless
 #+begin_src emacs-lisp
 (use-package orderless
+
+ :defer
  :ensure t
  :custom
  (completion-styles '(orderless))
@@ -7352,6 +7348,8 @@ To use this function, highlight the region you want to add numbering to and then
 * vertico
 #+begin_src emacs-lisp
 (use-package marginalia
+:defer
+:ensure t
  :delight
  :custom
  (marginalia-max-relative-age 0)
@@ -7360,6 +7358,7 @@ To use this function, highlight the region you want to add numbering to and then
  (marginalia-mode))
 
  (use-package vertico
+:defer
 :ensure t
    :init
  (vertico-mode)
@@ -7379,12 +7378,9 @@ To use this function, highlight the region you want to add numbering to and then
 
 * embark
 #+begin_src emacs-lisp
-(use-package marginalia
- :ensure t
- :config
- (marginalia-mode))
 
 (use-package embark
+:defer
  :ensure t
 
  :bind
@@ -7412,6 +7408,7 @@ To use this function, highlight the region you want to add numbering to and then
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
+:defer
  :ensure t ; only need to install it, embark loads it after consult if found
  :hook
  (embark-collect-mode . consult-preview-at-point-mode))
