@@ -7087,7 +7087,7 @@ Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a
 To use this function, highlight the region you want to add numbering to and then call the ~number-region~ function using M-x ~number-region~. This will add a number to the beginning of each line in the highlighted region. The numbering will start from 1 and increment by 1 for each line.
 
 * org-panes
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (use-package org-panes
  :ensure nil
@@ -7107,7 +7107,7 @@ To use this function, highlight the region you want to add numbering to and then
     (org-panes)))
 
 
-     #+end_src
+     #+END_EXAMPLE
 
 * word count
 #+begin_src emacs-lisp
