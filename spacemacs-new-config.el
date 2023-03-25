@@ -47,18 +47,13 @@
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
-(use-package mu4e)
-
 
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
   :load-path "/Users/jay/emacs/org-9.6.1/"
   :config
-  (org-reload))
-;; Removing the above causes the error: Symbol’s function definition is void: org-assert-version
-
-
+  )
 
 (use-package org-contrib
   :defer)
