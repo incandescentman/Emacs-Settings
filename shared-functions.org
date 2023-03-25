@@ -64,15 +64,18 @@
 
 ** don't Rquire some org packages
 #+BEGIN_SRC emacs-lisp
-(use-package ox-latex)
-(use-package ox-html)
+(use-package ox-LaTeX
+:defer
+  )
+(use-package ox-html
+  :defer)
 ;; (use-package org-bullets)
 ;; (use-package ox-latex)
 ;; (use-package ox-org)
 ;; (use-package ox-org)
 ;; (use-package ox-html)
 ;; (use-package ox-md)
-; (use-package org-fstree)
+;; (use-package org-fstree)
 #+END_SRC
 
 
@@ -537,7 +540,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-;; (use-package buffer-stack)
+(use-package buffer-stack)
 #+END_SRC
 
 GNU Emacs:
@@ -557,7 +560,8 @@ Aquamacs:
 ;; meaningful names for buffers with the same name
 ;; from prelude
 ;; http://bit.ly/1Woabxz
-(use-package uniquify)
+(use-package uniquify
+  :defer)
 (setq uniquify-buffer-name-style 'forward)
 (setq uniquify-separator "/")
 (setq uniquify-after-kill-buffer-p t)  ; rename after killing uniquified
@@ -629,7 +633,8 @@ Open new buffers without prompting me for a filename global counter to ensure ev
 ** Reveal in finder
 
 #+BEGIN_SRC emacs-lisp
-;; (use-package reveal-in-finder)
+(use-package reveal-in-finder
+  :defer)
 #+END_SRC
 
 ** cycle-hyphenation-or-toggle-item
@@ -994,7 +999,8 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** org settings
 #+BEGIN_SRC emacs-lisp
 ;; (add-hook 'after-init-hook 'org-agenda-list)
-(use-package org-inlinetask)
+(use-package org-inlinetask
+  :defer)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
 
@@ -1065,7 +1071,8 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** hl-todo
 
 #+begin_src emacs-lisp
-(use-package hl-todo
+(use-package hl-TODO
+:defer
  :hook (org-mode . hl-todo-mode)
  :config
  (global-hl-todo-mode)
@@ -1369,7 +1376,7 @@ Insert link with HTML title as default description. When using `org-insert-link'
 it as a default link description. Here is a way to accomplish this:
 
 #+BEGIN_SRC emacs-lisp
-(use-package mm-url) ; to include mm-url-decode-entities-string
+;; (use-package mm-url) ; to include mm-url-decode-entities-string
 
 (defun my-org-insert-link ()
   "Insert org link where default description is set to html title."
@@ -1592,7 +1599,9 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 
 ** org-mac-link
 #+BEGIN_SRC emacs-lisp
-(use-package org-mac-link)
+(use-package org-mac-link
+:defer
+  )
 #+END_SRC
 
 ** ~org-mime~
@@ -1810,7 +1819,8 @@ To enable Edit with Emacs in Chrome:
 ** message-mode hooks
 
 #+BEGIN_SRC emacs-lisp
-(use-package auto-capitalize)
+(use-package auto-capitalize
+  :defer)
 (add-hook 'message-mode-hook 'turn-on-auto-capitalize-mode)
 #+END_SRC
 
@@ -1914,6 +1924,7 @@ Defines ~ibuffer-do-replace-string~:
 		  (call-interactively 'self-insert-command))))))
 
 (use-package ido
+:defer
 :config
 (setq ido-ignore-directories  '("\\`CVS/" "\\`\\.\\./" "\\`\\./" ".git"))
 (setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*" ".git"))
@@ -2106,7 +2117,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 
 (use-package dired
-
+:defer
 :config
 (setq dired-omit-mode t)
 
@@ -2123,7 +2134,8 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ;; (add-hook 'dired-mode-hook 'hl-line-mode)
 
-(use-package dired-x)
+(use-package dired-x
+  :defer)
 ;; Load Dired X when Dired is loaded.
 ;; (add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
 
@@ -2177,7 +2189,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ** recentf
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-
+:defer
 :config
 
 
@@ -2307,7 +2319,8 @@ dired-omit-extensions
 * Word count
 
 #+begin_src emacs-lisp
-(use-package wc-mode)
+(use-package wc-mode
+  :defer)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
 ;; (add-hook 'org-mode-hook 'wc-mode)
 
@@ -3305,14 +3318,16 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 *** search all open buffers
 I know that string is in my Emacs somewhere!
 #+BEGIN_SRC emacs-lisp
-(use-package cl)
+(use-package clear
+  :defer)
 
 
 (defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
   "Files to ignore when searching buffers via \\[search-open-buffers]."
   :type 'editable-list)
 
-(use-package grep)
+(use-package grep
+  :defer)
 
 (defun search-open-buffers (regexp prefix)
   "Searches file-visiting buffers for occurence of REGEXP. With
@@ -3453,7 +3468,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
-
+:defer
 :config
 (setq projectile-completion-system (quote helm))
 (setq projectile-enable-caching nil)
@@ -3483,7 +3498,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 (setq ad-redefinition-action 'accept)
 (use-package helm-projectile
-
+:defer
 :config
 (setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
 (remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
