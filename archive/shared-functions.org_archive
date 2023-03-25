@@ -2538,3 +2538,83 @@ key-seq.el provides a way to map pairs of sequentially but quickly pressed keys 
 ;; (use-package orgalist)
 #+end_src
 
+
+* imenu-list
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-03-25 Sat 14:48
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: org-mode
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package imenu-list
+:defer)
+(setq imenu-list-position (quote left))
+
+(defun imenu-list-amazing-mode ()
+(interactive)
+(add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1)))
+)
+
+#+END_EXAMPLE
+
+Edit: in response to your comment, here's a simple command that, when invoked from the buffer clone, will switch to the base buffer and move point to wherever the cursor was in the buffer clone:
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun jump-to-point-and-show ()
+ "Switch to a cloned buffer's base buffer and move point to the
+cursor position in the clone."
+ (interactive)
+ (let ((buf (buffer-base-buffer)))
+  (unless buf
+   (error "You need to be in a cloned buffer!"))
+  (let ((pos (point))
+     (win (car (get-buffer-window-list buf))))
+   (if win
+     (select-window win)
+    (other-window 1)
+    (switch-to-buffer buf))
+   (goto-char pos)
+   (when (invisible-p (point))
+    (show-branches)))))
+#+END_EXAMPLE
+
+
+* another org-setting, not sure what this one does exactly
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-03-25 Sat 14:49
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: org-mode
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(defun org-ido-completing-read (&rest args)
+  "Completing-read using `ido-mode' speedups if available"
+  (if (and ido-mode (listp (second args)))
+      (apply 'ido-completing-read args)
+    (apply 'completing-read args)))
+#+END_EXAMPLE
+
+
+* zin/org-outline-mode
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-03-25 Sat 14:49
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: org-mode/org custom functions
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+Make ~org-mode~ temporarily emulate traditional outlining keybindings
+e.g. nvALT
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode zin/org-outline-mode
+  "" nil
+  :lighter " OOut"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<return>") 'smart-org-meta-return-dwim)
+            (define-key map (kbd "<tab>") 'org-metaright)
+            (define-key map (kbd "S-<tab>") 'org-metaleft)
+            (define-key map (kbd "<M-return>") 'smart-return)
+            map))
+(global-set-key "\C-co" 'zin/org-outline-mode)
+#+END_SRC
+

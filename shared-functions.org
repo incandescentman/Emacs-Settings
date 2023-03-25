@@ -526,7 +526,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-(use-package buffer-stack)
+(use-package buffer-stack
+:defer)
 #+END_SRC
 
 GNU Emacs:
@@ -1113,39 +1114,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 #+END_SRC
 
-** imenu-list
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package imenu-list)
-(setq imenu-list-position (quote left))
-
-(defun imenu-list-amazing-mode ()
-(interactive)
-(add-hook 'org-mode-hook (lambda () (imenu-list-minor-mode 1)))
-)
-
-#+END_EXAMPLE
-
-Edit: in response to your comment, here's a simple command that, when invoked from the buffer clone, will switch to the base buffer and move point to wherever the cursor was in the buffer clone:
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun jump-to-point-and-show ()
- "Switch to a cloned buffer's base buffer and move point to the
-cursor position in the clone."
- (interactive)
- (let ((buf (buffer-base-buffer)))
-  (unless buf
-   (error "You need to be in a cloned buffer!"))
-  (let ((pos (point))
-     (win (car (get-buffer-window-list buf))))
-   (if win
-     (select-window win)
-    (other-window 1)
-    (switch-to-buffer buf))
-   (goto-char pos)
-   (when (invisible-p (point))
-    (show-branches)))))
-#+END_EXAMPLE
-
 ** Org-mode hooks and other org settings
 #+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
@@ -1193,8 +1161,6 @@ cursor position in the clone."
 
 ** org-capture setup
 
-This is working correctly:
-
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
       (quote
@@ -1241,32 +1207,9 @@ This is working correctly:
 	       "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
 #+END_SRC
 
-** another org-setting, not sure what this one does exactly
-#+BEGIN_EXAMPLE emacs-lisp
-(defun org-ido-completing-read (&rest args)
-  "Completing-read using `ido-mode' speedups if available"
-  (if (and ido-mode (listp (second args)))
-      (apply 'ido-completing-read args)
-    (apply 'completing-read args)))
-#+END_EXAMPLE
+This is working correctly:
 
 ** org custom functions
-*** zin/org-outline-mode
-Make ~org-mode~ temporarily emulate traditional outlining keybindings
-e.g. nvALT
-#+BEGIN_SRC emacs-lisp
-(define-minor-mode zin/org-outline-mode
-  "" nil
-  :lighter " OOut"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<return>") 'smart-org-meta-return-dwim)
-            (define-key map (kbd "<tab>") 'org-metaright)
-            (define-key map (kbd "S-<tab>") 'org-metaleft)
-            (define-key map (kbd "<M-return>") 'smart-return)
-            map))
-(global-set-key "\C-co" 'zin/org-outline-mode)
-#+END_SRC
-
 *** update parent cookie
 I think this is to make parent ~DONE~ states automatically update:
 #+BEGIN_SRC emacs-lisp
@@ -1330,10 +1273,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 #+END_SRC
 
 *** org insert link
-
-Insert link with HTML title as default description. When using `org-insert-link'
-(`C-c C-l') it might be useful to extract contents from HTML <title> tag and use
-it as a default link description. Here is a way to accomplish this:
+Insert link with HTML title as default description. When using `org-insert-link' (`C-c C-l') it might be useful to extract contents from HTML <title> tag and use it as a default link description. Here is a way to accomplish this:
 
 #+BEGIN_SRC emacs-lisp
 ;; (use-package mm-url) ; to include mm-url-decode-entities-string
