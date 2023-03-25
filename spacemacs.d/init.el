@@ -259,6 +259,7 @@ This function should only modify configuration layer settings."
                                       ;; transcribe
                                       unfill
                                       visible-mark
+                                      wc-goal-mode
                                       wc-mode
                                       web-mode
                                       wrap-region
