@@ -209,12 +209,6 @@
 
 (setq org-adapt-indentation nil)
 
-
-
-
-
-;; (setq default-tab-width 4) ; for graphviz
-
 ;; disable smooth scrolling
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
@@ -222,56 +216,12 @@
 ;;
 
 
-(defun dotspacemacs/user-load ()
-  "Library to load while dumping.
-This function is called only while dumping Spacemacs configuration. You can
-`require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
-
-;; use OSX standard keybindings for navigating word-by-word and selecting
-;; whole words at a time
-;; I've been wanting to do this for so long. :-)
-;; this works correctly!!
-(eval-after-load "org"
-  '(progn
-     (define-key org-mode-map (kbd "<M-S-left>") nil)
-     (define-key org-mode-map (kbd "<M-S-right>") nil)
-     (define-key org-mode-map (kbd "<M-S-up>") nil)
-     (define-key org-mode-map (kbd "<M-S-down>") nil)
-     (define-key org-mode-map (kbd "<M-left>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map [C-S-right] 'org-shiftmetaright)
-     (define-key org-mode-map [C-S-left] 'org-shiftmetaleft)
-     (define-key org-mode-map [C-right] 'org-metaright)
-     (define-key org-mode-map [C-left] 'org-metaleft)
-     (define-key org-mode-map [C-up] 'org-metaup)
-     (define-key org-mode-map [C-down] 'org-metadown)
-     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
-     (define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
-     (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
-     ))
-
-(defun dotspacemacs/user-config ()
-  "Configuration for user code:
-This function is called at the very end of Spacemacs startup, after layer
-configuration.
-Put your configuration code here, except for variables that should be set
-before packages are loaded.")
-
 
 (setq package-archive-priorities nil)
 
 (setq global-auto-complete-mode -1)
 
 (setq ido-save-directory-list-file "/Users/jay/emacs/emacs-settings/spacemacs.d/.savefile/ido.hist")
-
-()
 
 (display-time)
 
@@ -297,11 +247,6 @@ before packages are loaded.")
 (setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
 (setq case-fold-search t)
-
-                                        ; (cyberpunk-jay)
-
-;;  (counsel-mode 1)
-
 
 (setq global-hl-line-mode nil)
 (setq hl-line-mode nil)
@@ -329,5 +274,4 @@ before packages are loaded.")
 
 
 ;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
-
+;; (setq gc-cons-threshold (* 2 1000 1000))
