@@ -1053,7 +1053,8 @@ Defining stuck projects as todos that do not contain "scheduled" or
 ** hl-todo
 
 #+begin_src emacs-lisp
-(use-package hl-TODO
+(use-package hl-todo
+:ensure t
 :defer
  :hook (org-mode . hl-todo-mode)
  :config
@@ -1174,8 +1175,13 @@ cursor position in the clone."
 '(org-indent-mode 1)
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
-(setq org-directory "~/Dropbox/writing/notationaldata/")
-(setq org-default-notes-file (concat org-directory "notes.txt"))
+
+(defvar my-org-directory "~/Dropbox/writing/notationaldata/")
+(defvar my-org-default-notes-file (concat my-org-directory "notes.txt"))
+
+(setq org-directory my-org-directory)
+(setq org-default-notes-file my-org-default-notes-file)
+
 #+END_SRC
 
 ** Org refile settings
@@ -1264,13 +1270,13 @@ This is working correctly:
 #+END_SRC
 
 ** another org-setting, not sure what this one does exactly
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun org-ido-completing-read (&rest args)
   "Completing-read using `ido-mode' speedups if available"
   (if (and ido-mode (listp (second args)))
       (apply 'ido-completing-read args)
     (apply 'completing-read args)))
-#+END_SRC
+#+END_EXAMPLE
 
 ** org custom functions
 *** zin/org-outline-mode
