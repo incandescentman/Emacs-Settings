@@ -54,7 +54,8 @@
 
 
 
-(use-package org-contrib)
+(use-package org-contrib
+  :defer)
 
 
 (setq vc-follow-symlinks t)
@@ -73,9 +74,11 @@
 
 (use-package wc-goal-mode
   :ensure t
+  :defer
   :load-path "/Users/jay/emacs/emacs-settings/")
 
-(use-package counsel)
+(use-package counsel
+  :defer)
 
 
   (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
@@ -104,8 +107,6 @@
   (load "/Users/jay/emacs/org-mime.el")
 
   (load "/Users/jay/tramp-settings.el")
-
-  ;; (use-package org-mime)
 
   ;; automatically display any prefix
   (setq guide-key/recursive-key-sequence-flag t)
@@ -167,7 +168,9 @@
 
   (setq org-bullets-bullet-list '("• "))
 
-  (use-package reveal-in-finder)
+  (use-package reveal-in-finder
+    :defer
+    )
 
   ;; (recenter-top-bottom)
   (setq case-fold-search t)
@@ -345,8 +348,6 @@ before packages are loaded.")
   ;; (load "/Users/jay/emacs/emacs-settings/mu4e-send-delay.el")
 
 
-
-  ;; (use-package mu4e-send-delay)
 
   ;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
   ;; (setq spaceline-org-clock-p t)
