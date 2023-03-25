@@ -374,10 +374,10 @@ before packages are loaded.")
 
   ;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
 
-  ;; (server-reflash)
-  (triplicate-code)
-  ;; (embiggen-text)
-  (scrollbar-init)
+;; (server-reflash)
+;;  (triplicate-code)
+;; (embiggen-text)
+(scrollbar-init)
 
 ;; (setq max-lisp-eval-depth 10000)
 ;;; When opening a file that is a symbolic link, don't ask whether I
