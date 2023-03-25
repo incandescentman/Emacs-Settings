@@ -185,8 +185,8 @@
 ;; 			                      (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
 ;; 			                      ) t)
 
-(defadvice load-theme (before theme-dont-propagate activate)
-  (mapcar #'disable-theme custom-enabled-themes))
+;; (defadvice load-theme (before theme-dont-propagate activate)
+;;   (mapcar #'disable-theme custom-enabled-themes))
 
 ;; if Emacs is running in terminal
 (if (is-in-terminal)
@@ -195,7 +195,7 @@
   (org-mode)
   )
 
-(iterm-mode)
+;; (iterm-mode)
 
 (setq org-emphasis-alist
 	    (quote
@@ -210,57 +210,7 @@
 (setq org-adapt-indentation nil)
 
 
-;; If non-nil activate `clean-aindent-mode' which tries to correct
-;; virtual indentation of simple modes. This can interfere with mode specific
-;; indent handling like has been reported for `go-mode'.
-;; If it does deactivate it here.
-;; (default t)
-dotspacemacs-use-clean-aindent-mode t
 
-;; Accept SPC as y for prompts if non-nil. (default nil)
-dotspacemacs-use-SPC-as-y nil
-
-;; If non-nil shift your number row to match the entered keyboard layout
-;; (only in insert state). Currently supported keyboard layouts are:
-;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
-;; New layouts can be added in `spacemacs-editing' layer.
-;; (default nil)
-dotspacemacs-swap-number-row nil
-
-;; Either nil or a number of seconds. If non-nil zone out after the specified
-;; number of seconds. (default nil)
-dotspacemacs-zone-out-when-idle nil
-
-;; Run `spacemacs/prettify-org-buffer' when
-;; visiting README.org files of Spacemacs.
-;; (default nil)
-dotspacemacs-pretty-docs nil
-
-;; If nil the home buffer shows the full path of agenda items
-;; and todos. If non-nil only the file name is shown.
-dotspacemacs-home-shorten-agenda-source nil
-
-;; If non-nil then byte-compile some of Spacemacs files.
-dotspacemacs-byte-compile nil
-
-;; ))
-
-(defun dotspacemacs/user-env ()
-  "Environment variables setup.
-This function defines the environment variables for your Emacs session. By
-default it calls `spacemacs/load-spacemacs-env' which loads the environment
-variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
-See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
-  )
-
-(defun dotspacemacs/user-init ()
-  "Initialization for user code:
-This function is called immediately after `dotspacemacs/init', before layer
-configuration.
-It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
 
 
 ;; (setq default-tab-width 4) ; for graphviz
