@@ -261,7 +261,6 @@ This function should only modify configuration layer settings."
                                       visible-mark
                                       wc-mode
                                       web-mode
-                                      wp-goal-mode
                                       wrap-region
                                       ;; writeroom-mode
                                       ;; wttrin

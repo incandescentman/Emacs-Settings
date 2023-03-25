@@ -50,7 +50,9 @@ Automatically load abbreviations table:
 
 * org predicates
   #+BEGIN_SRC emacs-lisp
-(use-package org-element)
+(use-package org-element
+:defer
+  )
 
   (defun org-checkbox-p ()
   "Predicate: Checks whether the current line org-checkbox"
@@ -110,6 +112,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
 
 #+begin_src emacs-lisp
 (use-package tab-bar
+:defer
  :config
  (tab-bar-mode 1))
  #+end_src
@@ -1539,6 +1542,7 @@ provided the (transient) mark is active."
 #+BEGIN_SRC emacs-lisp
 ;; Save point position between sessions
 (use-package saveplace
+:defer
  :init (save-place-mode))
 #+END_SRC
 
@@ -2714,7 +2718,7 @@ different → different
 #+BEGIN_SRC emacs-lisp
 
     (use-package web-mode
-
+:defer
 :init
  (add-hook 'web-mode-hook
       (lambda ()
@@ -2744,7 +2748,8 @@ different → different
 
 * mw-thesaurus
 #+BEGIN_SRC emacs-lisp
-(use-package mw-thesaurus)
+(use-package mw-thesaurus
+  :defer)
 (load "/Users/jay/emacs/emacs-settings/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC
