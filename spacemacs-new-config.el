@@ -71,25 +71,12 @@
 (setq yas-snippet-dirs '("/Users/jay/emacs/interesting-snippets/" "~/emacs/snippets"))
 
 
+(use-package wc-goal-mode
+  :ensure t
+  :load-path "/Users/jay/emacs/emacs-settings/")
 
-  ;; (load "/Users/jay/emacs/emacs-settings/zones.el")
-  ;; (use-package zones)
+(use-package counsel)
 
-  (load "/Users/jay/emacs/emacs-settings/org-panes.el")
-  (load "/Users/jay/emacs/emacs-settings/wc-goal-mode.el")
-
-  ;; (load "/Users/jay/emacs/emacs-settings/pastebin-credentials.el")
-
-  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
-
-  ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
-
-  ;; (load "/Users/jay/Dropbox/github/emacs-grammarly/emacs-grammarly.el")
-
-
-  (load "/Users/jay/emacs/emacs-settings/aide.el")
 
   (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
   (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
