@@ -122,78 +122,9 @@ And create a function to restore the red cursor in case a color-theme overwrites
   (set-frame-width (selected-frame) 68)
   )
 
-;;;; functions to adjust the transparency of the frame
-
-(defun opaque ()
-  (interactive)
-  (set-frame-parameter (selected-frame) 'alpha '(100 100))
-  (add-to-list 'default-frame-alist '(alpha 100 100))
-  )
-
-
 
 ;;;; functions to automatically load color-themes
 
-(defun zenburn ()
-  "Open my favorite file:  ~.emacs.
-The function is poorly named, didn't really want to 'load' it, just open it."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/zenburn-jay.el")
-(monaco-font)
-(custom-set-faces
-;; (spacemacs/toggle-fringe-off)
-'(minibuffer-prompt ((t (:weight bold :foreground "white" :background "black"))))
-'(org-ellipsis ((t (:foreground "#E0CF9F" :underline t))))
-`(org-tag ((t (:bold t :weight bold :background "#3F3F3F"))))
-
-`(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F"))))
-(scrollbar-init)
-)
-
-(org-mode)
-  (set-cursor-color "violet")
-  )
-
-(defun ritchie ()
-  (interactive)
-  (load-theme 'ritchie)
-  (incarnadine-cursor)
-(org-mode)
-  )
-
-(defun blue-light ()
-  (interactive)
-  (load-theme 'material-light)
-  (incarnadine-cursor)
-(org-mode)
-  )
-
-
-(defun tomorrow-night ()
-  (interactive)
-  (load-theme 'sanityinc-tomorrow-night)
-(org-mode)
-)
-
-
-(defun solarized-dark ()
-  "Open my own customized version of the Solarized color theme."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/solarized-jay.el")
- (load-theme 'solarized-dark)
-(load "/Users/jay/emacs/emacs-settings/solarized-fix.el")
-  (org-mode)
-;  (incarnadine-cursor)
-  )
-
-(defun solarized-light ()
-  "Open my own customized version of the Solarized color theme."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/solarized-jay.el")
-  (load-theme 'solarized-light)
-  (org-mode)
-  (incarnadine-cursor)
-  )
 
 (defun spacemacs-light ()
  (interactive)
@@ -209,56 +140,7 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (org-mode)
     )
 
-(defun spolsky ()
-  "Open my own customized version of the Solarized color theme."
-  (interactive)
-  (load-file "/Users/jay/gnulisp/jay-custom-color-themes/spolsky-jay.el")
-  (incarnadine-cursor)
-    (org-mode)
-  )
 
-(defun big-cyberpunk ()
-  "Open my own customized version of the Cyberpunk color theme."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-big-jay.el")
-  (org-mode)
-  (org-bullets-mode 1)
-  (incarnadine-cursor)
-  (turn-on-auto-capitalize-mode)
-(boss-mode)
-  )
-
-(defun cyberpunk-jay ()
-  "Open my own customized version of the Cyberpunk color theme."
-  (interactive)
-(load-theme 'cyberpunk)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
-  (org-mode)
-  (incarnadine-cursor)
-(scrollbar-init)
-)
-
-(defun cyberpunk-writeroom ()
-  "Open my own customized version of the Cyberpunk color theme."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
-  (org-mode)
-  (org-bullets-mode 1)
-  (incarnadine-cursor)
-  (turn-on-auto-capitalize-mode)
-  (writeroom-mode 1)
-(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
-
-(defun cyberpunk-large ()
-  "Open my own customized version of the Cyberpunk color theme."
-  (interactive)
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
-  (org-mode)
-  (org-bullets-mode 1)
-  (incarnadine-cursor)
-  (turn-on-auto-capitalize-mode)
-(large-type)
-(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
 
 (defun matrix ()
   (interactive)
@@ -285,15 +167,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
   (toggle-frame-maximized)
   )
 
-
-(defun top-gun-mode ()
-"Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (interactive)
-(set-frame-parameter (selected-frame) 'alpha '(40 40))
-  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-serenity.el")
-;; (set-fringe-mode -1)
-(setq fringe-styles '("no-fringes" . 0))
-)
 
 
 (defun rainy-highway-mode ()
@@ -324,26 +197,6 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 
 
 
-(defun leuven ()
-  (interactive)
-(load-theme 'leuven)
-;; (load-file "/Users/jay/gnulisp/jay-custom-color-themes/leuven-jay.el")
-  (incarnadine-cursor)
-  (org-mode)
-(custom-set-faces
-;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-'(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.05))))
-'(italic ((t (:foreground "DarkViolet" :family "Garamond" :slant italic :height 1.3))))
-'(org-level-1 ((t (:family "Courier" :weight normal))))
-;; '(org-link ((t (:underline nil))))
-)
-
-  )
-
-;; (defun garamond-web-font ()
-;;   (interactive)
-;; (set-face-attribute 'default nil :font "Garamond" :height 200)
-;; )
 
 
 (defun monaco-font ()
@@ -433,6 +286,169 @@ The function is poorly named, didn't really want to 'load' it, just open it."
 )
 
 
+
+#+END_SRC
+
+
+This worked when nothing else would:
+(setq cursor-type '(hbar . 5) )
+
+As did this:
+
+(setq evil-emacs-state-cursor '("red")) ; for box cursor
+;;;; functions to adjust the transparency of the frame
+
+(defun opaque ()
+  (interactive)
+  (set-frame-parameter (selected-frame) 'alpha '(100 100))
+  (add-to-list 'default-frame-alist '(alpha 100 100))
+  )
+
+
+
+(defun zenburn ()
+  "Open my favorite file:  ~.emacs.
+The function is poorly named, didn't really want to 'load' it, just open it."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/zenburn-jay.el")
+(monaco-font)
+(custom-set-faces
+;; (spacemacs/toggle-fringe-off)
+'(minibuffer-prompt ((t (:weight bold :foreground "white" :background "black"))))
+'(org-ellipsis ((t (:foreground "#E0CF9F" :underline t))))
+`(org-tag ((t (:bold t :weight bold :background "#3F3F3F"))))
+
+`(org-ellipsis ((t (:underline nil :box (:line-width 1 :color "#3F3F3F") :foreground "#999999" :background "#3F3F3F"))))
+(scrollbar-init)
+)
+
+(org-mode)
+  (set-cursor-color "violet")
+  )
+
+(defun ritchie ()
+  (interactive)
+  (load-theme 'ritchie)
+  (incarnadine-cursor)
+(org-mode)
+  )
+
+(defun blue-light ()
+  (interactive)
+  (load-theme 'material-light)
+  (incarnadine-cursor)
+(org-mode)
+  )
+
+
+(defun tomorrow-night ()
+  (interactive)
+  (load-theme 'sanityinc-tomorrow-night)
+(org-mode)
+)
+
+
+(defun solarized-dark ()
+  "Open my own customized version of the Solarized color theme."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/solarized-jay.el")
+ (load-theme 'solarized-dark)
+(load "/Users/jay/emacs/emacs-settings/solarized-fix.el")
+  (org-mode)
+;  (incarnadine-cursor)
+  )
+
+(defun solarized-light ()
+  "Open my own customized version of the Solarized color theme."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/solarized-jay.el")
+  (load-theme 'solarized-light)
+  (org-mode)
+  (incarnadine-cursor)
+  )
+
+(defun spolsky ()
+  "Open my own customized version of the Solarized color theme."
+  (interactive)
+  (load-file "/Users/jay/gnulisp/jay-custom-color-themes/spolsky-jay.el")
+  (incarnadine-cursor)
+    (org-mode)
+  )
+
+(defun big-cyberpunk ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-big-jay.el")
+  (org-mode)
+  (org-bullets-mode 1)
+  (incarnadine-cursor)
+  (turn-on-auto-capitalize-mode)
+(boss-mode)
+  )
+
+(defun cyberpunk-jay ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+(load-theme 'cyberpunk)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
+  (org-mode)
+  (incarnadine-cursor)
+(scrollbar-init)
+)
+
+(defun cyberpunk-writeroom ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
+  (org-mode)
+  (org-bullets-mode 1)
+  (incarnadine-cursor)
+  (turn-on-auto-capitalize-mode)
+  (writeroom-mode 1)
+(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
+
+(defun cyberpunk-large ()
+  "Open my own customized version of the Cyberpunk color theme."
+  (interactive)
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-jay.el")
+  (org-mode)
+  (org-bullets-mode 1)
+  (incarnadine-cursor)
+  (turn-on-auto-capitalize-mode)
+(large-type)
+(play-sound-file "/Users/jay/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/Space Age Motor Cycle 02.wav"))
+
+(defun top-gun-mode ()
+"Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive)
+(set-frame-parameter (selected-frame) 'alpha '(40 40))
+  (load-file "~/emacs/emacs-settings/jay-custom-color-themes/cyberpunk-serenity.el")
+;; (set-fringe-mode -1)
+(setq fringe-styles '("no-fringes" . 0))
+)
+
+
+(defun leuven ()
+  (interactive)
+(load-theme 'leuven)
+;; (load-file "/Users/jay/gnulisp/jay-custom-color-themes/leuven-jay.el")
+  (incarnadine-cursor)
+  (org-mode)
+(custom-set-faces
+;;  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+'(bold ((t (:family "Sans Serif" :weight bold :foreground "red" :height 1.05))))
+'(italic ((t (:foreground "DarkViolet" :family "Garamond" :slant italic :height 1.3))))
+'(org-level-1 ((t (:family "Courier" :weight normal))))
+;; '(org-link ((t (:underline nil))))
+)
+
+  )
+
+;; (defun garamond-web-font ()
+;;   (interactive)
+;; (set-face-attribute 'default nil :font "Garamond" :height 200)
+;; )
+
 (defun ommwriter-mode ()
 (interactive)
 (vera-font)
@@ -508,12 +524,3 @@ The function is poorly named, didn't really want to 'load' it, just open it."
  )
 
 
-#+END_SRC
-
-
-This worked when nothing else would:
-(setq cursor-type '(hbar . 5) )
-
-As did this:
-
-(setq evil-emacs-state-cursor '("red")) ; for box cursor
