@@ -438,8 +438,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-3") 'number-region)
 
-;; (define-key key-minor-mode-map (kbd "s-g") 'consult-grep)
-
 (define-key key-minor-mode-map [mouse-2] 'iloveyou)
 
 (define-key key-minor-mode-map (kbd "M-j") 'aide-openai-complete-buffer-insert)
@@ -530,7 +528,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
 
 
-(define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
+;; (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
 
 
 (define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
@@ -717,7 +715,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key org-mode-map (kbd "C-S-r") nil)
 
 
-(define-key key-minor-mode-map (kbd "M-s-g") 'gnugol-word-at-point)
 (define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
@@ -942,7 +939,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 
-(define-key key-minor-mode-map (kbd "s-G") 'projectile-grep)
+(define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep)
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 
 (define-key key-minor-mode-map (kbd "M-x") 'execute-extended-command) ; call helm-M-x instead of regular M-x

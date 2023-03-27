@@ -100,6 +100,7 @@ This function should only modify configuration layer settings."
      ;; better-defaults
      ;; chrome
      compleseus
+     ;; ivy
      ;; deft
      emacs-lisp
      ;; emoji
@@ -116,6 +117,7 @@ This function should only modify configuration layer settings."
       org-enable-roam-support t)
      osx
      ;; pdf
+     projectile
      ;; python
      ;; shell
      ;; shell-scripts
@@ -165,6 +167,7 @@ This function should only modify configuration layer settings."
                                       cheatsheet
                                       ;; command-log-mode
                                       counsel
+                                      counsel-projectile
                                       ;; spotify
                                       crux
                                       ;; cyberpunk-theme
@@ -268,6 +271,11 @@ This function should only modify configuration layer settings."
                                       ;; yahoo-weather
                                       ;; zone
 
+                                      rg
+                                      ripgrep
+                                      projectile-ripgrep
+                                      deadgrep
+
                                       ;; stripes
                                       )
    ;; A list of packages that cannot be updated.
@@ -299,14 +307,14 @@ This function should only modify configuration layer settings."
                                     highlight-indentation
                                     hl-line
                                     hs-mode
-                                    ivy
+                                    ;; ivy
                                     notmuch
 				                            org-download
-                                    org-projectile
+                                    ;; org-projectile
                                     org-superstar
                                     popwin
                                     spaceline
-                                    swiper
+                                    ;; swiper
                                     treemacs-icons-dired
                                     vterm
                                     vi-tilde-fringe
@@ -323,7 +331,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 
 (defun dotspacemacs/init ()
   "Initialization:
