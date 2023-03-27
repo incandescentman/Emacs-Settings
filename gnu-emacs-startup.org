@@ -438,7 +438,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-3") 'number-region)
 
-(define-key key-minor-mode-map (kbd "s-g") 'consult-grep)
+;; (define-key key-minor-mode-map (kbd "s-g") 'consult-grep)
 
 (define-key key-minor-mode-map [mouse-2] 'iloveyou)
 
@@ -942,7 +942,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 
-(define-key key-minor-mode-map (kbd "s-G") 'consult-grep)
+(define-key key-minor-mode-map (kbd "s-G") 'projectile-grep)
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 
 (define-key key-minor-mode-map (kbd "M-x") 'execute-extended-command) ; call helm-M-x instead of regular M-x
