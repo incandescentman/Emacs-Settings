@@ -1,4 +1,3 @@
-
 flycheck
 
 ido.hist
@@ -8,6 +7,8 @@ recent-addresses
 archive/
 shared-functions.el
 
+.projectile
+*eric-got-it-working.org
 *.savefile
 
 gnu-emacs-startup.el
