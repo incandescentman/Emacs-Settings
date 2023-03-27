@@ -275,7 +275,7 @@ This function should only modify configuration layer settings."
                                       ripgrep
                                       projectile-ripgrep
                                       deadgrep
-
+                                      consult-projectile
                                       ;; stripes
                                       )
    ;; A list of packages that cannot be updated.
