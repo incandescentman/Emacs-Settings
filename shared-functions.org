@@ -389,9 +389,8 @@ is this still necessary?
 (delete-selection-mode 1)
 #+END_SRC
 
-*** Automatically pair parentheses
+*** Buffer-save-without-query
 #+BEGIN_SRC emacs-lisp
-
 (setq buffer-save-without-query nil)
 #+END_SRC
 
@@ -4323,7 +4322,8 @@ event of an error or nonlocal exit."
      ;; ("("  ")")
      ("{"  "}")
      ;; ("["  "]")
-     ("<"  ">"))))
+;; ("<"  ">")
+     )))
 )
 
   (wrap-region-add-wrappers
@@ -5777,8 +5777,42 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
 
  (global-set-key (kbd "C-c v") 'projectile-ag)
  (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
-(setq projectile-indexing-method 'native)
+;; (setq projectile-indexing-method 'alien)
 #+END_SRC
+
+*** Ignore files specified in .projectile (doesn't work)
+
+The function counsel-projectile-grep is failing to ignore the files I
+specified to ignore in my .projectile file. How can I direct
+counsel-projectile-grep to ignore these files?
+
+By default, =counsel-projectile-grep= doesn't use the settings from your
+=.projectile= file. To configure =counsel-projectile-grep= to respect
+the ignore patterns specified in your =.projectile= file, you can modify
+the =counsel-projectile-grep= function by using the =advice-add= feature
+in Emacs Lisp.
+
+Here's an example of how to create an advice function that passes the
+ignore patterns to =counsel-projectile-grep=:
+
+#+begin_src emacs-lisp
+(defun my-projectile-ignore-list ()
+ (let ((project-root (projectile-project-root))
+    (projectile-file (concat (projectile-project-root) ".projectile")))
+  (when (file-exists-p projectile-file)
+   (with-temp-buffer
+    (insert-file-contents projectile-file)
+    (split-string (buffer-string) "\n" t)))))
+
+(defun my-counsel-projectile-grep-ignore-config (orig-fun &rest args)
+ (let* ((ignore-list (my-projectile-ignore-list))
+     (grep-find-ignored-files (append grep-find-ignored-files ignore-list))
+     (grep-find-ignored-directories (append grep-find-ignored-directories ignore-list)))
+  (apply orig-fun args)))
+
+(advice-add 'counsel-projectile-grep :around #'my-counsel-projectile-grep-ignore-config)
+
+#+end_src
 
 * web-mode
 
@@ -6187,7 +6221,7 @@ See also spacemacs/describe-system-info
 
 * convert to chat format
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun intern-convert-to-chat-format (begin end)
  (interactive "r")
  (xah-replace-pairs-region begin end
@@ -6201,7 +6235,7 @@ See also spacemacs/describe-system-info
  ["Benjamin: " "** Ben Bechar\n"]
  )))
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 * shell-pop
