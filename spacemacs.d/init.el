@@ -275,8 +275,8 @@ This function should only modify configuration layer settings."
                                       ripgrep
                                       projectile-ripgrep
                                       deadgrep
-                                      consult-projectile
-                                      ;; stripes
+consult-projectile ;; this finds filenames only. it does not search full text.
+
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
