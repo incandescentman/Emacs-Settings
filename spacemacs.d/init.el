@@ -201,7 +201,7 @@ This function should only modify configuration layer settings."
                                       ;; markdown-mode
                                       maxframe
                                       ;; mpv
-                                      multicolumn
+                                      ;; multicolumn
                                       multiple-cursors
                                       ;; mw-thesaurus
                                       ;; nm
@@ -219,7 +219,7 @@ This function should only modify configuration layer settings."
                                       org-pomodoro
                                       org-roam
                                       org-roam-ui
-                                      websocket
+                                      ;; websocket
                                       simple-httpd
                                       f
                                       org-sticky-header
