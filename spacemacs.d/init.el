@@ -162,13 +162,13 @@ This function should only modify configuration layer settings."
                                       buffer-stack
                                       caps-lock
                                       change-inner
-                                      chatgpt
+                                      ;; chatgpt
                                       cheatsheet
-                                      command-log-mode
+                                      ;; command-log-mode
                                       counsel
                                       ;; spotify
                                       crux
-                                      cyberpunk-theme
+                                      ;; cyberpunk-theme
                                       ;; cyberpunk-theme
                                       dired+
                                       dired-details+
@@ -177,13 +177,13 @@ This function should only modify configuration layer settings."
                                       discover-my-major
                                       ;; early-init
                                       emacsql
-                                      magit-section
+                                      ;; magit-section
                                       embark
                                       ;; emms
                                       epc
                                       expand-region
                                       fancy-narrow
-                                      fastdef
+                                      ;; fastdef
                                       flyspell-lazy
                                       ;; focus
                                       ;; fountain-mode
@@ -200,13 +200,13 @@ This function should only modify configuration layer settings."
                                       key-seq
                                       ;; markdown-mode
                                       maxframe
-                                      mpv
+                                      ;; mpv
                                       multicolumn
                                       multiple-cursors
-                                      mw-thesaurus
+                                      ;; mw-thesaurus
                                       ;; nm
                                       olivetti
-                                      openwith
+                                      ;; openwith
                                       ;;  orgalist
                                       orderless
                                       org-contrib
