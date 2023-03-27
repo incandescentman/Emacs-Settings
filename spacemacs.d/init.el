@@ -142,7 +142,6 @@ This function should only modify configuration layer settings."
                                       ;; dired-single
                                       ;; frame-restore
                                       ;; helm-projectile
-                                      ;; markdown-mode
                                       ;; notmuch
                                       ;; projectile
                                       ;; graphviz-dot-mode
@@ -198,7 +197,7 @@ This function should only modify configuration layer settings."
                                       ;; imenu-list
                                       ;; key-chord
                                       key-seq
-                                      ;; markdown-mode
+                                      markdown-mode
                                       maxframe
                                       ;; mpv
                                       ;; multicolumn

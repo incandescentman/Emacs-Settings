@@ -5777,6 +5777,7 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
 
  (global-set-key (kbd "C-c v") 'projectile-ag)
  (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
+(setq projectile-indexing-method 'native)
 #+END_SRC
 
 * web-mode
