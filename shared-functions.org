@@ -5795,7 +5795,7 @@ in Emacs Lisp.
 Here's an example of how to create an advice function that passes the
 ignore patterns to =counsel-projectile-grep=:
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun my-projectile-ignore-list ()
  (let ((project-root (projectile-project-root))
     (projectile-file (concat (projectile-project-root) ".projectile")))
@@ -5804,15 +5804,19 @@ ignore patterns to =counsel-projectile-grep=:
     (insert-file-contents projectile-file)
     (split-string (buffer-string) "\n" t)))))
 
+(defun my-ignore-list-to-grep-options (ignore-list)
+ (when ignore-list
+  (mapconcat (lambda (pattern)
+         (concat "--exclude=" (shell-quote-argument pattern)))
+        ignore-list " ")))
+
 (defun my-counsel-projectile-grep-ignore-config (orig-fun &rest args)
- (let* ((ignore-list (my-projectile-ignore-list))
-     (grep-find-ignored-files (append grep-find-ignored-files ignore-list))
-     (grep-find-ignored-directories (append grep-find-ignored-directories ignore-list)))
-  (apply orig-fun args)))
+ (let ((counsel-projectile-grep-base-command
+     (concat counsel-projectile-grep-base-command " "
+         (my-ignore-list-to-grep-options
 
-(advice-add 'counsel-projectile-grep :around #'my-counsel-projectile-grep-ignore-config)
 
-#+end_src
+#+end_EXAMPLE
 
 * web-mode
 

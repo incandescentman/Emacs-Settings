@@ -8,8 +8,8 @@ archive/
 shared-functions.el
 
 .projectile
--*eric-got-it-working.org
--*.savefile
+*eric-got-it-working.org
+*.savefile
 
 gnu-emacs-startup.el
 
