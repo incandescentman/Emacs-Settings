@@ -69,6 +69,7 @@
 
   (
    ("s-u f" . org-roam-node-find)
+   ("S-s-<up>" . org-roam-buffer-toggle)
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
    ("s-u c" . org-roam-capture)

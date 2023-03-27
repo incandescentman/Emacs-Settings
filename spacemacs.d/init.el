@@ -189,7 +189,7 @@ This function should only modify configuration layer settings."
                                       ;; fountain-mode
                                       frame-cmds
                                       fuzzy
-                                      gcmh
+                                      gcmh ; The Garbage Collector Magic Hack
                                       ;; gist
                                       ;; helm
                                       ;; helm-cmd-t
@@ -198,7 +198,7 @@ This function should only modify configuration layer settings."
                                       ;; imenu-list
                                       ;; key-chord
                                       key-seq
-                                      markdown-mode
+                                      ;; markdown-mode
                                       maxframe
                                       mpv
                                       multicolumn
