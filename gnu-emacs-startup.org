@@ -2623,18 +2623,11 @@ M-1 to 9
 
 * replace garbage characters
 
-Òembedding-
-
-→
-
-"embedding"
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
+Òembedding → "embedding"
 
 #+BEGIN_SRC emacs-lisp
   (defun replace-garbage-chars ()
-  "Replace goofy MS and other garbage characters with latin1 equivalents."
+  "Replace goofy MS and other garbage characters with latin1 equivalents." 
   (interactive)
   (save-excursion				;save the current point
     (replace-string "  " " " nil (point-min) (point-max))
@@ -2696,9 +2689,6 @@ M-1 to 9
 different → different
 
 #+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 (defun replace-missing-ligatures ()
 "Replace goofy MS and other garbage characters with latin1 equivalents."
 (interactive)
@@ -2718,31 +2708,19 @@ different → different
 ; (replace-string "ve" "the" nil (point-min) (point-max)); this one should be whole word only
   (replace-string "scientifc" "scientific" nil (point-min) (point-max))
 
-
-
 ))
 #+END_SRC
 
 * web-mode
 #+BEGIN_SRC emacs-lisp
-
-    (use-package web-mode
-:defer
-:init
- (add-hook 'web-mode-hook
-      (lambda ()
+    (use-package web-mode :defer
+      :init
+      (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
        (rainbow-mode)
        (rspec-mode)
-       (setq web-mode-markup-indent-offset 2)))
-
-;; (setq web-mode-load-hook (quote ((lambda nil (abbrev-mode -1)))))
-
-(add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
-
-    :bind (:map web-mode-map
-
-
-  ("s-O" . prelude-open-with)))
+       (setq web-mode-markup-indent-offset 2)
+      :bind (:map web-mode-map
+      ("s-O" . prelude-open-with)))
 #+END_SRC
 
 * flyspell fix

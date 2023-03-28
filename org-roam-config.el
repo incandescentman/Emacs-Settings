@@ -1,5 +1,6 @@
+#+begin_SRC emacs-lisp
 (use-package org-roam
-  :delight
+  :delight 
   :custom
   (org-roam-directory (file-truename "~/Dropbox/roam/"))
   :config
@@ -89,4 +90,4 @@
 
    ))
 
-
+#+end_SRC
