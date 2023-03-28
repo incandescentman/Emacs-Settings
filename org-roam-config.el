@@ -1,4 +1,3 @@
-#+begin_SRC emacs-lisp
 (use-package org-roam
   :delight 
   :custom
@@ -89,5 +88,3 @@
 (":" . insert-colon)
 
    ))
-
-#+end_SRC
