@@ -1,5 +1,5 @@
 (use-package org-roam
-  :delight 
+  :delight
   :custom
   (org-roam-directory (file-truename "~/Dropbox/roam/"))
   :config
@@ -16,53 +16,53 @@
   (require 'org-roam-protocol)
   (require 'org-roam-export)
   (setq org-roam-capture-templates
-	'(
+	      '(
 
-	  ("t" "topic" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :topic:\n\n")
-	   :unnarrowed t)
+	        ("t" "topic" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+	         :unnarrowed t)
 
-    ("c" "contact" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :person:\n\n\n")
-	   :unnarrowed t)
+          ("c" "contact" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :person:\n\n\n")
+	         :unnarrowed t)
 
-	  ("d" "definition" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :topic:\n\n")
-     :unnarrowed t)
+	        ("d" "definition" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+           :unnarrowed t)
 
-	  ("s" "sentence" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :topic:\n\n")
-	   :unnarrowed t)
+	        ("s" "sentence" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+	         :unnarrowed t)
 
-	  ("i" "idea" plain "%?"
-	   :target (file+head "blog/${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :idea:\n\n")
-	   :unnarrowed t)
+	        ("i" "idea" plain "%?"
+	         :target (file+head "blog/${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :idea:\n\n")
+	         :unnarrowed t)
 
-	  ("a" "association" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :association:\n\n")
-	   :unnarrowed t)
+	        ("a" "association" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :association:\n\n")
+	         :unnarrowed t)
 
-	  ("r" "research" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :research:\n\n")
-	   :unnarrowed t)
+	        ("r" "research" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :research:\n\n")
+	         :unnarrowed t)
 
-	  ("k" "Kings class" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :class:\n\n")
-	   :unnarrowed t)
+	        ("k" "Kings class" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :class:\n\n")
+	         :unnarrowed t)
 
-	  ("d" "default" plain "%?"
-	   :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                  "#+title: ${title}\n#+filetags: :note:\n\n")
-	   :unnarrowed t)
-    ))
+	        ("d" "default" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :note:\n\n")
+	         :unnarrowed t)
+          ))
   :bind
 
   ;; s-u (define-key key-minor-mode-map (kbd "s-u ") 'roam)
@@ -70,21 +70,40 @@
   (
    ("s-u f" . org-roam-node-find)
    ("S-s-<up>" . org-roam-buffer-toggle)
-;; ("S-s-<down>" . projectile-ripgrep)
+   ;; ("S-s-<down>" . projectile-ripgrep)
    ("S-s-<down>" . consult-git-grep)
-;;   ("S-s-<down>" . deadgrep)
+   ;;   ("S-s-<down>" . deadgrep)
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
    ("s-u c" . org-roam-capture)
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
-("s-D" . org-roam-dailies-goto-today)
-;; ("s-u t" . org-roam-dailies-goto-today)
-("s-u t" . org-roam-dailies-capture-today)
-("S-s-<left>" .  org-roam-node-insert)
-("S-s-<right>" . org-roam-node-find)
-("s-u d" . org-roam-dailies-goto-date)
+   ("s-D" . org-roam-dailies-goto-today)
+   ("s-u t" . org-roam-dailies-goto-today)
+   ("s-u t" . org-roam-dailies-capture-today)
+   ("S-s-<left>" .  org-roam-node-insert)
+   ("S-s-<right>" . org-roam-node-find)
+   ("s-u d" . org-roam-dailies-goto-date)
 
-(":" . insert-colon)
+   (":" . insert-colon)
 
+   ("s-u I" . org-roam-insert-immediate)
+   ("s-u t" . org-roam-dailies-today)
+   ("s-u y" . org-roam-dailies-yesterday)
+   ("s-u T" . org-roam-dailies-find-today)
+   ("s-u Y" . org-roam-dailies-find-yesterday)
+   ("s-u +" . org-roam-dailies-tomorrow)
+   ("s-u j" . org-roam-dailies-capture-today)
+   ("s-u c" . org-roam-capture)
+   ("s-u r" . org-roam-refile)
+   ("s-u b" . org-roam-switch-to-buffer)
+   ("s-u a" . org-roam-alias-add)
+   ("s-u s" . org-roam-server-mode)
+   ("s-u u" . org-roam-unlinked-references)
+   ("s-u v" . org-roam-dailies-find-tomorrow)
+   ("s-u o" . org-roam-dailies-find-date)
+   ("s-u p" . org-roam-dailies-goto-previous-note)
+   ("s-u n" . org-roam-dailies-goto-next-note)
+   ("s-u k" . org-roam-dailies-capture-date)
+   ("s-u m" . org-roam-dailies-find-date)
    ))
