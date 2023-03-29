@@ -1,0 +1,5 @@
+
+* search
+#+begin_src emacs-lisp
+(define-key key-minor-mode-map (kbd "s-/ cg") 'consult-grep)
+#+end_src

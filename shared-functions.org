@@ -92,9 +92,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq user-full-name "Jay Dixit")
 
  (setq blink-cursor-mode nil)
- (setq buffer-stack-show-position nil)
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*")))
- (setq calendar-latitude 40.7)
+(setq calendar-latitude 40.7)
  (setq case-fold-search t)
  (setq ccm-recenter-at-end-of-file t)
  (setq clean-buffer-list-delay-general 1)
@@ -2119,9 +2117,16 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; don't include wildcards like * they will be treated literally!
 ;; wrong: *hours*
 ;; right: hours
+
+
+;; the below does work
+(setq buffer-stack-show-position nil)
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*")))
+
+;; the below doesn't work.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "\\Help\\|help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|emacs\\|hours\\|gnugol\\|*guide-key*\\|scratch\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|.log\\|accountability\\|debug\\|Re-Builder\\|spacemacs\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|.gz\\|orgmode\\|loaddefs\\|gnu\\|elpa\\|sent mail\\|version\\|alert\\|::" (buffer-name buffer))
+  (not (or (string-match "\\Help\\|help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|emacs\\|hours\\|gnugol\\|*guide-key*\\|scratch\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|spacemacs\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|.log\\|accountability\\|debug\\|Re-Builder\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|.gz\\|orgmode\\|loaddefs\\|gnu\\|elpa\\|sent mail\\|version\\|alert\\|::" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 ;; (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 #+END_SRC
@@ -4322,6 +4327,7 @@ event of an error or nonlocal exit."
      ;; ("("  ")")
      ("{"  "}")
      ;; ("["  "]")
+;; ("<"  ">")
 ;; ("<"  ">")
      )))
 )
@@ -7339,7 +7345,7 @@ To use this function, highlight the region you want to add numbering to and then
 #+end_SRC
 
 * embark
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (use-package embark
 :defer
@@ -7374,7 +7380,7 @@ To use this function, highlight the region you want to add numbering to and then
  :ensure t ; only need to install it, embark loads it after consult if found
  :hook
  (embark-collect-mode . consult-preview-at-point-mode))
-#+end_src
+#+END_EXAMPLE
 
 
 * show duplicate lines
