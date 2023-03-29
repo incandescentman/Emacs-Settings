@@ -117,7 +117,6 @@ This function should only modify configuration layer settings."
       org-enable-roam-support t)
      osx
      ;; pdf
-     projectile
      ;; python
      ;; shell
      ;; shell-scripts

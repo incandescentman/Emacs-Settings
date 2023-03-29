@@ -564,7 +564,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-_") 'em-dash)
 
-(define-key key-minor-mode-map (kbd "s-/") 'rgrep)
+;; (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
 
 (define-key key-minor-mode-map (kbd "C-v") 'html2org-clipboard)
 
@@ -2627,7 +2627,7 @@ M-1 to 9
 
 #+BEGIN_SRC emacs-lisp
   (defun replace-garbage-chars ()
-  "Replace goofy MS and other garbage characters with latin1 equivalents." 
+  "Replace goofy MS and other garbage characters with latin1 equivalents."
   (interactive)
   (save-excursion				;save the current point
     (replace-string "  " " " nil (point-min) (point-max))

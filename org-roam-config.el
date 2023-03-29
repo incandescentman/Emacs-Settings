@@ -11,7 +11,8 @@
         '(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
+                              "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n
+- tags :: "))))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
   (require 'org-roam-export)
@@ -20,47 +21,56 @@
 
 	        ("t" "topic" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+			                        "#+title: ${title}\n#+filetags: :topic:\n
+- tags :: ")
 	         :unnarrowed t)
 
           ("c" "contact" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :person:\n\n\n")
+			                        "#+title: ${title}\n#+filetags: :person:\n\
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("d" "definition" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+			                        "#+title: ${title}\n#+filetags: :topic:\n
+- tags :: ")
            :unnarrowed t)
 
 	        ("s" "sentence" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n\n")
+			                        "#+title: ${title}\n#+filetags: :topic:\n
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("i" "idea" plain "%?"
 	         :target (file+head "blog/${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :idea:\n\n")
+			                        "#+title: ${title}\n#+filetags: :idea:\n
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("a" "association" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :association:\n\n")
+			                        "#+title: ${title}\n#+filetags: :association:\n
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("r" "research" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :research:\n\n")
+			                        "#+title: ${title}\n#+filetags: :research:\n
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("k" "Kings class" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :class:\n\n")
+			                        "#+title: ${title}\n#+filetags: :class:\n
+- tags :: ")
 	         :unnarrowed t)
 
 	        ("d" "default" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :note:\n\n")
+			                        "#+title: ${title}\n#+filetags: :note:\n
+- tags :: ")
 	         :unnarrowed t)
           ))
   :bind
