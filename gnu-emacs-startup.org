@@ -663,8 +663,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-q") 'prelude-switch-to-previous-buffer)
 
-(define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
+;; (define-key key-minor-mode-map (kbd "s-]") 'org-forward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-]") 'org-next-visible-heading)
+;; (define-key key-minor-mode-map (kbd "s-[") 'org-backward-heading-same-level)
+(define-key key-minor-mode-map (kbd "s-[") 'org-previous-visible-heading)
 
 
 (define-key key-minor-mode-map (kbd "C-M-]") 'org-next-subtree-and-narrow)
@@ -957,9 +959,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
-;; org-mime
-;; (define-key org-mode-map (kbd "M-n") 'new-email-from-subtree-no-signature)
-;; (define-key key-minor-mode-map (kbd "M-N") 'new-email-from-subtree)
 
 
 #+END_SRC
