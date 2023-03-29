@@ -1228,7 +1228,7 @@ I think this is to make parent ~DONE~ states automatically update:
 
 Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
 
@@ -1249,7 +1249,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
                      (equal (match-string 2) (match-string 3)))
                 (org-todo 'done)
               (org-todo 'todo)))))))
-#+END_EXAMPLE
+#+END_SRC
 
 *** org align tables
 
@@ -2121,7 +2121,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ;; the below does work
 (setq buffer-stack-show-position nil)
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*")))
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "*accountability*")))
 
 ;; the below doesn't work.
 (defun buffer-stack-filter-regexp (buffer)
@@ -4282,12 +4282,12 @@ event of an error or nonlocal exit."
                  adlist))))
 
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
-  "Advice to move to next list item on checkbox toggle."
-  (my/with-advice
-      ((#'org-update-checkbox-count-maybe
-        :after (lambda ()
-                 (ignore-errors (org-next-item)))))
-    (apply orig-fn args)))
+ "Advice to move to next list item on checkbox toggle."
+ (my/with-advice
+   ((org-update-checkbox-count-maybe
+    :after (lambda ()
+         (ignore-errors (org-next-item)))))
+  (apply orig-fn args)))
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
