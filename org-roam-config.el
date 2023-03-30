@@ -91,6 +91,7 @@
    ("s-j" . org-roam-dailies-goto-today)
    ("s-D" . org-roam-dailies-goto-today)
    ("s-u t" . org-roam-dailies-goto-today)
+;; org-roam-ui-mode
    ("s-u t" . org-roam-dailies-capture-today)
    ("S-s-<left>" .  org-roam-node-insert)
    ("S-s-<right>" . org-roam-node-find)
@@ -113,6 +114,13 @@
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-u k" . org-roam-dailies-capture-date)
    ("s-u m" . org-roam-dailies-goto-date)
+
+
+   ("s-/ sn" . org-roam-search-nodes)
+;   ("s-/ st" . consult-)
+; ("s-/ l" . council-)
+; ("s-/ d" . deadgrep-)
+; ("s-/ g" . gitgrep-)
    ))
 
 ;; (global-page-break-lines-mode 0)
@@ -133,7 +141,7 @@
 )
 
 
-(defun org-roam-rg-search ()
+(defun org-roam-search-nodes ()
   "Search org-roam directory using consult-ripgrep. With live-preview."
   (interactive)
 ;;  (require 'org-roam)

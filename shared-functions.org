@@ -7276,7 +7276,7 @@ To use this function, highlight the region you want to add numbering to and then
 ;;     a hookable mode anymore, you're advised to pick something yourself
 ;;     if you don't care about startup time, use
 ;; :hook (after-init . org-roam-ui-mode)
-  :bind (("s-u s" . org-roam-ui-mode))
+
   :config
   (setq org-roam-ui-sync-theme t
      org-roam-ui-follow t

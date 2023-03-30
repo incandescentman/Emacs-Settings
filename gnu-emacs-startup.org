@@ -436,6 +436,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
+
+(setq org-roam-completion-everywhere t)
+(define-key key-minor-mode-map (kbd "M-/") 'completion-at-point)
+
 (define-key key-minor-mode-map (kbd "M-3") 'number-region)
 
 (define-key key-minor-mode-map [mouse-2] 'iloveyou)
