@@ -1,9 +1,9 @@
 (use-package org-roam
   :delight
   :custom
-  (org-roam-directory (file-truename "~/Dropbox/roam/"))
+  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
   :config
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (org-roam-setup)
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-db-autosync-mode)
   (setq org-roam-dailies-directory "journal/")
@@ -108,9 +108,15 @@
    ("s-u c" . org-roam-capture)
    ("s-u r" . org-roam-refile)
    ;; ("s-u a" . org-roam-alias-add)
-("s-u o" . org-roam-dailies-find-date)
+   ("s-u o" . org-roam-dailies-find-date)
    ("s-u p" . org-roam-dailies-goto-previous-note)
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-u k" . org-roam-dailies-capture-date)
    ("s-u m" . org-roam-dailies-goto-date)
    ))
+
+(global-page-break-lines-mode 0)
+;; so that org-roam links can be followed
+;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
+
+
