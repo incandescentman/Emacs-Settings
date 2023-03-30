@@ -79,7 +79,7 @@
 
   (
    ("s-u f" . org-roam-node-find)
-   ("S-s-<up>" . org-roam-buffer-toggle)
+   ("S-s-<up>" . org-roam-backlinks-buffer)
    ;; ("S-s-<down>" . projectile-ripgrep)
    ("S-s-<down>" . consult-git-grep)
    ;;   ("S-s-<down>" . deadgrep)
@@ -115,8 +115,19 @@
    ("s-u m" . org-roam-dailies-goto-date)
    ))
 
-(global-page-break-lines-mode 0)
+;; (global-page-break-lines-mode 0)
+(advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
+
+
+
 ;; so that org-roam links can be followed
 ;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
+;; if necessary, consider using org-roam-buffer-refresh
 
 
+
+(defun org-roam-backlinks-buffer ()
+(interactive)
+(org-roam-buffer-toggle)
+(other-window 1)
+)
