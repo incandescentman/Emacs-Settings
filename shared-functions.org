@@ -3119,8 +3119,8 @@ Key bindings I don't use much and should remember to learn:
 
 
 
-;; (define-super-key "j a" 'org-agenda)
-;; (define-super-key "j j" 'helm-imenu-anywhere)
+;; (define-super-key "i a" 'org-agenda)
+;; (define-super-key "i j" 'helm-imenu-anywhere)
 ;; (define-super-key ";" 'ido-goto-symbol)
 ;; (define-super-key ";" 'helm-resume)
 ;; (define-super-key "D" 'diredp-dired-recent-dirs)
@@ -3129,56 +3129,54 @@ Key bindings I don't use much and should remember to learn:
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-super-key "j cy" 'cyberpunk-jay)
-(define-super-key "j cl" 'cyberpunk-large)
-(define-super-key "j zb" 'zenburn)
-(define-super-key "j le" 'leuven)
-(define-super-key "j ts" 'transparent-serenity)
-(define-super-key "j tg" 'top-gun-mode)
-(define-super-key "j tn" 'tomorrow-night)
+(define-super-key "i cy" 'cyberpunk-jay)
+(define-super-key "i cl" 'cyberpunk-large)
+(define-super-key "i zb" 'zenburn)
+(define-super-key "i le" 'leuven)
+(define-super-key "i ts" 'transparent-serenity)
+(define-super-key "i tg" 'top-gun-mode)
+(define-super-key "i tn" 'tomorrow-night)
 
-(define-super-key "j ma" 'inverse-add-global-abbrev)
+(define-super-key "i ma" 'inverse-add-global-abbrev)
 
-(define-super-key "j rr" 'replace-regexp)
-
-
-(define-super-key "j cf" 'customize-face)
-
-;; (define-super-key "j h" 'org-export-dispatch)
+(define-super-key "i rr" 'replace-regexp)
 
 
+(define-super-key "i cf" 'customize-face)
+
+;; (define-super-key "i h" 'org-export-dispatch)
 
 
-;(define-super-key "j nm" 'notmuch-hello)
-(define-super-key "j mu" 'mu4e)
 
-;; (define-super-key "j cl" 'cyberpunk-large)
 
-(define-super-key "j dd" 'delete-duplicate-lines-keep-blanks)
+;(define-super-key "i nm" 'notmuch-hello)
+(define-super-key "i mu" 'mu4e)
 
-(define-super-key "j cw" 'count-words)
-(define-super-key "j wb" 'whiteboard)
-(define-super-key "j sl" 'spacemacs-light)
+;; (define-super-key "i cl" 'cyberpunk-large)
 
-(define-super-key "j sd" 'solarized-dark)
-(define-super-key "j ri" 'ritchie)
-(define-super-key "j sp" 'spolsky)
-(define-super-key "j wr" 'writeroom-mode)
-(define-super-key "j wf" 'workflowy-mode)
-(define-super-key "j st" 'small-type)
-(define-super-key "j mp" 'morning-pages)
-(define-super-key "j lt" 'load-theme)
-(define-super-key "j mt" 'medium-type)
+(define-super-key "i dd" 'delete-duplicate-lines-keep-blanks)
 
-(define-super-key "j bl" 'blue-light)
+(define-super-key "i cw" 'count-words)
+(define-super-key "i wb" 'whiteboard)
+(define-super-key "i sl" 'spacemacs-light)
 
-(define-super-key "j eu" 'endless/upgrade)
+(define-super-key "i sd" 'solarized-dark)
+(define-super-key "i ri" 'ritchie)
+(define-super-key "i sp" 'spolsky)
+(define-super-key "i wr" 'writeroom-mode)
+(define-super-key "i wf" 'workflowy-mode)
+(define-super-key "i st" 'small-type)
+(define-super-key "i mp" 'morning-pages)
+(define-super-key "i lt" 'load-theme)
+(define-super-key "i mt" 'medium-type)
+
+(define-super-key "i bl" 'blue-light)
+
+(define-super-key "i eu" 'endless/upgrade)
 
 
 ;; accountability
 
-(define-super-key "j ek" 'erika-send-email-styled)
-(define-super-key "j ad" 'adrien-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -3188,8 +3186,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (save-excursion (insert ")")
                 ))
 
-(define-super-key "j kb" 'keybinding-read-and-insert)
-(define-super-key "j mk" 'keybinding-read-and-insert)
+(define-super-key "i kb" 'keybinding-read-and-insert)
+(define-super-key "i mk" 'keybinding-read-and-insert)
 
 
 

@@ -405,11 +405,11 @@ Source: [[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybin
 
 Use ⌘-m as prefix for my own custom keybindings:
 #+BEGIN_SRC emacs-lisp
-(global-unset-key (kbd "s-j"))
-(defvar s-j-map (make-keymap)
+(global-unset-key (kbd "s-i"))
+(defvar s-i-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
-(define-key global-map (kbd "s-j") 's-j-prefix)
-(fset 's-j-prefix s-j-map)
+(define-key global-map (kbd "s-i") 's-i-prefix)
+(fset 's-i-prefix s-i-map)
 #+END_SRC
 
 
@@ -444,24 +444,24 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-c C-x C-r") 'org-clock-report)
 
-(define-key key-minor-mode-map (kbd "s-j r t") 'org-render-table-at-point)
+(define-key key-minor-mode-map (kbd "s-i r t") 'org-render-table-at-point)
 
-(define-key key-minor-mode-map (kbd "s-j m c") 'multiple-cursors-reflash)
+(define-key key-minor-mode-map (kbd "s-i m c") 'multiple-cursors-reflash)
 
-(define-key key-minor-mode-map (kbd "s-J") 'dired-jump)
+;; (define-key key-minor-mode-map (kbd "s-J") 'dired-jump)
 
-(define-key key-minor-mode-map (kbd "s-j n s") 'yas/new-snippet)
-(define-key key-minor-mode-map (kbd "s-j y n") 'yas/new-snippet)
+(define-key key-minor-mode-map (kbd "s-i n s") 'yas/new-snippet)
+(define-key key-minor-mode-map (kbd "s-i n") 'yas/new-snippet)
 
 (define-key help-mode-map (kbd "C-s-]") 'help-go-back)
 (define-key key-minor-mode-map (kbd "C-s-]") 'help-go-forward)
 
 
 
-(define-key key-minor-mode-map (kbd "s-j c m") 'css-mode)
-;; (define-key css-mode-map (kbd "s-j c s") 'css-mode)
-(define-key key-minor-mode-map (kbd "s-j s h") 'sh-mode)
-(define-key key-minor-mode-map (kbd "s-j s m") 'sh-mode)
+(define-key key-minor-mode-map (kbd "s-i c m") 'css-mode)
+;; (define-key css-mode-map (kbd "s-i c s") 'css-mode)
+(define-key key-minor-mode-map (kbd "s-i s h") 'sh-mode)
+(define-key key-minor-mode-map (kbd "s-i s m") 'sh-mode)
 
 (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 
@@ -495,36 +495,36 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
 
-(define-key key-minor-mode-map (kbd "s-j t c") 'org-table-create)
+(define-key key-minor-mode-map (kbd "s-i t c") 'org-table-create)
 
 (define-key key-minor-mode-map (kbd "C-;") 'org-def)
 
 (define-key flyspell-mode-map (kbd "C-;") 'org-def)
 
-(define-key key-minor-mode-map (kbd "s-j u p") 'unfill-paragraph)
+(define-key key-minor-mode-map (kbd "s-i u p") 'unfill-paragraph)
 
 (define-key key-minor-mode-map (kbd "C-w") 'copy-region-as-kill)
 
 ;; (define-key key-minor-mode-map (kbd "=") 'insert-equals-sign)
 
-(define-key key-minor-mode-map (kbd "s-j w s") 'isearch-forward-word)
+(define-key key-minor-mode-map (kbd "s-i w s") 'isearch-forward-word)
 
 (define-key key-minor-mode-map (kbd "s-f") 'isearch-forward-ignore-case)
 
 ;; (define-key key-minor-mode-map (kbd "s-f") 'avy-goto-char-timer)
 
-(define-key key-minor-mode-map (kbd "s-j w m") 'whitespace-mode)
+(define-key key-minor-mode-map (kbd "s-i w m") 'whitespace-mode)
 
-(define-key key-minor-mode-map (kbd "s-j h l") 'spacemacs/toggle-highlight-current-line-globally-off)
+(define-key key-minor-mode-map (kbd "s-i h l") 'spacemacs/toggle-highlight-current-line-globally-off)
 
-(define-key key-minor-mode-map (kbd "s-j r b") 'revert-buffer)
+(define-key key-minor-mode-map (kbd "s-i r b") 'revert-buffer)
 
-(define-key key-minor-mode-map (kbd "s-j s b") 'scrollbar-mode-turn-off-scrollbar)
+(define-key key-minor-mode-map (kbd "s-i s b") 'scrollbar-mode-turn-off-scrollbar)
 
-(define-key key-minor-mode-map (kbd "s-j i l") 'imenu-list)
-(define-key key-minor-mode-map (kbd "s-j i m") 'imenu-list)
+(define-key key-minor-mode-map (kbd "s-i i l") 'imenu-list)
+(define-key key-minor-mode-map (kbd "s-i i m") 'imenu-list)
 
-(define-key key-minor-mode-map (kbd "s-j g t") 'google-translate-at-point)
+(define-key key-minor-mode-map (kbd "s-i g t") 'google-translate-at-point)
 
 (define-key key-minor-mode-map (kbd "M-?") 'insert-question-mark)
 
@@ -532,13 +532,13 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
 
 
-(define-key key-minor-mode-map (kbd "s-j g a") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-j ag") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-j gf") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-j mf") 'monaco-font)
-(define-key key-minor-mode-map (kbd "s-j mo") 'monaco-font)
+(define-key key-minor-mode-map (kbd "s-i g a") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-i ag") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-i gf") 'adobe-garamond-pro)
+(define-key key-minor-mode-map (kbd "s-i mf") 'monaco-font)
+(define-key key-minor-mode-map (kbd "s-i mo") 'monaco-font)
 
-(define-key key-minor-mode-map (kbd "s-j t t") 'toggle-between-src-and-example-block)
+(define-key key-minor-mode-map (kbd "s-i t t") 'toggle-between-src-and-example-block)
 
 ;; working with an external monitor
 (define-key key-minor-mode-map (kbd "s-n") 'make-frame)
@@ -550,13 +550,13 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-x C-d") 'dired)
 
-(define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-path-to-kill-ring)
+(define-key key-minor-mode-map (kbd "s-i c p") 'path-copy-path-to-kill-ring)
 
 
-(define-key org-mode-map (kbd "s-j c s") 'org-clone-subtree)
-(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree)
-(define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree)
-(define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree)
+(define-key org-mode-map (kbd "s-i c s") 'org-clone-subtree)
+(define-key key-minor-mode-map (kbd "s-i p s") 'org-paste-subtree)
+(define-key key-minor-mode-map (kbd "s-i v") 'org-paste-subtree)
+(define-key key-minor-mode-map (kbd "s-i x") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
 
@@ -576,7 +576,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-,") 'insert-comma)
 
 
-(define-key key-minor-mode-map (kbd "s-j g b") 'gist-buffer-to-pasteboard)
+(define-key key-minor-mode-map (kbd "s-i g b") 'gist-buffer-to-pasteboard)
 
 ;; (define-key key-minor-mode-map (kbd "<M-s-up>") 'scroll-down-command)
 ;; (define-key key-minor-mode-map (kbd "<M-s-down>") 'scroll-up-command)
@@ -587,26 +587,26 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
-(define-key key-minor-mode-map (kbd "s-j o m") 'org-mode)
-(define-key key-minor-mode-map (kbd "s-j f m") 'fundamental-mode)
-(define-key key-minor-mode-map (kbd "s-j e l") 'emacs-lisp-mode)
+(define-key key-minor-mode-map (kbd "s-i o m") 'org-mode)
+(define-key key-minor-mode-map (kbd "s-i f m") 'fundamental-mode)
+(define-key key-minor-mode-map (kbd "s-i e l") 'emacs-lisp-mode)
 
 
-(define-key key-minor-mode-map (kbd "s-j w c") 'wc-mode)
-(define-key key-minor-mode-map (kbd "s-j o c") 'org-wc-count-subtrees)
-(define-key key-minor-mode-map (kbd "s-j o c") 'org-wc-display)
+(define-key key-minor-mode-map (kbd "s-i w c") 'wc-mode)
+(define-key key-minor-mode-map (kbd "s-i o c") 'org-wc-count-subtrees)
+(define-key key-minor-mode-map (kbd "s-i o c") 'org-wc-display)
 
 (global-set-key (kbd "C-c m") 'compose-mail)
 ;; (global-set-key (kbd "C-c m") 'yale-or-vivovii-compose)
 
 
-(define-key key-minor-mode-map (kbd "s-j m b") 'menu-bar-mode)
+(define-key key-minor-mode-map (kbd "s-i m b") 'menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this)
 
-(define-key key-minor-mode-map (kbd "s-j d c") 'org-table-delete-column)
-(define-key key-minor-mode-map (kbd "s-j i c") 'org-table-insert-column)
-(define-key key-minor-mode-map (kbd "s-j i r") 'org-table-insert-row)
+(define-key key-minor-mode-map (kbd "s-i d c") 'org-table-delete-column)
+(define-key key-minor-mode-map (kbd "s-i i c") 'org-table-insert-column)
+(define-key key-minor-mode-map (kbd "s-i i r") 'org-table-insert-row)
 
 
 ;; mu4e-gmail
@@ -623,12 +623,12 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region)
 
-(define-key key-minor-mode-map (kbd "s-j p m") 'poetry-mode)
+(define-key key-minor-mode-map (kbd "s-i p m") 'poetry-mode)
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'zin/org-checkbox-next)
 
 (define-key key-minor-mode-map (kbd "<f20>") 'pomodoro-start-jay)
-(define-key key-minor-mode-map (kbd "s-j p o") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "s-i p o") 'pomodoro-start-jay)
 
 
 
@@ -636,8 +636,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 
-(define-key key-minor-mode-map (kbd "s-j t d") 'jd-org-today)
-(define-key key-minor-mode-map (kbd "s-j c i") 'jd-clock-in)
+(define-key key-minor-mode-map (kbd "s-i t d") 'jd-org-today)
+(define-key key-minor-mode-map (kbd "s-i c i") 'jd-clock-in)
 
 
 
@@ -777,7 +777,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
-(define-key key-minor-mode-map (kbd "s-j r e") 'set-rectangular-region-anchor)
+(define-key key-minor-mode-map (kbd "s-i r e") 'set-rectangular-region-anchor)
 
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 ;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
@@ -844,9 +844,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
-(define-key key-minor-mode-map (kbd "s-j o l") 'olivetti-mode)
+(define-key key-minor-mode-map (kbd "s-i o l") 'olivetti-mode)
 (define-key key-minor-mode-map (kbd "] ol") 'olivetti-mode)
-(define-key key-minor-mode-map (kbd "s-j o e") 'olivetti-expand)
+(define-key key-minor-mode-map (kbd "s-i o e") 'olivetti-expand)
 (define-key key-minor-mode-map (kbd "s-+") 'copy-region-to-other-window)
 (define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
 
@@ -903,12 +903,12 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; very useful when encountering names and other unfamiliar words
 (define-key key-minor-mode-map (kbd "M-+") 'add-word-to-personal-dictionary)
 
-(define-key key-minor-mode-map (kbd "s-j s w") 'crux-swap-windows)
+(define-key key-minor-mode-map (kbd "s-i s w") 'crux-swap-windows)
 
-(define-key key-minor-mode-map (kbd "s-j l a") 'jay-load-latex)
-(define-key key-minor-mode-map (kbd "s-j l t") 'jay-load-latex)
-(define-key key-minor-mode-map (kbd "s-j k a") 'load-koma-letter)
-(define-key key-minor-mode-map (kbd "s-j k o") 'load-koma-letter)
+(define-key key-minor-mode-map (kbd "s-i l a") 'jay-load-latex)
+(define-key key-minor-mode-map (kbd "s-i l t") 'jay-load-latex)
+(define-key key-minor-mode-map (kbd "s-i k a") 'load-koma-letter)
+(define-key key-minor-mode-map (kbd "s-i k o") 'load-koma-letter)
 
 (define-key key-minor-mode-map (kbd "M-s-v") 'html2org-clipboard)
 
