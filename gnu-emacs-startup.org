@@ -585,6 +585,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
+(define-key key-minor-mode-map (kbd "s-;") 'vertico-repeat)
 (define-key key-minor-mode-map (kbd "s-i o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-i f m") 'fundamental-mode)
 (define-key key-minor-mode-map (kbd "s-i e l") 'emacs-lisp-mode)
@@ -791,6 +792,12 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "=") 'smex) ; call any function with easiest keystroke possible
+(define-key key-minor-mode-map (kbd "=") 'counsel-M-x) ; call any function with easiest keystroke possible
+
+
+(global-set-key (kbd "C-s") 'consult-line) ;; instead of swiper
+;; Source: [[https://macowners.club/posts/from-ivy-to-vertico/][From Ivy & Counsel to Vertico & Consult | macOS & (open-source) Software]]
+
 ;; (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
@@ -838,7 +845,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-D") 'org-roam-dailies-capture-today)
 
 ;; own structure editing
-(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+;; (define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
 ;; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 
 
