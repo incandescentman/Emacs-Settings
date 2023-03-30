@@ -135,10 +135,12 @@
      (define-key org-mode-map [C-down] 'org-metadown)
      (define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
      (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
+     ;; (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
+     ;; (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
+;;     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
+     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-promote-subtree)
+;;     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
+     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-demote-subtree)
 
 
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
