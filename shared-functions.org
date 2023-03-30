@@ -3063,8 +3063,8 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 
 (defun define-super-key (key fun)
   (cond
-   (aquamacs-flag
-    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
+; (aquamacs-flag
+; (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
    (gnuemacs-flag
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 #+END_SRC
@@ -3129,20 +3129,20 @@ Key bindings I don't use much and should remember to learn:
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-super-key "j cy" 'cyberpunk-jay)
-(define-super-key "j cl" 'cyberpunk-large)
-(define-super-key "j zb" 'zenburn)
-(define-super-key "j le" 'leuven)
-(define-super-key "j ts" 'transparent-serenity)
-(define-super-key "j tg" 'top-gun-mode)
-(define-super-key "j tn" 'tomorrow-night)
+;; (define-super-key "j cy" 'cyberpunk-jay)
+;; (define-super-key "j cl" 'cyberpunk-large)
+;; (define-super-key "j zb" 'zenburn)
+;; (define-super-key "j le" 'leuven)
+;; (define-super-key "j ts" 'transparent-serenity)
+;; (define-super-key "j tg" 'top-gun-mode)
+;; (define-super-key "j tn" 'tomorrow-night)
 
-(define-super-key "j ma" 'inverse-add-global-abbrev)
+;; (define-super-key "j ma" 'inverse-add-global-abbrev)
 
-(define-super-key "j rr" 'replace-regexp)
+;; (define-super-key "j rr" 'replace-regexp)
 
 
-(define-super-key "j cf" 'customize-face)
+;; (define-super-key "j cf" 'customize-face)
 
 ;; (define-super-key "j h" 'org-export-dispatch)
 
@@ -3150,35 +3150,35 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 ;(define-super-key "j nm" 'notmuch-hello)
-(define-super-key "j mu" 'mu4e)
+;(define-super-key "j mu" 'mu4e)
 
 ;; (define-super-key "j cl" 'cyberpunk-large)
 
-(define-super-key "j dd" 'delete-duplicate-lines-keep-blanks)
+;; (define-super-key "j dd" 'delete-duplicate-lines-keep-blanks)
 
-(define-super-key "j cw" 'count-words)
-(define-super-key "j wb" 'whiteboard)
-(define-super-key "j sl" 'spacemacs-light)
+;; (define-super-key "j cw" 'count-words)
+;; (define-super-key "j wb" 'whiteboard)
+;; (define-super-key "j sl" 'spacemacs-light)
 
-(define-super-key "j sd" 'solarized-dark)
-(define-super-key "j ri" 'ritchie)
-(define-super-key "j sp" 'spolsky)
-(define-super-key "j wr" 'writeroom-mode)
-(define-super-key "j wf" 'workflowy-mode)
-(define-super-key "j st" 'small-type)
-(define-super-key "j mp" 'morning-pages)
-(define-super-key "j lt" 'load-theme)
-(define-super-key "j mt" 'medium-type)
+;; (define-super-key "j sd" 'solarized-dark)
+;; (define-super-key "j ri" 'ritchie)
+;; (define-super-key "j sp" 'spolsky)
+;; (define-super-key "j wr" 'writeroom-mode)
+;; (define-super-key "j wf" 'workflowy-mode)
+;; (define-super-key "j st" 'small-type)
+;; (define-super-key "j mp" 'morning-pages)
+;; (define-super-key "j lt" 'load-theme)
+;; (define-super-key "j mt" 'medium-type)
 
-(define-super-key "j bl" 'blue-light)
+;; (define-super-key "j bl" 'blue-light)
 
-(define-super-key "j eu" 'endless/upgrade)
+;; (define-super-key "j eu" 'endless/upgrade)
 
 
-;; accountability
+;; ;; accountability
 
-(define-super-key "j ek" 'erika-send-email-styled)
-(define-super-key "j ad" 'adrien-send-email-styled)
+;; (define-super-key "j ek" 'erika-send-email-styled)
+;; (define-super-key "j ad" 'adrien-send-email-styled)
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -3188,8 +3188,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (save-excursion (insert ")")
                 ))
 
-(define-super-key "j kb" 'keybinding-read-and-insert)
-(define-super-key "j mk" 'keybinding-read-and-insert)
+;; (define-super-key "j kb" 'keybinding-read-and-insert)
+;; (define-super-key "j mk" 'keybinding-read-and-insert)
 
 
 

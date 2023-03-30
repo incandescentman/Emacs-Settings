@@ -408,8 +408,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 (global-unset-key (kbd "s-j"))
 (defvar s-j-map (make-keymap)
   "Keymap for local bindings and functions, prefixed by (Command-M)")
-(define-key global-map (kbd "s-j") 's-j-prefix)
-(fset 's-j-prefix s-j-map)
+(define-key global-map (kbd "s-i") 's-i-prefix)
+(fset 's-i-prefix s-i-map)
 #+END_SRC
 
 
@@ -553,11 +553,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-j c p") 'path-copy-path-to-kill-ring)
 
 
-(define-key org-mode-map (kbd "s-j c s") 'org-clone-subtree)
-(define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree)
-(define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree)
-(define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree)
-(define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
+;; (define-key org-mode-map (kbd "s-j c s") 'org-clone-subtree)
+;; (define-key key-minor-mode-map (kbd "s-j p s") 'org-paste-subtree)
+;; (define-key key-minor-mode-map (kbd "s-j v") 'org-paste-subtree)
+;; (define-key key-minor-mode-map (kbd "s-j x") 'org-cut-subtree)
+;; (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
 
 
 (define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote)
