@@ -961,6 +961,34 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c v i") 'org-insert-src-block)
 
 
+(define-key key-minor-mode-map (kbd "s-h") 'replace-string)
+
+
+(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this)
+
+
+(define-key key-minor-mode-map (kbd "s-\\") 'visit-most-recent-file)
+
+;; (define-key key-minor-mode-map (kbd "s-f" 'isearch-forward)
+(define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
+;; (define-key key-minor-mode-map (kbd "s-R" 'helm-projectile-recentf)
+;; (define-key key-minor-mode-map (kbd "s-r" 'helm-mini)
+
+(define-key key-minor-mode-map (kbd "s-R") 'projectile-find-file)
+(define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
+(define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
+(define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
+(define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
+(define-key key-minor-mode-map (kbd "s-K") 'org-cut-subtree)
+(define-key key-minor-mode-map (kbd "s-d") 'org-todo)
+(define-key key-minor-mode-map (kbd "s-L") 'org-mac-link-chrome-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-S") 'org-mac-link-skim-insert-page)
+(define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer) ; select all
+(define-key key-minor-mode-map (kbd "s-w") 'delete-window) ; close
+;; (define-key key-minor-mode-map (kbd "s-`" 'other-window-or-frame)
+(define-key key-minor-mode-map (kbd "s-s") 'jay/save-some-buffers ) ; save all
+
+
 
 #+END_SRC
 

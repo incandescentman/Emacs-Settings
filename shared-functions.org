@@ -3070,7 +3070,11 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 #+END_SRC
 
 *** mksuper - shared Aquamacs / GNU Emacs keybindings:
-#+BEGIN_SRC emacs-lisp
+
+Deprecated in favor of (define-key key-minor-mode-map (kbd "s- ... in:
+[[/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
+
+#+BEGIN_EXAMPLE emacs-lisp
 (define-super-key "h" 'replace-string)
 
 
@@ -3097,7 +3101,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 (define-super-key "w" 'delete-window) ; close
 ;; (define-super-key "`" 'other-window-or-frame)
 (define-super-key "s" 'jay/save-some-buffers ) ; save all
-#+END_SRC
+#+END_EXAMPLE
 
 Key bindings I don't use much and should remember to learn:
 #+BEGIN_SRC emacs-lisp
