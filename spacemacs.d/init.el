@@ -825,7 +825,6 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
-
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
