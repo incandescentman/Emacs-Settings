@@ -131,3 +131,10 @@
 (org-roam-buffer-toggle)
 (other-window 1)
 )
+
+
+(defun org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+;;  (require 'org-roam)
+(counsel-rg nil org-roam-directory nil nil))
