@@ -88,6 +88,7 @@
    ("s-u c" . org-roam-capture)
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
+   ("s-j" . org-roam-dailies-goto-today)
    ("s-D" . org-roam-dailies-goto-today)
    ("s-u t" . org-roam-dailies-goto-today)
    ("s-u t" . org-roam-dailies-capture-today)

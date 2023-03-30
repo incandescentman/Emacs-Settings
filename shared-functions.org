@@ -5603,9 +5603,9 @@ into the main dumped emacs"
 :bind
 ( "M-`" . crux-swap-windows)
 
-( "s-j rf" .  crux-rename-file-and-buffer)
+;; ( "s-j rf" .  crux-rename-file-and-buffer)
 
-( "s-j df" . crux-delete-file-and-buffer)
+;; ( "s-j df" . crux-delete-file-and-buffer)
 
 ( "C-c d" . crux-duplicate-current-line-or-region)
 
