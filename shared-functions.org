@@ -3063,8 +3063,8 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 
 (defun define-super-key (key fun)
   (cond
-   (aquamacs-flag
-    (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
+; (aquamacs-flag
+; (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
    (gnuemacs-flag
     (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 #+END_SRC
@@ -3151,7 +3151,6 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 ;(define-super-key "i nm" 'notmuch-hello)
 (define-super-key "i mu" 'mu4e)
-
 ;; (define-super-key "i cl" 'cyberpunk-large)
 
 (define-super-key "i dd" 'delete-duplicate-lines-keep-blanks)
@@ -3174,9 +3173,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "i eu" 'endless/upgrade)
 
-
-;; accountability
-
+;; ;; accountability
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -3188,7 +3185,6 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 (define-super-key "i kb" 'keybinding-read-and-insert)
 (define-super-key "i mk" 'keybinding-read-and-insert)
-
 
 
 #+END_SRC

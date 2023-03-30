@@ -558,8 +558,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-i v") 'org-paste-subtree)
 (define-key key-minor-mode-map (kbd "s-i x") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
-
-
 (define-key key-minor-mode-map (kbd "M-'") 'insert-one-double-quote)
 (define-key key-minor-mode-map (kbd "M-s-.") 'mark-paragraph)
 
