@@ -21,11 +21,11 @@
 
 	        ("t" "topic" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n
+			                        "#+title: ${title}\n#+filetags: :concept:\n
 - tags :: ")
 	         :unnarrowed t)
 
-          ("c" "contact" plain "%?"
+          ("p" "person]" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
 - tags :: ")
@@ -33,13 +33,13 @@
 
 	        ("d" "definition" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n
+			                        "#+title: ${title}\n#+filetags: :concept:\n
 - tags :: ")
            :unnarrowed t)
 
 	        ("s" "sentence" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:\n
+			                        "#+title: ${title}\n#+filetags: :concept:\n
 - tags :: ")
 	         :unnarrowed t)
 
@@ -99,6 +99,8 @@
 
    (":" . insert-colon)
 
+   ("s-u h" . org-id-get-create) ;; org-roam create heading
+
    ("s-u t" . org-roam-dailies-capture-today)
    ;; ("s-u y" . org-roam-dailies-yesterday)
    ;; ("s-u T" . org-roam-dailies-goto-today)
@@ -127,6 +129,9 @@
 (advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
 
 
+
+(setq org-roam-completion-everywhere t)
+;; doesn't work for some reason
 
 ;; so that org-roam links can be followed
 ;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]

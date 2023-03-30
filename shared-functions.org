@@ -7269,6 +7269,8 @@ To use this function, highlight the region you want to add numbering to and then
 
 
 * org-roam-ui
+Pretty knowledge graphs are to knowledge management what speaker lights are to music.
+
   #+begin_SRC emacs-lisp
 (use-package org-roam-ui
   :after org-roam
