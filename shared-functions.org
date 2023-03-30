@@ -1993,14 +1993,14 @@ Disable IDO faces to see flx highlights:
 
 [[http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong/][link]]
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
   (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
 
 (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
 ;; helm-imenu
-#+END_SRC
+#+END_EXAMPLE
 
 Jump to a definition in the current file. (This is awesome.)
 #+BEGIN_SRC emacs-lisp
@@ -3527,7 +3527,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 **** swiper
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-s") 'swiper)
+;; (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
 
@@ -3854,7 +3854,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 
 * helm search current directory
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun helm-do-grep-current-directory-tree ()
   "Recursively search current directory.
 If a parent directory has a `dir-locals-file', use that as the
@@ -3871,7 +3871,7 @@ root instead."
         (nth 0 variables-file))
        (t default-directory)))
      t nil '("*"))))
-#+END_SRC
+#+END_EXAMPLE
 
 
 * contract-contractions
