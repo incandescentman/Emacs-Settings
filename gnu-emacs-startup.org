@@ -518,6 +518,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key key-minor-mode-map (kbd "s-f") 'avy-goto-char-timer)
 
+(define-key key-minor-mode-map (kbd "C-M-/") 'hippie-expand)
+
 (define-key key-minor-mode-map (kbd "s-i w m") 'whitespace-mode)
 
 (define-key key-minor-mode-map (kbd "s-i h l") 'spacemacs/toggle-highlight-current-line-globally-off)
