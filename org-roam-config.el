@@ -130,7 +130,7 @@
    ("s-u j" . org-roam-dailies-capture-today)
    ("s-u c" . org-roam-capture)
    ("s-u r" . org-roam-refile)
-   ;; ("s-u a" . org-roam-alias-add)
+   ("s-u a" . org-roam-alias-add)
    ("s-u o" . org-roam-dailies-find-date)
    ("s-u p" . org-roam-dailies-goto-previous-note)
    ("s-u n" . org-roam-dailies-goto-next-note)
