@@ -13,7 +13,6 @@
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
 - tags :: \n
-* ${title}\n
 "))))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
@@ -29,7 +28,7 @@
 ")
 	         :unnarrowed t)
 
-          ("p" "person]" plain "%?"
+          ("p" "person" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
 - tags :: \n
@@ -84,6 +83,15 @@
 * ${title}\n
 ")
 	         :unnarrowed t)
+
+	        ("c" "conversation" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :conversation:
+- tags :: \n
+* ${title}\n
+")
+	         :unnarrowed t)
+
 
 	        ("d" "default" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
