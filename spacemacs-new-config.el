@@ -103,7 +103,7 @@
 ;; (load "/Users/jay/emacs/emacs-settings/email.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
-
+;; (load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
 (jay-load-latex)
 
 

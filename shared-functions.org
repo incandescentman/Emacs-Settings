@@ -69,7 +69,6 @@
   )
 (use-package ox-html
   :defer)
-;; (use-package org-bullets)
 ;; (use-package ox-latex)
 ;; (use-package ox-org)
 ;; (use-package ox-org)
