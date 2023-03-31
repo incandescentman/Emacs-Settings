@@ -2323,6 +2323,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (yank))
 
 
+;; from ChatGPT. Doesn't work
 (defun html2org-clipboard-and-unfill-region-but-preserve-blockquotes ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
