@@ -147,7 +147,7 @@ This function should only modify configuration layer settings."
                                       ;; projectile
                                       ;; graphviz-dot-mode
                                       ;; js2
-                                      ;; magit
+                                      magit
                                       ;; smex
                                       ;; solarized-theme
                                       ;; sublime-themes
