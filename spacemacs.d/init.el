@@ -213,7 +213,7 @@ This function should only modify configuration layer settings."
                                       org-contrib
                                       org-bookmark-heading
 				                              ;; org-download
-                                      ;; org-drill
+                                      org-drill
                                       org-fstree
                                       org-mac-link
                                       ;; org-mime
@@ -258,6 +258,7 @@ This function should only modify configuration layer settings."
                                       titlecase
                                       ;; tldr
                                       ;; transcribe
+                                      ts
                                       unfill
                                       visible-mark
                                       wc-goal-mode
