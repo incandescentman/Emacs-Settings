@@ -1045,7 +1045,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 #+END_SRC
 
-** hl-todo
+**  hl-todo
 
 #+begin_src emacs-lisp
 (use-package hl-todo
@@ -2297,7 +2297,11 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+(setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
+ (setq org-content (replace-regexp-in-string ":PROPERTIES:[^\000]*:END:" "" org-content))
+
 (kill-new org-content)
  (yank))
 
@@ -4212,6 +4216,15 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (defun load-gnu-startup ()
   (interactive)
 (find-file "/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org"))
+
+(defun load-spacemacs-config ()
+ (interactive)
+(find-file "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el"))
+
+(defun load-roam-config ()
+ (interactive)
+(find-file "/Users/jay/emacs/emacs-settings/org-roam-config.el"))
+
 
 (defun open-abbrevs ()
   (interactive)
