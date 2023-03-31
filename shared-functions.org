@@ -2297,8 +2297,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
   (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
   (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
-(setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
-
+(setq org-content (replace-regexp-in-string "\\\\\\\\\n" "" org-content))
   (kill-new org-content)
   (yank))
 
