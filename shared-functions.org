@@ -2141,6 +2141,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "System")
+(add-to-list 'recentf-exclude "roam/notes")
 
 (add-to-list 'recentf-exclude "\\\.Icon")
 (add-to-list 'recentf-exclude "\\\.avi")
