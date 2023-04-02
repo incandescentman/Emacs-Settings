@@ -13,6 +13,7 @@
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
 - tags :: \n
+* %<%Y-%m-%d>\n
 "))))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)

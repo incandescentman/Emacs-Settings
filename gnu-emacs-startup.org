@@ -436,7 +436,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
-
+(define-key key-minor-mode-map (kbd "s-K") 'ido-kill-buffer)
 
 (setq org-roam-completion-everywhere t)
 (define-key key-minor-mode-map (kbd "M-/") 'completion-at-point)
