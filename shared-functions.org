@@ -3147,8 +3147,8 @@ Deprecated in favor of (define-key key-minor-mode-map (kbd "s- ... in:
 (define-super-key "t" 'new-buffer)
 (define-super-key "T" 'org-new-scratch-buffer)
 (define-super-key "g" 'isearch-repeat-forward)
-(define-super-key "k" 'kill-buffer)
-(define-super-key "K" 'org-cut-subtree)
+;; (define-super-key "k" 'kill-buffer)
+;; (define-super-key "K" 'org-cut-subtree)
 (define-super-key "d" 'org-todo)
 (define-super-key "L" 'org-mac-link-chrome-insert-frontmost-url)
 (define-super-key "S" 'org-mac-link-skim-insert-page)
@@ -3174,8 +3174,8 @@ Key bindings I don't use much and should remember to learn:
 
 
 
-;; (define-super-key "i a" 'org-agenda)
-;; (define-super-key "i j" 'helm-imenu-anywhere)
+;; (define-super-key "k a" 'org-agenda)
+;; (define-super-key "k j" 'helm-imenu-anywhere)
 ;; (define-super-key ";" 'ido-goto-symbol)
 ;; (define-super-key ";" 'helm-resume)
 ;; (define-super-key "D" 'diredp-dired-recent-dirs)
@@ -3184,49 +3184,49 @@ Key bindings I don't use much and should remember to learn:
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-super-key "i cy" 'cyberpunk-jay)
-(define-super-key "i cl" 'cyberpunk-large)
-(define-super-key "i zb" 'zenburn)
-(define-super-key "i le" 'leuven)
-(define-super-key "i ts" 'transparent-serenity)
-(define-super-key "i tg" 'top-gun-mode)
-(define-super-key "i tn" 'tomorrow-night)
+(define-super-key "k cy" 'cyberpunk-jay)
+(define-super-key "k cl" 'cyberpunk-large)
+(define-super-key "k zb" 'zenburn)
+(define-super-key "k le" 'leuven)
+(define-super-key "k ts" 'transparent-serenity)
+(define-super-key "k tg" 'top-gun-mode)
+(define-super-key "k tn" 'tomorrow-night)
 
-(define-super-key "i ma" 'inverse-add-global-abbrev)
+(define-super-key "k ma" 'inverse-add-global-abbrev)
 
-(define-super-key "i rr" 'replace-regexp)
-
-
-(define-super-key "i cf" 'customize-face)
-
-;; (define-super-key "i h" 'org-export-dispatch)
+(define-super-key "k rr" 'replace-regexp)
 
 
+(define-super-key "k cf" 'customize-face)
+
+;; (define-super-key "k h" 'org-export-dispatch)
 
 
-;(define-super-key "i nm" 'notmuch-hello)
-(define-super-key "i mu" 'mu4e)
-;; (define-super-key "i cl" 'cyberpunk-large)
 
-(define-super-key "i dd" 'delete-duplicate-lines-keep-blanks)
 
-(define-super-key "i cw" 'count-words)
-(define-super-key "i wb" 'whiteboard)
-(define-super-key "i sl" 'spacemacs-light)
+;(define-super-key "k nm" 'notmuch-hello)
+(define-super-key "k mu" 'mu4e)
+;; (define-super-key "k cl" 'cyberpunk-large)
 
-(define-super-key "i sd" 'solarized-dark)
-(define-super-key "i ri" 'ritchie)
-(define-super-key "i sp" 'spolsky)
-(define-super-key "i wr" 'writeroom-mode)
-(define-super-key "i wf" 'workflowy-mode)
-(define-super-key "i st" 'small-type)
-(define-super-key "i mp" 'morning-pages)
-(define-super-key "i lt" 'load-theme)
-(define-super-key "i mt" 'medium-type)
+(define-super-key "k dd" 'delete-duplicate-lines-keep-blanks)
 
-(define-super-key "i bl" 'blue-light)
+(define-super-key "k cw" 'count-words)
+(define-super-key "k wb" 'whiteboard)
+(define-super-key "k sl" 'spacemacs-light)
 
-(define-super-key "i eu" 'endless/upgrade)
+(define-super-key "k sd" 'solarized-dark)
+(define-super-key "k ri" 'ritchie)
+(define-super-key "k sp" 'spolsky)
+(define-super-key "k wr" 'writeroom-mode)
+(define-super-key "k wf" 'workflowy-mode)
+(define-super-key "k st" 'small-type)
+(define-super-key "k mp" 'morning-pages)
+(define-super-key "k lt" 'load-theme)
+(define-super-key "k mt" 'medium-type)
+
+(define-super-key "k bl" 'blue-light)
+
+(define-super-key "k eu" 'endless/upgrade)
 
 ;; ;; accountability
 
@@ -3238,8 +3238,8 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 (save-excursion (insert ")")
                 ))
 
-(define-super-key "i kb" 'keybinding-read-and-insert)
-(define-super-key "i mk" 'keybinding-read-and-insert)
+(define-super-key "k kb" 'keybinding-read-and-insert)
+(define-super-key "k mk" 'keybinding-read-and-insert)
 
 
 #+END_SRC
@@ -5665,9 +5665,9 @@ into the main dumped emacs"
 :bind
 ( "M-`" . crux-swap-windows)
 
-( "s-i rf" .  crux-rename-file-and-buffer)
+( "s-k rf" .  crux-rename-file-and-buffer)
 
-( "s-i df" . crux-delete-file-and-buffer)
+( "s-k df" . crux-delete-file-and-buffer)
 
 ( "C-c d" . crux-duplicate-current-line-or-region)
 
