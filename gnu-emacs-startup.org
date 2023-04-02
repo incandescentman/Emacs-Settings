@@ -436,8 +436,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
-(define-key key-minor-mode-map (kbd "s-K") 'ido-kill-buffer)
-
 (setq org-roam-completion-everywhere t)
 (define-key key-minor-mode-map (kbd "M-/") 'completion-at-point)
 
@@ -468,7 +466,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-i s h") 'sh-mode)
 (define-key key-minor-mode-map (kbd "s-i s m") 'sh-mode)
 
-(define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
+;; (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
+(define-key key-minor-mode-map (kbd "s-K") 'kill-buffer)
+
 
 ;; (define-key key-minor-mode-map (kbd "s-i") 'avy-goto-char)
 ;; (define-key key-minor-mode-map (kbd "s-p") 'org-html-export-to-html-and-open)
@@ -990,7 +990,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
 (define-key key-minor-mode-map (kbd "s-T") 'org-new-scratch-buffer)
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
-(define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
+;; (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 (define-key key-minor-mode-map (kbd "s-K") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s-d") 'org-todo)
 (define-key key-minor-mode-map (kbd "s-L") 'org-mac-link-chrome-insert-frontmost-url)
