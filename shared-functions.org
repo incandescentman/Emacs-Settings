@@ -7466,3 +7466,22 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
       (princ (concat line "\n"))))
    (message "No duplicate lines found."))))
 #+end_src
+
+
+* org-ai
+#+begin_src emacs-lisp
+(use-package org-ai
+ :ensure
+ :commands (org-ai-mode)
+ :custom
+ (org-ai-openai-api-token "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")
+ :init
+ (add-hook 'org-mode-hook #'org-ai-mode)
+ :config
+ ;; if you are on the gpt-4 beta:
+;; (setq org-ai-default-chat-model "gpt-4")
+ ;; if you are using yasnippet and want `ai` snippets
+ (org-ai-install-yasnippets))
+
+(setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
+#+end_src

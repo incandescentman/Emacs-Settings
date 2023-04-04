@@ -210,6 +210,7 @@ This function should only modify configuration layer settings."
                                       ;; openwith
                                       ;;  orgalist
                                       orderless
+                                      org-ai
                                       org-contrib
                                       org-bookmark-heading
 				                              ;; org-download
