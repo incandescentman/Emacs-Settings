@@ -522,8 +522,7 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-(use-package buffer-stack
-:defer)
+(use-package buffer-stack)
 #+END_SRC
 
 GNU Emacs:
@@ -2299,6 +2298,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string " " " " org-content))
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
 (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
  (setq org-content (replace-regexp-in-string ":PROPERTIES:[^\000]*:END:" "" org-content))
