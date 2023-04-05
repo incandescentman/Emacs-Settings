@@ -7515,7 +7515,25 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 ;;  "spook-people" "a-i"
 ;;  '("f" . spook-crm--individual-find)
 ;;  '("i" . spook-crm--individual-insert))
-(define-key key-minor-mode-map (kbd "s-i f") 'spook-crm--individual-find)
-(define-key key-minor-mode-map (kbd "s-i i") 'spook-crm--individual-insert)
+;; (define-key key-minor-mode-map (kbd "s-i f") 'spook-crm--individual-find)
+;; (define-key key-minor-mode-map (kbd "s-i i") 'spook-crm--individual-insert)
+(define-key key-minor-mode-map (kbd "s-i s") 'org-ai-summarize)
+
+#+end_src
+
+* own ai
+#+begin_src emacs-lisp
+
+(defun intelligent-summarize ()
+ "Run org-ai-summarize on the highlighted region."
+ (interactive)
+(if (get-buffer "*org-ai-on-region*")
+  (kill-buffer "*org-ai-on-region*"))
+ (let ((orig-point (point)))
+  (when (region-active-p)
+   (org-ai-summarize (region-beginning) (region-end)))
+  (goto-char orig-point))
+(olivetti-mode)
+ )
 
 #+end_src
