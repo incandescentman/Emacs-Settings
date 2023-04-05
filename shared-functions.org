@@ -2141,7 +2141,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "System")
 (add-to-list 'recentf-exclude "roam/notes")
-(add-to-list 'recentf-exclude "emacs-settings")
+(add-to-list 'recentf-exclude "*emacs-settings*")
 
 (add-to-list 'recentf-exclude "\\\.Icon")
 (add-to-list 'recentf-exclude "\\\.avi")
@@ -7482,7 +7482,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  ;; if you are using yasnippet and want `ai` snippets
  (org-ai-install-yasnippets))
 
-;; (setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
+(setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
 (load "/Users/jay/emacs/emacs-secret/openai-key.el")
 
 #+end_src
