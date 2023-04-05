@@ -2141,6 +2141,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "System")
 (add-to-list 'recentf-exclude "roam/notes")
+(add-to-list 'recentf-exclude "emacs-settings")
 
 (add-to-list 'recentf-exclude "\\\.Icon")
 (add-to-list 'recentf-exclude "\\\.avi")
@@ -7473,9 +7474,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (use-package org-ai
  :ensure
  :commands (org-ai-mode)
- :custom
- (org-ai-openai-api-token "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")
- :init
+:init
  (add-hook 'org-mode-hook #'org-ai-mode)
  :config
  ;; if you are on the gpt-4 beta:
@@ -7483,5 +7482,40 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  ;; if you are using yasnippet and want `ai` snippets
  (org-ai-install-yasnippets))
 
-(setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
+;; (setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
+(load "/Users/jay/emacs/emacs-secret/openai-key.el")
+
+#+end_src
+
+
+* org-roam as a personal CRM
+#+begin_src emacs-lisp
+(defvar spook--org-roam-crm-dir "/Users/jay/Dropbox/roam/contacts"
+ "Directory where org-roam notes related to people are kept.")
+
+(defun spook--with-org-roam-crm (func &rest args)
+ "Evaluate FUNC with ARGS org-roam set for working as CRM."
+ (let* ((org-roam-directory spook--org-roam-crm-dir)
+     (org-roam-db-location (concat org-roam-directory "/roam.db")))
+  (apply func args)))
+
+(defun spook-crm--db-sync ()
+ (interactive)
+ (spook--with-org-roam-crm #'org-roam-db-sync))
+
+(defun spook-crm--individual-find ()
+ (interactive)
+ (spook--with-org-roam-crm #'org-roam-node-find))
+
+(defun spook-crm--individual-insert ()
+ (interactive)
+ (spook--with-org-roam-crm #'org-roam-node-insert))
+
+;; (spook-defkeymap
+;;  "spook-people" "a-i"
+;;  '("f" . spook-crm--individual-find)
+;;  '("i" . spook-crm--individual-insert))
+(define-key key-minor-mode-map (kbd "s-i f") 'spook-crm--individual-find)
+(define-key key-minor-mode-map (kbd "s-i i") 'spook-crm--individual-insert)
+
 #+end_src

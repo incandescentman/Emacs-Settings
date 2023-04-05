@@ -279,3 +279,6 @@
 
 ;; Make gc pauses faster by decreasing the threshold.
 ;; (setq gc-cons-threshold (* 2 1000 1000))
+
+
+(define-key org-ai-mode-map (kbd "C-c r") 'eval-region)

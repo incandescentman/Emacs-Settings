@@ -145,6 +145,7 @@
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-u k" . org-roam-dailies-capture-date)
    ("s-u m" . org-roam-dailies-goto-date)
+;;   ("s-T" . org-roam-tags)
 
 
    ("s-/ sn" . org-roam-search-nodes)
