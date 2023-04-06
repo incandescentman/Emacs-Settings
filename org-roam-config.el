@@ -1,4 +1,5 @@
 (use-package org-roam
+  :defer
   :delight
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))

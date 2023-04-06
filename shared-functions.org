@@ -7226,28 +7226,6 @@ To use this function, highlight the region you want to add numbering to and then
 
 * org-roam
 #+begin_src emacs-lisp
-(use-package org-roam
-:defer
-  :ensure t
- :custom
- (org-roam-directory (file-truename "~/Dropbox/org-roam"))
- :bind (
-        ;; ("C-c n l" . org-roam-buffer-toggle)
-     ;; ("C-c n f" . org-roam-node-find)
-     ;; ("C-c n g" . org-roam-graph)
-     ;; ("C-c n i" . org-roam-node-insert)
-     ;; ("C-c n c" . org-roam-capture)
-     ;; ;; Dailies
-     ;; ("C-c n j" . org-roam-dailies-capture-today)
-     )
- :config
- ;; If you're using a vertical completion framework, you might want a more informative completion interface
- (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
- (org-roam-db-autosync-mode)
- ;; If using org-roam-protocol
- (require 'org-roam-protocol))
-
-
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
  #+end_SRC
@@ -7490,7 +7468,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 * org-roam as a personal CRM
 #+begin_src emacs-lisp
-(defvar spook--org-roam-crm-dir "/Users/jay/Dropbox/roam/contacts"
+(defvar spook--org-roam-crm-dir "/Users/jay/Dropbox/roam/notes"
  "Directory where org-roam notes related to people are kept.")
 
 (defun spook--with-org-roam-crm (func &rest args)
@@ -7521,7 +7499,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 #+end_src
 
-* own ai
+* Jay own ai
 #+begin_src emacs-lisp
 
 (defun intelligent-summarize ()
