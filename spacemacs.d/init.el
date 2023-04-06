@@ -204,7 +204,7 @@ This function should only modify configuration layer settings."
                                       ;; mpv
                                       ;; multicolumn
                                       multiple-cursors
-                                      ;; mw-thesaurus
+                                      mw-thesaurus
                                       ;; nm
                                       olivetti
                                       ;; openwith

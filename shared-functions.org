@@ -7527,13 +7527,37 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (defun intelligent-summarize ()
  "Run org-ai-summarize on the highlighted region."
  (interactive)
+(setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a summary of this text in a fun, fascinating, engaging, conversational style.")
 (if (get-buffer "*org-ai-on-region*")
   (kill-buffer "*org-ai-on-region*"))
  (let ((orig-point (point)))
   (when (region-active-p)
    (org-ai-summarize (region-beginning) (region-end)))
   (goto-char orig-point))
-(olivetti-mode)
  )
+
+(defun funny-summarize ()
+ "Run org-ai-summarize on the highlighted region."
+ (interactive)
+(setq org-ai-summarize-prompt "Writing for readers of The New York Times, write a funny summary of this text in a funny, witty conversational style.")
+(if (get-buffer "*org-ai-on-region*")
+ (kill-buffer "*org-ai-on-region*"))
+ (let ((orig-point (point)))
+ (when (region-active-p)
+  (org-ai-summarize (region-beginning) (region-end)))
+ (goto-char orig-point))
+ )
+(define-key key-minor-mode-map (kbd "s-i f") 'funny-summarize)
+#+end_src
+
+
+* Eisenhower Matrix :urgent:
+#+begin_src emacs-lisp
+(setq org-tag-alist '(("important" . ?i)
+           ("urgent"  . ?u)))
+#+end_src
+
+
+#+begin_src emacs-lisp
 
 #+end_src
