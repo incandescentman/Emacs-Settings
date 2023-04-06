@@ -108,6 +108,7 @@ This function should only modify configuration layer settings."
      ;; helm
      ;; html
      ;; jay
+     lang-tools
      ;; markdown
      ;; mu4e
      (multiple-cursors :variables multiple-cursors-backend 'mc)
@@ -162,7 +163,6 @@ This function should only modify configuration layer settings."
                                       buffer-stack
                                       caps-lock
                                       change-inner
-                                      ;; chatgpt
                                       cheatsheet
                                       ;; command-log-mode
                                       counsel
@@ -192,6 +192,7 @@ This function should only modify configuration layer settings."
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       ;; gist
+                                      gptel
                                       ;; helm
                                       ;; helm-cmd-t
                                       ;; hyperbole

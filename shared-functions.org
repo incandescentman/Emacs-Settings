@@ -7559,5 +7559,16 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 
 #+begin_src emacs-lisp
+(add-to-list 'load-path "/Users/jay/emacs/external-packages/chatgpt-shell-main")
+(use-package chatgpt-shell)
 
+
+#+end_src
+
+* gptel
+#+begin_src emacs-lisp
+(use-package gptel)
+
+(setq gptel-default-mode 'org-mode)
+(define-key key-minor-mode-map (kbd "C-t") 'gptel-send)
 #+end_src
