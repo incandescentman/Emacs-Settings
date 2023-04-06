@@ -575,8 +575,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-_") 'em-dash)
 
-;; (define-key key-minor-mode-map (kbd "s-/") 'rgrep)
-
 (define-key key-minor-mode-map (kbd "C-v") 'html2org-clipboard)
 
 

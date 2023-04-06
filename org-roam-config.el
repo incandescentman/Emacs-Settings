@@ -151,8 +151,11 @@
    ("s-/ sn" . org-roam-search-nodes)
 ;   ("s-/ st" . consult-)
 ; ("s-/ l" . council-)
-; ("s-/ d" . deadgrep-)
-; ("s-/ g" . gitgrep-)
+
+("s-/ dg" . deadgrep) ; not incremental. but nicely formatted
+("s-/ cp" . counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
+("s-/ rg" . consult-ripgrep) ; pretty slick, shows you the actual file context
+("s-/ gg" . consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
    ))
 
 ;; (global-page-break-lines-mode 0)
