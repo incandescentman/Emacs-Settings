@@ -108,7 +108,7 @@
   ;; s-u (define-key key-minor-mode-map (kbd "s-u ") 'roam)
 
   (
-   ("s-u f" . org-roam-node-find)
+   ("s-u f" . org-roam-find-node)
    ("S-s-<up>" . org-roam-backlinks-buffer)
    ;; ("S-s-<down>" . projectile-ripgrep)
    ("S-s-<down>" . consult-git-grep)
@@ -119,8 +119,8 @@
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
    ("s-j" . org-roam-dailies-goto-today)
-   ("s-D" . org-roam-dailies-goto-today)
-   ("s-u t" . org-roam-dailies-goto-today)
+   ("C-S-d" . org-roam-dailies-goto-today)
+;;   ("s-u t" . org-roam-dailies-goto-today)
 ;; org-roam-ui-mode
    ("s-u t" . org-roam-dailies-capture-today)
    ("S-s-<left>" .  org-roam-node-insert)
@@ -129,7 +129,7 @@
 
    (":" . insert-colon)
 
-   ("s-u h" . org-id-get-create) ;; org-roam create heading
+   ("s-u h" . org-roam-heading-add) ;; org-roam create heading
 
    ("s-u t" . org-roam-dailies-capture-today)
    ;; ("s-u y" . org-roam-dailies-yesterday)
@@ -185,3 +185,8 @@
   (interactive)
 ;;  (require 'org-roam)
 (counsel-rg nil org-roam-directory nil nil))
+
+
+(defalias 'org-roam-heading-add 'org-id-get-create)
+(defalias 'org-roam-find-node 'org-roam-node-find)
+(defalias 'org-roam-insert-node 'org-roam-node-insert)
