@@ -9,7 +9,7 @@
 
   ;; Capture templates
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry
+   '(("j" "default" entry
       "* %?"
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
@@ -192,13 +192,20 @@
                       (?p . "tweet")
                       (?i . "insight")
                       (?c . "cook-ideas-over-time")))
-         (selected-key (read-char "Choose a tag (r:review, b:book, t:todo, u:urgent, p:tweet, i:insight, c:cook-ideas-over-time): "))
-         (selected-tag (cdr (assoc selected-key tag-alist))))
+         (selected-key (read-char "Choose a tag:\n
+r: review
+b: book
+t: todo
+u: urgent
+p: tweet
+i: insight
+c: cook-ideas-over-time\n")))
+    (setq selected-tag (cdr (assoc selected-key tag-alist)))
     (if selected-tag
         (insert (format " ::%s::" selected-tag))
       (message "Invalid tag selection"))))
 
-(define-key org-mode-map (kbd "C-c i t") 'my-insert-inline-tag)
+;; (define-key org-mode-map (kbd "C-c i t") 'insert-inline-tag)
 
 
 (define-key org-mode-map (kbd "s-:") 'insert-inline-tag)
