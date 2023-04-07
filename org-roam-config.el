@@ -220,7 +220,7 @@ c: cook-ideas-over-time\n")))
 (defun search-for-inline-tag-project-wide (tag)
   "Search for inline TAG project-wide using consult-git-grep."
   (interactive "sEnter tag to search for: ")
-  (consult-git-grep (concat "#" tag)))
+  (consult-git-grep (concat "\\#" tag)))
 
 
 (define-key org-mode-map (kbd "s-:") 'insert-inline-tag)

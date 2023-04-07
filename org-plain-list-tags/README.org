@@ -1,0 +1,52 @@
+* org-inline-tags
+
+To insert an inline tag, press =C-c i t= in org-mode. You will be
+prompted with a list of pre-defined tags. Type the first letter of the
+desired tag to insert it at the cursor position.
+
+Here's the list of pre-defined tags and their corresponding single
+keystroke:
+
+- r: "review"
+- b: "book"
+- t: "todo"
+- u: "urgent"
+- p: "tweet"
+- i: "insight"
+- c: "cook-ideas-over-time"
+
+For example, typing =C-c i t= followed by =r= will insert =::review::=
+at the cursor position.
+
+To search for a specific inline tag in the current buffer, use the
+=org-inline-tag-search= function. Type =M-x org-inline-tag-search=
+followed by the name of the tag (e.g., =review=) to search for it in the
+current buffer.
+
+You can customize the appearance of inline tags by adding the following
+code to your Emacs configuration:
+
+#+begin_example
+emacs(defface org-inline-tag '((t (:foreground "cyan" :background "black" :bold t))) "Face for inline tags")
+(font-lock-add-keywords 'org-mode '(("(::w+::)" 1 'org-inline-tag prepend)) 'append)
+#+end_example
+
+This code snippet defines a custom face for inline tags, and adds a
+font-lock keyword to apply the face to inline tags in org-mode.
+Customize the =:foreground=, =:background=, and other face properties to
+your preference.
+
+
+** Why org-inline-tags?
+Org-mode is a powerful tool for organizing and managing information.
+While org-mode headings and TODO items are useful for organizing tasks
+and ideas, sometimes you need a way to flag plain list items for later
+review or action. =org-inline-tags= provides a simple, customizable
+solution for tagging plain list items with custom inline tags, making it
+easier to review, prioritize, and manage your notes.
+
+** Contributing
+Contributions are welcome! Please open an issue or submit a pull request on the [[https://github.com/yourusername/org-inline-tags][GitHub repository]].
+
+** License
+This project is licensed under the GNU General Public License v3.0 or later. See the [[https://chatgpt-static.s3.amazonaws.com/chats/LICENSE][LICENSE]] file for details.
