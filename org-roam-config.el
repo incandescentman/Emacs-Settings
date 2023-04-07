@@ -13,8 +13,9 @@
            "* %?"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
-- tags :: \n
+- tags :: \n\n
 * %<%Y-%m-%d>\n
+- %?
 "))))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
@@ -22,18 +23,19 @@
   (setq org-roam-capture-templates
 	      '(
 
-	        ("t" "topic" plain "%?"
+	        ("t" "topic" item "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :concept:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
+-
 ")
 	         :unnarrowed t)
 
           ("p" "person" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
@@ -41,7 +43,7 @@
 	        ("d" "definition" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :concept:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
            :unnarrowed t)
@@ -49,23 +51,24 @@
 	        ("s" "sentence" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :concept:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
 
 	        ("i" "idea" plain "%?"
-	         :target (file+head "blog/${slug}.org"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :idea:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
+-
 ")
 	         :unnarrowed t)
 
 	        ("a" "association" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :association:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
@@ -73,7 +76,7 @@
 	        ("r" "research" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :research:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
@@ -81,7 +84,7 @@
 	        ("k" "Kings class" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :class:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
@@ -89,7 +92,7 @@
 	        ("c" "conversation" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :conversation:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)
@@ -98,7 +101,7 @@
 	        ("d" "default" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :note:
-- tags :: \n
+- tags :: \n\n
 * ${title}\n
 ")
 	         :unnarrowed t)

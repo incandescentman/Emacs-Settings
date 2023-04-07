@@ -7550,3 +7550,21 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (setq gptel-default-mode 'org-mode)
 (define-key key-minor-mode-map (kbd "C-t") 'gptel-send)
 #+end_src
+
+
+#+begin_SRC emacs-lisp
+(require 'org-superstar)
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+(setq org-superstar-prettify-item-bullets t)
+
+;; (setq org-superstar-headline-bullets-list '(""))
+;; ;; This is usually the default, but keep in mind it must be nil
+;; (setq org-hide-leading-stars nil)
+;; ;; This line is necessary.
+;; (setq org-superstar-leading-bullet nil)
+;; ;; If you use Org Indent you also need to add this, otherwise the
+;; ;; above has no effect while Indent is enabled.
+;; (setq org-indent-mode-turns-on-hiding-stars nil)
+;; (setq org-superstar-remove-leading-stars t)
+#+END_SRC
+
