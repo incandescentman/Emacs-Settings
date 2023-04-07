@@ -227,9 +227,6 @@ c: cook-ideas-over-time\n")))
 (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
 
-
-
-
 (add-to-list 'org-agenda-custom-commands
              '("r" "Review items"
                agenda ""

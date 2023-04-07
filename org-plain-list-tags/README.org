@@ -1,4 +1,4 @@
-* org-plain-list-tags
+* Org Plain List Tags
 
 ** Introduction
 =org-plain-list-tags= is an Emacs package that extends org-mode functionality
