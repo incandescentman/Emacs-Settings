@@ -177,9 +177,11 @@
   "Face for custom inline tags in plain list items.")
 
 (font-lock-add-keywords 'org-mode
-  '(("#\\(\\w+\\)" 1 'inline-tag-face)))
+  '(("#\\(\\w+\\)" 0 'inline-tag-face)))
 
 (defun search-for-inline-tag (tag)
+  "Search for inline TAG in org-mode files."
+  (interactive "sEnter tag to search for: ")
   (org-search-view nil (concat "#" tag)))
 
 (defun insert-inline-tag ()
@@ -206,6 +208,8 @@ c: cook-ideas-over-time\n")))
 
 
 (define-key org-mode-map (kbd "s-:") 'insert-inline-tag)
+(define-key org-mode-map (kbd "s-;") 'search-for-inline-tag)
+(define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag)
 
 (add-to-list 'org-agenda-custom-commands
              '("r" "Review items"
