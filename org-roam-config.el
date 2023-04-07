@@ -23,12 +23,11 @@
   (setq org-roam-capture-templates
 	      '(
 
-	        ("t" "topic" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:
-- tags :: \n\n
+	        ("t" "topic" plain "- tags :: \n
 * ${title}
-- ")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:")
 	         :unnarrowed t)
 
           ("p" "person" plain "%?"
@@ -39,48 +38,49 @@
 - ")
 	         :unnarrowed t)
 
-	        ("d" "definition" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :concept:
-- tags :: \n\n
+	        ("d" "definition" plain "- tags :: \n
 * ${title}
-")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :definitiont:")
            :unnarrowed t)
 
-	        ("s" "sentence" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :sentence:
-- tags :: \n\n
+	        ("s" "sentence" plain "- tags :: \n
 * ${title}
-")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :sentence:")
 	         :unnarrowed t)
 
-	        ("i" "idea" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :idea:
-- tags :: \n\n
+	        ("i" "idea" plain "- tags :: \n
 * ${title}
--
-")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :idea:")
 	         :unnarrowed t)
 
-	        ("c" "conversation" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :conversation:
-- tags :: \n\n
+	        ("c" "conversation" plain "- tags :: \n
 * ${title}
-")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :conversation:")
 	         :unnarrowed t)
 
 
-	        ("d" "default" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :note:
-- tags :: \n\n
+	        ("d" "default" plain "- tags :: \n
 * ${title}
--
-")
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :note:")
 	         :unnarrowed t)
+
+
+          ("b" "book notes" plain
+ "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
+ :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+ :unnarrowed t)
+
+
           ))
   :bind
 
