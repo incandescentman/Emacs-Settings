@@ -23,11 +23,11 @@
   (setq org-roam-capture-templates
 	      '(
 
-	        ("t" "topic" item "%?"
+	        ("t" "topic" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :concept:
+			                        "#+title: ${title}\n#+filetags: :topic:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 - ")
 	         :unnarrowed t)
 
@@ -35,23 +35,23 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
 - tags :: \n\n
-* ${title}\n
-")
+* ${title}
+- ")
 	         :unnarrowed t)
 
 	        ("d" "definition" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :concept:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 ")
            :unnarrowed t)
 
 	        ("s" "sentence" plain "%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :concept:
+			                        "#+title: ${title}\n#+filetags: :sentence:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 ")
 	         :unnarrowed t)
 
@@ -59,32 +59,8 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :idea:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 -
-")
-	         :unnarrowed t)
-
-	        ("a" "association" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :association:
-- tags :: \n\n
-* ${title}\n
-")
-	         :unnarrowed t)
-
-	        ("r" "research" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :research:
-- tags :: \n\n
-* ${title}\n
-")
-	         :unnarrowed t)
-
-	        ("k" "Kings class" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :class:
-- tags :: \n\n
-* ${title}\n
 ")
 	         :unnarrowed t)
 
@@ -92,7 +68,7 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :conversation:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 ")
 	         :unnarrowed t)
 
@@ -101,7 +77,7 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :note:
 - tags :: \n\n
-* ${title}\n
+* ${title}
 -
 ")
 	         :unnarrowed t)
@@ -121,7 +97,7 @@
    ("s-u c" . org-roam-capture)
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
-   ("s-j" . org-roam-dailies-goto-today)
+   ("s-j j" . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
 ;;   ("s-u t" . org-roam-dailies-goto-today)
 ;; org-roam-ui-mode
@@ -134,12 +110,10 @@
    ("s-u h" . org-roam-heading-add) ;; org-roam create heading
 
    ("s-u t" . org-roam-dailies-capture-today)
-   ;; ("s-u y" . org-roam-dailies-yesterday)
-   ;; ("s-u T" . org-roam-dailies-goto-today)
+("s-j y" . org-roam-dailies-yesterday)
    ;; ("s-u Y" . org-roam-dailies-goto-yesterday)
-   ("s-u +" . org-roam-dailies-goto-tomorrow)
-   ("s-u v" . org-roam-dailies-goto-tomorrow)
-   ("s-u j" . org-roam-dailies-capture-today)
+   ("s-j t" . org-roam-dailies-goto-tomorrow)
+   ("s-j c" . org-roam-dailies-capture-today)
    ("s-u c" . org-roam-capture)
    ("s-u r" . org-roam-refile)
    ("s-u a" . org-roam-alias-add)

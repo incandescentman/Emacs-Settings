@@ -812,7 +812,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "M-x") 'helm-M-x) ; call helm-M-x instead of regular M-x
 ;; (define-key key-minor-mode-map (kbd "\|") 'deft)
 
-(define-key org-mode-map (kbd "M-K") 'kill-clause)
+(define-key org-mode-map (kbd "M-K") 'kill-sentence-maybe-else-kill-line)
 (define-key emacs-lisp-mode-map (kbd "M-K") 'kill-sexp)
 
 (define-key key-minor-mode-map (kbd "C-M-8") 'org-toggle-heading) ; i.e. subheading
@@ -1113,7 +1113,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     (my/kill-line-dwim))
 )
 ;; and the keybinding
-(global-set-key (kbd "M-k") 'kill-sentence-maybe-else-kill-line)
+(global-set-key (kbd "M-k") 'kill-clause)
 
   #+END_SRC
 
