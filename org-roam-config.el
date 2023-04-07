@@ -170,3 +170,44 @@
 
 (use-package org-roam-export
   :after org-roam)
+
+
+;; inline tags for plain list items
+(defface inline-tag-face
+  '((t (:foreground "orange" :weight bold)))
+  "Face for custom inline tags in plain list items.")
+
+(font-lock-add-keywords 'org-mode
+  '(("::\\(\\w+\\)::" 1 'inline-tag-face)))
+
+(defun search-for-inline-tag (tag)
+  (org-search-view nil (concat "::" tag "::")))
+
+(defun insert-inline-tag ()
+  (interactive)
+  (let* ((tag-alist '((?r . "review")
+                      (?b . "book")
+                      (?t . "todo")
+                      (?u . "urgent")
+                      (?p . "tweet")
+                      (?i . "insight")
+                      (?c . "cook-ideas-over-time")))
+         (selected-key (read-char "Choose a tag (r:review, b:book, t:todo, u:urgent, p:tweet, i:insight, c:cook-ideas-over-time): "))
+         (selected-tag (cdr (assoc selected-key tag-alist))))
+    (if selected-tag
+        (insert (format " ::%s::" selected-tag))
+      (message "Invalid tag selection"))))
+
+(define-key org-mode-map (kbd "C-c i t") 'my-insert-inline-tag)
+
+
+(define-key org-mode-map (kbd "s-:") 'insert-inline-tag)
+
+(add-to-list 'org-agenda-custom-commands
+             '("r" "Review items"
+               agenda ""
+               (
+                ;; (org-agenda-files '("~/path/to/your/org/files/"))
+                (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "::review::"))
+                (org-agenda-prefix-format " %i %-12:c%?-12t% s")
+                (org-agenda-overriding-header "Items to review"))))
