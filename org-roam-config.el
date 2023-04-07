@@ -4,12 +4,12 @@
   :delight
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
-  :config
-  (org-roam-setup)
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
+    (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
+     (org-roam-dailies-directory "journal/")
+       ;; Capture templates
   (org-roam-db-autosync-mode)
-  (setq org-roam-dailies-directory "journal/")
-  (setq org-roam-dailies-capture-templates
+
+  (org-roam-dailies-capture-templates
         '(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y-%m-%d>.org"
@@ -80,7 +80,14 @@
 
 
           ))
-  :bind
+
+  :config
+  (org-roam-setup)
+
+  ;; Capture templates
+  (org-roam-db-autosync-mode)
+
+:bind
   (
    ;; org-roam keybindings
    ("s-u f" . org-roam-find-node)
