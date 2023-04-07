@@ -847,7 +847,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
- '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+ '(org-agenda-files
+   '("~/Dropbox/writing/proposal/2022/April-2023-book-todo.org"
+     ))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
@@ -908,7 +910,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
- '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+;; '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
