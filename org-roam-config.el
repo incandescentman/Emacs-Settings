@@ -94,7 +94,6 @@
    ;; ("C-c r d s" . org-schedule)
    ("s-j" . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
-   ("s-u t" . org-roam-dailies-goto-today)
    ("S-s-<left>" .  org-roam-node-insert)
    ("S-s-<right>" . org-roam-node-find)
    ("s-u d" . org-roam-dailies-goto-date)
