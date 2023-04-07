@@ -1,5 +1,6 @@
 (use-package org-roam
   :defer
+  :after org
   :delight
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
@@ -17,9 +18,6 @@
 * %<%Y-%m-%d>\n
 -
 "))))
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol)
-  (require 'org-roam-export)
   (setq org-roam-capture-templates
 	      '(
 
@@ -76,16 +74,13 @@
 
 
           ("b" "book notes" plain
- "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
- :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
- :unnarrowed t)
+           "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
 
 
           ))
   :bind
-
-  ;; s-u (define-key key-minor-mode-map (kbd "s-u ") 'roam)
-
   (
    ("s-u f" . org-roam-find-node)
    ("S-s-<up>" . org-roam-backlinks-buffer)
@@ -97,10 +92,9 @@
    ("s-u c" . org-roam-capture)
    ;; ("C-c r d a" . org-agenda)
    ;; ("C-c r d s" . org-schedule)
-   ("s-j j" . org-roam-dailies-goto-today)
+   ("s-j" . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
-;;   ("s-u t" . org-roam-dailies-goto-today)
-;; org-roam-ui-mode
+   ("s-u t" . org-roam-dailies-goto-today)
    ("S-s-<left>" .  org-roam-node-insert)
    ("S-s-<right>" . org-roam-node-find)
    ("s-u d" . org-roam-dailies-goto-date)
@@ -110,11 +104,10 @@
    ("s-u h" . org-roam-heading-add) ;; org-roam create heading
 
    ("s-u t" . org-roam-dailies-capture-today)
-("s-j y" . org-roam-dailies-yesterday)
-   ;; ("s-u Y" . org-roam-dailies-goto-yesterday)
-   ("s-j t" . org-roam-dailies-goto-tomorrow)
-   ("s-j c" . org-roam-dailies-capture-today)
-   ("s-u c" . org-roam-capture)
+   ("s-u Y" . org-roam-dailies-yesterday)
+   ("s-u y" . org-roam-dailies-goto-yesterday)
+   ("s-u T" . org-roam-dailies-goto-tomorrow)
+   ("s-u c" . org-roam-dailies-capture-today)
    ("s-u r" . org-roam-refile)
    ("s-u a" . org-roam-alias-add)
    ("s-u o" . org-roam-dailies-find-date)
@@ -122,17 +115,17 @@
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-u k" . org-roam-dailies-capture-date)
    ("s-u m" . org-roam-dailies-goto-date)
-;;   ("s-T" . org-roam-tags)
+   ;;   ("s-T" . org-roam-tags)
 
 
    ("s-/ sn" . org-roam-search-nodes)
-;   ("s-/ st" . consult-)
-; ("s-/ l" . council-)
+                                        ;   ("s-/ st" . consult-)
+                                        ; ("s-/ l" . council-)
 
-("s-/ dg" . deadgrep) ; not incremental. but nicely formatted
-("s-/ cp" . counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
-("s-/ rg" . consult-ripgrep) ; pretty slick, shows you the actual file context
-("s-/ gg" . consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
+   ("s-/ dg" . deadgrep) ; not incremental. but nicely formatted
+   ("s-/ cp" . counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
+   ("s-/ rg" . consult-ripgrep) ; pretty slick, shows you the actual file context
+   ("s-/ gg" . consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
    ))
 
 ;; (global-page-break-lines-mode 0)
@@ -150,19 +143,25 @@
 
 
 (defun org-roam-backlinks-buffer ()
-(interactive)
-(org-roam-buffer-toggle)
-(other-window 1)
-)
+  (interactive)
+  (org-roam-buffer-toggle)
+  (other-window 1)
+  )
 
 
 (defun org-roam-search-nodes ()
   "Search org-roam directory using consult-ripgrep. With live-preview."
   (interactive)
-;;  (require 'org-roam)
-(counsel-rg nil org-roam-directory nil nil))
+  ;;  (require 'org-roam)
+  (counsel-rg nil org-roam-directory nil nil))
 
 
 (defalias 'org-roam-heading-add 'org-id-get-create)
 (defalias 'org-roam-find-node 'org-roam-node-find)
 (defalias 'org-roam-insert-node 'org-roam-node-insert)
+
+(use-package org-roam-protocol
+  :after org-roam)
+
+(use-package org-roam-export
+  :after org-roam)
