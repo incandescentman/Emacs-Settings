@@ -4,16 +4,15 @@
   :delight
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
-    (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
-     (org-roam-dailies-directory "journal/")
-       ;; Capture templates
-  (org-roam-db-autosync-mode)
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
+  (org-roam-dailies-directory "journal/")
 
+  ;; Capture templates
   (org-roam-dailies-capture-templates
-        '(("d" "default" entry
-           "* %?"
-           :target (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
+   '(("d" "default" entry
+      "* %?"
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
 - tags :: \n\n
 * %<%Y-%m-%d>\n
 -
@@ -83,13 +82,10 @@
 
   :config
   (org-roam-setup)
-
-  ;; Capture templates
   (org-roam-db-autosync-mode)
 
-:bind
+  :bind
   (
-   ;; org-roam keybindings
    ("s-u f" . org-roam-find-node)
    ("S-s-<up>" . org-roam-backlinks-buffer)
    ;; ("S-s-<down>" . projectile-ripgrep)
@@ -132,12 +128,12 @@
 
    ))
 
+;; Add custom functions and advice
 ;; (global-page-break-lines-mode 0)
 (advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
 
 (setq org-roam-completion-everywhere t)
 ;; doesn't work for some reason
-
 ;; so that org-roam links can be followed
 ;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
 ;; if necessary, consider using org-roam-buffer-refresh
@@ -154,20 +150,21 @@
   ;;  (require 'org-roam)
   (counsel-rg nil org-roam-directory nil nil))
 
-
+;; rename some org-roam functions
 (defalias 'org-roam-heading-add 'org-id-get-create)
 (defalias 'org-roam-find-node 'org-roam-node-find)
 (defalias 'org-roam-insert-node 'org-roam-node-insert)
 
-                                        ; Global keybindings not related to org-roam
+;; Search
 (global-set-key (kbd "s-/ dg") 'deadgrep) ; not incremental. but nicely formatted
 (global-set-key (kbd "s-/ cp") 'counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
 (global-set-key (kbd "s-/ rg") 'consult-ripgrep) ; pretty slick, shows you the actual file context
 (global-set-key (kbd "s-/ gg") 'consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
 
-(global-set-key (kbd "s-/ st") 'consult-) ;
-(global-set-key (kbd "s-/ l") 'counsel-) ;
+;; (global-set-key (kbd "s-/ st") 'consult-) ;
+;; (global-set-key (kbd "s-/ l") 'counsel-) ;
 
+;; Include org-roam-protocol and org-roam-export after org-roam
 (use-package org-roam-protocol
   :after org-roam)
 
