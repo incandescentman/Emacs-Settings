@@ -1,49 +1,136 @@
-* org-inline-tags
+* org-plain-list-tags
 
-To insert an inline tag, press =C-c i t= in org-mode. You will be
-prompted with a list of pre-defined tags. Type the first letter of the
-desired tag to insert it at the cursor position.
+** Introduction
+=org-plain-list-tags= is an Emacs package that extends org-mode functionality
+by allowing users to add hashtag-style tags to plain list
+items, making it easy to mark items for later review or action.
+Tags are fontified with a custom face to make them stand out visually, and are searchable via a custom command.
 
-Here's the list of pre-defined tags and their corresponding single
-keystroke:
+** Features
+- Add hashtag-style tags to plain list items
+- Fontify tags with a custom face
+- Search for tagged items in the current buffer, project-wide, or using
+ =consult-git-grep=
+- Insert predefined tags with a single keystroke
 
-- r: "review"
-- b: "book"
-- t: "todo"
-- u: "urgent"
-- p: "tweet"
-- i: "insight"
-- c: "cook-ideas-over-time"
+** Plain lists
+A plain list in Emacs org-mode is what you think of when you think of a bulleted list --- a simple, plain-text list. Each line begins with either a bullet or hyphen (an "unordered" i.e., bulleted list) or a number (an "ordered" i.e. numbered list).
 
-For example, typing =C-c i t= followed by =r= will insert =::review::=
-at the cursor position.
+Plain lists are useful for organizing information, capturing ideas, and creating outlines. The syntax for plain lists is simple and easy to manipulate, making them an ideal format for quickly and frictionlessly capturing and organizing ideas, notes, or tasks.
 
-To search for a specific inline tag in the current buffer, use the
-=org-inline-tag-search= function. Type =M-x org-inline-tag-search=
-followed by the name of the tag (e.g., =review=) to search for it in the
-current buffer.
+The org-plain-list-tags package enhances org-mode's default plain list behavior by allowing you to add inline tags to individual list items, making it easier to categorize, search, and filter items so you can act on them later.
 
-You can customize the appearance of inline tags by adding the following
-code to your Emacs configuration:
+** Why take notes as plain text lists?
+- I like the idea, popularized by Workflowy and Roam Research, that any text I type automatically sits within a hierarchical outline. Not all ideas are hierarchical, and that's fine --- I just don't indent and every thought I record sits at the same level of hierarchy.
+- But if I hit upon an idea I want to drill down on, I can indent to the next level of the hierarchy to signal to myself that these new thoughts are now sub-items
+- When I'm done drilling down on the sub-ideas, I outdent again so I can continue where I left off.
+
+** Why would plain lists need tags?
+- I take notes in plain text, not in the form of org-mode headings
+- As I'm writing, I often hit upon an idea I want to act on later in some way.
+  + a task I want to remember to do later
+  + an idea I want to think more about
+  + an idea for a Tweet
+  + an idea I want to "cook" over time by coming back to it every day over a period of weeks and recording new thoughts each time
+  + a well-formed sentence I want to put in the book I'm writing
+- When I have an idea I want to act on later, I usually want to act on the idea itself, not the broader heading or category it's under. But by default, org-mode tags can be added only to headings, not to plain lists. I don't know about you, but when I'm trying to capture my ideas, I'm not typing them down in the form of org-mode headings.
+- I needed a way to flag ideas for later action --- a way that would flag not the general heading the idea falls under, but the specific idea or thought itself.
+- Hence the need to use inline tags in plain lists.
+
+** Installation
+1. Clone the repository or download the =org-plain-list-tags.el= file.
+2. Add the following to your Emacs configuration:
 
 #+begin_example
-emacs(defface org-inline-tag '((t (:foreground "cyan" :background "black" :bold t))) "Face for inline tags")
-(font-lock-add-keywords 'org-mode '(("(::w+::)" 1 'org-inline-tag prepend)) 'append)
+emacs(add-to-list 'load-path "/path/to/org-plain-list-tags")
+(require 'org-plain-list-tags)
 #+end_example
 
-This code snippet defines a custom face for inline tags, and adds a
-font-lock keyword to apply the face to inline tags in org-mode.
-Customize the =:foreground=, =:background=, and other face properties to
-your preference.
+Replace =/path/to/org-plain-list-tags= with the actual path to the
+directory containing =org-plain-list-tags.el=.
+
+** Usage
+
+To insert a tag at the end of a plain list item, place the cursor at the
+end of the item and call the =org-plain-list-tags-insert= function with
+=M-x org-plain-list-tags-insert= or bind it to a key:
+
+#+begin_example
+emacs(global-set-key (kbd "C-c t") 'org-plain-list-tags-insert)
+#+end_example
+
+When prompted, select a predefined tag by pressing the corresponding
+key:
+
+#+begin_example
+makefiler: review
+b: book
+t: todo
+u: urgent
+p: tweet
+i: insight
+c: cook-ideas-over-time
+#+end_example
+
+*** Searching for tagged items
+To search for items tagged with a specific tag in the current buffer,
+call the =org-plain-list-tags-search-buffer= function with
+=M-x org-plain-list-tags-search-buffer= and enter the tag you're looking
+for.
+
+To search for items tagged with a specific tag project-wide, call the
+=org-plain-list-tags-search-project-wide= function with
+=M-x org-plain-list-tags-search-project-wide= and enter the tag you're
+looking for. This function requires =consult-git-grep=.
 
 
-** Why org-inline-tags?
-Org-mode is a powerful tool for organizing and managing information.
-While org-mode headings and TODO items are useful for organizing tasks
-and ideas, sometimes you need a way to flag plain list items for later
-review or action. =org-inline-tags= provides a simple, customizable
-solution for tagging plain list items with custom inline tags, making it
-easier to review, prioritize, and manage your notes.
+** Plain lists
+A plain list in Emacs org-mode is what you think of when you think of a bulleted list --- a simple, plain-text list. Each line begins with either a bullet or hyphen (an "unordered" i.e., bulleted list) or a number (an "ordered" i.e. numbered list).
+
+Plain lists are useful for organizing information, capturing ideas, and creating outlines. The syntax for plain lists is simple and easy to manipulate, making them an ideal format for quickly and frictionlessly capturing and organizing ideas, notes, or tasks.
+
+The org-plain-list-tags package enhances org-mode's default plain list behavior by allowing you to add inline tags to individual list items, making it easier to categorize, search, and filter items so you can act on them later.
+
+** Why take notes as plain text lists?
+- I like the idea, popularized by Workflowy and Roam Research, that any text I type automatically sits within a hierarchical outline. Not all ideas are hierarchical, and that's fine --- I just don't indent and every thought I record sits at the same level of hierarchy.
+- But if I hit upon an idea I want to drill down on, I can indent to the next level of the hierarchy to signal to myself that these new thoughts are now sub-items
+- When I'm done drilling down on the sub-ideas, I outdent again so I can continue where I left off.
+
+** Why would plain lists need tags?
+- I take notes in plain text, not in the form of org-mode headings
+- As I'm writing, I often hit upon an idea I want to act on later in some way.
+  + a task I want to remember to do later
+  + an idea I want to think more about
+  + an idea for a Tweet
+  + an idea I want to "cook" over time by coming back to it every day over a period of weeks and recording new thoughts each time
+  + a well-formed sentence I want to put in the book I'm writing
+- When I have an idea I want to act on later, I usually want to act on the idea itself, not the broader heading or category it's under. But by default, org-mode tags can be added only to headings, not to plain lists. I don't know about you, but when I'm trying to capture my ideas, I'm not typing them down in the form of org-mode headings.
+- I needed a way to flag ideas for later action --- a way that would flag not the general heading the idea falls under, but the specific idea or thought itself.
+- Hence the need to use inline tags in plain lists.
+
+
+** Customization
+
+To customize on your setup, you can modify the
+=org-plain-list-tags-face= face to change the appearance of tags:
+
+#+begin_example
+macs(custom-set-faces
+ '(org-plain-list-tags-face ((t (:foreground "your-color" :weight bold)))))
+#+end_example
+
+Replace ="your-color"= with the desired color for the tags.
+
+You can also customize the predefined tags by modifying the =tag-alist=
+within the =org-plain-list-tags-insert= function.
+
+** Why org-plain-list-tags?
+
+Org mode provides excellent support for organizing tasks using TODO
+headings and tags. However, sometimes you might want to flag a plain
+list item for later action without promoting it to a heading.
+=org-plain-list-tags= allows you to add inline tags to plain list items,
+making it easier to review and act on them later.
 
 ** Contributing
 Contributions are welcome! Please open an issue or submit a pull request on the [[https://github.com/yourusername/org-inline-tags][GitHub repository]].
