@@ -7551,10 +7551,15 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+end_src
 
 
+* org-superstar
 #+begin_SRC emacs-lisp
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq org-superstar-prettify-item-bullets t)
+
+;; additional indentation for sub-items in a list
+(setq org-list-indent-offset 1)
+
 
 ;; (setq org-superstar-headline-bullets-list '(""))
 ;; ;; This is usually the default, but keep in mind it must be nil
@@ -7565,6 +7570,8 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 ;; ;; above has no effect while Indent is enabled.
 ;; (setq org-indent-mode-turns-on-hiding-stars nil)
 ;; (setq org-superstar-remove-leading-stars t)
+
+
 #+END_SRC
 
 * openwith
