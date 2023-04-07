@@ -1835,7 +1835,7 @@ Defines ~ibuffer-do-replace-string~:
 :defer
 :config
 (setq ido-ignore-directories  '("\\`CVS/" "\\`\\.\\./" "\\`\\./" ".git"))
-(setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "pdf" "tex" "html" ".mm" "Icon*" ".git"))
+(setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "tex" "html" ".mm" "Icon*" ".git"))
 )
 
 (ido-mode t)
@@ -2220,11 +2220,11 @@ Make it so that recentf does not record the following uninteresting file types:
 ** dired-omit
 #+BEGIN_SRC emacs-lisp
 (setq
-dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|Icon*"
+dired-omit-files "^\\.[^.]\\|\\|\\.tex$\\|Icon*"
 
 dired-omit-extensions
   (quote
-  (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs" ".html" ".pdf" ".tex" ".git" ".skim" "docx" "mp4" "pptx" "jpeg"))
+  (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs" ".html" ".tex" ".git" ".skim" "docx" "mp4" "pptx" "jpeg"))
 )
 
 
@@ -4646,7 +4646,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 
 #+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 
 (global-set-key
@@ -4665,7 +4665,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
    ;; Converting M-v to V here by analogy.
    ("V" scroll-down-command)
    ("l" recenter-top-bottom)))
-
 
 
 (global-set-key
@@ -4709,7 +4708,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 
 
 
-#+END_SRC
+#+END_EXAMPLE
 
 Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile · abo-abo/hydra Wiki]]
 
@@ -7568,3 +7567,10 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 ;; (setq org-superstar-remove-leading-stars t)
 #+END_SRC
 
+* openwith
+#+begin_src emacs-lisp
+
+(use-package openwith)
+(setq openwith-associations '(("\\.pdf\\'" "open" (file))))
+(openwith-mode t)
+#+end_src
