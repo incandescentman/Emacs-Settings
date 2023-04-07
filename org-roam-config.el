@@ -15,7 +15,7 @@
                               "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
 - tags :: \n\n
 * %<%Y-%m-%d>\n
-- %?
+-
 "))))
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
@@ -28,8 +28,7 @@
 			                        "#+title: ${title}\n#+filetags: :concept:
 - tags :: \n\n
 * ${title}\n
--
-")
+- ")
 	         :unnarrowed t)
 
           ("p" "person" plain "%?"
@@ -103,6 +102,7 @@
 			                        "#+title: ${title}\n#+filetags: :note:
 - tags :: \n\n
 * ${title}\n
+-
 ")
 	         :unnarrowed t)
           ))
@@ -125,7 +125,6 @@
    ("C-S-d" . org-roam-dailies-goto-today)
 ;;   ("s-u t" . org-roam-dailies-goto-today)
 ;; org-roam-ui-mode
-   ("s-u t" . org-roam-dailies-capture-today)
    ("S-s-<left>" .  org-roam-node-insert)
    ("S-s-<right>" . org-roam-node-find)
    ("s-u d" . org-roam-dailies-goto-date)
