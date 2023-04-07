@@ -177,10 +177,10 @@
   "Face for custom inline tags in plain list items.")
 
 (font-lock-add-keywords 'org-mode
-  '(("::\\(\\w+\\)::" 1 'inline-tag-face)))
+  '(("#\\(\\w+\\)" 1 'inline-tag-face)))
 
 (defun search-for-inline-tag (tag)
-  (org-search-view nil (concat "::" tag "::")))
+  (org-search-view nil (concat "#" tag)))
 
 (defun insert-inline-tag ()
   (interactive)
@@ -201,10 +201,8 @@ i: insight
 c: cook-ideas-over-time\n")))
     (setq selected-tag (cdr (assoc selected-key tag-alist)))
     (if selected-tag
-        (insert (format " ::%s::" selected-tag))
+        (insert (format " #%s" selected-tag))
       (message "Invalid tag selection"))))
-
-;; (define-key org-mode-map (kbd "C-c i t") 'insert-inline-tag)
 
 
 (define-key org-mode-map (kbd "s-:") 'insert-inline-tag)
