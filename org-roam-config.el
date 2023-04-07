@@ -20,6 +20,68 @@
   :config
   (org-roam-setup)
   (org-roam-db-autosync-mode)
+ (setq org-roam-capture-templates
+	      '(
+
+	        ("t" "topic" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:")
+	         :unnarrowed t)
+
+          ("p" "person" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :person:\n\
+- tags :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+	        ("d" "definition" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :definitiont:")
+           :unnarrowed t)
+
+	        ("s" "sentence" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :sentence:")
+	         :unnarrowed t)
+
+	        ("i" "idea" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :idea:")
+	         :unnarrowed t)
+
+	        ("c" "conversation" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :conversation:")
+	         :unnarrowed t)
+
+
+	        ("d" "default" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :note:")
+	         :unnarrowed t)
+
+
+          ("b" "book notes" plain
+           "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
+
+
+          ))
 
   :bind
   (
@@ -157,65 +219,3 @@ c: cook-ideas-over-time\n")))
                 (org-agenda-overriding-header "Items to review"))))
 
 
- (setq org-roam-capture-templates
-	      '(
-
-	        ("t" "topic" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:")
-	         :unnarrowed t)
-
-          ("p" "person" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :person:\n\
-- tags :: \n\n
-* ${title}
-- ")
-	         :unnarrowed t)
-
-	        ("d" "definition" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :definitiont:")
-           :unnarrowed t)
-
-	        ("s" "sentence" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :sentence:")
-	         :unnarrowed t)
-
-	        ("i" "idea" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :idea:")
-	         :unnarrowed t)
-
-	        ("c" "conversation" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :conversation:")
-	         :unnarrowed t)
-
-
-	        ("d" "default" plain "- tags :: \n
-* ${title}
-- %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :note:")
-	         :unnarrowed t)
-
-
-          ("b" "book notes" plain
-           "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t)
-
-
-          ))
