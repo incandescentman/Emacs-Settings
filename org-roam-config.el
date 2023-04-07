@@ -152,7 +152,7 @@
 (defalias 'org-roam-find-node 'org-roam-node-find)
 (defalias 'org-roam-insert-node 'org-roam-node-insert)
 
-; Global keybindings not related to org-roam
+                                        ; Global keybindings not related to org-roam
 (global-set-key (kbd "s-/ dg") 'deadgrep) ; not incremental. but nicely formatted
 (global-set-key (kbd "s-/ cp") 'counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
 (global-set-key (kbd "s-/ rg") 'consult-ripgrep) ; pretty slick, shows you the actual file context
