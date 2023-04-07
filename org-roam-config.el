@@ -1,5 +1,4 @@
 (use-package org-roam
-  :defer
   :after org
   :delight
   :custom
@@ -38,6 +37,22 @@
 - ")
 	         :unnarrowed t)
 
+	        ("b" "book" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :book:")
+	         :unnarrowed t)
+
+          ("p" "person" plain "%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :person:\n\
+- tags :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+
 	        ("d" "definition" plain "- tags :: \n
 * ${title}
 - %?"
@@ -75,7 +90,7 @@
 	         :unnarrowed t)
 
 
-          ("b" "book notes" plain
+          ("n" "book notes" plain
            "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
            :unnarrowed t)

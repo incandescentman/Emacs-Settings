@@ -36,19 +36,23 @@
   "Face for custom inline tags in plain list items.")
 
 (font-lock-add-keywords 'org-mode
-  '(("#\\(\\w+\\)" 1 'org-plain-list-tags-face)))
+  '(("#\\(\\w+\\)" 0 'org-plain-list-tags-face)))
 
+;;;###autoload
 (defun org-plain-list-tags-search (tag)
   (org-search-view nil (concat "#" tag)))
 
+;;;###autoload
 (defun org-plain-list-tags-search-buffer (tag)
   (consult-line (concat "#" tag)))
 
+;;;###autoload
 (defun org-plain-list-tags-search-project-wide (tag)
   "Search for inline TAG project-wide using consult-git-grep."
   (interactive "sEnter tag to search for: ")
   (consult-git-grep (concat "\\#" tag)))
 
+;;;###autoload
 (defun org-plain-list-tags-insert ()
   (interactive)
   (let* ((tag-alist '((?r . "review")
