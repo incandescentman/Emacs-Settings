@@ -49,6 +49,16 @@ emacs(add-to-list 'load-path "/path/to/org-plain-list-tags")
 Replace =/path/to/org-plain-list-tags= with the actual path to the
 directory containing =org-plain-list-tags.el=.
 
+**** Manual installation
+
+1. Download the `org-inline-tags.el` file from the GitHub repository.
+2. Place the file in your Emacs load-path.
+3. Add the following to your Emacs configuration:
+
+#+begin_src emacs-lisp
+(use-package 'org-inline-tags)
+#+end_src
+
 ** Usage
 To insert a tag at the end of a plain list item, place the cursor at the
 end of the item and call the =org-plain-list-tags-insert= function with
@@ -70,6 +80,13 @@ p: tweet
 i: insight
 c: cook-ideas-over-time
 #+end_example
+
+** Customization
+If you prefer different keybindings, you can customize them in your Emacs configuration. For example, to bind `org-inline-tag-insert` to `C-c C-t`, add the following to your configuration:
+
+#+begin_src emacs-lisp
+(define-key org-mode-map (kbd "C-c C-t") #'org-inline-tag-insert)
+#+end_src>
 
 *** Searching for tagged items
 To search for items tagged with a specific tag in the current buffer,
