@@ -223,7 +223,7 @@ c: cook-ideas-over-time\n")))
   (consult-git-grep (concat "\\#" tag)))
 
 
-(define-key org-mode-map (kbd "s-:") 'insert-inline-tag)
+(define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
 
