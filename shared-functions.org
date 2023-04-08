@@ -7599,15 +7599,15 @@ LaTeX, rather than every time?
 ChatGPT: Yes, you can achieve this by modifying your custom function to remove
 itself from the ~org-export-before-processing-hook~ after it loads your
 configuration file. This way, the function will be executed only once
-during the first export.
+during the first export:
 
 #+begin_src emacs-lisp
 (add-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config)
 
 (defun my-load-org-latex-export-config (&rest args)
- "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
-(jay-load-latex)
- (remove-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config))
+  "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
+  (jay-load-latex)
+  (remove-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config))
 #+end_src
 
 
