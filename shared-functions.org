@@ -7611,3 +7611,51 @@ during the first export:
 #+end_src
 
 
+* org-autolist
+#+begin_src emacs-lisp
+(use-package org-autolist
+ :hook (org-mode . org-autolist-mode))
+(add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
+#+end_src
+
+*** org-autolist deleting list items
+Suppose we start with:
+
+#+begin_example
+- [ ] one
+- [ ] two
+  - [ ] apple
+  - [ ] |
+#+end_example
+
+Pressing "Backspace" will produce:
+
+#+begin_example
+- [ ] one
+- [ ] two
+  - [ ] apple|
+#+end_example
+
+Similarly, if we instead start from here:
+
+#+begin_example
+- [ ] one
+- [ ] two
+  - [ ] |apple
+#+end_example
+
+Then pressing "Backspace" will produce:
+
+#+begin_example
+- [ ] one
+- [ ] two|apple
+#+end_example
+
+If you want to disable this behavior, add this to your ~init.el~:
+
+#+begin_example
+(setq org-autolist-enable-delete nil)
+#+end_example
+
+*** start at the right number
+[[https://www.reddit.com/r/orgmode/comments/10ybf40/how_to_force_orgautolistel_to_start_from_the/][How to force org-autolist.el to start from the number I choose : orgmode]]

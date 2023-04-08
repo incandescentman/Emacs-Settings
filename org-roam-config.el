@@ -29,7 +29,7 @@
 	         :unnarrowed t)
 
           ("p" "person" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
 - tags :: \n\n
 * ${title}
@@ -39,7 +39,7 @@
 	        ("b" "book" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "book/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "book-roam/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :book:")
 	         :unnarrowed t)
 
@@ -55,28 +55,28 @@
 	        ("d" "definition" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :definitiont:")
            :unnarrowed t)
 
 	        ("s" "sentence" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "sentences/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :sentence:")
 	         :unnarrowed t)
 
 	        ("i" "idea" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "creative-ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :idea:")
 	         :unnarrowed t)
 
 	        ("c" "conversation" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :conversation:")
 	         :unnarrowed t)
 
@@ -89,10 +89,23 @@
 	         :unnarrowed t)
 
 
-          ("n" "book notes" plain
-           "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\n\n* Summary\n\n%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t)
+	        ("n" "notes or books and articles" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "research/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :note:")
+	         :unnarrowed t)
+
+
+          ("w" "work ie NLI" plain "%?"
+	         :target (file+head "nli-roam/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :person:\n\
+- tags :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+
 
 
           ))
