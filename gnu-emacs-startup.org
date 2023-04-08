@@ -783,7 +783,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
 ;; replaced it with multiple-cursors-hydra/body for now
 
-;; (define-key key-minor-mode-map (kbd "C-8") '(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
+;; (define-key key-minor-mode-map (kbd "C-8") #'(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
 (define-key key-minor-mode-map (kbd "s-k r e") 'set-rectangular-region-anchor)
 
@@ -2387,7 +2387,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 ;; (use-package fountain-mode)
 
 ;; (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
-(add-hook 'fountain-mode-hook '(lambda () (orgalist-mode 1)))
+(add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1)))
 (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
 (add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))

@@ -357,9 +357,9 @@ is this still necessary?
 
 #+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
-(add-hook 'text-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'markdown-mode-hook  '(lambda () (auto-fill-mode -1)))
-(add-hook 'message-mode-hook  '(lambda () (auto-fill-mode -1)))
+(add-hook 'text-mode-hook  #'(lambda () (auto-fill-mode -1)))
+(add-hook 'markdown-mode-hook  #'(lambda () (auto-fill-mode -1)))
+(add-hook 'message-mode-hook  #'(lambda () (auto-fill-mode -1)))
 #+END_SRC
 
 *** Sounds
@@ -2044,7 +2044,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (use-package dired-x
   :defer)
 ;; Load Dired X when Dired is loaded.
-;; (add-hook 'dired-load-hook '(lambda () (require 'dired-x)))
+;; (add-hook 'dired-load-hook #'(lambda () (require 'dired-x)))
 
 
 (setq-default dired-omit-files-p t) ; Buffer-local variable
@@ -6670,7 +6670,7 @@ Wow: This was amazing:
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'org-mode-hook '(lambda () (auto-fill-mode -1)))
+(add-hook 'org-mode-hook #'(lambda () (auto-fill-mode -1)))
 
 (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 
