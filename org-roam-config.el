@@ -12,10 +12,9 @@
       "* %?"
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
-- tags :: \n\n
-* %<%Y-%m-%d>\n
--
-"))))
+- tags :: \n
+* %<%Y-%m-%d>
+- "))))
   :config
   (org-roam-setup)
   (org-roam-db-autosync-mode)
