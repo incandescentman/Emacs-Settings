@@ -104,7 +104,7 @@
 ;; (load "/Users/jay/gnulisp/org-image.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
-(jay-load-latex)
+
 
 
 ;; (load "/Users/jay/emacs/org-mime.el")

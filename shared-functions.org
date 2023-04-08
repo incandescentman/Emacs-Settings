@@ -2306,6 +2306,8 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
 (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
  (setq org-content (replace-regexp-in-string ":PROPERTIES:[^\000]*:END:" "" org-content))
+;; Add the following line to replace "=" enclosed text with "~" enclosed text
+ (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
 
 (kill-new org-content)
  (yank))
@@ -6043,7 +6045,7 @@ This solution also works for MELPA.
 #+BEGIN_SRC emacs-lisp
 (defun screenflick-mode ()
 (interactive)
- (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
+;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
 (horizontal-cursor)
 (spacemacs/toggle-highlight-current-line-globally-off)
 (adobe-garamond-pro)
@@ -6920,8 +6922,8 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
  (org-ctrl-c-ctrl-c))
 
 ; Shortcut
-(define-key evil-normal-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
-(define-key evil-insert-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
+;; (define-key evil-normal-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
+;; (define-key evil-insert-state-map (kbd "C-'") 'jx/insert-custom-clock-entry)
 #+end_src
 
 
@@ -7579,3 +7581,33 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (setq openwith-associations '(("\\.pdf\\'" "open" (file))))
 (openwith-mode t)
 #+end_src
+
+
+* load my LaTeX config only when I actually need to export something
+
+Jay: How do I direct Emacs to load a file (containing my org-mode LaTeX
+export configuration) the first time I run org Export to LaTeX?
+
+ChatGPT: You can achieve this by using the ~org-export-before-processing-hook~.
+This hook allows you to run a custom function before the export process
+starts. You can define a custom function to load your Org-mode LaTeX
+export configuration file and add this function to the hook.
+
+Jay: Can I make it load this file only the first time I export something to
+LaTeX, rather than every time?
+
+ChatGPT: Yes, you can achieve this by modifying your custom function to remove
+itself from the ~org-export-before-processing-hook~ after it loads your
+configuration file. This way, the function will be executed only once
+during the first export.
+
+#+begin_src emacs-lisp
+(add-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config)
+
+(defun my-load-org-latex-export-config (&rest args)
+ "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
+(jay-load-latex)
+ (remove-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config))
+#+end_src
+
+
