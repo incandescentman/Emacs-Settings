@@ -39,7 +39,7 @@
 	        ("b" "book" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "book/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :book:")
 	         :unnarrowed t)
 

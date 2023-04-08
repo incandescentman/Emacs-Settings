@@ -1,4 +1,4 @@
-* file settings                                                     :ARCHIVE:
+* NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
@@ -864,6 +864,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
+(define-key key-minor-mode-map (kbd "C-M-d") 'dictionary-search)
 
 ;; For extracting content from my browser
 
