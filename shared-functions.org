@@ -895,7 +895,11 @@ Note: disable this when trying to export to org-html-themes!
 
 #+END_SRC
 
-*** ignore secret headlines tagged with "ignore"
+*** Omit headlines tagged with :ignore: --- but do still export the text in that section
+This is so I can do structure headlines, for myself, that aren't part of the actual article text.
+
+Pretty cool actually. Leaving it in.
+
 :PROPERTIES:
 :ID:       EA8DFF1F-F89F-4B5E-AC56-28EED76EE68C
 :END:
@@ -3368,11 +3372,6 @@ When doing isearch, hand the word over to ~helm-swoop~:
 From ~helm-swoop~ to ~helm-multi-swoop-all~:
 #+BEGIN_EXAMPLE emacs-lisp
 ;; (define-key helm-swoop-map (kbd "M-i"); 'helm-multi-swoop-all-from-helm-swoop)
-#+END_EXAMPLE
-
-When doing evil-search, hand the word over to ~helm-swoop~:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
 #+END_EXAMPLE
 
 Save buffer when ~helm-multi-swoop-edit~ completes:
