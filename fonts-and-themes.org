@@ -306,7 +306,7 @@ This worked when nothing else would:
 
 As did this:
 
-(setq evil-emacs-state-cursor '("red")) ; for box cursor
+;; (setq evil-emacs-state-cursor '("red")) ; for box cursor
 ;;;; functions to adjust the transparency of the frame
 
 (defun opaque ()
