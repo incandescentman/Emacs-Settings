@@ -108,7 +108,6 @@ This function should only modify configuration layer settings."
      ;; helm
      ;; html
      ;; jay
-     lang-tools
      ;; markdown
      ;; mu4e
      (multiple-cursors :variables multiple-cursors-backend 'mc)
