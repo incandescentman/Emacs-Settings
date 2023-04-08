@@ -864,7 +864,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
-(define-key key-minor-mode-map (kbd "C-M-d") 'dictionary-search)
+(define-key key-minor-mode-map (kbd "s-D") 'dictionary-search)
 
 ;; For extracting content from my browser
 
@@ -1385,14 +1385,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (current-column)))
 #+END_SRC
 
-*** smart-return - without org-run-like-in-org-mode
-In this version, I removed this line:
-
-(org-run-like-in-org-mode (lambda () (interactive)
-
-... it seems to work. But not knowing what that line does, or what I'm doing more generally, I don't know what unexpected effects this redaction may have...
-
-Also, the refreshing of the buffer still seems to happen when I hit smart-return when I'm in a bulleted list. also it seems to be replacing the hyphen (-) with an n dash (-)
+*** smart-return
+I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybinding to see if org-autolist emulates all desired behavior.
 
 #+BEGIN_SRC emacs-lisp
 
@@ -1468,7 +1462,7 @@ Also, the refreshing of the buffer still seems to happen when I hit smart-return
 
         (t (newline))))
 
-(define-key org-mode-map (kbd "<return>") 'smart-return)
+;; (define-key org-mode-map (kbd "<return>") 'smart-return)
 ;; (define-key orgalist-mode-map (kbd "<return>") 'smart-return)
 #+END_SRC
 
