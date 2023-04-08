@@ -2640,7 +2640,7 @@ Don't forget to mention your Emacs and library versions."))
   :link '(url-link :tag "Description"
           "https://www.emacswiki.org/emacs/DiredPlus")
   :link '(emacs-commentary-link :tag "Commentary" "dired+"))
- 
+
 ;;; Variables
 
 ;; `dired-do-toggle' was renamed to `dired-toggle-marks' after Emacs 20.
@@ -3024,7 +3024,7 @@ Default value is same as `directory-files-no-dot-files-regexp'.")
     "Regular expression to match up to the file name in a directory listing.
 The default value is designed to recognize dates and times
 regardless of the language."))
- 
+
 ;;; Macros
 
 
@@ -3108,7 +3108,7 @@ Return value depends on the number of plain `C-u' used:
  * `all-files'         if 4"
   (and (consp arg)
        (> (prefix-numeric-value arg) 4)
-       (case (prefix-numeric-value arg)
+       (cl-case (prefix-numeric-value arg)
          (16   'all-files-no-dirs)      ; `C-u C-u'
          (64   'all-files-no-dots)      ; `C-u C-u C-u'
          (256  'all-files)              ; `C-u C-u C-u C-u'
@@ -3203,7 +3203,7 @@ If DISTINGUISH-ONE-MARKED is non-nil, then return (t FILENAME) instead
     `(with-output-to-temp-buffer ,buffer ,@body)))
 
 (put 'diredp-with-help-window 'common-lisp-indent-function '(4 &body))
- 
+
 ;;; Utility functions
 
 ;; Same as `imenup-delete-if-not'.
@@ -3398,7 +3398,7 @@ ARG is as in `diredp-dired-recent-files'."
           (sort (copy-sequence (funcall function arg)) diredp-default-sort-arbitrary-function)
         (nreverse (funcall function arg)))
     (funcall function arg)))
- 
+
 
 (unless (fboundp 'dired-nondirectory-p) ; Emacs 20, 21.
   (defun dired-nondirectory-p (file)
@@ -4427,7 +4427,7 @@ command then it is ignored.)"
       (setq name  (completing-read prompt obarray #'commandp t nil
                                    'extended-command-history default)))
     (intern name)))
- 
+
 ;;; Face Definitions
 
 (defface diredp-autofile-name
@@ -4785,7 +4785,7 @@ This means file names that match regexp `diredp-omit-files-font-lock-regexp'.
   (setq font-lock-mode  nil)
   (font-lock-mode))
 (add-hook 'dired-after-readin-hook 'diredp-refontify-buffer)
- 
+
 ;;; Function Definitions
 
 ;;; $$$$$$$$
@@ -5884,7 +5884,7 @@ DETAILS is passed to `diredp-list-files', to show details about FILES."
                                                              prompt
                                                            (concat "Please answer y or n.  " prompt)))))))
                             (setq answer  (lookup-key query-replace-map (vector key) t))
-                            (case answer
+                            (cl-case answer
                               ((skip  act)              nil)
                               (recenter                 (recenter) t)
                               (show                     (diredp-list-files files nil list-buf predicate details)
@@ -6640,7 +6640,7 @@ When called from Lisp, optional arg DETAILS is passed to
                     (message "Thumb could not be created for file %s" curr-file)
                   (image-dired-insert-thumbnail thumb-name curr-file dired-buf)))
               files))
-      (case image-dired-line-up-method
+      (cl-case image-dired-line-up-method
         (dynamic      (image-dired-line-up-dynamic))
         (fixed        (image-dired-line-up))
         (interactive  (image-dired-line-up-interactive))
@@ -7903,17 +7903,17 @@ When called from Lisp, optional arg DETAILS is passed to
 ;;;   "Aggregate results of invoking a function in the marked files and dirs.
 ;;; This command prompts you for the aggregate function, AGGREGATE-FUN,
 ;;; and for the function to invoke in each marked file or dir, INVOKE-FUN.
-;;; 
+;;;
 ;;; Then it calls `diredp-do-invoke-in-marked-recursive', which calls
 ;;; INVOKE-FUN at the start of the file, with no args.
-;;; 
+;;;
 ;;; The files included are those that are marked in the current Dired
 ;;; buffer, or all files in the directory if none are marked.  Marked
 ;;; subdirectories are handled recursively in the same way.
-;;; 
+;;;
 ;;; With a prefix argument, ignore all marks - include all files in this
 ;;; Dired buffer and all subdirs, recursively.
-;;; 
+;;;
 ;;; When called from Lisp, optional arg DETAILS is passed to
 ;;; `diredp-get-files'."
 ;;;   (interactive
@@ -9968,10 +9968,10 @@ In particular, `C-u C-u' operates on all files in the Dired buffer."
 ;;; (defun diredp-do-aggregate-invoke-in-marked (aggregate-fun &optional mark-arg msgp)
 ;;;   "Aggregate results of invoking a function in the marked files and dirs.
 ;;; This command prompts you for the aggregate function, AGGREGATE-FUN.
-;;; 
+;;;
 ;;; Then it calls `diredp-do-invoke-in-marked', which prompts you for a
 ;;; function to invoke in each marked file or dir.
-;;; 
+;;;
 ;;; A prefix arg acts like the ARG argument of `dired-get-marked-files'.
 ;;; In particular, `C-u C-u' operates on all files in the Dired buffer."
 ;;;   (interactive
@@ -12965,7 +12965,7 @@ When called from Lisp:
                                                        "UNmark"
                                                      "Mark")
                                                    (format " files (regexp matching %s): "
-                                                           (case type
+                                                           (cl-case type
                                                              ((nil)   "names with default dir")
                                                              (no-dir  "relative names - no dir")
                                                              (t       "absolute names")))))
@@ -12975,7 +12975,7 @@ When called from Lisp:
   (let ((dired-marker-char  (or marker-char  dired-marker-char)))
     (diredp-mark-if (and (not (diredp-looking-at-p dired-re-dot))
                          (not (eolp))   ; Empty line
-                         (let ((fn  (dired-get-filename (case name-form
+                         (let ((fn  (dired-get-filename (cl-case name-form
                                                           ((nil)   t)
                                                           (no-dir  'no-dir)
                                                           (t       nil))
@@ -15101,7 +15101,7 @@ windows there, then delete its window (toggle : show/hide the file)."
     (if shown
         (when (= 2 (count-windows 'NOMINI)) (delete-window fwin))
       (set-window-buffer fwin (find-file-noselect file)))))
- 
+
 ;;; Key Bindings.
 
 
