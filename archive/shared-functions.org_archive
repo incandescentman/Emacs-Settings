@@ -2632,3 +2632,174 @@ Doesn't work.
 
 (setq lexic-dictionary-path "/Users/jay/.stardict")
 #+end_src
+
+* cheatsheet
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-04-08 Sat 21:09
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+(cheatsheet-add :group 'Common
+                :key "M-s-="
+                :description "calc-eval-region")
+
+(cheatsheet-add :group 'Dired
+                :key "C-x C-j"
+                :description "dired of current file")
+
+(cheatsheet-add :group 'Dired
+                :key "C-x d"
+                :description "recent directories")
+
+(cheatsheet-add :group 'Dired
+                :key "DD"
+                :description "recent directories")
+
+
+(cheatsheet-add :group 'Dired
+                :key "C-x C-d"
+                :description "ido-list-directory")
+
+
+(cheatsheet-add :group 'Mu4e
+		:key "a e"
+		:description "org-contact-add")
+
+
+(cheatsheet-add :group 'Common
+                :key "C-x u"
+                :description "undo-tree-visualize")
+
+(cheatsheet-add :group 'Mooovement
+                :key "C-c C-j"
+                :description "org-goto")
+
+
+(cheatsheet-add :group 'Mooovement
+                :key "C--"
+                :description "goto-last-edit")
+
+
+(cheatsheet-add :group 'Search
+                :key "s-G"
+                :description "consult-ripgrep")
+
+(cheatsheet-add :group 'Mooovement
+                :key "C-drag"
+                :description "mouse-copy")
+
+
+(cheatsheet-add :group 'Mooovement
+                :key "jj"
+                :description "helm-imenu")
+
+(cheatsheet-add :group 'Mooovement
+                :key "kk"
+                :description "helm-imenu")
+
+(cheatsheet-add :group 'Mooovement
+                :key "jk"
+                :description "avy-goto-line")
+
+(cheatsheet-add :group 'Common
+                :key "XX"
+                :description "M-x")
+
+(cheatsheet-add :group 'Search
+                :key "ww"
+                :description "helm-swoop")
+
+
+(cheatsheet-add :group 'Search
+                :key "FF"
+                :description "isearch")
+
+(cheatsheet-add :group 'Search
+                :key "SS"
+                :description "swiper")
+
+
+(cheatsheet-add :group 'Buffers
+                :key "WW"
+                :description "widen")
+
+(cheatsheet-add :group 'Editing
+                :key "ZZ"
+                :description "undo")
+
+(cheatsheet-add :group 'Editing
+		:key "C-x C-o"
+		:description "delete-blank-lines")
+
+
+(cheatsheet-add :group 'Replacing
+                :key "RR"
+                :description "replace-regexp")
+
+(cheatsheet-add :group 'Action!
+                :key "XX"
+                :description "helm-mx")
+
+(cheatsheet-add :group 'Action!
+		:key "HH"
+		:description "cheatsheet")
+
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "MM"
+                :description "mc/mark-all-dwim")
+
+
+(cheatsheet-add :group 'MultipleCursors
+		:key "s-m"
+		:description "mc/mark-all-like-this")
+
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "M-2"
+                :description "mc/mark-all-dwim")
+
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "C-4"
+                :description "mc/mark-next-like-this")
+
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "C-3"
+                :description "mc/mark-previous-like-this")
+
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "C-8"
+                :description "endless/mc-map")
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "i"
+                :description "mc/insert-numbers")
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "h"
+                :description "mc/hide-unmatched-lines")
+
+(cheatsheet-add :group 'MultipleCursors
+                :key "h"
+                :description "mc/mark-all-like-this")
+
+
+
+#+END_EXAMPLE
+
+
+
+
+;; (key-chord-define-global "HH" 'helm-M-x)
+
+
+;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)
+(key-chord-define-global "NN" 'org-narrow-to-subtree)
+
+(key-chord-define-global "II" 'god-mode-all)
+
+

@@ -105,7 +105,7 @@
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
 
-
+;; (monaco-font)
 
 ;; (load "/Users/jay/emacs/org-mime.el")
 
