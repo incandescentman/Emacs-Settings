@@ -3190,51 +3190,45 @@ Key bindings I don't use much and should remember to learn:
 
 mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 #+BEGIN_SRC emacs-lisp
-(define-super-key "k cy" 'cyberpunk-jay)
-(define-super-key "k cl" 'cyberpunk-large)
-(define-super-key "k zb" 'zenburn)
-(define-super-key "k le" 'leuven)
-(define-super-key "k ts" 'transparent-serenity)
-(define-super-key "k tg" 'top-gun-mode)
-(define-super-key "k tn" 'tomorrow-night)
+;; (define-super-key "k cy" 'cyberpunk-jay)
+;; (define-super-key "k cl" 'cyberpunk-large)
+;; (define-super-key "k zb" 'zenburn)
+;; (define-super-key "k le" 'leuven)
+;; (define-super-key "k ts" 'transparent-serenity)
+;; (define-super-key "k tg" 'top-gun-mode)
+;; (define-super-key "k tn" 'tomorrow-night)
+;; (define-super-key "k cl" 'cyberpunk-large)
 
-(define-super-key "k ma" 'inverse-add-global-abbrev)
+;; (define-super-key "k ma" 'inverse-add-global-abbrev)
+
+;; (define-super-key "k sd" 'solarized-dark)
+;; (define-super-key "k ri" 'ritchie)
+;; (define-super-key "k sp" 'spolsky)
+;; (define-super-key "k wr" 'writeroom-mode)
+;; (define-super-key "k wf" 'workflowy-mode)
+;; (define-super-key "k st" 'small-type)
+;; (define-super-key "k mp" 'morning-pages)
+;; (define-super-key "k lt" 'load-theme)
+;; (define-super-key "k mt" 'medium-type)
+;; (define-super-key "k wb" 'whiteboard)
+;; (define-super-key "k sl" 'spacemacs-light)
+
 
 (define-super-key "k rr" 'replace-regexp)
 
 
 (define-super-key "k cf" 'customize-face)
 
-;; (define-super-key "k h" 'org-export-dispatch)
 
-
-
-
-;(define-super-key "k nm" 'notmuch-hello)
-(define-super-key "k mu" 'mu4e)
-;; (define-super-key "k cl" 'cyberpunk-large)
 
 (define-super-key "k dd" 'delete-duplicate-lines-keep-blanks)
 
 (define-super-key "k cw" 'count-words)
-(define-super-key "k wb" 'whiteboard)
-(define-super-key "k sl" 'spacemacs-light)
 
-(define-super-key "k sd" 'solarized-dark)
-(define-super-key "k ri" 'ritchie)
-(define-super-key "k sp" 'spolsky)
-(define-super-key "k wr" 'writeroom-mode)
-(define-super-key "k wf" 'workflowy-mode)
-(define-super-key "k st" 'small-type)
-(define-super-key "k mp" 'morning-pages)
-(define-super-key "k lt" 'load-theme)
-(define-super-key "k mt" 'medium-type)
 
 (define-super-key "k bl" 'blue-light)
 
-(define-super-key "k eu" 'endless/upgrade)
-
-;; ;; accountability
+;; ;; Accountability
 
 (defun keybinding-read-and-insert (key)
   (interactive "kKey: ")
@@ -6897,31 +6891,6 @@ Here is an example of how you might rewrite the function to retrieve the API key
 
 This function will look for a file named ~/.openai/api-key, read the contents of the file, and return the API key as a string. The openai-api-key variable will then be set to this value.
 
-* openAI
-#+begin_src emacs-lisp
-(use-package aide)
-
-(defun aide-openai-complete-buffer-insert ()
- "Send the ENTIRE buffer to OpenAI and insert the result to the end of buffer."
- (interactive)
- (let (region
-    result
-    original-point)
-  (setq region (buffer-substring-no-properties (point-min) (point-max)))
-  (setq result (aide--openai-complete-string region))
-  (goto-char (point-max))
-  (setq original-point (point))
-  (if result
-    (progn
-     (insert "\n" result)
-     (fill-paragraph)
-     (let ((x (make-overlay original-point (point-max))))
-      (overlay-put x 'face '(:foreground "orange red")))
-     result)
-   (message "Empty result"))))
-#+end_src
-
-
 * playing with ChatGTP
 #+begin_src emacs-lisp
 (defun start-pomodoro ()
@@ -7519,7 +7488,6 @@ irony
 
 #+end_src
 
-
 ** dictionary
 - dictionary-lookup-definition
 - dictionary-search
@@ -7540,6 +7508,8 @@ Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
 
 
 * consult ripgrep
+
+Avoid recentering errors. Works!
 #+begin_src emacs-lisp
 (defun consult-recenter-advice (orig-fn &rest args)
  "Advice for `recenter' to avoid errors when the window is not displaying the current buffer."
@@ -7547,5 +7517,4 @@ Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
   (apply orig-fn args)))
 
 (advice-add 'recenter :around #'consult-recenter-advice)
-
 #+end_src
