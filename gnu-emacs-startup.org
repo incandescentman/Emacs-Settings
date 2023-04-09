@@ -864,7 +864,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
-(define-key key-minor-mode-map (kbd "s-D") 'dictionary-search)
+(define-key key-minor-mode-map (kbd "s-D") 'define-word-at-point)
 
 ;; For extracting content from my browser
 
