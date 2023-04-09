@@ -7659,3 +7659,21 @@ If you want to disable this behavior, add this to your ~init.el~:
 
 *** start at the right number
 [[https://www.reddit.com/r/orgmode/comments/10ybf40/how_to_force_orgautolistel_to_start_from_the/][How to force org-autolist.el to start from the number I choose : orgmode]]
+
+* dictionaries
+Three different dictionary programs:
+
+irony
+
+** ~define-word~
+- its own dictionary. Definitions appear in minibuffer, which is weird.
+- But nicely formatted
+** ~dictionary-lookup-definition~
+- (also WordNet)
+** dictionary-search
+wordnet, via dict.org)
+
+#+begin_src emacs-lisp
+'(dictionary-default-dictionary "gcide")
+
+#+end_src
