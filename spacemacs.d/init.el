@@ -124,7 +124,7 @@ This function should only modify configuration layer settings."
      ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
-     treemacs
+     ;; treemacs
      ;; typography
      ;; xkcd
 
