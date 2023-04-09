@@ -1,6 +1,3 @@
-
-* search
-#+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
 
 ;; Search
@@ -11,5 +8,3 @@
 
 ;; (global-set-key (kbd "s-/ st") 'consult-) ;
 ;; (global-set-key (kbd "s-/ l") 'counsel-) ;
-
-#+end_src
