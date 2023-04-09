@@ -39,10 +39,8 @@
 ;; (key-chord-define-global "jj" 'imenu)
 
 
-;; (key-chord-define-global "kk" 'helm-org-in-buffer-headings) ; 
-(key-chord-define-global "KK" 'helm-imenu) ; 
-
-(key-chord-define-global "kk" 'helm-org-in-buffer-headings) ;
+(key-chord-define-global "KK" 'helm-imenu) ;
+(key-chord-define-global "kk" 'consult-outline) ;
 
 
 ;; (key-chord-define-global "jk" 'ace-jump-line-mode)
@@ -83,7 +81,7 @@
 
 (key-chord-define-global "II" 'god-mode-all)
 
-;; (setq key-chord-one-key-delay 0.11) 
+;; (setq key-chord-one-key-delay 0.11)
 
 ;; John Cook's post http://www.johndcook.com/blog/2015/02/01/rare-bigrams/
 ;; provides a list of rare bi-grams that would work great for key-chords.
