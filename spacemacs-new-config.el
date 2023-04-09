@@ -95,7 +95,7 @@
 (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-(load "/Users/jay/gnulisp/book-functions.el")
+;; (load "/Users/jay/gnulisp/book-functions.el")
 (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
 (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
