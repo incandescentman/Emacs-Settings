@@ -879,6 +879,7 @@ This function is called at the very end of Spacemacs initialization."
      (eval define-key key-minor-mode-map
            (kbd "SPC")
            'insert-space)))
+ '(sdcv-popup-function 'showtip)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
  '(warning-suppress-log-types '((use-package))))
