@@ -90,7 +90,7 @@
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
 (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
 (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/jay-search-commands.org")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
 (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
