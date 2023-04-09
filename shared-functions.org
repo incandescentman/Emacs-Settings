@@ -5098,7 +5098,7 @@ minibuffer."
 
 
 * cheatsheet
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (cheatsheet-add :group 'Common
                 :key "M-s-="
                 :description "calc-eval-region")
@@ -5248,7 +5248,7 @@ minibuffer."
 
 
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 
@@ -7668,12 +7668,39 @@ irony
 ** ~define-word~
 - its own dictionary. Definitions appear in minibuffer, which is weird.
 - But nicely formatted
-** ~dictionary-lookup-definition~
-- (also WordNet)
-** dictionary-search
-wordnet, via dict.org)
 
 #+begin_src emacs-lisp
-'(dictionary-default-dictionary "gcide")
+(defun define-word--convert-html-tag-to-face (str)
+ "Replace semantical HTML markup in STR with the relevant faces."
+ (with-temp-buffer
+  (insert str)
+  ;; Remove empty <i></i> tags
+  (goto-char (point-min))
+  (while (re-search-forward "<i></i>" nil t)
+   (replace-match ""))
+  (cl-loop for (regexp face) in define-word--tag-faces do
+     (define-word--regexp-to-face regexp face))
+  (buffer-string)))
 
 #+end_src
+
+
+** dictionary
+- dictionary-lookup-definition
+- dictionary-search
+- via dict.org
+- choice of wordnet, websters (gcide)
+
+** sdcv
+Gives me all the offline dictionaries I've previously installed! Is great.
+
+#+begin_src emacs-lisp
+(use-package sdcv)
+#+end_SRC
+
+
+
+** command line
+Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
+
+

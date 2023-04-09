@@ -994,9 +994,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-w") 'delete-window) ; close
 ;; (define-key key-minor-mode-map (kbd "s-`" 'other-window-or-frame)
 (define-key key-minor-mode-map (kbd "s-s") 'jay/save-some-buffers ) ; save all
-
-
-
 #+END_SRC
 
 
