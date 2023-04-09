@@ -2618,3 +2618,17 @@ e.g. nvALT
 (global-set-key "\C-co" 'zin/org-outline-mode)
 #+END_SRC
 
+
+* lexic
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-04-08 Sat 20:47
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+Doesn't work.
+
+#+begin_src emacs-lisp
+(use-package lexic)
+
+(setq lexic-dictionary-path "/Users/jay/.stardict")
+#+end_src
