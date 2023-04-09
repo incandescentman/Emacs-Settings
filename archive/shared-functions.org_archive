@@ -2834,3 +2834,33 @@ Doesn't work.
 #+end_src
 
 
+
+* Lisps
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-04-08 Sat 21:44
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_OLPATH: from Harry Schwartz
+:ARCHIVE_CATEGORY: shared-functions
+:END:
+
+All the lisps have some shared features, so we want to do the same things for
+all of them. That includes using =paredit-mode= to balance parentheses (and
+more!), =rainbow-delimiters= to color matching parentheses, and highlighting the
+whole expression when point is on a paren.
+
+#+BEGIN_EXAMPLE emacs-lisp
+ (setq lispy-mode-hooks
+    '(clojure-mode-hook
+     emacs-lispmode-hook
+     lisp-mode-hook
+     scheme-mode-hook))
+
+ (dolist (hook lispy-mode-hooks)
+  (add-hook hook (lambda ()
+           (setq show-paren-style 'expression)
+; (paredit-mode)
+;; (rainbow-delimiters-mode)
+)))
+#+END_EXAMPLE
+
+
