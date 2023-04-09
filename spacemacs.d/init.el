@@ -515,8 +515,8 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 10.0
+   dotspacemacs-default-font '("Monaco"
+                               :size 14.0
                                :weight normal
                                :width normal)
 
@@ -845,6 +845,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
+ '(marginalia-align 'left nil nil "Customized with use-package marginalia")
  '(org-agenda-files
    '("~/Dropbox/writing/proposal/2022/April-2023-book-todo.org"))
  '(org-export-preserve-breaks nil)
@@ -892,6 +893,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
  '(org-code ((t (:inherit shadow :underline nil))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
