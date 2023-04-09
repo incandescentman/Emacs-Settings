@@ -36,8 +36,8 @@ Source: [[https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam
 
 
 * consult notes
-
-Can set paths later.
+Can set paths later. Instrctions here:
+[[https://github.com/mclear-tools/consult-notes][mclear-tools/consult-notes: Use consult to search notes]]
 
 #+begin_example emacs-lisp
 (use-package consult-notes
