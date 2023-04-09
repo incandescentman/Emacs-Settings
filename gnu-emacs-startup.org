@@ -2604,11 +2604,10 @@ M-1 to 9
 (define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task)
 (define-key key-minor-mode-map (kbd "] c[") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
-(define-key key-minor-mode-map (kbd "] c]") 'load-gnu-startup)
 
 (global-unset-key (kbd "] cr"))
 (define-key key-minor-mode-map (kbd "] cr") 'load-roam-config)
-
+(define-key key-minor-mode-map (kbd "] cs") 'load-search-config)
 (define-key key-minor-mode-map (kbd "] ci") 'load-spacemacs-config)
 (define-key key-minor-mode-map (kbd "] ]") 'insert-right-bracket)
 

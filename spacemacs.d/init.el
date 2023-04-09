@@ -165,6 +165,7 @@ This function should only modify configuration layer settings."
                                       cheatsheet
                                       ;; command-log-mode
                                       counsel
+                                      consult-notes
                                       counsel-projectile
                                       ;; spotify
                                       crux
