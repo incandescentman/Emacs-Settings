@@ -4222,6 +4222,10 @@ Although I've specified a user-reserved binding in the code, I've actually bound
  (interactive)
 (find-file "/Users/jay/emacs/emacs-settings/org-roam-config.el"))
 
+(defun load-search-config ()
+ (interactive)
+(find-file "/Users/jay/emacs/emacs-settings/search-commands.org"))
+
 
 (defun open-abbrevs ()
   (interactive)
@@ -6930,7 +6934,7 @@ This function will look for a file named ~/.openai/api-key, read the contents of
     (push (match-string-no-properties 0) hyperlinks)))
   (message "Hyperlinks extracted: %s" hyperlinks)
   hyperlinks))
-#+end_src>
+#+end_src
 
 
 

@@ -1,6 +1,3 @@
-
-* search
-#+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
 
 ;; Search
@@ -14,13 +11,6 @@
 
 (global-set-key (kbd "s-/ rr") 'roam-rg-search)
 
-#+end_src
-
-
-* roam-rg-search
-Source: [[https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam-for-searching-notes/1226/1][Using consult-ripgrep with org-roam for searching notes - How To - Org-roam]]
-
-#+begin_src emacs-lisp
 (defun roam-rg-search ()
  "Search org-roam directory using consult-ripgrep. With live-preview."
  (interactive)
@@ -31,27 +21,3 @@ Source: [[https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam
  "Do counsel-ag on the org roam directory"
  (interactive)
  (counsel-ag nil org-roam-directory))
-
-#+end_src
-
-
-* consult notes
-
-Can set paths later.
-
-#+begin_example emacs-lisp
-(use-package consult-notes
- :commands (consult-notes
-       consult-notes-search-in-all-notes
-       ;; if using org-roam
-       consult-notes-org-roam-find-node
-       consult-notes-org-roam-find-node-relation)
- :config
- (setq consult-notes-file-dir-sources '(("Name" ?key "path/to/dir"))) ;; Set notes dir(s), see below
- ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
- (setq consult-notes-org-headings-files '("~/path/to/file1.org"
-                      "~/path/to/file2.org"))
- (consult-notes-org-headings-mode)
- (when (locate-library "denote")
-  (consult-notes-denote-mode)))
-#+end_example
