@@ -1778,6 +1778,16 @@ t)
 (right-char 2)
 ))
 
+;; fix a bug that leaves this: ":, "
+(when (looking-back ":, ")
+(progn
+(left-char 1)
+(delete-backward-char 1)
+(right-char 1)
+))
+
+
+
 
 ;; fix a bug that leaves this: ",."
 (when (looking-back ",. ")
@@ -1815,6 +1825,8 @@ t)
 (delete-char 1)
 (insert-space))
 
+;; leave the cursor before the comma or period, not after it
+(left-char 2)
 
 
 ))
