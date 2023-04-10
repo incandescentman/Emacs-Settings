@@ -441,6 +441,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+(define-key key-minor-mode-map (kbd "C-S-<left>") 'org-outdent-item-tree)
+(define-key key-minor-mode-map (kbd "C-S-<right>") 'org-indent-item-tree)
+
+
 (define-key key-minor-mode-map (kbd "s-k a f") 'org-attach)
 
 (define-key key-minor-mode-map (kbd "M-/") 'completion-at-point)
@@ -598,7 +602,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
 (define-key key-minor-mode-map (kbd "s-;") 'vertico-repeat)
 (define-key key-minor-mode-map (kbd "s-k o m") 'org-mode)
-(define-key key-minor-mode-map (kbd "s-k f m") 'fundamental-mode)
+(define-key key-minor-mode-map (kbd "s-k f m") 'text-mode)
 (define-key key-minor-mode-map (kbd "s-k e l") 'emacs-lisp-mode)
 
 
