@@ -1708,12 +1708,12 @@ The last line sets the path to where saveplace stores your position data. Change
 (my/fix-space)
 t)
 
-;; fix a bug that leaves this: " : "
-(when (looking-back " : ")
+;; fix a bug that leaves this: " ?"
+(when (looking-back " ?")
 (progn
-(left-char 2)
+(left-char 1)
 (new-org-delete-backward-char 1)
-(right-char 2)
+(right-char 1)
 ))
 
 
@@ -1773,7 +1773,7 @@ t)
 (insert-space))
 
 ;; leave the cursor before the comma or period, not after it
-(left-char 2)
+;; (left-char 2)
 
 
 ))
