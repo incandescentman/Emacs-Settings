@@ -1709,7 +1709,7 @@ The last line sets the path to where saveplace stores your position data. Change
 t)
 
 ;; fix a bug that leaves this: " ?"
-(when (looking-back " ?")
+(when (looking-back " \\?")
 (progn
 (left-char 1)
 (new-org-delete-backward-char 1)
@@ -1773,7 +1773,7 @@ t)
 (insert-space))
 
 ;; leave the cursor before the comma or period, not after it
-;; (left-char 2)
+(left-char 2)
 
 
 ))
