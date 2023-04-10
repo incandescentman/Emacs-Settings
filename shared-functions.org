@@ -7408,6 +7408,8 @@ during the first export:
 (use-package org-autolist
  :hook (org-mode . org-autolist-mode))
 (add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
+
+(setq org-autolist-enable-delete nil)
 #+end_src
 
 *** org-autolist deleting list items
