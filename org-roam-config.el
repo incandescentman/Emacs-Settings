@@ -52,7 +52,7 @@
 	         :unnarrowed t)
 
 
-	        ("d" "definition" plain "- tags :: \n
+	        ("l" "definition" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -87,6 +87,17 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :note:")
 	         :unnarrowed t)
+
+
+
+	        ("e" "emacs" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :emacs:")
+	         :unnarrowed t)
+
+
 
 
 	        ("n" "notes or books and articles" plain "- tags :: \n
