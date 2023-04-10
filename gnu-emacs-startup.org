@@ -1655,7 +1655,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ** kill-clause
 
-This version kill org-mode headings by 'kill-line'
+*** This version kill org-mode headings by 'kill-line'
 #+BEGIN_EXAMPLE emacs-lisp
 
 ;; Identify the end of sentences globally.
@@ -1708,7 +1708,7 @@ t)))
 #+END_EXAMPLE
 
 
-This old version leaves a rogue comma:
+*** This old version leaves a rogue comma:
 #+BEGIN_EXAMPLE emacs-lisp
 
 ;; Identify the end of sentences globally.
@@ -1730,29 +1730,29 @@ This old version leaves a rogue comma:
 
 #+END_EXAMPLE
 
-Old version that I retrieved:
+*** Old version that I retrieved:
 #+BEGIN_SRC emacs-lisp
+
 (defun kill-clause ()
   (interactive)
   (smart-expand)
 
-(if
-(let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-(kill-line)
+  (if
+      (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+      (kill-line)
 
-
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading)))
-
+    (let ((old-point (point))
+          (kill-punct (my/beginning-of-sentence-p)))
+      ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
+      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.\\( \\|$\\)" nil t)
+        (kill-region old-point
+                     (if kill-punct
+                         (match-end 0)
+                       (match-beginning 0)))))
+    (my/fix-space)
+    (save-excursion
+      (when (my/beginning-of-sentence-p)
+        (capitalize-unless-org-heading)))
 (when
 (or    (looking-back ", , ")
      (looking-back ":: ")
@@ -1793,6 +1793,18 @@ t)
 (delete-backward-char 2)
 (right-char 2)
 )
+
+
+;; fix a bug that leaves this: " . "
+(when (looking-back " . ")
+(left-char 2)
+(delete-backward-char 1)
+(right-char 2)
+)
+
+
+
+
 
 (when
 (and
