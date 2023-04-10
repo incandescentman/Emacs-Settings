@@ -476,9 +476,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k s h") 'sh-mode)
 (define-key key-minor-mode-map (kbd "s-k s m") 'sh-mode)
 
-;; (define-key key-minor-mode-map (kbd "s-k") 'kill-buffer)
 (define-key key-minor-mode-map (kbd "s-K") 'kill-buffer)
-
+(define-key key-minor-mode-map (kbd "s-k RET") 'kill-current-buffer)
 
 ;; (define-key key-minor-mode-map (kbd "s-k") 'avy-goto-char)
 ;; (define-key key-minor-mode-map (kbd "s-p") 'org-html-export-to-html-and-open)
@@ -600,7 +599,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
-(define-key key-minor-mode-map (kbd "s-;") 'vertico-repeat)
+;; so sad this is gone
 (define-key key-minor-mode-map (kbd "s-k o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-k f m") 'text-mode)
 (define-key key-minor-mode-map (kbd "s-k e l") 'emacs-lisp-mode)
@@ -989,7 +988,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
 
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
-;; (define-key key-minor-mode-map (kbd "s-K") 'kill-buffer)
 
 (define-key key-minor-mode-map (kbd "s-d") 'org-todo)
 (define-key key-minor-mode-map (kbd "s-L") 'org-mac-link-chrome-insert-frontmost-url)

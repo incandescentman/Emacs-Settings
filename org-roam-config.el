@@ -243,7 +243,8 @@ c: cook-ideas-over-time\n")))
 
 
 (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
-(define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
+;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
+
 
 
 (add-to-list 'org-agenda-custom-commands
@@ -323,3 +324,6 @@ If region is active, then use it instead of the node at point."
                    (buffer-base-buffer (current-buffer)))
           (org-capture-kill))
         (kill-buffer (current-buffer))))))
+
+
+(define-key key-minor-mode-map (kbd "s-;") 'org-roam-refile)
