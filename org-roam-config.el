@@ -279,7 +279,7 @@ If region is active, then use it instead of the node at point."
         (user-error "Target is the same as current node")
       (if regionp
           (progn
-            (kill-new (buffer-substring region-start region-end))
+            (kill-new (buffer-substring-no-properties region-start region-end))
             (org-save-markers-in-region region-start region-end))
         (progn
           (if (org-before-first-heading-p)
@@ -305,7 +305,9 @@ If region is active, then use it instead of the node at point."
                 (org-align-tags)))
          (when (fboundp 'deactivate-mark) (deactivate-mark))))
       (if regionp
-          (delete-region (point) (+ (point) (- region-end region-start)))
+          (progn
+            (goto-char region-end)
+            (delete-region region-start region-end))
         (org-preserve-local-variables
          (delete-region
           (and (org-back-to-heading t) (point))
