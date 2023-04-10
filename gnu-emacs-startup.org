@@ -1744,7 +1744,7 @@ t)))
     (let ((old-point (point))
           (kill-punct (my/beginning-of-sentence-p)))
       ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
-      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.\\( \\|$\\)" nil t)
+      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|$" nil t)
         (kill-region old-point
                      (if kill-punct
                          (match-end 0)
