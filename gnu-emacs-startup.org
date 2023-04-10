@@ -1655,31 +1655,9 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ** kill-clause
 
-*** kill clause This old version leaves a rogue comma:
-#+BEGIN_EXAMPLE emacs-lisp
+*** current version:
 
-;; Identify the end of sentences globally.
-(setq sentence-end-base "[][.?!…}]+[\"”]?")
-(defun kill-clause ()
-  (interactive)
-  (smart-expand)
-  (let ((old-point (point))
-        (kill-punct (my/beginning-of-sentence-p)))
-    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
-      (kill-region old-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0)))))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
-
-#+END_EXAMPLE
-
-*** Old version that I retrieved:
-
-This is mostly correctly within sentences. But when I use it at the end of a sentence, it clobbers the period at the end of the sentence.
+This works mostly correctly within sentences. But when I use it at the end of a sentence, it clobbers the period at the end of the sentence.
 
 For example, if I have this...
 
@@ -1700,7 +1678,8 @@ Whereas the desired result is this:
 Alice started to her feet. For it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch.^
 #+END_QUOTE
 
-Not a big deal, but ChatGPT having trouble figuring it out.
+Even worse, if there's no punctuation
+
 
 #+BEGIN_SRC emacs-lisp
 
@@ -1715,7 +1694,7 @@ Not a big deal, but ChatGPT having trouble figuring it out.
     (let ((old-point (point))
           (kill-punct (my/beginning-of-sentence-p)))
       ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
-      (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|$" nil t)
+      (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
         (kill-region old-point
                      (if kill-punct
                          (match-end 0)
@@ -1783,6 +1762,21 @@ t)
 (right-char 2)
 )
 
+
+;; fix a bug that leaves this: " ; "
+(when (looking-back " ; ")
+(left-char 2)
+(delete-backward-char 1)
+(right-char 2)
+)
+
+
+;; fix a bug that leaves this: " : "
+(when (looking-back " : ")
+(left-char 2)
+(delete-backward-char 1)
+(right-char 2)
+)
 
 
 
