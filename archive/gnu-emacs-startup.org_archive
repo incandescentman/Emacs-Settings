@@ -1942,3 +1942,32 @@ t)))
 #+END_EXAMPLE
 
 
+
+* kill clause This old version leaves a rogue comma:
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-04-10 Mon 19:51
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_OLPATH: smart punctuation/kill-clause
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:END:
+#+BEGIN_EXAMPLE emacs-lisp
+
+;; Identify the end of sentences globally.
+(setq sentence-end-base "[][.?!…}]+[\"”]?")
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (let ((old-point (point))
+        (kill-punct (my/beginning-of-sentence-p)))
+    (when (re-search-forward "--\\|[][,;:?!…\"”()}]+\\|\\.+ " nil t)
+      (kill-region old-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0)))))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+#+END_EXAMPLE
+
