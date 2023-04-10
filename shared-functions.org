@@ -1063,6 +1063,11 @@ Defining stuck projects as todos that do not contain "scheduled" or
      ("NEXT" . "#dca3a3")
      ("THEM" . "#dc8cc3")
      ("REJECTED" . "Red")
+     ("TK" . "Red")
+     ("tktk" . "Red")
+     ("tktks" . "Red")
+     ("Q" . "Red")
+     ("QUESTION" . "Red")
      ("PROG" . "#7cb8bb")
      ("OKAY" . "#7cb8bb")
      ("DONT" . "#5f7f5f")
@@ -7440,9 +7445,9 @@ Then pressing "Backspace" will produce:
 
 If you want to disable this behavior, add this to your ~init.el~:
 
-#+begin_example
+#+begin_SRC
 (setq org-autolist-enable-delete nil)
-#+end_example
+#+END_SRC
 
 *** start at the right number
 [[https://www.reddit.com/r/orgmode/comments/10ybf40/how_to_force_orgautolistel_to_start_from_the/][How to force org-autolist.el to start from the number I choose : orgmode]]
