@@ -43,9 +43,9 @@
 			                        "#+title: ${title}\n#+filetags: :book:")
 	         :unnarrowed t)
 
-          ("p" "person" plain "%?"
-	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :person:\n\
+          ("P" "project" plain "%?"
+	         :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :projecte:\n\
 - tags :: \n\n
 * ${title}
 - ")
@@ -95,6 +95,15 @@
 - %?"
 	         :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :emacs:")
+	         :unnarrowed t)
+
+
+
+	        ("x" "x-temporary" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "xtemp/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :xtemp:")
 	         :unnarrowed t)
 
 
