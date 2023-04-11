@@ -139,9 +139,9 @@
      ;; (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
      ;; (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
 ;;     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-promote-subtree)
+     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-outdent-or-promote)
 ;;     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-demote-subtree)
+     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-indent-or-demote)
 
 
      (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)

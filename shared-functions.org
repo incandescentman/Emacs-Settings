@@ -2011,9 +2011,6 @@ Disable IDO faces to see flx highlights:
 Jump to a definition in the current file. (This is awesome.)
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-i") 'ido-imenu)
-;; (add-hook 'my-mode-hook 'imenu-add-menubar-index)
-;; (add-hook 'org-mode-hook 'imenu-add-menubar-index)
-
 (defun try-to-add-imenu ()
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
@@ -2247,7 +2244,7 @@ dired-omit-extensions
 (use-package wc-mode
   :defer)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
-;; (add-hook 'org-mode-hook 'wc-mode)
+(add-hook 'org-mode-hook 'wc-mode)
 
 (defun word-count (arg)
 (interactive "r")
@@ -7581,4 +7578,33 @@ If region is active, then use it instead of the node at point."
 
 (define-key key-minor-mode-map (kbd "s-;") 'org-roam-refile)
 
+#+end_src
+
+
+* outdent or promote
+Do the same thing whether on a plain text list or an org heading.
+#+begin_src emacs-lisp
+(defun org-outdent-or-promote ()
+ "Run either org-outdent-item-tree or org-promote-subtree,
+depending on which one is appropriate based on the context."
+ (interactive)
+ (cond
+ ;; If the cursor is on a plain list item, run org-outdent-item-tree
+ ((org-at-item-p) (org-outdent-item-tree))
+ ;; If the cursor is on a headline, run org-promote-subtree
+ ((org-at-heading-p) (org-promote-subtree))
+ ;; Otherwise, do nothing and show a message
+ (t (message "Not at an item or a headline"))))
+
+(defun org-indent-or-demote ()
+ "Run either org-indent-item-tree or org-demote-subtree,
+depending on which one is appropriate based on the context."
+ (interactive)
+ (cond
+  ;; If the cursor is on a plain list item, run org-indent-item-tree
+  ((org-at-item-p) (org-indent-item-tree))
+  ;; If the cursor is on a headline, run org-demote-subtree
+  ((org-at-heading-p) (org-demote-subtree))
+  ;; Otherwise, do nothing and show a message
+  (t (message "Not at an item or a headline"))))
 #+end_src
