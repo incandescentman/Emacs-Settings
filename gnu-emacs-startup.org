@@ -1719,8 +1719,6 @@ t)
 ))
 
 
-
-
 ;; fix a bug that leaves this: ",."
 (when (looking-back ",\\. ")
 (left-char 2)
@@ -1761,8 +1759,6 @@ t)
 )
 
 
-
-
 (when
 (and
 (looking-back "----")
@@ -1773,7 +1769,20 @@ t)
 (insert-space))
 
 ;; leave the cursor before the comma or period, not after it
-(left-char 2)
+(when
+(looking-back "[[:punct:]] ")
+(left-char 2))
+(when
+(looking-back "[[:punct:]]")
+(left-char 1))
+
+
+;; when on a punctuation mark with a space before it, delete the space
+(when
+    (and
+(looking-at "[[:punct:]]")
+(looking-back " ")
+(delete-backward-char 1)))
 
 
 ))
