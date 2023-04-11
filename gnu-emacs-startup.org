@@ -1655,32 +1655,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 ** kill-clause
 
-*** current version:
-
-This works mostly correctly within sentences. But when I use it at the end of a sentence, it clobbers the period at the end of the sentence.
-
-For example, if I have this...
-
-#+BEGIN_QUOTE
-Alice started to her feet. For^ it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch ^to take out of it.
-#+END_QUOTE
-
-...where the ^ represents the point...
-
-and I do kill-clause, this is the result:
-
-#+BEGIN_QUOTE
-Alice started to her feet. For it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch ^
-#+END_QUOTE
-
-Whereas the desired result is this:
-#+BEGIN_QUOTE
-Alice started to her feet. For it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch.^
-#+END_QUOTE
-
-Even worse, if there's no punctuation
-
-
+*** current version. Works!
 #+BEGIN_SRC emacs-lisp
 
 (defun kill-clause ()
@@ -1796,6 +1771,64 @@ t)
 
 ))
 #+END_SRC
+
+
+
+*** version written by GPT4
+#+BEGIN_EXAMPLE emacs-lisp
+(defun kill-clause ()
+ "Remove a clause or sentence from the current point in the buffer."
+ (interactive)
+ (smart-expand)
+
+ (if (org-at-heading-p)
+   (kill-line)
+  (kill-clause-or-sentence))
+ (fix-spacing))
+
+
+
+(defun kill-clause-or-sentence ()
+  "Remove a clause or sentence from the current point in the buffer."
+  (let ((start-point (point))
+        (kill-punct (beginning-of-sentence-p)))
+    (when (re-search-forward "\\(--\\|[][:punct:]]+\\)\\|$" nil t)
+      (kill-region start-point
+                   (if kill-punct
+                       (match-end 0)
+                     (match-beginning 0))))))
+
+
+(defun beginning-of-sentence-p ()
+ "Check if the point is at the beginning of a sentence."
+ (save-excursion
+  (skip-chars-backward " \t\n")
+  (or (bolp)
+    (memq (char-syntax (char-before)) '(?\. ?! ??)))))
+
+(defun fix-spacing ()
+  (interactive)
+ "Fix spacing issues after removing a clause or sentence."
+ (let ((spacing-regex-alist
+     '((", , " . ", ")
+      (":: " . ": ")
+      (" \\?" . "?")
+      (" , " . ",")
+      (":, " . ",")
+      (",\\." . ".")
+      (", \\. " . ".")
+      (" \\. " . ".")
+      (" ; " . ";")
+      (" : " . ":")
+      ("----" . "-"))))
+  (dolist (spacing-fix spacing-regex-alist)
+   (when (looking-back (car spacing-fix))
+    (replace-regexp (car spacing-fix) (cdr spacing-fix) nil (point-min) (point))))))
+
+
+
+
+#+END_EXAMPLE
 
 
 
