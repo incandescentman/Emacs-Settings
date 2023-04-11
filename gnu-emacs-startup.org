@@ -1735,24 +1735,9 @@ t)
 )
 
 
-;; fix a bug that leaves this: " . "
-(when (looking-back " \\. ")
-(left-char 2)
-(delete-backward-char 1)
-(right-char 2)
-)
-
-
 ;; fix a bug that leaves this: " ; "
-(when (looking-back " ; ")
-(left-char 2)
-(delete-backward-char 1)
-(right-char 2)
-)
-
-
-;; fix a bug that leaves this: " : "
-(when (looking-back " : ")
+(when
+    (looking-back " [[:punct:]] ")
 (left-char 2)
 (delete-backward-char 1)
 (right-char 2)
