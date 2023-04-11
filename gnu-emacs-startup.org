@@ -1768,9 +1768,18 @@ t)
 (looking-at "[[:punct:]]")
 (looking-back " ")
 (delete-backward-char 1)))
+)
+;; (get-before-punctuation) ; for some reason this doesn't work here! But works when I run it on its own
+)
+
+(defun get-before-punctuation ()
+(interactive)
+(when
+(looking-back "[[:punct:]] ")
+(left-char 2)))
 
 
-))
+
 #+END_SRC
 
 
