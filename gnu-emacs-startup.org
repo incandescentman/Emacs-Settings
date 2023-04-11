@@ -505,7 +505,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 )
 
 
-;; (define-key key-minor-mode-map (kbd "s-p") 'move-region-to-other-window)
 
 (defun visit-messages-buffer-full-screen ()
   (interactive)
@@ -774,7 +773,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-v") 'refile-region)
 
 (define-key key-minor-mode-map (kbd "s-0") 'move-region-to-other-window)
-(define-key key-minor-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
+(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
 
 
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)

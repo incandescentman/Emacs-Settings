@@ -7608,3 +7608,11 @@ depending on which one is appropriate based on the context."
   ;; Otherwise, do nothing and show a message
   (t (message "Not at an item or a headline"))))
 #+end_src
+
+
+* Info mode
+#+begin_src emacs-lisp
+(define-key Info-mode-map (kbd "s-o") 'copy-region-to-other-window)
+(define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
+(define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
+#+end_src
