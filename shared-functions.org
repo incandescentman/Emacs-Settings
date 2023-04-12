@@ -7637,6 +7637,7 @@ This can be done by adding using ~consult-customize~.
 #+end_src
 
 * fuzzy open recent file
+This is my goto way for navigating. It feels like it is reading your mind.
 
 #+begin_src emacs-lisp
 (use-package fasd
