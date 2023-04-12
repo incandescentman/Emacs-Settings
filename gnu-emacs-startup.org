@@ -1663,23 +1663,36 @@ The last line sets the path to where saveplace stores your position data. Change
 * smart punctuation
 
 ** kill-clause
+~Kill-clause~ kills (cuts) a clause in the text and makes various fixes to punctuation and spacing.
 
-*** current version. Works!
+1. ~(smart-expand)~: call expand-abbrev on any unexpanded words.
+3. Check if the cursor is at a comma, semicolon, or colon and moves one character to the right if so.
+4. The function determines whether to kill the entire line or just a portion of it, based on specific conditions.
+5. The function makes several fixes to punctuation and spacing, such as:
+  - Removing extra spaces before punctuation marks
+  - Deleting incorrect combinations of punctuation marks and spaces
+  - Capitalizing the first letter of a sentence unless it's an Org mode heading
+6. The function ensures the cursor is left at an appropriate position, either before or after punctuation, depending on the context.
+
 #+BEGIN_SRC emacs-lisp
-    
+
     (defun kill-clause ()
       (interactive)
       (smart-expand)
     (if (or
-	 (looking-at ",")
+	 (looking-at "\\,")
 	 (looking-at ";")
 	 (looking-at ":"))
     (right-char 1))
-    
+
+(if
+    (looking-back " ")
+    (left-char 1))
+
       (if
 	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
 	  (kill-line)
-    
+
 	(let ((old-point (point))
 	      (kill-punct (my/beginning-of-sentence-p)))
 	  ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
@@ -1699,7 +1712,7 @@ The last line sets the path to where saveplace stores your position data. Change
     (new-org-delete-backward-char 2)
     (my/fix-space)
     t)
-    
+
     ;; fix a bug that leaves this: " ?"
     (when (looking-back " \\?")
     (progn
@@ -1707,8 +1720,8 @@ The last line sets the path to where saveplace stores your position data. Change
     (new-org-delete-backward-char 1)
     (right-char 1)
     ))
-    
-    
+
+
     ;; fix a bug that leaves this: " , "
     (when (looking-back " , ")
     (progn
@@ -1716,7 +1729,7 @@ The last line sets the path to where saveplace stores your position data. Change
     (my/fix-space)
     (right-char 2)
     ))
-    
+
     ;; fix a bug that leaves this: ":, "
     (when (looking-back ":, ")
     (progn
@@ -1724,24 +1737,24 @@ The last line sets the path to where saveplace stores your position data. Change
     (delete-backward-char 1)
     (right-char 1)
     ))
-    
-    
+
+
     ;; fix a bug that leaves this: ",."
     (when (looking-back ",\\. ")
     (left-char 2)
     (delete-backward-char 1)
     (right-char 2)
     )
-    
-    
+
+
     ;; fix a bug that leaves this: ", . "
     (when (looking-back ", \\. ")
     (left-char 2)
     (delete-backward-char 2)
     (right-char 2)
     )
-    
-    
+
+
     ;; fix a bug that leaves this: " ; "
     (when
 	(looking-back " [[:punct:]] ")
@@ -1749,17 +1762,17 @@ The last line sets the path to where saveplace stores your position data. Change
     (delete-backward-char 1)
     (right-char 2)
     )
-    
-    
+
+
     (when
     (and
     (looking-back "----")
     (looking-at "-"))
-    
+
     (delete-backward-char 4)
     (delete-char 1)
     (insert-space))
-    
+
     ;; leave the cursor before the comma or period, not after it
     (when
     (looking-back "[[:punct:]] ")
@@ -1767,8 +1780,8 @@ The last line sets the path to where saveplace stores your position data. Change
     (when
     (looking-back "[[:punct:]]")
     (left-char 1))
-    
-    
+
+
     ;; when on a punctuation mark with a space before it, delete the space
     (when
 	(and
@@ -1777,86 +1790,28 @@ The last line sets the path to where saveplace stores your position data. Change
     (delete-backward-char 1)))
     )
     ;; (get-before-punctuation) ; for some reason this doesn't work here! But works when I run it on its own
-    
+
   (if
     (or
      (looking-at ":\\.")
      (looking-at ";\\.")
-     (looking-at ",\\.")
+     (looking-at "\\,\\.")
 )
 (delete-char 1)
 )
 
       )
-    
+
     (defun get-before-punctuation ()
     (interactive)
     (when
     (looking-back "[[:punct:]] ")
     (left-char 2))
     )
-    
-    
-    
+
+
+
 #+END_SRC
-
-
-
-*** version written by GPT4
-#+BEGIN_EXAMPLE emacs-lisp
-(defun kill-clause ()
- "Remove a clause or sentence from the current point in the buffer."
- (interactive)
- (smart-expand)
-
- (if (org-at-heading-p)
-   (kill-line)
-  (kill-clause-or-sentence))
- (fix-spacing))
-
-
-
-(defun kill-clause-or-sentence ()
-  "Remove a clause or sentence from the current point in the buffer."
-  (let ((start-point (point))
-        (kill-punct (beginning-of-sentence-p)))
-    (when (re-search-forward "\\(--\\|[][:punct:]]+\\)\\|$" nil t)
-      (kill-region start-point
-                   (if kill-punct
-                       (match-end 0)
-                     (match-beginning 0))))))
-
-
-(defun beginning-of-sentence-p ()
- "Check if the point is at the beginning of a sentence."
- (save-excursion
-  (skip-chars-backward " \t\n")
-  (or (bolp)
-    (memq (char-syntax (char-before)) '(?\. ?! ??)))))
-
-(defun fix-spacing ()
-  (interactive)
- "Fix spacing issues after removing a clause or sentence."
- (let ((spacing-regex-alist
-     '((", , " . ", ")
-      (":: " . ": ")
-      (" \\?" . "?")
-      (" , " . ",")
-      (":, " . ",")
-      (",\\." . ".")
-      (", \\. " . ".")
-      (" \\. " . ".")
-      (" ; " . ";")
-      (" : " . ":")
-      ("----" . "-"))))
-  (dolist (spacing-fix spacing-regex-alist)
-   (when (looking-back (car spacing-fix))
-    (replace-regexp (car spacing-fix) (cdr spacing-fix) nil (point-min) (point))))))
-
-
-
-
-#+END_EXAMPLE
 
 
 
