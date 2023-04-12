@@ -148,8 +148,7 @@ This function should only modify configuration layer settings."
                                       ;; projectile
                                       ;; graphviz-dot-mode
                                       ;; js2
-  ;                                    magit
-                                      ;; smex
+			         ;; smex
                                       ;; solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
@@ -165,6 +164,7 @@ This function should only modify configuration layer settings."
                                       change-inner
                                       cheatsheet
                                       ;; command-log-mode
+				      consult-org-roam
                                       counsel
                                       consult-notes
                                       counsel-projectile
@@ -184,7 +184,9 @@ This function should only modify configuration layer settings."
                                       ;; emms
                                       epc
                                       expand-region
+				      eww
                                       fancy-narrow
+				      fasd
                                       ;; fastdef
                                       flyspell-lazy
                                       ;; focus
@@ -193,6 +195,7 @@ This function should only modify configuration layer settings."
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       ;; gist
+				      google-this
                                       gptel
                                       ;; helm
                                       ;; helm-cmd-t
@@ -201,7 +204,8 @@ This function should only modify configuration layer settings."
                                       ;; imenu-list
                                       ;; key-chord
                                       key-seq
-                                      markdown-mode
+				      magit
+				      markdown-mode
                                       maxframe
                                       ;; mpv
                                       ;; multicolumn
@@ -209,13 +213,13 @@ This function should only modify configuration layer settings."
                                       mw-thesaurus
                                       ;; nm
                                       olivetti
-                                      ;; openwith
-                                      ;;  orgalist
+                                      openwith
                                       orderless
                                       org-ai
+				      org-autolist
                                       org-contrib
                                       org-bookmark-heading
-				                              ;; org-download
+				      ;; org-download
                                       org-drill
                                       org-fstree
                                       org-mac-link
@@ -247,7 +251,7 @@ This function should only modify configuration layer settings."
                                       ;; polymode
                                       popup
                                       project-explorer
-				                              quelpa-use-package
+				      quelpa-use-package
                                       rainbow-mode
                                       re-builder
                                       recentf
@@ -255,6 +259,7 @@ This function should only modify configuration layer settings."
                                       rspec-mode
                                       scratch
                                       scratch-message
+				      sdcv
                                       stripe-buffer
                                       sudo-edit
                                       tabbar
@@ -274,7 +279,6 @@ This function should only modify configuration layer settings."
                                       xah-replace-pairs
                                       ;; yahoo-weather
                                       ;; zone
-
                                       rg
                                       ripgrep
                                       projectile-ripgrep
@@ -312,13 +316,11 @@ consult-projectile ;; this finds filenames only. it does not search full text.
                                     hs-mode
                                     ;; ivy
                                     notmuch
-				                            org-download
+				    org-download
                                     ;; org-projectile
-                                    org-superstar
                                     popwin
                                     spaceline
-                                    ;; swiper
-                                    treemacs-icons-dired
+				    treemacs-icons-dired
                                     vterm
                                     vi-tilde-fringe
                                     volatile-highlights

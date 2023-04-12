@@ -7665,5 +7665,5 @@ This can be done by adding using ~consult-customize~.
 
 * EWW
 #+begin_src emacs-lisp
-(define-key eww-mode-map (kbd "o") 'eww-browse-with-external-browser)
+;; (define-key eww-mode-map (kbd "o") 'eww-browse-with-external-browser)
 #+end_src
