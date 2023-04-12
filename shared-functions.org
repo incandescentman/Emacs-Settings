@@ -7641,10 +7641,15 @@ This can be done by adding using ~consult-customize~.
 #+begin_src emacs-lisp
 (use-package fasd
  :custom
- (fasd-enable-initial-prompt nil))
+ (fasd-enable-initial-prompt nil)
+ :config
+ ;; global-fasd-mode records new files in the fasd database,
+ ;; even if they haven't been opened from the command line
+ (global-fasd-mode 1)
+ )
 #+end_src
 
-* Google within emacs?
+* Google things from within emacs
 #+begin_SRC emacs-lisp
 (use-package google-this
 :custom
@@ -7666,6 +7671,26 @@ This can be done by adding using ~consult-customize~.
    #+end_SRC
 
 * EWW
+o: open in external browser
+r: reload
+w: copy-page-url
+v: view-source
+
 #+begin_src emacs-lisp
-(use-package eww :bind (:map eww-mode-map ("o" . eww-browse-with-external-browser)))
+(use-package eww
+  :bind
+  (
+   :map eww-mode-map
+        ("o" . eww-browse-with-external-browser)
+        ("r" . eww-reload)
+        ("s-l" . eww)
+        ("s-[" . eww-back-url)
+        ("s-]" . eww-forward-url)
+        ("s-o" . eww-open-file)
+   ))
 #+end_src
+
+If you want to waste some time, there are some extras here:
+https://protesilaos.com/codelog/2021-03-25-emacs-eww/
+
+(set-face-attribute 'org-variable-pitch-face (face-attribute 'default :font))
