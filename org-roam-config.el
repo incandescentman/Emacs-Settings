@@ -357,3 +357,16 @@ If region is active, then use it instead of the node at point."
 
 
 (define-key key-minor-mode-map (kbd "s-;") 'org-roam-refile-region-or-subtree)
+
+
+
+;; TODO learn how to use this
+(use-package consult-org-roam)
+;; https://github.com/jgru/consult-org-roam
+
+
+;; maybe not OP but I tried this package a few days ago and gave up, it slowed considerably consult-buffer. I couldn't identify yet why.
+;; https://www.reddit.com/r/emacs/comments/yy79pn/how_to_hideignore_orgroam_buffersfiles_when_using/
+;; exclude certain tags
+  ;; (add-to-list 'recentf-exclude ".*roam.org$")
+  ;; (add-to-list 'consult-buffer-filter ".*roam.org$")
