@@ -872,7 +872,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-+") 'copy-region-to-other-window)
 (define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
 
-(define-key key-minor-mode-map (kbd "s-l") 'org-insert-link)
+(define-key org-mode-map (kbd "s-l") 'org-insert-link)
 
 
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
