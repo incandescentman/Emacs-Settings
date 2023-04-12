@@ -1666,122 +1666,138 @@ The last line sets the path to where saveplace stores your position data. Change
 
 *** current version. Works!
 #+BEGIN_SRC emacs-lisp
-
-(defun kill-clause ()
-  (interactive)
-  (smart-expand)
-
-  (if
-      (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-      (kill-line)
-
-    (let ((old-point (point))
-          (kill-punct (my/beginning-of-sentence-p)))
-      ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
-      (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
-        (kill-region old-point
-                     (if kill-punct
-                         (match-end 0)
-                       (match-beginning 0)))))
+    
+    (defun kill-clause ()
+      (interactive)
+      (smart-expand)
+    (if (or
+	 (looking-at ",")
+	 (looking-at ";")
+	 (looking-at ":"))
+    (right-char 1))
+    
+      (if
+	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+	  (kill-line)
+    
+	(let ((old-point (point))
+	      (kill-punct (my/beginning-of-sentence-p)))
+	  ;; Modification: Change the regular expression to stop at a period followed by a space or the end of the line
+	  (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
+	    (kill-region old-point
+			 (if kill-punct
+			     (match-end 0)
+			   (match-beginning 0)))))
+	(my/fix-space)
+	(save-excursion
+	  (when (my/beginning-of-sentence-p)
+	    (capitalize-unless-org-heading)))
+    (when
+    (or    (looking-back ", , ")
+	 (looking-back ":: ")
+	 )
+    (new-org-delete-backward-char 2)
     (my/fix-space)
-    (save-excursion
-      (when (my/beginning-of-sentence-p)
-        (capitalize-unless-org-heading)))
-(when
-(or    (looking-back ", , ")
-     (looking-back ":: ")
-     )
-(new-org-delete-backward-char 2)
-(my/fix-space)
-t)
-
-;; fix a bug that leaves this: " ?"
-(when (looking-back " \\?")
-(progn
-(left-char 1)
-(new-org-delete-backward-char 1)
-(right-char 1)
-))
-
-
-;; fix a bug that leaves this: " , "
-(when (looking-back " , ")
-(progn
-(left-char 2)
-(my/fix-space)
-(right-char 2)
-))
-
-;; fix a bug that leaves this: ":, "
-(when (looking-back ":, ")
-(progn
-(left-char 1)
-(delete-backward-char 1)
-(right-char 1)
-))
-
-
-;; fix a bug that leaves this: ",."
-(when (looking-back ",\\. ")
-(left-char 2)
-(delete-backward-char 1)
-(right-char 2)
-)
-
-
-;; fix a bug that leaves this: ", . "
-(when (looking-back ", \\. ")
-(left-char 2)
-(delete-backward-char 2)
-(right-char 2)
-)
-
-
-;; fix a bug that leaves this: " ; "
-(when
-    (looking-back " [[:punct:]] ")
-(left-char 2)
-(delete-backward-char 1)
-(right-char 2)
-)
-
-
-(when
-(and
-(looking-back "----")
-(looking-at "-"))
-
-(delete-backward-char 4)
-(delete-char 1)
-(insert-space))
-
-;; leave the cursor before the comma or period, not after it
-(when
-(looking-back "[[:punct:]] ")
-(left-char 2))
-(when
-(looking-back "[[:punct:]]")
-(left-char 1))
-
-
-;; when on a punctuation mark with a space before it, delete the space
-(when
+    t)
+    
+    ;; fix a bug that leaves this: " ?"
+    (when (looking-back " \\?")
+    (progn
+    (left-char 1)
+    (new-org-delete-backward-char 1)
+    (right-char 1)
+    ))
+    
+    
+    ;; fix a bug that leaves this: " , "
+    (when (looking-back " , ")
+    (progn
+    (left-char 2)
+    (my/fix-space)
+    (right-char 2)
+    ))
+    
+    ;; fix a bug that leaves this: ":, "
+    (when (looking-back ":, ")
+    (progn
+    (left-char 1)
+    (delete-backward-char 1)
+    (right-char 1)
+    ))
+    
+    
+    ;; fix a bug that leaves this: ",."
+    (when (looking-back ",\\. ")
+    (left-char 2)
+    (delete-backward-char 1)
+    (right-char 2)
+    )
+    
+    
+    ;; fix a bug that leaves this: ", . "
+    (when (looking-back ", \\. ")
+    (left-char 2)
+    (delete-backward-char 2)
+    (right-char 2)
+    )
+    
+    
+    ;; fix a bug that leaves this: " ; "
+    (when
+	(looking-back " [[:punct:]] ")
+    (left-char 2)
+    (delete-backward-char 1)
+    (right-char 2)
+    )
+    
+    
+    (when
     (and
-(looking-at "[[:punct:]]")
-(looking-back " ")
-(delete-backward-char 1)))
+    (looking-back "----")
+    (looking-at "-"))
+    
+    (delete-backward-char 4)
+    (delete-char 1)
+    (insert-space))
+    
+    ;; leave the cursor before the comma or period, not after it
+    (when
+    (looking-back "[[:punct:]] ")
+    (left-char 2))
+    (when
+    (looking-back "[[:punct:]]")
+    (left-char 1))
+    
+    
+    ;; when on a punctuation mark with a space before it, delete the space
+    (when
+	(and
+    (looking-at "[[:punct:]]")
+    (looking-back " ")
+    (delete-backward-char 1)))
+    )
+    ;; (get-before-punctuation) ; for some reason this doesn't work here! But works when I run it on its own
+    
+  (if
+    (or
+     (looking-at ":\\.")
+     (looking-at ";\\.")
+     (looking-at ",\\.")
 )
-;; (get-before-punctuation) ; for some reason this doesn't work here! But works when I run it on its own
+(delete-char 1)
 )
 
-(defun get-before-punctuation ()
-(interactive)
-(when
-(looking-back "[[:punct:]] ")
-(left-char 2)))
-
-
-
+      )
+    
+    (defun get-before-punctuation ()
+    (interactive)
+    (when
+    (looking-back "[[:punct:]] ")
+    (left-char 2))
+    )
+    
+    
+    
 #+END_SRC
 
 

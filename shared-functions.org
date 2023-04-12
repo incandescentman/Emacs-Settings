@@ -2116,22 +2116,16 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ** buffer-stack untrack / ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
-
-;; don't include wildcards like * they will be treated literally!
-;; wrong: *hours*
-;; right: hours
-
-
-;; the below doesn't work for some reason but whatever
 (setq buffer-stack-show-position nil)
  (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "*accountability*" "todo" "TODO")))
 
 ;; it's OK because the below works
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "todo\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
+
 #+END_SRC
 
 ** recentf-exclude
