@@ -7661,9 +7661,11 @@ This can be done by adding using ~consult-customize~.
      (eww-browse-url (concat "https://www.google.com/search?q=" word))
      (message "Showing results for %s in EWW" word))
    (message "No word at point"))))
-#+end_SRC
+
+(define-key key-minor-mode-map (kbd "M-g M-g") 'google-this)
+   #+end_SRC
 
 * EWW
 #+begin_src emacs-lisp
-;; (define-key eww-mode-map (kbd "o") 'eww-browse-with-external-browser)
+(use-package eww :bind (:map eww-mode-map ("o" . eww-browse-with-external-browser)))
 #+end_src
