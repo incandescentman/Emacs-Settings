@@ -2122,16 +2122,16 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; right: hours
 
 
-;; the below does work
+;; the below doesn't work for some reason but whatever
 (setq buffer-stack-show-position nil)
- (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "*prolific*" "*750words*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "*accountability*" "*todo*" "*TODO")))
+ (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "*accountability*" "todo" "TODO")))
 
-;; the below doesn't work.
+;; it's OK because the below works
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "\\Help\\|help\\|minibuf\\|org2blog\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\||*Compile-Log*\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|*Warnings*\\|*tags*\\|emacs\\|hours\\|gnugol\\|*guide-key*\\|scratch\\|vc\\|booktime\\|accountability\\|Compile\\|*mm*\\|nntpd\\|Gnus agent\\|dribble\\|gnus work\\|spacemacs\\|Original Article\\|Prefetch\\|Backlog\\|article copy\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|.log\\|accountability\\|debug\\|Re-Builder\\|Ilist\\|contacts-org-jay.txt\\|later.txt\\|.gz\\|orgmode\\|loaddefs\\|gnu\\|elpa\\|sent mail\\|version\\|alert\\|::" (buffer-name buffer))
+  (not (or (string-match "todo\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
-;; (setq buffer-stack-filter 'buffer-stack-filter-regexp)
+(setq buffer-stack-filter 'buffer-stack-filter-regexp)
 #+END_SRC
 
 ** recentf-exclude
@@ -2140,7 +2140,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "*Org tags*")
 (add-to-list 'recentf-exclude "*sent mail")
 (add-to-list 'recentf-exclude "/var/")
-(add-to-list 'recentf-exclude "750words")
+(add-to-list 'recentf-exclude "todo")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude "LaTeX")
