@@ -4189,6 +4189,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'web-mode-hook 'olivetti-mode 1)
 (add-hook 'help-mode-hook 'olivetti-mode 1)
 (add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
+(add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
 
 ;; (add-hook 'help-mode-hook 'olivetti-mode 1)
 
@@ -4197,6 +4198,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'magit-status-mode-hook 'olivetti-mode 1)
 (add-hook 'dired-mode-hook 'olivetti-mode 1)
 (add-hook 'Info-mode-hook 'olivetti-mode 1)
+(add-hook 'eww-mode-hook 'olivetti-mode 1)
 
 #+END_SRC
 

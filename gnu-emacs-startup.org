@@ -654,7 +654,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k t d") 'org-todo-list)
 (define-key key-minor-mode-map (kbd "s-k o a") 'org-agenda)
-(define-key key-minor-mode-map (kbd "s-\"") 'org-cycle-agenda-files)
+(define-key key-minor-mode-map (kbd "s->") 'org-cycle-agenda-files)
 
 (define-key key-minor-mode-map (kbd "s-k c i") 'jd-clock-in)
 

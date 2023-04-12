@@ -54,20 +54,19 @@
 (key-chord-define-global "XX" 'helm-M-x)
 (key-chord-define-global "YY" 'repeat-last-command)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
-(key-chord-define-global "ww" 'helm-swoop)
+(key-chord-define-global "ww" 'consult-git-grep)
 (key-chord-define-global "WW" 'widen)
 (key-chord-define-global "CC" 'turn-on-auto-capitalize-mode)
 (key-chord-define-global "LL" 'turn-off-auto-capitalize-mode)
+(key-chord-define-global "TT" 'titlecase-dwim)
 (key-chord-define-global "DD" 'bjm/ivy-dired-recent-dirs)
 ;; (key-chord-define-global "ZZ" 'repeat-complex-command)
 (key-chord-define-global "ZZ" 'undo-tree-undo)
 (key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 (key-chord-define-global "FF" 'isearch-forward-regexp)
-(key-chord-define-global "HH" 'cheatsheet-show)
-(key-chord-define-global "PP" 'pcre-regexp-from-list-of-words)
-
-;; (key-chord-define-global "nm" 'new-email-from-subtree-no-signature)
+;; (key-chord-define-global "HH" 'cheatsheet-show)
+;; (key-chord-define-global "PP" 'pcre-regexp-from-list-of-words)
 
 
 ;; (key-chord-define-global "EE" 'insert-ellipsis)
@@ -79,7 +78,7 @@
 ;; (key-chord-define-global "NN" 'ni-narrow-to-region-indirect-other-window)
 ;; (key-chord-define-global "NN" 'org-narrow-to-subtree)
 
-(key-chord-define-global "II" 'god-mode-all)
+;; (key-chord-define-global "II" 'god-mode-all)
 
 ;; (setq key-chord-one-key-delay 0.11)
 
