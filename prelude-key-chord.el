@@ -69,7 +69,7 @@
 ;; (key-chord-define-global "PP" 'pcre-regexp-from-list-of-words)
 
 
-;; (key-chord-define-global "EE" 'insert-ellipsis)
+(key-chord-define-global "EE" 'fasd-find-file)
 
 (key-chord-define-global "MM" 'mc/mark-all-dwim)
 (key-chord-define-global "AA" 'inverse-add-global-abbrev)

@@ -103,6 +103,7 @@ This function should only modify configuration layer settings."
      ;; ivy
      ;; deft
      emacs-lisp
+     eww
      ;; emoji
      ;; floobits
      ;; helm
@@ -881,7 +882,6 @@ This function is called at the very end of Spacemacs initialization."
      (eval define-key key-minor-mode-map
            (kbd "SPC")
            'insert-space)))
- '(sdcv-popup-function 'showtip)
  '(tab-bar-close-button-show nil)
  '(tab-bar-new-button-show nil)
  '(warning-suppress-log-types '((use-package))))
@@ -905,6 +905,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dimsgray" :slant normal))))
  '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
  '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+ '(variable-pitch ((t (:family "\"Courier\" "))))
  '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
 )
 (custom-set-variables

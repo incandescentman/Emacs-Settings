@@ -7482,10 +7482,10 @@ irony
 Gives me all the offline dictionaries I've previously installed! Is great.
 
 #+begin_src emacs-lisp
-(use-package sdcv)
+(use-package sdcv
+:custom
+sdcv-popup-function 'showtip)
 #+end_SRC
-
-
 
 ** command line
 Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
@@ -7634,4 +7634,36 @@ This can be done by adding using ~consult-customize~.
     ;; ("C-c n l" . consult-org-roam-forward-links)
     ;; ("C-c n r" . consult-org-roam-search)
 )
+#+end_src
+
+* fuzzy open recent file
+
+#+begin_src emacs-lisp
+(use-package fasd
+ :custom
+ (fasd-enable-initial-prompt nil))
+#+end_src
+
+* Google within emacs?
+#+begin_SRC emacs-lisp
+(use-package google-this
+:custom
+(google-this-browse-url-function 'eww-browse-url)
+  )
+
+
+(defun google-word-and-display-in-EWW ()
+ "Google the word at point and display the results in the minibuffer using EWW."
+ (interactive)
+ (let ((word (thing-at-point 'word t)))
+  (if word
+    (progn
+     (eww-browse-url (concat "https://www.google.com/search?q=" word))
+     (message "Showing results for %s in EWW" word))
+   (message "No word at point"))))
+#+end_SRC
+
+* EWW
+#+begin_src emacs-lisp
+(define-key eww-mode-map (kbd "o") 'eww-browse-with-external-browser)
 #+end_src
