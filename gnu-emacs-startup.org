@@ -2596,8 +2596,7 @@ m-,
 s-i
 C->
 C-<
-M-1 to 9
-
+M-1 to 9: windows.
 
 
 * embolden-or-bold
