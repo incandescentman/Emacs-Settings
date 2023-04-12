@@ -45,19 +45,28 @@
 
           ("P" "project" plain "%?"
 	         :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :projecte:\n\
+			                        "#+title: ${title}\n#+filetags: :project:\n\
 - tags :: \n\n
 * ${title}
 - ")
 	         :unnarrowed t)
 
 
+	        ("x" "x-cuts" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "cuts/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :cuts:")
+           :unnarrowed t)
+
+
 	        ("l" "definition" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :definitiont:")
+			                        "#+title: ${title}\n#+filetags: :definition:")
            :unnarrowed t)
+
 
 	        ("s" "sentence" plain "- tags :: \n
 * ${title}
@@ -99,7 +108,7 @@
 
 
 
-	        ("x" "x-temporary" plain "- tags :: \n
+	        ("T" "Temporary" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "xtemp/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -262,7 +271,7 @@ c: cook-ideas-over-time\n")))
   (consult-git-grep (concat "\\#" tag)))
 
 
-(define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
+;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
 
@@ -279,3 +288,72 @@ c: cook-ideas-over-time\n")))
 
 
 
+
+;; Fix org-roam-refile to avoid this error:
+;; user-error: The kill is not a (set of) tree(s). Use 'C-y' to yank anyway
+
+;; Problem: seems to be related to the org-paste-subtree function, which expects the content in the kill ring to be a valid Org subtree or a set of subtrees. If the content you're trying to refile as a region is not in this format, the function raises an error.
+;; Solution: Modify the org-roam-refile function to copy the region as plain text instead of using org-copy-subtree
+(defun org-roam-refile-region-or-subtree ()
+ "Refile node at point to an Org-roam node.
+If region is active, then use it instead of the node at point."
+ (interactive)
+ (let* ((regionp (org-region-active-p))
+     (region-start (and regionp (region-beginning)))
+     (region-end (and regionp (region-end)))
+     (node (org-roam-node-read nil nil nil 'require-match))
+     (file (org-roam-node-file node))
+     (nbuf (or (find-buffer-visiting file)
+          (find-file-noselect file)))
+     level reversed)
+  (if (equal (org-roam-node-at-point) node)
+    (user-error "Target is the same as current node")
+   (if regionp
+     (progn
+      (kill-new (buffer-substring-no-properties region-start region-end))
+      (org-save-markers-in-region region-start region-end))
+    (progn
+     (if (org-before-first-heading-p)
+       (org-roam-demote-entire-buffer))
+     (org-copy-subtree 1 nil t)))
+   (with-current-buffer nbuf
+    (org-with-wide-buffer
+     (goto-char (org-roam-node-point node))
+     (setq level (org-get-valid-level (funcall outline-level) 1)
+        reversed (org-notes-order-reversed-p))
+     (goto-char
+     (if reversed
+       (or (outline-next-heading) (point-max))
+      (or (save-excursion (org-get-next-sibling))
+        (org-end-of-subtree t t)
+        (point-max))))
+     (unless (bolp) (newline))
+     (if regionp
+       (insert (current-kill 0))
+      (org-paste-subtree level nil nil t))
+     (and org-auto-align-tags
+       (let ((org-loop-over-headlines-in-active-region nil))
+        (org-align-tags)))
+     (when (fboundp 'deactivate-mark) (deactivate-mark))))
+   (if regionp
+     (progn
+      (goto-char region-end)
+      (delete-region region-start region-end))
+    (org-preserve-local-variables
+     (delete-region
+     (and (org-back-to-heading t) (point))
+     (min (1+ (buffer-size)) (org-end-of-subtree t t) (point)))))
+   ;; If the buffer end-up empty after the refile, kill it and delete its
+   ;; associated file.
+   (when (eq (buffer-size) 0)
+    (if (buffer-file-name)
+      (delete-file (buffer-file-name)))
+    (set-buffer-modified-p nil)
+    ;; If this was done during capture, abort the capture process.
+    (when (and org-capture-mode
+          (buffer-base-buffer (current-buffer)))
+     (org-capture-kill))
+    (kill-buffer (current-buffer))))))
+
+
+(define-key key-minor-mode-map (kbd "s-;") 'org-roam-refile-region-or-subtree)
