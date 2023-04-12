@@ -1679,15 +1679,13 @@ The last line sets the path to where saveplace stores your position data. Change
     (defun kill-clause ()
       (interactive)
       (smart-expand)
-    (if (or
-	 (looking-at "\\,")
-	 (looking-at ";")
-	 (looking-at ":"))
-    (right-char 1))
+(when (or (looking-at ",")
+          (looking-at ";")
+          (looking-at ":"))
+  (right-char 1))
 
-(if
-    (looking-back " ")
-    (left-char 1))
+(when (looking-back " ")
+  (left-char 1))
 
       (if
 	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
@@ -1705,39 +1703,36 @@ The last line sets the path to where saveplace stores your position data. Change
 	(save-excursion
 	  (when (my/beginning-of-sentence-p)
 	    (capitalize-unless-org-heading)))
-    (when
-    (or    (looking-back ", , ")
-	 (looking-back ":: ")
-	 )
-    (new-org-delete-backward-char 2)
-    (my/fix-space)
-    t)
+
+(cond
+ ((looking-back ", , ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t)
+ ((looking-back ":: ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t))
+
 
     ;; fix a bug that leaves this: " ?"
     (when (looking-back " \\?")
-    (progn
-    (left-char 1)
+        (left-char 1)
     (new-org-delete-backward-char 1)
-    (right-char 1)
-    ))
+    (right-char 1))
 
 
     ;; fix a bug that leaves this: " , "
     (when (looking-back " , ")
-    (progn
     (left-char 2)
     (my/fix-space)
-    (right-char 2)
-    ))
+    (right-char 2))
 
     ;; fix a bug that leaves this: ":, "
     (when (looking-back ":, ")
-    (progn
     (left-char 1)
     (delete-backward-char 1)
-    (right-char 1)
-    ))
-
+    (right-char 1))
 
     ;; fix a bug that leaves this: ",."
     (when (looking-back ",\\. ")
@@ -1789,26 +1784,21 @@ The last line sets the path to where saveplace stores your position data. Change
     (looking-back " ")
     (delete-backward-char 1)))
     )
-    ;; (get-before-punctuation) ; for some reason this doesn't work here! But works when I run it on its own
 
-  (if
+  (when
     (or
-     (looking-at ":\\.")
-     (looking-at ";\\.")
-     (looking-at "\\,\\.")
+     (looking-at ":\\,")
+     (looking-at ";\\,")
+     (looking-at "\\,\\,")
+     (looking-at "\\,;")
+     (looking-at "\\,:")
 )
-(delete-char 1)
+(right-char 1)
+      (delete-char 1)
+      (left-char 1)
 )
 
       )
-
-    (defun get-before-punctuation ()
-    (interactive)
-    (when
-    (looking-back "[[:punct:]] ")
-    (left-char 2))
-    )
-
 
 
 #+END_SRC
