@@ -7729,7 +7729,34 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 
 * edge
 #+begin_src emacs-lisp
-(defun org-mac-bing-get-frontmost-url ()
+(use-package org-mac-link)
+
+(defun org-mac-paste-applescript-links (as-link-list)
+ "Paste in a list of links from an applescript handler.
+The links are of the form <link>::split::<name>."
+ (let* ((noquote-as-link-list
+	 (if (string-prefix-p "\"" as-link-list)
+	   (substring as-link-list 1 -1)
+	  as-link-list))
+	 (link-list
+	 (mapcar (lambda (x) (if (string-match "\\`\"\\(.*\\)\"\\'" x)
+				 (setq x (match-string 1 x)))
+		  x)
+		 (split-string noquote-as-link-list "[\r\n]+")))
+	 split-link URL description orglink orglink-insert rtn orglink-list)
+  (while link-list
+   (setq split-link (split-string (pop link-list) "::split::"))
+   (setq URL (car split-link))
+   (setq description (cadr split-link))
+   (when (not (string= URL ""))
+	(setq orglink (org-make-link-string URL description))
+	(push orglink orglink-list)))
+  (setq rtn (mapconcat 'identity orglink-list "\n"))
+  (kill-new rtn)
+  rtn))
+
+
+(defun org-as-mac-bing-get-frontmost-url ()
  (let ((result
 	 (do-applescript
 	 (concat
@@ -7758,3 +7785,4 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 (define-key key-minor-mode-map (kbd "s-b") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
 
+[[https://www.ctvnews.ca/health/coronavirus/introverts-vs-extroverts-how-personality-traits-affect-working-from-home-1.4969999][Introverts vs. extroverts: How personality traits affect working from home | CTV News]]
