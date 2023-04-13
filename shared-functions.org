@@ -7669,6 +7669,17 @@ This is my goto way for navigating. It feels like it is reading your mind.
    (message "No word at point"))))
 
 (define-key key-minor-mode-map (kbd "M-g M-g") 'google-this)
+
+(defun er-google ()
+ "Google the selected region if any, display a query prompt otherwise."
+ (interactive)
+ (browse-url
+  (concat
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+  (url-hexify-string (if mark-active
+     (buffer-substring (region-beginning) (region-end))
+    (read-string "Google: "))))))
+
    #+end_SRC
 
 * EWW
@@ -7709,3 +7720,41 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
  (cons input (apply-partially #'orderless--highlight input)))
 (setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
 #+end_src
+
+* consult git grep
+#+begin_src emacs-lisp
+;; (setq consult-git-grep-args )
+#+end_src
+
+
+* edge
+#+begin_src emacs-lisp
+(defun org-mac-bing-get-frontmost-url ()
+ (let ((result
+	 (do-applescript
+	 (concat
+	  "set frontmostApplication to path to frontmost application\n"
+	  "tell application \"Bing\"\n"
+	  "	set theUrl to get URL of active tab of first window\n"
+	  "	set theResult to (get theUrl) & \"::split::\" & (get name of window 1)\n"
+	  "end tell\n"
+	  "activate application (frontmostApplication as text)\n"
+	  "set links to {}\n"
+	  "copy theResult to the end of links\n"
+	  "return links as string\n"))))
+  (replace-regexp-in-string
+   "^\"\\|\"$" "" (car (split-string result "[\r\n]+" t)))))
+
+(defun org-mac-bing-get-frontmost-url ()
+ (interactive)
+ (message "Applescript: Getting Bing url...")
+ (org-mac-paste-applescript-links (org-as-mac-bing-get-frontmost-url)))
+
+;;;###autoload
+(defun org-mac-bing-insert-frontmost-url ()
+ (interactive)
+ (insert (org-mac-bing-get-frontmost-url)))
+
+(define-key key-minor-mode-map (kbd "s-b") 'org-mac-bing-insert-frontmost-url)
+ #+end_SRC
+

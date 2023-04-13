@@ -78,7 +78,7 @@
 	        ("i" "idea" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "creative-ideas/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :idea:")
 	         :unnarrowed t)
 
