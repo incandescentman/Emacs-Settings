@@ -148,7 +148,7 @@ This function should only modify configuration layer settings."
                                       ;; projectile
                                       ;; graphviz-dot-mode
                                       ;; js2
-			         ;; smex
+			                                ;; smex
                                       ;; solarized-theme
                                       ;; sublime-themes
                                       ;; xml-rpc
@@ -164,7 +164,7 @@ This function should only modify configuration layer settings."
                                       change-inner
                                       cheatsheet
                                       ;; command-log-mode
-				      consult-org-roam
+				                              consult-org-roam
                                       counsel
                                       consult-notes
                                       counsel-projectile
@@ -172,6 +172,7 @@ This function should only modify configuration layer settings."
                                       crux
                                       ;; cyberpunk-theme
                                       ;; cyberpunk-theme
+                                      define-word
                                       dired+
                                       dired-details+
                                       dired-quick-sort
@@ -899,7 +900,7 @@ This function is called at the very end of Spacemacs initialization."
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
  '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
  '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
- '(org-code ((t (:inherit shadow :underline nil))))
+ '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
  '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
  '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
  '(org-link ((t (:inherit link :underline nil))))
