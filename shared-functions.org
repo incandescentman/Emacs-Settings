@@ -7695,3 +7695,17 @@ If you want to waste some time, there are some extras here:
 https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 
 (set-face-attribute 'org-variable-pitch-face (face-attribute 'default :font))
+
+
+* affe
+#+begin_src emacs-lisp
+(use-package affe
+ :config
+ ;; Manual preview key for `affe-grep'
+ (consult-customize affe-grep :preview-key "M->"))
+
+(defun affe-orderless-regexp-compiler (input _type _ignorecase)
+ (setq input (orderless-pattern-compiler input))
+ (cons input (apply-partially #'orderless--highlight input)))
+(setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
+#+end_src
