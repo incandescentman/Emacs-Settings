@@ -672,7 +672,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
-                                        ; org-narrow-to-subtree
+
 
 ;; (define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
 
