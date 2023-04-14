@@ -7782,7 +7782,7 @@ The links are of the form <link>::split::<name>."
  (interactive)
  (insert (org-mac-bing-get-frontmost-url)))
 
-(define-key key-minor-mode-map (kbd "s-b") 'org-mac-bing-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-B") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
 
 [[https://www.ctvnews.ca/health/coronavirus/introverts-vs-extroverts-how-personality-traits-affect-working-from-home-1.4969999][Introverts vs. extroverts: How personality traits affect working from home | CTV News]]
