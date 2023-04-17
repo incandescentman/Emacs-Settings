@@ -7785,4 +7785,69 @@ The links are of the form <link>::split::<name>."
 (define-key key-minor-mode-map (kbd "s-B") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
 
-[[https://www.ctvnews.ca/health/coronavirus/introverts-vs-extroverts-how-personality-traits-affect-working-from-home-1.4969999][Introverts vs. extroverts: How personality traits affect working from home | CTV News]]
+
+
+* refile-region-to-org-heading-or-roam-node
+#+begin_EXAMPLE emacs-lisp
+
+(defun org-refile-region-to-org-heading-or-org-roam-node ()
+ "Refile the active region to an Org heading or an Org-roam node."
+ (interactive)
+ (unless (region-active-p)
+  (user-error "No active region"))
+
+ (let* ((region-start (region-beginning))
+     (region-end (region-end))
+     (region-text (buffer-substring-no-properties region-start region-end))
+     (dest (org-refile-get-location "Refile to: " nil t))
+     (dest-type (car dest))
+     (dest-file (nth 1 dest))
+     (dest-pos (nth 3 dest))
+     (dest-buffer (or (find-buffer-visiting dest-file)
+             (find-file-noselect dest-file))))
+  (kill-region region-start region-end)
+  (deactivate-mark)
+  (with-current-buffer dest-buffer
+   (save-excursion
+    (goto-char dest-pos)
+    (if (eq dest-type 'org-roam-node)
+      (progn
+       (goto-char (org-roam-node-point (org-roam-node-at-point)))
+       (setq dest-pos (org-roam-node-end (org-roam-node-at-point))))
+     (org-end-of-meta-data))
+    (insert (format "\n%s" region-text))))
+  (message "Region has been refiled to %s" (car dest))))
+
+
+(defun org-refile-get-location (&optional prompt default-buffer new-nodes no-exclude)
+ "Prompt the user for a refile location, including Org-roam nodes.
+Returns a list with four elements: the name of the target, the file name,
+the target type (either 'org-roam-node or 'org-heading), and the position in the file."
+ (let ((org-refile-targets '((nil :maxlevel . 9)
+               (org-agenda-files :maxlevel . 9)))
+    (org-refile-use-outline-path t)
+    (org-refile-allow-creating-parent-nodes new-nodes))
+  (org-refile-cache-clear)
+  (let* ((org-cands (org-refile-get-targets))
+      (roam-cands (mapcar (lambda (node)
+                 (cons (org-roam-node-title node)
+                    (list (org-roam-node-file node)
+                       (org-roam-node-point node))))
+                (org-roam-node-list)))
+      (cands (append org-cands roam-cands))
+      (completion-ignore-case t)
+      (tar (org-icompleting-read
+         (concat (or prompt "Refile to: ") " ")
+         cands nil t nil nil (car default-buffer))))
+   (if (member tar (mapcar #'car cands))
+     (let* ((type (if (member tar (mapcar #'car roam-cands))
+              'org-roam-node
+             'org-heading))
+         (heading (nth 0 (assoc tar cands)))
+         (file (nth 1 (assoc tar cands)))
+         (pos (nth 3 (assoc tar cands))))
+      (list heading file type pos))
+    (error "Invalid refile target")))))
+
+
+#+END_EXAMPLE

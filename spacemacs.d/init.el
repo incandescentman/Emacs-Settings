@@ -905,7 +905,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
    '(org-link ((t (:inherit link :underline nil))))
    '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
-   '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "dimsgray" :slant normal))))
+   '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "DimGray" :slant normal))))
    '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
    '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
    '(variable-pitch ((t (:family "\"Courier\" "))))

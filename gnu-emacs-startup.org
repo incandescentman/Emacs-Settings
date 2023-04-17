@@ -1472,8 +1472,8 @@ I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybindi
 
         (t (newline))))
 
-;; (define-key org-mode-map (kbd "<return>") 'smart-return)
-;; (define-key orgalist-mode-map (kbd "<return>") 'smart-return)
+(define-key org-mode-map (kbd "<return>") 'smart-return)
+
 #+END_SRC
 
 
