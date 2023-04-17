@@ -35,7 +35,7 @@
 
 (require 'key-chord)
 
-(key-chord-define-global "JJ" 'helm-multi-swoop-org)
+;; (key-chord-define-global "JJ" 'helm-multi-swoop-org)
 ;; (key-chord-define-global "jj" 'imenu)
 
 
@@ -64,7 +64,7 @@
 (key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 
-(key-chord-define-global "bb" 'consult-buffer)
+(key-chord-define-global "bb" 'consult-multi-occur)
 
 (key-chord-define-global "FF" 'isearch-forward-regexp)
 ;; (key-chord-define-global "HH" 'cheatsheet-show)

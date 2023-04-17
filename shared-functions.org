@@ -2123,7 +2123,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -7785,7 +7785,7 @@ The links are of the form <link>::split::<name>."
 (define-key key-minor-mode-map (kbd "s-B") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
 
-
+test
 
 * org-refile-region-to-org-heading-or-roam-node
 #+begin_EXAMPLE emacs-lisp
@@ -7797,16 +7797,22 @@ If COPY is non-nil, copy the region instead of cutting it."
      (file (nth 1 target))
      (pos (nth 3 target))
      (text (buffer-substring-no-properties beg end)))
-  (unless copy
-   (kill-region beg end))
-  (deactivate-mark)
-  (with-current-buffer (find-file-noselect file)
-   (save-excursion
-    (goto-char pos)
-    (if (eql refile-region-position 'bottom)
-      (org-end-of-subtree)
-     (org-end-of-meta-data))
-    (insert (format refile-region-format text))))))
+  (if pos
+    (progn
+     (unless copy
+      (kill-region beg end))
+     (deactivate-mark)
+     (with-current-buffer (find-file-noselect file)
+      (save-excursion
+       (goto-char pos)
+       (if (eql refile-region-position 'bottom)
+         (org-end-of-subtree)
+        (org-end-of-meta-data))
+       (insert (format refile-region-format text)))))
+   (progn
+    (message "Target: %s" target)
+    (user-error "Invalid target location")))))
+
 
 (defun org-refile-get-location (&optional prompt default-buffer new-nodes)
  "Prompt the user for a refile location, including Org-roam nodes.
