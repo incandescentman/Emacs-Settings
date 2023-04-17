@@ -7787,67 +7787,99 @@ The links are of the form <link>::split::<name>."
 
 
 
-* refile-region-to-org-heading-or-roam-node
+* org-refile-region-to-org-heading-or-roam-node
 #+begin_EXAMPLE emacs-lisp
 
-(defun org-refile-region-to-org-heading-or-org-roam-node ()
- "Refile the active region to an Org heading or an Org-roam node."
- (interactive)
- (unless (region-active-p)
-  (user-error "No active region"))
-
- (let* ((region-start (region-beginning))
-     (region-end (region-end))
-     (region-text (buffer-substring-no-properties region-start region-end))
-     (dest (org-refile-get-location "Refile to: " nil t))
-     (dest-type (car dest))
-     (dest-file (nth 1 dest))
-     (dest-pos (nth 3 dest))
-     (dest-buffer (or (find-buffer-visiting dest-file)
-             (find-file-noselect dest-file))))
-  (kill-region region-start region-end)
+(defun org-refile-region-to-org-heading-or-roam-node (beg end copy)
+ "Refile the active region to an Org-heading or an Org-roam node.
+If no region is active, refile the current paragraph.
+With prefix arg C-u, copy region instead of killing it."
+ (interactive "r\nP")
+ ;; mark paragraph if no region is set
+ (unless (use-region-p)
+  (setq beg (save-excursion
+        (backward-paragraph)
+        (skip-chars-forward "\n\t ")
+        (point))
+     end (save-excursion
+        (forward-paragraph)
+        (skip-chars-backward "\n\t ")
+        (point))))
+ (let* ((target (org-refile-get-location))
+     (file (nth 0 target))
+     (pos (nth 1 target))
+     (text (buffer-substring-no-properties beg end)))
+  (unless copy (kill-region beg end))
   (deactivate-mark)
-  (with-current-buffer dest-buffer
+  (with-current-buffer (find-file-noselect file)
    (save-excursion
-    (goto-char dest-pos)
-    (if (eq dest-type 'org-roam-node)
-      (progn
-       (goto-char (org-roam-node-point (org-roam-node-at-point)))
-       (setq dest-pos (org-roam-node-end (org-roam-node-at-point))))
+    (goto-char pos)
+    (if (eql refile-region-position 'bottom)
+      (org-end-of-subtree)
      (org-end-of-meta-data))
-    (insert (format "\n%s" region-text))))
-  (message "Region has been refiled to %s" (car dest))))
+    (insert (format refile-region-format text))))))
 
 
-(defun org-refile-get-location (&optional prompt default-buffer new-nodes no-exclude)
+
+(defun org-refile-get-location (&optional prompt default-buffer new-nodes)
  "Prompt the user for a refile location, including Org-roam nodes.
-Returns a list with four elements: the name of the target, the file name,
-the target type (either 'org-roam-node or 'org-heading), and the position in the file."
- (let ((org-refile-targets '((nil :maxlevel . 9)
-               (org-agenda-files :maxlevel . 9)))
-    (org-refile-use-outline-path t)
-    (org-refile-allow-creating-parent-nodes new-nodes))
-  (org-refile-cache-clear)
-  (let* ((org-cands (org-refile-get-targets))
-      (roam-cands (mapcar (lambda (node)
-                 (cons (org-roam-node-title node)
-                    (list (org-roam-node-file node)
-                       (org-roam-node-point node))))
-                (org-roam-node-list)))
-      (cands (append org-cands roam-cands))
-      (completion-ignore-case t)
-      (tar (org-icompleting-read
-         (concat (or prompt "Refile to: ") " ")
-         cands nil t nil nil (car default-buffer))))
-   (if (member tar (mapcar #'car cands))
-     (let* ((type (if (member tar (mapcar #'car roam-cands))
-              'org-roam-node
-             'org-heading))
-         (heading (nth 0 (assoc tar cands)))
-         (file (nth 1 (assoc tar cands)))
-         (pos (nth 3 (assoc tar cands))))
-      (list heading file type pos))
-    (error "Invalid refile target")))))
+PROMPT should not be suffixed with a colon and a space, because
+this function appends the default value from
+`org-refile-history' automatically, if that is not empty."
+ (let ((org-refile-targets org-refile-targets)
+    (org-refile-use-outline-path org-refile-use-outline-path))
+  (setq org-refile-target-table (org-refile-get-targets default-buffer)))
+ (unless org-refile-target-table
+  (user-error "No refile targets"))
+
+ (let* ((cbuf (current-buffer))
+     (cfn (buffer-file-name (buffer-base-buffer cbuf)))
+     (cfunc (if (and org-refile-use-outline-path
+             org-outline-path-complete-in-steps)
+          #'org-olpath-completing-read
+         #'completing-read))
+     (extra (if org-refile-use-outline-path "/" ""))
+     (cbnex (concat (buffer-name) extra))
+     (filename (and cfn (expand-file-name cfn)))
+     (org-cands (mapcar
+           (lambda (x)
+            (if (and (not (member org-refile-use-outline-path
+                       '(file full-file-path title)))
+                (not (equal filename (nth 1 x))))
+              (cons (concat (car x) extra " ("
+                     (file-name-nondirectory (nth 1 x)) ")")
+                 (cdr x))
+             (cons (concat (car x) extra) (cdr x))))
+           org-refile-target-table))
+     (roam-cands (mapcar (lambda (node)
+                (cons (org-roam-node-title node)
+                   (list (org-roam-node-file node)
+                      (org-roam-node-point node))))
+               (org-roam-node-list)))
+     (tbl (append org-cands roam-cands))
+     (completion-ignore-case t)
+     (prompt (let ((default (or (car org-refile-history)
+                  (and (assoc cbnex tbl) (setq cdef cbnex)
+                     cbnex))))
+          (org-format-prompt prompt default)))
+     answ)
+  (setq answ (funcall cfunc prompt tbl nil (not new-nodes)
+            nil 'org-refile-history
+            (or cdef (car org-refile-history))))
+  (if (assoc answ tbl)
+    (cdr (assoc answ tbl))
+   (if (string-match "\\`\\(.*\\)/\\([^/]+\\)\\'" answ)
+     (progn
+      (setq parent (match-string 1 answ)
+         child (match-string 2 answ))
+      (setq parent-target (org-refile--get-location parent tbl))
+      (when (and parent-target
+            (or (eq new-nodes t)
+              (and (eq new-nodes 'confirm)
+                (y-or-n-p (format "Create new node \"%s\"? "
+                         child)))))
+       (org-refile-new-child parent-target child)))
+    (user-error "Invalid target location")))))
 
 
 #+END_EXAMPLE
