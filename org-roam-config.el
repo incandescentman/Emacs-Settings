@@ -21,11 +21,11 @@
  (setq org-roam-capture-templates
 	      '(
 
-	        ("t" "topic" plain "- tags :: \n
+	        ("n" "note" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :topic:")
+			                        "#+title: ${title}\n#+filetags: ")
 	         :unnarrowed t)
 
 
@@ -54,7 +54,7 @@
 	         :unnarrowed t)
 
 
-	        ("x" "x-cuts" plain "- tags :: \n
+	        ("x" "cuts" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "cuts/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -118,17 +118,17 @@
 
 
 
-	        ("T" "Temporary" plain "- tags :: \n
+	        ("t" "temporary" plain "- tags :: \n
 * ${title}
 - %?"
-	         :target (file+head "xtemp/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :xtemp:")
+	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :temp:")
 	         :unnarrowed t)
 
 
 
 
-	        ("n" "notes or books and articles" plain "- tags :: \n
+	        ("a" "article notes or books and articles" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "research/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -138,7 +138,7 @@
 
           ("w" "work ie NLI" plain "%?"
 	         :target (file+head "nli-roam/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: :person:\n\
+			                        "#+title: ${title}\n#+filetags: :work:\n\
 - tags :: \n\n
 * ${title}
 - ")

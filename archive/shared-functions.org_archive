@@ -2864,3 +2864,55 @@ whole expression when point is on a paren.
 #+END_EXAMPLE
 
 
+
+* search all open buffers
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-04-17 Mon 22:11
+:ARCHIVE_FILE: ~/emacs/emacs-settings/shared-functions.org
+:ARCHIVE_CATEGORY: shared-functions
+:ARCHIVE_ITAGS: emacs_settings
+:END:
+Works but isn't incremental. But works!
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package clear
+;;   :defer)
+
+
+(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
+  "Files to ignore when searching buffers via \\[search-open-buffers]."
+  :type 'editable-list)
+
+(use-package grep
+  :defer)
+
+(defun search-open-buffers (regexp prefix)
+  "Searches file-visiting buffers for occurence of REGEXP. With
+prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
+searches all buffers."
+  (interactive (list (grep-read-regexp)
+                     current-prefix-arg))
+  (message "Regexp is %s; prefix is %s" regexp prefix)
+  (multi-occur
+   (if (member prefix '(4 (4)))
+       (buffer-list)
+     (remove-if
+      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
+      (remove-if-not 'buffer-file-name (buffer-list))))
+
+   regexp))
+#+END_SRC
+
+** multi-occur-all-buffers
+Works!
+#+begin_src emacs-lisp
+(defun multi-occur-all-buffers (regexp &optional allbufs)
+ "Show lines matching REGEXP in all file-visiting buffers (i.e. open files).
+Given a prefix argument (ctrl-U), search in ALL buffers including org-agenda, scratch, Messages, Help, etc."
+ (interactive (occur-read-primary-args))
+ (multi-occur-in-matching-buffers "." regexp allbufs))
+
+;; (global-set-key (kbd "M-s /") 'my-multi-occur-in-matching-buffers)
+#+end_src
+
+conclusion. I'll just use swiper-all! Better.
