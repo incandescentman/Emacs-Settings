@@ -853,7 +853,7 @@ This function is called at the very end of Spacemacs initialization."
    '(flycheck-disabled-checkers '(proselint))
    '(marginalia-align 'left nil nil "Customized with use-package marginalia")
    '(org-agenda-files
-     '("~/Dropbox/writing/proposal/2022/April-2023-book-todo.org"))
+     'org-roam-directory)
    '(org-export-preserve-breaks nil)
    '(org-noter-auto-save-last-location t)
    '(org-noter-insert-note-no-questions t)
