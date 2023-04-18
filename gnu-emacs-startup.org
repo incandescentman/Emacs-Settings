@@ -476,7 +476,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k r l") 'remove-link)
 
 (define-key key-minor-mode-map (kbd "s-k n s") 'yas/new-snippet)
-(define-key key-minor-mode-map (kbd "s-k n") 'yas/new-snippet)
+;; (define-key key-minor-mode-map (kbd "s-k n") 'yas/new-snippet)
 
 (define-key help-mode-map (kbd "C-s-]") 'help-go-back)
 (define-key key-minor-mode-map (kbd "C-s-]") 'help-go-forward)

@@ -852,8 +852,6 @@ This function is called at the very end of Spacemacs initialization."
    '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
    '(flycheck-disabled-checkers '(proselint))
    '(marginalia-align 'left nil nil "Customized with use-package marginalia")
-   '(org-agenda-files
-     'org-roam-directory)
    '(org-export-preserve-breaks nil)
    '(org-noter-auto-save-last-location t)
    '(org-noter-insert-note-no-questions t)
@@ -918,7 +916,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-disabled-checkers '(proselint))
- ;; '(org-agenda-files '("~/Dropbox/writing/notationaldata/accountability.org"))
+ ;; '(org-agenda-files '("/Users/jay/Dropbox/roam/notes/accountability.org"))
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
