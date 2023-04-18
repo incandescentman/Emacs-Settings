@@ -3,7 +3,6 @@
 ;; Copyright © 2011-2013 Bozhidar Batsov
 ;;
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/prelude
 ;; Version: 1.0.0
 ;; Keywords: convenience
 
@@ -64,7 +63,8 @@
 (key-chord-define-global "RR" 'replace-regexp)
 (key-chord-define-global "SS" 'swiper)
 
-(key-chord-define-global "bb" 'consult-multi-occur)
+;; (key-chord-define-global "bb" 'multi-occur-all-buffers)
+(key-chord-define-global "bb" 'swiper-all) ; same, but better
 
 (key-chord-define-global "FF" 'isearch-forward-regexp)
 ;; (key-chord-define-global "HH" 'cheatsheet-show)

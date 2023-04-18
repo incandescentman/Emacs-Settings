@@ -7676,25 +7676,6 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 
 (set-face-attribute 'org-variable-pitch-face (face-attribute 'default :font))
 
-
-* affe
-#+begin_src emacs-lisp
-(use-package affe
- :config
- ;; Manual preview key for `affe-grep'
- (consult-customize affe-grep :preview-key "M->"))
-
-(defun affe-orderless-regexp-compiler (input _type _ignorecase)
- (setq input (orderless-pattern-compiler input))
- (cons input (apply-partially #'orderless--highlight input)))
-(setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
-
-(defun affe-search-org-directory ()
-  (interactive)
-  (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
-   (affe-grep org-directory)))
-#+end_src
-
 * consult git grep
 #+begin_src emacs-lisp
 ;; (setq consult-git-grep-args )
@@ -7762,6 +7743,9 @@ The links are of the form <link>::split::<name>."
 test
 
 * org-refile-region-to-org-heading-or-roam-node
+wonder if this could help...
+https://www.reddit.com/r/emacs/comments/l99xc8/consult_got_support_for_multiple_candidate_sources/
+
 #+begin_EXAMPLE emacs-lisp
 (defun org-refile-region-to-org-heading-or-roam-node (beg end &optional copy)
  "Refile the region between BEG and END to an Org mode heading or Org-roam node.
@@ -7855,38 +7839,55 @@ this function appends the default value from
 #+END_EXAMPLE
 
 
-* search all open buffers
-
-#+BEGIN_SRC emacs-lisp
-Works but isn't incremental. But works!
-
-;; (use-package clear
-;;   :defer)
+* aliases
+#+begin_src emacs-lisp
+(defalias 'affe-grep-current-directory 'affe-grep)
+(defalias 'consult-grep-current-directory 'consult-grep)
 
 
-(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
-  "Files to ignore when searching buffers via \\[search-open-buffers]."
-  :type 'editable-list)
-
-(use-package grep
-  :defer)
-
-(defun search-open-buffers (regexp prefix)
-  "Searches file-visiting buffers for occurence of REGEXP. With
-prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
-searches all buffers."
-  (interactive (list (grep-read-regexp)
-                     current-prefix-arg))
-  (message "Regexp is %s; prefix is %s" regexp prefix)
-  (multi-occur
-   (if (member prefix '(4 (4)))
-       (buffer-list)
-     (remove-if
-      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
-      (remove-if-not 'buffer-file-name (buffer-list))))
-
-   regexp))
-#+END_SRC
+(defalias 'affe-find-filenames-and-folder-names 'affe-find)
+(defalias 'consult-find-filenames-and-folder-names 'consult-find)
+#+end_src
 
 
+* affe
+#+begin_src emacs-lisp
+(use-package affe
+ :config
+ ;; Manual preview key for `affe-grep'
+ (consult-customize affe-grep :preview-key "M->"))
 
+(defun affe-orderless-regexp-compiler (input _type _ignorecase)
+ (setq input (orderless-pattern-compiler input))
+ (cons input (apply-partially #'orderless--highlight input)))
+(setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
+
+;; refresher: grep means search inside a file, find means search filenames/foldernames
+(defun affe-grep-org-directory ()
+  (interactive)
+  (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
+   (affe-grep org-directory)))
+
+(defun affe-grep-gnulisp-directory ()
+ (interactive)
+ (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
+  (affe-grep "/Users/jay/gnulisp")))
+#+end_src
+
+
+* ignore unresolvable links
+Instead of canceling export. So that I can export org-roam nodes if I want to.
+
+#+begin_src emacs-lisp
+
+
+(defun my-org-html-ignore-unresolved-id-link (orig-fun link desc info)
+ (condition-case err
+   (funcall orig-fun link desc info)
+  (user-error (progn
+         (message "Ignoring unresolved link: %s" (org-element-property :path link))
+         nil))))
+
+(advice-add 'org-html-link :around #'my-org-html-ignore-unresolved-id-link)
+
+#+end_src
