@@ -28,6 +28,8 @@
 			                        "#+title: ${title}\n#+filetags: :topic:")
 	         :unnarrowed t)
 
+
+
           ("p" "person" plain "%?"
 	         :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
@@ -58,6 +60,14 @@
 	         :target (file+head "cuts/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :cuts:")
            :unnarrowed t)
+
+	        ("f" "finances" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: :topic:")
+	         :unnarrowed t)
+
 
 
 	        ("l" "definition" plain "- tags :: \n

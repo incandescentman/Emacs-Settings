@@ -3283,37 +3283,6 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 ;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
 #+END_SRC
 
-*** search all open buffers
-I know that string is in my Emacs somewhere!
-#+BEGIN_SRC emacs-lisp
-(use-package clear
-  :defer)
-
-
-(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
-  "Files to ignore when searching buffers via \\[search-open-buffers]."
-  :type 'editable-list)
-
-(use-package grep
-  :defer)
-
-(defun search-open-buffers (regexp prefix)
-  "Searches file-visiting buffers for occurence of REGEXP. With
-prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
-searches all buffers."
-  (interactive (list (grep-read-regexp)
-                     current-prefix-arg))
-  (message "Regexp is %s; prefix is %s" regexp prefix)
-  (multi-occur
-   (if (member prefix '(4 (4)))
-       (buffer-list)
-     (remove-if
-      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
-      (remove-if-not 'buffer-file-name (buffer-list))))
-
-   regexp))
-#+END_SRC
-
 *** Position of the Cursor after Searching
 
 Note that when you type ‘C-r’, isearch goes backwards. When you search
@@ -4976,7 +4945,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
@@ -7719,6 +7688,11 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
  (setq input (orderless-pattern-compiler input))
  (cons input (apply-partially #'orderless--highlight input)))
 (setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
+
+(defun affe-search-org-directory ()
+  (interactive)
+  (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
+   (affe-grep org-directory)))
 #+end_src
 
 * consult git grep
@@ -7879,4 +7853,40 @@ this function appends the default value from
     (user-error "Invalid target location")))))
 
 #+END_EXAMPLE
+
+
+* search all open buffers
+
+#+BEGIN_SRC emacs-lisp
+Works but isn't incremental. But works!
+
+;; (use-package clear
+;;   :defer)
+
+
+(defcustom search-open-buffers-ignored-files (list (rx-to-string '(and bos (or ".bash_history" "TAGS" "Preferences" "Backtrace" "Messages" "Custom" "scratch") eos)))
+  "Files to ignore when searching buffers via \\[search-open-buffers]."
+  :type 'editable-list)
+
+(use-package grep
+  :defer)
+
+(defun search-open-buffers (regexp prefix)
+  "Searches file-visiting buffers for occurence of REGEXP. With
+prefix > 1 (i.e., if you type C-u \\[search-open-buffers]),
+searches all buffers."
+  (interactive (list (grep-read-regexp)
+                     current-prefix-arg))
+  (message "Regexp is %s; prefix is %s" regexp prefix)
+  (multi-occur
+   (if (member prefix '(4 (4)))
+       (buffer-list)
+     (remove-if
+      (lambda (b) (some (lambda (rx) (string-match rx  (file-name-nondirectory (buffer-file-name b)))) search-open-buffers-ignored-files))
+      (remove-if-not 'buffer-file-name (buffer-list))))
+
+   regexp))
+#+END_SRC
+
+
 
