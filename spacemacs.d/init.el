@@ -113,6 +113,7 @@ This function should only modify configuration layer settings."
      ;; mu4e
      (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
+        :load-path "/Users/jay/emacs/org-9.6.1/"
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t)
