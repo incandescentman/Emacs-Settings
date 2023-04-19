@@ -28,6 +28,14 @@
 			                        "#+title: ${title}\n#+filetags: ")
 	         :unnarrowed t)
 
+	        ("m" "memoir" plain "- tags :: \n
+* ${title}
+- %?"
+	         :target (file+head "memoir/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+title: ${title}\n#+filetags: ")
+	         :unnarrowed t)
+
+
 
 
           ("p" "person" plain "%?"
