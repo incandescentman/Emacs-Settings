@@ -7529,7 +7529,7 @@ depending on which one is appropriate based on the context."
 
 
 * grammarly
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 ;; load el file in your .emacs, e.g.
 
@@ -7537,7 +7537,7 @@ depending on which one is appropriate based on the context."
 (use-package send-to-osx-grammarly)
 (call-process-shell-command "osascript ~/Users/jay/emacs/emacs-grammarly/scripts/pull.scpt")
 
-#+end_src
+#+END_EXAMPLE
 
 
 * dired
