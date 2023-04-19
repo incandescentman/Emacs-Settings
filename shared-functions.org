@@ -7895,5 +7895,5 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 * org-agenda
 #+begin_src emacs-lisp
-(setq org-agenda-files '("/Users/jay/dropbox/roam"))
+;; (setq org-agenda-files '("/Users/jay/dropbox/roam/notes"))
 #+end_src
