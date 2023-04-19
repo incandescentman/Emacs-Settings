@@ -152,7 +152,8 @@
   :bind
   (
    ("s-u f" . org-roam-find-node)
-   ("S-s-<up>" . org-roam-backlinks-buffer)
+;;   ("S-s-<up>" . org-roam-backlinks-buffer)
+   ("S-s-<up>" . org-roam-buffer-toggle)
    ;; ("S-s-<down>" . projectile-ripgrep)
    ("S-s-<down>" . consult-git-grep)
    ;;   ("S-s-<down>" . deadgrep)
