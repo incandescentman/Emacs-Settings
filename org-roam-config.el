@@ -381,3 +381,11 @@ If region is active, then use it instead of the node at point."
 ;; exclude certain tags
   ;; (add-to-list 'recentf-exclude ".*roam.org$")
   ;; (add-to-list 'consult-buffer-filter ".*roam.org$")
+
+
+
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            'org-roam-unlinked-references-section
+            ))
