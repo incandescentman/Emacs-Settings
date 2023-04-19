@@ -51,14 +51,10 @@
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
-  :load-path "/Users/jay/emacs/org-9.6.1/"
   :custom
   (org-hide-leading-stars t)
   (org-adapt-indentation nil)
   )
-
-;; (use-package org-contrib
-;;   :defer)
 
 
 (setq vc-follow-symlinks t)
