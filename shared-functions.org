@@ -2123,7 +2123,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|accountability\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|accountability\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -6392,7 +6392,7 @@ Wow: This was amazing:
 
 ** make this work with multiple cursors
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (defun multiple-cursors-reflash ()
 (interactive)
@@ -6421,7 +6421,7 @@ Wow: This was amazing:
 (delete 'delete-backward-char mc/cmds-to-run-once)
 (add-to-list 'mc/cmds-to-run-for-all 'crux-kill-line-backwards)
 
-#+end_src
+#+end_EXAMPLE
 
 
 
@@ -7878,7 +7878,7 @@ this function appends the default value from
 * ignore unresolvable links
 Instead of canceling export. So that I can export org-roam nodes if I want to.
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 
 (defun my-org-html-ignore-unresolved-id-link (orig-fun link desc info)
@@ -7890,6 +7890,29 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 (advice-add 'org-html-link :around #'my-org-html-ignore-unresolved-id-link)
 
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp
+(defun org-export-id-link-removal (backend)
+ "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
+ (save-excursion
+  (while (re-search-forward "id:" nil t)
+   (let ((link (org-element-context)))
+    (if (and (eq 'link (org-element-type link))
+         (string-equal "id"
+                (org-element-property :type link)))
+      (let ((description (and (org-element-property :contents-begin link)
+                  (buffer-substring-no-properties
+                   (org-element-property :contents-begin link)
+                   (org-element-property :contents-end link))))
+         )
+       (goto-char (org-element-property :end link))
+       (skip-chars-backward " \t")
+       (delete-region (org-element-property :begin link) (point))
+       (insert description))
+     )))))
+
+(add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
 #+end_src
 
 
@@ -7897,3 +7920,19 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 #+begin_src emacs-lisp
 ;; (setq org-agenda-files '("/Users/jay/dropbox/roam/notes"))
 #+end_src
+
+* org-attach
+#+begin_src emacs-lisp
+(defun org-roam-show-attachments (node)
+ (when-let ((id (org-roam-node-id node))
+       (folder (org-attach-dir-from-id id t))
+       (attached-files (org-attach-file-list folder)))
+  (magit-insert-section (org-roam-show-attachments)
+   (magit-insert-heading "Attached Files")
+   (dolist (file attached-files)
+    (insert (org-roam-fontify-like-in-org-mode
+         (format " - [[file:%s/%s][%s]]\n" folder file file))))
+   (insert "\n"))))
+#+end_src
+
+
