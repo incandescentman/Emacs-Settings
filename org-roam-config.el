@@ -7,39 +7,45 @@
   (org-roam-dailies-directory "journal/")
 
   ;; Capture templates
+
+;; %A, %B %d, %Y
   (org-roam-dailies-capture-templates
    '(("j" "default" entry
       "* %?"
       :target (file+head "%<%Y-%m-%d>.org"
-                         "#+title: %<%Y-%m-%d>\n#+filetags: :journal:
+                         "#+TITLE: %<%Y-%m-%d>\n#+filetags: :journal:
 - tags :: \n
-* %<%Y-%m-%d>
+* %<%A, %B %d, %Y>
+- %<Week %W, day %j>
 - "))))
   :config
   (org-roam-setup)
   (org-roam-db-autosync-mode)
- (setq org-roam-capture-templates
+
+
+
+  (setq org-roam-capture-templates
 	      '(
 
 	        ("n" "note" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: ")
+			                        "#+title: ${title}\n#+filetags: :note:")
 	         :unnarrowed t)
 
 	        ("m" "memoir" plain "- tags :: \n
 * ${title}
 - %?"
 	         :target (file+head "memoir/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+title: ${title}\n#+filetags: ")
+			                        "#+title: ${title}\n#+filetags: :memoir:")
 	         :unnarrowed t)
 
 
 
 
           ("p" "person" plain "%?"
-	         :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
+	         :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+title: ${title}\n#+filetags: :person:\n\
 - tags :: \n\n
 * ${title}
