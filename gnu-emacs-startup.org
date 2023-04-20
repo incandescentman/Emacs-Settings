@@ -1737,7 +1737,7 @@ The last line sets the path to where saveplace stores your position data. Change
     (right-char 1))
 
     ;; fix a bug that leaves this: ",."
-    (when (looking-back ",\\. ")
+    (when (looking-back "\\,\\. ")
     (left-char 2)
     (delete-backward-char 1)
     (right-char 2)
@@ -1745,7 +1745,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 
     ;; fix a bug that leaves this: ", . "
-    (when (looking-back ", \\. ")
+    (when (looking-back "\\, \\. ")
     (left-char 2)
     (delete-backward-char 2)
     (right-char 2)
@@ -1759,6 +1759,10 @@ The last line sets the path to where saveplace stores your position data. Change
     (delete-backward-char 1)
     (right-char 2)
     )
+
+
+
+
 
 
     (when
@@ -1777,6 +1781,25 @@ The last line sets the path to where saveplace stores your position data. Change
     (when
     (looking-back "[[:punct:]]")
     (left-char 1))
+
+
+
+    ;; fix a bug that leaves this: ".,"
+ (when
+	(looking-at "\\.\\,")
+ (delete-forward-char 1)
+ )
+;; works!!
+
+
+
+  ;; fix a bug that leaves this: ":."
+ (when
+	(looking-at ":\\.")
+ (delete-forward-char 1)
+ )
+;; works!!
+
 
 
     ;; when on a punctuation mark with a space before it, delete the space
