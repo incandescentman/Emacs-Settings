@@ -844,72 +844,74 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(evil-want-Y-yank-to-eol nil)
-   '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
-   '(flycheck-disabled-checkers '(proselint))
-   '(marginalia-align 'left nil nil "Customized with use-package marginalia")
-   '(org-export-preserve-breaks nil)
-   '(org-noter-auto-save-last-location t)
-   '(org-noter-insert-note-no-questions t)
-   '(org-safe-remote-resources
-     '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
-   '(org-sidebar-jump-indirect t)
-   '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
-   '(org-superstar-headline-bullets-list '(42 42 42 42))
-   '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
-   '(org-superstar-remove-leading-stars t)
-   '(org-tempo-keywords-alist
-     '(("l " . "src emacs-lisp ")
-       ("H" . "html")
-       ("A" . "ascii")
-       ("i" . "index")))
-   '(package-selected-packages
-     '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
-   '(plain-org-wiki-directory "~/book/sending-the-proposal/")
-   '(safe-local-variable-values
-     '((eval triplicate-code)
-       (eval define-key key-minor-mode-map
-             (kbd "SPC")
-             'insert-space)
-       (eval define-key org-mode-map
-             (kbd ":")
-             'insert-colon)
-       (org-html-head-include-scripts)
-       (org-export-allow-bind-keywords . t)
-       (eval define-key key-minor-mode-map
-             (kbd "SPC")
-             'insert-space)))
-   '(tab-bar-close-button-show nil)
-   '(tab-bar-new-button-show nil)
-   '(warning-suppress-log-types '((use-package))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(beacon ((t (:inherit highlight))))
-   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
-   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
-   '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
-   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
-   '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
-   '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
-   '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
-   '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
-   '(org-link ((t (:inherit link :underline nil))))
-   '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
-   '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "DimGray" :slant normal))))
-   '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
-   '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
-   '(variable-pitch ((t (:family "\"Courier\" "))))
-   '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(elfeed-feeds
+   '("https://www.reddit.com/user/peter-salazar/saved.json?feed=9562fff6749af4fa9bf4de08623b2500655fcb82&user=peter-salazar"))
+ '(evil-want-Y-yank-to-eol nil)
+ '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
+ '(flycheck-disabled-checkers '(proselint))
+ '(marginalia-align 'left nil nil "Customized with use-package marginalia")
+ '(org-export-preserve-breaks nil)
+ '(org-noter-auto-save-last-location t)
+ '(org-noter-insert-note-no-questions t)
+ '(org-safe-remote-resources
+   '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
+ '(org-sidebar-jump-indirect t)
+ '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+ '(org-superstar-headline-bullets-list '(42 42 42 42))
+ '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
+ '(org-superstar-remove-leading-stars t)
+ '(org-tempo-keywords-alist
+   '(("l " . "src emacs-lisp ")
+     ("H" . "html")
+     ("A" . "ascii")
+     ("i" . "index")))
+ '(package-selected-packages
+   '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+ '(plain-org-wiki-directory "~/book/sending-the-proposal/")
+ '(safe-local-variable-values
+   '((eval triplicate-code)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           'insert-space)
+     (eval define-key org-mode-map
+           (kbd ":")
+           'insert-colon)
+     (org-html-head-include-scripts)
+     (org-export-allow-bind-keywords . t)
+     (eval define-key key-minor-mode-map
+           (kbd "SPC")
+           'insert-space)))
+ '(tab-bar-close-button-show nil)
+ '(tab-bar-new-button-show nil)
+ '(warning-suppress-log-types '((use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(beacon ((t (:inherit highlight))))
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+ '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+ '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+ '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
+ '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+ '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
+ '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
+ '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+ '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
+ '(org-link ((t (:inherit link :underline nil))))
+ '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
+ '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "DimGray" :slant normal))))
+ '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+ '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+ '(variable-pitch ((t (:family "\"Courier\" "))))
+ '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
