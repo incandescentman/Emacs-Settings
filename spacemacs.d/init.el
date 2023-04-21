@@ -156,6 +156,7 @@ This function should only modify configuration layer settings."
                                       ;; xml-rpc
                                       ;; zenburn-theme
                                       ;; ag
+                                      affe
                                       auto-capitalize
                                       beacon
                                       benchmark-init
@@ -339,7 +340,8 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-but-keep-unused))
+dotspacemacs-install-packages 'used-but-keep-unused))
+;;   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
   "Initialization:
