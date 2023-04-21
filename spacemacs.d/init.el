@@ -111,7 +111,8 @@ This function should only modify configuration layer settings."
      ;; jay
      ;; markdown
      ;; mu4e
-     (multiple-cursors :variables multiple-cursors-backend 'mc)
+  ;;   (multiple-cursors :variables multiple-cursors-backend 'mc)
+;;     (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
 ;;        :load-path "/Users/jay/emacs/org-9.6.1/"
       :variables
