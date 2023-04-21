@@ -795,7 +795,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
 ;; (define-key key-minor-mode-map (kbd "C-8") 'embolden-or-bold)
-;; replaced it with multiple-cursors-hydra/body for now
 
 ;; (define-key key-minor-mode-map (kbd "C-8") #'(lambda (arg) (interactive "p") (wrap-region-trigger arg "*"))) ; wow this was a stroke of genius
 
