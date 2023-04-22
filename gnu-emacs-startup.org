@@ -444,6 +444,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-i s-I") 'clone-indirect-buffer-other-window)
 
 
+
+(define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
+
+
 ;; (define-key key-minor-mode-map (kbd "C-S-<left>") 'org-outdent-item-tree)
 ;; (define-key key-minor-mode-map (kbd "C-S-<right>") 'org-indent-item-tree)
 
@@ -1704,7 +1708,7 @@ The last line sets the path to where saveplace stores your position data. Change
 	    (capitalize-unless-org-heading)))
 
 (cond
- ((looking-back ", , ")
+ ((looking-back "\\, \\, ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
  t)
@@ -1713,7 +1717,12 @@ The last line sets the path to where saveplace stores your position data. Change
  (my/fix-space)
  t))
 
-
+(when
+    (looking-back [[:punct:]])
+  (prog
+(forward-char 1)
+(my/fix-space)
+(backward-char 1)))
     ;; fix a bug that leaves this: " ?"
     (when (looking-back " \\?")
         (left-char 1)
@@ -1798,13 +1807,14 @@ The last line sets the path to where saveplace stores your position data. Change
 ;; works!!
 
 
-
+this .
     ;; when on a punctuation mark with a space before it, delete the space
     (when
 	(and
     (looking-at "[[:punct:]]")
     (looking-back " ")
-    (delete-backward-char 1)))
+)
+  (delete-backward-char 1))
     )
 
   (when
@@ -1815,7 +1825,7 @@ The last line sets the path to where saveplace stores your position data. Change
      (looking-at "\\.\\.")
      (looking-at "\\,;")
      (looking-at "\\,:")
-     (looking-at "??")
+     (looking-at "\\?\\?")
 )
 (right-char 1)
       (delete-char 1)
