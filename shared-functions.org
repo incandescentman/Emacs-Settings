@@ -7797,16 +7797,28 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 * org-attach
 #+begin_src emacs-lisp
+
+(setq org-attach-auto-tag "ATTACHMENTS")
+(setq org-attach-id-dir "/Users/jay/dropbox/roam/attachments")
 (defun org-roam-show-attachments (node)
- (when-let ((id (org-roam-node-id node))
-       (folder (org-attach-dir-from-id id t))
-       (attached-files (org-attach-file-list folder)))
-  (magit-insert-section (org-roam-show-attachments)
-   (magit-insert-heading "Attached Files")
-   (dolist (file attached-files)
-    (insert (org-roam-fontify-like-in-org-mode
-         (format " - [[file:%s/%s][%s]]\n" folder file file))))
-   (insert "\n"))))
+  (when-let ((id (org-roam-node-id node))
+             (folder (org-attach-dir-from-id id t))
+             (attached-files (org-attach-file-list folder)))
+    (magit-insert-section (org-roam-show-attachments)
+      (magit-insert-heading "Attached Files")
+      (dolist (file attached-files)
+        (insert (org-roam-fontify-like-in-org-mode
+                 (format " - [[file:%s/%s][%s]]\n" folder file file))))
+      (insert "\n"))))
 #+end_src
 
+** org unique ID method
+Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Better Folder Names · The Art of Not Asking Why]]
 
+
+#+begin_src emacs-lisp
+(setq org-id-method 'ts)
+(setq org-attach-id-to-path-function-list
+ '(org-attach-id-ts-folder-format
+  org-attach-id-uuid-folder-format))
+#+end_src
