@@ -321,7 +321,6 @@ This function should only modify configuration layer settings."
                                     ;; ivy
                                     notmuch
 				                            org-download
-                                    ;; org-projectile
                                     popwin
                                     spaceline
 				                            treemacs-icons-dired

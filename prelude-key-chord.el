@@ -64,7 +64,7 @@
 (key-chord-define-global "SS" 'swiper)
 
 ;; (key-chord-define-global "bb" 'multi-occur-all-buffers)
-(key-chord-define-global "bb" 'swiper-all) ; same, but better
+(key-chord-define-global "BB" 'swiper-all) ; same, but better
 
 (key-chord-define-global "FF" 'isearch-forward-regexp)
 ;; (key-chord-define-global "HH" 'cheatsheet-show)

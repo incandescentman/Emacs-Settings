@@ -626,8 +626,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k m b") 'menu-bar-mode)
 
-(define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this)
-
 (define-key key-minor-mode-map (kbd "s-k d c") 'org-table-delete-column)
 (define-key key-minor-mode-map (kbd "s-k i c") 'org-table-insert-column)
 (define-key key-minor-mode-map (kbd "s-k i r") 'org-table-insert-row)
@@ -677,7 +675,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
 
 
-(define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
+;; (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
 
 ;; (define-key key-minor-mode-map (kbd "s-H") 'hyperbole)
 
@@ -1817,6 +1815,7 @@ The last line sets the path to where saveplace stores your position data. Change
      (looking-at "\\.\\.")
      (looking-at "\\,;")
      (looking-at "\\,:")
+     (looking-at "??")
 )
 (right-char 1)
       (delete-char 1)
