@@ -5,8 +5,12 @@
       '(
         beginning-of-visual-line
         insert-colon
+        jay/left-char
+        jay/right-char
         my/delete-backward-and-capitalize
         my/kill-line-dwim
+        org-beginning-of-line
+        org-self-insert-command
         ))
 
 (setq mc/cmds-to-run-once
