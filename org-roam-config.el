@@ -19,7 +19,7 @@
 - %<Week %W, day %j>
 - "))))
   :config
-  (org-roam-setup)
+;;  (org-roam-setup)
   (org-roam-db-autosync-mode)
 
 
