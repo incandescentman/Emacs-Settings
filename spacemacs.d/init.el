@@ -851,8 +851,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(elfeed-feeds
-   '("https://www.reddit.com/user/peter-salazar/saved.json?feed=9562fff6749af4fa9bf4de08623b2500655fcb82&user=peter-salazar"))
+
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
@@ -874,7 +873,6 @@ This function is called at the very end of Spacemacs initialization."
      ("i" . "index")))
  '(package-selected-packages
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
- '(plain-org-wiki-directory "~/book/sending-the-proposal/")
  '(safe-local-variable-values
    '((eval triplicate-code)
      (eval define-key key-minor-mode-map
@@ -978,9 +976,6 @@ This function is called at the very end of Spacemacs initialization."
                    web-mode
                    wrap-region
                    ;; writeroom-mode
-                   ;; wttrin
                    xah-replace-pairs
-                   ;; yahoo-weather
-                   ;; zone
                    )
    ))
