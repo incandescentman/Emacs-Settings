@@ -7752,6 +7752,8 @@ this function appends the default value from
 * ignore unresolvable links
 Instead of canceling export. So that I can export org-roam nodes if I want to.
 
+** my own attempts to fix this. Second one worked
+
 #+begin_EXAMPLE emacs-lisp
 
 
@@ -7766,7 +7768,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 #+END_EXAMPLE
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun org-export-id-link-removal (backend)
  "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
  (save-excursion
@@ -7787,6 +7789,11 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
      )))))
 
 (add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
+#+END_EXAMPLE
+
+** found the official solution: org-roam export
+#+begin_src emacs-lisp
+(use-package org-roam-export)
 #+end_src
 
 
@@ -7834,3 +7841,25 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
  (emojify-emoji-styles '(unicode)))
 #+end_SRC
 
+
+* org-roam browsing history
+
+#+begin_src emacs-lisp
+(winner-mode +1)
+(define-key winner-mode-map (kbd "s-[") #'winner-undo)
+(define-key winner-mode-map (kbd "s-]") #'winner-redo)
+#+end_src
+
+
+* deft
+#+begin_src emacs-lisp
+(use-package deft
+ :after org
+ :bind
+ ("s-k d e" . deft)
+ :custom
+ (deft-recursive t)
+ (deft-use-filter-string-for-filename t)
+ (deft-default-extension "org")
+ (deft-directory org-roam-directory))
+#+end_src

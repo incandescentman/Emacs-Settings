@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-kill-word-correctly-and-capitalize
         beginning-of-visual-line
         insert-colon
         jay/left-char
@@ -11,6 +12,8 @@
         my/kill-line-dwim
         org-beginning-of-line
         org-self-insert-command
+        org-shiftleft
+        org-shiftright
         ))
 
 (setq mc/cmds-to-run-once
