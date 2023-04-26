@@ -1769,8 +1769,6 @@ The last line sets the path to where saveplace stores your position data. Change
 
 
 
-
-
     (when
     (and
     (looking-back "----")
@@ -1807,7 +1805,15 @@ The last line sets the path to where saveplace stores your position data. Change
 ;; works!!
 
 
-this .
+;; a more general solution, haven't tested it yet:
+;; (when
+;;   (looking-at "[[:punct:]]\\.")
+;; (delete-forward-char 1) )
+
+
+
+
+
     ;; when on a punctuation mark with a space before it, delete the space
     (when
 	(and
