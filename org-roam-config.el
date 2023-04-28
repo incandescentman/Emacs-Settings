@@ -16,8 +16,8 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-- %<Week %W, day %j>
-- "))))
+"))))
+;; - %<Week %W, day %j>\n
   :config
 ;;  (org-roam-setup)
   (org-roam-db-autosync-mode)
