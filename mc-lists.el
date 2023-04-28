@@ -8,12 +8,19 @@
         insert-colon
         jay/left-char
         jay/right-char
+        meta-return
         my/delete-backward-and-capitalize
         my/kill-line-dwim
         org-beginning-of-line
+        org-end-of-line
+        org-meta-return
+        org-return
         org-self-insert-command
         org-shiftleft
         org-shiftright
+        return
+        smart-return
+        smart-space
         ))
 
 (setq mc/cmds-to-run-once

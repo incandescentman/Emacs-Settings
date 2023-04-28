@@ -1719,7 +1719,7 @@ The last line sets the path to where saveplace stores your position data. Change
 
 (when
     (looking-back "[[:punct:]]")
-  (prog
+  (progn
 (forward-char 1)
 (my/fix-space)
 (backward-char 1)))
