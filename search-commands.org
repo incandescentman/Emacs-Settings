@@ -6,7 +6,13 @@
 ;; Search
 (global-set-key (kbd "s-/ dg") 'deadgrep-current-directory) ; not incremental. but nicely formatted. lays it all out nicely in a buffer.
 (global-set-key (kbd "s-/ pa") 'counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
+
 (global-set-key (kbd "s-/ rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
+
+(global-set-key (kbd "s-k rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
+
+(define-key key-minor-mode-map (kbd "C-s-g") 'consult-ripgrep-current-directory)
+
 (global-set-key (kbd "s-/ gg") 'consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
 
 ;; (global-set-key (kbd "s-/ st") 'consult-) ;
