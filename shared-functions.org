@@ -7739,12 +7739,15 @@ this function appends the default value from
 
 * aliases
 #+begin_src emacs-lisp
-(defalias 'affe-grep-current-directory 'affe-grep)
-(defalias 'consult-grep-current-directory 'consult-grep)
+(defalias 'affe-grep-current-project 'affe-grep)
+(defalias 'consult-grep-current-project 'consult-grep)
 
 
 (defalias 'affe-find-filenames-and-folder-names 'affe-find)
 (defalias 'consult-find-filenames-and-folder-names 'consult-find)
+
+(defalias 'counsel-google 'counsel-search)
+(defalias 'google-counsel-Google-with-autosuggest 'counsel-search)
 #+end_src
 
 

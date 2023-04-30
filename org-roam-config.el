@@ -145,8 +145,8 @@
 	        ("a" "article notes or books and articles" plain "- Links :: \n
 * ${title}
 - %?"
-	         :target (file+head "research/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
+	         :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :literaturenote:")
 	         :unnarrowed t)
 
 
