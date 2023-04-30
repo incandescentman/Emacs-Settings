@@ -145,9 +145,7 @@ This function should only modify configuration layer settings."
                                       ;; dired-hacks-utils
                                       ;; dired-single
                                       ;; frame-restore
-                                      ;; helm-projectile
                                       ;; notmuch
-                                      ;; projectile
                                       ;; graphviz-dot-mode
                                       ;; js2
 			                                ;; smex
@@ -851,7 +849,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
+ '(counsel-search-engine 'google)
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
