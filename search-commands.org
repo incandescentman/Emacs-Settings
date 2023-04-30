@@ -82,6 +82,13 @@ You can define a custom function that calls consult-ripgrep with the current dir
  (let ((search-term (read-string "Search term: ")))
   (deadgrep search-term default-directory)))
 
-(defalias 'deadgrep-project-directory 'deadgrep)
+(defalias 'deadgrep 'deadgrep-project-directory)
+
+(defalias 'rg-current-directory 'rg-dwim-current-dir)
+(defalias 'rg-project-directory 'rg-dwim-project-dir)
+(defalias 'rg-current-file 'rg-dwim-current-file)
 
 #+end_src
+
+
+
