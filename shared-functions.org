@@ -7890,3 +7890,11 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
  (deft-default-extension "org")
  (deft-directory org-roam-directory))
 #+end_src
+
+
+* rg
+#+begin_src emacs-lisp
+
+
+(rg-enable-default-bindings)
+#+end_src

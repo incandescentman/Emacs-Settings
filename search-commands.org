@@ -11,7 +11,6 @@
 
 (global-set-key (kbd "s-k rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
 
-(define-key key-minor-mode-map (kbd "C-s-g") 'consult-ripgrep-current-directory)
 
 (global-set-key (kbd "s-/ gg") 'consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
 
@@ -91,4 +90,17 @@ You can define a custom function that calls consult-ripgrep with the current dir
 #+end_src
 
 
+
+
+* keybindings
+#+begin_src emacs-lisp
+;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
+;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
+
+(define-key key-minor-mode-map (kbd "s-G") 'consult-ripgrep-current-directory)
+(define-key key-minor-mode-map (kbd "C-s-g") 'counsel-projectile-ag)
+
+
+
+#+end_src
 
