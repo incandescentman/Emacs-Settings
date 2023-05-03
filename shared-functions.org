@@ -2302,12 +2302,18 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string " " " " org-content))
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
 (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
- (setq org-content (replace-regexp-in-string ":PROPERTIES:[^\000]*:END:" "" org-content))
+;; (setq org-content (replace-regexp-in-string ":PROPERTIES:[^\000]*:END:" "" org-content)) ;; this line fucks everything up
+
+(setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content)) ;; fixed but leaves stray square brackets in the output 
+
+
 ;; Add the following line to replace "=" enclosed text with "~" enclosed text
  (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
 
 (kill-new org-content)
- (yank))
+ (yank)
+(org-mode-restart
+ )
 
 
 (defun html2org-clipboard-and-unfill-region ()
