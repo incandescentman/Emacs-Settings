@@ -964,12 +964,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-,") 'customize-group)
 
 
-;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
-;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
-
-(define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag ) ; works!
-
-
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 
 (define-key key-minor-mode-map (kbd "M-x") 'execute-extended-command) ; call helm-M-x instead of regular M-x

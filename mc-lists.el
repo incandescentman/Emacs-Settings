@@ -5,6 +5,7 @@
       '(
         backward-kill-word-correctly-and-capitalize
         beginning-of-visual-line
+        downcase-or-endless-downcase
         insert-colon
         jay/left-char
         jay/right-char
@@ -16,13 +17,17 @@
         org-meta-return
         org-return
         org-self-insert-command
+        org-shiftdown
         org-shiftleft
         org-shiftright
         return
+        right-word
         smart-return
         smart-space
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        counsel-recentf
+        jay/save-some-buffers
         ))
