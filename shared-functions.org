@@ -2309,8 +2309,8 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 (kill-new org-content)
  (yank)
-(org-mode-restart
- ))
+;; (org-mode-restart)
+)
 
 
 (defun html2org-clipboard-and-unfill-region ()
@@ -3108,11 +3108,22 @@ Redefine help shortcut:
 - [C-p] Move to previous helm suggestion.
 
 
+** flyspell-correct-space
+#+begin_src emacs-lisp
+(defun flyspell-auto-correct-word-correct-space ()
+ (interactive)
+ (when (looking-back " " nil)
+  (left-char 1))
+ (flyspell-auto-correct-word)
+(right-char 1)
+ )
+
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
-(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
-;; (define-key key-minor-mode-map (kbd "`") 'flyspell-auto-correct-word)
+(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 #+END_SRC
