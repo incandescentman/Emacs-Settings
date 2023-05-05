@@ -24,6 +24,7 @@
         right-word
         smart-return
         smart-space
+        newline-and-indent
         ))
 
 (setq mc/cmds-to-run-once
