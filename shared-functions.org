@@ -6330,6 +6330,7 @@ Go through `org-structure-template-alist' and
 (define-key endless/mc-map "r" #'mc/reverse-regions)
 (define-key endless/mc-map "s" #'mc/sort-regions)
 (define-key endless/mc-map "l" #'mc/edit-lines)
+(define-key endless/mc-map (kbd "<return>") #'newline-and-indent)
 (define-key endless/mc-map "\C-a"
  #'mc/edit-beginnings-of-lines)
 (define-key endless/mc-map "\C-e"
