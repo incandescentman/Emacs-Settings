@@ -132,12 +132,21 @@
 
 
 
-	        ("t" "temporary" plain "- Links :: \n
+	        ("T" "temporary" plain "- Links :: \n
 * ${title}
 - %?"
 	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
 	         :unnarrowed t)
+
+
+          	        ("t" "therapy" plain "- Links :: \n
+* ${title}
+- %?"
+	         :target (file+head "therapy/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
+	         :unnarrowed t)
+
 
 
 
