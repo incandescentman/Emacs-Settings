@@ -279,3 +279,7 @@
 
 
 (define-key org-ai-mode-map (kbd "C-c r") 'eval-region)
+
+(global-fasd-mode 1)
+
+
