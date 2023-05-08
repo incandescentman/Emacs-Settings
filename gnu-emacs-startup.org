@@ -563,11 +563,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "<s-S-down>") 'scratch)
 
 
-(define-key key-minor-mode-map (kbd "s-k g a") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-k ag") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-k gf") 'adobe-garamond-pro)
-(define-key key-minor-mode-map (kbd "s-k mf") 'monaco-font)
-(define-key key-minor-mode-map (kbd "s-k mo") 'monaco-font)
+(define-key key-minor-mode-map (kbd "s-k ag") 'affe-grep)
 
 (define-key key-minor-mode-map (kbd "s-k t t") 'toggle-between-src-and-example-block)
 
@@ -641,6 +637,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
 
 
+(define-key key-minor-mode-map (kbd "C-x C-f") 'affe-find)
+
 (define-key key-minor-mode-map (kbd "s-k f z") 'counsel-fzf)
 
 (define-key key-minor-mode-map (kbd "M-s-=") 'calc-eval-region)
@@ -677,6 +675,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-b") 'narrow-or-widen-dwim)
 
+(define-key key-minor-mode-map (kbd "C-x C-d") 'consult-dir)
 
 ;; (define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
 

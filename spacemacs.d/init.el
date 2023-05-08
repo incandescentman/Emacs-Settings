@@ -165,6 +165,7 @@ This function should only modify configuration layer settings."
                                       change-inner
                                       cheatsheet
                                       ;; command-log-mode
+                                      consult-dir
 				                              consult-org-roam
                                       counsel
                                       consult-notes
@@ -173,6 +174,7 @@ This function should only modify configuration layer settings."
                                       crux
                                       ;; cyberpunk-theme
                                       ;; cyberpunk-theme
+                                      deadgrep
                                       define-word
                                       dired+
                                       dired-details+

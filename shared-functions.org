@@ -7778,6 +7778,10 @@ this function appends the default value from
  (cons input (apply-partially #'orderless--highlight input)))
 (setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
 
+
+(setq affe-regexp-function #'orderless-pattern-compiler
+   affe-highlight-function #'orderless-highlight-matches)
+
 ;; refresher: grep means search inside a file, find means search filenames/foldernames
 (defun affe-grep-org-directory ()
   (interactive)
@@ -7912,4 +7916,41 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 
 (rg-enable-default-bindings)
+#+end_src
+
+
+* deadgrep
+#+begin_src emacs-lisp
+(use-package deadgrep)
+(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep)
+#+end_src
+
+
+* search recently used directories
+#+begin_src emacs-lisp
+
+ (defun timu/search-org-files ()
+  "Grep for a string in the `~/org' using `rg'."
+  (interactive)
+(consult-ripgrep "~/org" ""))
+
+ (defun timu/search-project-files ()
+  "Grep for a string in the `~/projects' using `rg'."
+  (interactive)
+(consult-ripgrep "~/projects" ""))
+
+#+end_src
+
+* org headings
+#+begin_src emacs-lisp
+
+(defun timu/org-go-to-heading (&optional arg)
+
+"Go to an outline heading with `consult-org-heading'. Also move the heading to the top of the buffer with `evil-scroll-line-to-top'"
+
+  (interactive)
+
+(consult-org-heading)
+(evil-scroll-line-to-top arg))
+
 #+end_src
