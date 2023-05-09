@@ -7954,3 +7954,128 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 (evil-scroll-line-to-top arg))
 
 #+end_src
+
+* open in external app
+#+begin_src emacs-lisp
+(defun timu-dired-open-in-external-app (&optional file)
+
+ "Open the current FILE or Dired marked files in external app.
+
+The app is chosen from your OS's preference.
+
+Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
+
+ (interactive)
+
+ (let (doIt (myFileList
+
+       (cond
+
+        ((eq major-mode 'dired-mode)
+
+        (dired-get-marked-files))
+
+        ((not file) (list (buffer-file-name)))
+
+        (file (list file)))))
+
+  (setq doIt (if (<= (length myFileList) 30) t
+
+         (y-or-n-p "Open more than 30 files? ")))
+
+  (when doIt
+
+   (cond
+
+    ((string-equal system-type "windows-nt")
+
+    (mapc (lambda (fPath)
+
+        (w32-shell-execute
+
+         "open" (replace-regexp-in-string "/" "\\" fPath t t)))
+
+       myFileList))
+
+    ((string-equal system-type "darwin")
+
+    (mapc (lambda (fPath)
+
+        (shell-command (format "open \"%s\"" fPath)))
+
+       myFileList))
+
+    ((string-equal system-type "gnu/linux")
+
+    (mapc (lambda (fPath)
+
+        (let ((process-connection-type nil))
+
+         (start-process "" nil "xdg-open" fPath))) myFileList))))))
+
+#+end_src
+
+* Dired
+** open current directory in Finder
+#+begin_src emacs-lisp
+
+(defun timu-baseline-async-shell-command-no-window (command)
+
+ "Do not display the `async-shell-command' COMMAND output buffer.
+
+Credit: https://stackoverflow.com/a/60333836
+
+Credit: https://stackoverflow.com/a/47910509."
+
+ (interactive)
+
+ (let ((display-buffer-alist
+
+     (list (cons
+
+        "\\*Async Shell Command\\*.*"
+
+        (cons #'display-buffer-no-window nil)))))
+
+  (async-shell-command command)))
+
+
+(defun shell-open-dir ()
+ "Open current directory at point with shell command \"open\".
+This will open \"Finder.app\" at current location."
+ (interactive)
+ (timu-baseline-async-shell-command-no-window "open ./" ))
+
+
+(defun dired-up-directory ()
+ "Go up a directory in `dired'."
+ (interactive)
+ (find-alternate-file ".."))
+
+
+(defun dired-copy-path-at-point ()
+ "Copy the full path of the at `point' to the `kill-ring'.
+Credit: https://emacs.stackexchange.com/a/36851/30874"
+ (interactive)
+ (dired-copy-filename-as-kill 0))
+
+
+
+(defun dired-shell-open-dir ()
+ "Open current directory at point with shell command \"open\".
+This will open \"Finder.app\" at current location."
+ (interactive)
+ (timu-baseline-async-shell-command-no-window "open ./" ))
+
+#+end_src
+
+** quicklook
+#+begin_src emacs-lisp
+(defun quicklook ()
+ "Open the files at point with shell command \"qlmanage\".
+This will display a Quicklook of the file at point in macOS."
+ (interactive)
+ (setq file (dired-get-file-for-visit))
+ (timu-baseline-async-shell-command-no-window
+  (concat "qlmanage -p " (shell-quote-argument file) " > /dev/null 2>&1")))
+#+end_src
