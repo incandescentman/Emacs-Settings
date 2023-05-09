@@ -7532,6 +7532,56 @@ This is my goto way for navigating. It feels like it is reading your mind.
  )
 #+end_src
 
+** make fasd work even when not using Ivy
+#+begin_src emacs-lisp
+(defun fasd-find-file (prefix &optional query)
+ "Use fasd to open a file, or a directory with dired.
+If PREFIX is positive consider only directories.
+If PREFIX is -1 consider only files.
+If PREFIX is nil consider files and directories.
+QUERY can be passed optionally to avoid the prompt."
+
+ (interactive "P")
+ (if (not (executable-find "fasd"))
+   (error "Fasd executable cannot be found. It is required by `fasd.el'. Cannot use `fasd-find-file'")
+  (unless query (setq query (if fasd-enable-initial-prompt
+                 (read-from-minibuffer "Fasd query: ")
+                "")))
+  (let* ((prompt "Fasd query: ")
+      (results
+      (split-string
+       (shell-command-to-string
+       (concat "fasd -l -R"
+           (pcase (prefix-numeric-value prefix)
+            (`-1 " -f ")
+            ((pred (< 1)) " -d ")
+            (_ (concat " " fasd-standard-search " ")))
+           query))
+       "\n" t))
+      (file (when results
+          ;; set `this-command' to `fasd-find-file' is required because
+          ;; `read-from-minibuffer' modifies its value, while `ivy-completing-read'
+          ;; assumes it to be its caller
+          (setq this-command 'fasd-find-file)
+          (completing-read prompt results nil t))))
+   (if (not file)
+     (message "Fasd found nothing for query `%s'" query)
+    (fasd-find-file-action file))))) ; Call the `fasd-find-file-action` function here
+#+end_src
+
+** don't forget to update the fasd database
+#+begin_EXAMPLE emacs-lisp
+(defun update-fasd-database (&rest _)
+ "Update the fasd database with the current buffer's file."
+ (when (and (executable-find "fasd") buffer-file-name)
+  (start-process "*fasd*" nil "fasd" "--add" buffer-file-name)))
+
+(add-hook 'find-file-hook 'update-fasd-database)
+
+#+END_EXAMPLE
+
+
+
 * Google things from within emacs
 #+begin_SRC emacs-lisp
 (use-package google-this
