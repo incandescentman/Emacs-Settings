@@ -283,3 +283,5 @@
 (global-fasd-mode 1)
 
 
+
+(load "~/.hammerspoon/Spoons/editWithEmacs.spoon/hammerspoon.el")
