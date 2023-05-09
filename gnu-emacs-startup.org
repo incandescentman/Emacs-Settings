@@ -995,6 +995,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-t") 'new-buffer)
 
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
+(define-key key-minor-mode-map (kbd "s-k e e") 'fasd-find-file)
 
 (define-key key-minor-mode-map (kbd "s-d") 'org-todo)
 (define-key key-minor-mode-map (kbd "s-L") 'org-mac-link-chrome-insert-frontmost-url)
