@@ -7551,7 +7551,7 @@ QUERY can be passed optionally to avoid the prompt."
       (results
       (split-string
        (shell-command-to-string
-       (concat "fasd -l -R"
+       (concat "fasd -t -l -R" ; Add the -t option here
            (pcase (prefix-numeric-value prefix)
             (`-1 " -f ")
             ((pred (< 1)) " -d ")
@@ -7566,8 +7566,18 @@ QUERY can be passed optionally to avoid the prompt."
           (completing-read prompt results nil t))))
    (if (not file)
      (message "Fasd found nothing for query `%s'" query)
-    (fasd-find-file-action file))))) ; Call the `fasd-find-file-action` function here
+    (fasd-find-file-action file)))))
 #+end_src
+
+I added the -t flag above. Ugh, didn't work 🤷🏻‍♂️
+
+The -t flag in fasd stands for "time" and means that the matching will be done based on the recent access time of files or directories. When you use the -t flag, fasd will rank the files or directories according to their access time and present them in that order.
+
+By default, fasd sorts the results based on a combination of frequency (how often a file or directory is accessed) and recency (how recently it was accessed). The -t flag modifies this behavior to consider only the recency of access, giving you a list of files or directories that you accessed most recently, regardless of how often you've accessed them.
+
+For example, to list recently accessed files using the -t flag, you can run:
+
+I also took out the -R flag. I don't know why it was there?
 
 ** don't forget to update the fasd database
 #+begin_EXAMPLE emacs-lisp
@@ -7576,8 +7586,20 @@ QUERY can be passed optionally to avoid the prompt."
  (when (and (executable-find "fasd") buffer-file-name)
   (start-process "*fasd*" nil "fasd" "--add" buffer-file-name)))
 
-(add-hook 'find-file-hook 'update-fasd-database)
+(defun fasd-add-file-to-db ()
+ "Add current file or directory to the Fasd database."
+  (let ((file (if (string= major-mode "dired-mode")
+          dired-directory
+         (buffer-file-name))))
+   (when (and file
+         (stringp file)
+         (file-readable-p file))
+    (start-process "*fasd*" nil "fasd" "--add" file))))
 
+
+(add-hook 'find-file-hook 'update-fasd-database)
+(add-hook 'find-file-hook 'fasd-add-file-to-db)
+(add-hook 'dired-mode-hook 'fasd-add-file-to-db)
 #+END_EXAMPLE
 
 
@@ -8141,4 +8163,13 @@ directory
 
 #+begin_src emacs-lisp
 (use-package counsel-fd)
+#+end_src
+
+
+* consult-locate
+Maybe to replace fasd?
+
+#+begin_src emacs-lisp
+(setq consult-locate-args "fasd -t -l -R")
+(define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
 #+end_src
