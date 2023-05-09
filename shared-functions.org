@@ -8079,3 +8079,16 @@ This will display a Quicklook of the file at point in macOS."
  (timu-baseline-async-shell-command-no-window
   (concat "qlmanage -p " (shell-quote-argument file) " > /dev/null 2>&1")))
 #+end_src
+
+
+* counsel-found
+** Usage
+
+~M-x counsel-fd-dired-jump~ to jump to a subdirectory under current
+directory
+
+~M-x counsel-fd-file-jump~ to jump to a file under current directory
+
+#+begin_src emacs-lisp
+(use-package counsel-fd)
+#+end_src

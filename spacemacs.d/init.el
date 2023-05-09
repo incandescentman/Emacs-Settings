@@ -168,6 +168,7 @@ This function should only modify configuration layer settings."
                                       consult-dir
 				                              consult-org-roam
                                       counsel
+                                      counsel-fd
                                       consult-notes
                                       counsel-projectile
                                       ;; spotify
