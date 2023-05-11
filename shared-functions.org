@@ -2691,8 +2691,11 @@ Transpose windows, useful:
 #+END_SRC
 
 * move stuff around
-** Move region to other window, very useful:
-#+BEGIN_SRC emacs-lisp
+** Move region to other window, very useful
+
+Deprecated! Replaced with move-or-copy-region-to-other-window
+
+#+BEGIN_EXAMPLE emacs-lisp
 (defun move-region-to-other-window (start end)
   "Move selected text to other window"
   (interactive "r")
@@ -2707,10 +2710,13 @@ Transpose windows, useful:
         (other-window -1)
         (message "Moved %s words" count))
     (message "No region selected")))
-#+END_SRC
+#+END_EXAMPLE
 
 ** copy region to other window
-#+BEGIN_SRC emacs-lisp
+Deprecated! Replaced with move-or-copy-region-to-other-window
+
+
+#+BEGIN_EXAMPLE emacs-lisp
 (defun copy-region-to-other-window (start end)
  "Move selected text to other window"
  (interactive "r")
@@ -2727,7 +2733,7 @@ Transpose windows, useful:
     (message "Moved %s words" count))
   (message "No region selected")))
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 ** org-refile
@@ -8227,27 +8233,6 @@ Doesn't work
  (interactive)
  (setq move-or-copy-mode
     (completing-read "Would you like to move this region or just copy it? (move or copy): " '("move" "copy"))))
-
-(defun move-or-copy-region-to-other-window (start end)
- "Move or copy selected text to other window based on move-or-copy-mode."
- (interactive "r")
- (if (use-region-p)
-  (let ((count (count-words-region start end)))
-   (save-excursion
-    (if (string= move-or-copy-mode "move")
-      (progn
-       (kill-region start end)
-       (message "Moved %s words" count))
-     (progn
-      (copy-region-as-kill start end)
-      (message "Copied %s words" count)))
-    (other-window 1)
-    (newline)
-    (yank)
-    (newline)
-    (other-window -1))
-  (message "No region selected"))))
-
 
 (defun move-or-copy-region-to-other-window (start end)
  "Move or copy selected text to other window based on move-or-copy-mode."
