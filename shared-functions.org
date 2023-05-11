@@ -8216,3 +8216,20 @@ Doesn't work
    (let ((org-confirm-babel-evaluate nil))
     (org-babel-execute-src-block)))))
 #+end_src
+
+
+* ask me whether to move region or copy region
+#+begin_src emacs-lisp
+(defvar my-org-mode-s-o-preference nil)
+(defun set-org-mode-s-o-binding ()
+ (interactive)
+
+  (setq my-org-mode-s-o-preference
+     (completing-read "Choose function for s-o: "
+              '("move-region-to-other-window" "copy-region-to-other-window"))))
+ (cond ((string= my-org-mode-s-o-preference "move-region-to-other-window")
+     (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window))
+    ((string= my-org-mode-s-o-preference "copy-region-to-other-window")
+     (define-key org-mode-map (kbd "s-o") 'copy-region-to-other-window)))
+
+#+end_src
