@@ -677,7 +677,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-x C-d") 'consult-dir)
 
-;; (define-key key-minor-mode-map (kbd "s-B") 'helm-mini)
+
 
 
 ;; (define-key key-minor-mode-map (kbd "C-x <return> RET") 'mc/mark-all-dwim)
@@ -878,6 +878,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key org-mode-map (kbd "s-l") 'org-insert-link)
 
+(define-key key-minor-mode-map (kbd "s-B") 'consult-buffer)
 
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
 (define-key key-minor-mode-map (kbd "s-D") 'define-word-at-point)
@@ -887,7 +888,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-W") 'org-mac-chrome-insert-frontmost-url)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
-
+(define-key key-minor-mode-map (kbd "C-s-\\") 'source-current-file)
 
 ;; and the keybinding
 (define-key org-mode-map (kbd "C-k") 'my/kill-line-dwim)

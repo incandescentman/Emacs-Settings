@@ -1207,8 +1207,12 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
                         "Vocabulary")
          "* Word :drill:\n%^ \n** Answer \n%^")
 
-	      ("f" "flowy" entry (file "flowy.org")
-	       "\n\n*  %i\n %?\n" :prepend t :kill-buffer t))))
+("f" "Fitness")
+("fw" "Weight" table-line
+  (id "7c721aac-eafa-4a42-9354-fbc151402510")
+  "| | %U | %^{Weight} | %^{Comment}" :immediate-finish t)
+
+        )))
 #+END_SRC
 
 This is working correctly:
@@ -7722,7 +7726,7 @@ The links are of the form <link>::split::<name>."
  (interactive)
  (insert (org-mac-bing-get-frontmost-url)))
 
-(define-key key-minor-mode-map (kbd "s-B") 'org-mac-bing-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-6") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
 
 test
@@ -8153,7 +8157,7 @@ This will display a Quicklook of the file at point in macOS."
 #+end_src
 
 
-* counsel-found
+* counsel-fd
 ** Usage
 
 ~M-x counsel-fd-dired-jump~ to jump to a subdirectory under current
@@ -8172,4 +8176,43 @@ Maybe to replace fasd?
 #+begin_src emacs-lisp
 (setq consult-locate-args "fasd -t -l -R")
 (define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
+#+end_src
+
+
+* source current file
+Doesn't work
+
+#+begin_src emacs-lisp
+(defun source-current-file ()
+ "Source the current file in a shell."
+ (interactive)
+ (let* ((filename (buffer-file-name))
+     (cmd (format "source %s" (shell-quote-argument filename)))
+     (output (shell-command-to-string cmd)))
+  (message "Output: %s" output)))
+#+end_src
+
+
+* fitness.org
+#+begin_src emacs-lisp
+;; The fitness.org file calls this function to eval the configuration source
+;; block. This is the only function that needs to be defined outside of
+;; fitness.org.
+
+(defun ap/org-call-src-block (name)
+ ;; Based on <http://kitchingroup.cheme.cmu.edu/blog/2014/08/11/Using-org-mode-outside-of-Emacs-sort-of/>
+ ;; This works better than the org-sbe (aka sbe) macro, because it
+ ;; calls the block upon expansion, making it difficult to bind to
+ ;; a command to run later
+ ;; TODO: Use `org-babel-goto-named-src-block'! I guess it's new...or not, it's from 2010!
+ (org-with-wide-buffer
+  (-when-let (src (org-element-map (org-element-parse-buffer) 'src-block
+           (lambda (element)
+            (when (string= name (org-element-property :name element))
+             element))
+           nil ;info
+           t ))
+   (goto-char (org-element-property :begin src))
+   (let ((org-confirm-babel-evaluate nil))
+    (org-babel-execute-src-block)))))
 #+end_src
