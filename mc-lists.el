@@ -9,9 +9,11 @@
         insert-colon
         jay/left-char
         jay/right-char
+        kill-region
         meta-return
         my/delete-backward-and-capitalize
         my/kill-line-dwim
+        newline-and-indent
         org-beginning-of-line
         org-end-of-line
         org-meta-return
@@ -24,7 +26,6 @@
         right-word
         smart-return
         smart-space
-        newline-and-indent
         ))
 
 (setq mc/cmds-to-run-once

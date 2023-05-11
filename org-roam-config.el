@@ -16,8 +16,9 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-"))))
-;; - %<Week %W, day %j>\n
+- Hi! What's on your mind at this moment? Any ideas, insights, thoughts, or funny things you want to capture? Plans for the day? Anything you're avoiding?
+- "))))
+;; - %<Week %w, day %j>\n
   :config
 ;;  (org-roam-setup)
   (org-roam-db-autosync-mode)
