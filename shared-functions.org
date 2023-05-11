@@ -8226,9 +8226,22 @@ Doesn't work
 
 * ask me whether to move region or copy region
 
+Set this varable to nil at the start of every Emacs session, so that switch-between-move-mode-and-copy-mode will prompt me about my preference:
+
 #+begin_src emacs-lisp
 (defvar move-or-copy-mode nil)
+#+end_src
 
+The first time I call move-or-copy-region-to-other-window, the unless statement sees that move-or-copy-mode is nil, so it calls select-copy-mode-or-move-mode.
+
+The next time I call move-or-copy-region-to-other-window within the same Emacs session, move-or-copy-mode is no longer nil, because it now contains my previous choice. So the unless statement doesn't trigger, and select-copy-mode-or-move-mode is not called, hence I'm not prompted for my preference again.
+
+When a new Emacs session starts, move-or-copy-mode is reset to nil, so I will again be prompted for Ir preference the first time I call move-or-copy-region-to-other-window in the new session.
+
+Emacs sessions are independent of each other, so global variables like move-or-copy-mode don't persist across sessions.
+
+
+#+begin_src emacs-lisp
 (defun switch-between-move-mode-and-copy-mode ()
  (interactive)
  (setq move-or-copy-mode
@@ -8255,5 +8268,4 @@ Doesn't work
     (newline)
     (other-window -1))
   (message "No region selected"))))
-
 #+end_src
