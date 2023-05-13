@@ -8273,7 +8273,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+begin_SRC emacs-lisp
 (defun activate-olivetti-in-split ()
- (if (> (length (window-list)) 1)
+ (if (< (window-width) 80)
    (olivetti-mode -1)
   (olivetti-mode 1)))
 
