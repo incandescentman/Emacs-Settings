@@ -4170,8 +4170,6 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 )
 
 (add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-
-(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'text-mode-hook 'olivetti-mode 1)
 ;; (add-hook 'org-mode-hook 'olivetti-mode 1)
 (add-hook 'message-mode-hook 'olivetti-mode 1 'append)
@@ -8273,7 +8271,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 * disable Olivetti on split
 
-#+begin_src emacs-lisp
+#+begin_SRC emacs-lisp
 (defun activate-olivetti-in-split ()
  (if (> (length (window-list)) 1)
    (olivetti-mode -1)
@@ -8282,4 +8280,4 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (add-hook 'org-mode-hook (lambda ()
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
 
-#+end_src
+#+END_SRC
