@@ -183,6 +183,7 @@ This function should only modify configuration layer settings."
                                       dired-sort-menu
                                       discover-my-major
                                       ;; early-init
+                                      ;;                                      emacs-everywhere
                                       emacsql
                                       ;; magit-section
                                       embark
@@ -208,6 +209,7 @@ This function should only modify configuration layer settings."
                                       ido-hacks
                                       ;; imenu-list
                                       ;; key-chord
+                                      lister ;; (for delve)
                                       key-seq
 				                              magit
 				                              markdown-mode

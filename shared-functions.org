@@ -8281,3 +8281,26 @@ Emacs sessions are independent of each other, so global variables like move-or-c
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
 
 #+END_SRC
+
+* delve
+[[https://github.com/publicimageltd/delve][publicimageltd/delve: Delve into your org-roam zettelkasten]]
+
+#+begin_EXAMPLE emacs-lisp
+(add-to-list 'load-path "/Users/jay/emacs/external-packages/delve/")
+
+(use-package delve
+ :after (org-roam)
+ ;; this is necessary if use-package-always-defer is true
+ :demand t
+ :bind
+ ;; the main entry point, offering a list of all stored collections
+ ;; and of all open Delve buffers:
+(("M-<f12>" . delve))
+ :config
+ ;; set meaningful tag names for the dashboard query
+ (setq delve-dashboard-tags '("Tag1" "Tag2"))
+ ;; optionally turn on compact view as default
+ (add-hook #'delve-mode-hook #'delve-compact-view-mode)
+ ;; turn on delve-minor-mode when Org Roam file is opened:
+ (delve-global-minor-mode))
+#+END_EXAMPLE
