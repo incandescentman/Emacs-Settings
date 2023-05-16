@@ -31,6 +31,9 @@
 	      '(
 
 	        ("n" "note" plain "- Links :: \n
+* export settings                       :ARCHIVE:noexport:
+#+OPTIONS: H:6 num:nil toc:nil :nil @:t ::t |:t ^:t -:t f:t *:t <:t \n:t
+#+HTML_HEAD: <link rel='stylesheet' type='text/css' href='https://incandescentman.github.io/css/cortex-theme.css' />
 * ${title}
 - %?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
