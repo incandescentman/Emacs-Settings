@@ -8300,9 +8300,13 @@ Emacs sessions are independent of each other, so global variables like move-or-c
  ;; set meaningful tag names for the dashboard query
  (setq delve-dashboard-tags '("Tag1" "Tag2"))
  ;; optionally turn on compact view as default
- (add-hook #'delve-mode-hook #'delve-compact-view-mode)
+ )
+#+END_EXAMPLE
+
+#+begin_EXAMPLE emacs-lisp
+(add-hook #'delve-mode-hook #'delve-compact-view-mode)
  ;; turn on delve-minor-mode when Org Roam file is opened:
- (delve-global-minor-mode))
+ (delve-global-minor-mode)
 #+END_EXAMPLE
 
 
