@@ -750,7 +750,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
 
 
-(define-key org-mode-map (kbd "s-O") 'reveal-in-finder)
 
 
 ;; pop mark
@@ -784,6 +783,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window) ; very useful when working with a split frame
 
 (define-key key-minor-mode-map (kbd "s-o") 'move-or-copy-region-to-other-window)
+(define-key org-mode-map (kbd "s-O") 'reveal-in-finder)
 
 
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
@@ -795,7 +795,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-9") 'goto-last-change-reverse) ; super useful when editing
 (define-key key-minor-mode-map (kbd "C--") 'goto-last-change) ; super useful when editing
 
-;; (define-key key-minor-mode-map (kbd "s-=") 'zoom-in-and-disable-menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "M-=") 'er/expand-region)
 (define-key key-minor-mode-map (kbd "C-=") 'er/expand-region)
