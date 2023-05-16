@@ -10,6 +10,7 @@
         jay/left-char
         jay/right-char
         kill-region
+        kill-word-correctly-and-capitalize
         meta-return
         my/delete-backward-and-capitalize
         my/kill-line-dwim
@@ -22,6 +23,8 @@
         org-shiftdown
         org-shiftleft
         org-shiftright
+        pasteboard-cut-and-capitalize
+        pasteboard-paste-without-smart-quotes
         return
         right-word
         smart-return
