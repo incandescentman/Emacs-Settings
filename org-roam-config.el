@@ -19,7 +19,7 @@
 *Weight:*
 *Heart rate:*
 - Hi! What's on your mind at this moment? Any ideas, insights, thoughts, or funny things you want to capture? Plans for the day? Anything you're avoiding?
-- "))))
+- \n\n\n"))))
 ;; - %<Week %w, day %j>\n
   :config
 ;;  (org-roam-setup)
@@ -31,9 +31,6 @@
 	      '(
 
 	        ("n" "note" plain "- Links :: \n
-* export settings                       :ARCHIVE:noexport:
-#+OPTIONS: H:6 num:nil toc:nil :nil @:t ::t |:t ^:t -:t f:t *:t <:t \n:t
-#+HTML_HEAD: <link rel='stylesheet' type='text/css' href='https://incandescentman.github.io/css/cortex-theme.css' />
 
 * ${title}
 - %?"
