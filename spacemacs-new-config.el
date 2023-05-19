@@ -284,4 +284,4 @@
 
 
 
-(load "~/.hammerspoon/Spoons/editWithEmacs.spoon/hammerspoon.el")
+
