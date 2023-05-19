@@ -468,6 +468,13 @@ Replace smart quotes with straight quotes so that spell check can recognize word
 
 ;; ("- " . "") ; also remove stray spac- es
 ;; ("­ " . "") ; also remove stray spac- es
+
+
+      ;; Convert markdown headings to org headings
+                            ("###" . "***")
+                            ("##" . "**")
+
+
 )
                        nil   beg (min end (point-max)))
 
