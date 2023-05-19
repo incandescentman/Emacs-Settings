@@ -5492,7 +5492,7 @@ into the main dumped emacs"
 
 ( "s-k rf" .  crux-rename-file-and-buffer)
 
-( "s-k df" . crux-delete-file-and-buffer)
+( "s-k df" . delete-file)
 
 ( "C-c d" . crux-duplicate-current-line-or-region)
 
@@ -8002,7 +8002,7 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 * deadgrep
 #+begin_src emacs-lisp
 (use-package deadgrep)
-(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep)
+(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
 #+end_src
 
 
