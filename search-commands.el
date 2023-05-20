@@ -45,8 +45,47 @@
 (defalias 'rg-project-directory 'rg-dwim-project-dir)
 (defalias 'rg-current-file 'rg-dwim-current-file)
 
+ (use-package consult-org-roam
+  :ensure t
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor mode
+  (consult-org-roam-mode 1)
+  :custom
+  ;; Use `ripgrep' for searching with `consult-org-roam-search'
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  ;; Configure a custom narrow key for `consult-buffer'
+  (consult-org-roam-buffer-narrow-key ?r)
+  ;; Display org-roam buffers right after non-org-roam buffers
+  ;; in consult-buffer (and not down at the bottom)
+  (consult-org-roam-buffer-after-buffers t)
+  :config
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+  consult-org-roam-forward-links
+  :preview-key (kbd "M-."))
+  :bind
+  ;; Define some convenient keybindings as an addition
+  ;; ("C-c n e" . consult-org-roam-file-find)
+  ;; ("C-c n b" . consult-org-roam-backlinks)
+  ;; ("C-c n l" . consult-org-roam-forward-links)
+  ;; ("C-c n r" . consult-org-roam-search)
+)
+
 ;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
 ;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
 
 (define-key key-minor-mode-map (kbd "s-G") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "C-s-g") 'counsel-projectile-ag)
+
+(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ b s") 'affe-grep-bash-scripts)
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
+
+
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
+
+(define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)
