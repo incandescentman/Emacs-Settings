@@ -1,4 +1,3 @@
-
 * search
 #+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
@@ -90,7 +89,50 @@ You can define a custom function that calls consult-ripgrep with the current dir
 #+end_src
 
 
+* consult org roam
+~consult-org-roam.el~ provides several functions to connect [[https://github.com/org-roam/org-roam][org-roam]] to [[https://github.com/minad/consult][consult]]'s completing read interface.
 
+First, it provides the following standalone functions which enhance =org-roam='s capabilities:
+
+- ~consult-org-roam-file-find~ :: Search your org-roam files with consult's completing-read and its live preview
+- ~consult-org-roam-backlinks~ :: List backlinks to ~org-roam-node-at-point~ (e.g. currently open note) and sift through them with consult's completing-read and its live preview
+- ~consult-org-roam-forward-links~ :: List forward links contained in the currently opened note
+- ~consult-org-roam-search~ :: [[https://github.com/minad/consult#asynchronous-search][Asynchronously search]] your roam-directory
+ with [[https://www.gnu.org/software/grep/manual/grep.html][grep]] or [[https://github.com/BurntSushi/ripgrep][ripgrep]]
+
+Second, it provides a minor mode called ~consult-org-roam-mode~. When activated, ~org-roam-node-read~ is overridden, which is used by ~org-roam-node-find~, ~org-roam-node-insert~ and ~org-roam-refile~. By doing so, all functions utilizing completing-read resort to ~consult~ for performing completion. Furthermore, the same is done for ~org-roam-ref-read~ so that ~consult~ is used for completing references as well.
+
+Eventually, you might want to suppress previewing for certain functions. This can be done by adding using consult-customize.
+
+#+begin_src emacs-lisp
+ (use-package consult-org-roam
+  :ensure t
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor mode
+  (consult-org-roam-mode 1)
+  :custom
+  ;; Use `ripgrep' for searching with `consult-org-roam-search'
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  ;; Configure a custom narrow key for `consult-buffer'
+  (consult-org-roam-buffer-narrow-key ?r)
+  ;; Display org-roam buffers right after non-org-roam buffers
+  ;; in consult-buffer (and not down at the bottom)
+  (consult-org-roam-buffer-after-buffers t)
+  :config
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+  consult-org-roam-forward-links
+  :preview-key (kbd "M-."))
+  :bind
+  ;; Define some convenient keybindings as an addition
+  ;; ("C-c n e" . consult-org-roam-file-find)
+  ;; ("C-c n b" . consult-org-roam-backlinks)
+  ;; ("C-c n l" . consult-org-roam-forward-links)
+  ;; ("C-c n r" . consult-org-roam-search)
+)
+#+end_src
 
 * keybindings
 #+begin_src emacs-lisp
@@ -100,7 +142,16 @@ You can define a custom function that calls consult-ripgrep with the current dir
 (define-key key-minor-mode-map (kbd "s-G") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "C-s-g") 'counsel-projectile-ag)
 
+(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
 
+(define-key key-minor-mode-map (kbd "s-/ b s") 'affe-grep-bash-scripts)
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
+
+
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
+
+(define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
+(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)
 
 #+end_src
 
