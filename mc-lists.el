@@ -24,6 +24,7 @@
         org-shiftleft
         org-shiftright
         pasteboard-cut-and-capitalize
+        pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
         return
         right-word
