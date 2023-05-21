@@ -4176,6 +4176,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'message-mode-hook 'olivetti-mode 1 'append)
 (add-hook 'emacs-lisp-mode-hook 'olivetti-mode 1)
 (add-hook 'css-mode-hook 'olivetti-mode 1)
+(add-hook 'helpful-mode-hook 'olivetti-mode 1)
 (add-hook 'sh-mode-hook 'olivetti-mode 1)
 (add-hook 'web-mode-hook 'olivetti-mode 1)
 (add-hook 'fundamental-mode-hook 'olivetti-mode 1)
@@ -8273,4 +8274,47 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
 
+#+end_src
+
+* helpful
+[[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
+
+replacing Emacs built-in documenation
+#+begin_src emacs-lisp
+;; Note that the built-in `describe-function' includes both functions
+;; and macros. `helpful-function' is functions only, so we provide
+;; `helpful-callable' as a drop-in replacement.
+(global-set-key (kbd "M-h f") #'helpful-callable)
+
+(global-set-key (kbd "M-h v") #'helpful-variable)
+(global-set-key (kbd "M-h k") #'helpful-key)
+(global-set-key (kbd "M-h x") #'helpful-command)
+
+;; Lookup the current symbol at point. C-c C-d is a common keybinding
+;; for this in lisp modes.
+(global-set-key (kbd "C-c C-d") #'helpful-at-point)
+
+;; Look up *F*unctions (excludes macros).
+;;
+;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+;; already links to the manual, if a function is referenced there.
+(global-set-key (kbd "M-h F") #'helpful-function)
+#+end_SRC
+
+* workgroups
+** Usage
+
+*** [[https://github.com/pashinin/workgroups2#quick-start][[[data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ib2N0aWNvbiBvY3RpY29uLWxpbmsiIHZpZXdib3g9IjAgMCAxNiAxNiIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGFyaWEtaGlkZGVuPSJ0cnVlIj48cGF0aCBkPSJtNy43NzUgMy4yNzUgMS4yNS0xLjI1YTMuNSAzLjUgMCAxIDEgNC45NSA0Ljk1bC0yLjUgMi41YTMuNSAzLjUgMCAwIDEtNC45NSAwIC43NTEuNzUxIDAgMCAxIC4wMTgtMS4wNDIuNzUxLjc1MSAwIDAgMSAxLjA0Mi0uMDE4IDEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwyLjUtMi41YTIuMDAyIDIuMDAyIDAgMCAwLTIuODMtMi44M2wtMS4yNSAxLjI1YS43NTEuNzUxIDAgMCAxLTEuMDQyLS4wMTguNzUxLjc1MSAwIDAgMS0uMDE4LTEuMDQyWm0tNC42OSA5LjY0YTEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwxLjI1LTEuMjVhLjc1MS43NTEgMCAwIDEgMS4wNDIuMDE4Ljc1MS43NTEgMCAwIDEgLjAxOCAxLjA0MmwtMS4yNSAxLjI1YTMuNSAzLjUgMCAxIDEtNC45NS00Ljk1bDIuNS0yLjVhMy41IDMuNSAwIDAgMSA0Ljk1IDAgLjc1MS43NTEgMCAwIDEtLjAxOCAxLjA0Mi43NTEuNzUxIDAgMCAxLTEuMDQyLjAxOCAxLjk5OCAxLjk5OCAwIDAgMC0yLjgzIDBsLTIuNSAyLjVhMS45OTggMS45OTggMCAwIDAgMCAyLjgzWiI+PC9wYXRoPjwvc3ZnPg==]]]]
+Quick
+Start
+
+Use ~M-x wg-create-workgroup~ to save save window&buffer layout as a
+work group.
+
+Use ~M-x wg-open-workgroup~ to open an existing work group.
+
+Use ~M-x wg-kill-workgroup~ to delete an existing work group.
+
+#+begin_src emacs-lisp
+(use-package workgroups2)
 #+end_src
