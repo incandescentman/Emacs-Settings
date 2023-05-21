@@ -145,9 +145,7 @@ This function should only modify configuration layer settings."
                                       ;; dired-hacks-utils
                                       ;; dired-single
                                       ;; frame-restore
-                                      ;; notmuch
                                       ;; graphviz-dot-mode
-                                      ;; js2
 			                                ;; smex
                                       ;; solarized-theme
                                       ;; sublime-themes
@@ -183,7 +181,6 @@ This function should only modify configuration layer settings."
                                       dired-sort-menu
                                       discover-my-major
                                       ;; early-init
-                                      ;;                                      emacs-everywhere
                                       emacsql
                                       ;; magit-section
                                       embark
@@ -203,9 +200,7 @@ This function should only modify configuration layer settings."
                                       ;; gist
 				                              google-this
                                       gptel
-                                      ;; helm
-                                      ;; helm-cmd-t
-                                      ;; hyperbole
+                                      helpful
                                       ido-hacks
                                       ;; imenu-list
                                       ;; key-chord
