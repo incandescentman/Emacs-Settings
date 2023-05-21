@@ -8303,6 +8303,7 @@ replacing Emacs built-in documenation
 #+end_SRC
 
 * workgroups
+[[https://github.com/pashinin/workgroups2][pashinin/workgroups2: Workgroups2 - Emacs session manager]]
 
 ** Usage
 
@@ -8328,12 +8329,14 @@ Put below line at the bottom of ~.emacs~,
 #+end_src
 
 * CTRLF
-Disabling because there's no isearch-repeat-forward?
+[[https://github.com/radian-software/ctrlf#customization][radian-software/ctrlf: ⌨️ Emacs finally learns how to ctrl+F.]]
 
-[[https://github.com/radian-software/ctrlf][radian-software/ctrlf: ⌨️ Emacs finally learns how to ctrl+F.]]
+Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's no isearch-repeat-forward]]? Update: found it.
 
-#+begin_EXAMPLE emacs-lisp
+
+#+begin_SRC emacs-lisp
 (use-package ctrlf)
 (ctrlf-mode +1)
 (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
-#+end_EXAMPLE
+(define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
+#+END_SRC
