@@ -8357,3 +8357,13 @@ Here's a screencast of browsing Info using ~ace-link-info~:
 #+begin_src emacs-lisp
 (ace-link-setup-default)
 #+end_src
+
+** mwim
+[[https://github.com/alezost/mwim.el][alezost/mwim.el: Move to the beginning/end of line, code or comment]]
+
+Smart jump to beginning / end of lines.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-a") 'mwim-beginning)
+(global-set-key (kbd "C-e") 'mwim-end)
+#+end_src
