@@ -8339,4 +8339,21 @@ Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's
 (ctrlf-mode +1)
 (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
 (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
+;; (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
 #+END_SRC
+
+
+* ace-link
+[[https://github.com/abo-abo/ace-link][abo-abo/ace-link: Quickly follow links in Emacs]]
+In Help buffers, single key ~o~ to follow links
+
+** Usage
+Just press ~o~ when you're
+in ~Info-mode~ or ~help-mode~ or ~woman-mode~ or ~eww-mode~ or ~compilation-mode~.
+
+Here's a screencast of browsing Info using ~ace-link-info~:
+
+
+#+begin_src emacs-lisp
+(ace-link-setup-default)
+#+end_src
