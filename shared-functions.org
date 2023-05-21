@@ -2299,7 +2299,8 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (interactive)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
  (setq org-content (shell-command-to-string cmd))
- (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+(setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
+
  (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
@@ -8280,7 +8281,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
 replacing Emacs built-in documenation
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 ;; Note that the built-in `describe-function' includes both functions
 ;; and macros. `helpful-function' is functions only, so we provide
 ;; `helpful-callable' as a drop-in replacement.
@@ -8318,3 +8319,32 @@ Use ~M-x wg-kill-workgroup~ to delete an existing work group.
 #+begin_src emacs-lisp
 (use-package workgroups2)
 #+end_src
+
+
+** Usage
+
+*** [[https://github.com/pashinin/workgroups2#quick-start][[[data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ib2N0aWNvbiBvY3RpY29uLWxpbmsiIHZpZXdib3g9IjAgMCAxNiAxNiIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGFyaWEtaGlkZGVuPSJ0cnVlIj48cGF0aCBkPSJtNy43NzUgMy4yNzUgMS4yNS0xLjI1YTMuNSAzLjUgMCAxIDEgNC45NSA0Ljk1bC0yLjUgMi41YTMuNSAzLjUgMCAwIDEtNC45NSAwIC43NTEuNzUxIDAgMCAxIC4wMTgtMS4wNDIuNzUxLjc1MSAwIDAgMSAxLjA0Mi0uMDE4IDEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwyLjUtMi41YTIuMDAyIDIuMDAyIDAgMCAwLTIuODMtMi44M2wtMS4yNSAxLjI1YS43NTEuNzUxIDAgMCAxLTEuMDQyLS4wMTguNzUxLjc1MSAwIDAgMS0uMDE4LTEuMDQyWm0tNC42OSA5LjY0YTEuOTk4IDEuOTk4IDAgMCAwIDIuODMgMGwxLjI1LTEuMjVhLjc1MS43NTEgMCAwIDEgMS4wNDIuMDE4Ljc1MS43NTEgMCAwIDEgLjAxOCAxLjA0MmwtMS4yNSAxLjI1YTMuNSAzLjUgMCAxIDEtNC45NS00Ljk1bDIuNS0yLjVhMy41IDMuNSAwIDAgMSA0Ljk1IDAgLjc1MS43NTEgMCAwIDEtLjAxOCAxLjA0Mi43NTEuNzUxIDAgMCAxLTEuMDQyLjAxOCAxLjk5OCAxLjk5OCAwIDAgMC0yLjgzIDBsLTIuNSAyLjVhMS45OTggMS45OTggMCAwIDAgMCAyLjgzWiI+PC9wYXRoPjwvc3ZnPg==]]]]Quick
+Start
+
+Use ~M-x wg-create-workgroup~ to save save window&buffer layout as a
+work group.
+
+Use ~M-x wg-open-workgroup~ to open an existing work group.
+
+Use ~M-x wg-kill-workgroup~ to delete an existing work group.
+
+* scroll
+#+begin_src emacs-lisp
+(global-yascroll-bar-mode 1)
+#+end_src
+
+* CTRLF
+Disabling because there's no isearch-repeat-forward?
+
+[[https://github.com/radian-software/ctrlf][radian-software/ctrlf: ⌨️ Emacs finally learns how to ctrl+F.]]
+
+#+begin_EXAMPLE emacs-lisp
+(use-package ctrlf)
+(ctrlf-mode +1)
+(define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
+#+end_EXAMPLE
