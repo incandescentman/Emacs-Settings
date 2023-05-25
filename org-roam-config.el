@@ -30,7 +30,7 @@
   (setq org-roam-capture-templates
 	      '(
 
-	        ("n" "note" plain "- Links :: \n
+	        ("n" "note" plain "- Links :: \n- Source :: \n
 
 * ${title}
 - %?"
@@ -38,7 +38,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
 
-	        ("m" "memoir" plain "- Links :: \n
+	        ("m" "memoir" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "memoir/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -51,12 +51,12 @@
           ("p" "person" plain "%?"
 	         :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :person:\n\
-- Links :: \n\n
+- Links :: \n- Source :: \n\n
 * ${title}
 - ")
 	         :unnarrowed t)
 
-	        ("b" "book" plain "- Links :: \n
+	        ("b" "book" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "book/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -66,20 +66,20 @@
           ("P" "project" plain "%?"
 	         :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :project:\n\
-- Links :: \n\n
+- Links :: \n- Source :: \n\n
 * ${title}
 - ")
 	         :unnarrowed t)
 
 
-	        ("x" "cuts" plain "- Links :: \n
+	        ("x" "cuts" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "cuts/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :cuts:")
            :unnarrowed t)
 
-	        ("f" "finances" plain "- Links :: \n
+	        ("f" "finances" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -88,7 +88,7 @@
 
 
 
-	        ("l" "definition" plain "- Links :: \n
+	        ("l" "definition" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -96,21 +96,21 @@
            :unnarrowed t)
 
 
-	        ("s" "sentence" plain "- Links :: \n
+	        ("s" "sentence" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "sentences/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :sentence:")
 	         :unnarrowed t)
 
-	        ("i" "idea" plain "- Links :: \n
+	        ("i" "idea" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :idea:")
 	         :unnarrowed t)
 
-	        ("c" "conversation" plain "- Links :: \n
+	        ("c" "conversation" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -118,7 +118,7 @@
 	         :unnarrowed t)
 
 
-	        ("d" "default" plain "- Links :: \n
+	        ("d" "default" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -127,7 +127,7 @@
 
 
 
-	        ("e" "emacs" plain "- Links :: \n
+	        ("e" "emacs" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -136,7 +136,7 @@
 
 
 
-	        ("T" "temporary" plain "- Links :: \n
+	        ("T" "temporary" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -144,7 +144,7 @@
 	         :unnarrowed t)
 
 
-          	        ("t" "therapy" plain "- Links :: \n
+          	        ("t" "therapy" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "therapy/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -155,7 +155,7 @@
 
 
 
-	        ("a" "article notes or books and articles" plain "- Links :: \n
+	        ("a" "article notes or books and articles" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -166,7 +166,7 @@
           ("w" "work ie NLI" plain "%?"
 	         :target (file+head "nli-roam/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :work:\n\
-- Links :: \n\n
+- Links :: \n- Source :: \n\n
 * ${title}
 - ")
 	         :unnarrowed t)

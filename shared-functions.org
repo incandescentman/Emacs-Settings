@@ -471,6 +471,8 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("###" . "***")
                             ("##" . "**")
 
+                            ("**" . "*")
+
                             )
                           nil   beg (min end (point-max))))
 #+END_SRC
@@ -2111,7 +2113,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 :defer
 :config
 
-(setq recentf-save-file "/Users/jay/emacs/emacs-settings/.savefile/recentf")
+(setq recentf-save-file "/Users/jay/emacs/recentf/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100)
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
@@ -3127,7 +3129,7 @@ Redefine help shortcut:
  (when (looking-back " " nil)
   (left-char 1))
  (flyspell-auto-correct-word)
-(right-char 1)
+;; (right-char 1)
  )
 
 #+end_src
@@ -3135,6 +3137,7 @@ Redefine help shortcut:
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
+;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
 (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
@@ -4177,6 +4180,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'message-mode-hook 'olivetti-mode 1 'append)
 (add-hook 'emacs-lisp-mode-hook 'olivetti-mode 1)
 (add-hook 'css-mode-hook 'olivetti-mode 1)
+(add-hook 'Custom-mode-hook 'olivetti-mode 1)
 (add-hook 'helpful-mode-hook 'olivetti-mode 1)
 (add-hook 'sh-mode-hook 'olivetti-mode 1)
 (add-hook 'web-mode-hook 'olivetti-mode 1)
@@ -6248,7 +6252,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 * default org-css
 
-#+begin_EXAMPLE emacs-lisp
+#+begin_SRC emacs-lisp
 (defun my-org-inline-css-hook (exporter)
  "Insert custom inline css"
  (when (eq exporter 'html)
@@ -6267,7 +6271,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
               "</style>\n")))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
-#+END_EXAMPLE
+#+END_SRC
 
 * hashtags
 
@@ -8336,8 +8340,8 @@ Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's
 
 #+begin_SRC emacs-lisp
 (use-package ctrlf)
-(ctrlf-mode +1)
-(define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
+;; (ctrlf-mode +1)
+;; (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
 (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
 ;; (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
 #+END_SRC
