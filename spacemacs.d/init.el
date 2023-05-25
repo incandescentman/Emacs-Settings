@@ -854,6 +854,8 @@ This function is called at the very end of Spacemacs initialization."
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
  '(marginalia-align 'left nil nil "Customized with use-package marginalia")
+ '(org-attach-expert t)
+ '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
  '(org-export-preserve-breaks nil)
  '(org-noter-auto-save-last-location t)
  '(org-noter-insert-note-no-questions t)
