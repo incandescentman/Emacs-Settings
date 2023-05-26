@@ -8397,3 +8397,11 @@ Smart jump to beginning / end of lines.
  (add-hook hook #'jinx-mode))
 #+END_EXAMPLE
 
+
+* ox-timeline
+#+begin_src emacs-lisp
+(use-package ox-timeline
+ :config
+ (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
+
+#+end_src
