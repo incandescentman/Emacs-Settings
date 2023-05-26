@@ -173,8 +173,17 @@
 
 
 
+        ("z" "zork" plain "- Links :: \nSource :: \n
+
+* ${title}
+- %?"
+         :target (file+head (lambda () (concat (read-string "Enter file path: ") "/%<%Y%m%d%H%M%S>-${slug}.org"))
+                            "#+TITLE: ${title}\n#+FILETAGS: :work:")
+         :unnarrowed t)
 
           ))
+
+
 
   :bind
   (
