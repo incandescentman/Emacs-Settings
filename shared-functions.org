@@ -3138,7 +3138,8 @@ Redefine help shortcut:
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
 ;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space)
+;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space)
+(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-previous-word)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
 #+END_SRC
