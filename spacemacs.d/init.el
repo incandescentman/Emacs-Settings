@@ -141,38 +141,31 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-                                      ;; auto-complete
-                                      ;; dired-hacks-utils
-                                      ;; dired-single
-                                      ;; frame-restore
-                                      ;; graphviz-dot-mode
-			                                ;; smex
-                                      ;; solarized-theme
-                                      ;; sublime-themes
-                                      ;; xml-rpc
-                                      ;; zenburn-theme
-                                      ;; ag
+				                              consult-org-roam
+				                              eww
+				                              fasd
+				                              google-this
+				                              magit
+				                              markdown-mode
+				                              org-autolist
+				                              quelpa-use-package
+				                              sdcv
                                       affe
                                       auto-capitalize
                                       beacon
                                       benchmark-init
-                                      ;; blimp
-                                      ;; bongo
                                       buffer-stack
                                       caps-lock
                                       change-inner
                                       cheatsheet
-                                      ;; command-log-mode
                                       consult-dir
-				                              consult-org-roam
+                                      consult-notes
+                                      consult-projectile ;; searches filenames
                                       counsel
                                       counsel-fd
-                                      consult-notes
                                       counsel-projectile
-                                      ;; spotify
                                       crux
-                                      ;; cyberpunk-theme
-                                      ;; cyberpunk-theme
+                                      deadgrep
                                       deadgrep
                                       define-word
                                       dired+
@@ -180,97 +173,67 @@ This function should only modify configuration layer settings."
                                       dired-quick-sort
                                       dired-sort-menu
                                       discover-my-major
-                                      ;; early-init
                                       emacsql
-                                      ;; magit-section
                                       embark
-                                      ;; emms
                                       epc
                                       expand-region
-				                              eww
+                                      f
                                       fancy-narrow
-				                              fasd
-                                      ;; fastdef
                                       flyspell-lazy
-                                      ;; focus
-                                      ;; fountain-mode
                                       frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
-                                      ;; gist
-				                              google-this
                                       gptel
                                       helpful
                                       ido-hacks
-                                      ;; imenu-list
                                       jinx
-                                      ;; key-chord
-                                      lister ;; (for delve)
                                       key-seq
-				                              magit
-				                              markdown-mode
+                                      lister ;; (for delve)
                                       maxframe
-                                      ;; mpv
-                                      ;; multicolumn
                                       multiple-cursors
                                       mw-thesaurus
-                                      ;; nm
                                       olivetti
                                       openwith
                                       orderless
                                       org-ai
-				                              org-autolist
-                                      org-contrib
                                       org-bookmark-heading
-				                              ;; org-download
+                                      org-contrib
                                       org-drill
                                       org-fstree
                                       org-mac-link
-                                      ;; org-mime
+                                      org-modern
                                       org-pomodoro
                                       org-roam
                                       org-roam-ui
-                                      ;; websocket
-                                      simple-httpd
-                                      f
                                       org-sticky-header
+                                      org-superstar
                                       ox-clip
-                                      ;; ox-epub
                                       ox-gfm
                                       ox-timeline
-                                      org-modern
-                                      ;; org-noter
-                                      ;; org-noter-pdftools
-                                      ;; org-pdftools
-                                      ;; org-sidebar
-                                      org-superstar
-                                      ;; ox-twbs
                                       ox-tufte
                                       palimpsest
                                       paredit
                                       peg
                                       persp-mode
-                                      ;; plain-org-wiki
                                       point-stack
-                                      ;; polymode
                                       popup
                                       project-explorer
-				                              quelpa-use-package
+                                      projectile-ripgrep
                                       rainbow-mode
                                       re-builder
                                       recentf
                                       regex-tool
+                                      rg
+                                      ripgrep
                                       rspec-mode
                                       scratch
                                       scratch-message
-				                              sdcv
+                                      simple-httpd
                                       stripe-buffer
                                       sudo-edit
                                       tabbar
                                       tiny
                                       titlecase
-                                      ;; tldr
-                                      ;; transcribe
                                       ts
                                       unfill
                                       visible-mark
@@ -278,17 +241,53 @@ This function should only modify configuration layer settings."
                                       wc-mode
                                       web-mode
                                       wrap-region
+                                      xah-replace-pairs
+                                      ;; smex
+                            				  ;; org-download
+                                      ;; ag
+                                      ;; auto-complete
+                                      ;; blimp
+                                      ;; bongo
+                                      ;; command-log-mode
+                                      ;; cyberpunk-theme
+                                      ;; cyberpunk-theme
+                                      ;; dired-hacks-utils
+                                      ;; dired-single
+                                      ;; early-init
+                                      ;; emms
+                                      ;; fastdef
+                                      ;; focus
+                                      ;; fountain-mode
+                                      ;; frame-restore
+                                      ;; gist
+                                      ;; graphviz-dot-mode
+                                      ;; imenu-list
+                                      ;; key-chord
+                                      ;; magit-section
+                                      ;; mpv
+                                      ;; multicolumn
+                                      ;; nm
+                                      ;; org-mime
+                                      ;; org-noter
+                                      ;; org-noter-pdftools
+                                      ;; org-pdftools
+                                      ;; org-sidebar
+                                      ;; ox-epub
+                                      ;; ox-twbs
+                                      ;; plain-org-wiki
+                                      ;; polymode
+                                      ;; solarized-theme
+                                      ;; spotify
+                                      ;; sublime-themes
+                                      ;; tldr
+                                      ;; transcribe
+                                      ;; websocket
                                       ;; writeroom-mode
                                       ;; wttrin
-                                      xah-replace-pairs
+                                      ;; xml-rpc
                                       ;; yahoo-weather
+                                      ;; zenburn-theme
                                       ;; zone
-                                      rg
-                                      ripgrep
-                                      projectile-ripgrep
-                                      deadgrep
-                                      consult-projectile ;; this finds filenames only. it does not search full text.
-
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
