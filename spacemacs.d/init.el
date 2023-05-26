@@ -203,6 +203,7 @@ This function should only modify configuration layer settings."
                                       helpful
                                       ido-hacks
                                       ;; imenu-list
+                                      jinx
                                       ;; key-chord
                                       lister ;; (for delve)
                                       key-seq
@@ -236,6 +237,7 @@ This function should only modify configuration layer settings."
                                       ox-clip
                                       ;; ox-epub
                                       ox-gfm
+                                      ox-timeline
                                       org-modern
                                       ;; org-noter
                                       ;; org-noter-pdftools
@@ -853,6 +855,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
+ '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
  '(marginalia-align 'left nil nil "Customized with use-package marginalia")
  '(org-attach-expert nil)
  '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")

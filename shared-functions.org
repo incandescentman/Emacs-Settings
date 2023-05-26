@@ -8389,3 +8389,11 @@ Smart jump to beginning / end of lines.
 (defalias 'crux-delete-buffer-and-file #'crux-delete-file-and-buffer)
 
 #+end_src
+
+* jinx
+#+begin_EXAMPLE emacs-lisp
+(use-package jinx)
+(dolist (hook '(text-mode-hook org-mode-hook conf-mode-hook))
+ (add-hook hook #'jinx-mode))
+#+END_EXAMPLE
+
