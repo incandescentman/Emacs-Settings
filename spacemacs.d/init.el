@@ -98,23 +98,22 @@ This function should only modify configuration layer settings."
      ;; ag-lang-tools
      auto-completion
      ;; better-defaults
-     ;; chrome
      compleseus
-     ;; ivy
+     ;; chrome
      ;; deft
-     emacs-lisp
-     eww
      ;; emoji
      ;; floobits
      ;; helm
      ;; html
+     ;; ivy
      ;; jay
      ;; markdown
      ;; mu4e
-  ;;   (multiple-cursors :variables multiple-cursors-backend 'mc)
-;;     (multiple-cursors :variables multiple-cursors-backend 'mc)
+     emacs-lisp
+     eww
+     ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
+     ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
-;;        :load-path "/Users/jay/emacs/org-9.6.1/"
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t)
@@ -141,25 +140,17 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-				                              consult-org-roam
-				                              eww
-				                              fasd
-				                              google-this
-				                              magit
-				                              markdown-mode
-				                              org-autolist
-				                              quelpa-use-package
-				                              sdcv
                                       affe
                                       auto-capitalize
                                       beacon
-                                      benchmark-init
                                       buffer-stack
                                       caps-lock
                                       change-inner
                                       cheatsheet
                                       consult-dir
                                       consult-notes
+                                      consult-org-roam
+                                      benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
                                       counsel-fd
@@ -176,19 +167,24 @@ This function should only modify configuration layer settings."
                                       emacsql
                                       embark
                                       epc
+                                      eww
                                       expand-region
                                       f
                                       fancy-narrow
+                                      fasd
                                       flyspell-lazy
                                       frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
+                                      google-this
                                       gptel
                                       helpful
                                       ido-hacks
                                       jinx
                                       key-seq
                                       lister ;; (for delve)
+                                      magit
+                                      markdown-mode
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
@@ -196,6 +192,7 @@ This function should only modify configuration layer settings."
                                       openwith
                                       orderless
                                       org-ai
+                                      org-autolist
                                       org-bookmark-heading
                                       org-contrib
                                       org-drill
@@ -219,6 +216,7 @@ This function should only modify configuration layer settings."
                                       popup
                                       project-explorer
                                       projectile-ripgrep
+                                      quelpa-use-package
                                       rainbow-mode
                                       re-builder
                                       recentf
@@ -228,6 +226,7 @@ This function should only modify configuration layer settings."
                                       rspec-mode
                                       scratch
                                       scratch-message
+                                      sdcv
                                       simple-httpd
                                       stripe-buffer
                                       sudo-edit
@@ -242,8 +241,7 @@ This function should only modify configuration layer settings."
                                       web-mode
                                       wrap-region
                                       xah-replace-pairs
-                                      ;; smex
-                            				  ;; org-download
+
                                       ;; ag
                                       ;; auto-complete
                                       ;; blimp
@@ -267,6 +265,7 @@ This function should only modify configuration layer settings."
                                       ;; mpv
                                       ;; multicolumn
                                       ;; nm
+                                      ;; org-download
                                       ;; org-mime
                                       ;; org-noter
                                       ;; org-noter-pdftools
@@ -288,6 +287,7 @@ This function should only modify configuration layer settings."
                                       ;; yahoo-weather
                                       ;; zenburn-theme
                                       ;; zone
+                                      ;; smex
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
