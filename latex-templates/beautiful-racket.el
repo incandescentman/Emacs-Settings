@@ -41,7 +41,6 @@
 \\fi
 \\usepackage{url}
 \\usepackage{paralist}
-\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -72,14 +71,13 @@
 
 
 
-\\usepackage{magaz}
+% \\usepackage{magaz}
 
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
-\\usepackage{letterspace}
 \\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
 
 
@@ -317,7 +315,7 @@
 
 \\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}}
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{17}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
