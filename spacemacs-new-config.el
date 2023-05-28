@@ -226,14 +226,14 @@
 
 (display-time)
 
-;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
-(setq evil-emacs-state-cursor '("red")) ; for box cursor
+(setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
+;; (setq evil-emacs-state-cursor '("red")) ; ;; for box cursor
 
 
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
-;; (horizontal-cursor)
-(box-cursor)
+(horizontal-cursor)
+;; (box-cursor)
 (incarnadine-cursor)
 (scroll-bar-mode 1)
 (defun package--save-selected-packages (&rest opt) nil)

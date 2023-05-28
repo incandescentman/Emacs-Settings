@@ -112,7 +112,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
-     ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
       :variables
       org-enable-roam-protocol t
