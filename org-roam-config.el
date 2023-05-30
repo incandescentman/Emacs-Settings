@@ -152,6 +152,13 @@
 	         :unnarrowed t)
 
 
+	        ("I" "Intelligence" plain "- Links :: \n- Source :: \n
+
+* ${title}
+- %?"
+	         :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
+	         :unnarrowed t)
 
 
 

@@ -671,7 +671,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
 
-;; (define-key key-minor-mode-map (kbd "s-p") 'jay-refile-region)
 
 (define-key key-minor-mode-map (kbd "M-0") 'copy-region-to-other-window)
 
@@ -847,7 +846,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 
-(define-key key-minor-mode-map (kbd "s-'") 'refile-region-or-subtree)
+(define-key key-minor-mode-map (kbd "s-;") 'refile-region-or-subtree)
+(define-key key-minor-mode-map (kbd "s-'") 'org-roam-refile-region-or-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 ;; helm-mini) ; shows recent files; also bound to ⌘-r

@@ -8405,3 +8405,11 @@ Smart jump to beginning / end of lines.
  (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
 
 #+end_src
+
+
+* ox-clip
+#+begin_src emacs-lisp
+'(ox-clip-osx-cmd
+  "pandoc -f html -t markdown - | grep -v \"^:::\" | sed 's/{#.*}//g' | pbcopy")
+(defalias 'copy-as-markdown 'ox-clip-formatted-copy)
+#+end_src

@@ -872,7 +872,7 @@ This function is called at the very end of Spacemacs initialization."
      ("H" . "html")
      ("A" . "ascii")
      ("i" . "index")))
- '(package-selected-packages
+'(package-selected-packages
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(safe-local-variable-values
    '((org-html-postamble . "</div><div class='span1'></div><div class='span3'> <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='/Users/jay/Dropbox/github/org-tocify/src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/bootstrap.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/jquery.tocify.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/prettify.js'></script><script> $(function() { var toc = $('#toc').tocify({ selectors: 'h2,h3,h4,h5' }).data('toc-tocify'); prettyPrint(); $('.optionName').popover({ trigger: 'hover' }); });</script>")
