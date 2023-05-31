@@ -442,6 +442,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; mk - mykeybindings
 
 
+(define-key key-minor-mode-map (kbd "C-<tab>") 'org-cycle-force-archived)
+
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
 
 (define-key key-minor-mode-map (kbd "s-i s-I") 'clone-indirect-buffer-other-window)
