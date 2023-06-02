@@ -1,0 +1,77 @@
+
+#+begin_src emacs-lisp
+(defun html2org-clipboard-and-unfill-region ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+ (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+ (with-temp-buffer
+  (insert org-content)
+  (unfill-paragraph (point-min) (point-max))
+  (setq org-content (buffer-string)))
+ (kill-new org-content)
+ (yank))
+
+(defun html2org-clipboard-and-unfill-region-clobber-blockquotes ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+ (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+ (with-temp-buffer
+ (insert org-content)
+ (unfill-region (point-min) (point-max))
+ (setq org-content (buffer-string)))
+(setq org-content (replace-regexp-in-string "#\\+end_quote" "\n#\\+end_quote" org-content))
+ (kill-new org-content)
+ (yank))
+
+
+;; from ChatGPT. Doesn't work
+(defun html2org-clipboard-and-unfill-region-but-preserve-blockquotes ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+ (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+ (with-temp-buffer
+ (insert org-content)
+ (goto-char (point-min))
+ (while (not (eobp))
+  (unless (or (looking-at-p "^#\\+begin_quote") (looking-at-p "#\\+end_quote"))
+  (let ((start (point)))
+   (forward-paragraph)
+   (fill-region-as-paragraph start (point))))
+  (forward-line))
+ (setq org-content (buffer-string)))
+ (kill-new org-content)
+ (yank))
+
+
+
+(defun html2org-clipboard-with-questions ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank) with questions emphasized."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+ (setq org-content (replace-regexp-in-string "^\\[\\[data:image.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "^\\(.*\\?\\)$" "* \\1" org-content))
+ (kill-new org-content)
+ (yank))
+
+#+end_src
