@@ -4875,7 +4875,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2022/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2023/bin/universal-darwin")
   )
 #+END_SRC
 
