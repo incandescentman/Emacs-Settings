@@ -1,5 +1,41 @@
 
+
+
+
 #+begin_src emacs-lisp
+
+;; works!!
+(defun html2org-clipboard ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
+ (interactive)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (setq org-content (shell-command-to-string cmd))
+(setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
+
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
+ (setq org-content (replace-regexp-in-string "" " " org-content))
+ (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+(setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
+(setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content)) ;; somehow leaves stray square brackets in the output
+
+;; Add the following line to replace "=" enclosed text with "~" enclosed text
+ (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
+
+(kill-new org-content)
+ (yank)
+;; (org-mode-restart)
+)
+;; works!!
+
+
+
+
+
+
+
 (defun html2org-clipboard-and-unfill-region ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
