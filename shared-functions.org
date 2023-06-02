@@ -2315,9 +2315,19 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 ;; Add the following line to replace "=" enclosed text with "~" enclosed text
  (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
 
-(kill-new org-content)
- (yank)
-)
+
+;; Unfill paragraph
+  (with-temp-buffer
+   (insert org-content)
+   (goto-char (point-min))
+   (while (not (eobp))
+    (unfill-paragraph)
+    (forward-paragraph))
+   (setq org-content (buffer-string)))
+
+  (kill-new org-content)
+  (yank))
+
 #+END_SRC
 
 * My custom functions for working with dates and times
