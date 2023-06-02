@@ -8374,19 +8374,17 @@ Smart jump to beginning / end of lines.
 
 * delete file
 #+begin_src emacs-lisp
-(defun crux-delete-file-and-buffer ()
- "Kill the current buffer and deletes the file it is visiting."
- (interactive)
- (let ((filename (buffer-file-name)))
-  (when filename
-   (if (vc-backend filename)
-     (vc-delete-file filename)
-    (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
-     (delete-file filename delete-by-moving-to-trash)
-     (message "Deleted file %s" filename)
-     (kill-buffer))))))
-
-(defalias 'crux-delete-buffer-and-file #'crux-delete-file-and-buffer)
+(defun delete-visited-file (buffer-name)
+ "Delete the file visited by the buffer named BUFFER-NAME."
+ (interactive "bDelete file visited by buffer ")
+ (let* ((buffer (get-buffer buffer-name))
+     (filename (buffer-file-name buffer)))
+  (when buffer
+   (when (and filename
+         (file-exists-p filename))
+    (delete-file filename))
+   (kill-buffer buffer))))
+(defalias 'crux-delete-buffer-and-file #'delete-visited-file)
 
 #+end_src
 
@@ -8413,3 +8411,4 @@ Smart jump to beginning / end of lines.
   "pandoc -f html -t markdown - | grep -v \"^:::\" | sed 's/{#.*}//g' | pbcopy")
 (defalias 'copy-as-markdown 'ox-clip-formatted-copy)
 #+end_src
+
