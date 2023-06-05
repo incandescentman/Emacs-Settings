@@ -8343,3 +8343,7 @@ Smart jump to beginning / end of lines.
 (defalias 'copy-as-markdown 'ox-clip-formatted-copy)
 #+end_src
 
+
+
+
+okkkk
