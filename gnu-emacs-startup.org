@@ -2314,7 +2314,8 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 
 (smart-space)
 )
-)
+(my/fix-space
+))
 #+END_SRC
 
 ** NOTE-TO-JAY Question
