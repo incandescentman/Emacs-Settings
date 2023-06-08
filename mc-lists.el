@@ -12,6 +12,7 @@
         kill-region
         kill-word-correctly-and-capitalize
         meta-return
+        mwim-beginning
         my/delete-backward-and-capitalize
         my/kill-line-dwim
         newline-and-indent
