@@ -1069,6 +1069,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
      ("TK" . "Red")
      ("tktk" . "Red")
      ("xyz" . "Red")
+     ("tk" . "Red")
      ("tktks" . "Red")
      ("Q" . "Red")
      ("QUESTION" . "Red")
@@ -6189,7 +6190,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
       (path (concat dir "style.css"))
       (homestyle (or (null dir) (null (file-exists-p path))))
-      (final (if homestyle "/Users/jay/Dropbox/github/incandescentman.github.io/css/simple-cortex.css" path))) ;; <- set your own style file path
+      (final (if homestyle "/users/jay/dropbox/web-design/custom-css/gmail.css" path))) ;; <- set your own style file path
    (setq org-html-head-include-default-style nil)
    (setq org-html-head (concat
               "<style type=\"text/css\">\n"

@@ -13,6 +13,7 @@
         kill-word-correctly-and-capitalize
         meta-return
         mwim-beginning
+        mwim-end
         my/delete-backward-and-capitalize
         my/kill-line-dwim
         newline-and-indent
