@@ -6184,22 +6184,38 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 * default org-css
 
 #+begin_SRC emacs-lisp
+(defvar my-org-selected-css nil
+  "Path of the selected CSS file.")
+
+(defun select-org-export-css ()
+  "Select a CSS file if none has been selected."
+  (interactive)
+  (setq my-org-selected-css
+        (completing-read "Choose a CSS file: "
+                         '("/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"))))
+
 (defun my-org-inline-css-hook (exporter)
- "Insert custom inline css"
- (when (eq exporter 'html)
-  (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
-      (path (concat dir "style.css"))
-      (homestyle (or (null dir) (null (file-exists-p path))))
-      (final (if homestyle "/users/jay/dropbox/web-design/custom-css/gmail.css" path))) ;; <- set your own style file path
-   (setq org-html-head-include-default-style nil)
-   (setq org-html-head (concat
-              "<style type=\"text/css\">\n"
-              "<!--/*--><![CDATA[/*><!--*/\n"
-              (with-temp-buffer
-               (insert-file-contents final)
-               (buffer-string))
-              "/*]]>*/-->\n"
-              "</style>\n")))))
+  "Insert custom inline css"
+  (when (eq exporter 'html)
+    (unless my-org-selected-css
+      (select-org-export-css))
+    (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
+           (path (concat dir "style.css"))
+           (homestyle (or (null dir) (null (file-exists-p path))))
+           (final (if homestyle my-org-selected-css path)))
+      (setq org-html-head-include-default-style nil)
+      (setq org-html-head (concat
+                           "<style type=\"text/css\">\n"
+                           "<!--/*--><![CDATA[/*><!--*/\n"
+                           (with-temp-buffer
+                             (insert-file-contents final)
+                             (buffer-string))
+                           "/*]]>*/-->\n"
+                           "</style>\n")))))
+
+(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
+
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 #+END_SRC
@@ -7757,22 +7773,9 @@ this function appends the default value from
 Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 ** my own attempts to fix this. Second one worked
+#+begin_SRC emacs-lisp
+(use-package org-roam-export)
 
-#+begin_EXAMPLE emacs-lisp
-
-
-(defun my-org-html-ignore-unresolved-id-link (orig-fun link desc info)
- (condition-case err
-   (funcall orig-fun link desc info)
-  (user-error (progn
-         (message "Ignoring unresolved link: %s" (org-element-property :path link))
-         nil))))
-
-(advice-add 'org-html-link :around #'my-org-html-ignore-unresolved-id-link)
-
-#+END_EXAMPLE
-
-#+begin_EXAMPLE emacs-lisp
 (defun org-export-id-link-removal (backend)
  "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
  (save-excursion
@@ -7793,12 +7796,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
      )))))
 
 (add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
-#+END_EXAMPLE
-
-** found the official solution: org-roam export
-#+begin_src emacs-lisp
-(use-package org-roam-export)
-#+end_src
+#+END_SRC
 
 
 * org-agenda
