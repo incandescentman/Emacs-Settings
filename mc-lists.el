@@ -30,6 +30,7 @@
         pasteboard-paste-without-smart-quotes
         return
         right-word
+        smart-forward-sentence
         smart-return
         smart-space
         ))
