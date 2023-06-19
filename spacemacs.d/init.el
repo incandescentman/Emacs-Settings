@@ -218,7 +218,7 @@ This function should only modify configuration layer settings."
                                       quelpa-use-package
                                       rainbow-mode
                                       re-builder
-                                      recentf
+                                      ;; recentf
                                       regex-tool
                                       rg
                                       ripgrep
@@ -229,6 +229,7 @@ This function should only modify configuration layer settings."
                                       simple-httpd
                                       stripe-buffer
                                       sudo-edit
+                                      sync-recentf
                                       tabbar
                                       tiny
                                       titlecase
