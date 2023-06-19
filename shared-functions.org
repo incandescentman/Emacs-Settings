@@ -2145,9 +2145,12 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "/var/")
 (add-to-list 'recentf-exclude "todo")
 (add-to-list 'recentf-exclude "Applications")
+(add-to-list 'recentf-exclude "Before")
 (add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude "LaTeX")
 (add-to-list 'recentf-exclude "System")
+(add-to-list 'recentf-exclude "shared")
+(add-to-list 'recentf-exclude "Shared")
 (add-to-list 'recentf-exclude "roam/notes")
 (add-to-list 'recentf-exclude "*emacs-settings*")
 
@@ -8258,7 +8261,7 @@ Put below line at the bottom of ~.emacs~,
 
 * scroll
 #+begin_src emacs-lisp
-(global-yascroll-bar-mode 1)
+;; (global-yascroll-bar-mode 1)
 #+end_src
 
 * CTRLF
@@ -8344,3 +8347,16 @@ Smart jump to beginning / end of lines.
 
 
 
+* sync-recentf
+#+begin_src emacs-lisp
+(use-package sync-recentf)
+
+;; Cleanup the recent files list and synchronize it every 60 seconds.
+(setq recentf-auto-cleanup 60)
+
+;; Activate recentf
+(recentf-mode 1)
+#+end_src
+
+
+* debug recentf
