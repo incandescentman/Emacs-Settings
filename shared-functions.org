@@ -1031,6 +1031,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
     ;; (sequence "QUESTIONS" "|" "ANSWERS")
     ;; (sequence "STRATEGY" "|")
     ;; (sequence "TIP" "|")
+(sequence "REWARD" "|" "REWARDED")
     ;; (sequence "NOTES" "RESEARCH" "POINT" "NARRATIVE" "ANECDOTE" "WRITING" "|")
     ;; (sequence "PART" "HED" "HEDTK" "|")
     ;; (sequence "IF" "THEN" "|")
@@ -2144,6 +2145,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "*sent mail")
 (add-to-list 'recentf-exclude "/var/")
 (add-to-list 'recentf-exclude "todo")
+(add-to-list 'recentf-exclude "\\.cache")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "Before")
 (add-to-list 'recentf-exclude "Calendar")
@@ -8309,7 +8311,7 @@ Smart jump to beginning / end of lines.
 #+begin_src emacs-lisp
 (defun delete-visited-file (buffer-name)
  "Delete the file visited by the buffer named BUFFER-NAME."
- (interactive "bDelete file visited by buffer ")
+ (interactive "Delete file visited by buffer ")
  (let* ((buffer (get-buffer buffer-name))
      (filename (buffer-file-name buffer)))
   (when buffer
@@ -8346,17 +8348,19 @@ Smart jump to beginning / end of lines.
 #+end_src
 
 
-
-* sync-recentf
-#+begin_src emacs-lisp
-(use-package sync-recentf)
-
-;; Cleanup the recent files list and synchronize it every 60 seconds.
-(setq recentf-auto-cleanup 60)
-
-;; Activate recentf
-(recentf-mode 1)
-#+end_src
-
-
 * debug recentf
+#+begin_src emacs-lisp
+(defadvice recentf-save-list (around debug-recentf-save-list activate)
+ (message "Saving recentf list...")
+ ad-do-it
+ (message "Saved recentf list"))
+
+(defun my-update-recentf ()
+ (copy-file "/Users/jay/emacs/recentf/recentf" "/Users/jay/.emacs.d/.cache/recentf" t))
+
+(defadvice configuration-layer/update-packages
+  (before my-update-recentf-before-update-packages activate)
+ (copy-file "/Users/jay/emacs/recentf/recentf" "/Users/jay/.emacs.d/.cache/recentf" t))
+
+
+#+end_src
