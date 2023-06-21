@@ -7,8 +7,7 @@
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
-\\linespread{1.3} 
-
+\\linespread{1.3}
 
 \\usepackage{float}
 \\usepackage{changepage}
@@ -24,9 +23,9 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold, 
+        BoldFont = HelveticaNowDisplay-Bold,
         ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+        BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 
 \\setromanfont{Garamond Premier Pro}
@@ -66,15 +65,15 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 %\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{ideablue}{HTML}{55C1E7} 
+\\definecolor{ideablue}{HTML}{55C1E7}
 
 
-\\newtoks\\leftheader 
+\\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
 % \\raggedright
-\\hyphenpenalty=5000 
+\\hyphenpenalty=5000
 \\tolerance=1000
 
 %This macro is to make cleaner the specification of the titling font
@@ -140,7 +139,7 @@
 
 \\usepackage{enumitem}
 
-\\newlist{mylist}{enumerate}{10} 
+\\newlist{mylist}{enumerate}{10}
 
 
 % control line spacing in bulleted list
@@ -291,6 +290,6 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process 
+(setq org-latex-to-pdf-process
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes

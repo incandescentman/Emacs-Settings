@@ -49,6 +49,7 @@
 \\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
+\\usepackage[asterism]{sectionbreak}
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
