@@ -4459,7 +4459,7 @@ execute speed commands."
 
 ;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
-(add-to-list 'org-structure-template-alist '("v" . "export verse"))
+(add-to-list 'org-structure-template-alist '("v" . " verse"))
 #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
@@ -4479,7 +4479,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("q" . "quote")
   ("s" . "src")
   ("sh" . "src sh")
-  ("v" . "export verse")))
+  ("v" . "verse")))
 #+end_src
 
 
