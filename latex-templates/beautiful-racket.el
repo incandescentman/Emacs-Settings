@@ -21,6 +21,8 @@
 % \\makeglossaries
 
 \\usepackage{todonotes}
+\\usepackage[asterism]{sectionbreak}
+\\sectionbreakmark{❦}
 
 \\usepackage{changepage}
 \\usepackage{algorithm}
@@ -280,6 +282,7 @@
 \\makeatother
 
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
+
 
 \\newenvironment{indentedsection}
 {  {\\adjustwidth{2em}{0pt}}
