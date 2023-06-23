@@ -8364,3 +8364,13 @@ Smart jump to beginning / end of lines.
 
 
 #+end_src
+
+
+* unpair <
+If all else fails, as a last resort, you could use a keybinding to insert a "<" without triggering the auto-pairing. For instance:
+
+#+begin_example emacs-lisp
+(global-set-key (kbd "<") (lambda () (interactive) (insert "<")))
+#+end_example
+
+This tells Emacs to simply insert a "<" whenever you press that key, bypassing any other logic that might be attached to it.
