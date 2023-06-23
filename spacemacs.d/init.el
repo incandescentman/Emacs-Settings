@@ -840,11 +840,6 @@ you should place your code here."
 ;; auto-generate custom variable definitions.
 
 
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -854,6 +849,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
+ '(insert-pair-alist '((40 41) (91 93) (123 125) (34 34) (39 39) (96 39)))
  '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
  '(marginalia-align 'left nil nil "Customized with use-package marginalia")
  '(org-attach-expert nil)
@@ -914,8 +910,13 @@ This function is called at the very end of Spacemacs initialization."
  '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
  '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
  '(variable-pitch ((t (:family "\"Courier\" "))))
- '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-)
+ '(zz-fringe-for-narrowing ((t (:background "#darkgrey"))))))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
