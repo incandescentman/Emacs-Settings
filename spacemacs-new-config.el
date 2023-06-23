@@ -179,7 +179,9 @@
 
 (setq org-hide-leading-stars t)
 
-(electric-pair-mode 1)
+;; (electric-pair-mode 1)
+(smartparens-mode 1)
+(smartparens-global-mode 1)
 
 ;; (add-hook 'ido-setup-hook (lambda ()
 ;; 			                      (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
