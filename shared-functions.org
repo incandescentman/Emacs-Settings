@@ -8374,3 +8374,13 @@ If all else fails, as a last resort, you could use a keybinding to insert a "<" 
 #+end_example
 
 This tells Emacs to simply insert a "<" whenever you press that key, bypassing any other logic that might be attached to it.
+
+* global Olivetti mode
+#+begin_src emacs-lisp
+(define-globalized-minor-mode olivetti-global-mode olivetti-mode
+ (lambda ()
+  (unless (minibufferp)
+   (olivetti-mode 1))))
+
+(olivetti-global-mode)
+#+end_src
