@@ -5,6 +5,7 @@
       '(
         backward-kill-word-correctly-and-capitalize
         beginning-of-visual-line
+        capitalize-or-endless/capitalize
         downcase-or-endless-downcase
         insert-colon
         jay/left-char
@@ -18,6 +19,7 @@
         my/kill-line-dwim
         newline-and-indent
         org-beginning-of-line
+        org-delete-char
         org-end-of-line
         org-meta-return
         org-return
@@ -25,6 +27,8 @@
         org-shiftdown
         org-shiftleft
         org-shiftright
+        org-shiftup
+        org-toggle-heading-same-level
         pasteboard-cut-and-capitalize
         pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
