@@ -21,9 +21,9 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold, 
+        BoldFont = HelveticaNowDisplay-Bold,
         ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta, 
+        BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 
 \\setromanfont{HelveticaNowText-Light}
@@ -62,13 +62,13 @@
 \\definecolor{ideablue}{HTML}{55C1E7}
 
 
-\\newtoks\\leftheader 
+\\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 \\newtoks\\rightheader
 
 \\raggedright
-\\hyphenpenalty=5000 
+\\hyphenpenalty=5000
 \\tolerance=1000
 
 
@@ -101,7 +101,7 @@
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{\\@title:\\  {\\nouppercase{\\the\\rightheader}}}
+\\rhead{Invoice: \\@title\\  {\\nouppercase{\\the\\rightheader}}}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
@@ -136,7 +136,7 @@
 
 \\usepackage{enumitem}
 
-\\newlist{mylist}{enumerate}{10} 
+\\newlist{mylist}{enumerate}{10}
 
 
 % control line spacing in bulleted list
@@ -282,6 +282,6 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process 
+(setq org-latex-to-pdf-process
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes

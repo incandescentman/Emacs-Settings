@@ -1021,7 +1021,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
    '((sequence "TODO" "STARTED" "|" "DONE")
     ;; (sequence "|" "SKIPPING")
     ;; (sequence "MISSED" "|" "DONE")
-    ;; (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
+    (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
     ;; (sequence "|" "CANCELED")
     ;; (sequence "EXPOSURE ACTIVITY" "|")
     ;; (sequence "MSG" "MESSAGE" "|" "CALLED")
@@ -8386,3 +8386,4 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 (olivetti-global-mode)
 #+end_src
+
