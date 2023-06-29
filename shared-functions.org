@@ -8405,7 +8405,6 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 * org-mode timestamp format
 #+begin_src emacs-lisp
-;; (setq org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%m/%d/%y %a %I:%M %p>"))
-;; (setq org-time-stamp-formats '("<%m/%d/%y %a>" . "<%m/%d/%y %a %I:%M %p>"))
-
+(setq org-time-stamp-custom-formats '("<%a %m/%e/%Y>" . "<%a %B %e %l:%M %p>"))
+(setq-default org-display-custom-times t)
 #+end_src
