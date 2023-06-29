@@ -976,10 +976,12 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
 
-
 (define-key org-mode-map (kbd "C-c C-s") 'org-schedule)
 (define-key key-minor-mode-map (kbd "C-c C-s") 'org-schedule)
-;; (define-key palimpsest-keymap (kbd "C-c C-s") 'org-schedule)
+(define-key key-minor-mode-map (kbd "s-k o s") 'org-schedule)
+(define-key key-minor-mode-map (kbd "s-k o d") 'org-deadline)
+
+(define-key key-minor-mode-map (kbd "s-k t s") 'org-toggle-time-stamp-overlays)
 
 (define-key key-minor-mode-map (kbd "M-x") 'execute-extended-command) ; call helm-M-x instead of regular M-x
 
