@@ -72,20 +72,3 @@
   ;; ("C-c n l" . consult-org-roam-forward-links)
   ;; ("C-c n r" . consult-org-roam-search)
 )
-
-;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
-;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
-
-(define-key key-minor-mode-map (kbd "s-G") 'consult-ripgrep-current-directory)
-(define-key key-minor-mode-map (kbd "C-s-g") 'counsel-projectile-ag)
-
-(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ b s") 'affe-grep-bash-scripts)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-(define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)

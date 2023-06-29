@@ -215,12 +215,11 @@
    ("s-j"   . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
    ("s-u y" . org-roam-dailies-goto-yesterday)
-   ("s-u T" . org-roam-dailies-goto-tomorrow)
+   ("s-u t" . org-roam-dailies-goto-tomorrow)
    ("s-u Y" . org-roam-dailies-yesterday)
 
    ;; capture
-   ("s-u t" . org-roam-dailies-capture-today)
-   ("s-u c" . org-roam-dailies-capture-today)
+      ("s-u c" . org-roam-dailies-capture-today)
    ("s-u k" . org-roam-dailies-capture-date)
 
    ;; search

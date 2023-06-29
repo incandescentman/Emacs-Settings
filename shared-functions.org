@@ -2338,6 +2338,19 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 #+END_SRC
 
+** html2text-clipboard
+#+begin_src emacs-lisp
+(defun html2text-clipboard ()
+ "Convert clipboard contents from HTML to plain text and paste."
+ (interactive)
+;; (jd-org-today)
+ (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t plain")
+ (kill-new (shell-command-to-string cmd))
+ (yank))
+
+#+end_src
+
+
 * My custom functions for working with dates and times
 
 #+BEGIN_SRC emacs-lisp
@@ -4472,6 +4485,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("c" . "center")
   ("C" . "comment")
   ("e" . "example")
+  ("x" . "example")
   ("le" . "example")
   ("E" . "export")
   ("h" . "export html")
@@ -4481,7 +4495,8 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("q" . "quote")
   ("s" . "src")
   ("sh" . "src sh")
-  ("v" . "verse")))
+  ("f" . "example fountain")
+  ("v" . "example verse")))
 #+end_src
 
 
@@ -8126,7 +8141,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (defun switch-between-move-mode-and-copy-mode ()
  (interactive)
  (setq move-or-copy-mode
-    (completing-read "Would you like to move this region or just copy it? (move or copy): " '("move" "copy"))))
+    (completing-read "Would you like to move this region or just copy it? (move or copy): " '("Move" "Copy"))))
 
 (defun move-or-copy-region-to-other-window (start end)
  "Move or copy selected text to other window based on move-or-copy-mode."
@@ -8387,3 +8402,10 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (olivetti-global-mode)
 #+end_src
 
+
+* org-mode timestamp format
+#+begin_src emacs-lisp
+;; (setq org-time-stamp-custom-formats '("<%m/%d/%y %a>" . "<%m/%d/%y %a %I:%M %p>"))
+;; (setq org-time-stamp-formats '("<%m/%d/%y %a>" . "<%m/%d/%y %a %I:%M %p>"))
+
+#+end_src

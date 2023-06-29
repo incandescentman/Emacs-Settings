@@ -6,6 +6,7 @@
         backward-kill-word-correctly-and-capitalize
         beginning-of-visual-line
         capitalize-or-endless/capitalize
+        colon-or-smart-colon
         downcase-or-endless-downcase
         insert-colon
         jay/left-char
@@ -22,6 +23,7 @@
         org-delete-char
         org-end-of-line
         org-meta-return
+        org-metaright
         org-return
         org-self-insert-command
         org-shiftdown

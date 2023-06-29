@@ -139,8 +139,8 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 ;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
 ;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
 
-(define-key key-minor-mode-map (kbd "s-G") 'consult-ripgrep-current-directory)
-(define-key key-minor-mode-map (kbd "C-s-g") 'counsel-projectile-ag)
+(define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
+(define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
 
 (define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
 
