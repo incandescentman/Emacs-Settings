@@ -6796,10 +6796,23 @@ This function will look for a file named ~/.openai/api-key, read the contents of
   (with-temp-buffer
    (insert-file-contents file)
    (goto-char (point-min))
-   (while (re-search-forward "\\(http\\|https\\)://[^[:space:]]+" nil t)
+   (while (re-search-forward "\\(http\\|https\\|id\\)://[^[:space:]]+" nil t)
     (push (match-string-no-properties 0) hyperlinks)))
   (message "Hyperlinks extracted: %s" hyperlinks)
   hyperlinks))
+
+
+(defun extract-hyperlinks-from-buffer ()
+ "Extracts all hyperlinks from the current buffer."
+ (interactive)
+ (let ((hyperlinks '()))
+  (save-excursion
+   (goto-char (point-min))
+   (while (re-search-forward "\\[\\[id:[^]]+\\]\\]" nil t)
+    (push (match-string-no-properties 0) hyperlinks)))
+  (message "Hyperlinks extracted: %s" hyperlinks)
+  hyperlinks))
+
 #+end_src
 
 
