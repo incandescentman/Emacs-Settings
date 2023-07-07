@@ -9,6 +9,7 @@
         colon-or-smart-colon
         downcase-or-endless-downcase
         insert-colon
+        insert-space
         jay/left-char
         jay/right-char
         kill-region

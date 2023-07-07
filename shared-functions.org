@@ -8421,3 +8421,17 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (setq org-time-stamp-custom-formats '("<%a %m/%e/%Y>" . "<%a %B %e %l:%M %p>"))
 (setq-default org-display-custom-times t)
 #+end_src
+
+* smartparens
+#+begin_src emacs-lisp
+(setq sp-escape-quotes-after-insert nil)
+#+end_src
+
+
+* archive tasks based on date
+#+begin_src emacs-lisp
+
+(setq org-archive-location
+ (concat "/Users/jay/Dropbox/roam/notes/archive/"
+  (format-time-string "%Y-%m" (current-time)) "-%s::* "(format-time-string "%Y-%m-%d" (current-time))))
+#+end_src
