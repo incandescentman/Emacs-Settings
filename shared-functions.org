@@ -2145,7 +2145,7 @@ Make it so that recentf does not record the following uninteresting file types:
 (add-to-list 'recentf-exclude "*sent mail")
 (add-to-list 'recentf-exclude "/var/")
 (add-to-list 'recentf-exclude "todo")
-(add-to-list 'recentf-exclude "\\.cache")
+(add-to-list 'recentf-exclude "cache")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "Before")
 (add-to-list 'recentf-exclude "Calendar")
