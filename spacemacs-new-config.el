@@ -254,7 +254,6 @@
 (setq global-hl-line-mode nil)
 (setq hl-line-mode nil)
 
-(setq org-latex-default-class "elegant")
 (setq org-twbs-link-home "http://jaydixit.com")
 (setq org-twbs-postamble nil)
 (setq org-twbs-postamble-format nil)
