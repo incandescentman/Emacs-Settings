@@ -26,13 +26,17 @@
 % define Helvetica Now font weights
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
-        UprightFont = HelveticaNowText-Light,
+%        UprightFont = HelveticaNowText-Light,
+        UprightFont = SF-Pro-Text-Light,
         BoldFont = HelveticaNowDisplay-Light,
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 
-\\setromanfont{HelveticaNowText-Light}
+% \\setromanfont{HelveticaNowText-Light}
+% not sure i like this
+
+\\setromanfont{SF Pro}
 \\setsansfont{HelveticaNowDisplay-Regular}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 

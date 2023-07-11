@@ -71,9 +71,6 @@
   :defer)
 ;; (use-package ox-latex)
 ;; (use-package ox-org)
-;; (use-package ox-org)
-;; (use-package ox-html)
-;; (use-package ox-md)
 ;; (use-package org-fstree)
 #+END_SRC
 
@@ -725,6 +722,8 @@ read-file-name-completion-ignore-case t)
  (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
 
 ;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
+
+(setq org-latex-default-class "elegant")
 
 (setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
 
@@ -8434,4 +8433,37 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (setq org-archive-location
  (concat "/Users/jay/Dropbox/roam/notes/archive/"
   (format-time-string "%Y-%m" (current-time)) "-%s::* "(format-time-string "%Y-%m-%d" (current-time))))
+#+end_src
+
+
+* unfill-region-keep-formatting
+#+begin_src emacs-lisp
+(defun unfill-paragraph-keep-formatting (start end)
+ "Unfill the region, but preserve plain-text lists and org-mode SCHEDULED tasks."
+ (interactive "*r")
+ (let ((fill-column (point-max)))
+  (unfill-paragraph start end)))
+
+(defun should-unfill-p (start end)
+ "Determine whether the region should be unfilled."
+ (save-excursion
+  (goto-char start)
+  (not (or (looking-at "^\\s-*\\([-*+]\\|[0-9]+[.)]\\)\\s-+") ;; plain-text list
+       (looking-at "^\\s-*SCHEDULED:")           ;; org-mode SCHEDULED task
+       (looking-at "^\\s-*DEADLINE:")            ;; org-mode DEADLINE
+       ))))
+
+
+(defun unfill-region-smart (start end)
+ "Unfill the region, but preserve plain-text lists and org-mode SCHEDULED tasks."
+ (interactive "*r")
+ (let ((pos start))
+  (while (< pos end)
+   (let ((next-pos (or (next-single-property-change pos 'hard) end)))
+    (when (should-unfill-p pos next-pos)
+     (unfill-region-keep-formatting pos next-pos))
+    (setq pos next-pos)))))
+
+
+
 #+end_src
