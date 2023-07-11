@@ -33,10 +33,11 @@
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 
-% \\setromanfont{HelveticaNowText-Light}
+\\setromanfont{HelveticaNowText-Light}
+
+% \\setromanfont{sf Pro}
 % not sure i like this
 
-\\setromanfont{SF Pro}
 \\setsansfont{HelveticaNowDisplay-Regular}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
