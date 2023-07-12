@@ -468,7 +468,9 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("###" . "***")
                             ("##" . "**")
 
-                            ("**" . "*")
+                            ("- ** TODO" . "*** TODO")
+                            ("  SCHEDULED" . "SCHEDULED")
+                            ("  DEADLINE" . "DEADLINE")
 
                             )
                           nil   beg (min end (point-max))))
@@ -1019,7 +1021,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (setq org-todo-keywords
    '((sequence "TODO" "STARTED" "|" "DONE")
     ;; (sequence "|" "SKIPPING")
-    ;; (sequence "MISSED" "|" "DONE")
+(sequence "MISSED" "|" "DONE")
     (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
     ;; (sequence "|" "CANCELED")
     ;; (sequence "EXPOSURE ACTIVITY" "|")
