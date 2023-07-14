@@ -446,8 +446,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
 
-(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-other-window)
-;; (define-key key-minor-mode-map (kbd "s-i s-i") 'clone-indirect-buffer-other-window)
+(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
 
 
 
