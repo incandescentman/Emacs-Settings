@@ -468,7 +468,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("###" . "***")
                             ("##" . "**")
 
-                            ("- ** TODO" . "*** TODO")
+                            ("- \\*\\* TODO" . "*** TODO")
                             ("  SCHEDULED" . "SCHEDULED")
                             ("  DEADLINE" . "DEADLINE")
 
@@ -3147,7 +3147,7 @@ Deprecated in favor of (define-key key-minor-mode-map (kbd "s- ... in:
 
 Key bindings I don't use much and should remember to learn:
 #+BEGIN_SRC emacs-lisp
-(define-super-key "4" 'clone-indirect-buffer-other-window)
+;; (define-super-key "4" 'clone-indirect-buffer-other-window)
 (define-super-key "5" 'point-stack-push)
 (define-super-key "6" 'point-stack-pop)
 (define-super-key "7" 'point-stack-forward-stack-pop)
@@ -8468,4 +8468,34 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 
 
+#+end_src
+
+* string to list
+#+begin_src emacs-lisp
+(defun region-to-numbered-list (start end)
+  "Turn a region into a numbered list."
+  (interactive "r")
+  (let* ((s (buffer-substring-no-properties start end))
+         (split-strings (split-string s "\\([0-9]+\\. \\)" t))
+         (trimmed-strings (mapcar 'string-trim split-strings))
+         (filtered-strings (cl-remove-if (lambda (x) (string= x "")) trimmed-strings))
+         (numbered-strings
+          (cl-loop for str in filtered-strings and i from 1
+                   collect (concatenate 'string (number-to-string i) ". " str))))
+    (delete-region start end)
+    (insert (mapconcat 'identity numbered-strings "\n"))))
+#+end_src
+
+
+* clone-indirect-buffer-new-window-and-focus
+#+begin_src emacs-lisp
+(defun clone-indirect-buffer-new-window-and-focus ()
+  (interactive)
+  (let ((current-buffer (current-buffer)))
+    (split-window-right)
+    (set-window-buffer (next-window) (clone-indirect-buffer nil nil))
+    (with-current-buffer (window-buffer (next-window))
+      (when (derived-mode-p 'org-mode)
+        (org-narrow-to-subtree)))
+    (other-window 1)))
 #+end_src
