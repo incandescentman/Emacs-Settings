@@ -2329,10 +2329,32 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 #+END_SRC
 
-** html2org and unfill paragraph
+** html2org and unfill new version
+#+begin_src emacs-lisp
+(defun html2org-clipboard-and-unfill-paragraph ()
+ "Convert clipboard contents from HTML to Org, remove base64-encoded images, unfill paragraph and then paste (yank)."
+ (interactive)
+ (html2org-clipboard)
+ (let* ((org-content (car kill-ring))) ;; get the most recent item in the kill ring, which is the result of html2org-clipboard
+
+ ;; Unfill paragraph
+  (with-temp-buffer
+  (insert org-content)
+  (goto-char (point-min))
+  (while (not (eobp))
+   (unfill-paragraph)
+   (forward-paragraph))
+  (setq org-content (buffer-string)))
+
+  (kill-new org-content)
+  (yank)))
+
+#+end_src
+
+** html2org and unfill paragraph. Old version. works
 Paste HTML using proper org-mode format
 Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun html2org-clipboard-and-unfill-paragraph ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
@@ -2367,7 +2389,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (kill-new org-content)
   (yank)))
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** html2text-clipboard
 #+begin_src emacs-lisp
