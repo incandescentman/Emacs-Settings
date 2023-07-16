@@ -2303,7 +2303,7 @@ dired-omit-extensions
 Paste HTML using proper org-mode format
 Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
 #+BEGIN_SRC emacs-lisp
-(defun html2org-clipboard ()
+(defun html2org-clipboard-and-unfill-paragraph ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
 (let* ((cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
