@@ -2324,9 +2324,9 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 ;; Fix the bug
 (setq org-content (replace-regexp-in-string "\\(#\\+begin_example\\)\n\\s-*\\([a-zA-Z]*\\)Copy code" "\\1 \\2\n" org-content))
 
-;; Add two line breaks before #+begin and #+end for both src and example, and remove leading spaces
+;; Add two line breaks before #+begin for both src and example, and one line break before #+end, and remove leading spaces
   (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
-  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
+  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
 
 ;; Add the following line to replace "=" enclosed text with "~" enclosed text
  (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
