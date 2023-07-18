@@ -41,8 +41,8 @@ The org-plain-list-tags package enhances org-mode's default plain list behavior 
 1. Clone the repository or download the =org-plain-list-tags.el= file.
 2. Add the following to your Emacs configuration:
 
-#+begin_example
-emacs(add-to-list 'load-path "/path/to/org-plain-list-tags")
+#+begin_example emacs-lisp
+(add-to-list 'load-path "/path/to/org-plain-list-tags")
 (require 'org-plain-list-tags)
 #+end_example
 
@@ -64,8 +64,8 @@ To insert a tag at the end of a plain list item, place the cursor at the
 end of the item and call the =org-plain-list-tags-insert= function with
 =M-x org-plain-list-tags-insert= or bind it to a key:
 
-#+begin_example
-emacs(global-set-key (kbd "C-c t") 'org-plain-list-tags-insert)
+#+begin_example emacs-lisp
+(global-set-key (kbd "C-c t") 'org-plain-list-tags-insert)
 #+end_example
 
 When prompted, select a predefined tag by pressing the corresponding

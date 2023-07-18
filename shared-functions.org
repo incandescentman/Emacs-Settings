@@ -2300,9 +2300,15 @@ dired-omit-extensions
 #+END_SRC
 
 ** html2org
+
+Aliasing instead
+#+begin_src emacs-lisp
+(defalias 'html2org-clipboard 'chatgpt2org)
+#+end_src
+
 Paste HTML using proper org-mode format
 Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun html2org-clipboard ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
@@ -2334,10 +2340,10 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (kill-new org-content)
  (yank)))
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** html2org and unfill new version
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun html2org-clipboard-and-unfill-paragraph ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, unfill paragraph and then paste (yank)."
  (interactive)
@@ -2356,7 +2362,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
   (kill-new org-content)
   (yank)))
 
-#+end_src
+#+END_EXAMPLE
 
 ** html2org and unfill paragraph. Old version. works
 Paste HTML using proper org-mode format
@@ -8557,4 +8563,10 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
       (when (derived-mode-p 'org-mode)
         (org-narrow-to-subtree)))
     (other-window 1)))
+#+end_src
+
+* chatgpt2org
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
+(use-package chatgpt2org)
 #+end_src

@@ -38,11 +38,20 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
 
+
 	        ("m" "memoir" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "memoir/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
+	         :unnarrowed t)
+
+
+          	        ("M" "mantra" plain "- Links :: \n- Source :: \n
+* ${title}
+- %?"
+	         :target (file+head "mantras/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :mantras:")
 	         :unnarrowed t)
 
 
@@ -83,7 +92,7 @@
 * ${title}
 - %?"
 	         :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :topic:")
+			                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
 	         :unnarrowed t)
 
 
@@ -148,7 +157,7 @@
 * ${title}
 - %?"
 	         :target (file+head "therapy/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
+			                        "#+TITLE: ${title}\n#+FILETAGS: :therapy:")
 	         :unnarrowed t)
 
 
@@ -157,7 +166,7 @@
 * ${title}
 - %?"
 	         :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
+			                        "#+TITLE: ${title}\n#+FILETAGS: :intelligence:")
 	         :unnarrowed t)
 
 
