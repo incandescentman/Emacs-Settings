@@ -5930,9 +5930,19 @@ This solution also works for MELPA.
 #+END_SRC
 
 * Tufte
+
+** tufte export to HTML
 #+BEGIN_SRC emacs-lisp
 (use-package ox-tufte)
 #+END_SRC
+
+** tufte export to LaTeX
+#+begin_src emacs-lisp
+(use-package ox-tufte-latex
+  :ensure nil
+  :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
+  )
+#+end_SRC
 
 * ignore case in searches
 #+BEGIN_SRC emacs-lisp
