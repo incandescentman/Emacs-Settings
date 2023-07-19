@@ -8580,3 +8580,31 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
 (use-package chatgpt2org)
 #+end_src
+
+
+
+* org-inline-tags
+
+#+begin_src emacs-lisp
+
+
+
+;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
+;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
+
+#+end_src
+
+#+begin_example emacs-lisp
+;; if you have consult installed:
+(defun search-for-inline-tag (tag)
+ "Search for inline TAG in the current buffer using consult-line."
+ (interactive "sEnter tag to search for: ")
+ (consult-line (concat "#" tag)))
+
+;; if not:
+;; (defun search-for-inline-tag (tag)
+;; "Search for inline TAG in the current buffer."
+;; (interactive "sEnter tag to search for: ")
+;; (occur (concat "#" tag)))
+
+#+end_example

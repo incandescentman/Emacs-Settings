@@ -281,61 +281,6 @@
   :after org-roam)
 
 
-;; inline tags for plain list items
-(defface inline-tag-face
-  '((t (:foreground "orange" :weight bold)))
-  "Face for custom inline tags in plain list items.")
-
-(font-lock-add-keywords 'org-mode
-  '(("#\\(\\w+\\)" 0 'inline-tag-face)))
-
-
-
-
-(defun insert-inline-tag ()
-  (interactive)
-  (let* ((tag-alist '((?r . "review")
-                      (?b . "book")
-                      (?t . "todo")
-                      (?u . "urgent")
-                      (?p . "tweet")
-                      (?i . "insight")
-                      (?c . "cook-ideas-over-time")))
-         (selected-key (read-char "Choose a tag:\n
-r: review
-b: book
-t: todo
-u: urgent
-p: tweet
-i: insight
-c: cook-ideas-over-time\n")))
-    (setq selected-tag (cdr (assoc selected-key tag-alist)))
-    (if selected-tag
-        (insert (format " #%s" selected-tag))
-      (message "Invalid tag selection"))))
-
-
-;; if you have consult installed:
-(defun search-for-inline-tag (tag)
-  "Search for inline TAG in the current buffer using consult-line."
-  (interactive "sEnter tag to search for: ")
-  (consult-line (concat "#" tag)))
-
-;; if not:
-;; (defun search-for-inline-tag (tag)
-;;   "Search for inline TAG in the current buffer."
-;;   (interactive "sEnter tag to search for: ")
-;;   (occur (concat "#" tag)))
-
-(defun search-for-inline-tag-project-wide (tag)
-  "Search for inline TAG project-wide using consult-git-grep."
-  (interactive "sEnter tag to search for: ")
-  (consult-git-grep (concat "\\#" tag)))
-
-
-;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
-;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
-
 
 
 (add-to-list 'org-agenda-custom-commands
