@@ -8630,4 +8630,8 @@ on the MacBook screen, set the font to 'Monaco' and size to 13pt."
   (if (> (frame-pixel-width frame) 2540) ; The frame width when displayed on the external monitor
       (set-face-attribute 'default nil :font "Monaco" :height 280) ; Big monitor settings - 28pt
     (set-face-attribute 'default nil :font "Monaco" :height 200))) ; Laptop settings - 13pt
+
+(add-hook 'after-make-frame-functions 'adjust-font-size-based-on-frame-size)
+(add-hook 'focus-in-hook 'adjust-font-size-based-on-frame-size)
+(add-hook 'focus-out-hook 'adjust-font-size-based-on-frame-size)
 #+END_SRC
