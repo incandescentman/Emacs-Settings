@@ -45,7 +45,7 @@ Automatically load abbreviations table:
   (interactive)
   (org-indent-mode 1)
   (recenter-top-bottom)
-  (adjust-font-size-based-on-frame-size)
+  (adjust-font-size-for-all-frames)
   )
 #+END_SRC
 

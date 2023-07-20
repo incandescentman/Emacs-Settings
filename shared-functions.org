@@ -8614,7 +8614,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 This function dynamically adjusts the font size based on the frame width.
 It's designed to handle a setup where Emacs is used on two monitors with different resolutions, an external monitor and a MacBook screen.
 
-#+begin_SRC emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun adjust-font-size-based-on-frame-size (&optional frame)
   "Check the frame width and adjust the font size accordingly.
 
@@ -8634,4 +8634,27 @@ on the MacBook screen, set the font to 'Monaco' and size to 13pt."
 (add-hook 'after-make-frame-functions 'adjust-font-size-based-on-frame-size)
 (add-hook 'focus-in-hook 'adjust-font-size-based-on-frame-size)
 (add-hook 'focus-out-hook 'adjust-font-size-based-on-frame-size)
-#+END_SRC
+#+END_EXAMPLE
+
+The function above and the function below are doing largely the same task - adjusting the font size based on the frame width - but there are some differences in their design that may provide advantages in certain scenarios:
+
+Applying to All Frames: The main difference is that adjust-font-size-for-all-frames applies the changes to all frames associated with every monitor, while adjust-font-size-based-on-frame-size applies the changes only to the selected frame. If you're using a multi-monitor setup or using multiple frames in a single Emacs session, adjust-font-size-for-all-frames would ensure that all frames adjust their font sizes accordingly.
+
+The main advantage of ~adjust-font-size-for-all-frames~ is applying the font size changes to all frames, not just the selected one. However, if you typically use only a single frame, this advantage may not matter for you, and you could continue using ~adjust-font-size-based-on-frame-size~.
+
+#+begin_src emacs-lisp
+(defun adjust-font-size-for-all-frames ()
+  "Set face height in real-world points."
+  (interactive)
+  (dolist (monitor (display-monitor-attributes-list))
+    (dolist (frame (cdr (assoc 'frames monitor)))
+      (if (> (frame-pixel-width frame) 2540) ; The frame width when displayed on the external monitor
+          (set-face-attribute 'default frame :font "Monaco" :height 280) ; Big monitor settings - 28pt
+        (set-face-attribute 'default frame :font "Monaco" :height 200))))) ; Laptop settings - 13pt
+
+;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames) ; e.g. M-13 C-x C-\
+
+(add-hook 'window-size-change-functions 'adjust-font-size-for-all-frames)
+(add-hook 'focus-in-hook 'adjust-font-size-for-all-frames)
+(add-hook 'focus-out-hook 'adjust-font-size-for-all-frames)
+#+end_src
