@@ -88,7 +88,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :cuts:")
            :unnarrowed t)
 
-	        ("f" "finances" plain "- Links :: \n- Source :: \n
+	        ("f" "finances and housekeeping" plain "- Links :: \n- Source :: \n
 * ${title}
 - %?"
 	         :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
