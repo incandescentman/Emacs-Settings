@@ -96,6 +96,14 @@
 	         :unnarrowed t)
 
 
+	        ("F" "Food and recipes " plain "- Links :: \n- Source :: \n
+* ${title}
+- %?"
+	         :target (file+head "food/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :food:")
+	         :unnarrowed t)
+
+
 
 	        ("l" "definition" plain "- Links :: \n- Source :: \n
 * ${title}
