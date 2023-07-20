@@ -45,6 +45,7 @@ Automatically load abbreviations table:
   (interactive)
   (org-indent-mode 1)
   (recenter-top-bottom)
+  (adjust-font-size-based-on-frame-size)
   )
 #+END_SRC
 
@@ -89,12 +90,14 @@ Automatically load abbreviations table:
 
 (define-key global-map [(s-return)] 'toggle-maxframe)
 ;; make it easy to go fullscreen
+
 (defun toggle-fullscreen ()
-  "Toggle full screen"
-  (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+ "Toggle full screen"
+ (interactive)
+ (set-frame-parameter
+  nil 'fullscreen
+  (when (not (frame-parameter nil 'fullscreen)) 'fullboth))
+ (adjust-font-size-based-on-frame-size))
 
 ;; and the keybinding
 (unless (fboundp 'toggle-frame-fullscreen)
