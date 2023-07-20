@@ -97,7 +97,7 @@ Automatically load abbreviations table:
  (set-frame-parameter
   nil 'fullscreen
   (when (not (frame-parameter nil 'fullscreen)) 'fullboth))
- (adjust-font-size-based-on-frame-size))
+ (adjust-font-size-for-all-frames))
 
 ;; and the keybinding
 (unless (fboundp 'toggle-frame-fullscreen)

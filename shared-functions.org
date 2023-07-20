@@ -8653,23 +8653,18 @@ The main advantage of ~adjust-font-size-for-all-frames~ is applying the font siz
  The function is interactive, so it can be invoked manually.
 
 #+begin_src emacs-lisp
-(defun adjust-font-size-for-all-frames ()
-  "Set face height in real-world points."
-  (interactive)
-  (dolist (monitor (display-monitor-attributes-list))
-    (dolist (frame (cdr (assoc 'frames monitor)))
-      (if (> (frame-pixel-width frame) 2540) ; The frame width when displayed on the external monitor
-          (set-face-attribute 'default frame :font "Monaco" :height 280) ; Big monitor settings - 28pt
-        (set-face-attribute 'default frame :font "Monaco" :height 200))))) ; Laptop settings - 13pt
+(defun adjust-font-size-for-all-frames (&optional frame)
+ (interactive)
+ (dolist (monitor (display-monitor-attributes-list))
+  (dolist (frame (cdr (assoc 'frames monitor)))
+   (if (> (frame-pixel-width frame) 2540)
+     (set-face-attribute 'default frame :font "Monaco" :height 280)
+    (set-face-attribute 'default frame :font "Monaco" :height 200)))))
 
 ;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames) ; e.g. M-13 C-x C-\
 
-;; The function is also invoked automatically in response to certain events:
-;; 1. Whenever a window size is changed.
-;; 2. Whenever Emacs gains focus.
-;; 3. Whenever Emacs loses focus.
+;; The function is also invoked automatically in response whenever Emacs gains or loses focus, or when invoked manually.
 
-(add-hook 'window-size-change-functions 'adjust-font-size-for-all-frames)
 (add-hook 'focus-in-hook 'adjust-font-size-for-all-frames)
 (add-hook 'focus-out-hook 'adjust-font-size-for-all-frames)
 ;; Additionally, the function is bound to the keyboard shortcut C-x C-\,
