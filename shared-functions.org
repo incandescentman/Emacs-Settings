@@ -8632,8 +8632,7 @@ on the MacBook screen, set the font to 'Monaco' and size to 13pt."
     (set-face-attribute 'default nil :font "Monaco" :height 200))) ; Laptop settings - 13pt
 
 (add-hook 'after-make-frame-functions 'adjust-font-size-based-on-frame-size)
-(add-hook 'focus-in-hook 'adjust-font-size-based-on-frame-size)
-(add-hook 'focus-out-hook 'adjust-font-size-based-on-frame-size)
+(add-hook 'server-after-make-frame-hook 'adjust-font-size-based-on-frame-size)
 #+END_EXAMPLE
 
 The function above and the function below are doing largely the same task - adjusting the font size based on the frame width - but there are some differences in their design that may provide advantages in certain scenarios:
