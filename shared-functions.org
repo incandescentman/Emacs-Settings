@@ -8644,29 +8644,28 @@ The main advantage of ~adjust-font-size-for-all-frames~ is applying the font siz
 
 
 ** Adjust-font-size-for-all-frames function
- This function dynamically adjusts the font size of all frames based on their width. The function works as follows:
- 1. It iterates over all available monitors.
- 2. For each monitor, it iterates over all the frames displayed on that monitor.
- 3. If the width of a frame is greater than 2540 pixels, which is typically the case for an external monitor, it sets the font for that frame to 'Monaco' and the size to 28 points.
- 4. If the width of a frame is 2540 pixels or less, which is typically the case for the MacBook screen, it sets the font for that frame to 'Monaco' and the size to 20 points.
+This function dynamically adjusts the font size of all frames based on their width. The function works as follows:
+1. It iterates over all available monitors.
+2. For each monitor, it iterates over all the frames displayed on that monitor.
+3. If the width of a frame is greater than 2540 pixels, which is typically the case for an external monitor, it sets the font for that frame to 'Monaco' and the size to 28 points.
+4. If the width of a frame is 2540 pixels or less, which is typically the case for the MacBook screen, it sets the font for that frame to 'Monaco' and the size to 20 points (represented as :height 200 in the function).
 
- The function is interactive, so it can be invoked manually.
+The function is interactive, so it can be invoked manually.
 
 #+begin_src emacs-lisp
 (defun adjust-font-size-for-all-frames (&optional frame)
  (interactive)
  (dolist (monitor (display-monitor-attributes-list))
-  (dolist (frame (cdr (assoc 'frames monitor)))
-   (if (> (frame-pixel-width frame) 2540)
-     (set-face-attribute 'default frame :font "Monaco" :height 280)
-    (set-face-attribute 'default frame :font "Monaco" :height 200)))))
+ (dolist (frame (cdr (assoc 'frames monitor)))
+  (if (> (frame-pixel-width frame) 2540)
+   (set-face-attribute 'default frame :font "Monaco" :height 280)
+  (set-face-attribute 'default frame :font "Monaco" :height 200)))))
 
-;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames) ; e.g. M-13 C-x C-\
+;; The function is also invoked automatically when a new frame is created or when invoked manually.
 
-;; The function is also invoked automatically in response whenever Emacs gains or loses focus, or when invoked manually.
+(add-hook 'after-make-frame-functions 'adjust-font-size-for-all-frames)
+(add-hook 'server-after-make-frame-hook 'adjust-font-size-for-all-frames)
 
-(add-hook 'focus-in-hook 'adjust-font-size-for-all-frames)
-(add-hook 'focus-out-hook 'adjust-font-size-for-all-frames)
 ;; Additionally, the function is bound to the keyboard shortcut C-x C-\,
 ;; so it can be quickly invoked without entering M-x.
 ;; Uncomment the following line to enable this shortcut.
