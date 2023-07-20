@@ -176,7 +176,6 @@
 (toggle-fullscreen)
 (menu-bar-mode -1)
 (toggle-menu-bar-mode-from-frame)
-
 (setq org-hide-leading-stars t)
 
 ;; (electric-pair-mode 1)
