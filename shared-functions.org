@@ -8615,21 +8615,19 @@ This function dynamically adjusts the font size based on the frame width.
 It's designed to handle a setup where Emacs is used on two monitors with different resolutions, an external monitor and a MacBook screen.
 
 #+begin_SRC emacs-lisp
-(defun adjust-font-size-based-on-frame-size (frame)
+(defun adjust-font-size-based-on-frame-size (&optional frame)
   "Check the frame width and adjust the font size accordingly.
 
-  If the frame width is greater than 3840 pixels, which is typically the case when Emacs is
-  displayed on the external monitor, set the font to 'Monaco' and size to 18pt.
+If the frame width is greater than 3840 pixels, which is typically the case when Emacs is
+displayed on the external monitor, set the font to 'Monaco' and size to 28pt.
 
-  If the frame width is 3840 pixels or less, which is typically the case when Emacs is displayed
-  on the MacBook screen, set the font to 'Monaco' and size to 13pt."
+If the frame width is 3840 pixels or less, which is typically the case when Emacs is displayed
+on the MacBook screen, set the font to 'Monaco' and size to 13pt."
 
-  (if (eq frame (selected-frame))
-      (if (> (frame-pixel-width) 2540) ; The frame width when displayed on the external monitor
-          (set-face-attribute 'default nil :font "Monaco" :height 350) ; Big monitor settings - 28pt
-        (set-face-attribute 'default nil :font "Monaco" :height 210)))) ; Laptop settings - 13pt
-
-;; Add the function to `window-size-change-functions`, so it's called every time a window is resized.
-;; This ensures that the font size is always appropriate for the current monitor.
-(add-hook 'window-size-change-functions 'adjust-font-size-based-on-frame-size)
+  (interactive)
+  (unless frame
+    (setq frame (selected-frame)))
+  (if (> (frame-pixel-width frame) 2540) ; The frame width when displayed on the external monitor
+      (set-face-attribute 'default nil :font "Monaco" :height 280) ; Big monitor settings - 28pt
+    (set-face-attribute 'default nil :font "Monaco" :height 200))) ; Laptop settings - 13pt
 #+END_SRC
