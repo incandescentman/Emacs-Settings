@@ -8610,11 +8610,11 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 #+end_example
 
 
-* Increase font size when I'm using my 4k monitor
+* Embiggen font size when I'm using my 4k monitor
 This function dynamically adjusts the font size based on the frame width.
 It's designed to handle a setup where Emacs is used on two monitors with different resolutions, an external monitor and a MacBook screen.
 
-#+begin_src emacs-lisp
+#+begin_SRC emacs-lisp
 (defun adjust-font-size-based-on-frame-size (frame)
   "Check the frame width and adjust the font size accordingly.
 
@@ -8625,11 +8625,11 @@ It's designed to handle a setup where Emacs is used on two monitors with differe
   on the MacBook screen, set the font to 'Monaco' and size to 13pt."
 
   (if (eq frame (selected-frame))
-      (if (> (frame-pixel-width) 1840) ; The frame width when displayed on the external monitor
-          (set-face-attribute 'default nil :font "Monaco" :height 280) ; Big monitor settings - 28pt
-        (set-face-attribute 'default nil :font "Monaco" :height 130)))) ; Laptop settings - 13pt
+      (if (> (frame-pixel-width) 2540) ; The frame width when displayed on the external monitor
+          (set-face-attribute 'default nil :font "Monaco" :height 350) ; Big monitor settings - 28pt
+        (set-face-attribute 'default nil :font "Monaco" :height 210)))) ; Laptop settings - 13pt
 
 ;; Add the function to `window-size-change-functions`, so it's called every time a window is resized.
 ;; This ensures that the font size is always appropriate for the current monitor.
 (add-hook 'window-size-change-functions 'adjust-font-size-based-on-frame-size)
-#+end_src
+#+END_SRC
