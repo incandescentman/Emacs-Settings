@@ -72,7 +72,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :book:")
 	         :unnarrowed t)
 
-          ("P" "project" plain "%?"
+          ("P" "Plans" plain "%?"
 	         :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :project:\n\
 - Links :: \n- Source :: \n\n

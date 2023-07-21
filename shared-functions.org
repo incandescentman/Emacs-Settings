@@ -6291,7 +6291,10 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   (setq my-org-selected-css
         (completing-read "Choose a CSS file: "
                          '("/Users/jay/Dropbox/web-design/custom-css/gmail.css"
-                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"))))
+                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+
+"/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+                           ))))
 
 (defun my-org-inline-css-hook (exporter)
   "Insert custom inline css"
@@ -8671,3 +8674,75 @@ The function is interactive, so it can be invoked manually.
 ;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames)
 
 #+end_src
+
+
+** auto-link notes
+Doesn't work.
+
+Development:
+https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
+
+#+begin_src emacs-lisp
+(defun org-roam-auto-link-buffer ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (let* ((word (thing-at-point 'word 'no-properties))
+             (node (car (org-roam-db-query [:select [id] :from nodes :where (= title $s1)] word))))
+        (if node
+            (progn
+              (push-mark)
+              (forward-word)
+              (let ((region (list (mark) (point))))
+                (org-roam-link-set-region (car region) (cadr region) node))))))))
+#+end_src
+
+
+* New org-roam
+#+begin_src emacs-lisp
+(defun kb/find-node-backlink (arg &optional node choices)
+ "Navigate notes by link. With universal ARG try to use only to navigate the tags of the current note. Optionally takes a selected NODE and filepaths CHOICES."
+ (interactive "P")
+ (let* ((depth (if (numberp arg) arg 1))
+     (choices
+     (or choices
+       (when arg
+        (-map #'org-roam-backlink-target-node (org-roam-backlinks-get (org-roam-node-from-id (or (ignore-errors (org-roam-node-id node))
+                                                     (org-id-get-create))))))))
+     (all-notes (org-roam-node--completions))
+     (completions
+     (or (--filter (-contains-p choices (cdr it)) all-notes) all-notes))
+     (next-node
+     ;; taken from org-roam-node-read
+     (let* ((nodes completions)
+         (node (completing-read
+            "Node: "
+            (lambda (string pred action)
+             (if (eq action 'metadata)
+               '(metadata
+                (annotation-function . (lambda (title)
+                             (funcall org-roam-node-annotation-function
+                                 (get-text-property 0 'node title))))
+                (category . org-roam-node))
+              (complete-with-action action nodes string pred))))))
+      (or (cdr (assoc node nodes))
+        (org-roam-node-create :title node)))
+     )
+     )
+  (if (equal node next-node)
+    (org-roam-node-visit node)
+   (kb/find-node-backlink nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
+   )))
+#+end_src
+
+* fontify checkboxes on org export to HTML
+[[https://emacs.stackexchange.com/questions/33382/replace-checkbox-with-glyph-via-font-lock][org mode - replace checkbox with glyph via font-lock - Emacs Stack Exchange]]
+#+begin_src emacs-lisp
+(setq org-html-checkbox-type 'unicode)
+(setq org-html-checkbox-types
+ '((unicode (on . "<span class=\"task-done\">&#x2611;</span>")
+   (off . "<span class=\"task-todo\">&#x2610;</span>")
+   (trans . "<span class=\"task-in-progress\">&#x25eb;</span>"))))
+#+end_src
+
