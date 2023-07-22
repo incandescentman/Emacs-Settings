@@ -8502,9 +8502,77 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 * org-inline-tags
 
 #+begin_src emacs-lisp
+(defface org-inline-tags-face
+ '((t (:foreground "orange" :weight bold)))
+ "Face for custom inline tags in plain list items.")
 
-(use-package org-inline-tags
- :load-path "/Users/jay/Dropbox/github/org-inline-tags/")
+(font-lock-add-keywords 'org-mode
+ '(("#\\(\\w+\\(-\\w+\\)*\\)" 0 'org-inline-tags-face)))
+
+
+;;;***autoload
+(defun org-inline-tags-search (tag)
+ "Search for TAG in the current org file."
+ (org-search-view nil (concat "\\" "#" tag)))
+
+;;;***autoload
+(defun org-inline-tags-search-buffer (tag)
+ "Search for TAG in the current buffer."
+ (consult-line (concat "\\" "#" tag)))
+
+;;;***autoload
+(defun org-inline-tags-search-project-wide ()
+ "Search for inline TAG project-wide using consult-ripgrep if available, otherwise use occur."
+ (interactive)
+ (if (fboundp 'consult-ripgrep)
+   (progn
+    (message "Enter tag to search for (Please go to the beginning of the line and add a \\ before the # sign)")
+    (sit-for 0.5) ; pause for 0.5 to 2 seconds, whatever you waaant
+    (consult-ripgrep nil))
+  (occur (read-string "Enter tag to search for (Please go to the beginning of the line and add a \\ before the # sign): #"))))
+
+(defun org-inline-tags-return (&optional indent)
+ "Check if point is on an inline tag, and if so, search for that tag.
+Otherwise, call `org-return'."
+ (interactive)
+ (let ((tag (with-syntax-table (let ((st (make-syntax-table)))
+                 (modify-syntax-entry ?# "_" st)
+                 st)
+        (thing-at-point 'symbol))))
+  (if (and tag (string-prefix-p "#" tag))
+    (org-inline-tags-search-project-wide)
+   (org-return indent))))
+
+
+
+;;;***autoload
+(defun org-inline-tags-insert ()
+ "Prompt the user to choose a tag and insert it at the current cursor position."
+ (interactive)
+ (let* ((tag-alist '((?r . "review")
+           (?b . "book")
+           (?t . "todo")
+           (?u . "urgent")
+           (?p . "tweet")
+           (?i . "insight")
+           (?c . "cook-ideas-over-time")))
+     (selected-key (read-char "Choose a tag:\n
+r: review
+b: book
+t: todo
+u: urgent
+p: tweet
+i: insight
+c: cook-ideas-over-time\n")))
+  (setq selected-tag (cdr (assoc selected-key tag-alist)))
+  (if selected-tag
+    (insert (format " #%s" selected-tag))
+   (error "Invalid tag selection"))))
+
+
+(define-key org-mode-map (kbd "<return>") 'org-inline-tags-return)
+
+(define-key key-minor-mode-map (kbd "<return>") 'org-inline-tags-return)
 
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
@@ -8558,7 +8626,7 @@ The function is interactive, so it can be invoked manually.
  (dolist (monitor (display-monitor-attributes-list))
  (dolist (frame (cdr (assoc 'frames monitor)))
   (if (> (frame-pixel-width frame) 2540)
-   (set-face-attribute 'default frame :font "Monaco" :height 280)
+   (set-face-attribute 'default frame :font "Monaco" :height 230)
   (set-face-attribute 'default frame :font "Monaco" :height 200)))))
 
 ;; The function is also invoked automatically when a new frame is created or when invoked manually.

@@ -8,6 +8,7 @@
         capitalize-or-endless/capitalize
         colon-or-smart-colon
         downcase-or-endless-downcase
+        indent-for-tab-command
         insert-colon
         insert-space
         jay/left-char
