@@ -2127,3 +2127,73 @@ t)))
 
 
 #+end_src
+
+* replace garbage characters
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-07-22 Sat 02:50
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:ARCHIVE_ITAGS: emacs_settings
+:END:
+
+Òembedding → "embedding"
+
+#+BEGIN_SRC emacs-lisp
+  (defun replace-garbage-chars ()
+  "Replace goofy MS and other garbage characters with latin1 equivalents."
+  (interactive)
+  (save-excursion				;save the current point
+    (replace-string "  " " " nil (point-min) (point-max))
+    (replace-string "" "" nil (point-min) (point-max))
+    (replace-string "΄" "\"" nil (point-min) (point-max))
+    (replace-string "“" "\"" nil (point-min) (point-max))
+    (replace-string "’" "'" nil (point-min) (point-max))
+    (replace-string "“" "\"" nil (point-min) (point-max))
+    (replace-string "—" "--" nil (point-min) (point-max)) ; multi-byte
+    (replace-string "" "'" nil (point-min) (point-max))
+    (replace-string "" "'" nil (point-min) (point-max))
+    (replace-string "" "\"" nil (point-min) (point-max))
+    (replace-string "" "\"" nil (point-min) (point-max))
+    (replace-string "" "\"" nil (point-min) (point-max))
+    (replace-string "" "\"" nil (point-min) (point-max))
+    (replace-string "‘" "\"" nil (point-min) (point-max))
+    (replace-string "’" "'" nil (point-min) (point-max))
+    (replace-string "¡\"" "\"" nil (point-min) (point-max))
+    (replace-string "¡­" "..." nil (point-min) (point-max))
+    (replace-string "" "..." nil (point-min) (point-max))
+    (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
+    (replace-string "" "`" nil (point-min) (point-max))  ; \221
+    (replace-string "" "'" nil (point-min) (point-max))  ; \222
+    (replace-string "" "``" nil (point-min) (point-max))
+    (replace-string "" "''" nil (point-min) (point-max))
+    (replace-string "" "*" nil (point-min) (point-max))
+    (replace-string "" "--" nil (point-min) (point-max))
+    (replace-string "" "--" nil (point-min) (point-max))
+    (replace-string " " " " nil (point-min) (point-max)) ; M-SPC
+    (replace-string "¡" "\"" nil (point-min) (point-max))
+    (replace-string "´" "\"" nil (point-min) (point-max))
+    (replace-string "»" "<<" nil (point-min) (point-max))
+    (replace-string "Ç" "'" nil (point-min) (point-max))
+    (replace-string "È" "\"" nil (point-min) (point-max))
+    (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
+    (replace-string "ó" "-" nil (point-min) (point-max))
+
+    (replace-string " Ñ " "---" nil (point-min) (point-max))
+
+
+    (replace-string "á" "-" nil (point-min) (point-max))
+  (replace-string "     " "" nil (point-min) (point-max))
+  (replace-string "    " "" nil (point-min) (point-max))
+  (replace-string " " " " nil (point-min) (point-max))
+  (replace-string " " "" nil (point-min) (point-max))
+
+
+  (replace-string "Õ" "'" nil (point-min) (point-max))
+  (replace-string "Ò" "\"" nil (point-min) (point-max))
+  (replace-string "Ó" "\"" nil (point-min) (point-max))
+
+
+
+  ))
+#+END_SRC
+
