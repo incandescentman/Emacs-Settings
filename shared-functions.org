@@ -1656,13 +1656,6 @@ margin-bottom: 1em;
   word-wrap:normal!important;")))
 #+END_SRC
 
-** org-download
-  #+BEGIN EXAMPLE SRC emacs-lisp
-;;(use-package org-download)
-;; (setq-default org-download-image-dir "/Users/jay/Downloads")
-;; (setq org-download-method (quote directory))
-#+END_EXAMPLE
-
 * Browsing
 ** Make URLs in comments/strings clickable
 
@@ -8415,9 +8408,20 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 * archive tasks based on date
 #+begin_src emacs-lisp
 
-(setq org-archive-location
- (concat "/Users/jay/Dropbox/roam/notes/archive/"
-  (format-time-string "%Y-%m" (current-time)) "-%s::* "(format-time-string "%Y-%m-%d" (current-time))))
+;; (setq org-archive-location
+;;  (concat "/Users/jay/Dropbox/roam/notes/archive/"
+;;   (format-time-string "%Y-%m" (current-time)) "-%s::* "(format-time-string "%Y-%m-%d" (current-time))))
+
+(defun org-archive-location ()
+ "Sets the Org archive location based on the current directory."
+ (setq org-archive-location
+    (concat (file-name-directory (buffer-file-name)) "archive/"
+        (format-time-string "%Y-%m" (current-time))
+        "-%s::* "
+        (format-time-string "%Y-%m-%d" (current-time)))))
+
+
+
 #+end_src
 
 

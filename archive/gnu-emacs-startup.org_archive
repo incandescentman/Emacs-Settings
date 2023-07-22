@@ -1971,3 +1971,159 @@ t)))
 
 #+END_EXAMPLE
 
+
+* kill-clause refactored by ChatGPT. Doesn't work
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-07-22 Sat 02:46
+:ARCHIVE_FILE: ~/emacs/emacs-settings/gnu-emacs-startup.org
+:ARCHIVE_OLPATH: smart punctuation
+:ARCHIVE_CATEGORY: gnu-emacs-startup
+:ARCHIVE_ITAGS: emacs_settings
+:END:
+#+begin_EXAMPLE emacs-lisp
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (move-right-if-punctuation)
+  (move-left-if-space)
+  (handle-asterisk-line)
+  (handle-punctuation-and-capitalization)
+  (fix-punctuation-issues)
+  (fix-multiple-punctuation-marks))
+
+(defun move-right-if-punctuation ()
+  (when (or (looking-at ",")
+            (looking-at ";")
+            (looking-at ":"))
+    (right-char 1)))
+
+(defun move-left-if-space ()
+  (when (looking-back " ")
+    (left-char 1)))
+
+(defun handle-asterisk-line ()
+  (if (let ((sm (string-match "\\*+\\s" (thing-at-point 'line))))
+        (and sm (= sm 0)))
+      (kill-line)
+    (let ((old-point (point))
+          (kill-punct (my/beginning-of-sentence-p)))
+      (when (re-search-forward "--\\|[-.,;:?!…“”()]+\\|$" nil t)
+        (kill-region old-point
+                     (if kill-punct
+                         (match-end 0)
+                       (match-beginning 0)))))))
+
+(defun handle-punctuation-and-capitalization ()
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+(defun fix-punctuation-issues ()
+  (fix-double-comma)
+  (fix-double-colon)
+  (fix-colon-comma)
+  (fix-comma-period)
+  (fix-comma-space-period)
+  (fix-space-punct-punct)
+  (fix-hyphens)
+  (move-cursor-before-punctuation))
+
+(defun fix-double-comma ()
+  (when (looking-back "\\, \\, ")
+    (new-org-delete-backward-char 2)
+    (my/fix-space)))
+
+(defun fix-double-colon ()
+  (when (looking-back ":: ")
+    (new-org-delete-backward-char 2)
+    (my/fix-space)))
+
+(defun fix-colon-comma ()
+  (when (looking-back ":, ")
+    (left-char 1)
+    (delete-backward-char 1)
+    (right-char 1)))
+
+(defun fix-comma-period ()
+  (when (looking-back "\\,\\. ")
+    (left-char 2)
+    (delete-backward-char 1)
+    (right-char 2)))
+
+(defun fix-comma-space-period ()
+  (when (looking-back "\\, \\. ")
+    (left-char 2)
+    (delete-backward-char 2)
+    (right-char 2)))
+
+(defun fix-space-punct-punct ()
+  (when (looking-back " \\?")
+    (left-char 1)
+    (new-org-delete-backward-char 1)
+    (right-char 1)))
+
+(defun fix-hyphens ()
+  (when (and (looking-back "----") (looking-at "-"))
+    (delete-backward-char 4)
+    (delete-char 1)
+    (insert-space)))
+
+(defun move-cursor-before-punctuation ()
+  (when (looking-back "[[:punct:]][[:punct:]]? ")
+    (left-char 2))
+  (when (looking-back "[[:punct:]][[:punct:]]?")
+    (left-char 1)))
+
+(defun fix-multiple-punctuation-marks ()
+  (when (or (looking-at ":\\,")
+            (looking-at ";\\,")
+            (looking-at "\\,\\,")
+            (looking-at "\\.\\.")
+            (looking-at "\\,;")
+
+(looking-at "\\,:")
+(looking-at "\\?\\?"))
+  (right-char 1)
+  (delete-char 1)
+  (left-char 1)))
+
+(defun fix-period-comma ()
+  (when (looking-at "\\.\\,")
+    (delete-forward-char 1)))
+
+(defun fix-colon-period ()
+  (when (looking-at ":\\.")
+    (delete-forward-char 1)))
+
+(defun delete-space-before-punctuation ()
+  (when (and (looking-at "[[:punct:]]\\{1,2\\}")
+             (looking-back " "))
+    (delete-backward-char 1)))
+
+(defun fix-space-between-punctuations ()
+  (when (looking-back "[[:punct:]]\\{1,2\\}")
+    (progn
+      (forward-char 1)
+      (my/fix-space)
+      (backward-char 1))))
+
+;; Add the new helper functions to the main function
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (move-right-if-punctuation)
+  (move-left-if-space)
+  (handle-asterisk-line)
+  (handle-punctuation-and-capitalization)
+  (fix-punctuation-issues)
+  (fix-multiple-punctuation-marks)
+  (fix-period-comma)
+  (fix-colon-period)
+  (delete-space-before-punctuation)
+  (fix-space-between-punctuations))
+
+
+
+
+#+end_src
