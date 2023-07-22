@@ -2610,10 +2610,6 @@ traditional word processors, highlighting whole words at a time:
 #+BEGIN_SRC emacs-lisp
 (defvar lawlist-movement-syntax-table
   (let ((st (make-syntax-table)))
-    ;; ` default = punctuation
-    ;;  default = punctuation
-    ;; , default = punctuation
-    ;; ; default = punctuation
     (modify-syntax-entry ?{ "." st)  ;; { = punctuation
     (modify-syntax-entry ?} "." st)  ;; } = punctuation
     (modify-syntax-entry ?\" "." st) ;; " = punctuation
@@ -2710,51 +2706,6 @@ Transpose windows, useful:
 #+END_SRC
 
 * move stuff around
-** Move region to other window, very useful
-
-Deprecated! Replaced with move-or-copy-region-to-other-window
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun move-region-to-other-window (start end)
-  "Move selected text to other window"
-  (interactive "r")
-  (if (use-region-p)
-      (let ((count (count-words-region start end)))
-        (save-excursion
-          (kill-region start end)
-(newline)
-(other-window 1)
-          (yank)
-          (newline))
-        (other-window -1)
-        (message "Moved %s words" count))
-    (message "No region selected")))
-#+END_EXAMPLE
-
-** copy region to other window
-Deprecated! Replaced with move-or-copy-region-to-other-window
-
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun copy-region-to-other-window (start end)
- "Move selected text to other window"
- (interactive "r")
- (if (use-region-p)
-   (let ((count (count-words-region start end)))
-    (save-excursion
-     (copy-region-as-kill start end)
-(other-window 1)
-(newline)
-     (yank)
-(newline)
-     (newline))
-    (other-window -1)
-    (message "Moved %s words" count))
-  (message "No region selected")))
-
-#+END_EXAMPLE
-
-
 ** org-refile
 #+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil) ; Refile in a single go
@@ -2770,7 +2721,6 @@ Deprecated! Replaced with move-or-copy-region-to-other-window
    (org-buffer-list 'files t))))
 
 (setq org-refile-targets '((my-org-files-list :maxlevel . 4)))
-
 
 
 ;; allow refile to create parent tasks with confirmation:
