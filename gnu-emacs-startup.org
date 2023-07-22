@@ -2682,69 +2682,6 @@ M-1 to 9: windows.
 #+END_EXAMPLE
 
 
-* replace garbage characters
-
-Òembedding → "embedding"
-
-#+BEGIN_SRC emacs-lisp
-  (defun replace-garbage-chars ()
-  "Replace goofy MS and other garbage characters with latin1 equivalents."
-  (interactive)
-  (save-excursion				;save the current point
-    (replace-string "  " " " nil (point-min) (point-max))
-    (replace-string "" "" nil (point-min) (point-max))
-    (replace-string "΄" "\"" nil (point-min) (point-max))
-    (replace-string "“" "\"" nil (point-min) (point-max))
-    (replace-string "’" "'" nil (point-min) (point-max))
-    (replace-string "“" "\"" nil (point-min) (point-max))
-    (replace-string "—" "--" nil (point-min) (point-max)) ; multi-byte
-    (replace-string "" "'" nil (point-min) (point-max))
-    (replace-string "" "'" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "" "\"" nil (point-min) (point-max))
-    (replace-string "‘" "\"" nil (point-min) (point-max))
-    (replace-string "’" "'" nil (point-min) (point-max))
-    (replace-string "¡\"" "\"" nil (point-min) (point-max))
-    (replace-string "¡­" "..." nil (point-min) (point-max))
-    (replace-string "" "..." nil (point-min) (point-max))
-    (replace-string "" " " nil (point-min) (point-max)) ; M-SPC
-    (replace-string "" "`" nil (point-min) (point-max))  ; \221
-    (replace-string "" "'" nil (point-min) (point-max))  ; \222
-    (replace-string "" "``" nil (point-min) (point-max))
-    (replace-string "" "''" nil (point-min) (point-max))
-    (replace-string "" "*" nil (point-min) (point-max))
-    (replace-string "" "--" nil (point-min) (point-max))
-    (replace-string "" "--" nil (point-min) (point-max))
-    (replace-string " " " " nil (point-min) (point-max)) ; M-SPC
-    (replace-string "¡" "\"" nil (point-min) (point-max))
-    (replace-string "´" "\"" nil (point-min) (point-max))
-    (replace-string "»" "<<" nil (point-min) (point-max))
-    (replace-string "Ç" "'" nil (point-min) (point-max))
-    (replace-string "È" "\"" nil (point-min) (point-max))
-    (replace-string "é" "e" nil (point-min) (point-max)) ;; &eacute;
-    (replace-string "ó" "-" nil (point-min) (point-max))
-
-    (replace-string " Ñ " "---" nil (point-min) (point-max))
-
-
-    (replace-string "á" "-" nil (point-min) (point-max))
-  (replace-string "     " "" nil (point-min) (point-max))
-  (replace-string "    " "" nil (point-min) (point-max))
-  (replace-string " " " " nil (point-min) (point-max))
-  (replace-string " " "" nil (point-min) (point-max))
-
-
-  (replace-string "Õ" "'" nil (point-min) (point-max))
-  (replace-string "Ò" "\"" nil (point-min) (point-max))
-  (replace-string "Ó" "\"" nil (point-min) (point-max))
-
-
-
-  ))
-#+END_SRC
-
 * replace missing PDF ligatures
 
 different → different

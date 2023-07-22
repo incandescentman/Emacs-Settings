@@ -8412,14 +8412,18 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 ;;  (concat "/Users/jay/Dropbox/roam/notes/archive/"
 ;;   (format-time-string "%Y-%m" (current-time)) "-%s::* "(format-time-string "%Y-%m-%d" (current-time))))
 
-(defun org-archive-location ()
- "Sets the Org archive location based on the current directory."
- (setq org-archive-location
-    (concat (file-name-directory (buffer-file-name)) "archive/"
-        (format-time-string "%Y-%m" (current-time))
-        "-%s::* "
-        (format-time-string "%Y-%m-%d" (current-time)))))
+(defun my/org-archive-file ()
+ "Dynamically set `org-archive-location' based on the current file directory."
+ (let* ((current-file-dir (file-name-directory (buffer-file-name)))
+     (archive-dir (concat current-file-dir "archive/"))
+     (archive-file (concat archive-dir
+                (format-time-string "%Y-%m" (current-time))
+                "-%s::"
+                (format-time-string "%Y-%m-%d" (current-time)))))
+  (setq org-archive-location archive-file)))
 
+;; Run the above function before every org-archive operation
+(add-hook 'org-archive-hook 'my/org-archive-file)
 
 
 #+end_src
