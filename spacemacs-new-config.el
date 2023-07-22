@@ -285,7 +285,7 @@
 
 
 
-(use-package 'server)
+(use-package server)
 (when (server-running-p)
   (server-force-delete))
 (server-start)
