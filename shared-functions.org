@@ -757,13 +757,6 @@ read-file-name-completion-ignore-case t)
 </div>
 </div>")
 
-(setq org-html-text-markup-alist (quote    ((bold . "<strong>%s</strong>")
-     (code . "<blockquote>%s</blockquote>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
-
 (setq org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
      (code . verb)
      (italic . "\\textit{%s}")
@@ -797,7 +790,7 @@ read-file-name-completion-ignore-case t)
 (setq org-html-text-markup-alist
    (quote
     ((bold . "<strong>%s</strong>")
-     (code . "<blockquote>%s</blockquote>")
+     (code . "<code>%s</code>")
      (italic . "<em>%s</em>")
      (strike-through . "<del>%s</del>")
      (underline . "<span class=\"underline\">%s</span>")
@@ -2140,87 +2133,86 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+END_SRC
 
 ** recentf-exclude
+- [[id:8AB9478C-67B4-4DA5-9329-71DE9C03F595][Escape special characters]]
+- Use ~*~ for wildcard? Doesn't seem to be necessary
+
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'recentf-exclude "*Org tags*")
-(add-to-list 'recentf-exclude "*sent mail")
+(add-to-list 'recentf-exclude "*emacs-settings*")
+(add-to-list 'recentf-exclude "*sent mail*")
 (add-to-list 'recentf-exclude "/var/")
-(add-to-list 'recentf-exclude "todo")
-(add-to-list 'recentf-exclude "cache")
 (add-to-list 'recentf-exclude "Applications")
 (add-to-list 'recentf-exclude "Before")
 (add-to-list 'recentf-exclude "Calendar")
 (add-to-list 'recentf-exclude "LaTeX")
-(add-to-list 'recentf-exclude "System")
-(add-to-list 'recentf-exclude "shared")
 (add-to-list 'recentf-exclude "Shared")
-(add-to-list 'recentf-exclude "roam/notes")
-(add-to-list 'recentf-exclude "*emacs-settings*")
-
-(add-to-list 'recentf-exclude "\\\.Icon")
-(add-to-list 'recentf-exclude "\\\.avi")
-(add-to-list 'recentf-exclude "\\\.bmk")
-(add-to-list 'recentf-exclude "\\\.bmp")
-(add-to-list 'recentf-exclude "\\\.doc")
-(add-to-list 'recentf-exclude "\\\.docx")
-(add-to-list 'recentf-exclude "\\\.emacs.d")
-(add-to-list 'recentf-exclude "\\\.flv")
-(add-to-list 'recentf-exclude "\\\.gif")
-(add-to-list 'recentf-exclude "\\\.git")
-(add-to-list 'recentf-exclude "\\\.gz")
-(add-to-list 'recentf-exclude "\\\.html")
-(add-to-list 'recentf-exclude "\\\.ics")
-(add-to-list 'recentf-exclude "\\\.jabber")
-(add-to-list 'recentf-exclude "\\\.jpeg")
-(add-to-list 'recentf-exclude "\\\.jpg")
-(add-to-list 'recentf-exclude "\\\.mkv")
-(add-to-list 'recentf-exclude "\\\.mov")
-(add-to-list 'recentf-exclude "\\\.mp4")
-(add-to-list 'recentf-exclude "\\\.mpeg")
-(add-to-list 'recentf-exclude "\\\.mpg")
-(add-to-list 'recentf-exclude "\\\.odg")
-(add-to-list 'recentf-exclude "\\\.odp")
-(add-to-list 'recentf-exclude "\\\.ods")
-(add-to-list 'recentf-exclude "\\\.odt")
-(add-to-list 'recentf-exclude "\\\.ogg")
-(add-to-list 'recentf-exclude "\\\.ogm")
-(add-to-list 'recentf-exclude "\\\.pdf")
-(add-to-list 'recentf-exclude "\\\.png")
-(add-to-list 'recentf-exclude "\\\.ppt")
-(add-to-list 'recentf-exclude "\\\.tex")
-(add-to-list 'recentf-exclude "\\\.tif")
-(add-to-list 'recentf-exclude "\\\.wav")
-(add-to-list 'recentf-exclude "\\\.wmv")
-(add-to-list 'recentf-exclude "\\\.xls")
-(add-to-list 'recentf-exclude "\\\.xlsx")
-
+(add-to-list 'recentf-exclude "System")
+(add-to-list 'recentf-exclude "\\.Icon")
+(add-to-list 'recentf-exclude "\\.avi")
+(add-to-list 'recentf-exclude "\\.bmk")
+(add-to-list 'recentf-exclude "\\.bmp")
+(add-to-list 'recentf-exclude "\\.doc")
+(add-to-list 'recentf-exclude "\\.docx")
+(add-to-list 'recentf-exclude "\\.emacs.d")
+(add-to-list 'recentf-exclude "\\.flv")
+(add-to-list 'recentf-exclude "\\.gif")
+(add-to-list 'recentf-exclude "\\.git")
+(add-to-list 'recentf-exclude "\\.gz")
+(add-to-list 'recentf-exclude "\\.html")
+(add-to-list 'recentf-exclude "\\.ics")
+(add-to-list 'recentf-exclude "\\.jabber")
+(add-to-list 'recentf-exclude "\\.jpeg")
+(add-to-list 'recentf-exclude "\\.jpg")
+(add-to-list 'recentf-exclude "\\.mkv")
+(add-to-list 'recentf-exclude "\\.mov")
+(add-to-list 'recentf-exclude "\\.mp4")
+(add-to-list 'recentf-exclude "\\.mpeg")
+(add-to-list 'recentf-exclude "\\.mpg")
+(add-to-list 'recentf-exclude "\\.odg")
+(add-to-list 'recentf-exclude "\\.odp")
+(add-to-list 'recentf-exclude "\\.ods")
+(add-to-list 'recentf-exclude "\\.odt")
+(add-to-list 'recentf-exclude "\\.ogg")
+(add-to-list 'recentf-exclude "\\.ogm")
+(add-to-list 'recentf-exclude "\\.pdf")
+(add-to-list 'recentf-exclude "\\.png")
+(add-to-list 'recentf-exclude "\\.ppt")
+(add-to-list 'recentf-exclude "\\.tex")
+(add-to-list 'recentf-exclude "\\.tif")
+(add-to-list 'recentf-exclude "\\.wav")
+(add-to-list 'recentf-exclude "\\.wmv")
+(add-to-list 'recentf-exclude "\\.xls")
+(add-to-list 'recentf-exclude "\\.xlsx")
 (add-to-list 'recentf-exclude "accountability")
 (add-to-list 'recentf-exclude "agenda")
 (add-to-list 'recentf-exclude "archive")
 (add-to-list 'recentf-exclude "bookmark")
 (add-to-list 'recentf-exclude "bookmarks")
+(add-to-list 'recentf-exclude "cache")
 (add-to-list 'recentf-exclude "contacts")
 (add-to-list 'recentf-exclude "elpa")
 (add-to-list 'recentf-exclude "gnugol")
 (add-to-list 'recentf-exclude "helm")
-;; (add-to-list 'recentf-exclude "-hours")
-(add-to-list 'recentf-exclude "ido")
+; (add-to-list 'recentf-exclude "ido")
 (add-to-list 'recentf-exclude "ido.hist")
-(add-to-list 'recentf-exclude "ido.last'")
+(add-to-list 'recentf-exclude "ido.last")
 (add-to-list 'recentf-exclude "koma")
 (add-to-list 'recentf-exclude "message")
 (add-to-list 'recentf-exclude "mu2")
 (add-to-list 'recentf-exclude "org-clock-save.el")
 (add-to-list 'recentf-exclude "paths")
 (add-to-list 'recentf-exclude "persp-auto")
-(add-to-list 'recentf-exclude "png")
-(add-to-list 'recentf-exclude "recent-addresses'")
+(add-to-list 'recentf-exclude "recent-addresses")
 (add-to-list 'recentf-exclude "recentf")
+(add-to-list 'recentf-exclude "roam/notes")
 (add-to-list 'recentf-exclude "rollback-info")
-(add-to-list 'recentf-exclude "scp")
+; (add-to-list 'recentf-exclude "scp")
+(add-to-list 'recentf-exclude "shared")
 (add-to-list 'recentf-exclude "ssh:")
-;; (add-to-list 'recentf-exclude "gnu-emacs-startup")
-;; (add-to-list 'recentf-exclude "shared-functions")
+;; (add-to-list 'recentf-exclude "-hours")
+;; (add-to-list 'recentf-exclude "todo")
+
 #+END_SRC
 
 ** grep-ignore
@@ -8590,28 +8582,13 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 #+begin_src emacs-lisp
 
-
+(use-package org-inline-tags
+ :load-path "/Users/jay/Dropbox/github/org-inline-tags/")
 
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
 #+end_src
-
-#+begin_example emacs-lisp
-;; if you have consult installed:
-(defun search-for-inline-tag (tag)
- "Search for inline TAG in the current buffer using consult-line."
- (interactive "sEnter tag to search for: ")
- (consult-line (concat "#" tag)))
-
-;; if not:
-;; (defun search-for-inline-tag (tag)
-;; "Search for inline TAG in the current buffer."
-;; (interactive "sEnter tag to search for: ")
-;; (occur (concat "#" tag)))
-
-#+end_example
-
 
 * Embiggen font size when I'm using my 4k monitor
 This function dynamically adjusts the font size based on the frame width.
