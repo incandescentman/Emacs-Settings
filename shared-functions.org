@@ -2790,20 +2790,6 @@ With prefix arg C-u, copy region instad of killing it."
 * Remove hyperlink
 A useful function: remove a hyperlink but leave the link description:
 
-** no longer works
-#+BEGIN_SRC emacs-lisp
-(defun remove-link ()
-    "Replace an org link by its description or if empty its address"
-  (interactive)
-  (if (org-in-regexp org-bracket-link-regexp 1)
-      (let ((remove (list (match-beginning 0) (match-end 0)))
-        (description (if (match-end 3)
-                 (org-match-string-no-properties 3)
-                 (org-match-string-no-properties 1))))
-    (apply 'delete-region remove)
-    (insert description))))
-#+END_SRC
-
 ** new
 #+begin_src emacs-lisp
 (defun remove-link ()
@@ -2963,34 +2949,6 @@ Useful for working with files and references:
 (add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
 #+END_SRC
 
-
-** Google search
-Enable Google search:
-#+BEGIN_SRC emacs-lisp
-;; (use-package engine-mode)
-;; (engine-mode t)
-
-;; (defengine google  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"  "g")
-#+END_SRC
-
-** Google search through Gnugol
-#+HEADER: :comments noweb
-#+BEGIN_SRC emacs-lisp
-;; (use-package gnugol)
-
-(defun region-or-word-at-point ()
-  (if (use-region-p)
-      (buffer-substring-no-properties
-       (region-beginning)
-       (region-end))
-    (substring-no-properties
-     (thing-at-point 'word))))
-
- ;; (defun gnugol-word-at-point ()
- ;;   (interactive)
- ;;  (gnugol-search-google (region-or-word-at-point)))
-
-#+END_SRC
 
 * Things I want to learn
 ** Need to add "cleanup buffer safe" here from whattheemacsd.com
