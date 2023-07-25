@@ -8714,7 +8714,11 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
 
 
 
-* Skim get page title
+* Skim PDF: Capture page title correctly
+In org-mode for Emacs, we often want to create links to specific resources. One such resource could be a PDF file that is being viewed in Skim.app, a popular PDF reader for macOS. The initial implementation of this functionality allowed for the creation of a link directly to a specific page in a PDF file. However, the link was not easily readable, as it only contained the file path and the page number.
+
+We've updated this functionality to enhance the readability and usability of these links. Now, the link will also display the title of the file (which is generally more readable than a filepath). The link still points to the specific page in the PDF file, but when viewed in org-mode, it will be displayed with the title of the PDF file.
+
 #+begin_src emacs-lisp
 (defun org-mac-link-skim-get-page ()
  "Get the link to the page in the Skim.app."
@@ -8729,7 +8733,9 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
    (setq link (substring link 1)))
   (when (string-suffix-p "\"" link)
    (setq link (substring link 0 -1)))
-  ;; Remove .pdf from the description
+  ;; Remove ending quote and .pdf from the description
+  (when (string-suffix-p "\"" description)
+   (setq description (substring description 0 -1)))
   (when (string-suffix-p ".pdf" description)
    (setq description (substring description 0 -4)))
   (message "DEBUG: link is %s, description is %s" link description)
