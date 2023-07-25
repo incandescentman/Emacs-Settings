@@ -6191,7 +6191,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
                          '("/Users/jay/Dropbox/web-design/custom-css/gmail.css"
                            "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
 
-"/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+;; "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
                            ))))
 
 (defun my-org-inline-css-hook (exporter)
@@ -8541,7 +8541,7 @@ Otherwise, call `org-return'."
         (thing-at-point 'symbol))))
   (if (and tag (string-prefix-p "#" tag))
     (org-inline-tags-search-project-wide)
-   (org-return indent))))
+   (smart-return indent))))
 
 
 
@@ -8570,9 +8570,9 @@ c: cook-ideas-over-time\n")))
    (error "Invalid tag selection"))))
 
 
-(define-key org-mode-map (kbd "<return>") 'org-inline-tags-return)
+;; (define-key org-mode-map (kbd "<return>") 'org-inline-tags-return)
 
-(define-key key-minor-mode-map (kbd "<return>") 'org-inline-tags-return)
+;; (define-key key-minor-mode-map (kbd "<return>") 'org-inline-tags-return)
 
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
