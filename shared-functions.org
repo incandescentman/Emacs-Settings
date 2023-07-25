@@ -8712,3 +8712,60 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
    (trans . "<span class=\"task-in-progress\">&#x25eb;</span>"))))
 #+end_src
 
+
+
+* Skim get page title
+#+begin_src emacs-lisp
+(defun org-mac-link-skim-get-page ()
+ "Get the link to the page in the Skim.app."
+ (interactive)
+ (message "Applescript: Getting Skim page link...")
+ (let* ((result (org-mac-link-applescript-get-skim-page-link))
+     (result-parts (split-string result "::split::"))
+     (link (car result-parts))
+     (description (cadr result-parts)))
+  ;; Remove starting and ending quotes from the link
+  (when (string-prefix-p "\"" link)
+   (setq link (substring link 1)))
+  (when (string-suffix-p "\"" link)
+   (setq link (substring link 0 -1)))
+  ;; Remove .pdf from the description
+  (when (string-suffix-p ".pdf" description)
+   (setq description (substring description 0 -4)))
+  (message "DEBUG: link is %s, description is %s" link description)
+  ;; Return the formatted string instead of inserting it
+  (format "[[%s][%s]]" link description)))
+
+(defun org-mac-link-skim-insert-page ()
+ "Insert the link to the page in the Skim.app."
+ (interactive)
+ (insert (org-mac-link-skim-get-page)))
+
+(defun org-mac-link-applescript-get-skim-page-link ()
+ "AppleScript to get the link to the page in the Skim.app."
+ (org-mac-link-do-applescript
+  (concat
+  "tell application \"Skim\"\n"
+  "set theDoc to front document\n"
+  "set theTitle to (name of theDoc)\n"
+  "set thePath to (path of theDoc)\n"
+  "set thePage to (get index of current page of theDoc)\n"
+  "set theSelection to selection of theDoc\n"
+  "set theContent to theTitle\n"
+  "if theContent is missing value then\n"
+  "  set theContent to theTitle & \", p. \" & thePage\n"
+  (when org-mac-link-highlight-selection-p
+   (concat
+    "else\n"
+    "  tell theDoc\n"
+    "    set theNote to make new note with properties {type:highlight note, selection:theSelection} at page thePage\n"
+    "    set text of theNote to (get text of theSelection)\n"
+    "  end tell\n"))
+  "end if\n"
+  "set theLink to \"skim://\" & thePath & \"::\" & thePage & "
+  "\"::split::\" & theContent\n"
+  "end tell\n"
+  "return theLink as string\n")))
+
+
+#+end_src
