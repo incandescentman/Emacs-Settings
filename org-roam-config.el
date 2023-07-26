@@ -46,6 +46,14 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
 	         :unnarrowed t)
 
+	        ("k" "kanban" plain "- Links :: \n- Source :: \n
+* ${title}
+- %?"
+	         :target (file+head "kanban/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :kanban:")
+	         :unnarrowed t)
+
+
 
           	        ("M" "mantra" plain "- Links :: \n- Source :: \n
 * ${title}
