@@ -379,9 +379,6 @@ If region is active, then use it instead of the node at point."
     (kill-buffer (current-buffer))))))
 
 
-(define-key key-minor-mode-map (kbd "s-;") 'org-roam-refile-region-or-subtree)
-
-
 
 ;; TODO learn how to use this
 (use-package consult-org-roam)

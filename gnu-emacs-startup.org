@@ -617,8 +617,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-s c") 'current-buffers-search)
 
 
-;; (define-key key-minor-mode-map (kbd "s-;") 'helm-resume)
-;; so sad this is gone
 (define-key key-minor-mode-map (kbd "s-k o m") 'org-mode)
 (define-key key-minor-mode-map (kbd "s-k f m") 'text-mode)
 (define-key key-minor-mode-map (kbd "s-k e l") 'emacs-lisp-mode)
@@ -851,7 +849,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 
-(define-key key-minor-mode-map (kbd "s-;") 'refile-region-or-subtree)
+(define-key key-minor-mode-map (kbd "s-;") 'choose-refile-method-and-refile)
 (define-key key-minor-mode-map (kbd "s-'") 'org-roam-refile-region-or-subtree)
 
 ;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
