@@ -6191,7 +6191,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
                          '("/Users/jay/Dropbox/web-design/custom-css/gmail.css"
                            "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
 
-;; "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+"/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
                            ))))
 
 (defun my-org-inline-css-hook (exporter)
@@ -7395,8 +7395,8 @@ depending on which one is appropriate based on the context."
 
 * Info mode
 #+begin_src emacs-lisp
-(define-key Info-mode-map (kbd "s-o") 'copy-region-to-other-window)
-(define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
+; (define-key Info-mode-map (kbd "s-o") 'copy-region-to-other-window)
+; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 (define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
 (define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
 #+end_src
@@ -8115,7 +8115,19 @@ Doesn't work
 
 
 * ask me whether to move region or copy region
+interactive tool for moving or copying text regions to another window in the Emacs environment. It is functionally correct and appears to be well-structured. Here are a few notes on the provided code.
 
+Global variable initialization: At the start of each Emacs session, a global variable move-or-copy-mode is declared and set to nil. This variable is used to store the user's preference for either moving or copying text regions.
+
+Interactive Mode Selection: The switch-between-move-mode-and-copy-mode function allows the user to specify their preference in an interactive manner. If move-or-copy-mode is nil (which will be true at the start of each session), this function is called to populate move-or-copy-mode with the user's choice.
+
+Move or Copy Implementation: The move-or-copy-region-to-other-window function uses the value stored in move-or-copy-mode to determine whether to move or copy the selected region. If the value is "move", the function kills (cuts) the region and displays a message indicating the number of words moved. If the value is "copy", the function copies the region and displays a message indicating the number of words copied.
+
+Region Handling: The code uses use-region-p to check if a region is currently active (selected). If not, a message is displayed to inform the user that no region is selected.
+
+Text Insertion: After the text region has been either moved or copied, it is yanked (pasted) into the other window. The code also adds a newline character both before and after the inserted text for neat formatting.
+
+First:
 Set this varable to nil at the start of every Emacs session, so that switch-between-move-mode-and-copy-mode will prompt me about my preference:
 
 #+begin_src emacs-lisp
@@ -8161,6 +8173,41 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 #+end_src
 
 
+
+* refile or org-roam-refile
+#+begin_src emacs-lisp
+(defvar refile-or-roam-refile-mode nil)
+
+(defun switch-between-refile-modes ()
+ (interactive)
+ (setq refile-or-roam-refile-mode
+    (completing-read "Would you like to refile this region or subtree to Org file or Org-roam file? (org-refile or org-roam-refile): " '("org-refile" "org-roam-refile"))))
+
+(defun choose-refile-method-and-refile ()
+ "Choose the refile method and refile the current subtree or region based on refile-or-roam-refile-mode."
+ (interactive)
+ (unless refile-or-roam-refile-mode
+  (switch-between-refile-modes))
+ (if (use-region-p)
+   (save-excursion
+    (if (string= refile-or-roam-refile-mode "org-refile")
+      (progn
+       (refile-region-or-subtree)
+       (message "Refiled to Org file"))
+     (progn
+      (org-roam-refile-region-or-subtree)
+      (message "Refiled to Org-roam file"))))
+  (let ((current-heading (org-get-heading t t t t)))
+   (save-excursion
+    (if (string= refile-or-roam-refile-mode "org-refile")
+      (progn
+       (refile-region-or-subtree)
+       (message "Refiled to Org file %s" current-heading))
+     (progn
+      (org-roam-refile-region-or-subtree)
+      (message "Refiled to Org-roam file %s" current-heading)))))))
+
+#+end_src
 * disable Olivetti on split
 
 #+begin_SRC emacs-lisp

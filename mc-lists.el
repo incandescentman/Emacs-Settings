@@ -15,6 +15,7 @@
         jay/right-char
         kill-region
         kill-word-correctly-and-capitalize
+        mac-mwheel-scroll
         meta-return
         mwim-beginning
         mwim-end
