@@ -21,8 +21,8 @@
 % \\makeglossaries
 
 \\usepackage{todonotes}
-\\usepackage[asterism]{sectionbreak}
-\\sectionbreakmark{❦}
+% \\usepackage[asterism]{sectionbreak}
+% \\sectionbreakmark{❦}
 
 \\usepackage{changepage}
 \\usepackage{algorithm}
