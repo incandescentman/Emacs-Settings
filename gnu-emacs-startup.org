@@ -847,7 +847,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
 
-
+(define-key key-minor-mode-map (kbd "S-s-<up>") 'later-list)
 
 (define-key key-minor-mode-map (kbd "s-;") 'choose-refile-method-and-refile)
 (define-key key-minor-mode-map (kbd "s-'") 'org-roam-refile-region-or-subtree)

@@ -16,9 +16,6 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-*Weight:*
-*Heart rate:*
-- Hi! What's on your mind at this moment? Any ideas, insights, thoughts, or funny things you want to capture? Plans for the day? Anything you're avoiding?
 - \n\n\n"))))
 ;; - %<Week %w, day %j>\n
   :config
@@ -221,9 +218,8 @@
   (
    ("s-u f" . org-roam-find-node)
 ;;   ("S-s-<up>" . org-roam-backlinks-buffer)
-   ("S-s-<up>" . org-roam-buffer-toggle)
    ;; ("S-s-<down>" . projectile-ripgrep)
-   ("S-s-<down>" . consult-git-grep)
+   ("S-s-<down>" . org-roam-buffer-toggle)
    ;;   ("S-s-<down>" . deadgrep)
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
