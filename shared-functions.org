@@ -8809,3 +8809,17 @@ We've updated this functionality to enhance the readability and usability of the
   (interactive)
   (insert (org-mac-link-skim-get-page)))
 #+end_src
+
+
+* org-timeblocking
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/users/jay/emacs/external-packages/org-timeblock/")
+(use-package org-timeblock)
+#+end_src
+
+* later list
+#+begin_src emacs-lisp
+(defun later-list ()
+ (interactive)
+ (find-file "/Users/jay/Dropbox/roam/notes/20230728235900-later_list.org")) 
+#+end_src
