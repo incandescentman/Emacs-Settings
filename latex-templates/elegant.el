@@ -54,7 +54,7 @@
 \\usepackage{graphicx}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
-\\usepackage[asterism]{sectionbreak}
+% \\usepackage[asterism]{sectionbreak}
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
@@ -274,13 +274,13 @@
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{24pt}{6pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
 
 \\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
 \\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
 
 
