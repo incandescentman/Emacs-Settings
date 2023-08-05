@@ -294,7 +294,7 @@
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 
-\\titleformat*{\\section}{\\ttfamily\\fontsize{60}{56}\\raggedright\\ttfamily\\color{spacegrey}}
+\\titleformat*{\\section}{\\ttfamily\\fontsize{60}{30}\\raggedright\\ttfamily\\color{spacegrey}}
 \\titleformat*{\\subsection}{\\ttfamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\ttfamily}
 \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
