@@ -115,7 +115,9 @@ This function should only modify configuration layer settings."
      (org
       :variables
       org-enable-roam-protocol t
-      org-enable-roam-support t)
+      org-enable-roam-support t
+      org-enable-hugo-support t
+      )
      osx
      ;; pdf
      ;; python
@@ -272,7 +274,7 @@ This function should only modify configuration layer settings."
                                       ;; org-pdftools
                                       ;; org-sidebar
                                       ;; ox-epub
-                                      ;; ox-twbs
+                                      ox-twbs
                                       ;; plain-org-wiki
                                       ;; polymode
                                       ;; solarized-theme
@@ -873,6 +875,12 @@ This function is called at the very end of Spacemacs initialization."
      ("H" . "html")
      ("A" . "ascii")
      ("i" . "index")))
+ '(org-twbs-head
+   "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9\" crossorigin=\"anonymous\">
+<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm\" crossorigin=\"anonymous\"></script> ")
+ '(org-twbs-head-include-default-style nil)
+ '(org-twbs-head-include-scripts nil)
+  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(safe-local-variable-values
@@ -900,7 +908,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "red" :weight bold))))
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
@@ -949,7 +957,7 @@ This function is called at the very end of Spacemacs initialization."
                    ;; org-noter-pdftools
                    ;; org-pdftools
                    ;; org-sidebar
-                   ;; ox-twbs
+                   ox-twbs
                    ox-tufte
                    palimpsest
                    paredit
