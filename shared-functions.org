@@ -6561,6 +6561,16 @@ want to use in the modeline *in lieu of* the original.")
   (setq mode-line (concat mode-line flymake-mode-line-status))
   (setq flymake-mode-line mode-line)
   (force-mode-line-update)))
+
+(setq flymake-mode-line-format "")
+
+(add-to-list 'mode-line-cleaner-alist '(org-ai-mode . ""))
+
+(remove-hook 'vc-mode-line-hook 'vc-mode-line)
+(setq evil-mode-line-format nil)
+
+
+
 #+end_src
 
 * org-timesheet
@@ -7259,13 +7269,13 @@ during the first export:
 
 
 * org-autolist
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-autolist
  :hook (org-mode . org-autolist-mode))
 (add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
 
 (setq org-autolist-enable-delete nil)
-#+end_src
+#+END_EXAMPLE
 
 *** org-autolist deleting list items
 Suppose we start with:
