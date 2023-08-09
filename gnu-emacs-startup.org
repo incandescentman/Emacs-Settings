@@ -851,6 +851,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-a") 'org-priority-up)
 
+(define-key key-minor-mode-map (kbd "C-c C-x p p") 'pomodoro-start-jay)
+
 (define-key key-minor-mode-map (kbd "s-;") 'choose-refile-method-and-refile)
 (define-key key-minor-mode-map (kbd "s-'") 'org-roam-refile-region-or-subtree)
 

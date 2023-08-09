@@ -857,7 +857,9 @@ This function is called at the very end of Spacemacs initialization."
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
  '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
+ '(line-number-mode nil)
  '(marginalia-align 'left nil nil "Customized with use-package marginalia")
+ '(mode-line-compact 'long)
  '(org-attach-expert nil)
  '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
  '(org-export-preserve-breaks nil)
@@ -908,7 +910,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :foreground "red" :weight bold))))
+ '(bold ((t (:inherit font-lock-warning-face :weight bold))))
  '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
  '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
  '(font-lock-comment-face ((t (:foreground "red" :weight bold))))
