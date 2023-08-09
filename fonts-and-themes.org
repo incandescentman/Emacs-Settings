@@ -296,6 +296,9 @@ And create a function to restore the red cursor in case a color-theme overwrites
 )
 
 
+(custom-set-faces
+'(bold ((t (:inherit font-lock-warning-face :foreground "red" :weight bold)))))
+
 #+END_SRC
 
 

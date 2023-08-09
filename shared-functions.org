@@ -8824,10 +8824,3 @@ We've updated this functionality to enhance the readability and usability of the
  (interactive)
  (find-file "/Users/jay/Dropbox/roam/notes/20230728235900-later_list.org"))
 #+end_src
-
-* hugo
-#+begin_src emacs-lisp
-
-
-
-#+end_src
