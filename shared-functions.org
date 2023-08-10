@@ -6566,9 +6566,12 @@ want to use in the modeline *in lieu of* the original.")
 
 (add-to-list 'mode-line-cleaner-alist '(org-ai-mode . ""))
 
-(remove-hook 'vc-mode-line-hook 'vc-mode-line)
+(setq-default mode-line-format
+       (remove '(vc-mode vc-mode) mode-line-format))
+
 (setq evil-mode-line-format nil)
 
+(setq gcmh-mode-line nil)
 
 
 #+end_src
@@ -7109,11 +7112,11 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  :config
  ;; if you are on the gpt-4 beta:
 (setq org-ai-default-chat-model "gpt-4")
-(setq org-ai-summarize-prompt
-  "You are a brilliant writer for The New York Times and Harvard Business Review. Write a summary of this text in a fun, fascinating, engaging, conversational style.")
+;; (setq org-ai-summarize-prompt
+;;   "You are a brilliant writer for The New York Times and Harvard Business Review. Write a summary of this text in a fun, fascinating, engaging, conversational style.")
 
  ;; if you are using yasnippet and want `ai` snippets
- (org-ai-install-yasnippets))
+(org-ai-install-yasnippets))
 
 
 
@@ -7151,12 +7154,12 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 ;;  '("i" . spook-crm--individual-insert))
 ;; (define-key key-minor-mode-map (kbd "s-i f") 'spook-crm--individual-find)
 ;; (define-key key-minor-mode-map (kbd "s-i i") 'spook-crm--individual-insert)
-(define-key key-minor-mode-map (kbd "s-i s") 'org-ai-summarize)
+;; (define-key key-minor-mode-map (kbd "s-i s") 'org-ai-summarize)
 
 #+end_src
 
 * Jay own ai
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (defun intelligent-summarize ()
  "Run org-ai-summarize on the highlighted region."
@@ -7182,7 +7185,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  (goto-char orig-point))
  )
 (define-key key-minor-mode-map (kbd "s-i f") 'funny-summarize)
-#+end_src
+#+END_EXAMPLE
 
 
 * Eisenhower Matrix :urgent:
