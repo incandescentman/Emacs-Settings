@@ -7118,7 +7118,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  ;; if you are using yasnippet and want `ai` snippets
 (org-ai-install-yasnippets))
 
-
+(setq org-ai-default-chat-system-prompt "I'm Jay Dixit, a science writer, adjunct professor of creative writing and storytelling, consultant, and corporate trainer. I'm an expert on writing about psychology, and I used to be an editor at Psychology Today Magazine. I've also written for The New York Times. I offer professional workshops and training workshops in business writing and storytelling. I would like to start offering corporate training for companies on how to use ChatGPT, and I'm looking for clients. I work on Mac OS, and I use Emacs org-mode and Bash scripts. You are a helpful assistant inside Emacs.")
 
 (load "/Users/jay/emacs/emacs-secret/openai-key.el")
 
@@ -7208,8 +7208,51 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 (setq gptel-default-mode 'org-mode)
 (define-key key-minor-mode-map (kbd "C-t") 'gptel-send)
+
+
+(defun gptel-return ()
+ (interactive)
+ (if (bound-and-true-p gptel-mode) ; if gptel-mode is active
+   (gptel-send)          ; call gptel-send
+  (org-return-indent))       ; else normal org-mode return
+)
+(define-key gptel-mode-map (kbd "RET") 'gptel-return)
+
 #+end_src
 
+* gptel extensions
+[[https://github.com/kamushadenes/gptel-extensions.el][kamushadenes/gptel-extensions.el: Extra functions for gptel]]
+
+~gptel-ext-send-whole-buffer~
+
+Send the whole buffer to ChatGPT.
+
+~gptel-ext-ask-document~
+
+Load the current buffer into a session so you can ask questions about
+it.
+
+~gptel-ext-rewrite-and-replace~
+
+Rewrite the region or sentence at point and replace it with the
+response. Extracted from
+the [[https://github.com/karthink/gptel/wiki][Wiki]].
+
+~gptel-ext-refactor~
+
+Refactor the region or sentence at point.
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/Users/jay/emacs/external-packages/gptel-extensions")
+(use-package gpt-extensions
+ :ensure t
+ :config
+ ;; Your configuration comes here
+ )
+
+#+end_src
+
+See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el: Blogging with Emacs and AI]]
 
 * org-superstar
 #+begin_SRC emacs-lisp
@@ -8836,4 +8879,13 @@ We've updated this functionality to enhance the readability and usability of the
 (defun later-list ()
  (interactive)
  (find-file "/Users/jay/Dropbox/roam/notes/20230728235900-later_list.org"))
+#+end_src
+
+* red bold
+#+begin_src emacs-lisp
+(defun redbold ()
+  (interactive)
+  (custom-set-faces
+'(bold ((t (:inherit font-lock-warning-face :foreground "red" :weight bold)))))
+  )
 #+end_src
