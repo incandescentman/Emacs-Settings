@@ -444,7 +444,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
-(define-key org-mode-map (kbd "<return>") 'smart-return)
+;; (define-key org-mode-map (kbd "<return>") 'smart-return)
+(defun setup-org-mode-keys ()
+ (define-key org-mode-map (kbd "<return>") 'smart-return))
+
+(add-hook 'org-mode-hook 'setup-org-mode-keys)
 
 
 (define-key key-minor-mode-map (kbd "C-<tab>") 'org-cycle-force-archived)
