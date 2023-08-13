@@ -7204,19 +7204,28 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 * gptel
 #+begin_src emacs-lisp
-(use-package gptel)
-
-(setq gptel-default-mode 'org-mode)
-(define-key key-minor-mode-map (kbd "C-t") 'gptel-send)
-
-
-(defun gptel-return ()
- (interactive)
- (if (bound-and-true-p gptel-mode) ; if gptel-mode is active
-   (gptel-send)          ; call gptel-send
-  (org-return-indent))       ; else normal org-mode return
+(use-package gptel
+ :init
+ (setq gptel-default-mode 'org-mode)
+ :config
+ (defun gptel-return ()
+  (interactive)
+  (if (gptel-mode) ; if gptel-mode is active
+    (gptel-send)   ; call gptel-send
+   (org-return-indent)))  ; else normal org-mode return
+ ;; key binding within gptel-mode-map
+ (define-key gptel-mode-map (kbd "RET") 'gptel-return)
+ ;; bind C-t directly within gptel-mode-map
+ (define-key gptel-mode-map (kbd "C-t") 'gptel-send)
 )
-(define-key gptel-mode-map (kbd "RET") 'gptel-return)
+
+(defun setup-org-mode-keys ()
+ ;; Key binding for org-mode-map
+ (define-key org-mode-map (kbd "RET") 'smart-return))
+
+(add-hook 'org-mode-hook 'setup-org-mode-keys)
+
+
 
 #+end_src
 
@@ -7242,15 +7251,15 @@ the [[https://github.com/karthink/gptel/wiki][Wiki]].
 
 Refactor the region or sentence at point.
 
-#+begin_src emacs-lisp
-(add-to-list 'load-path "/Users/jay/emacs/external-packages/gptel-extensions")
-(use-package gpt-extensions
+#+begin_EXAMPLE emacs-lisp
+(load "/Users/jay/emacs/external-packages/gptel-extensions/gptel-extensions.el")
+(use-package gptel-extensions
  :ensure t
  :config
  ;; Your configuration comes here
  )
 
-#+end_src
+#+end_EXAMPLE
 
 See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el: Blogging with Emacs and AI]]
 
