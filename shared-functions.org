@@ -8220,22 +8220,21 @@ Emacs sessions are independent of each other, so global variables like move-or-c
  (interactive "r")
  (unless move-or-copy-mode
   (switch-between-move-mode-and-copy-mode))
- (if (use-region-p)
-  (let ((count (count-words-region start end)))
-   (save-excursion
-    (if (string= move-or-copy-mode "move")
-      (progn
-       (kill-region start end)
-       (message "Moved %s words" count))
-     (progn
-      (copy-region-as-kill start end)
-      (message "Copied %s words" count)))
-    (other-window 1)
-    (newline)
-    (yank)
-    (newline)
-    (other-window -1))
-  (message "No region selected"))))
+ (let ((count (count-words-region start end)))
+ (save-excursion
+  (if (string= move-or-copy-mode "Move")
+   (progn
+   (kill-region start end)
+   (message "Moved %s words" count))
+  (progn
+   (copy-region-as-kill start end)
+   (message "Copied %s words" count)))
+  (other-window 1)
+  (newline)
+  (yank)
+  (newline)
+  (other-window -1))))
+
 #+end_src
 
 
