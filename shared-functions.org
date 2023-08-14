@@ -8210,7 +8210,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 
 #+begin_src emacs-lisp
-(defun switch-between-move-mode-and-copy-mode ()
+(defun select-move-mode-or-copy-mode ()
  (interactive)
  (setq move-or-copy-mode
     (completing-read "Would you like to move this region or just copy it? (move or copy): " '("Move" "Copy"))))
@@ -8219,7 +8219,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
  "Move or copy selected text to other window based on move-or-copy-mode."
  (interactive "r")
  (unless move-or-copy-mode
-  (switch-between-move-mode-and-copy-mode))
+  (select-move-mode-or-copy-mode))
  (let ((count (count-words-region start end)))
  (save-excursion
   (if (string= move-or-copy-mode "Move")
@@ -8243,7 +8243,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 #+begin_src emacs-lisp
 (defvar refile-or-roam-refile-mode nil)
 
-(defun switch-between-refile-modes ()
+(defun select-refile-mode ()
  (interactive)
  (setq refile-or-roam-refile-mode
     (completing-read "Would you like to refile this region or subtree to Org file or Org-roam file? (org-refile or org-roam-refile): " '("org-refile" "org-roam-refile"))))
@@ -8252,7 +8252,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
  "Choose the refile method and refile the current subtree or region based on refile-or-roam-refile-mode."
  (interactive)
  (unless refile-or-roam-refile-mode
-  (switch-between-refile-modes))
+  (select-refile-mode))
  (if (use-region-p)
    (save-excursion
     (if (string= refile-or-roam-refile-mode "org-refile")
