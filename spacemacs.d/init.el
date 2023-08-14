@@ -154,7 +154,7 @@ This function should only modify configuration layer settings."
                                       benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
-                                      counsel-fd
+    ;                                  counsel-fd
                                       counsel-projectile
                                       crux
                                       deadgrep
@@ -165,9 +165,9 @@ This function should only modify configuration layer settings."
                                       dired-sort-menu
                                       discover-my-major
                                       emacsql
-                                      embark
-                                      epc
-                                      eww
+;                                      embark
+;                                      epc
+;                                      eww
                                       expand-region
                                       f
                                       fancy-narrow
@@ -201,20 +201,20 @@ This function should only modify configuration layer settings."
                                       org-modern
                                       org-pomodoro
                                       org-roam
-                                      org-roam-ui
+ ;                                     org-roam-ui
                                       org-sticky-header
                                       org-superstar
                                       ox-clip
                                       ox-gfm
                                       ox-timeline
-                                      ox-tufte
+ ;                                     ox-tufte
                                       palimpsest
                                       paredit
                                       peg
                                       persp-mode
                                       point-stack
                                       popup
-                                      project-explorer
+  ;                                    project-explorer
                                       projectile-ripgrep
                                       quelpa-use-package
                                       rainbow-mode
@@ -227,12 +227,12 @@ This function should only modify configuration layer settings."
                                       scratch
                                       scratch-message
                                       sdcv
-                                      simple-httpd
-                                      stripe-buffer
+   ;                                   simple-httpd
+   ;                                   stripe-buffer
                                       sudo-edit
                                       sync-recentf
                                       tabbar
-                                      tiny
+   ;                                   tiny
                                       titlecase
                                       ts
                                       unfill
