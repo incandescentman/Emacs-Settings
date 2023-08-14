@@ -113,15 +113,15 @@ Automatically load abbreviations table:
 * tabbar
 So Emacs text doesn't appear on the MacBook Pro notch.
 
-#+begin_src emacs-lisp
+#+begin_SRC emacs-lisp
 (use-package tab-bar
 :defer
  :config
- (tab-bar-mode 1))
- #+end_src
+ (tab-bar-mode -1))
+ #+END_SRC
 
 
-#+begin_src emacs-lisp
+#+begin_SRC emacs-lisp
 (defun my-toggle-tab-bar-mode ()
  "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
  (if (frame-parameter nil 'fullscreen)
@@ -129,7 +129,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
  (tab-bar-mode -1)))
 
 (add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
-#+end_src
+#+END_SRC
 
 
 * directory settings

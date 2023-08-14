@@ -879,8 +879,7 @@ This function is called at the very end of Spacemacs initialization."
      ("A" . "ascii")
      ("i" . "index")))
  '(org-twbs-head
-   "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9\" crossorigin=\"anonymous\">
-<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm\" crossorigin=\"anonymous\"></script> ")
+   "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9\" crossorigin=\"anonymous\">\12<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm\" crossorigin=\"anonymous\"></script> ")
  '(org-twbs-head-include-default-style nil)
  '(org-twbs-head-include-scripts nil)
  '(org-twbs-htmlize-output-type 'css)
@@ -925,6 +924,8 @@ This function is called at the very end of Spacemacs initialization."
  '(org-quote ((t (:inherit default :background "#FFFFE0" :foreground "DimGray" :slant normal))))
  '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
  '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+ '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
+ '(tab-bar-tab-ungrouped ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
  '(variable-pitch ((t (:family "\"Courier\" "))))
  '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
 )
