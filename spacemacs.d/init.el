@@ -158,7 +158,6 @@ This function should only modify configuration layer settings."
                                       counsel-projectile
                                       crux
                                       deadgrep
-                                      deadgrep
                                       define-word
                                       dired+
                                       dired-details+
@@ -925,7 +924,7 @@ This function is called at the very end of Spacemacs initialization."
  '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
  '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
  '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
- '(tab-bar-tab-ungrouped ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
+ ;; '(tab-bar-tab-ungrouped ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
  '(variable-pitch ((t (:family "\"Courier\" "))))
  '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
 )
@@ -946,12 +945,12 @@ This function is called at the very end of Spacemacs initialization."
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam                             org-bookmark-heading
 				           ;; org-download
                    ;; org-drill
-                   org-fstree
+          ;;         org-fstree
                    org-mac-link
                    ;; org-mime
                    org-pomodoro
                    org-roam
-                   org-roam-ui
+;;                   org-roam-ui
                    org-sticky-header
                    ox-clip
                    ;; ox-epub
@@ -978,12 +977,12 @@ This function is called at the very end of Spacemacs initialization."
                    recentf
                    regex-tool
                    rspec-mode
-                   scratch
-                   scratch-message
-                   stripe-buffer
+  ;;                 scratch
+    ;;               scratch-message
+      ;;             stripe-buffer
                    sudo-edit
                    tabbar
-                   tiny
+        ;;           tiny
                    titlecase
                    ;; tldr
                    ;; transcribe
