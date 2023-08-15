@@ -1030,12 +1030,15 @@ Defining stuck projects as todos that do not contain "scheduled" or
     ;; (sequence "PART" "HED" "HEDTK" "|")
     ;; (sequence "IF" "THEN" "|")
     ;; (sequence "COWRITE" "|" "DONE")
+(sequence "TO PROCESS" "|" "PROCESSED")
 ;; (sequence "GOAL" "PLAN" "NOTE" "|" "DONE")
     ))
 
 ;; Set todo keyword colors
 (setq org-todo-keyword-faces
- '(("NEXT" :background "medium sea green" :foreground "white" :weight bold)
+ '(
+   ("PROCESSED" :foreground "LavenderBlush" :background "darkgrey" :weight bold)
+   ("NEXT" :background "medium sea green" :foreground "white" :weight bold)
   ("ACTION" :foreground "medium sea green" :weight bold)
   ("WAITING" :background "yellow" :foreground "purple" :weight bold)
   ("EVENT" :background "gray25" :foreground "white" :weight bold)
@@ -2772,13 +2775,26 @@ With prefix arg C-u, copy region instad of killing it."
 
 #+BEGIN_SRC emacs-lisp
 (defun move-region-or-subtree-to-other-window ()
-  (interactive)
-  (when (and
-         (eq 'org-mode major-mode)
-         (not (region-active-p)))
-    (org-mark-subtree))
-  (call-interactively 'move-region-to-other-window))
+ (interactive)
+ (when (and (eq 'org-mode major-mode)
+       (not (region-active-p)))
+  (org-mark-subtree))
+ (let ((text (buffer-substring (region-beginning) (region-end))))
+  (delete-region (region-beginning) (region-end))
+  (other-window 1)
+  (insert text)))
 #+END_SRC
+
+** copy-region
+#+begin_src emacs-lisp
+(defun copy-region-to-other-window ()
+ (interactive)
+ (when (region-active-p)
+  (let ((text (buffer-substring (region-beginning) (region-end))))
+   (other-window 1)
+   (insert text)
+   (other-window -1))))
+#+end_src
 
 * Remove hyperlink
 A useful function: remove a hyperlink but leave the link description:

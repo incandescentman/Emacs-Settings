@@ -595,7 +595,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key org-mode-map (kbd "s-k c s") 'org-clone-subtree)
-(define-key key-minor-mode-map (kbd "s-k p s") 'org-paste-subtree)
 (define-key key-minor-mode-map (kbd "s-k v") 'org-paste-subtree)
 (define-key key-minor-mode-map (kbd "s-k x") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s->") 'org-mark-subtree)
@@ -659,8 +658,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key key-minor-mode-map (kbd "s-p") 'zin/org-checkbox-next)
 
-(define-key key-minor-mode-map (kbd "<f20>") 'pomodoro-start-jay)
-(define-key key-minor-mode-map (kbd "s-k p o") 'pomodoro-start-jay)
+(define-key key-minor-mode-map (kbd "<f20>") 'pomodoro-start)
+(define-key key-minor-mode-map (kbd "s-k p s") 'pomodoro-start)
 
 
 
