@@ -35,6 +35,7 @@
         org-shiftup
         org-toggle-heading-same-level
         pasteboard-cut-and-capitalize
+        pasteboard-paste-no-spaces
         pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
         return

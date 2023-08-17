@@ -8917,3 +8917,20 @@ We've updated this functionality to enhance the readability and usability of the
        (redbold)))
 
 #+end_src
+
+
+* Claire share
+#+begin_src emacs-lisp
+(defun claire-share-export-subtree-to-html ()
+ (interactive)
+ (let* ((title (file-name-sans-extension (buffer-name)))
+     (path "/users/jay/dropbox/roam/claire/")
+     (export-line (concat "#+EXPORT_FILE_NAME: " path title ".html")))
+  (save-excursion
+   (goto-char (point-min))
+   (forward-line 3)
+   (unless (looking-at "#\\+EXPORT_FILE_NAME:")
+    (insert (concat export-line "\n"))))
+  (org-export-dispatch)))
+
+#+end_src
