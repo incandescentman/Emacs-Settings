@@ -28,6 +28,7 @@
         org-meta-return
         org-metaright
         org-return
+        org-return-and-maybe-indent
         org-self-insert-command
         org-shiftdown
         org-shiftleft
