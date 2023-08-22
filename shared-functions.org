@@ -8851,7 +8851,7 @@ In org-mode for Emacs, we often want to create links to specific resources. One 
 
 We've updated this functionality to enhance the readability and usability of these links. Now, the link will also display the title of the file (which is generally more readable than a filepath). The link still points to the specific page in the PDF file, but when viewed in org-mode, it will be displayed with the title of the PDF file.
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun org-mac-link-skim-get-page ()
   "Get the link to the page in the Skim.app.
 
@@ -8863,10 +8863,10 @@ We've updated this functionality to enhance the readability and usability of the
   returned."
   (interactive)
   (message "Applescript: Getting Skim page link...")
-  (let* ((result (org-mac-link-applescript-get-skim-page-link))
-         (result-parts (split-string result "::split::"))
-         (link (car result-parts))
-         (description (cadr result-parts)))
+(let* ((result (org-mac-link-applescript-get-skim-page-link))
+    (result-parts (split-string result "::split::"))
+    (link (car result-parts))
+    (description (cadr result-parts)))
     ;; Remove starting and ending quotes from the link
     (when (string-prefix-p "\"" link)
       (setq link (substring link 1)))
@@ -8891,36 +8891,42 @@ We've updated this functionality to enhance the readability and usability of the
   (insert (org-mac-link-skim-get-page)))
 
 
-
 (defun org-mac-link-applescript-get-skim-page-link ()
  "AppleScript to get the link to the page in the Skim.app."
  (org-mac-link-do-applescript
   (concat
   "tell application \"Skim\"\n"
   "set theDoc to front document\n"
-  "set theTitle to (name of theDoc)\n"
-  "set thePath to (path of theDoc)\n"
-  "set thePage to (get index of current page of theDoc)\n"
+  "set theTitle to (name of theDoc) as string\n"
+  "log \"Debug: theTitle = \" & theTitle\n"
+  "set thePath to (path of theDoc) as string\n"
+  "log \"Debug: thePath = \" & thePath\n"
+  "set thePage to (get index of current page of theDoc) as string\n"
+  "log \"Debug: thePage = \" & thePage\n"
   "set theSelection to selection of theDoc\n"
-  "set theContent to contents of (get text of theSelection)\n"
-  "if theContent is missing value then\n"
+  "set theContent to contents of (get text of theSelection) as string\n"
+  "log \"Debug: theContent = \" & theContent\n"
+  "if theContent is missing value or theContent is \"\" then\n" ;; Check for missing value or empty string
   "  set theContent to theTitle & \", p. \" & thePage\n"
+  "  log \"Debug: theContent (missing value) = \" & theContent\n"
+  "else\n"
   (when org-mac-link-highlight-selection-p
    (concat
-    "else\n"
     "  tell theDoc\n"
     "    set theNote to make new note with properties {type:highlight note, selection:theSelection} at page thePage\n"
     "    set text of theNote to (get text of theSelection)\n"
     "  end tell\n"))
+  "  log \"Debug: theContent (selected text) = \" & theContent\n"
   "end if\n"
 
 "set theLink to \"skim://\" & thePath & \"::\" & thePage & "
 "\" ::split::\" & theContent\n" ;; Add a space before ::split::
+  "log \"Debug: theLink = \" & theLink\n" ;; Log the final link
   "end tell\n"
   "return theLink as string\n")))
 
 
-#+end_src
+#+END_EXAMPLE
 
 
 * org-timeblocking
