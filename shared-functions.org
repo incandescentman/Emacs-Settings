@@ -429,6 +429,14 @@ Replace smart quotes with straight quotes so that spell check can recognize word
        (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
    smart-quote-regexp-replacements))
 
+(defun replace-double-asterisks (beg end)
+ "Replace occurrences of '**' that are not at the beginning of a line or followed by a space."
+ (save-excursion
+  (goto-char beg)
+  (while (re-search-forward "\\(^\\|[^*]\\)\\*\\*\\([^ ]\\)" end t)
+   (replace-match "\\1*\\2" nil nil))))
+
+
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
@@ -437,6 +445,10 @@ Replace smart quotes with straight quotes so that spell check can recognize word
   ;; add alpha. And replace the alpha.
 
   (replace-smart-quotes-regexp beg end)
+
+
+;; remove double asterisks
+(replace-double-asterisks beg end)
 
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
@@ -461,7 +473,7 @@ Replace smart quotes with straight quotes so that spell check can recognize word
                             ("‖" . "\"")
 
                             ;; ("- " . "") ; also remove stray spac- es
-                            ;; ("­ " . "") ; also remove stray spac- es
+                            ;; ("­ " . "") ; also remove stray spac- besides
 
 
                             ;; Convert markdown headings to org headings

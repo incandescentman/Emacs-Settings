@@ -30,7 +30,7 @@
 	        ("n" "note" plain "- Links :: \n- Source :: \n
 
 * ${title}
-- %?"
+%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
