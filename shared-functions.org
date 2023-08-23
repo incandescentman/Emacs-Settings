@@ -8851,7 +8851,10 @@ In org-mode for Emacs, we often want to create links to specific resources. One 
 
 We've updated this functionality to enhance the readability and usability of these links. Now, the link will also display the title of the file (which is generally more readable than a filepath). The link still points to the specific page in the PDF file, but when viewed in org-mode, it will be displayed with the title of the PDF file.
 
-#+begin_EXAMPLE emacs-lisp
+If I encounter more errors, pls refer to this:
+https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
+
+#+begin_SRC emacs-lisp
 
 (defun org-mac-link-skim-insert-page ()
   "Insert the link to the page in the Skim.app.
@@ -8907,9 +8910,11 @@ We've updated this functionality to enhance the readability and usability of the
   ;; Format the link
   (format "[[%s][%s]]" link description)))
 
+#+END_SRC
 
-#+END_EXAMPLE
 
+Fixed and working:
+https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 * org-timeblocking
 #+begin_src emacs-lisp
