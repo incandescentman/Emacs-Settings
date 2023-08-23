@@ -8911,6 +8911,9 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  ;; Remove .pdf from the description
  (when (string-suffix-p ".pdf" description)
   (setq description (substring description 0 -4)))
+ ;; Replace underscores with spaces in the description
+(setq description (replace-regexp-in-string "_" " " description))
+
  ;; Format the link
  (format "[[%s][%s]]" link description))) ;; Org-mode link format
 
@@ -8935,6 +8938,8 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
   ;; Remove .pdf from the description
   (when (string-suffix-p ".pdf" description)
    (setq description (substring description 0 -4)))
+  ;; Replace underscores with spaces in the description
+(setq description (replace-regexp-in-string "_" " " description))
   ;; Remove page number from the description
   (when (string-match ", p\\. \\([0-9]+\\)" description)
    (setq description (replace-match "" nil nil description)))
@@ -8946,7 +8951,7 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  (interactive)
  (insert (org-mac-link-skim-get-document)))
 
-
+;; Skim insert link to PDF (or with C-u prefix, insert link to PDF including page number)
 (defun org-mac-link-skim-insert (&optional arg)
  "Insert a link to the current Skim document or page.
 With a universal argument, insert a link to the current page including page number."
