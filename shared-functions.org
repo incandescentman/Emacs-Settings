@@ -8857,7 +8857,7 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 #+begin_SRC emacs-lisp
 
 (defun org-mac-link-skim-insert-page ()
-  "Insert the link to the page in the Skim.app.
+  "Insert the link to the page in the Skim.app. Include the page number.
 
   This function calls the org-mac-link-skim-get-page function to get
   a formatted org-mode link to the current page in the Skim.app PDF file.
@@ -8871,45 +8871,48 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 (defun org-mac-link-applescript-get-skim-page-link ()
  "AppleScript to get the link to the page in the Skim.app."
  (org-mac-link-do-applescript
-  (concat
-  "tell application \"Skim\"\n"
-  "set theDoc to front document\n"
-  "set theTitle to (name of theDoc) as string\n"
-  "set thePath to (path of theDoc) as string\n"
-  "set thePage to (get index of current page of theDoc) as string\n"
-  "set theSelection to selection of theDoc\n"
-  "set theContent to contents of (get text of theSelection) as string\n"
-  "if theContent is missing value or theContent is \"\" then\n" ;; Check for missing value or empty string
-  " set theContent to theTitle & \", p. \" & thePage\n"
-  "end if\n"
-  "set theLink to \"skim://\" & thePath & \"::\" & thePage\n" ;; Removed extra space before ::split::
-  "end tell\n"
-  "return theLink & \" ::split::\" & theContent as string\n"))) ;; Separated link and content
+ (concat
+ "tell application \"Skim\"\n"
+ "set theDoc to front document\n"
+ "set theTitle to (name of theDoc) as string\n"
+ "set thePath to (path of theDoc) as string\n"
+ "set thePage to (get index of current page of theDoc) as string\n"
+ "set theSelection to selection of theDoc\n"
+ "set theContent to contents of (get text of theSelection) as string\n"
+ "if theContent is missing value or theContent is \"\" then\n" ;; Check for missing value or empty string
+ " set theContent to theTitle & \", p. \" & thePage\n"
+ "end if\n"
+ "if theTitle ends with \".pdf\" then\n" ;; Check for .pdf at the end of the title
+ " set theTitle to text 1 thru -5 of theTitle\n" ;; Remove the last 4 characters (.pdf)
+ "end if\n"
+ "set theLink to \"skim://\" & thePath & \"::\" & thePage\n" ;; Removed extra space before ::split::
+ "end tell\n"
+ "return theLink & \" ::split::\" & theTitle & \", p. \" & thePage as string\n"))) ;; Separated link and content
+
 
 (defun org-mac-link-skim-get-page ()
  "Get the link to the page in the Skim.app."
  (interactive)
  (message "Applescript: Getting Skim page link...")
  (let* ((result (org-mac-link-applescript-get-skim-page-link))
-     (result-parts (split-string result "::split::"))
-     (link (car result-parts))
-     (description (cadr result-parts)))
-  ;; Remove starting and ending quotes from the link
-  (when (string-prefix-p "\"" link)
-   (setq link (substring link 1)))
-  (when (string-suffix-p "\"" link)
-   (setq link (substring link 0 -1)))
-  ;; Remove starting and ending quotes from the description
-  (when (string-prefix-p "\"" description)
-   (setq description (substring description 1)))
-  (when (string-suffix-p "\"" description)
-   (setq description (substring description 0 -1)))
-  ;; Remove .pdf from the description
-  (when (string-suffix-p ".pdf" description)
-   (setq description (substring description 0 -4)))
-  ;; Format the link
-  (format "[[%s][%s]]" link description)))
-
+   (result-parts (split-string result "::split::"))
+   (link (car result-parts))
+   (description (cadr result-parts)))
+ ;; Remove starting and ending quotes from the link
+ (when (string-prefix-p "\"" link)
+  (setq link (substring link 1)))
+ (when (string-suffix-p "\"" link)
+  (setq link (substring link 0 -1)))
+ ;; Remove starting and ending quotes from the description
+ (when (string-prefix-p "\"" description)
+  (setq description (substring description 1)))
+ (when (string-suffix-p "\"" description)
+  (setq description (substring description 0 -1)))
+ ;; Remove .pdf from the description
+ (when (string-suffix-p ".pdf" description)
+  (setq description (substring description 0 -4)))
+ ;; Format the link
+ (format "[[%s][%s]]" link description))) ;; Org-mode link format
 
 (defun org-mac-link-skim-get-document ()
  "Get the link to the document in the Skim.app, without page number."
@@ -8942,6 +8945,15 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  "Insert the link to the document in the Skim.app, without page number."
  (interactive)
  (insert (org-mac-link-skim-get-document)))
+
+
+(defun org-mac-link-skim-insert (&optional arg)
+ "Insert a link to the current Skim document or page.
+With a universal argument, insert a link to the current page including page number."
+ (interactive "P")
+ (if arg
+   (org-mac-link-skim-insert-page)
+  (org-mac-link-skim-insert-document)))
 
 #+END_SRC
 
