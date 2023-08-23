@@ -8903,11 +8903,15 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
   (setq link (substring link 1)))
  (when (string-suffix-p "\"" link)
   (setq link (substring link 0 -1)))
+ ;; Remove leading and trailing whitespace from the link
+  (setq link (string-trim link))
  ;; Remove starting and ending quotes from the description
  (when (string-prefix-p "\"" description)
   (setq description (substring description 1)))
  (when (string-suffix-p "\"" description)
   (setq description (substring description 0 -1)))
+;; Trim leading and trailing whitespace from the description
+ (setq description (string-trim description))
  ;; Remove .pdf from the description
  (when (string-suffix-p ".pdf" description)
   (setq description (substring description 0 -4)))
@@ -8930,11 +8934,15 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
    (setq link (substring link 1)))
   (when (string-suffix-p "\"" link)
    (setq link (substring link 0 -1)))
+  ;; Remove leading and trailing whitespace from the link
+  (setq link (string-trim link))
   ;; Remove starting and ending quotes from the description
   (when (string-prefix-p "\"" description)
    (setq description (substring description 1)))
   (when (string-suffix-p "\"" description)
    (setq description (substring description 0 -1)))
+;; Trim leading and trailing whitespace from the description
+ (setq description (string-trim description))
   ;; Remove .pdf from the description
   (when (string-suffix-p ".pdf" description)
    (setq description (substring description 0 -4)))
