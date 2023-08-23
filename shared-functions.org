@@ -8910,6 +8910,39 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
   ;; Format the link
   (format "[[%s][%s]]" link description)))
 
+
+(defun org-mac-link-skim-get-document ()
+ "Get the link to the document in the Skim.app, without page number."
+ (interactive)
+ (message "Applescript: Getting Skim document link...")
+ (let* ((result (org-mac-link-applescript-get-skim-page-link))
+     (result-parts (split-string result "::split::"))
+     (link (car result-parts))
+     (description (cadr result-parts)))
+  ;; Remove starting and ending quotes from the link
+  (when (string-prefix-p "\"" link)
+   (setq link (substring link 1)))
+  (when (string-suffix-p "\"" link)
+   (setq link (substring link 0 -1)))
+  ;; Remove starting and ending quotes from the description
+  (when (string-prefix-p "\"" description)
+   (setq description (substring description 1)))
+  (when (string-suffix-p "\"" description)
+   (setq description (substring description 0 -1)))
+  ;; Remove .pdf from the description
+  (when (string-suffix-p ".pdf" description)
+   (setq description (substring description 0 -4)))
+  ;; Remove page number from the description
+  (when (string-match ", p\\. \\([0-9]+\\)" description)
+   (setq description (replace-match "" nil nil description)))
+  ;; Format the link
+  (format "[[%s][%s]]" link description)))
+
+(defun org-mac-link-skim-insert-document ()
+ "Insert the link to the document in the Skim.app, without page number."
+ (interactive)
+ (insert (org-mac-link-skim-get-document)))
+
 #+END_SRC
 
 
