@@ -546,7 +546,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k u p") 'unfill-paragraph)
 
-(define-key key-minor-mode-map (kbd "C-w") 'copy-region-as-kill)
+(define-key key-minor-mode-map (kbd "C-w") 'copy-region-as-kill-and-push-to-clipboard)
 
 ;; (define-key key-minor-mode-map (kbd "=") 'insert-equals-sign)
 

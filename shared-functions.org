@@ -4905,10 +4905,8 @@ It will open the link in Emacs with typing C-c C-o.
  '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-(setq org-export-preserve-breaks nil)
 
 ;; add padding to numbered lists and bulleted lists (set to t)
-;; (setq org-export-preserve-breaks t)
 #+END_SRC
 
 *** load my custom latex templates
@@ -9027,4 +9025,23 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
     (insert (concat export-line "\n"))))
   (org-export-dispatch)))
 
+#+end_src
+
+
+* embark vertico
+#+begin_src emacs-lisp
+(with-eval-after-load 'vertico
+(define-key key-minor-mode-map (kbd "C-M-S-s-o") 'embark-act)
+;; (define-key vertico-map (kbd "M-o") 'embark-act)
+)
+
+#+end_src
+
+* copy-region-as-kill-and-push-to-clipboard
+#+begin_src emacs-lisp
+(defun copy-region-as-kill-and-push-to-clipboard ()
+ "Copy the region to the kill ring and push it to the system clipboard."
+ (interactive)
+ (copy-region-as-kill (region-beginning) (region-end))
+ (x-select-text (current-kill 0)))
 #+end_src
