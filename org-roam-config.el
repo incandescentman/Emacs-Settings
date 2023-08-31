@@ -16,7 +16,7 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-- \n\n\n"))))
+\n\n\n"))))
 ;; - %<Week %w, day %j>\n
   :config
 ;;  (org-roam-setup)
@@ -38,14 +38,14 @@
 
 	        ("m" "memoir" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "memoir/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
 	         :unnarrowed t)
 
 	        ("k" "kanban" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "kanban/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :kanban:")
 	         :unnarrowed t)
@@ -54,7 +54,7 @@
 
           	        ("M" "mantra" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "mantras/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :mantras:")
 	         :unnarrowed t)
@@ -72,7 +72,7 @@
 
 	        ("b" "book" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "book/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :book:")
 	         :unnarrowed t)
@@ -88,14 +88,14 @@
 
 	        ("x" "cuts" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "cuts/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :cuts:")
            :unnarrowed t)
 
 	        ("f" "finances and housekeeping" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
 	         :unnarrowed t)
@@ -103,7 +103,7 @@
 
 	        ("F" "Food and recipes " plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "food/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :food:")
 	         :unnarrowed t)
@@ -112,7 +112,7 @@
 
 	        ("l" "definition" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :definition:")
            :unnarrowed t)
@@ -120,21 +120,21 @@
 
 	        ("s" "sentence" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "sentences/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :sentence:")
 	         :unnarrowed t)
 
-	        ("i" "idea" plain "- Links :: \n- Source :: \n
+	        ("I" "Idea" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :idea:")
 	         :unnarrowed t)
 
 	        ("c" "conversation" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :conversation:")
 	         :unnarrowed t)
@@ -142,7 +142,7 @@
 
 	        ("d" "default" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
@@ -151,7 +151,7 @@
 
 	        ("e" "emacs" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "emacs/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :emacs:")
 	         :unnarrowed t)
@@ -160,7 +160,7 @@
 
 	        ("T" "temporary" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
 	         :unnarrowed t)
@@ -168,16 +168,16 @@
 
           	        ("t" "therapy" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "therapy/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :therapy:")
 	         :unnarrowed t)
 
 
-	        ("I" "Intelligence" plain "- Links :: \n- Source :: \n
+	        ("i" "intelligence" plain "- Links :: \n- Source :: \n
 
 * ${title}
-- %?"
+%?"
 	         :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :intelligence:")
 	         :unnarrowed t)
@@ -186,9 +186,17 @@
 
 	        ("a" "article notes or books and articles" plain "- Links :: \n- Source :: \n
 * ${title}
-- %?"
+%?"
 	         :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :literaturenote:")
+	         :unnarrowed t)
+
+
+	        ("L" "Library of articles poems and essays" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "library/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :library:")
 	         :unnarrowed t)
 
 
@@ -205,7 +213,7 @@
         ("z" "zork" plain "- Links :: \nSource :: \n
 
 * ${title}
-- %?"
+%?"
          :target (file+head (lambda () (concat (read-string "Enter file path: ") "/%<%Y%m%d%H%M%S>-${slug}.org"))
                             "#+TITLE: ${title}\n#+FILETAGS: :work:")
          :unnarrowed t)

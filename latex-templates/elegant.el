@@ -14,8 +14,6 @@
 \\usepackage{float}
 \\usepackage{changepage}
 
-\\usepackage{wrapfig}
-
 \\usepackage{algorithm}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
@@ -52,6 +50,8 @@
 
 \\usepackage{paralist}
 \\usepackage{graphicx}
+\\usepackage{wrapfig}
+
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 % \\usepackage[asterism]{sectionbreak}
@@ -118,7 +118,7 @@
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
-\\lhead{\\@title}}} % title of the document as left header
+\\lhead{\\bfseries\\@title}}} % title of the document as left header
 
 
 \\lfoot{}

@@ -24,6 +24,8 @@
 % \\usepackage[asterism]{sectionbreak}
 % \\sectionbreakmark{❦}
 
+
+\\usepackage{wrapfig}
 \\usepackage{changepage}
 \\usepackage{algorithm}
 \\usepackage{pdfpages}

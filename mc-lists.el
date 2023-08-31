@@ -26,6 +26,7 @@
         org-delete-char
         org-end-of-line
         org-meta-return
+        org-metaleft
         org-metaright
         org-return
         org-return-and-maybe-indent
@@ -39,9 +40,11 @@
         pasteboard-paste-no-spaces
         pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
+        reflash-indentation
         return
         right-word
         smart-forward-sentence
+        smart-period
         smart-return
         smart-space
         ))
