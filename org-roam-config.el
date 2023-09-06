@@ -86,6 +86,17 @@
 	         :unnarrowed t)
 
 
+                    ("B" "business" plain "%?"
+	                   :target (file+head "business/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :business:\n\
+- Links :: \n- Source :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+
+
+
 	        ("x" "cuts" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"

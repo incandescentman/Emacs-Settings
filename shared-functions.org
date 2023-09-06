@@ -9045,3 +9045,10 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  (copy-region-as-kill (region-beginning) (region-end))
  (x-select-text (current-kill 0)))
 #+end_src
+
+
+* switch two classic keybindings
+#+begin_src emacs-lisp
+(define-key key-minor-mode-map (kbd "M-%") 'eval-expression)
+(define-key key-minor-mode-map (kbd "M-:") 'query-replace)
+#+end_src
