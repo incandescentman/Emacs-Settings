@@ -9052,3 +9052,31 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 (define-key key-minor-mode-map (kbd "M-%") 'eval-expression)
 (define-key key-minor-mode-map (kbd "M-:") 'query-replace)
 #+end_src
+
+
+* TOC in org file
+[[https://github.com/alphapapa/org-make-toc][alphapapa/org-make-toc: Automatic tables of contents for Org-mode files]]
+
+Usage:
+A document may have any number of tables of contents (TOCs), each of
+which may list entries in a highly configurable way.
+
+To make a basic TOC, follow these steps:
+
+1. Choose a heading to contain a TOC and move the point to it.
+2. Run command ~org-make-toc-insert~, which inserts
+   a ~:CONTENTS:~ drawer and sets TOC properties. Set
+   the ~include~ property to ~all~.
+3. Run the command ~org-make-toc~ to update all TOCs in the document.
+
+Use command ~org-make-toc-set~ to change TOC properties for the entry at
+point with completion.
+
+
+#+begin_src emacs-lisp
+(use-package org-make-toc
+ :config
+ ;; Add 'org-make-toc-mode' to 'org-mode-hook'
+ ;; This ensures 'org-make-toc-mode' is enabled every time 'org-mode' is activated
+ (add-hook 'org-mode-hook #'org-make-toc-mode))
+#+end_src
