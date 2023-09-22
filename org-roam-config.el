@@ -43,6 +43,14 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
 	         :unnarrowed t)
 
+	        ("S" "Structure / Schelling Points" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :structure:")
+	         :unnarrowed t)
+
+
 	        ("k" "kanban" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
