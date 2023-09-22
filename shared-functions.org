@@ -9139,10 +9139,10 @@ After evaluating your init-file you can use links analog to the example:
   (let* ((clip-content (substring-no-properties (current-kill 0)))
          (file-name (file-name-nondirectory clip-content))
          (file-name-base (file-name-sans-extension file-name))
-(hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
-
+         (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
+         (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced))
          (start-pos (point)))
-    (insert (format "[[%s][%s]]" clip-content hyphen-replaced))
+    (insert (format "[[%s][%s]]" clip-content (string-trim no-leading-numbers)))
     (goto-char start-pos)
     (search-forward "[[" nil t)
     (search-forward "[" nil t)
