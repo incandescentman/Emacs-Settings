@@ -9134,23 +9134,25 @@ After evaluating your init-file you can use links analog to the example:
 * Insert local file link from clipboard
 #+begin_src emacs-lisp
 (defun insert-local-file-link-from-clipboard ()
- "Inserts an org-mode link using the clipboard content as the file path."
- (interactive)
- (let* ((clip-content (substring-no-properties (current-kill 0)))
-     (file-name (file-name-nondirectory clip-content))
-     (file-name-base (file-name-sans-extension file-name))
-     (hyphen-replaced (replace-regexp-in-string "-" " " file-name-base))
-     (start-pos (point)))
-  (insert (format "[[%s][%s]]" clip-content hyphen-replaced))
-  (goto-char start-pos)
-  (search-forward "[[" nil t)
-  (search-forward "[" nil t)
-  (let ((title-start (point)))
-   (search-forward "]" nil t)
-   (backward-char)
-   (capitalize-region title-start (point)))
-  (goto-char (+ 2 start-pos))
-  (search-forward "[" nil t)
-  (search-forward "]" nil t)))
+  "Inserts an org-mode link using the clipboard content as the file path."
+  (interactive)
+  (let* ((clip-content (substring-no-properties (current-kill 0)))
+         (file-name (file-name-nondirectory clip-content))
+         (file-name-base (file-name-sans-extension file-name))
+(hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
+
+         (start-pos (point)))
+    (insert (format "[[%s][%s]]" clip-content hyphen-replaced))
+    (goto-char start-pos)
+    (search-forward "[[" nil t)
+    (search-forward "[" nil t)
+    (let ((title-start (point)))
+      (search-forward "]" nil t)
+      (backward-char)
+      (capitalize-region title-start (point)))
+    (goto-char (+ 2 start-pos))
+    (search-forward "[" nil t)
+    (search-forward "]" nil t))
+  nil)  ; Explicitly return nil
 #+end_src
 
