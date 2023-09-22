@@ -8368,7 +8368,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
 replacing Emacs built-in documenation
-#+begin_EXAMPLE emacs-lisp
+#+begin_SRC emacs-lisp
 ;; Note that the built-in `describe-function' includes both functions
 ;; and macros. `helpful-function' is functions only, so we provide
 ;; `helpful-callable' as a drop-in replacement.
@@ -8388,6 +8388,7 @@ replacing Emacs built-in documenation
 ;; already links to the manual, if a function is referenced there.
 (global-set-key (kbd "M-h F") #'helpful-function)
 #+end_SRC
+
 
 * workgroups
 [[https://github.com/pashinin/workgroups2][pashinin/workgroups2: Workgroups2 - Emacs session manager]]
@@ -9079,4 +9080,52 @@ point with completion.
  ;; Add 'org-make-toc-mode' to 'org-mode-hook'
  ;; This ensures 'org-make-toc-mode' is enabled every time 'org-mode' is activated
  (add-hook 'org-mode-hook #'org-make-toc-mode))
+#+end_src
+
+
+* display online images
+[[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
+
+And again we have a use-case for image data not stored on harddisk. (The
+other two use-cases
+are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64
+encoded images in org
+buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying
+previews of youtube videos]].)
+
+Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the
+following elisp code into
+your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
+
+After evaluating your init-file you can use links analog to the example:
+
+~[[imghttp://tn-home.de/Pic/tn-home.png]]~
+
+
+
+
+#+begin_src emacs-lisp
+
+(load "/Users/jay/emacs/external-packages/org-yt/org-yt.el")
+(require 'org-yt)
+
+(defun org-image-link (protocol link _description)
+ "Interpret LINK as base64-encoded image data."
+ (cl-assert (string-match "\\`img" protocol) nil
+       "Expected protocol type starting with img")
+ (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
+  (cl-assert buf nil
+        "Download of image \"%s\" failed." link)
+  (with-current-buffer buf
+   (goto-char (point-min))
+   (re-search-forward "\r?\n\r?\n")
+   (buffer-substring-no-properties (point) (point-max)))))
+
+(org-link-set-parameters
+ "imghttp"
+ :image-data-fun #'org-image-link)
+
+(org-link-set-parameters
+ "imghttps"
+ :image-data-fun #'org-image-link)
 #+end_src
