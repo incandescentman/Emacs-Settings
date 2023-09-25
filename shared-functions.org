@@ -1027,6 +1027,9 @@ Defining stuck projects as todos that do not contain "scheduled" or
    '((sequence "TODO" "STARTED" "|" "DONE")
     ;; (sequence "|" "SKIPPING")
 (sequence "MISSED" "|" "DONE")
+(sequence "MISSED ❌" "|" "DONE")
+(sequence "❌ MISSED" "|" "DONE")
+(sequence "Example:" "|")
     (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
     ;; (sequence "|" "CANCELED")
     ;; (sequence "EXPOSURE ACTIVITY" "|")
@@ -9130,6 +9133,22 @@ After evaluating your init-file you can use links analog to the example:
  :image-data-fun #'org-image-link)
 #+end_src
 
+
+** do
+#+begin_src emacs-lisp
+(defun insert-image-link-from-clipboard ()
+  "Inserts an org-mode image link using the clipboard content as the image URL."
+  (interactive)
+  (let* ((mac-clipboard-content (gui-selection-value))
+         (clip-content (if mac-clipboard-content
+                           (progn
+                             (kill-new mac-clipboard-content)
+                             mac-clipboard-content)
+                         (substring-no-properties (current-kill 0)))))
+    (if clip-content
+        (insert (format "[[img%s]]" clip-content))
+      (message "Clipboard is empty."))))
+#+end_src
 
 * Insert local file link from clipboard
 #+begin_src emacs-lisp

@@ -60,7 +60,7 @@
 
 
 
-          	        ("M" "mantra" plain "- Links :: \n- Source :: \n
+          	        ("v" "Venture out of comfort zone / mantras" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "mantras/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -144,14 +144,14 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :sentence:")
 	         :unnarrowed t)
 
-	        ("I" "Idea" plain "- Links :: \n- Source :: \n
+	        ("c" "creative idea" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :idea:")
 	         :unnarrowed t)
 
-	        ("c" "conversation" plain "- Links :: \n- Source :: \n
+	        ("C" "Conversation" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -193,7 +193,7 @@
 	         :unnarrowed t)
 
 
-	        ("i" "intelligence" plain "- Links :: \n- Source :: \n
+	        ("I" "intelligence" plain "- Links :: \n- Source :: \n
 
 * ${title}
 %?"
