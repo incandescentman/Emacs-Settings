@@ -9146,7 +9146,11 @@ After evaluating your init-file you can use links analog to the example:
                              mac-clipboard-content)
                          (substring-no-properties (current-kill 0)))))
     (if clip-content
-        (insert (format "[[img%s]]" clip-content))
+        (if (string-match-p "^http" clip-content)
+            (progn
+              (insert (format "[[img%s]]" clip-content))
+              (org-display-inline-images))
+          (message "Clipboard content does not start with 'http'."))
       (message "Clipboard is empty."))))
 #+end_src
 
