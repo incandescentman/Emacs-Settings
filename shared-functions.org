@@ -9134,7 +9134,7 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 
-** do
+* Insert image link from clipboard
 #+begin_src emacs-lisp
 (defun insert-image-link-from-clipboard ()
   "Inserts an org-mode image link using the clipboard content as the image URL."
