@@ -1028,7 +1028,8 @@ Defining stuck projects as todos that do not contain "scheduled" or
     ;; (sequence "|" "SKIPPING")
 (sequence "MISSED" "|" "DONE")
 (sequence "MISSED ❌" "|" "DONE")
-(sequence "❌ MISSED" "|" "DONE")
+(sequence "STARTED" "|" "DONE ✅")
+(sequence "STARTED 🏁" "|" "DONE ✅")
 (sequence "Example:" "|")
     (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
     ;; (sequence "|" "CANCELED")
@@ -6795,7 +6796,8 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+end_src
 
 
-* Capitalize level 1 headings use correct rules of capitalizing titles
+* Capitalization
+** Capitalize level 1 headings use correct rules of capitalizing titles
 #+begin_src emacs-lisp
 (defun org-titlecase-level-1 ()
  "Convert all Level 1 org-mode headings to title case."
@@ -6806,6 +6808,26 @@ This function will look for a file named ~/.openai/api-key, read the contents of
   (titlecase-line))))
 #+end_SRC
 
+** Sentencecase-region
+#+begin_src emacs-lisp
+(defun sentencecase-region (start end)
+ "Convert the region to sentence case."
+ (interactive "r")
+ (let ((end-marker (copy-marker end))) ; Create a marker to remember the end position
+  (save-excursion
+   (goto-char start)
+   (downcase-region start end) ; First, make everything lowercase
+   (while (< (point) end-marker)
+    (when (or (and (eq (point) start) (bolp)) ; Special case for the start
+         (eq (char-before) ?.) ; Period
+         (eq (char-before) ?!) ; Exclamation mark
+         (eq (char-before) ??)) ; Question mark
+     (skip-syntax-forward " ") ; Skip any spaces
+     (when (< (point) end-marker) ; Check if still within bounds
+      (capitalize-word 1))) ; Capitalize the first word
+    (forward-word 1)))))
+
+#+end_src
 
 * extract hyperlinks
 #+begin_src emacs-lisp
@@ -8378,7 +8400,7 @@ replacing Emacs built-in documenation
 (global-set-key (kbd "M-h f") #'helpful-callable)
 
 (global-set-key (kbd "M-h v") #'helpful-variable)
-(global-set-key (kbd "M-h k") #'helpful-key)
+;; (global-set-key (kbd "M-h k") #'helpful-key)
 (global-set-key (kbd "M-h x") #'helpful-command)
 
 ;; Lookup the current symbol at point. C-c C-d is a common keybinding
@@ -8772,7 +8794,9 @@ The function is interactive, so it can be invoked manually.
  (dolist (monitor (display-monitor-attributes-list))
  (dolist (frame (cdr (assoc 'frames monitor)))
   (if (> (frame-pixel-width frame) 2540)
-   (set-face-attribute 'default frame :font "Monaco" :height 230)
+(set-face-attribute 'default frame :font "Monaco" :height 230)
+;; (restore-to-two-thirds-size-and-position)
+
   (set-face-attribute 'default frame :font "Monaco" :height 200)))))
 
 ;; The function is also invoked automatically when a new frame is created or when invoked manually.
@@ -9179,3 +9203,47 @@ After evaluating your init-file you can use links analog to the example:
   nil)  ; Explicitly return nil
 #+end_src
 
+* Save frame size and position
+#+begin_src emacs-lisp
+(defvar saved-frame-parameters nil
+ "Variable to store saved frame parameters.")
+
+(defun save-frame-size-and-position ()
+ "Save the current frame's size and position."
+ (interactive)
+ (setq saved-frame-parameters
+    (list (cons 'left (frame-parameter nil 'left))
+       (cons 'top (frame-parameter nil 'top))
+       (cons 'width (frame-parameter nil 'width))
+       (cons 'height (frame-parameter nil 'height)))))
+
+(defun restore-frame-size-and-position ()
+ "Restore the frame's size and position."
+ (interactive)
+ (when saved-frame-parameters
+  (modify-frame-parameters nil saved-frame-parameters)))
+
+(defun restore-frame-to-external-minotaur-two-thirds-size-and-position ()
+  "Restore the frame's size and position to specific values."
+  (interactive)
+  (let ((specific-frame-parameters '((left . 1280)
+                                     (top . 25)
+                                     (width . 182)
+                                     (height . 68))))
+    (modify-frame-parameters nil specific-frame-parameters)))
+
+(defun restore-frame-to-laptop-two-thirds-size-and-position ()
+  "Restore the frame's size and position to specific values."
+  (interactive)
+  (let ((specific-frame-parameters '((left . 685)
+                                     (top . 44)
+                                     (width . 113)
+                                     (height . 47))))
+    (modify-frame-parameters nil specific-frame-parameters)))
+
+
+(define-key key-minor-mode-map (kbd "s-k f m") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
+(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
+
+
+#+end_src

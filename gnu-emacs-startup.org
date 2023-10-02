@@ -816,10 +816,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 ;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
-
+(define-key key-minor-mode-map (kbd "M-d") 'org-todo)
 ;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
-
-
 
 (define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
 ;; (define-key org-mode-map (kbd "C-l") 'reflash-indentation)
@@ -858,8 +856,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-c C-x p p") 'pomodoro-start-jay)
 
-(define-key key-minor-mode-map (kbd "s-;") 'choose-refile-method-and-refile)
-(define-key key-minor-mode-map (kbd "s-'") 'org-roam-refile-region-or-subtree)
+(define-key key-minor-mode-map (kbd "s-;") 'jay-refile-region)
+(define-key key-minor-mode-map (kbd "s-'") 'choose-refile-method-and-refile)
 
 ;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 ;; helm-mini) ; shows recent files; also bound to ⌘-r
