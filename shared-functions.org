@@ -9242,7 +9242,7 @@ After evaluating your init-file you can use links analog to the example:
     (modify-frame-parameters nil specific-frame-parameters)))
 
 
-(define-key key-minor-mode-map (kbd "s-k f m") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
+(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
 (define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
 

@@ -317,12 +317,20 @@
 
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
+\\newcommand{\\mysectiontitle}[1]{%
+  \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
+}
+
+\\usepackage{titlesec}
+\\usepackage{xcolor}
 
 \\titleformat{\\section}
-  {\\normalfont}
-  {\\thesection}
-  {1em}
-  {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
+  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+  {}
+  {0em}
+  {\\hfill\\mysectiontitle}
+
+{\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
