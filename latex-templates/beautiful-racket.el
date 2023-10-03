@@ -318,7 +318,13 @@
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 
-\\titleformat*{\\section}{\\ttfamily\\scshape\\fontsize{40}{36}\\raggedleft\\ttfamily\\color{spacegrey}}
+\\titleformat{\\section}
+  {\\normalfont}
+  {\\thesection}
+  {1em}
+  {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
+
+
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
 \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
