@@ -648,7 +648,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-c C-x <C-i>") 'org-clock-in)
 
 
-(define-key key-minor-mode-map (kbd "C-x C-f") 'affe-find)
 
 (define-key key-minor-mode-map (kbd "s-k f z") 'counsel-fzf)
 

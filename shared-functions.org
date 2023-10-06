@@ -1032,7 +1032,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
 (sequence "STARTED 🏁" "|" "DONE ✅")
 (sequence "Example:" "|")
     (sequence "NEED TO INVOICE" "INVOICED" "|" "PAID")
-    ;; (sequence "|" "CANCELED")
+    (sequence "|" "CANCELED")
     ;; (sequence "EXPOSURE ACTIVITY" "|")
     ;; (sequence "MSG" "MESSAGE" "|" "CALLED")
     ;; (sequence "COMMITTED" "RESULTS" "|")
@@ -6809,7 +6809,7 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+end_SRC
 
 ** Sentencecase-region
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun sentencecase-region (start end)
  "Convert the region to sentence case."
  (interactive "r")
@@ -6826,6 +6826,40 @@ This function will look for a file named ~/.openai/api-key, read the contents of
      (when (< (point) end-marker) ; Check if still within bounds
       (capitalize-word 1))) ; Capitalize the first word
     (forward-word 1)))))
+
+
+
+
+#+END_EXAMPLE
+
+^ doesn't work
+
+#+begin_src emacs-lisp
+(defun sentencecase-region (start end)
+ "Convert the region to sentence case."
+ (interactive "r")
+ (let ((case-fold-search nil)) ; Make search case-sensitive
+ (save-excursion
+  (goto-char start)
+  (downcase-region start end) ; Convert everything to lowercase first
+  (while (< (point) end)
+  (capitalize-word 1)  ; Capitalize the first word
+  (forward-sentence))  ; Move to the next sentence
+  (goto-char start)    ; Go back to the start to fix special cases
+  (while (re-search-forward "\\bi\\b" end t)
+  (replace-match "I"))
+  (goto-char start)
+  (while (re-search-forward "\\bi'" end t)
+  (replace-match "I'"))
+  (goto-char start)
+  (while (re-search-forward "\\bjay\\b" end t)
+  (replace-match "Jay"))
+  (goto-char start)
+  (while (re-search-forward "\\bsunjay\\b" end t)
+  (replace-match "Sunjay"))
+  (goto-char start)
+  (while (re-search-forward "\\bdixit\\b" end t)
+  (replace-match "Dixit")))))
 
 #+end_src
 
@@ -7899,6 +7933,17 @@ this function appends the default value from
  (interactive)
  (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
   (affe-grep "/Users/jay/gnulisp")))
+
+(defun find-file-at-point-or-affe-find ()
+ "Open the file at point if one exists, otherwise run affe-find."
+ (interactive)
+ (let ((filename (ffap-file-at-point))) ; Check if there is a file at point
+  (if filename
+    (find-file filename) ; Open file at point if it exists
+   (affe-find)))) ; Otherwise, run affe-find
+
+(define-key key-minor-mode-map (kbd "C-x C-f") 'find-file-at-point-or-affe-find)
+
 #+end_src
 
 
@@ -9189,7 +9234,7 @@ After evaluating your init-file you can use links analog to the example:
          (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
          (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced))
          (start-pos (point)))
-    (insert (format "[[%s][%s]]" clip-content (string-trim no-leading-numbers)))
+    (insert (format "[[%s][📄 %s]]" clip-content (string-trim no-leading-numbers)))
     (goto-char start-pos)
     (search-forward "[[" nil t)
     (search-forward "[" nil t)
@@ -9201,6 +9246,31 @@ After evaluating your init-file you can use links analog to the example:
     (search-forward "[" nil t)
     (search-forward "]" nil t))
   nil)  ; Explicitly return nil
+#+end_src
+
+* Insert directory link from clipboard
+#+begin_src emacs-lisp
+(defun insert-directory-link-from-clipboard ()
+ "Inserts an org-mode directory link using the clipboard content as the directory path."
+ (interactive)
+ (let* ((clip-content (substring-no-properties (current-kill 0)))
+     (dir-name (file-name-nondirectory (directory-file-name clip-content)))
+     (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " dir-name))
+     (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced))
+     (start-pos (point)))
+  (insert (format "[[%s][📁 %s]]" clip-content (string-trim no-leading-numbers)))
+  (goto-char start-pos)
+  (search-forward "[[" nil t)
+  (search-forward "[" nil t)
+  (let ((title-start (point)))
+   (search-forward "]" nil t)
+   (backward-char)
+   (capitalize-region title-start (point)))
+  (goto-char (+ 2 start-pos))
+  (search-forward "[" nil t)
+  (search-forward "]" nil t))
+ nil) ; Explicitly return nil
+
 #+end_src
 
 * Save frame size and position
