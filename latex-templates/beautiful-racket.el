@@ -345,17 +345,29 @@
 
 \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
 
+
+\\newenvironment{changemargin}[2]{%
+\\begin{list}{}{%
+\\setlength{\\topsep}{0pt}%
+\\setlength{\\leftmargin}{#1}%
+\\setlength{\\rightmargin}{#2}%
+\\setlength{\\listparindent}{\\parindent}%
+\\setlength{\\itemindent}{\\parindent}%
+\\setlength{\\parsep}{\\parskip}%
+}%
+\\item[]}{\\end{list}}
+
 \\newenvironment{tagline}% environment name
 {% begin code
-\\vspace{-36pt}
-\\Large
-\\begin{itshape}%
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+  \\vspace{-36pt}
+  \\Large
+  \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
+  \\begin{itshape}%
+    \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
 }%
 {% end code
-  \\end{itshape}\\vspace{24pt}\\ignorespacesafterend
+  \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
 }
-
 
 
 \\newenvironment{fauxtitle}% environment name
