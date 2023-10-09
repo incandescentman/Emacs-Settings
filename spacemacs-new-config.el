@@ -88,6 +88,8 @@
 (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+(load "/Users/jay/emacs/archive/email.el")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/email-sending.org")
 (load "/Users/jay/emacs/prelude/core/prelude-core.el")
 ;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")

@@ -678,11 +678,6 @@ read-file-name-completion-ignore-case t)
  'append)
 #+END_SRC
 
-*** Load my org modules
-#+BEGIN_SRC emacs-lisp
-(setq org-modules (quote (org-mime )))
-#+END_SRC
-
 ** org custom functions
 *** archiving
 (defadvice org-archive-subtree (around my-org-archive-subtree activate)
@@ -1534,8 +1529,8 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 
 ** ~org-mime~
 
-#+BEGIN_SRC emacs-lisp
-;; (use-package org-mime)
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package org-mime)
 (setq org-mime-default-header "")
 
 ;; add signature
@@ -1630,11 +1625,11 @@ text-transform:capitalize; font-weight:bold;")))
 ;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
 (local-set-key "\M-p" 'org-mime-htmlize)))
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 *** org-mime blockquote hacker style
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 
 (add-hook 'org-mime-html-hook
@@ -1652,10 +1647,10 @@ width:80%;
 quotes: '«' '»';
 font-family: Courier, 'Courier New', monospace;
     font-weight: 400 !important; font-size:small;")))
-#+END_SRC
+#+END_EXAMPLE
 
 *** org-mime blockquote literary style
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
@@ -1673,7 +1668,7 @@ margin-bottom: 1em;
 	white-space:0;
   width:60%;
   word-wrap:normal!important;")))
-#+END_SRC
+#+END_EXAMPLE
 
 * Browsing
 ** Make URLs in comments/strings clickable
@@ -9333,28 +9328,48 @@ After evaluating your init-file you can use links analog to the example:
 * email
 #+begin_src emacs-lisp
 (defun email-org-subtree ()
- "Email the current Org subtree."
- (interactive)
- (unless (eq major-mode 'org-mode)
-  (error "Not an Org Mode buffer"))
- (save-excursion
+  "Email the current Org subtree as HTML."
+  (interactive)
+  (unless (eq major-mode 'org-mode)
+    (error "Not an Org Mode buffer"))
   (org-back-to-heading)
-  (let ((end (save-excursion (org-end-of-subtree t)))
-     (subject (nth 4 (org-heading-components)))
-     (content ""))
-   ;; Capture the subtree content
-   (forward-line)
-   (setq content (buffer-substring-no-properties (point) end))
-   ;; Create the email
-   (message-mail)
-   (message-goto-to) ;; position cursor at To field
-   ;; You can insert a default "To:" address here
-   ;; (insert "someone@example.com")
-   (message-goto-subject)
-   (insert subject)
-   (message-goto-body)
-   (insert content)
-   (message-goto-to) ;; position cursor back to To field for you to fill
-   )))
-
+  (let* ((end (save-excursion (org-end-of-subtree t)))
+         (subject (nth 4 (org-heading-components)))
+         (content (buffer-substring-no-properties (point) end))
+         (html-content (org-mime-org-buffer-htmlize content)))
+    ;; Create the email
+    (compose-mail)
+    (message-goto-to)  ;; position cursor at To field
+    (message-goto-subject)
+    (insert subject)
+    (message-goto-body)
+    ;; Insert the HTML content
+    (mml-insert-multipart "alternative")
+    (mml-insert-part "text/html")
+    (insert html-content)
+    (mml-insert-endpart)
+    (message-goto-to)  ;; position cursor back to To field for you to fill
+    ))
 #+end_src
+
+* org-mime
+#+BEGIN_SRC emacs-lisp
+(use-package org-mime
+ :ensure t)
+
+(setq org-mime-export-options '(:section-numbers nil
+                :with-author nil
+                :with-toc nil))
+
+
+(add-hook 'org-mime-html-hook
+     (lambda ()
+      (org-mime-change-element-style
+      "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
+             "#E6E1DC" "#232323"))))
+
+
+(add-hook 'message-send-hook 'org-mime-htmlize)
+
+#+END_SRC
+
