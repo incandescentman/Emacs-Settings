@@ -8411,7 +8411,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 
 * msmtp
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 ;; This is needed to allow msmtp to do its magic:
 (setq message-sendmail-f-is-evil 't)
 
@@ -8431,6 +8431,16 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (setq user-mail-address "sunjaydixit@gmail.com")
 
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
+
+#+END_EXAMPLE
+
+* email
+#+begin_src emacs-lisp
+(setq send-mail-function 'sendmail-send-it
+   sendmail-program "/usr/sbin/sendmail"
+   mail-specify-envelope-from t
+   mail-envelope-from 'header
+   message-sendmail-envelope-from 'header)
 
 #+end_src
 
@@ -9315,5 +9325,36 @@ After evaluating your init-file you can use links analog to the example:
 (define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
 (define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
+
+#+end_src
+
+
+
+* email
+#+begin_src emacs-lisp
+(defun email-org-subtree ()
+ "Email the current Org subtree."
+ (interactive)
+ (unless (eq major-mode 'org-mode)
+  (error "Not an Org Mode buffer"))
+ (save-excursion
+  (org-back-to-heading)
+  (let ((end (save-excursion (org-end-of-subtree t)))
+     (subject (nth 4 (org-heading-components)))
+     (content ""))
+   ;; Capture the subtree content
+   (forward-line)
+   (setq content (buffer-substring-no-properties (point) end))
+   ;; Create the email
+   (message-mail)
+   (message-goto-to) ;; position cursor at To field
+   ;; You can insert a default "To:" address here
+   ;; (insert "someone@example.com")
+   (message-goto-subject)
+   (insert subject)
+   (message-goto-body)
+   (insert content)
+   (message-goto-to) ;; position cursor back to To field for you to fill
+   )))
 
 #+end_src
