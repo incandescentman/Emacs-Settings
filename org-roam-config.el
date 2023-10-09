@@ -43,7 +43,15 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
 	         :unnarrowed t)
 
-	        ("S" "Structure / Schelling Points" plain "- Links :: \n- Source :: \n
+	        ("$" "consumer" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "consumer/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
+	         :unnarrowed t)
+
+
+          ("S" "Structure / Schelling Points" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -258,7 +266,7 @@
    ;; goto
    ("s-u o" . org-roam-dailies-find-date)
    ("s-u ." . org-roam-dailies-goto-date)
-   ("s-u p" . org-roam-dailies-goto-previous-note)
+   ("s-u p" . org-roam-yesterday)
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-j"   . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
@@ -283,6 +291,15 @@
    ;; ("C-c r d s" . org-schedule)
 
    ))
+
+
+(defun org-roam-yesterday ()
+(interactive)
+(jay/save-some-buffers)
+(org-roam-dailies-goto-previous-note)
+  )
+
+
 
 ;; Add custom functions and advice
 ;; (global-page-break-lines-mode 0)
