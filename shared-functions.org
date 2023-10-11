@@ -9373,3 +9373,37 @@ After evaluating your init-file you can use links analog to the example:
 
 #+END_SRC
 
+
+* org-msg
+[[https://github.com/jeremy-compostella/org-msg][jeremy-compostella/org-msg: OrgMsg is a GNU/Emacs global minor mode mixing up Org mode and Message mode to compose and reply to emails in a Outlook HTML friendly style.]]
+
+
+#+begin_src emacs-lisp
+;; (setq mail-user-agent 'gnus-user-agent)
+;; message-user-agent
+ (require 'org-msg)
+ (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+	org-msg-startup "hidestars indent inlineimages"
+	org-msg-greeting-fmt "\nHi%s,\n\n"
+	org-msg-recipient-names '(("jeremy.compostella@gmail.com" . "Jérémy"))
+	org-msg-greeting-name-limit 3
+	org-msg-default-alternatives '((new		. (text html))
+				    (reply-to-html	. (text html))
+				    (reply-to-text	. (text)))
+	org-msg-convert-citation t
+	org-msg-signature "
+
+ Regards,
+
+ ,#+begin_signature
+ --
+ ,*Jeremy*
+ /One Emacs to rule them all/
+ ,#+end_signature")
+ (org-msg-mode)
+#+end_src
+
+* indent level
+#+begin_src emacs-lisp
+(setq org-indent-indentation-per-level 4)
+#+end_src
