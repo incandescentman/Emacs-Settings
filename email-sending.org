@@ -260,23 +260,21 @@ subsequent sends."
 *** Claire send css
 #+begin_src emacs-lisp
 (defun claire-send-email-with-css ()
- "Send the current org-mode heading as the body of an email, with headline as the subject."
- (interactive)
- (if (and (eq major-mode 'org-mode) (org-on-heading-p))
-     (progn
-       (save-excursion
-         (org-narrow-to-subtree)
-         (let* ((TO "Claire Fridkin <jay@jaydixit.com>")
-                (SUBJECT (nth 4 (org-heading-components)))
-                (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
-                (continue nil)
-                (switch-function nil)
-                (yank-action nil)
-                (send-actions '((email-send-action . nil)))
-                (return-action '(email-heading-return))
-                (hardcoded-css "<style type=\"text/css\">
-
-
+  "Send the current org-mode heading as the body of an email, with headline as the subject."
+  (interactive)
+  (if (and (eq major-mode 'org-mode) (org-on-heading-p))
+      (progn
+        (save-excursion
+          (org-narrow-to-subtree)
+          (let* ((TO "Claire Fridkin <jay@jaydixit.com>")
+                 (SUBJECT (nth 4 (org-heading-components)))
+                 (OTHER-HEADERS (eval (org-entry-get (point) "OTHER-HEADERS")))
+                 (continue nil)
+                 (switch-function nil)
+                 (yank-action nil)
+                 (send-actions '((email-send-action . nil)))
+                 (return-action '(email-heading-return))
+                 (hardcoded-css "<style type=\"text/css\"> /* Your CSS Here */
 i {
   color: #1A1A1A;
 }
@@ -748,21 +746,27 @@ span.todo.STARTED__ {
 }
 
 </style>")
-                (html-content (org-export-as 'html nil nil nil nil)))
-           (if html-content
-               (progn
-                 (setq html-content (replace-regexp-in-string "</head>" (concat hardcoded-css "</head>") html-content))
-                 (widen)
-                 (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
-                 (message-goto-body)
-                 (mml-insert-multipart "alternative")
-                 (mml-insert-part "text/html")
-                 (insert html-content)
-                 (message-goto-to)
-                 (message-send-and-exit))
-             (message "Failed to generate HTML content."))))
-       (message "Email sent."))
-   (message "You must be in an Org mode buffer on a heading to use this function.")))
+                 (html-content (org-export-as 'html nil nil nil nil)))
+            (if html-content
+                (progn
+                  ;; Insert CSS into the <head> section
+                  (setq html-content (replace-regexp-in-string "<head>\\(.*\\)</head>"
+                                                              (concat "<head>\\1" hardcoded-css "</head>")
+                                                              html-content))
+                  (widen)
+                  (compose-mail TO SUBJECT OTHER-HEADERS continue switch-function yank-action send-actions return-action)
+                  (message-goto-body)
+                  (mml-insert-multipart "alternative")
+                  (mml-insert-part "text/html")
+                  (insert html-content)
+                  (message-goto-to)
+                  (message-send-and-exit))
+              (message "Failed to generate HTML content."))))
+        (message "Email sent."))
+    (message "You must be in an Org mode buffer on a heading to use this function.")))
+
+
+
 #+end_src
 
 *** bigblowcss
