@@ -858,7 +858,7 @@ This function is called at the very end of Spacemacs initialization."
  '(flycheck-disabled-checkers '(proselint))
  '(gptel-model "gpt-4")
  '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
- '(line-number-mode nil)
+ '(line-number-mode t)
  '(marginalia-align 'left nil nil "Customized with use-package marginalia")
  '(mode-line-compact 'long)
  '(org-attach-expert nil)

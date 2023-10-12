@@ -102,8 +102,8 @@
 	         :unnarrowed t)
 
 
-                    ("B" "business" plain "%?"
-	                   :target (file+head "business/%<%Y%m%d%H%M%S>-${slug}.org"
+                    ("i" "incomegen" plain "%?"
+	                   :target (file+head "incomegen/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :business:\n\
 - Links :: \n- Source :: \n\n
 * ${title}

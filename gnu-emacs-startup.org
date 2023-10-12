@@ -479,8 +479,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-3") 'winum-select-window-3)
 (define-key key-minor-mode-map (kbd "C-M-3") 'number-region)
 
-(define-key key-minor-mode-map [mouse-2] 'iloveyou)
 
+(define-key key-minor-mode-map [mouse-2] 'context-menu-open)
+
+
+(bind-key "C-c <mouse-3>" 'right-click-context-menu)
 (define-key key-minor-mode-map (kbd "M-j") 'aide-openai-complete-buffer-insert)
 
 (define-key key-minor-mode-map (kbd "C-c C-x C-r") 'org-clock-report)
