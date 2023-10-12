@@ -9150,14 +9150,13 @@ To make a basic TOC, follow these steps:
 Use command ~org-make-toc-set~ to change TOC properties for the entry at
 point with completion.
 
-
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-make-toc
  :config
  ;; Add 'org-make-toc-mode' to 'org-mode-hook'
  ;; This ensures 'org-make-toc-mode' is enabled every time 'org-mode' is activated
  (add-hook 'org-mode-hook #'org-make-toc-mode))
-#+end_src
+#+END_EXAMPLE
 
 
 * display online images
@@ -9407,3 +9406,24 @@ After evaluating your init-file you can use links analog to the example:
 #+begin_src emacs-lisp
 (setq org-indent-indentation-per-level 4)
 #+end_src
+
+* right-click
+[[https://oylenshpeegul.gitlab.io/blog/posts/20230129/][Context menus in Emacs 28! · oylenshpeegul]]
+
+[[http://yummymelon.com/devnull/customizing-the-emacs-context-menu.html][nfdn: Customizing the Emacs Context Menu]]
+
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'context-menu-mode)
+(add-hook 'shell-mode-hook 'context-menu-mode)
+(add-hook 'dired-mode-hook 'context-menu-mode)
+(add-hook 'org-mode-hook 'context-menu-mode)
+
+; (add-hook 'context-menu-functions #'my-context-menu)
+
+#+end_src
+
+
+
+
+
+
