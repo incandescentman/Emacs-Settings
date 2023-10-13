@@ -24,16 +24,15 @@
 % define Helvetica Now font weights
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
-%        UprightFont = HelveticaNowText-Light,
-        UprightFont = SF-Pro-Text-Light,
+        UprightFont = SF Pro Light,
         BoldFont = HelveticaNowDisplay-Light,
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
-  Extension = .ttf
+  Extension = .ttf]
 
 \\setromanfont{HelveticaNowText-Light}
 
-% \\setromanfont{sf Pro}
+% \\setromanfont{SF Pro}
 % not sure i like this
 
 \\setsansfont{HelveticaNowDisplay-Regular}
@@ -76,7 +75,7 @@
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
-%\\definecolor{elegantblue}{HTML}{1792d1}
+\\definecolor{elegantblue}{HTML}{1792d1}
 \\definecolor{ideablue}{HTML}{55C1E7}
 
 
@@ -253,6 +252,8 @@
 \\usepackage{etoolbox}
 \\AtBeginEnvironment{quote}{\\singlespace\\vspace{-\\topsep}\\small}
 \\AtEndEnvironment{quote}{\\vspace{-\\topsep}\\endsinglespace}
+
+
 
 
 \\usepackage[sc]{titlesec}
