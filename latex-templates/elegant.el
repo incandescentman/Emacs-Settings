@@ -250,9 +250,8 @@
 \\usepackage{setspace}
 \\usepackage{lipsum}
 \\usepackage{etoolbox}
-\\AtBeginEnvironment{quote}{\\singlespace\\vspace{-\\topsep}\\small}
-\\AtEndEnvironment{quote}{\\vspace{-\\topsep}\\endsinglespace}
-
+\\AtBeginEnvironment{quote}{\\singlespace\\small\\vspace{0em}}  % Added %\\vspace{1em}
+\\AtEndEnvironment{quote}{\\singlespace\\vspace{-1em}}  % Added \\vspace{1em}
 
 
 
