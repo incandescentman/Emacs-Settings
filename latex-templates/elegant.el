@@ -38,7 +38,8 @@
 \\setsansfont{HelveticaNowDisplay-Regular}
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
-  \\setmonofont{Myriad Pro}
+  \\setmonofont{Consolas}[Scale=0.9]
+
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -77,6 +78,9 @@
 %\\definecolor{dullerelegantblue}{HTML}{4380b9}
 \\definecolor{elegantblue}{HTML}{1792d1}
 \\definecolor{ideablue}{HTML}{55C1E7}
+\\definecolor{powderblue}{HTML}{f5f7ff}
+\\definecolor{stormybluegrey}{HTML}{898ea4}
+\\definecolor{moonrockgrey}{HTML}{212121}
 
 
 \\newtoks\\leftheader
@@ -247,11 +251,35 @@
   {\\endadjustwidth}
 
 
-\\usepackage{setspace}
-\\usepackage{lipsum}
+
+\\usepackage[most]{tcolorbox}
 \\usepackage{etoolbox}
-\\AtBeginEnvironment{quote}{\\singlespace\\small\\vspace{0em}}  % Added %\\vspace{1em}
-\\AtEndEnvironment{quote}{\\singlespace\\vspace{-1em}}  % Added \\vspace{1em}
+
+\\tcbuselibrary{skins}
+
+\\AtBeginEnvironment{quote}{\\vspace{1em}}
+\\AtEndEnvironment{quote}{\\vspace{1em}}
+
+
+
+\\renewenvironment{quote}
+{%
+  \\begin{center}
+  \\begin{tcolorbox}[
+    colback=powderblue,  % Background color
+    colframe=stormybluegrey,  % Frame color
+    colupper=moonrockgrey,  % Text color
+    boxrule=0.5pt,  % Border thickness
+    rounded corners,  % Rounded corners
+    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing
+    width=0.8\\textwidth,  % Width
+    halign=flush left  % Left alignment inside the box
+  ]
+}
+{%
+  \\end{tcolorbox}
+  \\end{center}
+}
 
 
 
