@@ -30,7 +30,7 @@
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf]
 
-\\setromanfont{HelveticaNowText-Light}
+\\setromanfont{SF Pro}
 
 % \\setromanfont{SF Pro}
 % not sure i like this
@@ -300,7 +300,7 @@
 %\\titlespacing*{\\subsubsection}{0pt}{16pt}{-6pt}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{1.5ex}{24pt}{6pt}
+\\titlespacing*{\\section}{1.5ex}{12pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 

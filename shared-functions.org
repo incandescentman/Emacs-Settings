@@ -9122,6 +9122,16 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  (interactive)
  (copy-region-as-kill (region-beginning) (region-end))
  (x-select-text (current-kill 0)))
+
+
+(defun clipboard-to-kill-ring ()
+"Push the current macOS clipboard content to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (unless (string-equal clipboard-content "")
+   (kill-new (substring clipboard-content 0 -1))))) ; Remove trailing newline
+
+
 #+end_src
 
 
@@ -9232,6 +9242,7 @@ After evaluating your init-file you can use links analog to the example:
 (defun insert-local-file-link-from-clipboard ()
   "Inserts an org-mode link using the clipboard content as the file path."
   (interactive)
+  (clipboard-to-kill-ring)
   (let* ((clip-content (substring-no-properties (current-kill 0)))
          (file-name (file-name-nondirectory clip-content))
          (file-name-base (file-name-sans-extension file-name))
@@ -9257,6 +9268,7 @@ After evaluating your init-file you can use links analog to the example:
 (defun insert-directory-link-from-clipboard ()
  "Inserts an org-mode directory link using the clipboard content as the directory path."
  (interactive)
+clipboard-to-kill-ring
  (let* ((clip-content (substring-no-properties (current-kill 0)))
      (dir-name (file-name-nondirectory (directory-file-name clip-content)))
      (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " dir-name))
