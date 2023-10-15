@@ -9369,6 +9369,11 @@ clipboard-to-kill-ring
  :ensure t)
 
 (setq org-mime-export-options '(:section-numbers nil
+                                :with-author nil
+                                :with-toc nil))
+
+
+(setq org-mime-export-options '(:section-numbers nil
                 :with-author nil
                 :with-toc nil))
 
@@ -9389,7 +9394,7 @@ clipboard-to-kill-ring
 [[https://github.com/jeremy-compostella/org-msg][jeremy-compostella/org-msg: OrgMsg is a GNU/Emacs global minor mode mixing up Org mode and Message mode to compose and reply to emails in a Outlook HTML friendly style.]]
 
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 ;; (setq mail-user-agent 'gnus-user-agent)
 ;; message-user-agent
  (require 'org-msg)
@@ -9412,7 +9417,7 @@ clipboard-to-kill-ring
  /One Emacs to rule them all/
  ,#+end_signature")
  (org-msg-mode)
-#+end_src
+#+END_EXAMPLE
 
 * indent level
 #+begin_src emacs-lisp
