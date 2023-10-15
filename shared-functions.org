@@ -719,7 +719,7 @@ read-file-name-completion-ignore-case t)
 (setq org-export-with-smart-quotes t)
 (setq org-export-exclude-tags (quote ("noexport" "extra")))
 
-;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/simple-cortex.css'>")
+;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/neo.css'>")
 (setq org-export-time-stamp-file nil)
 (setq org-export-with-clocks t)
 (setq org-export-with-drawers t)
@@ -1527,148 +1527,6 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
   )
 #+END_SRC
 
-** ~org-mime~
-
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package org-mime)
-(setq org-mime-default-header "")
-
-;; add signature
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (goto-char (point-max))
-            (insert "<br>
-<br>
---<br>
-<strong><a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>Jay Dixit</a></strong><br>
-Founder, <a href='http://storytelling.nyc/' style='text-decoration:none; color:#000;' target='_blank'> Storytelling.NYC</a><br>
-<a href='http://jaydixit.com/' style='text-decoration:none;' target='_blank'>
-  jaydixit.com</a>
-<br>
-<span style='text-decoration:none;'><a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>storytelling.nyc</a><br></span>
-<span style='text-decoration:none;'><a href='http://jaydixit.com/' style='text-decoration:none; color:#000;' target='_blank'>(646) 355-8001</a><br></span>
-<a href='http://storytelling.nyc/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png' alt='Storytelling NYC' height='55'>
-</a>
-<a href='https://twitter.com/jaydixit' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/twitter-512.png' height=16 width=16 alt='New York Writers on Twitter'>
-</a>
-<a href='https://www.facebook.com/newyorkwriters/' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/facebook-512.png' height=16 width=16 alt='New York Writers on Facebook'>
-</a>
-<a href='https://instagram.com/jaydixit' style='text-decoration:none;' target='_blank'>
-<img src='http://incandescentman.github.io/assets/images/instagram-icon-128.png' height=16 width=16 alt='Jay Dixit on Instagram'>
-</a>
-<br>
-<p style='color:#FFF;' target='_blank'>Jay Dixit</p>")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "p" "font-family:Helvetica,sans-serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "a" "font-family:Helvetica,sans-serif; margin-bottom: 1em;")))
-
-(add-hook 'org-mime-html-hook
-     (lambda ()
-      (org-mime-change-element-style
-       "ul.org-ul li a" "line-height: 1.5;")))
-
-
-
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-class-style
-"example" "
-	background:rgba(255,0,0,0.05);
-	border:1px solid rgba(255,0,0,0.2);
-	border-radius:8px;
-	color:#3f3f3f;
-  font-family:monospace;
-	line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-margin-left:2em;
-	text-align:left;
-	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-	white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "li" "font-family:sans-serif")))
-
-(add-hook 'org-mime-html-hook
-     (lambda ()
-      (org-mime-change-element-style
-       "strong" "font-family:sans-serif;color:#00ADEF;")))
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "h2" "color:#55C1E7;
-    font-family:Sans-Serif;
-text-transform:capitalize; font-weight:bold;")))
-
-(add-hook 'message-mode-hook
-          (lambda ()
-;;;            (local-set-key "\C-c\M-o" 'org-mime-htmlize)))
-(local-set-key "\M-p" 'org-mime-htmlize)))
-
-#+END_EXAMPLE
-
-
-*** org-mime blockquote hacker style
-#+BEGIN_EXAMPLE emacs-lisp
-
-
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "pre" "color: #777;
-    quotes: none;
-    border-radius: 15px;
-    font-weight: 400;
-    color: #87ceeb;
-    line-height: 1.3em;
-width:80%;
-    background: none repeat scroll 0% 0% rgb(61, 61, 61);
-    padding: 20px;
-quotes: '«' '»';
-font-family: Courier, 'Courier New', monospace;
-    font-weight: 400 !important; font-size:small;")))
-#+END_EXAMPLE
-
-*** org-mime blockquote literary style
-#+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "
-	background:rgba(255,0,0,0.05);
-	border:1px solid rgba(255,0,0,0.2);
-	border-radius:8px;
-	color:#3f3f3f;
-  font-family:monospace;
-	line-height:1.2;
-  padding: 1em 1em 1em 1em;
-margin-bottom: 1em;
-	text-align:left;
-	text-shadow:rgba(0,0,0,0.2) 0 2px 5px;
-	white-space:0;
-  width:60%;
-  word-wrap:normal!important;")))
-#+END_EXAMPLE
 
 * Browsing
 ** Make URLs in comments/strings clickable
@@ -6241,7 +6099,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 
-
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 #+END_SRC
 
@@ -9362,62 +9219,6 @@ clipboard-to-kill-ring
     (message-goto-to)  ;; position cursor back to To field for you to fill
     ))
 #+end_src
-
-* org-mime
-#+BEGIN_SRC emacs-lisp
-(use-package org-mime
- :ensure t)
-
-(setq org-mime-export-options '(:section-numbers nil
-                                :with-author nil
-                                :with-toc nil))
-
-
-(setq org-mime-export-options '(:section-numbers nil
-                :with-author nil
-                :with-toc nil))
-
-
-(add-hook 'org-mime-html-hook
-     (lambda ()
-      (org-mime-change-element-style
-      "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
-             "#E6E1DC" "#232323"))))
-
-
-(add-hook 'message-send-hook 'org-mime-htmlize)
-
-#+END_SRC
-
-
-* org-msg
-[[https://github.com/jeremy-compostella/org-msg][jeremy-compostella/org-msg: OrgMsg is a GNU/Emacs global minor mode mixing up Org mode and Message mode to compose and reply to emails in a Outlook HTML friendly style.]]
-
-
-#+begin_EXAMPLE emacs-lisp
-;; (setq mail-user-agent 'gnus-user-agent)
-;; message-user-agent
- (require 'org-msg)
- (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-	org-msg-startup "hidestars indent inlineimages"
-	org-msg-greeting-fmt "\nHi%s,\n\n"
-	org-msg-recipient-names '(("jeremy.compostella@gmail.com" . "Jérémy"))
-	org-msg-greeting-name-limit 3
-	org-msg-default-alternatives '((new		. (text html))
-				    (reply-to-html	. (text html))
-				    (reply-to-text	. (text)))
-	org-msg-convert-citation t
-	org-msg-signature "
-
- Regards,
-
- ,#+begin_signature
- --
- ,*Jeremy*
- /One Emacs to rule them all/
- ,#+end_signature")
- (org-msg-mode)
-#+END_EXAMPLE
 
 * indent level
 #+begin_src emacs-lisp
