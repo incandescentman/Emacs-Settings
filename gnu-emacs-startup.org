@@ -2744,7 +2744,7 @@ different → different
 #+BEGIN_SRC emacs-lisp
 (use-package mw-thesaurus
   :defer)
-(load "/Users/jay/emacs/emacs-settings/secret-codes.el")
+(load "/Users/jay/emacs/emacs-secret/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC
 
