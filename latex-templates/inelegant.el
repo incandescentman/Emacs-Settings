@@ -32,7 +32,11 @@
 ]{Helvetica Display}
 
 \\setmainfont{HelveticaNowDisplay-Light}
-\\setsansfont{TeX Gyre Pagella}
+%\\setsansfont{TeX Gyre Pagella}
+
+\\newfontfamily{\\jayromanfont}{TeX Gyre Pagella}
+
+
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Consolas}[Scale=0.9]
 
@@ -302,19 +306,12 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{36}{36}\\raggedright\\sffamily}
 
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{black}}
+\\titleformat*{\\subsection}{\\normalfont\\bfseries\\fontsize{18}{15}\\raggedright\\color{black}}
+\\titleformat*{\\subsubsection}{\\normalfont\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{black}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
-
-
-\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{black} }
-
-\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{black} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
