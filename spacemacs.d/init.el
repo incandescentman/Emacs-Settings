@@ -83,7 +83,7 @@ This function should only modify configuration layer settings."
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("/Users/jay/starship/layers/")
+   dotspacemacs-configuration-layer-path '("/Users/jay/emacs/emacs-settings/spacemacs.d")
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers

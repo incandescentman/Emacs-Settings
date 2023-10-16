@@ -1,1 +1,1 @@
-/Users/jay/starship/init.el
+/Users/jay/emacs/emacs-settings/spacemacs.d/init.el
