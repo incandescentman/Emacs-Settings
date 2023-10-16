@@ -92,7 +92,7 @@
 \\makeatletter
 
 
-%\\renewcommand{\\contentsname}{Table of Contents}
+\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
@@ -129,7 +129,9 @@
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
   \\tolerance=1000
-%\\usepackage{tocloft}
+\\usepackage{tocloft}
+\\renewcommand{\\cftsecfont}{\\normalfont}
+\\renewcommand{\\cftsecpagefont}{\\normalfont}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
 
@@ -241,7 +243,9 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
+%\\titleformat*{\\section}{font}\\fontsize{size}{baseline-skip}\\raggedright\\sffamily}
+
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{40}\\raggedright\\sffamily}
 
 \\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
 
