@@ -4776,6 +4776,7 @@ It will open the link in Emacs with typing C-c C-o.
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
