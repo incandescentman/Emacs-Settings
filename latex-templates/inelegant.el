@@ -1,8 +1,8 @@
-(provide 'elegant)
+(provide 'inelegant)
 
 (with-eval-after-load 'ox-latex
 (add-to-list 'org-latex-classes
-  '("elegant"
+  '("inelegant"
 "
 
 \\documentclass[12pt]{article}
@@ -25,17 +25,17 @@
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = SF Pro Light,
-        BoldFont = HelveticaNowDisplay-Light,
+        BoldFont = HelveticaNowDisplay-Bold,
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf]
 
 \\setromanfont{SF Pro}
 
-% \\setromanfont{SF Pro}
-% not sure i like this
 
-\\setsansfont{HelveticaNowDisplay-Regular}
+
+\\setsansfont{TeX Gyre Pagella}
+
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 
   \\setmonofont{Consolas}[Scale=0.9]
@@ -51,10 +51,10 @@
 \\usepackage{paralist}
 \\usepackage{graphicx}
 \\usepackage{wrapfig}
-
+\\usepackage{setspace}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
-% \\usepackage[asterism]{sectionbreak}
+
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
@@ -97,7 +97,7 @@
 \\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
 %Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+\\DeclareTextFontCommand{\\textbf}{\\rmfamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{textcase}
@@ -293,13 +293,15 @@
  \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
 }
 
+
+
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{12pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
 \\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
