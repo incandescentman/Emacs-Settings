@@ -113,6 +113,23 @@
 \\pagestyle{fancy}
 
 
+% doesn't work
+% source: https://tex.stackexchange.com/questions/236705/how-do-i-show-the-subsection-name-and-the-subsubsection-number-and-name-in-a-fan
+% https://tex.stackexchange.com/questions/310046/fancyhdr-and-redefinition-of-leftmark-rightmark
+%\\usepackage{blindtext}
+%\\let\\Sectionmark\\sectionmark
+%\\def\\sectionmark#1{\\def\\Sectionname{#1}\\Sectionmark{#1}}
+%\\let\\Subsectionmark\\subsectionmark
+%\\def\\subsectionmark#1{\\def\\Subsectionname{#1}\\Subsectionmark{#1}}
+%\\let\\Subsubsectionmark\\subsubsectionmark
+%\\def\\subsubsectionmark#1{\\def\\Subsubsectionname{#1}\\Subsubsectionmark{#1}}
+
+
+% \\fancyhf{}
+% \\fancyhead[L]{\\thesection.\\ \\Sectionname} % displays the section (1. SECTION NAME)
+% \\fancyhead[R]{\\thesubsection.\\ \\Subsectionname} % displays the subsection (1.1 SUBSECTION NAME)
+% \\fancyfoot[R]{\\thesubsubsection.\\ \\Subsubsectionname}
+
 
 
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
