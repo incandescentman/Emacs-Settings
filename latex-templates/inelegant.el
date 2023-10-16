@@ -16,34 +16,29 @@
 
 \\usepackage{algorithm}
 \\usepackage{amsmath}
-\\usepackage{ifxetex}
-\\ifxetex
-  \\usepackage{fontspec,xltxtra,xunicode}
-  \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 
-% define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
+
+\\usepackage{fontspec}
+\\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+% define main font
+\\setmainfont[
   Path = /Users/jay/Library/Fonts/,
-        UprightFont = SF Pro Light,
-        BoldFont = HelveticaNowDisplay-Bold,
-        ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
-  Extension = .ttf]
+  UprightFont = HelveticaNowDisplay-Light,
+  BoldFont = HelveticaNowDisplay-Bold,
+  ItalicFont = HelveticaNowText-LightItalic,
+  BoldItalicFont = HelveticaNowDisplay-BoldIta,
+  Extension = .ttf
+]{Helvetica Display}
 
-\\setromanfont{SF Pro}
-
-
-
+\\setmainfont{HelveticaNowDisplay-Light}
 \\setsansfont{TeX Gyre Pagella}
-
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setmonofont{Consolas}[Scale=0.9]
 
-  \\setmonofont{Consolas}[Scale=0.9]
+\\usepackage[mathletters]{ucs}
+\\usepackage[utf8x]{inputenc}
 
-\\else
-  \\usepackage[mathletters]{ucs}
-  \\usepackage[utf8x]{inputenc}
-\\fi
 
 \\usepackage[obeyspaces]{url}
 \\PassOptionsToPackage{obeyspaces}{url}
@@ -96,9 +91,16 @@
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
-%Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\rmfamily\\bfseries}
+
+% Define a new font family for boldface
+\\newfontfamily{\\myboldfont}[BoldFont=HelveticaNowDisplay-Bold]{HelveticaNowDisplay}
+
+% Redefine textbf to use the new font family
+\\DeclareTextFontCommand{\\textbf}{\\myboldfont\\bfseries}
+
+% Keep textit as it is
 \\DeclareTextFontCommand{\\textit}{\\itshape}
+
 
 \\usepackage{textcase}
 
@@ -303,16 +305,16 @@
 \\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
 
 \\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{black}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
+\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{black} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{black} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
