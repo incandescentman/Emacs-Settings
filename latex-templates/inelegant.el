@@ -12,10 +12,10 @@
 
 
 \\usepackage{float}
-\\usepackage{changepage}
+%\\usepackage{changepage}
 
-\\usepackage{algorithm}
-\\usepackage{amsmath}
+%\\usepackage{algorithm}
+%\\usepackage{amsmath}
 
 
 \\usepackage{fontspec}
@@ -27,34 +27,32 @@
   UprightFont = HelveticaNowText-Light,
   BoldFont = HelveticaNowText-Bold,
   ItalicFont = HelveticaNowText-LightItalic,
-  BoldItalicFont = HelveticaNowText-BoldIta,
+  BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 ]{Helvetica Display}
 
 \\setsansfont{TeX Gyre Pagella}
 
-\\newfontfamily{\\jayromanfont}{TeX Gyre Pagella}
-
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+%\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Consolas}[Scale=0.9]
 
-\\usepackage[mathletters]{ucs}
-\\usepackage[utf8x]{inputenc}
+%\\usepackage[mathletters]{ucs}
+%\\usepackage[utf8x]{inputenc}
 
 
 \\usepackage[obeyspaces]{url}
 \\PassOptionsToPackage{obeyspaces}{url}
 
 \\usepackage{paralist}
-\\usepackage{graphicx}
+%\\usepackage{graphicx}
 \\usepackage{wrapfig}
 \\usepackage{setspace}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 
-\\usepackage{calc}
-\\usepackage{eso-pic}
-\\usepackage{etoolbox}
+%\\usepackage{calc}
+%\\usepackage{eso-pic}
+%\\usepackage{etoolbox}
 \\usepackage{xcolor}
 \\PassOptionsToPackage{hyperref,x11names}{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
@@ -80,18 +78,13 @@
 \\definecolor{moonrockgrey}{HTML}{212121}
 
 
-\\newtoks\\leftheader
-\\newtoks\\leftheaderurl
-\\newtoks\\coverimage
+% \\newtoks\\leftheader
+% \\newtoks\\leftheaderurl
+% \\newtoks\\coverimage
 
 \\raggedright
 \\hyphenpenalty=5000
 \\tolerance=1000
-
-%This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
 
 \\usepackage{textcase}
 
@@ -99,7 +92,7 @@
 \\makeatletter
 
 
-\\renewcommand{\\contentsname}{Table of Contents}
+%\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
@@ -130,13 +123,13 @@
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
-\\usepackage{fancyvrb}
+%\\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
   \\tolerance=1000
-\\usepackage{tocloft}
+%\\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
 
@@ -190,52 +183,7 @@
 
 \\definecolor{azure}{HTML}{f2feff}
 
-\\usepackage{lipsum}
-\\usepackage{tikz}
-\\usetikzlibrary{backgrounds}
-\\makeatletter
-
-\\tikzset{%
-  fancy quotes/.style={
-    text width=\\fq@width pt,
-    align=justify,
-    inner sep=1em,
-    anchor=north west,
-    minimum width=\\linewidth,
-  },
-  fancy quotes width/.initial={.8\\linewidth},
-  fancy quotes marks/.style={
-    scale=8,
-    text=black,
-    inner sep=0pt,
-  },
-  fancy quotes opening/.style={
-    fancy quotes marks,
-  },
-  fancy quotes closing/.style={
-    fancy quotes marks,
-  },
-  fancy quotes background/.style={
-    show background rectangle,
-    inner frame xsep=0pt,
-    background rectangle/.style={
-      fill=azure,
-      rounded corners,
-    },
-  }
-}
-
-\\newenvironment{fancyquotes}[1][]{%
-\\noindent
-\\tikzpicture[fancy quotes background]
-\\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
-\\tikz@scan@one@point\\pgfutil@firstofone(fq@ul.east)
-\\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
-\\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \\bgroup}
-{\\egroup;
-\\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
-\\endtikzpicture}
-\\makeatother
+%\\usepackage{lipsum}
 
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
