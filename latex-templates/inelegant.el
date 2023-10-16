@@ -32,7 +32,7 @@
 ]{Helvetica Display}
 
 \\setmainfont{HelveticaNowDisplay-Light}
-%\\setsansfont{TeX Gyre Pagella}
+\\setsansfont{TeX Gyre Pagella}
 
 \\newfontfamily{\\jayromanfont}{TeX Gyre Pagella}
 
@@ -306,9 +306,9 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{36}{36}\\raggedright\\sffamily}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\setstretch{0.1}\\fontsize{36}{36}\\raggedright}
 
-\\titleformat*{\\subsection}{\\normalfont\\bfseries\\fontsize{18}{15}\\raggedright\\color{black}}
+\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\color{black}}
 \\titleformat*{\\subsubsection}{\\normalfont\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{black}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
