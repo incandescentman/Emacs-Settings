@@ -24,18 +24,16 @@
 % define main font
 \\setmainfont[
   Path = /Users/jay/Library/Fonts/,
-  UprightFont = HelveticaNowDisplay-Light,
-  BoldFont = HelveticaNowDisplay-Bold,
+  UprightFont = HelveticaNowText-Light,
+  BoldFont = HelveticaNowText-Bold,
   ItalicFont = HelveticaNowText-LightItalic,
   BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
 ]{Helvetica Display}
 
-\\setmainfont{HelveticaNowDisplay-Light}
 \\setsansfont{TeX Gyre Pagella}
 
 \\newfontfamily{\\jayromanfont}{TeX Gyre Pagella}
-
 
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Consolas}[Scale=0.9]
@@ -94,17 +92,6 @@
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
-
-
-% Define a new font family for boldface
-\\newfontfamily{\\myboldfont}[BoldFont=HelveticaNowDisplay-Bold]{HelveticaNowDisplay}
-
-% Redefine textbf to use the new font family
-\\DeclareTextFontCommand{\\textbf}{\\myboldfont\\bfseries}
-
-% Keep textit as it is
-\\DeclareTextFontCommand{\\textit}{\\itshape}
-
 
 \\usepackage{textcase}
 
@@ -306,10 +293,11 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\setstretch{0.1}\\fontsize{36}{36}\\raggedright}
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\color{black}}
-\\titleformat*{\\subsubsection}{\\normalfont\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{black}}
+\\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
+
+\\titleformat*{\\subsubsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{14}{16}\\raggedright\\color{black}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
 
