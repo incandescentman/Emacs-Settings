@@ -27,7 +27,7 @@
   UprightFont = HelveticaNowText-Light,
   BoldFont = HelveticaNowText-Bold,
   ItalicFont = HelveticaNowText-LightItalic,
-  BoldItalicFont = HelveticaNowDisplay-BoldIta,
+  BoldItalicFont = HelveticaNowText-BoldIta,
   Extension = .ttf
 ]{Helvetica Display}
 
