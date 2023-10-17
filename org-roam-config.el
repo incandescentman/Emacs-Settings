@@ -128,6 +128,15 @@
 	         :unnarrowed t)
 
 
+	        ("A" "accountability and task capture" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "accountability/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :accountability:")
+	         :unnarrowed t)
+
+
+
 	        ("F" "Food and recipes " plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
