@@ -793,3 +793,30 @@ subsequent sends."
       (insert "--></style>\n"))))
 #+END_EXAMPLE
 
+
+*** doesn't work:
+#+begin_src emacs-lisp
+(defun email-org-subtree ()
+ "Email the current Org subtree as HTML."
+ (interactive)
+ (unless (eq major-mode 'org-mode)
+  (error "Not an Org Mode buffer"))
+ (org-back-to-heading)
+ (let* ((end (save-excursion (org-end-of-subtree t)))
+     (subject (nth 4 (org-heading-components)))
+     (content (buffer-substring-no-properties (point) end))
+     (html-content (org-mime-org-buffer-htmlize content)))
+  ;; Create the email
+  (compose-mail)
+  (message-goto-to) ;; position cursor at To field
+  (message-goto-subject)
+  (insert subject)
+  (message-goto-body)
+  ;; Insert the HTML content
+  (mml-insert-multipart "alternative")
+  (mml-insert-part "text/html")
+  (insert html-content)
+  (mml-insert-endpart)
+  (message-goto-to) ;; position cursor back to To field for you to fill
+  ))
+#+end_src
