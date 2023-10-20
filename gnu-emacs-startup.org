@@ -819,6 +819,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 ;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
 (define-key key-minor-mode-map (kbd "M-d") 'org-todo)
+
+(define-key key-minor-mode-map (kbd "M-s-9") 'org-todo)
+
 ;; (define-key key-minor-mode-map (kbd "m-D") 'org-shiftleft)
 
 (define-key key-minor-mode-map (kbd "C-l") 'reflash-indentation)
