@@ -99,7 +99,6 @@
 (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
 ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
-;; (load "/Users/jay/emacs/emacs-settings/email.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 (load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
