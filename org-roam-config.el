@@ -137,11 +137,11 @@
 
 
 
-	        ("F" "Food and recipes " plain "- Links :: \n- Source :: \n
+	        ("R" "Recipes and Food" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
-	         :target (file+head "food/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :food:")
+	         :target (file+head "recipes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :recipes:")
 	         :unnarrowed t)
 
 

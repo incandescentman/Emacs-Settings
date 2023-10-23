@@ -13,6 +13,7 @@
         insert-space
         jay/left-char
         jay/right-char
+        kill-clause
         kill-region
         kill-word-correctly-and-capitalize
         mac-mwheel-scroll
