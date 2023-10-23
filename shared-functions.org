@@ -8648,12 +8648,11 @@ c: cook-ideas-over-time\n")))
 
 ;; for org-html-export
 (defun my-org-add-class-to-hash-tags (text backend info)
- "Add class to words starting with a '#' in HTML export."
- (when (org-export-derived-backend-p backend 'html)
-  (replace-regexp-in-string "\\(\\<#\\w+\\>"
-               "<span class=\"hash-tag\">\\1</span>"
-               text)))
-
+  "Add class to words starting with a '#' in HTML export."
+  (when (org-export-derived-backend-p backend 'html)
+    (replace-regexp-in-string "\\<#\\w+\\>"
+                              "<span class=\"hash-tag\">\\&</span>"
+                              text)))
 
 (add-to-list 'org-export-filter-plain-text-functions
     'my-org-add-class-to-hash-tags)
