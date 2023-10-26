@@ -420,21 +420,35 @@ Replace smart quotes with straight quotes so that spell check can recognize word
         ("\\(\\w\\)- " . "\\1")
         ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
 
-(defun replace-smart-quotes-regexp (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (mapcar
-   (lambda (r)
-     (save-excursion
-       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
-   smart-quote-regexp-replacements))
 
 (defun replace-double-asterisks (beg end)
- "Replace occurrences of '**' that are not at the beginning of a line or followed by a space."
- (save-excursion
-  (goto-char beg)
-  (while (re-search-forward "\\(^\\|[^*]\\)\\*\\*\\([^ ]\\)" end t)
-   (replace-match "\\1*\\2" nil nil))))
+ "Replace occurrences of '*' that are not at the beginning of a line or followed by a space."
+ (interactive "r") ; To allow the user to specify a region interactively
+ (save-excursion ; Preserve the current point position
+  (goto-char beg) ; Move to the beginning of the region
+  ;; Search for '*' followed by a character that's not a space
+  (while (re-search-forward "\\*\\*\\([^ ]\\)" end t)
+   ;; Capture the start and end positions of the match.
+   ;; match-beginning 0 gives the start position of the entire match.
+   ;; match-end 0 gives the end position of the entire match.
+   (let ((match-start (match-beginning 0))
+      (match-end (match-end 0)))
+    ;; Check if '*' is at the beginning of a line.
+    ;; line-beginning-position gives the position at the start of the current line.
+    ;; We compare this with the start position of the '*' match.
+    (if (= match-start (line-beginning-position))
+      ;; If '*' is at the beginning of the line, move the cursor forward to the end of the match.
+      ;; This skips the replacement for this occurrence.
+      (goto-char match-end)
+     ;; Otherwise, '*' is not at the beginning of the line, and we proceed to replace it.
+     ;; replace-match replaces the entire match with '*'
+     ;; and keeps the character that was not a space.
+     (replace-match "*\\1" nil nil))))))
+
+
+
+;; ^^^
+;; The main trick with the above is in using match-beginning and match-end to capture the exact positions of the ** and then comparing that with line-beginning-position. This comparison allows us to accurately determine whether the ** is at the beginning of a line or not, thereby deciding whether to replace it.
 
 
 (defun replace-smart-quotes (beg end)
