@@ -250,8 +250,15 @@
 \\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
 
 \\titleformat*{\\subsubsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{14}{16}\\raggedright\\color{black}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
+
+
+\\titleformat{\\paragraph}[block]{\\normalfont\\sffamily\\fontsize{13}{12}\\bfseries\\color{black}}{}{0em}{}
+\\titlespacing*{\\paragraph}{0pt}{0pt}{-6pt}
+
+
+
+\\titleformat{\\subparagraph}{\\normalfont\\sffamily\\fontsize{13}{12}\\bfseries\\color{black}}{}{0em}{}
+\\titlespacing*{\\subparagraph}{0pt}{0pt}{-6pt}
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
