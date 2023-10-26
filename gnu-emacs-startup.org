@@ -1739,6 +1739,12 @@ The last line sets the path to where saveplace stores your position data. Change
  (new-org-delete-backward-char 2)
  (my/fix-space)
  t)
+
+((looking-back "!\\. ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t))
+
  ((looking-back ":: ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
@@ -1865,7 +1871,7 @@ The last line sets the path to where saveplace stores your position data. Change
       (left-char 1)
 )
 
-      )
+
 
 
 #+END_SRC
