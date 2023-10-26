@@ -12,52 +12,47 @@
 
 
 \\usepackage{float}
-\\usepackage{changepage}
+%\\usepackage{changepage}
 
-\\usepackage{algorithm}
-\\usepackage{amsmath}
-\\usepackage{ifxetex}
-\\ifxetex
-  \\usepackage{fontspec,xltxtra,xunicode}
-  \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+%\\usepackage{algorithm}
+%\\usepackage{amsmath}
 
-% define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
+
+\\usepackage{fontspec}
+\\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+% define main font
+\\setmainfont[
   Path = /Users/jay/Library/Fonts/,
-        UprightFont = SF Pro Light,
-        BoldFont = HelveticaNowDisplay-Light,
-        ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
-  Extension = .ttf]
+  UprightFont = HelveticaNowText-Light,
+  BoldFont = HelveticaNowText-Bold,
+  ItalicFont = HelveticaNowText-LightItalic,
+  BoldItalicFont = HelveticaNowDisplay-BoldIta,
+  Extension = .ttf
+]{Helvetica Display}
 
-\\setromanfont{SF Pro}
+\\setsansfont{TeX Gyre Pagella}
 
-% \\setromanfont{SF Pro}
-% not sure i like this
+%\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setmonofont{Consolas}[Scale=0.9]
 
-\\setsansfont{HelveticaNowDisplay-Regular}
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+%\\usepackage[mathletters]{ucs}
+%\\usepackage[utf8x]{inputenc}
 
-  \\setmonofont{Consolas}[Scale=0.9]
-
-\\else
-  \\usepackage[mathletters]{ucs}
-  \\usepackage[utf8x]{inputenc}
-\\fi
 
 \\usepackage[obeyspaces]{url}
 \\PassOptionsToPackage{obeyspaces}{url}
 
 \\usepackage{paralist}
-\\usepackage{graphicx}
+%\\usepackage{graphicx}
 \\usepackage{wrapfig}
-
+\\usepackage{setspace}
 \\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
-% \\usepackage[asterism]{sectionbreak}
-\\usepackage{calc}
-\\usepackage{eso-pic}
-\\usepackage{etoolbox}
+
+%\\usepackage{calc}
+%\\usepackage{eso-pic}
+%\\usepackage{etoolbox}
 \\usepackage{xcolor}
 \\PassOptionsToPackage{hyperref,x11names}{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
@@ -83,22 +78,13 @@
 \\definecolor{moonrockgrey}{HTML}{212121}
 
 
-\\newtoks\\leftheader
-\\newtoks\\leftheaderurl
-\\newtoks\\coverimage
+% \\newtoks\\leftheader
+% \\newtoks\\leftheaderurl
+% \\newtoks\\coverimage
 
 \\raggedright
 \\hyphenpenalty=5000
 \\tolerance=1000
-
-%This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
-
-%Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
-\\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{textcase}
 
@@ -137,13 +123,15 @@
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
-\\usepackage{fancyvrb}
+%\\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
   \\tolerance=1000
 \\usepackage{tocloft}
+\\renewcommand{\\cftsecfont}{\\normalfont}
+\\renewcommand{\\cftsecpagefont}{\\normalfont}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
 
@@ -197,52 +185,7 @@
 
 \\definecolor{azure}{HTML}{f2feff}
 
-\\usepackage{lipsum}
-\\usepackage{tikz}
-\\usetikzlibrary{backgrounds}
-\\makeatletter
-
-\\tikzset{%
-  fancy quotes/.style={
-    text width=\\fq@width pt,
-    align=justify,
-    inner sep=1em,
-    anchor=north west,
-    minimum width=\\linewidth,
-  },
-  fancy quotes width/.initial={.8\\linewidth},
-  fancy quotes marks/.style={
-    scale=8,
-    text=black,
-    inner sep=0pt,
-  },
-  fancy quotes opening/.style={
-    fancy quotes marks,
-  },
-  fancy quotes closing/.style={
-    fancy quotes marks,
-  },
-  fancy quotes background/.style={
-    show background rectangle,
-    inner frame xsep=0pt,
-    background rectangle/.style={
-      fill=azure,
-      rounded corners,
-    },
-  }
-}
-
-\\newenvironment{fancyquotes}[1][]{%
-\\noindent
-\\tikzpicture[fancy quotes background]
-\\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
-\\tikz@scan@one@point\\pgfutil@firstofone(fq@ul.east)
-\\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
-\\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \\bgroup}
-{\\egroup;
-\\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
-\\endtikzpicture}
-\\makeatother
+%\\usepackage{lipsum}
 
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
@@ -293,24 +236,22 @@
  \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
 }
 
+
+
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{12pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
+%\\titleformat*{\\section}{font}\\fontsize{size}{baseline-skip}\\raggedright\\sffamily}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\color{black}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{40}\\raggedright\\sffamily}
+
+\\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
+
+\\titleformat*{\\subsubsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{14}{16}\\raggedright\\color{black}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{black}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
-
-
-\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
-
-\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
-
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{black}}
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
