@@ -852,8 +852,8 @@ Note: disable this when trying to export to org-html-themes!
     (plist-put plist :with-toc nil)
     (plist-put plist :section-numbers nil))
    ((equal backend 'latex)
-;; (plist-put plist :with-toc t) ; yes TOC in latex
-(plist-put plist :with-toc nil); no TOC in latex
+(plist-put plist :with-toc t) ; yes TOC in LaTeX
+;; (plist-put plist :with-toc nil); no TOC in latex
     (plist-put plist :section-numbers t)))
   plist)
 (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
@@ -1034,6 +1034,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
     ;; (sequence "WAITING" "DAILIES" "WEEKLIES" "MONTHLIES" "QUARTERLIES" "YEARLIES" "GOALS" "SOMEDAY" "|")
     ;; (sequence "QUESTION" "|" "ANSWERED")
     ;; (sequence "QUESTIONS" "|" "ANSWERS")
+(sequence "Original:" "|" "Revised:")
     ;; (sequence "STRATEGY" "|")
     ;; (sequence "TIP" "|")
 (sequence "REWARD" "|" "REWARDED")
@@ -4776,7 +4777,7 @@ It will open the link in Emacs with typing C-c C-o.
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
+;; (load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
@@ -9212,7 +9213,7 @@ clipboard-to-kill-ring
 
 * indent level
 #+begin_src emacs-lisp
-(setq org-indent-indentation-per-level 4)
+(setq org-indent-indentation-per-level 2)
 #+end_src
 
 * right-click
