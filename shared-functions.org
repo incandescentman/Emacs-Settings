@@ -421,6 +421,15 @@ Replace smart quotes with straight quotes so that spell check can recognize word
         ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
 
 
+(defun replace-smart-quotes-regexp (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (mapcar
+   (lambda (r)
+     (save-excursion
+       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
+   smart-quote-regexp-replacements))
+
 (defun replace-double-asterisks (beg end)
  "Replace occurrences of '*' that are not at the beginning of a line or followed by a space."
  (interactive "r") ; To allow the user to specify a region interactively
@@ -1799,7 +1808,7 @@ Add superior flex matching to ~ido-mode~:
 Disable IDO faces to see flx highlights:
 #+BEGIN_SRC emacs-lisp
 (setq ido-use-faces nil)
-(setq gc-cons-threshold 20000000)
+
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -4985,7 +4994,7 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
          'sensible-defaults/comment-or-uncomment-region-or-line)
 
 
-(setq gc-cons-threshold 20000000)
+
 (setq vc-follow-symlinks t)
 
 "When saving a file that starts with `#!', make it executable."
@@ -9247,3 +9256,10 @@ clipboard-to-kill-ring
 
 
 
+* garbage collection
+[[/Users/jay/Dropbox/roam/emacs/20231030235900-garbage_collection_emacs.or][📄 Garbage Collection Emacs]]
+
+[[https://github.com/doomemacs/doomemacs/issues/3108][org-mode slow but fixed with garbage collection delay on mac · Issue #3108 · doomemacs/doomemacs · GitHub]]
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 33554432) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
+#+end_src
