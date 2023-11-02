@@ -112,6 +112,15 @@
 
 
 
+                    ("W" "Wanderlust and travel" plain "%?"
+	                   :target (file+head "travel/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :business:\n\
+- Links :: \n- Source :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+
 
 	        ("x" "cuts" plain "- Links :: \n- Source :: \n
 * ${title}
