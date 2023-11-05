@@ -51,12 +51,20 @@
 	         :unnarrowed t)
 
 
-          ("S" "Structure / Schelling Points" plain "- Links :: \n- Source :: \n
+          ("S" "Storytelling and Writing" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "storytelling/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :storytelling:")
+	         :unnarrowed t)
+
+          ("O" "Outline / Structure / Schelling Points" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :structure:")
 	         :unnarrowed t)
+
 
 
 	        ("k" "kanban" plain "- Links :: \n- Source :: \n
