@@ -461,25 +461,29 @@ The function iterates over the selected region of text, checking each occurrence
        (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
    smart-quote-regexp-replacements))
 
-(defun replace-double-asterisks (beg end)
- "Replace '*' with '*' except when '*' is at the beginning of a line followed by a space."
+(defun replace-non-heading-double-asterisks (beg end)
+"Replace occurrences of '*' that are not at the beginning of a line or followed by a space."
  (interactive "r") ; To allow the user to specify a region interactively
  (save-excursion ; Preserve the current point position
-  (goto-char beg) ; Move to the beginning of the region
-  ;; Loop over the region to find '*'
-  (while (re-search-forward "\\*\\*" end t)
-   ;; Save the match position
-   (let ((match-start (match-beginning 0))
-      (match-end (match-end 0)))
-    ;; Check if '*' is at the beginning of a line and followed by a space
-    (if (and (progn (goto-char match-start) (beginning-of-line) (looking-at "^\\*\\* "))
-         (progn (goto-char match-end) (looking-at " ")))
-      ;; If '*' is at the beginning of the line and followed by a space, skip replacement
-      (goto-char (match-end 0))
-     ;; Otherwise, replace '*' with '*'
-     (replace-match "*" nil nil)
-     ;; Adjust 'end' in case the replacement affects the region's end
-     (setq end (- end 1)))))))
+ (goto-char beg) ; Move to the beginning of the region
+ ;; Search for '*' followed by a character that's not a space
+ (while (re-search-forward "\\*\\*\\([^ ]\\)" end t)
+  ;; Capture the start and end positions of the match.
+  ;; match-beginning 0 gives the start position of the entire match.
+  ;; match-end 0 gives the end position of the entire match.
+  (let ((match-start (match-beginning 0))
+   (match-end (match-end 0)))
+  ;; Check if '*' is at the beginning of a line.
+  ;; line-beginning-position gives the position at the start of the current line.
+  ;; We compare this with the start position of the '*' match.
+  (if (= match-start (line-beginning-position))
+   ;; If '*' is at the beginning of the line, move the cursor forward to the end of the match.
+   ;; This skips the replacement for this occurrence.
+   (goto-char match-end)
+   ;; Otherwise, '*' is not at the beginning of the line, and we proceed to replace it.
+   ;; replace-match replaces the entire match with '*'
+   ;; and keeps the character that was not a space.
+   (replace-match "*\\1" nil nil))))))
 
 ;; for an explanation of the function and how it works, see above
 
@@ -494,7 +498,7 @@ The function iterates over the selected region of text, checking each occurrence
 
 
 ;; remove double asterisks
-(replace-double-asterisks beg end)
+(replace-non-heading-double-asterisks beg end)
 
   (format-replace-strings '(("\x201C" . "\"")
                             ("\x201D" . "\"")
