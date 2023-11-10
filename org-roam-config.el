@@ -36,6 +36,7 @@
 	         :unnarrowed t)
 
 
+
 	        ("m" "memoir" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
@@ -108,6 +109,13 @@
 * ${title}
 - ")
 	         :unnarrowed t)
+	        ("X" "exemplars" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "exemplars/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :exemplars:")
+	         :unnarrowed t)
+
 
 
                     ("i" "incomegen" plain "%?"
