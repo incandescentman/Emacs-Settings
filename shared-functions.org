@@ -444,6 +444,17 @@ Certainly! Here's a breakdown of the logic and the workings of the function `rep
 
 The function iterates over the selected region of text, checking each occurrence of `**` against the specified conditions, and performs replacements accordingly. It ensures that formatting such as Markdown headers (which often start with `**`) are not inadvertently altered, while still allowing for the intended bold-to-italic conversion in other parts of the text.
 
+note: it doesn't work.
+
+It incorrectly leaves this text intact:
+
+**Key Questions Guiding Analytical Reports.*
+
+(The desired behavior is to change it to this: *Key Questions Guiding Analytical Reports.*)
+
+Here's the struggle:
+https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
+
 #+BEGIN_SRC emacs-lisp
 
 (setq smart-quote-regexp-replacements
