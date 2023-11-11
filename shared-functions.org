@@ -9301,3 +9301,22 @@ clipboard-to-kill-ring
 #+begin_src emacs-lisp
 (setq gc-cons-threshold 33554432) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
 #+end_src
+
+
+* dired-preview
+#+begin_src emacs-lisp
+(require 'dired-preview)
+
+;; Default values for demo purposes
+(setq dired-preview-delay 0.7)
+(setq dired-preview-max-size (expt 2 20))
+(setq dired-preview-ignored-extensions-regexp
+   (concat "\\."
+       "\\(mkv\\|webm\\|mp4\\|mp3\\|ogg\\|m4a"
+       "\\|gz\\|zst\\|tar\\|xz\\|rar\\|zip"
+       "\\|iso\\|epub\\|pdf\\)"))
+
+;; Enable `dired-preview-mode' in a given Dired buffer or do it
+;; globally:
+(dired-preview-global-mode 1)
+#+end_src
