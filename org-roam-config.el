@@ -179,6 +179,15 @@
            :unnarrowed t)
 
 
+          ("L" "lectures and classes" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :definition:")
+           :unnarrowed t)
+
+
+
 	        ("s" "sentence" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
@@ -293,7 +302,7 @@
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
    ("s-u c" . org-roam-capture)
-   ("S-s-<left>" .  org-roam-node-insert)
+   ("S-s-<left>" . my-org-roam-node-insert-with-emoji)
    ("S-s-<right>" . org-roam-node-find)
    ("s-u r" . org-roam-refile)
 
@@ -474,3 +483,25 @@ If region is active, then use it instead of the node at point."
             ))
 
 
+
+
+(defun my-org-roam-node-insert-with-emoji ()
+  "Insert an Org-roam node link with a 🌐 emoji prepended to the description."
+  (interactive)
+  (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
+    (add-hook 'org-roam-post-node-insert-hook
+              (lambda (id description)
+                (save-excursion
+                  ;; Use org-element-context to find the link
+                  (let* ((context (org-element-context))
+                         (start (org-element-property :contents-begin context))
+                         (end (org-element-property :contents-end context)))
+                    (when start
+                      (goto-char start)
+                      (insert "🌐 ")))))
+              ;; Append to the front of the hook list
+              0 t)
+    (unwind-protect
+        (org-roam-node-insert)
+      ;; Restore the original hook after the function is done
+      (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
