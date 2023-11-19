@@ -1431,6 +1431,11 @@ I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybindi
 (defun smart-return ()
   (interactive)
 
+;; Check if the point is on an image link
+ (if (and (thing-at-point 'url)
+      (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" (thing-at-point 'url)))
+   (display-online-image-in-new-buffer)
+
   ;; don't leave stray stars or links
   (when
       (or
@@ -1498,7 +1503,7 @@ I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybindi
                 (looking-back ">"))))
 (call-interactively 'org-return))
 
-        (t (newline))))
+        (t (newline)))))
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
 
