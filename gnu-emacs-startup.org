@@ -1748,7 +1748,7 @@ The last line sets the path to where saveplace stores your position data. Change
 ((looking-back "!\\. ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
- t))
+ t) 
 
  ((looking-back ":: ")
  (new-org-delete-backward-char 2)
