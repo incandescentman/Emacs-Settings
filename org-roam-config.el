@@ -179,11 +179,11 @@
            :unnarrowed t)
 
 
-          ("L" "lectures and classes" plain "- Links :: \n- Source :: \n
+          ("L" "Learning, lectures, and classes" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :definition:")
+			                        "#+TITLE: ${title}\n#+FILETAGS: :learning:")
            :unnarrowed t)
 
 
@@ -216,6 +216,15 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
+
+
+          ("w" "lectures and public talks" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :lectures:")
+           :unnarrowed t)
+
 
 
 
