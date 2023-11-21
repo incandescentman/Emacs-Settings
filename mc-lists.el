@@ -10,6 +10,7 @@
         downcase-or-endless-downcase
         indent-for-tab-command
         insert-colon
+        insert-right-bracket
         insert-space
         jay/left-char
         jay/right-char
