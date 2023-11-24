@@ -9345,36 +9345,66 @@ clipboard-to-kill-ring
 * remove filler words
 #+begin_src emacs-lisp
 (defun remove-filler-words ()
- "Remove common discourse markers and filler words from the text."
- (interactive)
- (save-excursion
-  (goto-char (point-min))
-  ;; Delete instances of ", you know,"
-  (while (search-forward ", you know," nil t)
-   (replace-match ""))
-  ;; Delete instances of "you know"
-  (goto-char (point-min))
-  (while (search-forward "you know" nil t)
-   (replace-match ""))
-  ;; Delete instances of "kind of"
-  (goto-char (point-min))
-  (while (search-forward "kind of" nil t)
-   (replace-match ""))
-;; Delete instances of ", like, "
- (goto-char (point-min))
- (while (search-forward ", like, " nil t)
-  (replace-match " "))
-  ;; Delete instances of "sort of"
-  (goto-char (point-min))
-  (while (search-forward "sort of" nil t)
-   (replace-match ""))
-  ;; Delete instances of "um"
-  (goto-char (point-min))
-  (while (search-forward "um" nil t)
-   (replace-match ""))
-  ;; Replace ", right?" with "."
-  (goto-char (point-min))
-  (while (search-forward ", right?" nil t)
-   (replace-match "."))))
-
+  "Remove common discourse markers and filler words from the text, and report the count of each."
+  (interactive)
+  (let ((count-you-know 0)
+        (count-kind-of 0)
+        (count-like 0)
+        (count-sort-of 0)
+        (count-um 0)
+        (count-right 0)
+        (report-string ""))
+    (save-excursion
+      (goto-char (point-min))
+      ;; Delete instances of ", you know,"
+      (while (search-forward ", you know, " nil t)
+        (setq count-you-know (1+ count-you-know))
+        (replace-match ", "))
+      ;; Delete instances of "you know"
+      (goto-char (point-min))
+      (while (search-forward "you know" nil t)
+        (setq count-you-know (1+ count-you-know))
+        (replace-match ""))
+      ;; Delete instances of "kind of"
+      (goto-char (point-min))
+      (while (search-forward "kind of" nil t)
+        (setq count-kind-of (1+ count-kind-of))
+        (replace-match ""))
+      ;; Delete instances of ", like, "
+      (goto-char (point-min))
+      (while (search-forward ", like, " nil t)
+        (setq count-like (1+ count-like))
+        (replace-match ", "))
+      ;; Delete instances of "sort of"
+      (goto-char (point-min))
+      (while (search-forward "sort of" nil t)
+        (setq count-sort-of (1+ count-sort-of))
+        (replace-match ""))
+      ;; Delete instances of "um"
+      (goto-char (point-min))
+      (while (search-forward "um" nil t)
+        (setq count-um (1+ count-um))
+        (replace-match ""))
+      ;; Replace ", right?" with "."
+      (goto-char (point-min))
+      (while (search-forward ", right?" nil t)
+        (setq count-right (1+ count-right))
+        (replace-match ".")))
+    ;; Constructing the report string
+    (when (> count-you-know 0)
+      (setq report-string (concat report-string (format "Removed %d instances of \"you know\"" count-you-know))))
+    (when (> count-kind-of 0)
+      (setq report-string (concat report-string (format "Removed %d instances of \"kind of\"" count-kind-of))))
+    (when (> count-like 0)
+      (setq report-string (concat report-string (format "Removed %d instances of \"like\"" count-like))))
+    (when (> count-sort-of 0)
+      (setq report-string (concat report-string (format "Removed %d instances of \"sort of\"" count-sort-of))))
+    (when (> count-um 0)
+      (setq report-string (concat report-string (format "Removed %d instances of \"um\"" count-um))))
+    (when (> count-right 0)
+      (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\"" count-right))))
+    ;; Reporting the changes
+    (if (string= report-string "")
+      (message "No changes made.")
+      (message report-string))))
 #+end_src
