@@ -1523,7 +1523,7 @@ Make org-capture open in full window! :-)
 ;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
 ;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
 
-(defun pomodoro-start-jay ()
+(defun pomodoro-start ()
   (interactive)
 (org-todo 'done)
 (previous-line)
@@ -9343,9 +9343,13 @@ clipboard-to-kill-ring
 
 
 * remove filler words
+
+Dev:
+https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
+
 #+begin_src emacs-lisp
 (defun remove-filler-words ()
-  "Remove common discourse markers and filler words from the text, and report the count of each."
+  "Remove filler words from the text and report what was removed."
   (interactive)
   (let ((count-you-know 0)
         (count-kind-of 0)
