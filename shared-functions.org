@@ -9342,3 +9342,39 @@ clipboard-to-kill-ring
 #+end_src
 
 
+* remove filler words
+#+begin_src emacs-lisp
+(defun remove-filler-words ()
+ "Remove common discourse markers and filler words from the text."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  ;; Delete instances of ", you know,"
+  (while (search-forward ", you know," nil t)
+   (replace-match ""))
+  ;; Delete instances of "you know"
+  (goto-char (point-min))
+  (while (search-forward "you know" nil t)
+   (replace-match ""))
+  ;; Delete instances of "kind of"
+  (goto-char (point-min))
+  (while (search-forward "kind of" nil t)
+   (replace-match ""))
+;; Delete instances of ", like, "
+ (goto-char (point-min))
+ (while (search-forward ", like, " nil t)
+  (replace-match " "))
+  ;; Delete instances of "sort of"
+  (goto-char (point-min))
+  (while (search-forward "sort of" nil t)
+   (replace-match ""))
+  ;; Delete instances of "um"
+  (goto-char (point-min))
+  (while (search-forward "um" nil t)
+   (replace-match ""))
+  ;; Replace ", right?" with "."
+  (goto-char (point-min))
+  (while (search-forward ", right?" nil t)
+   (replace-match "."))))
+
+#+end_src
