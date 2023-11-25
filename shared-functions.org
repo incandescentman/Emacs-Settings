@@ -2422,7 +2422,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (org-insert-time-stamp (current-time))
 (insert "\n")
 (insert "*** TODO bookwriting\n")
-(pomodoro-start-jay)
+(pomodoro-start)
  )
 
 
@@ -2432,7 +2432,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (org-insert-heading)
  (insert "*** TODO bookwriting")
  (insert "\n")
- (pomodoro-start-jay))
+ (pomodoro-start))
 
 
 
