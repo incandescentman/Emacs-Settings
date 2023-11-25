@@ -7831,25 +7831,10 @@ this function appends the default value from
  ;; Manual preview key for `affe-grep'
  (consult-customize affe-grep :preview-key "M->"))
 
-(defun affe-orderless-regexp-compiler (input _type _ignorecase)
- (setq input (orderless-pattern-compiler input))
- (cons input (apply-partially #'orderless--highlight input)))
-(setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
-
-
-(setq affe-regexp-function #'orderless-pattern-compiler
-   affe-highlight-function #'orderless-highlight-matches)
-
-;; refresher: grep means search inside a file, find means search filenames/foldernames
-(defun affe-grep-org-directory ()
-  (interactive)
-  (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
-   (affe-grep org-directory)))
-
-(defun affe-grep-gnulisp-directory ()
- (interactive)
- (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
-  (affe-grep "/Users/jay/gnulisp")))
+(defun affe-grep-gnulisp-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/gnulisp" initial))
 
 (defun find-file-at-point-or-affe-find ()
  "Open the file at point if one exists, otherwise run affe-find."
@@ -9426,3 +9411,6 @@ https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
       (message "No changes made.")
       (message report-string))))
 #+end_src
+
+
+;; -*- lexical-binding: t -*-
