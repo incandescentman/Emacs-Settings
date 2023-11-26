@@ -9429,13 +9429,15 @@ Philosophy:
       (while (search-forward "okay" nil t)
         (setq count-okay (1+ count-okay))
         (replace-match "OK"))
-  ;; Replace instances of "um", "umm", "uh", and "uhh" with a space
-      (goto-char (point-min))
-      (while (re-search-forward "\\b\\(um\\|umm\\|uh\\|uhh\\)\\b" nil t)
-        (if (string= (match-string 0) "um"  )
-            (setq count-um (1+ count-um))
-          (setq count-uh (1+ count-uh)))
-        (replace-match " " t t))
+
+   ;; Replace instances of "um", "umm", "uh", and "uhh" with a space
+   (goto-char (point-min))
+   (while (re-search-forward "\\b\\(um\\|umm\\|uh\\|uhh\\)\\b" nil t)
+    (cond ((string= (match-string 0) "um") (setq count-um (1+ count-um)))
+       ((string= (match-string 0) "uh") (setq count-uh (1+ count-uh))))
+    (replace-match " "))
+
+
       ;; Replace ", right?" with "."
       (goto-char (point-min))
       (while (search-forward ", right?" nil t)
@@ -9452,8 +9454,10 @@ Philosophy:
         (setq count-right (1+ count-right))
         (replace-match " ")))
     ;; Constructing the report string
-    (when (> count-you-know 0)
-      (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-you-know))))
+   ;; Constructing the report string
+   (when (> count-you-know 0)
+    (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-you-know))))
+
     (when (> count-kind-of 0)
       (setq report-string (concat report-string (format "Removed %d instances of \"kind of\". " count-kind-of))))
     (when (> count-like 0)
@@ -9466,10 +9470,10 @@ Philosophy:
       (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\"" count-right))))
     (when (> count-okay 0)
       (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-okay))))
-      (when (> count-um 0)
-        (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-um))))
-        (when (> count-uh 0)
-        (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-uh))))
+  (when (> count-um 0)
+    (setq report-string (concat report-string (format "Replaced %d instances of \"um\" with a space. " count-um))))
+   (when (> count-uh 0)
+    (setq report-string (concat report-string (format "Replaced %d instances of \"uh\" with a space. " count-uh))))
 
 
 
