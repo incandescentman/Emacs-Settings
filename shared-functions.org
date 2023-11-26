@@ -9456,7 +9456,7 @@ Philosophy:
     (when (> count-right 0)
       (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\"" count-right))))
 (when (> count-okay 0)
-   (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-right))))
+   (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-okay))))
     ;; Reporting the changes
     (if (string= report-string "")
       (message "No changes made.")
