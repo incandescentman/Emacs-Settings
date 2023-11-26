@@ -9382,6 +9382,8 @@ Philosophy:
         (count-um 0)
         (count-right 0)
         (count-okay 0)
+        (count-um 0)
+        (count-uh 0)
         (report-string ""))
     (save-excursion
       (goto-char (point-min))
@@ -9389,10 +9391,10 @@ Philosophy:
       (while (search-forward ", you know, " nil t)
         (setq count-you-know (1+ count-you-know))
         (replace-match ", "))
-;; Delete instances of ", you know,"
-   (while (search-forward "you know, " nil t)
-    (setq count-you-know (1+ count-you-know))
-    (replace-match ""))
+      ;; Delete instances of ", you know,"
+      (while (search-forward "you know, " nil t)
+        (setq count-you-know (1+ count-you-know))
+        (replace-match ""))
       ;; Delete instances of "you know"
       (goto-char (point-min))
       (while (search-forward "you know" nil t)
@@ -9422,21 +9424,28 @@ Philosophy:
       (while (search-forward "um, " nil t)
         (setq count-um (1+ count-um))
         (replace-match ""))
-;; Replace "okay" with "OK"
-   (goto-char (point-min))
-   (while (search-forward "okay" nil t)
-    (setq count-okay (1+ count-okay))
-    (replace-match "OK"))
+      ;; Replace "okay" with "OK"
+      (goto-char (point-min))
+      (while (search-forward "okay" nil t)
+        (setq count-okay (1+ count-okay))
+        (replace-match "OK"))
+  ;; Replace instances of "um", "umm", "uh", and "uhh" with a space
+      (goto-char (point-min))
+      (while (re-search-forward "\\b\\(um\\|umm\\|uh\\|uhh\\)\\b" nil t)
+        (if (string= (match-string 0) "um"  )
+            (setq count-um (1+ count-um))
+          (setq count-uh (1+ count-uh)))
+        (replace-match " " t t))
       ;; Replace ", right?" with "."
       (goto-char (point-min))
       (while (search-forward ", right?" nil t)
         (setq count-right (1+ count-right))
         (replace-match "."))
-;; Replace ", right?" with "."
-   (goto-char (point-min))
-   (while (search-forward ", right." nil t)
-    (setq count-right (1+ count-right))
-    (replace-match "."))
+      ;; Replace ", right?" with "."
+      (goto-char (point-min))
+      (while (search-forward ", right." nil t)
+        (setq count-right (1+ count-right))
+        (replace-match "."))
       ;; Remove double spaces
       (goto-char (point-min))
       (while (search-forward "  " nil t)
@@ -9455,11 +9464,18 @@ Philosophy:
       (setq report-string (concat report-string (format "Removed %d instances of \"um\". " count-um))))
     (when (> count-right 0)
       (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\"" count-right))))
-(when (> count-okay 0)
-   (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-okay))))
+    (when (> count-okay 0)
+      (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-okay))))
+      (when (> count-um 0)
+        (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-um))))
+        (when (> count-uh 0)
+        (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-uh))))
+
+
+
     ;; Reporting the changes
     (if (string= report-string "")
-      (message "No changes made.")
+        (message "No changes made.")
       (message report-string))))
 #+end_src
 
