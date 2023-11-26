@@ -545,6 +545,7 @@ https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
                             ("##" . "**")
 
                             ("- \\*\\* TODO" . "*** TODO")
+                            ("okay" . "OK")
                             ("  SCHEDULED" . "SCHEDULED")
                             ("  DEADLINE" . "DEADLINE")
 
@@ -8603,6 +8604,20 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 #+end_src
 
 
+* clone-indirect-buffer-new-window-without-focus
+#+begin_src emacs-lisp
+(defun clone-indirect-buffer-new-window-without-focus ()
+  (interactive)
+  (let ((current-buffer (current-buffer)))
+    (split-window-right)
+    (set-window-buffer (next-window) (clone-indirect-buffer nil nil))
+    (with-current-buffer (window-buffer (next-window))
+      (when (derived-mode-p 'org-mode)
+        (org-narrow-to-subtree)))
+; (other-window 1)
+    ))
+#+end_src
+
 * clone-indirect-buffer-new-window-and-focus
 #+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-and-focus ()
@@ -9332,6 +9347,30 @@ clipboard-to-kill-ring
 Dev:
 https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
 
+Philosophy:
+[[https://help.descript.com/hc/en-us/articles/10164806394509-Removing-filler-words#h_01H8Y6XQ6N0WYCXKSKZRRDT0QD][Removing filler words – Descript Help]]
+
+
+"mmm"	"mmm"	"mmm"
+"um"	"um"	"um"
+"uh"	"uh"	"uh"
+"hm"	"hm"	"hm"
+ 	 	"but you know"
+ 	 	"I guess"
+ 	 	"I mean"
+ 	 	"I suppose"
+ 	 	"kind of"
+ 	 	"like"
+ 	 	"or something"
+ 	 	"so"
+ 	 	"sort of"
+ 	 	"well"
+ 	 	"you know"
+ 	 	"you know what I mean"
+ 	 	"you see"
+
+
+
 #+begin_src emacs-lisp
 (defun remove-filler-words ()
   "Remove filler words from the text and report what was removed."
@@ -9342,6 +9381,7 @@ https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
         (count-sort-of 0)
         (count-um 0)
         (count-right 0)
+        (count-okay 0)
         (report-string ""))
     (save-excursion
       (goto-char (point-min))
@@ -9349,6 +9389,10 @@ https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
       (while (search-forward ", you know, " nil t)
         (setq count-you-know (1+ count-you-know))
         (replace-match ", "))
+;; Delete instances of ", you know,"
+   (while (search-forward "you know, " nil t)
+    (setq count-you-know (1+ count-you-know))
+    (replace-match ""))
       ;; Delete instances of "you know"
       (goto-char (point-min))
       (while (search-forward "you know" nil t)
@@ -9378,6 +9422,11 @@ https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
       (while (search-forward "um, " nil t)
         (setq count-um (1+ count-um))
         (replace-match ""))
+;; Replace "okay" with "OK"
+   (goto-char (point-min))
+   (while (search-forward "okay" nil t)
+    (setq count-okay (1+ count-okay))
+    (replace-match "OK"))
       ;; Replace ", right?" with "."
       (goto-char (point-min))
       (while (search-forward ", right?" nil t)
@@ -9406,6 +9455,8 @@ https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
       (setq report-string (concat report-string (format "Removed %d instances of \"um\". " count-um))))
     (when (> count-right 0)
       (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\"" count-right))))
+(when (> count-okay 0)
+   (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK\"" count-right))))
     ;; Reporting the changes
     (if (string= report-string "")
       (message "No changes made.")
