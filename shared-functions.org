@@ -9251,7 +9251,7 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 * Insert local file link from clipboard
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun insert-local-file-link-from-clipboard ()
   "Inserts an org-mode link using the clipboard content as the file path."
   (interactive)
@@ -9274,10 +9274,10 @@ After evaluating your init-file you can use links analog to the example:
     (search-forward "[" nil t)
     (search-forward "]" nil t))
   nil)  ; Explicitly return nil
-#+end_src
+#+END_EXAMPLE
 
 * Insert directory link from clipboard
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (defun insert-directory-link-from-clipboard ()
  "Inserts an org-mode directory link using the clipboard content as the directory path."
  (interactive)
@@ -9292,10 +9292,10 @@ After evaluating your init-file you can use links analog to the example:
 (defvar saved-frame-parameters nil
  "Variable to store saved frame parameters.")
 
-#+end_src
+#+END_EXAMPLE
 
 * save frame size and position
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 
 (defun save-frame-size-and-position ()
  "Save the current frame's size and position."
@@ -9344,7 +9344,7 @@ After evaluating your init-file you can use links analog to the example:
 (define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
 
-#+end_src
+#+END_EXAMPLE
 
 
 
