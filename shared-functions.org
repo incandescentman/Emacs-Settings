@@ -9251,7 +9251,7 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 * Insert local file link from clipboard
-#+begin_EXAMPLE emacs-lisp
+#+begin_SRC emacs-lisp
 (defun insert-local-file-link-from-clipboard ()
   "Inserts an org-mode link using the clipboard content as the file path."
   (interactive)
@@ -9274,7 +9274,7 @@ After evaluating your init-file you can use links analog to the example:
     (search-forward "[" nil t)
     (search-forward "]" nil t))
   nil)  ; Explicitly return nil
-#+END_EXAMPLE
+#+END_SRC
 
 * Insert directory link from clipboard
 #+begin_SRC emacs-lisp
