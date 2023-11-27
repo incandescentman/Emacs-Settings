@@ -9089,13 +9089,23 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  (copy-region-as-kill (region-beginning) (region-end))
  (x-select-text (current-kill 0)))
 
-
 (defun clipboard-to-kill-ring ()
-"Push the current macOS clipboard content to the Emacs kill ring."
  (interactive)
  (let ((clipboard-content (shell-command-to-string "pbpaste")))
-  (unless (string-equal clipboard-content "")
-   (kill-new (substring clipboard-content 0 -1))))) ; Remove trailing newline
+ (unless (string-equal clipboard-content "")
+  (kill-new clipboard-content))))
+
+(defun clipboard-to-kill-ring-and-remove-trailing-newslines ()
+ "Push the current macOS clipboard content to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (when clipboard-content
+   (setq clipboard-content
+      (if (string-match "\n\\'" clipboard-content)
+        (replace-match "" t t clipboard-content)
+       clipboard-content))
+   (unless (string-equal clipboard-content "")
+    (kill-new clipboard-content)))))
 
 
 #+end_src
@@ -9279,23 +9289,13 @@ After evaluating your init-file you can use links analog to the example:
      (start-pos (point)))
   (insert (format "[[%s][📁 %s]]" clip-content (string-trim no-leading-numbers)))
   (goto-char start-pos)
-  (search-forward "[[" nil t)
-  (search-forward "[" nil t)
-  (let ((title-start (point)))
-   (search-forward "]" nil t)
-   (backward-char)
-   (capitalize-region title-start (point)))
-  (goto-char (+ 2 start-pos))
-  (search-forward "[" nil t)
-  (search-forward "]" nil t))
- nil) ; Explicitly return nil
+(defvar saved-frame-parameters nil
+ "Variable to store saved frame parameters.")
 
 #+end_src
 
-* Save frame size and position
+* save frame size and position
 #+begin_src emacs-lisp
-(defvar saved-frame-parameters nil
- "Variable to store saved frame parameters.")
 
 (defun save-frame-size-and-position ()
  "Save the current frame's size and position."
@@ -9326,6 +9326,15 @@ After evaluating your init-file you can use links analog to the example:
   (interactive)
   (let ((specific-frame-parameters '((left . 685)
                                      (top . 44)
+                                     (width . 113)
+                                     (height . 47))))
+    (modify-frame-parameters nil specific-frame-parameters)))
+
+
+(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
+(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
+
+
                                      (width . 113)
                                      (height . 47))))
     (modify-frame-parameters nil specific-frame-parameters)))
