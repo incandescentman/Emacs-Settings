@@ -9277,7 +9277,7 @@ After evaluating your init-file you can use links analog to the example:
 #+END_EXAMPLE
 
 * Insert directory link from clipboard
-#+begin_EXAMPLE emacs-lisp
+#+begin_SRC emacs-lisp
 (defun insert-directory-link-from-clipboard ()
  "Inserts an org-mode directory link using the clipboard content as the directory path."
  (interactive)
@@ -9289,10 +9289,17 @@ After evaluating your init-file you can use links analog to the example:
      (start-pos (point)))
   (insert (format "[[%s][📁 %s]]" clip-content (string-trim no-leading-numbers)))
   (goto-char start-pos)
-(defvar saved-frame-parameters nil
- "Variable to store saved frame parameters.")
-
-#+END_EXAMPLE
+  (search-forward "[[" nil t)
+  (search-forward "[" nil t)
+  (let ((title-start (point)))
+   (search-forward "]" nil t)
+   (backward-char)
+   (capitalize-region title-start (point)))
+  (goto-char (+ 2 start-pos))
+  (search-forward "[" nil t)
+  (search-forward "]" nil t))
+ nil) ; Explicitly return nil
+#+END_SRC
 
 * save frame size and position
 #+begin_EXAMPLE emacs-lisp
