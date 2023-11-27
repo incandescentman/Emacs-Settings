@@ -9083,31 +9083,31 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 * copy-region-as-kill-and-push-to-clipboard
 #+begin_src emacs-lisp
-(defun copy-region-as-kill-and-push-to-clipboard ()
- "Copy the region to the kill ring and push it to the system clipboard."
- (interactive)
- (copy-region-as-kill (region-beginning) (region-end))
- (x-select-text (current-kill 0)))
+;; Simpler version - directly copies clipboard to kill ring
+(defun clipboard-to-kill-ring-simple ()
+"Copies clipboard contents directly to kill ring."
+(interactive)
+(let ((clipboard-content (shell-command-to-string "pbpaste")))
+(unless (string-equal clipboard-content "")
+(kill-new clipboard-content))))
 
-(defun clipboard-to-kill-ring ()
- (interactive)
- (let ((clipboard-content (shell-command-to-string "pbpaste")))
- (unless (string-equal clipboard-content "")
-  (kill-new clipboard-content))))
+;; More complex version - strips trailing newline
+(defun clipboard-to-kill-ring-complex ()
+"Strips trailing newline from clipboard before copying to kill ring." 
+(interactive) 
+(let ((clipboard-content (shell-command-to-string "pbpaste")))
+;; Check for non-empty clipboard contents
+(when clipboard-content
 
-(defun clipboard-to-kill-ring-and-remove-trailing-newslines ()
- "Push the current macOS clipboard content to the Emacs kill ring."
- (interactive)
- (let ((clipboard-content (shell-command-to-string "pbpaste")))
-  (when clipboard-content
-   (setq clipboard-content
-      (if (string-match "\n\\'" clipboard-content)
-        (replace-match "" t t clipboard-content)
-       clipboard-content))
+  ;; Strip trailing newline if present    
+  (setq clipboard-content
+        (if (string-match "\n\\'" clipboard-content)
+            (replace-match "" t t clipboard-content)
+          clipboard-content))
+
+   ;; Copy to kill ring unless empty
    (unless (string-equal clipboard-content "")
-    (kill-new clipboard-content)))))
-
-
+     (kill-new clipboard-content)))))
 #+end_src
 
 
