@@ -7839,11 +7839,6 @@ this function appends the default value from
  ;; Manual preview key for `affe-grep'
  (consult-customize affe-grep :preview-key "M->"))
 
-(defun affe-grep-gnulisp-directory (&optional initial)
- "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
- (interactive "P")
- (affe-grep "/Users/jay/gnulisp" initial))
-
 (defun find-file-at-point-or-affe-find ()
  "Open the file at point if one exists, otherwise run affe-find."
  (interactive)
@@ -7856,6 +7851,34 @@ this function appends the default value from
 
 #+end_src
 
+* affe: search full text within frequently used directories
+
+#+begin_src emacs-lisp
+(defun affe-grep-gnulisp-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/gnulisp" initial))
+
+(defun affe-grep-yasnippets-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/emacs/interesting-snippets/org-mode" initial))
+
+
+#+end_src
+
+
+* search by filename within frequently used directories
+#+begin_src emacs-lisp
+
+(defun counsel-find-file-in-snippets ()
+ "Use counsel-find-file to search for files in the org-mode snippets directory."
+ (interactive)
+ (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
+  (counsel-find-file)))
+
+
+#+end_src
 
 * ignore unresolvable links
 Instead of canceling export. So that I can export org-roam nodes if I want to.
@@ -9248,7 +9271,7 @@ After evaluating your init-file you can use links analog to the example:
 (defun insert-directory-link-from-clipboard ()
  "Inserts an org-mode directory link using the clipboard content as the directory path."
  (interactive)
-clipboard-to-kill-ring
+(clipboard-to-kill-ring)
  (let* ((clip-content (substring-no-properties (current-kill 0)))
      (dir-name (file-name-nondirectory (directory-file-name clip-content)))
      (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " dir-name))
