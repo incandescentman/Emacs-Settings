@@ -9093,13 +9093,13 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 ;; More complex version - strips trailing newline
 (defun clipboard-to-kill-ring-complex ()
-"Strips trailing newline from clipboard before copying to kill ring." 
-(interactive) 
+"Strips trailing newline from clipboard before copying to kill ring."
+(interactive)
 (let ((clipboard-content (shell-command-to-string "pbpaste")))
 ;; Check for non-empty clipboard contents
 (when clipboard-content
 
-  ;; Strip trailing newline if present    
+  ;; Strip trailing newline if present
   (setq clipboard-content
         (if (string-match "\n\\'" clipboard-content)
             (replace-match "" t t clipboard-content)
@@ -9341,10 +9341,6 @@ After evaluating your init-file you can use links analog to the example:
 (define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
 (define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
-
-                                     (width . 113)
-                                     (height . 47))))
-    (modify-frame-parameters nil specific-frame-parameters)))
 
 
 (define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
