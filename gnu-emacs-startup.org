@@ -237,30 +237,48 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 *** pasteboard-paste (with smart quotes by default)
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste ()
+(defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
         (end (if mark-active
-                (mark)
-                (point)))
+                 (mark)
+               (point)))
         (ins-text
          (replace-regexp-in-string
           "\\[\\([^][]*\\)\\](\\([^)]*\\))"
           (lambda (m)
-             (let ((m1 (match-string 1 m))
-                   (m2 (match-string 2 m)))
-                (if (string= m1 m2)
+            (let ((m1 (match-string 1 m))
+                  (m2 (match-string 2 m)))
+              (if (string= m1 m2)
                   (concat "[[" m1 "]]")
-                  (concat "[[" m2 "][" m1 "]]"))))
+                (concat "[[" m2 "][" m1 "]]"))))
           (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
     (delete-region start end)
     (insert ins-text)
     (my/fix-space)
     (save-excursion
-     (goto-char start)
-     (my/fix-space)))
-  ; (reflash-indentation)
+      (goto-char start)
+      (my/fix-space)))
+                                        ; (reflash-indentation)
+  )
+
+(defun pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point)))
+        (ins-text
+         (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")))
+    (delete-region start end)
+    (insert ins-text)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space)))
+                                        ; (reflash-indentation)
   )
 #+END_SRC
 
