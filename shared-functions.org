@@ -2179,13 +2179,20 @@ dired-omit-extensions
 #+begin_src emacs-lisp
 (use-package wc-mode
   :defer)
-(setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+
 (add-hook 'org-mode-hook 'wc-mode)
 
 (defun word-count (arg)
 (interactive "r")
 (count-words arg)
  )
+
+(setq wc-modeline-format "[Words: %tw")
+
+(defun count-characters ()
+(interactive)
+(setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+  )
 #+end_src
 
 * web research functions
