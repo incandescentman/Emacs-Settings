@@ -9084,7 +9084,7 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 * copy-region-as-kill-and-push-to-clipboard
 #+begin_src emacs-lisp
 ;; Simpler version - directly copies clipboard to kill ring
-(defun clipboard-to-kill-ring-simple ()
+(defun clipboard-to-kill-ring ()
 "Copies clipboard contents directly to kill ring."
 (interactive)
 (let ((clipboard-content (shell-command-to-string "pbpaste")))
@@ -9092,7 +9092,7 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 (kill-new clipboard-content))))
 
 ;; More complex version - strips trailing newline
-(defun clipboard-to-kill-ring-complex ()
+(defun clipboard-to-kill-ring-and-strip-trailing-newlines ()
 "Strips trailing newline from clipboard before copying to kill ring."
 (interactive)
 (let ((clipboard-content (shell-command-to-string "pbpaste")))
