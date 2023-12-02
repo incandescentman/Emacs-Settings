@@ -79,17 +79,6 @@
 (define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
 
-(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ b s") 'affe-grep-bash-scripts)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-(define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)
-
 (use-package affe
  :config
  ;; Manual preview key for `affe-grep'
@@ -117,6 +106,14 @@
 
 (define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
 
+(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ g ub") 'affe-grep-bash-scripts)
+(define-key key-minor-mode-map (kbd "s-/ g up") 'affe-grep-bash-profile)
+
+;; (define-key key-minor-mode-map (kbd "s-/ g r") 'consult-org-roam-search)
+;; (define-key key-minor-mode-map (kbd "s-/ g r") 'affe-grep-org-roam)
+
 (defun counsel-find-file-in-yasnippets ()
  "Use counsel-find-file to search for files in the org-mode snippets directory."
  (interactive)
@@ -131,8 +128,10 @@
  ;; Use counsel-fzf with the specified directory as the root for searching.
  (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
 
+(defalias 'search-filename-proposal-directory 'fzf-find-file--proposal-directory)
 
-(define-key key-minor-mode-map (kbd "s-k p r") 'fzf-find-file--proposal-directory)
+(define-key key-minor-mode-map (kbd "s-/ f p") 'search-filename-proposal-directory)
+
 
 (defun fzf-find-file--book-directory ()
  "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
@@ -140,16 +139,62 @@
  ;; Use counsel-fzf with the specified directory as the root for searching.
  (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
 
-
-(define-key key-minor-mode-map (kbd "s-k b o") 'fzf-find-file--book-directory)
-
-(defun fzf-find-file-both-proposal-and-book-dirs ()
- "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories using fzf."
- (interactive)
- (let ((cmd "find '/Users/jay/Dropbox/writing/proposal/' '/Users/jay/Dropbox/writing/book/' -type f | fzf"))
-  (ivy-read "Find file: " (process-lines "sh" "-c" cmd)
-       :action (lambda (f) (when f (find-file f)))
-       :caller 'counsel-fzf-proposal-and-book-dirs)))
+(defalias 'search-filename-book-directory 'fzf-find-file--book-directory)
 
 
-(define-key key-minor-mode-map (kbd "s-k b b") 'fzf-find-file-both-proposal-and-book-dirs)
+(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
+
+(defun counsel-fzf-both-proposal-and-book-dirs ()
+  "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
+  (interactive)
+  ;; Define the directories to search in as dir1 and dir2.
+  (let* ((dir1 "/Users/jay/Dropbox/writing/proposal/")
+         (dir2 "/Users/jay/Dropbox/writing/book/")
+         ;; Use directory-files-recursively to list all files in dir1.
+         ;; This function recursively lists files in a directory and its subdirectories.
+         (files1 (directory-files-recursively dir1 ""))
+         ;; Similarly, list all files in dir2.
+         (files2 (directory-files-recursively dir2 ""))
+         ;; Combine the file lists from both directories into all-files.
+         (all-files (append files1 files2)))
+    ;; Use ivy-read to present an interactive interface with the combined file list.
+    ;; ivy-read is a part of the ivy completion framework, providing a simple and
+    ;; efficient way to select an item from a list.
+    (ivy-read "Find file: " all-files
+              ;; Define an action to be performed when a file is selected.
+              ;; In this case, it opens the selected file with find-file.
+              :action (lambda (f) (when f (find-file f))))))
+
+
+(defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)
+
+(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ f b") 'search-filename-both-book-and-proposal-directories)
+
+(defun affe-grep-book-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/Dropbox/writing/book/" initial))
+
+(define-key global-map (kbd "s-/ g B") 'affe-grep-book-directory)
+
+(defun affe-grep-proposal-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/Dropbox/writing/proposal/" initial))
+
+(define-key global-map (kbd "s-/ g p") 'affe-grep-proposal-directory)
+
+
+
+(defun affe-grep-both-directories (&optional initial)
+ "Fuzzy grep in combined book and proposal directories with optional INITIAL input."
+ (interactive "P")
+ ;; Define the directories to search
+ (let ((dir1 "/Users/jay/Dropbox/writing/book/")
+    (dir2 "/Users/jay/Dropbox/writing/proposal/"))
+  ;; Combine directories in a way that affe-grep can handle (this part is conceptual)
+  (affe-grep (combine-directories-for-search dir1 dir2) initial)))
+
+(define-key global-map (kbd "s-/ g b") 'affe-grep-both-directories)

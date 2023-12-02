@@ -1,3 +1,13 @@
+
+* keybindings
+
+Let's use s-/ f as a prefix for searching filenames, and s-/ g as a prefix for searching full text using grep
+
+Using ~s-/ f~ and ~s-/ g~ as prefix keybindings for searching filenames
+and full text, respectively, is a logical choice.
+
+
+
 * search
 #+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
@@ -142,16 +152,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 (define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
 
-(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ b s") 'affe-grep-bash-scripts)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-bash-profile)
-
-(define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
-(define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)
 
 #+end_src
 
@@ -190,6 +190,16 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 
 (define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
 
+(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ g ub") 'affe-grep-bash-scripts)
+(define-key key-minor-mode-map (kbd "s-/ g up") 'affe-grep-bash-profile)
+
+;; (define-key key-minor-mode-map (kbd "s-/ g r") 'consult-org-roam-search)
+;; (define-key key-minor-mode-map (kbd "s-/ g r") 'affe-grep-org-roam)
+
+
+
 #+end_src
 
 
@@ -224,8 +234,10 @@ Eventually, you might want to suppress previewing for certain functions. This ca
  ;; Use counsel-fzf with the specified directory as the root for searching.
  (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
 
+(defalias 'search-filename-proposal-directory 'fzf-find-file--proposal-directory)
 
-(define-key key-minor-mode-map (kbd "s-k p r") 'fzf-find-file--proposal-directory)
+(define-key key-minor-mode-map (kbd "s-/ f p") 'search-filename-proposal-directory)
+
 
 (defun fzf-find-file--book-directory ()
  "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
@@ -233,8 +245,10 @@ Eventually, you might want to suppress previewing for certain functions. This ca
  ;; Use counsel-fzf with the specified directory as the root for searching.
  (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
 
+(defalias 'search-filename-book-directory 'fzf-find-file--book-directory)
 
-(define-key key-minor-mode-map (kbd "s-k b o") 'fzf-find-file--book-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
 
 
 #+end_src
@@ -267,7 +281,7 @@ In this function:
 This function provides a user-friendly way to search and open files from two different directories using Emacs's ~ivy~ completion system, offering a seamless integration with your Emacs workflow.
 
 #+begin_src emacs-lisp
-(defun counsel-fzf-proposal-and-book-dirs ()
+(defun counsel-fzf-both-proposal-and-book-dirs ()
   "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
   (interactive)
   ;; Define the directories to search in as dir1 and dir2.
@@ -288,9 +302,59 @@ This function provides a user-friendly way to search and open files from two dif
               ;; In this case, it opens the selected file with find-file.
               :action (lambda (f) (when f (find-file f))))))
 
-(define-key key-minor-mode-map (kbd "s-k b b") 'counsel-fzf-proposal-and-book-dirs)
+
+(defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)
+
+(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
+
+(define-key key-minor-mode-map (kbd "s-/ f b") 'search-filename-both-book-and-proposal-directories)
 
 #+end_src
 
 
 ** search full text of book directory and proposal directory
+
+#+begin_src emacs-lisp
+(defun affe-grep-book-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/Dropbox/writing/book/" initial))
+
+(define-key global-map (kbd "s-/ g B") 'affe-grep-book-directory)
+
+(defun affe-grep-proposal-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/Dropbox/writing/proposal/" initial))
+
+(define-key global-map (kbd "s-/ g p") 'affe-grep-proposal-directory)
+
+
+(defun rg-search-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ (interactive "P")
+ (let ((rg-cmd (concat "rg --color=never --files --hidden -g '!.git' '"
+            initial-input "' "
+            "/Users/jay/Dropbox/writing/book "
+            "/Users/jay/Dropbox/writing/proposal | "
+            "xargs rg --color=always '" initial-input "'")))
+  (compilation-start rg-cmd 'grep-mode)))
+
+
+
+(defun counsel-rg-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ (interactive "P")
+ (let ((dirs '("/Users/jay/Dropbox/writing/book/" "/Users/jay/Dropbox/writing/proposal/")))
+  (mapc (lambda (dir)
+      (counsel-rg initial-input dir))
+     dirs)))
+
+
+
+(defalias 'grep-both-directories 'rg-search-book-and-proposal-dirs)
+
+
+(define-key global-map (kbd "s-/ g b") 'grep-both-directories)
+
+#+end_src
