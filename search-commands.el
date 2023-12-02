@@ -89,3 +89,67 @@
 
 (define-key key-minor-mode-map (kbd "s-/ o r") 'consult-org-roam-search)
 (define-key key-minor-mode-map (kbd "s-/ b p") 'affe-grep-org-roam)
+
+(use-package affe
+ :config
+ ;; Manual preview key for `affe-grep'
+ (consult-customize affe-grep :preview-key "M->"))
+
+(defun find-file-at-point-or-affe-find ()
+ "Open the file at point if one exists, otherwise run affe-find."
+ (interactive)
+ (let ((filename (ffap-file-at-point))) ; Check if there is a file at point
+ (if filename
+  (find-file filename) ; Open file at point if it exists
+  (affe-find)))) ; Otherwise, run affe-find
+
+(define-key key-minor-mode-map (kbd "C-x C-f") 'find-file-at-point-or-affe-find)
+
+(defun affe-grep-gnulisp-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/gnulisp" initial))
+
+(defun affe-grep-yasnippets-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/emacs/interesting-snippets/org-mode" initial))
+
+(define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
+
+(defun counsel-find-file-in-yasnippets ()
+ "Use counsel-find-file to search for files in the org-mode snippets directory."
+ (interactive)
+ (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
+ (counsel-find-file)))
+
+(define-key key-minor-mode-map (kbd "s-k y a") 'affe-grep-gnulisp-directory)
+
+(defun fzf-find-file--proposal-directory ()
+ "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/proposal/ directory."
+ (interactive)
+ ;; Use counsel-fzf with the specified directory as the root for searching.
+ (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
+
+
+(define-key key-minor-mode-map (kbd "s-k p r") 'fzf-find-file--proposal-directory)
+
+(defun fzf-find-file--book-directory ()
+ "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
+ (interactive)
+ ;; Use counsel-fzf with the specified directory as the root for searching.
+ (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
+
+
+(define-key key-minor-mode-map (kbd "s-k b o") 'fzf-find-file--book-directory)
+
+(defun fzf-find-file-both-proposal-and-book-dirs ()
+ "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories using fzf."
+ (interactive)
+ (let ((cmd "find '/Users/jay/Dropbox/writing/proposal/' '/Users/jay/Dropbox/writing/book/' -type f | fzf"))
+  (ivy-read "Find file: " (process-lines "sh" "-c" cmd)
+       :action (lambda (f) (when f (find-file f)))
+       :caller 'counsel-fzf-proposal-and-book-dirs)))
+
+
+(define-key key-minor-mode-map (kbd "s-k b b") 'fzf-find-file-both-proposal-and-book-dirs)

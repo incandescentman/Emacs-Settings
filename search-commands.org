@@ -155,3 +155,117 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 
 #+end_src
 
+
+* affe
+#+begin_src emacs-lisp
+(use-package affe
+ :config
+ ;; Manual preview key for `affe-grep'
+ (consult-customize affe-grep :preview-key "M->"))
+
+(defun find-file-at-point-or-affe-find ()
+ "Open the file at point if one exists, otherwise run affe-find."
+ (interactive)
+ (let ((filename (ffap-file-at-point))) ; Check if there is a file at point
+ (if filename
+  (find-file filename) ; Open file at point if it exists
+  (affe-find)))) ; Otherwise, run affe-find
+
+(define-key key-minor-mode-map (kbd "C-x C-f") 'find-file-at-point-or-affe-find)
+
+#+end_src
+
+* affe: search full text within frequently used directories
+
+#+begin_src emacs-lisp
+(defun affe-grep-gnulisp-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/gnulisp" initial))
+
+(defun affe-grep-yasnippets-directory (&optional initial)
+ "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
+ (interactive "P")
+ (affe-grep "/Users/jay/emacs/interesting-snippets/org-mode" initial))
+
+(define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
+
+#+end_src
+
+
+* search by filename within frequently used directories
+#+begin_src emacs-lisp
+
+(defun counsel-find-file-in-yasnippets ()
+ "Use counsel-find-file to search for files in the org-mode snippets directory."
+ (interactive)
+ (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
+ (counsel-find-file)))
+
+(define-key key-minor-mode-map (kbd "s-k y a") 'affe-grep-gnulisp-directory)
+
+#+end_src
+
+
+* book search
+
+** search filenames of book directory and proposal directory
+
+[[/Users/jay/Dropbox/writing/proposal/][📁 Proposal]]: /Users/jay/Dropbox/writing/proposal
+
+[[/Users/jay/Dropbox/writing/book/][📁 Book]]: /Users/jay/Dropbox/writing/book
+
+
+#+begin_src emacs-lisp
+
+(defun fzf-find-file--proposal-directory ()
+ "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/proposal/ directory."
+ (interactive)
+ ;; Use counsel-fzf with the specified directory as the root for searching.
+ (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
+
+
+(define-key key-minor-mode-map (kbd "s-k p r") 'fzf-find-file--proposal-directory)
+
+(defun fzf-find-file--book-directory ()
+ "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
+ (interactive)
+ ;; Use counsel-fzf with the specified directory as the root for searching.
+ (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
+
+
+(define-key key-minor-mode-map (kbd "s-k b o") 'fzf-find-file--book-directory)
+
+
+#+end_src
+
+
+** simultaneously both
+In this function:
+
+- ~directory-files-recursively~ is used to get a list of all files in
+  each directory (~dir1~ and ~dir2~).
+- These lists are concatenated into ~all-files~.
+- ~ivy-read~ is then used to create an interactive selection interface
+  with the combined file list.
+
+#+begin_src emacs-lisp
+(defun counsel-fzf-proposal-and-book-dirs ()
+ "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
+ (interactive)
+ (let* ((dir1 "/Users/jay/Dropbox/writing/proposal/")
+     (dir2 "/Users/jay/Dropbox/writing/book/")
+     (files1 (directory-files-recursively dir1 ""))
+     (files2 (directory-files-recursively dir2 ""))
+     (all-files (append files1 files2)))
+  (ivy-read "Find file: " all-files
+       :action (lambda (f) (when f (find-file f))))))
+
+
+
+(define-key key-minor-mode-map (kbd "s-k b b") 'counsel-fzf-proposal-and-book-dirs)
+
+#+end_src
+
+
+** search full text of book directory and proposal directory
