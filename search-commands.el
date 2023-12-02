@@ -187,14 +187,75 @@
 (define-key global-map (kbd "s-/ g p") 'affe-grep-proposal-directory)
 
 
-
-(defun affe-grep-both-directories (&optional initial)
- "Fuzzy grep in combined book and proposal directories with optional INITIAL input."
+(defun rg-search-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
  (interactive "P")
- ;; Define the directories to search
- (let ((dir1 "/Users/jay/Dropbox/writing/book/")
-    (dir2 "/Users/jay/Dropbox/writing/proposal/"))
-  ;; Combine directories in a way that affe-grep can handle (this part is conceptual)
-  (affe-grep (combine-directories-for-search dir1 dir2) initial)))
+ (let ((rg-cmd (concat "rg --color=never --files --hidden -g '!.git' '"
+            initial-input "' "
+            "/Users/jay/Dropbox/writing/book "
+            "/Users/jay/Dropbox/writing/proposal | "
+            "xargs rg --color=always '" initial-input "'")))
+  (compilation-start rg-cmd 'grep-mode)))
 
-(define-key global-map (kbd "s-/ g b") 'affe-grep-both-directories)
+
+
+(defun counsel-rg-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ (interactive "P")
+ (let ((dirs '("/Users/jay/Dropbox/writing/book/" "/Users/jay/Dropbox/writing/proposal/")))
+  (mapc (lambda (dir)
+      (counsel-rg initial-input dir))
+     dirs)))
+
+(defun rg-search-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ (interactive "sEnter search pattern: ")
+ (let* ((input (if (and initial-input (not (equal initial-input "")))
+          initial-input
+         ".*"))
+     (rg-cmd (concat "rg --vimgrep --color=always --hidden -g '!.git' '"
+             input "' "
+             "/Users/jay/Dropbox/writing/book "
+             "/Users/jay/Dropbox/writing/proposal")))
+  (compilation-start rg-cmd 'grep-mode)))
+
+
+(defalias 'grep-both-directories 'rg-search-book-and-proposal-dirs)
+
+(define-key global-map (kbd "s-/ g b") 'grep-both-directories)
+
+
+
+
+
+(defun counsel-ag-search-book-and-proposal-dirs ()
+ "Search using counsel-ag in the book and proposal directories."
+ (interactive)
+ (counsel-ag "" (expand-file-name "~/Dropbox/writing/book"))
+ (counsel-ag "" (expand-file-name "~/Dropbox/writing/proposal")))
+
+
+
+(defun consult-git-grep-book-and-proposal-dirs ()
+ "Search using consult-git-grep in the book and proposal directories."
+ (interactive)
+ (let ((search-term (read-string "Enter search term: ")))
+  ;; Switch to a buffer visiting a file in the book directory
+  ;; and do the search.
+  (with-temp-buffer
+   (cd "/Users/jay/Dropbox/writing/book")
+   (consult-git-grep search-term))
+  ;; Switch to a buffer visiting a file in the proposal directory
+  ;; and do the search.
+  (with-temp-buffer
+   (cd "/Users/jay/Dropbox/writing/proposal")
+   (consult-git-grep search-term))))
+
+
+
+(defun my-show-project-root ()
+ "Show the root directory of the current Projectile project."
+ (interactive)
+ (if (projectile-project-p)
+   (message "Current project root: %s" (projectile-project-root))
+  (message "Not in a project")))

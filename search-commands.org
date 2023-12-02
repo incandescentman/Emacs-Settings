@@ -351,10 +351,29 @@ This function provides a user-friendly way to search and open files from two dif
      dirs)))
 
 
+;; works but is overly complex. Do not use. use counsel-projectile-ag instead.
+(defun rg-search-book-and-proposal-dirs (&optional initial-input)
+ "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ (interactive "sEnter search pattern: ")
+ (let* ((input (if (and initial-input (not (equal initial-input "")))
+          initial-input
+         ".*"))
+     (rg-cmd (concat "rg --vimgrep --color=always --hidden -g '!.git' '"
+             input "' "
+             "/Users/jay/Dropbox/writing/book "
+             "/Users/jay/Dropbox/writing/proposal")))
+  (compilation-start rg-cmd 'grep-mode)))
 
-(defalias 'grep-both-directories 'rg-search-book-and-proposal-dirs)
 
+(defalias 'grep-both-directories 'counsel-projectile-ag)
 
 (define-key global-map (kbd "s-/ g b") 'grep-both-directories)
+
+(defun projectile-display-project-root ()
+ "Show the root directory of the current Projectile project."
+ (interactive)
+ (if (projectile-project-p)
+   (message "Current project root: %s" (projectile-project-root))
+  (message "Not in a project")))
 
 #+end_src
