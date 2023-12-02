@@ -207,6 +207,8 @@
       (counsel-rg initial-input dir))
      dirs)))
 
+
+;; works but is overly complex. Do not use. use counsel-projectile-ag instead.
 (defun rg-search-book-and-proposal-dirs (&optional initial-input)
  "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
  (interactive "sEnter search pattern: ")
@@ -220,40 +222,11 @@
   (compilation-start rg-cmd 'grep-mode)))
 
 
-(defalias 'grep-both-directories 'rg-search-book-and-proposal-dirs)
+(defalias 'grep-both-directories 'counsel-projectile-ag)
 
 (define-key global-map (kbd "s-/ g b") 'grep-both-directories)
 
-
-
-
-
-(defun counsel-ag-search-book-and-proposal-dirs ()
- "Search using counsel-ag in the book and proposal directories."
- (interactive)
- (counsel-ag "" (expand-file-name "~/Dropbox/writing/book"))
- (counsel-ag "" (expand-file-name "~/Dropbox/writing/proposal")))
-
-
-
-(defun consult-git-grep-book-and-proposal-dirs ()
- "Search using consult-git-grep in the book and proposal directories."
- (interactive)
- (let ((search-term (read-string "Enter search term: ")))
-  ;; Switch to a buffer visiting a file in the book directory
-  ;; and do the search.
-  (with-temp-buffer
-   (cd "/Users/jay/Dropbox/writing/book")
-   (consult-git-grep search-term))
-  ;; Switch to a buffer visiting a file in the proposal directory
-  ;; and do the search.
-  (with-temp-buffer
-   (cd "/Users/jay/Dropbox/writing/proposal")
-   (consult-git-grep search-term))))
-
-
-
-(defun my-show-project-root ()
+(defun projectile-display-project-root ()
  "Show the root directory of the current Projectile project."
  (interactive)
  (if (projectile-project-p)
