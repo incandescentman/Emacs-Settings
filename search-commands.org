@@ -240,7 +240,7 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 #+end_src
 
 
-** simultaneously both
+** simultaneously search both directories
 In this function:
 
 - ~directory-files-recursively~ is used to get a list of all files in
@@ -249,19 +249,44 @@ In this function:
 - ~ivy-read~ is then used to create an interactive selection interface
   with the combined file list.
 
+*** Explanation of How the Code Works:
+
+
+1. *Interactive Declaration*: ~(interactive)~ makes this function a command that can be called interactively within Emacs, for example, using ~M-x~.
+2. *Directory Definitions*: The paths ~/Users/jay/Dropbox/writing/proposal/~ and ~/Users/jay/Dropbox/writing/book/~ are set as ~dir1~ and ~dir2~ respectively. These represent the two directories you want to search.
+3. *Listing Files*:
+   - ~directory-files-recursively~ is used for both ~dir1~ and ~dir2~ to create a list of all files within these directories and their subdirectories. The empty string ~""~ argument means it lists all types of files without filtering by extension.
+4. *Combining File Lists*: The lists ~files1~ and ~files2~ are combined into a single list ~all-files~ using ~append~. This list now contains file paths from both directories.
+5. *Interactive File Selection*:
+   - ~ivy-read~ is used to create an interactive selection interface. It takes ~all-files~ as the list of choices to present to the user.
+   - The prompt ~"Find file: "~ is displayed to the user.
+6. *File Selection Action*:
+   - The ~:action~ argument defines what to do when the user selects a file.
+   - It uses a lambda function ~(lambda (f) (when f (find-file f)))~ to open the selected file. The ~when~ statement ensures that an action is only taken if a file is actually selected (i.e., ~f~ is not ~nil~).
+
+This function provides a user-friendly way to search and open files from two different directories using Emacs's ~ivy~ completion system, offering a seamless integration with your Emacs workflow.
+
 #+begin_src emacs-lisp
 (defun counsel-fzf-proposal-and-book-dirs ()
- "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
- (interactive)
- (let* ((dir1 "/Users/jay/Dropbox/writing/proposal/")
-     (dir2 "/Users/jay/Dropbox/writing/book/")
-     (files1 (directory-files-recursively dir1 ""))
-     (files2 (directory-files-recursively dir2 ""))
-     (all-files (append files1 files2)))
-  (ivy-read "Find file: " all-files
-       :action (lambda (f) (when f (find-file f))))))
-
-
+  "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
+  (interactive)
+  ;; Define the directories to search in as dir1 and dir2.
+  (let* ((dir1 "/Users/jay/Dropbox/writing/proposal/")
+         (dir2 "/Users/jay/Dropbox/writing/book/")
+         ;; Use directory-files-recursively to list all files in dir1.
+         ;; This function recursively lists files in a directory and its subdirectories.
+         (files1 (directory-files-recursively dir1 ""))
+         ;; Similarly, list all files in dir2.
+         (files2 (directory-files-recursively dir2 ""))
+         ;; Combine the file lists from both directories into all-files.
+         (all-files (append files1 files2)))
+    ;; Use ivy-read to present an interactive interface with the combined file list.
+    ;; ivy-read is a part of the ivy completion framework, providing a simple and
+    ;; efficient way to select an item from a list.
+    (ivy-read "Find file: " all-files
+              ;; Define an action to be performed when a file is selected.
+              ;; In this case, it opens the selected file with find-file.
+              :action (lambda (f) (when f (find-file f))))))
 
 (define-key key-minor-mode-map (kbd "s-k b b") 'counsel-fzf-proposal-and-book-dirs)
 
