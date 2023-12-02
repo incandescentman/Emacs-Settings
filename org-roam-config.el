@@ -44,6 +44,14 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :memoir:")
 	         :unnarrowed t)
 
+	        ("q" "quotes for the book" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "quotes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :quote:")
+	         :unnarrowed t)
+
+
 	        ("$" "consumer" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"

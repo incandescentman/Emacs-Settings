@@ -501,9 +501,16 @@ https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
-  ;;(while (search-forward-regexp "- " nil to)
+  ;;(while (search-forward-regexp "- " nil t)
   ;; (replace-match "") nil t)
   ;; add alpha. And replace the alpha.
+
+;; replace ** with * when it's at the beginning of a line and not followed by a space
+(save-excursion
+  (goto-char beg)
+  (while (re-search-forward "^\\*\\*\\([[:alnum:]]\\)" end t)
+   (replace-match "*\\1")))
+
 
   (replace-smart-quotes-regexp beg end)
 
@@ -2789,20 +2796,48 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
 
 ** Copy path
 Useful for working with files and references:
+
+Add 'filename' to the kill ring *without duplicating it* if it's already there.
 #+BEGIN_SRC emacs-lisp
+
+
 (defun path-copy-path-to-clipboard ()
-  "Copy the full current filename and path to the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename)))
-  (push-kill-ring-pasteboard-to-clipboard)
-)
+ "Copy the full current filename and path to the clipboard."
+ (interactive)
+ (let ((filename (if (equal major-mode 'dired-mode)
+           default-directory
+          (buffer-file-name))))
+  (when (and filename (not (equal filename (car kill-ring))))
+   (with-temp-buffer
+    (insert filename)
+    (clipboard-kill-region (point-min) (point-max)))
+   (kill-new filename))
+  (when filename
+   (message "Copied to clipboard: %s" filename)))
+ (push-kill-ring-pasteboard-to-clipboard))
+
+
+(defun path-copy-path-to-clipboard ()
+ "Copy the full current filename and path to the clipboard."
+ (interactive)
+ ;; Define a local variable 'filename' to store the path of the current file or directory.
+ (let ((filename (if (equal major-mode 'dired-mode)
+           default-directory ; If in 'dired-mode', use the current directory.
+          (buffer-file-name)))) ; Otherwise, use the file path of the current buffer.
+  ;; Check if 'filename' is non-nil and is not the latest entry in the kill ring.
+  (when (and filename (not (equal filename (car kill-ring))))
+   ;; Add 'filename' to the kill ring without duplicating it if it's already there.
+   (kill-new filename)
+   ;; Use a temporary buffer to copy 'filename' to the system clipboard.
+   (with-temp-buffer
+    (insert filename)
+    (clipboard-kill-region (point-min) (point-max))))
+  ;; Provide feedback to the user.
+  (when filename
+   (message "Copied to clipboard: %s" filename)))
+ ;; Use custom function to ensure the clipboard content is also in the kill ring.
+ (push-kill-ring-pasteboard-to-clipboard))
+
 #+END_SRC
 
 ** Copy path with quotes
@@ -9350,8 +9385,6 @@ After evaluating your init-file you can use links analog to the example:
 #+END_EXAMPLE
 
 
-
-* email
 
 * indent level
 #+begin_src emacs-lisp
