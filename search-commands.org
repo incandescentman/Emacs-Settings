@@ -315,42 +315,6 @@ This function provides a user-friendly way to search and open files from two dif
 ** search full text of book directory and proposal directory
 
 #+begin_src emacs-lisp
-(defun affe-grep-book-directory (&optional initial)
- "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
- (interactive "P")
- (affe-grep "/Users/jay/Dropbox/writing/book/" initial))
-
-(define-key global-map (kbd "s-/ g B") 'affe-grep-book-directory)
-
-(defun affe-grep-proposal-directory (&optional initial)
- "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
- (interactive "P")
- (affe-grep "/Users/jay/Dropbox/writing/proposal/" initial))
-
-(define-key global-map (kbd "s-/ g p") 'affe-grep-proposal-directory)
-
-
-(defun rg-search-book-and-proposal-dirs (&optional initial-input)
- "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
- (interactive "P")
- (let ((rg-cmd (concat "rg --color=never --files --hidden -g '!.git' '"
-            initial-input "' "
-            "/Users/jay/Dropbox/writing/book "
-            "/Users/jay/Dropbox/writing/proposal | "
-            "xargs rg --color=always '" initial-input "'")))
-  (compilation-start rg-cmd 'grep-mode)))
-
-
-
-(defun counsel-rg-book-and-proposal-dirs (&optional initial-input)
- "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
- (interactive "P")
- (let ((dirs '("/Users/jay/Dropbox/writing/book/" "/Users/jay/Dropbox/writing/proposal/")))
-  (mapc (lambda (dir)
-      (counsel-rg initial-input dir))
-     dirs)))
-
-
 ;; works but is overly complex. Do not use. use counsel-projectile-ag instead.
 (defun rg-search-book-and-proposal-dirs (&optional initial-input)
  "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
@@ -364,8 +328,13 @@ This function provides a user-friendly way to search and open files from two dif
              "/Users/jay/Dropbox/writing/proposal")))
   (compilation-start rg-cmd 'grep-mode)))
 
+;; don't need any of this. I put both directories in the same projectile project ("both"), so just use counsel-projectile-ag
+
 
 (defalias 'grep-both-directories 'counsel-projectile-ag)
+(defalias 'grep-book-directory 'consult-ripgrep-current-directory)
+(defalias 'grep-proposal-directory 'consult-ripgrep-current-directory)
+
 
 (define-key global-map (kbd "s-/ g b") 'grep-both-directories)
 
