@@ -9406,7 +9406,6 @@ Philosophy:
         (count-kind-of 0)
         (count-like 0)
         (count-sort-of 0)
-        (count-um 0)
         (count-right 0)
         (count-okay 0)
         (count-um 0)
@@ -9467,8 +9466,13 @@ Philosophy:
       ;; Remove double spaces
       (goto-char (point-min))
       (while (search-forward "  " nil t)
-        (setq count-right (1+ count-right))
         (replace-match " ")))
+
+;; Remove double commas
+      (goto-char (point-min))
+      (while (search-forward " , " nil t)
+
+        (replace-match ", ")))
     ;; Constructing the report string
    ;; Constructing the report string
    (when (> count-you-know 0)
@@ -9496,7 +9500,7 @@ Philosophy:
     ;; Reporting the changes
     (if (string= report-string "")
         (message "No changes made.")
-      (message report-string))))
+      (message report-string)))
 #+end_src
 
 
