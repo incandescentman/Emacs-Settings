@@ -28,6 +28,18 @@
 
 \\setromanfont{HelveticaNowText-Light}
 \\setsansfont{HelveticaNowDisplay-Regular}
+
+% define sans font
+\\setsansfont[
+ Path = /Users/jay/Library/Fonts/,
+ %UprightFont = HelveticaNowText-Light,
+ BoldFont = HelveticaNeueLTPro-BdCn,
+%ItalicFont = HelveticaNowText-LightItalic,
+%BoldItalicFont = HelveticaNowDisplay-BoldIta,
+ Extension = .otf
+]{Helvetica Display}
+
+
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Myriad Pro}
 \\else
@@ -37,8 +49,7 @@
 \\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
-\\setkeys{Gin}{resolution=72}
-\\usepackage{tikz}
+%\\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
@@ -78,8 +89,8 @@
 
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mytitlefont[Color={libertyblue}]{Arial}
+\\newfontfamily\\myauthorfont[Color={libertyblue}]{Arial}
 \\newfontfamily\\mybluefont[Color=libertyblue]{Arial}
 
 %Define Bold face
@@ -98,29 +109,26 @@
 \\usepackage[labelformat=empty]{caption}
 
 
-
-
-
+\\usepackage{fontspec}
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
 
 \\fancyhead[C]{%
-  \\begin{minipage}[c]{0.6\\linewidth}
-    \\includegraphics[width=\\linewidth,height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
+  \\begin{minipage}[c]{1\\linewidth}
+    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
   \\end{minipage}%
-  \\hfill % This adds a space between the logo and the text
+  \\hspace{1in} % 1-inch space between the logo and the text
   \\begin{minipage}[c]{0.3\\linewidth}
-    \\raggedleft % Right-align the text in the minipage
-    Your Text Here\\\\
-    More Text\\\\
-    Additional Text
+    \\raggedright % Left-align the text in the minipage
+    {\\fontsize{60}{72}\\fontspec{/Users/jay/Library/Fonts/HelveticaNeueLTPro-BdCn.otf} STORYTELLING.NYC}
   \\end{minipage}
 }
 \\rhead{}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
+
 
 
 
