@@ -60,6 +60,7 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 \\definecolor{elegantblue}{HTML}{1792d1}
 \\definecolor{ideablue}{HTML}{55C1E7}
+\\definecolor{libertyblue}{HTML}{73b0be}
 
 
 \\newtoks\\leftheader
@@ -79,7 +80,7 @@
 %This macro is to make cleaner the specification of the titling font
 \\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
 \\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=ideablue]{Arial}
+\\newfontfamily\\mybluefont[Color=libertyblue]{Arial}
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
@@ -253,22 +254,22 @@
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{ideablue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{ideablue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{ideablue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{ideablue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{libertyblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{libertyblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{libertyblue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{libertyblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{libertyblue}}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{ideablue} }
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf\\color{libertyblue} }
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{libertyblue}}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{libertyblue} }
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
+\\hypersetup{colorlinks, citecolor=libertyblue,filecolor=libertyblue,linkcolor=libertyblue,urlcolor=libertyblue}
 
 \\renewcommand\\maketitle{}
 
