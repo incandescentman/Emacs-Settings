@@ -77,6 +77,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\definecolor{elegantblue}{HTML}{1792d1}
 \\definecolor{ideablue}{HTML}{55C1E7}
 \\definecolor{libertyblue}{HTML}{73b0be}
+\\definecolor{darklibertyblue}{HTML}{19455b}
 
 
 \\newtoks\\leftheader
@@ -121,16 +122,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\fancyhead[C]{%
   \\begin{minipage}[c][1in][c]{1\\linewidth}
-    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
+    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
   \\end{minipage}%
   \\hspace{0in} % Reducing space to 0 inches between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
-    \\raisebox{0.7in}[0pt][0pt]{ % Raise the text by 0.7 inches
-      {\\fontsize{60}{72}\\sffamily STORYTELLING.NYC}
+    \\raisebox{0.58in}[0pt][0pt]{ % Raise the text by 0.7 inches
+      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
     }
   \\end{minipage}%
-  \\hspace{2.5in} % Move the text 1 inch to the left
+  \\hspace{2.7in} % Move the text 1 inch to the left
 }
 
 
