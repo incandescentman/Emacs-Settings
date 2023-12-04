@@ -106,6 +106,10 @@
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
+
+
+
+
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
