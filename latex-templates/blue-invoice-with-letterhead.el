@@ -1,7 +1,7 @@
-(provide 'blue-invoice)
+(provide 'blue-invoice-letterhead)
 
 (add-to-list 'org-latex-classes
-  '("blue-invoice"
+  '("blue-invoice-letterhead"
 "
 
 \\documentclass[12pt]{article}
@@ -98,11 +98,12 @@
 \\usepackage[labelformat=empty]{caption}
 
 
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
-\\fancyhead[C]{\\includegraphics[width=\\linewidth]{/Users/jay/Dropbox/writing/prosperous/bofa/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png}}
-\\rhead{Invoice: \\@title\\  {\\nouppercase{\\the\\rightheader}}}
+\\fancyhead[C]{\\includegraphics[width=\\linewidth,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/bofa/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png}\\\\[3in]}
+\\rhead{}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
