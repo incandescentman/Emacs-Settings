@@ -126,7 +126,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   \\hspace{1in} % 1-inch space between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
-    {\\fontsize{60}{72}\\sffamily STORYTELLING.NYC}
+    \\raisebox{0.7in}[0pt][0pt]{ % Raise the text by 0.7 inches
+      {\\fontsize{60}{72}\\sffamily STORYTELLING.NYC}
+    }
   \\end{minipage}
 }
 
