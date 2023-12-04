@@ -19,7 +19,7 @@
 \\usepackage{fontspec}
 
 % define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
+\\setmainfont{HelveticaNow}[
   Path = /Users/jay/Library/Fonts/,
   UprightFont = HelveticaNowText-Light,
   BoldFont = HelveticaNowDisplay-Bold,
