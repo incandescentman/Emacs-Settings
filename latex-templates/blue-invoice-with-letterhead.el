@@ -99,14 +99,30 @@
 
 
 
+
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
-\\fancyhead[C]{\\includegraphics[width=\\linewidth,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/bofa/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png}\\\\[3in]}
+
+\\fancyhead[C]{%
+  \\begin{minipage}[c]{0.6\\linewidth}
+    \\includegraphics[width=\\linewidth,height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
+  \\end{minipage}%
+  \\hfill % This adds a space between the logo and the text
+  \\begin{minipage}[c]{0.3\\linewidth}
+    \\raggedleft % Right-align the text in the minipage
+    Your Text Here\\\\
+    More Text\\\\
+    Additional Text
+  \\end{minipage}
+}
 \\rhead{}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
+
+
 
 
 
