@@ -97,15 +97,18 @@
 
 \\usepackage[labelformat=empty]{caption}
 
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
-\\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
-\\chead{}
+\\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
+\\fancyhead[C]{\\includegraphics[width=\\linewidth]{/Users/jay/Dropbox/writing/prosperous/bofa/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png}}
 \\rhead{Invoice: \\@title\\  {\\nouppercase{\\the\\rightheader}}}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
+
+
+
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
