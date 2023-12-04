@@ -123,14 +123,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   \\begin{minipage}[c][1in][c]{1\\linewidth}
     \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
   \\end{minipage}%
-  \\hspace{1in} % 1-inch space between the logo and the text
+  \\hspace{0in} % Reducing space to 0 inches between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
     \\raisebox{0.7in}[0pt][0pt]{ % Raise the text by 0.7 inches
       {\\fontsize{60}{72}\\sffamily STORYTELLING.NYC}
     }
-  \\end{minipage}
+  \\end{minipage}%
+  \\hspace{2.5in} % Move the text 1 inch to the left
 }
+
 
 
 \\rhead{}
