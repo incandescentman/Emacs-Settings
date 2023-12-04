@@ -1,8 +1,8 @@
 (provide 'blue-invoice-letterhead)
 
 (add-to-list 'org-latex-classes
-  '("blue-invoice-letterhead"
-"
+             '("blue-invoice-letterhead"
+               "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry}
@@ -16,32 +16,37 @@
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 
+\\usepackage{fontspec}
 
 % define Helvetica Now font weights
 \\setmainfont{EBGaramond}[
   Path = /Users/jay/Library/Fonts/,
-        UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold,
-        ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
+  UprightFont = HelveticaNowText-Light,
+  BoldFont = HelveticaNowDisplay-Bold,
+  ItalicFont = HelveticaNowText-LightItalic,
+  BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
+]
 
 \\setromanfont{HelveticaNowText-Light}
 \\setsansfont{HelveticaNowDisplay-Regular}
 
 % define sans font
-\\setsansfont[
- Path = /Users/jay/Library/Fonts/,
- %UprightFont = HelveticaNowText-Light,
- BoldFont = HelveticaNeueLTPro-BdCn,
-%ItalicFont = HelveticaNowText-LightItalic,
-%BoldItalicFont = HelveticaNowDisplay-BoldIta,
- Extension = .otf
-]{Helvetica Display}
-
+\\setsansfont{Helvetica Neue LT Pro}[
+  Path = /Users/jay/Library/Fonts/,
+UprightFont = HelveticaNeueLTPro-MdCn,
+  BoldFont = HelveticaNeueLTPro-BdCn,
+  Extension = .otf
+]
 
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Myriad Pro}
+
+
+\\usepackage{fancyhdr}
+\\pagestyle{fancy}
+\\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal
+
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -109,29 +114,27 @@
 \\usepackage[labelformat=empty]{caption}
 
 
-\\usepackage{fontspec}
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
 
+
 \\fancyhead[C]{%
-  \\begin{minipage}[c]{1\\linewidth}
+  \\begin{minipage}[c][1in][c]{1\\linewidth}
     \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/storytelling-nyc-logo-final.png}
   \\end{minipage}%
   \\hspace{1in} % 1-inch space between the logo and the text
-  \\begin{minipage}[c]{0.3\\linewidth}
+  \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
-    {\\fontsize{60}{72}\\fontspec{/Users/jay/Library/Fonts/HelveticaNeueLTPro-BdCn.otf} STORYTELLING.NYC}
+    {\\fontsize{60}{72}\\sffamily STORYTELLING.NYC}
   \\end{minipage}
 }
+
+
 \\rhead{}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
-
-
-
-
 
 
 \\usepackage{listings}
@@ -304,13 +307,13 @@
 
       [NO-DEFAULT-PACKAGES]
       [NO-PACKAGES]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
 (setq org-latex-to-pdf-process
-  '("xelatex -interaction nonstopmode %f"
-     "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes
