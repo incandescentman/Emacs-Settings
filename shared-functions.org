@@ -8488,6 +8488,13 @@ Smart jump to beginning / end of lines.
  :config
  (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
 
+(defun org-timeline-export-to-html-and-open ()
+ "Export the current Org file to HTML using `org-timeline-export-to-html', then open the HTML file."
+ (interactive)
+ (let ((html-file (org-timeline-export-to-html)))
+  (when html-file
+   (browse-url (concat "file://" (expand-file-name html-file))))))
+
 #+end_src
 
 
