@@ -9482,11 +9482,7 @@ Philosophy:
       (goto-char (point-min))
       (while (search-forward ", right." nil t)
         (setq count-right (1+ count-right))
-        (replace-match "."))
-      ;; Remove double spaces
-      (goto-char (point-min))
-      (while (search-forward "  " nil t)
-        (replace-match " ")))
+        (replace-match ".")))
 
       ;; Function to clean up doubled punctuation, returns t if a replacement was made
   (defun cleanup-doubled-punctuation ()
@@ -9511,13 +9507,6 @@ Philosophy:
 
   ;; Keep cleaning up doubled punctuation until no more replacements are made
   (while (cleanup-doubled-punctuation))
-
-;; If you want to keep the general doubled punctuation removal,
-;; make sure to define a capturing group or adjust as needed.
-;; For example, to replace any two commas or periods with a single period:
-(goto-char (point-min))
-(while (re-search-forward "\\([.,]\\)\\1" nil t)
-  (replace-match "\\1"))
 
 
 ;; Remove stray commas
