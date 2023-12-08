@@ -9489,15 +9489,20 @@ Philosophy:
       (while (search-forward "  " nil t)
         (replace-match " ")))
 
-;; Remove double commas
-   (goto-char (point-min))
-   (while (search-forward ",," nil t)
-    (replace-match ","))
+;; Remove doubled commas
+(goto-char (point-min))
+(while (search-forward ",," nil t)
+ (replace-match ","))
 
-;; Remove doubled punct
-  (goto-char (point-min))
-  (while (search-forward ".," nil t)
-  (replace-match "."))
+;; Remove doubled periods
+(goto-char (point-min))
+(while (search-forward ".," nil t)
+ (replace-match "."))
+
+;; Remove doubled punctuation
+(goto-char (point-min))
+(while (re-search-forward "[.,][,.]" nil t)
+ (replace-match "\1"))
 
 ;; Remove stray commas
       (goto-char (point-min))
