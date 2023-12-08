@@ -9489,20 +9489,24 @@ Philosophy:
       (while (search-forward "  " nil t)
         (replace-match " ")))
 
+
 ;; Remove doubled commas
 (goto-char (point-min))
 (while (search-forward ",," nil t)
- (replace-match ","))
+  (replace-match ","))
 
-;; Remove doubled periods
 (goto-char (point-min))
 (while (search-forward ".," nil t)
  (replace-match "."))
 
-;; Remove doubled punctuation
+
+;; If you want to keep the general doubled punctuation removal,
+;; make sure to define a capturing group or adjust as needed.
+;; For example, to replace any two commas or periods with a single period:
 (goto-char (point-min))
-(while (re-search-forward "[.,][,.]" nil t)
- (replace-match "\1"))
+(while (re-search-forward "\\([.,]\\)\\1" nil t)
+  (replace-match "\\1"))
+
 
 ;; Remove stray commas
       (goto-char (point-min))
