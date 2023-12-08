@@ -9546,4 +9546,23 @@ Philosophy:
 #+end_src
 
 
+* remove doubled words
+#+begin_src emacs-lisp
+(defun remove-duplicate-words ()
+  "Remove doubled words from the text, excluding certain grammatically permissible repetitions."
+  (interactive)
+  (let ((exclusions '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry"
+                      "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo"
+                      "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like"
+                      "way" "big" "best" "pretty" "well")))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward
+              (concat "\\b\\(\\w+\\)\\b \\1\\b") nil t)
+        (let ((matched-word (match-string 1)))
+          (unless (member matched-word exclusions)
+            (replace-match matched-word)))))))  ;; Ensure this line closes all open parentheses
+#+end_src
+
+
 ;; -*- lexical-binding: t -*-
