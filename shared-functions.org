@@ -9460,20 +9460,19 @@ Philosophy:
         (setq count-okay (1+ count-okay))
         (replace-match "OK"))
 
-   ;; Remove instances of "um," "um", and "umm"
-(goto-char (point-min))
- (while (re-search-forward "\\b\\(um, \\|um\\|umm\\)\\b" nil t)
+;; Remove instances of "um" and "umm" as whole words
+ (goto-char (point-min))
+ (while (re-search-forward "\\b\\(um\\|umm\\)\\b" nil t)
   (setq count-um (1+ count-um))
   (replace-match ""))
 
-;; Remove instances of "uh" not followed by "huh"
-(goto-char (point-min))
-(while (search-forward "uh" nil t)
+
+;; Remove instances of "uh" not followed by "huh" as a whole word
+ (goto-char (point-min))
+ (while (re-search-forward "\\buh\\b" nil t)
   (unless (looking-at "-huh")
-    (setq count-uh (1+ count-uh))
-    (replace-match "")))
-
-
+   (setq count-uh (1+ count-uh))
+   (replace-match "")))
 
       ;; Replace ", right?" with "."
       (goto-char (point-min))
