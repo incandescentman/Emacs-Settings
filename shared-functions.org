@@ -9549,22 +9549,32 @@ Philosophy:
 * remove doubled words
 #+begin_src emacs-lisp
 (defconst duplicate-word-exclusions
- '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry"
-  "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum"
-  "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love"
-  "hate" "like" "way" "big" "best" "pretty" "well"))
+  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry"
+    "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum"
+    "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love"
+    "hate" "like" "way" "big" "best" "pretty" "well"))
 
 (defun remove-duplicated-words ()
- "Remove duplicated words, excluding certain grammatical duplicates."
- (interactive)
- (save-excursion
-  (goto-char (point-min))
-  (while (re-search-forward
-      "\\b\\(\\w+\\)\\b\\s+\\1\\b" nil t)
-   (unless (member (match-string 1) duplicate-word-exclusions)
-    (replace-match "")))))
-
-
+  "Remove duplicated words, excluding certain grammatical duplicates."
+  (interactive)
+  (let ((removed-words (make-hash-table :test 'equal))
+        (report-string ""))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward
+              "\\b\\(\\w+\\)\\b\\s-+\\1\\b" nil t)
+        (let ((matched-word (match-string 1)))
+          (unless (member matched-word duplicate-word-exclusions)
+            (puthash matched-word (1+ (gethash matched-word removed-words 0)) removed-words)
+            (replace-match matched-word))))
+    ;; Constructing the report string
+    (maphash (lambda (key value)
+               (setq report-string (concat report-string (format "\"%s\" %d times, " key value))))
+             removed-words)
+    ;; Reporting the changes
+    (if (string= report-string "")
+        (message "No duplicated words removed.")
+      (message (concat "Removed duplicated words: " (substring report-string 0 -2) "."))))))
 #+end_src
 
 
