@@ -9466,7 +9466,6 @@ Philosophy:
   (setq count-um (1+ count-um))
   (replace-match ""))
 
-
 ;; Remove instances of "uh" not followed by "huh" as a whole word
  (goto-char (point-min))
  (while (re-search-forward "\\buh\\b" nil t)
@@ -9489,16 +9488,29 @@ Philosophy:
       (while (search-forward "  " nil t)
         (replace-match " ")))
 
+      ;; Function to clean up doubled punctuation, returns t if a replacement was made
+  (defun cleanup-doubled-punctuation ()
+    (let ((replaced nil))
+      (goto-char (point-min))
+      (while (search-forward ",," nil t)
+        (replace-match ",")
+        (setq replaced t))
+      (goto-char (point-min))
+      (while (search-forward ".," nil t)
+        (replace-match ".")
+        (setq replaced t))
+      (goto-char (point-min))
+      (while (search-forward " , " nil t)
+        (replace-match ", ")
+        (setq replaced t))
+      (goto-char (point-min))
+      (while (search-forward "  " nil t)
+        (replace-match " ")
+        (setq replaced t))
+      replaced))
 
-;; Remove doubled commas
-(goto-char (point-min))
-(while (search-forward ",," nil t)
-  (replace-match ","))
-
-(goto-char (point-min))
-(while (search-forward ".," nil t)
- (replace-match "."))
-
+  ;; Keep cleaning up doubled punctuation until no more replacements are made
+  (while (cleanup-doubled-punctuation))
 
 ;; If you want to keep the general doubled punctuation removal,
 ;; make sure to define a capturing group or adjust as needed.
