@@ -9468,12 +9468,13 @@ Philosophy:
 
 ;; Remove instances of "uh" not followed by "huh"
 (goto-char (point-min))
-(while (re-search-forward "\\buh\\(?!-huh\\)\\b" nil t)
-  (setq count-uh (1+ count-uh))
-  (replace-match ""))
+(while (search-forward "uh" nil t)
+  (unless (looking-at "-huh")
+    (setq count-uh (1+ count-uh))
+    (replace-match "")))
 
 
- 
+
       ;; Replace ", right?" with "."
       (goto-char (point-min))
       (while (search-forward ", right?" nil t)
