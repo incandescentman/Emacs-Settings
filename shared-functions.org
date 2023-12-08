@@ -9554,7 +9554,7 @@ Philosophy:
   "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love"
   "hate" "like" "way" "big" "best" "pretty" "well"))
 
-(defun remove-duplicate-words ()
+(defun remove-duplicated-words ()
  "Remove duplicated words, excluding certain grammatical duplicates."
  (interactive)
  (save-excursion
@@ -9562,7 +9562,7 @@ Philosophy:
   (while (re-search-forward
       "\\b\\(\\w+\\)\\b\\s+\\1\\b" nil t)
    (unless (member (match-string 1) duplicate-word-exclusions)
-    (replace-match ""))))
+    (replace-match "")))))
 
 
 #+end_src
