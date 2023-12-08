@@ -9460,12 +9460,20 @@ Philosophy:
         (setq count-okay (1+ count-okay))
         (replace-match "OK"))
 
-   ;; Replace instances of "um", "umm", "uh", and "uhh" with a space
-   (goto-char (point-min))
-   (while (re-search-forward "\\b\\(um, \\|um\\|umm\\|uh\\|uhh\\)\\b" nil t)
-    (cond ((string= (match-string 0) "um") (setq count-um (1+ count-um)))
-       ((string= (match-string 0) "uh") (setq count-uh (1+ count-uh))))
-    (replace-match ""))
+   ;; Remove instances of "um," "um", and "umm"
+(goto-char (point-min))
+ (while (re-search-forward "\\b\\(um, \\|um\\|umm\\)\\b" nil t)
+  (setq count-um (1+ count-um))
+  (replace-match ""))
+
+;; Remove instances of "uh" not followed by "huh"
+(goto-char (point-min))
+(while (re-search-forward "\\buh\\(?!-huh\\)\\b" nil t)
+  (setq count-uh (1+ count-uh))
+  (replace-match ""))
+
+
+ 
       ;; Replace ", right?" with "."
       (goto-char (point-min))
       (while (search-forward ", right?" nil t)
@@ -9480,6 +9488,16 @@ Philosophy:
       (goto-char (point-min))
       (while (search-forward "  " nil t)
         (replace-match " ")))
+
+;; Remove double commas
+   (goto-char (point-min))
+   (while (search-forward ",," nil t)
+    (replace-match ","))
+
+;; Remove doubled punct
+  (goto-char (point-min))
+  (while (search-forward ".," nil t)
+  (replace-match "."))
 
 ;; Remove stray commas
       (goto-char (point-min))
