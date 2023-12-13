@@ -110,13 +110,24 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :book:")
 	         :unnarrowed t)
 
-          ("P" "Plans" plain "%?"
+          ("B" "Plans" plain "%?"
 	         :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :project:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
 - ")
 	         :unnarrowed t)
+
+
+          ("P" "photography" plain "%?"
+	         :target (file+head "photography/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :photography:\n\
+- Links :: [[id:C3FA6627-02AB-46B2-BC9B-2651AEBFCAC9][🌐 photography]]\n- Source :: \n\n
+* ${title}
+- ")
+	         :unnarrowed t)
+
+
 	        ("X" "exemplars" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
