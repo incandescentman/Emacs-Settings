@@ -2475,6 +2475,13 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 #+END_SRC
 
 * Prose editing settings
+
+** lowercase
+#+begin_src emacs-lisp
+(defalias 'lowercase-region 'downcase-region)
+#+end_src
+
+
 ** Capitalization
 *** Intelligently change punctuation of sentences when I change the capitalization
 ([[http://endlessparentheses.com/super-smart-capitalization.html][source]]):
@@ -9549,10 +9556,7 @@ Philosophy:
 * remove doubled words
 #+begin_src emacs-lisp
 (defconst duplicate-word-exclusions
-  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry"
-    "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum"
-    "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love"
-    "hate" "like" "way" "big" "best" "pretty" "well"))
+  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally"))
 
 (defun remove-duplicated-words ()
   "Remove duplicated words, excluding certain grammatical duplicates."

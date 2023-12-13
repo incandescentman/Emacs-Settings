@@ -7,6 +7,7 @@
         beginning-of-visual-line
         capitalize-or-endless/capitalize
         colon-or-smart-colon
+        comma-or-smart-comma
         downcase-or-endless-downcase
         indent-for-tab-command
         insert-colon
