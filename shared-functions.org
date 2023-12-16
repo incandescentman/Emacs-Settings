@@ -9556,7 +9556,7 @@ Philosophy:
 * remove doubled words
 #+begin_src emacs-lisp
 (defconst duplicate-word-exclusions
-  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally"))
+  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally" "yeah" "blah"))
 
 (defun remove-duplicated-words ()
   "Remove duplicated words, excluding certain grammatical duplicates."
