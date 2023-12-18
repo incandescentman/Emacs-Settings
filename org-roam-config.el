@@ -149,7 +149,7 @@
 
                     ("W" "Wanderlust and travel" plain "%?"
 	                   :target (file+head "travel/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :business:\n\
+			                        "#+TITLE: ${title}\n#+FILETAGS: :travel:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
 - ")
