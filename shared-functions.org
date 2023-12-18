@@ -3880,7 +3880,9 @@ Single Capitals as you type."
 
 #+END_SRC
 
-* yasnippet
+* yasnippets
+
+** yasnippets
 #+BEGIN_SRC emacs-lisp
 
 
@@ -3917,7 +3919,7 @@ Single Capitals as you type."
   )
 #+END_SRC
 
-* fix yasnippet org-mode conflict
+** fix yasnippet org-mode conflict
 #+BEGIN_SRC emacs-lisp
 (defun yas-org-very-safe-expand ()
    (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
@@ -3929,6 +3931,42 @@ Single Capitals as you type."
       (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
       (define-key yas-keymap [tab] 'yas-next-field)))
 #+END_SRC
+
+** create new yasnippet
+#+begin_src emacs-lisp
+(defun new-yasnippet ()
+ "Create a new Org-mode snippet file."
+ (interactive)
+ (let ((snippet-dir "/Users/jay/emacs/interesting-snippets/org-mode/")
+    (snippet-name (read-string "Snippet name: "))
+    (snippet-key (read-string "Snippet key: "))
+    full-path)
+
+  ;; Construct the full file path
+  (setq full-path (concat snippet-dir snippet-name ".yasnippet"))
+
+  ;; Ensure the snippet directory exists
+  (unless (file-exists-p snippet-dir)
+   (make-directory snippet-dir t))
+
+  ;; Check if the file already exists
+  (if (file-exists-p full-path)
+    (message "Snippet file already exists.")
+   (progn
+    ;; Create and open the new snippet file
+    (find-file full-path)
+    ;; Insert the snippet structure
+    (insert "# -*- mode: snippet -*-\n")
+    (insert "# name: " snippet-name "\n")
+    (insert "# key: " snippet-key "\n")
+    (insert "# --\n")
+    (insert "$0\n"))))
+ )
+
+(define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
+
+#+end_src
+
 
 * flyspell
 
