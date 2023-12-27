@@ -9616,21 +9616,12 @@ Philosophy:
 #+begin_src emacs-lisp
 
 
-
-
-
-
 (defun remove-asterisks-in-org-headings ()
   "Remove asterisks that follow the initial asterisks in org-mode headings."
   (interactive)
   (save-excursion  ; Preserve the original cursor position.
     (goto-char (point-min))  ; Start from the beginning of the buffer.
-
-
-
     (while (re-search-forward "^\\(*+\\) \\(.*?\\*+.*\\)$" nil t)  ; Search for headings with extra asterisks.
-
-
       (let ((heading-start (match-beginning 2))  ; Beginning of the heading text.
             (heading-end (match-end 2)))  ; End of the heading text.
         (goto-char heading-start)  ; Move to the start of the heading text.
