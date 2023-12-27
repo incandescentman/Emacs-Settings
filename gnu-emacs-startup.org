@@ -289,6 +289,16 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (let ((beg (point)))
     (pasteboard-paste)
     (replace-smart-quotes beg (point))))
+
+
+(defun pasteboard-paste-without-smart-quotes ()
+ (interactive)
+ (let ((beg (point)))
+  (pasteboard-paste) ; Paste the content from the clipboard.
+  (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
+  (remove-redundant-asterisks-in-org-headings))) ; Clean up org-mode headings in the pasted content.
+
+
 #+END_SRC
 
 *** pasteboard-paste-spaces-maybe
