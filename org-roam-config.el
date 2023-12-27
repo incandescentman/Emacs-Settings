@@ -92,6 +92,15 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
 	         :unnarrowed t)
 
+	        ("F" "family" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "family/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
+	         :unnarrowed t)
+
+
+
 
           ("i" "incomegen" plain "%?"
 	         :target (file+head "incomegen/%<%Y%m%d%H%M%S>-${slug}.org"

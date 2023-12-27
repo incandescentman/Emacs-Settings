@@ -9225,16 +9225,9 @@ Display online images in new buffer on return
 
 [[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
 
-And again we have a use-case for image data not stored on harddisk. (The
-other two use-cases
-are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64
-encoded images in org
-buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying
-previews of youtube videos]].)
+And again we have a use-case for image data not stored on harddisk. (The other two use-cases are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64 encoded images in org buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying previews of youtube videos]].)
 
-Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the
-following elisp code into
-your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
+Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the following elisp code into your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
 
 After evaluating your init-file you can use links analog to the example:
 
