@@ -6226,7 +6226,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   (interactive)
   (setq my-org-selected-css
         (completing-read "Choose a CSS file: "
-                         '("/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+                         '("/Users/jay/Dropbox/web-design/custom-css/email.css"
                            "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
 
 "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
@@ -9612,5 +9612,34 @@ Philosophy:
       (message (concat "Removed duplicated words: " (substring report-string 0 -2) "."))))))
 #+end_src
 
+* remove redundant bold tags from org headings
+#+begin_src emacs-lisp
+
+
+
+
+
+
+(defun remove-asterisks-in-org-headings ()
+  "Remove asterisks that follow the initial asterisks in org-mode headings."
+  (interactive)
+  (save-excursion  ; Preserve the original cursor position.
+    (goto-char (point-min))  ; Start from the beginning of the buffer.
+
+
+
+    (while (re-search-forward "^\\(*+\\) \\(.*?\\*+.*\\)$" nil t)  ; Search for headings with extra asterisks.
+
+
+      (let ((heading-start (match-beginning 2))  ; Beginning of the heading text.
+            (heading-end (match-end 2)))  ; End of the heading text.
+        (goto-char heading-start)  ; Move to the start of the heading text.
+        ;; Replace asterisks that are not part of the org-mode asterisks.
+(while (re-search-forward "\\([^*]\\)\\(\\*+\\)" heading-end t)
+  (delete-region (match-beginning 2) (match-end 2)))
+        (goto-char (min (point-max) (+ 1 heading-end)))))))  ; Move to the end of the current heading.
+#+end_src
+
 
 ;; -*- lexical-binding: t -*-
+
