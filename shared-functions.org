@@ -9617,18 +9617,18 @@ Philosophy:
 
 
 (defun remove-asterisks-in-org-headings ()
-  "Remove asterisks that follow the initial asterisks in org-mode headings."
-  (interactive)
-  (save-excursion  ; Preserve the original cursor position.
-    (goto-char (point-min))  ; Start from the beginning of the buffer.
-    (while (re-search-forward "^\\(*+\\) \\(.*?\\*+.*\\)$" nil t)  ; Search for headings with extra asterisks.
-      (let ((heading-start (match-beginning 2))  ; Beginning of the heading text.
-            (heading-end (match-end 2)))  ; End of the heading text.
-        (goto-char heading-start)  ; Move to the start of the heading text.
-        ;; Replace asterisks that are not part of the org-mode asterisks.
-(while (re-search-forward "\\([^*]\\)\\(\\*+\\)" heading-end t)
-  (delete-region (match-beginning 2) (match-end 2)))
-        (goto-char (min (point-max) (+ 1 heading-end)))))))  ; Move to the end of the current heading.
+ "Remove asterisks that follow the initial asterisks in org-mode headings."
+ (interactive)
+ (save-excursion ; Preserve the original cursor position.
+  (goto-char (point-min)) ; Start from the beginning of the buffer.
+  (while (re-search-forward "^\\(*+\\) \\(.*?\\*+.*\\)$" nil t) ; Search for headings with extra asterisks.
+   (let ((heading-start (match-beginning 2)) ; Beginning of the heading text.
+      (heading-end (match-end 2))) ; End of the heading text.
+    (goto-char heading-start) ; Move to the start of the heading text.
+    ;; Replace asterisks that are not part of the org-mode asterisks.
+    (while (re-search-forward "\\([^*]\\)\\(\\*+\\)" heading-end t)
+     (delete-region (match-beginning 2) (match-end 2))) ; Delete the unwanted asterisks.
+    (goto-char (min (point-max) (+ 1 heading-end))))))) ; Move to the end of the current heading.
 #+end_src
 
 
