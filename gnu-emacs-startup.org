@@ -468,14 +468,19 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 #+BEGIN_SRC emacs-lisp
 ;; create a custom minor mode to override other keybindings and use mine instead
-(defvar key-minor-mode-map (make-keymap) "key-minor-mode keymap.")
+(defvar key-minor-mode-map (make-sparse-keymap) "key-minor-mode keymap.")
 (define-minor-mode key-minor-mode
   "A minor mode so that my key settings override annoying major modes."
-  t " key" 'key-minor-mode-map)
+  :init-value t
+  :lighter " key"
+  :keymap key-minor-mode-map)
 (key-minor-mode 1)
+
+
 (defun my-minibuffer-setup-hook ()
   (key-minor-mode 0))
 (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup-hook)
+
 
 ;; unbind some existing keybindings
 ;; (define-key undo-tree-map (kbd "C-x r") nil)
@@ -483,10 +488,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
-;; (define-key org-mode-map (kbd "<return>") 'smart-return)
 (defun setup-org-mode-keys ()
  (define-key org-mode-map (kbd "<return>") 'smart-return))
 
+;; Setup Org mode specific keys
 (add-hook 'org-mode-hook 'setup-org-mode-keys)
 
 
