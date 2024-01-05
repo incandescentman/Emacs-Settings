@@ -1,7 +1,7 @@
-(provide 'elegant-garamond)
+(provide 'elegant-garamond-test)
 
 (add-to-list 'org-latex-classes
-  '("elegant-garamond"
+  '("elegant-garamond-test"
 "
 
 \\documentclass[12pt]{article}
@@ -303,8 +303,6 @@
 \\usepackage{titlesec}
 \\usepackage{xcolor}
 
-
-{\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
