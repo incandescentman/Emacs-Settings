@@ -4940,7 +4940,7 @@ It will open the link in Emacs with typing C-c C-o.
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el")

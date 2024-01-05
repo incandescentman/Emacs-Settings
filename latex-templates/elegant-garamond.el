@@ -1,11 +1,11 @@
-(provide 'beautiful-racket)
+(provide 'elegant-garamond)
 
 (add-to-list 'org-latex-classes
-  '("beautiful-racket"
+  '("elegant-garamond"
 "
 
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
+\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.25in]{geometry} % for normal margins
 
 % Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
 
@@ -285,39 +285,33 @@
 
 
 
-\\newlength\\TitleOverhang
-\\setlength\\TitleOverhang{1.5cm}
-
-\\newcommand\\Overhang[1]{%
- \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
-}
-
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{150pt}{40pt}
+\\titlespacing*{\\section}{0pt}{0pt}{0pt}
 %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
-  \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
+\\raggedright\\fontsize{40}{26}\\selectfont #1
 }
 
 \\usepackage{titlesec}
 \\usepackage{xcolor}
 
+
 \\titleformat{\\section}
   {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
   {}
   {0em}
-  {\\hfill\\mysectiontitle}
+  {\\mysectiontitle}
 
 {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
