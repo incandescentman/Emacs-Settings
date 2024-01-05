@@ -1,8 +1,8 @@
-(provide 'inelegant)
+(provide 'elegant-with-serif-headings)
 
 (with-eval-after-load 'ox-latex
 (add-to-list 'org-latex-classes
-  '("inelegant"
+  '("elegant-with-serif-headings"
 "
 
 \\documentclass[12pt]{article}
