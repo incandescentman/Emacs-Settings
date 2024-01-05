@@ -3935,38 +3935,47 @@ Single Capitals as you type."
 ** create new yasnippet
 #+begin_src emacs-lisp
 (defun new-yasnippet ()
- "Create a new Org-mode snippet file."
- (interactive)
- (let ((snippet-dir "/Users/jay/emacs/interesting-snippets/org-mode/")
-    (snippet-name (read-string "Snippet name: "))
-    (snippet-key (read-string "Snippet key: "))
-    full-path)
+  "Create a new Org-mode snippet file."
+  (interactive)
+  (let ((snippet-dir "/Users/jay/emacs/interesting-snippets/org-mode/")
+        (snippet-name (read-string "Snippet name: "))
+        (snippet-key (read-string "Snippet key: "))
+        full-path)
 
-  ;; Construct the full file path
-  (setq full-path (concat snippet-dir snippet-name ".yasnippet"))
+    ;; Construct the full file path
+    (setq full-path (concat snippet-dir snippet-name ".yasnippet"))
 
-  ;; Ensure the snippet directory exists
-  (unless (file-exists-p snippet-dir)
-   (make-directory snippet-dir t))
+    ;; Ensure the snippet directory exists
+    (unless (file-exists-p snippet-dir)
+      (make-directory snippet-dir t))
 
-  ;; Check if the file already exists
-  (if (file-exists-p full-path)
-    (message "Snippet file already exists.")
-   (progn
-    ;; Create and open the new snippet file
-    (find-file full-path)
-    ;; Insert the snippet structure
-    (insert "# -*- mode: snippet -*-\n")
-    (insert "# name: " snippet-name "\n")
-    (insert "# key: " snippet-key "\n")
-    (insert "# --\n")
-    (insert "$0\n"))))
- )
+    ;; Check if the file already exists
+    (if (file-exists-p full-path)
+        (if (yes-or-no-p "Snippet file already exists. Overwrite? ")
+            (create-and-insert-snippet full-path snippet-name snippet-key)
+          (message "Snippet creation canceled."))
+      (create-and-insert-snippet full-path snippet-name snippet-key))))
+
+(defun create-and-insert-snippet (full-path snippet-name snippet-key)
+  "Helper function to create and insert snippet content."
+  ;; Create and open the new snippet file
+  (find-file full-path)
+  ;; Insert the snippet structure
+  (insert "# -*- mode: snippet -*-\n")
+  (insert "# filename: " snippet-name "\n")
+  (insert "# shortcut key: " snippet-key "\n")
+  (insert "# --\n")
+  (insert "$0\n"))
 
 (define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
-
 #+end_src
 
+
+** yasnippet copy to clipboard
+
+#+begin_src emacs-lisp
+
+#+end_src
 
 * flyspell
 
