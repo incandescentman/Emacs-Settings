@@ -21,7 +21,7 @@
 \\usepackage{fontspec}
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
-% define main font
+% % define main font
 \\setmainfont[
   Path = /Users/jay/Library/Fonts/,
   UprightFont = HelveticaNowText-Light,

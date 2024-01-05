@@ -1,47 +1,50 @@
-(provide 'elegant-garamond)
+(provide 'beautiful-racket)
 
 (add-to-list 'org-latex-classes
-  '("elegant-garamond"
+  '("beautiful-racket"
 "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
-\\linespread{1.3}
+% Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
 
+
+\\usepackage{wrapfig}
+
+
+% To have more control over figure placement in your document, use the float package and its [H] option to place figures exactly where you want them in the text:
 \\usepackage{float}
-\\usepackage{changepage}
 
+
+% \\usepackage{glossaries}
+% \\makeglossaries
+
+\\usepackage{todonotes}
+% \\usepackage[asterism]{sectionbreak}
+% \\sectionbreakmark{❦}
+
+
+\\usepackage{wrapfig}
+\\usepackage{changepage}
 \\usepackage{algorithm}
+\\usepackage{pdfpages}
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
+\\usepackage{setspace}
 \\ifxetex
-  \\usepackage{fontspec,xltxtra,xunicode}
-  \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-
-% define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
-  Path = /Users/jay/Library/Fonts/,
-        UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold,
-        ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
-  Extension = .ttf
-
+\\usepackage{fontspec,xltxtra,xunicode}
+\\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Garamond Premier Pro}
-\\setromanfont{Adobe Caslon Pro}
-\\setsansfont{Garamond Premier Pro}
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+ \\setsansfont{TeX Gyre Pagella}
+  \\setmonofont{TeX Gyre Heros}
 
-  \\setmonofont{Myriad Pro}
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
 \\usepackage{url}
 \\usepackage{paralist}
-\\usepackage{graphicx}
-\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -63,51 +66,78 @@
 \\definecolor{resonateorange}{HTML}{da7635}
 \\definecolor{resonategrey}{HTML}{4d4d4c}
 \\definecolor{nliblue}{HTML}{2f9ed3}
-%\\definecolor{dullerelegantblue}{HTML}{4380b9}
-%\\definecolor{elegantblue}{HTML}{1792d1}
-\\definecolor{ideablue}{HTML}{55C1E7}
-
+\\definecolor{elegantblue}{HTML}{4380b9}
+\\definecolor{spacegrey}{HTML}{434346}
 
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 
-% \\raggedright
-\\hyphenpenalty=5000
-\\tolerance=1000
 
-%This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\mybluefont[Color=elegantblue]{Arial}
+
+% \\usepackage{magaz}
+
 
 %Define Bold face
 \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
-\\usepackage{textcase}
+\\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
+
+
+\\hyphenpenalty=1000
+\\tolerance=1000
+\\exhyphenpenalty=100
+\\pretolerance=150
+\\emergencystretch=10pt
+
+
 
 \\pagenumbering{arabic}
 \\makeatletter
 
 
-\\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
 
 
-\\usepackage[labelformat=empty]{caption}
+\\usepackage[font={small,tt}]{caption}
+
+\\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
+
+% Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
 \\usepackage{fancyhdr}
+\\fancyhf{} % sets both header and footer to nothing
+\\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
+
+
+
+
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
-\\rhead{{\\nouppercase{\\leftmark}}}
-% \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
+\\rhead{{\\scshape{\\leftmark}}} % Add section heading
+% \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
-\\cfoot{\\thepage}
+\\cfoot{\\thepage} % Add page numbers
 \\rfoot{}
+
+
+% Ensure consistent spacing after periods in your document by using the xspace package:
+\\usepackage{xspace}
+
+\\newenvironment{fauxsubtitle}
+{
+
+\\Large
+\\itshape
+}
+
+
+
+
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
@@ -118,12 +148,16 @@
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
+
+\\usepackage{setspace}
+\\onehalfspacing
+\\setstretch{1.2}
+
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
-  \\tolerance=1000
 \\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
@@ -173,12 +207,19 @@
 \\renewlist{itemize}{itemize}{10}
 
 
+\\renewcommand{\\contentsname}{Table of Contents}
 
+
+
+\\renewcommand{\\descriptionlabel}[1]{%
+ {\\hspace{\\labelsep}\\bfseries\\textsc{#1}}}
+
+
+\\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
 
 
 \\definecolor{azure}{HTML}{f2feff}
 
-\\usepackage{lipsum}
 \\usepackage{tikz}
 \\usetikzlibrary{backgrounds}
 \\makeatletter
@@ -227,10 +268,11 @@
 
 %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
-\\newenvironment{indentedsection}
-  {\\adjustwidth{2em}{0pt}}
-  {\\endadjustwidth}
 
+\\newenvironment{indentedsection}
+{  {\\adjustwidth{2em}{0pt}}
+  {\\endadjustwidth}
+}
 
 \\usepackage{setspace}
 \\usepackage{lipsum}
@@ -242,6 +284,7 @@
 \\usepackage[sc]{titlesec}
 
 
+
 \\newlength\\TitleOverhang
 \\setlength\\TitleOverhang{1.5cm}
 
@@ -251,34 +294,114 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-%\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
-%\\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
-%\\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
+\\titlespacing*{\\section}{0pt}{150pt}{40pt}
+%\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
+\\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
-% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{1.5ex}{24pt}{-6pt}
-\\titlespacing*{\\subsection}{0pt}{24pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{24pt}{-6pt}
+\\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
+
+\\newcommand{\\mysectiontitle}[1]{%
+  \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
+}
+
+\\usepackage{titlesec}
+\\usepackage{xcolor}
+
+\\titleformat{\\section}
+  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+  {}
+  {0em}
+  {\\hfill\\mysectiontitle}
+
+{\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape}
-\\titleformat*{\\subsection}{\\sffamily\\bfseries\\fontsize{18}{15}\\raggedright\\scshape\\}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\}
+\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+
+\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
+
+\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
+
+\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
 
 
-\\DeclareTextFontCommand{\\nonsection}{\\thindisplayfont\\fontsize{19}{19}\\raggedright\\thindisplayfont\\textlf\\color{ideablue} }
+\\newenvironment{changemargin}[2]{%
+\\begin{list}{}{%
+\\setlength{\\topsep}{0pt}%
+\\setlength{\\leftmargin}{#1}%
+\\setlength{\\rightmargin}{#2}%
+\\setlength{\\listparindent}{\\parindent}%
+\\setlength{\\itemindent}{\\parindent}%
+\\setlength{\\parsep}{\\parskip}%
+}%
+\\item[]}{\\end{list}}
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\thindisplayfont\\fontsize{18}{15}\\raggedright\\scshape\\color{ideablue}}
+\\newenvironment{tagline}% environment name
+{% begin code
+  \\vspace{-36pt}
+  \\Large
+  \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
+  \\begin{itshape}%
+    \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+}%
+{% end code
+  \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
+}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\thindisplayfont\\itshape\\fontsize{14}{14}\\raggedright\\sffamily\\color{ideablue} }
+
+\\newenvironment{fauxtitle}% environment name
+{% begin code
+%\\vspace{12pt}
+\\Large
+\\begin{bfseries}%
+  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+}%
+{% end code
+  \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
+}
+
+
+
+\\newenvironment{fauxcenter}% environment name
+{% begin code
+
+\\Large
+\\begin{center}
+
+}%
+{% end code
+\\end{center}\\ignorespacesafterend
+}
+
+
+
+
+\\newenvironment{causationstatement}% environment name
+{% begin code
+\\vspace{-30pt}
+\\ttfamily
+\\bfseries
+\\begin{center}
+
+}%
+{% end code
+\\end{center}\\ignorespacesafterend
+}
+
+
+
+
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=ideablue,filecolor=ideablue,linkcolor=ideablue,urlcolor=ideablue}
+\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
 \\renewcommand\\maketitle{}
+
 
 
       [NO-DEFAULT-PACKAGES]
