@@ -304,12 +304,6 @@
 \\usepackage{xcolor}
 
 
-\\titleformat{\\section}
-  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
-  {}
-  {0em}
-  {\\mysectiontitle}
-
 {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
@@ -318,78 +312,6 @@
 
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
-
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
-
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
-
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
-
-
-\\newenvironment{changemargin}[2]{%
-\\begin{list}{}{%
-\\setlength{\\topsep}{0pt}%
-\\setlength{\\leftmargin}{#1}%
-\\setlength{\\rightmargin}{#2}%
-\\setlength{\\listparindent}{\\parindent}%
-\\setlength{\\itemindent}{\\parindent}%
-\\setlength{\\parsep}{\\parskip}%
-}%
-\\item[]}{\\end{list}}
-
-\\newenvironment{tagline}% environment name
-{% begin code
-  \\vspace{-36pt}
-  \\Large
-  \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
-  \\begin{itshape}%
-    \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}%
-{% end code
-  \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
-}
-
-
-\\newenvironment{fauxtitle}% environment name
-{% begin code
-%\\vspace{12pt}
-\\Large
-\\begin{bfseries}%
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}%
-{% end code
-  \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
-}
-
-
-
-\\newenvironment{fauxcenter}% environment name
-{% begin code
-
-\\Large
-\\begin{center}
-
-}%
-{% end code
-\\end{center}\\ignorespacesafterend
-}
-
-
-
-
-\\newenvironment{causationstatement}% environment name
-{% begin code
-\\vspace{-30pt}
-\\ttfamily
-\\bfseries
-\\begin{center}
-
-}%
-{% end code
-\\end{center}\\ignorespacesafterend
-}
-
-
 
 
 
