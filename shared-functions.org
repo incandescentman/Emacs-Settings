@@ -8020,7 +8020,7 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 #+begin_src emacs-lisp
 
 
-(rg-enable-default-bindings)
+;; (rg-enable-default-bindings)
 #+end_src
 
 

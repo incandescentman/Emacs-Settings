@@ -5,7 +5,7 @@
 "
 
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.25in]{geometry} % for normal margins
+\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
 % Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
 
