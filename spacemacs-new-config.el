@@ -165,8 +165,8 @@
 
 (setq org-bullets-bullet-list '("• "))
 
-(use-package transient)
-(use-package rg)
+;; (use-package transient)
+;; (use-package rg)
 
 (use-package reveal-in-finder
   :defer
