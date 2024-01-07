@@ -894,7 +894,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
-(define-key key-minor-mode-map (kbd "M-t") 'transpose-words)
+;; (define-key key-minor-mode-map (kbd "M-t") 'titlecase-dwim)
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
 
@@ -904,7 +904,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-c C-x p p") 'pomodoro-start)
 
-(define-key key-minor-mode-map (kbd "s-;") 'jay-refile-region)
+(define-key key-minor-mode-map (kbd "s-; ") 'jay-refile-region)
+;;(define-key key-minor-mode-map (kbd "s-:") 'consult-outline)
+(define-key key-minor-mode-map (kbd "s-.") 'consult-outline)
 (define-key key-minor-mode-map (kbd "s-'") 'choose-refile-method-and-refile)
 
 ;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
