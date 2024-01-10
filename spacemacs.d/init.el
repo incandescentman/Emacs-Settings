@@ -248,8 +248,7 @@ This function should only modify configuration layer settings."
                                       ;; blimp
                                       ;; bongo
                                       ;; command-log-mode
-                                      ;; cyberpunk-theme
-                                      ;; cyberpunk-theme
+                                      cyberpunk-theme
                                       ;; dired-hacks-utils
                                       ;; dired-single
                                       ;; early-init
@@ -501,6 +500,7 @@ It should only modify the values of Spacemacs settings."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
                          ;; whiteboard
+                         cyberpunk
                          leuven
                          zenburn
                          spacemacs-dark
