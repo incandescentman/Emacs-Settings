@@ -6,7 +6,13 @@
 "
 
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
+\\usepackage{geometry}
+
+\\geometry{
+  footskip=1in, % The distance from the bottom of the text area to the baseline of the footer
+margin=1.5in,hmargin=1.5in
+  bottom=1.25in % Adjust the bottom margin to create more space for the footer
+}
 
 \\linespread{1.2}
 
@@ -86,6 +92,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\definecolor{stormybluegrey}{HTML}{898ea4}
 \\definecolor{moonrockgrey}{HTML}{212121}
 \\definecolor{libertyblue}{HTML}{73b0be}
+\\definecolor{darklibertyblue}{HTML}{19455b}
 
 
 % \\newtoks\\leftheader
@@ -125,23 +132,18 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 \\fancyfoot[C]{%
-  \\begin{minipage}[c][1in][c]{1\\linewidth}
-    \\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
-  \\end{minipage}%
-  \\hspace{0in} % Reducing space to 0 inches between the logo and the text
-  \\begin{minipage}[c][1in][c]{0.3\\linewidth}
-    \\raggedright % Left-align the text in the minipage
-    \\raisebox{1in}[0pt][0pt]{ % Raise the text by 0.7 inches
-      {\\fontsize{43}{42}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
-    }
-  \\end{minipage}%
-  \\hspace{2.7in} % Move the text 1 inch to the left
-}}
+  % Graphic
+  \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
+\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+  }%
+  % Space between the graphic and the text (adjust as needed)
+  \\hspace{0in}%
+  % Text
+  \\raisebox{0.2in}{% Adjust this value to align the text with the image
 
-\\lfoot{}
-% \\cfoot{\\thepage}
-\\rfoot{}
-
+    \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC
+  }%
+}
 
 
 %%%%%%%%%%%%%%%%
