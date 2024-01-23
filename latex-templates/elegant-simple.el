@@ -1,8 +1,8 @@
-(provide 'elegant)
+(provide 'elegant-simple)
 
 (with-eval-after-load 'ox-latex
 (add-to-list 'org-latex-classes
-  '("elegant"
+  '("elegant-simple"
 "
 
 \\documentclass[12pt]{article}
@@ -21,20 +21,29 @@
 \\usepackage{fontspec}
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
-% % define main font
-\\setmainfont[
+% define Helvetica Now font weights
+\\setmainfont{HelveticaNow}[
   Path = /Users/jay/Library/Fonts/,
   UprightFont = HelveticaNowText-Light,
-  BoldFont = HelveticaNowText-Bold,
+  BoldFont = HelveticaNowDisplay-Bold,
   ItalicFont = HelveticaNowText-LightItalic,
   BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
-]{Helvetica Display}
+]
 
-\\setsansfont{TeX Gyre Pagella}
+\\setromanfont{HelveticaNowText-Light}
+\\setsansfont{HelveticaNowDisplay-Regular}
 
-%\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
-\\setmonofont{Consolas}[Scale=0.9]
+% define sans font
+\\setsansfont{Helvetica Neue LT Pro}[
+  Path = /Users/jay/Library/Fonts/,
+UprightFont = HelveticaNeueLTPro-MdCn,
+  BoldFont = HelveticaNeueLTPro-BdCn,
+  Extension = .otf
+]
+
+\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setmonofont{Myriad Pro}
 
 %\\usepackage[mathletters]{ucs}
 %\\usepackage[utf8x]{inputenc}
@@ -109,6 +118,22 @@
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
 \\lhead{\\bfseries\\@title}}} % title of the document as left header
+
+
+\\fancyfoot[C]{%
+  \\begin{minipage}[c][1in][c]{1\\linewidth}
+    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+  \\end{minipage}%
+  \\hspace{0in} % Reducing space to 0 inches between the logo and the text
+  \\begin{minipage}[c][1in][c]{0.3\\linewidth}
+    \\raggedright % Left-align the text in the minipage
+    \\raisebox{0.59in}[0pt][0pt]{ % Raise the text by 0.7 inches
+      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
+    }
+  \\end{minipage}%
+  \\hspace{2.7in} % Move the text 1 inch to the left
+}
+
 
 
 \\lfoot{}
@@ -244,13 +269,12 @@
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-%\\titleformat*{\\section}{font}\\fontsize{size}{baseline-skip}\\raggedright\\sffamily}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{libertyblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{libertyblue}}
+\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{libertyblue}}
+\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{libertyblue}}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{libertyblue}}
 
-\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{40}\\raggedright\\sffamily}
-
-\\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
-
-\\titleformat*{\\subsubsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{14}{16}\\raggedright\\color{black}}
 
 
 \\titleformat{\\paragraph}[block]{\\normalfont\\sffamily\\fontsize{13}{12}\\bfseries\\color{black}}{}{0em}{}

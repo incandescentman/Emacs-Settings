@@ -9627,7 +9627,7 @@ Philosophy:
 
  (save-excursion
   (goto-char (point-min))
-  (while (re-search-forward "^\\(*+\\) \\(.*?\\)\\(*+\\)$" nil t)
+  (while (re-search-forward "^\\(*+\\) \\(\\**.*?\\)\\(*+\\)$" nil t)
    (let ((leading-asterisks (match-string 1))
       (heading-text (match-string 2)))
     (replace-match (concat leading-asterisks " " heading-text) nil nil)))))
