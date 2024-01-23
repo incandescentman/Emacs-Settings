@@ -37,7 +37,16 @@
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
-  \\setmonofont{TeX Gyre Heros}
+  % \\setmonofont{TeX Gyre Heros}
+
+% define sans font
+\\setmonofont{Helvetica Neue LT Pro}[
+  Path = /Users/jay/Library/Fonts/,
+UprightFont = HelveticaNeueLTPro-MdCn,
+  BoldFont = HelveticaNeueLTPro-BdCn,
+  Extension = .otf
+]
+
 
 \\else
   \\usepackage[mathletters]{ucs}

@@ -52,7 +52,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :project:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
-- ")
+")
 	         :unnarrowed t)
 
           ("c" "creative idea" plain "- Links :: \n- Source :: \n
@@ -107,7 +107,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :business:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
-- ")
+")
 	         :unnarrowed t)
 
 
@@ -182,7 +182,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :person:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
-- ")
+")
 	         :unnarrowed t)
 
           ("P" "photography" plain "%?"
@@ -190,7 +190,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :photography:\n\
 - Links :: [[id:C3FA6627-02AB-46B2-BC9B-2651AEBFCAC9][🌐 photography]]\n- Source :: \n\n
 * ${title}
-- ")
+")
 	         :unnarrowed t)
 
 
@@ -262,7 +262,7 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :travel:\n\
 - Links :: \n- Source :: \n\n
 * ${title}
-- ")
+")
 	         :unnarrowed t)
 
 
@@ -281,14 +281,6 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :cuts:")
            :unnarrowed t)
 
-
-          ("w" "work ie NLI" plain "%?"
-	         :target (file+head "nli-roam/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :work:\n\
-- Links :: \n- Source :: \n\n
-* ${title}
-- ")
-	         :unnarrowed t)
 
           ("z" "zork" plain "- Links :: \nSource :: \n
 
