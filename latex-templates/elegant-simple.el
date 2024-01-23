@@ -109,8 +109,12 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\usepackage[labelformat=empty]{caption}
 
+
+%%%%%%%%%%%%%%%%%
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
+\\fancyhf{}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
@@ -122,23 +126,26 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\fancyfoot[C]{%
   \\begin{minipage}[c][1in][c]{1\\linewidth}
-    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+    \\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
   \\end{minipage}%
   \\hspace{0in} % Reducing space to 0 inches between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
-    \\raisebox{0.59in}[0pt][0pt]{ % Raise the text by 0.7 inches
-      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
+    \\raisebox{1in}[0pt][0pt]{ % Raise the text by 0.7 inches
+      {\\fontsize{43}{42}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
     }
   \\end{minipage}%
   \\hspace{2.7in} % Move the text 1 inch to the left
-}
-
-
+}}
 
 \\lfoot{}
-\\cfoot{\\thepage}
+% \\cfoot{\\thepage}
 \\rfoot{}
+
+
+
+%%%%%%%%%%%%%%%%
+
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
