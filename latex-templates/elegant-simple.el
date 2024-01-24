@@ -9,10 +9,11 @@
 \\usepackage{geometry}
 
 \\geometry{
-  footskip=1in, % The distance from the bottom of the text area to the baseline of the footer
-margin=1.5in,hmargin=1.5in
-  bottom=1.25in % Adjust the bottom margin to create more space for the footer
+  margin=1.5in, % Set all margins to 1.5 inches
+  bottom=1.25in, % Bottom margin set to 1.25 inches
+  footskip=1in % Distance from the bottom of the text area to the baseline of the footer
 }
+
 
 \\linespread{1.2}
 
@@ -123,14 +124,14 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\pagestyle{fancy}
 \\fancyhf{}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+% \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
 \\lhead{\\bfseries\\@title}}} % title of the document as left header
 
-
+% \\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
   % Graphic
   \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
@@ -139,11 +140,14 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   % Space between the graphic and the text (adjust as needed)
   \\hspace{0in}%
   % Text
-  \\raisebox{0.2in}{% Adjust this value to align the text with the image
+  \\raisebox{0.25in}{% Adjust this value to align the text with the image
 
     \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC
   }%
 }
+
+% overwrite the logo footer
+\\cfoot{\\thepage} % Add page numbers
 
 
 %%%%%%%%%%%%%%%%
