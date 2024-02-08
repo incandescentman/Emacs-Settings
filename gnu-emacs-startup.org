@@ -949,7 +949,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; For extracting content from my browser
 
-(define-key key-minor-mode-map (kbd "s-W") 'org-mac-chrome-insert-frontmost-url)
+(define-key key-minor-mode-map (kbd "s-W") 'open-weeklies)
 ;; (define-key key-minor-mode-map (kbd "s-V") 'html2org-clipboard) ; paste HTML content that I've copied from the web, automatically converting to proper org-mode syntax
 
 (define-key key-minor-mode-map (kbd "C-s-\\") 'source-current-file)
