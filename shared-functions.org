@@ -9635,5 +9635,14 @@ Philosophy:
 #+end_src
 
 
+* weeklies
+#+begin_src emacs-lisp
+(defun open-weeklies ()
+  (interactive)
+  (find-file "/Users/jay/Dropbox/roam/accountability/weeklies.txt")
+  )
+#+end_src
+
+
 ;; -*- lexical-binding: t -*-
 

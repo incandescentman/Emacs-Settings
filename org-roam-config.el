@@ -55,14 +55,14 @@
 ")
 	         :unnarrowed t)
 
-          ("c" "creative idea" plain "- Links :: \n- Source :: \n
+          ("C" "creative idea" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :idea:")
 	         :unnarrowed t)
 
-	        ("C" "Conversation" plain "- Links :: \n- Source :: \n
+	        ("c" "Conversation" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
