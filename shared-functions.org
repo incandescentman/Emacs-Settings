@@ -2757,7 +2757,7 @@ A useful function: remove a hyperlink but leave the link description:
 
 ** new
 #+begin_src emacs-lisp
-(defun remove-link ()
+(defun remove-link-at-point ()
   "Replace an org link by its description or if empty its address"
  (interactive)
  (if (org-in-regexp org-link-bracket-re 1)
@@ -2771,6 +2771,30 @@ A useful function: remove a hyperlink but leave the link description:
      (insert description)))))
 #+end_src
 Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link][in org-mode, how to remove a link? - Emacs Stack Exchange]]
+
+** remove hyperlinks in buffer
+#+begin_src emacs-lisp
+(defun remove-hyperlinks ()
+ "Remove all Org mode style links from the current buffer."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  (while (re-search-forward "\\[\\[\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]" nil t)
+   (replace-match "\\2"))))
+
+
+(defun remove-org-links-and-newlines ()
+ "Remove all Org mode style links from the current buffer, also removing any newlines from the description."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  (while (re-search-forward "\\[\\[\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]" nil t)
+   (let ((description (match-string 2)))
+    ;; Replace newline characters with a space in the description
+    (setq description (replace-regexp-in-string "\n" " " description))
+    (replace-match description)))))
+
+#+end_src
 
 * Working with files
 ** Reopen last closed file, very useful:

@@ -370,8 +370,7 @@
 (defun org-roam-search-nodes ()
   "Search org-roam directory using consult-ripgrep. With live-preview."
   (interactive)
-  ;;  (require 'org-roam)
-  (counsel-rg nil org-roam-directory nil nil))
+    (counsel-rg nil org-roam-directory nil nil))
 
 ;; rename some org-roam functions
 (defalias 'org-roam-heading-add 'org-id-get-create)
