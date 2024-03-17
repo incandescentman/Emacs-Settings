@@ -11,6 +11,7 @@
 ;; (setq gc-cons-threshold (* 50 1000 1000))
 (setq message-log-max t)
 (use-package benchmark-init
+  :defer
   :ensure t
   :hook (after-init . benchmark-init/deactivate))
 
@@ -42,6 +43,7 @@
 ;; (setq initial-major-mode 'fundamental-mode)
 
 (use-package auto-capitalize
+ 
   )
 
 
@@ -51,6 +53,7 @@
 
 ;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
 (use-package org
+  :defer
   :custom
   (org-hide-leading-stars t)
   (org-adapt-indentation nil)
@@ -60,6 +63,7 @@
 (setq vc-follow-symlinks t)
 
 (use-package flyspell
+  :defer
   :ensure t
   :hook (prog-mode . flyspell-prog-mode))
 ;; (flyspell-mode)
@@ -75,6 +79,7 @@
 
 
 (use-package wc-goal-mode
+  :defer
   :ensure t
   :defer
   :load-path "/Users/jay/emacs/emacs-settings/")
@@ -289,7 +294,8 @@
 
 
 
-(use-package server)
+(use-package server
+  :defer)
 (when (server-running-p)
   (server-force-delete))
 (server-start)
