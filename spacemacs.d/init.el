@@ -313,6 +313,7 @@ This function should only modify configuration layer settings."
                                     evil-unimpaired
                                     exec-path-from-shell
                                     global-git-commit
+                                    gnus
                                     helm
                                     highlight-indentation
                                     hl-line

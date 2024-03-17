@@ -10,11 +10,14 @@
 (gcmh-mode 1)
 ;; (setq gc-cons-threshold (* 50 1000 1000))
 (setq message-log-max t)
-(use-package benchmark-init
-  :defer
-  :ensure t
-  :hook (after-init . benchmark-init/deactivate))
+;; (use-package benchmark-init
+;;   :ensure t
 
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;; --------------------
 ;; Don't give org-assert-version error
@@ -43,7 +46,7 @@
 ;; (setq initial-major-mode 'fundamental-mode)
 
 (use-package auto-capitalize
- 
+
   )
 
 
