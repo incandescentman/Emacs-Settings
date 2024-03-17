@@ -308,6 +308,91 @@
 
 
           ))
+  (setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            'org-roam-unlinked-references-section
+            ))
+
+
+(defun org-roam-node-insert-with-emoji ()
+  "Insert an Org-roam node link with a 🌐 emoji prepended to the description."
+  (interactive)
+  (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
+    (add-hook 'org-roam-post-node-insert-hook
+              (lambda (id description)
+                (save-excursion
+                  ;; Use org-element-context to find the link
+                  (let* ((context (org-element-context))
+                         (start (org-element-property :contents-begin context))
+                         (end (org-element-property :contents-end context)))
+                    (when start
+                      (goto-char start)
+                      (insert "🌐 ")))))
+              ;; Append to the front of the hook list
+              0 t)
+    (unwind-protect
+        (org-roam-node-insert)
+      ;; Restore the original hook after the function is done
+      (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
+
+(defun org-roam-node-insert-with-emoji-and-comma ()
+  "Insert an Org-roam node link with a 🌐 emoji prepended to the description.
+If the point is already on an existing link, it prepends ', ' before inserting the new link."
+  (interactive)
+  ;; Check if point is looking back at "]]"
+  (when (looking-back "\\]\\]" 2)
+    (insert ", "))
+  (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
+    (add-hook 'org-roam-post-node-insert-hook
+              (lambda (id description)
+                (save-excursion
+                  ;; Use org-element-context to find the link
+                  (let* ((context (org-element-context))
+                         (start (org-element-property :contents-begin context))
+                         (end (org-element-property :contents-end context)))
+                    (when start
+                      (goto-char start)
+                      (insert "🌐 ")))))
+              ;; Append to the front of the hook list
+              0 t)
+    (unwind-protect
+        (org-roam-node-insert)
+      ;; Restore the original hook after the function is done
+      (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
+
+(defun org-roam-yesterday ()
+  (interactive)
+  (jay/save-some-buffers)
+  (org-roam-dailies-goto-previous-note)
+  )
+
+;; Add custom functions and advice
+;; (global-page-break-lines-mode 0)
+(advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
+
+(setq org-roam-completion-everywhere t)
+;; doesn't work for some reason
+;; so that org-roam links can be followed
+;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
+;; if necessary, consider using org-roam-buffer-refresh
+
+(defun org-roam-backlinks-buffer ()
+  (interactive)
+  (org-roam-buffer-toggle)
+  (other-window 1)
+  )
+
+(defun org-roam-search-nodes ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+    (counsel-rg nil org-roam-directory nil nil))
+
+;; rename some org-roam functions
+(defalias 'org-roam-heading-add 'org-id-get-create)
+(defalias 'org-roam-find-node 'org-roam-node-find)
+(defalias 'org-roam-insert-node 'org-roam-node-insert)
+
 
   :bind
   (
@@ -353,37 +438,6 @@
    ))
 
 
-(defun org-roam-yesterday ()
-  (interactive)
-  (jay/save-some-buffers)
-  (org-roam-dailies-goto-previous-note)
-  )
-
-;; Add custom functions and advice
-;; (global-page-break-lines-mode 0)
-(advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
-
-(setq org-roam-completion-everywhere t)
-;; doesn't work for some reason
-;; so that org-roam links can be followed
-;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
-;; if necessary, consider using org-roam-buffer-refresh
-
-(defun org-roam-backlinks-buffer ()
-  (interactive)
-  (org-roam-buffer-toggle)
-  (other-window 1)
-  )
-
-(defun org-roam-search-nodes ()
-  "Search org-roam directory using consult-ripgrep. With live-preview."
-  (interactive)
-    (counsel-rg nil org-roam-directory nil nil))
-
-;; rename some org-roam functions
-(defalias 'org-roam-heading-add 'org-id-get-create)
-(defalias 'org-roam-find-node 'org-roam-node-find)
-(defalias 'org-roam-insert-node 'org-roam-node-insert)
 
 
 ;; Include org-roam-protocol and org-roam-export after org-roam
@@ -480,55 +534,3 @@ If region is active, then use it instead of the node at point."
 ;; (add-to-list 'recentf-exclude ".*roam.org$")
 ;; (add-to-list 'consult-buffer-filter ".*roam.org$")
 
-(setq org-roam-mode-sections
-      (list #'org-roam-backlinks-section
-            #'org-roam-reflinks-section
-            'org-roam-unlinked-references-section
-            ))
-
-
-(defun org-roam-node-insert-with-emoji ()
-  "Insert an Org-roam node link with a 🌐 emoji prepended to the description."
-  (interactive)
-  (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
-    (add-hook 'org-roam-post-node-insert-hook
-              (lambda (id description)
-                (save-excursion
-                  ;; Use org-element-context to find the link
-                  (let* ((context (org-element-context))
-                         (start (org-element-property :contents-begin context))
-                         (end (org-element-property :contents-end context)))
-                    (when start
-                      (goto-char start)
-                      (insert "🌐 ")))))
-              ;; Append to the front of the hook list
-              0 t)
-    (unwind-protect
-        (org-roam-node-insert)
-      ;; Restore the original hook after the function is done
-      (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
-
-(defun org-roam-node-insert-with-emoji-and-comma ()
-  "Insert an Org-roam node link with a 🌐 emoji prepended to the description.
-If the point is already on an existing link, it prepends ', ' before inserting the new link."
-  (interactive)
-  ;; Check if point is looking back at "]]"
-  (when (looking-back "\\]\\]" 2)
-    (insert ", "))
-  (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
-    (add-hook 'org-roam-post-node-insert-hook
-              (lambda (id description)
-                (save-excursion
-                  ;; Use org-element-context to find the link
-                  (let* ((context (org-element-context))
-                         (start (org-element-property :contents-begin context))
-                         (end (org-element-property :contents-end context)))
-                    (when start
-                      (goto-char start)
-                      (insert "🌐 ")))))
-              ;; Append to the front of the hook list
-              0 t)
-    (unwind-protect
-        (org-roam-node-insert)
-      ;; Restore the original hook after the function is done
-      (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
