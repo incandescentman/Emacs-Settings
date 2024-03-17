@@ -2780,7 +2780,8 @@ different → different
 
 * web-mode
 #+BEGIN_SRC emacs-lisp
-    (use-package web-mode :defer
+    (use-package web-mode
+      :defer
       :init
       (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
        (rainbow-mode)

@@ -1,4 +1,5 @@
 (use-package org-roam
+  :defer
   :after org
   :delight
   :custom
