@@ -608,7 +608,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-(use-package buffer-stack)
+(use-package buffer-stack
+  :defer)
 #+END_SRC
 
 GNU Emacs:
@@ -704,6 +705,7 @@ read-file-name-completion-ignore-case t)
 
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
+:defer
   :bind)
 #+END_SRC
 
@@ -980,7 +982,8 @@ Pretty cool actually. Leaving it in.
 :ID:       EA8DFF1F-F89F-4B5E-AC56-28EED76EE68C
 :END:
 #+BEGIN_SRC emacs-lisp
-(use-package ox-extra)
+(use-package ox-extra
+)
 (ox-extras-activate '(ignore-headlines))
 #+END_SRC
 
@@ -2064,7 +2067,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|log\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -3290,7 +3293,8 @@ AdrianKubala:
 
 
 #+BEGIN_EXAMPLE emacs-lisp
-(use-package helm-swoop)
+(use-package helm-swoop
+:defer)
 ; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
 
 (setq helm-swoop-pre-input-function
@@ -3503,7 +3507,9 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 
  :config
-
+ (ivy-add-actions t
+    '(("W" kill-new "save to kill ring")
+     ("I" insert "insert in buffer")))
 (define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
 (define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (setq ivy-height 25)
@@ -3529,9 +3535,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
   [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
 #+BEGIN_SRC emacs-lisp
-(ivy-add-actions t
- '(("W" kill-new "save to kill ring")
-  ("I" insert "insert in buffer")))
+  
 #+END_SRC
 
 **** swiper hydra
@@ -3802,7 +3806,8 @@ Handy way of getting back to previous places.
 * xah-replace-pairs
 
 #+BEGIN_SRC emacs-lisp
-(use-package xah-replace-pairs)
+(use-package xah-replace-pairs
+  :defer)
 (defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -3833,7 +3838,8 @@ The trick is to not use different colored delimiters! The reason I need the rain
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 ;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-(use-package rainbow-delimiters)
+(use-package rainbow-delimiters
+:defer)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
@@ -3912,6 +3918,7 @@ Single Capitals as you type."
 
 
 (use-package yasnippet
+:defer
 :ensure t
 :bind
 ("C-c e" . yas-load-snippet-buffer)
@@ -4007,6 +4014,7 @@ Single Capitals as you type."
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+:defer
 
 :config
 '(flyspell-abbrev-p t)
@@ -4050,9 +4058,11 @@ Single Capitals as you type."
 * tiny-expand
 
 #+BEGIN_SRC emacs-lisp
-(use-package tiny)
+(use-package tiny
+  :defer
+:config
 (tiny-setup-default)
-
+)
 (defun new-week ()
   (interactive)
 (tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n")
@@ -4078,15 +4088,9 @@ Single Capitals as you type."
 * re-builder
 
 #+BEGIN_SRC emacs-lisp
-(use-package re-builder)
-(setq reb-re-syntax 'string)
-#+END_SRC
-
-* re-builder "Query Replace This"
-[[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder “Query Replace This” - Dev and Such]]
-
-
-#+BEGIN_SRC emacs-lisp
+(use-package re-builder
+:defer
+:config
 (defun reb-query-replace-this-regxp (replace)
  "Uses the regexp built with re-builder to query the target buffer.
 This function must be run from within the re-builder buffer, not the target
@@ -4104,6 +4108,16 @@ Argument REPLACE String used to replace the matched strings in the buffer.
   (message "Not in a re-builder buffer!")))
 
 (define-key reb-mode-map "\C-c\M-%" 'reb-query-replace-this-regxp)
+
+  )
+(setq reb-re-syntax 'string)
+#+END_SRC
+
+* re-builder "Query Replace This"
+[[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder “Query Replace This” - Dev and Such]]
+
+
+#+BEGIN_SRC emacs-lisp
 #+END_SRC
 
 * poetry
@@ -4154,7 +4168,7 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 * olivetti
 #+BEGIN_SRC emacs-lisp
 (use-package olivetti
-
+:defer
 :config
 (setq olivetti-body-width 120)
 (unbind-key (kbd "C-c [") olivetti-mode-map)
@@ -4360,6 +4374,7 @@ event of an error or nonlocal exit."
 
 ;; wrap-region
 (use-package wrap-region
+:defer
   :ensure t
   :config
 (wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
@@ -4378,9 +4393,7 @@ event of an error or nonlocal exit."
 ;; ("<"  ">")
 ;; ("<"  ">")
      )))
-)
-
-  (wrap-region-add-wrappers
+(wrap-region-add-wrappers
    '(
 ;;     ("*" "*" nil org-mode)
 ;;     ("/" "/" nil org-mode)
@@ -4392,6 +4405,9 @@ event of an error or nonlocal exit."
       ("$" "$" nil (org-mode latex-mode))
       ))
 
+)
+
+  
 #+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
@@ -4423,7 +4439,8 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 ;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
 
-             (use-package god-mode-isearch)
+             (use-package god-mode-isearch
+             :defer)
 (define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
 (define-key god-local-mode-map (kbd ".") 'repeat)
@@ -4495,7 +4512,8 @@ execute speed commands."
 
 ** org insert easy template source blocks
 #+BEGIN_SRC emacs-lisp
-(use-package org-tempo)
+(use-package org-tempo
+  :defer)
 
 ;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
 
@@ -4971,7 +4989,6 @@ It will open the link in Emacs with typing C-c C-o.
 (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el")
 (load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-simple.el")
 ;; (use-package blue-ruin)
 ;; (use-package blue-invoice)
 ;; (use-package blue-ruin-no-cover)
@@ -5011,6 +5028,7 @@ It will open the link in Emacs with typing C-c C-o.
 #+BEGIN_SRC emacs-lisp
 (load "/Users/jay/emacs/emacs-settings/dired+.el")
 (use-package dired+
+:defer
  :init
  (progn
   (spacemacs/set-leader-keys
@@ -5086,7 +5104,8 @@ minibuffer."
 * flycheck
 
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck)
+(use-package flycheck
+  :defer)
 #+END_SRC
 
 
@@ -5483,6 +5502,7 @@ into the main dumped emacs"
 #+BEGIN_SRC emacs-lisp
 
 (use-package crux
+:defer
 :bind
 ( "M-`" . crux-swap-windows)
 
@@ -5574,6 +5594,7 @@ into the main dumped emacs"
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
+:defer
 :bind (:map undo-tree-map
 ("M-_" . nil)
 )
@@ -5769,6 +5790,7 @@ This solution also works for MELPA.
 * ivy counsel
 #+BEGIN_EXAMPLE emacs-lisp
 (use-package counsel
+:defer
  :bind
  (("M-y" . counsel-yank-pop)
   :map ivy-minibuffer-map
@@ -5821,7 +5843,8 @@ This solution also works for MELPA.
 
 * dired-quick-sort
 #+BEGIN_SRC emacs-lisp
-(use-package dired-quick-sort)
+(use-package dired-quick-sort
+  :defer)
 #+END_SRC
 
 
@@ -5863,7 +5886,8 @@ This solution also works for MELPA.
 
 * ox-clip
 #+BEGIN_SRC emacs-lisp
-(use-package ox-clip)
+(use-package ox-clip
+  :defer)
 #+END_SRC
 
 * org-def
@@ -5890,7 +5914,7 @@ This solution also works for MELPA.
 * beacon
 #+BEGIN_SRC emacs-lisp
 (use-package beacon
-
+:defer
  :init
 
  (beacon-mode 1)
@@ -5903,12 +5927,14 @@ This solution also works for MELPA.
 
 ** tufte export to HTML
 #+BEGIN_SRC emacs-lisp
-(use-package ox-tufte)
+(use-package ox-tufte
+  :defer)
 #+END_SRC
 
 ** tufte export to LaTeX
 #+begin_src emacs-lisp
-(use-package ox-tufte-latex
+(use-package ox-tufte-LaTeX
+:defer
   :ensure nil
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
   )
@@ -6090,6 +6116,7 @@ See also spacemacs/describe-system-info
 * flycheck
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
+:defer
   :ensure t
   :init (global-flycheck-mode))
 
@@ -6122,6 +6149,7 @@ See also spacemacs/describe-system-info
 
 #+BEGIN_SRC emacs-lisp
 (use-package shell-pop
+:defer
  :bind (("C-t" . shell-pop))
  :config
  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
@@ -6342,7 +6370,8 @@ Go through `org-structure-template-alist' and
 * multiple cursors
 
 #+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors)
+(use-package multiple-cursors
+  :defer)
 (setq mc/list-file "/Users/jay/emacs/emacs-settings/mc-lists.el")
 
 
@@ -6563,7 +6592,8 @@ Pretty cool here:
 
 
 #+begin_src emacs-lisp
-(use-package ido-vertical-mode)
+(use-package ido-vertical-mode
+  :defer)
 (ido-mode 1)
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -6732,7 +6762,8 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 * saveplace
 #+begin_src emacs-lisp
-(use-package saveplace)
+(use-package saveplace
+  :defer)
 (setq-default save-place t)
 #+end_src
 
@@ -6815,7 +6846,8 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 
 * Warnings
 #+begin_src emacs-lisp
-(use-package warnings)
+(use-package warnings
+  :defer)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 #+end_src
 
@@ -6936,7 +6968,8 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 
 Use key chord
 #+BEGIN_SRC emacs-lisp
-(use-package key-chord)
+(use-package key-chord
+  :defer)
 (key-chord-mode 1)
 #+END_SRC
 
@@ -6975,6 +7008,7 @@ To use this function, highlight the region you want to add numbering to and then
 #+begin_EXAMPLE emacs-lisp
 
 (use-package org-panes
+:defer
  :ensure nil
  :config (setq org-panes-split-overview-horizontally t)
      (setq org-panes-main-size 70))
@@ -7014,6 +7048,7 @@ To use this function, highlight the region you want to add numbering to and then
 #+begin_src emacs-lisp
 ;; Example configuration for Consult
 (use-package consult
+:defer
  :after (consult-eglot)
  ;; Replace bindings. Lazily loaded due by `use-package'.
  :bind (
@@ -7106,6 +7141,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
   #+begin_SRC emacs-lisp
 (use-package org-roam-ui
+:defer
   :after org-roam
 ;;     normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;;     a hookable mode anymore, you're advised to pick something yourself
@@ -7227,7 +7263,9 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 * org-ai
 #+begin_src emacs-lisp
 (use-package org-ai
- :ensure
+
+:defer
+:ensure
  :commands (org-ai-mode)
 :init
  (add-hook 'org-mode-hook #'org-ai-mode)
@@ -7319,7 +7357,8 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 #+begin_src emacs-lisp
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/chatgpt-shell-main")
-(use-package chatgpt-shell)
+(use-package chatgpt-shell
+  :defer)
 
 
 #+end_src
@@ -7327,6 +7366,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 * gptel
 #+begin_src emacs-lisp
 (use-package gptel
+:defer
  :init
  (setq gptel-default-mode 'org-mode)
  :config
@@ -7376,7 +7416,8 @@ Refactor the region or sentence at point.
 #+begin_EXAMPLE emacs-lisp
 (load "/Users/jay/emacs/external-packages/gptel-extensions/gptel-extensions.el")
 (use-package gptel-extensions
- :ensure t
+:defer
+:ensure t
  :config
  ;; Your configuration comes here
  )
@@ -7411,7 +7452,8 @@ See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el:
 * openwith
 #+begin_src emacs-lisp
 
-(use-package openwith)
+(use-package openwith
+  :defer)
 (setq openwith-associations '(("\\.pdf\\'" "open" (file))))
 (openwith-mode t)
 #+end_src
@@ -7448,7 +7490,8 @@ during the first export:
 * org-autolist
 #+begin_EXAMPLE emacs-lisp
 (use-package org-autolist
- :hook (org-mode . org-autolist-mode))
+:defer
+:hook (org-mode . org-autolist-mode))
 (add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
 
 (setq org-autolist-enable-delete nil)
@@ -7531,6 +7574,7 @@ Gives me all the offline dictionaries I've previously installed! Is great.
 
 #+begin_src emacs-lisp
 (use-package sdcv
+:defer
 :custom
 sdcv-popup-function 'showtip)
 #+end_SRC
@@ -7613,7 +7657,8 @@ depending on which one is appropriate based on the context."
 ;; load el file in your .emacs, e.g.
 
 (add-to-list 'load-path "/Users/jay/emacs/emacs-grammarly")
-(use-package send-to-osx-grammarly)
+(use-package send-to-osx-grammarly
+:defer)
 (call-process-shell-command "osascript ~/Users/jay/emacs/emacs-grammarly/scripts/pull.scpt")
 
 #+END_EXAMPLE
@@ -7629,7 +7674,8 @@ This is my goto way for navigating. It feels like it is reading your mind.
 
 #+begin_src emacs-lisp
 (use-package fasd
- :custom
+:defer
+:custom
  (fasd-enable-initial-prompt nil)
  :config
  ;; global-fasd-mode records new files in the fasd database,
@@ -7713,6 +7759,7 @@ I also took out the -R flag. I don't know why it was there?
 * Google things from within emacs
 #+begin_SRC emacs-lisp
 (use-package google-this
+:defer
 :custom
 (google-this-browse-url-function 'eww-browse-url)
   )
@@ -7750,7 +7797,8 @@ v: view-source
 
 #+begin_src emacs-lisp
 (use-package eww
-  :bind
+:defer
+:bind
   (
    :map eww-mode-map
         ("o" . eww-browse-with-external-browser)
@@ -7775,7 +7823,8 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 
 * edge
 #+begin_src emacs-lisp
-(use-package org-mac-link)
+(use-package org-mac-link
+  :defer)
 
 (defun org-mac-paste-applescript-links (as-link-list)
  "Paste in a list of links from an applescript handler.
@@ -7949,7 +7998,8 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 
 ** my own attempts to fix this. Second one worked
 #+begin_SRC emacs-lisp
-(use-package org-roam-export)
+(use-package org-roam-export
+  :defer)
 
 (defun org-export-id-link-removal (backend)
  "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
@@ -8010,7 +8060,8 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 ** Emojify
 #+begin_src emacs-lisp
 (use-package emojify
- :hook (after-init . global-emojify-mode)
+:defer
+:hook (after-init . global-emojify-mode)
  :bind (:map key-minor-mode-map
      ("C-s-SPC" . emojify-insert-emoji))
  :custom
@@ -8029,9 +8080,10 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 
 * deft
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package deft
- :after org
+:defer
+:after org
  :bind
  ("s-k d e" . deft)
  :custom
@@ -8039,7 +8091,7 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
  (deft-use-filter-string-for-filename t)
  (deft-default-extension "org")
  (deft-directory org-roam-directory))
-#+end_src
+#+END_EXAMPLE
 
 
 * rg
@@ -8052,7 +8104,8 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 * deadgrep
 #+begin_src emacs-lisp
-(use-package deadgrep)
+(use-package deadgrep
+  :defer)
 (define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
 #+end_src
 
@@ -8221,7 +8274,8 @@ directory
 ~M-x counsel-fd-file-jump~ to jump to a file under current directory
 
 #+begin_src emacs-lisp
-(use-package counsel-fd)
+(use-package counsel-found
+  :defer)
 #+end_src
 
 
@@ -8386,7 +8440,8 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/delve/")
 
 (use-package delve
- :after (org-roam)
+:defer
+:after (org-roam)
  ;; this is necessary if use-package-always-defer is true
  :demand t
  :bind
@@ -8500,7 +8555,8 @@ Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's
 
 
 #+begin_SRC emacs-lisp
-(use-package ctrlf)
+(use-package ctrlf
+  :defer)
 ;; (ctrlf-mode +1)
 ;; (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
 (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
@@ -8552,7 +8608,8 @@ Smart jump to beginning / end of lines.
 
 * jinx
 #+begin_EXAMPLE emacs-lisp
-(use-package jinx)
+(use-package jinx
+:defer)
 (dolist (hook '(text-mode-hook org-mode-hook conf-mode-hook))
  (add-hook hook #'jinx-mode))
 #+END_EXAMPLE
@@ -8561,7 +8618,8 @@ Smart jump to beginning / end of lines.
 * ox-timeline
 #+begin_src emacs-lisp
 (use-package ox-timeline
- :config
+:defer
+:config
  (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
 
 (defun org-timeline-export-to-html-and-open ()
@@ -8735,7 +8793,8 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 * chatgpt2org
 #+begin_src emacs-lisp
 (add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
-(use-package chatgpt2org)
+(use-package chatgpt2org
+  :defer)
 #+end_src
 
 
@@ -9100,10 +9159,11 @@ Fixed and working:
 https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 * org-timeblocking
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (add-to-list 'load-path "/users/jay/emacs/external-packages/org-timeblock/")
-(use-package org-timeblock)
-#+end_src
+(use-package org-timeblock
+:defer)
+#+END_EXAMPLE
 
 * later list
 #+begin_src emacs-lisp
@@ -9209,7 +9269,8 @@ point with completion.
 
 #+begin_EXAMPLE emacs-lisp
 (use-package org-make-toc
- :config
+:defer
+:config
  ;; Add 'org-make-toc-mode' to 'org-mode-hook'
  ;; This ensures 'org-make-toc-mode' is enabled every time 'org-mode' is activated
  (add-hook 'org-mode-hook #'org-make-toc-mode))
@@ -9222,7 +9283,8 @@ point with completion.
 Display online images in new buffer on return
 
 #+begin_src emacs-lisp
-(use-package url)
+(use-package url
+  :defer)
 
 
 (defun display-online-image-in-new-buffer (&optional url)
@@ -9641,21 +9703,35 @@ Philosophy:
     (if (string= report-string "")
         (message "No duplicated words removed.")
       (message (concat "Removed duplicated words: " (substring report-string 0 -2) "."))))))
+
+(defalias 'remove-doubled-words 'remove-duplicated-words)
+
+(defun whittle ()
+(interactive)
+(remove-filler-words)
+(remove-duplicated-words)
+  )
 #+end_src
 
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun remove-redundant-asterisks-in-org-headings ()
- "Remove asterisks that follow the initial asterisks in org-mode headings."
+ "Remove asterisks that follow the initial asterisks in org-mode headings, including lines ending with an asterisk after a space."
 
  (interactive)
 
  (save-excursion
-  (goto-char (point-min))
-  (while (re-search-forward "^\\(*+\\) \\(\\**.*?\\)\\(*+\\)$" nil t)
-   (let ((leading-asterisks (match-string 1))
-      (heading-text (match-string 2)))
-    (replace-match (concat leading-asterisks " " heading-text) nil nil)))))
+ (goto-char (point-min))
+ ;; Remove redundant asterisks within the heading text
+ (while (re-search-forward "^\\(*+\\) \\(\\*.*?\\)\\(*+\\)$" nil t)
+  (let ((leading-asterisks (match-string 1))
+     (heading-text (match-string 2)))
+   (replace-match (concat leading-asterisks " " heading-text) nil nil)))
+ ;; Remove final asterisk after a space in headings
+ (goto-char (point-min))
+ (while (re-search-forward "^\\(*+\\) \\*" nil t)
+  (let ((leading-asterisks (match-string 1)))
+   (replace-match (concat leading-asterisks " ") nil nil)))))
 #+end_src
 
 
@@ -9668,5 +9744,18 @@ Philosophy:
 #+end_src
 
 
+
+* split window left
+#+begin_src emacs-lisp
+(defun split-window-left (&optional size)
+ "Like split-window-right, with selected window on the right."
+ (interactive "P")
+ (split-window-right size)
+ (other-window 1))
+#+end_src
+
+
+
 ;; -*- lexical-binding: t -*-
+
 
