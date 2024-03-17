@@ -1,19 +1,12 @@
-(provide 'elegant-simple)
+(provide 'elegant)
 
 (with-eval-after-load 'ox-latex
 (add-to-list 'org-latex-classes
-  '("elegant-simple"
+  '("elegant"
 "
 
 \\documentclass[12pt]{article}
-\\usepackage{geometry}
-
-\\geometry{
-  margin=1.5in, % Set all margins to 1.5 inches
-  bottom=1.25in, % Bottom margin set to 1.25 inches
-  footskip=1in % Distance from the bottom of the text area to the baseline of the footer
-}
-
+\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
 \\linespread{1.2}
 
@@ -28,29 +21,20 @@
 \\usepackage{fontspec}
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
-% define Helvetica Now font weights
-\\setmainfont{HelveticaNow}[
+% % define main font
+\\setmainfont[
   Path = /Users/jay/Library/Fonts/,
   UprightFont = HelveticaNowText-Light,
-  BoldFont = HelveticaNowDisplay-Bold,
+  BoldFont = HelveticaNowText-Bold,
   ItalicFont = HelveticaNowText-LightItalic,
   BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
-]
+]{Helvetica Display}
 
-\\setromanfont{HelveticaNowText-Light}
-\\setsansfont{HelveticaNowDisplay-Regular}
+\\setsansfont{TeX Gyre Pagella}
 
-% define sans font
-\\setsansfont{Helvetica Neue LT Pro}[
-  Path = /Users/jay/Library/Fonts/,
-UprightFont = HelveticaNeueLTPro-MdCn,
-  BoldFont = HelveticaNeueLTPro-BdCn,
-  Extension = .otf
-]
-
-\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
-\\setmonofont{Myriad Pro}
+%\\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
+\\setmonofont{Consolas}[Scale=0.9]
 
 %\\usepackage[mathletters]{ucs}
 %\\usepackage[utf8x]{inputenc}
@@ -93,7 +77,6 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\definecolor{stormybluegrey}{HTML}{898ea4}
 \\definecolor{moonrockgrey}{HTML}{212121}
 \\definecolor{libertyblue}{HTML}{73b0be}
-\\definecolor{darklibertyblue}{HTML}{19455b}
 
 
 % \\newtoks\\leftheader
@@ -117,41 +100,20 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\usepackage[labelformat=empty]{caption}
 
-
-%%%%%%%%%%%%%%%%%
-
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
-\\fancyhf{}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-% \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
 \\lhead{\\bfseries\\@title}}} % title of the document as left header
 
-% \\renewcommand{\\footrulewidth}{0.4pt}
-\\fancyfoot[C]{%
-  % Graphic
-  \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
-\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
-  }%
-  % Space between the graphic and the text (adjust as needed)
-  \\hspace{0in}%
-  % Text
-  \\raisebox{0.25in}{% Adjust this value to align the text with the image
 
-    \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC
-  }%
-}
-
-% overwrite the logo footer
-\\cfoot{\\thepage} % Add page numbers
-
-
-%%%%%%%%%%%%%%%%
-
+\\lfoot{}
+\\cfoot{\\thepage}
+\\rfoot{}
 \\usepackage{listings}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
@@ -282,12 +244,13 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{libertyblue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{libertyblue}}
-\\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{libertyblue}}
-\\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{libertyblue}}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{libertyblue}}
+%\\titleformat*{\\section}{font}\\fontsize{size}{baseline-skip}\\raggedright\\sffamily}
 
+\\titleformat*{\\section}{\\sffamily\\setstretch{0.1}\\fontsize{24}{40}\\raggedright\\sffamily}
+
+\\titleformat*{\\subsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{18}{15}\\selectfont\\raggedright\\color{black}}
+
+\\titleformat*{\\subsubsection}{\\fontspec{HelveticaNowDisplay-Bold}\\fontsize{14}{16}\\raggedright\\color{black}}
 
 
 \\titleformat{\\paragraph}[block]{\\normalfont\\sffamily\\fontsize{13}{12}\\bfseries\\color{black}}{}{0em}{}

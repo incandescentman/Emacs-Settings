@@ -100,6 +100,13 @@
 	         :unnarrowed t)
 
 
+                    ("h" "health, fitness, leanness, longevity" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "health-and-fitness/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :health:")
+           :unnarrowed t)
+
 
 
           ("i" "incomegen" plain "%?"

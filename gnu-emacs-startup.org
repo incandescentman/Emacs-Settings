@@ -24,7 +24,8 @@
 (global-set-key  (kbd "s-1") 'delete-other-windows)
 (global-set-key  (kbd "s-9") 'sticky-window-keep-window-visible)
 (global-set-key  (kbd "s-2") 'split-window-vertically)
-(global-set-key  (kbd "s-3") 'split-window-horizontally)
+; (global-set-key  (kbd "s-3") 'split-window-horizontally)
+(global-set-key  (kbd "s-3") 'split-window-left)
 #+END_SRC
 
 * abbreviations
@@ -499,7 +500,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
 
-(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-without-focus)
+(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
 
 
 (define-key key-minor-mode-map (kbd "s-k o t") 'org-timeline-export-to-html-and-open)
