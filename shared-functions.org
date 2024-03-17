@@ -1139,9 +1139,9 @@ Defining stuck projects as todos that do not contain "scheduled" or
 
 #+begin_src emacs-lisp
 (use-package hl-todo
-:ensure t
 :defer
- :hook (org-mode . hl-todo-mode)
+; ensure t
+:hook (org-mode . hl-todo-mode)
  :config
  (global-hl-todo-mode)
  (setq hl-todo-include-modes '(org-mode))
@@ -3535,7 +3535,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
   [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
 #+BEGIN_SRC emacs-lisp
-  
+
 #+END_SRC
 
 **** swiper hydra
@@ -4407,7 +4407,7 @@ event of an error or nonlocal exit."
 
 )
 
-  
+
 #+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
