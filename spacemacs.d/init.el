@@ -156,7 +156,7 @@ This function should only modify configuration layer settings."
                                       counsel
                                       ;; counsel-fd
                                       counsel-projectile
-                                      crux
+                                      ;; crux
                                       deadgrep
                                       define-word
                                       dired+
@@ -169,7 +169,7 @@ This function should only modify configuration layer settings."
                                       ;; epc
                                       ;; eww
                                       expand-region
-                                      f
+                                      ; f
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
