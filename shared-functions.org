@@ -9498,7 +9498,7 @@ After evaluating your init-file you can use links analog to the example:
 
 [[https://github.com/doomemacs/doomemacs/issues/3108][org-mode slow but fixed with garbage collection delay on mac · Issue #3108 · doomemacs/doomemacs · GitHub]]
 #+begin_src emacs-lisp
-(setq gc-cons-threshold 33554432) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
+(setq gc-cons-threshold 64554432) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
 #+end_src
 
 

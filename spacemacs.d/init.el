@@ -152,7 +152,7 @@ This function should only modify configuration layer settings."
                                       consult-dir
                                       ;; consult-notes
                                       consult-org-roam
-                                      benchmark-init
+                                      ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
                                       ;; counsel-fd
