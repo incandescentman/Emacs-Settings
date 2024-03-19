@@ -177,13 +177,13 @@ This function should only modify configuration layer settings."
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
-                                      gptel
+                                      ;; gptel
                                       helpful
-                                      ido-hacks
-                                      jinx
+                                      ;; ido-hacks
+                                      ;; jinx
                                       key-seq
-                                      lister ;; (for delve)
-                                      magit
+                                      ;; lister ;; (for delve)
+                                      ;; magit
                                       ; markdown-mode
                                       maxframe
                                       multiple-cursors
