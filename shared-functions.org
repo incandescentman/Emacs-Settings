@@ -639,7 +639,10 @@ Aquamacs:
 
 :config
 
+; Uniqify new buffers
 (defvar new-buffer-count 0)
+
+;; open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
 
 (defun new-buffer ()
  (interactive)
@@ -656,12 +659,6 @@ Aquamacs:
 
 
 )
-#+END_SRC
-
-*** Uniqify new buffers
-Open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
-#+BEGIN_SRC emacs-lisp
-
 #+END_SRC
 
 *** new scratch buffer
@@ -710,7 +707,6 @@ read-file-name-completion-ignore-case t)
 
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
-
   :bind)
 #+END_SRC
 
@@ -759,6 +755,8 @@ read-file-name-completion-ignore-case t)
 
 ** org custom functions
 *** archiving
+#+BEGIN_SRC emacs-lisp
+
 (defadvice org-archive-subtree (around my-org-archive-subtree activate)
   (let ((org-archive-location
 	 (if (save-excursion (org-back-to-heading)
