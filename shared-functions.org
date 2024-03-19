@@ -1972,39 +1972,38 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; (add-hook 'dired-mode-hook 'hl-line-mode)
 
 (use-package dired-x
-  :defer)
-;; Load Dired X when Dired is loaded.
-;; (add-hook 'dired-load-hook #'(lambda () (require 'dired-x)))
+  :defer
 
+:config
 
 (setq-default dired-omit-files-p t) ; Buffer-local variable
 
 
 
 (setq delete-by-moving-to-trash t
-      trash-directory "~/.Trash/emacs")
+   trash-directory "~/.Trash/emacs")
 
 ;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
 
 (defun tmtxt/dired-do-shell-mac-open ()
-  (interactive)
-  (save-window-excursion
-    (let ((files (dired-get-marked-files nil current-prefix-arg))
-          command)
-      ;; the open command
-      (setq command "open ")
-      (dolist (file files)
-        (setq command (concat command (shell-quote-argument file) " ")))
-      (message command)
-      ;; execute the command
-      (async-shell-command command))))
+ (interactive)
+ (save-window-excursion
+  (let ((files (dired-get-marked-files nil current-prefix-arg))
+     command)
+   ;; the open command
+   (setq command "open ")
+   (dolist (file files)
+    (setq command (concat command (shell-quote-argument file) " ")))
+   (message command)
+   ;; execute the command
+   (async-shell-command command))))
 
 (defun dired-open-current-directory-in-finder ()
-  "Open the current directory in Finder"
-  (interactive)
-  (save-window-excursion
-    (dired-do-async-shell-command
-     "open .")))
+ "Open the current directory in Finder"
+ (interactive)
+ (save-window-excursion
+  (dired-do-async-shell-command
+   "open .")))
 
 
 ;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
@@ -2013,6 +2012,12 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 
 (setq-default dired-omit-files-p t) ; this is buffer-local variable
+
+  )
+;; Load Dired X when Dired is loaded.
+;; (add-hook 'dired-load-hook #'(lambda () (require 'dired-x)))
+
+
 #+END_SRC
 
 
