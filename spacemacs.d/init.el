@@ -194,8 +194,8 @@ This function should only modify configuration layer settings."
                                       org-ai
                                       org-autolist
                                       org-bookmark-heading
-                                      org-contrib
-                                      org-drill
+                                      ;; org-contrib
+                                      ;; org-drill
                                       org-fstree
                                       org-mac-link
                                       org-modern
@@ -205,7 +205,7 @@ This function should only modify configuration layer settings."
                                       org-sticky-header
                                       org-superstar
                                       ox-clip
-                                      ox-gfm
+                                      ;; ox-gfm
                                       ox-timeline
                                       ;; ox-tufte
                                       palimpsest
