@@ -248,7 +248,7 @@ This function should only modify configuration layer settings."
                                       ;; blimp
                                       ;; bongo
                                       ;; command-log-mode
-                                      cyberpunk-theme
+                                      ;; cyberpunk-theme
                                       ;; dired-hacks-utils
                                       ;; dired-single
                                       ;; early-init
@@ -272,7 +272,7 @@ This function should only modify configuration layer settings."
                                       ;; org-pdftools
                                       ;; org-sidebar
                                       ;; ox-epub
-                                      ox-twbs
+                                      ;; ox-twbs
                                       ;; plain-org-wiki
                                       ;; polymode
                                       ;; solarized-theme
