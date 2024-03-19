@@ -123,7 +123,7 @@ This function should only modify configuration layer settings."
      ;; python
      ;; shell
      ;; shell-scripts
-     smex
+     ; smex
      ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
