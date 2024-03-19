@@ -126,7 +126,7 @@ This function should only modify configuration layer settings."
      ; smex
      ;; speed-reading
      spell-checking
-     syntax-checking ; this is the layer with flycheck
+     ; syntax-checking ; this is the layer with flycheck
      ;; treemacs
      ;; typography
      ;; xkcd

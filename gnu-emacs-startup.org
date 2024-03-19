@@ -114,12 +114,12 @@ Automatically load abbreviations table:
 * tabbar
 So Emacs text doesn't appear on the MacBook Pro notch.
 
-#+begin_SRC emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package tab-bar
 :defer
  :config
  (tab-bar-mode -1))
- #+END_SRC
+ #+END_EXAMPLE
 
 
 #+begin_SRC emacs-lisp

@@ -69,7 +69,7 @@
   )
 (use-package ox-html
   :defer)
-;; (use-package ox-latex)
+
 ;; (use-package ox-org)
 ;; (use-package org-fstree)
 #+END_SRC
@@ -636,26 +636,31 @@ Aquamacs:
 (setq uniquify-separator "/")
 (setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
 (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
+:config
+
+(defvar new-buffer-count 0)
+
+(defun new-buffer ()
+ (interactive)
+ (setq new-buffer-count (+ new-buffer-count 1))
+ (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+ (org-mode))
+
+
+(defun new-lisp-buffer ()
+ (interactive)
+ (setq new-buffer-count (+ new-buffer-count 1))
+ (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+ (emacs-lisp-mode))
+
+
 )
 #+END_SRC
 
 *** Uniqify new buffers
 Open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
 #+BEGIN_SRC emacs-lisp
-(defvar new-buffer-count 0)
-
-(defun new-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (org-mode))
-
-
-(defun new-lisp-buffer ()
-  (interactive)
-  (setq new-buffer-count (+ new-buffer-count 1))
-  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
-  (emacs-lisp-mode))
 
 #+END_SRC
 
