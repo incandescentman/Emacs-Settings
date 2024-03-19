@@ -2033,7 +2033,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (use-package recentf
 :defer
 :config
-
 (setq recentf-save-file "/Users/jay/emacs/recentf/recentf")
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100)
@@ -2173,8 +2172,8 @@ dired-omit-extensions
 
 #+begin_src emacs-lisp
 (use-package wc-mode
-  :defer)
-
+  :defer
+:config
 (add-hook 'org-mode-hook 'wc-mode)
 
 (defun word-count (arg)
@@ -2187,7 +2186,9 @@ dired-omit-extensions
 (defun count-characters ()
 (interactive)
 (setq wc-modeline-format "[Words: %tw, Chars: %tc]")
+ )
   )
+
 #+end_src
 
 * web research functions

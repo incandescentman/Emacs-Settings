@@ -147,9 +147,9 @@ This function should only modify configuration layer settings."
                                       buffer-stack
                                       caps-lock
                                       change-inner
-                                      cheatsheet
+                                      ;; cheatsheet
                                       consult-dir
-                                      consult-notes
+                                      ;; consult-notes
                                       consult-org-roam
                                       benchmark-init
                                       consult-projectile ;; searches filenames
@@ -184,7 +184,7 @@ This function should only modify configuration layer settings."
                                       key-seq
                                       lister ;; (for delve)
                                       magit
-                                      markdown-mode
+                                      ; markdown-mode
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
@@ -301,6 +301,7 @@ This function should only modify configuration layer settings."
                                     diff-auto-refine-mode
                                     diff-hl
                                     eldoc
+                                    elisa
                                     electric-indent-mode
                                     evil-mode
                                     evil-escape
@@ -885,6 +886,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+ '(paradox-github-token t)
  '(safe-local-variable-values
    '((buffer-file-coding-system . utf-8-unix)
      (org-html-postamble . "</div><div class='span1'></div><div class='span3'> <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='/Users/jay/Dropbox/github/org-tocify/src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/bootstrap.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/jquery.tocify.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/prettify.js'></script><script> $(function() { var toc = $('#toc').tocify({ selectors: 'h2,h3,h4,h5' }).data('toc-tocify'); prettyPrint(); $('.optionName').popover({ trigger: 'hover' }); });</script>")
