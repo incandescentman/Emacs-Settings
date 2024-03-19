@@ -59,7 +59,7 @@
 
 ** don't require packages
 #+begin_src emacs-lisp
-(setq use-package-verbose t) ;; this is for debugging
+(setq use-package-verbose nil) ;; set to to for debugging
 #+end_src
 
 ** some org packages
@@ -9270,33 +9270,36 @@ Display online images in new buffer on return
 
 #+begin_src emacs-lisp
 (use-package url
-  :defer)
-
-
+  :defer
+:config
 (defun display-online-image-in-new-buffer (&optional url)
-  (interactive)
-  (unless url (setq url (url-get-url-at-point)))
-  (unless url
-    (error "Couldn't find URL."))
-  (let ((buffer (url-retrieve-synchronously url))
-        (image-buffer (generate-new-buffer "*Image*")))
-    (unwind-protect
-        (with-current-buffer buffer
-          (goto-char (point-min))
-          (search-forward "\n\n")
-          (let ((data (buffer-substring (point) (point-max))))
-            (with-current-buffer image-buffer
-              (insert-image (create-image data nil t))
-              ;; Check if the current frame is already split
-              (if (> (length (window-list)) 1)
-                  (set-window-buffer (next-window) image-buffer)  ; Use existing window
-                ;; Else, split the window and switch to the image buffer
-                (split-window-right)
-                (other-window 1)
-                (switch-to-buffer image-buffer)
-                (other-window -1))))
-      (kill-buffer buffer))))
+ (interactive)
+ (unless url (setq url (url-get-url-at-point)))
+ (unless url
+  (error "Couldn't find URL."))
+ (let ((buffer (url-retrieve-synchronously url))
+    (image-buffer (generate-new-buffer "*Image*")))
+  (unwind-protect
+    (with-current-buffer buffer
+     (goto-char (point-min))
+     (search-forward "\n\n")
+     (let ((data (buffer-substring (point) (point-max))))
+      (with-current-buffer image-buffer
+       (insert-image (create-image data nil t))
+       ;; Check if the current frame is already split
+       (if (> (length (window-list)) 1)
+         (set-window-buffer (next-window) image-buffer) ; Use existing window
+        ;; Else, split the window and switch to the image buffer
+        (split-window-right)
+        (other-window 1)
+        (switch-to-buffer image-buffer)
+        (other-window -1))))
+   (kill-buffer buffer))))
 )
+
+  )
+
+
 
 #+end_src
 
