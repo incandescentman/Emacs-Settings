@@ -705,7 +705,7 @@ read-file-name-completion-ignore-case t)
 
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
-:defer
+
   :bind)
 #+END_SRC
 
@@ -8794,7 +8794,8 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 #+begin_src emacs-lisp
 (add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
 (use-package chatgpt2org
-  :defer)
+
+  )
 #+end_src
 
 
