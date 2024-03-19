@@ -916,7 +916,7 @@ The post-processing step is handed the path to your new file; you could use some
     (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
 #+END_SRC
 
-*** Change section numbering depending on what export format I use
+** Change section numbering depending on what export format I use
 
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
@@ -981,9 +981,6 @@ This is so I can do structure headlines, for myself, that aren't part of the act
 
 Pretty cool actually. Leaving it in.
 
-:PROPERTIES:
-:ID:       EA8DFF1F-F89F-4B5E-AC56-28EED76EE68C
-:END:
 #+BEGIN_SRC emacs-lisp
 (use-package ox-extra
 )
@@ -993,9 +990,6 @@ Pretty cool actually. Leaving it in.
 Works!
 
 *** correct org-mode export
-:PROPERTIES:
-:ID:       08203F72-2C72-4E41-816A-D26984A8862B
-:END:
 #+BEGIN_SRC emacs-lisp
 (defun org-repair-export-blocks ()
  "Repair export blocks and INCLUDE keywords in current buffer."
@@ -1257,7 +1251,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 
 ** org-capture setup
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq org-capture-templates
       (quote
        (
@@ -1305,7 +1299,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
   "| | %U | %^{Weight} | %^{Comment}" :immediate-finish t)
 
         )))
-#+END_SRC
+#+END_EXAMPLE
 
 This is working correctly:
 
@@ -1378,7 +1372,7 @@ Insert link with HTML title as default description. When using `org-insert-link'
 #+BEGIN_SRC emacs-lisp
 ;; (use-package mm-url) ; to include mm-url-decode-entities-string
 
-(defun my-org-insert-link ()
+(defun org-insert-link ()
   "Insert org link where default description is set to html title."
   (interactive)
   (let* ((url (read-string "URL: "))
@@ -1396,8 +1390,6 @@ Insert link with HTML title as default description. When using `org-insert-link'
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
 #+END_SRC
-
-;;youarehere
 
 *** org insert subtask
 
