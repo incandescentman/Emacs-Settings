@@ -334,6 +334,13 @@ This function should only modify configuration layer settings."
                                     winner-mode-enable
                                     xterm-mouse
                                     xterm-mouse-mode
+
+                                    magit
+                                    persp-mode
+                                    popup
+                                    polymide
+                                    markdown-mode
+
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -951,11 +958,9 @@ This function is called at the very end of Spacemacs initialization."
  '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
  '(package-selected-packages
    '(
-
      emacsql-sqlite
      s
      mw-thesaurus
-     ox-epub
      org-bookmark-heading
 		 ;; org-download
      ;; org-drill
