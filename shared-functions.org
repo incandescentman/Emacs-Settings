@@ -1423,11 +1423,11 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 
 ** org capture
 Make org-capture open in full window! :-)
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
-#+END_SRC
+#+END_EXAMPLE
 
 ** org-levels
 #+BEGIN_SRC emacs-lisp
@@ -1496,7 +1496,7 @@ Make org-capture open in full window! :-)
 (global-auto-revert-mode -1)
 #+END_SRC
 
-*** globally enable palimpsest-mode
+** globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
 #+END_SRC
@@ -1784,22 +1784,21 @@ Defines ~ibuffer-do-replace-string~:
 :config
 (setq ido-ignore-directories  '("\\`CVS/" "\\`\\.\\./" "\\`\\./" ".git"))
 (setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "tex" "html" ".mm" "Icon*" ".git"))
-)
 
 (ido-mode t)
 
 (setq ido-enable-prefix nil
-      ido-enable-flex-matching t
-      ido-create-new-buffer 'always
-      ido-use-filename-at-point 'guess
-      ido-use-virtual-buffers t
-      ido-handle-duplicate-virtual-buffers 2
-      ido-decorations (quote ("{" "}" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not so readable bro]" " [Too big yo]" " [Make it so.]"))
-      ido-enable-last-directory-history t
+   ido-enable-flex-matching t
+   ido-create-new-buffer 'always
+   ido-use-filename-at-point 'guess
+   ido-use-virtual-buffers t
+   ido-handle-duplicate-virtual-buffers 2
+   ido-decorations (quote ("{" "}" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not so readable bro]" " [Too big yo]" " [Make it so.]"))
+   ido-enable-last-directory-history t
 ido-enter-matching-directory nil
-      ido-use-faces t
-      ido-use-url-at-point t
-      ido-max-prospects 10)
+   ido-use-faces t
+   ido-use-url-at-point t
+   ido-max-prospects 10)
 ;; (ido-everywhere t)
 
 (setq confirm-nonexistent-file-or-buffer nil)
@@ -1809,115 +1808,110 @@ ido-enter-matching-directory nil
 (setq ido-show-dot-for-dired nil) ;; put . as the first item
 (setq ido-use-filename-at-point t) ;; prefer file names near point
 (setq ido-use-filename-at-point 'guess)
-(setq ido-file-extensions-order '(".org" ".txt" ".md"  ".emacs" ".el"))
+(setq ido-file-extensions-order '(".org" ".txt" ".md" ".emacs" ".el"))
 
-#+END_SRC
-
-
-** Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
-#+BEGIN_SRC emacs-lisp
+; Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
-#+END_SRC
 
-Use the current window when visiting files and buffers with IDO:
-#+BEGIN_SRC emacs-lisp
+
+; Use the current window when visiting files and buffers with IDO:
 (setq ido-default-file-method 'selected-window)
 (setq ido-default-buffer-method 'selected-window)
-#+END_SRC
 
-Sort ido filelist by mtime instead of alphabetically. Why would anyone want an alphabetically sorted list? You can save keystrokes if the most recently modified files are at the front:
 
-#+BEGIN_SRC emacs-lisp
+; Sort ido filelist by mtime instead of alphabetically. Why would anyone want an alphabetically sorted list? You can save keystrokes if the most recently modified files are at the front:
 (add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
 (add-hook 'ido-make-dir-list-hook 'ido-sort-mtime)
 (defun ido-sort-mtime ()
-  (setq ido-temp-list
-        (sort ido-temp-list
-              (lambda (a b)
-                (time-less-p
-                 (sixth (file-attributes (concat ido-current-directory b)))
-                 (sixth (file-attributes (concat ido-current-directory a)))))))
-  (ido-to-end  ;; move . files to end (again)
-   (delq nil (mapc
-              (lambda (x) (and (char-equal (string-to-char x) ?.) x))
-              ido-temp-list))))
-#+END_SRC
+ (setq ido-temp-list
+    (sort ido-temp-list
+       (lambda (a b)
+        (time-less-p
+         (sixth (file-attributes (concat ido-current-directory b)))
+         (sixth (file-attributes (concat ido-current-directory a)))))))
+ (ido-to-end ;; move . files to end (again)
+  (delq nil (mapc
+       (lambda (x) (and (char-equal (string-to-char x) ?.) x))
+       ido-temp-list))))
 
-Add superior flex matching to ~ido-mode~:
-#+BEGIN_SRC emacs-lisp
-;; (use-package flx-ido)
-;; (ido-mode 1)
-;; (ido-everywhere 1)
+; Add superior flex matching to ~ido-mode~:
 (flx-ido-mode 1)
-#+END_SRC
 
-Disable IDO faces to see flx highlights:
-#+BEGIN_SRC emacs-lisp
+; disable IDO faces to see flx highlights:
 (setq ido-use-faces nil)
 
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 (defun ido-bookmark-jump (bname)
-  "*Switch to bookmark interactively using `ido'."
-  (interactive (list (ido-completing-read "Bookmark: " (bookmark-all-names) nil t)))
-  (bookmark-jump bname))
-#+END_SRC
+ "*Switch to bookmark interactively using `ido'."
+ (interactive (list (ido-completing-read "Bookmark: " (bookmark-all-names) nil t)))
+ (bookmark-jump bname))
 
-#+BEGIN_SRC emacs-lisp
 (setq
  ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics")))
+
+(defun ido-goto-symbol (&optional symbol-list)
+ "Refresh imenu and jump to a place in the buffer using Ido."
+ (interactive)
+ (unless (featurep 'imenu)
+  (require 'imenu nil t))
+ (cond
+  ((not symbol-list)
+  (let ((ido-mode ido-mode)
+     (ido-enable-flex-matching
+      (if (boundp 'ido-enable-flex-matching)
+        ido-enable-flex-matching t))
+     name-and-pos symbol-names position)
+   (unless ido-mode
+    (ido-mode 1)
+    (setq ido-enable-flex-matching t))
+   (while (progn
+        (imenu--cleanup)
+        (setq imenu--index-alist nil)
+        (ido-goto-symbol (imenu--make-index-alist))
+        (setq selected-symbol
+           (ido-completing-read "Symbol? " symbol-names))
+        (string= (car imenu--rescan-item) selected-symbol)))
+   (unless (and (boundp 'mark-active) mark-active)
+    (push-mark nil t nil))
+   (setq position (cdr (assoc selected-symbol name-and-pos)))
+   (cond
+    ((overlayp position)
+    (goto-char (overlay-start position)))
+    (t
+    (goto-char position)))))
+  ((listp symbol-list)
+  (dolist (symbol symbol-list)
+   (let (name position)
+    (cond
+     ((and (listp symbol) (imenu--subalist-p symbol))
+     (ido-goto-symbol symbol))
+     ((listp symbol)
+     (setq name (car symbol))
+     (setq position (cdr symbol)))
+     ((stringp symbol)
+     (setq name symbol)
+     (setq position
+        (get-text-property 1 'org-imenu-marker symbol))))
+    (unless (or (null position) (null name)
+          (string= (car imenu--rescan-item) name))
+     (add-to-list 'symbol-names name)
+     (add-to-list 'name-and-pos (cons name position))))))))
+
+
+)
+
+
+#+END_SRC
+
+
+
+#+BEGIN_SRC emacs-lisp
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun ido-goto-symbol (&optional symbol-list)
-  "Refresh imenu and jump to a place in the buffer using Ido."
-  (interactive)
-  (unless (featurep 'imenu)
-    (require 'imenu nil t))
-  (cond
-   ((not symbol-list)
-    (let ((ido-mode ido-mode)
-          (ido-enable-flex-matching
-           (if (boundp 'ido-enable-flex-matching)
-               ido-enable-flex-matching t))
-          name-and-pos symbol-names position)
-      (unless ido-mode
-        (ido-mode 1)
-        (setq ido-enable-flex-matching t))
-      (while (progn
-               (imenu--cleanup)
-               (setq imenu--index-alist nil)
-               (ido-goto-symbol (imenu--make-index-alist))
-               (setq selected-symbol
-                     (ido-completing-read "Symbol? " symbol-names))
-               (string= (car imenu--rescan-item) selected-symbol)))
-      (unless (and (boundp 'mark-active) mark-active)
-        (push-mark nil t nil))
-      (setq position (cdr (assoc selected-symbol name-and-pos)))
-      (cond
-       ((overlayp position)
-        (goto-char (overlay-start position)))
-       (t
-        (goto-char position)))))
-   ((listp symbol-list)
-    (dolist (symbol symbol-list)
-      (let (name position)
-        (cond
-         ((and (listp symbol) (imenu--subalist-p symbol))
-          (ido-goto-symbol symbol))
-         ((listp symbol)
-          (setq name (car symbol))
-          (setq position (cdr symbol)))
-         ((stringp symbol)
-          (setq name symbol)
-          (setq position
-                (get-text-property 1 'org-imenu-marker symbol))))
-        (unless (or (null position) (null name)
-                    (string= (car imenu--rescan-item) name))
-          (add-to-list 'symbol-names name)
-          (add-to-list 'name-and-pos (cons name position))))))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 #+END_SRC
 
 * Things that I don't know what they're for
