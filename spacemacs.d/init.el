@@ -890,7 +890,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-twbs-head-include-scripts nil)
  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
-   '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg persp-mode plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+   '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(paradox-github-token t)
  '(safe-local-variable-values
    '((buffer-file-coding-system . utf-8-unix)
@@ -957,26 +957,26 @@ This function is called at the very end of Spacemacs initialization."
                    org-mac-link
                    ;; org-mime
                    org-pomodoro
-                   org-roam
+                   ;; org-roam
 ;;                   org-roam-ui
                    org-sticky-header
                    ox-clip
                    ;; ox-epub
-                   ox-gfm
+                   ;; ox-gfm
                    org-modern
                    ;; org-noter
                    ;; org-noter-pdftools
                    ;; org-pdftools
                    ;; org-sidebar
-                   ox-twbs
+                   ;; ox-twbs
                    ox-tufte
                    palimpsest
                    paredit
-                   peg
-                   persp-mode
-                   plain-org-wiki
+                   ;; peg
+                   ;; persp-mode
+                   ;; plain-org-wiki
                    point-stack
-                   polymode
+                   ;; polymode
                    popup
                    project-explorer
 				           quelpa-use-package
@@ -989,7 +989,7 @@ This function is called at the very end of Spacemacs initialization."
     ;;               scratch-message
       ;;             stripe-buffer
                    sudo-edit
-                   tabbar
+                   ;; tabbar
         ;;           tiny
                    titlecase
                    ;; tldr
@@ -997,7 +997,7 @@ This function is called at the very end of Spacemacs initialization."
                    unfill
                    visible-mark
                    wc-mode
-                   web-mode
+                   ;; web-mode
                    wrap-region
                    ;; writeroom-mode
                    xah-replace-pairs
