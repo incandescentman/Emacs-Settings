@@ -8,7 +8,6 @@
 
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/gcmh.el")
 (gcmh-mode 1)
-;; (setq gc-cons-threshold (* 50 1000 1000))
 (setq message-log-max t)
 ;; (use-package benchmark-init
 ;;   :ensure t
@@ -285,9 +284,6 @@
 ;; (setq find-file-visit-truename t)
 ;; this seems to break in Emacs 28, so I commented it
 
-
-;; Make gc pauses faster by decreasing the threshold.
-;; (setq gc-cons-threshold (* 2 1000 1000))
 
 
 (define-key org-ai-mode-map (kbd "C-c r") 'eval-region)
