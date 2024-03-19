@@ -953,12 +953,12 @@ This function is called at the very end of Spacemacs initialization."
    '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam                             org-bookmark-heading
 				           ;; org-download
                    ;; org-drill
-          ;;         org-fstree
+                   ;;         org-fstree
                    org-mac-link
                    ;; org-mime
                    org-pomodoro
                    ;; org-roam
-;;                   org-roam-ui
+                   ;;                   org-roam-ui
                    org-sticky-header
                    ox-clip
                    ;; ox-epub
@@ -978,19 +978,19 @@ This function is called at the very end of Spacemacs initialization."
                    point-stack
                    ;; polymode
                    popup
-                   project-explorer
+                   ;; project-explorer
 				           quelpa-use-package
                    rainbow-mode
                    re-builder
                    recentf
                    regex-tool
                    rspec-mode
-  ;;                 scratch
-    ;;               scratch-message
-      ;;             stripe-buffer
+                   ;;                 scratch
+                   ;;               scratch-message
+                   ;;             stripe-buffer
                    sudo-edit
                    ;; tabbar
-        ;;           tiny
+                   ;;           tiny
                    titlecase
                    ;; tldr
                    ;; transcribe
