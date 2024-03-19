@@ -110,13 +110,13 @@ This function should only modify configuration layer settings."
      ;; markdown
      ;; mu4e
      emacs-lisp
-     eww
+     ;;     eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
-      org-enable-hugo-support t
+      ; org-enable-hugo-support t
       )
      osx
      ;; pdf
