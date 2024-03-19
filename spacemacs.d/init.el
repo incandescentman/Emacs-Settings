@@ -231,7 +231,7 @@ This function should only modify configuration layer settings."
                                       ;; stripe-buffer
                                       sudo-edit
                                       sync-recentf
-                                      tabbar
+                                      ; tabbar
                                       ;; tiny
                                       titlecase
                                       ts
@@ -239,7 +239,7 @@ This function should only modify configuration layer settings."
                                       visible-mark
                                       wc-goal-mode
                                       wc-mode
-                                      web-mode
+                                      ;; web-mode
                                       wrap-region
                                       xah-replace-pairs
 
