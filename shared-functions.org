@@ -37,6 +37,11 @@
 [[https://www.reddit.com/r/emacs/comments/cduuxb/opinions_on_railwaycats_emacsmacport/][Opinions on Railwaycat's Emacs-MacPort? : emacs]]
 
 * packages
+
+** lexical binding
+#+begin_SRC emacs-lisp
+(setq lexical-binding t)
+#+end_SRC
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp

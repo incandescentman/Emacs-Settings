@@ -113,6 +113,7 @@ This function should only modify configuration layer settings."
      ;;     eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
+      :defer
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
