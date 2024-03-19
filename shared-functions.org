@@ -1767,7 +1767,7 @@ Defines ~ibuffer-do-replace-string~:
 
 * ido
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'ido-setup-hook
 	  (lambda ()
 	    ;; Go straight home
@@ -1901,7 +1901,7 @@ ido-enter-matching-directory nil
 )
 
 
-#+END_SRC
+#+END_EXAMPLE
 
 
 
