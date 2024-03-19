@@ -211,7 +211,7 @@ This function should only modify configuration layer settings."
                                       palimpsest
                                       paredit
                                       peg
-                                      persp-mode
+                                      ;; persp-mode
                                       point-stack
                                       popup
                                       ;; project-explorer
@@ -224,8 +224,8 @@ This function should only modify configuration layer settings."
                                       rg
                                       ripgrep
                                       rspec-mode
-                                      scratch
-                                      scratch-message
+                                      ;; scratch
+                                      ;; scratch-message
                                       sdcv
                                       ;; simple-httpd
                                       ;; stripe-buffer
