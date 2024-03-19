@@ -1904,16 +1904,6 @@ ido-enter-matching-directory nil
 #+END_EXAMPLE
 
 
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 * Things that I don't know what they're for
 
 ** I forgot what this is but it looks important
@@ -1943,12 +1933,12 @@ ido-enter-matching-directory nil
 #+END_EXAMPLE
 
 Jump to a definition in the current file. (This is awesome.)
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (global-set-key (kbd "C-x C-i") 'ido-imenu)
 (defun try-to-add-imenu ()
   (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
 (add-hook 'font-lock-mode-hook 'try-to-add-imenu)
-#+END_SRC
+#+END_EXAMPLE
 
 ** Helm
 Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders.
