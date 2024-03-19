@@ -836,6 +836,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (setq gc-cons-threshold 100000000) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
+(setq read-process-output-max (* 1024 1024))
+; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
+
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
   )
 
