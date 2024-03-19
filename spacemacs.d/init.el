@@ -890,7 +890,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-twbs-head-include-scripts nil)
  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
-   '(markdown-mode magit-section emacsql-sqlite s mw-thesaurus ox-epub org-brain packed org-roam org-bookmark-heading org-fstree org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip ox-gfm org-modern ox-tufte palimpsest paredit peg plain-org-wiki point-stack polymode popup project-explorer quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode scratch scratch-message stripe-buffer sudo-edit tabbar tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+   '(emacsql-sqlite s mw-thesaurus packed org-roam org-bookmark-heading org-mac-link org-pomodoro org-roam org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode stripe-buffer sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(paradox-github-token t)
  '(safe-local-variable-values
    '((buffer-file-coding-system . utf-8-unix)
