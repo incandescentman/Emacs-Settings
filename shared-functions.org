@@ -894,7 +894,7 @@ read-file-name-completion-ignore-case t)
 #+BEGIN_SRC emacs-lisp
 
   (setq org-latex-image-default-width "370pt");; new value just for book export
-;; (setq org-latex-image-default-width "180pt") good value, works for QIAGEN for example
+;; (setq org-latex-image-default-width "180pt") good value, works for QIAGEN for exampl
 (setq   org-export-allow-bind-keywords t)
 #+END_SRC
 
@@ -4502,10 +4502,14 @@ execute speed commands."
 
 ** org insert easy template source blocks
 #+BEGIN_SRC emacs-lisp
-(use-package org-tempo
-  :defer)
 
-;; (add-to-list 'org-structure-template-alist '("sr" . "src"))
+(use-package org-tempo
+; do not defer!
+  )
+
+                                        ; do not defer, is needed for these structure templates
+
+(add-to-list 'org-structure-template-alist '("sr" . "src"))
 
 (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
 
@@ -4513,7 +4517,7 @@ execute speed commands."
 
 (add-to-list 'org-structure-template-alist '("le" . "example"))
 
-;; (add-to-list 'org-structure-template-alist '("l" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 
 ;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
 
@@ -9745,6 +9749,24 @@ Philosophy:
  (interactive "P")
  (split-window-right size)
  (other-window 1))
+
+#+end_src
+
+
+* export and prepend cover page
+#+begin_src emacs-lisp
+(defun export-to-pdf-and-prepend-cover-page ()
+ "Export the current Org document to PDF and prepend a cover page."
+ (interactive)
+ (let ((output-pdf (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))
+  (cover-page "/Users/jay/Downloads/cover-page.pdf")
+  (final-pdf (concat (file-name-sans-extension (buffer-file-name)) "-with-cover.pdf")))
+ (org-latex-export-to-pdf)
+ (shell-command (format "pdftk %s %s cat output %s"
+       (shell-quote-argument cover-page)
+       (shell-quote-argument output-pdf)
+       (shell-quote-argument final-pdf)))
+ (message "PDF exported and combined with cover page: %s" final-pdf)))
 #+end_src
 
 
