@@ -207,7 +207,7 @@ This function should only modify configuration layer settings."
                                       org-superstar
                                       ox-clip
                                       ;; ox-gfm
-                                      ox-timeline
+                                                                            ox-timeline
                                       ;; ox-tufte
                                       palimpsest
                                       paredit
