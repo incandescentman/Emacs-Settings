@@ -9756,17 +9756,17 @@ Philosophy:
 * export to PDF and prepend cover page
 #+begin_src emacs-lisp
 (defun export-to-pdf-and-prepend-cover-page ()
- "Export the current Org document to PDF and prepend a cover page."
+ "Export the current Org document to PDF and prepend a cover page located in the same directory."
  (interactive)
- (let ((output-pdf (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))
-  (cover-page "/Users/jay/Downloads/cover-page.pdf")
-  (final-pdf (concat (file-name-sans-extension (buffer-file-name)) "__with-cover-page.pdf")))
- (org-latex-export-to-pdf)
- (shell-command (format "pdftk %s %s cat output %s"
-       (shell-quote-argument cover-page)
-       (shell-quote-argument output-pdf)
-       (shell-quote-argument final-pdf)))
- (message "PDF exported and combined with cover page: %s" final-pdf)))
+ (let* ((output-pdf (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))
+     (cover-page (concat (file-name-directory (buffer-file-name)) "cover-page.pdf"))
+     (final-pdf (concat (file-name-sans-extension (buffer-file-name)) "__with-cover.pdf")))
+  (org-latex-export-to-pdf)
+  (shell-command (format "pdftk %s %s cat output %s"
+              (shell-quote-argument cover-page)
+              (shell-quote-argument output-pdf)
+              (shell-quote-argument final-pdf)))
+  (message "PDF exported and combined with cover page: %s" final-pdf)))
 #+end_src
 
 
