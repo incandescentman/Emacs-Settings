@@ -17,7 +17,7 @@
 
 \\linespread{1.2}
 
-
+\\usepackage[all]{nowidow}
 \\usepackage{float}
 %\\usepackage{changepage}
 
@@ -50,7 +50,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 ]
 
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
-\\setmonofont{Myriad Pro}
+\\setmonofont{Myriad Pro} % for nice quotes
+% \\setmonofont{Adobe Garamond Pro} % for beautiful LaTeX Formulae
+
 
 %\\usepackage[mathletters]{ucs}
 %\\usepackage[utf8x]{inputenc}
@@ -253,7 +255,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
     colupper=moonrockgrey,  % Text color
     boxrule=0.5pt,  % Border thickness
     rounded corners,  % Rounded corners
-    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing
+fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing % for nice quotes
+% fontupper=\\singlespacing\\fontsize{7}{10}\\selectfont\\ttfamily,  % Single-spacing % for nice quotes % for beautiful LaTeX Formulae
     width=0.8\\textwidth,  % Width
     halign=flush left  % Left alignment inside the box
   ]
