@@ -98,7 +98,7 @@
 (load "/Users/jay/emacs/archive/email.el")
 ;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
 (load "/Users/jay/emacs/prelude/core/prelude-core.el")
-;;  (load "/Users/jay/emacs/emacs-settings/skeletons.el")
+(load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
 ;; (load "/Users/jay/gnulisp/book-functions.el")
 (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")

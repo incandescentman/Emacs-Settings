@@ -3797,7 +3797,8 @@ Handy way of getting back to previous places.
 
 #+BEGIN_SRC emacs-lisp
 (use-package xah-replace-pairs
-  :defer)
+:defer
+)
 (defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -7668,7 +7669,7 @@ This is my goto way for navigating. It feels like it is reading your mind.
 
 #+begin_src emacs-lisp
 (use-package fasd
-:defer
+
 :custom
  (fasd-enable-initial-prompt nil)
  :config
@@ -7818,7 +7819,7 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 * edge
 #+begin_src emacs-lisp
 (use-package org-mac-link
-  :defer)
+)
 
 (defun org-mac-paste-applescript-links (as-link-list)
  "Paste in a list of links from an applescript handler.
