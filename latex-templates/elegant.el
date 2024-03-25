@@ -133,7 +133,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\lhead{\\bfseries\\@title}}} % title of the document as left header
 
-% \\renewcommand{\\footrulewidth}{0.4pt}
+\\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
   % Graphic
   \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
@@ -142,14 +142,18 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   % Space between the graphic and the text (adjust as needed)
   \\hspace{0in}%
   % Text
-  \\raisebox{0.25in}{% Adjust this value to align the text with the image
+  \\raisebox{0.35in}{% Adjust this value to align the text with the image
 
-    \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC
+ %   \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC footer
+
+\\fontsize{16}{16}\\sffamily\\color{darklibertyblue}All materials Copyright Jay Dixit / STORYTELLING.NYC % small storytelling.NYC footer
+
+
   }%
 }
 
 % overwrite the logo footer
-\\cfoot{\\thepage} % Add page numbers
+% \\cfoot{\\thepage} % Add page numbers
 
 
 %%%%%%%%%%%%%%%%
