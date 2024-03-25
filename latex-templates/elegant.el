@@ -11,7 +11,7 @@
 \\geometry{
   margin=1.5in, % Set all margins to 1.5 inches
   bottom=1.25in, % Bottom margin set to 1.25 inches
-  footskip=1in % Distance from the bottom of the text area to the baseline of the footer
+  footskip=1.25in % Distance from the bottom of the text area to the baseline of the footer
 }
 
 
@@ -137,7 +137,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\fancyfoot[C]{%
   % Graphic
   \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
-\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing
+
+%\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png} % logo of just lady liberty
   }%
   % Space between the graphic and the text (adjust as needed)
   \\hspace{0in}%
@@ -146,7 +148,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
  %   \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC footer
 
-\\fontsize{16}{16}\\sffamily\\color{darklibertyblue}All materials Copyright Jay Dixit / STORYTELLING.NYC % small storytelling.NYC footer
+\\fontsize{16}{16}\\sffamily\\color{darklibertyblue}All materials Copyright Jay Dixit % small storytelling.NYC footer
 
 
   }%
