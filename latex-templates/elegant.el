@@ -10,7 +10,7 @@
 
 \\geometry{
   margin=1.5in, % Set all margins to 1.5 inches
-  bottom=1.25in, % Bottom margin set to 1.25 inches
+  bottom=1.5in, % Bottom margin set to 1.25 inches
   footskip=1.25in % Distance from the bottom of the text area to the baseline of the footer
 }
 
@@ -133,7 +133,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\lhead{\\bfseries\\@title}}} % title of the document as left header
 
-\\renewcommand{\\footrulewidth}{0.4pt}
+%\\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
   % Graphic
   \\raisebox{0.06in}{% Align the bottom of the image with the baseline of the surrounding text
