@@ -136,19 +136,24 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
   % Graphic
-  \\raisebox{0.2in}{% Align the bottom of the image with the baseline of the surrounding text
-\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing
+  \\raisebox{0.06in}{% Align the bottom of the image with the baseline of the surrounding text
+% \\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing
+
+% \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png} % The whole thing with a period
+
+\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
 
 %\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png} % logo of just lady liberty
   }%
   % Space between the graphic and the text (adjust as needed)
-  \\hspace{0in}%
+  \\hspace{0.05in}%
   % Text
   \\raisebox{0.35in}{% Adjust this value to align the text with the image
 
  %   \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC footer
 
-\\fontsize{16}{16}\\sffamily\\color{darklibertyblue}All materials Copyright Jay Dixit % small storytelling.NYC footer
+% \\fontsize{16}{16}\\sffamily\\color{black}All materials Copyright Jay Dixit. % copyright
+
 
 
   }%
