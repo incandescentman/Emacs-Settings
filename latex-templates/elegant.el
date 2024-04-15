@@ -160,7 +160,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 }
 
 % overwrite the logo footer
-% \\cfoot{\\thepage} % Add page numbers
+\\cfoot{\\thepage} % Add page numbers
 
 
 %%%%%%%%%%%%%%%%

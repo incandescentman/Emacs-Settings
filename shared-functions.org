@@ -1377,12 +1377,12 @@ Insert link with HTML title as default description. When using `org-insert-link'
 #+BEGIN_SRC emacs-lisp
 ;; (use-package mm-url) ; to include mm-url-decode-entities-string
 
-(defun org-insert-link ()
-  "Insert org link where default description is set to html title."
-  (interactive)
-  (let* ((url (read-string "URL: "))
-         (title (get-html-title-from-url url)))
-    (org-insert-link nil url title)))
+;; (defun org-insert-link ()
+;;   "Insert org link where default description is set to html title."
+;;   (interactive)
+;;   (let* ((url (read-string "URL: "))
+;;          (title (get-html-title-from-url url)))
+;;     (org-insert-link nil url title)))
 
 (defun get-html-title-from-url (url)
   "Return content in <title> tag."
@@ -2177,7 +2177,7 @@ dired-omit-extensions
 
 #+begin_src emacs-lisp
 (use-package wc-mode
-  :defer
+
 :config
 (add-hook 'org-mode-hook 'wc-mode)
 
@@ -3985,8 +3985,8 @@ Single Capitals as you type."
   (find-file full-path)
   ;; Insert the snippet structure
   (insert "# -*- mode: snippet -*-\n")
-  (insert "# filename: " snippet-name "\n")
-  (insert "# shortcut key: " snippet-key "\n")
+  (insert "# name: " snippet-name "\n")
+  (insert "# key: " snippet-key "\n")
   (insert "# --\n")
   (insert "$0\n"))
 
@@ -4947,7 +4947,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2023/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2024/bin/universal-darwin")
   )
 #+END_SRC
 
@@ -8681,6 +8681,10 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 * smartparens
 #+begin_src emacs-lisp
+(require 'smartparens)
+(smartparens-mode 1)
+(smartparens-global-mode 1)
+
 (setq sp-escape-quotes-after-insert nil)
 #+end_src
 
@@ -9780,7 +9784,17 @@ Philosophy:
 #+end_src
 
 
+* org-mode security vulnerability
+[[https://list.orgmode.org/87o7b3eczr.fsf@bzg.fr/T/#t][[ANN] Emergency bugfix release: Org mode 9.6.23]]
+
+Only required if Emacs < 29.3.
+
+#+begin_src emacs-lisp
+(setq org-preview-latex-default-process 'verbatim)
+#+end_src
+
 
 ;; -*- lexical-binding: t -*-
+
 
 

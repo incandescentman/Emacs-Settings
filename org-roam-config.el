@@ -144,13 +144,6 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :library:")
 	         :unnarrowed t)
 
-	        ("l" "definition" plain "- Links :: \n- Source :: \n
-* ${title}
-%?"
-	         :target (file+head "definitions/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :definition:")
-           :unnarrowed t)
-
 
           ("L" "Learning, lectures, and classes" plain "- Links :: \n- Source :: \n
 * ${title}
@@ -175,6 +168,17 @@
 	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
 	         :unnarrowed t)
+
+
+
+("o" "OpenAI, i.e. work" plain "- Links :: \n- Source :: \n
+
+* ${title}
+%?"
+	         :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :work:")
+	         :unnarrowed t)
+
 
 
           ("O" "Outline / Structure / Schelling Points" plain "- Links :: \n- Source :: \n
@@ -234,14 +238,6 @@
 	         :unnarrowed t)
 
 
-	        ("T" "temporary" plain "- Links :: \n- Source :: \n
-* ${title}
-%?"
-	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
-	         :unnarrowed t)
-
-
           ("t" "therapy" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
@@ -249,12 +245,31 @@
 			                        "#+TITLE: ${title}\n#+FILETAGS: :therapy:")
 	         :unnarrowed t)
 
+                    ("T" "Travel" plain "%?"
+	         :target (file+head "travel/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :travel:\n\
+- Links :: \n- Source :: \n\n
+* ${title}
+")
+	         :unnarrowed t)
+
+
           ("v" "Venture out of comfort zone / mantras" plain "- Links :: \n- Source :: \n
 * ${title}
 %?"
 	         :target (file+head "mantras/%<%Y%m%d%H%M%S>-${slug}.org"
 			                        "#+TITLE: ${title}\n#+FILETAGS: :mantras:")
 	         :unnarrowed t)
+
+
+	        ("W" "temporary" plain "- Links :: \n- Source :: \n
+* ${title}
+%?"
+	         :target (file+head "temp/%<%Y%m%d%H%M%S>-${slug}.org"
+			                        "#+TITLE: ${title}\n#+FILETAGS: :temp:")
+	         :unnarrowed t)
+
+
 
 
           ("w" "lectures and public talks" plain "- Links :: \n- Source :: \n
@@ -265,13 +280,6 @@
            :unnarrowed t)
 
 
-                    ("W" "Wanderlust and travel" plain "%?"
-	         :target (file+head "travel/%<%Y%m%d%H%M%S>-${slug}.org"
-			                        "#+TITLE: ${title}\n#+FILETAGS: :travel:\n\
-- Links :: \n- Source :: \n\n
-* ${title}
-")
-	         :unnarrowed t)
 
 
 	        ("X" "exemplars" plain "- Links :: \n- Source :: \n
