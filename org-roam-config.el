@@ -22,7 +22,7 @@
   :config
   ;;  (org-roam-setup)
   (org-roam-db-autosync-mode)
-
+  (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
   (setq org-roam-capture-templates
 	      '(
 
