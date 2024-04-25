@@ -44,9 +44,14 @@
 (setq frame-inhibit-implied-resize t)
 ;; (setq initial-major-mode 'fundamental-mode)
 
-(use-package auto-capitalize
+(let ((directory "~/emacs/emacs-settings/elpa-supplement/"))
+  (dolist (file (directory-files directory t "\\.el$"))
+    (load file)))
 
-  )
+
+;; (use-package auto-capitalize
+
+;;   )
 
 
 ;; (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
