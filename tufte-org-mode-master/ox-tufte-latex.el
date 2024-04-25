@@ -185,7 +185,7 @@ used as a communication channel."
                                                      image-code
                                                      nil t))))
     ;; Return proper string, depending on FLOAT.
-    (case float
+    (cl-case float
       (wrap (format "\\begin{wrapfigure}%s
 %s\\centering
 %s%s
@@ -283,7 +283,7 @@ INFO is a plist holding contextual information.  See
        (let ((destination (if (string= type "fuzzy")
                               (org-export-resolve-fuzzy-link link info)
                               (org-export-resolve-id-link link info))))
-         (case (org-element-type destination)
+         (cl-case (org-element-type destination)
            ;; Id link points to an external file.
            (plain-text
             (if desc (format "\\href{%s}{%s}" destination desc)
