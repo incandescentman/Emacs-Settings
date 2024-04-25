@@ -174,7 +174,7 @@ This function should only modify configuration layer settings."
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      frame-cmds
+                                      ;; frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
@@ -197,7 +197,7 @@ This function should only modify configuration layer settings."
                                       org-bookmark-heading
                                       ;; org-contrib
                                       ;; org-drill
-                                      org-fstree
+                                      ;; org-fstree
                                       org-mac-link
                                       org-modern
                                       org-pomodoro

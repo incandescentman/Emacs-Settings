@@ -597,11 +597,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; (define-key key-minor-mode-map (kbd "=") 'insert-equals-sign)
 
-(define-key key-minor-mode-map (kbd "s-k w s") 'isearch-forward-word)
 
-(define-key key-minor-mode-map (kbd "s-f") 'isearch-forward-ignore-case)
-
-;; (define-key key-minor-mode-map (kbd "s-f") 'avy-goto-char-timer)
 
 (define-key key-minor-mode-map (kbd "C-M-/") 'hippie-expand)
 
@@ -756,6 +752,15 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-]") 'org-next-subtree-same-level-and-narrow)
 
 (define-key key-minor-mode-map (kbd "ESC ESC") 'org-previous-subtree-same-level-and-narrow)
+
+
+(define-key key-minor-mode-map (kbd "s-k w s") 'isearch-forward-word)
+
+(define-key key-minor-mode-map (kbd "C-s") 'isearch-forward-ignore-case)
+
+(define-key key-minor-mode-map (kbd "s-f") 'consult-line)
+
+; Experiment: swap the above two
 
 
 (define-key key-minor-mode-map (kbd "s-F") 'pasteboard-search-for-clipboard-contents)
