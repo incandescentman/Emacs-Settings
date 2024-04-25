@@ -160,7 +160,7 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       affe
-                                      auto-capitalize
+                                      ;; auto-capitalize
                                       beacon
                                       buffer-stack
                                       caps-lock
@@ -865,7 +865,7 @@ before packages are loaded."
 ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
 
 (load "/Users/jay/emacs/emacs-settings/elpa-supplement/auto-capitalize.el")
-  (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
+(load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
 (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
 (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
 
