@@ -307,7 +307,7 @@ This is THE switching command; all other motions are based on this."
             (beep))
       ;; find the new index
       (if (> direction 0)
-          (incf buffer-stack-index)
+          (cl-incf buffer-stack-index)
         (if (< direction 0)
             (decf buffer-stack-index)))
       (if (< buffer-stack-index 0)
