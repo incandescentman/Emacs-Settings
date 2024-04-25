@@ -2,6 +2,23 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+
+(setq ispell-program-name "/opt/homebrew/bin/aspell")
+(setq ispell-program-name "/usr/local/bin/hunspell")
+
+
+;; Set the path to aspell
+(setq ispell-program-name "/opt/homebrew/bin/aspell")
+
+;; Enable spell checking by default
+(setq-default spell-checking-enable-by-default t)
+
+;; Enable auto dictionary
+(setq-default spell-checking-enable-auto-dictionary t)
+
+;; Set the default dictionary
+(setq ispell-dictionary "english")
+
 (defmacro org-assert-version ()
   "Assert compile time and runtime version match."
   ;; We intentionally use a more permissive `org-release' instead of
@@ -847,7 +864,12 @@ before packages are loaded."
 (setq read-process-output-max (* 1024 1024))
 ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
 
+(load "/Users/jay/emacs/emacs-settings/auto-capitalize.el")
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
+(load "/Users/jay/emacs/external-packages/buffer-stack.el")
+
+
+
   )
 
 
@@ -891,13 +913,11 @@ This function is called at the very end of Spacemacs initialization."
      ("H" . "html")
      ("A" . "ascii")
      ("i" . "index")))
- '(org-twbs-head
-   "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9\" crossorigin=\"anonymous\">\12<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm\" crossorigin=\"anonymous\"></script> ")
- '(org-twbs-head-include-default-style nil)
+'(org-twbs-head-include-default-style nil)
  '(org-twbs-head-include-scripts nil)
  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
-   '(emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+   '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(paradox-github-token t)
  '(safe-local-variable-values
    '((buffer-file-coding-system . utf-8-unix)
