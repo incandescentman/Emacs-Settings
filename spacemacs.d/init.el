@@ -177,10 +177,10 @@ This function should only modify configuration layer settings."
                                       ;; crux
                                       deadgrep
                                       define-word
-                                      dired+
-                                      dired-details+
+                                      ;; dired+
+                                      ;; dired-details+
                                       dired-quick-sort
-                                      dired-sort-menu
+                                      ;; dired-sort-menu
                                       discover-my-major
                                       emacsql
                                       ;; embark
