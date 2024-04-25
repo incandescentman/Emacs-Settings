@@ -84,6 +84,7 @@
  ;; Manual preview key for `affe-grep'
  (consult-customize affe-grep :preview-key "M->"))
 
+(use-package ffap)
 (defun find-file-at-point-or-affe-find ()
  "Open the file at point if one exists, otherwise run affe-find."
  (interactive)

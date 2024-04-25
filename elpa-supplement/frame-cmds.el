@@ -155,7 +155,7 @@
 ;;
 ;;    `font-too-small', `font-size'.
 ;;
-;;  
+;;
 ;;  ***** NOTE: The following EMACS PRIMITIVE has been ADVISED HERE:
 ;;
 ;;  `delete-window' - If only one window in frame, `delete-frame'.
@@ -335,7 +335,7 @@
 ;;              tile-frames                    to frcmds-tile-frames.
 ;;     rename-non-minibuffer-frame: Pass OLD-NAME and NEW-NAME to rename-frame.
 ;;     Group Frame-Commands: Added :prefix frcmds-.
-;;     
+;;
 ;; 2014/02/24 dadams
 ;;     rename-frame, rename-non-minibuffer-frame: Fixed default buffer name for non-interactive.
 ;; 2013/09/21 dadams
@@ -492,12 +492,12 @@
 ;;     hide-everything, iconify-everything: bind thumbify-instead-of-iconify-flag to nil.
 ;; 2004/12/10 dadams
 ;;     tile-frames: Change 15 to (frame-char-height fr) for scroll-bar-width.
-;;     tile-frames-*: Corrected doc strings for non-interactive case.
+;;     tile-frames-*: Corrected doc strings for non-interactive cl-case.
 ;; 2004/12/09 dadams
 ;;     Changed compile-time require of strings to a soft require.
 ;; 2004/10/11 dadams
 ;;     args-for-tile-frames: Fixed bug when non-existant frame in name history.
-;;     tile-frames: show-frame at end (for case where use prefix arg)
+;;     tile-frames: show-frame at end (for cl-case where use prefix arg)
 ;; 2004/09/11 dadams
 ;;     Moved to doremi-frm.el: frame-config-ring*, frame-config-wo-parameters,
 ;;                             push-frame-config.
@@ -567,7 +567,7 @@
 ;;
 ;;; Code:
 
-(eval-when-compile (require 'cl)) ;; case, incf (plus, for Emacs 20: dolist, dotimes)
+(eval-when-compile (require 'cl)) ;; cl-case, cl-incf (plus, for Emacs 20: dolist, dotimes)
 (require 'frame-fns) ;; frame-geom-value-cons, frame-geom-value-numeric, frames-on, get-frame-name,
                      ;; get-a-frame, read-frame
 (require 'strings nil t) ;; (no error if not found) read-buffer
@@ -636,7 +636,7 @@ Candidates include `jump-to-frame-config-register' and `show-buffer-menu'."
                  (function :tag "Another function"))
   :group 'Frame-Commands)
 
-;; Use `cond', not `case', for Emacs 20 byte-compiler.
+;; Use `cond', not `cl-case', for Emacs 20 byte-compiler.
 (defcustom window-mgr-title-bar-pixel-height (cond ((eq window-system 'mac) 22)
                                                    ;; For older versions of OS X, 40 might be better.
 						   ((eq window-system 'ns)  50)
@@ -675,7 +675,7 @@ and (x1, y1) is the lower right position.  Coordinates are in pixels,
 measured from the screen absolute origin, (0, 0), at the upper left.
 
 If this is nil, then the available space is calculated.  That should
-give good results in most cases."
+give good results in most cl-cases."
   :type '(list
           (integer :tag "X0 (upper left) - pixels from screen left")
           (integer :tag "Y0 (upper left) - pixels from screen top")
@@ -1157,7 +1157,7 @@ Interactively, use a prefix arg (`\\[universal-argument]') to be prompted for FR
                        (selected-frame))))
   (when frame
     (dolist (fr  (frame-list))
-      (unless (eq fr frame) (condition-case nil (delete-frame fr) (error nil))))))
+      (unless (eq fr frame) (condition-cl-case nil (delete-frame fr) (error nil))))))
 
 ;;;###autoload
 (defun maximize-frame-horizontally (&optional frame)
@@ -1239,7 +1239,7 @@ In Lisp code:
                                (frame-geom-value-numeric 'height new-height))
                (cons 'restore-height orig-height)))))
     (show-frame frame)
-    (incf fr-origin (if (eq direction 'horizontal) fr-pixel-width fr-pixel-height))))
+    (cl-incf fr-origin (if (eq direction 'horizontal) fr-pixel-width fr-pixel-height))))
 
 ;;;###autoload
 (unless (fboundp 'restore-frame-horizontally)
@@ -1305,7 +1305,7 @@ In Lisp code:
         (orig-height     (frame-parameter frame 'height))
         (horiz           (memq direction '(horizontal both)))
         (vert            (memq direction '(vertical both))))
-    (case direction
+    (cl-case direction
       (both        (unless (and restore-left  restore-width  restore-top  restore-height)
                      (maximize-frame 'both frame)))
       (vertical    (unless (and restore-top  restore-height) (maximize-frame-vertically frame)))
@@ -1375,7 +1375,7 @@ With a prefix arg, create that many new frames.
 The same character size is used for the new frames."
   (interactive "p")
   (frcmds-split-frame-1 'horizontal num))
-  
+
 ;;;###autoload
 (defun split-frame-vertically (num)
   "Vertically split the selected frame.
@@ -1444,7 +1444,7 @@ the pixel width and height of the rectangle."
         (fr-origin        (if (eq direction 'horizontal)
                               (or x-min-pix  (car (frcmds-effective-screen-pixel-bounds)))
                             (or y-min-pix  (cadr (frcmds-effective-screen-pixel-bounds))))))
-    (case direction                     ; Size of frame in pixels.
+    (cl-case direction                     ; Size of frame in pixels.
       (horizontal  (setq fr-pixel-width   (/ fr-pixel-width  (length visible-frames))))
       (vertical    (setq fr-pixel-height  (/ fr-pixel-height (length visible-frames))))
       (otherwise   (error "`frcmds-tile-frames': DIRECTION must be `horizontal' or `vertical'")))
@@ -1482,7 +1482,7 @@ the pixel width and height of the rectangle."
                           (if (eq direction 'horizontal) (or y-min-pix  0) fr-origin))
       (show-frame fr)
       ;; Move over the width or height of one frame, and add one border width.
-      (incf fr-origin (+ (or (cdr (assq 'border-width (frame-parameters fr)))  0)
+      (cl-incf fr-origin (+ (or (cdr (assq 'border-width (frame-parameters fr)))  0)
                          (if (eq direction 'horizontal) fr-pixel-width fr-pixel-height))))))
 
 (defun frcmds-extra-pixels-width (frame)
