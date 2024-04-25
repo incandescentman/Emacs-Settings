@@ -32,3 +32,6 @@ pastebin-credentials.el
 secret-codes.el
 spacemacs.d/unique_lines.txt
 *old/
+spacemacs.d/.DS_Store
+spacemacs.d/spacemacs.env
+spacemacs.d/spacemacs.env
