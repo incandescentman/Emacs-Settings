@@ -237,13 +237,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 *** hunspell - workaround
 
 #+BEGIN_SRC emacs-lisp
-;; Work around for Hunspell 1.7.0
-(defun manage-hunspell-1.7 (old-function-ispell &rest arguments)
- "Add null-device when calling \"hunspell -D\"."
- (if (equal "-D" (nth 4 arguments))
-  (funcall old-function-ispell "hunspell" null-device t nil "-D" null-device)
-  (apply old-function-ispell arguments)))
-(advice-add 'ispell-call-process :around #'manage-hunspell-1.7)
 
 (setenv "DICTIONARY" "en_US")
 (setq ispell-dictionary "en_US")

@@ -63,19 +63,19 @@
 ;; (setq highlight-tail-colors '(("black" . 0)
 ;;                               ("#bc2525" . 25)
 ;;                               ("black" . 66)))
-;; 
+;;
 ;; 2. -----
 ;;
 ;; (setq highlight-tail-steps 14
 ;;       highlight-tail-timer 1)
-;; 
+;;
 ;; 3. -----
-;; 
+;;
 ;; (setq highlight-tail-posterior-type 'const)
 ;;
 ;; These are all customizable variables.  I think you get the idea
 ;; how to customize this mode for best fit.
-;; 
+;;
 ;; ATTENTION
 ;;
 ;; You will often need to run (highlight-tail-reload) function to make
@@ -110,7 +110,7 @@
 ;;      + Overlays that had fade out are now reused later instead of
 ;;        being left to the garbage collector.  Thanks to Markus
 ;;        Triska for reporting.
-;; 
+;;
 ;; * 1.3.7 (14 Nov 2006)
 ;;      + Made `highlight-tail-reload' function interactive, so it can
 ;;        be evaluated with `execute-extended-command' (M-x).  Thanks
@@ -119,7 +119,7 @@
 ;;
 ;; * 1.3.6 (11 Nov 2006)
 ;;      + No line exceeds 80 column.
-;; 
+;;
 ;; * 1.3.5 (11 Nov 2006)
 ;;      + Do not activate if run under terminal (because it leads to
 ;;        errors).
@@ -136,13 +136,13 @@
 ;;      + Added (require 'cl).  Thanks to Arnaldo Mandel and Kevin
 ;;        Rodgers for reporting.
 ;;      + Many less warnings on compilation.  Thanks to Kevin Rodgers.
-;; 
+;;
 ;; * 1.3.2 (29 Oct 2006)
 ;;      + Fixed the way the number of steps between every two colors
 ;;        are computed.
 ;;      + Added a test on `highlight-tail-colors' to enforce its
 ;;        correctness.
-;; 
+;;
 ;; * 1.3.1 (28 Oct 2006)
 ;;      + Minor documentation corrections.
 ;;
@@ -156,14 +156,14 @@
 ;;        change background color, highlight-tail will discover it and
 ;;        fade out to this color.
 ;;      + Some corrections in the documentation and comments.
-;;      
+;;
 ;; * 1.2 (25 Aug 2006)
 ;;      + Now works with org-mode and orgtbl-mode.  Thanks to William
 ;;        Xu for reporting.
 ;;      + You can now choose a color by name in XEmacs.
 ;;      + XEmacs related bug with itimer fixed.
 ;;      + Fixed some typos and errors in the documentation.
-;; 
+;;
 ;; * 1.1.1
 ;;      + Updated information about web page (up; new address (the old
 ;;        one works though)).
@@ -283,7 +283,7 @@ Please do not change this variable.")
 This variable is a association list, which means it contains lists
 like (key . value).
 
-Key could be: 
+Key could be:
 - 'start
 - 'default
 - hex value
@@ -392,7 +392,7 @@ One tick every 3 seconds.")
 ;;; Code:
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl-lib))
 
 (if (featurep 'xemacs)
     (progn
@@ -708,7 +708,7 @@ This is called every `highlight-tail-timer' amount of time."
       (when (> (hash-table-count highlight-tail-overlays-hash) 0)
         (maphash 'highlight-tail-fade-out-step-process-overlay
                  highlight-tail-overlays-hash)))))
-      
+
 (defun highlight-tail-fade-out-step-process-overlay (key value)
   "Process every KEY in `highlight-tail-overlays-hash'."
   (let ((cur-face-number (car (last value))))
@@ -796,9 +796,9 @@ Where 'default is `highlight-tail-default-background-color'"
                                                    steps-count)
   "Create a list of smoothly changed colors.
 From COLOR-FROM to COLOR-TO             ; STEPS-COUNT length."
-  (let (color-from-red color-from-green color-from-blue  
-                       color-to-red color-to-green color-to-blue    
-                       color-temp-red color-temp-green color-temp-blue       
+  (let (color-from-red color-from-green color-from-blue
+                       color-to-red color-to-green color-to-blue
+                       color-temp-red color-temp-green color-temp-blue
                        color-step-red ; the color is smoothly changing
                                         ; we'll calculate a value
                        color-step-green ; that will be added to COLOR-FROM
@@ -844,7 +844,7 @@ From COLOR-FROM to COLOR-TO             ; STEPS-COUNT length."
      color-step-red-positive (>= color-to-red color-from-red)
      color-step-green-positive (>= color-to-green color-from-green)
      color-step-blue-positive (>= color-to-blue color-from-blue))
-    
+
     ;; if desirable - make values negative
     (if (not color-step-red-positive) (setq color-step-red
                                             (* color-step-red -1)))
@@ -977,7 +977,7 @@ Run it, when you've made changes to some highlight-tail-mode variables."
       (apply httmp-signal-error-function
              (format "Last (%s)" (car (last highlight-tail-colors)))
              (list "Value should be less than or equal to 100."))))
-  
+
   ;; if there is a color name in `highlight-tail-colors', that doesn't
   ;; exist in systemlists - call out an error
   (when (member
@@ -1007,7 +1007,7 @@ Run it, when you've made changes to some highlight-tail-mode variables."
          (background-color-hex (highlight-tail-hex-from-colorname
                                 background-color-name)))
     (setq highlight-tail-default-background-color background-color-name))
-  
+
   (setq highlight-tail-colors-with-100
         (if (= (cdr (nth (1- (length highlight-tail-colors))
                          highlight-tail-colors))
@@ -1046,7 +1046,7 @@ Run it, when you've made changes to some highlight-tail-mode variables."
   (setq highlight-tail-face-max highlight-tail-steps)
   (highlight-tail-make-faces
    (highlight-tail-get-colors-fade-table-with-key 'default))
-  
+
   (setq highlight-tail-fading-timer
         (if (featurep 'xemacs)
             (start-itimer "highlight-tail-fade-out-step"
