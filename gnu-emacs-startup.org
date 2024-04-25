@@ -1943,9 +1943,6 @@ The last line sets the path to where saveplace stores your position data. Change
 (setq *smart-punctuation-exceptions*
   (list "?!" ".." "..." "............................................." "---" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
-;; How do I add an exception for ") ; "?
-;; e.g. if I want to add a comment after a line of lisp?
-
    #+END_SRC
 
 
@@ -1997,7 +1994,6 @@ The last line sets the path to where saveplace stores your position data. Change
                     (save-excursion (my/fix-space))))))))))
     (when (and (eql major-mode 'org-mode)
                (org-at-heading-p))
-; (org-align-tags-here org-tags-column)
 ))
 #+END_SRC
 
