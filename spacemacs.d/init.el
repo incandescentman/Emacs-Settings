@@ -3,22 +3,6 @@
 ;; It must be stored in your home directory.
 
 
-(setq ispell-program-name "/opt/homebrew/bin/aspell")
-(setq ispell-program-name "/usr/local/bin/hunspell")
-
-
-;; Set the path to aspell
-(setq ispell-program-name "/opt/homebrew/bin/aspell")
-
-;; Enable spell checking by default
-(setq-default spell-checking-enable-by-default t)
-
-;; Enable auto dictionary
-(setq-default spell-checking-enable-auto-dictionary t)
-
-;; Set the default dictionary
-(setq ispell-dictionary "english")
-
 (defmacro org-assert-version ()
   "Assert compile time and runtime version match."
   ;; We intentionally use a more permissive `org-release' instead of
@@ -214,7 +198,7 @@ This function should only modify configuration layer settings."
                                       org-bookmark-heading
                                       ;; org-contrib
                                       ;; org-drill
-                                      ;; org-fstree
+                                      org-fstree
                                       org-mac-link
                                       org-modern
                                       org-pomodoro
