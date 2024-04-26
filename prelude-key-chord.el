@@ -54,8 +54,9 @@
 (key-chord-define-global "YY" 'repeat-last-command)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
 (key-chord-define-global "WW" 'consult-git-grep)
-(key-chord-define-global "CC" 'turn-on-auto-capitalize-mode)
-(key-chord-define-global "LL" 'turn-off-auto-capitalize-mode)
+;; (key-chord-define-global "CC" 'turn-on-auto-capitalize-mode)
+;; (key-chord-define-global "LL" 'turn-off-auto-capitalize-mode)
+
 ;; (key-chord-define-global "TT" 'titlecase-dwim)
 (key-chord-define-global "DD" 'bjm/ivy-dired-recent-dirs)
 ;; (key-chord-define-global "ZZ" 'repeat-complex-command)

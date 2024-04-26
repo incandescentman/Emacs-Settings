@@ -2486,7 +2486,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 ;; (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1)))
-(add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
+;; (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 
 (add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
