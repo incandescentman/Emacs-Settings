@@ -1412,7 +1412,7 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 ** org capture
 Make org-capture open in full window! :-)
 #+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
+;; (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 (add-hook 'org-capture-mode-hook 'writeroom-mode)
 #+END_EXAMPLE
@@ -2992,7 +2992,7 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (global-set-key (kbd "s-p") 'org-export-dispatch)
 (define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
 
-(global-set-key (kbd "M-1") 'auto-capitalize-mode)
+;; (global-set-key (kbd "M-1") 'auto-capitalize-mode)
 ;; (global-set-key (kbd "s-u") 'dired-single)
 
 
@@ -6249,7 +6249,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
         (variable-pitch-mode 1)
 (poetry-mode)
 (olivetti-mode 1)
-(turn-off-auto-capitalize-mode)
+;; (turn-off-auto-capitalize-mode)
 
 )
 #+END_SRC
@@ -6405,7 +6405,7 @@ Go through `org-structure-template-alist' and
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'org-mode-hook #'(lambda () (auto-fill-mode -1)))
 
-(add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
+;; (add-hook 'org-mode-hook 'turn-on-auto-capitalize-mode)
 
 
 (add-hook 'org-mode-hook 'wrap-region-mode)
