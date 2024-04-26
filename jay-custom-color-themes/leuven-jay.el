@@ -521,8 +521,7 @@ more...")
    `(info-file ((,class (:family "Sans Serif" :height 1.8 :weight bold :box (:line-width 1 :color "#0000CC") :foreground "cornflower blue" :background "LightSteelBlue1"))))
    `(info-header-node ((,class (:underline t :foreground "orange")))) ; nodes in header
    `(info-header-xref ((,class (:underline t :foreground "dodger blue")))) ; cross references in header
-   ;`(info-index-match ((,class (:weight bold :foreground black :background "#FDBD33")))) ; when using `i'
-   `(info-menu-header ((,class ,ol2))) ; menu titles (headers) -- major topics
+      `(info-menu-header ((,class ,ol2))) ; menu titles (headers) -- major topics
    `(info-menu-star ((,class (:foreground "black")))) ; every 3rd menu item
    `(info-node ((,class (:underline t :foreground "blue")))) ; node names
    `(info-quoted-name ((,class ,code-inline)))

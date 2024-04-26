@@ -35,3 +35,5 @@ spacemacs.d/unique_lines.txt
 spacemacs.d/.DS_Store
 spacemacs.d/spacemacs.env
 spacemacs.d/spacemacs.env
+spacemacs.env
+spacemacs.d/.spacemacs.env

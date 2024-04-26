@@ -1113,7 +1113,6 @@ customize the resulting theme."
      `(info-node ((,class (:foreground ,base1 :slant italic :weight bold))))
      `(info-header-node ((,class (:inherit info-node))))
      `(info-header-xref ((,class (:inherit info-xref))))
-     ;`(info-index-match ((,class (:inherit match))))
      `(info-menu-header ((,class (:inherit variable-pitch :weight bold))))
      `(info-menu-star ((,class (:foreground ,orange))))
      `(info-xref ((,class (:inherit link))))

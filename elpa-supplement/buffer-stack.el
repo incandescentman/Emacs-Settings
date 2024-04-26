@@ -309,7 +309,7 @@ This is THE switching command; all other motions are based on this."
       (if (> direction 0)
           (cl-incf buffer-stack-index)
         (if (< direction 0)
-            (decf buffer-stack-index)))
+            (cl-decf buffer-stack-index)))
       (if (< buffer-stack-index 0)
           ;; go backwards to the last buffer
           (progn (setq buffer-stack-index max-index)
