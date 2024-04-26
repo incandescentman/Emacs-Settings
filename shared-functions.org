@@ -76,7 +76,7 @@
   :defer)
 
 ;; (use-package ox-org)
-;; (use-package org-fstree)
+
 #+END_SRC
 
 
@@ -596,8 +596,8 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 *** Buffer-stack
 I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 #+BEGIN_SRC emacs-lisp
-(use-package buffer-stack
-  :defer)
+;;(use-package buffer-stack
+;; defer)
 #+END_SRC
 
 GNU Emacs:
@@ -3777,11 +3777,11 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 * xah-replace-pairs
-
-#+BEGIN_SRC emacs-lisp
 (use-package xah-replace-pairs
 :defer
 )
+#+BEGIN_SRC emacs-lisp
+
 (defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end

@@ -118,7 +118,7 @@ adaptive-wrap
 (defun jay/init-bongo () (use-package bongo))
 (defun jay/init-cyberpunk-theme () (use-package cyberpunk-theme))
 (defun jay/init-buffer-stack () (use-package buffer-stack))
-(defun jay/init-org-fstree () (use-package org-fstree))
+;; (defun jay/init-org-fstree () (use-package org-fstree))
 (defun jay/init-auto-capitalize () (use-package auto-capitalize))
 ;; (defun jay/init-edit-server () (use-package edit-server))
 (defun jay/init-ido-hacks () (use-package ido-hacks))
