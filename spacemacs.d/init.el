@@ -128,7 +128,7 @@ This function should only modify configuration layer settings."
      ; smex
      ;; speed-reading
      spell-checking
-     ; syntax-checking ; this is the layer with flycheck
+     ;; syntax-checking ; this is the layer with flycheck
      ;; treemacs
      ;; typography
      ;; xkcd
@@ -178,7 +178,7 @@ This function should only modify configuration layer settings."
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      frame-cmds
+                                      ;; frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
@@ -201,7 +201,7 @@ This function should only modify configuration layer settings."
                                       org-bookmark-heading
                                       ;; org-contrib
                                       ;; org-drill
-                                      org-fstree
+                                      ;; org-fstree
                                       org-mac-link
                                       org-modern
                                       org-pomodoro
@@ -249,7 +249,7 @@ This function should only modify configuration layer settings."
                                       ;; web-mode
                                       with-editor
                                       wrap-region
-                                      xah-replace-pairs
+                                      ;; xah-replace-pairs
 
                                       ;; ag
                                       auto-complete
