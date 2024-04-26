@@ -145,19 +145,23 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       affe
                                       beacon
-                                      buffer-stack
+                                      bind-key
+                                      bui
+                                      ;; buffer-stack
                                       caps-lock
                                       change-inner
                                       ;; cheatsheet
+                                      company
                                       consult-dir
                                       ;; consult-notes
+                                      consult-ag
                                       consult-org-roam
                                       ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
-                                      ;; counsel-fd
+                                      counsel-fd
                                       counsel-projectile
-                                      ;; crux
+                                      crux
                                       deadgrep
                                       define-word
                                       ;; dired+
@@ -170,11 +174,11 @@ This function should only modify configuration layer settings."
                                       ;; epc
                                       ;; eww
                                       expand-region
-                                      ; f
+                                      f
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      ;; frame-cmds
+                                      frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
@@ -201,17 +205,19 @@ This function should only modify configuration layer settings."
                                       org-mac-link
                                       org-modern
                                       org-pomodoro
+                                      org-ql
                                       org-roam
-                                      ;; org-roam-ui
+                                      org-roam-ui
                                       org-sticky-header
                                       org-superstar
                                       ox-clip
                                       ;; ox-gfm
-                                                                            ox-timeline
-                                      ;; ox-tufte
+                                      ox-timeline
+                                      ox-tufte
                                       palimpsest
                                       paredit
                                       peg
+                                      persist
                                       ;; persp-mode
                                       point-stack
                                       popup
@@ -220,7 +226,7 @@ This function should only modify configuration layer settings."
                                       quelpa-use-package
                                       rainbow-mode
                                       re-builder
-                                      ;; recentf
+                                      recentf
                                       regex-tool
                                       rg
                                       ripgrep
@@ -233,7 +239,7 @@ This function should only modify configuration layer settings."
                                       sudo-edit
                                       sync-recentf
                                       ; tabbar
-                                      ;; tiny
+                                      tiny
                                       titlecase
                                       ts
                                       unfill
@@ -241,11 +247,12 @@ This function should only modify configuration layer settings."
                                       wc-goal-mode
                                       wc-mode
                                       ;; web-mode
+                                      with-editor
                                       wrap-region
                                       xah-replace-pairs
 
                                       ;; ag
-                                      ;; auto-complete
+                                      auto-complete
                                       ;; blimp
                                       ;; bongo
                                       ;; command-log-mode
@@ -288,7 +295,7 @@ This function should only modify configuration layer settings."
                                       ;; yahoo-weather
                                       ;; zenburn-theme
                                       ;; zone
-                                      ;; smex
+                                      smex
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
