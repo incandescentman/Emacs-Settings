@@ -857,6 +857,7 @@ before packages are loaded."
 (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
 (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
 (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
+(load "/Users/jay/emacs/local-config.el")
 
 
 
