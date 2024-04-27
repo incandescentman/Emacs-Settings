@@ -3941,7 +3941,7 @@ additional multi-command keys.  See `dired' (defadvice doc)."
                                        (directory-files dired-directory 'FULL diredp-re-no-dot)))))
                   file)
              (when read-extra-files-p
-               (while (condition-cl-case nil ; Use lax completion, to allow wildcards.
+               (while (condition-case nil ; Use lax completion, to allow wildcards.
                           (setq file  (read-file-name "File or dir (C-g when done): "))
                         (quit nil))
                  ;; Do not allow root dir (`/' or a Windows drive letter, e.g. `c:/').
@@ -4427,7 +4427,7 @@ A prefix argument ARG specifies files to use instead of those marked.
         (failure  nil))
     (save-excursion
       (if (and file  (diredp-string-match-p (image-file-name-regexp) file))
-          (condition-cl-case err
+          (condition-case err
               (let ((find-file-run-dired  nil)) (find-file-other-window file))
             (error (setq failure  (error-message-string err))))
         (dired-log (format "Not an image file: `%s'" file))
@@ -5311,7 +5311,7 @@ keeping only the first of a set of `equal' THINGS."
                                            read-file-name-completion-ignore-cl-case)
                                       completion-ignore-cl-case))
          thing)
-    (while (condition-cl-case nil
+    (while (condition-case nil
                (setq thing  (completing-read prompt (mapcar #'list things) nil t))
              (quit nil))
       (if exclude (delete thing thgs)
@@ -5359,7 +5359,7 @@ keeping only the first of a set of `equal' THINGS."
 ;;;             (let ((insert-default-directory  nil)
 ;;;                   (files                     ())
 ;;;                   file)
-;;;               (while (condition-cl-case nil ; Use lax completion, to allow wildcards.
+;;;               (while (condition-case nil ; Use lax completion, to allow wildcards.
 ;;;                          (setq file  (read-file-name "File or dir (C-g when done): "))
 ;;;                        (quit nil))
 ;;;                 (push file files))
@@ -5616,7 +5616,7 @@ Non-nil DIRED-BUFFER is passed to `dired-read-dir-and-switches'.
             (unless (equal dirname (buffer-name (cdr db)))
               (push (cons (buffer-name (cdr db)) (car db)) dirbufs))
           (setq dired-buffers  (delq db dired-buffers))))
-      (while (and dirbufs  (condition-cl-case nil
+      (while (and dirbufs  (condition-case nil
                                (setq buf  (completing-read "Existing Dired buffer to include (C-g when done): "
                                                            dirbufs nil t nil 'buffer-name-history
                                                            (and dirbufs  (car (assoc (buffer-name) dirbufs)))))
@@ -5669,7 +5669,7 @@ With a prefix arg you are first prompted for the `ls' switches.
     (let ((files  ())
           bufname)
       (save-excursion (goto-char (point-min))
-                      (while (condition-cl-case nil (compilation-next-file 1) (error nil))
+                      (while (condition-case nil (compilation-next-file 1) (error nil))
                         (setq compilation-current-error  (point))
                         (push (diredp-file-for-compilation-hit-at-point) files)))
       (setq files  (nreverse files))
@@ -5907,7 +5907,7 @@ Non-nil optional arg NO-DOT-DOT-P means do not include marked `..'."
   ;; If no file is marked, exclude `(FILENAME)': the unmarked file at cursor.
   ;; If there are no marked files as a result, return all files and subdirs in the dir.
   (let* ((dired-marker-char  ?*)
-         (ff                 (condition-cl-case nil ; Ignore error if on `.' or `..' and no file is marked.
+         (ff                 (condition-case nil ; Ignore error if on `.' or `..' and no file is marked.
                                  (dired-get-marked-files
                                   nil nil (and no-dot-dot-p
                                                (lambda (mf) (not (diredp-string-match-p "/\\.\\.$" mf))))
@@ -5983,10 +5983,10 @@ DETAILS is passed to `diredp-list-files', to show details about FILES."
                               (show                     (diredp-list-files files nil list-buf predicate details)
                                                         (setq list-was-shown  t)) ; Record showing it.
                               (help                     (message "Use `l' to show file list") (sit-for 1))
-                              (scroll-up                (condition-cl-case nil (scroll-up-command) (error nil)) t)
-                              (scroll-down              (condition-cl-case nil (scroll-down-command) (error nil)) t)
-                              (scroll-other-window      (condition-cl-case nil (scroll-other-window) (error nil)) t)
-                              (scroll-other-window-down (condition-cl-case nil (scroll-other-window-down nil)
+                              (scroll-up                (condition-case nil (scroll-up-command) (error nil)) t)
+                              (scroll-down              (condition-case nil (scroll-down-command) (error nil)) t)
+                              (scroll-other-window      (condition-case nil (scroll-other-window) (error nil)) t)
+                              (scroll-other-window-down (condition-case nil (scroll-other-window-down nil)
                                                           (error nil)) t)
                               ((exit-prefix  quit)      (signal 'quit nil) t)
                               (t (or (not (eq key ?\e))  (progn (signal 'quit nil) t)))))
@@ -5994,7 +5994,7 @@ DETAILS is passed to `diredp-list-files', to show details about FILES."
                      (discard-input)))
                (when (get-buffer list-buf)
                  (save-window-excursion (pop-to-buffer list-buf)
-                                        (condition-cl-case nil ; Ignore error if user already deleted.
+                                        (condition-case nil ; Ignore error if user already deleted.
                                             (if (one-window-p) (delete-frame) (delete-window))
                                           (error nil))
                                         (if list-was-shown (bury-buffer list-buf) (kill-buffer list-buf))))
@@ -8174,7 +8174,7 @@ use `g' in that buffer to revert the listing.)"
     (diredp-maybe-save-visited files nil details)
     (dolist (file  files)
       (save-selected-window
-        (condition-cl-case err
+        (condition-case err
             (with-current-buffer (find-file-noselect file)
               (save-excursion (goto-char (point-min))
                               (let ((current-prefix-arg  (and (not ignore-marks-p)  arg)))
@@ -8397,7 +8397,7 @@ When called from Lisp, optional arg DETAILS is passed to
                 (failures           ()))
             (unless progress-reporter (message "Deleting..."))
             (dolist (file  files)
-              (condition-cl-case err
+              (condition-case err
                   (progn (if (fboundp 'dired-delete-file) ; Emacs 22+
                              (dired-delete-file file dired-recursive-deletes delete-by-moving-to-trash)
                            ;; This test is equivalent to (and (file-directory-p file)  (not (file-symlink-p file)))
@@ -9065,7 +9065,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (bmkp-autofile-add-tags file tags nil prefix)
       (error (setq failure  (error-message-string err))))
     (if (not failure)
@@ -9125,7 +9125,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (bmkp-autofile-remove-tags file tags nil prefix)
       (error (setq failure  (error-message-string err))))
     (if (not failure)
@@ -9184,7 +9184,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (bmkp-remove-all-tags (bmkp-autofile-set file nil prefix))
       (error (setq failure  (error-message-string err))))
     (if (not failure)
@@ -9241,7 +9241,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (bmkp-autofile-add-tags file bmkp-copied-tags nil prefix)
       (error (setq failure  (error-message-string err))))
     (if (not failure)
@@ -9299,7 +9299,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (progn (bmkp-remove-all-tags (bmkp-autofile-set file nil prefix))
                (bmkp-autofile-add-tags file bmkp-copied-tags nil prefix))
       (error (setq failure  (error-message-string err))))
@@ -9364,7 +9364,7 @@ Return nil for success, file name otherwise."
   (bookmark-maybe-load-default-file)
   (let ((file  (dired-get-file-for-visit))
         failure)
-    (condition-cl-case err
+    (condition-case err
         (bmkp-set-tag-value (bmkp-autofile-set file nil prefix) tag value)
       (error (setq failure  (error-message-string err))))
     (if (not failure)
@@ -9555,13 +9555,13 @@ Non-nil optional arg NO-MSG-P means do not show progress messages."
   (bookmark-maybe-load-default-file)
   (let ((fil      (or file  (dired-get-file-for-visit)))
         (failure  nil))
-    (condition-cl-case err
+    (condition-case err
         (if (fboundp 'bmkp-autofile-set) ; Bookmark+ - just set an autofile bookmark.
             (bmkp-autofile-set fil nil prefix nil (not no-msg-p))
           ;; Vanilla `bookmark.el' (or very old Bookmark+ version).
           (let ((bookmark-make-record-function
                  (cond ((and (require 'image nil t)  (require 'image-mode nil t)
-                             (condition-cl-case nil (image-type fil) (error nil)))
+                             (condition-case nil (image-type fil) (error nil)))
                         ;; Last two lines of function are from `image-bookmark-make-record'.
                         ;; But don't use that directly, because it uses
                         ;; `bookmark-make-record-default', which gets nil for `filename'.
@@ -10426,7 +10426,7 @@ Non-nil optional arg ECHOP means also echo the result."
                       (diredp-get-file-or-dir-name arg))) ; Multi C-u
         (failure  nil)
         result)
-    (condition-cl-case err
+    (condition-case err
         (setq result  (funcall function file))
       (error (setq failure  (error-message-string err))))
     (diredp-report-file-result file result failure echop)))
@@ -10452,7 +10452,7 @@ use `g' in that buffer to revert the listing.)"
   (let* ((file     (dired-get-filename nil 'NO-ERROR)) ; Explicitly marked or integer ARG
          (failure  (not (file-exists-p file))))
     (unless failure
-      (condition-cl-case err
+      (condition-case err
           (save-selected-window
             (with-current-buffer (find-file-noselect file)
               (save-excursion (goto-char (point-min))
@@ -10478,7 +10478,7 @@ Non-nil optional arg ECHOP means also echo the result."
          (failure  (not (file-exists-p file)))
          result)
     (unless failure
-      (condition-cl-case err
+      (condition-case err
           (with-current-buffer (find-file-noselect file)
             (save-excursion
               (goto-char (point-min))
@@ -10498,7 +10498,7 @@ Non-nil optional arg ECHOP means also echo the result."
          (failure  (not (file-exists-p file)))
          result)
     (unless failure
-      (condition-cl-case err
+      (condition-case err
           (with-current-buffer (find-file-noselect file)
             (save-excursion (goto-char (point-min))
                             (setq result  (eval-expression sexp))))
@@ -10521,7 +10521,7 @@ Non-nil optional arg ECHOP means also echo the result."
          (failure  (not (file-exists-p file)))
          result)
     (unless failure
-      (condition-cl-case err
+      (condition-case err
           (with-current-buffer (find-file-noselect file)
             (save-excursion
               (goto-char (point-min))
@@ -10989,7 +10989,7 @@ SYM is `q' or ESC, return nil."
         (when (get-buffer list-buf)
           (save-window-excursion
             (pop-to-buffer list-buf)
-            (condition-cl-case nil         ; Ignore error if user already deleted.
+            (condition-case nil         ; Ignore error if user already deleted.
                 (if (one-window-p) (delete-frame) (delete-window))
               (error nil))
             (if list-was-shown (bury-buffer list-buf) (kill-buffer list-buf)))))))
@@ -11247,7 +11247,7 @@ Non-nil optional arg RECURSIVE means recurse on any directories in
                (or (eq recursive 'always)  (yes-or-no-p (format "Recursive copies of %s? " from))))
           (copy-directory from to keep-time)
         (or top  (dired-handle-overwrite to from))
-        (condition-cl-case err
+        (condition-case err
             (if (stringp (car attrs))   ; It is a symlink
                 (make-symbolic-link (car attrs) to ok-if-already-exists)
               (copy-file from to ok-if-already-exists keep-time))
@@ -12003,7 +12003,7 @@ Handle `dired-hide-details-mode' invisibility spec (Emacs 24.4+)."
     (save-excursion
       (goto-char beg)
       (while (< (point) end)
-        (condition-cl-case nil
+        (condition-case nil
             (cond ((dired-move-to-filename)
                    (add-text-properties (line-beginning-position) (line-end-position)
                                         '(mouse-face highlight help-echo diredp-mouseover-help))
@@ -12038,7 +12038,7 @@ show an image preview, then do so.  Otherwise, show text help."
     (or (and (boundp 'tooltip-mode)  tooltip-mode
              (fboundp 'image-file-name-regexp) ; Emacs 22+, `image-file.el'.
              diredp-image-preview-in-tooltip
-             (condition-cl-case nil
+             (condition-case nil
                  (and (with-current-buffer buffer
                         (save-excursion (goto-char pos)
                                         (diredp-string-match-p
@@ -12177,9 +12177,9 @@ Otherwise, just move to the buffer limit."
   (let* ((line-move-visual  nil)
          ;; (goal-column       nil)
 
-         ;; Use `condition-cl-case' and `(progn... t)' because Emacs < 22 `line-move' has no
+         ;; Use `condition-case' and `(progn... t)' because Emacs < 22 `line-move' has no
          ;; NO-ERROR arg and it always returns nil.
-         (no-more           (or (not (condition-cl-case nil (progn (line-move arg) t) (error nil)))
+         (no-more           (or (not (condition-case nil (progn (line-move arg) t) (error nil)))
                                 (if (< arg 0) (bobp) (eobp)))))
     (when (and diredp-wrap-around-flag  no-more)
       (let ((diredp-wrap-around-flag  nil))
@@ -12889,7 +12889,7 @@ FUNCTION should not manipulate the files.  It should just read input
                (goto-char (point-min)))
              (setq result  (apply function args)))
         (save-excursion
-          (condition-cl-case nil           ; Ignore error if user already deleted window.
+          (condition-case nil           ; Ignore error if user already deleted window.
               (progn (select-window (get-buffer-window buffer-or-name 0))
                      (if (one-window-p) (delete-frame) (delete-window)))
             (error nil)))
@@ -15077,7 +15077,7 @@ Also abbreviate `mode-name', using \"Dired/\" instead of \"Dired by\"."
                            (let ((this   0)
                                  (total  0)
                                  (o-pt   (line-beginning-position))
-                                 (e-pt   (or (condition-cl-case nil
+                                 (e-pt   (or (condition-case nil
                                                  (let ((diredp-wrap-around-flag  nil))
                                                    (save-excursion
                                                      (diredp-next-subdir 1)
@@ -15087,7 +15087,7 @@ Also abbreviate `mode-name', using \"Dired/\" instead of \"Dired by\"."
                              (when dired-subdir-alist (dired-goto-subdir (dired-current-directory)))
                              (while (and (<= (point) e-pt)
                                          (< (point) (point-max))) ; Hack to work around Emacs display-engine bug.
-                               (when (condition-cl-case nil
+                               (when (condition-case nil
                                          (dired-get-filename nil diredp-count-.-and-..-flag)
                                        (error nil))
                                  (when (<= (line-beginning-position) o-pt) (setq this  (1+ this)))

@@ -9777,7 +9777,42 @@ Only required if Emacs < 29.3.
 #+end_src
 
 
+
+* detect and open street addresses
+#+begin_src emacs-lisp
+(defun open-labeled-address-in-google-maps ()
+ "Find and open a labeled address in Google Maps while displaying the address in the minibuffer."
+ (interactive)
+ (save-excursion
+  (let (address-bound start end)
+   ;; Search backward for the label 'address:' or 'Address:', considering possible extra whitespace
+   (if (re-search-backward "^\\s-*\\(?:address:\\|Address:\\)\\s-*" nil t)
+     (progn
+      ;; Check if the address starts on the same line or the next line
+      (if (looking-at "$")
+        (forward-line 1)) ; Move to the beginning of the next line if the label line is empty
+      (setq start (point))
+      ;; Search forward for the first occurrence of a 5-digit ZIP code followed by optional whitespace and a newline
+      (if (re-search-forward "\\([0-9]\\{5\\}\\)\\s-*$" nil t)
+        (progn
+         (setq end (match-end 0)) ; Capture up to the end of the ZIP code
+         (setq address-bound (buffer-substring-no-properties start end))
+         (setq address-bound (replace-regexp-in-string "\n+" " " (string-trim address-bound)))
+         ;; Display the address in the minibuffer
+         (message "Opening %s" address-bound)
+         ;; Open the address in Google Maps
+         (browse-url (concat "https://www.google.com/maps/search/?api=1&query="
+                   (url-hexify-string address-bound))))
+       (message "ZIP code not found after label!")))
+    (message "No address label found!")))))
+
+#+end_src
+
+
+
+
 ;; -*- lexical-binding: t -*-
+
 
 
 
