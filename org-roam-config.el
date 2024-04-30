@@ -17,7 +17,10 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-\n\n\n"))))
+\n\n\n
+** Daily tasks [0/1]
+*** TODO Morning Pages
+"))))
   ;; - %<Week %w, day %j>\n
   :config
   ;;  (org-roam-setup)
