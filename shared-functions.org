@@ -6261,16 +6261,21 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 (defvar my-org-selected-css nil
   "Path of the selected CSS file.")
 
-(defun select-org-export-css ()
-  "Select a CSS file if none has been selected."
-  (interactive)
-  (setq my-org-selected-css
-        (completing-read "Choose a CSS file: "
-                         '("/Users/jay/Dropbox/web-design/custom-css/email.css"
-                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+(defvar my-org-selected-css nil
+ "Path of the selected CSS file or nil for no stylesheet.")
 
-"/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-                           ))))
+(defun select-org-export-css ()
+ "Select a CSS file or choose not to use any."
+ (interactive)
+ (setq my-org-selected-css
+    (completing-read "Choose a CSS file or none: "
+             '("/Users/jay/Dropbox/web-design/custom-css/email.css"
+              "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+              "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+
+              "none"))) ; 'none' is now the last option
+ (when (string-equal my-org-selected-css "none")
+  (setq my-org-selected-css nil)))
 
 (defun my-org-inline-css-hook (exporter)
   "Insert custom inline css"
@@ -8596,7 +8601,7 @@ Smart jump to beginning / end of lines.
 * ox-timeline
 #+begin_src emacs-lisp
 (use-package ox-timeline
-:defer
+
 :config
  (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
 
