@@ -484,7 +484,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; unbind some existing keybindings
-;; (define-key undo-tree-map (kbd "C-x r") nil)
+
 
 ;; and the keybindings
 ;; mk - mykeybindings
@@ -978,8 +978,12 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ; (define-key key-minor-mode-map (kbd "s-+") 'set-mark-command)
 
 ;; (define-key key-minor-mode-map (kbd "s-_") 'avy-pop-mark)
+
+
 ;; use OSX standard keybinding for "Redo"
-(define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
+;; (define-key key-minor-mode-map (kbd "s-y") 'undo-tree-redo)
+(define-key key-minor-mode-map (kbd "s-y") 'undo-fu-only-redo)
+(define-key key-minor-mode-map (kbd "s-z") 'undo-fu-only-undo)
 
 ;; use OSX standard keybinding to increase or decrease font size
 ;; (define-key key-minor-mode-map (kbd "s-=") 'text-scale-increase)
