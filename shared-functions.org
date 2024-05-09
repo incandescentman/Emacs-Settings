@@ -9814,9 +9814,14 @@ Only required if Emacs < 29.3.
 #+end_src
 
 
-
+* server start
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook 'server-start)
+(server-start)
+#+end_src
 
 ;; -*- lexical-binding: t -*-
+
 
 
 
