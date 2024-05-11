@@ -137,7 +137,8 @@ If the point is already on an existing link, it prepends ', ' before inserting t
    ("s-j"   . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
    ("s-u y" . org-roam-dailies-goto-yesterday)
-   ("s-u t" . org-roam-dailies-goto-tomorrow)
+   ("s-u t" . org-transclusion-make-from-link)
+   ("s-u T" . org-roam-dailies-goto-tomorrow)
    ("s-u Y" . org-roam-dailies-yesterday)
 
    ;; capture

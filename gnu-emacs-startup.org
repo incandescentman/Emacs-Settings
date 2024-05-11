@@ -564,7 +564,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
-(define-key key-minor-mode-map (kbd "s-M") 'visit-messages-buffer)
+(define-key key-minor-mode-map (kbd "M-s-m") 'visit-messages-buffer)
 
 (defun visit-messages-buffer ()
 (interactive)
