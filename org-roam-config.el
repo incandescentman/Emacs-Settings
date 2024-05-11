@@ -49,7 +49,8 @@
                          (end (org-element-property :contents-end context)))
                     (when start
                       (goto-char start)
-                      (insert "🌐 ")))))
+                      ;; (insert "🌐 ")
+                      ))))
               ;; Append to the front of the hook list
               0 t)
     (unwind-protect
@@ -74,7 +75,8 @@ If the point is already on an existing link, it prepends ', ' before inserting t
                          (end (org-element-property :contents-end context)))
                     (when start
                       (goto-char start)
-                      (insert "🌐 ")))))
+;                      (insert "🌐 ")
+                      ))))
               ;; Append to the front of the hook list
               0 t)
     (unwind-protect
