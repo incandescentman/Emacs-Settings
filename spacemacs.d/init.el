@@ -905,7 +905,11 @@ This function is called at the very end of Spacemacs initialization."
      ("H" . "html")
      ("A" . "ascii")
      ("i" . "index")))
-'(org-twbs-head-include-default-style nil)
+ '(org-transclusion-exclude-elements '(property-drawer))
+ '(org-transclusion-extensions
+   '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
+ '(org-transclusion-include-first-section nil)
+ '(org-twbs-head-include-default-style nil)
  '(org-twbs-head-include-scripts nil)
  '(org-twbs-htmlize-output-type 'css)
  '(package-selected-packages
@@ -949,8 +953,8 @@ This function is called at the very end of Spacemacs initialization."
  '(org-link ((t (:inherit link :underline nil))))
  '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
  '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
- '(org-transclusion ((t (:background "cyan" :foreground "black"))))
- '(org-transclusion-fringe ((t (:extend t :background "alice blue" :foreground "dark red"))))
+ '(org-transclusion ((t (:extend t :foreground "black"))))
+ '(org-transclusion-fringe ((t (:background "yellow"))))
  '(org-transclusion-source ((t (:background "#ebf6fa"))))
  '(org-transclusion-source-edit ((t (:background "#fff3da"))))
  '(org-transclusion-source-fringe ((t nil)))
