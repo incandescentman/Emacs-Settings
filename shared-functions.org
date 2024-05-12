@@ -9889,6 +9889,15 @@ If the point is on an existing transclusion, remove it using `org-transclusion-r
  :foreground "green"
  :background "green")
 
+(defun tr-insert-transclusion ()
+(interactive)
+(org-roam-node-insert)
+(beginning-of-line)
+(insert "#+transclude: ")
+(beginning-of-line)
+  )
+
+(define-key key-minor-mode-map (kbd "S-s-<down>") 'tr-insert-transclusion)
 #+end_src
 
 * flycheck-mode-line
