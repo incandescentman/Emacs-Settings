@@ -49,7 +49,8 @@
                          (end (org-element-property :contents-end context)))
                     (when start
                       (goto-char start)
-                      (insert "🌐 ")))))
+                      ;; (insert "🌐 ")
+                      ))))
               ;; Append to the front of the hook list
               0 t)
     (unwind-protect
@@ -74,7 +75,8 @@ If the point is already on an existing link, it prepends ', ' before inserting t
                          (end (org-element-property :contents-end context)))
                     (when start
                       (goto-char start)
-                      (insert "🌐 ")))))
+;                      (insert "🌐 ")
+                      ))))
               ;; Append to the front of the hook list
               0 t)
     (unwind-protect
@@ -137,7 +139,8 @@ If the point is already on an existing link, it prepends ', ' before inserting t
    ("s-j"   . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)
    ("s-u y" . org-roam-dailies-goto-yesterday)
-   ("s-u t" . org-roam-dailies-goto-tomorrow)
+   ("s-u t" . org-transclusion-make-from-link)
+   ("s-u T" . org-roam-dailies-goto-tomorrow)
    ("s-u Y" . org-roam-dailies-yesterday)
 
    ;; capture
