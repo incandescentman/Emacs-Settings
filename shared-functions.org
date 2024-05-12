@@ -9889,7 +9889,6 @@ If the point is on an existing transclusion, remove it using `org-transclusion-r
  :foreground "green"
  :background "green")
 
-(define-key key-minor-mode-map (kbd "s-m") 'org-transclusion-add-or-remove)
 #+end_src
 
 * flycheck-mode-line
