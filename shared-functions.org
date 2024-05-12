@@ -237,27 +237,40 @@ I should probably eventually break these out of custom-set-variables and organiz
 *** hunspell - workaround
 
 #+BEGIN_SRC emacs-lisp
+;; Flyspell
+(use-package flyspell
+ :ensure nil
+ :config
+
+;; Set the path to the Hunspell executable
+ (setq-default ispell-program-name (executable-find "hunspell"))
+
+;; Set environment variable `DICPATH` to point to the directory containing the Hunspell dictionaries
+(setenv "DICPATH" (concat (getenv "HOME") "/Library/Spelling"))
+
+;; Set the main dictionary
+(setq ispell-dictionary "en_US-large")
+
+;; Set the personal dictionary to a new name
+(setq ispell-personal-dictionary "/Users/jay/Library/Spelling/personal.dic")
+
+(setq ispell-really-hunspell t)
+
+
+;; below two lines reset the the hunspell so it STOPS querying locale!
+(flyspell-mode 1)
+)
+
 
 (setenv "DICTIONARY" "en_US")
-(setq ispell-dictionary "en_US")
+;; Add the Line: If you want to ensure that the "en_US" dictionary is used globally outside of Emacs.
+;; Skip the Line: If only Emacs's internal spell-checking needs to be configured.
 
-(when (executable-find "hunspell")
- (setq-default ispell-program-name "/usr/local/bin/hunspell")
- (setq ispell-really-hunspell t))
+;; (setq ispell-program-name "hunspell")
 
-;; (executable-find "hunspell")
-
- (setq ispell-local-dictionary-alist
-    '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)
-     ))
-
-(setq ispell-program-name "hunspell")
-;; below two lines reset the the hunspell to it STOPS querying locale!
-(setq ispell-local-dictionary "en_US") ; "en_US" is key to lookup in `ispell-local-dictionary-alist`
-(setq ispell-local-dictionary-alist
-   '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-
-(flyspell-mode 1)
+;; (setq ispell-local-dictionary "en_US") ; "en_US" is key to lookup in `ispell-local-dictionary-alist`
+;; (setq ispell-local-dictionary-alist
+;;  '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
 
 
 #+END_SRC
