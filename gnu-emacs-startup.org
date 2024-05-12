@@ -1061,7 +1061,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-m") 'mc/mark-all-like-this)
-(define-key key-minor-mode-map (kbd "s-M") 'org-transclusion-add-or-remove)
+(define-key key-minor-mode-map (kbd "s-M") 'tr-toggle-transclusion)
 
 
 (define-key key-minor-mode-map (kbd "s-\\") 'visit-most-recent-file)
