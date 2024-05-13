@@ -9856,7 +9856,13 @@ Only required if Emacs < 29.3.
     '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
 (custom-set-faces
  '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow")))))
-  )
+
+;; Ensure that load-path to org-transclusion is already added
+;; If you installed it with the built-in package.el, this should be already done.
+;; (add-to-list 'load-path "path/to/org-transclusion/")
+(add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode)
+(require 'org-transclusion-indent-mode)
+)
 
 ;; Customize the appearance of transclusion fringes
 (set-face-attribute
