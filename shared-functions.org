@@ -262,6 +262,15 @@ I should probably eventually break these out of custom-set-variables and organiz
 )
 
 
+
+(defun my/fix-ispell-contraction ()
+ "Fixes contractions (e.g. shouldn't) aren't not being checked properly. See https://github.com/casouri/lunarymacs/blob/master/star/checker.el#L44-L49."
+ (add-to-list 'ispell-dictionary-alist
+        '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
+)
+
+
+
 (setenv "DICTIONARY" "en_US")
 ;; Add the Line: If you want to ensure that the "en_US" dictionary is used globally outside of Emacs.
 ;; Skip the Line: If only Emacs's internal spell-checking needs to be configured.
