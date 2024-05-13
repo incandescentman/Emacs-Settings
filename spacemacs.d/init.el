@@ -916,7 +916,11 @@ This function is called at the very end of Spacemacs initialization."
    '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(paradox-github-token t)
  '(safe-local-variable-values
-   '((buffer-file-coding-system . utf-8-unix)
+   '((olivetti-mode . 0)
+     (olivetti-mode)
+     (org-export-html-style-include-scripts)
+     (org-export-html-style-include-default)
+     (buffer-file-coding-system . utf-8-unix)
      (org-html-postamble . "</div><div class='span1'></div><div class='span3'> <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='/Users/jay/Dropbox/github/org-tocify/src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/bootstrap.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/jquery.tocify.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/prettify.js'></script><script> $(function() { var toc = $('#toc').tocify({ selectors: 'h2,h3,h4,h5' }).data('toc-tocify'); prettyPrint(); $('.optionName').popover({ trigger: 'hover' }); });</script>")
      (org-html-postamble . "</div><div class='span1'></div><div class='span3'>  <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='../src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='../src/javascripts/bootstrap.js'></script><script src='../src/javascripts/jquery.tocify.js'></script><script src='../src/javascripts/prettify.js'></script><script>  $(function() {  var toc = $('#toc').tocify({  selectors: 'h2,h3,h4,h5'  }).data('toc-tocify');  prettyPrint();  $('.optionName').popover({ trigger: 'hover' });  });</script>")
      (eval triplicate-code)

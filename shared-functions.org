@@ -8429,9 +8429,11 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+begin_SRC emacs-lisp
 (defun activate-olivetti-in-split ()
- (if (< (window-width) 80)
-   (olivetti-mode -1)
-  (olivetti-mode 1)))
+ (when (not (bound-and-true-p disable-olivetti-auto-toggle))
+  (if (< (window-width) 80)
+    (olivetti-mode -1)
+   (olivetti-mode 1))))
+
 
 (add-hook 'org-mode-hook (lambda ()
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
