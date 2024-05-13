@@ -20,6 +20,8 @@
 \n\n\n
 ** Daily tasks [0/1]
 *** TODO Morning Pages
+
+** Notes
 "))))
   ;; - %<Week %w, day %j>\n
   :config
