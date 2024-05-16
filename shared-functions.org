@@ -9556,6 +9556,7 @@ Philosophy:
   "Remove filler words from the text and report what was removed."
   (interactive)
   (let ((count-you-know 0)
+        (count-I-mean 0)
         (count-kind-of-like 0)
         (count-kind-of 0)
         (count-like 0)
@@ -9584,6 +9585,19 @@ Philosophy:
       (while (search-forward "you know" nil t)
         (setq count-you-know (1+ count-you-know))
         (replace-match ""))
+;; Delete instances of ", I mean,"
+   (while (search-forward ", I mean, " nil t)
+    (setq count-I-mean (1+ count-I-mean))
+    (replace-match ", "))
+   ;; Delete instances of ", I mean,"
+   (while (search-forward "I mean, " nil t)
+    (setq count-I-mean (1+ count-I-mean))
+    (replace-match ""))
+   ;; Delete instances of "I mean"
+   (goto-char (point-min))
+   (while (search-forward "I mean" nil t)
+    (setq count-I-mean (1+ count-I-mean))
+    (replace-match ""))
       ;; Delete instances of "kind of"
       (goto-char (point-min))
       (while (search-forward "kind of" nil t)
@@ -9662,6 +9676,8 @@ Philosophy:
    ;; Constructing the report string
    (when (> count-you-know 0)
     (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-you-know))))
+(when (> count-I-mean 0)
+  (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-I-mean))))
 (when (> count-kind-of-like 0)
    (setq report-string (concat report-string (format "Removed %d instances of \"kind of like\". " count-kind-of-like))))
     (when (> count-kind-of 0)
