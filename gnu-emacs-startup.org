@@ -782,7 +782,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 (define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
-(define-key key-minor-mode-map (kbd "M-v") 'html2org-clipboard)
+;; (define-key key-minor-mode-map (kbd "M-v") 'html2org-clipboard)
 
 
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
