@@ -38,6 +38,7 @@
         org-shiftleft
         org-shiftright
         org-shiftup
+        org-toggle-heading
         org-toggle-heading-same-level
         pasteboard-cut-and-capitalize
         pasteboard-paste-no-spaces

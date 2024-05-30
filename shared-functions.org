@@ -9924,6 +9924,47 @@ If the point is on an existing transclusion, remove it using `org-transclusion-r
 
 #+end_src
 
+
+
+* English language natural language syntax highlighting
+[[https://github.com/istib/wordsmith-mode?tab=readme-ov-file][istib/wordsmith-mode: prose syntax analysis in emacs]]
+
+dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax control for the command line]]
+
+#+begin_src emacs-lisp
+(use-package wordsmith-mode
+  :ensure t
+:config
+;; Customize faces for wordsmith-mode
+ (set-face-attribute 'wordsmith-verb-face nil :inherit 'font-lock-keyword-face)
+ (set-face-attribute 'wordsmith-noun-face nil :inherit 'font-lock-constant-face))
+
+
+;; Define a function to highlight verbs by default
+(defun wordsmith-enable-verbs ()
+  "Enable wordsmith-mode and highlight verbs."
+  (wordsmith-mode 1)
+  (wordsmith-highlight-verbs)
+  ;; Add a buffer-local hook to reapply highlighting after changes
+  (add-hook 'after-change-functions 'wordsmith-highlight-verbs-after-change nil t))
+
+(defun wordsmith-highlight-verbs-after-change (beg end len)
+  "Reapply verb highlighting after buffer changes."
+  (when wordsmith-mode
+    (save-excursion
+      ;; Reapply highlighting to the entire buffer
+      (wordsmith-highlight-verbs))))
+
+;; Add a hook to enable wordsmith-mode and highlight verbs in org-mode buffers
+(add-hook 'org-mode-hook 'wordsmith-enable-verbs)
+#+end_src
+
+
+
+
+
+
+
 ;; -*- lexical-binding: t -*-
 
 
