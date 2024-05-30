@@ -48,6 +48,7 @@
         return
         right-word
         smart-forward-sentence
+        smart-org-meta-return-dwim
         smart-period
         smart-return
         smart-space
