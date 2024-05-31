@@ -2621,7 +2621,7 @@ of that nature."
 (defvar minibuffer-default-add-function)          ; In `simple.el', Emacs 23+
 (defvar mouse3-dired-function)                    ; In `mouse3.el'
 (defvar pp-read-expression-map)                   ; In `pp+.el'
-(defvar read-file-name-completion-ignore-cl-case)    ; In `minibuffer.el', Emacs 23+.  In C code, Emacs 22.
+(defvar read-file-name-completion-ignore-case)    ; In `minibuffer.el', Emacs 23+.  In C code, Emacs 22.
 (defvar recentf-list)                             ; In `recentf.el'
 ;; Really a function, not a var - this quiets Emacs 20 byte-compiler, which doesn't recognize `declare-function'.
 ;; (defvar rgrep-find-ignored-directories)
@@ -3865,9 +3865,9 @@ additional multi-command keys.  See `dired' (defadvice doc)."
                                                                icicle-sort-comparer)))
 
          ;; The rest of the bindings are from `icicle-file-bindings', in `icicles-mac.el'.
-         (completion-ignore-cl-case
-          (or (and (boundp 'read-file-name-completion-ignore-cl-case)  read-file-name-completion-ignore-cl-case)
-              completion-ignore-cl-case))
+         (completion-ignore-case
+          (or (and (boundp 'read-file-name-completion-ignore-case)  read-file-name-completion-ignore-case)
+              completion-ignore-case))
          (icicle-show-Completions-initially-flag      (and (boundp 'icicle-show-Completions-initially-flag)
                                                            (or icicle-show-Completions-initially-flag
                                                                icicle-files-ido-like-flag)))
@@ -5306,10 +5306,10 @@ Unless optional arg KEEP-DUPLICATES-P is non-nil, remove duplicates,
 keeping only the first of a set of `equal' THINGS."
   (let* ((thgs                    (if exclude (copy-sequence things) ()))
          (prompt                  (format "%s to %s (C-g when done): " thing (if exclude 'EXCLUDE 'INCLUDE)))
-         (completion-ignore-cl-case  (or (and (boundp 'read-file-name-completion-ignore-cl-case)
+         (completion-ignore-case  (or (and (boundp 'read-file-name-completion-ignore-case)
                                            (memq thing '(Dir Directory File "Dir" "Directory" "File")) ; Hack
-                                           read-file-name-completion-ignore-cl-case)
-                                      completion-ignore-cl-case))
+                                           read-file-name-completion-ignore-case)
+                                      completion-ignore-case))
          thing)
     (while (condition-case nil
                (setq thing  (completing-read prompt (mapcar #'list things) nil t))

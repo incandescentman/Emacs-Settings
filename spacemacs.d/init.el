@@ -164,8 +164,6 @@ This function should only modify configuration layer settings."
                                       crux
                                       deadgrep
                                       define-word
-                                      ;; dired+
-                                      ;; dired-details+
                                       dired-quick-sort
                                       ;; dired-sort-menu
                                       discover-my-major
@@ -879,6 +877,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(counsel-search-engine 'google)
+ '(deft-directory
+   "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/")
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))

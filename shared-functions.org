@@ -1551,7 +1551,7 @@ Make org-capture open in full window! :-)
 ignoring application responses
 	tell application \"System Events\"
 		key code {118} -- press F4 to toggle do not disturb
-		keystroke \"P\" using {command down, shift down, option down, control down} -- start Pomodoro One
+
 	end tell
 end ignoring"))
 (org-pomodoro)
@@ -1981,6 +1981,9 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 
 ;; (add-hook 'dired-mode-hook 'hl-line-mode)
 
+(setq dired-listing-switches "-1 --group-directories-first")
+
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (use-package dired-x
   :defer
 
@@ -5025,7 +5028,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 
 * reuse directory buffers
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (load "/Users/jay/emacs/emacs-settings/dired+.el")
 (use-package dired+
 :defer
@@ -5041,7 +5044,7 @@ It will open the link in Emacs with typing C-c C-o.
     (lambda () (interactive) (find-alternate-file "..")))
   ; was dired-up-directory
  ))
-#+END_SRC
+#+END_EXAMPLE
 
 
 * open recent directories
@@ -7360,16 +7363,16 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+end_src
 
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/chatgpt-shell-main")
 (use-package chatgpt-shell
   :defer)
 
 
-#+end_src
+#+END_EXAMPLE
 
 * gptel
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package gptel
 :defer
  :init
@@ -7394,7 +7397,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 
 
-#+end_src
+#+END_EXAMPLE
 
 * gptel extensions
 [[https://github.com/kamushadenes/gptel-extensions.el][kamushadenes/gptel-extensions.el: Extra functions for gptel]]
@@ -7654,19 +7657,6 @@ depending on which one is appropriate based on the context."
       (message "Point is not in window 2 or 3.")))))
 ;; (define-key key-minor-mode-map (kbd "s-`") 'toggle-window-2-3)
 #+end_src
-
-
-* grammarly
-#+begin_EXAMPLE emacs-lisp
-
-;; load el file in your .emacs, e.g.
-
-(add-to-list 'load-path "/Users/jay/emacs/emacs-grammarly")
-(use-package send-to-osx-grammarly
-:defer)
-(call-process-shell-command "osascript ~/Users/jay/emacs/emacs-grammarly/scripts/pull.scpt")
-
-#+END_EXAMPLE
 
 
 * dired
@@ -9983,9 +9973,27 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 
 
 
+* dired-preview
 
 
+#+begin_src sh
+(add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
+(require 'dired-preview)
 
+#+end_src
+
+
+* nvalt
+#+begin_src emacs-lisp
+(defun nvalt ()
+ "Open the directory in dired and run dired-preview."
+ (interactive)
+
+ (let ((directory "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/"))
+  (dired directory)
+  (dired-preview-mode)))
+
+#+end_src
 
 ;; -*- lexical-binding: t -*-
 
