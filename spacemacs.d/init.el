@@ -878,7 +878,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(counsel-search-engine 'google)
  '(deft-directory
-   "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/")
+   "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)
+ '(dired-preview-delay 0.2)
  '(evil-want-Y-yank-to-eol nil)
  '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
  '(flycheck-disabled-checkers '(proselint))
