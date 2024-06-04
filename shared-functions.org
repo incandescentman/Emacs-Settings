@@ -9933,7 +9933,7 @@ If the point is on an existing transclusion, remove it using `org-transclusion-r
 
 dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax control for the command line]]
 
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package wordsmith-mode
   :ensure t
 :config
@@ -9959,7 +9959,7 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 
 ;; Add a hook to enable wordsmith-mode and highlight verbs in org-mode buffers
 (add-hook 'org-mode-hook 'wordsmith-enable-verbs)
-#+end_src
+#+END_EXAMPLE
 
 
 
