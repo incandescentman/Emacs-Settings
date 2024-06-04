@@ -1,6 +1,10 @@
 # Local Variables:
 # org-config-files-local-mode: t
 # eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space)
+# enable-local-eval: t
+# eval: (make-local-variable abbrev-mode)
+# eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space)
+# eval: (setq abbrev-mode nil)
 # End:
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
@@ -10,16 +14,7 @@
 
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
-#+TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
-#+TODO: | NOTE-TO-JAY NOTE-TO-SERJ NOTE-TO-SERJ
-#+TODO: PLEASE-CHECK-MY-INEPT-CODE PLEASE-HELP-ME-DEBUG-MY-INEPT-CODE TRY-THIS | DONE
 
-# Local Variables:
-# enable-local-eval: t
-# eval: (make-local-variable abbrev-mode)
-# eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space)
-# eval: (setq abbrev-mode nil)
-# end:
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
@@ -33,8 +28,6 @@
     - =brew tap railwaycat/emacsmacport=
     - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
-
-[[https://www.reddit.com/r/emacs/comments/cduuxb/opinions_on_railwaycats_emacsmacport/][Opinions on Railwaycat's Emacs-MacPort? : emacs]]
 
 * packages
 
@@ -64,7 +57,7 @@
 
 ** don't require packages
 #+begin_src emacs-lisp
-(setq use-package-verbose nil) ;; set to to for debugging
+(setq use-package-verbose nil) ;; set t to for debugging
 #+end_src
 
 ** some org packages
@@ -74,8 +67,6 @@
   )
 (use-package ox-html
   :defer)
-
-;; (use-package ox-org)
 
 #+END_SRC
 
@@ -104,7 +95,7 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq cua-mode nil)
  (setq debug-on-error t)
  (setq deft-directory "~/Dropbox/writing/notationaldata/")
-; (setq delete-window-preserve-buffer (quote ("fearless.org" "current-book-research.txt" "accountability.txt")))
+
  (setq dired-clean-up-buffers-too nil)
 ;; (setq dired-details-hidden-string "")
  (setq dired-kept-versions 8)
@@ -116,7 +107,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq ido-use-faces t)
  (setq ido-use-url-at-point t)
  (setq initial-major-mode (quote org-mode))
- ;; (setq mail-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
 
  (setq make-backup-files t)
  (setq message-draft-headers (quote (From References Date)))
