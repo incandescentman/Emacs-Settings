@@ -917,7 +917,8 @@ This function is called at the very end of Spacemacs initialization."
    '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
  '(paradox-github-token t)
  '(safe-local-variable-values
-   '((olivetti-mode . 0)
+   '((flyspell-mode)
+     (olivetti-mode . 0)
      (olivetti-mode)
      (org-export-html-style-include-scripts)
      (org-export-html-style-include-default)
