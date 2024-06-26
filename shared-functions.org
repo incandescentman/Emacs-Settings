@@ -9424,155 +9424,77 @@ Philosophy:
 (defun remove-filler-words ()
   "Remove filler words from the text and report what was removed."
   (interactive)
-  (let ((count-you-know 0)
-        (count-I-mean 0)
-        (count-kind-of-like 0)
-        (count-kind-of 0)
-        (count-like 0)
-        (count-sort-of 0)
-        (count-um 0)
-        (count-right 0)
-        (count-okay 0)
-        (count-uh 0)
+  (let ((counts (make-hash-table :test 'equal))
         (report-string ""))
     (save-excursion
-      (goto-char (point-min))
-;; Delete instances of ", you know,"
-   (while (search-forward "kind of like" nil t)
-    (setq count-kind-of-like (1+ count-kind-of-like))
-    (replace-match ""))
-      ;; Delete instances of ", you know,"
-      (while (search-forward ", you know, " nil t)
-        (setq count-you-know (1+ count-you-know))
-        (replace-match ", "))
-      ;; Delete instances of ", you know,"
-      (while (search-forward "you know, " nil t)
-        (setq count-you-know (1+ count-you-know))
-        (replace-match ""))
-      ;; Delete instances of "you know"
-      (goto-char (point-min))
-      (while (search-forward "you know" nil t)
-        (setq count-you-know (1+ count-you-know))
-        (replace-match ""))
-;; Delete instances of ", I mean,"
-   (while (search-forward ", I mean, " nil t)
-    (setq count-I-mean (1+ count-I-mean))
-    (replace-match ", "))
-   ;; Delete instances of ", I mean,"
-   (while (search-forward "I mean, " nil t)
-    (setq count-I-mean (1+ count-I-mean))
-    (replace-match ""))
-   ;; Delete instances of "I mean"
-   (goto-char (point-min))
-   (while (search-forward "I mean" nil t)
-    (setq count-I-mean (1+ count-I-mean))
-    (replace-match ""))
-      ;; Delete instances of "kind of"
-      (goto-char (point-min))
-      (while (search-forward "kind of" nil t)
-        (setq count-kind-of (1+ count-kind-of))
-        (replace-match ""))
-      ;; Delete instances of ", like, "
-      (goto-char (point-min))
-      (while (search-forward ", like, " nil t)
-        (setq count-like (1+ count-like))
-        (replace-match ", "))
-      ;; Delete instances of "sort of"
-      (goto-char (point-min))
-      (while (search-forward "sort of" nil t)
-        (setq count-sort-of (1+ count-sort-of))
-        (replace-match ""))
-;; Replace "okay" with "OK"
-      (goto-char (point-min))
-      (while (search-forward "okay" nil t)
-        (setq count-okay (1+ count-okay))
-        (replace-match "OK"))
+      (dolist (filler '(("kind of like" . "")
+                        (", you know, " . ", ")
+                        ("you know, " . "")
+                        ("you know" . "")
+                        (", I mean, " . ", ")
+                        ("I mean, " . "")
+                        ("I mean" . "")
+                        ("kind of" . "")
+                        (", like, " . ", ")
+                        ("sort of" . "")
+                        ("okay" . "OK")
+                        ("\\b\\(um\\|umm\\)\\b" . "")
+                        ("\\buh\\b" . "")
+                        (", right?" . ".")
+                        (", right." . ".")))
+        (goto-char (point-min))
+        (let ((search-func (if (string-match-p "\\\\b" (car filler))
+                               're-search-forward
+                             'search-forward))
+              (count 0))
+          (while (funcall search-func (car filler) nil t)
+            (setq count (1+ count))
+            (if (string= (car filler) "\\buh\\b")
+                (unless (looking-at "-huh")
+                  (replace-match (cdr filler)))
+              (replace-match (cdr filler))))
+          (when (> count 0)
+            (puthash (car filler) count counts)))))
 
-;; Remove instances of "um" and "umm" as whole words
- (goto-char (point-min))
- (while (re-search-forward "\\b\\(um\\|umm\\)\\b" nil t)
-  (setq count-um (1+ count-um))
-  (replace-match ""))
+    (while (cleanup-doubled-punctuation))
 
-;; Remove instances of "uh" not followed by "huh" as a whole word
- (goto-char (point-min))
- (while (re-search-forward "\\buh\\b" nil t)
-  (unless (looking-at "-huh")
-   (setq count-uh (1+ count-uh))
-   (replace-match "")))
+    ;; Remove stray commas
+    (goto-char (point-min))
+    (while (search-forward " , " nil t)
+      (replace-match ", "))
 
-      ;; Replace ", right?" with "."
-      (goto-char (point-min))
-      (while (search-forward ", right?" nil t)
-        (setq count-right (1+ count-right))
-        (replace-match "."))
-      ;; Replace ", right?" with "."
-      (goto-char (point-min))
-      (while (search-forward ", right." nil t)
-        (setq count-right (1+ count-right))
-        (replace-match ".")))
+    ;; Construct the report string
+    (maphash
+     (lambda (key value)
+       (setq report-string
+             (concat report-string
+                     (format
+                      (cond
+                       ((string= key "okay") "Replaced %d instances of \"okay\" with \"OK\". ")
+                       ((string= key ", right?") "Replaced %d instances of \", right?\" with \".\". ")
+                       ((string= key "\\b\\(um\\|umm\\)\\b") "Removed %d instances of \"um\" or \"umm\". ")
+                       ((string= key "\\buh\\b") "Removed %d instances of \"uh\". ")
+                       (t "Removed %d instances of \"%s\". "))
+                      value key))))
+     counts)
 
-      ;; Function to clean up doubled punctuation, returns t if a replacement was made
-  (defun cleanup-doubled-punctuation ()
-    (let ((replaced nil))
-      (goto-char (point-min))
-      (while (search-forward ",," nil t)
-        (replace-match ",")
-        (setq replaced t))
-      (goto-char (point-min))
-      (while (search-forward ".," nil t)
-        (replace-match ".")
-        (setq replaced t))
-      (goto-char (point-min))
-      (while (search-forward " , " nil t)
-        (replace-match ", ")
-        (setq replaced t))
-      (goto-char (point-min))
-      (while (search-forward "  " nil t)
-        (replace-match " ")
-        (setq replaced t))
-      replaced))
-
-  ;; Keep cleaning up doubled punctuation until no more replacements are made
-  (while (cleanup-doubled-punctuation))
-
-
-;; Remove stray commas
-      (goto-char (point-min))
-      (while (search-forward " , " nil t)
-        (replace-match ", "))
-    ;; Constructing the report string
-   ;; Constructing the report string
-   (when (> count-you-know 0)
-    (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-you-know))))
-(when (> count-I-mean 0)
-  (setq report-string (concat report-string (format "Removed %d instances of \"you know\". " count-I-mean))))
-(when (> count-kind-of-like 0)
-   (setq report-string (concat report-string (format "Removed %d instances of \"kind of like\". " count-kind-of-like))))
-    (when (> count-kind-of 0)
-      (setq report-string (concat report-string (format "Removed %d instances of \"kind of\". " count-kind-of))))
-    (when (> count-like 0)
-      (setq report-string (concat report-string (format "Removed %d instances of \"like\". " count-like))))
-    (when (> count-sort-of 0)
-      (setq report-string (concat report-string (format "Removed %d instances of \"sort of\". " count-sort-of))))
-    (when (> count-um 0)
-      (setq report-string (concat report-string (format "Removed %d instances of \"um\". " count-um))))
-    (when (> count-right 0)
-      (setq report-string (concat report-string (format "Replaced %d instances of \", right?\" with \".\" " count-right))))
-    (when (> count-okay 0)
-      (setq report-string (concat report-string (format "Replaced %d instances of \"okay\" with \"OK.\" " count-okay))))
-  (when (> count-um 0)
-    (setq report-string (concat report-string (format "Replaced %d instances of \"um\" with a space. " count-um))))
-   (when (> count-uh 0)
-    (setq report-string (concat report-string (format "Replaced %d instances of \"uh\" with a space. " count-uh))))
-
-
-
-    ;; Reporting the changes
+    ;; Report the changes
     (if (string= report-string "")
         (message "No changes made.")
-      (message report-string)))
-)
+      (message report-string))))
+
+(defun cleanup-doubled-punctuation ()
+  "Clean up doubled punctuation, returns t if a replacement was made."
+  (let ((replaced nil))
+    (dolist (pair '((",," . ",")
+                    (".," . ".")
+                    (" , " . ", ")
+                    ("  " . " ")))
+      (goto-char (point-min))
+      (while (search-forward (car pair) nil t)
+        (replace-match (cdr pair))
+        (setq replaced t)))
+    replaced))
 #+end_src
 
 
