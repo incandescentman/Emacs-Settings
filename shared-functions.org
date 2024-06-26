@@ -1544,17 +1544,8 @@ Make org-capture open in full window! :-)
 (org-todo 'done)
 (previous-line)
 (condition-case nil
- (kill-buffer "fearless.org")
- (error nil))
-
-(do-applescript (format "
-ignoring application responses
-	tell application \"System Events\"
-		key code {118} -- press F4 to toggle do not disturb
-
-	end tell
-end ignoring"))
 (org-pomodoro)
+ (error nil))
 )
 
 
@@ -1563,7 +1554,7 @@ end ignoring"))
 (do-applescript (format "
 ignoring application responses
 	tell application \"System Events\"
-keystroke \"P\" using {command down, shift down, option down, control down} -- start Pomodoro One
+keystroke \"B\" using {command down, shift down, option down, control down} -- start Pomodoro One
 key code {118}
 end tell
 end ignoring
@@ -1580,19 +1571,10 @@ set entry_text to \"# Bookwriting:\" & pStartTime & \" - \" & time string of now
 
 #pomodoro \"
 
-do shell script \"echo \" & (quoted form of entry_text) & \" | /usr/local/bin/dayone new\"
-
-
 "))
 ))
 
 #+END_SRC
-
-Old one:
-do shell script \"/usr/local/bin/dayone new \" & quoted form of entry_text
-
-Almost worked:
-do shell script \"echo \" & quoted form of entry_text & \" | /usr/local/bin/dayone new\"
 
 
 
@@ -2462,15 +2444,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (next-line 2))
 
 
-
-(defun jd-org-book-and-adulting ()
- "Insert a new heading with TODO bookwriting and TODO adulting."
- (interactive)
- (org-insert-heading)
- (org-insert-time-stamp (current-time))
- (insert "\n*** TODO bookwriting \n")
- (insert "*** TODO adulting\n")
-)
 
 
 
@@ -5250,91 +5223,6 @@ cmd)
 #+END_SRC
 
 *** document
-**** my/delete-duplicate-lines
-     :PROPERTIES:
-     :ID:       7E335494-C925-4D11-8D01-6175377F1F3C
-     :END:
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my/update-lines (bunches pos keep)
- (cl-loop with dec = (if keep 0 1)
-      for line being the hash-key of bunches
-      using (hash-value positions) do
-      (puthash
-      line
-      (cl-loop for p in positions
-           if (< p pos) collect p
-           else if (> p pos) collect (- p dec))
-      bunches)))
-
-(defun my/suggest-delete-line (line)
- (let ((len (length line)))
-  (move-overlay selection (point) (+ (point) len))
-  (let* ((inhibit-quit t)
-      (answer
-      (with-local-quit
-       (read-key
-        (format "Delete '%s%s'? [y]es/[n]o"
-            (substring line 0 (min len 13))
-            (cond
-            ((> len 16) "...")
-            ((> len 13) (substring line 13 len))
-            (t "")))))))
-   (when (= answer ?y)
-    (delete-region
-     (point)
-     (progn
-      (move-end-of-line 1)
-      (forward-char)
-      (point))))
-   answer)))
-
-(defun my/delete-duplicate-lines (beg end)
- (interactive
-  (if (region-active-p)
-    (list (region-beginning) (region-end))
-   (list (point-min) (point-max))))
- (let ((ignore-white (< (prefix-numeric-value current-prefix-arg) 1))
-    (ignore-blank (< (prefix-numeric-value current-prefix-arg) 4))
-    (bunches (make-hash-table :test 'equal))
-    (selection (make-overlay 1 1)))
-  (overlay-put selection 'face 'secondary-selection)
-  (save-excursion
-   (goto-char beg)
-   (move-beginning-of-line 1)
-   (cl-loop for lnum = (count-lines (point-min) beg)
-        then (1+ lnum)
-        for line = (buffer-substring-no-properties
-              (point)
-              (progn
-               (move-end-of-line 1)
-               (point)))
-        while (< (point) end) do
-        (forward-char)
-        (unless
-          (or (and (string-match "[ \t]+" line) ignore-white)
-            (and (string-match "^$" line) ignore-blank))
-         (puthash line (cons lnum (gethash line bunches)) bunches))))
-  (cl-loop for line being the hash-key of bunches
-       using (hash-value positions)
-       unless (cdr positions) do
-       (remhash line bunches))
-  (cl-loop named :outer for line being the hash-key of bunches do
-       (cl-loop for positions = (gethash line bunches)
-           while positions do
-           (cl-loop with continue = t
-                for pos in positions
-                while continue do
-                (goto-char (point-min))
-                (forward-line pos)
-                (recenter)
-                (cl-case (my/suggest-delete-line line)
-                 (?\C-g (cl-return-from :outer))
-                 (?y)
-                 (otherwise (setf continue nil)))
-                (my/update-lines bunches pos continue))))
-  (delete-overlay selection)))
-#+END_EXAMPLE
-
 **** kill to buffer end
      :PROPERTIES:
      :ID:       49820CA2-490C-4DA0-9036-F16B262F712E
@@ -8678,7 +8566,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 * org-mode timestamp format
 #+begin_src emacs-lisp
 (setq org-time-stamp-custom-formats '("<%a %m/%e/%Y>" . "<%a %B %e %l:%M %p>"))
-(setq-default org-display-custom-times t)
+(setq-default org-display-custom-times nil)
 #+end_src
 
 * smartparens
@@ -9968,7 +9856,7 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
       (wordsmith-highlight-verbs))))
 
 ;; Add a hook to enable wordsmith-mode and highlight verbs in org-mode buffers
-(add-hook 'org-mode-hook 'wordsmith-enable-verbs)
+;; (add-hook 'org-mode-hook 'wordsmith-enable-verbs)
 #+end_src
 
 
@@ -9995,9 +9883,48 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 
 #+end_src
 
+#+begin_src emacs-lisp
+(server-start)
+#+end_src
+
 ;; -*- lexical-binding: t -*-
 
 
 
 
 
+* smartparens fix
+#+begin_src emacs-lisp
+;; smartparens configuration
+(require 'smartparens-config)
+(smartparens-global-mode t)
+(show-smartparens-global-mode t)
+
+;; web-mode configuration
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+(add-hook 'web-mode-hook
+     (lambda ()
+      (setq web-mode-enable-auto-pairing nil)
+      (setq web-mode-enable-auto-closing nil)))
+
+;; Disable smartparens in web-mode
+(add-hook 'web-mode-hook 'turn-off-smartparens-mode)
+#+end_src
+
+
+* pasteboard-copy-large-file
+#+begin_src emacs-lisp
+(defun pasteboard-copy-large-file ()
+ "Copy the current region to the pasteboard using a temporary file."
+ (interactive)
+ (let* ((txt (buffer-substring (region-beginning) (region-end)))
+     (temp-file (make-temp-file "emacs-pasteboard")))
+  (with-temp-file temp-file
+   (insert txt))
+  (shell-command-to-string (format "cat %s | pbcopy" (shell-quote-argument temp-file)))
+  (delete-file temp-file)))
+
+(global-set-key (kbd "C-c C-c") 'pasteboard-copy)
+#+end_src
