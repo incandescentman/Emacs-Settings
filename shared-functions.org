@@ -75,7 +75,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 ;; General Settings
 (setq user-full-name "Jay Dixit"
-      mail-kill-buffer-on-exit t
       abbrev-all-caps nil
       undo-limit 800000
       blink-cursor-mode nil
@@ -84,26 +83,59 @@ I should probably eventually break these out of custom-set-variables and organiz
       ccm-recenter-at-end-of-file t
       clean-buffer-list-delay-general 1
       column-number-mode nil
-      compose-mail-user-agent-warnings nil
-      cua-highlight-region-shift-only t
-      cua-mode nil
       debug-on-error t
-      deft-directory "~/Dropbox/writing/notationaldata/"
-      dired-clean-up-buffers-too nil
-      dired-kept-versions 8
       display-time-mode t
-      edit-server-default-major-mode 'org-mode
-      edit-server-new-frame t
-      eshell-load-hook '((lambda () (abbrev-mode -1)))
       grep-highlight-matches 'always
-      ido-use-faces t
-      ido-use-url-at-point t
       initial-major-mode 'org-mode
       make-backup-files t
+      reb-re-syntax 'string
+      standard-indent 3
+      tooltip-mode nil
+      completion-ignored-extensions '(".o" "~" ".bin" ".lbin" ".so" ".a" ".ln"
+                                      ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx"
+                                      ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/"
+                                      "_darcs/" "_MTN/" ".fmt" ".tfm" ".class"
+                                      ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl"
+                                      ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl"
+                                      ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo"
+                                      ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp"
+                                      ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps"
+                                      ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon"
+                                      ".html" ".zip"))
+
+;; Mail Settings
+(setq mail-kill-buffer-on-exit t
+      compose-mail-user-agent-warnings nil
       message-draft-headers '(From References Date)
       message-required-headers '(From (optional . References))
       mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages"
-      org-M-RET-may-split-line '((item . t))
+      message-send-mail-function 'message-send-mail-with-sendmail
+      send-mail-function 'sendmail-send-it)
+
+;; CUA Mode Settings
+(setq cua-highlight-region-shift-only t
+      cua-mode nil)
+
+;; Deft Settings
+(setq deft-directory "~/Dropbox/writing/notationaldata/")
+
+;; Dired Settings
+(setq dired-clean-up-buffers-too nil
+      dired-kept-versions 8)
+
+;; Edit Server Settings
+(setq edit-server-default-major-mode 'org-mode
+      edit-server-new-frame t)
+
+;; Eshell Settings
+(setq eshell-load-hook '((lambda () (abbrev-mode -1))))
+
+;; Ido Settings
+(setq ido-use-faces t
+      ido-use-url-at-point t)
+
+;; Org-Mode Settings
+(setq org-M-RET-may-split-line '((item . t))
       org-activate-links '(bracket plain radio tag date footnote)
       org-archive-location "archive/%s_archive::"
       org-ascii-headline-spacing '(1 . 1)
@@ -155,36 +187,28 @@ I should probably eventually break these out of custom-set-variables and organiz
       org2blog/wp-default-categories '("inspiration" "personal growth" "miscellany")
       org2blog/wp-keep-new-lines t
       org2blog/wp-show-post-in-browser t
-      org2blog/wp-use-tags-as-categories t
-      osx-browse-prefer-background nil
+      org2blog/wp-use-tags-as-categories t)
+
+;; OSX Browse Settings
+(setq osx-browse-prefer-background nil
       osx-browse-prefer-browser "com.google.Chrome"
-      osx-browse-prefer-new-window t
-      reb-re-syntax 'string
-      smex-prompt-string "I love you. "
-      standard-indent 3
-      tooltip-mode nil
-      completion-ignored-extensions '(".o" "~" ".bin" ".lbin" ".so" ".a" ".ln"
-                                      ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx"
-                                      ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/"
-                                      "_darcs/" "_MTN/" ".fmt" ".tfm" ".class"
-                                      ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl"
-                                      ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl"
-                                      ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo"
-                                      ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp"
-                                      ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps"
-                                      ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon"
-                                      ".html" ".zip")
-      message-send-mail-function 'message-send-mail-with-sendmail
-      org-export-latex-image-default-option "width=20.5cm"
+      osx-browse-prefer-new-window t)
+
+;; Smex Settings
+(setq smex-prompt-string "I love you. ")
+
+;; Org Export Settings
+(setq org-export-latex-image-default-option "width=20.5cm"
       org-export-time-stamp-file nil
       org-export-with-clocks t
       org-html-head-include-default-style nil
       org-html-toplevel-hlevel 2
       org-indent-indentation-per-level 2
       org-list-allow-alphabetical t
-      org-priority-faces nil
-      safe-local-variable-values '((org-export-allow-bind-keywords . t))
-      send-mail-function 'sendmail-send-it)
+      org-priority-faces nil)
+
+;; Safe Local Variable Values
+(setq safe-local-variable-values '((org-export-allow-bind-keywords . t)))
 
 ;; Uncomment if needed
 ;; (setq org-agenda-jump-prefer-future t)
