@@ -38,15 +38,12 @@
 ** Load the proper repositories
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives
-'("marmalade" .
-"http://marmalade-repo.org/packages/" ) t)  ; many packages won't show if this isn't here
-(setq package-archives '(
-("gnu" . "https://elpa.gnu.org/packages/")
-("melpa" . "https://melpa.org/packages/")
-("nongnu" . "https://elpa.nongnu.org/nongnu/")
-("tromey" . "http://tromey.com/elpa/")
-))
+;; Set package archives
+(setq package-archives
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+    ("melpa" . "https://melpa.org/packages/")
+    ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+    ("tromey" . "http://tromey.com/elpa/")))
 (package-initialize)
 #+END_SRC
 
@@ -6163,9 +6160,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 #+begin_SRC emacs-lisp
 (defvar my-org-selected-css nil
-  "Path of the selected CSS file.")
-
-(defvar my-org-selected-css nil
  "Path of the selected CSS file or nil for no stylesheet.")
 
 (defun select-org-export-css ()
@@ -6176,32 +6170,31 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
              '("/Users/jay/Dropbox/web-design/custom-css/email.css"
               "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
               "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-
               "none"))) ; 'none' is now the last option
  (when (string-equal my-org-selected-css "none")
   (setq my-org-selected-css nil)))
 
 (defun my-org-inline-css-hook (exporter)
-  "Insert custom inline css"
-  (when (eq exporter 'html)
-    (unless my-org-selected-css
-      (select-org-export-css))
-    (let* ((dir (ignore-errors (file-name-directory (buffer-file-name))))
-           (path (concat dir "style.css"))
-           (homestyle (or (null dir) (null (file-exists-p path))))
-           (final (if homestyle my-org-selected-css path)))
+ "Insert custom inline CSS."
+ (when (eq exporter 'html)
+  (unless my-org-selected-css
+   (select-org-export-css))
+  (if my-org-selected-css
+    (let ((final my-org-selected-css))
+     (when (file-exists-p final)
       (setq org-html-head-include-default-style nil)
       (setq org-html-head (concat
-                           "<style type=\"text/css\">\n"
-                           "<!--/*--><![CDATA[/*><!--*/\n"
-                           (with-temp-buffer
-                             (insert-file-contents final)
-                             (buffer-string))
-                           "/*]]>*/-->\n"
-                           "</style>\n")))))
+                 "<style type=\"text/css\">\n"
+                 "<!--/*--><![CDATA[/*><!--*/\n"
+                 (with-temp-buffer
+                  (insert-file-contents final)
+                  (buffer-string))
+                 "/*]]>*/-->\n"
+                 "</style>\n"))))
+   (setq org-html-head-include-default-style nil)
+   (setq org-html-head nil))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
-
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 #+END_SRC
 
@@ -9531,6 +9524,7 @@ Philosophy:
 (interactive)
 (remove-filler-words)
 (remove-duplicated-words)
+(remove-doubled-words)
   )
 #+end_src
 
@@ -9841,3 +9835,27 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 
 (global-set-key (kbd "C-c C-c") 'pasteboard-copy)
 #+end_src
+
+* openwith
+#+begin_example emacs-lisp
+;; Ensure the package is installed
+(unless (package-installed-p 'openwith)
+ (package-refresh-contents)
+ (package-install 'openwith))
+
+(require 'openwith)
+
+;; Define the file associations
+(setq openwith-associations
+   (list
+    (list (openwith-make-extension-regexp '("docx")) "open" '("-a" "Microsoft Word" file))
+    (list (openwith-make-extension-regexp '("pdf")) "open" '("-a" "Preview" file))
+    ;; Add more associations as needed
+    ))
+
+;; Enable openwith mode
+(openwith-mode 1)
+
+;; Avoid conflicts with email attachments
+(add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
+#+end_example
