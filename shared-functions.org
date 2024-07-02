@@ -43,7 +43,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
     ("melpa" . "https://melpa.org/packages/")
     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-    ("tromey" . "http://tromey.com/elpa/")))
+    ("tromey" . "https://tromey.com/elpa/")))
 (package-initialize)
 #+END_SRC
 
@@ -52,9 +52,9 @@
 (add-to-list 'load-path "~/emacs/emacs-settings/")
 #+END_SRC
 
-** don't require packages
+** Control use-package verbosity
 #+begin_src emacs-lisp
-(setq use-package-verbose nil) ;; set t to for debugging
+(setq use-package-verbose nil) ;; Set to t for debugging
 #+end_src
 
 ** some org packages
@@ -71,132 +71,129 @@
 * Setting variables
 I should probably eventually break these out of custom-set-variables and organize them according to their function.
 #+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t -*-
 
+;; General Settings
+(setq user-full-name "Jay Dixit"
+      mail-kill-buffer-on-exit t
+      abbrev-all-caps nil
+      undo-limit 800000
+      blink-cursor-mode nil
+      calendar-latitude 40.7
+      case-fold-search t
+      ccm-recenter-at-end-of-file t
+      clean-buffer-list-delay-general 1
+      column-number-mode nil
+      compose-mail-user-agent-warnings nil
+      cua-highlight-region-shift-only t
+      cua-mode nil
+      debug-on-error t
+      deft-directory "~/Dropbox/writing/notationaldata/"
+      dired-clean-up-buffers-too nil
+      dired-kept-versions 8
+      display-time-mode t
+      edit-server-default-major-mode 'org-mode
+      edit-server-new-frame t
+      eshell-load-hook '((lambda () (abbrev-mode -1)))
+      grep-highlight-matches 'always
+      ido-use-faces t
+      ido-use-url-at-point t
+      initial-major-mode 'org-mode
+      make-backup-files t
+      message-draft-headers '(From References Date)
+      message-required-headers '(From (optional . References))
+      mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages"
+      org-M-RET-may-split-line '((item . t))
+      org-activate-links '(bracket plain radio tag date footnote)
+      org-archive-location "archive/%s_archive::"
+      org-ascii-headline-spacing '(1 . 1)
+      org-ascii-table-use-ascii-art t
+      org-catch-invisible-edits 'smart
+      org-ctrl-k-protect-subtree t
+      org-custom-properties '(">")
+      org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt"
+      org-display-custom-times nil
+      org-drawers '("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")
+      org-edit-src-content-indentation 4
+      org-ellipsis 'org-warning
+      org-enforce-todo-checkbox-dependencies t
+      org-enforce-todo-dependencies t
+      org-extend-today-until 8
+      org-fontify-done-headline t
+      org-fontify-emphasized-text t
+      org-footnote-define-inline t
+      org-footnote-section "Footnotes"
+      org-footnote-tag-for-non-org-mode-files "Footnotes:"
+      org-hide-block-startup nil
+      org-hide-emphasis-markers t
+      org-html-container-element "div"
+      org-html-head-include-scripts nil
+      org-html-html5-fancy t
+      org-html-postamble nil
+      org-html-text-markup-alist '((bold . "<strong>%s</strong>")
+                                   (code . "<code>%s</code>")
+                                   (italic . "<em>%s</em>")
+                                   (strike-through . "<del>%s</del>")
+                                   (underline . "<span class=\"underline\">%s</span>")
+                                   (verbatim . "<code>%s</code>"))
+      org-indent-mode-turns-off-org-adapt-indentation nil
+      org-indent-mode-turns-on-hiding-stars nil
+      org-insert-mode-line-in-empty-file t
+      org-log-done nil
+      org-mac-link-skim-highlight-selection-p t
+      org-n-level-faces 9
+      org-odd-levels-only nil
+      org-provide-checkbox-statistics t
+      org-replace-disputed-keys nil
+      org-special-ctrl-a/e t
+      org-src-preserve-indentation t
+      org-startup-align-all-tables t
+      org-startup-indented t
+      org-use-speed-commands t
+      org-yank-adjusted-subtrees t
+      org2blog/wp-confirm-post nil
+      org2blog/wp-default-categories '("inspiration" "personal growth" "miscellany")
+      org2blog/wp-keep-new-lines t
+      org2blog/wp-show-post-in-browser t
+      org2blog/wp-use-tags-as-categories t
+      osx-browse-prefer-background nil
+      osx-browse-prefer-browser "com.google.Chrome"
+      osx-browse-prefer-new-window t
+      reb-re-syntax 'string
+      smex-prompt-string "I love you. "
+      standard-indent 3
+      tooltip-mode nil
+      completion-ignored-extensions '(".o" "~" ".bin" ".lbin" ".so" ".a" ".ln"
+                                      ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx"
+                                      ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/"
+                                      "_darcs/" "_MTN/" ".fmt" ".tfm" ".class"
+                                      ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl"
+                                      ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl"
+                                      ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo"
+                                      ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp"
+                                      ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps"
+                                      ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon"
+                                      ".html" ".zip")
+      message-send-mail-function 'message-send-mail-with-sendmail
+      org-export-latex-image-default-option "width=20.5cm"
+      org-export-time-stamp-file nil
+      org-export-with-clocks t
+      org-html-head-include-default-style nil
+      org-html-toplevel-hlevel 2
+      org-indent-indentation-per-level 2
+      org-list-allow-alphabetical t
+      org-priority-faces nil
+      safe-local-variable-values '((org-export-allow-bind-keywords . t))
+      send-mail-function 'sendmail-send-it)
 
-
- (setq mail-kill-buffer-on-exit t)
- (setq abbrev-all-caps nil)
-(customize-set-variable 'undo-limit 800000)
-
- (setq user-full-name "Jay Dixit")
-
- (setq blink-cursor-mode nil)
-(setq calendar-latitude 40.7)
- (setq case-fold-search t)
- (setq ccm-recenter-at-end-of-file t)
- (setq clean-buffer-list-delay-general 1)
- (setq column-number-mode nil)
- (setq compose-mail-user-agent-warnings nil)
- (setq cua-highlight-region-shift-only t)
- ;; (setq cua-mode nil nil (cua-base))
- (setq cua-mode nil)
- (setq debug-on-error t)
- (setq deft-directory "~/Dropbox/writing/notationaldata/")
-
- (setq dired-clean-up-buffers-too nil)
+;; Uncomment if needed
+;; (setq org-agenda-jump-prefer-future t)
+;; (setq org-agenda-skip-scheduled-if-done t)
+;; (setq org-agenda-timegrid-use-ampm t)
+;; (setq tramp-default-method "ssh")
+;; (setq visual-line-mode nil t)
 ;; (setq dired-details-hidden-string "")
- (setq dired-kept-versions 8)
- (setq display-time-mode t)
- (setq edit-server-default-major-mode (quote org-mode))
- (setq edit-server-new-frame t)
- (setq eshell-load-hook (quote ((lambda nil (abbrev-mode -1)))))
- (setq grep-highlight-matches (quote always))
- (setq ido-use-faces t)
- (setq ido-use-url-at-point t)
- (setq initial-major-mode (quote org-mode))
-
- (setq make-backup-files t)
- (setq message-draft-headers (quote (From References Date)))
-
- (setq message-required-headers (quote (From (optional . References))))
- (setq mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages")
- (setq org-M-RET-may-split-line (quote ((item . t))))
- (setq org-activate-links (quote (bracket plain radio tag date footnote)))
-           ; (setq org-agenda-jump-prefer-future t)
-           ; (setq org-agenda-skip-scheduled-if-done t)
-           ; (setq org-agenda-timegrid-use-ampm t)
- (setq org-archive-location "archive/%s_archive::")
- (setq org-ascii-headline-spacing (quote (1 . 1)))
- (setq org-ascii-table-use-ascii-art t)
- (setq org-catch-invisible-edits (quote error))
- (setq org-catch-invisible-edits (quote smart))
- (setq org-ctrl-k-protect-subtree t)
- (setq org-custom-properties (quote (">")))
- (setq org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt")
- (setq org-display-custom-times nil)
- (setq org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")))
- (setq org-edit-src-content-indentation 4)
- (setq org-ellipsis (quote org-warning))
- (setq org-enforce-todo-checkbox-dependencies t)
- (setq org-enforce-todo-dependencies t)
- (setq org-extend-today-until 8)
- (setq org-fontify-done-headline t)
- (setq org-fontify-emphasized-text t)
- (setq org-footnote-define-inline t)
- (setq org-footnote-section "Footnotes")
- (setq org-footnote-tag-for-non-org-mode-files "Footnotes:")
- (setq org-hide-block-startup nil)
- (setq org-hide-emphasis-markers t)
-(setq org-html-container-element "div")
- (setq org-html-head-include-scripts nil)
- (setq org-html-html5-fancy t)
- (setq org-html-postamble nil)
- (setq org-html-text-markup-alist (quote ((bold . "<strong>%s</strong>") (code . "<code>%s</code>") (italic . "<em>%s</em>") (strike-through . "<del>%s</del>") (underline . "<span class=\"underline\">%s</span>") (verbatim . "<code>%s</code>"))))
- (setq org-indent-mode-turns-off-org-adapt-indentation nil)
- (setq org-indent-mode-turns-on-hiding-stars nil)
- (setq org-insert-mode-line-in-empty-file t)
- ;; (setq org-list-indent-offset 3)
- (setq org-log-done nil)
-
- (setq org-mac-link-skim-highlight-selection-p t)
- (setq org-mac-grab-Firefox+Vimperator-p nil)
- (setq org-mac-grab-Firefox-app-p nil)
- (setq org-mac-grab-Mail-app-p nil)
- (setq org-mac-grab-Safari-app-p nil)
- (setq org-mac-grab-Together-app-p nil)
- (setq org-n-level-faces 9)
- (setq org-odd-levels-only nil)
- (setq org-provide-checkbox-statistics t)
- (setq org-replace-disputed-keys nil)
- (setq org-special-ctrl-a/e t)
- (setq org-src-preserve-indentation t)
- (setq org-startup-align-all-tables t)
- (setq org-startup-indented t)
-
- (setq org-use-speed-commands t)
- (setq org-yank-adjusted-subtrees t)
- (setq org2blog/wp-confirm-post nil)
- (setq org2blog/wp-default-categories (quote ("inspiration" "personal growth" "miscellany")))
- (setq org2blog/wp-keep-new-lines t)
- (setq org2blog/wp-show-post-in-browser t)
- (setq org2blog/wp-use-tags-as-categories t)
- (setq osx-browse-prefer-background nil)
- (setq osx-browse-prefer-browser "com.google.Chrome")
- (setq osx-browse-prefer-new-window t)
- (setq reb-re-syntax (quote string))
- (setq smex-prompt-string "I love you. ")
- (setq standard-indent 3)
- (setq tooltip-mode nil)
- ;; (setq tramp-default-method "ssh")
-
- ;; (setq visual-line-mode nil t)
-
-
- (setq completion-ignored-extensions (quote (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".fasl" ".ufsl" ".fsl" ".dxl" ".pfsl" ".dfsl" ".p64fsl" ".d64fsl" ".dx64fsl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon" ".html" ".zip")))
-
- (setq message-send-mail-function (quote message-send-mail-with-sendmail))
-
-(setq org-export-latex-image-default-option "width=20.5cm")
- (setq org-export-time-stamp-file nil)
- (setq org-export-with-clocks t)
- (setq org-html-head-include-default-style nil)
- (setq org-html-toplevel-hlevel 2)
- (setq org-indent-indentation-per-level 2)
- (setq org-list-allow-alphabetical t)
- (setq org-priority-faces nil)
- (setq safe-local-variable-values (quote ((org-export-allow-bind-keywords . t))))
- (setq send-mail-function (quote sendmail-send-it))
-
+;; (setq org-list-indent-offset 3)
 #+END_SRC
 
 
