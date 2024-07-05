@@ -76,7 +76,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; General Settings
 (setq user-full-name "Jay Dixit"
       abbrev-all-caps nil
-      undo-limit 800000
       blink-cursor-mode nil
       calendar-latitude 40.7
       case-fold-search t
@@ -322,10 +321,6 @@ Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-hori
 
 
 
-*** Undo limit
-#+BEGIN_SRC emacs-lisp
-(setq undo-limit 100000)
-#+END_SRC
 
 ** quitting emacs
 *** Ask before exiting Emacs
@@ -2049,7 +2044,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+BEGIN_SRC emacs-lisp
 (setq buffer-stack-show-position nil)
 
-(setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "todo" "TODO" )))
+(setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "todo" "TODO" "*org-roam*")))
 
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
@@ -5494,11 +5489,15 @@ into the main dumped emacs"
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
-:defer
-:bind (:map undo-tree-map
-("M-_" . nil)
-)
-)
+ :defer t
+ :config
+ (global-undo-tree-mode))
+
+;; Undo Limits
+(setq undo-limit 200000
+   undo-strong-limit 300000
+   undo-outer-limit 3000000)
+
 #+END_SRC
 
 * Emacs 25
@@ -9880,3 +9879,21 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 ;; Avoid conflicts with email attachments
 (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
 #+end_example
+
+
+* Make Emacs use MacOS Trash instead of rm
+When deleting a file, don't use vc-delete-file
+#+begin_src emacs-lisp
+(defun crux-delete-file-and-buffer ()
+ "Kill the current buffer and deletes the file it is visiting."
+ (interactive)
+ (let ((filename (buffer-file-name)))
+  (when filename
+   (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
+    (let ((vc-backend (vc-backend filename)))
+     (when vc-backend
+      (vc-delete-file filename))
+     (call-process "/usr/local/bin/rmtrash" nil nil nil filename)
+     (message "Moved file %s to your MacOS Trash 🗑️" filename)
+     (kill-buffer))))))
+#+end_src

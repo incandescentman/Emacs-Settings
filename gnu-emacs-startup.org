@@ -495,6 +495,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; Setup Org mode specific keys
 (add-hook 'org-mode-hook 'setup-org-mode-keys)
 
+;; learn this key binding!!!
+(define-key key-minor-mode-map (kbd "M-s-d") 'counsel-find-file)
 
 (define-key key-minor-mode-map (kbd "C-<tab>") 'org-cycle-force-archived)
 
@@ -584,6 +586,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
   )
 
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
+
+(define-key key-minor-mode-map (kbd "s-A") 'palimpsest-move-region-to-bottom)
+;; TODO learn this key binding!!
 
 (define-key key-minor-mode-map (kbd "s-k t c") 'org-table-create)
 
@@ -801,7 +806,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key org-mode-map (kbd "C-S-r") nil)
 
 
-(define-key key-minor-mode-map (kbd "M-s-d") 'define-word-at-point)
 
 
 (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
