@@ -460,6 +460,250 @@ Use ⌘-m as prefix for my own custom keybindings:
   (fset 's-k-prefix s-k-map)
 #+END_SRC
 
+* Keybindings cheat sheet
+Here's the key bindings cheat sheet in Org-mode format, organized and classified:
+
+** File and Buffer Management
+
+~M-s-d~             counsel-find-file
+~s-k o l~           olivetti-mode
+~s-I~               clone-indirect-buffer-new-window-and-focus
+~C-x C-d~           dired
+~s-n~               make-frame
+~C-s-r~             consult-find
+~s-R~               fasd-find-file
+~s-t~               new-buffer
+~s-g~               isearch-repeat-forward
+~s-w~               delete-window
+~s-s~               jay/save-some-buffers
+~s-k RET~           kill-current-buffer
+
+** Text and Region Operations
+
+~C-w~               copy-region-as-kill-and-push-to-clipboard
+~C-d~               kill-word-correctly-and-capitalize
+~C-l~               reflash-indentation
+~s-v~               pasteboard-paste-no-spaces
+~s-x~               pasteboard-cut-and-capitalize
+~s-c~               pasteboard-copy
+~s-V~               pasteboard-paste-no-spaces
+~M-\"~              open-abbrevs
+~s-|~               path-copy-path-to-clipboard
+~s-A~               palimpsest-move-region-to-bottom
+~M-+~               add-word-to-personal-dictionary
+~s-k r e~           set-rectangular-region-anchor
+~s-0~               move-region-to-other-window
+~s-o~               move-or-copy-region-to-other-window
+~s-O~               reveal-in-finder
+~s-.~               jay-refile-region
+~C-.~               searchlink
+
+** Navigation
+
+~C-<tab>~           org-cycle-force-archived
+~C-x p~             pop-to-mark-command
+~s-`~               other-window-or-frame
+~s-\\~              visit-most-recent-file
+~M-s-<right>~       switch-to-next-buffer
+~M-s-<left>~        previous-buffer
+~M-]~               org-next-visible-heading
+~M-[~               org-previous-visible-heading
+~C-M-]~             org-next-subtree-and-narrow
+~C-M-[~             org-previous-subtree-and-narrow
+~C-]~               org-next-subtree-same-level-and-narrow
+~ESC ESC~           org-previous-subtree-same-level-and-narrow
+~s-k w s~           isearch-forward-word
+~C-s~               consult-line
+~s-f~               isearch-forward-ignore-case
+~s-F~               pasteboard-search-for-clipboard-contents
+
+** Help and Documentation
+
+~M-h M-k~           describe-key
+~M-h~               help-command
+~C-s-]~             help-go-back
+~C-s-]~             help-go-forward
+
+** Evaluation
+
+~C-c e~             eval-buffer
+~C-c r~             eval-region
+
+** Miscellaneous
+
+~M-j~               aide-openai-complete-buffer-insert
+~M-s-m~             visit-messages-buffer
+~<s-backspace>~     ~kill-region
+~M-?~               insert-question-mark
+~s-k ag~            affe-grep
+~s-k t t~           toggle-between-src-and-example-block
+~C-9~               goto-last-change-reverse
+~C--~               goto-last-change
+~M-=~               er/expand-region
+~C-=~               er/expand-region
+~s-,~               customize-group
+~M-s-=~             calc-eval-region
+
+* Org Mode Specific Key Bindings
+
+** General Org Mode
+
+~<return>~          smart-return
+~C-c C-x C-r~       org-clock-report
+~s-k r t~           org-render-table-at-point
+~s-k r l~           remove-link
+~s-k c s~           org-clone-subtree
+~s-k v~             org-paste-subtree
+~s-k x~             org-cut-subtree
+~s->~               org-mark-subtree
+~M-'~               insert-one-double-quote
+~C-;~               org-def
+~s-k t c~           org-table-create
+~s-k d c~           org-table-delete-column
+~s-k i c~           org-table-insert-column
+~s-k i r~           org-table-insert-row
+~M-8~               org-toggle-heading-same-level
+~M-*~               org-toggle-todo-heading
+~M-d~               org-todo
+~M-s-9~             org-todo
+~M-a~               org-priority-up
+~s-k t d~           org-todo-list
+~s-k o a~           org-agenda
+~s->~               org-cycle-agenda-files
+~s-k c i~           jd-clock-in
+~s-k o s~           org-schedule
+~s-k o d~           org-deadline
+~s-k t s~           org-toggle-time-stamp-overlays
+~C-c v i~           org-insert-src-block
+~s-k o l~           olivetti-mode
+~] ol~              olivetti-mode
+~s-k o e~           olivetti-expand
+~s-+~               copy-region-to-other-window
+~s-_~               olivetti-shrink
+~s-l~               org-insert-link
+~s-.~               jay-refile-region
+~s-;~               consult-outline
+~s-'~               choose-refile-method-and-refile
+~M-K~               kill-sentence-maybe-else-kill-line
+~C-M-8~             org-toggle-heading
+~C-c C-s~           org-schedule
+~s-k w m~           whitespace-mode
+~s-k h l~           spacemacs/toggle-highlight-current-line-globally-off
+~s-k r b~           revert-buffer
+~s-k s b~           scrollbar-mode-turn-off-scrollbar
+~s-k i l~           imenu-list
+~s-k i m~           imenu-list
+~s-k g t~           google-translate-at-point
+~s-v~               pasteboard-paste-spaces-maybe
+~s-k o m~           org-mode
+~s-k f m~           text-mode
+~s-k e l~           emacs-lisp-mode
+~s-k w c~           wc-mode
+~s-k o c~           org-wc-count-subtrees
+~s-k o c~           org-wc-display
+
+** Custom Functions
+
+~M-h~               replace-string
+~s-k k a~           load-koma-letter
+~s-k k o~           load-koma-letter
+~M-s-v~             html2org-clipboard
+~C-x p~             pop-to-mark-command
+~s-K~               org-cut-subtree
+~C-c m~             compose-mail
+~C-x p~             pop-to-mark-command
+~s-E~               new-email-from-subtree-no-signature
+~s-+~               set-mark-command
+~M-a~               org-priority-up
+~C-c C-x p p~       pomodoro-start
+~s-.~               jay-refile-region
+~s-;~               consult-outline
+~s-'~               choose-refile-method-and-refile
+~M-b M-d~           book-dired
+~M-b r~             read-a-book
+~M-b j~             read-jd
+~M-b M-b~           work-on-book
+~M-b M-w~           work-on-book
+~M-b lc~            book-load-current
+~M-b M-p~           book-proposal-directory
+~M-b M-m~           book-mistakes-directory
+~s-k o l~           olivetti-mode
+~] ol~              olivetti-mode
+~s-k o e~           olivetti-expand
+~s-_~               olivetti-shrink
+~s-l~               org-insert-link
+~s-.~               jay-refile-region
+~s-;~               consult-outline
+~s-'~               choose-refile-method-and-refile
+~M-K~               kill-sentence-maybe-else-kill-line
+~C-M-8~             org-toggle-heading
+~M-8~               org-toggle-heading-same-level
+~M-*~               org-toggle-todo-heading
+~M-d~               org-todo
+~M-s-9~             org-todo
+~C-c v i~           org-insert-src-block
+~s-h~               replace-string
+~s-m~               mc/mark-all-like-this
+~s-M~               tr-toggle-transclusion
+
+* External Applications
+
+** External Monitor
+
+~s-n~               make-frame
+
+* Mouse Bindings
+
+
+
+~<mouse-2>~         context-menu-open
+~C-c <mouse-3>~     ~right-click-context-menu
+
+* Pomodoro
+
+~<f20>~             pomodoro-start
+~s-k p s~           pomodoro-start
+~C-c C-x pi~        pomodoro-start
+~C-c C-x po~        pomodoro-stop
+
+* Custom Functions
+
+** Custom Key Bindings
+
+~M-t~               titlecase-dwim
+~M--~               cycle-hyphenation-or-toggle-item
+~C-M-SPC~           set-mark-command
+~C-M-x~             exchange-point-and-mark
+~s-y~               undo-tree-redo
+~s-+~               embiggen-text
+~s--~               ensmallen-text
+~M-h~               help-command
+~M-+~               add-word-to-personal-dictionary
+~s-k s w~           crux-swap-windows
+~s-k l a~           jay-load-latex
+~s-k l t~           jay-load-latex
+~M-s-v~             html2org-clipboard
+~M-s-<right>~       switch-to-next-buffer
+~M-s-<left>~        previous-buffer
+~<backspace>~       my/delete-backward-and-capitalize
+~C-<backspace>~     ~delete-char
+~M-<backspace>~     ~backward-kill-word-correctly-and-capitalize
+~s-,~               customize-group
+~s-g~               isearch-repeat-forward
+~C-s-g~             consult-ripgrep-current-directory
+~s-G~               counsel-projectile-ag
+~s-\\~              visit-most-recent-file
+~s-R~               fasd-find-file
+~s-t~               new-buffer
+~s-F~               pasteboard-search-for-clipboard-contents
+~s-d~               org-todo
+~s-L~               org-mac-link-chrome-insert-frontmost-url
+~s-S~               org-mac-link-skim-insert
+~s-a~               mark-whole-buffer
+~s-w~               delete-window
+~s-s~               jay/save-some-buffers
+~C-s-r~             consult-find
+
 
 ** NOTE-TO-JAY TODO Custom keybindings
 
@@ -1090,6 +1334,95 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-s") 'jay/save-some-buffers ) ; save all
 
 (define-key key-minor-mode-map (kbd "C-s-r") 'consult-find)
+#+END_SRC
+
+
+* OSX ⌘ key bindings
+Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
+#+BEGIN_SRC emacs-lisp
+(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
+(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
+
+(defun define-super-key (key fun)
+ (cond
+ (gnuemacs-flag
+ (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
+#+END_SRC
+
+** mksuper - shared Aquamacs / GNU Emacs keybindings:
+
+Deprecated in favor of (define-key key-minor-mode-map (kbd "s... in:
+[[/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
+
+#+BEGIN_EXAMPLE emacs-lisp
+(define-super-key "h" 'replace-string)
+
+
+(define-super-key "m" 'mc/mark-all-like-this)
+
+
+(define-super-key "\\" 'visit-most-recent-file)
+
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents)
+
+(define-super-key "R" 'projectile-find-file)
+(define-super-key "t" 'new-buffer)
+(define-super-key "T" 'org-new-scratch-buffer)
+(define-super-key "g" 'isearch-repeat-forward)
+(define-super-key "d" 'org-todo)
+(define-super-key "L" 'org-mac-link-chrome-insert-frontmost-url)
+(define-super-key "S" 'org-mac-link-skim-insert-page)
+(define-super-key "a" 'mark-whole-buffer) ; select all
+(define-super-key "w" 'delete-window) ; close
+(define-super-key "s" 'jay/save-some-buffers ) ; save all
+#+END_EXAMPLE
+
+Key bindings I don't use much and should remember to learn:
+#+BEGIN_SRC emacs-lisp
+(define-super-key "5" 'point-stack-push)
+(define-super-key "6" 'point-stack-pop)
+(define-super-key "7" 'point-stack-forward-stack-pop)
+(define-super-key "8" 'search-open-buffers)
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents)
+(define-super-key "(" 'org-velocity)
+(define-super-key "{" 'path-copy-path-to-clipboard)
+(define-super-key "}" 'path-copy-path-to-clipboard)
+;; why not use N and P here? TODO
+
+
+#+END_SRC
+
+mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
+#+BEGIN_SRC emacs-lisp
+
+(define-super-key "k rr" 'replace-regexp)
+
+
+(define-super-key "k cf" 'customize-face)
+
+
+
+(define-super-key "k dd" 'delete-duplicate-lines-keep-blanks)
+
+(define-super-key "k cw" 'count-words)
+
+
+(define-super-key "k bl" 'blue-light)
+
+;; ;; Accountability
+
+(defun keybinding-read-and-insert (key)
+ (interactive "kKey: ")
+(insert "(define-key key-minor-mode-map ")
+  (insert (format "(kbd \"%s\")" (key-description key)))
+  (insert " '")
+(save-excursion (insert ")")
+    ))
+
+(define-super-key "k kb" 'keybinding-read-and-insert)
+(define-super-key "k mk" 'keybinding-read-and-insert)
+
+
 #+END_SRC
 
 

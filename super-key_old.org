@@ -1,0 +1,128 @@
+
+** OSX ⌘ key bindings
+Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
+#+BEGIN_SRC emacs-lisp
+(defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
+(defvar aquamacs-flag (string-match "Aquamacs" (emacs-version)))
+
+(defun define-super-key (key fun)
+ (cond
+; (aquamacs-flag
+; (define-key osx-key-mode-map (kbd (concat "A-" key)) fun))
+  (gnuemacs-flag
+  (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
+#+END_SRC
+
+*** mksuper - shared Aquamacs / GNU Emacs keybindings:
+
+Deprecated in favor of (define-key key-minor-mode-map (kbd "s... in:
+[[/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
+
+#+BEGIN_EXAMPLE emacs-lisp
+(define-super-key "h" 'replace-string)
+
+
+(define-super-key "m" 'mc/mark-all-like-this)
+
+
+(define-super-key "\\" 'visit-most-recent-file)
+
+;; (define-super-key "f" 'isearch-forward)
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents)
+;; (define-super-key "R" 'helm-projectile-recentf)
+;; (define-super-key "r" 'helm-mini)
+
+(define-super-key "R" 'projectile-find-file)
+(define-super-key "t" 'new-buffer)
+(define-super-key "T" 'org-new-scratch-buffer)
+(define-super-key "g" 'isearch-repeat-forward)
+;; (define-super-key "k" 'kill-buffer)
+;; (define-super-key "K" 'org-cut-subtree)
+(define-super-key "d" 'org-todo)
+(define-super-key "L" 'org-mac-link-chrome-insert-frontmost-url)
+(define-super-key "S" 'org-mac-link-skim-insert-page)
+(define-super-key "a" 'mark-whole-buffer) ; select all
+(define-super-key "w" 'delete-window) ; close
+;; (define-super-key "`" 'other-window-or-frame)
+(define-super-key "s" 'jay/save-some-buffers ) ; save all
+#+END_EXAMPLE
+
+Key bindings I don't use much and should remember to learn:
+#+BEGIN_SRC emacs-lisp
+;; (define-super-key "4" 'clone-indirect-buffer-other-window)
+(define-super-key "5" 'point-stack-push)
+(define-super-key "6" 'point-stack-pop)
+(define-super-key "7" 'point-stack-forward-stack-pop)
+(define-super-key "8" 'search-open-buffers)
+;; (define-super-key "o" 'eval-buffer)
+(define-super-key "F" 'pasteboard-search-for-clipboard-contents)
+(define-super-key "(" 'org-velocity)
+(define-super-key "{" 'path-copy-path-to-clipboard)
+(define-super-key "}" 'path-copy-path-to-clipboard)
+;; why not use N and P here? TODO
+
+
+
+;; (define-super-key "k a" 'org-agenda)
+;; (define-super-key "k j" 'helm-imenu-anywhere)
+;; (define-super-key ";" 'ido-goto-symbol)
+;; (define-super-key ";" 'helm-resume)
+;; (define-super-key "D" 'diredp-dired-recent-dirs)
+
+#+END_SRC
+
+mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
+#+BEGIN_SRC emacs-lisp
+;; (define-super-key "k cy" 'cyberpunk-jay)
+;; (define-super-key "k cl" 'cyberpunk-large)
+;; (define-super-key "k zb" 'zenburn)
+;; (define-super-key "k le" 'leuven)
+;; (define-super-key "k ts" 'transparent-serenity)
+;; (define-super-key "k tg" 'top-gun-mode)
+;; (define-super-key "k tn" 'tomorrow-night)
+;; (define-super-key "k cl" 'cyberpunk-large)
+
+;; (define-super-key "k ma" 'inverse-add-global-abbrev)
+
+;; (define-super-key "k sd" 'solarized-dark)
+;; (define-super-key "k ri" 'ritchie)
+;; (define-super-key "k sp" 'spolsky)
+;; (define-super-key "k wr" 'writeroom-mode)
+;; (define-super-key "k wf" 'workflowy-mode)
+;; (define-super-key "k st" 'small-type)
+;; (define-super-key "k mp" 'morning-pages)
+;; (define-super-key "k lt" 'load-theme)
+;; (define-super-key "k mt" 'medium-type)
+;; (define-super-key "k wb" 'whiteboard)
+;; (define-super-key "k sl" 'spacemacs-light)
+
+
+(define-super-key "k rr" 'replace-regexp)
+
+
+(define-super-key "k cf" 'customize-face)
+
+
+
+(define-super-key "k dd" 'delete-duplicate-lines-keep-blanks)
+
+(define-super-key "k cw" 'count-words)
+
+
+(define-super-key "k bl" 'blue-light)
+
+;; ;; Accountability
+
+(defun keybinding-read-and-insert (key)
+ (interactive "kKey: ")
+(insert "(define-key key-minor-mode-map ")
+    (insert (format "(kbd \"%s\")" (key-description key)))
+    (insert " '")
+(save-excursion (insert ")")
+        ))
+
+(define-super-key "k kb" 'keybinding-read-and-insert)
+(define-super-key "k mk" 'keybinding-read-and-insert)
+
+
+#+END_SRC
