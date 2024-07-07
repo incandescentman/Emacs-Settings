@@ -1,6 +1,0 @@
-* This
-- one
-- two
-- Instructions: Place the point at end of this file and do ~M-<return>~. Desired behavior is to add an org-heading. Current behavior is to add a heading.
-
-
