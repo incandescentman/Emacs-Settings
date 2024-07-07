@@ -1535,13 +1535,6 @@ Make org-capture open in full window! :-)
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a")
 
 
-
-;; (add-hook 'org-pomodoro-started-hook #'(lambda () (adobe-garamond-pro)))
-;; (add-hook 'org-pomodoro-finished-hook #'(lambda () (monaco-font)))
-;; (add-hook 'org-pomodoro-started-hook #'(lambda () (org-todo 'done)))
-;; (add-hook 'org-pomodoro-short-break-finished-hook 'previous-line)
-;; (add-hook 'org-pomodoro-long-break-finished-hook 'previous-line)
-
 (defun pomodoro-start ()
   (interactive)
 (org-todo 'done)
@@ -2338,7 +2331,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (defun html2text-clipboard ()
  "Convert clipboard contents from HTML to plain text and paste."
  (interactive)
-;; (jd-org-today)
  (setq cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t plain")
  (kill-new (shell-command-to-string cmd))
  (yank))
@@ -2426,6 +2418,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 (insert "\n")
 (insert "*** TODO bookwriting\n")
 (pomodoro-start)
+(pomidor)
  )
 
 
@@ -2434,7 +2427,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (interactive)
 
  (insert "*** TODO bookwriting\n")
-
+(pomidor)
  (pomodoro-start))
 
 
