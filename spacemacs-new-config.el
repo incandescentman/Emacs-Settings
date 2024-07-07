@@ -28,8 +28,8 @@
 (setq file-name-handler-alist nil)
 (defun ambrevar/reset-file-name-handler-alist ()
   (setq file-name-handler-alist
-	      (append default-file-name-handler-alist
-		            file-name-handler-alist))
+        (append default-file-name-handler-alist
+                file-name-handler-alist))
   (cl-delete-duplicates file-name-handler-alist :test 'equal))
 (add-hook 'after-init-hook #'ambrevar/reset-file-name-handler-alist)
 
@@ -104,7 +104,7 @@
 ;; (load "/Users/jay/gnulisp/book-functions.el")
 (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
-(load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
+;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
 ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
@@ -143,9 +143,9 @@
      (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
      ;; (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
      ;; (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
-;;     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
+     ;;     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
      (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-outdent-or-promote)
-;;     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
+     ;;     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
      (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-indent-or-demote)
 
 
@@ -195,9 +195,9 @@
 (smartparens-global-mode 1)
 
 ;; (add-hook 'ido-setup-hook (lambda ()
-;; 			                      (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
-;; 			                      (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
-;; 			                      ) t)
+;;                            (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
+;;                            (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
+;;                            ) t)
 
 ;; (defadvice load-theme (before theme-dont-propagate activate)
 ;;   (mapcar #'disable-theme custom-enabled-themes))
@@ -212,14 +212,14 @@
 ;; (iterm-mode)
 
 (setq org-emphasis-alist
-	    (quote
-	     (("*" bold)
-	      ("/" italic)
-	      ("_" underline)
-	      ("~" org-code verbatim)
-	      ("=" flyspell-incorrect)
-	      ("+"
-	       (:strike-through t)))))
+      (quote
+       (("*" bold)
+        ("/" italic)
+        ("_" underline)
+        ("~" org-code verbatim)
+        ("=" flyspell-incorrect)
+        ("+"
+         (:strike-through t)))))
 
 (setq org-adapt-indentation nil)
 

@@ -727,7 +727,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 ;; (define-key key-minor-mode-map (kbd "s-.") 'org-select-line)
-(define-key key-minor-mode-map (kbd "C-.") 'searchlink)
+;; (define-key key-minor-mode-map (kbd "C-.") 'searchlink)
 
 
 
