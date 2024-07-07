@@ -59,4 +59,6 @@
       '(
         counsel-recentf
         jay/save-some-buffers
+        mark-whole-buffer
+        pasteboard-copy
         ))
