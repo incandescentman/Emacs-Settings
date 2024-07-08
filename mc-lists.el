@@ -29,6 +29,7 @@
         org-beginning-of-line
         org-delete-char
         org-end-of-line
+        org-force-self-insert
         org-meta-return
         org-metaleft
         org-metaright
