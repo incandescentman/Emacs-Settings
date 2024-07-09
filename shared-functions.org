@@ -5353,10 +5353,10 @@ into the main dumped emacs"
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
-(use-package undo-tree
- :defer t
+(use-package undo-fu-session
+ :ensure t
  :config
- (global-undo-tree-mode))
+ (undo-fu-session-global-mode))
 
 ;; Undo Limits
 (setq undo-limit 200000
