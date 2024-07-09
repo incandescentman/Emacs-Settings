@@ -9761,3 +9761,10 @@ When deleting a file, don't use vc-delete-file
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
 #+end_src
+
+* server
+#+begin_src emacs-lisp
+(require 'server)
+(unless (server-running-p)
+ (server-start))
+#+end_src
