@@ -53,6 +53,8 @@
         smart-period
         smart-return
         smart-space
+        wdired--self-insert
+        wdired-finish-edit
         ))
 
 (setq mc/cmds-to-run-once
