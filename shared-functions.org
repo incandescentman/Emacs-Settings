@@ -3759,9 +3759,11 @@ Single Capitals as you type."
 (defun yas-expand-and-copy-to-clipboard ()
  "Expand the snippet at point and copy the expansion to the macOS clipboard."
  (interactive)
- (let ((start (point)))
-  (yas-expand)
-  (let ((expanded-text (buffer-substring-no-properties start (point))))
+ (let ((start (point))
+    (end (save-excursion
+        (yas-expand)
+        (point))))
+  (let ((expanded-text (buffer-substring-no-properties start end)))
    (kill-new expanded-text)
    (x-select-text expanded-text))))
 
