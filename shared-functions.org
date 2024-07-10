@@ -3757,11 +3757,13 @@ Single Capitals as you type."
 ** yasnippets
 #+BEGIN_SRC emacs-lisp
 (defun yas-expand-and-copy-to-clipboard ()
-  "Expand the snippet at point and copy the expansion to the clipboard."
-  (interactive)
-  (let ((start (point)))
-    (yas-expand)
-    (kill-new (buffer-substring-no-properties start (point)))))
+ "Expand the snippet at point and copy the expansion to the macOS clipboard."
+ (interactive)
+ (let ((start (point)))
+  (yas-expand)
+  (let ((expanded-text (buffer-substring-no-properties start (point))))
+   (kill-new expanded-text)
+   (x-select-text expanded-text))))
 
 (use-package yasnippet
   :defer t
