@@ -3759,36 +3759,36 @@ Single Capitals as you type."
 
 
 (use-package yasnippet
-:defer
-:ensure t
-:bind
-("C-c e" . yas-load-snippet-buffer)
-("." . insert-period)
-:init
-(yas-global-mode 1)
+  :defer
+  :ensure t
+  :bind
+  ("C-c e" . yas-load-snippet-buffer)
+  ("." . insert-period)
+  :init
+  (yas-global-mode 1)
 
-:config
-;; load yasnippet directories
-(setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
+  :config
+  ;; load yasnippet directories
+  (setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
 
-(add-hook 'yas-before-expand-snippet-hook (key-minor-mode nil))
-(add-hook 'yas-after-exit-snippet-hook (key-minor-mode 1))
+  (add-hook 'yas-before-expand-snippet-hook (key-minor-mode nil))
+  (add-hook 'yas-after-exit-snippet-hook (key-minor-mode 1))
 
 
 
-;; don't insert random spaces in my prose
-(setq yas-indent-line (quote none))
+  ;; don't insert random spaces in my prose
+  (setq yas-indent-line (quote none))
 
-;; take input word including hyphen.
-(setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
+  ;; take input word including hyphen.
+  (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
-;; suppress backquote warnings, whatever those are
-;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
-)
+  ;; suppress backquote warnings, whatever those are
+  ;; (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+  )
 
 (defun suppress-backquote-warnings ()
-(interactive)
-(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+  (interactive)
+  (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
   )
 #+END_SRC
 
