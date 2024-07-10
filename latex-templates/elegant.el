@@ -1,9 +1,9 @@
 (provide 'elegant)
 
 (with-eval-after-load 'ox-latex
-(add-to-list 'org-latex-classes
-  '("elegant"
-"
+  (add-to-list 'org-latex-classes
+               '("elegant"
+                 "
 
 \\documentclass[12pt]{article}
 \\usepackage{geometry}
@@ -289,7 +289,25 @@ fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spac
  \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
 }
 
-
+\\renewenvironment{quote}
+{%
+  \\begin{center}
+  \\begin{tcolorbox}[
+    colback=powderblue,  % Background color
+    colframe=stormybluegrey,  % Frame color
+    colupper=moonrockgrey,  % Text color
+    boxrule=0.5pt,  % Border thickness
+    rounded corners,  % Rounded corners
+    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing for nice quotes
+    width=0.8\\textwidth,  % Width
+    halign=flush left  % Left alignment inside the box
+  ]
+  \\setlength{\\parskip}{1em}  % Set the space between paragraphs
+}
+{%
+  \\end{tcolorbox}
+  \\end{center}
+}
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{12pt}{0pt}
@@ -321,13 +339,13 @@ fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spac
 
       [NO-DEFAULT-PACKAGES]
       [NO-PACKAGES]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 
 (setq org-latex-to-pdf-process
-  '("xelatex -interaction nonstopmode %f"
-     "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes

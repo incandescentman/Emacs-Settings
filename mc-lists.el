@@ -61,6 +61,7 @@
 (setq mc/cmds-to-run-once
       '(
         counsel-recentf
+        insert-period
         jay/save-some-buffers
         mark-whole-buffer
         pasteboard-copy
