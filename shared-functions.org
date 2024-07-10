@@ -5353,16 +5353,30 @@ into the main dumped emacs"
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
+(defun undo-fu-only-redo-fail-silently ()
+ "Redo the last undone change if possible, silently fail if no more redo steps."
+ (interactive)
+ (ignore-errors
+  (undo-fu-only-redo)))
+
+(defun undo-fu-only-redo-fail-with-heart ()
+ "Redo the last undone change if possible."
+ (interactive)
+ (condition-case nil
+   (undo-fu-only-redo)
+  (user-error (message "❤️"))))
+
+
+;; Install and configure undo-fu-session to save undo history between sessions
 (use-package undo-fu-session
  :ensure t
  :config
  (undo-fu-session-global-mode))
 
-;; Undo Limits
+;; Set undo limits
 (setq undo-limit 200000
    undo-strong-limit 300000
    undo-outer-limit 3000000)
-
 #+END_SRC
 
 * Emacs 25
@@ -7026,7 +7040,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 
 * org-ai
-#+begin_src emacs-lisp
+#+begin_EXAMPLE emacs-lisp
 (use-package org-ai
 
 :defer
@@ -7047,7 +7061,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 (load "/Users/jay/emacs/emacs-secret/openai-key.el")
 
-#+end_src
+#+END_EXAMPLE
 
 
 * org-roam as a personal CRM
