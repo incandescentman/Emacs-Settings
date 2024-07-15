@@ -1864,7 +1864,12 @@ The last line sets the path to where saveplace stores your position data. Change
 (when (or (looking-at ",")
           (looking-at ";")
           (looking-at ":"))
-  (right-char 1))
+  (org-delete-char 1))
+(when (or (looking-back ",")
+     (looking-back ";")
+     (looking-back ":"))
+ (org-delete-backward-char 1))
+
 
 (when (looking-back " ")
   (left-char 1))
