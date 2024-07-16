@@ -3756,17 +3756,23 @@ Single Capitals as you type."
 
 ** yasnippets
 #+BEGIN_SRC emacs-lisp
-(defun yas-expand-and-copy-to-clipboard ()
- "Expand the snippet at point and copy the expansion to the macOS clipboard."
- (interactive)
- (let ((start (point))
-    (end (save-excursion
-        (yas-expand)
-        (point))))
-  (let ((expanded-text (buffer-substring-no-properties start end)))
-   (kill-new expanded-text)
-   (x-select-text expanded-text))))
+(defun yas-expand-and-copy-to-clipboard (&optional field)
+ "Expand snippet at point and copy the expansion to the clipboard.
 
+Optional argument FIELD is for non-interactive use and is an
+object satisfying `yas--field-p' to restrict the expansion to."
+ (interactive)
+ (let ((yas-triggers-in-field t)
+    (yas-fallback-behavior nil))
+  (setq field (yas-expand-from-trigger-key field))
+  (when field
+   (when (eq field t)
+    (let ((snippet (car (yas-active-snippets))))
+     (setq field (yas--snippet-exit snippet))))
+   (gui-select-text (yas--field-start field)
+            (yas--field-end field))
+   (clipboard-kill-ring-save (yas--field-start field)
+                (yas--field-end field)))))
 (use-package yasnippet
   :defer t
   :ensure t
@@ -3801,7 +3807,7 @@ Single Capitals as you type."
 (defun yas-org-very-safe-expand ()
  "Expand the snippet at point and copy the expansion to the clipboard safely in org-mode."
  (let ((yas-fallback-behavior 'return-nil))
-  (yas-expand-and-copy-to-clipboard)))
+  (yas-expand)))
 
 (add-hook 'org-mode-hook
      (lambda ()
