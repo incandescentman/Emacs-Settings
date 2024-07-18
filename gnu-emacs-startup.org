@@ -773,7 +773,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
 (define-key key-minor-mode-map (kbd "s-|") 'path-copy-path-to-clipboard)
-
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 (global-set-key (kbd "s-v") 'pasteboard-paste-no-spaces)
@@ -904,9 +903,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-<") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "s->") 'load-gnu-startup)
-;;(define-key key-minor-mode-map (kbd "s-:") 'consult-outline)
-(define-key key-minor-mode-map (kbd "s-;") 'consult-outline)
+(define-key key-minor-mode-map (kbd "s-/") 'consult-outline)
 (define-key key-minor-mode-map (kbd "s-'") 'choose-refile-method-and-refile)
+
 
 ;; (define-key key-minor-mode-map (kbd "C-c j") 'helm-org-headlines) ; also bound to keychord jj
 ;; helm-mini) ; shows recent files; also bound to ⌘-r
@@ -925,12 +924,6 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; book bindings
 (define-key key-minor-mode-map (kbd "M-b M-p") 'book-proposal-directory)
 (define-key key-minor-mode-map (kbd "M-b M-m") 'book-mistakes-directory)
-
-;; helm-strict) ; this is a smart function, show recent files in my book folder
-
-;; can't get this to work. for some reason GNU Emacs interprets ⌘-shift-d as s-c
-
-;; own structure editing
 
 
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
@@ -1094,6 +1087,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-.") 'available) ;; s-.
 ;; (define-key key-minor-mode-map (kbd "s-:") 'available) ;; s-:
 ;; (define-key key-minor-mode-map (kbd "C-\\") 'available) ;; C-\
+
+;; available
+;; (define-key key-minor-mode-map (kbd "C-\") 'available)
+;;(define-key key-minor-mode-map (kbd "s-:") 'consult-outline)
+
 
 #+end_src
 
