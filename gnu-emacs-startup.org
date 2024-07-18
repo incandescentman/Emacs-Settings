@@ -1855,180 +1855,50 @@ The last line sets the path to where saveplace stores your position data. Change
 6. The function ensures the cursor is left at an appropriate position, either before or after punctuation, depending on the context.
 
 #+BEGIN_SRC emacs-lisp
+(defun kill-clause ()
+  (interactive)
+  (smart-expand)
+  (let ((start-point (point))
+        (end-point nil)
+        (killed-text ""))
+    ;; Search for the end of the clause
+    (if (re-search-forward "[,;:]\\|[.!?]\\s-" nil t)
+        (setq end-point (match-end 0))
+      (setq end-point (line-end-position)))
 
-    (defun kill-clause ()
-      (interactive)
-      (smart-expand)
-(when (or (looking-at ",")
-          (looking-at ";")
-          (looking-at ":"))
-  (org-delete-char 1))
-(when (or (looking-back ",")
-     (looking-back ";")
-     (looking-back ":"))
- (org-delete-backward-char 1))
+    ;; Kill the region
+    (when end-point
+      (setq killed-text (buffer-substring start-point end-point))
+      (delete-region start-point end-point))
 
+    ;; Handle punctuation and capitalization
+    (cond
+     ;; If we killed to the end of a sentence
+     ((string-match-p "[.!?]\\s-*$" killed-text)
+      (when (looking-back "[.!?]\\s-*")
+        (delete-backward-char 1))
+      (insert " ")
+      (capitalize-word 1))
+     ;; If we killed to a comma, semicolon, or colon
+     ((string-match-p "[,;:]\\s-*$" killed-text)
+      (when (looking-back "[,;:]\\s-*")
+        (delete-backward-char 2))
+      (insert " ")
+      (capitalize-word 1))
+     ;; If we killed to the end of a line
+     (t
+      (just-one-space 1)))
 
-(when (looking-back " ")
-  (left-char 1))
+    ;; Ensure proper spacing
+    (when (looking-at "\\s-+") (delete-horizontal-space))
+    (when (looking-back "\\s-+") (delete-horizontal-space t))
+    (unless (looking-back "\\s-") (insert " "))
 
-      (if
-	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-	  (kill-line)
-
-	(let ((old-point (point))
-	      (kill-punct (my/beginning-of-sentence-p)))
-	  ;; Stop at a period followed by a space, or the end of the line
-	  (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
-	    (kill-region old-point
-			 (if kill-punct
-			     (match-end 0)
-			   (match-beginning 0)))))
-	(my/fix-space)
-	(save-excursion
-	  (when (my/beginning-of-sentence-p)
-	    (capitalize-unless-org-heading)))
-
-(cond
- ((looking-back "\\, \\, ")
- (new-org-delete-backward-char 2)
- (my/fix-space)
- t)
-
-((looking-back "!\\. ")
- (new-org-delete-backward-char 2)
- (my/fix-space)
- t)
-
- ((looking-back ":: ")
- (new-org-delete-backward-char 2)
- (my/fix-space)
- t))
-
-(when
-    (looking-back "[[:punct:]]")
-  (progn
-(forward-char 1)
-(my/fix-space)
-(backward-char 1)))
-    ;; fix a bug that leaves this: " ?"
-    (when (looking-back " \\?")
-        (left-char 1)
-    (new-org-delete-backward-char 1)
-    (right-char 1))
-
-
-    ;; fix a bug that leaves this: " , "
-    (when (looking-back " , ")
-    (left-char 2)
-    (my/fix-space)
-    (right-char 2))
-
-    ;; fix a bug that leaves this: ":, "
-    (when (looking-back ":, ")
-    (left-char 1)
-    (delete-backward-char 1)
-    (right-char 1))
-
-    ;; fix a bug that leaves this: ",."
-    (when (looking-back "\\,\\. ")
-    (left-char 2)
-    (delete-backward-char 1)
-    (right-char 2)
-    )
-
-
-    ;; fix a bug that leaves this: ", . "
-    (when (looking-back "\\, \\. ")
-    (left-char 2)
-    (delete-backward-char 2)
-    (right-char 2)
-    )
-
-
-    ;; fix a bug that leaves this: " ; "
-    (when
-	(looking-back " [[:punct:]] ")
-    (left-char 2)
-    (delete-backward-char 1)
-    (right-char 2)
-    )
-
-
-
-
-    (when
-    (and
-    (looking-back "----")
-    (looking-at "-"))
-
-    (delete-backward-char 4)
-    (delete-char 1)
-    (insert-space))
-
-    ;; leave the cursor before the comma or period, not after it
-    (when
-    (looking-back "[[:punct:]] ")
-    (left-char 2))
-    (when
-    (looking-back "[[:punct:]]")
-    (left-char 1))
-
-
-
-    ;; fix a bug that leaves this: ".,"
- (when
-	(looking-at "\\.\\,")
- (delete-forward-char 1)
- )
-;; works!!
-
-
-
-  ;; fix a bug that leaves this: ":."
- (when
-	(looking-at ":\\.")
- (delete-forward-char 1)
- )
-;; works!!
-
-
-;; a more general solution, haven't tested it yet:
-;; (when
-;;   (looking-at "[[:punct:]]\\.")
-;; (delete-forward-char 1) )
-
-
-
-
-
-    ;; when on a punctuation mark with a space before it, delete the space
-    (when
-	(and
-    (looking-at "[[:punct:]]")
-    (looking-back " ")
-)
-  (delete-backward-char 1))
-    )
-
-  (when
-    (or
-     (looking-at ":\\,")
-     (looking-at ";\\,")
-     (looking-at "\\,\\,")
-     (looking-at "\\.\\.")
-     (looking-at "\\,;")
-     (looking-at "\\,:")
-     (looking-at "\\?\\?")
-)
-(right-char 1)
-      (delete-char 1)
-      (left-char 1)
-))
-
-
-
-
+    ;; Move point to the beginning of the next word
+    (skip-syntax-backward " ")
+    (skip-syntax-backward "w")
+    (skip-syntax-forward "^w"))
+  (my/fix-space))
 #+END_SRC
 
 
