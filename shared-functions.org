@@ -9796,3 +9796,23 @@ When deleting a file, don't use vc-delete-file
 (unless (server-running-p)
  (server-start))
 #+end_src
+
+* capitalist-mode
+#+begin_src emacs-lisp
+(defvar capitalist-mode nil
+ "Mode variable for capitalist-mode.")
+
+(defun capitalist-mode-on ()
+ "Turn on capitalist-mode."
+ (interactive)
+ (setq capitalist-mode t)
+ (message "Capitalist mode is now ON."))
+
+(defun capitalist-mode-off ()
+ "Turn off capitalist-mode."
+ (interactive)
+ (setq capitalist-mode nil)
+ (message "Capitalist mode is now OFF."))
+
+(capitalist-mode-on)
+#+end_src
