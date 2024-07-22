@@ -6080,7 +6080,9 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
  (interactive)
  (setq my-org-selected-css
     (completing-read "Choose a CSS file or none: "
-             '("/Users/jay/Dropbox/web-design/custom-css/email.css"
+             '(
+               "/Users/jay/Dropbox/web-design/custom-css/email.css"
+               "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
               "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
               "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
               "none"))) ; 'none' is now the last option
@@ -9785,7 +9787,7 @@ When deleting a file, don't use vc-delete-file
     (let ((vc-backend (vc-backend filename)))
      (when vc-backend
       (vc-delete-file filename))
-     (call-process "/usr/local/bin/rmtrash" nil nil nil filename)
+     (call-process "/opt/homebrew/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
 #+end_src
