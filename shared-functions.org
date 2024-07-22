@@ -9785,7 +9785,7 @@ When deleting a file, don't use vc-delete-file
     (let ((vc-backend (vc-backend filename)))
      (when vc-backend
       (vc-delete-file filename))
-     (call-process "/usr/local/bin/rmtrash" nil nil nil filename)
+     (call-process "/opt/homebrew/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
 #+end_src
