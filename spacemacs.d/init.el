@@ -118,14 +118,14 @@ This function should only modify configuration layer settings."
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
-      ; org-enable-hugo-support t
+                                        ; org-enable-hugo-support t
       )
      osx
      ;; pdf
      ;; python
      ;; shell
      ;; shell-scripts
-     ; smex
+                                        ; smex
      ;; speed-reading
      spell-checking
      ;; syntax-checking ; this is the layer with flycheck
@@ -187,7 +187,7 @@ This function should only modify configuration layer settings."
                                       key-seq
                                       ;; lister ;; (for delve)
                                       ;; magit
-                                      ; markdown-mode
+                                        ; markdown-mode
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
@@ -236,7 +236,7 @@ This function should only modify configuration layer settings."
                                       ;; stripe-buffer
                                       sudo-edit
                                       sync-recentf
-                                      ; tabbar
+                                        ; tabbar
                                       tiny
                                       titlecase
                                       ts
@@ -327,11 +327,11 @@ This function should only modify configuration layer settings."
                                     hs-mode
                                     ;; ivy
                                     notmuch
-				                            org-download
+                                    org-download
                                     org-timeblock
                                     popwin
                                     spaceline
-				                            treemacs-icons-dired
+                                    treemacs-icons-dired
                                     vterm
                                     vi-tilde-fringe
                                     volatile-highlights
@@ -354,7 +354,7 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-dotspacemacs-install-packages 'used-but-keep-unused))
+   dotspacemacs-install-packages 'used-but-keep-unused))
 ;;   dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
@@ -849,13 +849,13 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (setq gc-cons-threshold 100000000) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
-(setq read-process-output-max (* 1024 1024))
-; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
+  (setq read-process-output-max (* 1024 1024))
+                                        ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
 
-(load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
-(load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
-(load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
-(load "/Users/jay/emacs/local-config.el")
+  (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
+  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
+  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
+  (load "/Users/jay/emacs/local-config.el")
 
 
 
@@ -871,105 +871,105 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(counsel-search-engine 'google)
- '(deft-directory
-   "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)
- '(dired-preview-delay 0.2)
- '(evil-want-Y-yank-to-eol nil)
- '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
- '(flycheck-disabled-checkers '(proselint))
- '(gptel-model "gpt-4")
- '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
- '(line-number-mode t)
- '(marginalia-align 'left nil nil "Customized with use-package marginalia")
- '(mode-line-compact 'long)
- '(org-attach-expert nil)
- '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
- '(org-ellipsis " 🪜 ")
- '(org-export-preserve-breaks nil)
- '(org-noter-auto-save-last-location t)
- '(org-noter-insert-note-no-questions t)
- '(org-safe-remote-resources
-   '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
- '(org-sidebar-jump-indirect t)
- '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
- '(org-superstar-headline-bullets-list '(42 42 42 42))
- '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
- '(org-superstar-remove-leading-stars t)
- '(org-tempo-keywords-alist
-   '(("l " . "src emacs-lisp ")
-     ("H" . "html")
-     ("A" . "ascii")
-     ("i" . "index")))
- '(org-transclusion-exclude-elements '(property-drawer))
- '(org-transclusion-extensions
-   '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
- '(org-transclusion-include-first-section nil)
- '(org-twbs-head-include-default-style nil)
- '(org-twbs-head-include-scripts nil)
- '(org-twbs-htmlize-output-type 'css)
- '(package-selected-packages
-   '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
- '(paradox-github-token t)
- '(safe-local-variable-values
-   '((flyspell-mode)
-     (olivetti-mode . 0)
-     (olivetti-mode)
-     (org-export-html-style-include-scripts)
-     (org-export-html-style-include-default)
-     (buffer-file-coding-system . utf-8-unix)
-     (org-html-postamble . "</div><div class='span1'></div><div class='span3'> <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='/Users/jay/Dropbox/github/org-tocify/src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/bootstrap.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/jquery.tocify.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/prettify.js'></script><script> $(function() { var toc = $('#toc').tocify({ selectors: 'h2,h3,h4,h5' }).data('toc-tocify'); prettyPrint(); $('.optionName').popover({ trigger: 'hover' }); });</script>")
-     (org-html-postamble . "</div><div class='span1'></div><div class='span3'>  <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='../src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='../src/javascripts/bootstrap.js'></script><script src='../src/javascripts/jquery.tocify.js'></script><script src='../src/javascripts/prettify.js'></script><script>  $(function() {  var toc = $('#toc').tocify({  selectors: 'h2,h3,h4,h5'  }).data('toc-tocify');  prettyPrint();  $('.optionName').popover({ trigger: 'hover' });  });</script>")
-     (eval triplicate-code)
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           'insert-space)
-     (eval define-key org-mode-map
-           (kbd ":")
-           'insert-colon)
-     (org-html-head-include-scripts)
-     (org-export-allow-bind-keywords . t)
-     (eval define-key key-minor-mode-map
-           (kbd "SPC")
-           'insert-space)))
- '(sp-escape-wrapped-region nil)
- '(tab-bar-close-button-show nil)
- '(tab-bar-new-button-show nil)
- '(warning-suppress-log-types '((use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :weight bold))))
- '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
- '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
- '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
- '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
- '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
- '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
- '(org-link ((t (:inherit link :underline nil))))
- '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
- '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
- '(org-transclusion ((t (:extend t :background "light steel blue" :foreground "black"))))
- '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow"))))
- '(org-transclusion-source ((t (:background "#ebf6fa"))))
- '(org-transclusion-source-edit ((t (:background "#fff3da"))))
- '(org-transclusion-source-fringe ((t nil)))
- '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
- '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
- '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
- '(variable-pitch ((t (:family "\"Courier\" "))))
- '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(counsel-search-engine 'google)
+   '(deft-directory
+     "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)
+   '(dired-preview-delay 0.2)
+   '(evil-want-Y-yank-to-eol nil)
+   '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
+   '(flycheck-disabled-checkers '(proselint))
+   '(gptel-model "gpt-4")
+   '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
+   '(line-number-mode t)
+   '(marginalia-align 'left nil nil "Customized with use-package marginalia")
+   '(mode-line-compact 'long)
+   '(org-attach-expert nil)
+   '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
+   '(org-ellipsis " 🪜 ")
+   '(org-export-preserve-breaks nil)
+   '(org-noter-auto-save-last-location t)
+   '(org-noter-insert-note-no-questions t)
+   '(org-safe-remote-resources
+     '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
+   '(org-sidebar-jump-indirect t)
+   '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+   '(org-superstar-headline-bullets-list '(42 42 42 42))
+   '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
+   '(org-superstar-remove-leading-stars t)
+   '(org-tempo-keywords-alist
+     '(("l " . "src emacs-lisp ")
+       ("H" . "html")
+       ("A" . "ascii")
+       ("i" . "index")))
+   '(org-transclusion-exclude-elements '(property-drawer))
+   '(org-transclusion-extensions
+     '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
+   '(org-transclusion-include-first-section nil)
+   '(org-twbs-head-include-default-style nil)
+   '(org-twbs-head-include-scripts nil)
+   '(org-twbs-htmlize-output-type 'css)
+   '(package-selected-packages
+     '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+   '(paradox-github-token t)
+   '(safe-local-variable-values
+     '((flyspell-mode)
+       (olivetti-mode . 0)
+       (olivetti-mode)
+       (org-export-html-style-include-scripts)
+       (org-export-html-style-include-default)
+       (buffer-file-coding-system . utf-8-unix)
+       (org-html-postamble . "</div><div class='span1'></div><div class='span3'> <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='/Users/jay/Dropbox/github/org-tocify/src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/bootstrap.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/jquery.tocify.js'></script><script src='/Users/jay/Dropbox/github/org-tocify/src/javascripts/prettify.js'></script><script> $(function() { var toc = $('#toc').tocify({ selectors: 'h2,h3,h4,h5' }).data('toc-tocify'); prettyPrint(); $('.optionName').popover({ trigger: 'hover' }); });</script>")
+       (org-html-postamble . "</div><div class='span1'></div><div class='span3'>  <div id='toc'></div></div><!--/span--></div><!--/row--></div><!--/.fluid-container--> <!-- Placed at the end of the document so the pages load faster --><script src='../src/libs/jqueryui/jquery-ui-1.9.1.custom.min.js'></script><script src='../src/javascripts/bootstrap.js'></script><script src='../src/javascripts/jquery.tocify.js'></script><script src='../src/javascripts/prettify.js'></script><script>  $(function() {  var toc = $('#toc').tocify({  selectors: 'h2,h3,h4,h5'  }).data('toc-tocify');  prettyPrint();  $('.optionName').popover({ trigger: 'hover' });  });</script>")
+       (eval triplicate-code)
+       (eval define-key key-minor-mode-map
+             (kbd "SPC")
+             'insert-space)
+       (eval define-key org-mode-map
+             (kbd ":")
+             'insert-colon)
+       (org-html-head-include-scripts)
+       (org-export-allow-bind-keywords . t)
+       (eval define-key key-minor-mode-map
+             (kbd "SPC")
+             'insert-space)))
+   '(sp-escape-wrapped-region nil)
+   '(tab-bar-close-button-show nil)
+   '(tab-bar-new-button-show nil)
+   '(warning-suppress-log-types '((use-package))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(beacon ((t (:inherit highlight))))
+   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
+   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+   '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
+   '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
+   '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+   '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
+   '(org-link ((t (:inherit link :underline nil))))
+   '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
+   '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
+   '(org-transclusion ((t (:extend t :background "light steel blue" :foreground "black"))))
+   '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow"))))
+   '(org-transclusion-source ((t (:background "#ebf6fa"))))
+   '(org-transclusion-source-edit ((t (:background "#fff3da"))))
+   '(org-transclusion-source-fringe ((t nil)))
+   '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+   '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+   '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
+   '(variable-pitch ((t (:family "\"Courier\" "))))
+   '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+  )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -989,7 +989,7 @@ This function is called at the very end of Spacemacs initialization."
      s
      mw-thesaurus
      org-bookmark-heading
-		 ;; org-download
+     ;; org-download
      ;; org-drill
      ;;         org-fstree
      org-mac-link
@@ -1017,7 +1017,7 @@ This function is called at the very end of Spacemacs initialization."
      ;; polymode
      ;; popup
      ;; project-explorer
-		 quelpa-use-package
+     quelpa-use-package
      rainbow-mode
      re-builder
      recentf
