@@ -2038,11 +2038,13 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 (setq buffer-stack-show-position nil)
 
 (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "todo" "TODO" "*org-roam*")))
+;; the above I don't think works or at least I don't know how to add to it
+
 
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|help\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -3756,13 +3758,23 @@ Single Capitals as you type."
 
 ** yasnippets
 #+BEGIN_SRC emacs-lisp
-(defun yas-expand-and-copy-to-clipboard ()
-  "Expand the snippet at point and copy the expansion to the clipboard."
-  (interactive)
-  (let ((start (point)))
-    (yas-expand)
-    (kill-new (buffer-substring-no-properties start (point)))))
+(defun yas-expand-and-copy-to-clipboard (&optional field)
+ "Expand snippet at point and copy the expansion to the clipboard.
 
+Optional argument FIELD is for non-interactive use and is an
+object satisfying `yas--field-p' to restrict the expansion to."
+ (interactive)
+ (let ((yas-triggers-in-field t)
+    (yas-fallback-behavior nil))
+  (setq field (yas-expand-from-trigger-key field))
+  (when field
+   (when (eq field t)
+    (let ((snippet (car (yas-active-snippets))))
+     (setq field (yas--snippet-exit snippet))))
+   (gui-select-text (yas--field-start field)
+            (yas--field-end field))
+   (clipboard-kill-ring-save (yas--field-start field)
+                (yas--field-end field)))))
 (use-package yasnippet
   :defer t
   :ensure t
@@ -3797,7 +3809,7 @@ Single Capitals as you type."
 (defun yas-org-very-safe-expand ()
  "Expand the snippet at point and copy the expansion to the clipboard safely in org-mode."
  (let ((yas-fallback-behavior 'return-nil))
-  (yas-expand-and-copy-to-clipboard)))
+  (yas-expand)))
 
 (add-hook 'org-mode-hook
      (lambda ()
@@ -6065,40 +6077,42 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 #+begin_SRC emacs-lisp
 (defvar my-org-selected-css nil
- "Path of the selected CSS file or nil for no stylesheet.")
+  "Path of the selected CSS file or nil for no stylesheet.")
 
 (defun select-org-export-css ()
- "Select a CSS file or choose not to use any."
- (interactive)
- (setq my-org-selected-css
-    (completing-read "Choose a CSS file or none: "
-             '("/Users/jay/Dropbox/web-design/custom-css/email.css"
-"/Users/jay/Dropbox/web-design/custom-css/gmail.css"
-"/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
-              "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-              "none"))) ; 'none' is now the last option
- (when (string-equal my-org-selected-css "none")
-  (setq my-org-selected-css nil)))
+  "Select a CSS file or choose not to use any."
+  (interactive)
+  (setq my-org-selected-css
+        (completing-read "Choose a CSS file or none: "
+                         '(
+                           "/Users/jay/Dropbox/web-design/custom-css/email.css"
+                           "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+
+                           "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+                           "none"))) ; 'none' is now the last option
+  (when (string-equal my-org-selected-css "none")
+    (setq my-org-selected-css nil)))
 
 (defun my-org-inline-css-hook (exporter)
- "Insert custom inline CSS."
- (when (eq exporter 'html)
-  (unless my-org-selected-css
-   (select-org-export-css))
-  (if my-org-selected-css
-    (let ((final my-org-selected-css))
-     (when (file-exists-p final)
+  "Insert custom inline CSS."
+  (when (eq exporter 'html)
+    (unless my-org-selected-css
+      (select-org-export-css))
+    (if my-org-selected-css
+        (let ((final my-org-selected-css))
+          (when (file-exists-p final)
+            (setq org-html-head-include-default-style nil)
+            (setq org-html-head (concat
+                                 "<style type=\"text/css\">\n"
+                                 "<!--/*--><![CDATA[/*><!--*/\n"
+                                 (with-temp-buffer
+                                   (insert-file-contents final)
+                                   (buffer-string))
+                                 "/*]]>*/-->\n"
+                                 "</style>\n"))))
       (setq org-html-head-include-default-style nil)
-      (setq org-html-head (concat
-                 "<style type=\"text/css\">\n"
-                 "<!--/*--><![CDATA[/*><!--*/\n"
-                 (with-temp-buffer
-                  (insert-file-contents final)
-                  (buffer-string))
-                 "/*]]>*/-->\n"
-                 "</style>\n"))))
-   (setq org-html-head-include-default-style nil)
-   (setq org-html-head nil))))
+      (setq org-html-head nil))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
@@ -9171,7 +9185,7 @@ After evaluating your init-file you can use links analog to the example:
          (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
          (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced))
          (start-pos (point)))
-    (insert (format "[[%s][📄 %s]]" clip-content (string-trim no-leading-numbers)))
+    (insert (format "[[file+emacs:%s][📄 %s]]" clip-content (string-trim no-leading-numbers)))
     (goto-char start-pos)
     (search-forward "[[" nil t)
     (search-forward "[" nil t)
@@ -9778,7 +9792,7 @@ When deleting a file, don't use vc-delete-file
     (let ((vc-backend (vc-backend filename)))
      (when vc-backend
       (vc-delete-file filename))
-     (call-process "/usr/local/bin/rmtrash" nil nil nil filename)
+     (call-process "/opt/homebrew/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
 #+end_src
@@ -9788,4 +9802,24 @@ When deleting a file, don't use vc-delete-file
 (require 'server)
 (unless (server-running-p)
  (server-start))
+#+end_src
+
+* capitalist-mode
+#+begin_src emacs-lisp
+(defvar capitalist-mode nil
+ "Mode variable for capitalist-mode.")
+
+(defun capitalist-mode-on ()
+ "Turn on capitalist-mode."
+ (interactive)
+ (setq capitalist-mode t)
+ (message "Capitalist mode is now ON."))
+
+(defun capitalist-mode-off ()
+ "Turn off capitalist-mode."
+ (interactive)
+ (setq capitalist-mode nil)
+ (message "Capitalist mode is now OFF."))
+
+(capitalist-mode-on)
 #+end_src
