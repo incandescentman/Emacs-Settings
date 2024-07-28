@@ -5376,9 +5376,13 @@ into the main dumped emacs"
  (undo-fu-session-global-mode))
 
 ;; Set undo limits
-(setq undo-limit 200000
-   undo-strong-limit 300000
-   undo-outer-limit 3000000)
+;; (setq undo-limit 200000
+;;    undo-strong-limit 300000
+;;    undo-outer-limit 3000000)
+
+(setq undo-limit 67108864) ; 64mb.
+(setq undo-strong-limit 100663296) ; 96mb.
+(setq undo-outer-limit 1006632960) ; 960mb.
 #+END_SRC
 
 * Emacs 25
@@ -6069,7 +6073,8 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
  (setq my-org-selected-css
     (completing-read "Choose a CSS file or none: "
              '("/Users/jay/Dropbox/web-design/custom-css/email.css"
-              "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+"/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+"/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
               "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
               "none"))) ; 'none' is now the last option
  (when (string-equal my-org-selected-css "none")
