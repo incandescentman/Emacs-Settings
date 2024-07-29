@@ -5388,9 +5388,13 @@ into the main dumped emacs"
  (undo-fu-session-global-mode))
 
 ;; Set undo limits
-(setq undo-limit 200000
-   undo-strong-limit 300000
-   undo-outer-limit 3000000)
+;; (setq undo-limit 200000
+;;    undo-strong-limit 300000
+;;    undo-outer-limit 3000000)
+
+(setq undo-limit 67108864) ; 64mb.
+(setq undo-strong-limit 100663296) ; 96mb.
+(setq undo-outer-limit 1006632960) ; 960mb.
 #+END_SRC
 
 * Emacs 25
@@ -6073,41 +6077,42 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 #+begin_SRC emacs-lisp
 (defvar my-org-selected-css nil
- "Path of the selected CSS file or nil for no stylesheet.")
+  "Path of the selected CSS file or nil for no stylesheet.")
 
 (defun select-org-export-css ()
- "Select a CSS file or choose not to use any."
- (interactive)
- (setq my-org-selected-css
-    (completing-read "Choose a CSS file or none: "
-             '(
-               "/Users/jay/Dropbox/web-design/custom-css/email.css"
-               "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
-              "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
-              "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-              "none"))) ; 'none' is now the last option
- (when (string-equal my-org-selected-css "none")
-  (setq my-org-selected-css nil)))
+  "Select a CSS file or choose not to use any."
+  (interactive)
+  (setq my-org-selected-css
+        (completing-read "Choose a CSS file or none: "
+                         '(
+                           "/Users/jay/Dropbox/web-design/custom-css/email.css"
+                           "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+
+                           "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+                           "none"))) ; 'none' is now the last option
+  (when (string-equal my-org-selected-css "none")
+    (setq my-org-selected-css nil)))
 
 (defun my-org-inline-css-hook (exporter)
- "Insert custom inline CSS."
- (when (eq exporter 'html)
-  (unless my-org-selected-css
-   (select-org-export-css))
-  (if my-org-selected-css
-    (let ((final my-org-selected-css))
-     (when (file-exists-p final)
+  "Insert custom inline CSS."
+  (when (eq exporter 'html)
+    (unless my-org-selected-css
+      (select-org-export-css))
+    (if my-org-selected-css
+        (let ((final my-org-selected-css))
+          (when (file-exists-p final)
+            (setq org-html-head-include-default-style nil)
+            (setq org-html-head (concat
+                                 "<style type=\"text/css\">\n"
+                                 "<!--/*--><![CDATA[/*><!--*/\n"
+                                 (with-temp-buffer
+                                   (insert-file-contents final)
+                                   (buffer-string))
+                                 "/*]]>*/-->\n"
+                                 "</style>\n"))))
       (setq org-html-head-include-default-style nil)
-      (setq org-html-head (concat
-                 "<style type=\"text/css\">\n"
-                 "<!--/*--><![CDATA[/*><!--*/\n"
-                 (with-temp-buffer
-                  (insert-file-contents final)
-                  (buffer-string))
-                 "/*]]>*/-->\n"
-                 "</style>\n"))))
-   (setq org-html-head-include-default-style nil)
-   (setq org-html-head nil))))
+      (setq org-html-head nil))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
