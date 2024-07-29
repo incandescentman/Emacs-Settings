@@ -489,6 +489,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; and the keybindings
 ;; mk - mykeybindings
 
+
 (defun setup-org-mode-keys ()
  (define-key org-mode-map (kbd "<return>") 'smart-return))
 
@@ -506,6 +507,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key key-minor-mode-map (kbd "s-k o t") 'org-timeline-export-to-html-and-open)
+
+
+(define-key key-minor-mode-map (kbd "s-k e b") 'ediff-buffers)
 
 
 ;; (define-key key-minor-mode-map (kbd "C-S-<left>") 'org-outdent-item-tree)
@@ -1685,17 +1689,19 @@ I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybindi
 
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly-and-capitalize ()
-  "Check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  "Kill the word correctly and capitalize if at the beginning of a sentence and capitalist-mode is enabled."
   (interactive)
-(when (looking-at "[ ]")
-         (forward-char 1)
-          )
-;; capitalize correctly if there's point is before the space at the beginning of a sentence
-
+  ;; Move forward if at a space
+  (when (looking-at " ")
+    (forward-char 1))
+  ;; Check if at the beginning of a sentence
   (let ((fix-capitalization (my/beginning-of-sentence-p)))
+    ;; Kill the word correctly
     (call-interactively 'kill-word-correctly)
-    (when fix-capitalization
-      (save-excursion (capitalize-unless-org-heading)))))
+    ;; Capitalize if needed and capitalist-mode is enabled
+    (when (and fix-capitalization capitalist-mode)
+      (save-excursion
+        (capitalize-unless-org-heading)))))
 #+END_SRC
 
 
