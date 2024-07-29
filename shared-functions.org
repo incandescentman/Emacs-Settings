@@ -7501,6 +7501,46 @@ QUERY can be passed optionally to avoid the prompt."
    (if (not file)
      (message "Fasd found nothing for query `%s'" query)
     (fasd-find-file-action file)))))
+
+
+
+(defun fasd-find-file (prefix &optional query)
+ "Use fasd to open a file, or a directory with dired.
+If PREFIX is positive consider only directories.
+If PREFIX is -1 consider only files.
+If PREFIX is nil consider files and directories.
+QUERY can be passed optionally to avoid the prompt."
+
+ (interactive "P")
+ (if (not (executable-find "fasd"))
+   (error "Fasd executable cannot be found. It is required by 'fasd.el'. Cannot use fasd-find-file'")
+  (unless query
+   (setq query (if fasd-enable-initial-prompt
+           (read-from-minibuffer "Fasd query: ")
+          "")))
+  (let* ((prompt "Fasd query: ")
+      (command (concat "fasd -t -l -R "
+              (pcase (prefix-numeric-value prefix)
+               (-1 " -f ")
+               ((pred (< 1)) " -d ")
+               (_ ""))
+              " " query))
+      (results (split-string
+           (shell-command-to-string command)
+           "\n" t))
+      (file (when results
+          ;; Debug: print the command and results
+          (message "fasd command: %s" command)
+          (message "fasd results: %s" results)
+          ;; set this-command to 'fasd-find-file' as required
+          ;; because 'read-from-minibuffer' modifies its value
+          ;; while 'ivy-completing-read' assumes it to be its caller
+          (setq this-command 'fasd-find-file)
+          (completing-read prompt results nil t))))
+   (if (not file)
+     (message "Fasd found nothing for query '%s'" query)
+    (fasd-find-file-action file)))))
+
 #+end_src
 
 I added the -t flag above. Ugh, didn't work 🤷🏻‍♂️
