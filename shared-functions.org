@@ -317,6 +317,17 @@ Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-hori
 ;; (setq org-indirect-buffer-display 'current-window)
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
+
+(setq split-width-threshold 80) ; Increase this value as needed
+(setq split-height-threshold 20) ; Increase this value as needed
+
+
+
+(setq split-width-threshold 0)  ; Always split vertically
+(setq split-height-threshold nil) ; Prevent horizontal splits
+(setq window-min-width 20)    ; Set a minimum width
+(setq window-min-height 5)    ; Set a minimum height
+
 #+END_SRC
 
 
@@ -9892,4 +9903,30 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
 (add-hook 'dired-mode-hook
           (lambda ()
             (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
+#+end_src
+
+
+* fix buffers
+#+begin_src emacs-lisp
+(setq split-height-threshold nil)
+(setq split-width-threshold 0)
+
+(defun force-split-window-vertically (&optional window)
+ "Force splitting windows vertically."
+ (let ((window (or window (selected-window))))
+  (or (and (window-splittable-p window t)
+       (with-selected-window window
+        (split-window-right)))
+    (split-window-sensibly window))))
+
+(setq split-window-preferred-function #'force-split-window-vertically)
+
+(setq org-roam-buffer-display-properties '((side . right) (slot . 1) (window-width . 0.3)))
+
+(purpose-mode -1)
+
+(setq max-lisp-eval-depth 10000)
+
+
+
 #+end_src
