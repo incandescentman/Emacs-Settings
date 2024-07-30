@@ -1569,13 +1569,15 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 *** smart-return
-I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybinding to see if org-autolist emulates all desired behavior.
 
 #+BEGIN_SRC emacs-lisp
 
 (defun smart-return ()
   (interactive)
-
+(let ((url (thing-at-point 'url)))
+  (if (and url (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" url))
+    (display-online-image-in-new-buffer)
+   (message "URL at point: %s" url)
 ;; Check if the point is on an image link
  (if (and (thing-at-point 'url)
       (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" (thing-at-point 'url)))
@@ -1648,7 +1650,75 @@ I'm temporarily, or rather, experimentally disabling the ~smart-return~ keybindi
                 (looking-back ">"))))
 (call-interactively 'org-return))
 
-        (t (newline)))))
+        (t (newline))))
+)))
+
+
+(defun smart-return ()
+ (interactive)
+ (let ((url (thing-at-point 'url)))
+  (message "URL at point: %s" url) ; Debug message
+  (if (and url (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" url))
+    (display-online-image-in-new-buffer)
+   ;; Rest of the function logic
+   (cond
+    ;; don't leave stray stars or links
+    ((or (looking-back "\\[")
+      (looking-back "^\*+[ ]*")
+      (looking-back "^# "))
+    (beginning-of-line))
+
+    (mark-active
+    (delete-region (mark) (point))
+    (newline))
+
+    ((and org-return-follows-link
+       (org-in-regexp org-any-link-re))
+    (cond
+     ((or (looking-back ">")
+       (looking-back "\\]\\]")
+       (and url
+          (let ((bnds (bounds-of-thing-at-point 'url)))
+           (and bnds ; Check if bnds is non-nil
+             (or (>= (car bnds) (point))
+               (<= (cdr bnds) (point)))))))
+     (newline))
+     ((char-equal (string-to-char "]") (following-char))
+     (forward-char 2)
+     (newline))
+     (t (call-interactively 'org-open-at-point))))
+
+    ((let ((el (org-element-at-point)))
+     (and el
+        (eq (car el) 'item)
+        (eql (plist-get (cadr el) :contents-begin)
+          (plist-get (cadr el) :contents-end))))
+    (message "at 1")
+    (beginning-of-line)
+    (let ((kill-whole-line nil))
+     (kill-line))
+    (newline))
+
+    ((let ((el (org-element-at-point)))
+     (and (not (org--line-empty-p 1))
+        el
+        (or (memq (car el) '(item plain-list))
+          (let ((parent (plist-get (cadr el) :parent)))
+           (and parent
+             (memq (car parent) '(item plain-list)))))))
+    (let ((is-org-chbs (org-checkbox-p)))
+     (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
+     (when is-org-chbs
+      (insert "[ ] "))))
+
+    ((not (and org-return-follows-link
+         (looking-back ">")))
+    (call-interactively 'org-return))
+
+    (t (newline))))))
+
+
+
 
 (define-key org-mode-map (kbd "<return>") 'smart-return)
 

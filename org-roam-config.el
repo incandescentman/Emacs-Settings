@@ -259,3 +259,24 @@ If region is active, then use it instead of the node at point."
 ;; exclude certain tags
 ;; (add-to-list 'recentf-exclude ".*roam.org$")
 ;; (add-to-list 'consult-buffer-filter ".*roam.org$")
+
+
+(defun org-roam-create-sequence-next ()
+  "Insert '- Next :: ' and then run org-roam-node-insert."
+  (interactive)
+  (insert "- Next :: ")
+  (org-roam-node-insert))
+
+(defun org-roam-create-sequence-previous ()
+  "Insert '- Previous :: ' and then run org-roam-node-insert."
+  (interactive)
+  (insert "- Previous :: ")
+  (org-roam-node-insert))
+
+(define-key key-minor-mode-map (kbd "s-u P") 'org-roam-create-sequence-previous)
+(define-key key-minor-mode-map (kbd "s-u N") 'org-roam-create-sequence-next)
+
+
+(add-hook 'org-roam-buffer-postrender-functions
+          (lambda ()
+            (org-roam-buffer--command-in-region-p)))
