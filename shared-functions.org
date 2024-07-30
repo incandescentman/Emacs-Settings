@@ -2044,7 +2044,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244\\|ediff" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -9822,4 +9822,34 @@ When deleting a file, don't use vc-delete-file
  (message "Capitalist mode is now OFF."))
 
 (capitalist-mode-on)
+#+end_src
+
+* query replace all files in current directory
+#+begin_src emacs-lisp
+(defun query-replace-all-files-in-current-directory (from-string to-string &optional regexp-flag)
+ "Query replace FROM-STRING with TO-STRING in all files in the current directory.
+If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
+ (interactive
+  (let ((from-string (read-string "Replace: "))
+     (to-string (read-string "With: "))
+     (regexp-flag (y-or-n-p "Use regular expressions? ")))
+   (list from-string to-string regexp-flag)))
+ (let ((dir default-directory)
+    (files (directory-files-recursively default-directory ".*" nil)))
+  (dolist (file files)
+   (when (file-regular-p file)
+    (find-file file)
+    (save-excursion
+     (goto-char (point-min))
+     (if regexp-flag
+       (query-replace-regexp from-string to-string)
+      (query-replace from-string to-string)))
+    (save-buffer)
+    (kill-buffer)))))
+
+(define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
+
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
 #+end_src
