@@ -9931,3 +9931,36 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
 
 
 #+end_src
+
+* outreach-copy-to-prompt
+
+* paste and copy all
+#+begin_src emacs-lisp
+
+(defun expand-outreach-snippet ()
+ "Expand the yasnippet with key 'outreach'."
+ (interactive)
+ (yas-expand-snippet (yas-lookup-snippet "outreach")))
+
+(defun my-expand-snippet-paste-and-copy-all ()
+ "Expand the 'outreach' snippet, paste clipboard text into the buffer using `pasteboard-paste-spaces-maybe`, and then select the entire buffer and copy it."
+ (interactive)
+ ;; Expand the snippet
+ (expand-outreach-snippet)
+ ;; Wait a moment to ensure snippet expansion completes
+ (run-at-time "0.1 sec" nil
+        (lambda ()
+         ;; Paste clipboard text into buffer
+         (pasteboard-paste-spaces-maybe)
+         ;; Select the entire buffer
+         (goto-char (point-min))
+         (push-mark (point-max) nil t)
+         ;; Copy the entire buffer to clipboard
+         (pasteboard-copy (point-min) (point-max)))))
+
+;; You can bind this function to a keybinding if you like, for example:
+;; (global-set-key (kbd "C-c p") 'my-expand-snippet-paste-and-copy-all)
+
+
+
+#+end_src
