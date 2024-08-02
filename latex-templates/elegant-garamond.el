@@ -1,8 +1,8 @@
 (provide 'elegant-garamond)
 
 (add-to-list 'org-latex-classes
-  '("elegant-garamond"
-"
+             '("elegant-garamond"
+               "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
@@ -35,9 +35,19 @@
 \\ifxetex
 \\usepackage{fontspec,xltxtra,xunicode}
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-\\setromanfont{Garamond Premier Pro}
- \\setsansfont{TeX Gyre Pagella}
+\\setsansfont{TeX Gyre Pagella}
   % \\setmonofont{TeX Gyre Heros}
+
+%\\setromanfont{Garamond Premier Pro}
+
+
+\\setromanfont[Path=/Users/jay/Library/Fonts/,
+  UprightFont=GaramondPremrPro,
+  ItalicFont=GaramondPremrPro-It,
+  BoldFont=GaramondPremrPro-Bd,
+  BoldItalicFont=GaramondPremrPro-BdIt,
+  Extension=.otf
+]{Garamond Premier Pro}
 
 % define sans font
 \\setmonofont{Helvetica Neue LT Pro}[
@@ -88,7 +98,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 %Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+%\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
 \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
@@ -412,13 +422,13 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
       [NO-DEFAULT-PACKAGES]
       [NO-PACKAGES]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
 (setq org-latex-to-pdf-process
-  '("xelatex -interaction nonstopmode %f"
-     "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes
