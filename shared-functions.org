@@ -9986,4 +9986,15 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
           end tell"))))
 
 (define-key key-minor-mode-map (kbd "s-k e m") 'expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
+#+end_SRC
+
+
+* cleanup
+#+begin_src emacs-lisp
+(defun four-delete-lines-starting-with-four-asterisks ()
+ "Delete all lines in the buffer that start with '**** '."
+ (interactive)
+ (goto-char (point-min))
+ (while (re-search-forward "^\\*\\*\\*\\*\\* " nil t)
+ (delete-region (line-beginning-position) (1+ (line-end-position)))))
 #+end_src
