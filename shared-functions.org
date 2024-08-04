@@ -572,6 +572,8 @@ https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
 
 
                             ;; Convert markdown headings to org headings
+                            ("#####" . "*****")
+                            ("####" . "****")
                             ("###" . "***")
                             ("##" . "**")
 
