@@ -892,6 +892,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
    '(org-ellipsis " 🪜 ")
    '(org-export-preserve-breaks nil)
+   '(org-html-prefer-user-labels t)
    '(org-noter-auto-save-last-location t)
    '(org-noter-insert-note-no-questions t)
    '(org-safe-remote-resources
