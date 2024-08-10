@@ -9998,3 +9998,13 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
  (while (re-search-forward "^\\*\\*\\*\\*\\* " nil t)
  (delete-region (line-beginning-position) (1+ (line-end-position)))))
 #+end_src
+
+#+begin_src emacs-lisp
+(defun replace-double-asterisks ()
+ "Replace any alphabetical character or closing parenthesis followed by '** ' with the same character followed by '* '."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  (while (re-search-forward "\\([a-zA-Z)]\\)\\*\\* " nil t)
+   (replace-match "\\1* "))))
+#+end_src
