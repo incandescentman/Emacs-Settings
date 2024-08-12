@@ -28,6 +28,8 @@
 \\usepackage{fontspec}
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
+
+
 % define Helvetica Now font weights
 \\setmainfont{HelveticaNow}[
   Path = /Users/jay/Library/Fonts/,
@@ -65,7 +67,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 %\\usepackage{graphicx}
 \\usepackage{wrapfig}
 \\usepackage{setspace}
-\\setkeys{Gin}{resolution=72}
+%\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 
 %\\usepackage{calc}
@@ -228,32 +230,29 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\newcommand{\\labelitemx}{$\\bullet$}
 
 
-\\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemi}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemii}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiii}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemiv}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemv}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvi}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemvii}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemviii}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemix}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\renewcommand{\\labelitemx}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
 
 \\setlistdepth{10}
-\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,2]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,3]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,4]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,5]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,6]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,7]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,8]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
 \\renewlist{itemize}{itemize}{10}
-
-
-
 
 
 \\definecolor{azure}{HTML}{f2feff}
@@ -278,26 +277,6 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 
-\\renewenvironment{quote}
-{%
-  \\begin{center}
-  \\begin{tcolorbox}[
-    colback=powderblue,  % Background color
-    colframe=stormybluegrey,  % Frame color
-    colupper=moonrockgrey,  % Text color
-    boxrule=0.5pt,  % Border thickness
-    rounded corners,  % Rounded corners
-fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing % for nice quotes
-% fontupper=\\singlespacing\\fontsize{7}{10}\\selectfont\\ttfamily,  % Single-spacing % for nice quotes % for beautiful LaTeX Formulae
-    width=0.8\\textwidth,  % Width
-    halign=flush left  % Left alignment inside the box
-  ]
-}
-{%
-  \\end{tcolorbox}
-  \\end{center}
-}
-
 
 
 \\usepackage[sc]{titlesec}
@@ -310,25 +289,44 @@ fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spac
  \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
 }
 
+
+% Ensure the tcolorbox package is included with the 'skins' library
+\\usepackage[most]{tcolorbox}
+
+% Define custom colors if not already defined
+\\definecolor{powderblue}{HTML}{B0E0E6}
+\\definecolor{stormybluegrey}{HTML}{708090}
+\\definecolor{moonrockgrey}{HTML}{5D5D5D}
+
+% Define a custom tcolorbox style for quotes
+\\tcbset{
+  myquote/.style={
+    colback=powderblue,
+    colframe=stormybluegrey,
+    colupper=moonrockgrey,
+    boxrule=0.5pt,
+    rounded corners,
+    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,
+    width=0.8\\textwidth,
+    left=0pt,
+    right=0pt,
+    boxalign=center,
+    halign=flush left,
+    before skip=1em,  % Vertical space before the box
+    after skip=1em,   % Vertical space after the box
+    parskip=1em       % Space between paragraphs within the box
+  }
+}
+
+% Redefine the quote environment using the custom style
 \\renewenvironment{quote}
 {%
-  \\begin{center}
-  \\begin{tcolorbox}[
-    colback=powderblue,  % Background color
-    colframe=stormybluegrey,  % Frame color
-    colupper=moonrockgrey,  % Text color
-    boxrule=0.5pt,  % Border thickness
-    rounded corners,  % Rounded corners
-    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,  % Single-spacing for nice quotes
-    width=0.8\\textwidth,  % Width
-    halign=flush left  % Left alignment inside the box
-  ]
-  \\setlength{\\parskip}{1em}  % Set the space between paragraphs
+  \\begin{tcolorbox}[myquote]
 }
 {%
   \\end{tcolorbox}
-  \\end{center}
 }
+
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
 \\titlespacing*{\\section}{1.5ex}{12pt}{0pt}
