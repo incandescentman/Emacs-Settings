@@ -38,6 +38,14 @@
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 
+\\newcounter{level}
+\\usepackage{forloop}
+
+% Apply the Custom Bullet to All Itemize Levels
+\\forloop{level}{1}{\\value{level} <= 10}{%
+  \\setlist[itemize,\\value{level}]{label=\\raisedtinybullet}
+}
+
 \\setlength{\\headheight}{14.49998pt}
 
 % Font Settings
@@ -88,7 +96,6 @@
 \\definecolor{spacegrey}{HTML}{434346}
 \\definecolor{azure}{HTML}{f2feff}
 
-
 \\usepackage{enumitem} % Ensures advanced list customization
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -96,8 +103,6 @@
 \\newcommand{\\labelitemviii}{\\textbullet}
 \\newcommand{\\labelitemix}{\\textbullet}
 \\newcommand{\\labelitemx}{\\textbullet}
-
-\\usepackage{forloop}
 
 % Header and Footer Configuration
 \\fancyhf{} % Clear all header and footer fields
@@ -146,8 +151,8 @@
 \\renewcommand{\\labelitemx}{\\raisedtinybullet}
 
 % Apply the Custom Bullet to All Itemize Levels
-\\forloop{\\level}{1}{\\value{\\level} <= 10}{%
-  \\setlist[itemize,\\level]{label=\\raisedtinybullet}
+\\forloop{level}{1}{\\value{level} <= 10}{%
+  \\setlist[itemize,\\value{level}]{label=\\raisedtinybullet}
 }
 
 % Quote Environment Customization Using tcolorbox
