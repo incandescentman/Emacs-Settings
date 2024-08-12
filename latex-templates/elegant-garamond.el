@@ -38,13 +38,8 @@
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 
-\\newcounter{level}
+\\newcounter{level} % Define the custom counter
 \\usepackage{forloop}
-
-% Apply the Custom Bullet to All Itemize Levels
-\\forloop{level}{1}{\\value{level} <= 10}{%
-  \\setlist[itemize,\\value{level}]{label=\\raisedtinybullet}
-}
 
 \\setlength{\\headheight}{14.49998pt}
 
@@ -152,7 +147,7 @@
 
 % Apply the Custom Bullet to All Itemize Levels
 \\forloop{level}{1}{\\value{level} <= 10}{%
-  \\setlist[itemize,\\value{level}]{label=\\raisedtinybullet}
+  \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
 
 % Quote Environment Customization Using tcolorbox
