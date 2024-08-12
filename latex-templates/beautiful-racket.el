@@ -1,8 +1,8 @@
 (provide 'beautiful-racket)
 
 (add-to-list 'org-latex-classes
-  '("beautiful-racket"
-"
+             '("beautiful-racket"
+               "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
@@ -74,6 +74,7 @@
 \\newtoks\\coverimage
 
 
+\\setlength{\\marginparwidth}{2cm} % Set marginparwidth for todonotes
 
 % \\usepackage{magaz}
 
@@ -112,6 +113,8 @@
 \\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
 
+
+\\setlength{\\headheight}{14.49998pt} % Set headheight for fancyhdr
 
 
 
@@ -406,13 +409,13 @@
 
       [NO-DEFAULT-PACKAGES]
       [NO-PACKAGES]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
 (setq org-latex-to-pdf-process
-  '("xelatex -interaction nonstopmode %f"
-     "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes
