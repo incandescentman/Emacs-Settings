@@ -120,6 +120,11 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\usepackage[labelformat=empty]{caption}
 
 
+
+
+
+
+
 %%%%%%%%%%%%%%%%%
 
 \\usepackage{fancyhdr}
@@ -131,7 +136,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
-\\lhead{\\bfseries\\@title}}} % title of the document as left header
+\\lhead{\\bfseries\\@title} % title of the document as left header
 
 %\\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
@@ -188,6 +193,12 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\usepackage[normalem]{ulem}
 
 
+
+\\setlength{\\headheight}{15pt} % Adjusted value based on warning
+
+\\addtolength{\\topmargin}{-3pt} % Adjusted value to maintain layout
+
+
 \\makeatletter
 \\newcommand{\\globalcolor}[1]{%
   \\color{#1}\\global\\let\\default@color\\current@color
@@ -197,6 +208,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\newcommand{\\textsubscr}[1]{\\ensuremath{_{\\scriptsize\\textrm{#1}}}}
 
 \\usepackage{enumitem}
+\\setlistdepth{10} % Allows up to 10 levels of nesting
 
 \\newlist{mylist}{enumerate}{10}
 
@@ -205,6 +217,15 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
 % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
 %\\setlist{topsep=0pt} % for a line between list items
+
+
+% Define labels for levels 5 to 10
+\\newcommand{\\labelitemv}{$\\bullet$}
+\\newcommand{\\labelitemvi}{$\\bullet$}
+\\newcommand{\\labelitemvii}{$\\bullet$}
+\\newcommand{\\labelitemviii}{$\\bullet$}
+\\newcommand{\\labelitemix}{$\\bullet$}
+\\newcommand{\\labelitemx}{$\\bullet$}
 
 
 \\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
