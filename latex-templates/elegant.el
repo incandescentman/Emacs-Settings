@@ -14,7 +14,7 @@
   footskip=1.25in % Distance from the bottom of the text area to the baseline of the footer
 }
 
-
+\\usepackage{fontspec}
 \\linespread{1.2}
 
 \\usepackage[all]{nowidow}
@@ -25,7 +25,7 @@
 %\\usepackage{amsmath}
 
 
-\\usepackage{fontspec}
+
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
 
@@ -148,7 +148,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 % \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png} % The whole thing with a period
 
-\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
+%\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
 
 %\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png} % logo of just lady liberty
   }%
@@ -294,7 +294,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\usepackage[most]{tcolorbox}
 
 % Define custom colors if not already defined
-\\definecolor{powderblue}{HTML}{B0E0E6}
+\\definecolor{powderblue}{HTML}{f5f7ff}
 \\definecolor{stormybluegrey}{HTML}{708090}
 \\definecolor{moonrockgrey}{HTML}{5D5D5D}
 
@@ -333,8 +333,10 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\scshape\\color{libertyblue}}
-\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\scshape\\color{libertyblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\color{libertyblue}}
+\\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{15}\\raggedright\\color{libertyblue}}
+
+
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{14}{16}\\raggedright\\sffamily\\color{libertyblue}}
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{libertyblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{libertyblue}}

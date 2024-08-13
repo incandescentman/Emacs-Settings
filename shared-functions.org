@@ -10008,3 +10008,11 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
   (while (re-search-forward "\\([a-zA-Z)]\\)\\*\\* " nil t)
    (replace-match "\\1* "))))
 #+end_src
+
+
+* suppress warnings
+#+begin_src emacs-lisp
+(with-eval-after-load 'yasnippet
+ (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
+
+#+end_src
