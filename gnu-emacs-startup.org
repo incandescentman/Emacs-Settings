@@ -1578,24 +1578,25 @@ https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
 *** smart-return
 #+begin_src emacs-lisp
 ;; Ensure necessary packages are loaded
-(require 'org)
-(require 'url)
+
 
 ;; Helper function to check if point is in an empty list item
 (defun org-in-empty-item-p ()
   "Return t if the point is in an empty Org list item."
   (when (org-at-item-p)
-    (let ((content (org-trim (buffer-substring-no-properties
-                              (line-beginning-position)
-                              (line-end-position)))))
-      (string-match-p (format "^%s\\s-*$" (regexp-quote (org-list-bullet-string))) content))))
+    (let* ((element (org-element-lineage (org-element-context) '(item) t))
+           (begin (org-element-property :contents-begin element))
+           (end (org-element-property :contents-end element)))
+      (or (not begin) (= begin end)))))
 
 ;; Helper function to check if URL at point is an image
 (defun org-url-at-point-is-image-p ()
   "Return t if the URL at point points to an image file."
-  (let ((url (thing-at-point 'url)))
+  (let* ((url (thing-at-point 'url))
+         (image-extensions '("png" "jpg" "jpeg" "gif" "bmp" "svg" "webp"))
+         (regexp (concat "\\.\\(" (mapconcat 'identity image-extensions "\\|") "\\)\\(?:\\?[^\\s]*\\)?\\(?:#[^\\s]*\\)?$")))
     (when url
-      (string-match-p (regexp-opt '(".png" ".jpg" ".jpeg" ".gif" ".bmp" ".svg") t) url))))
+      (string-match-p regexp url))))
 
 ;; Helper function to check if point is on an Org link
 (defun org-link-at-point-p ()
@@ -1613,9 +1614,9 @@ https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
      (lambda (status)
        (if (plist-get status :error)
            (message "Error retrieving image: %s" (plist-get status :error))
-         (goto-char (point-min))
-         (re-search-forward "\r?\n\r?\n")
-         (let ((image-data (buffer-substring-no-properties (point) (point-max))))
+         (let ((image-data (buffer-substring-no-properties
+                            (search-forward "\n\n" nil t)
+                            (point-max))))
            (with-current-buffer (get-buffer-create "*Online Image*")
              (erase-buffer)
              (insert-image (create-image image-data nil t))
@@ -1631,9 +1632,11 @@ https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
   (cond
    ;; Exit empty list item
    ((org-in-empty-item-p)
-    (org-delete-indentation)
-    (beginning-of-line)
-    (delete-char (length (org-list-bullet-string))))
+    (let ((indent (org-get-indentation)))
+      (beginning-of-line)
+      (delete-region (line-beginning-position) (line-end-position))
+      (indent-line-to indent)
+      (newline)))
 
    ;; Display image if URL at point is an image
    ((org-url-at-point-is-image-p)
@@ -1643,7 +1646,7 @@ https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
    ((and (org-link-at-point-p) org-return-follows-link)
     (org-open-at-point))
 
-   ;; Delete active region and insert newline
+   ;; Delete active region and insert newline with indentation
    ((use-region-p)
     (delete-region (region-beginning) (region-end))
     (org-return-indent))
