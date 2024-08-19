@@ -853,6 +853,7 @@ before packages are loaded."
                                         ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
 
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
+  (load "/Users/jay/gnulisp/smart-return.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
   (load "/Users/jay/emacs/local-config.el")
