@@ -9129,36 +9129,27 @@ Display online images in new buffer on return
 
 #+begin_src emacs-lisp
 (use-package url
-  :defer
-:config
-(defun display-online-image-in-new-buffer (&optional url)
+  :defer)
+
+(defun display-online-image-in-new-buffer (url)
  "Fetch and display an online image from URL in a new buffer."
- (interactive)
- (let ((image-url (or url (url-get-url-at-point))))
-  (unless image-url
-   (error "No URL found at point"))
+ (interactive "sEnter image URL: ")
+ (when (and url (string-match-p "^https?://" url))
   (url-retrieve
-   image-url
+   url
    (lambda (status)
     (if (plist-get status :error)
       (message "Error retrieving image: %s" (plist-get status :error))
      (goto-char (point-min))
-     (re-search-forward "\r?\n\r?\n")
-     (let* ((data (buffer-substring (point) (point-max)))
-        (image (create-image data nil t))
-        (buffer (get-buffer-create "*Online Image*")))
-      (with-current-buffer buffer
+     (re-search-forward "\r?\n\r?\n" nil 'move)
+     (let ((data (buffer-substring-no-properties (point) (point-max))))
+      (with-current-buffer (get-buffer-create "*Online Image*")
        (erase-buffer)
-       (insert-image image)
+       (insert-image (create-image data nil t))
        (goto-char (point-min))
-       (image-mode))
-      (let ((display-buffer-alist
-         '(("*Online Image*" display-buffer-pop-up-window))))
-       (display-buffer buffer))))
-    (kill-buffer (current-buffer)))))))
-
-
-
+       (image-mode)
+       (display-buffer (current-buffer)))))
+    (kill-buffer (current-buffer))))))
 #+end_src
 
 ** 2
