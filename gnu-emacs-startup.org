@@ -1571,160 +1571,82 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (current-column)))
 #+END_SRC
 
+
+** smart return
+https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
+*** org delete item
+#+begin_src emacs-lisp
+(defun org-delete-item ()
+ "Delete the current org list item."
+ (interactive)
+ (when (org-at-item-p)
+  (let ((begin (line-beginning-position))
+     (end (line-end-position)))
+   (delete-region begin (min (1+ end) (point-max)))
+   (org-update-checkbox-count))))
+#+end_src
+
+*** org item empty
+#+begin_src emacs-lisp
+(defun org-item-empty-p ()
+ "Check if the current Org list item is empty."
+ (let* ((element (org-element-at-point))
+     (contents-begin (org-element-property :contents-begin element))
+     (contents-end (org-element-property :contents-end element)))
+  (or (null contents-begin)
+    (= contents-begin contents-end)
+    (string-match-p "\\`[ \t\r\n]*\\'"
+            (buffer-substring-no-properties contents-begin contents-end)))))
+#+end_src
+
 *** smart-return
 
 #+BEGIN_SRC emacs-lisp
-
 (defun smart-return ()
+  "Smart Return key behavior depending on context."
   (interactive)
-(let ((url (thing-at-point 'url)))
-  (if (and url (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" url))
-    (display-online-image-in-new-buffer)
-   (message "URL at point: %s" url)
-;; Check if the point is on an image link
- (if (and (thing-at-point 'url)
-      (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" (thing-at-point 'url)))
-   (display-online-image-in-new-buffer)
-
-  ;; don't leave stray stars or links
-  (when
-      (or
-       (looking-back "\\[")
-       (looking-back "^\*+[ ]*") ; hopefully this means: at the beginning of the line, 1 or more asterisks followed by zero or more spaces
-       (looking-back "^# ")
-       ;; (looking-back "* TODO ") ; actually I don't think I want this
-       ;; (looking-back "^*+")
-       ;; (looking-back "- ")
-       )
-    (beginning-of-line)
-    )
-  ;;
-  (cond (mark-active
-         (progn (delete-region (mark) (point))
-                (newline)))
-        ;; Lifted from `org-return'. Why isn't there an
-        ;; `org-at-link-p' function?!
-        ((and
-          org-return-follows-link
-          (org-in-regexp org-any-link-re))
-         (cond
-          ((or
-            ;;(looking-at "\\[\\[.*")
-            (looking-back ">")
-            (looking-back "\\]\\]")
-            (and (thing-at-point 'url)
-                 (let ((bnds (bounds-of-thing-at-point 'url)))
-                   (or (>= (car bnds) (point))
-                       (<= (cdr bnds) (point))))))
-           (newline))
-          ((char-equal (string-to-char "]") (following-char))
-           (progn (forward-char 2)
-                  (newline)))
-          (t (call-interactively 'org-open-at-point))))
-
-        ((and
-          (let ((el (org-element-at-point)))
-            (and el
-                 ;; point is at an item
-                 (eq (first el) 'item)
-                 ;; item is empty
-                 (eql (getf (second el) :contents-begin)
-                      (getf (second el) :contents-end)))))
-         (message "at 1")
-         (beginning-of-line)
-         (let ((kill-whole-line nil))
-           (kill-line))
-         (newline))
-        ((and
-          (let ((el (org-element-at-point)))
-            (and (not (org--line-empty-p 1))
-                 (and el
-                      (or (member (first el) '(item plain-list))
-                          (let ((parent (getf (second el) :parent)))
-                            (and parent
-                                 (member (first parent) '(item plain-list)))))))))
-         (let ((is-org-chbs (org-checkbox-p)))
-           (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
-           (when is-org-chbs
-             (insert "[ ] "))))
-        ((and
-          (not (and
-                org-return-follows-link
-                (looking-back ">"))))
-(call-interactively 'org-return))
-
-        (t (newline))))
-)))
-
-
-(defun smart-return ()
- (interactive)
- (let ((url (thing-at-point 'url)))
-  (message "URL at point: %s" url) ; Debug message
-  (if (and url (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)$" url))
-    (display-online-image-in-new-buffer)
-   ;; Rest of the function logic
-   (cond
-    ;; don't leave stray stars or links
-    ((or (looking-back "\\[")
-      (looking-back "^\*+[ ]*")
-      (looking-back "^# "))
-    (beginning-of-line))
-
-    (mark-active
-    (delete-region (mark) (point))
-    (newline))
-
-    ((and org-return-follows-link
-       (org-in-regexp org-any-link-re))
+  (let* ((context (org-element-context))
+         (type (org-element-type context))
+         (url (or (thing-at-point 'url t)
+                  (when (eq type 'link)
+                    (org-element-property :raw-link context)))))
     (cond
-     ((or (looking-back ">")
-       (looking-back "\\]\\]")
-       (and url
-          (let ((bnds (bounds-of-thing-at-point 'url)))
-           (and bnds ; Check if bnds is non-nil
-             (or (>= (car bnds) (point))
-               (<= (cdr bnds) (point)))))))
-     (newline))
-     ((char-equal (string-to-char "]") (following-char))
-     (forward-char 2)
-     (newline))
-     (t (call-interactively 'org-open-at-point))))
+     ;; 1. Display image if URL ends with image extensions
+     ((and url (string-match-p "\\(\\.png\\|\\.jpg\\|\\.jpeg\\)\\'" url))
+      (display-online-image-in-new-buffer url))
 
-    ((let ((el (org-element-at-point)))
-     (and el
-        (eq (car el) 'item)
-        (eql (plist-get (cadr el) :contents-begin)
-          (plist-get (cadr el) :contents-end))))
-    (message "at 1")
-    (beginning-of-line)
-    (let ((kill-whole-line nil))
-     (kill-line))
-    (newline))
+     ;; 2. Delete active region and insert newline
+     ((use-region-p)
+      (delete-region (region-beginning) (region-end))
+      (newline))
 
-    ((let ((el (org-element-at-point)))
-     (and (not (org--line-empty-p 1))
-        el
-        (or (memq (car el) '(item plain-list))
-          (let ((parent (plist-get (cadr el) :parent)))
-           (and parent
-             (memq (car parent) '(item plain-list)))))))
-    (let ((is-org-chbs (org-checkbox-p)))
-     (org-run-like-in-org-mode (lambda () (interactive) (call-interactively 'org-meta-return)))
-     (when is-org-chbs
-      (insert "[ ] "))))
+     ;; 3. Open Org link if org-return-follows-link is enabled
+     ((and (eq type 'link) org-return-follows-link)
+      (org-open-at-point))
 
-    ((not (and org-return-follows-link
-         (looking-back ">")))
-    (call-interactively 'org-return))
+     ;; 4. Exit list when on empty list item
+     ((and (org-at-item-p) (org-item-empty-p))
+      (org-delete-item)
+      (newline))
 
-    (t (newline))))))
+     ;; 5. Insert new list item
+     ((org-at-item-p)
+      (org-insert-item (org-element-property :checkbox (org-element-lineage context '(item) t))))
 
+     ;; 6. Prevent stray characters
+     ((or (looking-back "\\[" (line-beginning-position))
+          (looking-back "^\\*+\\s-*" (line-beginning-position))
+          (looking-back "^# " (line-beginning-position)))
+      (beginning-of-line)
+      (org-return))
 
+     ;; 7. Default org-return behavior in org-mode
+     ((derived-mode-p 'org-mode)
+      (org-return))
 
-
-(define-key org-mode-map (kbd "<return>") 'smart-return)
-
+     ;; 8. Fallback to inserting newline
+     (t
+      (newline)))))
 #+END_SRC
 
 
