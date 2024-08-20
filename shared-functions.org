@@ -5393,17 +5393,13 @@ into the main dumped emacs"
    (undo-fu-only-redo)
   (user-error (message "❤️"))))
 
+(setq undo-tree-auto-save-history nil)
 
 ;; Install and configure undo-fu-session to save undo history between sessions
 (use-package undo-fu-session
  :ensure t
  :config
  (undo-fu-session-global-mode))
-
-;; Set undo limits
-;; (setq undo-limit 200000
-;;    undo-strong-limit 300000
-;;    undo-outer-limit 3000000)
 
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
