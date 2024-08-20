@@ -1571,11 +1571,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (current-column)))
 #+END_SRC
 
-
-** smart return
-https://chatgpt.com/share/e/a73dbb9f-9ad0-403c-bb61-621be0a3c0f2
-
-
 ** kill word correctly
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
