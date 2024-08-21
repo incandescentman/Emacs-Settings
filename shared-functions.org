@@ -4082,6 +4082,11 @@ Although I've specified a user-reserved binding in the code, I've actually bound
   (interactive)
 (find-file "/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org"))
 
+(defun load-spacecraft-mode ()
+ (interactive)
+(find-file "~/emacs/emacs-settings/spacecraft-mode.org"))
+
+
 (defun load-spacemacs-config ()
  (interactive)
 (find-file "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el"))
