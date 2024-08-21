@@ -10066,3 +10066,17 @@ of each speaker's name with the other within the selected region."
     (while (search-forward temp-placeholder nil t)
      (replace-match speaker-name-2))))))
 #+end_src
+
+
+* replace add em dashes
+#+begin_src emacs-lisp
+(defun replace-triple-dash-with-em-dashes ()
+ "Replace all occurrences of '---' with em dashes in the current buffer."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  (while (search-forward "---" nil t)
+   (replace-match "—" nil t))))
+
+(global-set-key (kbd "C-c e") 'replace-triple-dash-with-em-dash)
+#+end_src
