@@ -317,11 +317,80 @@
     (delete-backward-char 2)
     (insert ", "))))
 
+
+(defun kill-clause ()
+ "Kill a clause intelligently, fixing surrounding punctuation and spacing."
+ (interactive)
+ ;; Expand abbreviations if appropriate
+ (when (smart-space-should-expand-p)
+  (smart-expand))
+ ;; Remove trailing punctuation if present
+ (when (looking-at "[,;:]")
+  (delete-char 1))
+ (when (looking-back "[,;:]" (line-beginning-position))
+  (delete-char -1))
+ ;; Adjust point position before killing
+ (when (looking-back " " (line-beginning-position))
+  (backward-char))
+ ;; Determine region to kill
+ (let ((start (point))
+    (end (or (save-excursion
+          (re-search-forward "[.?!]\\s-+" nil t))
+         (line-end-position))))
+  (kill-region start end))
+ ;; Clean up spaces and punctuation
+ (fix-space)
+ (when (looking-back "\\s-+" (line-beginning-position))
+  (delete-horizontal-space))
+ ;; Capitalize next sentence if appropriate
+ (save-excursion
+  (when (looking-at "\\s-*\\w")
+   (capitalize-word 1)))
+ ;; Additional punctuation cleanup
+ (clean-up-punctuation))
+
+
+(defun clean-up-punctuation ()
+  "Clean up redundant or incorrect punctuation around point."
+  (interactive)
+  ;; General cleanup for repeated punctuation
+  (let ((general-pattern "\\([[:punct:]]\\)\\1+"))
+    (save-excursion
+      (when (re-search-backward general-pattern (line-beginning-position) t)
+        (let ((match (match-string 0)))
+          (unless (smart-punctuation-exception-p match)
+            (replace-match "\\1"))))))
+  ;; Specific patterns cleanup
+  (let ((specific-patterns
+         '(("[.,!?]\\s+[.,!?]" . "\\2")
+           ("\\s-+\\([.,!?]\\)" . "\\1")
+           ("\\([.,!?]\\)\\s-*$" . "\\1")
+           (":\\," . ":")
+           (";\\," . ";")
+           ("\\.,\\s-*" . ".")
+           (":\\.\\s-*" . ":")
+           ("\\([?!]\\)\\.\\s-*" . "\\1")
+           ("\\([?!]\\)\\,\\s-*" . "\\1"))))
+    (dolist (pattern specific-patterns)
+      (save-excursion
+        (when (re-search-backward (car pattern) (line-beginning-position) t)
+          (replace-match (cdr pattern)))))))
+
 (defvar *smart-punctuation-marks*
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
   (list "?!" ".." "..." "............................................." "---" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
+
+
+
+(defvar smart-punctuation-exceptions
+ '("?!" ".." "..." "---" ";;" "!!" "!!!" "??" "???")
+ "List of punctuation sequences that should not be altered by smart punctuation functions.")
+
+(defun smart-punctuation-exception-p (sequence)
+ "Check if SEQUENCE is in `smart-punctuation-exceptions`."
+ (member sequence smart-punctuation-exceptions))
 
   (defun smart-punctuation (new-punct &optional not-so-smart)
     (smart-expand)
