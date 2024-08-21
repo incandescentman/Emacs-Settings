@@ -356,31 +356,6 @@
     (delete-backward-char 2)
     (insert ", "))))
 
-(defun clean-up-punctuation ()
- "Clean up redundant or incorrect punctuation around point."
- (interactive)
- ;; General cleanup for repeated punctuation
- (let ((general-pattern "\\([[:punct:]]\\)\\1+"))
-  (save-excursion
-   (when (re-search-backward general-pattern (line-beginning-position) t)
-    (let ((match (match-string 0)))
-     (unless (smart-punctuation-exception-p match)
-      (replace-match "\\1"))))))
- ;; Specific patterns cleanup
- (let ((specific-patterns
-     '(("[.,!?]\\s+[.,!?]" . "\\2")
-      ("\\s-+\\([.,!?]\\)" . "\\1")
-      ("\\([.,!?]\\)\\s-*$" . "\\1")
-      (":\\," . ":")
-      (";\\," . ";")
-      ("\\.,\\s-*" . ".")
-      (":\\.\\s-*" . ":")
-      ("\\([?!]\\)\\.\\s-*" . "\\1")
-      ("\\([?!]\\)\\,\\s-*" . "\\1"))))
-  (dolist (pattern specific-patterns)
-   (save-excursion
-    (when (re-search-backward (car pattern) (line-beginning-position) t)
-     (replace-match (cdr pattern)))))))
 
 (defun kill-clause ()
  "Kill a clause intelligently, fixing surrounding punctuation and spacing."
@@ -413,6 +388,32 @@
  ;; Additional punctuation cleanup
  (clean-up-punctuation))
 
+
+(defun clean-up-punctuation ()
+  "Clean up redundant or incorrect punctuation around point."
+  (interactive)
+  ;; General cleanup for repeated punctuation
+  (let ((general-pattern "\\([[:punct:]]\\)\\1+"))
+    (save-excursion
+      (when (re-search-backward general-pattern (line-beginning-position) t)
+        (let ((match (match-string 0)))
+          (unless (smart-punctuation-exception-p match)
+            (replace-match "\\1"))))))
+  ;; Specific patterns cleanup
+  (let ((specific-patterns
+         '(("[.,!?]\\s+[.,!?]" . "\\2")
+           ("\\s-+\\([.,!?]\\)" . "\\1")
+           ("\\([.,!?]\\)\\s-*$" . "\\1")
+           (":\\," . ":")
+           (";\\," . ";")
+           ("\\.,\\s-*" . ".")
+           (":\\.\\s-*" . ":")
+           ("\\([?!]\\)\\.\\s-*" . "\\1")
+           ("\\([?!]\\)\\,\\s-*" . "\\1"))))
+    (dolist (pattern specific-patterns)
+      (save-excursion
+        (when (re-search-backward (car pattern) (line-beginning-position) t)
+          (replace-match (cdr pattern)))))))
 
 #+END_SRC
 

@@ -919,6 +919,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-<") 'load-shared-functions)
 (define-key key-minor-mode-map (kbd "s->") 'load-gnu-startup)
+(define-key key-minor-mode-map (kbd "s-?") 'load-spacecraft-mode)
+(define-key key-minor-mode-map (kbd "s->") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "s-.") 'consult-outline)
 (define-key key-minor-mode-map (kbd "s-'") 'choose-refile-method-and-refile)
 
