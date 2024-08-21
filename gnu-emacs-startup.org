@@ -261,8 +261,46 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
     (save-excursion
       (goto-char start)
       (my/fix-space)))
-                                        ; (reflash-indentation)
   )
+
+
+(defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
+ "Paste text from the system clipboard and convert Markdown links to Org-mode format.
+
+This function retrieves text from the system clipboard, converts any Markdown-style links
+to Org-mode links, and inserts the result at the current point. If a region is active,
+it replaces the region with the converted text.
+
+Markdown link formats handled:
+- [text](url) => [[url][text]]
+- [url](url) => [[url]]
+
+Requires Emacs 25.1 or later for `gui-get-selection` support."
+ (interactive)
+ (let* ((clipboard-text (or (gui-get-selection 'CLIPBOARD)
+               (error "Clipboard is empty")))
+     (converted-text
+     (replace-regexp-in-string
+      "\$begin:math:display$\\\\(.*?\\\\)\\$end:math:display$(\$begin:math:text$.*?\\$end:math:text$)"
+      (lambda (match)
+       (let ((text (match-string 1 match))
+          (url (match-string 2 match)))
+        (if (string= text url)
+          (format "[[%s]]" url)
+         (format "[[%s][%s]]" url text))))
+      clipboard-text)))
+  ;; Replace active region or insert at point
+  (if (use-region-p)
+    (progn
+     (delete-region (region-beginning) (region-end))
+     (insert converted-text))
+   (insert converted-text))
+  ;; Optional: Fix spacing if `my/fix-space` is defined
+  (when (fboundp 'my/fix-space)
+   (save-excursion
+    (my/fix-space)))
+  ;; Provide user feedback
+  (message "Pasted and converted Markdown links successfully.")))
 
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
