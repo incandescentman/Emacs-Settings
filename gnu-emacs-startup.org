@@ -305,42 +305,14 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 *** pasteboard-paste-spaces-maybe
     #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-spaces-maybe ()
-(interactive)
-;; begin if
-(if
-(or
-(looking-back "'")
-(looking-back ":")
-(looking-at "'")
-(looking-back "(")
-(looking-back "'")
-(looking-at ")")
-(looking-at "|")
-(looking-back "|")
-(looking-back "\\[")
-(looking-at "\\]")
-(looking-at "\\/")
-(looking-at "\\\\")
-(looking-back "\\\\")
-(looking-back "/")
-(looking-back "\"")
-(looking-at "\"")
-(looking-back "\"")
-(looking-back "=")
-(looking-at "<")
-(looking-back "<")
-(looking-at "<")
-(looking-back ">")
-(looking-at "{")
-(looking-back "{")
-(looking-at "}")
-(looking-back "}")
-)
-;; end if
+"Paste from the pasteboard, deciding whether to include spaces based on surrounding characters."
+ (interactive)
+ (if (or (looking-back "[':()|\\[\\]/\\\\\"=<>\\{\\}]" 1)
+     (looking-at "[')|\\]/\\\\\"<>\\{\\}]"))
+   (pasteboard-paste-no-spaces)
+  (pasteboard-paste-without-smart-quotes)))
 
-    (pasteboard-paste-no-spaces) ; then
-  (pasteboard-paste-without-smart-quotes))   ; else
-  )
+
     #+END_SRC
 
 *** pasteboard-paste-no-spaces - original working version
