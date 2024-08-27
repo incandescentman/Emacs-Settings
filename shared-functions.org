@@ -6104,7 +6104,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
                            "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
                            "/Users/jaydixit/Dropbox/web-design/custom-css/sakura.css"
                            "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-                           ""
+
                            "none")))
   (when (string-equal my-org-selected-css "none")
     (setq my-org-selected-css nil)))
@@ -10085,5 +10085,4 @@ of each speaker's name with the other within the selected region."
   (while (search-forward "---" nil t)
    (replace-match "—" nil t))))
 
-(global-set-key (kbd "C-c e") 'replace-triple-dash-with-em-dash)
 #+end_src
