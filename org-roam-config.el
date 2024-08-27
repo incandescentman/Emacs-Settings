@@ -17,12 +17,8 @@
                          "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
 - Links :: \n
 * %<%A, %B %d, %Y>
-\n\n\n
-** To do today [0/1]
-*** TODO Morning Pages
-*** TODO Plan day
-
-** Notes
+\n
+** Today [0/1]
 "))))
   ;; - %<Week %w, day %j>\n
   :config
