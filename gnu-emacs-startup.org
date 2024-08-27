@@ -239,68 +239,22 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 *** pasteboard-paste (with smart quotes by default)
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
-  (interactive)
-  (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point)))
-        (ins-text
-         (replace-regexp-in-string
-          "\\[\\([^][]*\\)\\](\\([^)]*\\))"
-          (lambda (m)
-            (let ((m1 (match-string 1 m))
-                  (m2 (match-string 2 m)))
-              (if (string= m1 m2)
-                  (concat "[[" m1 "]]")
-                (concat "[[" m2 "][" m1 "]]"))))
-          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))))
-    (delete-region start end)
-    (insert ins-text)
-    (my/fix-space)
-    (save-excursion
-      (goto-char start)
-      (my/fix-space)))
-  )
-
-
-(defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
- "Paste text from the system clipboard and convert Markdown links to Org-mode format.
-
-This function retrieves text from the system clipboard, converts any Markdown-style links
-to Org-mode links, and inserts the result at the current point. If a region is active,
-it replaces the region with the converted text.
-
-Markdown link formats handled:
-- [text](url) => [[url][text]]
-- [url](url) => [[url]]
-
-Requires Emacs 25.1 or later for `gui-get-selection` support."
+ "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
  (interactive)
- (let* ((clipboard-text (or (gui-get-selection 'CLIPBOARD)
-               (error "Clipboard is empty")))
-     (converted-text
-     (replace-regexp-in-string
-      "\$begin:math:display$\\\\(.*?\\\\)\\$end:math:display$(\$begin:math:text$.*?\\$end:math:text$)"
-      (lambda (match)
-       (let ((text (match-string 1 match))
-          (url (match-string 2 match)))
-        (if (string= text url)
-          (format "[[%s]]" url)
-         (format "[[%s][%s]]" url text))))
-      clipboard-text)))
-  ;; Replace active region or insert at point
-  (if (use-region-p)
-    (progn
-     (delete-region (region-beginning) (region-end))
-     (insert converted-text))
-   (insert converted-text))
-  ;; Optional: Fix spacing if `my/fix-space` is defined
-  (when (fboundp 'my/fix-space)
-   (save-excursion
-    (my/fix-space)))
-  ;; Provide user feedback
-  (message "Pasted and converted Markdown links successfully.")))
+ (let* ((clipboard-content (shell-command-to-string "pbpaste"))
+     (clean-content (string-trim clipboard-content))
+     (start (point))
+     (end (if mark-active (mark) (point))))
+  (if (string-empty-p clean-content)
+    (message "Clipboard is empty.")
+   (let ((converted-content
+       (replace-regexp-in-string
+       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
+       "[[\\2][\\1]]"
+       clean-content)))
+    (delete-region start end)
+    (insert converted-content)
+    (message "Content pasted and converted successfully.")))))
 
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
