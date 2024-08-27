@@ -347,3 +347,10 @@ This function provides a user-friendly way to search and open files from two dif
   (message "Not in a project")))
 
 #+end_src
+
+** counsel-projectile-ag
+#+begin_src emacs-lisp
+(setq counsel-projectile-find-file-matcher #'counsel--find-file-matcher)
+
+(setq counsel-find-file-ignore-regexp "\\.html")
+#+end_src

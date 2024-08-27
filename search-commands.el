@@ -202,3 +202,7 @@
  (if (projectile-project-p)
    (message "Current project root: %s" (projectile-project-root))
   (message "Not in a project")))
+
+(setq counsel-projectile-find-file-matcher #'counsel--find-file-matcher)
+
+(setq counsel-find-file-ignore-regexp "\\.html")
