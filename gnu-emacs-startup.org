@@ -432,21 +432,32 @@ use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-
 #+END_SRC
 
 * kill ring to pasteboard functions
-** push kill ring to OSX pasteboard
+** push kill ring to MacOS pasteboard
   #+BEGIN_SRC emacs-lisp
 (setq x-select-enable-clipboard t)
 
-(defun push-kill-ring-pasteboard-to-clipboard ()
+(defun push-kill-ring-pasteboard-to-MacOS-clipboard ()
   (interactive)
   (x-select-text (current-kill 0)))
   #+END_SRC
+
+** push MacOS pasteboard to kill ring
+#+begin_src emacs-lisp
+(defun push-MacOS-clipboard-to-kill-ring ()
+ "Push the content of the MacOS clipboard to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (when (and clipboard-content (not (string= clipboard-content "")))
+   (kill-new clipboard-content)
+   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+#+end_src
 
 ** gist-buffer-to-pasteboard
   #+BEGIN_SRC emacs-lisp
 (defun gist-buffer-to-pasteboard ()
   (interactive)
   (gist-buffer)
-  (push-kill-ring-pasteboard-to-clipboard)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard)
   )
   #+END_SRC
 
@@ -839,7 +850,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
   (beginning-of-visual-line)
   (end-of-buffer)
   (copy-region-as-kill (mark) (point))
-  (push-kill-ring-pasteboard-to-clipboard)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard)
   )
 
 
