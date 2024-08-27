@@ -2832,7 +2832,7 @@ Add 'filename' to the kill ring *without duplicating it* if it's already there.
    (kill-new filename))
   (when filename
    (message "Copied to clipboard: %s" filename)))
- (push-kill-ring-pasteboard-to-clipboard))
+ (push-kill-ring-pasteboard-to-MacOS-clipboard))
 
 
 (defun path-copy-path-to-clipboard ()
@@ -2854,7 +2854,7 @@ Add 'filename' to the kill ring *without duplicating it* if it's already there.
   (when filename
    (message "Copied to clipboard: %s" filename)))
  ;; Use custom function to ensure the clipboard content is also in the kill ring.
- (push-kill-ring-pasteboard-to-clipboard))
+ (push-kill-ring-pasteboard-to-MacOS-clipboard))
 
 #+END_SRC
 
@@ -2872,7 +2872,7 @@ Useful for working with files and references:
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename)))
-  (push-kill-ring-pasteboard-to-clipboard)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
 #+END_SRC
 
@@ -5843,7 +5843,7 @@ To use this, just write your org links in the following way (optionally adding a
  (kill-new
    (message "Mac OSX Sierra version %s, Spacemacs version %s, Emacs version %s, org-mode version %s"
        system-version spacemacs-version emacs-version org-version))
- (push-kill-ring-pasteboard-to-clipboard)
+ (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
 #+END_SRC
 
@@ -5861,7 +5861,7 @@ See also spacemacs/describe-system-info
  (kill-new
    (message "Mac OSX Sierra version %s, Emacs version %s, org-mode version %s"
        system-version emacs-version org-version))
- (push-kill-ring-pasteboard-to-clipboard)
+ (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
 #+END_SRC
 
@@ -6102,7 +6102,9 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
                            "/Users/jay/Dropbox/web-design/custom-css/email.css"
                            "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
                            "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+                           "/Users/jaydixit/Dropbox/web-design/custom-css/sakura.css"
                            "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+                           ""
                            "none")))
   (when (string-equal my-org-selected-css "none")
     (setq my-org-selected-css nil)))
