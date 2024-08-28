@@ -3815,6 +3815,9 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (defun suppress-backquote-warnings ()
     (interactive)
     (add-to-list 'warning-suppress-types '(yasnippet backquote-change))))
+
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+
 #+END_SRC
 
 ** fix yasnippet org-mode conflict
@@ -10085,4 +10088,43 @@ of each speaker's name with the other within the selected region."
   (while (search-forward "---" nil t)
    (replace-match "—" nil t))))
 
+#+end_src
+
+
+* Aibo
+#+begin_src emacs-lisp
+;; -----------------------------
+;; Python and Aibo Configuration
+;; -----------------------------
+
+;; Ensure use-package is installed
+
+;; 1. Import environment variables using exec-path-from-shell
+(use-package exec-path-from-shell
+  :config
+  (setq exec-path-from-shell-variables '("PATH" "PYTHONPATH" "VIRTUAL_ENV"))
+  (exec-path-from-shell-initialize))
+
+;; 2. Activate pyvenv and set the virtual environment
+(use-package pyvenv
+  :config
+  (pyvenv-activate "/Users/jaydixit/.virtualenvs/aibo")
+  (pyvenv-tracking-mode 1))
+
+;; 3. Set Python interpreter for Emacs
+(setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python"))
+(setq python-shell-interpreter-args "-i")
+
+;; 4. Add virtualenv bin to exec-path
+(add-to-list 'exec-path (concat pyvenv-virtual-env "bin"))
+
+;; 5. Add virtualenv bin to PATH environment variable
+(setenv "PATH" (concat (concat pyvenv-virtual-env "bin:") (getenv "PATH")))
+
+;; 6. Load and configure aibo package
+(add-to-list 'load-path "/Users/jaydixit/github/aibo/elisp")
+(require 'aibo)
+
+;; Optionally, ensure aibo uses the correct Python interpreter
+(setq aibo-python-interpreter (concat pyvenv-virtual-env "bin/python"))
 #+end_src

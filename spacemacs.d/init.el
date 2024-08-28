@@ -118,6 +118,7 @@ This function should only modify configuration layer settings."
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
+      org-export-backends '(ascii html icalendar latex md)
                                         ; org-enable-hugo-support t
       )
      osx
