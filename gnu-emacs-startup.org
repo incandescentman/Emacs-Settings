@@ -481,7 +481,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
 
-(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
+;; (define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
+
+;; (define-key key-minor-mode-map (kbd "s-I") 'aibo:question)
 
 
 (define-key key-minor-mode-map (kbd "s-k o t") 'org-timeline-export-to-html-and-open)
@@ -548,7 +550,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "M-h M-k") 'describe-key)
 
-(define-key key-minor-mode-map (kbd "M-s-m") 'visit-messages-buffer)
+;; (define-key key-minor-mode-map (kbd "M-s-m") 'visit-messages-buffer)
+
+(define-key key-minor-mode-map (kbd "S-<return>") 'visit-messages-buffer)
 
 (defun visit-messages-buffer ()
 (interactive)
