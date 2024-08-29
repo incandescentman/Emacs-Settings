@@ -40,17 +40,17 @@
 (use-package websocket :ensure t)
 
 ;; 6. Load and configure aibo package
-(when (file-exists-p "~/git/aibo/elisp")
-  (add-to-list 'load-path "/Users/jaydixit/github/aibo/elisp")
+(when (file-exists-p "~/github/aibo/elisp")
+  (add-to-list 'load-path "/Users/jaydixit/github/aibo/elisp"))
 
-  (require 'aibo)
+(require 'aibo)
 
-  (condition-case err
-      (aibo:start-server)
-    (error (message "Failed to start AIBO server: %S" err)))
+(condition-case err
+    (aibo:start-server)
+  (error (message "Failed to start AIBO server: %S" err)))
 
 
-  (add-to-list 'ivy-ignore-buffers "\\*Aibo"))
+;; (add-to-list 'ivy-ignore-buffers "\\*Aibo"))
 
 ;; disable warning
 ;; toggle-debug-on-error
@@ -68,6 +68,8 @@
 ;;   (global-set-key (kbd "C-M-y") 'aibo:rephrase-yank)
 ;;   (global-set-key (kbd "M-/") 'aibo:create-conversation)
 
+
+
 ;; (defvar aibo:conversation-mode-map
 ;;   (let ((map (make-sparse-keymap)))
 ;;     (define-key map (kbd "C-c C-x C-r") #'aibo:refresh-current-conversation)
@@ -81,4 +83,10 @@
 ;;     (define-key map (kbd "M-RET")       #'aibo:submit-user-message)
 ;;     map))
 
-;; TODO make a command and keystroke directly to "ask question"
+
+
+;; Jay's key bindings
+
+(global-set-key (kbd "s-I s-I") 'aibo:question)
+(global-set-key (kbd "s-I r") 'aibo:region)
+(global-set-key (kbd "s-I b") 'aibo:buffer)
