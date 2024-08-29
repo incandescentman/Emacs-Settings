@@ -1,25 +1,39 @@
+;;; aibo-power-pack.el --- Enhanced Aibo commands -*- lexical-binding: t -*-
+
+;; Required dependencies
+(require 'aibo-api)
+(require 'aibo-types)
+(require 'aibo-conversation)
+(require 'ht)
+(require 'subr-x) ;; For string-trim and string-empty-p
+
+;; aibo:question function
 (defun aibo:question ()
-  "Create a new Aibo conversation using the 'Question' template."
+  "Prompt for a question and process it using the 'Question' template."
   (interactive)
-  (let* ((content (read-string "Enter your question: "))
-         (template (aibo:get-conversation-template :short-name "q"))
-         (message-inputs (aibo:get-conversation-template-message-inputs
-                          :template template
-                          :content content)))
-    (aibo:api-create-conversation
-     :message-inputs message-inputs
-     :on-success
-     (lambda (conversation)
-       (aibo:go-to-conversation :conversation conversation)
-       (aibo:stream-assistant-message
-        :conversation-id (ht-get conversation "id"))))))
+  (let* ((content (string-trim (read-string "Enter your question: ")))
+         (template (aibo:get-conversation-template :short-name "q")))
+    (if (string-empty-p content)
+        (message "Question cannot be empty.")
+      (if template
+          (let ((message-inputs (aibo:get-conversation-template-message-inputs
+                                 :template template
+                                 :content content)))
+            (aibo:api-create-conversation
+             :message-inputs message-inputs
+             :on-success
+             (lambda (conversation)
+               (aibo:go-to-conversation :conversation conversation)
+               (aibo:stream-assistant-message
+                :conversation-id (ht-get conversation "id"))))
+            :on-error
+            (lambda (error)
+              (message "Failed to create conversation: %s" error))))
+      (message "Error: 'Question' template not found."))))
 
-
-
-;;; Custom Aibo commands for processing region and buffer -*- lexical-binding: t -*-
-
+;; aibo:generate-template function
 (defun aibo:generate-template (instruction content)
-  "Generate a temporary conversation template with INSTRUCTION and CONTENT."
+  "Generate a conversation template with INSTRUCTION and CONTENT."
   (aibo:ConversationTemplate
    :short-name "dynamic"
    :name "Dynamic Template"
@@ -30,40 +44,58 @@
       (ht ("role" "system")
           ("contents" (list
                        (ht ("kind" "text")
-                           ("text" "You are a helpful AI assistant.")))))
+                           ("text" "You are a knowledgeable and detail-oriented AI assistant. Please follow the user's instructions carefully and provide clear and concise responses.")))))
       (ht ("role" "user")
           ("contents" (list
                        (ht ("kind" "text")
-                           ("text" (format "%s:\n\n%s" instruction content))))))))))
+                           ("text" (format "%s\n\n```text\n%s\n```" instruction content))))))))))
 
-(defun aibo:process-content (content instruction)
+;; aibo:process-content function
+(defun aibo:process-content (instruction content)
   "Process CONTENT with given INSTRUCTION using Aibo API."
-  (let* ((template (aibo:generate-template instruction content))
-         (message-inputs (aibo:get-conversation-template-message-inputs
-                          :template template
-                          :content content)))
-    (aibo:api-create-conversation
-     :message-inputs message-inputs
-     :on-success
-     (lambda (conversation)
-       (aibo:go-to-conversation :conversation conversation)
-       (aibo:stream-assistant-message
-        :conversation-id (ht-get conversation "id"))))))
+  (let ((template (aibo:generate-template instruction content)))
+    (if template
+        (let ((message-inputs (aibo:get-conversation-template-message-inputs
+                               :template template
+                               :content content)))
+          (aibo:api-create-conversation
+           :message-inputs message-inputs
+           :on-success
+           (lambda (conversation)
+             (aibo:go-to-conversation :conversation conversation)
+             (aibo:stream-assistant-message
+              :conversation-id (ht-get conversation "id"))))
+          :on-error
+          (lambda (error)
+            (message "Failed to process content: %s" error))))
+    (message "Error: Failed to generate conversation template.")))
 
 ;;;###autoload
 (defun aibo:region ()
   "Prompt for instruction and process the selected region using Aibo."
   (interactive)
   (if (use-region-p)
-      (let* ((instruction (read-string "Instruction: "))
-             (content (buffer-substring-no-properties (region-beginning) (region-end))))
-        (aibo:process-content content instruction))
+      (let* ((instruction (string-trim (read-string "Instruction: ")))
+             (content (string-trim (buffer-substring-no-properties (region-beginning) (region-end)))))
+        (if (string-empty-p instruction)
+            (message "Instruction cannot be empty.")
+          (aibo:process-content instruction content)))
     (message "No region selected. Please select a region and try again.")))
 
 ;;;###autoload
 (defun aibo:buffer ()
   "Prompt for instruction and process the entire buffer using Aibo."
   (interactive)
-  (let* ((instruction (read-string "Instruction: "))
-         (content (buffer-substring-no-properties (point-min) (point-max))))
-    (aibo:process-content content instruction)))
+  (let* ((instruction (string-trim (read-string "Instruction: ")))
+         (content (string-trim (buffer-substring-no-properties (point-min) (point-max)))))
+    (if (string-empty-p instruction)
+        (message "Instruction cannot be empty.")
+      (aibo:process-content instruction content))))
+
+;; Optional keybindings for convenience
+(global-set-key (kbd "s-I s-I") 'aibo:question)
+(global-set-key (kbd "s-I r") 'aibo:region)
+(global-set-key (kbd "s-I b") 'aibo:buffer)
+
+(provide 'aibo-power-pack)
+;;; aibo-power-pack.el ends here
