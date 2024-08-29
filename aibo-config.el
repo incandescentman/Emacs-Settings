@@ -86,7 +86,3 @@
 
 
 ;; Jay's key bindings
-
-(global-set-key (kbd "s-I s-I") 'aibo:question)
-(global-set-key (kbd "s-I r") 'aibo:region)
-(global-set-key (kbd "s-I b") 'aibo:buffer)
