@@ -436,48 +436,10 @@ is this still necessary?
 
 *** Typography
 **** TODO Replace smart quotes with straight quotes
-Replace smart quotes with straight quotes so that spell check can recognize words with contractions like "don't" and "can't." For when I paste text in that I've copied from the web.
 
-Certainly! Here's a breakdown of the logic and the workings of the function `replace-double-asterisks`:
+If `**` is at the beginning of the line and followed by a space, the function should skips the replacement
 
-1. *Interactive Region Selection:*
-   - `(interactive "r")`: This line makes the function interactive, allowing the user to select a region of text in the buffer. The `beg` and `end` arguments represent the beginning and end of this region, respectively.
-
-2. *Preserving Cursor Position:*
-   - `(save-excursion ...)`: This macro ensures that after the function runs, the cursor (point) returns to its original position, preserving the user's location in the buffer.
-
-3. *Processing the Selected Region:*
-   - `(goto-char beg)`: This moves the cursor to the beginning of the selected region.
-   - `(while (re-search-forward "\\*\\*" end t) ...)`: This loop searches forward from the cursor's current position for the pattern `**`. The `re-search-forward` function moves the cursor to each occurrence of `**` until it reaches the end of the region (`end`). The `t` argument allows the search to wrap around the buffer.
-
-4. *Handling Each Match:*
-   - For each occurrence of `**`, the function captures the start and end positions of the match using `(match-beginning 0)` and `(match-end 0)`.
-
-5. *Conditional Replacement Logic:*
-   - The `if` condition contains two checks using `looking-at` wrapped in `progn`:
-     - `(progn (goto-char match-start) (beginning-of-line) (looking-at "^\\*\\* "))`: This part moves the cursor to the start of the match, then to the beginning of the line, and checks if the line starts with `**` followed by a space.
-     - `(progn (goto-char match-end) (looking-at " "))`: After the first check, this moves the cursor to the end of the match and checks if it is followed by a space.
-   - If both checks are true, meaning `**` is at the beginning of the line and followed by a space, the function skips the replacement by moving the cursor to the end of the match with `(goto-char (match-end 0))`.
-
-6. *Performing the Replacement:*
-   - `(replace-match "*" nil nil)`: If the `**` is not at the beginning of a line followed by a space, the function replaces it with a single `*`.
-   - The replacement is done directly without any additional condition because the `if` statement already ensures that `**` at the beginning of a line followed by a space is not replaced.
-
-7. *Updating the End Position:*
-   - `(setq end (- end 1))`: After each replacement, the end position of the region is adjusted. This is because the replacement shortens the text by one character each time `**` is replaced with `*`, potentially affecting the original `end` position of the region.
-
-The function iterates over the selected region of text, checking each occurrence of `**` against the specified conditions, and performs replacements accordingly. It ensures that formatting such as Markdown headers (which often start with `**`) are not inadvertently altered, while still allowing for the intended bold-to-italic conversion in other parts of the text.
-
-note: it doesn't work.
-
-It incorrectly leaves this text intact:
-
-**Key Questions Guiding Analytical Reports.*
-
-(The desired behavior is to change it to this: *Key Questions Guiding Analytical Reports.*)
-
-Here's the struggle:
-https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
+If the `**` is not at the beginning of a line followed by a space, the function should replaces it with a single `*`.
 
 #+BEGIN_SRC emacs-lisp
 
@@ -497,30 +459,16 @@ https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
    smart-quote-regexp-replacements))
 
 (defun replace-non-heading-double-asterisks (beg end)
-"Replace occurrences of '*' that are not at the beginning of a line or followed by a space."
- (interactive "r") ; To allow the user to specify a region interactively
- (save-excursion ; Preserve the current point position
- (goto-char beg) ; Move to the beginning of the region
- ;; Search for '*' followed by a character that's not a space
- (while (re-search-forward "\\*\\*\\([^ ]\\)" end t)
-  ;; Capture the start and end positions of the match.
-  ;; match-beginning 0 gives the start position of the entire match.
-  ;; match-end 0 gives the end position of the entire match.
-  (let ((match-start (match-beginning 0))
-   (match-end (match-end 0)))
-  ;; Check if '*' is at the beginning of a line.
-  ;; line-beginning-position gives the position at the start of the current line.
-  ;; We compare this with the start position of the '*' match.
-  (if (= match-start (line-beginning-position))
-   ;; If '*' is at the beginning of the line, move the cursor forward to the end of the match.
-   ;; This skips the replacement for this occurrence.
-   (goto-char match-end)
-   ;; Otherwise, '*' is not at the beginning of the line, and we proceed to replace it.
-   ;; replace-match replaces the entire match with '*'
-   ;; and keeps the character that was not a space.
-   (replace-match "*\\1" nil nil))))))
+ "Replace '*' with '*' unless '*' is at the beginning of a line followed by a space."
+ (interactive "r")
+ (save-excursion
+  (goto-char beg)
+  (while (re-search-forward "\\*\\*" end t)
+   (if (and (= (line-beginning-position) (- (point) 2))
+        (looking-at " "))
+     (goto-char (+ (point) 1)) ; Skip this occurrence
+    (replace-match "*" t t)))))
 
-;; for an explanation of the function and how it works, see above
 
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
