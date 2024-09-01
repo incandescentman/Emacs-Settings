@@ -479,9 +479,7 @@ If the `**` is not at the beginning of a line followed by a space, the function 
   (while (re-search-forward "^\\*\\*\\([[:alnum:]]\\)" end t)
    (replace-match "*\\1")))
 
-
   (replace-smart-quotes-regexp beg end)
-
 
 ;; remove double asterisks
 (replace-non-heading-double-asterisks beg end)
@@ -528,6 +526,64 @@ If the `**` is not at the beginning of a line followed by a space, the function 
 
                             )
                           nil   beg (min end (point-max))))
+
+(defun replace-smart-quotes (beg end)
+  "Replace smart quotes and format text appropriately in the specified region."
+  (interactive "r")
+  (save-excursion
+    ;; Replace '*' with '*' unless '*' is at the beginning of a line followed by a space
+    (goto-char beg)
+    (while (re-search-forward "\\*\\*" end t)
+      (if (and (= (line-beginning-position) (- (point) 2))
+               (looking-at " "))
+          (forward-char 1) ; Skip this occurrence
+        (replace-match "*" t t)))
+
+    ;; Perform additional string replacements
+    (goto-char beg)
+    (let ((replacements
+           '(("“" . "\"")
+             ("”" . "\"")
+             ("‘" . "'")
+             ("’" . "'")
+             ("—" . "--")
+             ("–" . "-")
+             ("…" . "...")
+             ("• " . "- ")
+             ("•" . "-")
+             ("–" . "-")
+             ("—" . "--")
+             ("‐" . "-")
+             ("‑" . "-")
+             ("‒" . "-")
+             ("⁃" . "-")
+             ("·" . "-")
+             ("‧" . "-")
+             ("«" . "\"")
+             ("»" . "\"")
+             ("‹" . "'")
+             ("›" . "'")
+             ("„" . "\"")
+             ("‟" . "\"")
+             ("''" . "\"")
+             (" " . " ")       ; Non-breaking space
+             (" " . " ")       ; Narrow no-break space
+             ("\u200B" . "")   ; Zero-width space
+             (":*" . ":*")
+             ("#####" . "***")
+             ("####" . "**")
+             ("###" . "**")
+             ("##" . "*")
+             ("#" . "*")
+             ("- \\*\\* TODO" . "** TODO")
+             ("okay" . "OK")
+             ("  SCHEDULED" . " SCHEDULED")
+             ("  DEADLINE" . " DEADLINE"))))
+      (dolist (pair replacements)
+        (goto-char beg)
+        (while (re-search-forward (regexp-quote (car pair)) end t)
+          (replace-match (cdr pair) t t))))))
+
 #+END_SRC
 
 **** Paste and replace quotes
