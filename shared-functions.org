@@ -466,7 +466,7 @@ If the `**` is not at the beginning of a line followed by a space, the function 
   (while (re-search-forward "\\*\\*" end t)
    (if (and (= (line-beginning-position) (- (point) 2))
         (looking-at " "))
-     (goto-char (+ (point) 1)) ; Skip this occurrence
+     (forward-char 2) ; Skip this occurrence
     (replace-match "*" t t)))))
 
 
