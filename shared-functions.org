@@ -525,10 +525,6 @@ https://chat.openai.com/share/9b578aee-9505-41a1-a7d3-c2dc94e6c7e0
 (defun replace-smart-quotes (beg end)
   "Replace 'smart quotes' in buffer or region with ascii quotes."
   (interactive "r")
-  ;;(while (search-forward-regexp "- " nil t)
-  ;; (replace-match "") nil t)
-  ;; add alpha. And replace the alpha.
-
 ;; replace ** with * when it's at the beginning of a line and not followed by a space
 (save-excursion
   (goto-char beg)
