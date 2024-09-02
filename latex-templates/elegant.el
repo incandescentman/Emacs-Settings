@@ -119,9 +119,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\setcounter{secnumdepth}{0}
 \\usepackage{graphicx}
 \\usepackage{float}
-\\usepackage[labelformat=empty, font=it]{caption}
 
 
+\\usepackage[labelformat=empty, font=it, width=0.9\\textwidth]{caption}
 
 
 
