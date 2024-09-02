@@ -571,7 +571,6 @@ If the `**` is not at the beginning of a line followed by a space, the function 
              ("‑" . "-")
              ("‒" . "-")
              ("‾" . "-")
-             ("_" . "-")
              (" " . " ")       ; Non-breaking space
              (" " . " ")       ; Narrow no-break space
              ("\u200B" . "")   ; Zero-width space
