@@ -27,6 +27,7 @@
         my/kill-line-dwim
         newline-and-indent
         org-beginning-of-line
+        org-ctrl-c-ctrl-c
         org-delete-char
         org-end-of-line
         org-force-self-insert

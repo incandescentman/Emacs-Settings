@@ -18,7 +18,7 @@
 \\linespread{1.2}
 
 \\usepackage[all]{nowidow}
-\\usepackage{float}
+
 %\\usepackage{changepage}
 
 %\\usepackage{algorithm}
@@ -64,7 +64,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\PassOptionsToPackage{obeyspaces}{url}
 
 \\usepackage{paralist}
-%\\usepackage{graphicx}
+
 \\usepackage{wrapfig}
 \\usepackage{setspace}
 %\\setkeys{Gin}{resolution=72}
@@ -117,9 +117,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\renewcommand{\\contentsname}{Table of Contents}
 
 \\setcounter{secnumdepth}{0}
-
-
-\\usepackage[labelformat=empty]{caption}
+\\usepackage{graphicx}
+\\usepackage{float}
+\\usepackage[labelformat=empty, font=it]{caption}
 
 
 
