@@ -481,9 +481,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-k o l") 'olivetti-mode)
 
-;; (define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
+(define-key key-minor-mode-map (kbd "s-I") 'clone-indirect-buffer-new-window-and-focus)
 
-;; (define-key key-minor-mode-map (kbd "s-I") 'aibo:question)
+;; (define-key key-minor-mode-map (kbd "m-I") 'aibo:question)
 
 
 (define-key key-minor-mode-map (kbd "s-k o t") 'org-timeline-export-to-html-and-open)
