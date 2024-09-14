@@ -92,10 +92,25 @@
         (message "Instruction cannot be empty.")
       (aibo:process-content instruction content))))
 
-;; Optional keybindings for convenience
-(global-set-key (kbd "s-I s-I") 'aibo:question)
-(global-set-key (kbd "s-I r") 'aibo:region)
-(global-set-key (kbd "s-I b") 'aibo:buffer)
+;; OPTIONAL KEYBINDINGS
+
+;; Define the prefix keymap
+(defvar aibo-prefix-map (make-sparse-keymap)
+  "Keymap for Aibo-related commands.")
+
+;; Bind commands within the prefix map
+(define-key aibo-prefix-map (kbd "M-i") #'aibo:question)
+(define-key aibo-prefix-map (kbd "r")    #'aibo:region)
+(define-key aibo-prefix-map (kbd "b")    #'aibo:buffer)
+
+;; Assign the prefix map to M-i globally
+(global-set-key (kbd "M-i") aibo-prefix-map)
+
+;; Optional: Integrate with which-key for better discoverability
+(with-eval-after-load 'which-key
+  (which-key-add-key-based-replacements
+    "M-i" "Aibo Commands"))
+
 
 (provide 'aibo-power-pack)
 ;;; aibo-power-pack.el ends here

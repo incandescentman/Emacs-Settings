@@ -858,7 +858,7 @@ before packages are loaded."
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
   (load "/Users/jay/emacs/local-config.el")
-  ;; (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
+  ;;  (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
   ;; (load "/Users/jay/emacs/emacs-settings/aibo-power-pack.el")
   )
 
