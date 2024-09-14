@@ -10088,14 +10088,18 @@ of each speaker's name with the other within the selected region."
 
 * replace add em dashes
 #+begin_src emacs-lisp
-(defun replace-triple-dash-with-em-dashes ()
- "Replace all occurrences of '---' with em dashes in the current buffer."
- (interactive)
- (save-excursion
-  (goto-char (point-min))
-  (while (search-forward "---" nil t)
-   (replace-match "—" nil t))))
-
+(defun replace-dashes-with-em-dashes ()
+  "Replace all occurrences of '---' or '--' with em dashes in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    ;; First, replace all occurrences of '---' with em dashes
+    (while (search-forward "---" nil t)
+      (replace-match "—" nil t))
+    ;; Then, replace all occurrences of '--' with em dashes
+    (goto-char (point-min))
+    (while (search-forward "--" nil t)
+      (replace-match "—" nil t))))
 #+end_src
 
 
