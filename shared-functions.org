@@ -30,13 +30,11 @@
     - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
 * packages
-
 ** lexical binding
 #+begin_SRC emacs-lisp
 (setq lexical-binding t)
 #+end_SRC
 ** Load the proper repositories
-
 #+BEGIN_SRC emacs-lisp
 ;; Set package archives
 (setq package-archives
@@ -242,7 +240,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+end_src
 
 *** hunspell - workaround
-
 #+BEGIN_SRC emacs-lisp
 ;; Flyspell
 (use-package flyspell
@@ -294,7 +291,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ** UI / customization of appearance and editing environment
 *** mouse
 **** Stop accidentally highlighting org-mode links all the time:
-
 #+BEGIN_SRC emacs-lisp
 (setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil)
@@ -335,13 +331,11 @@ Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-hori
 
 ** quitting emacs
 *** Ask before exiting Emacs
-
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
 *** System alarms
-
 In some cases, you'd like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit C-g in the minibuffer or during an isearch:
 
 #+BEGIN_SRC emacs-lisp
@@ -363,7 +357,6 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 
 *** Use visual line mode whenever possible
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'mail-mode-hook (lambda () (visual-line-mode 1)))
 (add-hook 'message-mode-hook (lambda () (visual-line-mode 1)))
@@ -384,7 +377,6 @@ is this still necessary?
 #+END_SRC
 
 *** Sounds
-
 #+BEGIN_EXAMPLE emacs-lisp
 (unless (and (fboundp 'play-sound-internal)
 	     (subrp (symbol-function 'play-sound-internal)))
@@ -396,13 +388,11 @@ is this still necessary?
 #+END_EXAMPLE
 
 *** Disable double spacing between sentences
-
 #+BEGIN_SRC emacs-lisp
 (setq-default sentence-end-double-space nil)
 #+END_SRC
 
 *** Make typing override text selection
-
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode 1)
 #+END_SRC
@@ -418,7 +408,6 @@ is this still necessary?
 #+END_SRC
 
 *** Automatically open files in their correct modes
-
 #+BEGIN_SRC emacs-lisp
 
 
@@ -436,7 +425,6 @@ is this still necessary?
 
 *** Typography
 **** TODO Replace smart quotes with straight quotes
-
 If `**` is at the beginning of the line and followed by a space, the function should skips the replacement
 
 If the `**` is not at the beginning of a line followed by a space, the function should replaces it with a single `*`.
@@ -605,7 +593,6 @@ Haven't used this next one:
 #+END_SRC
 
 *** Indentation
-
 Automatically indenting yanked text if in programming-modes:
 #+BEGIN_SRC emacs-lisp
 (defvar yank-indent-modes
@@ -632,7 +619,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
 (setq vc-handled-backends nil)
 
 *** Color themes
-
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'custom-theme-load-path "~/emacs/emacs-settings/sublime-themes-jay/")
 #+END_SRC
@@ -738,14 +724,12 @@ read-file-name-completion-ignore-case t)
 #+END_SRC
 
 ** Reveal in finder
-
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
   :bind)
 #+END_SRC
 
 ** cycle-hyphenation-or-toggle-item
-
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation-or-toggle-item ()
   (interactive)
@@ -777,7 +761,6 @@ read-file-name-completion-ignore-case t)
 
 
 *** fontify item checklists
-
 [[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
 
 #+BEGIN_SRC emacs-lisp
@@ -825,7 +808,6 @@ read-file-name-completion-ignore-case t)
 #+END_SRC
 
 ** org-export
-
 #+BEGIN_SRC emacs-lisp
 (setq org-export-with-smart-quotes t)
 (setq org-export-exclude-tags (quote ("noexport" "extra")))
@@ -951,7 +933,6 @@ The post-processing step is handed the path to your new file; you could use some
 #+END_SRC
 
 ** Change section numbering depending on what export format I use
-
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
 Note: disable this when trying to export to org-html-themes!
@@ -1067,7 +1048,6 @@ Works!
 
 ** org agenda
 *** agenda display settings
-
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
@@ -1167,7 +1147,6 @@ Defining stuck projects as todos that do not contain "scheduled" or
 #+END_SRC
 
 **  hl-todo
-
 #+begin_src emacs-lisp
 (use-package hl-todo
 :defer
@@ -1284,7 +1263,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 #+END_EXAMPLE
 
 ** org-capture setup
-
 #+BEGIN_EXAMPLE emacs-lisp
 (setq org-capture-templates
       (quote
@@ -1356,7 +1334,6 @@ I think this is to make parent ~DONE~ states automatically update:
 #+END_SRC
 
 *** checkbox-list-complete
-
 Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
 
 #+BEGIN_SRC emacs-lisp
@@ -1383,7 +1360,6 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 #+END_SRC
 
 *** org align tables
-
 #+BEGIN_SRC emacs-lisp
 (defun my-align-all-tables ()
   (interactive)
@@ -1391,7 +1367,6 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 #+END_SRC
 
 *** org extract link
-
 #+BEGIN_SRC emacs-lisp
 (defun my-org-extract-link ()
   "Extract the link location at point and put it on the killring."
@@ -1426,7 +1401,6 @@ Insert link with HTML title as default description. When using `org-insert-link'
 #+END_SRC
 
 *** org insert subtask
-
 #+BEGIN_SRC emacs-lisp
 (defun my-org-insert-sub-task ()
   (interactive)
@@ -1438,7 +1412,6 @@ Insert link with HTML title as default description. When using `org-insert-link'
 #+END_SRC
 
 *** reschedule agenda items to today with a single command
-
 #+BEGIN_SRC emacs-lisp
 (defun org-agenda-reschedule-to-today ()
   (interactive)
@@ -1447,7 +1420,6 @@ Insert link with HTML title as default description. When using `org-insert-link'
 #+END_SRC
 
 *** org archive done
-
 Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
 #+BEGIN_SRC emacs-lisp
 (defun my-org-archive-done-tasks ()
@@ -1536,7 +1508,6 @@ Make org-capture open in full window! :-)
 #+END_SRC
 
 * org-mode other packages
-
 ** org-pomodoro
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-pomodoro-format "Pomodoro: %s")
@@ -1610,7 +1581,6 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 
 * Browsing
 ** Make URLs in comments/strings clickable
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
 #+END_SRC
@@ -1621,7 +1591,6 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 #+END_SRC
 
 ** Edit with Emacs
-
 To enable Edit with Emacs in Chrome:
 #+BEGIN_SRC emacs-lisp
 ;; (use-package edit-server)
@@ -1629,7 +1598,6 @@ To enable Edit with Emacs in Chrome:
 #+END_SRC
 
 * Miscellaneous/unsorted settings
-
 #+BEGIN_SRC emacs-lisp
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
@@ -1656,7 +1624,6 @@ To enable Edit with Emacs in Chrome:
 #+END_SRC
 
 ** Open everything in its right mode; use ~org-mode~ whenever possible
-
 #+BEGIN_SRC emacs-lisp
 
 (setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
@@ -1684,13 +1651,11 @@ To enable Edit with Emacs in Chrome:
 #+END_SRC
 
 ** Enable highlighting of text similar to standard word processors
-
 #+BEGIN_SRC emacs-lisp
 '(org-support-shift-select (quote always))
 #+END_SRC
 
 ** Define my default directory:
-
 #+BEGIN_SRC emacs-lisp
 (setq default-directory "~/Dropbox/writing/" )
 #+END_SRC
@@ -1739,14 +1704,12 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 #+END_SRC
 
 * ~eshell~
-
 #+BEGIN_SRC emacs-lisp
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 ;; (use-package eshell-autojump)
 #+END_SRC
 
 * ~ibuffer~
-
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
@@ -1775,7 +1738,6 @@ Defines ~ibuffer-do-replace-string~:
 #+END_SRC
 
 * ido
-
 #+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'ido-setup-hook
 	  (lambda ()
@@ -1914,7 +1876,6 @@ ido-enter-matching-directory nil
 
 
 * Things that I don't know what they're for
-
 ** I forgot what this is but it looks important
 #+BEGIN_SRC emacs-lisp
 (define-key org-mode-map
@@ -1929,7 +1890,6 @@ ido-enter-matching-directory nil
 
 * Fuzzy matching
 ** imenu
-
 [[http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong/][link]]
 
 #+BEGIN_EXAMPLE emacs-lisp
@@ -1959,7 +1919,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+END_EXAMPLE
 
 * Dired
-
 #+BEGIN_SRC emacs-lisp
 
 (use-package dired
@@ -2053,7 +2012,6 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 #+END_SRC
 
 * Ignore / Exclude Uninteresting Things
-
 ** buffer-stack untrack / ignore uninteresting buffers
 #+BEGIN_SRC emacs-lisp
 (setq buffer-stack-show-position nil)
@@ -2184,7 +2142,6 @@ dired-omit-extensions
 
 
 * Word count
-
 #+begin_src emacs-lisp
 (use-package wc-mode
 
@@ -2245,7 +2202,6 @@ dired-omit-extensions
 #+END_SRC
 
 ** html2org
-
 Aliasing this instead now that I'm putting in on Github
 #+begin_src emacs-lisp
 (defalias 'html2org-clipboard 'chatgpt2org)
@@ -2362,7 +2318,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 
 * My custom functions for working with dates and times
-
 #+BEGIN_SRC emacs-lisp
 (defun jd-org-current-time ()
   "foo"
@@ -2470,7 +2425,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 #+END_SRC
 
 * Prose editing settings
-
 ** lowercase
 #+begin_src emacs-lisp
 (defalias 'lowercase-region 'downcase-region)
@@ -2722,7 +2676,6 @@ With prefix arg C-u, copy region instad of killing it."
 
 
 ** move-region-or-subtree-to-other-window
-
 #+BEGIN_SRC emacs-lisp
 (defun move-region-or-subtree-to-other-window ()
  (interactive)
@@ -2985,7 +2938,6 @@ Including indent-buffer, which should not be called automatically on save."
 #+END_SRC
 
 * Keybindings
-
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
@@ -3120,7 +3072,6 @@ Redefine help shortcut:
 #+END_SRC
 
 *** Position of the Cursor after Searching
-
 Note that when you type ‘C-r’, isearch goes backwards. When you search
 backwards, find something, and then end the search, for example by hitting
 ‘RET’, point is at the beginning of the string you searched. When you search
@@ -3153,8 +3104,6 @@ AdrianKubala:
 #+END_SRC
 
 ** Helm
-
-
 #+BEGIN_EXAMPLE emacs-lisp
 (use-package helm-swoop
 :defer)
@@ -3234,7 +3183,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_EXAMPLE
 
 ** projectile
-
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
 :defer
@@ -3261,7 +3209,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 #+END_SRC
 
 ** helm projectile
-
 #+BEGIN_EXAMPLE emacs-lisp
 
 
@@ -3325,7 +3272,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 
 *** isearch arrow keys
-
   Here's very convenient keys for isearch. Put it in your emacs init.
 
 
@@ -3363,7 +3309,6 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
    :ID:       37637C3F-0CB1-48CE-8CD0-4436182F212A
    :END:
 *** swiper
-
 **** ivy
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
@@ -3505,7 +3450,6 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 
 * these seem to need to go at the end
-
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
 ;; (use-package palimpsest)
@@ -3516,7 +3460,6 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 C-C C-R to move text to the bottom of the buffer
 
 ** Make block quotes appear nicely in buffer, displaying > instead of :
-
 This doesn't seem to be working.
 
 http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
@@ -3590,14 +3533,12 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 * Treat all themes as safe
-
 #+BEGIN_SRC emacs-lisp
 (setq custom-safe-themes t)
 #+END_SRC
 
 
 * org-toggle-heading-same-level
-
 #+BEGIN_SRC emacs-lisp
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -3619,7 +3560,6 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 * org-toggle-todo-heading
-
 #+BEGIN_SRC emacs-lisp
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
@@ -3640,8 +3580,6 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 * delete-extra-whitespace-region
-
-
 #+BEGIN_SRC emacs-lisp
 (defun delete-extra-whitespace-region (beg end)
   "replace all whitespace in the region with single spaces"
@@ -3655,7 +3593,6 @@ Handy way of getting back to previous places.
 #+END_SRC
 
 * double-line-breaks-in-region
-
 #+BEGIN_SRC emacs-lisp
 (defun double-line-breaks-in-region (begin end)
   (interactive "r")
@@ -3710,7 +3647,6 @@ The trick is to not use different colored delimiters! The reason I need the rain
 #+END_EXAMPLE
 
 * helm search current directory
-
 #+BEGIN_EXAMPLE emacs-lisp
 (defun helm-do-grep-current-directory-tree ()
   "Recursively search current directory.
@@ -3732,8 +3668,6 @@ root instead."
 
 
 * contract-contractions
-
-
 #+BEGIN_SRC emacs-lisp
 
 (defun contract-contractions (begin end)
@@ -3776,7 +3710,6 @@ Single Capitals as you type."
 #+END_SRC
 
 * yasnippets
-
 ** yasnippets
 #+BEGIN_SRC emacs-lisp
 (defun yas-expand-and-copy-to-clipboard (&optional field)
@@ -3883,13 +3816,11 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 
 ** yasnippet copy to clipboard
-
 #+begin_src emacs-lisp
 
 #+end_src
 
 * flyspell
-
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
@@ -3914,7 +3845,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 #+END_SRC
 
 ** flyspell skip source blocks
-
 #+BEGIN_SRC emacs-lisp
 ;; NO spell check for embedded snippets
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
@@ -3935,7 +3865,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 #+END_SRC
 
 * tiny-expand
-
 #+BEGIN_SRC emacs-lisp
 (use-package tiny
   :defer
@@ -3965,7 +3894,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 #+END_SRC
 
 * re-builder
-
 #+BEGIN_SRC emacs-lisp
 (use-package re-builder
 :defer
@@ -4004,8 +3932,6 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this:
-
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -4132,7 +4058,6 @@ C-c q
 
 
 * org-agenda skip keywords
-
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS")))
 
@@ -4140,7 +4065,6 @@ C-c q
 #+END_SRC
 
 * org-ellipsis
-
 #+BEGIN_SRC emacs-lisp
 ;; (setq org-ellipsis " ◦◦◦ ")
 ;; (set-face-attribute org-ellipsis '(((:background "white" :underline nil))))
@@ -4189,7 +4113,6 @@ C-c q
 
 * org todo stuff
 ** move point to next TODO heading upon DONE state change
-
 #+BEGIN_SRC emacs-lisp
 (defun bb/next-heading (&rest args)
 (when
@@ -4249,7 +4172,6 @@ event of an error or nonlocal exit."
 #+END_SRC
 
 * wrap region
-
 #+BEGIN_SRC emacs-lisp
 ;; (use-package wrap-region)
 ;; (wrap-region-add-wrapper "*" "*" "*")
@@ -4298,7 +4220,6 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 * faces
 ** bold
-
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -4311,7 +4232,6 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 
 ** god mode
-
 #+BEGIN_EXAMPLE emacs-lisp
 ;; (use-package god-mode)
 (defun my-update-cursor ()
@@ -4333,7 +4253,6 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 #+END_EXAMPLE
 
 ** C-c C-c to exit source code blocks
-
 #+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-src
   '(define-key org-src-mode-map
@@ -4342,7 +4261,6 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 
 ** narrow or widen
-
 #+BEGIN_SRC emacs-lisp
 (defun narrow-or-widen-dwim (p)
   "Widen if buffer is narrowed, narrow-dwim otherwise.
@@ -4372,7 +4290,6 @@ already narrowed."
 
 
 ** org go speed
-
 ; Speed commands are really useful, but I often want to make use of
 ; them when I'm not at the beginning of a header. This command brings
 ; you back to the beginning of an item's header, so that you can do
@@ -4507,7 +4424,6 @@ The full path into relative path and insert it as a local file link in org-mode"
 
 
 * unbind meta-number
-
 This unbinds M-1, M-2, ..., M-0, which I very rarely used (I use C-u for count arguments) and I suddenly found myself with 10 new shortcuts that are easy to type (especially M-1, M-2 and M-3). You can also use them as prefixes, so for example M-1 r could be ivy-recentf and M-1 s could be swiper.
 
 I hope this is somewhat helpful to someone else, happy hacking! Source: [[https://www.reddit.com/r/emacs/comments/3ricev/tip_for_when_you_are_running_out_of_easytopress/][Tip for when you are running out of easy-to-press key shortcuts : emacs]]
@@ -4518,8 +4434,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 #+END_SRC
 
 * hydras experiments
-
-
 #+BEGIN_EXAMPLE emacs-lisp
 (defhydra email (global-map "s-]")
  "email"
@@ -4776,7 +4690,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 * Save file as new
-
 #+BEGIN_SRC emacs-lisp
 (defun save-file-as-new ()
   "Force modification of current file, unless already modified."
@@ -4815,7 +4728,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 * If you want Emacs to treat all new files as modified, you can automate the solution like this
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -4837,7 +4749,6 @@ It will open the link in Emacs with typing C-c C-o.
 
 ** LaTeX
 *** Find LaTeX on my system
-
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2024/bin/universal-darwin")
@@ -4845,7 +4756,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 *** XeLaTeX customisations
-
  ~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
 #+BEGIN_SRC emacs-lisp
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
@@ -4859,7 +4769,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 *** load my custom latex templates
-
 #+BEGIN_SRC emacs-lisp
 
 (defun jay-load-latex ()
@@ -4990,7 +4899,6 @@ minibuffer."
 
 
 * flycheck
-
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :defer)
@@ -4998,7 +4906,6 @@ minibuffer."
 
 
 * query-replace-duplicate-lines-keep-blanks
-
 Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-duplicate-lines/20384?noredirect=1#comment31370_20384][replace - how to query-delete-duplicate-lines? - Emacs Stack Exchange]]
 
 #+BEGIN_SRC emacs-lisp
@@ -5008,7 +4915,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+END_SRC
 
 * display
-
 ** recenter top bottom
 #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
@@ -5105,7 +5011,6 @@ cmd)
 #+END_SRC
 
 *** lines
-
 *** paragraphs
 **** kill whole paragraph
      :PROPERTIES:
@@ -5212,7 +5117,6 @@ cmd)
     :ID:       8DEDEA6E-ED28-46E7-8277-588FE1048EA6
     :END:
 **** refile active region or subtree
-
 #+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree ()
   (interactive)
@@ -5247,7 +5151,6 @@ You can toggle it in necessary files by setting the local variables section at t
 #+END_EXAMPLE
 
 * yasnippet fixes
-
 #+BEGIN_SRC emacs-lisp
 (defun yas/pasteboard-without-spaces ()
  "Return content of OS X system pasteboard via `pbpaste'."
@@ -5322,7 +5225,6 @@ into the main dumped emacs"
 #+END_SRC
 
 * typography custom functions
-
 ** em dash
 #+BEGIN_SRC emacs-lisp
 (defun em-dash ()
@@ -5423,14 +5325,12 @@ into the main dumped emacs"
 #+END_SRC
 
 * Emacs 25
-
 ** don't create new frames
 #+BEGIN_SRC emacs-lisp
 (setq display-buffer-alist (quote (("" ignore (nil . reusable-frames)))))
 #+END_SRC
 
 * from Harry Schwartz
-
 ** find file as sudo
 #+BEGIN_SRC emacs-lisp
 (defun edit-this-file-as-sudo ()
@@ -5462,7 +5362,6 @@ into the main dumped emacs"
 
 
 ** Use fancy lambdas
-
 Why not?
 
 #+BEGIN_SRC emacs-lisp
@@ -5472,7 +5371,6 @@ Why not?
 
 
 ** Projectile
-
 Projectile's default binding of =projectile-ag= to =C-c p s s= is clunky enough
 that I rarely use it (and forget it when I need it). This binds the
 easier-to-type =C-c C-v= and =C-c v= to useful searches.
@@ -5489,7 +5387,6 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
 #+END_SRC
 
 *** Ignore files specified in .projectile (doesn't work)
-
 The function counsel-projectile-grep is failing to ignore the files I
 specified to ignore in my .projectile file. How can I direct
 counsel-projectile-grep to ignore these files?
@@ -5527,7 +5424,6 @@ ignore patterns to =counsel-projectile-grep=:
 #+end_EXAMPLE
 
 * web-mode
-
 If I'm in =web-mode=, I'd like to:
 
 - Color color-related words with =rainbow-mode=.
@@ -5564,7 +5460,6 @@ new one (which shows the same information).
 
 
 * how to do an argument
-
 Insert today's date
 Ben Maughan
 
@@ -5745,7 +5640,6 @@ This solution also works for MELPA.
 #+END_SRC
 
 * Tufte
-
 ** tufte export to HTML
 #+BEGIN_SRC emacs-lisp
 (use-package ox-tufte
@@ -5770,7 +5664,6 @@ This solution also works for MELPA.
 #+END_SRC
 
 * timestamp export format
-
 Remove the remove <> surrounding timestamps
 
 #+BEGIN_SRC emacs-lisp
@@ -5948,7 +5841,6 @@ See also spacemacs/describe-system-info
 
 
 * convert to chat format
-
 #+BEGIN_EXAMPLE emacs-lisp
 (defun intern-convert-to-chat-format (begin end)
  (interactive "r")
@@ -5967,7 +5859,6 @@ See also spacemacs/describe-system-info
 
 
 * shell-pop
-
 #+BEGIN_SRC emacs-lisp
 (use-package shell-pop
 :defer
@@ -6099,7 +5990,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 
 * default org-css
-
 #+begin_SRC emacs-lisp
 (defvar my-org-selected-css 'unset
   "Path of the selected CSS file or 'none' for no stylesheet. 'unset' indicates that the user has not been prompted yet.")
@@ -6144,7 +6034,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 #+END_SRC
 
 * hashtags
-
 #+begin_src emacs-lisp
 (defun show-duplicate-words (&optional alphabetical)
  "Collect all of the unique words in the current buffer and
@@ -6193,7 +6082,6 @@ Go through `org-structure-template-alist' and
 
 
 * multiple cursors
-
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :defer)
@@ -6225,9 +6113,7 @@ Go through `org-structure-template-alist' and
 
 #+END_SRC
 * org-mode-hooks and text-mode-hooks
-
 ** text-mode-hooks
-
 #+begin_src emacs-lisp
 
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -6246,8 +6132,6 @@ Go through `org-structure-template-alist' and
 #+end_src
 
 ** org-mode-hooks
-
-
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'org-mode-hook #'(lambda () (auto-fill-mode -1)))
@@ -6284,14 +6168,12 @@ In collapsed view, hide empty lines between subtrees
 #+end_src
 
 * Demote sequence for list bullets
-
 #+begin_src emacs-lisp
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+")))
 #+end_src
 
 
 * embiggen text
-
 #+begin_SRC emacs-lisp
 
 
@@ -6634,7 +6516,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+end_src
 
 * set OpenAI API key
-
 Rewrite this emacs-lisp function to retrieve the API key from an external file: (setq openai-api-key "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")
 
 Here is an example of how you might rewrite the function to retrieve the API key from an external file:
@@ -6790,7 +6671,6 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 
 
 * Key chords
-
 Use key chord
 #+BEGIN_SRC emacs-lisp
 (use-package key-chord
@@ -7065,7 +6945,6 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 
 * show duplicate lines
-
 #+begin_src emacs-lisp
 (defun show-duplicate-lines ()
  "Display all duplicate lines in the current buffer."
@@ -7285,7 +7164,6 @@ See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el:
 
 
 * load my LaTeX config only when I actually need to export something
-
 Jay: How do I direct Emacs to load a file (containing my org-mode LaTeX
 export configuration) the first time I run org Export to LaTeX?
 
@@ -7409,7 +7287,6 @@ Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
 
 
 * consult ripgrep
-
 Avoid recentering errors. Works!
 #+begin_src emacs-lisp
 (defun consult-recenter-advice (orig-fn &rest args)
@@ -7460,7 +7337,6 @@ depending on which one is appropriate based on the context."
 
 
 * toggle between two windows but not the third
-
 #+begin_src emacs-lisp
 (defun toggle-window-2-3 ()
  "Toggle between window 2 and window 3 using winum."
@@ -7673,7 +7549,8 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 #+end_src
 
 
-* edge
+* org-mac-link
+** edge
 #+begin_src emacs-lisp
 (use-package org-mac-link
 )
@@ -7733,6 +7610,50 @@ The links are of the form <link>::split::<name>."
  #+end_SRC
 
 test
+
+** don't number windows
+#+begin_src emacs-lisp
+(defun org-mac-link--clean-title (title)
+  "Remove unwanted prefixes like '(2) ' from TITLE."
+  (replace-regexp-in-string "^([0-9]+)\\s-+" "" title))
+
+(defun org-mac-link-chrome-copy-frontmost-url ()
+  "Retrieve the URL and title from the frontmost Google Chrome tab and copy as an Org-mode link."
+  (interactive)
+  (let* ((as-command
+          "tell application \"Google Chrome\"
+               if not (exists front window) then return \"NO_ACTIVE_TAB\"
+               set theURL to URL of active tab of front window
+               set theTitle to title of active tab of front window
+               return theURL & \"§§§\" & theTitle
+           end tell")
+         (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command))))))
+    (if (string-equal as-result "NO_ACTIVE_TAB")
+        (message "No active tab found in Google Chrome.")
+      (let* ((components (split-string as-result "§§§"))
+             (url (string-trim (nth 0 components)))
+             (title (org-mac-link--clean-title (string-trim (nth 1 components))))
+             (org-link (format "[[%s][%s]]" url title)))
+        (kill-new org-link)
+        (message "Copied Org link to clipboard: %s" org-link)))))
+
+(defun org-mac-link-chrome-insert-frontmost-url ()
+  "Insert the URL and title from the frontmost Google Chrome tab as an Org-mode link."
+  (interactive)
+  (let* ((as-command
+          "tell application \"Google Chrome\"
+               set theURL to URL of active tab of front window
+               set theTitle to title of active tab of front window
+               return theURL & \"§§§\" & theTitle
+           end tell")
+         (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command)))))
+         (components (split-string as-result "§§§"))
+         (url (string-trim (nth 0 components)))
+         (title (org-mac-link--clean-title (string-trim (nth 1 components))))
+         (org-link (format "[[%s][%s]]" url title)))
+    (insert org-link)
+    (message "Inserted Org link: %s" org-link)))
+#+end_src
 
 * org-refile-region-to-org-heading-or-roam-node
 wonder if this could help...
@@ -7923,7 +7844,6 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 
 * org-roam browsing history
-
 #+begin_src emacs-lisp
 (winner-mode +1)
 (define-key winner-mode-map (kbd "s-[") #'winner-undo)
@@ -8119,7 +8039,6 @@ This will display a Quicklook of the file at point in macOS."
 
 * counsel-fd
 ** Usage
-
 ~M-x counsel-fd-dired-jump~ to jump to a subdirectory under current
 directory
 
@@ -8273,7 +8192,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+end_src
 * disable Olivetti on split
-
 #+begin_SRC emacs-lisp
 (defun activate-olivetti-in-split ()
  (when (not (bound-and-true-p disable-olivetti-auto-toggle))
@@ -8380,7 +8298,6 @@ replacing Emacs built-in documenation
 [[https://github.com/pashinin/workgroups2][pashinin/workgroups2: Workgroups2 - Emacs session manager]]
 
 ** Usage
-
 Use ~M-x wg-create-workgroup~ to save save window&buffer layout as a
 work group.
 
@@ -8389,7 +8306,6 @@ Use ~M-x wg-open-workgroup~ to open an existing work group.
 Use ~M-x wg-kill-workgroup~ to delete an existing work group.
 
 *** Enable minor mode ~workgroups-mode~ (OPTIONAL)
-
 Put below line at the bottom of ~.emacs~,
 
 #+begin_example
@@ -8659,7 +8575,6 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 
 * org-inline-tags
-
 #+begin_src emacs-lisp
 (defface org-inline-tags-face
  '((t (:foreground "orange" :weight bold)))
@@ -9137,7 +9052,6 @@ point with completion.
 
 
 * display online images
-
 ** 1
 Display online images in new buffer on return
 
@@ -9167,7 +9081,6 @@ Display online images in new buffer on return
 #+end_src
 
 ** 2
-
 [[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
 
 And again we have a use-case for image data not stored on harddisk. (The other two use-cases are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64 encoded images in org buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying previews of youtube videos]].)
@@ -9359,7 +9272,6 @@ After evaluating your init-file you can use links analog to the example:
 
 
 * remove filler words
-
 Dev:
 https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
 
@@ -9505,22 +9417,16 @@ Philosophy:
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun remove-redundant-asterisks-in-org-headings ()
- "Remove asterisks that follow the initial asterisks in org-mode headings, including lines ending with an asterisk after a space."
-
- (interactive)
-
- (save-excursion
- (goto-char (point-min))
- ;; Remove redundant asterisks within the heading text
- (while (re-search-forward "^\\(*+\\) \\(\\*.*?\\)\\(*+\\)$" nil t)
-  (let ((leading-asterisks (match-string 1))
-     (heading-text (match-string 2)))
-   (replace-match (concat leading-asterisks " " heading-text) nil nil)))
- ;; Remove final asterisk after a space in headings
- (goto-char (point-min))
- (while (re-search-forward "^\\(*+\\) \\*" nil t)
-  (let ((leading-asterisks (match-string 1)))
-   (replace-match (concat leading-asterisks " ") nil nil)))))
+  "Remove redundant asterisks in Org-mode headings within the current buffer or selected region."
+  (interactive)
+  (let ((start (if (use-region-p) (region-beginning) (point-min)))
+        (end (if (use-region-p) (region-end) (point-max))))
+    (save-excursion
+      (goto-char start)
+      (while (re-search-forward "^\\(*+\\) \\(.*?\\)\\(*+\\)?\\s-*$" end t)
+        (let ((stars (match-string 1))
+              (heading (match-string 2)))
+          (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading))))))))
 #+end_src
 
 
@@ -9620,7 +9526,6 @@ Only required if Emacs < 29.3.
 #+end_src
 
 * org-transclusion
-
 ** org-transclusion-config
 #+begin_src emacs-lisp
 (use-package org-transclusion
@@ -9648,7 +9553,6 @@ Only required if Emacs < 29.3.
 #+end_src
 
 ** Org-transclusion enhancements
-
 These enhancements aim to streamline the process of working with transclusions in Org documents, making it more intuitive and efficient.
 
 **** Enhanced Functionality
@@ -9743,8 +9647,6 @@ dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax co
 
 
 * dired-preview
-
-
 #+begin_src sh
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
 (require 'dired-preview)
@@ -9937,7 +9839,6 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
 #+end_src
 
 * outreach-copy-to-prompt
-
 * paste and copy all
 #+begin_src emacs-lisp
 (defun expand-outreach-snippet ()
