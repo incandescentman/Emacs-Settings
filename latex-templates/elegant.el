@@ -138,7 +138,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
-\\lhead{\\bfseries\\@title} % title of the document as left header
+\\lhead{\\bfseries\\@author} % title of the document as left header
 
 %\\renewcommand{\\footrulewidth}{0.4pt}
 \\fancyfoot[C]{%
@@ -310,7 +310,6 @@ UprightFont = HelveticaNeueLTPro-MdCn,
     width=0.8\\textwidth,
     left=0pt,
     right=0pt,
-    boxalign=center,
     halign=flush left,
     before skip=1em,  % Vertical space before the box
     after skip=1em,   % Vertical space after the box
