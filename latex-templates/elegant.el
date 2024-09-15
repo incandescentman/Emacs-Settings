@@ -141,9 +141,23 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\lhead{\\bfseries\\@author} % title of the document as left header
 
 %\\renewcommand{\\footrulewidth}{0.4pt}
+
+
 \\fancyfoot[C]{%
   % Graphic
-  \\raisebox{0.06in}{% Align the bottom of the image with the baseline of the surrounding text
+  \\raisebox{0.025in}{% Increase this value to move the logo higher
+%\\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC text footer
+
+\\includegraphics[height=0.4in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
+
+  }%
+  % Space between the graphic and the text (adjust as needed)
+  %\\hspace{0.05in}%
+  % Text
+  \\raisebox{1.05in}{% Adjust this value to align the text with the image
+
+
+
 % \\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing
 
 % \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png} % The whole thing with a period
@@ -157,9 +171,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   % Text
   \\raisebox{0.35in}{% Adjust this value to align the text with the image
 
- %   \\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC footer
 
-% \\fontsize{16}{16}\\sffamily\\color{black}All materials Copyright Jay Dixit. % copyright
+
+%\\fontsize{16}{16}\\sffamily\\color{black}All materials Copyright Jay Dixit. % copyright
 
 
 
@@ -167,7 +181,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 }
 
 % overwrite the logo footer
-\\cfoot{\\thepage} % Add page numbers
+%\\cfoot{\\thepage} % Add page numbers
 
 
 %%%%%%%%%%%%%%%%
