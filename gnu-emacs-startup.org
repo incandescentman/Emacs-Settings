@@ -8,7 +8,6 @@
 #+TITLE: Jay Dixit's GNU Emacs setup
 * environment settings
 ** Handle Emacs UTF-8 input
-
 #+BEGIN_SRC emacs-lisp
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -76,7 +75,6 @@ Automatically load abbreviations table:
 
 
 * fullscreen settings
-
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
 #+BEGIN_SRC emacs-lisp
@@ -134,7 +132,6 @@ So Emacs text doesn't appear on the MacBook Pro notch.
 
 
 * directory settings
-
 There is probably a lot of redundancy here, I don't understand this stuff too
 well.
 
@@ -162,7 +159,6 @@ well.
 #+END_SRC
 
 * other functions
-
 Manually remove the scrollbar if default setting fails when creating a new frame:
 
 #+BEGIN_SRC emacs-lisp
@@ -192,7 +188,6 @@ autosaves?
 #+END_SRC
 
 * isolate Emacs kill ring from the OSX system pasteboard (clipboard).
-
 Very important, I use this all the time.  These are custom functions to separate
 the OSX clipboard from Emacs' kill ring, effectively giving me two separate
 clipboards to work from. The below are the traditional OSX keybindings for
@@ -215,6 +210,17 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
      (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
 #+END_SRC
 
+** to the end
+#+begin_src emacs-lisp
+(defun pasteboard-copy-to-end-of-buffer ()
+  "Copy text from point to the end of the buffer to OS X system pasteboard."
+  (interactive)
+  (let* ((txt (buffer-substring (point) (point-max))))
+    (shell-command-to-string
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+
+#+end_src
+
 ** pasteboard-copy-and-convert-to-markdown-link
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-copy-and-convert-to-markdown-link ()
@@ -235,7 +241,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 #+END_SRC
 
 ** pasteboard-paste
-
 *** pasteboard-paste (with smart quotes by default)
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
@@ -289,7 +294,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
  (let ((beg (point)))
   (pasteboard-paste) ; Paste the content from the clipboard.
   (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
-  (remove-redundant-asterisks-in-org-headings))) ; Clean up org-mode headings in the pasted content.
+  (redundant-delete-redundant-asterisks-in-org-headings))) ; Clean up org-mode headings in the pasted content.
 
 
 #+END_SRC
@@ -327,7 +332,6 @@ use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-
 #+END_SRC
 
 ** pasteboard-cut
-
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."
@@ -416,9 +420,7 @@ use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-
   #+END_SRC
 
 * keybindings
-
 ** Create custom keybinding prefix
-
 #+BEGIN_QUOTE
 I have an unconventional approach to this that I recommend highly. I have redefined the C-l ('ell') key to be a prefix key, and I use that to prefix my favorite commands. This key is very easy to type and it is bound to a function ('recenter) that isn't used that much. Well, I don't use 'recenter much, but even if you did, it can be assigned to C-l C-l which is almost as easy to type, and a small price to pay for the possibilities opened up by the Ctrl-L-map. (Actually I prefer 'redraw-display to 'recenter, so I gave that the place of honor.)
 #+END_QUOTE
@@ -440,9 +442,7 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 * Custom Key Bindings
-
 ** NOTE-TO-JAY TODO Custom keybindings
-
 Eventually replace these with this? https://github.com/noctuid/general.el
 
 
@@ -1095,7 +1095,6 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 #+END_SRC
 
 *** mksuper - shared Aquamacs / GNU Emacs keybindings:
-
 Deprecated in favor of (define-key key-minor-mode-map (kbd "s... in:
 [[/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
 
@@ -1172,7 +1171,6 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 * sentences
-
 Make ~kill-sentence~ work in a more intuitive way:
 #+BEGIN_SRC emacs-lisp
 (defun kill-sentence-to-period ()
@@ -1239,7 +1237,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 * my/kill-line-dwim
-
 #+BEGIN_SRC emacs-lisp
 
 
@@ -1267,8 +1264,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 * kill-sentence-maybe-else-kill-line
-
-
   #+BEGIN_SRC emacs-lisp
 (defun kill-sentence-maybe-else-kill-line ()
   (interactive)
@@ -1286,7 +1281,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 * Browsing
-
 #+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 #+END_SRC
@@ -1418,7 +1412,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 ** kill word correctly and capitalize
-
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly-and-capitalize ()
   "Kill the word correctly and capitalize if at the beginning of a sentence and capitalist-mode is enabled."
@@ -1491,7 +1484,6 @@ The saveplace package is part of Emacs, and remembers the position of point - ev
 The last line sets the path to where saveplace stores your position data. Change it at your peril!
 
 * embolden next word
-
    #+BEGIN_SRC emacs-lisp
 (define-minor-mode embolden-next-word
     "Make the next word you type bold."
@@ -1524,7 +1516,6 @@ The last line sets the path to where saveplace stores your position data. Change
    #+END_SRC
 
 * cycle-hyphenation
-
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation ()
   (interactive)
@@ -1535,7 +1526,6 @@ The last line sets the path to where saveplace stores your position data. Change
 #+END_SRC
 
 * cycle-punctuation
-
 #+BEGIN_SRC emacs-lisp
 (defvar *punctuation-markers-to-cycle-between*  ".?!")
 
@@ -1690,7 +1680,6 @@ The last line sets the path to where saveplace stores your position data. Change
 #+END_SRC
 
 * return-insert-blank-line-before
-
 #+BEGIN_SRC emacs-lisp
 (defun return-insert-blank-line-before ()
   (interactive)
@@ -1743,7 +1732,6 @@ doesn't work.
 
 
 * bjm-swiper
-
 #+BEGIN_EXAMPLE emacs-lisp
 ;;advise swiper to recenter on exit
 (defun bjm-swiper-recenter (&rest args)
@@ -1755,8 +1743,6 @@ doesn't work.
 
 
 * embolden-or-bold
-
-
 #+BEGIN_SRC emacs-lisp
 
 (defun embolden-or-bold (arg)
@@ -1789,7 +1775,6 @@ doesn't work.
 
 
 * leader key, doesn't need a special mode
-
 #+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "] i t") 'org-inlinetask-insert-task)
 
@@ -1819,7 +1804,6 @@ doesn't work.
 
 
 * replace missing PDF ligatures
-
 different → different
 
 #+BEGIN_SRC emacs-lisp
