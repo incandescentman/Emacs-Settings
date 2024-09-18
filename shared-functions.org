@@ -2023,7 +2023,7 @@ Make helm-grep search recursively by default. I want helm-grep to search not onl
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244\\|ediff" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244\\|ediff\\|Org parse" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -5317,7 +5317,8 @@ into the main dumped emacs"
 (use-package undo-fu-session
  :ensure t
  :config
- (undo-fu-session-global-mode))
+;; (undo-fu-session-global-mode) ; do not persist undo tree across sessions
+)
 
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
@@ -7635,7 +7636,8 @@ test
              (title (org-mac-link--clean-title (string-trim (nth 1 components))))
              (org-link (format "[[%s][%s]]" url title)))
         (kill-new org-link)
-        (message "Copied Org link to clipboard: %s" org-link)))))
+(message "Copied Org link to clipboard: %s" org-link)
+))))
 
 (defun org-mac-link-chrome-insert-frontmost-url ()
   "Insert the URL and title from the frontmost Google Chrome tab as an Org-mode link."
@@ -7652,7 +7654,8 @@ test
          (title (org-mac-link--clean-title (string-trim (nth 1 components))))
          (org-link (format "[[%s][%s]]" url title)))
     (insert org-link)
-    (message "Inserted Org link: %s" org-link)))
+;; (message "Inserted Org link: %s" org-link)
+))
 #+end_src
 
 * org-refile-region-to-org-heading-or-roam-node
@@ -9416,7 +9419,7 @@ Philosophy:
 
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
-(defun remove-redundant-asterisks-in-org-headings ()
+(defun redundant-delete-redundant-asterisks-in-org-headings ()
   "Remove redundant asterisks in Org-mode headings within the current buffer or selected region."
   (interactive)
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
@@ -10000,3 +10003,10 @@ of each speaker's name with the other within the selected region."
 #+end_src
 
 
+
+* use shell environment
+#+begin_src emacs-lisp
+(setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin:/usr/local/bin"))
+(add-to-list 'exec-path "/opt/homebrew/bin")
+(add-to-list 'exec-path "/usr/local/bin")
+#+end_src
