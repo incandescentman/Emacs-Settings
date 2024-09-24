@@ -458,62 +458,6 @@ If the `**` is not at the beginning of a line followed by a space, the function 
     (replace-match "*" t t)))))
 
 
-(defun replace-smart-quotes (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-;; replace ** with * when it's at the beginning of a line and not followed by a space
-(save-excursion
-  (goto-char beg)
-  (while (re-search-forward "^\\*\\*\\([[:alnum:]]\\)" end t)
-   (replace-match "*\\1")))
-
-  (replace-smart-quotes-regexp beg end)
-
-;; remove double asterisks
-(replace-non-heading-double-asterisks beg end)
-
-  (format-replace-strings '(("\x201C" . "\"")
-                            ("\x201D" . "\"")
-                            ("\x2018" . "'")
-                            ("\x2019" . "'")
-                            ("’" . "'")
-                            ("”" . "\"")
-                            ("“" . "\"")
-                            ("''" . "\"")
-                            ("​" . "")
-                            ("…" . "...")
-                            ("• " . "- ")
-                            (" " . "")
-                            ("  " . " ")
-                            (":**" . ":*")
-
-                            ("ó" . "-")
-                            ("á" . "-")
-                            ("Õ" . "'")
-                            ("Õ" . "'")
-                            ("Ò" . "\"")
-                            ("Ó" . "\"")
-
-                            ("―" . "\"")
-                            ("‖" . "\"")
-
-                            ;; ("- " . "") ; also remove stray spac- es
-                            ;; ("­ " . "") ; also remove stray spac- besides
-
-
-                            ;; Convert markdown headings to org headings
-                            ("#####" . "*****")
-                            ("####" . "****")
-                            ("###" . "***")
-                            ("##" . "**")
-
-                            ("- \\*\\* TODO" . "*** TODO")
-                            ("okay" . "OK")
-                            ("  SCHEDULED" . "SCHEDULED")
-                            ("  DEADLINE" . "DEADLINE")
-
-                            )
-                          nil   beg (min end (point-max))))
 
 
 (defun replace-smart-quotes (beg end)
@@ -548,7 +492,8 @@ If the `**` is not at the beginning of a line followed by a space, the function 
              ("«" . "\"")
              ("»" . "\"")
              ("–" . "-")
-             ("—" . "--")
+             ("—" . "---")
+             ("—" . "---")
              ("…" . "...")
              ("• " . "- ")
              ("•" . "-")
