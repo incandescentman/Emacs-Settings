@@ -242,7 +242,19 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** pasteboard-paste
 *** pasteboard-paste (with smart quotes by default)
+
 #+BEGIN_SRC emacs-lisp
+
+(defun convert-markdown-links-to-org-mode (beg end)
+  "Convert Markdown links to Org-mode links in the specified region."
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^)]+\\))" end t)
+      (replace-match "[[\\2][\\1]]" t))))
+
+
+
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
  "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
  (interactive)
@@ -296,6 +308,16 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
   (redundant-delete-redundant-asterisks-in-org-headings))) ; Clean up org-mode headings in the pasted content.
 
+
+(defun pasteboard-paste-without-smart-quotes ()
+  "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
+  (interactive)
+  (let ((beg (point)))
+    (pasteboard-paste) ; Paste the content from the clipboard.
+    (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
+    (convert-markdown-links-to-org-mode beg (point)) ; Convert Markdown links to Org-mode.
+    ;; If you have other cleanup functions, call them here.
+    ))
 
 #+END_SRC
 

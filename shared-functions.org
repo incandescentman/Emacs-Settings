@@ -8927,6 +8927,17 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 #+end_src
 
 * copy-region-as-kill-and-push-to-clipboard
+
+#+begin_src emacs-lisp
+(defun copy-region-as-kill-and-push-to-clipboard (beg end)
+  "Copy the region as kill and push it to the macOS clipboard.
+BEG and END define the region to copy."
+  (interactive "r")
+  (copy-region-as-kill beg end)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard))
+#+end_src
+
+
 #+begin_src emacs-lisp
 ;; Simpler version - directly copies clipboard to kill ring
 (defun clipboard-to-kill-ring ()
@@ -9778,7 +9789,7 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
 
 #+end_src
 
-* outreach-copy-to-prompt
+
 * paste and copy all
 #+begin_src emacs-lisp
 (defun expand-outreach-snippet ()
@@ -9946,8 +9957,35 @@ of each speaker's name with the other within the selected region."
 
 
 * use shell environment
-#+begin_src emacs-lisp
+** Set Path environment
+#+begin_EXAMPLE emacs-lisp
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
+(setq exec-path (append exec-path '("/Applications/Firefox.app/Contents/MacOS")))
+;; can add more if needed, since it's appending
+#+end_EXAMPLE
+
+
+#+begin_EXAMPLE emacs-lisp
 (setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin:/usr/local/bin"))
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (add-to-list 'exec-path "/usr/local/bin")
+#+end_EXAMPLE
+
+#+begin_src emacs-lisp
+;; Define a list of additional paths
+(defvar my-additional-paths
+  '("/usr/local/bin"
+    "/opt/homebrew/bin"
+    "/Applications/Firefox.app/Contents/MacOS"))
+
+;; Update PATH environment variable
+(setenv "PATH"
+        (concat (getenv "PATH") ":"
+                (mapconcat 'identity my-additional-paths ":")))
+
+;; Update exec-path
+(dolist (path my-additional-paths)
+  (add-to-list 'exec-path path))
 #+end_src
