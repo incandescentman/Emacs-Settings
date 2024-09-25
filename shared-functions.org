@@ -230,14 +230,6 @@ I should probably eventually break these out of custom-set-variables and organiz
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 #+END_SRC
 
-*** Set Path environment
-#+begin_src emacs-lisp
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
-(setq exec-path (append exec-path '("/Applications/Firefox.app/Contents/MacOS")))
-;; can add more if needed, since it's appending
-#+end_src
 
 *** hunspell - workaround
 #+BEGIN_SRC emacs-lisp
