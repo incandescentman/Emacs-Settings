@@ -9958,21 +9958,6 @@ of each speaker's name with the other within the selected region."
 
 * use shell environment
 ** Set Path environment
-#+begin_EXAMPLE emacs-lisp
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
-(setq exec-path (append exec-path '("/Applications/Firefox.app/Contents/MacOS")))
-;; can add more if needed, since it's appending
-#+end_EXAMPLE
-
-
-#+begin_EXAMPLE emacs-lisp
-(setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin:/usr/local/bin"))
-(add-to-list 'exec-path "/opt/homebrew/bin")
-(add-to-list 'exec-path "/usr/local/bin")
-#+end_EXAMPLE
-
 #+begin_src emacs-lisp
 ;; Define a list of additional paths
 (defvar my-additional-paths
