@@ -148,7 +148,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   \\raisebox{0.025in}{% Increase this value to move the logo higher
 %\\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC text footer
 
-\\includegraphics[height=0.4in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
+%\\includegraphics[height=0.4in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
 
   }%
   % Space between the graphic and the text (adjust as needed)
