@@ -501,6 +501,7 @@ If the `**` is not at the beginning of a line followed by a space, the function 
              ("\u200B" . "")   ; Zero-width space
              ("\u200C" . "")   ; Zero-width non-joiner
              ("\u200D" . "")   ; Zero-width joiner
+             ("\t" . " ")      ; Tab character replaced with a space
              (":**" . ":*")
              ("#####" . "*****")
              ("####" . "****")
@@ -515,6 +516,7 @@ If the `**` is not at the beginning of a line followed by a space, the function 
         (goto-char beg)
         (while (re-search-forward (regexp-quote (car pair)) end t)
           (replace-match (cdr pair) t t))))))
+
 
 
 #+END_SRC
