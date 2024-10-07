@@ -295,21 +295,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 *** pasteboard-paste-without-smart-quotes (and without spaces)
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-without-smart-quotes ()
-  (interactive)
-  (let ((beg (point)))
-    (pasteboard-paste)
-    (replace-smart-quotes beg (point))))
-
-
-(defun pasteboard-paste-without-smart-quotes ()
- (interactive)
- (let ((beg (point)))
-  (pasteboard-paste) ; Paste the content from the clipboard.
-  (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
-  (redundant-delete-redundant-asterisks-in-org-headings))) ; Clean up org-mode headings in the pasted content.
-
-
-(defun pasteboard-paste-without-smart-quotes ()
   "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
   (interactive)
   (let ((beg (point)))
