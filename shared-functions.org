@@ -469,6 +469,11 @@ If the `**` is not at the beginning of a line followed by a space, the function 
     (while (re-search-forward "^\\s-*---\\s-*$" end t)
       (replace-match "" t t))
 
+;; Remove space before "-" at the beginning of lines
+      (goto-char (point-min))
+      (while (re-search-forward "^\\(\\s-*\\) -" nil t)
+        (replace-match "\\1-" nil nil))
+
     ;; Define replacement pairs
     (let ((replacement-pairs
            '(("“" . "\"")

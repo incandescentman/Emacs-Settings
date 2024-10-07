@@ -15,10 +15,9 @@
 (defun org-in-empty-item-p ()
   "Return t if the point is in an empty Org list item."
   (when (org-at-item-p)
-    (let* ((element (org-element-lineage (org-element-context) '(item) t))
-           (begin (org-element-property :contents-begin element))
-           (end (org-element-property :contents-end element)))
-      (or (not begin) (= begin end)))))
+    (save-excursion
+      (beginning-of-line)
+      (looking-at-p "[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]*$"))))
 
 ;; Helper function to check if URL at point is an image
 (defun org-url-at-point-is-image-p ()
@@ -79,11 +78,10 @@
   (cond
    ;; Exit empty list item
    ((org-in-empty-item-p)
-    (let ((indent (org-get-indentation)))
-      (beginning-of-line)
-      (delete-region (line-beginning-position) (line-end-position))
-      (indent-line-to indent)
-      (newline)))
+    (org-beginning-of-item)
+    (delete-region (point) (line-end-position))
+    (delete-char 1)  ; Delete the newline
+    (reflash-indentation))
 
    ;; Display image if URL at point is an image
    ((org-url-at-point-is-image-p)
