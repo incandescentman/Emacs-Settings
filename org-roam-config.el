@@ -86,7 +86,7 @@ If the point is already on an existing link, it prepends ', ' before inserting t
   (defun org-roam-yesterday ()
     (interactive)
     (jay/save-some-buffers)
-    (org-roam-dailies-yesterday)
+    (org-roam-dailies-goto-previous-note)
     )
 
   ;; Add custom functions and advice
