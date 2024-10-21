@@ -12,6 +12,7 @@
         endless/upcase
         indent-for-tab-command
         insert-colon
+        insert-comma
         insert-right-bracket
         insert-space
         jay/left-char

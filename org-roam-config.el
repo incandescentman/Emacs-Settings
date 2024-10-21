@@ -271,8 +271,3 @@ If region is active, then use it instead of the node at point."
 
 (define-key key-minor-mode-map (kbd "s-u P") 'org-roam-create-sequence-previous)
 (define-key key-minor-mode-map (kbd "s-u N") 'org-roam-create-sequence-next)
-
-
-(add-hook 'org-roam-buffer-postrender-functions
-          (lambda ()
-            (org-roam-buffer--command-in-region-p)))
