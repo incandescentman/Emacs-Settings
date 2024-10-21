@@ -81,7 +81,9 @@
     (org-beginning-of-item)
     (delete-region (point) (line-end-position))
     (delete-char 1)  ; Delete the newline
-    (reflash-indentation))
+    (newline)
+                                        ;(reflash-indentation)
+    )
 
    ;; Display image if URL at point is an image
    ((org-url-at-point-is-image-p)
