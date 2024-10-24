@@ -9,6 +9,7 @@
         colon-or-smart-colon
         comma-or-smart-comma
         downcase-or-endless-downcase
+        embolden-or-bold
         endless/upcase
         indent-for-tab-command
         insert-colon
