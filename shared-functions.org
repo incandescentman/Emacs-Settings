@@ -25,9 +25,9 @@
 - org-mode version 9.6.1
 - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
 - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
- - =brew tap railwaycat/emacsmacport=
- - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
- - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
+- =brew tap railwaycat/emacsmacport=
+- [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
+- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
 * packages
 ** lexical binding
@@ -9967,6 +9967,9 @@ of each speaker's name with the other within the selected region."
 
 * use shell environment
 ** Set Path environment
+I duplicated the below to /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
+and now it works. Don't understand why it was getting overwritten before, but whatever, it's working now.
+
 #+begin_src emacs-lisp
 ;; Define a list of additional paths
 (defvar my-additional-paths
