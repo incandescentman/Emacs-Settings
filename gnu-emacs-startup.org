@@ -210,6 +210,24 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
      (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
 #+END_SRC
 
+** and replace em dashes
+#+begin_src emacs-lisp
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS system pasteboard, replacing all occurrences of '---' and '--' with em dashes only in the clipboard text."
+  (interactive)
+  (if (use-region-p)
+      (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
+             ;; Perform replacements on the copied text
+             (txt (replace-regexp-in-string "---" "—" txt))
+             (txt (replace-regexp-in-string "--" "—" txt)))
+        ;; Send the modified text to the system clipboard
+        (with-temp-buffer
+          (insert txt)
+          (shell-command-on-region (point-min) (point-max) "pbcopy"))
+        (message "Text with em dashes copied to macOS pasteboard"))
+    (message "No region selected")))
+#+end_src
+
 ** to the end
 #+begin_src emacs-lisp
 (defun pasteboard-copy-to-end-of-buffer ()
