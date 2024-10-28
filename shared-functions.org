@@ -9968,12 +9968,6 @@ of each speaker's name with the other within the selected region."
 * use shell environment
 ** Set Path environment
 #+begin_src emacs-lisp
-
-(when (memq window-system '(mac ns x))
-  (setq exec-path-from-shell-check-startup-files nil)
-  (setq exec-path-from-shell-arguments '("-l"))
-  (exec-path-from-shell-initialize))
-
 ;; Define a list of additional paths
 (defvar my-additional-paths
   '("/usr/local/bin"
