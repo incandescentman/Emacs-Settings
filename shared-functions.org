@@ -19,15 +19,15 @@
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
 * About
- - System: Mac OSX Sierra version 13.1
- - Emacs version: Emacs 28.2 (Carbon Version)
- - Spacemacs version 0.999.0
- - org-mode version 9.6.1
- - Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
- - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
-   - =brew tap railwaycat/emacsmacport=
-   - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-   - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
+- System: Mac OSX Sierra version 13.1
+- Emacs version: Emacs 28.2 (Carbon Version)
+- Spacemacs version 0.999.0
+- org-mode version 9.6.1
+- Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
+- If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
+ - =brew tap railwaycat/emacsmacport=
+ - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
+ - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
 
 * packages
 ** lexical binding
@@ -4476,7 +4476,7 @@ Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile 
     _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
 	^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
 	^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
- --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 	"
 	("<tab>" helm-keyboard-quit "back" :exit t)
 	("<escape>" nil "quit")
@@ -7153,8 +7153,8 @@ Suppose we start with:
 #+begin_example
 - [ ] one
 - [ ] two
- - [ ] apple
- - [ ] |
+- [ ] apple
+- [ ] |
 #+end_example
 
 Pressing "Backspace" will produce:
@@ -7162,7 +7162,7 @@ Pressing "Backspace" will produce:
 #+begin_example
 - [ ] one
 - [ ] two
- - [ ] apple|
+- [ ] apple|
 #+end_example
 
 Similarly, if we instead start from here:
@@ -7170,7 +7170,7 @@ Similarly, if we instead start from here:
 #+begin_example
 - [ ] one
 - [ ] two
- - [ ] |apple
+- [ ] |apple
 #+end_example
 
 Then pressing "Backspace" will produce:
@@ -9518,23 +9518,23 @@ These enhancements aim to streamline the process of working with transclusions i
 **** Enhanced Functionality
 1. *Toggle Transclusion*:
 
- - *Function*: ~tr-toggle-transclusion~
- - *Description*: Toggle transclusion on or off with a single keystroke. If the point is on a line starting with ~#+transclude:~, it expands it. If the point is on a transclusion, it collapses it.
- - *Usage*: Use this function to quickly toggle transclusions without having to think about whether you're expanding or collapsing transclusion states.
+- *Function*: ~tr-toggle-transclusion~
+- *Description*: Toggle transclusion on or off with a single keystroke. If the point is on a line starting with ~#+transclude:~, it expands it. If the point is on a transclusion, it collapses it.
+- *Usage*: Use this function to quickly toggle transclusions without having to think about whether you're expanding or collapsing transclusion states.
 
 2. *Alias Definitions*:
 
- - *Aliases*:
-  - ~tr-expand~ for ~org-transclusion-add~
-  - ~tr-collapse~ for ~org-transclusion-remove~
-  - ~tr-make-link~ for ~org-transclusion-make-from-link~
-  - ~tr-expand-or-collapse~ for ~org-transclusion-add-or-remove~
- - *Description*: Shorter and more intuitive command names are provided as aliases to the existing transclusion commands, simplifying recall.
+- *Aliases*:
+- ~tr-expand~ for ~org-transclusion-add~
+- ~tr-collapse~ for ~org-transclusion-remove~
+- ~tr-make-link~ for ~org-transclusion-make-from-link~
+- ~tr-expand-or-collapse~ for ~org-transclusion-add-or-remove~
+- *Description*: Shorter and more intuitive command names are provided as aliases to the existing transclusion commands, simplifying recall.
 
 3. *Insert Transclusion Links*:
 
- - *Function*: ~tr-insert-transclusion~
- - *Description*: Inserts transclusion links by integrating with ~org-roam-node-insert~. Automatically prepends ~#+transclude:~ to the links.
+- *Function*: ~tr-insert-transclusion~
+- *Description*: Inserts transclusion links by integrating with ~org-roam-node-insert~. Automatically prepends ~#+transclude:~ to the links.
 
 
 #+begin_src emacs-lisp
@@ -9968,6 +9968,12 @@ of each speaker's name with the other within the selected region."
 * use shell environment
 ** Set Path environment
 #+begin_src emacs-lisp
+
+(when (memq window-system '(mac ns x))
+  (setq exec-path-from-shell-check-startup-files nil)
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
+
 ;; Define a list of additional paths
 (defvar my-additional-paths
   '("/usr/local/bin"
@@ -9982,4 +9988,9 @@ of each speaker's name with the other within the selected region."
 ;; Update exec-path
 (dolist (path my-additional-paths)
   (add-to-list 'exec-path path))
+
+
+
+;; Rest of your configuration
+(message "Final PATH: %s" (getenv "PATH"))
 #+end_src
