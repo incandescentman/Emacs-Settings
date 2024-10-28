@@ -860,6 +860,30 @@ before packages are loaded."
   (load "/Users/jay/emacs/local-config.el")
   ;;  (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
   ;; (load "/Users/jay/emacs/emacs-settings/aibo-power-pack.el")
+
+
+  ;; Define a list of additional paths
+  (defvar my-additional-paths
+    '("/usr/local/bin"
+      "/opt/homebrew/bin"
+      "/Applications/Firefox.app/Contents/MacOS"))
+
+  ;; Update PATH environment variable
+  (setenv "PATH"
+          (concat (getenv "PATH") ":"
+                  (mapconcat 'identity my-additional-paths ":")))
+
+  ;; Update exec-path
+  (dolist (path my-additional-paths)
+    (add-to-list 'exec-path path))
+
+
+
+  ;; Rest of your configuration
+  (message "Final PATH: %s" (getenv "PATH"))
+
+
+
   )
 
 
