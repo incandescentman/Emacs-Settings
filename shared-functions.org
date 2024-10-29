@@ -1112,6 +1112,7 @@ Defining stuck projects as todos that do not contain "scheduled" or
      ("tktks" . "Red")
      ("Q" . "Red")
      ("QUESTION" . "Red")
+     ("GOAL" . "DarkGreen")
      ("PROG" . "#7cb8bb")
      ("OKAY" . "#7cb8bb")
      ("DONT" . "#5f7f5f")
