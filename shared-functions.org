@@ -5939,29 +5939,29 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 * default org-css
 #+begin_SRC emacs-lisp
-(defvar my-org-selected-css 'unset
-  "Path of the selected CSS file or 'none' for no stylesheet. 'unset' indicates that the user has not been prompted yet.")
+(defvar my-org-selected-css "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
+  "Path of the selected CSS file or 'none' for no stylesheet. Defaults to sans-serif.css if not manually selected.")
+
+(defvar my-org-css-options
+  '("/Users/jay/Dropbox/web-design/custom-css/email.css"
+    "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
+    "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura.css"
+    "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
+    "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+    "none")
+  "List of CSS file options for Org HTML export.")
 
 (defun select-org-export-css ()
-  "Select a CSS file or choose not to use any."
+  "Prompt the user to select a CSS file or choose none."
   (interactive)
   (setq my-org-selected-css
-        (completing-read "Choose a CSS file or none: "
-                         '(
-                           "/Users/jay/Dropbox/web-design/custom-css/email.css"
-                           "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
-                           "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
-                           "/Users/jaydixit/Dropbox/web-design/custom-css/sakura.css"
-
-                           "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
-                           "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-
-                           "none")))
+        (completing-read "Choose a CSS file or none: " my-org-css-options))
   (when (string-equal my-org-selected-css "none")
     (setq my-org-selected-css nil)))
 
 (defun my-org-inline-css-hook (exporter)
-  "Insert custom inline CSS."
+  "Insert custom inline CSS for Org HTML export."
   (when (eq exporter 'html)
     (when (eq my-org-selected-css 'unset)
       (select-org-export-css))
