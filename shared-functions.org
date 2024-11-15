@@ -489,6 +489,8 @@ If the `**` is not at the beginning of a line followed by a space, the function 
              ("«" . "\"")
              ("»" . "\"")
              ("–" . "-")
+             ("" . "")
+             ("" . "")
              ("—" . "---")
              ("—" . "---")
              ("…" . "...")
@@ -9991,4 +9993,23 @@ and now it works. Don't understand why it was getting overwritten before, but wh
 
 ;; Rest of your configuration
 (message "Final PATH: %s" (getenv "PATH"))
+#+end_src
+
+
+* Jay Call
+#+begin_src emacs-lisp
+(defun org-to-html-to-clipboard-hardcoded ()
+  "Convert hardcoded org-mode text to HTML and copy it to the MacOS clipboard as HTML."
+  (interactive)
+  (let* ((org-content "Feel free to suggest some times that work for you or book time with me directly [[https://calendar.app.google/aSu61Nzz3PmxeYVaA][here]].")
+         (html-content (org-export-string-as org-content 'html t))
+         (temp-file (make-temp-file "clipboard-html-" nil ".html")))
+    ;; Write the HTML content to a temporary file
+    (with-temp-file temp-file
+      (insert html-content))
+    ;; Use AppleScript to read the file and set the clipboard
+    (let ((script (format "set the clipboard to (read (POSIX file \"%s\")) as «class HTML»" temp-file)))
+      (do-applescript script))
+    ;; Delete the temporary file
+    (delete-file temp-file)))
 #+end_src
