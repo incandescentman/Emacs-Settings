@@ -356,6 +356,51 @@ use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-
       )))
 #+END_SRC
 
+*** pasteboard paste and adjust heading levels
+#+begin_src emacs-lisp
+(defun pasteboard-paste-adjusted-subtrees ()
+  "Paste text from the system pasteboard, adjusting Org headings to be subheadings.
+This function ensures that all Org-mode headings in the pasted text
+are adjusted so they become subheadings under the current Org heading."
+  (interactive)
+  (let* ((text (shell-command-to-string "pbpaste"))
+         ;; Ensure we have the correct current heading level
+         (current-level (save-excursion
+                          (if (org-before-first-heading-p)
+                              0
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0)))))
+    ;; Clean up the text by removing carriage returns
+    (setq text (replace-regexp-in-string "\r" "" text))
+    ;; Adjust the heading levels in the pasted text
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (let ((min-level nil))
+        ;; Find the minimum heading level in the pasted text
+        (while (re-search-forward "^\\(\\*+\\) " nil t)
+          (let ((level (length (match-string 1))))
+            (when (or (not min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          ;; Calculate the shift needed to adjust heading levels
+          (let ((shift (- (+ current-level 1) min-level)))
+            (goto-char (point-min))
+            ;; Adjust each heading in the pasted text
+            (while (re-search-forward "^\\(\\*+\\)" nil t)
+              (let* ((stars (match-string 1))
+                     (level (length stars))
+                     (new-level (max 1 (+ level shift))))
+                (replace-match (make-string new-level ?*) t t)))))
+        ;; Retrieve the adjusted text
+        (setq text (buffer-string))))
+    ;; Insert the adjusted text at point
+    (insert text)))
+#+end_src
+
 ** pasteboard-cut
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-cut ()
@@ -785,10 +830,11 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-|") 'path-copy-path-to-clipboard)
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
-(global-set-key (kbd "s-v") 'pasteboard-paste-no-spaces)
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+
+;; (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+;; (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+;; (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+
 (define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
@@ -796,15 +842,40 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
 
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
 (global-unset-key (kbd "C-S-r"))
 (define-key key-minor-mode-map (kbd "C-S-r") nil)
 (define-key org-mode-map (kbd "C-S-r") nil)
 
+(defun my-pasteboard-paste (&optional arg)
+  "Paste from pasteboard. With prefix argument, call `pasteboard-paste-adjusted-subtrees'.
+Without prefix argument, call `pasteboard-paste-no-spaces'."
+  (interactive "P")
+  (if arg
+      (pasteboard-paste-adjusted-subtrees)
+    (pasteboard-paste-no-spaces)))
 
+(global-set-key (kbd "s-v") 'my-pasteboard-paste)
+
+;; Define the wrapper function
+(defun my-pasteboard-paste (&optional arg)
+  "Paste from pasteboard. With prefix argument, call `pasteboard-paste-adjusted-subtrees'.
+Without prefix argument, call `pasteboard-paste-no-spaces'."
+  (interactive "P")
+  (if arg
+      (pasteboard-paste-adjusted-subtrees)
+    (pasteboard-paste-no-spaces)))
+
+;; Bind s-v globally to the wrapper function
+(global-set-key (kbd "s-v") 'my-pasteboard-paste)
+
+;; Other key bindings to keep
+(define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
+(define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
+(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
 
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
