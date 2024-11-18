@@ -439,15 +439,15 @@ If the `**` is not at the beginning of a line followed by a space, the function 
    smart-quote-regexp-replacements))
 
 (defun replace-non-heading-double-asterisks (beg end)
- "Replace '*' with '*' unless '*' is at the beginning of a line followed by a space."
- (interactive "r")
- (save-excursion
-  (goto-char beg)
-  (while (re-search-forward "\\*\\*" end t)
-   (if (and (= (line-beginning-position) (- (point) 2))
-        (looking-at " "))
-     (forward-char 2) ; Skip this occurrence
-    (replace-match "*" t t)))))
+  "Replace '*' with '*' unless '*' is at the beginning of a line followed by a space."
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "\\*\\*" end t)
+      (if (and (= (line-beginning-position) (- (point) 2))
+               (looking-at " "))
+          (forward-char 2) ; Skip this occurrence
+        (replace-match "*" t t)))))
 
 
 
@@ -469,10 +469,10 @@ If the `**` is not at the beginning of a line followed by a space, the function 
     (while (re-search-forward "^\\s-*---\\s-*$" end t)
       (replace-match "" t t))
 
-;; Remove space before "-" at the beginning of lines
-      (goto-char (point-min))
-      (while (re-search-forward "^\\(\\s-*\\) -" nil t)
-        (replace-match "\\1-" nil nil))
+    ;; Remove space before "-" at the beginning of lines
+    (goto-char beg)
+    (while (re-search-forward "^\\(\\s-*\\) -" end t)
+      (replace-match "\\1-" nil nil))
 
     ;; Define replacement pairs
     (let ((replacement-pairs
