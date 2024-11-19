@@ -831,16 +831,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 
-;; (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-;; (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-;; (define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
-
-(define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
-(define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
-(define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
-(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
-(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
-
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
 
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
@@ -848,35 +841,14 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-S-r") nil)
 (define-key org-mode-map (kbd "C-S-r") nil)
 
-(defun my-pasteboard-paste (&optional arg)
-  "Paste from pasteboard. With prefix argument, call `pasteboard-paste-adjusted-subtrees'.
-Without prefix argument, call `pasteboard-paste-no-spaces'."
-  (interactive "P")
-  (if arg
-      (pasteboard-paste-adjusted-subtrees)
-    (pasteboard-paste-no-spaces)))
-
-(global-set-key (kbd "s-v") 'my-pasteboard-paste)
-
-;; Define the wrapper function
-(defun my-pasteboard-paste (&optional arg)
-  "Paste from pasteboard. With prefix argument, call `pasteboard-paste-adjusted-subtrees'.
-Without prefix argument, call `pasteboard-paste-no-spaces'."
-  (interactive "P")
-  (if arg
-      (pasteboard-paste-adjusted-subtrees)
-    (pasteboard-paste-no-spaces)))
-
-;; Bind s-v globally to the wrapper function
-(global-set-key (kbd "s-v") 'my-pasteboard-paste)
 
 ;; Other key bindings to keep
 (define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
-(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-no-spaces)
-
+(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees)
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
 (define-key key-minor-mode-map (kbd "C-x C-j") 'dired-up-directory)
