@@ -10017,3 +10017,8 @@ we can still make it better. The YYYY-MM-DD weekday format isn't commonly used i
 Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs - Endless Parentheses]]
 
 Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
+* sql
+#+begin_src emacs-lisp
+(use-package emacsql-sqlite3
+  :ensure t)
+#+end_src
