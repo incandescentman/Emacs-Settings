@@ -767,6 +767,8 @@ read-file-name-completion-ignore-case t)
 (setq org-export-with-toc nil)
 
  (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ (setq org-export-date-timestamp-format "%B %d, %Y")
+
  (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
 
 ;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
@@ -5611,32 +5613,6 @@ This solution also works for MELPA.
  )
 #+END_SRC
 
-* timestamp export format
-Remove the remove <> surrounding timestamps
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-export-filter-timestamp-functions
-       #'endless/filter-timestamp)
-(defun endless/filter-timestamp (trans back _comm)
- "Remove <> around time-stamps."
- (pcase back
-  ((or `jekyll `html)
-   (replace-regexp-in-string "&[lg]t;" "" trans))
-  (`latex
-   (replace-regexp-in-string "[<>]" "" trans))))
-#+END_SRC
-
-we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
-#+BEGIN_SRC emacs-lisp
-; (setq-default org-display-custom-times t)
-;;; Before you ask: No, removing the <> here doesn't work.
-; (setq org-time-stamp-custom-formats '("<%b %d, %Y>" . "<%d/%m/%Y %a %H:%M>"))
-#+END_SRC
-
-Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs · Endless Parentheses]]
-
-Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
-
 * add YouTube link type yt:
 #+BEGIN_SRC emacs-lisp
 (defvar yt-iframe-format
@@ -10013,3 +9989,31 @@ and now it works. Don't understand why it was getting overwritten before, but wh
     ;; Delete the temporary file
     (delete-file temp-file)))
 #+end_src
+
+
+* timestamp export format
+Remove the remove <> surrounding timestamps
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-export-filter-timestamp-functions
+       #'endless/filter-timestamp)
+(defun endless/filter-timestamp (trans back _comm)
+ "Remove <> around time-stamps."
+ (pcase back
+  ((or `jekyll `html)
+   (replace-regexp-in-string "&[lg]t;" "" trans))
+  (`latex
+   (replace-regexp-in-string "[<>]" "" trans))))
+#+END_SRC
+
+we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default org-display-custom-times t)
+;; Before you ask: No, removing the <> here doesn't work.
+(setq org-time-stamp-custom-formats '("%B %d, %Y>" . "<%d/%m/%Y %a %H:%M>"))
+#+END_SRC
+
+Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs - Endless Parentheses]]
+
+Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
