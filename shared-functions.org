@@ -7280,7 +7280,7 @@ depending on which one is appropriate based on the context."
 
 * dired
 #+begin_src emacs-lisp
-(define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
+;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
 #+end_src
 
 * fuzzy open recent file
@@ -9744,11 +9744,11 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
     (save-buffer)
     (kill-buffer)))))
 
-(define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
+;; (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
 
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
+;; (add-hook 'dired-mode-hook
+;;           (lambda ()
+;;             (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
 #+end_src
 
 
