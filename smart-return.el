@@ -87,7 +87,7 @@
 
    ;; Display image if URL at point is an image
    ((org-url-at-point-is-image-p)
-    (display-online-image-in-new-buffer (thing-at-point 'url)))
+    (display-image-in-new-buffer (thing-at-point 'url)))
 
    ;; Open Org link if at point and setting enabled
    ((and (org-link-at-point-p) org-return-follows-link)
