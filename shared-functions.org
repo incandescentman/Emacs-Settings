@@ -7280,7 +7280,7 @@ depending on which one is appropriate based on the context."
 
 * dired
 #+begin_src emacs-lisp
-(define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
+;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
 #+end_src
 
 * fuzzy open recent file
@@ -8998,25 +8998,45 @@ Display online images in new buffer on return
 (use-package url
   :defer)
 
-(defun display-online-image-in-new-buffer (url)
- "Fetch and display an online image from URL in a new buffer."
- (interactive "sEnter image URL: ")
- (when (and url (string-match-p "^https?://" url))
-  (url-retrieve
-   url
-   (lambda (status)
-    (if (plist-get status :error)
-      (message "Error retrieving image: %s" (plist-get status :error))
-     (goto-char (point-min))
-     (re-search-forward "\r?\n\r?\n" nil 'move)
-     (let ((data (buffer-substring-no-properties (point) (point-max))))
-      (with-current-buffer (get-buffer-create "*Online Image*")
-       (erase-buffer)
-       (insert-image (create-image data nil t))
-       (goto-char (point-min))
-       (image-mode)
-       (display-buffer (current-buffer)))))
-    (kill-buffer (current-buffer))))))
+(defun display-image-in-new-buffer (input)
+  "Fetch and display an image from INPUT, which can be a URL or a local file path."
+  (interactive "sEnter image URL or file path: ")
+  (if (string-match-p "^https?://" input)
+      ;; Handle as URL
+      (progn
+        (message "Fetching image from URL...")
+        (url-retrieve
+         input
+         (lambda (status)
+           (let ((retrieval-buffer (current-buffer)))
+             (unwind-protect
+                 (if (plist-get status :error)
+                     (message "Error retrieving image: %s" (plist-get status :error))
+                   (goto-char url-http-end-of-headers)
+                   (let* ((data (buffer-substring-no-properties (point) (point-max)))
+                          (image-type (image-type-from-data data)))
+                     (if image-type
+                         (let ((buffer (generate-new-buffer "*Image*")))
+                           (with-current-buffer buffer
+                             (insert-image (create-image data image-type t))
+                             (goto-char (point-min))
+                             (image-mode))
+                           (display-buffer buffer))
+                       (message "Unsupported or invalid image format."))))
+               (kill-buffer retrieval-buffer))))))
+    ;; Handle as local file
+    (if (file-exists-p input)
+        (let ((buffer (generate-new-buffer "*Image*")))
+          (with-current-buffer buffer
+            (let ((image (create-image input)))
+              (if image
+                  (progn
+                    (insert-image image)
+                    (goto-char (point-min))
+                    (image-mode))
+                (message "Unsupported or invalid image format."))))
+          (display-buffer buffer))
+      (message "File does not exist: %s" input))))
 #+end_src
 
 ** 2
@@ -9744,11 +9764,11 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
     (save-buffer)
     (kill-buffer)))))
 
-(define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
+;; (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
 
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
+;; (add-hook 'dired-mode-hook
+;;           (lambda ()
+;;             (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
 #+end_src
 
 
