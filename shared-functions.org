@@ -27,7 +27,7 @@
 - If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
 - =brew tap railwaycat/emacsmacport=
 - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac — Bitbucket]]
+- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
 
 * packages
 ** lexical binding

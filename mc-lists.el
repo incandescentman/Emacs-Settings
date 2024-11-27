@@ -63,6 +63,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        beginning-of-buffer
         counsel-recentf
         insert-period
         jay/save-some-buffers
