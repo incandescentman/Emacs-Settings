@@ -455,6 +455,11 @@ If the `**` is not at the beginning of a line followed by a space, the function 
 (defun replace-smart-quotes (beg end)
   "Replace smart quotes and format text appropriately in the specified region."
   (interactive "r")
+  ;; Ensure beg <= end
+  (when (> beg end)
+    (let ((temp beg))
+      (setq beg end)
+      (setq end temp)))
   (save-excursion
     ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
     (goto-char beg)
@@ -523,8 +528,6 @@ If the `**` is not at the beginning of a line followed by a space, the function 
         (goto-char beg)
         (while (re-search-forward (regexp-quote (car pair)) end t)
           (replace-match (cdr pair) t t))))))
-
-
 
 #+END_SRC
 
