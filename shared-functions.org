@@ -450,8 +450,6 @@ If the `**` is not at the beginning of a line followed by a space, the function 
         (replace-match "*" t t)))))
 
 
-
-
 (defun replace-smart-quotes (beg end)
   "Replace smart quotes and format text appropriately in the specified region."
   (interactive "r")
@@ -460,24 +458,27 @@ If the `**` is not at the beginning of a line followed by a space, the function 
     (let ((temp beg))
       (setq beg end)
       (setq end temp)))
-  (save-excursion
-    ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
-    (goto-char beg)
-    (while (re-search-forward "\\*\\*" end t)
-      (if (and (= (line-beginning-position) (- (point) 2))
-               (looking-at " "))
-          (forward-char 1) ; Skip this occurrence
-        (replace-match "*" t t)))
+  ;; Convert end into a marker that adjusts with buffer changes
+  (let ((end-marker (copy-marker end)))
+    (save-excursion
+      ;; Replace '*' with '*' unless '*' is at the beginning of a line followed by a space
+      (goto-char beg)
+      (while (re-search-forward "\\*\\*" end-marker t)
+        (if (and (= (line-beginning-position) (- (point) 2))
+                 (looking-at " "))
+            (forward-char 1) ; Skip this occurrence
+          (replace-match "*" t t)))
 
-    ;; Remove lines that contain only '---' (possibly with surrounding spaces)
-    (goto-char beg)
-    (while (re-search-forward "^\\s-*---\\s-*$" end t)
-      (replace-match "" t t))
+      ;; Remove lines that contain only '---' (possibly with surrounding spaces)
+      (goto-char beg)
+      (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
+        (replace-match "" t t))
 
-    ;; Remove space before "-" at the beginning of lines
-    (goto-char beg)
-    (while (re-search-forward "^\\(\\s-*\\) -" end t)
-      (replace-match "\\1-" nil nil))
+      ;; Remove space before "-" at the beginning of lines
+      (goto-char beg)
+      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
+        (replace-match "\\1-" nil nil))
+
 
     ;; Define replacement pairs
     (let ((replacement-pairs
@@ -523,12 +524,11 @@ If the `**` is not at the beginning of a line followed by a space, the function 
              ("okay" . "OK")
              ("  SCHEDULED" . " SCHEDULED")
              ("  DEADLINE" . " DEADLINE"))))
-      ;; Perform replacements
-      (dolist (pair replacement-pairs)
-        (goto-char beg)
-        (while (re-search-forward (regexp-quote (car pair)) end t)
-          (replace-match (cdr pair) t t))))))
-
+;; Perform replacements
+        (dolist (pair replacement-pairs)
+          (goto-char beg)
+          (while (re-search-forward (regexp-quote (car pair)) end-marker t)
+            (replace-match (cdr pair) t t)))))))
 #+END_SRC
 
 **** Paste and replace quotes
