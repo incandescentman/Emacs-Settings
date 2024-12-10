@@ -149,6 +149,7 @@ This function should only modify configuration layer settings."
                                       ctrlf
                                       web-mode
                                       ox-twbs
+                                      mwim
                                       affe
                                       beacon
                                       bind-key
