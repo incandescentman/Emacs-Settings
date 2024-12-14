@@ -4,12 +4,13 @@
   :delight
   :config
   (require 'ol)
+  :hook
+  (after-init . org-roam-db-autosync-mode)
   :custom
-  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
+  (setq org-roam-directory (expand-file-name "~/Dropbox/roam"))
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
 
-  (advice-add #'org-roam-buffer-persistent-set :after #'org-roam-buffer-redisplay-h)
 
   ;; Capture templates
 
@@ -28,8 +29,8 @@
   :config
   (org-roam-setup)
   (org-roam-db-autosync-mode)
-  (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
-
+  ;; (advice-add #'org-roam-buffer-persistent-set :after #'org-roam-buffer-redisplay-h) ;; need to define this or remove
+  (setq org-roam-db-location (expand-file-name "org-roam.db" org-roam-directory))
 
 
   (setq org-roam-mode-sections
@@ -40,9 +41,11 @@
 
   (defun org-roam-yesterday ()
     (interactive)
-    (jay/save-some-buffers)
-    (org-roam-dailies-goto-previous-note)
-    )
+    (condition-case nil
+        (progn
+          (jay/save-some-buffers)
+          (org-roam-dailies-goto-previous-note))
+      (error (message "Failed to go to yesterday's note"))))
 
   ;; Add custom functions and advice
   ;; (global-page-break-lines-mode 0)
@@ -97,7 +100,6 @@
    ("s-u Y" . org-roam-dailies-yesterday)
 
    ;; capture
-   ("s-u c" . org-roam-dailies-capture-today)
    ("s-u k" . org-roam-dailies-capture-date)
 
    ;; search
@@ -204,6 +206,7 @@ If region is active, then use it instead of the node at point."
 (use-package consult-org-roam)
 ;; https://github.com/jgru/consult-org-roam
 
+(setq consult-org-roam-buffer-after-buffers t)
 
 ;; maybe not OP but I tried this package a few days ago and gave up, it slowed considerably consult-buffer. I couldn't identify yet why.
 ;; https://www.reddit.com/r/emacs/comments/yy79pn/how_to_hideignore_orgroam_buffersfiles_when_using/
@@ -229,6 +232,23 @@ If region is active, then use it instead of the node at point."
 
 
 (setq org-roam-db-update-method 'immediate)
+
+;; Setting org-roam-db-update-method to 'immediate ensures real-time updates but can impact performance for large note sets. Monitor performance and consider alternative methods if necessary.
+
+
 (setq org-roam-db-node-include-function
       (lambda ()
-        (not (member "SKIP" (org-get-tags)))))
+        (not (member "SKIP" (org-get-tags)))
+        (not (string-prefix-p "archive/" (org-roam-node-file (org-roam-node-at-point))))))
+
+
+
+
+(defun org-roam-refresh ()
+  "Refresh the org-roam buffer."
+  (interactive)
+  (org-roam-buffer-refresh))
+
+;; Add to your key bindings
+:bind
+(("s-u R" . org-roam-refresh))
