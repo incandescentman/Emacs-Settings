@@ -208,7 +208,6 @@ This function should only modify configuration layer settings."
                                       ;; org-drill
                                       ;; org-fstree
                                       org-mac-link
-                                      org-modern
                                       org-pomodoro
                                       org-ql
                                       org-roam
@@ -946,7 +945,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-twbs-head-include-scripts nil)
    '(org-twbs-htmlize-output-type 'css)
    '(package-selected-packages
-     '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip org-modern ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+     '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
    '(paradox-github-token t)
    '(safe-local-variable-values
      '((org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
@@ -1022,7 +1021,6 @@ This function is called at the very end of Spacemacs initialization."
      ox-clip
      ;; ox-epub
      ;; ox-gfm
-     org-modern
      ;; org-noter
      ;; org-noter-pdftools
      ;; org-pdftools
