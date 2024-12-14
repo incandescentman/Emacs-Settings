@@ -2,10 +2,14 @@
   :defer
   :after org
   :delight
+  :config
+  (require 'ol)
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
+
+  (advice-add #'org-roam-buffer-persistent-set :after #'org-roam-buffer-redisplay-h)
 
   ;; Capture templates
 
@@ -22,7 +26,7 @@
 "))))
   ;; - %<Week %w, day %j>\n
   :config
-  ;;  (org-roam-setup)
+  (org-roam-setup)
   (org-roam-db-autosync-mode)
   (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
 
@@ -33,55 +37,6 @@
               #'org-roam-reflinks-section
               'org-roam-unlinked-references-section
               ))
-
-
-  (defun org-roam-node-insert-with-emoji ()
-    "Insert an Org-roam node link with a 🌐 emoji prepended to the description."
-    (interactive)
-    (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
-      (add-hook 'org-roam-post-node-insert-hook
-                (lambda (id description)
-                  (save-excursion
-                    ;; Use org-element-context to find the link
-                    (let* ((context (org-element-context))
-                           (start (org-element-property :contents-begin context))
-                           (end (org-element-property :contents-end context)))
-                      (when start
-                        (goto-char start)
-                        ;; (insert "🌐 ")
-                        ))))
-                ;; Append to the front of the hook list
-                0 t)
-      (unwind-protect
-          (org-roam-node-insert)
-        ;; Restore the original hook after the function is done
-        (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
-
-  (defun org-roam-node-insert-with-emoji-and-comma ()
-    "Insert an Org-roam node link with a 🌐 emoji prepended to the description.
-If the point is already on an existing link, it prepends ', ' before inserting the new link."
-    (interactive)
-    ;; Check if point is looking back at "]]"
-    (when (looking-back "\\]\\]" 2)
-      (insert ", "))
-    (let ((original-org-roam-post-node-insert-hook org-roam-post-node-insert-hook))
-      (add-hook 'org-roam-post-node-insert-hook
-                (lambda (id description)
-                  (save-excursion
-                    ;; Use org-element-context to find the link
-                    (let* ((context (org-element-context))
-                           (start (org-element-property :contents-begin context))
-                           (end (org-element-property :contents-end context)))
-                      (when start
-                        (goto-char start)
-                                        ;                      (insert "🌐 ")
-                        ))))
-                ;; Append to the front of the hook list
-                0 t)
-      (unwind-protect
-          (org-roam-node-insert)
-        ;; Restore the original hook after the function is done
-        (setq org-roam-post-node-insert-hook original-org-roam-post-node-insert-hook))))
 
   (defun org-roam-yesterday ()
     (interactive)
@@ -125,7 +80,7 @@ If the point is already on an existing link, it prepends ', ' before inserting t
    ("s-u l" . org-roam-buffer-toggle)
    ("s-u i" . org-roam-node-insert)
    ("s-u c" . org-roam-capture)
-   ("S-s-<left>" . org-roam-node-insert-with-emoji-and-comma)
+   ("S-s-<left>" . org-roam-node-insert)
    ("S-s-<right>" . org-roam-node-find)
    ("s-u r" . org-roam-refile)
 
@@ -271,3 +226,9 @@ If region is active, then use it instead of the node at point."
 
 (define-key key-minor-mode-map (kbd "s-u P") 'org-roam-create-sequence-previous)
 (define-key key-minor-mode-map (kbd "s-u N") 'org-roam-create-sequence-next)
+
+
+(setq org-roam-db-update-method 'immediate)
+(setq org-roam-db-node-include-function
+      (lambda ()
+        (not (member "SKIP" (org-get-tags)))))

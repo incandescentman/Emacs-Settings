@@ -2810,34 +2810,20 @@ Useful for working with files and references:
 * save some buffers
 #+BEGIN_SRC emacs-lisp
 (defun jay/save-some-buffers ()
-(interactive)
-  (save-some-buffers 'no-confirm (lambda ()
-    (cond
-      ((and buffer-file-name (equal buffer-file-name abbrev-file-name)))
-      ((and buffer-file-name (eq major-mode 'latex-mode)))
-((and buffer-file-name (eq major-mode 'emacs-lisp-mode)))
-((and buffer-file-name (eq major-mode 'fundamental-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'markdown-mode)))
-((and buffer-file-name (eq major-mode 'js2-mode)))
-((and buffer-file-name (eq major-mode 'json-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'graphviz-dot-mode)))
-((and buffer-file-name (eq major-mode 'python-mode)))
-((and buffer-file-name (eq major-mode 'text-mode)))
-((and buffer-file-name (eq major-mode 'snippet-mode)))
-((and buffer-file-name (eq major-mode 'css-mode)))
-((and buffer-file-name (eq major-mode 'xml-mode)))
-((and buffer-file-name (eq major-mode 'nxml-mode)))
-((and buffer-file-name (eq major-mode 'fountain-mode)))
-((and buffer-file-name (eq major-mode 'nmxml-mode)))
-((and buffer-file-name (eq major-mode 'web-mode)))
-((and buffer-file-name (eq major-mode 'conf-mode)))
-((and buffer-file-name (eq major-mode 'gitconfig-mode)))
-((and buffer-file-name (eq major-mode 'gitignore-mode)))
-      ((and buffer-file-name (eq major-mode 'sh-mode)))
-      ((and buffer-file-name (derived-mode-p 'org-mode)))))))
+  "Save certain buffers without confirmation based on specific criteria."
+  (interactive)
+  (save-some-buffers 'no-confirm
+    (lambda ()
+      (or
+        (and buffer-file-name (equal buffer-file-name abbrev-file-name))
+        (and buffer-file-name (memq major-mode
+                            '(latex-mode emacs-lisp-mode fundamental-mode
+                              conf-mode markdown-mode js2-mode json-mode
+                              graphviz-dot-mode python-mode text-mode
+                              snippet-mode css-mode xml-mode nxml-mode
+                              fountain-mode nmxml-mode web-mode gitconfig-mode
+                              gitignore-mode sh-mode)))
+        (and buffer-file-name (derived-mode-p 'org-mode))))))
 #+END_SRC
 
 ** find-file tricks
@@ -10058,3 +10044,32 @@ we can still make it better. The YYYY-MM-DD weekday format isn't commonly used i
 Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs - Endless Parentheses]]
 
 Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
+
+
+
+* org-roam diagnostics
+#+begin_src emacs-lisp
+
+(defun my/check-org-roam-files ()
+  "Check each org-roam file for potential issues."
+  (interactive)
+  (let ((files (org-roam-list-files))
+        (problems '()))
+    (dolist (file files)
+      (with-current-buffer (find-file-noselect file)
+        (condition-case err
+            (progn
+              (org-element-parse-buffer)
+              (org-roam-db-update-file))
+          (error
+           (push (cons file err) problems)))))
+    (if problems
+        (with-current-buffer (get-buffer-create "*Org-Roam-Problems*")
+          (erase-buffer)
+          (dolist (problem problems)
+            (insert (format "File: %s\nError: %s\n\n"
+                          (car problem)
+                          (cdr problem))))
+          (pop-to-buffer (current-buffer)))
+      (message "No problems found!"))))
+#+end_src
