@@ -7,7 +7,7 @@
   :hook
   (after-init . org-roam-db-autosync-mode)
   :custom
-  (setq org-roam-directory (expand-file-name "~/Dropbox/roam"))
+  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
 
@@ -30,7 +30,7 @@
   (org-roam-setup)
   (org-roam-db-autosync-mode)
   ;; (advice-add #'org-roam-buffer-persistent-set :after #'org-roam-buffer-redisplay-h) ;; need to define this or remove
-  (setq org-roam-db-location (expand-file-name "org-roam.db" org-roam-directory))
+  (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
 
 
   (setq org-roam-mode-sections
@@ -240,15 +240,3 @@ If region is active, then use it instead of the node at point."
       (lambda ()
         (not (member "SKIP" (org-get-tags)))
         (not (string-prefix-p "archive/" (org-roam-node-file (org-roam-node-at-point))))))
-
-
-
-
-(defun org-roam-refresh ()
-  "Refresh the org-roam buffer."
-  (interactive)
-  (org-roam-buffer-refresh))
-
-;; Add to your key bindings
-:bind
-(("s-u R" . org-roam-refresh))
