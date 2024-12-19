@@ -234,9 +234,3 @@ If region is active, then use it instead of the node at point."
 (setq org-roam-db-update-method 'immediate)
 
 ;; Setting org-roam-db-update-method to 'immediate ensures real-time updates but can impact performance for large note sets. Monitor performance and consider alternative methods if necessary.
-
-
-(setq org-roam-db-node-include-function
-      (lambda ()
-        (not (member "SKIP" (org-get-tags)))
-        (not (string-prefix-p "archive/" (org-roam-node-file (org-roam-node-at-point))))))
