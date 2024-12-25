@@ -335,7 +335,7 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing{\\section}{0pt}{150pt}{40pt}
+\\titlespacing*{\\section}{0pt}{150pt}{40pt}
 %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
