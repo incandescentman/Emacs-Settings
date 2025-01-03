@@ -6336,6 +6336,26 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+begin_src emacs-lisp
 ;; (setq-default org-display-custom-times nil)
 (setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>"))
+
+(defun insert-date-time-stamp-file-local-variable ()
+  "Insert file-local variables to set custom `org-time-stamp-custom-formats` into the current buffer."
+  (interactive)
+  (let* ((options '(("Short Format (Mon Dec 24)"
+                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%a %b %d>\" . \"<%a %b %d %H:%M>\"))")
+                    ("Long Format (Monday December 24, 2024)"
+                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%A %B %e, %Y>\" . \"<%01m/%01e %01I:%M %p>\"))")))
+         (choice (completing-read "Choose a date-time format: " (mapcar 'car options)))
+         (format-line (cdr (assoc choice options))))
+    (if format-line
+        (progn
+          (goto-char (point-max)) ;; Move to the end of the buffer
+          (insert "\n# Local Variables:\n")
+          (insert (format "# %s\n" format-line))
+          (insert "# eval: (setq-local org-display-custom-times t)\n")
+          (insert "# End:\n")
+          (message "Inserted file-local variables for: %s" choice))
+      (message "Invalid choice"))))
+
 #+end_src
 
 
@@ -8154,7 +8174,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
  :bind
  ;; the main entry point, offering a list of all stored collections
  ;; and of all open Delve buffers:
-(("M-<f12>" . delve))
+;; (("M-<f12>" . delve))
  :config
  ;; set meaningful tag names for the dashboard query
  (setq delve-dashboard-tags '("Tag1" "Tag2"))
@@ -8500,17 +8520,17 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 #+end_src
 
 * chatgpt2org
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
 (use-package chatgpt2org
 
   )
-#+end_src
+#+END_EXAMPLE
 
 
 
 * org-inline-tags
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defface org-inline-tags-face
  '((t (:foreground "orange" :weight bold)))
  "Face for custom inline tags in plain list items.")
@@ -8600,7 +8620,7 @@ c: cook-ideas-over-time\n")))
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
-#+end_src
+#+END_EXAMPLE
 
 * Embiggen font size when I'm using my 4k monitor
 This function dynamically adjusts the font size based on the frame width.
@@ -10072,4 +10092,18 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
                           (cdr problem))))
           (pop-to-buffer (current-buffer)))
       (message "No problems found!"))))
+#+end_src
+
+
+* org element parser error
+#+begin_src emacs-lisp
+(setq debug-on-message "org-element--cache: Added org-data parent to non-headline element")
+
+(with-eval-after-load 'smartparens
+  (sp-local-pair 'org-mode "'" nil :actions nil)  ;; example: disable quote pairing
+  (remove-hook 'org-mode-hook #'show-smartparens-mode))
+
+
+; or more drastically:
+; (remove-hook 'post-command-hook 'sp-show--pair-function)
 #+end_src
