@@ -212,7 +212,6 @@ This function should only modify configuration layer settings."
                                       org-ql
                                       org-roam
                                       org-roam-ui
-                                      org-sticky-header
                                       org-superstar
                                       ox-clip
                                       ;; ox-gfm
@@ -721,7 +720,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil smartparens-mode will be enabled in programming modes.
    ;; (default t)
-   dotspacemacs-activate-smartparens-mode t
+   dotspacemacs-activate-smartparens-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
