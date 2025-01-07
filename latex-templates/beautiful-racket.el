@@ -5,7 +5,6 @@
                "
 
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot,margin=1.5in,hmargin=1.5in,vmargin=0.5in]{geometry} % for normal margins
 
 % Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
 
@@ -159,8 +158,12 @@
 \\usepackage{fancyvrb}
 \\usepackage{enumerate}
 \\usepackage{ctable}
+
+
 \\setlength{\\paperwidth}{8.5in}
 \\setlength{\\paperheight}{11in}
+\\usepackage[includeheadfoot,hmargin=1.5in,top=0.5in,bottom=1in]{geometry}
+
 \\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\usepackage[normalem]{ulem}
@@ -277,11 +280,46 @@
   {\\endadjustwidth}
 }
 
+\\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
+\\usepackage{tcolorbox}       % For creating and customizing colored boxes
+\\usepackage{setspace}        % For \\singlespacing (optional, if not already loaded)
+
 \\usepackage{setspace}
 \\usepackage{lipsum}
 \\usepackage{etoolbox}
-\\AtBeginEnvironment{quote}{\\singlespace\\vspace{-\\topsep}\\small}
-\\AtEndEnvironment{quote}{\\vspace{-\\topsep}\\endsinglespace}
+
+% Define custom colors if not already defined
+\\definecolor{powderblue}{HTML}{f5f7ff}
+\\definecolor{stormybluegrey}{HTML}{708090}
+\\definecolor{moonrockgrey}{HTML}{5D5D5D}
+
+
+
+\\tcbset{
+  myquote/.style={
+    colback=powderblue,
+    colframe=stormybluegrey,
+    colupper=moonrockgrey,
+    boxrule=0.5pt,
+    rounded corners,
+    width=0.8\\textwidth,
+    left=1em,
+    right=1em,
+    before skip=1em, % space before the box
+    after skip=1em,  % space after the box
+    parskip=1em
+  }
+}
+
+\\renewenvironment{quote}
+{%
+  \\begin{center}%
+  \\begin{tcolorbox}[myquote]%
+}
+{%
+  \\end{tcolorbox}%
+  \\end{center}%
+}
 
 
 \\usepackage[sc]{titlesec}
