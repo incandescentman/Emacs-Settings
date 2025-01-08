@@ -399,6 +399,65 @@ are adjusted so they become subheadings under the current Org heading."
         (setq text (buffer-string))))
     ;; Insert the adjusted text at point
     (insert text)))
+
+
+
+(defun pasteboard-paste-adjusted-subtrees-spaces-maybe ()
+  "Paste Org text from the system pasteboard, adjust heading levels,
+and then remove spaces or smart quotes based on surrounding punctuation."
+  (interactive)
+  ;; 1) Grab raw text from pbpaste
+  (let* ((text (shell-command-to-string "pbpaste"))
+         (current-level (save-excursion
+                          (if (org-before-first-heading-p)
+                              0
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0)))))
+        start end)
+
+    ;; 2) Shift headings exactly as in your working function
+    (setq text (replace-regexp-in-string "\r" "" text))
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (let ((min-level nil))
+        (while (re-search-forward "^\\(\\*+\\) " nil t)
+          (let ((level (length (match-string 1))))
+            (when (or (not min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          (let ((shift (- (+ current-level 1) min-level)))
+            (goto-char (point-min))
+            (while (re-search-forward "^\\(\\*+\\)" nil t)
+              (let* ((stars (match-string 1))
+                     (level (length stars))
+                     (new-level (max 1 (+ level shift))))
+                (replace-match (make-string new-level ?*) t t))))))
+      (setq text (buffer-string)))
+
+    ;; 3) Insert the shifted text right here
+    (setq start (point))
+    (insert text)
+    (setq end (point))
+
+    ;; 4) Now decide: are we next to punctuation -> remove spaces? else remove smart quotes?
+    ;;    Since your existing pasteboard-paste-* functions re-call pbpaste, we can't use them directly.
+    ;;    Instead, call the sub-steps they do. For instance:
+    (let ((prev-char (char-before))
+          (next-char (char-after))
+          (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
+      (if (or (member prev-char char-set)
+              (member next-char char-set))
+          ;; We do the "no-spaces" style cleanup
+          (my-remove-carriage-returns-in-region start end)
+        ;; We do the "no-smart-quotes" style cleanup
+        (progn
+          (replace-smart-quotes start end)
+          (convert-markdown-links-to-org-mode start end)))))
+
 #+end_src
 
 ** pasteboard-cut
@@ -851,7 +910,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-spaces-maybe)
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
 (define-key key-minor-mode-map (kbd "C-x C-j") 'dired-up-directory)
