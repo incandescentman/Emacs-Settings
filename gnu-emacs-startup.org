@@ -400,13 +400,10 @@ are adjusted so they become subheadings under the current Org heading."
     ;; Insert the adjusted text at point
     (insert text)))
 
-
-
 (defun pasteboard-paste-adjusted-subtrees-spaces-maybe ()
-  "Paste Org text from the system pasteboard, adjust heading levels,
-and then remove spaces or smart quotes based on surrounding punctuation."
+  "Paste Org text from pasteboard, adjust heading levels to be subheadings,
+and handle spacing based on surrounding punctuation."
   (interactive)
-  ;; 1) Grab raw text from pbpaste
   (let* ((text (shell-command-to-string "pbpaste"))
          (current-level (save-excursion
                           (if (org-before-first-heading-p)
@@ -415,20 +412,26 @@ and then remove spaces or smart quotes based on surrounding punctuation."
                                 (progn
                                   (org-back-to-heading t)
                                   (org-current-level))
-                                0)))))
-        start end)
+                                0))))
+         (prev-char (char-before))
+         (next-char (char-after))
+         (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
-    ;; 2) Shift headings exactly as in your working function
+    ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))
+
+    ;; Adjust the heading levels in the pasted text
     (with-temp-buffer
       (insert text)
       (goto-char (point-min))
       (let ((min-level nil))
+        ;; Find the minimum heading level in the pasted text
         (while (re-search-forward "^\\(\\*+\\) " nil t)
           (let ((level (length (match-string 1))))
             (when (or (not min-level) (< level min-level))
               (setq min-level level))))
         (when min-level
+          ;; Calculate the shift needed
           (let ((shift (- (+ current-level 1) min-level)))
             (goto-char (point-min))
             (while (re-search-forward "^\\(\\*+\\)" nil t)
@@ -438,26 +441,22 @@ and then remove spaces or smart quotes based on surrounding punctuation."
                 (replace-match (make-string new-level ?*) t t))))))
       (setq text (buffer-string)))
 
-    ;; 3) Insert the shifted text right here
-    (setq start (point))
-    (insert text)
-    (setq end (point))
-
-    ;; 4) Now decide: are we next to punctuation -> remove spaces? else remove smart quotes?
-    ;;    Since your existing pasteboard-paste-* functions re-call pbpaste, we can't use them directly.
-    ;;    Instead, call the sub-steps they do. For instance:
-    (let ((prev-char (char-before))
-          (next-char (char-after))
-          (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
-      (if (or (member prev-char char-set)
-              (member next-char char-set))
-          ;; We do the "no-spaces" style cleanup
-          (my-remove-carriage-returns-in-region start end)
-        ;; We do the "no-smart-quotes" style cleanup
-        (progn
-          (replace-smart-quotes start end)
-          (convert-markdown-links-to-org-mode start end)))))
-
+    ;; Insert the text
+    (let ((start (point)))
+      (insert text)
+      (let ((end (point)))  ;; if you need this in a region-based approach
+        ;; Now do spacing or quotes logic
+        (unless (or (member prev-char char-set)
+                    (member next-char char-set))
+          ;; Attempt more explicit calls for search & replace
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward "['']" (point-max) t 1)
+              (replace-match "'" t t))
+            (goto-char start)
+(while (re-search-forward "[\"""]" (point-max) t 1)
+  (replace-match "\"" t t))
+              (replace-match "\"" t t)))))))
 #+end_src
 
 ** pasteboard-cut
