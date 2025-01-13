@@ -346,7 +346,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{0pt}{-12pt}
 
-\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\color{libertyblue}}
+\\titleformat*{\\section}{\\sffamily\\bfseries\\fontsize{30}{20}\\raggedright\\sffamily\\color{black}}
 \\titleformat*{\\subsection}{\\sffamily\\fontsize{18}{16}\\selectfont\\raggedright\\color{libertyblue}}
 
 \\titleformat*{\\subsubsection}{\\sffamily\\bfseries\\fontsize{15}{16}\\raggedright\\sffamily\\color{libertyblue}}
