@@ -425,13 +425,11 @@ and handle spacing based on surrounding punctuation."
       (insert text)
       (goto-char (point-min))
       (let ((min-level nil))
-        ;; Find the minimum heading level in the pasted text
         (while (re-search-forward "^\\(\\*+\\) " nil t)
           (let ((level (length (match-string 1))))
-            (when (or (not min-level) (< level min-level))
+            (when (or (null min-level) (< level min-level))
               (setq min-level level))))
         (when min-level
-          ;; Calculate the shift needed
           (let ((shift (- (+ current-level 1) min-level)))
             (goto-char (point-min))
             (while (re-search-forward "^\\(\\*+\\)" nil t)
@@ -441,22 +439,25 @@ and handle spacing based on surrounding punctuation."
                 (replace-match (make-string new-level ?*) t t))))))
       (setq text (buffer-string)))
 
-    ;; Insert the text
+    ;; Insert the text at point and perform quote replacements if appropriate
     (let ((start (point)))
       (insert text)
-      (let ((end (point)))  ;; if you need this in a region-based approach
-        ;; Now do spacing or quotes logic
+      (let ((end-pos (point)))
+        ;; If we're NOT next to punctuation, do quote replacements
         (unless (or (member prev-char char-set)
                     (member next-char char-set))
-          ;; Attempt more explicit calls for search & replace
           (save-excursion
             (goto-char start)
-            (while (re-search-forward "['']" (point-max) t 1)
-              (replace-match "'" t t))
+            ;; Replace various types of apostrophes with a straight '
+            (ignore-errors
+              (while (re-search-forward "['']" end-pos t)
+                (replace-match "'" t t)))
             (goto-char start)
-(while (re-search-forward "[\"""]" (point-max) t 1)
-  (replace-match "\"" t t))
-              (replace-match "\"" t t)))))))
+            ;; Replace straight or curly double quotes with a straight "
+            (ignore-errors
+              (while (re-search-forward "[\"""]" end-pos t)
+                (replace-match "\"" t t)))))))))
+
 #+end_src
 
 ** pasteboard-cut
