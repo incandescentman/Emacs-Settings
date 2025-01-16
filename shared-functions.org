@@ -3803,21 +3803,17 @@ object satisfying `yas--field-p' to restrict the expansion to."
 ** flyspell skip source blocks
 #+BEGIN_SRC emacs-lisp
 ;; NO spell check for embedded snippets
-(defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-  (let ((rlt ad-return-value)
-        (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
-        (end-regexp "^[ \t]*#\\+end_\\(src\\|html\\|latex\\)")
-        old-flag
-        b e)
-    (when ad-return-value
-      (save-excursion
-        (setq old-flag case-fold-search)
-        (setq case-fold-search t)
-        (setq b (re-search-backward begin-regexp nil t))
-        (if b (setq e (re-search-forward end-regexp nil t)))
-        (setq case-fold-search old-flag))
-      (if (and b e (< (point) e)) (setq rlt nil)))
-    (setq ad-return-value rlt)))
+(defun my-org-setup-flyspell ()
+  "Use flyspell in comments and text, but skip code blocks."
+  ;; This ensures code blocks are skipped because `org-mode` sets them
+  ;; as 'org-src-block regions, which `flyspell-prog-mode` ignores.
+  (when (derived-mode-p 'org-mode)
+    (flyspell-mode 1)
+    ;; Also set up ispell skip region for #+BEGIN_SRC blocks if necessary
+    (make-local-variable 'ispell-skip-region-alist)
+    (add-to-list 'ispell-skip-region-alist '("^#\\+begin_src" . "^#\\+end_src"))))
+
+(add-hook 'org-mode-hook 'my-org-setup-flyspell)
 #+END_SRC
 
 * tiny-expand
