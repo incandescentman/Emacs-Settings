@@ -1,11 +1,9 @@
 # Local Variables:
 # org-config-files-local-mode: t
-# eval: (define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space)
 # enable-local-eval: t
-# eval: (make-local-variable abbrev-mode)
-# eval: (define-key org-mode-map (kbd "<SPC>") 'insert-space)
-# eval: (setq abbrev-mode nil)
+# eval: (my-org-config-mode 1)
 # End:
+
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
 ;;; (abbrev-mode)
@@ -6305,6 +6303,7 @@ want to use in the modeline *in lieu of* the original.")
 (setq-default mode-line-format
        (remove '(vc-mode vc-mode) mode-line-format))
 
+(setq evil-want-keybinding nil)
 (setq evil-mode-line-format nil)
 
 (setq gcmh-mode-line nil)
@@ -10063,33 +10062,6 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 
 
 
-* org-roam diagnostics
-#+begin_src emacs-lisp
-
-(defun my/check-org-roam-files ()
-  "Check each org-roam file for potential issues."
-  (interactive)
-  (let ((files (org-roam-list-files))
-        (problems '()))
-    (dolist (file files)
-      (with-current-buffer (find-file-noselect file)
-        (condition-case err
-            (progn
-              (org-element-parse-buffer)
-              (org-roam-db-update-file))
-          (error
-           (push (cons file err) problems)))))
-    (if problems
-        (with-current-buffer (get-buffer-create "*Org-Roam-Problems*")
-          (erase-buffer)
-          (dolist (problem problems)
-            (insert (format "File: %s\nError: %s\n\n"
-                          (car problem)
-                          (cdr problem))))
-          (pop-to-buffer (current-buffer)))
-      (message "No problems found!"))))
-#+end_src
-
 
 * org element parser error
 #+begin_src emacs-lisp
@@ -10102,4 +10074,28 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 
 ; or more drastically:
 ; (remove-hook 'post-command-hook 'sp-show--pair-function)
+#+end_src
+
+
+* top level heading
+What This Does:
+This makes level 1 Org headings (**) export as <h1> instead of <h2>.
+The document title (from #+TITLE: or the filename) remains in the <title> tag but is not included as an additional <h1>.
+
+#+begin_src emacs-lisp
+(setq org-html-toplevel-hlevel 1)
+#+end_src
+
+* org config files mode
+#+begin_src emacs-lisp
+(define-minor-mode my-org-config-mode
+  "Minor mode for my custom Org file config."
+  :init-value nil
+  :lighter " myOrgCfg"
+  (when my-org-config-mode
+    (define-key org-mode-map (kbd "<SPC>") #'insert-space)
+    (make-local-variable 'abbrev-mode)
+    (setq abbrev-mode nil)))
+
+(provide 'my-org-config-mode)
 #+end_src
