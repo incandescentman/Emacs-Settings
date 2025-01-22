@@ -235,15 +235,17 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
   "Copy selected region to macOS system pasteboard.
-If current major mode is `shell-script-mode` OR `org-config-files-local-mode` is on,
-copy text verbatim (no replacements).
+If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
+or a mode derived from `prog-mode`, copy text verbatim (no replacements).
 Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
   (interactive)
   (if (use-region-p)
       (if (or (eq major-mode 'shell-script-mode)
-              (bound-and-true-p org-config-files-local-mode))
+              (eq major-mode 'emacs-lisp-mode)
+              (bound-and-true-p org-config-files-local-mode)
+              (derived-mode-p 'prog-mode))
           ;; Just copy verbatim
-          (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+          (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
             (shell-command-to-string
              (format "echo -n %s | pbcopy" (shell-quote-argument txt)))
             (message "Copied text verbatim."))
@@ -256,6 +258,7 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
           (message "Text with em dashes copied to macOS pasteboard.")))
     (message "No region selected")))
+
 
 #+end_src
 
