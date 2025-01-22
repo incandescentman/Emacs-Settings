@@ -1,3 +1,9 @@
+# Local Variables:
+# org-config-files-local-mode: t
+# enable-local-eval: t
+# eval: (my-org-config-mode 1)
+# End:
+
 * NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -226,6 +232,31 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
           (shell-command-on-region (point-min) (point-max) "pbcopy"))
         (message "Text with em dashes copied to macOS pasteboard"))
     (message "No region selected")))
+
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS system pasteboard.
+If current major mode is `shell-script-mode` OR `org-config-files-local-mode` is on,
+copy text verbatim (no replacements).
+Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
+  (interactive)
+  (if (use-region-p)
+      (if (or (eq major-mode 'shell-script-mode)
+              (bound-and-true-p org-config-files-local-mode))
+          ;; Just copy verbatim
+          (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+            (shell-command-to-string
+             (format "echo -n %s | pbcopy" (shell-quote-argument txt)))
+            (message "Copied text verbatim."))
+        ;; Otherwise do the dash replacements
+        (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
+               (txt (replace-regexp-in-string "---" "---" txt))
+               (txt (replace-regexp-in-string "--" "---" txt)))
+          (with-temp-buffer
+            (insert txt)
+            (shell-command-on-region (point-min) (point-max) "pbcopy"))
+          (message "Text with em dashes copied to macOS pasteboard.")))
+    (message "No region selected")))
+
 #+end_src
 
 ** to the end

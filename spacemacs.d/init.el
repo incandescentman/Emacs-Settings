@@ -975,6 +975,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
    '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
    '(org-headline-done ((t (:strike-through t))))
+   '(org-level-6 ((t (:extend nil :foreground "#0077CC" :slant normal :weight bold :height 1.0))))
    '(org-link ((t (:inherit link :underline nil))))
    '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
    '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
