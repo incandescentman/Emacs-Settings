@@ -5,17 +5,99 @@
 ;; handling contexts such as empty list items (to "escape" lists),
 ;; links, checklists, and images.
 ;;
-;; For example, if you have a checklist item:
+;; =============================================================================
+;; SMART-RETURN LOGIC TREE
 ;;
-;;     - [ ] Request access to Ironclad^
+;; The smart-return function implements context-aware behavior for the
+;; Return key in Org-mode. Below is a detailed breakdown of its decision tree:
 ;;
-;; and the item is not empty, a Return will insert a new checklist item:
+;; 1. EMPTY LIST ITEM / ESCAPE FROM LIST
+;;    -------------------------------------
+;;    Condition: (org-in-empty-item-p)
+;;      - Detects if the current list item (or checklist item) is empty.
+;;      - An empty item contains only a bullet (or numbered marker) and,
+;;        optionally, a checkbox ([ ] or [X]) with no further text.
 ;;
-;;     - [ ] Request access to Ironclad
-;;     - [ ] ^
+;;    Action:
+;;      a. Move point to the beginning of the item.
+;;      b. Delete the marker (bullet and optional checkbox) on the line.
+;;      c. Insert a newline.
+;;      d. If Org-mode auto-inserts a bullet on the new line,
+;;         delete that bullet.
 ;;
-;; But if you hit Return on an empty list item (or an empty checklist item),
-;; it "escapes" the list by creating a new line outside the list.
+;;    Example:
+;;      Before: "-^"  (a bullet with point, no text)
+;;      After:  an empty line (list escaped)
+;;
+;; 2. IMAGE HANDLING
+;;    -----------------
+;;    Condition: (org-url-at-point-is-image-p)
+;;      - Checks if the URL at point ends with a recognized image extension.
+;;
+;;    Action:
+;;      - Call display-online-image-in-new-buffer to fetch and display
+;;        the image.
+;;
+;; 3. LINK HANDLING
+;;    ----------------
+;;    Condition: (org-link-at-point-p) AND (org-return-follows-link)
+;;      - Determines if the point is on an Org-mode link and if the user
+;;        has enabled link following.
+;;
+;;    Action:
+;;      - Open the link using org-open-at-point.
+;;
+;; 4. ACTIVE REGION HANDLING
+;;    -------------------------
+;;    Condition: (use-region-p)
+;;      - Checks if there is an active (selected) region.
+;;
+;;    Action:
+;;      a. Delete the active region.
+;;      b. Insert a newline with proper indentation using
+;;         org-return-indent.
+;;
+;; 5. CHECKLIST ITEM HANDLING
+;;    --------------------------
+;;    Condition: (org-at-item-p) AND (smart-return--at-checklist-p)
+;;      - Detects if the current list item is a checklist item.
+;;
+;;    Action:
+;;      - Insert a new checklist item on a new line.
+;;        * The new checklist item is always created as unchecked
+;;          ("- [ ]"), regardless of the current item's state.
+;;
+;;    Example:
+;;      Before: "- [X] Request access to Ironclad ^"
+;;      After:  "- [X] Request access to Ironclad ^"
+;;              "- [ ] ^"
+;;
+;; 6. GENERAL LIST ITEM HANDLING
+;;    -----------------------------
+;;    Condition: (org-at-item-p)
+;;      - Applies if the point is in any list item (that is not empty or
+;;        a checklist item).
+;;
+;;    Action:
+;;      - Insert a new list item using org-insert-item.
+;;
+;; 7. DEFAULT ORG RETURN
+;;    ----------------------
+;;    Condition: (derived-mode-p 'org-mode)
+;;      - Applies if the current major mode is Org-mode and none of the above
+;;        conditions were met.
+;;
+;;    Action:
+;;      - Execute the standard org-return behavior.
+;;
+;; 8. FALLBACK
+;;    ---------
+;;    Condition: (None of the above conditions apply)
+;;
+;;    Action:
+;;      - Simply insert a newline.
+;;
+;; =============================================================================
 
 ;;; Code:
 
@@ -29,14 +111,13 @@
 
 (defun org-in-empty-item-p ()
   "Return t if the point is in an empty Org list item.
-An empty item is one that only has a bullet (and an optional checkbox)
-followed by no further text."
+An empty item is one that only has a bullet (or a numbered marker)
+and, optionally, a checkbox ([ ] or [X]) with no further text."
   (when (org-at-item-p)
     (save-excursion
       (beginning-of-line)
-      ;; This regex matches a bullet (or number) followed by at least one space
-      ;; and an optional checkbox ([ ] or [X]) and then nothing else.
-      (looking-at-p "[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+\\(?:\\[[ Xx]\\][ \t]*\\)?$"))))
+      (looking-at-p
+       "[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+\\(?:\\[[ Xx]\\][ \t]*\\)?$"))))
 
 ;;------------------------------------------------------------------------------
 ;; 2) IMAGE HANDLING
@@ -107,13 +188,14 @@ for example \"- [ ] \" or \"- [X] \"."
 
 (defun smart-return--insert-checklist-item ()
   "Insert a new checklist item on a new line, preserving indentation.
-The new line will have the same bullet and a blank checkbox."
+The new line will have the same bullet but a blank (unchecked) checkbox."
   (let ((indent (current-indentation))
         bullet)
     (save-excursion
       (beginning-of-line)
       (when (looking-at "^[ \t]*\\([-+*]\\)[ \t]+\\(\\[[ Xx]\\]\\)[ \t]+")
-        (setq bullet (concat (match-string 1) " " (match-string 2) " "))))
+        ;; Instead of preserving the current checkbox state, force an unchecked box.
+        (setq bullet (concat (match-string 1) " " "[ ] "))))
     (unless bullet
       (setq bullet "- [ ] "))
     (end-of-line)
@@ -137,9 +219,13 @@ Handles:
    ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
    ((org-in-empty-item-p)
     (org-beginning-of-item)
+    ;; Delete the entire marker on the current line.
     (delete-region (point) (line-end-position))
-    (delete-char 1)  ; Remove the newline
-    (newline))
+    ;; Insert a newline.
+    (newline)
+    ;; If Org auto-inserted a new list bullet on the new line, remove it.
+    (when (looking-at "^[ \t]*[-+*][ \t]+")
+      (delete-region (point) (line-end-position))))
    ;; 2) If the URL at point is an image, display it.
    ((org-url-at-point-is-image-p)
     (display-online-image-in-new-buffer (thing-at-point 'url)))
@@ -150,8 +236,7 @@ Handles:
    ((use-region-p)
     (delete-region (region-beginning) (region-end))
     (org-return-indent))
-   ;; 5) If in a list and the item is a checklist (and not empty),
-   ;;    insert a new checklist item.
+   ;; 5) If in a list and the item is a checklist (and not empty), insert a new checklist item.
    ((and (org-at-item-p) (smart-return--at-checklist-p))
     (smart-return--insert-checklist-item))
    ;; 6) If in any list, insert a new list item.
