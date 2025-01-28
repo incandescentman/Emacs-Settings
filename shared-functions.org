@@ -2813,15 +2813,16 @@ Useful for working with files and references:
   (save-some-buffers 'no-confirm
     (lambda ()
       (or
-        (and buffer-file-name (equal buffer-file-name abbrev-file-name))
-        (and buffer-file-name (memq major-mode
-                            '(latex-mode emacs-lisp-mode fundamental-mode
-                              conf-mode markdown-mode js2-mode json-mode
-                              graphviz-dot-mode python-mode text-mode
-                              snippet-mode css-mode xml-mode nxml-mode
-                              fountain-mode nmxml-mode web-mode gitconfig-mode
-                              gitignore-mode sh-mode)))
-        (and buffer-file-name (derived-mode-p 'org-mode))))))
+       (and buffer-file-name (equal buffer-file-name abbrev-file-name))
+       (and buffer-file-name (memq major-mode
+                                   '(latex-mode emacs-lisp-mode fundamental-mode
+                                                conf-mode markdown-mode js2-mode json-mode
+                                                graphviz-dot-mode python-mode text-mode
+                                                snippet-mode css-mode xml-mode nxml-mode
+                                                fountain-mode nmxml-mode web-mode gitconfig-mode
+                                                gitignore-mode sh-mode)))
+       (and (or buffer-file-name (buffer-modified-p))
+            (derived-mode-p 'org-mode))))))
 #+END_SRC
 
 ** find-file tricks
