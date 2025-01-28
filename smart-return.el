@@ -19,16 +19,19 @@
       (beginning-of-line)
       (looking-at-p "[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]*$"))))
 
-;; Helper function to check if URL at point is an image
+(defcustom smart-return-image-extensions
+  '("png" "jpg" "jpeg" "gif" "bmp" "svg" "webp" "tiff" "ico" "heic" "avif")
+  "List of file extensions recognized as images."
+  :type '(repeat string)
+  :group 'smart-return)
+
 (defun org-url-at-point-is-image-p ()
   "Return t if the URL at point points to an image file."
   (let* ((url (thing-at-point 'url))
-         (image-extensions '("png" "jpg" "jpeg" "gif" "bmp" "svg" "webp" "tiff" "ico" "heic" "avif"))
          (regexp (concat "\\.\\("
-                         (mapconcat 'identity image-extensions "\\|")
+                         (mapconcat #'identity smart-return-image-extensions "\\|")
                          "\\)\\(?:\\?[^[:space:]]*\\)?\\(?:#[^[:space:]]*\\)?$")))
-    (when url
-      (string-match-p regexp url))))
+    (and url (string-match-p regexp url))))
 
 ;; Enhanced helper function to check if point is precisely on an Org link
 (defun org-link-at-point-p ()
@@ -71,47 +74,61 @@
         nil t))
   (message "Invalid URL provided."))
 
-;; Main smart-return function
+
+;; new
 (defun smart-return ()
-  "Smart behavior for the Return key in Org-mode."
+  "Perform context-aware Return actions in Org-mode.
+
+Behaviors handled include:
+- Exiting an empty list item
+- Displaying an image if the URL at point is an image
+- Following an Org link if `org-return-follows-link' is non-nil
+- Deleting the region if active
+- Creating a new list item if in a list
+- Otherwise behaving like `org-return'"
   (interactive)
   (cond
-   ;; Exit empty list item
    ((org-in-empty-item-p)
     (org-beginning-of-item)
     (delete-region (point) (line-end-position))
-    (delete-char 1)  ; Delete the newline
-    (newline)
-                                        ;(reflash-indentation)
-    )
+    (delete-char 1)
+    (newline))
 
-   ;; Display image if URL at point is an image
    ((org-url-at-point-is-image-p)
-    (display-image-in-new-buffer (thing-at-point 'url)))
+    (display-online-image-in-new-buffer (thing-at-point 'url)))
 
-   ;; Open Org link if at point and setting enabled
    ((and (org-link-at-point-p) org-return-follows-link)
     (org-open-at-point))
 
-   ;; Delete active region and insert newline with indentation
    ((use-region-p)
     (delete-region (region-beginning) (region-end))
     (org-return-indent))
 
-   ;; Insert new list item if in a list
    ((org-at-item-p)
     (org-insert-item))
 
-   ;; Default Org-mode return behavior
    ((derived-mode-p 'org-mode)
     (org-return))
 
-   ;; Fallback to simple newline
    (t
     (newline))))
 
-;; Bind smart-return to Enter key in Org-mode
-(define-key org-mode-map (kbd "RET") 'smart-return)
+(defvar smart-return-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "RET") 'smart-return)
+    map)
+  "Keymap for `smart-return-mode'.")
+
+(define-minor-mode smart-return-mode
+  "Minor mode for a custom Return key in Org-mode."
+  :lighter " SR"
+  :keymap smart-return-mode-map
+  (if smart-return-mode
+      (message "Smart Return mode enabled")
+    (message "Smart Return mode disabled")))
+
+;; Then you can enable it in Org-mode hooks if desired:
+(add-hook 'org-mode-hook #'smart-return-mode)
 
 (provide 'smart-return)
 
