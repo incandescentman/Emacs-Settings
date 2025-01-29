@@ -786,3 +786,153 @@ If the point is on an existing transclusion, remove it using `org-transclusion-r
  ;; If neither condition is met, display a message
  (t
  (message "Not on an org-transclusion link or transclusion"))))
+
+
+
+* English language natural language syntax highlighting
+[[https://github.com/istib/wordsmith-mode?tab=readme-ov-file][istib/wordsmith-mode: prose syntax analysis in emacs]]
+
+dependencies: [[https://github.com/stephencelis/syn][stephencelis/syn: Syntax control for the command line]]
+
+#+begin_EXAMPLE emacs-lisp
+(use-package wordsmith-mode
+  :ensure t
+:config
+;; Customize faces for wordsmith-mode
+ (set-face-attribute 'wordsmith-verb-face nil :inherit 'font-lock-keyword-face)
+ (set-face-attribute 'wordsmith-noun-face nil :inherit 'font-lock-constant-face))
+
+
+;; Define a function to highlight verbs by default
+(defun wordsmith-enable-verbs ()
+  "Enable wordsmith-mode and highlight verbs."
+  (wordsmith-mode 1)
+  (wordsmith-highlight-verbs)
+  ;; Add a buffer-local hook to reapply highlighting after changes
+  (add-hook 'after-change-functions 'wordsmith-highlight-verbs-after-change nil t))
+
+(defun wordsmith-highlight-verbs-after-change (beg end len)
+  "Reapply verb highlighting after buffer changes."
+  (when wordsmith-mode
+    (save-excursion
+      ;; Reapply highlighting to the entire buffer
+      (wordsmith-highlight-verbs))))
+
+;; Add a hook to enable wordsmith-mode and highlight verbs in org-mode buffers
+
+;; (add-hook 'org-mode-hook 'wordsmith-enable-verbs)
+#+END_EXAMPLE
+
+
+
+* switch speaker names
+#+begin_src emacs-lisp
+(defvar speaker-name-1 nil
+ "First speaker's name for the switch-speaker-names function.")
+
+(defvar speaker-name-2 nil
+ "Second speaker's name for the switch-speaker-names function.")
+
+(defun switch-speaker-names ()
+ "Switch between two speaker names in the current line.
+
+On the first invocation in a session, prompts for two speaker names
+and stores them for future use. When called, it checks the current
+line for either name and replaces it with the other."
+ (interactive)
+ ;; Prompt for names if they haven't been set yet
+ (when (or (not speaker-name-1) (not speaker-name-2))
+  (setq speaker-name-1 (read-string "Enter the first speaker's name: "))
+  (setq speaker-name-2 (read-string "Enter the second speaker's name: ")))
+ ;; Work within the confines of the current line
+ (save-excursion
+  (let ((line-start (line-beginning-position))
+     (line-end (line-end-position)))
+   (goto-char line-start)
+   (cond
+    ((search-forward speaker-name-1 line-end t)
+    (replace-match speaker-name-2))
+    ((progn
+     (goto-char line-start)
+     (search-forward speaker-name-2 line-end t))
+    (replace-match speaker-name-1))
+    (t
+    (message "Neither speaker name found in the current line."))))))
+
+(defun switch-speaker-names-in-region (start end)
+ "Switch between two speaker names within the selected region.
+
+On the first invocation in a session, prompts for two speaker names
+and stores them for future use. When called, it replaces all occurrences
+of each speaker's name with the other within the selected region."
+
+ (interactive "r")
+ ;; Prompt for names if they haven't been set yet
+ (when (or (not speaker-name-1) (not speaker-name-2))
+  (setq speaker-name-1 (read-string "Enter the first speaker's name: "))
+  (setq speaker-name-2 (read-string "Enter the second speaker's name: ")))
+ (let ((temp-placeholder "~~TEMP-SPEAKER-NAME-PLACEHOLDER~~"))
+  (save-excursion
+   (save-restriction
+    (narrow-to-region start end)
+    ;; Replace speaker-name-1 with temp-placeholder
+    (goto-char (point-min))
+    (while (search-forward speaker-name-1 nil t)
+     (replace-match temp-placeholder))
+    ;; Replace speaker-name-2 with speaker-name-1
+    (goto-char (point-min))
+    (while (search-forward speaker-name-2 nil t)
+     (replace-match speaker-name-1))
+    ;; Replace temp-placeholder with speaker-name-2
+    (goto-char (point-min))
+    (while (search-forward temp-placeholder nil t)
+     (replace-match speaker-name-2))))))
+#+end_src
+
+
+
+* cleanup
+#+begin_src emacs-lisp
+(defun four-delete-lines-starting-with-four-asterisks ()
+ "Delete all lines in the buffer that start with '** '."
+ (interactive)
+ (goto-char (point-min))
+ (while (re-search-forward "^\\*\\*\\*\\*\\* " nil t)
+ (delete-region (line-beginning-position) (1+ (line-end-position)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun replace-double-asterisks ()
+ "Replace any alphabetical character or closing parenthesis followed by '* ' with the same character followed by '* '."
+ (interactive)
+ (save-excursion
+  (goto-char (point-min))
+  (while (re-search-forward "\\([a-zA-Z)]\\)\\*\\* " nil t)
+   (replace-match "\\1* "))))
+#+end_src
+
+
+* openwith
+#+begin_example emacs-lisp
+;; Ensure the package is installed
+(unless (package-installed-p 'openwith)
+ (package-refresh-contents)
+ (package-install 'openwith))
+
+(require 'openwith)
+
+;; Define the file associations
+(setq openwith-associations
+   (list
+    (list (openwith-make-extension-regexp '("docx")) "open" '("-a" "Microsoft Word" file))
+    (list (openwith-make-extension-regexp '("pdf")) "open" '("-a" "Preview" file))
+    ;; Add more associations as needed
+    ))
+
+;; Enable openwith mode
+(openwith-mode 1)
+
+;; Avoid conflicts with email attachments
+(add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
+#+end_example
+
