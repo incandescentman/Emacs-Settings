@@ -210,8 +210,52 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 
 * The Writing Environment
-** spellcheck
-*** Spellcheck add word
+
+* Spellcheck / flyspell
+** flyspell setup
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell
+:defer
+
+:config
+'(flyspell-abbrev-p t)
+'(flyspell-use-global-abbrev-table-p t)
+
+:bind
+(:map flyspell-mode-map
+("C-." . nil)
+)
+)
+
+;; Remove any global flyspell-mode settings, and then:
+(add-hook 'text-mode-hook #'flyspell-mode)
+(add-hook 'org-mode-hook  #'flyspell-mode)
+
+(setq flyspell-mark-duplications-exceptions
+ (quote
+ ((nil "that" "had" "really" "very" "much")
+  ("\\`francais" "nous" "vous"))))
+
+#+END_SRC
+
+** flyspell skip source blocks
+#+BEGIN_SRC emacs-lisp
+;; NO spell check for embedded snippets
+(defun my-org-setup-flyspell ()
+  "Use flyspell in comments and text, but skip code blocks."
+  ;; This ensures code blocks are skipped because `org-mode` sets them
+  ;; as 'org-src-block regions, which `flyspell-prog-mode` ignores.
+  (when (derived-mode-p 'org-mode)
+    (flyspell-mode 1)
+    ;; Also set up ispell skip region for #+BEGIN_SRC blocks if necessary
+    (make-local-variable 'ispell-skip-region-alist)
+    (add-to-list 'ispell-skip-region-alist '("^#\\+begin_src" . "^#\\+end_src"))))
+
+(add-hook 'org-mode-hook 'my-org-setup-flyspell)
+#+END_SRC
+
+
+** Spellcheck add word
 #+BEGIN_SRC emacs-lisp
 (defun add-word-to-personal-dictionary ()
   (interactive)
@@ -222,7 +266,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 
 
-*** hunspell - workaround
+** hunspell - workaround
 #+BEGIN_SRC emacs-lisp
 ;; Flyspell
 (use-package flyspell
@@ -271,25 +315,25 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 #+END_SRC
 
-** UI / customization of appearance and editing environment
-*** mouse
-**** Stop accidentally highlighting org-mode links all the time:
+* UI / customization of appearance and editing environment
+** mouse
+*** Stop accidentally highlighting org-mode links all the time:
 #+BEGIN_SRC emacs-lisp
 (setq mouse-highlight nil)
 (setq-local cursor-in-non-selected-windows nil)
 
 #+END_SRC
 
-*** disable TAB to indent
+** disable TAB to indent
 #+BEGIN_SRC emacs-lisp
 (setq org-cycle-emulate-tab nil)
 #+END_SRC
 
-*** Windows
+** Windows
 :PROPERTIES:
 :ID:       B02E7409-F743-4FCB-A1D7-E0F3B65BBD67
 :END:
-**** Split windows vertically, i.e. using a vertical line to split
+*** Split windows vertically, i.e. using a vertical line to split
 Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal][Setting Emacs Split to Horizontal - Stack Overflow]]
 
 #+BEGIN_SRC emacs-lisp
@@ -341,8 +385,8 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 *** Use visual line mode whenever possible
 #+BEGIN_SRC emacs-lisp
-(visual-line-mode t)
-(global-visual-line-mode t)
+(add-hook 'text-mode-hook #'visual-line-mode)
+(add-hook 'org-mode-hook  #'visual-line-mode)
 #+END_SRC
 
 *** Autofill mode
@@ -1533,7 +1577,7 @@ To enable Edit with Emacs in Chrome:
 '(shift-select-mode nil)
 '(transient-mark-mode t)
 
-'(global-flyspell-mode t)
+
 '(message-send-mail-function (quote message-send-mail-with-sendmail))
 '(mail-send-mail-function (quote message-send-mail-with-sendmail))
 '(setq mail-user-agent 'message-user-agent)
@@ -2652,16 +2696,6 @@ Redefine help shortcut:
 (global-set-key (kbd "M-h") 'help-command)
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'helm-find-files)
-;; (define-key key-minor-mode-map (kbd "C-x C-f") 'ido-find-file-in-dir)
-;; (global-set-key (kbd "C-c h") 'helm-mini)
-#+END_SRC
-
-~helm~ keybindings:
-- [C-n] Move to next helm suggestion.
-- [C-p] Move to previous helm suggestion.
-
 
 ** flyspell-correct-space
 #+begin_src emacs-lisp
@@ -3293,46 +3327,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 (define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
 #+end_src
-
-* flyspell
-** flyspell setup
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell
-:defer
-
-:config
-'(flyspell-abbrev-p t)
-'(flyspell-use-global-abbrev-table-p t)
-'(global-flyspell-mode t)
-
-:bind
-(:map flyspell-mode-map
-("C-." . nil)
-)
-)
-
-(setq flyspell-mark-duplications-exceptions
- (quote
- ((nil "that" "had" "really" "very" "much")
-  ("\\`francais" "nous" "vous"))))
-
-#+END_SRC
-
-** flyspell skip source blocks
-#+BEGIN_SRC emacs-lisp
-;; NO spell check for embedded snippets
-(defun my-org-setup-flyspell ()
-  "Use flyspell in comments and text, but skip code blocks."
-  ;; This ensures code blocks are skipped because `org-mode` sets them
-  ;; as 'org-src-block regions, which `flyspell-prog-mode` ignores.
-  (when (derived-mode-p 'org-mode)
-    (flyspell-mode 1)
-    ;; Also set up ispell skip region for #+BEGIN_SRC blocks if necessary
-    (make-local-variable 'ispell-skip-region-alist)
-    (add-to-list 'ispell-skip-region-alist '("^#\\+begin_src" . "^#\\+end_src"))))
-
-(add-hook 'org-mode-hook 'my-org-setup-flyspell)
-#+END_SRC
 
 * tiny-expand
 #+BEGIN_SRC emacs-lisp
@@ -7234,69 +7228,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+END_SRC
 
-* delve
-[[https://github.com/publicimageltd/delve][publicimageltd/delve: Delve into your org-roam zettelkasten]]
-
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/Users/jay/emacs/external-packages/delve/")
-
-(use-package delve
-:defer
-:after (org-roam)
- ;; this is necessary if use-package-always-defer is true
- :demand t
- :bind
- ;; the main entry point, offering a list of all stored collections
- ;; and of all open Delve buffers:
-;; (("M-<f12>" . delve))
- :config
- ;; set meaningful tag names for the dashboard query
- (setq delve-dashboard-tags '("Tag1" "Tag2"))
- ;; optionally turn on compact view as default
- )
-#+END_EXAMPLE
-
-#+begin_EXAMPLE emacs-lisp
-(add-hook #'delve-mode-hook #'delve-compact-view-mode)
- ;; turn on delve-minor-mode when Org Roam file is opened:
- (delve-global-minor-mode)
-#+END_EXAMPLE
-
-
-* msmtp
-#+begin_EXAMPLE emacs-lisp
-;; This is needed to allow msmtp to do its magic:
-(setq message-sendmail-f-is-evil 't)
-
-;;need to tell msmtp which account we're using
-(setq message-sendmail-extra-arguments '("--read-envelope-from"))
-
-;; with Emacs 23.1, you have to set this explicitly (in MS Windows)
-;; otherwise it tries to send through OS associated mail client
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-;; we substitute sendmail with msmtp
-(setq sendmail-program "msmtp")
-;;need to tell msmtp which account we're using
-(setq message-sendmail-extra-arguments '("-a" "gmail"))
-;; you might want to set the following too
-(setq mail-host-address "Rainlight.local")
-(setq user-full-name "Sunjay Dixit")
-(setq user-mail-address "sunjaydixit@gmail.com")
-
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-
-#+END_EXAMPLE
-
-* email
-#+begin_src emacs-lisp
-(setq send-mail-function 'sendmail-send-it
-   sendmail-program "/usr/sbin/sendmail"
-   mail-specify-envelope-from t
-   mail-envelope-from 'header
-   message-sendmail-envelope-from 'header)
-
-#+end_src
-
 * helpful
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
@@ -8580,9 +8511,6 @@ Only required if Emacs < 29.3.
 :defer
   :ensure t
   :init (global-flycheck-mode))
-
-;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
-
 
 #+END_SRC
 
