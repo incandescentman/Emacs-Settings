@@ -4458,16 +4458,10 @@ into the main dumped emacs"
 :defer
 :bind
 ( "M-`" . crux-swap-windows)
-
 ( "s-k rf" .  crux-rename-file-and-buffer)
-
 ( "s-k df" . crux-delete-file-and-buffer)
-
 ( "C-c d" . crux-duplicate-current-line-or-region)
-
 ( "C-c i" . crux-find-user-init-file)
-
-;; ( "C-j") crux-top-join-line)
 )
 #+END_SRC
 
@@ -4495,10 +4489,7 @@ into the main dumped emacs"
 #+END_SRC
 
 ** double quote
-   :PROPERTIES:
-   :ID:       1566B9D2-A4A7-498B-8478-8D2C0DFF0287
-   :END:
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (defun insert-one-double-quote ()
 (interactive)
 (cond (mark-active
@@ -4531,10 +4522,6 @@ into the main dumped emacs"
 #+END_SRC
 
 ** insert slash no abbrev
-   :PROPERTIES:
-   :ID:       D2AC465A-336E-4DCD-979C-6484FDF969C6
-   :END:
-
 #+BEGIN_EXAMPLE emacs-lisp
 (defun jay/insert-slash ()
   (interactive)
@@ -4678,9 +4665,6 @@ If I'm in =web-mode=, I'd like to:
 - Still be able to run RSpec tests from =web-mode= buffers.
 - Indent everything with 2 spaces.
 
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 Use =web-mode= with embedded Ruby files, regular HTML, and PHP.
 
 #+BEGIN_SRC emacs-lisp
@@ -4715,70 +4699,13 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 ;; from http://bit.ly/2aBY92J
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun insert-todays-date (arg)
  (interactive "P")
  (insert (if arg
     (format-time-string "%d-%m-%Y")
    (format-time-string "%Y-%m-%d"))))
-#+END_EXAMPLE
-
-
-** No worries when elpa is down
-Chen Bin
-
-I use one liner shell command to clone Emacs Lisp Package Archive (ELPA):
-
-#+BEGIN_EXAMPLE sh
-mkdir -p ~/elpaclone && cd ~/elpaclone && curl -L https://elpa.gnu.org/packages/archive-contents | perl -pe 's/(^\(1|\n)//g' | perl -pe 's/\]\)/])\n/g' | perl -pe 's/^ *\(([a-z0-9A-Z-]*).*\[\(([0-9 ]*).*(single|tar).*/\1-\2.\3/g' | perl -pe 's/ /./g' | perl -pe 's/single/el/g' | perl -pe 's/\)//g' | xargs -I {} curl -L -O https://elpa.gnu.org/packages/{} && curl -L -O https://elpa.gnu.org/packages/archive-contents
-#+END_EXAMPLE
-
-
-The http://bit.ly/2brTy2S is contains all the information of packages. I re-organize it content to make sure every line contains one package's information. Then I use curl to download everything.
-
-Usage is simple.
-
-Insert below line at the beginning of ~/.emacs when elpa.gnu.org is down:
-
-#+BEGIN_EXAMPLE emacs-lisp
-(setq package-archives '(("elpaclone" . "~/elpaclone")))
-#+END_EXAMPLE
-
-This solution also works for MELPA.
-
-** poly mode
-#+BEGIN_SRC emacs-lisp
-;; (use-package poly-org)
 #+END_SRC
-
-* ivy counsel
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package counsel
-:defer
- :bind
- (("M-y" . counsel-yank-pop)
-  :map ivy-minibuffer-map
-  ("M-y" . ivy-next-line)))
-#+END_EXAMPLE
-
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'execute-extended-command)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-load-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
 
 * toggle-between-src-and-example-block
@@ -4826,27 +4753,12 @@ This solution also works for MELPA.
 
 #+END_SRC
 
-* screenflick
-#+BEGIN_SRC emacs-lisp
-(defun screenflick-mode ()
-(interactive)
-;; (setq evil-emacs-state-cursor '("red" (hbar . 2))) ; for horizontal cursor
-(horizontal-cursor)
-(spacemacs/toggle-highlight-current-line-globally-off)
-(adobe-garamond-pro)
-(toggle-fullscreen)
-(writeroom-mode)
-)
-#+END_SRC
-
-
 * fix image links
 #+BEGIN_SRC emacs-lisp
 (defun fix-image-links ()
 (interactive)
 )
 #+END_SRC
-
 
 * ox-clip
 #+BEGIN_SRC emacs-lisp
@@ -4866,7 +4778,6 @@ This solution also works for MELPA.
 #+END_SRC
 
 
-
 * delete html blocks
 #+BEGIN_SRC emacs-lisp
 (defun delete-html-blocks ()
@@ -4876,7 +4787,7 @@ This solution also works for MELPA.
 #+END_SRC
 
 * beacon
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package beacon
 :defer
  :init
@@ -4885,7 +4796,7 @@ This solution also works for MELPA.
 (setq beacon-push-mark 35)
 (setq beacon-color "#FFF876")
  )
-#+END_SRC
+#+END_EXAMPLE
 
 * Tufte
 ** tufte export to HTML
@@ -4902,14 +4813,6 @@ This solution also works for MELPA.
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
   )
 #+end_SRC
-
-* ignore case in searches
-#+BEGIN_SRC emacs-lisp
-(defun ignore-case-in-searches ()
- (interactive)
- (setq case-fold-search t)
- )
-#+END_SRC
 
 * add YouTube link type yt:
 #+BEGIN_SRC emacs-lisp
@@ -4941,21 +4844,6 @@ This solution also works for MELPA.
 To use this, just write your org links in the following way (optionally adding a description).
 
 [[yt:A3JAlWM8qRM]]
-
-* swiper-mc
-#+BEGIN_EXAMPLE emacs-lisp
-(defun swiper-mc ()
-(interactive)
-(unless (require 'multiple-cursors nil t)
-(error "multiple-cursors isn't installed")) (let ((cands (nreverse ivy--old-cands)))
-(unless (string= ivy-text "") (ivy-set-action
-(lambda (_) (let (cand)
-(while (setq cand (pop cands)) (swiper--action cand)
-(when cands
-               (mc/create-fake-cursor-at-point))))
-         (mc/maybe-multiple-cursors-mode)))
-(setq ivy-exit 'done) (exit-minibuffer))))
-#+END_EXAMPLE
 
 * display and copy spacemacs version info
 #+BEGIN_SRC emacs-lisp
@@ -5016,23 +4904,6 @@ See also spacemacs/describe-system-info
 [[https://www.masteringemacs.org/article/executing-shell-commands-emacs][Executing Shell Commands in Emacs - Mastering Emacs]]
 
 
-* message-mode
-#+BEGIN_SRC emacs-lisp
-(defun message-mode-next-field ()
-  (interactive)
-  (next-line)
-  (end-of-line))
-
-(setq message-tab-body-function (quote message-mode-next-field))
-#+END_SRC
-
-
-* tramp
-#+BEGIN_SRC emacs-lisp
-(setq tramp-default-method "ssh")
-#+END_SRC
-
-
 * smart question mark
 #+BEGIN_SRC emacs-lisp
 (defun qm-maybe ()
@@ -5048,18 +4919,6 @@ See also spacemacs/describe-system-info
 ;; (define-key key-minor-mode-map (kbd "?") 'qm-maybe)
 #+END_SRC
 
-
-* flycheck
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-:defer
-  :ensure t
-  :init (global-flycheck-mode))
-
-;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
-
-
-#+END_SRC
 
 
 * convert to chat format
@@ -5095,6 +4954,15 @@ See also spacemacs/describe-system-info
 
 
 * fix case
+
+* ignore case in searches
+#+BEGIN_SRC emacs-lisp
+(defun ignore-case-in-searches ()
+ (interactive)
+ (setq case-fold-search t)
+ )
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (defun isearch-forward-ignore-case ()
 (interactive)
@@ -8791,58 +8659,21 @@ Only required if Emacs < 29.3.
 
 #+end_src
 
-** Org-transclusion enhancements
-These enhancements aim to streamline the process of working with transclusions in Org documents, making it more intuitive and efficient.
 
-**** Enhanced Functionality
-1. *Toggle Transclusion*:
+* flycheck
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+:defer
+  :ensure t
+  :init (global-flycheck-mode))
 
-- *Function*: ~tr-toggle-transclusion~
-- *Description*: Toggle transclusion on or off with a single keystroke. If the point is on a line starting with ~#+transclude:~, it expands it. If the point is on a transclusion, it collapses it.
-- *Usage*: Use this function to quickly toggle transclusions without having to think about whether you're expanding or collapsing transclusion states.
-
-2. *Alias Definitions*:
-
-- *Aliases*:
-- ~tr-expand~ for ~org-transclusion-add~
-- ~tr-collapse~ for ~org-transclusion-remove~
-- ~tr-make-link~ for ~org-transclusion-make-from-link~
-- ~tr-expand-or-collapse~ for ~org-transclusion-add-or-remove~
-- *Description*: Shorter and more intuitive command names are provided as aliases to the existing transclusion commands, simplifying recall.
-
-3. *Insert Transclusion Links*:
-
-- *Function*: ~tr-insert-transclusion~
-- *Description*: Inserts transclusion links by integrating with ~org-roam-node-insert~. Automatically prepends ~#+transclude:~ to the links.
+;; (setq flycheck-global-modes '(not org-mode latex-mode)) ; doesn't work
 
 
-#+begin_src emacs-lisp
-(load "/Users/jay/Dropbox/github/org-transclusion-power-pack/org-transclusion-power-pack.el")
-#+end_src
+#+END_SRC
 
-both of these functions work. the first was generated by ChatGPT 4.0, the second by Claude 3 Opus.
 
-this also works:
-(defun claude-org-transclusion-add-or-remove ()
- "Add or remove a transclusion depending on the point.
-If the point is on an org-transclusion link, add the transclusion using `org-transclusion-add'.
-If the point is on an existing transclusion, remove it using `org-transclusion-remove'."
- (interactive)
- (cond
- ;; Check if the point is on an org-transclusion link
- ((let ((element (org-element-at-point)))
-  (when (and (eq (org-element-type element) 'keyword)
-     (string= (org-element-property :key element) "TRANSCLUDE"))
-  (org-transclusion-add)
-  t)))
- ;; Check if the point is on an existing transclusion
- ((org-transclusion-within-transclusion-p)
- (org-transclusion-remove))
- ;; If neither condition is met, display a message
- (t
- (message "Not on an org-transclusion link or transclusion"))))
-
-* flycheck-mode-line
+** flycheck-mode-line
 #+begin_src emacs-lisp
 (setq flycheck-mode-line nil)
 
