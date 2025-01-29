@@ -3250,7 +3250,8 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (("C-c e" . yas-load-snippet-buffer)
    ("." . insert-period))
   :init
-  (yas-global-mode 1)
+:hook ((org-mode . yas-minor-mode)
+         (text-mode . yas-minor-mode))
   :config
   ;; Load yasnippet directories
   (setq yas-snippet-dirs '("~/emacs/interesting-snippets" "~/emacs/snippets"))
@@ -4383,7 +4384,7 @@ into the main dumped emacs"
 Why not?
 
 #+BEGIN_SRC emacs-lisp
- (global-prettify-symbols-mode t)
+(add-hook 'prog-mode-hook #'prettify-symbols-mode)
 #+END_SRC
 
 
