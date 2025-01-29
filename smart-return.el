@@ -1,10 +1,5 @@
 ;;; smart-return.el --- Enhanced Return Key Functionality for Org-mode -*- lexical-binding: t; -*-
 
-;;; Commentary:
-;; This package provides smart behavior for the Return key in Org-mode,
-;; handling contexts such as empty list items (to "escape" lists),
-;; links, checklists, and images.
-;;
 ;; =============================================================================
 ;; SMART-RETURN LOGIC TREE
 ;;
@@ -14,7 +9,7 @@
 ;; 1. EMPTY LIST ITEM / ESCAPE FROM LIST
 ;;    -------------------------------------
 ;;    Condition: (org-in-empty-item-p)
-;;      - Detects if the current list item (or checklist item) is empty.
+;;      - Detects if the current list (or checklist) item is empty.
 ;;      - An empty item contains only a bullet (or numbered marker) and,
 ;;        optionally, a checkbox ([ ] or [X]) with no further text.
 ;;
@@ -22,12 +17,12 @@
 ;;      a. Move point to the beginning of the item.
 ;;      b. Delete the marker (bullet and optional checkbox) on the line.
 ;;      c. Insert a newline.
-;;      d. If Org-mode auto-inserts a bullet on the new line,
-;;         delete that bullet.
+;;      d. If Org-mode auto-inserts a new list bullet or number on the
+;;         new line (matching "^[ \t]*[-+*]\\|[0-9]+[.)]"), delete that marker.
 ;;
 ;;    Example:
 ;;      Before: "-^"  (a bullet with point, no text)
-;;      After:  an empty line (list escaped)
+;;      After:  an empty line (the list is escaped)
 ;;
 ;; 2. IMAGE HANDLING
 ;;    -----------------
@@ -41,8 +36,8 @@
 ;; 3. LINK HANDLING
 ;;    ----------------
 ;;    Condition: (org-link-at-point-p) AND (org-return-follows-link)
-;;      - Determines if the point is on an Org-mode link and if the user
-;;        has enabled link following.
+;;      - Determines if the point is on an Org-mode link and if link
+;;        following is enabled.
 ;;
 ;;    Action:
 ;;      - Open the link using org-open-at-point.
@@ -63,9 +58,10 @@
 ;;      - Detects if the current list item is a checklist item.
 ;;
 ;;    Action:
-;;      - Insert a new checklist item on a new line.
-;;        * The new checklist item is always created as unchecked
-;;          ("- [ ]"), regardless of the current item's state.
+;;      - Insert a new checklist item on a new line using
+;;        smart-return--insert-checklist-item.
+;;        * The new checklist item is always created as unchecked ("- [ ]")
+;;          regardless of the current item's state.
 ;;
 ;;    Example:
 ;;      Before: "- [X] Request access to Ironclad ^"
@@ -75,8 +71,8 @@
 ;; 6. GENERAL LIST ITEM HANDLING
 ;;    -----------------------------
 ;;    Condition: (org-at-item-p)
-;;      - Applies if the point is in any list item (that is not empty or
-;;        a checklist item).
+;;      - Applies if the point is in any list item (that is not empty or a
+;;        checklist item).
 ;;
 ;;    Action:
 ;;      - Insert a new list item using org-insert-item.
@@ -85,7 +81,7 @@
 ;;    ----------------------
 ;;    Condition: (derived-mode-p 'org-mode)
 ;;      - Applies if the current major mode is Org-mode and none of the above
-;;        conditions were met.
+;;        conditions have been met.
 ;;
 ;;    Action:
 ;;      - Execute the standard org-return behavior.
@@ -219,13 +215,24 @@ Handles:
    ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
    ((org-in-empty-item-p)
     (org-beginning-of-item)
+    ;; 1) Remove the current line's bullet/checkbox
+    (delete-region (point) (line-end-position))
+    ;; 2) Insert a new line
+    ;; (newline)
+    ;; 3) If Org inserted a bullet on the new line, remove it
+    (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
+      (delete-region (point) (line-end-position)))
+    ;; 4) Now remove any leftover indentation or whitespace
+    (delete-horizontal-space)
+
     ;; Delete the entire marker on the current line.
     (delete-region (point) (line-end-position))
     ;; Insert a newline.
     (newline)
-    ;; If Org auto-inserted a new list bullet on the new line, remove it.
-    (when (looking-at "^[ \t]*[-+*][ \t]+")
+    ;; If Org auto-inserted a new list bullet or number on the new line, remove it.
+    (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
       (delete-region (point) (line-end-position))))
+
    ;; 2) If the URL at point is an image, display it.
    ((org-url-at-point-is-image-p)
     (display-online-image-in-new-buffer (thing-at-point 'url)))
