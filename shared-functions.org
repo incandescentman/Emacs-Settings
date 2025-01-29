@@ -348,13 +348,9 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 
 *** Use visual line mode whenever possible
 #+BEGIN_SRC emacs-lisp
-(add-hook 'mail-mode-hook (lambda () (visual-line-mode 1)))
-(add-hook 'message-mode-hook (lambda () (visual-line-mode 1)))
-
 (visual-line-mode t)
 (global-visual-line-mode t)
 #+END_SRC
-
 
 *** Autofill mode
 is this still necessary?
@@ -365,17 +361,6 @@ is this still necessary?
 (add-hook 'markdown-mode-hook  #'(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  #'(lambda () (auto-fill-mode -1)))
 #+END_SRC
-
-*** Sounds
-#+BEGIN_EXAMPLE emacs-lisp
-(unless (and (fboundp 'play-sound-internal)
-	     (subrp (symbol-function 'play-sound-internal)))
-  (require 'play-sound))
-
-
-;; (add-hook 'org-after-todo-state-change-hook 'my-org-after-todo)
-;; (defun my-org-after-todo () (play-sound-file "~/sounds/InkSoundStroke3.mp3"))
-#+END_EXAMPLE
 
 *** Disable double spacing between sentences
 #+BEGIN_SRC emacs-lisp
@@ -399,18 +384,14 @@ is this still necessary?
 
 *** Automatically open files in their correct modes
 #+BEGIN_SRC emacs-lisp
-
-
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
-
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
-
 #+END_SRC
 
 *** Typography
@@ -1027,13 +1008,6 @@ Works!
 ;; (setq org-agenda-prefix-format "%t %s")
 #+END_SRC
 
-*** Stop mouse cursor from highlighting lines in org-agenda
-#+BEGIN_SRC emacs-lisp
-(add-hook 'org-finalize-agenda-hook
-(lambda () (remove-text-properties
-(point-min) (point-max) '(mouse-face t))))
-#+END_SRC
-
 ** org stuck projects (?)
 Defining stuck projects as todos that do not contain "scheduled" or
 "deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
@@ -1395,14 +1369,6 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 #+END_SRC
 
-** org capture
-Make org-capture open in full window! :-)
-#+BEGIN_EXAMPLE emacs-lisp
-;; (add-hook 'org-capture-mode-hook 'turn-on-auto-capitalize-mode 'append)
-(add-hook 'org-capture-mode-hook 'delete-other-windows)
-(add-hook 'org-capture-mode-hook 'writeroom-mode)
-#+END_EXAMPLE
-
 ** org-levels
 #+BEGIN_SRC emacs-lisp
  (defun org-show-level-1 ()
@@ -1705,144 +1671,6 @@ Defines ~ibuffer-do-replace-string~:
     t))
 #+END_SRC
 
-* ido
-#+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'ido-setup-hook
-	  (lambda ()
-	    ;; Go straight home
-	    (define-key ido-file-completion-map
-	      (kbd "~")
-	      (lambda ()
-		(interactive)
-		(if (looking-back "/")
-		    (insert "~/")
-		  (call-interactively 'self-insert-command))))))
-
-(use-package ido
-:defer
-:config
-(setq ido-ignore-directories  '("\\`CVS/" "\\`\\.\\./" "\\`\\./" ".git"))
-(setq ido-ignore-files  '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "tex" "html" ".mm" "Icon*" ".git"))
-
-(ido-mode t)
-
-(setq ido-enable-prefix nil
-   ido-enable-flex-matching t
-   ido-create-new-buffer 'always
-   ido-use-filename-at-point 'guess
-   ido-use-virtual-buffers t
-   ido-handle-duplicate-virtual-buffers 2
-   ido-decorations (quote ("{" "}" " | " " | ..." "[" "]" " [No match]" " [Matched]" " [Not so readable bro]" " [Too big yo]" " [Make it so.]"))
-   ido-enable-last-directory-history t
-ido-enter-matching-directory nil
-   ido-use-faces t
-   ido-use-url-at-point t
-   ido-max-prospects 10)
-;; (ido-everywhere t)
-
-(setq confirm-nonexistent-file-or-buffer nil)
-;; (ido-everywhere 1)
-(setq ido-enable-last-directory-history t)
-(setq ido-confirm-unique-completion t) ;; wait for RET, even for unique?
-(setq ido-show-dot-for-dired nil) ;; put . as the first item
-(setq ido-use-filename-at-point t) ;; prefer file names near point
-(setq ido-use-filename-at-point 'guess)
-(setq ido-file-extensions-order '(".org" ".txt" ".md" ".emacs" ".el"))
-
-; Use IDO for both buffer and file completion and ~ido-everywhere~ to ~t~:
-(setq ido-max-directory-size 100000)
-(ido-mode (quote both))
-
-
-; Use the current window when visiting files and buffers with IDO:
-(setq ido-default-file-method 'selected-window)
-(setq ido-default-buffer-method 'selected-window)
-
-
-; Sort ido filelist by mtime instead of alphabetically. Why would anyone want an alphabetically sorted list? You can save keystrokes if the most recently modified files are at the front:
-(add-hook 'ido-make-file-list-hook 'ido-sort-mtime)
-(add-hook 'ido-make-dir-list-hook 'ido-sort-mtime)
-(defun ido-sort-mtime ()
- (setq ido-temp-list
-    (sort ido-temp-list
-       (lambda (a b)
-        (time-less-p
-         (sixth (file-attributes (concat ido-current-directory b)))
-         (sixth (file-attributes (concat ido-current-directory a)))))))
- (ido-to-end ;; move . files to end (again)
-  (delq nil (mapc
-       (lambda (x) (and (char-equal (string-to-char x) ?.) x))
-       ido-temp-list))))
-
-; Add superior flex matching to ~ido-mode~:
-(flx-ido-mode 1)
-
-; disable IDO faces to see flx highlights:
-(setq ido-use-faces nil)
-
-(defun ido-bookmark-jump (bname)
- "*Switch to bookmark interactively using `ido'."
- (interactive (list (ido-completing-read "Bookmark: " (bookmark-all-names) nil t)))
- (bookmark-jump bname))
-
-(setq
- ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "html" "*.mm" "Icon*" "*gz" "*ido.hist" "*archive*" "ics")))
-
-(defun ido-goto-symbol (&optional symbol-list)
- "Refresh imenu and jump to a place in the buffer using Ido."
- (interactive)
- (unless (featurep 'imenu)
-  (require 'imenu nil t))
- (cond
-  ((not symbol-list)
-  (let ((ido-mode ido-mode)
-     (ido-enable-flex-matching
-      (if (boundp 'ido-enable-flex-matching)
-        ido-enable-flex-matching t))
-     name-and-pos symbol-names position)
-   (unless ido-mode
-    (ido-mode 1)
-    (setq ido-enable-flex-matching t))
-   (while (progn
-        (imenu--cleanup)
-        (setq imenu--index-alist nil)
-        (ido-goto-symbol (imenu--make-index-alist))
-        (setq selected-symbol
-           (ido-completing-read "Symbol? " symbol-names))
-        (string= (car imenu--rescan-item) selected-symbol)))
-   (unless (and (boundp 'mark-active) mark-active)
-    (push-mark nil t nil))
-   (setq position (cdr (assoc selected-symbol name-and-pos)))
-   (cond
-    ((overlayp position)
-    (goto-char (overlay-start position)))
-    (t
-    (goto-char position)))))
-  ((listp symbol-list)
-  (dolist (symbol symbol-list)
-   (let (name position)
-    (cond
-     ((and (listp symbol) (imenu--subalist-p symbol))
-     (ido-goto-symbol symbol))
-     ((listp symbol)
-     (setq name (car symbol))
-     (setq position (cdr symbol)))
-     ((stringp symbol)
-     (setq name symbol)
-     (setq position
-        (get-text-property 1 'org-imenu-marker symbol))))
-    (unless (or (null position) (null name)
-          (string= (car imenu--rescan-item) name))
-     (add-to-list 'symbol-names name)
-     (add-to-list 'name-and-pos (cons name position))))))))
-
-
-)
-
-
-#+END_EXAMPLE
-
-
 * Things that I don't know what they're for
 ** I forgot what this is but it looks important
 #+BEGIN_SRC emacs-lisp
@@ -1855,36 +1683,6 @@ ido-enter-matching-directory nil
                        (region-end))
       (call-interactively 'org-return))))
 #+END_SRC
-
-* Fuzzy matching
-** imenu
-[[http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong/][link]]
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun imenu-elisp-sections ()
-  (setq imenu-prev-index-position-function nil)
-  (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
-
-(add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
-;; helm-imenu
-#+END_EXAMPLE
-
-Jump to a definition in the current file. (This is awesome.)
-#+BEGIN_EXAMPLE emacs-lisp
-(global-set-key (kbd "C-x C-i") 'ido-imenu)
-(defun try-to-add-imenu ()
-  (condition-case nil (imenu-add-to-menubar "I love you.") (error nil)))
-(add-hook 'font-lock-mode-hook 'try-to-add-imenu)
-#+END_EXAMPLE
-
-** Helm
-Make helm-grep search recursively by default. I want helm-grep to search not only inside the current folder, but also inside subfolders.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(setq helm-M-x-always-save-history t)
-(eval-after-load 'helm-grep
-  '(setq helm-grep-default-command helm-grep-default-recurse-command))
-#+END_EXAMPLE
 
 * Dired
 #+BEGIN_SRC emacs-lisp
@@ -2828,7 +2626,7 @@ Useful for working with files and references:
 ** find-file tricks
 [[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun oleh-ido-setup-hook ()
   (define-key ido-file-dir-completion-map "~"
     (lambda ()
@@ -2866,7 +2664,7 @@ Useful for working with files and references:
    oleh-ido-shortcuts))
 
 (add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-#+END_SRC
+#+END_EXAMPLE
 
 
 * Things I want to learn
@@ -2966,12 +2764,11 @@ Redefine help shortcut:
 ** flyspell-correct-space
 #+begin_src emacs-lisp
 (defun flyspell-auto-correct-word-correct-space ()
- (interactive)
- (when (looking-back " " nil)
-  (left-char 1))
- (flyspell-auto-correct-word)
-;; (right-char 1)
- )
+  (interactive)
+  (when (looking-back " " nil)
+    (left-char 1))
+  (flyspell-auto-correct-word)
+  )
 
 #+end_src
 
@@ -3058,84 +2855,6 @@ AdrianKubala:
   (isearch-forward))
 #+END_SRC
 
-** Helm
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package helm-swoop
-:defer)
-; (global-set-key (kbd "M-i") (lambda() (interactive) (helm-swoop :$query nil)))
-
-(setq helm-swoop-pre-input-function
-      (lambda () nil))
-#+END_SRC
-
-When doing isearch, hand the word over to ~helm-swoop~:
-#+BEGIN_SRC emacs-lisp
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-#+END_SRC
-
-From ~helm-swoop~ to ~helm-multi-swoop-all~:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (define-key helm-swoop-map (kbd "M-i"); 'helm-multi-swoop-all-from-helm-swoop)
-#+END_EXAMPLE
-
-Save buffer when ~helm-multi-swoop-edit~ completes:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (setq helm-multi-swoop-edit-save t)
-#+END_EXAMPLE
-
-If this value is ~t~, split window inside the current window:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (setq helm-swoop-split-with-multiple-windows nil)
-#+END_EXAMPLE
-
-Split direcion. ~split-window-vertically~ or ~split-window-horizontally~:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (setq helm-swoop-split-direction 'split-window-vertically)
-#+END_EXAMPLE
-
-If ~nil~, you can slightly boost invoke speed in exchange for text color:
-#+BEGIN_EXAMPLE emacs-lisp
-;; (setq helm-swoop-speed-or-color nil)
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE emacs-lisp
-;; (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
-;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-;; (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE emacs-lisp
-;; (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
-;; (global-set-key (kbd "M-y")     #'helm-show-kill-ring)
-;; (global-set-key (kbd "M-s /")   #'helm-multi-swoop)
-
-(setq helm-ff-transformer-show-only-basename nil
-      helm-adaptive-history-file             "~/emacs/.savefile/helm-history"
-      helm-yank-symbol-first                 t
-      helm-move-to-line-cycle-in-source      t
-      helm-buffers-fuzzy-matching            t
-      helm-ff-auto-update-initial-value      t)
-
-(autoload 'helm-descbinds      "helm-descbinds" t)
-(autoload 'helm-eshell-history "helm-eshell"    t)
-(autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-(global-set-key (kbd "M-h a")    #'helm-apropos)
-(global-set-key (kbd "M-h i")    #'helm-info-emacs)
-(global-set-key (kbd "M-h b")    #'helm-descbinds)
-
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map (kbd "TAB")     #'helm-esh-pcomplete)
-              (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
-
-
-(global-set-key (kbd "C-x c!")   #'helm-calcul-expression)
-(global-set-key (kbd "C-x c:")   #'helm-eval-expression-with-eldoc)
-(define-key helm-map (kbd "M-o") #'helm-previous-source)
-
-(global-set-key (kbd "M-s s")   #'helm-again)
-#+END_EXAMPLE
 
 ** projectile
 #+BEGIN_SRC emacs-lisp
@@ -3163,68 +2882,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 #+END_SRC
 
-** helm projectile
-#+BEGIN_EXAMPLE emacs-lisp
-
-
-(setq ad-redefinition-action 'accept)
-(use-package helm-projectile
-:defer
-:config
-(setq helm-projectile-sources-list (cons 'helm-source-projectile-files-list
-(remove 'helm-source-projectile-files-list helm-projectile-sources-list)))
-)
-
-(helm-projectile-on)
-
-(define-key projectile-mode-map (kbd "C-c p /")
-  #'(lambda ()
-      (interactive)
-      (helm-ag (projectile-project-root))))
-#+END_EXAMPLE
-
 ** isearch
-   :PROPERTIES:
-   :ID:       646E722F-EEEE-4986-9DFA-A0A11068ECAD
-   :END:
-*** isearch current word
-  isearch Current Word
-
-  Buy Xah Emacs Tutorial. Master emacs benefits for life.
-  PayPal
-  Xah Lee, 2010-05-29, …, 2015-09-03
-  Here's a command that will do isearch of the word under cursor.
-
-  (defun xah-search-current-word ()
-    "Call `isearch' on current word or text selection.
-  "word" here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
-  URL `http://ergoemacs.org/emacs/modernization_isearch.html'
-  Version 2015-04-09"
-    (interactive)
-    (let ( ξp1 ξp2 )
-      (if (use-region-p)
-          (progn
-            (setq ξp1 (region-beginning))
-            (setq ξp2 (region-end)))
-        (save-excursion
-          (skip-chars-backward "-_A-Za-z0-9")
-          (setq ξp1 (point))
-          (right-char)
-          (skip-chars-forward "-_A-Za-z0-9")
-          (setq ξp2 (point))))
-      (setq mark-active nil)
-      (when (< ξp1 (point))
-        (goto-char ξp1))
-      (isearch-mode t)
-      (isearch-yank-string (buffer-substring-no-properties ξp1 ξp2))))
-
-  (define-key key-minor-mode-map (kbd "M-o") 'xah-search-current-word)
-
-  You need to give it a easy key. Such as 【Ctrl+3】. 〔➤ Emacs: How to Define Keys〕 Note: if you use the key 【Ctrl+⇧ Shift+s】, it won't work if emacs runs in terminal.
-
-
-
-
 
 *** isearch arrow keys
   Here's very convenient keys for isearch. Put it in your emacs init.
@@ -3260,9 +2918,7 @@ If ~nil~, you can slightly boost invoke speed in exchange for text color:
 
 
 ** searching
-   :PROPERTIES:
-   :ID:       37637C3F-0CB1-48CE-8CD0-4436182F212A
-   :END:
+
 *** swiper
 **** ivy
 #+BEGIN_SRC emacs-lisp
@@ -3369,9 +3025,6 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 #+END_SRC
 
 ** searching
-   :PROPERTIES:
-   :ID:       B637F4A7-B467-4273-8394-535DC3BF9C9C
-   :END:
 
 *** Tell isearch that curly apostrophes are the same as straight ones
  Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
@@ -3590,7 +3243,7 @@ I rely and paredit and formatting to keep my parenthesis honest, and for the mos
 
 The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter.
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 ;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
@@ -3599,27 +3252,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
-#+END_EXAMPLE
-
-* helm search current directory
-#+BEGIN_EXAMPLE emacs-lisp
-(defun helm-do-grep-current-directory-tree ()
-  "Recursively search current directory.
-If a parent directory has a `dir-locals-file', use that as the
-root instead."
-  (interactive)
-  (let ((variables-file (dir-locals-find-file
-                         (or (buffer-file-name) default-directory))))
-    (helm-do-grep-1
-     (list
-      (cond
-       ((stringp variables-file)
-        (file-name-directory variables-file))
-       ((consp variables-file)
-        (nth 0 variables-file))
-       (t default-directory)))
-     t nil '("*"))))
-#+END_EXAMPLE
+#+END_SRC
 
 
 * contract-contractions
@@ -3769,12 +3402,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 (define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
 #+end_src
 
-
-** yasnippet copy to clipboard
-#+begin_src emacs-lisp
-
-#+end_src
-
 * flyspell
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
@@ -3827,8 +3454,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 (tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n")
   )
 
-
-
 #+END_SRC
 
 
@@ -3845,7 +3470,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 #+END_SRC
 
 * re-builder
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package re-builder
 :defer
 :config
@@ -3869,7 +3494,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 
   )
 (setq reb-re-syntax 'string)
-#+END_SRC
+#+END_EXAMPLE
 
 * re-builder "Query Replace This"
 [[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder “Query Replace This” - Dev and Such]]
@@ -3894,8 +3519,6 @@ Here's an adaptation of dired-create-directory. It works the same way, so as wel
 
 
 #+BEGIN_SRC emacs-lisp
-
-
        (defun my-dired-create-file (file)
          "Create a file called FILE.
   If FILE already exists, signal an error."
@@ -3947,20 +3570,15 @@ Although I've specified a user-reserved binding in the code, I've actually bound
 (add-hook 'help-mode-hook 'olivetti-mode 1)
 (add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
 (add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
-
-;; (add-hook 'help-mode-hook 'olivetti-mode 1)
-
-
 (add-hook 'prog-mode-hook 'olivetti-mode 1)
 (add-hook 'magit-status-mode-hook 'olivetti-mode 1)
 (add-hook 'dired-mode-hook 'olivetti-mode 1)
 (add-hook 'Info-mode-hook 'olivetti-mode 1)
 (add-hook 'eww-mode-hook 'olivetti-mode 1)
-
 #+END_SRC
 
 
-* access config files
+* Functions to quickly access config files
 #+BEGIN_SRC emacs-lisp
 (defun load-shared-functions ()
   (interactive)
@@ -4007,26 +3625,6 @@ C-c x
 C-c q
 
 
-
-* org-agenda skip keywords
-#+BEGIN_SRC emacs-lisp
-;; (setq org-agenda-custom-commands '(org-agenda-skip-function 'org-agenda-skip-regexp-if 'todo '("MISSED" "COMMITTED" "RESULTS")))
-
-
-#+END_SRC
-
-* org-ellipsis
-#+BEGIN_SRC emacs-lisp
-;; (setq org-ellipsis " ◦◦◦ ")
-;; (set-face-attribute org-ellipsis '(((:background "white" :underline nil))))
-
-;; (setq org-ellipsis "⤵")
-;; other interesting characters are ▼, ↴, ⬎, ⤷, and ⋱
-
-(setq org-ellipsis "…")
-#+END_SRC
-
-
 * embolden-region-or-point
 #+BEGIN_SRC emacs-lisp
 (defun embolden-region-or-point ()
@@ -4059,7 +3657,6 @@ C-c q
 
 (define-key key-minor-mode-map (kbd "<C-i>") 'italicize-region-or-point)
 #+END_SRC
-
 
 
 * org todo stuff
@@ -4131,40 +3728,38 @@ event of an error or nonlocal exit."
 
 ;; wrap-region
 (use-package wrap-region
-:defer
+  :defer
   :ensure t
   :config
-(wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
+  (wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
 
-(defun wrap-region-define-wrappers ()
-  "Defines defaults wrappers."
-  (mapc
-   (lambda (pair)
-     (apply 'wrap-region-add-wrapper pair))
+  (defun wrap-region-define-wrappers ()
+    "Defines defaults wrappers."
+    (mapc
+     (lambda (pair)
+       (apply 'wrap-region-add-wrapper pair))
+     '(
+       ;; ("\"" "\"")
+       ;; ("'"  "'")
+       ;; ("("  ")")
+       ("{"  "}")
+       ;; ("["  "]")
+       ;; ("<"  ">")
+       ;; ("<"  ">")
+       )))
+  (wrap-region-add-wrappers
    '(
-;; ("\"" "\"")
-     ;; ("'"  "'")
-     ;; ("("  ")")
-     ("{"  "}")
-     ;; ("["  "]")
-;; ("<"  ">")
-;; ("<"  ">")
-     )))
-(wrap-region-add-wrappers
-   '(
-;;     ("*" "*" nil org-mode)
-;;     ("/" "/" nil org-mode)
-;; ("\"" "\"" nil org-mode)
+     ;;     ("*" "*" nil org-mode)
+     ;;     ("/" "/" nil org-mode)
+     ;; ("\"" "\"" nil org-mode)
      ("~" "~" nil org-mode)
      ("_" "_" nil org-mode)
      ("*" "*" nil (org-mode message-mode))
      ("/" "/" nil (org-mode message-mode))
-      ("$" "$" nil (org-mode latex-mode))
-      ))
+     ("$" "$" nil (org-mode latex-mode))
+     ))
 
-)
-
-
+  )
 #+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
@@ -4180,28 +3775,6 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
 #+END_SRC
-
-
-** god mode
-#+BEGIN_EXAMPLE emacs-lisp
-;; (use-package god-mode)
-(defun my-update-cursor ()
-  (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        'bar
-                      'box)))
-
-;; (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-;; (add-hook 'god-mode-disabled-hook 'my-update-cursor)
-
-
-             (use-package god-mode-isearch
-             :defer)
-(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
-(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
-(define-key god-local-mode-map (kbd ".") 'repeat)
-
-
-#+END_EXAMPLE
 
 ** C-c C-c to exit source code blocks
 #+BEGIN_SRC emacs-lisp
@@ -4238,28 +3811,6 @@ already narrowed."
          (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
 #+END_SRC
-
-
-** org go speed
-; Speed commands are really useful, but I often want to make use of
-; them when I'm not at the beginning of a header. This command brings
-; you back to the beginning of an item's header, so that you can do
-; speed commands.
-
-(defun org-go-speed ()
-  "Goes to the beginning of an element's header, so that you can
-execute speed commands."
-  (interactive)
-  (when (equal major-mode 'org-mode)
-    (if (org-at-heading-p)
-        (org-beginning-of-line)
-      (org-up-element))))
-
-; bind-key comes from Use Package
-(bind-key "C-c s" 'org-go-speed)
-
-(global-set-key "\M-9" 'backward-sexp)
-(global-set-key "\M-0" 'forward-sexp)
 
 
 ** org insert easy template source blocks
@@ -4317,36 +3868,6 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 #+END_SRC
 
 
-* convert from org-mode to Word
-#+BEGIN_SRC emacs-lisp
-;; This setup is tested on Emacs 24.3 & Emacs 24.4 on Linux/OSX
-;; org v7 bundled with Emacs 24.3
-(setq org-export-odt-preferred-output-format "doc")
-;; org v8 bundled with Emacs 24.4
-(setq org-odt-preferred-output-format "doc")
-;; BTW, you can assign "pdf" in above variables if you prefer PDF format
-
-;; Only OSX need below setup
-(defun my-setup-odt-org-convert-process ()
-  (interactive)
-  (let ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
-    (when (and (eq system-type 'darwin) (file-exists-p cmd))
-      ;; org v7
-      (setq org-export-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i")))
-      ;; org v8
-      (setq org-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i"))))
-    ))
-(my-setup-odt-org-convert-process)
-#+END_SRC
-
-Source: [[http://blog.binchen.org/posts/how-to-take-screen-shot-for-business-people-efficiently-in-emacs.html][How to take screen shot for business people efficiently in Emacs | Chen's blog]]
-
-2.4 Tips
-
-If you need page break in exported document, insert below snippet into the org file:
-
-#+ODT: <text:p text:style-name="PageBreak"/>
-
 * Create org file and insert path of screen shot
 #+BEGIN_SRC emacs-lisp
 (defun insert-file-link-from-clipboard ()
@@ -4383,92 +3904,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 (dotimes (n 10)
   (global-unset-key (kbd (format "M-%d" n))))
 #+END_SRC
-
-* hydras experiments
-#+BEGIN_EXAMPLE emacs-lisp
-(defhydra email (global-map "s-]")
- "email"
- ("a" erika-send-email)
- ("i" notmuch "inbox")
- ("n" new-email-from-subtree-no-signature "new-email-from-subtree-no-signature")
- ("s" new-email-from-subtree-with-signature "new-email-from-subtree-with-signature")
-)
-
-
-(defhydra hydra-zoom (global-map "s-[")
- "email"
- ("e" erika-send-mail)
- ("n" notmuch)
-)
-
-
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE emacs-lisp
-
-
-(global-set-key
- (kbd "C-p")
-(defhydra hydra-move-previous
-   (:body-pre (previous-line))
-   "move"
-("p" previous-line)
-("n" next-line)
-("k" my/kill-line-dwim)
-   ("f" forward-char)
-   ("b" backward-char)
-   ("a" beginning-of-line)
-   ("e" move-end-of-line)
-   ("v" scroll-up-command)
-   ;; Converting M-v to V here by analogy.
-   ("V" scroll-down-command)
-   ("l" recenter-top-bottom)))
-
-
-(global-set-key
- (kbd "C-n")
-(defhydra hydra-move-next
-   (:body-pre (next-line))
-   "move"
-   ("n" next-line)
-   ("p" previous-line)
-   ("k" my/kill-line-dwim)
-   ("f" forward-char)
-   ("b" backward-char)
-   ("a" beginning-of-line)
-   ("e" move-end-of-line)
-   ("v" scroll-up-command)
-   ;; Converting M-v to V here by analogy.
-   ("V" scroll-down-command)
-   ("l" recenter-top-bottom)))
-
-
-
-
-(global-set-key
- (kbd "s-n")
-(defhydra accountability-move
-   (:body-pre (next-line))
-   "move"
-   ("n" org-next-visible-heading)
-   ("p" org-previous-visible-heading)
-   ("k" org-cut-subtree)
-   ("f" forward-char)
-   ("b" backward-char)
-   ("d" org-todo)
-   ("m" (lambda nil (interactive) (org-todo "MISSED")))
-   ("e" move-end-of-line)
-   ("v" scroll-up-command)
-   ;; Converting M-v to V here by analogy.
-   ("V" scroll-down-command)
-   ("l" recenter-top-bottom)
-))
-
-
-
-#+END_EXAMPLE
-
-Projectile hydra [[https://github.com/abo-abo/hydra/wiki/Projectile][Projectile · abo-abo/hydra Wiki]]
 
 
 * hydra helm
