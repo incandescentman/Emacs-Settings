@@ -936,3 +936,64 @@ of each speaker's name with the other within the selected region."
 (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler)
 #+end_example
 
+
+** I forgot what this is but it looks important
+#+BEGIN_EXAMPLE emacs-lisp
+(define-key org-mode-map
+  (kbd "RET")
+  (lambda()
+    (interactive)
+    (if (region-active-p)
+        (delete-region (region-beginning)
+                       (region-end))
+      (call-interactively 'org-return))))
+#+END_EXAMPLE
+
+
+
+* re-builder
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package re-builder
+:defer
+:config
+(defun reb-query-replace-this-regxp (replace)
+ "Uses the regexp built with re-builder to query the target buffer.
+This function must be run from within the re-builder buffer, not the target
+buffer.
+
+Argument REPLACE String used to replace the matched strings in the buffer.
+ Subexpression references can be used (\1, \2, etc)."
+ (interactive "sReplace with: ")
+ (if (eq major-mode 'reb-mode)
+   (let ((reg (reb-read-regexp)))
+    (select-window reb-target-window)
+    (save-excursion
+     (beginning-of-buffer)
+     (query-replace-regexp reg replace)))
+  (message "Not in a re-builder buffer!")))
+
+(define-key reb-mode-map "\C-c\M-%" 'reb-query-replace-this-regxp)
+
+  )
+(setq reb-re-syntax 'string)
+#+END_EXAMPLE
+
+* re-builder "Query Replace This"
+[[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder "Query Replace This" - Dev and Such]]
+
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+* Settings
+#+begin_src emacs-lisp
+;; Mail Settings
+(setq mail-kill-buffer-on-exit t
+      compose-mail-user-agent-warnings nil
+      message-draft-headers '(From References Date)
+      message-required-headers '(From (optional . References))
+      mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages"
+      message-send-mail-function 'message-send-mail-with-sendmail
+      send-mail-function 'sendmail-send-it)
+
+#+end_src

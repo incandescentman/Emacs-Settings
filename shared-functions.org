@@ -28,7 +28,7 @@
 - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
 - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
 
-* packages
+* Packages
 ** lexical binding
 #+begin_SRC emacs-lisp
 (setq lexical-binding t)
@@ -99,14 +99,6 @@ I should probably eventually break these out of custom-set-variables and organiz
                                       ".vrs" ".pyc" ".pyo" ".tex" ".mm" "Icon"
                                       ".html" ".zip"))
 
-;; Mail Settings
-(setq mail-kill-buffer-on-exit t
-      compose-mail-user-agent-warnings nil
-      message-draft-headers '(From References Date)
-      message-required-headers '(From (optional . References))
-      mml-default-directory "~/Dropbox/writing/notationaldata/emacs-mail-message-mode-messages"
-      message-send-mail-function 'message-send-mail-with-sendmail
-      send-mail-function 'sendmail-send-it)
 
 ;; CUA Mode Settings
 (setq cua-highlight-region-shift-only t
@@ -115,7 +107,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; Deft Settings
 (setq deft-directory "~/Dropbox/writing/notationaldata/")
 
-;; Dired Settings
+; dired Settings
 (setq dired-clean-up-buffers-too nil
       dired-kept-versions 8)
 
@@ -1672,93 +1664,6 @@ Defines ~ibuffer-do-replace-string~:
     t))
 #+END_SRC
 
-* Things that I don't know what they're for
-** I forgot what this is but it looks important
-#+BEGIN_SRC emacs-lisp
-(define-key org-mode-map
-  (kbd "RET")
-  (lambda()
-    (interactive)
-    (if (region-active-p)
-        (delete-region (region-beginning)
-                       (region-end))
-      (call-interactively 'org-return))))
-#+END_SRC
-
-* Dired
-#+BEGIN_SRC emacs-lisp
-
-(use-package dired
-:defer
-:config
-(setq dired-omit-mode t)
-
-  :bind (:map dired-mode-map
-              ("M-o" . dired-omit-mode)
-              ("o" . dired-omit-mode)
-	      ("s-o" . tmtxt/dired-do-shell-mac-open)
-              ("s-O" . reveal-in-finder)
-              ("C-c n" . my-dired-create-file)
-              ("c" . touch-file)
-              ("s-:" .  reveal-in-finder)
-              )
-  )
-
-;; (add-hook 'dired-mode-hook 'hl-line-mode)
-
-(setq dired-listing-switches "-1 --group-directories-first")
-
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
-(use-package dired-x
-  :defer
-
-:config
-
-(setq-default dired-omit-files-p t) ; Buffer-local variable
-
-
-
-(setq delete-by-moving-to-trash t
-   trash-directory "~/.Trash/emacs")
-
-;; Note: If you are using Dired Omit Mode with dired+, remember to put the config of Dired Omit Mode before loading (require) dired+ since some feature of dired+ use the config from Dired Omit Mode (for example for displaying the file names).
-
-(defun tmtxt/dired-do-shell-mac-open ()
- (interactive)
- (save-window-excursion
-  (let ((files (dired-get-marked-files nil current-prefix-arg))
-     command)
-   ;; the open command
-   (setq command "open ")
-   (dolist (file files)
-    (setq command (concat command (shell-quote-argument file) " ")))
-   (message command)
-   ;; execute the command
-   (async-shell-command command))))
-
-(defun dired-open-current-directory-in-finder ()
- "Open the current directory in Finder"
- (interactive)
- (save-window-excursion
-  (dired-do-async-shell-command
-   "open .")))
-
-
-;; https://truongtx.me/2013/04/25/dired-as-default-file-manager-5-customize-ls-command/
-
-;; look at this: https://truongtx.me/2013/12/22/emacs-search-for-text-occurences-with-grep/
-
-
-(setq-default dired-omit-files-p t) ; this is buffer-local variable
-
-  )
-;; Load Dired X when Dired is loaded.
-;; (add-hook 'dired-load-hook #'(lambda () (require 'dired-x)))
-
-
-#+END_SRC
-
-
 * savefile
 ** file current locations
 #+BEGIN_SRC emacs-lisp
@@ -2716,10 +2621,6 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (global-set-key (kbd "s-p") 'org-export-dispatch)
 (define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
 
-;; (global-set-key (kbd "M-1") 'auto-capitalize-mode)
-;; (global-set-key (kbd "s-u") 'dired-single)
-
-
 (define-key global-map (kbd "<C-wheel-up>") (lambda ()
                                               (interactive)
                                               (scroll-up-command)))
@@ -2944,17 +2845,7 @@ AdrianKubala:
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
 
-
-
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
-
-#+END_SRC
-
-**** ivy add actions
-  [[https://www.reddit.com/r/emacs/comments/5453d4/what_does_your_ivyswiper_configuration_look_like/][What does your ivy/swiper configuration look like? : emacs]]
-
-  [[http://pastebin.com/g867n8h6][{Lisp} My ivy configuration - Pastebin.com]]
-#+BEGIN_SRC emacs-lisp
 
 #+END_SRC
 
@@ -3470,46 +3361,11 @@ object satisfying `yas--field-p' to restrict the expansion to."
 ))
 #+END_SRC
 
-* re-builder
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package re-builder
-:defer
-:config
-(defun reb-query-replace-this-regxp (replace)
- "Uses the regexp built with re-builder to query the target buffer.
-This function must be run from within the re-builder buffer, not the target
-buffer.
-
-Argument REPLACE String used to replace the matched strings in the buffer.
- Subexpression references can be used (\1, \2, etc)."
- (interactive "sReplace with: ")
- (if (eq major-mode 'reb-mode)
-   (let ((reg (reb-read-regexp)))
-    (select-window reb-target-window)
-    (save-excursion
-     (beginning-of-buffer)
-     (query-replace-regexp reg replace)))
-  (message "Not in a re-builder buffer!")))
-
-(define-key reb-mode-map "\C-c\M-%" 'reb-query-replace-this-regxp)
-
-  )
-(setq reb-re-syntax 'string)
-#+END_EXAMPLE
-
-* re-builder "Query Replace This"
-[[http://echosa.github.io/blog/2012/06/26/re-builder-query-replace-this/][RE Builder “Query Replace This” - Dev and Such]]
-
-
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 * poetry
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
 
 
-
-* If you want Emacs to treat all new files as modified, you can automate the solution like this
+* Treat all new files as modified
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -3517,34 +3373,7 @@ Argument REPLACE String used to replace the matched strings in the buffer.
     (set-buffer-modified-p t)))
 #+END_SRC
 
-Here's an adaptation of dired-create-directory. It works the same way, so as well as a plain filename, you can also specify new parent directories (to be created under the current directory) for the file (e.g. foo/bar/filename).
 
-
-#+BEGIN_SRC emacs-lisp
-       (defun my-dired-create-file (file)
-         "Create a file called FILE.
-  If FILE already exists, signal an error."
-         (interactive
-          (list (read-file-name "Create file: " (dired-current-directory))))
-         (let* ((expanded (expand-file-name file))
-                (try expanded)
-                (dir (directory-file-name (file-name-directory expanded)))
-                new)
-           (if (file-exists-p expanded)
-               (error "Cannot create file %s: file exists" expanded))
-           ;; Find the topmost nonexistent parent dir (variable `new')
-           (while (and try (not (file-exists-p try)) (not (equal new try)))
-             (setq new try
-                   try (directory-file-name (file-name-directory try))))
-           (when (not (file-exists-p dir))
-             (make-directory dir t))
-           (write-region "" nil expanded t)
-           (when new
-             (dired-add-file new)
-             (dired-move-to-filename))))
-#+END_SRC
-
-Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
 
 * olivetti
 #+BEGIN_SRC emacs-lisp
@@ -3680,7 +3509,7 @@ C-c q
 
 
 ** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 Each element of ADLIST should look like:
@@ -3708,12 +3537,17 @@ which is suitable for passing to `advice-add'."
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice to move to next list item on checkbox toggle."
   (my/with-advice
-   ((org-update-checkbox-count-maybe :after (lambda () (ignore-errors (org-next-item)))))
+   ((org-update-checkbox-count-maybe
+     :after (lambda () (ignore-errors (progn (org-next-item) (end-of-line))))))
    (apply orig-fn args)))
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
 
+#+END_SRC
+
+*** an alternative approach, probably not needed
+#+BEGIN_EXAMPLE emacs-lisp
 ;; a temporary hack
 (defun zin/org-checkbox-next ()
  (interactive)
@@ -3985,26 +3819,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 #+END_SRC
 
 
-* use dired for directory links
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-file-apps '(directory . emacs))
-#+END_SRC
-
-Alternatively you can modify the link description as follows:
-
-
-[[file+emacs:~/projects][Projects]]
-
-Use this notation in the org mode to create a link:
-
-[[/path/to/file.php::line][string-to-display]]
-If you want the file name to be displayed, use just
-
-[[/path/to/file.php::line]]
-
-
-It will open the link in Emacs with typing C-c C-o.
-
 
 * sort lines case insensitive
 #+BEGIN_SRC emacs-lisp
@@ -4143,33 +3957,6 @@ It will open the link in Emacs with typing C-c C-o.
 * no inline images
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-with-inline-images nil)
-#+END_SRC
-
-
-
-* open recent directories
-#+BEGIN_SRC emacs-lisp
-;; open recent directory, rquires ivy (part of swiper)
-;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
-(defun bjm/ivy-dired-recent-dirs ()
- "Present a list of recently used directories and open the selected one in dired"
- (interactive)
- (let ((recent-dirs
-     (delete-dups
-     (mapcar (lambda (file)
-          (if (file-directory-p file) file (file-name-directory file)))
-         recentf-list))))
-
-  (let ((dir (ivy-read "Directory: "
-             recent-dirs
-             :re-builder #'ivy--regex
-             :sort nil
-             :initial-input nil)))
-   (dired dir))))
-
-
-;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
-;; c-x C-d runs the command ido-list-directory
 #+END_SRC
 
 
@@ -4734,11 +4521,6 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
        (t (message "Not in a src or example block!"))))))
 #+END_SRC
 
-* dired-quick-sort
-#+BEGIN_SRC emacs-lisp
-(use-package dired-quick-sort
-  :defer)
-#+END_SRC
 
 
 * ediff
@@ -6467,11 +6249,6 @@ depending on which one is appropriate based on the context."
 #+end_src
 
 
-* dired
-#+begin_src emacs-lisp
-;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
-#+end_src
-
 * fuzzy open recent file
 This is my goto way for navigating. It feels like it is reading your mind.
 
@@ -7028,67 +6805,37 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 #+end_src
 
-* open in external app
-#+begin_src emacs-lisp
-(defun timu-dired-open-in-external-app (&optional file)
-
- "Open the current FILE or Dired marked files in external app.
-
-The app is chosen from your OS's preference.
-
-Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
-
- (interactive)
-
- (let (doIt (myFileList
-
-       (cond
-
-        ((eq major-mode 'dired-mode)
-
-        (dired-get-marked-files))
-
-        ((not file) (list (buffer-file-name)))
-
-        (file (list file)))))
-
-  (setq doIt (if (<= (length myFileList) 30) t
-
-         (y-or-n-p "Open more than 30 files? ")))
-
-  (when doIt
-
-   (cond
-
-    ((string-equal system-type "windows-nt")
-
-    (mapc (lambda (fPath)
-
-        (w32-shell-execute
-
-         "open" (replace-regexp-in-string "/" "\\" fPath t t)))
-
-       myFileList))
-
-    ((string-equal system-type "darwin")
-
-    (mapc (lambda (fPath)
-
-        (shell-command (format "open \"%s\"" fPath)))
-
-       myFileList))
-
-    ((string-equal system-type "gnu/linux")
-
-    (mapc (lambda (fPath)
-
-        (let ((process-connection-type nil))
-
-         (start-process "" nil "xdg-open" fPath))) myFileList))))))
-
-#+end_src
 
 * Dired
+Here's an adaptation of dired-create-directory. It works the same way, so as well as a plain filename, you can also specify new parent directories (to be created under the current directory) for the file (e.g. foo/bar/filename).
+
+
+#+BEGIN_SRC emacs-lisp
+       (defun my-dired-create-file (file)
+         "Create a file called FILE.
+  If FILE already exists, signal an error."
+         (interactive
+          (list (read-file-name "Create file: " (dired-current-directory))))
+         (let* ((expanded (expand-file-name file))
+                (try expanded)
+                (dir (directory-file-name (file-name-directory expanded)))
+                new)
+           (if (file-exists-p expanded)
+               (error "Cannot create file %s: file exists" expanded))
+           ;; Find the topmost nonexistent parent dir (variable `new')
+           (while (and try (not (file-exists-p try)) (not (equal new try)))
+             (setq new try
+                   try (directory-file-name (file-name-directory try))))
+           (when (not (file-exists-p dir))
+             (make-directory dir t))
+           (write-region "" nil expanded t)
+           (when new
+             (dired-add-file new)
+             (dired-move-to-filename))))
+#+END_SRC
+
+Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
+
 ** open current directory in Finder
 #+begin_src emacs-lisp
 
@@ -7153,6 +6900,171 @@ This will display a Quicklook of the file at point in macOS."
   (concat "qlmanage -p " (shell-quote-argument file) " > /dev/null 2>&1")))
 #+end_src
 
+** use dired for directory links
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-file-apps '(directory . emacs))
+#+END_SRC
+
+Alternatively you can modify the link description as follows:
+
+
+[[file+emacs:~/projects][Projects]]
+
+Use this notation in the org mode to create a link:
+
+[[/path/to/file.php::line][string-to-display]]
+If you want the file name to be displayed, use just
+
+[[/path/to/file.php::line]]
+
+
+It will open the link in Emacs with typing C-c C-o.
+
+** touch-file
+#+BEGIN_SRC emacs-lisp
+
+    (defun touch-file (file)
+    "Create a file called FILE.
+  If FILE already exists, signal an error."
+    (interactive
+    (list (read-file-name "Create file: " (dired-current-directory))))
+    (let* ((expanded (expand-file-name file))
+      (try expanded)
+      (dir (directory-file-name (file-name-directory expanded)))
+      new)
+     (if (file-exists-p expanded)
+      (error "Cannot create file %s: file exists" expanded))
+     ;; Find the topmost nonexistent parent dir (variable `new')
+     (while (and try (not (file-exists-p try)) (not (equal new try)))
+     (setq new try
+       try (directory-file-name (file-name-directory try))))
+     (when (not (file-exists-p dir))
+     (make-directory dir t))
+     (write-region "" nil expanded t)
+     (when new
+     (dired-add-file new)
+     (dired-move-to-filename))))
+#+END_SRC
+
+
+
+*** open recent directories
+#+BEGIN_SRC emacs-lisp
+;; open recent directory, rquires ivy (part of swiper)
+;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
+(defun bjm/ivy-dired-recent-dirs ()
+ "Present a list of recently used directories and open the selected one in dired"
+ (interactive)
+ (let ((recent-dirs
+     (delete-dups
+     (mapcar (lambda (file)
+          (if (file-directory-p file) file (file-name-directory file)))
+         recentf-list))))
+
+  (let ((dir (ivy-read "Directory: "
+             recent-dirs
+             :re-builder #'ivy--regex
+             :sort nil
+             :initial-input nil)))
+   (dired dir))))
+
+
+;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
+;; c-x C-d runs the command ido-list-directory
+#+END_SRC
+
+**** dired-quick-sort
+#+BEGIN_SRC emacs-lisp
+(use-package dired-quick-sort
+  :defer)
+#+END_SRC
+
+
+***** dired
+#+begin_src emacs-lisp
+;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
+#+end_src
+
+****** open in external app
+#+begin_src emacs-lisp
+(defun timu-dired-open-in-external-app (&optional file)
+
+ "Open the current FILE or Dired marked files in external app.
+
+The app is chosen from your OS's preference.
+
+Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
+
+ (interactive)
+
+ (let (doIt (myFileList
+
+       (cond
+
+        ((eq major-mode 'dired-mode)
+
+        (dired-get-marked-files))
+
+        ((not file) (list (buffer-file-name)))
+
+        (file (list file)))))
+
+  (setq doIt (if (<= (length myFileList) 30) t
+
+         (y-or-n-p "Open more than 30 files? ")))
+
+  (when doIt
+
+   (cond
+
+    ((string-equal system-type "windows-nt")
+
+    (mapc (lambda (fPath)
+
+        (w32-shell-execute
+
+         "open" (replace-regexp-in-string "/" "\\" fPath t t)))
+
+       myFileList))
+
+    ((string-equal system-type "darwin")
+
+    (mapc (lambda (fPath)
+
+        (shell-command (format "open \"%s\"" fPath)))
+
+       myFileList))
+
+    ((string-equal system-type "gnu/linux")
+
+    (mapc (lambda (fPath)
+
+        (let ((process-connection-type nil))
+
+         (start-process "" nil "xdg-open" fPath))) myFileList))))))
+
+#+end_src
+
+
+******* dired-preview
+#+begin_src sh
+(add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
+(require 'dired-preview)
+
+#+end_src
+
+
+** nvalt
+#+begin_src emacs-lisp
+(defun nvalt ()
+ "Open the directory in dired and run dired-preview."
+ (interactive)
+
+ (let ((directory "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/"))
+  (dired directory)
+  (dired-preview-mode)))
+
+#+end_src
 
 * counsel-fd
 ** Usage
@@ -8682,26 +8594,6 @@ Only required if Emacs < 29.3.
 #+end_src
 
 
-
-* dired-preview
-#+begin_src sh
-(add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
-(require 'dired-preview)
-
-#+end_src
-
-
-* nvalt
-#+begin_src emacs-lisp
-(defun nvalt ()
- "Open the directory in dired and run dired-preview."
- (interactive)
-
- (let ((directory "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/"))
-  (dired directory)
-  (dired-preview-mode)))
-
-#+end_src
 
 #+begin_src emacs-lisp
 (server-start)
