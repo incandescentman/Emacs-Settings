@@ -2002,14 +2002,6 @@ different → different
       ("s-O" . prelude-open-with)))
 #+END_SRC
 
-* flyspell fix
-#+BEGIN_SRC emacs-lisp
-(setq flyspell-abbrev-p t)
-(setq flyspell-use-global-abbrev-table-p t)
-(setq global-flyspell-mode t)
-#+END_SRC
-
-
 
 
 * mw-thesaurus
