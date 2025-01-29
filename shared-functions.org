@@ -3507,7 +3507,8 @@ Argument REPLACE String used to replace the matched strings in the buffer.
 (define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
 
 
-* If you want Emacs to treat all new files as modified, you can automate the solution like this:
+
+* If you want Emacs to treat all new files as modified, you can automate the solution like this
 #+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
@@ -3906,48 +3907,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 #+END_SRC
 
 
-* hydra helm
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-helm (:hint nil :color pink)
-	"
-									  ╭──────┐
-   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
-  ╭───────────────────────────────────────────────────────────────────────┴──────╯
-	^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
-	^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
-    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
-	^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
-	^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
---------------------------------------------------------------------------------
-	"
-	("<tab>" helm-keyboard-quit "back" :exit t)
-	("<escape>" nil "quit")
-	("\\" (insert "\\") "\\" :color blue)
-	("h" helm-beginning-of-buffer)
-	("j" helm-next-line)
-	("k" helm-previous-line)
-	("l" helm-end-of-buffer)
-	("g" helm-beginning-of-buffer)
-	("G" helm-end-of-buffer)
-	("n" helm-next-source)
-	("p" helm-previous-source)
-	("K" helm-scroll-other-window-down)
-	("J" helm-scroll-other-window)
-	("c" helm-recenter-top-bottom-other-window)
-	("m" helm-toggle-visible-mark)
-	("t" helm-toggle-all-marks)
-	("u" helm-unmark-all)
-	("H" helm-help)
-	("s" helm-buffer-help)
-	("v" helm-execute-persistent-action)
-	("d" helm-persistent-delete-marked)
-	("y" helm-yank-selection)
-	("w" helm-toggle-resplit-and-swap-windows)
-	("f" helm-follow-mode))
-#+END_SRC
-[[https://github.com/abo-abo/hydra/wiki/Helm-2][Helm 2 · abo-abo/hydra Wiki]]
-
-
 
 * fontify list titles
 #+BEGIN_SRC emacs-lisp
@@ -4053,19 +4012,6 @@ It will open the link in Emacs with typing C-c C-o.
     (call-interactively 'sort-lines)))
 #+END_SRC
 
-
-* re-builder large
-#+BEGIN_SRC emacs-lisp
-
-(defun re-builder-large ()
-  "Just like `re-builder', only make the font and window larger."
-  (interactive)
-  (re-builder)
-  (text-scale-increase 5)
-  (set-window-text-height (selected-window) 7))
-
-#+END_SRC
-
 * typewriter mode
 #+BEGIN_SRC emacs-lisp
 (defun typewriter-mode ()
@@ -4113,14 +4059,6 @@ It will open the link in Emacs with typing C-c C-o.
      (dired-move-to-filename))))
 #+END_SRC
 
-* If you want Emacs to treat all new files as modified, you can automate the solution like this
-#+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hooks 'assume-new-is-modified)
-(defun assume-new-is-modified ()
-  (when (not (file-exists-p (buffer-file-name)))
-    (set-buffer-modified-p t)))
-#+END_SRC
-
 * exporting
 ** org-twbs
 #+BEGIN_SRC emacs-lisp
@@ -4130,7 +4068,6 @@ It will open the link in Emacs with typing C-c C-o.
 ; '(org-twbs-indent t)
 
 #+END_SRC
-
 
 
 ** LaTeX
@@ -4207,25 +4144,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 
-* reuse directory buffers
-#+BEGIN_EXAMPLE emacs-lisp
-(load "/Users/jay/emacs/emacs-settings/dired+.el")
-(use-package dired+
-:defer
- :init
- (progn
-  (spacemacs/set-leader-keys
-  "ab" 'diredp-do-bookmark)))
-
-(toggle-diredp-find-file-reuse-dir 1)
-(add-hook 'dired-mode-hook
- (lambda ()
-  (define-key dired-mode-map (kbd "C-<up>")
-    (lambda () (interactive) (find-alternate-file "..")))
-  ; was dired-up-directory
- ))
-#+END_EXAMPLE
-
 
 * open recent directories
 #+BEGIN_SRC emacs-lisp
@@ -4253,44 +4171,6 @@ It will open the link in Emacs with typing C-c C-o.
 #+END_SRC
 
 
-* calc eval region
-#+BEGIN_SRC emacs-lisp
-(defun calc-eval-region (arg)
-  "Evaluate an expression in calc and communicate the result.
-
-If the region is active evaluate that, otherwise search backwards
-to the first whitespace character to find the beginning of the
-expression. By default, replace the expression with its value. If
-called with the universal prefix argument, keep the expression
-and insert the result into the buffer after it. If called with a
-negative prefix argument, just echo the result in the
-minibuffer."
-  (interactive "p")
-  (let (start end)
-(if (use-region-p)
-    (setq start (region-beginning) end (region-end))
-  (progn
-    (setq end (point))
-    (setq start (search-backward-regexp "\\s-\\|\n" 0 1))
-    (setq start (1+ (if start start 0)))
-    (goto-char end)))
-(let ((value (calc-eval (buffer-substring-no-properties start end))))
-  (pcase arg
-    (1 (delete-region start end))
-    (4 (insert " = ")))
-  (pcase arg
-    ((or 1 4) (insert value))
-    (-1 (message value))))))
-#+END_SRC
-
-
-* flycheck
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
-  :defer)
-#+END_SRC
-
-
 * query-replace-duplicate-lines-keep-blanks
 Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-duplicate-lines/20384?noredirect=1#comment31370_20384][replace - how to query-delete-duplicate-lines? - Emacs Stack Exchange]]
 
@@ -4306,7 +4186,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 (setq scroll-margin 25)
 ;; (setq recenter-positions (quote (top middle bottom)))
 #+END_SRC
-
 
 
 
@@ -4329,10 +4208,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
 #+END_SRC
-
-
-
-
 
 
 
@@ -4396,7 +4271,7 @@ cmd)
 (set-mark nil))
 #+END_SRC
 
-*** lines
+
 *** paragraphs
 **** kill whole paragraph
      :PROPERTIES:
@@ -4499,9 +4374,7 @@ cmd)
 #+END_SRC
 
 *** filing
-    :PROPERTIES:
-    :ID:       8DEDEA6E-ED28-46E7-8277-588FE1048EA6
-    :END:
+
 **** refile active region or subtree
 #+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree ()
@@ -4511,18 +4384,6 @@ cmd)
     (org-refile)))
 #+END_SRC
 
-
-* Make Messages Buffer modifiable in Emacs 24.4
-Chen Bin
-
-Insert below code into the beginning of ~/.emacs because any part of .emacs may create Messages Buffer instance.
-
-#+BEGIN_SRC emacs-lisp
-(when (boundp 'messages-buffer-mode-hook)
- (defun messages-buffer-mode-hook-setup ()
- (read-only-mode -1))
- (add-hook 'messages-buffer-mode-hook 'messages-buffer-mode-hook-setup))
-#+END_SRC
 
 * org-config-files-mode
 #+BEGIN_EXAMPLE emacs-lisp
