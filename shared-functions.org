@@ -165,6 +165,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       org2blog/wp-use-tags-as-categories t)
 
 ;; OSX Browse Settings
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
 (setq osx-browse-prefer-background nil
       osx-browse-prefer-browser "com.google.Chrome"
       osx-browse-prefer-new-window t)

@@ -84,35 +84,33 @@ Automatically load abbreviations table:
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
 #+BEGIN_SRC emacs-lisp
-(defvar maxframe-maximized-p nil "maxframe is in fullscreen mode")
+(defvar maxframe-maximized-p nil "Indicates whether maxframe is in fullscreen mode.")
 
 (defun toggle-maxframe ()
-  "Toggle maximized frame"
+  "Toggle maximized frame."
   (interactive)
   (setq maxframe-maximized-p (not maxframe-maximized-p))
-  (cond (maxframe-maximized-p (maximize-frame))
-        (t (restore-frame))))
+  (if maxframe-maximized-p
+      (maximize-frame)
+    (restore-frame)))
 
 (define-key global-map [(s-return)] 'toggle-maxframe)
-;; make it easy to go fullscreen
 
 (defun toggle-fullscreen ()
- "Toggle full screen"
- (interactive)
- (set-frame-parameter
-  nil 'fullscreen
-  (when (not (frame-parameter nil 'fullscreen)) 'fullboth))
-(adjust-font-size-for-all-frames)
-)
+  "Toggle full screen."
+  (interactive)
+  (set-frame-parameter
+   nil 'fullscreen
+   (if (frame-parameter nil 'fullscreen)
+       nil
+     'fullboth))
+  (adjust-font-size-for-all-frames))
 
-;; and the keybinding
+;; Bind F11 and F17 to toggle-fullscreen.
 (unless (fboundp 'toggle-frame-fullscreen)
-  (global-set-key (kbd "<f11>") 'toggle-fullscreen))
-(unless (fboundp 'toggle-frame-fullscreen)
-  (global-set-key (kbd "<f17>") 'toggle-fullscreen))
-
-  (global-set-key (kbd "<f17>") 'toggle-fullscreen)
-
+  (progn
+    (global-set-key (kbd "<f11>") 'toggle-fullscreen)
+    (global-set-key (kbd "<f17>") 'toggle-fullscreen)))
 #+END_SRC
 
 
@@ -578,8 +576,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 #+END_SRC
 
 
-* Custom Key Bindings
-** NOTE-TO-JAY TODO Custom keybindings
+** Custom Key Bindings
+*** NOTE-TO-JAY TODO Custom keybindings
 Eventually replace these with this? https://github.com/noctuid/general.el
 
 
@@ -1200,7 +1198,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-s-r") 'consult-find)
 #+END_SRC
 
-** available key bindings
+*** available key bindings
 #+begin_src emacs-lisp
 ;; (define-key key-minor-mode-map (kbd "s-A") 'available)
 ;; Define the available key bindings
@@ -1222,7 +1220,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 #+end_src
 
-** OSX ⌘ key bindings
+*** OSX ⌘ key bindings
 Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
 #+BEGIN_SRC emacs-lisp
 (defvar gnuemacs-flag (string-match "GNU" (emacs-version)))
@@ -1234,7 +1232,7 @@ Recognize the ⌘ key in both GNU Emacs and Aquamacs as hyper key:
  (define-key key-minor-mode-map (kbd (concat "s-" key)) fun))))
 #+END_SRC
 
-*** mksuper - shared Aquamacs / GNU Emacs keybindings:
+**** mksuper - shared Aquamacs / GNU Emacs keybindings:
 Deprecated in favor of (define-key key-minor-mode-map (kbd "s... in:
 [[/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
 
@@ -1308,6 +1306,7 @@ mkprefix: Key bindings for my own custom functions, using ⌘-m as a prefix:
 
 
 #+END_SRC
+
 
 
 * sentences
@@ -1421,12 +1420,9 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
 
 * Browsing
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-#+END_SRC
 
 ** smart insertion of headings and subheadings
-*** smart-org-meta-return-dwim
+** smart-org-meta-return-dwim
  #+BEGIN_SRC emacs-lisp
 (setq org-blank-before-new-entry
       '((heading . always)
@@ -1525,6 +1521,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
   (current-column)))
 #+END_SRC
 
+* Kill words
 ** kill word correctly
 #+BEGIN_SRC emacs-lisp
 (defun kill-word-correctly ()
@@ -1570,7 +1567,8 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 #+END_SRC
 
 
-* character movement
+
+* Character movement
 #+BEGIN_SRC emacs-lisp
 (defun jay/left-char ()
   "Move point to the left or the beginning of the region.
@@ -1608,6 +1606,7 @@ provided the (transient) mark is active."
 (define-key org-mode-map (kbd "<right>") 'jay/right-char)
 
 #+END_SRC
+
 
 * saveplace
 ;; Save point position between sessions
@@ -1704,13 +1703,8 @@ The last line sets the path to where saveplace stores your position data. Change
 
 * fountain
   #+BEGIN_SRC emacs-lisp
-;; (load-file "/Users/jay/emacs/emacs-settings/fountain-mode.el")
-;; (use-package fountain-mode)
-
-;; (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 (add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1)))
 ;; (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
-
 (add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
 (defcustom fountain-export-default-command
