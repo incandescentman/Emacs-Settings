@@ -214,104 +214,61 @@ I should probably eventually break these out of custom-set-variables and organiz
 * Spellcheck / flyspell
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t; -*-
+
 (use-package flyspell
-:defer
+  :ensure nil  ;; flyspell is built into Emacs, not an external package
+  ;; We don't do :defer t here because :hook already defers loading
+  :hook
+  ((text-mode . flyspell-mode)
+   (org-mode  . flyspell-mode))
+  :bind (:map flyspell-mode-map
+              ;; Example unbinding of C-.
+              ("C-." . nil))
+  :config
+  ;; 1) Put all your variable settings here with `setq` instead of quoting.
+  (setq flyspell-abbrev-p t
+        flyspell-use-global-abbrev-table-p t
+        flyspell-mark-duplications-exceptions
+        '( (nil "that" "had" "really" "very" "much")
+           ("\\`francais" "nous" "vous")))
+  ;; 2) Configure ispell / Hunspell
+  (setq-default ispell-program-name (executable-find "hunspell")
+                ispell-dictionary   "en_US-large"
+                ispell-personal-dictionary "/Users/jay/Library/Spelling/personal.dic"
+                ispell-really-hunspell t)
+  (setenv "DICPATH" (concat (getenv "HOME") "/Library/Spelling"))
+  (setenv "DICTIONARY" "en_US")
 
-:config
-'(flyspell-abbrev-p t)
-'(flyspell-use-global-abbrev-table-p t)
+  ;; 3) If you want to skip Org source blocks, define a small helper function
+  (defun my-org-setup-flyspell ()
+    ;; Ensure we skip code blocks for this buffer
+    (when (derived-mode-p 'org-mode)
+      (make-local-variable 'ispell-skip-region-alist)
+      (add-to-list 'ispell-skip-region-alist
+                   '("^#\\+begin_src" . "^#\\+end_src"))))
+  (add-hook 'org-mode-hook #'my-org-setup-flyspell)
 
-:bind
-(:map flyspell-mode-map
-("C-." . nil)
-)
-)
+  ;; 4) If you sometimes need to fix the contractions, do so:
+  (defun my/fix-ispell-contraction ()
+    "Fix contractions (e.g. shouldn't)."
+    (add-to-list 'ispell-dictionary-alist
+                 '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']"
+                   nil ("-d" "en_US") nil utf-8)))
+  (my/fix-ispell-contraction))
 
-;; Remove any global flyspell-mode settings, and then:
-(add-hook 'text-mode-hook #'flyspell-mode)
-(add-hook 'org-mode-hook  #'flyspell-mode)
-
-(setq flyspell-mark-duplications-exceptions
- (quote
- ((nil "that" "had" "really" "very" "much")
-  ("\\`francais" "nous" "vous"))))
-
-#+END_SRC
-
-** flyspell skip source blocks
-#+BEGIN_SRC emacs-lisp
-;; NO spell check for embedded snippets
-(defun my-org-setup-flyspell ()
-  "Use flyspell in comments and text, but skip code blocks."
-  ;; This ensures code blocks are skipped because `org-mode` sets them
-  ;; as 'org-src-block regions, which `flyspell-prog-mode` ignores.
-  (when (derived-mode-p 'org-mode)
-    (flyspell-mode 1)
-    ;; Also set up ispell skip region for #+BEGIN_SRC blocks if necessary
-    (make-local-variable 'ispell-skip-region-alist)
-    (add-to-list 'ispell-skip-region-alist '("^#\\+begin_src" . "^#\\+end_src"))))
-
-(add-hook 'org-mode-hook 'my-org-setup-flyspell)
-#+END_SRC
-
-
-** Spellcheck add word
-#+BEGIN_SRC emacs-lisp
+;; 5) A helper for adding words to your personal dictionary:
 (defun add-word-to-personal-dictionary ()
   (interactive)
   (let ((current-location (point))
         (word (flyspell-get-word)))
     (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-#+END_SRC
-
-
-** hunspell - workaround
-#+BEGIN_SRC emacs-lisp
-;; Flyspell
-(use-package flyspell
- :ensure nil
- :config
-
-;; Set the path to the Hunspell executable
- (setq-default ispell-program-name (executable-find "hunspell"))
-
-;; Set environment variable `DICPATH` to point to the directory containing the Hunspell dictionaries
-(setenv "DICPATH" (concat (getenv "HOME") "/Library/Spelling"))
-
-;; Set the main dictionary
-(setq ispell-dictionary "en_US-large")
-
-;; Set the personal dictionary to a new name
-(setq ispell-personal-dictionary "/Users/jay/Library/Spelling/personal.dic")
-
-(setq ispell-really-hunspell t)
-
-
-;; below two lines reset the the hunspell so it STOPS querying locale!
-(flyspell-mode 1)
-)
-
-
-
-(defun my/fix-ispell-contraction ()
- "Fixes contractions (e.g. shouldn't) aren't not being checked properly. See https://github.com/casouri/lunarymacs/blob/master/star/checker.el#L44-L49."
- (add-to-list 'ispell-dictionary-alist
-        '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
-)
-
-
-
-(setenv "DICTIONARY" "en_US")
-;; Add the Line: If you want to ensure that the "en_US" dictionary is used globally outside of Emacs.
-;; Skip the Line: If only Emacs's internal spell-checking needs to be configured.
-
-;; (setq ispell-program-name "hunspell")
-
-;; (setq ispell-local-dictionary "en_US") ; "en_US" is key to lookup in `ispell-local-dictionary-alist`
-;; (setq ispell-local-dictionary-alist
-;;  '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-
+      (flyspell-do-correct 'save nil
+                           (car word)
+                           current-location
+                           (cadr word)
+                           (caddr word)
+                           current-location))))
 
 #+END_SRC
 
@@ -3169,7 +3126,7 @@ I rely and paredit and formatting to keep my parenthesis honest, and for the mos
 
 The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 ;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
@@ -3178,7 +3135,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
-#+END_SRC
+#+END_EXAMPLE
 
 
 * contract-contractions
