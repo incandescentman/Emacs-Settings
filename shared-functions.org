@@ -11,6 +11,53 @@
 ;; (user-full-name)
 
 
+* New structure
+
+* Intro / About
+- Quick details about system, build, etc.
+
+* Package & Load Paths
+** package archives
+** use-package verbosity
+** use-package blocks
+
+* General Emacs Settings
+** Basic variables
+** Startup, UI, and appearance
+** Minor modes
+
+* Org-Specific Config
+** Basic org settings
+** org capture
+** org agenda
+** org export
+** Flyspell skip source blocks
+** Archiving / hooking
+
+* Writing Environment
+** Spellcheck / flyspell
+** Visual line, auto-fill
+** Typographic replacements
+** Misc
+
+* Utility Functions
+** my/with-advice
+** HTML to Org conversions
+** copy/cut region to other window
+** advanced replacements
+** searching
+** etc.
+
+* Local Variables & The End
+#+BEGIN_SRC
+# Local Variables:
+# enable-local-eval: t
+# eval: (my-org-config-mode 1)
+# End:
+#+END_SRC
+
+
+
 * file settings                                                     :ARCHIVE:
 #+OPTIONS: f:t
 
