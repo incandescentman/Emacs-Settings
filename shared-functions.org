@@ -97,9 +97,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; Deft Settings
 (setq deft-directory "~/Dropbox/writing/notationaldata/")
 
-; dired Settings
-(setq dired-clean-up-buffers-too nil
-      dired-kept-versions 8)
 
 ;; Edit Server Settings
 (setq edit-server-default-major-mode 'org-mode
@@ -194,7 +191,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; (setq org-agenda-timegrid-use-ampm t)
 ;; (setq tramp-default-method "ssh")
 ;; (setq visual-line-mode nil t)
-;; (setq dired-details-hidden-string "")
 ;; (setq org-list-indent-offset 3)
 #+END_SRC
 
@@ -6830,6 +6826,34 @@ Here's an adaptation of dired-create-directory. It works the same way, so as wel
 
 
 #+BEGIN_SRC emacs-lisp
+
+; dired Settings
+(setq dired-clean-up-buffers-too nil
+      dired-kept-versions 8)
+
+
+
+;; (use-package dired-details+)
+
+
+
+;; (defadvice dired-readin
+;;     (after dired-after-updating-hook first () activate)
+;;   "Sort dired listings with directories first before adding marks."
+;;   (mydired-sort)
+;;   (let ((dired-details-internal-overlay-list  ())) (dired-details-hide)))
+
+(defcustom dired-details-hidden-string ""
+  "*This string will be shown in place of file details and symbolic links."
+  :group 'dired-details
+  :type 'string)
+
+(defcustom dired-details-initially-hide t
+  "*Hide dired details on entry to dired buffers."
+  :group 'dired-details
+  :type 'boolean)
+
+
        (defun my-dired-create-file (file)
          "Create a file called FILE.
   If FILE already exists, signal an error."
