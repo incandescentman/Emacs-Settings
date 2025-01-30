@@ -11,60 +11,12 @@
 ;; (user-full-name)
 
 
-* New structure
 
-* Intro / About
-- Quick details about system, build, etc.
-
-* Package & Load Paths
-** package archives
-** use-package verbosity
-** use-package blocks
-
-* General Emacs Settings
-** Basic variables
-** Startup, UI, and appearance
-** Minor modes
-
-* Org-Specific Config
-** Basic org settings
-** org capture
-** org agenda
-** org export
-** Flyspell skip source blocks
-** Archiving / hooking
-
-* Writing Environment
-** Spellcheck / flyspell
-** Visual line, auto-fill
-** Typographic replacements
-** Misc
-
-* Utility Functions
-** my/with-advice
-** HTML to Org conversions
-** copy/cut region to other window
-** advanced replacements
-** searching
-** etc.
-
-* Local Variables & The End
-#+BEGIN_SRC
-# Local Variables:
-# enable-local-eval: t
-# eval: (my-org-config-mode 1)
-# End:
-#+END_SRC
-
-
-
-* file settings                                                     :ARCHIVE:
+* Intro / About:ARCHIVE:
 #+OPTIONS: f:t
-
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
 
-* About
 - System: Mac OSX Sierra version 13.1
 - Emacs version: Emacs 28.2 (Carbon Version)
 - Spacemacs version 0.999.0
@@ -75,12 +27,8 @@
 - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
 - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
 
-* Packages
-** lexical binding
-#+begin_SRC emacs-lisp
-(setq lexical-binding t)
-#+end_SRC
-** Load the proper repositories
+* Package & Load Paths
+** Load the proper repositories (package archives)
 #+BEGIN_SRC emacs-lisp
 ;; Set package archives
 (setq package-archives
@@ -91,28 +39,23 @@
 (package-initialize)
 #+END_SRC
 
-** Load some of my packages:
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/emacs/emacs-settings/")
-#+END_SRC
-
-** Control use-package verbosity
+** use-package verbosity
 #+begin_src emacs-lisp
 (setq use-package-verbose nil) ;; Set to t for debugging
 #+end_src
 
-** some org packages
+** use-package blocks
 #+BEGIN_SRC emacs-lisp
 (use-package ox-LaTeX
 :defer
   )
 (use-package ox-html
   :defer)
-
 #+END_SRC
 
-
-* Setting variables
+* General Emacs Settings
+** Basic variables
+*** Setting variables
 I should probably eventually break these out of custom-set-variables and organize them according to their function.
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t -*-
@@ -254,6 +197,309 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; (setq dired-details-hidden-string "")
 ;; (setq org-list-indent-offset 3)
 #+END_SRC
+
+
+** Startup, UI, and appearance
+
+
+** fontify item checklists
+[[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
+
+#+BEGIN_SRC emacs-lisp
+(font-lock-add-keywords
+ 'org-mode
+ `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
+ 'append)
+#+END_SRC
+
+** Minor modes
+
+* Org-Specific Config
+** Basic org settings
+** org setup
+** Some favorite ~org~ settings:
+#+BEGIN_SRC emacs-lisp
+  ; (setq org-use-property-inheritance t)
+  (setq org-ctrl-k-protect-subtree t)
+  (setq org-fontify-quote-and-verse-blocks t)
+  ;; blank lines before new headings
+  (setq org-blank-before-new-entry
+        '((heading . always)
+         (plain-list-item . nil)))
+  (setq org-return-follows-link t)
+
+  ;; leave an empty line between folded subtrees
+  (setq org-cycle-separator-lines 1)
+
+  (setq org-support-shift-select (quote always))
+
+#+END_SRC
+
+** org capture
+** org agenda
+
+** org-export
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-smart-quotes t)
+(setq org-export-exclude-tags (quote ("noexport" "extra")))
+
+;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/neo.css'>")
+(setq org-export-time-stamp-file nil)
+(setq org-export-with-clocks t)
+(setq org-export-with-drawers t)
+(setq org-export-with-section-numbers nil)
+(setq org-export-with-timestamps (quote active))
+(setq org-export-with-toc nil)
+
+ (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ (setq org-export-date-timestamp-format "%B %d, %Y")
+
+ (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
+
+;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
+
+(setq org-latex-default-class "elegant")
+
+(setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
+
+
+;; (setq org-export-html-style-include-default t)
+ (setq org-export-latex-date-format "%d %B %Y.")
+ (setq org-export-latex-emphasis-alist (quote (("*" "\\textit{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+;; (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+;; (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+ (setq org-export-with-clocks t)
+ (setq org-export-with-drawers t)
+ (setq org-export-with-section-numbers nil)
+(setq org-export-with-planning nil)
+(setq org-export-allow-bind-keywords t)
+;; (setq org-export-blocks-witheld (quote (hidden)) t)
+(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+(setq org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
+     ("/" "\\textit{%s}" nil)
+     ("_" "\\underline{%s}" nil)
+     ("+" "\\st{%s}" nil)
+     ("=" "\\verb" t)
+     ("~" "\\verb" t))))
+
+(setq org-html-footnotes-section
+   "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>")
+
+(setq org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
+     (code . verb)
+     (italic . "\\textit{%s}")
+     (strike-through . "\\sout{%s}")
+     (underline . "\\uline{%s}")
+     ;; (verbatim . protectedtext)
+     )))
+
+(setq org-latex-toc-command "\\tableofcontents
+\\newpage
+")
+
+(setq safe-local-variable-values (quote    ((eval when
+    (fboundp
+     (quote rainbow-mode))
+    (rainbow-mode 1)))))
+
+(setq org-html-footnotes-section "<div id=\"footnotes\">
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"footnote\">
+%s
+</div>
+</div>")
+
+(setq org-html-head-include-default-style nil)
+(setq org-html-head-include-scripts nil)
+(setq org-html-html5-fancy t)
+(setq org-html-doctype "html5")
+(setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
+(setq org-html-postamble nil)
+(setq org-html-text-markup-alist
+   (quote
+    ((bold . "<strong>%s</strong>")
+     (code . "<code>%s</code>")
+     (italic . "<em>%s</em>")
+     (strike-through . "<del>%s</del>")
+     (underline . "<span class=\"underline\">%s</span>")
+     (verbatim . "<code>%s</code>"))))
+(setq org-html-toplevel-hlevel 2)
+
+
+#+END_SRC
+
+
+
+*** org-html-export-to-html-and-open
+I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
+
+ (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
+
+The post-processing step is handed the path to your new file; you could use something as straight-forward as `find-file`:
+
+#+BEGIN_SRC emacs-lisp
+  (defun org-html-export-to-html-and-open
+   (&optional async subtreep visible-only body-only ext-plist)
+   (interactive)
+(let* ((outfile (org-export-output-file-name ".html" subtreep)))
+    (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
+#+END_SRC
+
+*** Change section numbering depending on what export format I use
+Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
+
+Note: disable this when trying to export to org-html-themes!
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+(plist-put plist :with-toc t) ; yes TOC in LaTeX
+;; (plist-put plist :with-toc nil); no TOC in latex
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+#+END_EXAMPLE
+
+#+begin_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (backend)
+  (cond
+   ((equal backend 'html)
+    (setq org-html-with-toc nil)
+    (setq org-html-section-numbers nil))
+   ((equal backend 'latex)
+    (setq org-latex-with-toc nil)
+    (setq org-latex-section-numbers t)))
+  nil)
+
+(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp
+(defun my-org-export-change-options (plist backend)
+ (cond
+  ((equal backend 'html)
+  (plist-put plist :with-toc nil)
+  (plist-put plist :section-numbers nil))
+  ((equal backend 'latex)
+  (plist-put plist :with-toc nil)
+  (plist-put plist :section-numbers t)))
+ plist)
+
+;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+
+#+end_src
+
+*** export with drawers
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-drawers t)
+(defun jbd-org-export-format-drawer (name content)
+  "Export drawers to drawer HTML class."
+  (setq content (org-remove-indentation content))
+  (format "@<div class=\"drawer\">%s@</div>\n" content))
+(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
+
+#+END_SRC
+
+*** Omit headlines tagged with :ignore: --- but do still export the text in that section
+This is so I can do structure headlines, for myself, that aren't part of the actual article text.
+
+Pretty cool actually. Leaving it in.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-extra
+)
+(ox-extras-activate '(ignore-headlines))
+#+END_SRC
+
+Works!
+
+*** correct org-mode export
+#+BEGIN_SRC emacs-lisp
+(defun org-repair-export-blocks ()
+ "Repair export blocks and INCLUDE keywords in current buffer."
+ (interactive)
+ (when (eq major-mode 'org-mode)
+  (let ((case-fold-search t)
+     (back-end-re (regexp-opt
+            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
+             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
+            t)))
+   (org-with-wide-buffer
+    (goto-char (point-min))
+    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
+     (save-excursion
+      (while (re-search-forward block-re nil t)
+       (let ((element (save-match-data (org-element-at-point))))
+        (when (eq (org-element-type element) 'special-block)
+         (save-excursion
+          (goto-char (org-element-property :end element))
+          (save-match-data (search-backward "_"))
+          (forward-char)
+          (insert "EXPORT")
+          (delete-region (point) (line-end-position)))
+         (replace-match "EXPORT \\1" nil nil nil 1))))))
+    (let ((include-re
+       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
+     (while (re-search-forward include-re nil t)
+      (let ((element (save-match-data (org-element-at-point))))
+       (when (and (eq (org-element-type element) 'keyword)
+            (string= (org-element-property :key element) "INCLUDE"))
+        (replace-match "EXPORT \\1" nil nil nil 1)))))))))
+#+END_SRC
+
+** Flyspell skip source blocks
+** Archiving / hooking
+
+* Writing Environment
+** Spellcheck / flyspell
+** Visual line, auto-fill
+** Typographic replacements
+** Misc
+
+* Utility Functions
+** my/with-advice
+** HTML to Org conversions
+** copy/cut region to other window
+** advanced replacements
+** searching
+** etc.
+
+* Local Variables & The End
+#+BEGIN_SRC
+# Local Variables:
+# enable-local-eval: t
+# eval: (my-org-config-mode 1)
+# End:
+#+END_SRC
+
+
+
+* About
+
+* Packages
+** lexical binding
+#+begin_SRC emacs-lisp
+(setq lexical-binding t)
+#+end_SRC
+
+** Load some of my packages:
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/emacs/emacs-settings/")
+#+END_SRC
+
+** Control use-package verbosity
+
+** some org packages
+
 
 
 * The Writing Environment
@@ -727,35 +973,6 @@ read-file-name-completion-ignore-case t)
 #+END_SRC
 
 * org-mode
-** org setup
-*** Some favorite ~org~ settings:
-#+BEGIN_SRC emacs-lisp
-  ; (setq org-use-property-inheritance t)
-  (setq org-ctrl-k-protect-subtree t)
-  (setq org-fontify-quote-and-verse-blocks t)
-  ;; blank lines before new headings
-  (setq org-blank-before-new-entry
-        '((heading . always)
-         (plain-list-item . nil)))
-  (setq org-return-follows-link t)
-
-  ;; leave an empty line between folded subtrees
-  (setq org-cycle-separator-lines 1)
-
-  (setq org-support-shift-select (quote always))
-
-#+END_SRC
-
-
-*** fontify item checklists
-[[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
-
-#+BEGIN_SRC emacs-lisp
-(font-lock-add-keywords
- 'org-mode
- `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
- 'append)
-#+END_SRC
 
 ** org custom functions
 *** archiving
@@ -771,6 +988,7 @@ read-file-name-completion-ignore-case t)
 	   org-archive-location)))
     ad-do-it))
 #+END_SRC
+
 *** org-mode speed commands
 #+BEGIN_SRC emacs-lisp
 (setq org-use-speed-commands t)
@@ -794,102 +1012,6 @@ read-file-name-completion-ignore-case t)
                                       ("Z" . ignore))))
 #+END_SRC
 
-** org-export
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-smart-quotes t)
-(setq org-export-exclude-tags (quote ("noexport" "extra")))
-
-;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/neo.css'>")
-(setq org-export-time-stamp-file nil)
-(setq org-export-with-clocks t)
-(setq org-export-with-drawers t)
-(setq org-export-with-section-numbers nil)
-(setq org-export-with-timestamps (quote active))
-(setq org-export-with-toc nil)
-
- (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
- (setq org-export-date-timestamp-format "%B %d, %Y")
-
- (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
-
-;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
-
-(setq org-latex-default-class "elegant")
-
-(setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
-
-
-;; (setq org-export-html-style-include-default t)
- (setq org-export-latex-date-format "%d %B %Y.")
- (setq org-export-latex-emphasis-alist (quote (("*" "\\textit{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- (setq org-export-with-clocks t)
- (setq org-export-with-drawers t)
- (setq org-export-with-section-numbers nil)
-(setq org-export-with-planning nil)
-(setq org-export-allow-bind-keywords t)
-;; (setq org-export-blocks-witheld (quote (hidden)) t)
-(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
-(setq org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
-     ("/" "\\textit{%s}" nil)
-     ("_" "\\underline{%s}" nil)
-     ("+" "\\st{%s}" nil)
-     ("=" "\\verb" t)
-     ("~" "\\verb" t))))
-
-(setq org-html-footnotes-section
-   "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
-
-(setq org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
-     (code . verb)
-     (italic . "\\textit{%s}")
-     (strike-through . "\\sout{%s}")
-     (underline . "\\uline{%s}")
-     ;; (verbatim . protectedtext)
-     )))
-
-(setq org-latex-toc-command "\\tableofcontents
-\\newpage
-")
-
-(setq safe-local-variable-values (quote    ((eval when
-	   (fboundp
-	    (quote rainbow-mode))
-	   (rainbow-mode 1)))))
-
-(setq org-html-footnotes-section "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
-
-(setq org-html-head-include-default-style nil)
-(setq org-html-head-include-scripts nil)
-(setq org-html-html5-fancy t)
-(setq org-html-doctype "html5")
-(setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
-(setq org-html-postamble nil)
-(setq org-html-text-markup-alist
-   (quote
-    ((bold . "<strong>%s</strong>")
-     (code . "<code>%s</code>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
-(setq org-html-toplevel-hlevel 2)
-
-
-#+END_SRC
-
-
 ** latex images
 #+BEGIN_SRC emacs-lisp
 
@@ -904,127 +1026,6 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 
 #+BEGIN_SRC emacs-lisp
 (setq org-highlight-latex-and-related '(latex))
-#+END_SRC
-
-** org-html-export-to-html-and-open
-I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
-
- (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
-
-The post-processing step is handed the path to your new file; you could use something as straight-forward as `find-file`:
-
-#+BEGIN_SRC emacs-lisp
-  (defun org-html-export-to-html-and-open
-   (&optional async subtreep visible-only body-only ext-plist)
-   (interactive)
-(let* ((outfile (org-export-output-file-name ".html" subtreep)))
-    (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
-#+END_SRC
-
-** Change section numbering depending on what export format I use
-Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
-
-Note: disable this when trying to export to org-html-themes!
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-(plist-put plist :with-toc t) ; yes TOC in LaTeX
-;; (plist-put plist :with-toc nil); no TOC in latex
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
-
-#+begin_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (backend)
-  (cond
-   ((equal backend 'html)
-    (setq org-html-with-toc nil)
-    (setq org-html-section-numbers nil))
-   ((equal backend 'latex)
-    (setq org-latex-with-toc nil)
-    (setq org-latex-section-numbers t)))
-  nil)
-
-(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp
-(defun my-org-export-change-options (plist backend)
- (cond
-  ((equal backend 'html)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers nil))
-  ((equal backend 'latex)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers t)))
- plist)
-
-;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-
-#+end_src
-
-*** export with drawers
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-drawers t)
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-
-#+END_SRC
-
-*** Omit headlines tagged with :ignore: --- but do still export the text in that section
-This is so I can do structure headlines, for myself, that aren't part of the actual article text.
-
-Pretty cool actually. Leaving it in.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ox-extra
-)
-(ox-extras-activate '(ignore-headlines))
-#+END_SRC
-
-Works!
-
-*** correct org-mode export
-#+BEGIN_SRC emacs-lisp
-(defun org-repair-export-blocks ()
- "Repair export blocks and INCLUDE keywords in current buffer."
- (interactive)
- (when (eq major-mode 'org-mode)
-  (let ((case-fold-search t)
-     (back-end-re (regexp-opt
-            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
-             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
-            t)))
-   (org-with-wide-buffer
-    (goto-char (point-min))
-    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
-     (save-excursion
-      (while (re-search-forward block-re nil t)
-       (let ((element (save-match-data (org-element-at-point))))
-        (when (eq (org-element-type element) 'special-block)
-         (save-excursion
-          (goto-char (org-element-property :end element))
-          (save-match-data (search-backward "_"))
-          (forward-char)
-          (insert "EXPORT")
-          (delete-region (point) (line-end-position)))
-         (replace-match "EXPORT \\1" nil nil nil 1))))))
-    (let ((include-re
-       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
-     (while (re-search-forward include-re nil t)
-      (let ((element (save-match-data (org-element-at-point))))
-       (when (and (eq (org-element-type element) 'keyword)
-            (string= (org-element-property :key element) "INCLUDE"))
-        (replace-match "EXPORT \\1" nil nil nil 1)))))))))
 #+END_SRC
 
 ** org-mode key bindings:
@@ -1047,13 +1048,6 @@ Works!
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-#+END_SRC
-
-** org stuck projects (?)
-Defining stuck projects as todos that do not contain "scheduled" or
-"deadline". See also [[http://www.gnu.org/software/emacs/manual/html_node/org/Stuck-projects.html][here]].
-#+BEGIN_SRC emacs-lisp
-;; (setq org-stuck-projects      '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 #+END_SRC
 
 ** org settings
