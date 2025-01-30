@@ -202,6 +202,32 @@ I should probably eventually break these out of custom-set-variables and organiz
 ** Startup, UI, and appearance
 
 
+** Appearance
+#+begin_src emacs-lisp
+
+
+(defun adjust-font-size-for-all-frames (&optional frame)
+ (interactive)
+ (dolist (monitor (display-monitor-attributes-list))
+ (dolist (frame (cdr (assoc 'frames monitor)))
+  (if (> (frame-pixel-width frame) 2540)
+(set-face-attribute 'default frame :font "Monaco" :height 230)
+;; (restore-to-two-thirds-size-and-position)
+
+  (set-face-attribute 'default frame :font "Monaco" :height 200)))))
+
+;; The function is also invoked automatically when a new frame is created or when invoked manually.
+
+(add-hook 'after-make-frame-functions 'adjust-font-size-for-all-frames)
+(add-hook 'server-after-make-frame-hook 'adjust-font-size-for-all-frames)
+
+;; Additionally, the function is bound to the keyboard shortcut C-x C-\,
+;; so it can be quickly invoked without entering M-x.
+;; Uncomment the following line to enable this shortcut.
+;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames)
+
+#+end_src
+
 ** fontify item checklists
 [[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
 
@@ -7495,41 +7521,42 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
     (insert (mapconcat 'identity numbered-strings "\n"))))
 #+end_src
 
+* indirect buffers
 
-* clone-indirect-buffer-new-window-without-focus
+** clone-indirect-buffer-new-window-without-focus
 #+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-without-focus ()
+  "Clone the current buffer to another window *but keep focus* in the original window."
   (interactive)
-  (let ((current-buffer (current-buffer)))
-    (split-window-right)
-    (set-window-buffer (next-window) (clone-indirect-buffer nil nil))
-    (with-current-buffer (window-buffer (next-window))
-      (when (derived-mode-p 'org-mode)
-        (org-narrow-to-subtree)))
-; (other-window 1)
-    ))
+  (let ((original-window (selected-window)))
+    ;; This built-in command automatically creates an indirect buffer
+    ;; for the current buffer, displays it in another window,
+    ;; and SELECTS that new window.
+    (clone-indirect-buffer-other-window nil t)
+
+    ;; If you want to narrow in Org mode:
+    (when (derived-mode-p 'org-mode)
+      (org-narrow-to-subtree))
+
+    ;; Now go back to the original window:
+    (select-window original-window)))
 #+end_src
 
-* clone-indirect-buffer-new-window-and-focus
+** clone-indirect-buffer-new-window-and-focus
 #+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-and-focus ()
+  "Clone the current buffer to another window and KEEP focus in the new window."
   (interactive)
-  (let ((current-buffer (current-buffer)))
-    (split-window-right)
-    (set-window-buffer (next-window) (clone-indirect-buffer nil nil))
-    (with-current-buffer (window-buffer (next-window))
-      (when (derived-mode-p 'org-mode)
-        (org-narrow-to-subtree)))
-    (other-window 1)))
+  ;; This will automatically create and select the new indirect buffer in another window
+  (clone-indirect-buffer-other-window nil t)
+
+  ;; Narrow if you wish:
+  (when (derived-mode-p 'org-mode)
+    (org-narrow-to-subtree))
+  ;; Because clone-indirect-buffer-other-window already selects the new buffer,
+  ;; you don't need to do anything else to maintain focus there.
+)
 #+end_src
-
-* chatgpt2org
-#+BEGIN_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/Users/jay/Dropbox/github/chatGPT2org/")
-(use-package chatgpt2org
-
-  )
-#+END_EXAMPLE
 
 
 
@@ -7625,70 +7652,6 @@ c: cook-ideas-over-time\n")))
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
 #+END_EXAMPLE
-
-* Embiggen font size when I'm using my 4k monitor
-This function dynamically adjusts the font size based on the frame width.
-It's designed to handle a setup where Emacs is used on two monitors with different resolutions, an external monitor and a MacBook screen.
-
-#+begin_EXAMPLE emacs-lisp
-(defun adjust-font-size-based-on-frame-size (&optional frame)
-  "Check the frame width and adjust the font size accordingly.
-
-If the frame width is greater than 3840 pixels, which is typically the case when Emacs is
-displayed on the external monitor, set the font to 'Monaco' and size to 28pt.
-
-If the frame width is 3840 pixels or less, which is typically the case when Emacs is displayed
-on the MacBook screen, set the font to 'Monaco' and size to 13pt."
-
-  (interactive)
-  (unless frame
-    (setq frame (selected-frame)))
-  (if (> (frame-pixel-width frame) 2540) ; The frame width when displayed on the external monitor
-      (set-face-attribute 'default nil :font "Monaco" :height 280) ; Big monitor settings - 28pt
-    (set-face-attribute 'default nil :font "Monaco" :height 200))) ; Laptop settings - 13pt
-
-(add-hook 'after-make-frame-functions 'adjust-font-size-based-on-frame-size)
-(add-hook 'server-after-make-frame-hook 'adjust-font-size-based-on-frame-size)
-#+END_EXAMPLE
-
-The function above and the function below are doing largely the same task - adjusting the font size based on the frame width - but there are some differences in their design that may provide advantages in certain scenarios:
-
-Applying to All Frames: The main difference is that adjust-font-size-for-all-frames applies the changes to all frames associated with every monitor, while adjust-font-size-based-on-frame-size applies the changes only to the selected frame. If you're using a multi-monitor setup or using multiple frames in a single Emacs session, adjust-font-size-for-all-frames would ensure that all frames adjust their font sizes accordingly.
-
-The main advantage of ~adjust-font-size-for-all-frames~ is applying the font size changes to all frames, not just the selected one. However, if you typically use only a single frame, this advantage may not matter for you, and you could continue using ~adjust-font-size-based-on-frame-size~.
-
-
-** Adjust-font-size-for-all-frames function
-This function dynamically adjusts the font size of all frames based on their width. The function works as follows:
-1. It iterates over all available monitors.
-2. For each monitor, it iterates over all the frames displayed on that monitor.
-3. If the width of a frame is greater than 2540 pixels, which is typically the case for an external monitor, it sets the font for that frame to 'Monaco' and the size to 28 points.
-4. If the width of a frame is 2540 pixels or less, which is typically the case for the MacBook screen, it sets the font for that frame to 'Monaco' and the size to 20 points (represented as :height 200 in the function).
-
-The function is interactive, so it can be invoked manually.
-
-#+begin_src emacs-lisp
-(defun adjust-font-size-for-all-frames (&optional frame)
- (interactive)
- (dolist (monitor (display-monitor-attributes-list))
- (dolist (frame (cdr (assoc 'frames monitor)))
-  (if (> (frame-pixel-width frame) 2540)
-(set-face-attribute 'default frame :font "Monaco" :height 230)
-;; (restore-to-two-thirds-size-and-position)
-
-  (set-face-attribute 'default frame :font "Monaco" :height 200)))))
-
-;; The function is also invoked automatically when a new frame is created or when invoked manually.
-
-(add-hook 'after-make-frame-functions 'adjust-font-size-for-all-frames)
-(add-hook 'server-after-make-frame-hook 'adjust-font-size-for-all-frames)
-
-;; Additionally, the function is bound to the keyboard shortcut C-x C-\,
-;; so it can be quickly invoked without entering M-x.
-;; Uncomment the following line to enable this shortcut.
-;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames)
-
-#+end_src
 
 
 ** auto-link notes
@@ -8473,7 +8436,7 @@ Only required if Emacs < 29.3.
 * server start
 #+begin_src emacs-lisp
 (add-hook 'after-init-hook 'server-start)
-(server-start)
+;; (server-start)
 #+end_src
 
 * org-transclusion
