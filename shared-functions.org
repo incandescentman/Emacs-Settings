@@ -1,7 +1,7 @@
 # Local Variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
-# eval: (my-org-config-mode 1)
+# eval: (org-config-files-local-mode 1)
 # End:
 
 ;; -*- lexical-binding: t -*-
@@ -495,14 +495,6 @@ Works!
 ** advanced replacements
 ** searching
 ** etc.
-
-* Local Variables & The End
-#+BEGIN_SRC
-# Local Variables:
-# enable-local-eval: t
-# eval: (my-org-config-mode 1)
-# End:
-#+END_SRC
 
 
 
@@ -4125,16 +4117,20 @@ cmd)
 
 
 * org-config-files-mode
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (define-minor-mode org-config-files-local-mode
   "Minor mode for editing configuration files in org-mode."
-  :init-value nil)
-(define-key org-config-files-local-mode-map (kbd "<SPC>") 'insert-space)
-(setq abbrev-mode nil) )
-
-You can toggle it in necessary files by setting the local variables section at the end of the file as follows. You can also change or add the keybinding here. You will still need to define different minor modes for each buffer that maps the same key-sequence to different commands.
-
-#+END_EXAMPLE
+  :init-value nil
+  :lighter " OrgCfg"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "<SPC>") 'insert-space)
+            map)
+  (if org-config-files-local-mode
+      (progn
+        ;; When enabling, set any additional buffer-local variables
+        (setq-local abbrev-mode nil))
+    (kill-local-variable 'abbrev-mode)))
+#+END_SRC
 
 * yasnippet fixes
 #+BEGIN_SRC emacs-lisp
