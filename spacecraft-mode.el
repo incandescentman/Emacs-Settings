@@ -821,7 +821,7 @@ Also converts full stops to commas."
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (smart-expand)
@@ -926,6 +926,8 @@ Also converts full stops to commas."
         (setq auto-capitalize--cap-next-word nil)))))))
 
 (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+
+(define-key org-mode-map (kbd ".") 'smart-period)
 
 (defun smart-comma ()
   (interactive)
