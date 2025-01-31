@@ -1,5 +1,4 @@
 # Local Variables:
-# org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
@@ -4125,6 +4124,7 @@ cmd)
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "<SPC>") 'insert-space)
             map)
+  (message "org-config-files-local-mode is now %s" org-config-files-local-mode)
   (if org-config-files-local-mode
       (progn
         ;; When enabling, set any additional buffer-local variables
@@ -8765,7 +8765,11 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 #+end_src
 
 
-* Captain
-#+begin_src emacs-lisp
-
-#+end_src
+* Local Variables & The End
+#+BEGIN_SRC
+# Local Variables:
+# org-config-files-local-mode: t
+# enable-local-eval: t
+# eval: (org-config-files-local-mode 1)
+# End:
+#+END_SRC
