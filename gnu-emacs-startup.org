@@ -180,6 +180,20 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** pasteboard-copy
 #+BEGIN_SRC emacs-lisp
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
+  "Copy to the macOS pasteboard using a command selected by the current mode.
+When working with prose (in `org-mode` without `org-config-files-local-mode`
+or in `text-mode`), call `pasteboard-copy-and-replace-em-dashes-in-clipboard`
+so that dash sequences are replaced with em dashes.
+When working with code (any mode other than `org-mode` or in `org-mode`
+with `org-config-files-local-mode` active), call `pasteboard-copy` to copy verbatim."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-copy-and-replace-em-dashes-in-clipboard)
+    (pasteboard-copy)))
+
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
   (interactive)
@@ -190,20 +204,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 ** and replace em dashes
 #+begin_src emacs-lisp
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS system pasteboard, replacing all occurrences of '---' and '--' with em dashes only in the clipboard text."
-  (interactive)
-  (if (use-region-p)
-      (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
-             ;; Perform replacements on the copied text
-             (txt (replace-regexp-in-string "---" "—" txt))
-             (txt (replace-regexp-in-string "--" "—" txt)))
-        ;; Send the modified text to the system clipboard
-        (with-temp-buffer
-          (insert txt)
-          (shell-command-on-region (point-min) (point-max) "pbcopy"))
-        (message "Text with em dashes copied to macOS pasteboard"))
-    (message "No region selected")))
 
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
   "Copy selected region to macOS system pasteboard.
@@ -223,8 +223,8 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
             (message "Copied text verbatim."))
         ;; Otherwise do the dash replacements
         (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
-               (txt (replace-regexp-in-string "---" "---" txt))
-               (txt (replace-regexp-in-string "--" "---" txt)))
+               (txt (replace-regexp-in-string "---" "—" txt))
+               (txt (replace-regexp-in-string "--" "—" txt)))
           (with-temp-buffer
             (insert txt)
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
@@ -344,9 +344,34 @@ use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-
       (member next-char char-set))
     (pasteboard-paste-no-spaces)
    (pasteboard-paste-without-smart-quotes))))
+
+(defun pasteboard-paste-spaces-maybe ()
+  "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
+
+In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`),
+always use `pasteboard-paste-without-smart-quotes`.
+
+In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
+use the existing logic: if the character before or after point is in a predefined set,
+use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-quotes`."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      ;; Prose: always use without-smart-quotes.
+      (pasteboard-paste-without-smart-quotes)
+    ;; Code: use the original logic.
+    (let* ((prev-char (char-before))
+           (next-char (char-after))
+           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+           (use-no-spaces (or (member prev-char char-set)
+                              (member next-char char-set))))
+      (if use-no-spaces
+          (pasteboard-paste-no-spaces)
+        (pasteboard-paste-without-smart-quotes)))))
     #+END_SRC
 
-*** pasteboard-paste-no-spaces - original working version
+*** pasteboard-paste-no-spaces
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-no-spaces ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -914,7 +939,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
 (define-key key-minor-mode-map (kbd "s-x") 'pasteboard-cut-and-capitalize)
-(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe)
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-spaces-maybe)
 
