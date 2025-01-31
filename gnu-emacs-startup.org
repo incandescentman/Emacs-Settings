@@ -834,7 +834,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-r") 'counsel-recentf)
 
-(define-key key-minor-mode-map (kbd "M-.") 'smart-period)
+(define-key key-minor-mode-map (kbd "M-.") 'insert-period)
 (define-key key-minor-mode-map (kbd "M-,") 'insert-comma)
 
 
