@@ -1,3 +1,93 @@
+(defun downcase-or-endless-downcase ()
+(interactive)
+(if
+
+; If
+(or
+(looking-back "\\.\\.\\.[ ]*[\n\t ]*")
+(looking-back "i.e.[ ]*")
+(looking-back "[0-9]\.[ ]*")
+(looking-back "e.g.[ ]*")
+(looking-back "vs.[ ]*")
+(looking-back "U.K.[ ]*")
+(looking-back "U.S.[ ]*")
+(looking-back "vs.[ ]*")
+(looking-back "^")
+)
+    (call-interactively 'downcase-word); then
+    (call-interactively 'endless/downcase); else
+
+)
+)
+
+(defun endless/convert-punctuation (rg rp)
+  "Look for regexp RG around point, and replace with RP.
+Only applies to text-mode."
+  (let ((f "\\(%s\\)\\(%s\\)")
+        (space "?:[[:blank:]\n\r]*"))
+    ;; We obviously don't want to do this in prog-mode.
+    (if (and (derived-mode-p 'text-mode)
+             (or (looking-at (format f space rg))
+                 (looking-back (format f rg space))))
+        (replace-match rp nil nil nil 1))))
+
+(defun endless/capitalize ()
+  "Capitalize region or word.
+Also converts commas to full stops, and kills
+extraneous space at beginning of line."
+  (interactive)
+  (endless/convert-punctuation "," ".")
+  (if (use-region-p)
+      (call-interactively 'capitalize-region)
+    ;; A single space at the start of a line:
+    (when (looking-at "^\\s-\\b")
+      ;; get rid of it!
+      (delete-char 1))
+    (call-interactively 'capitalize-word)))
+
+(defun endless/downcase ()
+  "Downcase region or word.
+Also converts full stops to commas."
+  (interactive)
+  (endless/convert-punctuation "\\." ",")
+  (if (use-region-p)
+      (call-interactively 'downcase-region)
+    (call-interactively 'downcase-word)))
+
+(defun endless/upcase ()
+  "Upcase region or word."
+  (interactive)
+  (if (use-region-p)
+      (call-interactively 'upcase-region)
+    (call-interactively 'upcase-word)))
+
+(defun capitalize-or-endless/capitalize ()
+(interactive)
+(if
+
+; If
+(or
+(looking-back "^")
+)
+    (call-interactively 'capitalize-word); then
+    (call-interactively 'endless/capitalize); else
+
+)
+)
+
+(global-set-key "\M-c" 'capitalize-or-endless/capitalize)
+(global-set-key "\M-l" 'downcase-or-endless-downcase)
+(global-set-key (kbd "M-u") 'endless/upcase)
+(global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
+
+(defun endless/upgrade ()
+  "Update all packages, no questions asked."
+  (interactive)
+  (save-window-excursion
+    (list-packages)
+    (package-menu-mark-upgrades)
+    (package-menu-execute 'no-query)))
+
 (defun smart-period-or-smart-space ()
 "double space adds a period!"
 (interactive)
@@ -754,3 +844,93 @@
     (expand-abbrev)
 )
 )
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            ;; For testing, let Captain run everywhere in Org
+            (setq captain-predicate (lambda () t))
+            (captain-mode 1)))
+
+;; 1) Make sure `captain-mode` won't conflict by removing its default hook:
+(defun my-captain-mode-on ()
+  (captain-mode 1)
+  ;; Remove Captain's default function so it doesn't fight us:
+  (remove-hook 'post-self-insert-hook 'captain--run t)
+  (add-hook 'post-self-insert-hook #'my-captain-run-next-word nil t))
+
+;; 2) Our custom function:
+(defun my-captain-run-next-word ()
+  "Auto-capitalize the word you just started typing if it follows end-of-sentence punctuation."
+  (when (and (captain-should-capitalize-p)
+             ;;  The character typed is a letter/word character:
+             (eq (char-syntax last-command-event) ?w))
+    (save-excursion
+      ;; Move back one character to the start of this letter
+      (backward-char)
+      ;; Skip spaces backwards
+      (skip-chars-backward " \t")
+      ;; Now check if there's a `.`, `?`, or `!` behind that space
+      (when (looking-back "[.?!]" 1)
+        (capitalize-word 1)))))
+
+;; 3) Activate in Org mode:
+(add-hook 'org-mode-hook
+          (lambda ()
+            ;; Captain's global on/off
+            (setq captain-predicate (lambda () t)) ; or a custom condition
+            (my-captain-mode-on)))  ;; Turn on Captain (with our override)
+
+(defun my-captain-run-next-word ()
+  "Auto-capitalize the word you just started typing if it follows end-of-sentence punctuation."
+  (when (and (captain-should-capitalize-p)
+             (eq (char-syntax last-command-event) ?w))
+    (save-excursion
+      (backward-char)
+      (skip-chars-backward " \t")
+      (when (looking-back "[.?!]" 1)
+        (capitalize-word 1)))))
+
+
+(defvar my-captain-abbreviations
+  '("mr." "mrs." "ms." "dr." "prof." "vs." "i.e." "e.g." "etc." "fig." "al.")
+  "List of abbreviations that end with a period but shouldn't trigger next-word capitalization.")
+
+(defun my-captain-run-next-word ()
+  "Auto-capitalize the word you just started typing if it follows
+end-of-sentence punctuation or a new paragraph, skipping known abbreviations."
+  (when (and (captain-should-capitalize-p)
+             (eq (char-syntax last-command-event) ?w))
+    (save-excursion
+      (backward-char)                ;; move back to the start of this letter
+      (skip-chars-backward " \t")    ;; skip spaces
+
+      (cond
+       ;; ----------------------------------------------------------
+       ;; 1) Check for paragraph break (double newline or line start).
+       ((and (bolp)
+             (save-excursion
+               (forward-line -1)
+               (or (bobp) (looking-at-p "^[ \t]*$"))))
+        ;; We are at the start of a paragraph
+        (capitalize-word 1))
+
+       ;; Alternatively, you might simply do:
+       ;; (when (looking-back "\n\n[ \t]*" nil) (capitalize-word 1))
+       ;; if you want to look for 2 newlines
+
+       ;; ----------------------------------------------------------
+       ;; 2) Check for .?! preceding text (end-of-sentence punctuation).
+       ((looking-back "[.?!]" 1)
+        ;; We see punctuation.  Now skip if it's a known abbreviation.
+        ;; e.g. if we typed "Mr." or "Dr." we don't auto-cap next word.
+        (let* ((punc-start (point)))
+          ;; Gather the preceding word text:
+          (backward-word-strictly)
+          (let* ((maybe-abbrev (buffer-substring-no-properties (point) punc-start)))
+            (if (member (downcase maybe-abbrev) my-captain-abbreviations)
+                (message "Skipping auto-cap (abbreviation %s)" maybe-abbrev)
+              (capitalize-word 1)))))
+
+       ;; ----------------------------------------------------------
+       ;; 3) Otherwise, do nothing
+       (t nil)))))
