@@ -10,7 +10,6 @@
 ;; (user-full-name)
 
 
-
 * Intro / About:ARCHIVE:
 #+OPTIONS: f:t
 
@@ -8764,6 +8763,10 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 (provide 'my-org-config-mode)
 #+end_src
 
+* Trust local variables
+#+begin_src emacs-lisp
+(put 'enable-local-eval 'safe-local-variable #'booleanp)
+#+end_src
 
 * Local Variables & The End
 #+BEGIN_SRC
