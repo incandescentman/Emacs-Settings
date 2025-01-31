@@ -8756,10 +8756,14 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
   "Minor mode for my custom Org file config."
   :init-value nil
   :lighter " myOrgCfg"
-  (when my-org-config-mode
-    (define-key org-mode-map (kbd "<SPC>") #'insert-space)
-    (make-local-variable 'abbrev-mode)
-    (setq abbrev-mode nil)))
+  (if my-org-config-mode
+      (progn
+        (define-key org-mode-map (kbd "<SPC>") #'insert-space)
+        (make-local-variable 'abbrev-mode)
+        (setq abbrev-mode nil)
+        (setq-local org-config-files-local-mode t))
+    ;; Optionally, unset org-config-files-local-mode when disabling:
+    (kill-local-variable 'org-config-files-local-mode)))
 
 (provide 'my-org-config-mode)
 #+end_src

@@ -178,8 +178,9 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (setq interprogram-paste-function nil)
 #+END_SRC
 
-** pasteboard-copy
-#+BEGIN_SRC emacs-lisp
+** different behavior depending on whether I'm working with code or prose
+
+#+begin_src emacs-lisp
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
   "Copy to the macOS pasteboard using a command selected by the current mode.
 When working with prose (in `org-mode` without `org-config-files-local-mode`
@@ -193,6 +194,43 @@ with `org-config-files-local-mode` active), call `pasteboard-copy` to copy verba
           (derived-mode-p 'text-mode))
       (pasteboard-copy-and-replace-em-dashes-in-clipboard)
     (pasteboard-copy)))
+
+
+#+end_src
+
+
+** pasteboard-paste-spaces-maybe
+    #+BEGIN_SRC emacs-lisp
+
+(defun pasteboard-paste-spaces-maybe ()
+  "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
+
+In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`),
+always use `pasteboard-paste-without-smart-quotes`.
+
+In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
+use the existing logic: if the character before or after point is in a predefined set,
+use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-quotes`."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      ;; Prose: always use without-smart-quotes.
+      (pasteboard-paste-without-smart-quotes)
+    ;; Code: use the original logic.
+    (let* ((prev-char (char-before))
+           (next-char (char-after))
+           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+           (use-no-spaces (or (member prev-char char-set)
+                              (member next-char char-set))))
+      (if use-no-spaces
+          (pasteboard-paste-no-spaces)
+        (pasteboard-paste-without-smart-quotes)))))
+    #+END_SRC
+
+
+** pasteboard-copy
+#+BEGIN_SRC emacs-lisp
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -329,47 +367,6 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
     ))
 
 #+END_SRC
-
-*** pasteboard-paste-spaces-maybe
-    #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-spaces-maybe ()
- "Paste from pasteboard, choosing paste method based on surrounding characters.
-If the character before or after the cursor is in a predefined set,
-use `pasteboard-paste-no-spaces', otherwise use `pasteboard-paste-without-smart-quotes'."
- (interactive)
- (let* ((prev-char (char-before))
-     (next-char (char-after))
-     (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
-  (if (or (member prev-char char-set)
-      (member next-char char-set))
-    (pasteboard-paste-no-spaces)
-   (pasteboard-paste-without-smart-quotes))))
-
-(defun pasteboard-paste-spaces-maybe ()
-  "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
-
-In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`),
-always use `pasteboard-paste-without-smart-quotes`.
-
-In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
-use the existing logic: if the character before or after point is in a predefined set,
-use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-quotes`."
-  (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      ;; Prose: always use without-smart-quotes.
-      (pasteboard-paste-without-smart-quotes)
-    ;; Code: use the original logic.
-    (let* ((prev-char (char-before))
-           (next-char (char-after))
-           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-           (use-no-spaces (or (member prev-char char-set)
-                              (member next-char char-set))))
-      (if use-no-spaces
-          (pasteboard-paste-no-spaces)
-        (pasteboard-paste-without-smart-quotes)))))
-    #+END_SRC
 
 *** pasteboard-paste-no-spaces
 #+BEGIN_SRC emacs-lisp
