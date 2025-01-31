@@ -13,7 +13,7 @@ Below is a modernized, cleaned-up version of *auto-capitalize.el*. Changes inclu
 This should compile without warnings in modern Emacs (24.3+) and retain the same functionality.
 
 #+begin_src emacs-lisp
-;;; auto-capitalize.el --- Automatically capitalize (or upcase) words -*- lexical-binding: t; -*-
+;;; auto-capitalize.el -- Automatically capitalize (or upcase) words -*- lexical-binding: t; -*-
 
 ;; Copyright 1998,2001,2002,2005 Kevin Rodgers
 
@@ -246,17 +246,20 @@ Capitalizes the previous word if warranted.  Capitalization logic:
       (auto-capitalize--capitalize-yanked beg end)))))
 
 (defun auto-capitalize--inserted-non-word-p (beg end length)
-  "Return non-nil if this command inserted a non-word character.
-Checks whether `this-command' is `self-insert-command' for a non-word char,
-or is a newline command."
-  (and (eq this-command 'self-insert-command)
-       (= length 0) ;; no deletion in this change
-       (= (- end beg) 1) ;; exactly 1 char inserted
-       (let ((ch (char-before end)))
-         (not (eq (char-syntax ch) ?w))))
-   ;; Alternatively, treat newlines as well:
-   ;; or (memq this-command '(newline newline-and-indent))
-   )
+  (or
+   ;; If it's one of our custom commands, skip the length checks:
+   (and (memq this-command '(smart-period smart-comma smart-question-mark
+                             smart-exclamation-point smart-colon smart-semicolon))
+        (let ((ch (char-before end)))
+          ;; If the last inserted char is punctuation, consider it "non-word"
+          (and ch (not (eq (char-syntax ch) ?w)))))
+   ;; Otherwise, the old checks for real self-insert:
+   (and (eq this-command 'self-insert-command)
+        (= length 0)
+        (= (- end beg) 1)
+        (let ((ch (char-before end)))
+          (not (eq (char-syntax ch) ?w))))))
+
 
 (defun auto-capitalize--capitalize-yanked (beg end)
   "Capitalize newly yanked text between BEG and END if it starts sentences.
@@ -403,10 +406,31 @@ Call this in your init file if you want to globally set up Auto-Capitalize."
 (provide 'auto-capitalize)
 
 ;;; auto-capitalize.el ends here
+
+
 #+end_src
 
 
 * spacecraft-mode - superior handling of whitespace for writing and editing prose
+
+** prep
+#+begin_src emacs-lisp
+(defvar auto-capitalize--cap-next-word nil
+  "Non-nil means the next typed word should be capitalized immediately.")
+
+(defun auto-capitalize--maybe-capitalize-next-word ()
+  "If `auto-capitalize--cap-next-word' is non-nil and we just typed a new word, capitalize it."
+  (when auto-capitalize--cap-next-word
+    (let ((ch (char-before (point))))
+      (when (and ch (eq (char-syntax ch) ?w))
+        ;; Upcase the character we just typed
+        (save-excursion
+          (backward-char 1)
+          (replace-match (upcase (string ch)) t t))
+        (setq auto-capitalize--cap-next-word nil)))))
+
+(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+#+end_src
 
 ** downcase
 #+begin_src emacs-lisp
@@ -555,7 +579,7 @@ Also converts full stops to commas."
 (looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
 (looking-back "\\be\.\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
-(looking-back "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines---brilliant!
+(looking-back "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines--brilliant!
 
 (looking-back ">") ; don't expand days of the week inside timestamps
 
@@ -784,7 +808,7 @@ Also converts full stops to commas."
 
     (when
     (and
-    (looking-back "----")
+    (looking-back "---")
     (looking-at "-"))
 
     (delete-backward-char 4)
@@ -872,7 +896,7 @@ Also converts full stops to commas."
   ".,;:!?-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "............................................." "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
    #+END_SRC
 
@@ -880,101 +904,112 @@ Also converts full stops to commas."
 *** smart-punctuation (auxiliary)
 
 #+BEGIN_SRC emacs-lisp
-  (defun smart-punctuation (new-punct &optional not-so-smart)
-    (smart-expand)
-    (save-restriction
-      (when (and (eql major-mode 'org-mode)
-                 (org-at-heading-p))
-        (save-excursion
-          (org-beginning-of-line)
-          (let ((heading-text (fifth (org-heading-components))))
-            (when heading-text
-              (search-forward heading-text)
-              (narrow-to-region (match-beginning 0) (match-end 0))))))
-      (cl-flet ((go-back (regexp)
-                  (re-search-backward regexp nil t)
-                  (ignore-errors      ; might signal `end-of-buffer'
-                    (forward-char (length (match-string 0))))))
-        (if not-so-smart
-            (let ((old-point (point)))
-              (go-back "[^ \t]")
-              (insert new-punct)
-              (goto-char old-point)
-              (forward-char (length new-punct)))
-          (let ((old-point (point)))
-            (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
-            (let ((was-after-space (and (< (point) old-point)
-                                        (find ?  (buffer-substring (point) old-point)))))
-              (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
-                                         ,*smart-punctuation-marks*)
-                                 nil t)
-              (let* ((old-punct (match-string 2))
-                     (was-after-punct (>= old-point (point))))
-                (replace-match "" nil t nil 1)
-                (replace-match (or (when (and was-after-punct
-                                              (not (string= old-punct "")))
-                                     (let ((potential-new-punct (concat old-punct new-punct)))
-                                       (find-if (lambda (exception)
-                                                  (search potential-new-punct exception))
-                                                ,*smart-punctuation-exceptions*)))
-                                   new-punct)
-                               nil t nil 2)
-                (if was-after-space
-                    (my/fix-space)
-                  (when (looking-at "[ \t]*\\<")
-                    (save-excursion (my/fix-space))))))))))
-    (when (and (eql major-mode 'org-mode)
+(defun smart-punctuation (new-punct &optional not-so-smart)
+  (smart-expand)
+  (save-restriction
+    (when (and (eq major-mode 'org-mode)
                (org-at-heading-p))
-))
+      (save-excursion
+        (org-beginning-of-line)
+        (let ((heading-text (fifth (org-heading-components))))
+          (when heading-text
+            (search-forward heading-text)
+            (narrow-to-region (match-beginning 0) (match-end 0))))))
+    (cl-flet ((go-back (regexp)
+                (re-search-backward regexp nil t)
+                (ignore-errors ; might signal `end-of-buffer'
+                  (forward-char (length (match-string 0))))))
+      (if not-so-smart
+          ;; Simple path: just insert `new-punct`
+          (let ((old-point (point)))
+            (go-back "[^ \t]")
+            (insert new-punct)
+            (goto-char old-point)
+            (forward-char (length new-punct)))
+        ;; "Smart" punctuation
+        (let ((old-point (point)))
+          (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+          (let ((was-after-space
+                 (and (< (point) old-point)
+                      (find ?\s (buffer-substring (point) old-point)))))
+            ;; Attempt to match existing punctuation
+            (if (re-search-forward
+                 (format "\\([ \t]*\\)\\([%s]*\\)" *smart-punctuation-marks*)
+                 nil t)
+                (let* ((old-punct (match-string 2))
+                       (was-after-punct (>= old-point (point))))
+                  ;; Replace subexp #1 (the whitespace)
+                  (replace-match "" nil t nil 1)
+                  ;; Replace subexp #2 (the punctuation), if it exists
+                  (when (match-beginning 2)
+                    (replace-match
+                     (or (when (and was-after-punct
+                                    (not (string= old-punct "")))
+                           ;; Possibly combine old punctuation with new
+                           (let ((potential-new-punct (concat old-punct new-punct)))
+                             (find-if (lambda (exception)
+                                        (search potential-new-punct exception))
+                                      ,*smart-punctuation-exceptions*)))
+                         new-punct)
+                     nil t nil 2))
+                  ;; Restore spaces if we had them
+                  (if was-after-space
+                      (my/fix-space)
+                    (when (looking-at "[ \t]*\\<")
+                      (save-excursion (my/fix-space)))))
+              ;; Fallback: if the re-search-forward fails, just insert punctuation
+              (goto-char old-point)
+              (insert new-punct)))))))
+    (when (and (eq major-mode 'org-mode)
+               (org-at-heading-p))
+      ;; Possibly do more things for Org headings here...
+      ))
 #+END_SRC
 
 *** smart-period
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
-(unless
-      (or
-(looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
-(looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra periods to ie.
-(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
-
-       )
-  (smart-punctuation "."))
-  (save-excursion
-    (unless
-        (or
-         (looking-at "[ ]*$")
-         (looking-at "\][[:punct:]]*[ ]*$")
-         (looking-at "[[:punct:]]*[ ]*$")
-         (looking-at "\"[[:punct:]]*[ ]*$")
-         (looking-at "\)[ ]*$")
-         (looking-at "\)")
-         ) ; or
-    (capitalize-unless-org-heading)
-      ) ; unless
-) ; save excursion
-
-;; if two periods or two commas in a row, delete the second one
-(when
-(or
-(and
-(looking-at "\\.")
-(looking-back "\\.")
-)
-(and
-(looking-at ",")
-(looking-back ",")
-))
-(delete-char 1)
-)
-
-  )
+  (when (use-region-p)
+    (delete-region (region-beginning) (region-end)))
+  (unless (or (looking-back "\\bvs.[ ]*" nil)
+              (looking-back "\\bi\\.e[[:punct:]]*[ ]*" nil)
+              (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
+    (smart-punctuation ".")
 
 
-(define-key org-mode-map (kbd ".") 'smart-period)
+(defun auto-capitalize--handler (beg end length)
+  "The `after-change-functions' handler for `auto-capitalize-mode'."
+  (when (and auto-capitalize-state
+             (or (null auto-capitalize-predicate)
+                 (funcall auto-capitalize-predicate)))
+    ;; If we inserted punctuation recognized as an end-of-sentence...
+    (when (and (eq this-command 'self-insert-command)
+               (member (char-before end) '(?. ?! ??)))
+      (setq auto-capitalize--cap-next-word t))
 
+    ;; Original logic to capitalize the *previous* word if needed:
+    (cond
+     ((auto-capitalize--inserted-non-word-p beg end length)
+      ...
+      (auto-capitalize--capitalize-previous-word))
+     ;; or yank logic...
+     )))
+
+(defun auto-capitalize--maybe-capitalize-next-word ()
+  "If `auto-capitalize--cap-next-word' is non-nil and we're typing a new word, capitalize it."
+  (when auto-capitalize--cap-next-word
+    (let ((ch (char-before (point))))
+      ;; If we typed a letter in a new word
+      (when (and ch (eq (char-syntax ch) ?w))
+        ;; Replace the just-typed letter with uppercase
+        (save-excursion
+          (backward-char 1)
+          (let ((case-fold-search nil))
+            (replace-match (upcase (string ch)) t t)))
+        (setq auto-capitalize--cap-next-word nil)))))))
+
+(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 #+END_SRC
 
 *** smart-comma
@@ -1156,7 +1191,7 @@ Also converts full stops to commas."
 #+END_SRC
 
 ** TODO [#A] check my changes to backward-kill-word-correctly?
-Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "---"
+Rúdi: desired behavior is that when invoking backward-kill-word-correctly to delete words backwards, Emacs should leave a space after the word to the left of the point UNLESS point is at the beginning of the line or after "--"
 
 I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
 
@@ -1171,7 +1206,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 
 ;; I added this ↓↓↓ #######################
 (when (and
-(not (looking-back "---")) ; I added this
+(not (looking-back "--")) ; I added this
 (not (looking-back "^"))) ; I added this
 ;; I added this ↑↑↑ #######################
 
@@ -1186,16 +1221,16 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
    Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~smart-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
 
 *** NOTE-TO-SERJ Answer
-Good question. The answer is that there should never be a space after "---"
+Good question. The answer is that there should never be a space after "--"
 
 Example:
-: Alice was tired---tired as hell. ^
+: Alice was tired--tired as hell. ^
 
 Say the point is the carat, and I invoke backward-kill-word-correctly 4 times.
 
 Output if I remove the whole ~(when ...)~ block:
-: Alice was tired--- ^
-Note the space after "---"
+: Alice was tired-- ^
+Note the space after "--"
 
 Desired output:
 : Alice was tired---^
