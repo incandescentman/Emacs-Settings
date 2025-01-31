@@ -1,3 +1,14 @@
+# Local Variables:
+# org-config-files-local-mode: t
+# enable-local-eval: t
+# eval: (my-org-config-mode 1)
+# End:
+
+;; -*- lexical-binding: t -*-
+;;;   Current time:      (current-time-string)
+;;;   Last command:      last-command
+;;; (abbrev-mode)
+;; (user-full-name)
 
 * New auto-capitalize-mode
 Below is a modernized, cleaned-up version of *auto-capitalize.el*. Changes include:
