@@ -392,6 +392,67 @@ Call this in your init file if you want to globally set up Auto-Capitalize."
 
 ;;; auto-capitalize.el ends here
 
+(setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
+
+(setq auto-capitalize-predicate
+      (lambda ()
+        (and
+         (not (org-checkbox-p))
+         (save-match-data
+           (not (and
+;; (org-or-orgalist-p)
+                 (looking-back
+                 "\\[\\[.*\\]\\][^.\n]*\\.?"))))
+         (save-match-data
+           (not (looking-back
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
+                 (- (point) 20)))))))
+
+(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
+
+(defun downcase-or-endless-downcase ()
+(interactive)
+(if
+
+; If
+(or
+(looking-back "\\.\\.\\.[ ]*[\n\t ]*")
+(looking-back "i.e.[ ]*")
+(looking-back "[0-9]\.[ ]*")
+(looking-back "e.g.[ ]*")
+(looking-back "vs.[ ]*")
+(looking-back "U.K.[ ]*")
+(looking-back "U.S.[ ]*")
+(looking-back "vs.[ ]*")
+(looking-back "^")
+)
+    (call-interactively 'downcase-word); then
+    (call-interactively 'endless/downcase); else
+
+)
+)
+
+(defun capitalize-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (endless/capitalize)
+(org-forward-sentence 1)
+(jay/right-char)
+)
+(define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
+
+(defun downcase-sentence ()
+  (interactive)
+(unless (my/beginning-of-sentence-p)
+(org-backward-sentence))
+  (downcase-word 1)
+(org-forward-sentence 1)
+(jay/right-char)
+)
+
+(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
+
 (defvar auto-capitalize--cap-next-word nil
   "Non-nil means the next typed word should be capitalized immediately.")
 
@@ -891,7 +952,7 @@ Also converts full stops to commas."
   (unless (or (looking-back "\\bvs.[ ]*" nil)
               (looking-back "\\bi\\.e[[:punct:]]*[ ]*" nil)
               (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
-    (smart-punctuation ".")
+    (smart-punctuation ".")))
 
 
 (defun auto-capitalize--handler (beg end length)
@@ -923,7 +984,7 @@ Also converts full stops to commas."
           (backward-char 1)
           (let ((case-fold-search nil))
             (replace-match (upcase (string ch)) t t)))
-        (setq auto-capitalize--cap-next-word nil)))))))
+        (setq auto-capitalize--cap-next-word nil)))))
 
 (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 

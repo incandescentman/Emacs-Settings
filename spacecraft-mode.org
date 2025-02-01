@@ -1076,7 +1076,19 @@ Also converts full stops to commas."
               (looking-back "\\bi\\.e[[:punct:]]*[ ]*" nil)
               (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
     (smart-punctuation ".")
-
+    ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
+    (auto-capitalize--handler (point) (point) 0))
+  (save-excursion
+    (unless (or (looking-at "[ ]*$")
+                (looking-at "\"[[:punct:]]*[ ]*$")
+                (looking-at "\)[ ]*$"))
+      (capitalize-unless-org-heading)))
+  ;; If two periods or commas in a row, remove the second one:
+  (when (or (and (looking-at "\\.")
+                 (looking-back "\\." nil))
+            (and (looking-at ",")
+                 (looking-back "," nil)))
+    (delete-char 1)))
 
 (defun auto-capitalize--handler (beg end length)
   "The `after-change-functions' handler for `auto-capitalize-mode'."
@@ -1107,7 +1119,7 @@ Also converts full stops to commas."
           (backward-char 1)
           (let ((case-fold-search nil))
             (replace-match (upcase (string ch)) t t)))
-        (setq auto-capitalize--cap-next-word nil)))))))
+        (setq auto-capitalize--cap-next-word nil)))))
 
 (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
