@@ -18,399 +18,55 @@
 )
 )
 
-;;; auto-capitalize.el -- Automatically capitalize (or upcase) words -*- lexical-binding: t; -*-
+(require 'captain)   ;; load Captain
 
-;; Copyright 1998,2001,2002,2005 Kevin Rodgers
+(defvar spacecraft-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;; If you want to override some keys:
+    ;; (define-key map (kbd ".") 'smart-period)
+    ;; ...
+    map)
+  "Keymap for `spacecraft-mode'.")
 
-;; This project was originally copied from:
-;; https://www.emacswiki.org/emacs/auto-capitalize.el
-;; and updated to work reliably in Emacs 24.3 and above.
-
-;; Author: Kevin Rodgers <ihs_4664@yahoo.com>
-;; Maintainer: Yuta Yamada <cokesboy at gmail.com>
-;; Package-Requires: ((emacs "24.3") (cl-lib "0.5"))
-
-;; Created: 20 May 1998
-;; Version: 2.21
-;; Keywords: text, wp, convenience
-;; URL: https://github.com/yuutayamada/auto-capitalize-el
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful, but
-;; WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; General Public License for more details.
-
-;; Commentary:
-
-;; `auto-capitalize-mode' is a minor mode that automatically capitalizes
-;; the first word at the beginning of a paragraph or sentence when a
-;; subsequent whitespace or punctuation character is inserted.
-
-;; Additionally, any word listed in `auto-capitalize-words' is automatically
-;; capitalized or upcased, even in mid-sentence.  Lowercase entries in that
-;; list will *not* be modified.
-
-;; To install:
-;;
-;; 1. Put this file in your `load-path`
-;; 2. (require 'auto-capitalize)
-;; 3. Optionally add hooks such as:
-;;
-;;    (add-hook 'text-mode-hook #'turn-on-auto-capitalize-mode)
-;;
-;; You can customize various options using:
-;;
-;;    M-x customize-group RET auto-capitalize RET
-;;
-;; Enjoy!
-
-;;; Code:
-
-(require 'cl-lib)
-(require 'rx)
-
-(defgroup auto-capitalize nil
-  "Automatically capitalize words in text."
-  :group 'convenience
-  :prefix "auto-capitalize-")
-
-;;; User options
-
-(defcustom auto-capitalize-ask nil
-  "If non-nil, ask for confirmation before capitalizing."
-  :group 'auto-capitalize
-  :type 'boolean)
-
-(defcustom auto-capitalize-yank nil
-  "If non-nil, also capitalize the first word of yanked sentences."
-  :group 'auto-capitalize
-  :type 'boolean)
-
-(defcustom auto-capitalize-words '("I")
-  "List of proper nouns or acronyms that should be auto-capitalized/upcased.
-If an entry in this list is uppercase or mixed case, it is always enforced.
-A lowercase entry in this list is never changed (treated as a word to ignore)."
-  :group 'auto-capitalize
-  :type '(repeat (string :tag "Capitalized or Upcased Word")))
-
-(defcustom auto-capitalize-predicate
-  #'auto-capitalize-default-predicate-function
-  "Function that decides whether auto-capitalization should apply.
-This function is called with no arguments whenever a change occurs
-and should return non-nil if auto-capitalization is allowed in the
-current context."
-  :group 'auto-capitalize
-  :type '(choice (function :tag "Predicate function")
-                 (const :tag "No predicate" nil)))
-
-(defcustom auto-capitalize-allowed-chars '(?\  ?, ?. ?? ?' ?: ?\; ?- ?!)
-  "Characters after which auto-capitalization is allowed.
-If nil, no restriction is imposed based on the preceding inserted character."
-  :group 'auto-capitalize
-  :type '(choice (const :tag "No restriction" nil)
-                 (repeat :tag "Allowed characters" character)))
-
-(defcustom auto-capitalize-inhibit-buffers '("*scratch*")
-  "List of buffer names in which to inhibit auto-capitalization."
-  :group 'auto-capitalize
-  :type '(repeat (string :tag "Buffer name")))
-
-(defcustom auto-capitalize-predicate-functions nil
-  "Hook of additional predicate functions for auto-capitalization.
-Each function is called with no arguments and should return t if
-capitalization should apply, nil otherwise.  If any function returns
-nil, auto-capitalization is skipped."
-  :group 'auto-capitalize
-  :type '(choice (const :tag "No additional predicates" nil)
-                 (repeat :tag "List of predicate functions" function)))
-
-(defcustom auto-capitalize-aspell-file nil
-  "Path to an aspell personal dictionary file (e.g., `~/.aspell.en.pws`).
-When set, capitalized words from that dictionary are merged into
-`auto-capitalize-words` at startup."
-  :group 'auto-capitalize
-  :type '(choice (const :tag "None" nil)
-                 (file :tag "Aspell dictionary file")))
-
-;;; Internal variables
-
-(defvar auto-capitalize-state nil
-  "Buffer-local state indicating whether `auto-capitalize-mode' is active.
-A non-nil value means auto-capitalization is on.")
-
-(defvar auto-capitalize--match-data nil
-  "Internal storage for match data in yank-based capitalization.")
-
-(defconst auto-capitalize-regex-lower "[[:lower:]]+"
-  "Regex matching a purely lowercase word.")
-
-(defconst auto-capitalize-regex-verify
-  "\\<\\([[:upper:]]?[[:lower:]]+\\.\\)+\\="
-  "Regex to detect abbreviations like \"e.g.\" or \"i.e.\"")
-
-(defvar auto-capitalize-avoid-words-regex
-  (rx (not (syntax word)) (or "e.g." "i.e." "vs.") (0+ " "))
-  "Regex of contexts in which to avoid auto-capitalization.")
-
-;;
-;; Minor mode definition
-;;
-
-;;;***autoload
-(define-minor-mode auto-capitalize-mode
-  "Toggle Auto-Capitalize mode in the current buffer.
-When enabled, the first word of a sentence or paragraph is capitalized
-automatically upon typing a subsequent whitespace or punctuation character.
-Also capitalizes or upcases any words in `auto-capitalize-words'.
-
-If the optional prefix ARG is positive, turn on.  If zero or negative, turn off."
-  :lighter " ACap"
-  (if (or (not auto-capitalize-mode)
-          buffer-read-only
-          (member (buffer-name) auto-capitalize-inhibit-buffers))
-      (progn
-        (setq-local auto-capitalize-state nil)
-        (remove-hook 'after-change-functions #'auto-capitalize--handler t))
-    (setq-local auto-capitalize-state t)
-    (add-hook 'after-change-functions #'auto-capitalize--handler nil t)))
-
-;;;***autoload
-(defun turn-on-auto-capitalize-mode ()
-  "Turn on `auto-capitalize-mode' unconditionally in the current buffer."
-  (interactive)
-  (auto-capitalize-mode 1))
-
-;;;***autoload
-(defun turn-off-auto-capitalize-mode ()
-  "Turn off `auto-capitalize-mode' unconditionally in the current buffer."
-  (interactive)
-  (auto-capitalize-mode -1))
-
-;;;***autoload
-(defun enable-auto-capitalize-mode ()
-  "Enable auto-capitalization, but set `auto-capitalize-ask' to t.
-This means the user is asked for confirmation before actually capitalizing."
-  (interactive)
-  (setq auto-capitalize-ask t)
-  (auto-capitalize-mode 1))
-
-;;
-;; Core logic
-;;
-
-(defun auto-capitalize-default-predicate-function ()
-  "Default predicate for `auto-capitalize-predicate'.
-Return t if in an appropriate buffer context for capitalization.
-This disallows read-only buffers, minibuffers, and imposes optional
-restrictions via `auto-capitalize-allowed-chars' and `auto-capitalize-predicate-functions'."
+(defun spacecraft-predicate ()
+  "Should the captain auto-capitalize right now?"
+  ;; Reuse your existing `auto-capitalize-predicate` checks:
   (and (not buffer-read-only)
-       (not (minibufferp))
-       ;; If in a prog-mode, only capitalize if in a string or comment.
-       (if (derived-mode-p 'prog-mode)
-           (let ((syntax-state (syntax-ppss)))
-             (nth 8 syntax-state))  ;; non-nil if inside string/comment
-         t)
-       (or (null auto-capitalize-allowed-chars)
-           (member last-command-event auto-capitalize-allowed-chars))
-       ;; Inhibit modes like comint:
-       (not (derived-mode-p 'comint-mode))
-       ;; Check additional user-defined predicates.
-       (run-hook-with-args-until-failure 'auto-capitalize-predicate-functions)
-       ;; Check for a major-mode-specific function named
-       ;; auto-capitalize-predicate-<major-mode> if it exists:
-       (let ((fn (intern (format "auto-capitalize-predicate-%s" major-mode))))
-         (if (fboundp fn)
-             (funcall fn)
-           t))))
+       (functionp auto-capitalize-predicate)
+       (funcall auto-capitalize-predicate)))
 
-(defun auto-capitalize--handler (beg end length)
-  "The `after-change-functions' handler for `auto-capitalize-mode'.
-Capitalizes the previous word if warranted.  Capitalization logic:
-- If user inserted a non-word character (like whitespace or punctuation),
-  and the preceding chunk of text matches a lowercased word at sentence
-  boundary, capitalize.
-- If `auto-capitalize-yank' is set, also handle capitalizing first words
-  within newly yanked text."
-  (when (and auto-capitalize-state
-             (or (null auto-capitalize-predicate)
-                 (funcall auto-capitalize-predicate)))
-    (cond
-     ;; 1) Self-inserting non-word character
-     ((auto-capitalize--inserted-non-word-p beg end length)
-      (when (and (> beg (point-min))
-                 (eq (char-syntax (char-before beg)) ?w))
-        (auto-capitalize--capitalize-previous-word)))
-     ;; 2) Yank
-     ((and auto-capitalize-yank
-           (memq this-command '(yank yank-pop)))
-      (auto-capitalize--capitalize-yanked beg end)))))
+(defun spacecraft-sentence-start ()
+  "Return the start of the current sentence.
+By default, Captain uses `bounds-of-thing-at-point', but you can
+override with your `my/beginning-of-sentence-p'."
+  ;; E.g. if you want a naive approach, do:
+  (car (bounds-of-thing-at-point 'sentence))
 
-(defun auto-capitalize--inserted-non-word-p (beg end length)
-  (or
-   ;; If it's one of our custom commands, skip the length checks:
-   (and (memq this-command '(smart-period smart-comma smart-question-mark
-                             smart-exclamation-point smart-colon smart-semicolon))
-        (let ((ch (char-before end)))
-          ;; If the last inserted char is punctuation, consider it "non-word"
-          (and ch (not (eq (char-syntax ch) ?w)))))
-   ;; Otherwise, the old checks for real self-insert:
-   (and (eq this-command 'self-insert-command)
-        (= length 0)
-        (= (- end beg) 1)
-        (let ((ch (char-before end)))
-          (not (eq (char-syntax ch) ?w))))))
-
-
-(defun auto-capitalize--capitalize-yanked (beg end)
-  "Capitalize newly yanked text between BEG and END if it starts sentences.
-Tries to mimic self-insert triggers over the newly inserted text."
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "\\Sw" end t)
-      (setq auto-capitalize--match-data (match-data))
-      (let* ((char-inserted (char-after (match-beginning 0))))
-        (when char-inserted
-          (set-match-data auto-capitalize--match-data)
-          (save-excursion
-            (goto-char (match-beginning 0))
-            (when (eq (char-syntax (char-before)) ?w)
-              (auto-capitalize--capitalize-previous-word))))))))
-
-(defun auto-capitalize--capitalize-previous-word ()
-  "Perform capitalization checks on the word immediately before point."
-  (save-excursion
-    (backward-word 1)
-    (unless (auto-capitalize--avoid-word-context-p)
-      (save-match-data
-        (let ((word-start (point))
-              (text-start  (auto-capitalize--back-to-text-start)))
-          (cond
-           ;; If the preceding word matches one in `auto-capitalize-words'
-           ;; (case-insensitive), enforce that casing.
-           ((and auto-capitalize-words
-                 (looking-at (concat "\\("
-                                     (mapconcat #'downcase
-                                                auto-capitalize-words
-                                                "\\|")
-                                     "\\)\\>")))
-            (auto-capitalize--enforce-user-specified
-             (match-beginning 1) (match-end 1)))
-           ;; Otherwise, if it looks like sentence start, do normal capitalize.
-           ((auto-capitalize--capitalizable-p text-start word-start)
-            (undo-boundary)
-            (capitalize-word 1))))))))
-
-(defun auto-capitalize--avoid-word-context-p ()
-  "Return non-nil if the previous word is in an avoid context (e.g. e.g., i.e.)."
-  (and auto-capitalize-avoid-words-regex
-       (looking-back auto-capitalize-avoid-words-regex nil)))
-
-(defun auto-capitalize--enforce-user-specified (m-beg m-end)
-  "If matched text from M-BEG to M-END is in `auto-capitalize-words', enforce that case."
-  (let ((found (buffer-substring m-beg m-end)))
-    (unless (member found auto-capitalize-words)
-      (undo-boundary)
-      (replace-match
-       (cl-find found auto-capitalize-words
-                :test #'string-equal
-                :key  #'downcase)
-       t t))))
-
-(defun auto-capitalize--capitalizable-p (text-start word-start)
-  "Return non-nil if the word at WORD-START should be capitalized as sentence start.
-TEXT-START is where we consider the sentence/paragraph boundary to begin.
-We check:
-- Are we at the beginning of a line/paragraph/sentence?
-- Is it purely lowercase?
-- Are we allowed to capitalize (`auto-capitalize-ask` or not)?"
-  (goto-char text-start)
-  (and
-   (or (bobp)
-       (and (= (current-column) left-margin)
-            (or (looking-back paragraph-separate nil)
-                (looking-back paragraph-start nil)))
-       (save-excursion
-         (narrow-to-region (point-min) word-start)
-         (and (re-search-backward (sentence-end) nil t)
-              (= (match-end 0) text-start)
-              (let ((previous-char (char-before text-start)))
-                (or (eq previous-char ?\s)
-                    (eq previous-char ?\n))))))
-   (save-excursion
-     (goto-char word-start)
-     (looking-at auto-capitalize-regex-lower))
-   (or (not auto-capitalize-ask)
-       (y-or-n-p (format "Capitalize \"%s\"? "
-                         (buffer-substring word-start (match-end 0)))))))
-
-(defun auto-capitalize--back-to-text-start ()
-  "Move point back over surrounding punctuation/quotes and return new position."
-  (while (or (cl-minusp (skip-chars-backward "\""))
-             (cl-minusp (skip-syntax-backward "\"("))))
-  (point))
-
-;;
-;; Aspell dictionary integration
-;;
-
-(defun auto-capitalize--read-file-as-string (file)
-  "Return contents of FILE as a string."
-  (with-temp-buffer
-    (insert-file-contents file)
-    (buffer-substring-no-properties (point-min) (point-max))))
-
-(defun auto-capitalize--aspell-capital-words (file)
-  "Return a list of capitalized words found in aspell personal dictionary FILE."
-  (when (file-exists-p file)
-    (cl-loop
-     for line in (split-string (auto-capitalize--read-file-as-string file) "\n" t)
-     if (string-match-p "[[:upper:]]" line)
-     collect line)))
+  ;; OR if you have something like `my/beginning-of-sentence-p`, you might
+  ;; do a custom search.  For now, let's do the naive approach:
+)
 
 ;;;***autoload
-(defun auto-capitalize-merge-aspell-words (&optional file)
-  "Merge capitalized words from FILE into `auto-capitalize-words'.
-If FILE is nil, use `auto-capitalize-aspell-file'."
-  (let ((f (or file auto-capitalize-aspell-file)))
-    (when (and f (file-exists-p f))
-      (setq auto-capitalize-words
-            (append auto-capitalize-words (auto-capitalize--aspell-capital-words f))))))
+(define-minor-mode spacecraft-mode
+  "A specialized mode for writing English prose with Captain for delayed capitalization."
+  :init-value nil
+  :lighter " SpaceCraft"
+  :keymap spacecraft-mode-map
+  (if spacecraft-mode
+      (progn
+        ;; 1) Enable Captain in this buffer
+        (captain-mode 1)
+        ;; 2) Set Captain's variables
+        (setq-local captain-predicate #'spacecraft-predicate)
+        (setq-local captain-sentence-start-function #'spacecraft-sentence-start)
 
-;;;***autoload
-(defun auto-capitalize-setup ()
-  "Merge aspell words and automatically enable `auto-capitalize-mode' after changes.
-Call this in your init file if you want to globally set up Auto-Capitalize."
-  (auto-capitalize-merge-aspell-words)
-  (add-hook 'after-change-major-mode-hook #'auto-capitalize-mode))
-
-;;
-;; Org-specific predicate
-;;
-(with-eval-after-load 'org
-  (defun auto-capitalize-predicate-org-mode ()
-    "Allow auto-capitalization in Org buffers except inside src blocks."
-    (not (and (fboundp 'org-in-src-block-p)
-              (org-in-src-block-p)))))
-
-;;
-;; SKK-specific predicate
-;;
-(with-eval-after-load 'skk
-  (add-hook
-   'auto-capitalize-predicate-functions
-   (lambda ()
-     (or (not (bound-and-true-p skk-mode))
-         (and (fboundp 'skk-current-input-mode)
-              (eq 'latin (skk-current-input-mode)))))))
-
-(provide 'auto-capitalize)
-
-;;; auto-capitalize.el ends here
+        ;; 3) Turn on your 'smart punctuation' bindings:
+        ;;   e.g. (define-key spacecraft-mode-map (kbd ".") 'smart-period)
+        ;;        ...
+        ;; Or rely on your existing global or org-mode bindings
+        )
+    ;; If turning off:
+    (captain-mode -1)))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
 
@@ -487,7 +143,7 @@ Call this in your init file if you want to globally set up Auto-Capitalize."
           (replace-match (upcase (string ch)) t t))
         (setq auto-capitalize--cap-next-word nil)))))
 
-(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (defun downcase-or-endless-downcase ()
 (interactive)
@@ -997,7 +653,8 @@ Also converts full stops to commas."
     ;; If we inserted punctuation recognized as an end-of-sentence...
     (when (and (eq this-command 'self-insert-command)
                (member (char-before end) '(?. ?! ??)))
-      (setq auto-capitalize--cap-next-word t))
+; (setq auto-capitalize--cap-next-word t)
+)
 
     ;; Original logic to capitalize the *previous* word if needed:
     (cond
@@ -1018,9 +675,10 @@ Also converts full stops to commas."
           (backward-char 1)
           (let ((case-fold-search nil))
             (replace-match (upcase (string ch)) t t)))
-        (setq auto-capitalize--cap-next-word nil)))))
+;(setq auto-capitalize--cap-next-word nil)
+))))
 
-(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 
