@@ -1,3 +1,23 @@
+(defun smart-expand ()
+  (interactive)
+
+  (unless
+
+    (or
+       (looking-back "\)\n*")
+(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
+(looking-back ":t[ ]*")
+(looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+
+(looking-back ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
+
+
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+)
+    (expand-abbrev)
+)
+)
+
 ;;; auto-capitalize.el -- Automatically capitalize (or upcase) words -*- lexical-binding: t; -*-
 
 ;; Copyright 1998,2001,2002,2005 Kevin Rodgers
@@ -631,6 +651,7 @@ Also converts full stops to commas."
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
+(let (inhibit-modification-hooks)
   (just-one-space)
   (when (and (or
               (looking-back "^[[:space:]]+")
@@ -643,7 +664,246 @@ Also converts full stops to commas."
              (not (looking-back " - "))
 
 )
-    (delete-horizontal-space)))
+    (delete-horizontal-space))))
+
+(defun insert-space ()
+  (interactive)
+(if (org-at-heading-p)
+(insert-smart-space-in-org-heading)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+  (insert " ")
+))
+(defun insert-normal-space-in-org-heading ()
+ (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+ (insert " ")
+)
+;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
+
+
+(defun insert-period ()
+"Inserts a fuckin' period!"
+ (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+
+ (insert ".")
+)
+
+
+(defun insert-comma ()
+ (interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+ (insert ",")
+)
+
+(defun insert-exclamation-point ()
+ (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point)))))
+ (insert "!")
+)
+
+
+(defun insert-colon ()
+"Insert a goodamn colon!"
+ (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point)))))
+ (insert ":")
+)
+
+(defun insert-question-mark ()
+"Insert a freaking question mark!!"
+ (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+ (insert "?")
+)
+
+    (defun kill-clause ()
+      (interactive)
+      (smart-expand)
+(when (or (looking-at ",")
+          (looking-at ";")
+          (looking-at ":"))
+  (org-delete-char 1))
+(when (or (looking-back ",")
+     (looking-back ";")
+     (looking-back ":"))
+ (org-delete-backward-char 1))
+
+
+(when (looking-back " ")
+  (left-char 1))
+
+      (if
+	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
+	  (kill-line)
+
+	(let ((old-point (point))
+	      (kill-punct (my/beginning-of-sentence-p)))
+	  ;; Stop at a period followed by a space, or the end of the line
+	  (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
+	    (kill-region old-point
+			 (if kill-punct
+			     (match-end 0)
+			   (match-beginning 0)))))
+	(my/fix-space)
+	(save-excursion
+	  (when (my/beginning-of-sentence-p)
+	    (capitalize-unless-org-heading)))
+
+(cond
+ ((looking-back "\\, \\, ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t)
+
+((looking-back "!\\. ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t)
+
+ ((looking-back ":: ")
+ (new-org-delete-backward-char 2)
+ (my/fix-space)
+ t))
+
+(when
+    (looking-back "[[:punct:]]")
+  (progn
+(forward-char 1)
+(my/fix-space)
+(backward-char 1)))
+    ;; fix a bug that leaves this: " ?"
+    (when (looking-back " \\?")
+        (left-char 1)
+    (new-org-delete-backward-char 1)
+    (right-char 1))
+
+
+    ;; fix a bug that leaves this: " , "
+    (when (looking-back " , ")
+    (left-char 2)
+    (my/fix-space)
+    (right-char 2))
+
+    ;; fix a bug that leaves this: ":, "
+    (when (looking-back ":, ")
+    (left-char 1)
+    (delete-backward-char 1)
+    (right-char 1))
+
+    ;; fix a bug that leaves this: ",."
+    (when (looking-back "\\,\\. ")
+    (left-char 2)
+    (delete-backward-char 1)
+    (right-char 2)
+    )
+
+
+    ;; fix a bug that leaves this: ", . "
+    (when (looking-back "\\, \\. ")
+    (left-char 2)
+    (delete-backward-char 2)
+    (right-char 2)
+    )
+
+
+    ;; fix a bug that leaves this: " ; "
+    (when
+	(looking-back " [[:punct:]] ")
+    (left-char 2)
+    (delete-backward-char 1)
+    (right-char 2)
+    )
+
+
+
+
+    (when
+    (and
+    (looking-back "---")
+    (looking-at "-"))
+
+    (delete-backward-char 4)
+    (delete-char 1)
+    (insert-space))
+
+    ;; leave the cursor before the comma or period, not after it
+    (when
+    (looking-back "[[:punct:]] ")
+    (left-char 2))
+    (when
+    (looking-back "[[:punct:]]")
+    (left-char 1))
+
+
+
+    ;; fix a bug that leaves this: ".,"
+ (when
+	(looking-at "\\.\\,")
+ (delete-forward-char 1)
+ )
+;; works!!
+
+
+
+  ;; fix a bug that leaves this: ":."
+ (when
+	(looking-at ":\\.")
+ (delete-forward-char 1)
+ )
+;; works!!
+
+
+;; a more general solution, haven't tested it yet:
+;; (when
+;;   (looking-at "[[:punct:]]\\.")
+;; (delete-forward-char 1) )
+
+
+
+
+
+    ;; when on a punctuation mark with a space before it, delete the space
+    (when
+	(and
+    (looking-at "[[:punct:]]")
+    (looking-back " ")
+)
+  (delete-backward-char 1))
+    )
+
+  (when
+    (or
+     (looking-at ":\\,")
+     (looking-at ";\\,")
+     (looking-at "\\,\\,")
+     (looking-at "\\.\\.")
+     (looking-at "\\,;")
+     (looking-at "\\,:")
+     (looking-at "\\?\\?")
+)
+(right-char 1)
+      (delete-char 1)
+      (left-char 1)
+)
+  ;; Add this near the end of the function, before the final right parenthesis
+(when (looking-at ",")
+  (when (looking-back ", ")
+    (delete-backward-char 2)
+    (insert ", "))))
+
+(defvar *smart-punctuation-marks*
+  ".,;:!?-")
+
+(setq *smart-punctuation-exceptions*
+  (list "?!" ".." "..." "............................................." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
   (smart-expand)
@@ -762,158 +1022,3 @@ Also converts full stops to commas."
 (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
-
-(defun smart-comma ()
-  (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
-
-  (smart-punctuation ",")
-(unless
-(or
-
-(looking-at "\]*[[:punct:]]*[ ]*$")
-(looking-at "[[:punct:]]*[ ]*$")
-(looking-at "[ ]*I\\b")          ; never downcase the word "I"
-(looking-at "[ ]*I\'")          ; never downcase the word "I'
-(looking-at "[[:punct:]]*[ ]*\"")          ; beginning of a quote
-)
-
-(save-excursion (downcase-word 1)))
-(when
-
-;; if two periods or two commas in a row, delete the second one
-(or
-(and
-(looking-at "\\.")
-(looking-back "\\.")
-)
-(and
-(looking-at ",")
-(looking-back ",")
-))
-(delete-char 1)
-)
-
-)
-
-
-(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
-;; (define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
-
-(defun smart-question-mark ()
-  (interactive)
-  (cond (mark-active
-         (progn (delete-region (mark) (point)))))
-
-  (smart-punctuation "?")
-  (save-excursion
-    (unless
-        (or
-         (looking-at "[ ]*$")
-         (looking-at "\][[:punct:]]*[ ]*$")
-         (looking-at "[[:punct:]]*[ ]*$")
-         (looking-at "\"[[:punct:]]*[ ]*$")
-         (looking-at "\)[ ]*$")
-         (looking-at "\)")
-         ) ; or
-    (capitalize-unless-org-heading)
-      ) ; unless
-    ) ; save excursion
-  ) ; defun
-
-;; works!!
-
-(define-key org-mode-map (kbd "?") 'smart-question-mark)
-;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
-
-(defun smart-semicolon ()
-  (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
-  (smart-punctuation ";")
-(unless
-(or
-(looking-at "[[:punct:]]*[ ]*$")
-(looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
-(looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
-)
-
-(save-excursion (downcase-word 1))))
-
-(define-key org-mode-map (kbd ";") 'smart-semicolon)
-;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
-
-(defun smart-colon ()
-  (interactive)
-(cond (mark-active
-  (progn (delete-region (mark) (point)))))
-  (smart-punctuation ":")
-(unless
-(or
-(looking-at "[[:punct:]]*[ ]*$")
-(looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
-(looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
-)
-
-;; (save-excursion (downcase-word 1))
-))
-
-
-(define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
-
-
-
-(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
-;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
-
-(defun comma-or-smart-comma ()
-(interactive)
-(if
-(or
-(bolp)
-(org-at-heading-p)
-(looking-at " \"")
-)
-(insert ",")
-(smart-comma))
-)
-
-(defun backward-kill-word-correctly-and-capitalize ()
-  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
-  (interactive)
-(call-interactively 'backward-kill-word-correctly)
-  (let ((fix-capitalization (my/beginning-of-sentence-p)))
-    (when fix-capitalization
-      (save-excursion (capitalize-unless-org-heading)))))
-
-(defun capitalize-unless-org-heading ()
-  (interactive)
-;(when capitalist-mode
-  (unless
-      (or
-       (looking-at "[[:punct:]]*[\n\t ]*\\*")
-       (let ((case-fold-search nil))
-         (looking-at "[ ]*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
-         (looking-at "[A-Z].*"))
-       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
-       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
-       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
-       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
-       (looking-at "[\n\t ]*\\[fn")
-       (looking-at "[\n\t ]*)$")
-       (looking-at "[\n\t ]*\"$")
-       (looking-at "\"[\n\t ]*$")
-       (looking-at "[[:punct:]]*[ ]*http")
-       (looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past
-       (looking-at "[ ]*I\'")
-       (looking-at
-        (concat
-         "\\("
-         (reduce (lambda (a b) (concat a "\\|" b))
-                 auto-capitalize-words)
-         "\\)")))
-    (capitalize-word 1)))
-;)
