@@ -975,7 +975,8 @@ Also converts full stops to commas."
               (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
     (smart-punctuation ".")
     ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
-    (auto-capitalize--handler (point) (point) 0))
+; (auto-capitalize--handler (point) (point) 0)
+)
   (save-excursion
     (unless (or (looking-at "[ ]*$")
                 (looking-at "\"[[:punct:]]*[ ]*$")
@@ -1022,3 +1023,325 @@ Also converts full stops to commas."
 (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
+
+(defun smart-comma ()
+  (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+
+  (smart-punctuation ",")
+(unless
+(or
+
+(looking-at "\]*[[:punct:]]*[ ]*$")
+(looking-at "[[:punct:]]*[ ]*$")
+(looking-at "[ ]*I\\b")          ; never downcase the word "I"
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
+(looking-at "[[:punct:]]*[ ]*\"")          ; beginning of a quote
+)
+
+(save-excursion (downcase-word 1)))
+(when
+
+;; if two periods or two commas in a row, delete the second one
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+)
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
+)
+
+)
+
+
+(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
+;; (define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
+
+(defun smart-question-mark ()
+  (interactive)
+  (cond (mark-active
+         (progn (delete-region (mark) (point)))))
+
+  (smart-punctuation "?")
+  (save-excursion
+    (unless
+        (or
+         (looking-at "[ ]*$")
+         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "[[:punct:]]*[ ]*$")
+         (looking-at "\"[[:punct:]]*[ ]*$")
+         (looking-at "\)[ ]*$")
+         (looking-at "\)")
+         ) ; or
+    (capitalize-unless-org-heading)
+      ) ; unless
+    ) ; save excursion
+  ) ; defun
+
+;; works!!
+
+(define-key org-mode-map (kbd "?") 'smart-question-mark)
+;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
+
+(defun smart-exclamation-point ()
+  (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+
+  (smart-punctuation "!")
+(save-excursion
+(unless (looking-at "[ ]*$")
+(capitalize-unless-org-heading))
+))
+
+(define-key org-mode-map (kbd "!") 'smart-exclamation-point)
+;; (define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
+
+(defun smart-semicolon ()
+  (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+  (smart-punctuation ";")
+(unless
+(or
+(looking-at "[[:punct:]]*[ ]*$")
+(looking-at "[ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
+)
+
+(save-excursion (downcase-word 1))))
+
+(define-key org-mode-map (kbd ";") 'smart-semicolon)
+;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
+
+(defun smart-colon ()
+  (interactive)
+(cond (mark-active
+  (progn (delete-region (mark) (point)))))
+  (smart-punctuation ":")
+(unless
+(or
+(looking-at "[[:punct:]]*[ ]*$")
+(looking-at "[ ]*I\\b")     ; never downcase the word "I"
+(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
+)
+
+;; (save-excursion (downcase-word 1))
+))
+
+
+(define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
+
+
+
+(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
+;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
+
+(defun comma-or-smart-comma ()
+(interactive)
+(if
+(or
+(bolp)
+(org-at-heading-p)
+(looking-at " \"")
+)
+(insert ",")
+(smart-comma))
+)
+
+(defun line-starts-with-hash-p ()
+ (save-excursion
+  (beginning-of-line)
+  (looking-at-p "#")))
+
+(defun colon-or-smart-colon ()
+ (interactive)
+ (if (or (bolp)
+     (org-at-heading-p)
+     (line-starts-with-hash-p))
+   (insert ":")
+  (smart-colon)))
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+(with-silent-modifications
+  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+      (kill-region (match-end 0) (match-beginning 0))
+    (backward-kill-word 1))
+  (my/fix-space)
+
+;; I added this ↓↓↓ #######################
+(when (and
+(not (looking-back "--")) ; I added this
+(not (looking-back "^"))) ; I added this
+;; I added this ↑↑↑ #######################
+
+(smart-space)
+)
+(my/fix-space
+)))
+
+(defun my/delete-backward ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-backward-char 1))
+  (save-excursion
+    (when (or (looking-at "[[:space:]]")
+              (looking-back "[[:space:]]"))
+(unless (looking-back "\\w ")
+      (my/fix-space)))))
+
+(defcustom capitalize-after-deleting-single-char nil
+  "Determines whether capitalization should occur after deleting a single character.")
+
+(defun my/delete-backward-and-capitalize ()
+  "When there is an active region, delete it and then fix up the whitespace"
+  (interactive)
+(when (looking-back "^[*]+ ")
+(kill-line 0)
+(insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire
+)
+
+  (let ((capitalize capitalize-after-deleting-single-char))
+    (if (use-region-p)
+        (progn
+          (delete-region (region-beginning) (region-end))
+          (setf capitalize t))
+      (new-org-delete-backward-char 1))
+    (save-excursion
+      (when (or (looking-at "[[:space:]]")
+    (looking-back "[[:space:]]"))
+;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
+(unless (and
+(looking-back "\\w ")
+(looking-at "\\w")
+)
+  (my/fix-space))))
+    (when (and capitalize (my/beginning-of-sentence-p))
+      (save-excursion
+        (capitalize-unless-org-heading))))
+(when
+
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+)
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
+)
+)
+
+(defun backward-kill-word-correctly-and-capitalize ()
+  "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
+  (interactive)
+(call-interactively 'backward-kill-word-correctly)
+  (let ((fix-capitalization (my/beginning-of-sentence-p)))
+    (when fix-capitalization
+      (save-excursion (capitalize-unless-org-heading)))))
+
+(defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
+
+  (unless
+
+      (or
+       (looking-at "[ ]*\"")          ; if looking at a quote? Might not work
+
+       (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
+       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd
+
+(looking-at "[ ]*I\'")   ; never downcase the word "I'
+
+       (looking-at "[[:punct:]]*[ ]*\"I\\b")          ; never downcase the word "I"
+       (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
+
+       ;; (looking-at "\\") ; how do you search for a literal backslash?
+       (looking-at (sentence-end))
+
+       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break
+
+       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break
+       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break
+       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break
+
+       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http
+
+(looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+
+(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+
+(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
+
+(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line
+
+
+       (looking-at (user-full-name))
+
+       )
+
+    (save-excursion
+      (downcase-word 1))))
+
+(defun capitalize-unless-org-heading ()
+  (interactive)
+;(when capitalist-mode
+  (unless
+      (or
+       (looking-at "[[:punct:]]*[\n\t ]*\\*")
+       (let ((case-fold-search nil))
+         (looking-at "[ ]*[\n\t ]*[[:punct:]]*[\n\t ]*[A-Z]")
+         (looking-at "[A-Z].*"))
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*#\\+")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*\(")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*<")
+       (looking-at "[\n\t ]*[[:punct:]]*[\n\t ]*file:")
+       (looking-at "[\n\t ]*\\[fn")
+       (looking-at "[\n\t ]*)$")
+       (looking-at "[\n\t ]*\"$")
+       (looking-at "\"[\n\t ]*$")
+       (looking-at "[[:punct:]]*[ ]*http")
+       (looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past
+       (looking-at "[ ]*I\'")
+       (looking-at
+        (concat
+         "\\("
+         (reduce (lambda (a b) (concat a "\\|" b))
+                 auto-capitalize-words)
+         "\\)")))
+    (capitalize-word 1)))
+;)
+
+(defun downcase-save-excursion ()
+  (interactive)
+(unless
+(or
+(looking-at "[[:punct:]]*[ ]*$")
+(looking-at "[ ]*I\\b") ; never downcase the word "I"
+(looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
+(looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
+(looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
+       (looking-at (user-full-name))
+
+
+)
+  (save-excursion
+      (downcase-word 1))
+  ))
