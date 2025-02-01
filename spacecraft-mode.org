@@ -11,7 +11,7 @@
 ;; (user-full-name)
 
 
-** smart-expand
+* smart-expand
 Don't expand past certain delimiters, e.g. line break, ), and "
 
 
@@ -39,6 +39,60 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 #+END_SRC
 
+
+
+* Captain
+#+begin_src emacs-lisp
+(require 'captain)   ;; load Captain
+
+(defvar spacecraft-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;; If you want to override some keys:
+    ;; (define-key map (kbd ".") 'smart-period)
+    ;; ...
+    map)
+  "Keymap for `spacecraft-mode'.")
+
+(defun spacecraft-predicate ()
+  "Should the captain auto-capitalize right now?"
+  ;; Reuse your existing `auto-capitalize-predicate` checks:
+  (and (not buffer-read-only)
+       (functionp auto-capitalize-predicate)
+       (funcall auto-capitalize-predicate)))
+
+(defun spacecraft-sentence-start ()
+  "Return the start of the current sentence.
+By default, Captain uses `bounds-of-thing-at-point', but you can
+override with your `my/beginning-of-sentence-p'."
+  ;; E.g. if you want a naive approach, do:
+  (car (bounds-of-thing-at-point 'sentence))
+
+  ;; OR if you have something like `my/beginning-of-sentence-p`, you might
+  ;; do a custom search.  For now, let's do the naive approach:
+)
+
+;;;***autoload
+(define-minor-mode spacecraft-mode
+  "A specialized mode for writing English prose with Captain for delayed capitalization."
+  :init-value nil
+  :lighter " SpaceCraft"
+  :keymap spacecraft-mode-map
+  (if spacecraft-mode
+      (progn
+        ;; 1) Enable Captain in this buffer
+        (captain-mode 1)
+        ;; 2) Set Captain's variables
+        (setq-local captain-predicate #'spacecraft-predicate)
+        (setq-local captain-sentence-start-function #'spacecraft-sentence-start)
+
+        ;; 3) Turn on your 'smart punctuation' bindings:
+        ;;   e.g. (define-key spacecraft-mode-map (kbd ".") 'smart-period)
+        ;;        ...
+        ;; Or rely on your existing global or org-mode bindings
+        )
+    ;; If turning off:
+    (captain-mode -1)))
+#+end_src
 
 * capitalization
 ** words to never downcase
@@ -144,7 +198,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
           (replace-match (upcase (string ch)) t t))
         (setq auto-capitalize--cap-next-word nil)))))
 
-(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 #+end_src
 
 ** downcase
@@ -715,7 +769,8 @@ Also converts full stops to commas."
     ;; If we inserted punctuation recognized as an end-of-sentence...
     (when (and (eq this-command 'self-insert-command)
                (member (char-before end) '(?. ?! ??)))
-      (setq auto-capitalize--cap-next-word t))
+; (setq auto-capitalize--cap-next-word t)
+)
 
     ;; Original logic to capitalize the *previous* word if needed:
     (cond
@@ -736,9 +791,10 @@ Also converts full stops to commas."
           (backward-char 1)
           (let ((case-fold-search nil))
             (replace-match (upcase (string ch)) t t)))
-        (setq auto-capitalize--cap-next-word nil)))))
+;(setq auto-capitalize--cap-next-word nil)
+))))
 
-(add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
