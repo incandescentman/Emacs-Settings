@@ -1204,7 +1204,7 @@ Also converts full stops to commas."
 
 (defun capitalize-unless-org-heading ()
   (interactive)
-(when capitalist-mode
+;(when capitalist-mode
   (unless
       (or
        (looking-at "[[:punct:]]*[\n\t ]*\\*")
@@ -1228,7 +1228,8 @@ Also converts full stops to commas."
          (reduce (lambda (a b) (concat a "\\|" b))
                  auto-capitalize-words)
          "\\)")))
-    (capitalize-word 1))))
+    (capitalize-word 1)))
+;)
 
 (defun downcase-save-excursion ()
   (interactive)

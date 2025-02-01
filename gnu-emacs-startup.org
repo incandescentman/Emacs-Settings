@@ -1831,35 +1831,6 @@ The last line sets the path to where saveplace stores your position data. Change
 #+END_SRC
 
 
-* capitalize sentence
-#+BEGIN_SRC emacs-lisp
-(defun capitalize-sentence ()
-  (interactive)
-(unless (my/beginning-of-sentence-p)
-(org-backward-sentence))
-  (endless/capitalize)
-(org-forward-sentence 1)
-(jay/right-char)
-)
-(define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
-
-#+END_SRC
-
-* downcase sentence
-#+BEGIN_SRC emacs-lisp
-(defun downcase-sentence ()
-  (interactive)
-(unless (my/beginning-of-sentence-p)
-(org-backward-sentence))
-  (downcase-word 1)
-(org-forward-sentence 1)
-(jay/right-char)
-)
-
-(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
-
-#+END_SRC
-
 * return-insert-blank-line-before
 #+BEGIN_SRC emacs-lisp
 (defun return-insert-blank-line-before ()
