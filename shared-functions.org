@@ -8706,6 +8706,7 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 #+begin_src emacs-lisp
 (put 'enable-local-eval 'safe-local-variable #'booleanp)
 (add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
+(setq enable-local-variables :all)
 #+end_src
 
 * Local Variables & The End

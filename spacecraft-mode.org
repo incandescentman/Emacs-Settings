@@ -1103,7 +1103,7 @@ Also converts full stops to commas."
     ;; Original logic to capitalize the *previous* word if needed:
     (cond
      ((auto-capitalize--inserted-non-word-p beg end length)
-      ...
+
       (auto-capitalize--capitalize-previous-word))
      ;; or yank logic...
      )))
@@ -1313,6 +1313,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
+(with-silent-modifications
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
@@ -1327,7 +1328,7 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 (smart-space)
 )
 (my/fix-space
-))
+)))
 #+END_SRC
 
 *** NOTE-TO-JAY Question
