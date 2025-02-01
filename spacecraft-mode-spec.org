@@ -1,0 +1,348 @@
+
+* o1 pro
+Below is a *proposed spec sheet* describing the *intended logic* and *desired behavior* of your "spacecraft-mode" (and related code). The aim is to unify your current usage of "auto-capitalization," "smart punctuation," and "whitespace-fixing" into *clear, consistent rules* that match how iOS (and other "intelligent text editing" systems) typically handle typed text. Once the spec is settled, you can refactor your Emacs Lisp code to implement it cleanly.
+
+** 1. Overall Goal
+
+Make Emacs editing feel more like an "intelligent text editor" for *prose* in English, with these main features:
+
+1. *Smart Punctuation*:
+  - Keys like `.` (period), `,` (comma), `?`, `!`, `;`, `:` automatically handle:
+     1. Combining with or replacing existing punctuation.
+     2. Ensuring correct spacing around them (one space after punctuation, no extra spaces).
+     3. Avoiding double punctuation where not wanted.
+  - For example, typing `.` when there's already a comma should "replace" or combine the comma with a period in some sensible way.
+
+2. *Intelligent Capitalization*:
+  - If you typed a period and ended a sentence, the next word typed *should* become capitalized, but *not* necessarily as soon as you press `.`. Instead, the user might back up, change punctuation, or do something else.
+  - Once the user actually commits to starting a new word in "sentence-start context," the *first letter of that new word* is capitalized automatically---similar to iOS.
+
+3. *Intelligent Whitespace*:
+  - Ensure that after punctuation marks, you never end up with more than 1 space.
+  - If a user retypes punctuation, your code merges them or removes duplicates.
+  - No unwanted space after "---" (em dash) or similar punctuation.
+
+4. *Minor Edge Cases*:
+  - Possibly skip auto-capitalizing if you're inside a bracketed expression, or inside a URL, or if the next typed word is something you specifically said *never* to capitalize (like "http").
+
+** 2. Detailed "Smart Punctuation" Behavior
+
+When the user hits a punctuation key---like `.`, `,`, `;`, etc.---the desired outcome is:
+
+1. *If* there is already punctuation at point or just behind it, combine or replace gracefully.
+  - Example: If user typed `,` but there's already a `.` there, you might replace the `.` with `,` or handle it as you see fit.
+  - If the user typed a second `.` in a row, you might keep only one or create an ellipsis `...` if that's your preference.
+
+2. *Spacing*:
+  - After finalizing punctuation, ensure exactly one space follows (unless it's end-of-line or something like that).
+  - If the user typed punctuation after existing punctuation, fix any spacing collisions.
+
+3. *No extra space after an em dash* (`---`).
+  - The user may want "---word" with no space, or "word---word".
+
+4. Possibly handle "double-space = period" logic:
+  - If user typed two consecutive spaces, you might insert a period + single space, iOS style. That's optional, but it's in your code as "double space adds a period."
+
+5. "Smart Hyphen," "Smart Colon," etc. all follow a similar pattern---*replace* or *unify* with existing punctuation, fix spacing, do not create duplicates.
+
+*Examples*:
+
+- Typing `.` when the text ends with a comma → remove/replace the comma with period. Then ensure one space after.
+  E.g. from `Hello,` → user hits `.` → you get `Hello.` (with 1 space if more words follow).
+- If the user typed `?` but the text ends with `!!`, you might unify them → `!?` or something, or you might just remove the extra `!`.
+
+** 3. Intelligent Capitalization
+
+In an iOS-like sense, you want:
+
+1. *When* user ends a sentence with `.`, `?`, or `!`:
+  - Set a "cap-next-word" flag. (But do *not* forcibly capitalize the next character typed, because the user might backspace or type punctuation again.)
+
+2. *When* the user starts typing letters for the next word,
+  - If "cap-next-word" is set, capitalize the *first letter typed* of that word.
+  - Then unset the flag.
+  - If the user typed some punctuation or a space again, keep waiting. Only "fire" the auto-cap if they typed a letter.
+
+3. You also want standard "capitalize if it's the start of a paragraph" or if it's truly the first word in the buffer. The `auto-capitalize` package can handle that automatically, or you can incorporate that logic into your "cap-next-word" approach.
+
+4. *Exceptions*:
+  - If the next typed word is explicitly in `auto-capitalize-words` as "never downcase," or if it's "http" or "i.e.," skip the forced capitalization.
+  - If the user typed a word that you want always capitalized (like "I" or "OK"), then do so even mid-sentence.
+
+*Example*:
+
+- You typed: `Hello there. ^` (carat = cursor)
+- The code sees `.` typed → sets "cap-next-word."
+- Next, user types `t` → code sees "cap-next-word is set," so it replaces `t` with `T` as soon as that single letter is typed.
+- Then user continues: `this is new sentence.`
+- If user typed a space or punctuation before any letter, we do *not* forcibly insert a capital letter. We wait for the first letter typed.
+
+** 4. Whitespace / "Smart Space" Behavior
+
+When you press the space bar:
+
+1. If a region is active, first delete it (region deletion).
+2. Possibly do an "abbrev expand" or "smart expand" if you have pending expansions (like iOS auto-complete).
+3. Make sure we do not add extra space after punctuation except for exactly one space.
+4. If user just typed "---" (em dash) and is wanting no space after it, do not forcibly insert one.
+
+*Examples*:
+
+- If your text is `Hello,|` (cursor after comma, no space), pressing space might yield `Hello, ` with exactly one space.
+- If you see `Hello--- ^`, you do *not* expand to "Hello---  " or anything. Possibly skip adding a space after `---`.
+
+A simpler approach is:
+- Always "just-one-space" except in contexts you want zero spaces (like after an em dash if the user typed no space).
+- "my/fix-space" ensures we don't have multiple spaces, etc.
+
+** 5. Special Key Bindings
+
+You mention:
+
+- "When I end a sentence by hitting period, and then I maybe press return or something, I still want the next typed *word* to auto-capitalize."
+  → That's covered by the "cap-next-word" logic that persists across a line break.
+
+- "Space bar is bound to 'smart-space'."
+  → That function does expansions, ensures 1 space, maybe "double space → period + space," etc.
+
+- "Period key is bound to 'smart-period'."
+  → That function replaces/combines punctuation as needed, ensures 1 space after, sets the "cap next word" flag, etc.
+
+- Similarly for "smart-comma," "smart-colon," etc.
+
+** 6. Deletions / `backward-kill-word-correctly`
+
+When you delete backwards:
+
+- If you delete near punctuation, fix spacing so you don't leave behind multiple spaces or weird punctuation combos.
+- If user typed `---` and then kills the last word, do not leave "--- " with a trailing space.
+  Possibly if you see "--- " after the kill, remove the space if it's not needed.
+
+*Example*:
+
+- Text is `He was tired--- exhausted.`
+- If user calls `backward-kill-word-correctly` on "exhausted," you might end up with `He was tired--- ^`.
+- Possibly re-check if that space after "---" is needed or not. If your rule says "never space after em dash," remove it.
+- The logic is "if we see that we are at the start of line or after triple dash, do not insert an extra space."
+
+** 7. Summarized "Spacecraft-Mode" Rules
+
+1. *Key bindings*:
+  - `SPC` → `smart-space`
+  - `.` → `smart-period`
+  - `,` → `smart-comma`
+  - `?`, `!`, `;`, `:` → "smart" variants that unify punctuation, ensure correct spacing, etc.
+2. *Auto-capitalization*:
+  - Use the iOS-like "cap next word if you ended a sentence with . ? !" approach.
+  - Or also rely on the built-in `auto-capitalize-mode` to handle "start of sentence or paragraph" detection.
+  - If your code sees punctuation that ends a sentence, it sets a "cap-next-word" flag. Then, the next letter typed in `post-self-insert-hook` becomes uppercase automatically.
+3. *Whitespace*:
+  - Usually "just-one-space" after punctuation, but skip it if user typed `---` (em dash) or `)` or something that they want no space.
+  - Possibly implement "double-space = period + single space" as an optional feature.
+4. *Deleting words*:
+  - After the deletion, fix spacing so that you don't have double spaces or trailing punctuation space.
+  - Possibly skip space if we are after "---."
+
+** 8. Additional Examples
+
+- "Double space → period + space + 'cap next word' flag."
+ - If user typed `Hello^` and hits space, space → you get `Hello `.
+ - If user hits space again quickly, you transform that second space into `. `, and set "cap next word."
+ - Next typed letter becomes uppercase.
+
+- "Smart period with existing punctuation":
+ - You have "Hello," and user types `.`, you remove/replace the comma with a period, then ensure `Hello. ` with single space after it, set "cap next word" if you want.
+
+- "Cap next word across lines":
+ - If user typed `.`, pressed enter, typed next letter → that next letter is capitalized.
+ - Make sure your "cap next word" flag doesn't vanish just because there's a newline. Or rely on `auto-capitalize-mode` to see that you started a new paragraph.
+
+** 9. Implementation Outline
+
+1. *`smart-*` punctuation commands* do these steps:
+   1. Possibly unify with existing punctuation.
+   2. Remove duplicates or "," if typing `.`.
+   3. Insert or confirm 1 space after punctuation, except skip if after `---`.
+   4. If punctuation is `.`, `?`, `!`, set the "cap-next-word" flag.
+
+2. *`auto-capitalize--maybe-capitalize-next-word`* in `post-self-insert-hook`:
+  - If "cap-next-word" is set and the user typed a letter (char-syntax = word), forcibly uppercase that letter, then clear the flag.
+
+3. *`my/fix-space`*:
+  - A general function that removes extra spaces, merges punctuation, etc.
+  - You might call it from "smart punctuation" or from a "post-self-insert whitespace fix." (But watch out for Emacs's `after-change-functions` re-entrancy. Possibly do it in `post-command-hook` or "post-self-insert-hook.")
+
+4. *`backward-kill-word-correctly`*:
+  - If you see you're at the end of "--- " and it's not wanted, remove the extra space.
+  - Otherwise do normal kill, then schedule a "fix-space" check after.
+
+** 10. Next Steps
+
+1. *Review* these specs for correctness. Do they match exactly how you want to type in Emacs and how you expect iOS-like text editing?
+2. *Revise* any rules if needed (for instance, do you truly want a single space after "!" at end of the line? Maybe not).
+3. *Refactor* your Emacs Lisp code around these specs. Typically, you'll have:
+  - A single "smart punctuation" function that's parameterized by the typed punctuation.
+  - A single "cap-next-word" mechanism integrated with `auto-capitalize`.
+  - A single "fix-space" call in `post-self-insert-hook` or "post-command-hook," rather than repeated calls inside `auto-capitalize--handler`.
+
+Once we confirm that the above spec matches your desired logic, we can reorganize or rewrite the code to follow these steps in a simpler, more robust manner. That's the recommended approach to avoid the `(args-out-of-range ...)` errors and code duplication you've run into.
+
+*Conclusion*: Let's finalize that this spec is correct for your usage. Then we'll systematically rework the code so that each piece does one job:
+- "Smart punctuation" for each punctuation command,
+- "Auto-capitalization" for sentence starts,
+- "Fix spacing" in `post-self-insert-hook`,
+- "Kill word" logic that cleans up the leftover spaces.
+
+That should yield a streamlined, robust "spacecraft-mode."
+* o3 mini
+Below is a proposed specification document for "spacecraft-mode" that describes---in plain English---the intended behavior and logic. This spec sheet is intended to serve as a basis for refactoring and unifying the current code, so please review and let me know if any adjustments are needed.
+
+# Spacecraft-Mode Specification
+
+*Overview:*
+Spacecraft-mode is a special editing mode optimized for writing and editing English prose. It is inspired by the smart punctuation and auto-capitalization behavior seen on iOS. The mode's primary goals are to (1) automatically manage punctuation insertion and spacing and (2) intelligently handle capitalization at sentence boundaries, all while allowing for quick corrections (e.g., replacing punctuation on the fly).
+
+** 1. Key Bindings and Command Behavior
+
+- *Space Bar ("Smart Space")*
+ - *Behavior:* Instead of inserting a literal space, the space bar is bound to a "smart-space" command. This command will:
+   - Insert a single space.
+   - Ensure that exactly one space exists after punctuation marks.
+   - (When appropriate) trigger expansion of any abbreviations (via a `smart-expand` function) before inserting the space.
+ - *Example:*
+   - Typing `Hello,` followed by space ensures the text becomes `"Hello, "` (with one space after the comma) even if the user accidentally types extra spaces.
+
+- *Period Key ("Smart Period")*
+ - *Behavior:* The period key is bound to a "smart-period" command. This command will:
+   - Insert a period (or replace an existing punctuation mark with a period if the user is "correcting" punctuation).
+   - After inserting a period, it will "flag" that the sentence has ended. The mode will remember that the next word should be treated as the beginning of a new sentence.
+   - If the user types two periods in a row (or a period after an already inserted period), the command will remove the duplicate.
+ - *Example:*
+   - Typing `this is a sentence` then pressing the period key produces `"this is a sentence."`. When the user later begins a new sentence (for instance, after hitting return or space), the first letter of the new word is automatically capitalized.
+   - If the user types `Hello..` the second period is removed so that only one period remains.
+
+- *Comma, Colon, Semicolon, Question Mark, Exclamation Point, and Hyphen*
+ - *Behavior:* Each punctuation key (e.g., comma, colon, semicolon, etc.) is similarly bound to a "smart" command:
+   - They work similarly to smart-period by inserting or replacing the existing punctuation.
+   - They perform a "clean-up" routine to fix spacing around the punctuation.
+   - They may also check the context to decide whether to trigger any capitalization logic.
+ - *Example:*
+   - When a user types a comma after a word (or replaces an existing comma), the command ensures that there is exactly one space after the comma and no extra space before it.
+   - Re-typing a punctuation mark while one is already present will combine or replace it intelligently (for example, if a user wants to change a comma to a semicolon, the mode will adjust the punctuation and spacing accordingly).
+
+- *General Command Consistency*
+ - The mode should override the default self-insert behavior in text contexts (and in Org-mode headings, where slight differences may apply) but leave programming and other non-prose modes unaffected.
+ - Additional commands such as "insert-space," "insert-period," and "insert-comma" exist to support manual intervention and should behave consistently with the smart versions.
+
+** 2. Auto-Capitalization Logic
+
+- *Sentence-Start Capitalization*
+ - *Triggering:*
+   - When the user types punctuation that marks the end of a sentence (such as a period, exclamation point, or question mark) and then later begins typing a new word (detected when a self-insert of a "word" character occurs after whitespace), the mode should automatically capitalize the first letter of the new word.
+   - The capitalization trigger should occur only after the entire word is typed (i.e., once the user hits space or another punctuation) so that the mode does not interfere with mid-word typing.
+ - *Stateful "Cap Next Word" Flag:*
+   - After inserting a sentence-ending punctuation, the mode sets an internal flag (e.g., `cap-next-word`) to note that the next word should be capitalized.
+   - Once a word is detected (via a post-self-insert hook) and finished (when a space or punctuation is inserted), the first character of that word is automatically changed to its uppercase version.
+ - *Contextual Exceptions:*
+   - In certain contexts (e.g., inside Org-mode headings or other marked regions), the auto-capitalization might be inhibited or behave differently.
+   - Certain words (or patterns) may be excluded from auto-capitalization based on a "never-downcase" or user-specified list.
+
+- *User-Correctable Capitalization*
+ - The mode allows for dynamic switching: if a user re-types a punctuation mark (or uses a "smart" command to replace punctuation), the capitalization status is re-evaluated. For example, if a user replaces a period with a comma, the "cap next word" flag might be cleared.
+ - There are also commands for explicitly downcasing or upcasing the word under the cursor, as well as combined commands that handle word deletion and capitalization correction.
+
+- *Examples:*
+ - *Example 1:*
+    1. User types: `it is a sunny day`
+    2. User types the smart period → the text becomes: `it is a sunny day.`
+    3. The mode sets the "cap next word" flag.
+    4. User types a return (or space) to begin a new sentence, then types `the weather is perfect`.
+    5. Upon completion of the word "the" (detected when a space or punctuation is entered), the "t" is automatically transformed to uppercase → `The weather is perfect.`
+
+ - *Example 2:*
+    1. User types: `i went to the store,`
+    2. The smart-comma command ensures the text is `i went to the store, ` (with exactly one space after the comma).
+    3. Later, if the user notices the comma should be a semicolon, retyping the punctuation key triggers a replacement, and spacing is corrected accordingly.
+
+ - *Example 3:*
+    1. If a user is editing a sentence mid-way and deletes a word using a "backward-kill-word-correctly" command, the mode cleans up extra spaces and, if the deletion brings the cursor to a sentence boundary, ensures the next word is capitalized appropriately---unless the deletion occurred after special punctuation (like a triple dash, where no extra space should be inserted).
+
+** 3. Smart Punctuation & Whitespace Cleanup
+
+- *Whitespace Normalization*
+ - Every time punctuation is inserted or a word is deleted/modified, the mode performs a "fix-up" routine:
+   - Ensure that there is exactly one space after punctuation.
+   - Remove any extra spaces or tabs around punctuation marks.
+   - Do not insert a space at the beginning of a line or immediately after certain punctuation (e.g., after a triple dash `---`).
+ - *Example:*
+   - If a user accidentally types `"Hello,  world"` (with two spaces after the comma), the mode automatically corrects this to `"Hello, world"`.
+
+- *Punctuation Replacement and Combination*
+ - If a punctuation key is pressed when there is already punctuation at the cursor, the mode intelligently replaces or merges them:
+   - For example, typing a comma immediately after an existing comma will not result in `",,"` but will either leave a single comma or combine with the previously inserted punctuation according to predefined exceptions.
+ - A list of exceptions (for example, common punctuation clusters like `?!` or ellipses `...`) is maintained so that certain combinations are left untouched.
+
+- *Edge Cases and Corrections*
+ - The mode takes care to handle edge cases such as:
+   - Punctuation inserted at the very beginning or end of a line.
+   - Punctuation within quotes or parentheses, where the mode should respect the context.
+   - Deletion commands that may leave orphaned spaces or double punctuation.
+ - *Example:*
+   - If a user types `Wait..` the second period is removed to leave a single period.
+   - If the cursor is immediately after a punctuation mark and a deletion command is issued, the mode ensures that the space between words remains consistent (unless the deletion is part of a larger "kill" command).
+
+** 4. Integration with Other Modes and Commands
+
+- *Org-Mode Considerations*
+ - In Org-mode, certain rules might differ:
+   - For instance, in Org headings or within certain blocks (like source code blocks), the smart punctuation and auto-capitalization may be partially disabled or behave differently.
+   - Separate key bindings (or "fallback" behaviors) can be defined so that when the point is in an Org heading, a simple space insertion is performed rather than the full smart-space logic.
+
+- *Undo and Correction Support*
+ - When a smart command makes an automated change (for instance, auto-capitalizing a word), an undo boundary should be created so that the user can easily revert the change if needed.
+ - The mode also supports explicit commands (such as `backward-kill-word-correctly`) that both delete text and fix spacing and capitalization, ensuring that subsequent typing is not disrupted.
+
+- *Yank (Paste) Handling*
+ - When text is pasted (yanked) into the buffer, if the pasted text begins with what appears to be a new sentence, the mode should ensure that its first word is correctly capitalized.
+
+** 5. Summary of User Scenarios
+
+1. *Beginning a New Sentence:*
+  - *User Action:* Types a sentence, ends it with a period, then hits return and begins typing the next sentence.
+  - *Expected Behavior:*
+    - The period command sets a "cap next word" flag.
+    - The first letter of the new sentence is automatically capitalized when the word is finished.
+
+2. *Punctuation Correction:*
+  - *User Action:* Inserts a comma but then decides it should be a semicolon.
+  - *Expected Behavior:*
+    - Re-typing the punctuation key (or invoking the smart command) replaces the comma with a semicolon and cleans up the surrounding space.
+
+3. *Whitespace and Punctuation Cleanup After Deletion:*
+  - *User Action:* Uses a backward deletion command to remove a word.
+  - *Expected Behavior:*
+    - The deletion command cleans up extra spaces.
+    - If the deletion exposes a sentence boundary, the mode ensures that the next word will be capitalized---except when adjacent to punctuation (e.g., after a triple dash).
+
+4. *Handling of Special Cases (e.g., Org-mode):*
+  - *User Action:* Types in an Org-mode heading.
+  - *Expected Behavior:*
+    - The smart commands recognize the context and either use a simplified space/punctuation insertion or leave the heading formatting intact.
+
+** 6. Implementation Notes (For Refactoring)
+
+- *Hook Integration:*
+ - Use `post-self-insert-hook` to check for the beginning of a new word and apply capitalization if the "cap next word" flag is set.
+ - Use `after-change-functions` to monitor buffer changes for punctuation insertion or deletion, then trigger whitespace cleanup and abbreviation expansion.
+
+- *State Management:*
+ - Maintain a buffer-local flag (e.g., `auto-capitalize--cap-next-word`) to remember when the next word should be capitalized.
+
+- *Consistency:*
+ - Consolidate overlapping logic from existing functions (e.g., `auto-capitalize-mode`, `smart-expand`, and smart-punctuation commands) so that the code is DRY (Don't Repeat Yourself) and easy to maintain.
+
+- *Context-Sensitive Behavior:*
+ - Ensure that all smart commands check the current mode (e.g., text-mode vs. prog-mode vs. org-mode) and adjust their behavior accordingly.
+ - Factor in exceptions for specific words or contexts as defined in user customizations (e.g., never-downcase words, org-specific predicates).
+
+Please review the above specification and let me know if any part of the logic or behavior should be modified, expanded, or clarified. Once we agree on the spec, we can proceed with a more focused refactoring of the code base to meet these requirements.
