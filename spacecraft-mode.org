@@ -706,6 +706,7 @@ Also converts full stops to commas."
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
   (interactive)
+(let (inhibit-modification-hooks)
   (just-one-space)
   (when (and (or
               (looking-back "^[[:space:]]+")
@@ -718,7 +719,7 @@ Also converts full stops to commas."
              (not (looking-back " - "))
 
 )
-    (delete-horizontal-space)))
+    (delete-horizontal-space))))
 #+END_SRC
 
 . This.
@@ -1336,16 +1337,16 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
    Since ~backward-kill-word-correctly~ already calls ~my/fix-space~, isn't a call to ~smart-space~ redundant? What was the use case you were thinking of when you originally added it? Note that if you remove the whole ~(when ...)~ block, it apparently works as you intend it to work...
 
 *** NOTE-TO-SERJ Answer
-Good question. The answer is that there should never be a space after "--"
+Good question. The answer is that there should never be a space after "---"
 
 Example:
-: Alice was tired--tired as hell. ^
+: Alice was tired---tired as hell. ^
 
 Say the point is the carat, and I invoke backward-kill-word-correctly 4 times.
 
 Output if I remove the whole ~(when ...)~ block:
-: Alice was tired-- ^
-Note the space after "--"
+: Alice was tired--- ^
+Note the space after "---"
 
 Desired output:
 : Alice was tired---^
