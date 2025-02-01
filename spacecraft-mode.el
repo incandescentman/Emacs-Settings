@@ -952,8 +952,20 @@ Also converts full stops to commas."
   (unless (or (looking-back "\\bvs.[ ]*" nil)
               (looking-back "\\bi\\.e[[:punct:]]*[ ]*" nil)
               (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
-    (smart-punctuation ".")))
-
+    (smart-punctuation ".")
+    ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
+    (auto-capitalize--handler (point) (point) 0))
+  (save-excursion
+    (unless (or (looking-at "[ ]*$")
+                (looking-at "\"[[:punct:]]*[ ]*$")
+                (looking-at "\)[ ]*$"))
+      (capitalize-unless-org-heading)))
+  ;; If two periods or commas in a row, remove the second one:
+  (when (or (and (looking-at "\\.")
+                 (looking-back "\\." nil))
+            (and (looking-at ",")
+                 (looking-back "," nil)))
+    (delete-char 1)))
 
 (defun auto-capitalize--handler (beg end length)
   "The `after-change-functions' handler for `auto-capitalize-mode'."
@@ -968,7 +980,7 @@ Also converts full stops to commas."
     ;; Original logic to capitalize the *previous* word if needed:
     (cond
      ((auto-capitalize--inserted-non-word-p beg end length)
-      ...
+
       (auto-capitalize--capitalize-previous-word))
      ;; or yank logic...
      )))
@@ -1138,6 +1150,7 @@ Also converts full stops to commas."
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
+(with-silent-modifications
   (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
       (kill-region (match-end 0) (match-beginning 0))
     (backward-kill-word 1))
@@ -1152,7 +1165,7 @@ Also converts full stops to commas."
 (smart-space)
 )
 (my/fix-space
-))
+)))
 
 (defun my/delete-backward ()
   "When there is an active region, delete it and then fix up the whitespace"
