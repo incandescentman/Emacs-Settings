@@ -18,6 +18,25 @@
 )
 )
 
+;; Let Emacs parse a single space as a sentence boundary
+(setq sentence-end-double-space nil)
+
+(defun my-captain-sentence-start ()
+  "Return the buffer position of the start of the current sentence."
+  (save-excursion
+    ;; E.g., search backwards for a punctuation char + single space:
+    ;; This is a naive approach, adjust as needed:
+    (re-search-backward "[.?!]\\s-+" nil t)
+    (forward-char 1) ; move past the punctuation
+    (skip-chars-forward " \t") ; skip spaces
+    (point)))
+
+;; Then tell Captain to use it:
+(setq-local captain-sentence-start-function #'my-captain-sentence-start)
+
+(setq-local captain-sentence-start-function
+            #'my-captain-sentence-start)
+
 (require 'captain)   ;; load Captain
 
 (defvar spacecraft-mode-map
@@ -87,35 +106,29 @@ override with your `my/beginning-of-sentence-p'."
 (setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 
 (defun downcase-or-endless-downcase ()
-(interactive)
-(if
-
-; If
-(or
-(looking-back "\\.\\.\\.[ ]*[\n\t ]*")
-(looking-back "i.e.[ ]*")
-(looking-back "[0-9]\.[ ]*")
-(looking-back "e.g.[ ]*")
-(looking-back "vs.[ ]*")
-(looking-back "U.K.[ ]*")
-(looking-back "U.S.[ ]*")
-(looking-back "vs.[ ]*")
-(looking-back "^")
-)
-    (call-interactively 'downcase-word); then
-    (call-interactively 'endless/downcase); else
-
-)
-)
+  (interactive)
+  (if
+      (or
+       (looking-back "\\.\\.\\.[ ]*[\n\t ]*")
+       (looking-back "i.e.[ ]*")
+       (looking-back "[0-9]\.[ ]*")
+       (looking-back "e.g.[ ]*")
+       (looking-back "vs.[ ]*")
+       (looking-back "U.K.[ ]*")
+       (looking-back "U.S.[ ]*")
+       (looking-back "vs.[ ]*")
+       (looking-back "^"))
+      (call-interactively 'downcase-word)
+    (call-interactively 'endless/downcase)))
 
 (defun capitalize-sentence ()
   (interactive)
-(unless (my/beginning-of-sentence-p)
-(org-backward-sentence))
+  (unless (my/beginning-of-sentence-p)
+    (org-backward-sentence))
   (endless/capitalize)
-(org-forward-sentence 1)
-(jay/right-char)
-)
+  (org-forward-sentence 1)
+  (jay/right-char)
+  )
 (define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
 
 (defun downcase-sentence ()
@@ -148,8 +161,6 @@ override with your `my/beginning-of-sentence-p'."
 (defun downcase-or-endless-downcase ()
 (interactive)
 (if
-
-; If
 (or
 (looking-back "\\.\\.\\.[ ]*[\n\t ]*")
 (looking-back "i.e.[ ]*")
@@ -159,13 +170,9 @@ override with your `my/beginning-of-sentence-p'."
 (looking-back "U.K.[ ]*")
 (looking-back "U.S.[ ]*")
 (looking-back "vs.[ ]*")
-(looking-back "^")
-)
-    (call-interactively 'downcase-word); then
-    (call-interactively 'endless/downcase); else
-
-)
-)
+(looking-back "^"))
+    (call-interactively 'downcase-word)
+    (call-interactively 'endless/downcase)))
 
 (defun endless/convert-punctuation (rg rp)
   "Look for regexp RG around point, and replace with RP.
@@ -226,23 +233,6 @@ Also converts full stops to commas."
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key (kbd "M-u") 'endless/upcase)
 (global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
-
-(defun endless/upgrade ()
-  "Update all packages, no questions asked."
-  (interactive)
-  (save-window-excursion
-    (list-packages)
-    (package-menu-mark-upgrades)
-    (package-menu-execute 'no-query)))
-
-(defun smart-period-or-smart-space ()
-"double space adds a period!"
-(interactive)
-  (if
-(looking-back "[A-Za-z0-9] ")
-(smart-period)
-(smart-space)
-))
 
 (defun smart-space ()
   "Insert space and then clean up whitespace."
