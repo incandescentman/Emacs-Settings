@@ -8702,6 +8702,17 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 (provide 'my-org-config-mode)
 #+end_src
 
+* Local Variables & The End
+#+BEGIN_SRC emacs-lisp
+(setq debug-on-message
+      "org-element--cache: Added org-data parent to non-headline element")
+
+(setq debug-on-message
+      "org-element--cache: Added org-data parent to non-headline element:")
+#+END_SRC
+
+
+
 * Trust local variables
 #+begin_src emacs-lisp
 (put 'enable-local-eval 'safe-local-variable #'booleanp)
@@ -8709,12 +8720,11 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 (setq enable-local-variables :all)
 #+end_src
 
-* Local Variables & The End
-#+BEGIN_SRC
 # Local Variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-#+END_SRC
 
+
+* Org element errors

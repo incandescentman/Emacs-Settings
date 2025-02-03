@@ -857,6 +857,22 @@ before packages are loaded."
   (setq read-process-output-max (* 1024 1024))
                                         ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
 
+
+  ;; Define the minor mode so it's loaded on startup.
+  (define-minor-mode org-config-files-local-mode
+    "Minor mode for editing configuration files in Org mode."
+    :init-value nil
+    :lighter " OrgCfg"
+    :keymap (let ((map (make-sparse-keymap)))
+              (define-key map (kbd "<SPC>") 'insert-space)
+              map)
+    (message "org-config-files-local-mode is now %s" org-config-files-local-mode)
+    (if org-config-files-local-mode
+        (setq-local abbrev-mode nil)
+      (kill-local-variable 'abbrev-mode)))
+
+
+
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
   (load "/Users/jay/gnulisp/smart-return.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
