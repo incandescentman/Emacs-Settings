@@ -212,7 +212,7 @@ This function should only modify configuration layer settings."
                                       org-ql
                                       org-roam
                                       org-roam-ui
-                                      org-superstar
+                                      ;; org-superstar
                                       ox-clip
                                       ;; ox-gfm
                                       ox-timeline
@@ -333,6 +333,7 @@ This function should only modify configuration layer settings."
                                     ;; ivy
                                     notmuch
                                     org-download
+                                    org-superstar
                                     org-timeblock
                                     popwin
                                     spaceline
@@ -944,9 +945,9 @@ This function is called at the very end of Spacemacs initialization."
      '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
    '(org-sidebar-jump-indirect t)
    '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
-   '(org-superstar-headline-bullets-list '(42 42 42 42))
-   '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
-   '(org-superstar-remove-leading-stars t)
+   ;; '(org-superstar-headline-bullets-list '(42 42 42 42))
+   ;; '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
+   ;; '(org-superstar-remove-leading-stars t)
    '(org-tempo-keywords-alist
      '(("l " . "src emacs-lisp ")
        ("H" . "html")
