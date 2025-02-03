@@ -180,6 +180,28 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (setq interprogram-paste-function nil)
 #+END_SRC
 
+** safe
+#+begin_src emacs-lisp
+(defun safe-replace (pattern replacement beg end)
+  "Safely replace PATTERN with REPLACEMENT between BEG and END."
+  (save-excursion
+    (goto-char beg)
+    (let ((last-point (point)))
+      (while (re-search-forward pattern end t)
+        (unless (> (point) last-point)  ; Prevent infinite loops
+          (error "Infinite loop detected in regex replacement."))
+        (setq last-point (point))
+        (replace-match replacement t t)))))
+
+(defun safe-pbpaste ()
+  "Run pbpaste with a timeout to prevent hanging."
+  (let ((default-directory "/tmp/"))  ; Avoid issues with remote TRAMP paths
+    (with-temp-buffer
+      (if (zerop (call-process "gtimeout" nil t nil "2" "pbpaste"))  ; Requires coreutils for `gtimeout`
+          (buffer-string)
+        (error "pbpaste timed out")))))
+#+end_src
+
 ** different behavior depending on whether I'm working with code or prose
 
 #+begin_src emacs-lisp
