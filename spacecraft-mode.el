@@ -552,16 +552,23 @@ Also converts full stops to commas."
   (list "?!" ".." "..." "............................................." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
+(with-silent-modifications
+
+
   (smart-expand)
   (save-restriction
-    (when (and (eq major-mode 'org-mode)
-               (org-at-heading-p))
-      (save-excursion
-        (org-beginning-of-line)
-        (let ((heading-text (fifth (org-heading-components))))
-          (when heading-text
-            (search-forward heading-text)
-            (narrow-to-region (match-beginning 0) (match-end 0))))))
+
+
+
+(when (and (eq major-mode 'org-mode)
+           (org-at-heading-p))
+  (save-excursion
+    (org-beginning-of-line)
+    (let ((heading-text (fifth (org-heading-components))))
+      (when heading-text
+        ;; Process heading-text as needed without narrowing.
+        ))))
+
     (cl-flet ((go-back (regexp)
                 (re-search-backward regexp nil t)
                 (ignore-errors ; might signal `end-of-buffer'
@@ -610,7 +617,74 @@ Also converts full stops to commas."
     (when (and (eq major-mode 'org-mode)
                (org-at-heading-p))
       ;; Possibly do more things for Org headings here...
-      ))
+      )))
+
+
+(defun smart-punctuation (new-punct &optional not-so-smart)
+(with-silent-modifications
+
+  (smart-expand)
+  (save-restriction
+
+(when (and (eq major-mode 'org-mode)
+           (org-at-heading-p))
+  (save-excursion
+    (org-beginning-of-line)
+    ;; (let ((heading-text (fifth (org-heading-components))))
+    ;;   (when heading-text
+    ;;     ;; Process heading-text as needed without narrowing.
+    ;;     ))
+    ))
+
+    (cl-flet ((go-back (regexp)
+                (re-search-backward regexp nil t)
+                (ignore-errors ; might signal `end-of-buffer'
+                  (forward-char (length (match-string 0))))))
+      (if not-so-smart
+          ;; Simple path: just insert `new-punct`
+          (let ((old-point (point)))
+            (go-back "[^ \t]")
+            (insert new-punct)
+            (goto-char old-point)
+            (forward-char (length new-punct)))
+        ;; "Smart" punctuation
+        (let ((old-point (point)))
+          (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+          (let ((was-after-space
+                 (and (< (point) old-point)
+                      (find ?\s (buffer-substring (point) old-point)))))
+            ;; Attempt to match existing punctuation
+            (if (re-search-forward
+                 (format "\\([ \t]*\\)\\([%s]*\\)" *smart-punctuation-marks*)
+                 nil t)
+                (let* ((old-punct (match-string 2))
+                       (was-after-punct (>= old-point (point))))
+                  ;; Replace subexp #1 (the whitespace)
+                  (replace-match "" nil t nil 1)
+                  ;; Replace subexp #2 (the punctuation), if it exists
+                  (when (match-beginning 2)
+                    (replace-match
+                     (or (when (and was-after-punct
+                                    (not (string= old-punct "")))
+                           ;; Possibly combine old punctuation with new
+                           (let ((potential-new-punct (concat old-punct new-punct)))
+                             (find-if (lambda (exception)
+                                        (search potential-new-punct exception))
+                                      *smart-punctuation-exceptions*)))
+                         new-punct)
+                     nil t nil 2))
+                  ;; Restore spaces if we had them
+                  (if was-after-space
+                      (my/fix-space)
+                    (when (looking-at "[ \t]*\\<")
+                      (save-excursion (my/fix-space)))))
+              ;; Fallback: if the re-search-forward fails, just insert punctuation
+              (goto-char old-point)
+              (insert new-punct)))))))
+    (when (and (eq major-mode 'org-mode)
+               (org-at-heading-p))
+      ;; Possibly do more things for Org headings here...
+      )))
 
 (defun smart-period ()
   (interactive)
