@@ -5912,7 +5912,7 @@ Refactor the region or sentence at point.
 See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el: Blogging with Emacs and AI]]
 
 * org-superstar
-#+begin_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 (setq org-superstar-prettify-item-bullets t)
@@ -5932,7 +5932,7 @@ See also: [[https://github.com/kamushadenes/ai-blog.el][kamushadenes/ai-blog.el:
 ;; (setq org-superstar-remove-leading-stars t)
 
 
-#+END_SRC
+#+END_EXAMPLE
 
 * openwith
 #+begin_src emacs-lisp
