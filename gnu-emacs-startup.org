@@ -230,8 +230,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 (defun pasteboard-paste-spaces-maybe ()
   "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
 
-In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`),
-always use `pasteboard-paste-without-smart-quotes`.
+In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`), always use `pasteboard-paste-without-smart-quotes`.
 
 In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
 use the original logic: if the character before or after point is in a predefined set,
