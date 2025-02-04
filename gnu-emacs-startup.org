@@ -605,8 +605,8 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+END_SRC
 
-* kill ring to pasteboard functions
-** push kill ring to MacOS pasteboard
+** kill ring to pasteboard functions
+*** push kill ring to MacOS pasteboard
   #+BEGIN_SRC emacs-lisp
 (setq x-select-enable-clipboard t)
 
@@ -615,7 +615,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (x-select-text (current-kill 0)))
   #+END_SRC
 
-** push MacOS pasteboard to kill ring
+*** push MacOS pasteboard to kill ring
 #+begin_src emacs-lisp
 (defun push-MacOS-clipboard-to-kill-ring ()
  "Push the content of the MacOS clipboard to the Emacs kill ring."
@@ -626,7 +626,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
    (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 #+end_src
 
-** gist-buffer-to-pasteboard
+*** gist-buffer-to-pasteboard
   #+BEGIN_SRC emacs-lisp
 (defun gist-buffer-to-pasteboard ()
   (interactive)
