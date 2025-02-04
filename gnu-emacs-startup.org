@@ -267,7 +267,6 @@ use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-
 
 ** and replace em dashes
 #+begin_src emacs-lisp
-
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
   "Copy selected region to macOS system pasteboard.
 If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
@@ -286,14 +285,19 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
             (message "Copied text verbatim."))
         ;; Otherwise do the dash replacements
         (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
-               (txt (safe-replace "---" "—" txt))
-               (txt (safe-replace "--" "—" txt)))
+               (txt (with-temp-buffer
+                      (insert txt)
+                      (safe-replace "---" "—" (point-min) (point-max))
+                      (buffer-string)))
+               (txt (with-temp-buffer
+                      (insert txt)
+                      (safe-replace "--" "—" (point-min) (point-max))
+                      (buffer-string))))
           (with-temp-buffer
             (insert txt)
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
           (message "Text with em dashes copied to macOS pasteboard.")))
     (message "No region selected")))
-
 
 #+end_src
 
@@ -427,7 +431,7 @@ are adjusted so they become subheadings under the current Org heading."
                                   (org-current-level))
                                 0)))))
     ;; Clean up the text by removing carriage returns
-    (setq text (replace-regexp-in-string "\r" "" text))
+    (setq text (safe-replace "\r" "" text))
     ;; Adjust the heading levels in the pasted text
     (with-temp-buffer
       (insert text)
@@ -471,7 +475,7 @@ and handle spacing based on surrounding punctuation."
          (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
     ;; Clean up the text by removing carriage returns
-    (setq text (replace-regexp-in-string "\r" "" text))
+    (setq text (safe-replace "\r" "" text))
 
     ;; Adjust the heading levels in the pasted text
     (with-temp-buffer
