@@ -95,6 +95,7 @@
 (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
 (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
 (org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
+(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
 ;; (load "/Users/jay/emacs/archive/email.el")
