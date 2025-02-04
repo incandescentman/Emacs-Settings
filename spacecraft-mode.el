@@ -693,6 +693,78 @@ Also converts full stops to commas."
       )))
 )))
 
+(defun smart-punctuation (new-punct &optional not-so-smart)
+  "Insert or replace punctuation with 'smart' logic, but skip Org list bullets."
+  (with-silent-modifications
+    ;; Skip if we're on an Org bullet (or an item).
+    (unless (or (org-at-item-p)
+                (looking-at-p "^[ \t]*[-+*][ \t]+"))
+      ;; Possibly do heading logic
+      (when (and (eq major-mode 'org-mode)
+                 (org-at-heading-p))
+        (save-excursion
+          (org-beginning-of-line)
+          ;; (let ((heading-text (fifth (org-heading-components))))
+          ;;   (when heading-text
+          ;;     ;; Process heading text as needed...
+          ;;     ))
+          ))
+
+      ;; Expand snippet or do your own expansions first
+      (smart-expand)
+
+      (save-restriction
+        (cl-flet
+            ((go-back (regexp)
+               (re-search-backward regexp nil t)
+               (ignore-errors
+                 (forward-char (length (match-string 0))))))
+
+          ;; If NOT so smart, just insert punctuation:
+          (if not-so-smart
+              (let ((old-point (point)))
+                (go-back "[^ \t]")
+                (insert new-punct)
+                (goto-char old-point)
+                (forward-char (length new-punct)))
+
+            ;; Otherwise do "smart" punctuation logic:
+            (let ((old-point (point)))
+              (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+              (let ((was-after-space
+                     (and (< (point) old-point)
+                          (find ?\s (buffer-substring (point) old-point)))))
+                (if (re-search-forward
+                     (format "\$begin:math:text$[ \\t]*\\$end:math:text$\$begin:math:text$[%s]*\\$end:math:text$"
+                             *smart-punctuation-marks*)
+                     nil t)
+                    (let* ((old-punct (match-string 2))
+                           (was-after-punct (>= old-point (point))))
+                      ;; Remove whitespace in group #1
+                      (replace-match "" nil t nil 1)
+                      ;; Replace existing punctuation in group #2
+                      (when (match-beginning 2)
+                        (replace-match
+                         (or (when (and was-after-punct
+                                        (not (string= old-punct "")))
+                               ;; Possibly combine old and new punctuation
+                               (let ((potential-new-punct
+                                      (concat old-punct new-punct)))
+                                 (find-if
+                                  (lambda (exception)
+                                    (search potential-new-punct exception))
+                                  *smart-punctuation-exceptions*)))
+                             new-punct)
+                         nil t nil 2))
+                      ;; Restore spaces if needed
+                      (if was-after-space
+                          (my/fix-space)
+                        (when (looking-at "[ \t]*\\<")
+                          (save-excursion (my/fix-space)))))
+                  ;; Fallback if no match found
+                  (goto-char old-point)
+                  (insert new-punct))))))))))
+
 (defun smart-period ()
   (interactive)
   (when (use-region-p)
