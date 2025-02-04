@@ -315,20 +315,23 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
 ** pasteboard-copy-and-convert-to-markdown-link
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-copy-and-convert-to-markdown-link ()
-  "Copy region to OS X system pasteboard."
+  "Copy region to OS X system pasteboard, converting Org-style links to Markdown format."
   (interactive)
-  (let* ((txt (buffer-substring (region-beginning) (region-end)))
-         (txt-updated-links
-          (safe-replace
-           "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
-           (lambda (m)
-             (concat "[" (or (match-string 3 m)
-                             (match-string 1 m))
-                     "](" (match-string 1 m) ")"))
-           txt)))
-;; (message "Copied: %s" txt-updated-links)
-    (shell-command-to-string
-     (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))))
+  (if (use-region-p)
+      (let* ((txt (buffer-substring (region-beginning) (region-end)))
+             (txt-updated-links
+              (replace-regexp-in-string
+               "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
+               (lambda (m)
+                 ;; The match data is set up so match-string works
+                 (concat "[" (or (match-string 3 m)
+                                 (match-string 1 m))
+                         "](" (match-string 1 m) ")"))
+               txt)))
+        (shell-command-to-string
+         (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
+        (message "Copied and converted Org links to Markdown."))
+    (message "No region selected")))
 #+END_SRC
 
 ** pasteboard-paste
