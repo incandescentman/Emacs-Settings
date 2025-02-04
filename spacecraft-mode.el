@@ -622,6 +622,12 @@ Also converts full stops to commas."
 
 (defun smart-punctuation (new-punct &optional not-so-smart)
 (with-silent-modifications
+(defun smart-punctuation (new-punct &optional not-so-smart)
+  (with-silent-modifications
+    (unless (or (org-at-item-p)
+                (looking-at "^[ \t]*[-+*][ \t]+"))
+      ;; Only do the punctuation logic if we're NOT at an org bullet
+      ;; ...
 
   (smart-expand)
   (save-restriction
@@ -685,6 +691,7 @@ Also converts full stops to commas."
                (org-at-heading-p))
       ;; Possibly do more things for Org headings here...
       )))
+)))
 
 (defun smart-period ()
   (interactive)
