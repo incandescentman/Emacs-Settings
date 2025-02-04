@@ -117,11 +117,13 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
         (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
                (txt (with-temp-buffer
                       (insert txt)
-                      (replace-regexp-in-string "---" "—" (point-min) (point-max))
+(let ((text (buffer-substring-no-properties (point-min) (point-max))))
+  (replace-regexp-in-string "---" "—" text))
                       (buffer-string)))
                (txt (with-temp-buffer
                       (insert txt)
-                      (replace-regexp-in-string "--" "—" (point-min) (point-max))
+(let ((text (buffer-substring-no-properties (point-min) (point-max))))
+  (replace-regexp-in-string "---" "—" text))
                       (buffer-string))))
           (with-temp-buffer
             (insert txt)
