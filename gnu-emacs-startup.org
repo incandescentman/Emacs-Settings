@@ -286,8 +286,8 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
             (message "Copied text verbatim."))
         ;; Otherwise do the dash replacements
         (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
-               (txt (replace-regexp-in-string "---" "—" txt))
-               (txt (replace-regexp-in-string "--" "—" txt)))
+               (txt (safe-replace "---" "—" txt))
+               (txt (safe-replace "--" "—" txt)))
           (with-temp-buffer
             (insert txt)
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
@@ -315,7 +315,7 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
   (interactive)
   (let* ((txt (buffer-substring (region-beginning) (region-end)))
          (txt-updated-links
-          (replace-regexp-in-string
+          (safe-replace
            "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
            (lambda (m)
              (concat "[" (or (match-string 3 m)
@@ -352,7 +352,7 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
   (if (string-empty-p clean-content)
     (message "Clipboard is empty.")
    (let ((converted-content
-       (replace-regexp-in-string
+       (safe-replace
        "\\[\\([^][]+\\)\\](\\([^)]+\\))"
        "[[\\2][\\1]]"
        clean-content)))
