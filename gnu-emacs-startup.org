@@ -286,11 +286,11 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
         (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
                (txt (with-temp-buffer
                       (insert txt)
-                      (safe-replace "---" "—" (point-min) (point-max))
+                      (replace-regexp-in-string "---" "—" (point-min) (point-max))
                       (buffer-string)))
                (txt (with-temp-buffer
                       (insert txt)
-                      (safe-replace "--" "—" (point-min) (point-max))
+                      (replace-regexp-in-string "--" "—" (point-min) (point-max))
                       (buffer-string))))
           (with-temp-buffer
             (insert txt)
@@ -358,7 +358,7 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
   (if (string-empty-p clean-content)
     (message "Clipboard is empty.")
    (let ((converted-content
-       (safe-replace
+       (replace-regexp-in-string
        "\\[\\([^][]+\\)\\](\\([^)]+\\))"
        "[[\\2][\\1]]"
        clean-content)))
@@ -433,7 +433,7 @@ are adjusted so they become subheadings under the current Org heading."
                                   (org-current-level))
                                 0)))))
     ;; Clean up the text by removing carriage returns
-    (setq text (safe-replace "\r" "" text))
+    (setq text (replace-regexp-in-string "\r" "" text))
     ;; Adjust the heading levels in the pasted text
     (with-temp-buffer
       (insert text)
@@ -477,7 +477,7 @@ and handle spacing based on surrounding punctuation."
          (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
     ;; Clean up the text by removing carriage returns
-    (setq text (safe-replace "\r" "" text))
+    (setq text (replace-regexp-in-string "\r" "" text))
 
     ;; Adjust the heading levels in the pasted text
     (with-temp-buffer
