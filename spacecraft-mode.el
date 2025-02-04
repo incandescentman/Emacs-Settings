@@ -1146,3 +1146,41 @@ Also converts full stops to commas."
   (save-excursion
       (downcase-word 1))
   ))
+
+(defun pasteboard-paste-no-spaces-with-smart-quotes ()
+  "Paste from system clipboard with no extra spaces, but still replace smart quotes and links.
+
+Useful in prose when you're adjacent to punctuation but still want the text cleaned up."
+  (interactive)
+  (let ((beg (point)))
+    ;; Do a raw paste with no extra spaces:
+    (pasteboard-paste-no-spaces)
+    ;; Now do the same transformations you'd do in pasteboard-paste-without-smart-quotes:
+    (replace-smart-quotes beg (point))
+    (convert-markdown-links-to-org-mode beg (point))))
+
+
+(defun pasteboard-paste-spaces-maybe ()
+  "Paste from pasteboard, choosing logic based on mode (prose vs. code) and punctuation.
+
+- In prose (Org-mode w/o `org-config-files-local-mode`, or a mode derived from `text-mode`):
+ - If near punctuation, call `pasteboard-paste-no-spaces-with-smart-quotes`.
+ - Else, call `pasteboard-paste-without-smart-quotes`.
+
+- In code (any other mode or Org with `org-config-files-local-mode`):
+ - Always call `pasteboard-paste-no-spaces` (raw, no quote cleanup)."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      ;; Prose branch
+      (let* ((prev-char (char-before))
+             (next-char (char-after))
+             (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+             (near-punctuation (or (member prev-char char-set)
+                                   (member next-char char-set))))
+        (if near-punctuation
+            (pasteboard-paste-no-spaces-with-smart-quotes)
+          (pasteboard-paste-without-smart-quotes)))
+    ;; Code branch
+    (pasteboard-paste-no-spaces)))
