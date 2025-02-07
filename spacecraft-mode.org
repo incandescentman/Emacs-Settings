@@ -118,6 +118,14 @@ override with your `my/beginning-of-sentence-p'."
     (captain-mode -1)))
 #+end_src
 
+* safehelper
+#+begin_src emacs-lisp
+(defun looking-back-safe (regexp &optional limit)
+  "Call `looking-back' with NOERROR = t, up to LIMIT or `line-beginning-position'.
+
+
+#+end_src
+
 * capitalization
 ** words to never downcase
 #+BEGIN_SRC emacs-lisp
@@ -133,8 +141,9 @@ override with your `my/beginning-of-sentence-p'."
          (save-match-data
            (not (and
 ;; (org-or-orgalist-p)
-                 (looking-back
-                 "\\[\\[.*\\]\\][^.\n]*\\.?"))))
+                 (looking-back-safe
+"\\[\\[[^]]*\\]\\]"))))
+
          (save-match-data
            (not (looking-back
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
