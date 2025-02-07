@@ -90,24 +90,10 @@ override with your `my/beginning-of-sentence-p'."
     (captain-mode -1)))
 
 (defun looking-back-safe (regexp &optional limit)
-  "Call `looking-back' with NOERROR = t, up to LIMIT or `line-beginning-position'.
+  "Like `looking-back' but no error if mismatch, up to LIMIT or `(line-beginning-position)'."
+  (looking-back regexp (or limit (line-beginning-position)) t))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
-
-(setq auto-capitalize-predicate
-      (lambda ()
-        (and
-         (not (org-checkbox-p))
-         (save-match-data
-           (not (and
-;; (org-or-orgalist-p)
-                 (looking-back-safe
-"\\[\\[[^]]*\\]\\]"))))
-
-         (save-match-data
-           (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
-                 (- (point) 20)))))))
 
 (setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 
