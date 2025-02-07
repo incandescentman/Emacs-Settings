@@ -4,17 +4,17 @@
   (unless
 
     (or
-       (looking-back "\\)\n*")
-(looking-back "[[:punct:]]*)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+(looking-back-safe "\\\\)\n*")
+(looking-back-safe "[[:punct:]]*\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
               (line-beginning-position) t)
 
-(looking-back ":t[ ]*")
-(looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+(looking-back-safe ":t[ ]*")
+(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
 
-(looking-back ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
+(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
 
 
-;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
     (expand-abbrev)
 )
@@ -89,11 +89,27 @@ override with your `my/beginning-of-sentence-p'."
     ;; If turning off:
     (captain-mode -1)))
 
-(defun looking-back-safe (regexp &optional limit)
-  "Like `looking-back' but no error if mismatch, up to LIMIT or `(line-beginning-position)'."
-  (looking-back regexp (or limit (line-beginning-position)) t))
+(defun looking-back-safe (regexp &optional limit noerror)
+  "Like `looking-back' but up to LIMIT or `(line-beginning-position)'.
+NOERROR is t by default."
+  (looking-back regexp (or limit (line-beginning-position)) (or noerror t)))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
+
+(setq auto-capitalize-predicate
+      (lambda ()
+        (and
+         (not (org-checkbox-p))
+         (save-match-data
+           (not (and
+;; (org-or-orgalist-p)
+                 (looking-back-safe
+"\\[\\[[^]]*\\]\\]"))))
+
+         (save-match-data
+           (not (looking-back-safe
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
+                 (- (point) 20)))))))
 
 (setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 
@@ -101,15 +117,15 @@ override with your `my/beginning-of-sentence-p'."
   (interactive)
   (if
       (or
-       (looking-back "\\.\\.\\.[ ]*[\n\t ]*")
-       (looking-back "i.e.[ ]*")
-       (looking-back "[0-9]\\.[ ]*")
-       (looking-back "e.g.[ ]*")
-       (looking-back "vs.[ ]*")
-       (looking-back "U.K.[ ]*")
-       (looking-back "U.S.[ ]*")
-       (looking-back "vs.[ ]*")
-       (looking-back "^"))
+       (looking-back-safe "\\.\\.\\.[ ]*[\n\t ]*")
+       (looking-back-safe "i.e.[ ]*")
+       (looking-back-safe "[0-9]\\.[ ]*")
+       (looking-back-safe "e.g.[ ]*")
+       (looking-back-safe "vs.[ ]*")
+       (looking-back-safe "U.K.[ ]*")
+       (looking-back-safe "U.S.[ ]*")
+       (looking-back-safe "vs.[ ]*")
+       (looking-back-safe "^"))
       (call-interactively 'downcase-word)
     (call-interactively 'endless/downcase)))
 
@@ -154,15 +170,15 @@ override with your `my/beginning-of-sentence-p'."
 (interactive)
 (if
 (or
-(looking-back "\\.\\.\\.[ ]*[\n\t ]*")
-(looking-back "i.e.[ ]*")
-(looking-back "[0-9]\\.[ ]*")
-(looking-back "e.g.[ ]*")
-(looking-back "vs.[ ]*")
-(looking-back "U.K.[ ]*")
-(looking-back "U.S.[ ]*")
-(looking-back "vs.[ ]*")
-(looking-back "^"))
+(looking-back-safe "\\.\\.\\.[ ]*[\n\t ]*")
+(looking-back-safe "i.e.[ ]*")
+(looking-back-safe "[0-9]\\.[ ]*")
+(looking-back-safe "e.g.[ ]*")
+(looking-back-safe "vs.[ ]*")
+(looking-back-safe "U.K.[ ]*")
+(looking-back-safe "U.S.[ ]*")
+(looking-back-safe "vs.[ ]*")
+(looking-back-safe "^"))
     (call-interactively 'downcase-word)
     (call-interactively 'endless/downcase)))
 
@@ -174,7 +190,7 @@ Only applies to text-mode."
     ;; We obviously don't want to do this in prog-mode.
     (if (and (derived-mode-p 'text-mode)
              (or (looking-at (format f space rg))
-                 (looking-back (format f rg space))))
+                 (looking-back-safe (format f rg space))))
         (replace-match rp nil nil nil 1))))
 
 (defun endless/capitalize ()
@@ -213,7 +229,7 @@ Also converts full stops to commas."
 
 ; If
 (or
-(looking-back "^")
+(looking-back-safe "^")
 )
     (call-interactively 'capitalize-word); then
     (call-interactively 'endless/capitalize); else
@@ -238,16 +254,16 @@ Also converts full stops to commas."
   (unless
       (or
 (let ((case-fold-search nil)
-(looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back-safe "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
 )
-(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\be\\.\\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back-safe "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back-safe "\\be\\.\\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
-(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+(looking-back-safe "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
-(looking-back ">") ; don't expand days of the week inside timestamps
+(looking-back-safe ">") ; don't expand days of the week inside timestamps
 
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
+(looking-back-safe "][\n\t ]*") ; don't expand past closing square brackets ]
        ))
   (smart-expand))
 
@@ -264,15 +280,15 @@ Also converts full stops to commas."
  (interactive)
 (unless
    (or
-(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
-(looking-back "\\be\\.\\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back-safe "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back-safe "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back-safe "\\be\\.\\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
-(looking-back "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines--brilliant!
+(looking-back-safe "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines--brilliant!
 
-(looking-back ">") ; don't expand days of the week inside timestamps
+(looking-back-safe ">") ; don't expand days of the week inside timestamps
 
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
+(looking-back-safe "][\n\t ]*") ; don't expand past closing square brackets ]
     )
  (smart-expand))
 (insert "\ ")
@@ -292,14 +308,14 @@ Also converts full stops to commas."
 (let (inhibit-modification-hooks)
   (just-one-space)
   (when (and (or
-              (looking-back "^[[:space:]]+")
-              (looking-back "-[[:space:]]+")
+              (looking-back-safe "^[[:space:]]+")
+              (looking-back-safe "-[[:space:]]+")
               (looking-at "[.,:;!?»)-]")
-              (looking-back"( ")
+              (looking-back-safe"( ")
               (looking-at " )")
               )
-             (not (looking-back "^-[[:space:]]+"))
-             (not (looking-back " - "))
+             (not (looking-back-safe "^-[[:space:]]+"))
+             (not (looking-back-safe " - "))
 
 )
     (delete-horizontal-space))))
@@ -369,13 +385,13 @@ Also converts full stops to commas."
           (looking-at ";")
           (looking-at ":"))
   (org-delete-char 1))
-(when (or (looking-back ",")
-     (looking-back ";")
-     (looking-back ":"))
+(when (or (looking-back-safe ",")
+     (looking-back-safe ";")
+     (looking-back-safe ":"))
  (org-delete-backward-char 1))
 
 
-(when (looking-back " ")
+(when (looking-back-safe " ")
   (left-char 1))
 
       (if
@@ -396,48 +412,48 @@ Also converts full stops to commas."
 	    (capitalize-unless-org-heading)))
 
 (cond
- ((looking-back "\\, \\, ")
+ ((looking-back-safe "\\, \\, ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
  t)
 
-((looking-back "!\\. ")
+((looking-back-safe "!\\. ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
  t)
 
- ((looking-back ":: ")
+ ((looking-back-safe ":: ")
  (new-org-delete-backward-char 2)
  (my/fix-space)
  t))
 
 (when
-    (looking-back "[[:punct:]]")
+    (looking-back-safe "[[:punct:]]")
   (progn
 (forward-char 1)
 (my/fix-space)
 (backward-char 1)))
     ;; fix a bug that leaves this: " ?"
-    (when (looking-back " \\?")
+    (when (looking-back-safe " \\?")
         (left-char 1)
     (new-org-delete-backward-char 1)
     (right-char 1))
 
 
     ;; fix a bug that leaves this: " , "
-    (when (looking-back " , ")
+    (when (looking-back-safe " , ")
     (left-char 2)
     (my/fix-space)
     (right-char 2))
 
     ;; fix a bug that leaves this: ":, "
-    (when (looking-back ":, ")
+    (when (looking-back-safe ":, ")
     (left-char 1)
     (delete-backward-char 1)
     (right-char 1))
 
     ;; fix a bug that leaves this: ",."
-    (when (looking-back "\\,\\. ")
+    (when (looking-back-safe "\\,\\. ")
     (left-char 2)
     (delete-backward-char 1)
     (right-char 2)
@@ -445,7 +461,7 @@ Also converts full stops to commas."
 
 
     ;; fix a bug that leaves this: ", . "
-    (when (looking-back "\\, \\. ")
+    (when (looking-back-safe "\\, \\. ")
     (left-char 2)
     (delete-backward-char 2)
     (right-char 2)
@@ -454,7 +470,7 @@ Also converts full stops to commas."
 
     ;; fix a bug that leaves this: " ; "
     (when
-	(looking-back " [[:punct:]] ")
+	(looking-back-safe " [[:punct:]] ")
     (left-char 2)
     (delete-backward-char 1)
     (right-char 2)
@@ -465,7 +481,7 @@ Also converts full stops to commas."
 
     (when
     (and
-    (looking-back "---")
+    (looking-back-safe "---")
     (looking-at "-"))
 
     (delete-backward-char 4)
@@ -474,10 +490,10 @@ Also converts full stops to commas."
 
     ;; leave the cursor before the comma or period, not after it
     (when
-    (looking-back "[[:punct:]] ")
+    (looking-back-safe "[[:punct:]] ")
     (left-char 2))
     (when
-    (looking-back "[[:punct:]]")
+    (looking-back-safe "[[:punct:]]")
     (left-char 1))
 
 
@@ -512,7 +528,7 @@ Also converts full stops to commas."
     (when
 	(and
     (looking-at "[[:punct:]]")
-    (looking-back " ")
+    (looking-back-safe " ")
 )
   (delete-backward-char 1))
     )
@@ -533,7 +549,7 @@ Also converts full stops to commas."
 )
   ;; Add this near the end of the function, before the final right parenthesis
 (when (looking-at ",")
-  (when (looking-back ", ")
+  (when (looking-back-safe ", ")
     (delete-backward-char 2)
     (insert ", "))))
 
@@ -761,9 +777,9 @@ Also converts full stops to commas."
   (interactive)
   (when (use-region-p)
     (delete-region (region-beginning) (region-end)))
-  (unless (or (looking-back "\\bvs.[ ]*" nil)
-              (looking-back "\\bi\\.e[[:punct:]]*[ ]*" nil)
-              (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil))
+  (unless (or (looking-back-safe "\\bvs.[ ]*" nil)
+              (looking-back-safe "\\bi\\.e[[:punct:]]*[ ]*" nil)
+              (looking-back-safe "\\be\\.g[[:punct:]]*[ ]*" nil))
     (smart-punctuation ".")
     ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
 ; (auto-capitalize--handler (point) (point) 0)
@@ -775,9 +791,9 @@ Also converts full stops to commas."
       (capitalize-unless-org-heading)))
   ;; If two periods or commas in a row, remove the second one:
   (when (or (and (looking-at "\\.")
-                 (looking-back "\\." nil))
+                 (looking-back-safe "\\." nil))
             (and (looking-at ",")
-                 (looking-back "," nil)))
+                 (looking-back-safe "," nil)))
     (delete-char 1)))
 
 (defun auto-capitalize--handler (beg end length)
@@ -840,11 +856,11 @@ Also converts full stops to commas."
 (or
 (and
 (looking-at "\\.")
-(looking-back "\\.")
+(looking-back-safe "\\.")
 )
 (and
 (looking-at ",")
-(looking-back ",")
+(looking-back-safe ",")
 ))
 (delete-char 1)
 )
@@ -973,8 +989,8 @@ Also converts full stops to commas."
 
 ;; I added this ↓↓↓ #######################
 (when (and
-(not (looking-back "--")) ; I added this
-(not (looking-back "^"))) ; I added this
+(not (looking-back-safe "--")) ; I added this
+(not (looking-back-safe "^"))) ; I added this
 ;; I added this ↑↑↑ #######################
 
 (smart-space)
@@ -990,8 +1006,8 @@ Also converts full stops to commas."
     (delete-backward-char 1))
   (save-excursion
     (when (or (looking-at "[[:space:]]")
-              (looking-back "[[:space:]]"))
-(unless (looking-back "\\w ")
+              (looking-back-safe "[[:space:]]"))
+(unless (looking-back-safe "\\w ")
       (my/fix-space)))))
 
 (defcustom capitalize-after-deleting-single-char nil
@@ -1000,7 +1016,7 @@ Also converts full stops to commas."
 (defun my/delete-backward-and-capitalize ()
   "When there is an active region, delete it and then fix up the whitespace"
   (interactive)
-(when (looking-back "^[*]+ ")
+(when (looking-back-safe "^[*]+ ")
 (kill-line 0)
 (insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire
 )
@@ -1013,10 +1029,10 @@ Also converts full stops to commas."
       (new-org-delete-backward-char 1))
     (save-excursion
       (when (or (looking-at "[[:space:]]")
-    (looking-back "[[:space:]]"))
+    (looking-back-safe "[[:space:]]"))
 ;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
 (unless (and
-(looking-back "\\w ")
+(looking-back-safe "\\w ")
 (looking-at "\\w")
 )
   (my/fix-space))))
@@ -1028,11 +1044,11 @@ Also converts full stops to commas."
 (or
 (and
 (looking-at "\\.")
-(looking-back "\\.")
+(looking-back-safe "\\.")
 )
 (and
 (looking-at ",")
-(looking-back ",")
+(looking-back-safe ",")
 ))
 (delete-char 1)
 )
