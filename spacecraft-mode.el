@@ -4,8 +4,10 @@
   (unless
 
     (or
-       (looking-back "\)\n*")
-(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
+       (looking-back "\\)\n*")
+(looking-back "[[:punct:]]*)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+              (line-beginning-position) t)
+
 (looking-back ":t[ ]*")
 (looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
 
@@ -87,6 +89,9 @@ override with your `my/beginning-of-sentence-p'."
     ;; If turning off:
     (captain-mode -1)))
 
+(defun looking-back-safe (regexp &optional limit)
+  "Call `looking-back' with NOERROR = t, up to LIMIT or `line-beginning-position'.
+
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
 
 (setq auto-capitalize-predicate
@@ -96,11 +101,12 @@ override with your `my/beginning-of-sentence-p'."
          (save-match-data
            (not (and
 ;; (org-or-orgalist-p)
-                 (looking-back
-                 "\\[\\[.*\\]\\][^.\n]*\\.?"))))
+                 (looking-back-safe
+"\\[\\[[^]]*\\]\\]"))))
+
          (save-match-data
            (not (looking-back
-                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\!\"[ ]*\\|\?\"[ ]*"
+                 "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
                  (- (point) 20)))))))
 
 (setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
@@ -111,7 +117,7 @@ override with your `my/beginning-of-sentence-p'."
       (or
        (looking-back "\\.\\.\\.[ ]*[\n\t ]*")
        (looking-back "i.e.[ ]*")
-       (looking-back "[0-9]\.[ ]*")
+       (looking-back "[0-9]\\.[ ]*")
        (looking-back "e.g.[ ]*")
        (looking-back "vs.[ ]*")
        (looking-back "U.K.[ ]*")
@@ -164,7 +170,7 @@ override with your `my/beginning-of-sentence-p'."
 (or
 (looking-back "\\.\\.\\.[ ]*[\n\t ]*")
 (looking-back "i.e.[ ]*")
-(looking-back "[0-9]\.[ ]*")
+(looking-back "[0-9]\\.[ ]*")
 (looking-back "e.g.[ ]*")
 (looking-back "vs.[ ]*")
 (looking-back "U.K.[ ]*")
@@ -246,10 +252,10 @@ Also converts full stops to commas."
   (unless
       (or
 (let ((case-fold-search nil)
-(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
 )
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back "\\be\\.\\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
 (looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
@@ -273,8 +279,8 @@ Also converts full stops to commas."
 (unless
    (or
 (looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
-(looking-back "\\be\.\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back "\\be\\.\\g[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
 (looking-back "^[[:punct:][:punct:]]*[ ]*") ; don't expand previous lines--brilliant!
 
@@ -779,7 +785,7 @@ Also converts full stops to commas."
   (save-excursion
     (unless (or (looking-at "[ ]*$")
                 (looking-at "\"[[:punct:]]*[ ]*$")
-                (looking-at "\)[ ]*$"))
+                (looking-at "\\)[ ]*$"))
       (capitalize-unless-org-heading)))
   ;; If two periods or commas in a row, remove the second one:
   (when (or (and (looking-at "\\.")
@@ -834,10 +840,10 @@ Also converts full stops to commas."
 (unless
 (or
 
-(looking-at "\]*[[:punct:]]*[ ]*$")
+(looking-at "\\]*[[:punct:]]*[ ]*$")
 (looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
-(looking-at "[ ]*I\'")          ; never downcase the word "I'
+(looking-at "[ ]*I\\'")          ; never downcase the word "I'
 (looking-at "[[:punct:]]*[ ]*\"")          ; beginning of a quote
 )
 
@@ -873,11 +879,11 @@ Also converts full stops to commas."
     (unless
         (or
          (looking-at "[ ]*$")
-         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "\\][[:punct:]]*[ ]*$")
          (looking-at "[[:punct:]]*[ ]*$")
          (looking-at "\"[[:punct:]]*[ ]*$")
-         (looking-at "\)[ ]*$")
-         (looking-at "\)")
+         (looking-at "\\)[ ]*$")
+         (looking-at "\\)")
          ) ; or
     (capitalize-unless-org-heading)
       ) ; unless
@@ -912,7 +918,7 @@ Also converts full stops to commas."
 (or
 (looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[ ]*I\\'")     ; never downcase the word "I'
 (looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
 )
 
@@ -930,7 +936,7 @@ Also converts full stops to commas."
 (or
 (looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b")     ; never downcase the word "I"
-(looking-at "[ ]*I\'")     ; never downcase the word "I'
+(looking-at "[ ]*I\\'")     ; never downcase the word "I'
 (looking-at "[[:punct:]]*[ ]*\"")     ; beginning of a quote
 )
 
@@ -1084,7 +1090,7 @@ Also converts full stops to commas."
 
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 
-(looking-at "\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+(looking-at "\\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
 
 (looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
 (looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
@@ -1118,7 +1124,7 @@ Also converts full stops to commas."
        (looking-at "\"[\n\t ]*$")
        (looking-at "[[:punct:]]*[ ]*http")
        (looking-at "[[:punct:]]*[ ]*\")$"); don't capitalize past
-       (looking-at "[ ]*I\'")
+       (looking-at "[ ]*I\\'")
        (looking-at
         (concat
          "\\("
@@ -1137,7 +1143,7 @@ Also converts full stops to commas."
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-(looking-at "\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at "\\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
 
