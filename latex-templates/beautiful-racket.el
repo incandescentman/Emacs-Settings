@@ -47,7 +47,6 @@
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
-\\usepackage{etoolbox}
 \\usepackage{xcolor}
 \\PassOptionsToPackage{hyperref,x11names}{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
@@ -114,6 +113,17 @@
 
 
 \\setlength{\\headheight}{14.49998pt} % Set headheight for fancyhdr
+
+\\fancypagestyle{plain}{%
+  \\fancyhf{}%
+  % Remove the header rule:
+  \\renewcommand{\\headrulewidth}{0pt}%
+  % Put page number in the center footer if you want:
+  \\cfoot{\\thepage}%
+}
+
+\\pagestyle{fancy}
+
 
 
 
@@ -286,7 +296,7 @@
 
 \\usepackage{setspace}
 \\usepackage{lipsum}
-\\usepackage{etoolbox}
+
 
 % Define custom colors if not already defined
 \\definecolor{powderblue}{HTML}{f5f7ff}
@@ -352,7 +362,7 @@
   {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
   {}
   {0em}
-  {\\hfill\\mysectiontitle}
+  {\\thispagestyle{plain}\\hfill\\mysectiontitle}
 
 {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
