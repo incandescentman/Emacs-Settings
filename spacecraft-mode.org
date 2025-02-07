@@ -121,7 +121,8 @@ override with your `my/beginning-of-sentence-p'."
 * safehelper
 #+begin_src emacs-lisp
 (defun looking-back-safe (regexp &optional limit)
-  "Call `looking-back' with NOERROR = t, up to LIMIT or `line-beginning-position'.
+  "Like `looking-back' but no error if mismatch, up to LIMIT or `(line-beginning-position)'."
+  (looking-back regexp (or limit (line-beginning-position)) t))
 
 
 #+end_src
@@ -133,7 +134,7 @@ override with your `my/beginning-of-sentence-p'."
 #+END_SRC
 
 ** auto-capitalize-predicate
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq auto-capitalize-predicate
       (lambda ()
         (and
@@ -149,7 +150,7 @@ override with your `my/beginning-of-sentence-p'."
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
                  (- (point) 20)))))))
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
