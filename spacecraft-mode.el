@@ -165,6 +165,15 @@ override with your `my/beginning-of-sentence-p'."
 
 ;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
+(defun smart-period-or-smart-space ()
+"double space adds a period!"
+(interactive)
+  (if
+(looking-back "[A-Za-z0-9] ")
+(smart-period)
+(smart-space)
+))
+
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
@@ -177,16 +186,16 @@ override with your `my/beginning-of-sentence-p'."
   (unless
       (or
 (let ((case-fold-search nil)
-(looking-back-safe "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
 )
-(looking-back-safe "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back-safe "\\be\\.\\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
-(looking-back-safe "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
-(looking-back-safe ">") ; don't expand days of the week inside timestamps
+(looking-back ">") ; don't expand days of the week inside timestamps
 
-(looking-back-safe "][\n\t ]*") ; don't expand past closing square brackets ]
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
        ))
   (smart-expand))
 
@@ -194,6 +203,35 @@ override with your `my/beginning-of-sentence-p'."
 (just-one-space)
 )
 
+
+(defun smart-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+
+;; (if (org-at-heading-p)
+ ;;    (insert-normal-space-in-org-heading)
+
+  (unless
+      (or
+(let ((case-fold-search nil)
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+)
+(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+
+(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+
+(looking-back ">") ; don't expand days of the week inside timestamps
+
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
+       ))
+  (smart-expand))
+
+(insert "\ ")
+(just-one-space)
+)
 
 
 
@@ -219,10 +257,10 @@ override with your `my/beginning-of-sentence-p'."
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'smart-space)
-;; (define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
-(global-set-key (kbd "M-SPC") 'insert-space)
-(define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
+;; (define-key org-mode-map (kbd "<SPC>") 'smart-space)
+(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+(global-set-key (kbd "M-SPC") 'smart-period-or-smart-space)
+(define-key org-mode-map (kbd "<M-SPC>") 'smart-period-or-smart-space)
 ;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
 
 (defun my/fix-space ()
@@ -698,49 +736,98 @@ override with your `my/beginning-of-sentence-p'."
 (my/fix-space)
 )))))))))
 
+
+(defun smart-punctuation (new-punct &optional not-so-smart)
+    (smart-expand)
+    (save-restriction
+      (when (and (eql major-mode 'org-mode)
+                 (org-at-heading-p))
+        (save-excursion
+          (org-beginning-of-line)
+          (let ((heading-text (fifth (org-heading-components))))
+            (when heading-text
+              (search-forward heading-text)
+              (narrow-to-region (match-beginning 0) (match-end 0))))))
+      (cl-flet ((go-back (regexp)
+                  (re-search-backward regexp nil t)
+                  (ignore-errors      ; might signal `end-of-buffer'
+                    (forward-char (length (match-string 0))))))
+        (if not-so-smart
+            (let ((old-point (point)))
+              (go-back "[^ \t]")
+              (insert new-punct)
+              (goto-char old-point)
+              (forward-char (length new-punct)))
+          (let ((old-point (point)))
+            (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+            (let ((was-after-space (and (< (point) old-point)
+                                        (find ?  (buffer-substring (point) old-point)))))
+              (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                         *smart-punctuation-marks*)
+                                 nil t)
+              (let* ((old-punct (match-string 2))
+                     (was-after-punct (>= old-point (point))))
+                (replace-match "" nil t nil 1)
+                (replace-match (or (when (and was-after-punct
+                                              (not (string= old-punct "")))
+                                     (let ((potential-new-punct (concat old-punct new-punct)))
+                                       (find-if (lambda (exception)
+                                                  (search potential-new-punct exception))
+                                                *smart-punctuation-exceptions*)))
+                                   new-punct)
+                               nil t nil 2)
+                (if was-after-space
+                    (my/fix-space)
+                  (when (looking-at "[ \t]*\\<")
+                    (save-excursion (my/fix-space))))))))))
+    (when (and (eql major-mode 'org-mode)
+               (org-at-heading-p))
+))
+
 (defun smart-period ()
   (interactive)
-  (when (use-region-p)
-    (delete-region (region-beginning) (region-end)))
-  (unless (or (looking-back-safe "\\bvs.[ ]*" nil)
-              (looking-back-safe "\\bi\\.e[[:punct:]]*[ ]*" nil)
-              (looking-back-safe "\\be\\.g[[:punct:]]*[ ]*" nil))
-    (smart-punctuation ".")
-;; You can do a final call to `my/fix-space` here if you like:
-  (my/fix-space)
-    ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
-; (auto-capitalize--handler (point) (point) 0)
-)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+(unless
+      (or
+(looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
+(looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra periods to ie.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
+
+       )
+  (smart-punctuation "."))
   (save-excursion
-    (unless (or (looking-at "[ ]*$")
-                (looking-at "\"[[:punct:]]*[ ]*$")
-                (looking-at "\\)[ ]*$"))
-      (capitalize-unless-org-heading)))
-  ;; If two periods or commas in a row, remove the second one:
-  (when (or (and (looking-at "\\.")
-                 (looking-back-safe "\\." nil))
-            (and (looking-at ",")
-                 (looking-back-safe "," nil)))
-    (delete-char 1)))
+    (unless
+        (or
+         (looking-at "[ ]*$")
+         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "[[:punct:]]*[ ]*$")
+         (looking-at "\"[[:punct:]]*[ ]*$")
+         (looking-at "\)[ ]*$")
+         (looking-at "\)")
+         ) ; or
+    (capitalize-unless-org-heading)
+      ) ; unless
+) ; save excursion
 
-(defun auto-capitalize--handler (beg end length)
-  "The `after-change-functions' handler for `auto-capitalize-mode'."
-  (when (and auto-capitalize-state
-             (or (null auto-capitalize-predicate)
-                 (funcall auto-capitalize-predicate)))
-    ;; If we inserted punctuation recognized as an end-of-sentence...
-    (when (and (eq this-command 'self-insert-command)
-               (member (char-before end) '(?. ?! ??)))
-; (setq auto-capitalize--cap-next-word t)
+;; if two periods or two commas in a row, delete the second one
+(when
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+)
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
 )
 
-    ;; Original logic to capitalize the *previous* word if needed:
-    (cond
-     ((auto-capitalize--inserted-non-word-p beg end length)
+  )
 
-      (auto-capitalize--capitalize-previous-word))
-     ;; or yank logic...
-     )))
+
+(define-key org-mode-map (kbd ".") 'smart-period)
 
 (defun auto-capitalize--maybe-capitalize-next-word ()
   "If `auto-capitalize--cap-next-word' is non-nil and we're typing a new word, capitalize it."
@@ -769,10 +856,10 @@ override with your `my/beginning-of-sentence-p'."
 (unless
 (or
 
-(looking-at "\\]*[[:punct:]]*[ ]*$")
+(looking-at "\]*[[:punct:]]*[ ]*$")
 (looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
-(looking-at "[ ]*I\\'")          ; never downcase the word "I'
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[[:punct:]]*[ ]*\"")          ; beginning of a quote
 )
 
@@ -783,16 +870,17 @@ override with your `my/beginning-of-sentence-p'."
 (or
 (and
 (looking-at "\\.")
-(looking-back-safe "\\.")
+(looking-back "\\.")
 )
 (and
 (looking-at ",")
-(looking-back-safe ",")
+(looking-back ",")
 ))
 (delete-char 1)
 )
 
 )
+
 
 
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)

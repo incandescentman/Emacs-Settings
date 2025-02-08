@@ -309,7 +309,48 @@ Also converts full stops to commas."
 
 
 ** smart-space
+
+** smart-space
 #+BEGIN_SRC emacs-lisp
+(defun smart-period-or-smart-space ()
+"double space adds a period!"
+(interactive)
+  (if
+(looking-back "[A-Za-z0-9] ")
+(smart-period)
+(smart-space)
+))
+
+(defun smart-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+
+;; (if (org-at-heading-p)
+ ;;    (insert-normal-space-in-org-heading)
+
+  (unless
+      (or
+(let ((case-fold-search nil)
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+)
+(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+
+(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+
+(looking-back ">") ; don't expand days of the week inside timestamps
+
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
+       ))
+  (smart-expand))
+
+(insert "\ ")
+(just-one-space)
+)
+
+
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
@@ -364,9 +405,9 @@ Also converts full stops to commas."
 
 
 ;; (define-key org-mode-map (kbd "<SPC>") 'smart-space)
-(define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
-(global-set-key (kbd "M-SPC") 'insert-space)
-(define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
+(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+(global-set-key (kbd "M-SPC") 'smart-period-or-smart-space)
+(define-key org-mode-map (kbd "<M-SPC>") 'smart-period-or-smart-space)
 ;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
 #+END_SRC
 
@@ -894,6 +935,53 @@ Also converts full stops to commas."
 (my/fix-space)
 )))))))))
 
+
+(defun smart-punctuation (new-punct &optional not-so-smart)
+    (smart-expand)
+    (save-restriction
+      (when (and (eql major-mode 'org-mode)
+                 (org-at-heading-p))
+        (save-excursion
+          (org-beginning-of-line)
+          (let ((heading-text (fifth (org-heading-components))))
+            (when heading-text
+              (search-forward heading-text)
+              (narrow-to-region (match-beginning 0) (match-end 0))))))
+      (cl-flet ((go-back (regexp)
+                  (re-search-backward regexp nil t)
+                  (ignore-errors      ; might signal `end-of-buffer'
+                    (forward-char (length (match-string 0))))))
+        (if not-so-smart
+            (let ((old-point (point)))
+              (go-back "[^ \t]")
+              (insert new-punct)
+              (goto-char old-point)
+              (forward-char (length new-punct)))
+          (let ((old-point (point)))
+            (go-back (format "[^ \t%s]\\|\\`" *smart-punctuation-marks*))
+            (let ((was-after-space (and (< (point) old-point)
+                                        (find ?  (buffer-substring (point) old-point)))))
+              (re-search-forward (format "\\([ \t]*\\)\\([%s]*\\)"
+                                         ,*smart-punctuation-marks*)
+                                 nil t)
+              (let* ((old-punct (match-string 2))
+                     (was-after-punct (>= old-point (point))))
+                (replace-match "" nil t nil 1)
+                (replace-match (or (when (and was-after-punct
+                                              (not (string= old-punct "")))
+                                     (let ((potential-new-punct (concat old-punct new-punct)))
+                                       (find-if (lambda (exception)
+                                                  (search potential-new-punct exception))
+                                                ,*smart-punctuation-exceptions*)))
+                                   new-punct)
+                               nil t nil 2)
+                (if was-after-space
+                    (my/fix-space)
+                  (when (looking-at "[ \t]*\\<")
+                    (save-excursion (my/fix-space))))))))))
+    (when (and (eql major-mode 'org-mode)
+               (org-at-heading-p))
+))
 #+END_SRC
 
 ** smart-period
@@ -973,10 +1061,10 @@ Also converts full stops to commas."
 (unless
 (or
 
-(looking-at "\\]*[[:punct:]]*[ ]*$")
+(looking-at "\]*[[:punct:]]*[ ]*$")
 (looking-at "[[:punct:]]*[ ]*$")
 (looking-at "[ ]*I\\b")          ; never downcase the word "I"
-(looking-at "[ ]*I\\'")          ; never downcase the word "I'
+(looking-at "[ ]*I\'")          ; never downcase the word "I'
 (looking-at "[[:punct:]]*[ ]*\"")          ; beginning of a quote
 )
 
@@ -987,16 +1075,17 @@ Also converts full stops to commas."
 (or
 (and
 (looking-at "\\.")
-(looking-back-safe "\\.")
+(looking-back "\\.")
 )
 (and
 (looking-at ",")
-(looking-back-safe ",")
+(looking-back ",")
 ))
 (delete-char 1)
 )
 
 )
+
 
 
 (define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
