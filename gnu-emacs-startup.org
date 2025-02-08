@@ -1643,7 +1643,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
     ;; Kill the word correctly
     (call-interactively 'kill-word-correctly)
     ;; Capitalize if needed and capitalist-mode is enabled
-    (when (and fix-capitalization capitalist-mode)
+    (when (fix-capitalization)
       (save-excursion
         (capitalize-unless-org-heading)))))
 #+END_SRC
