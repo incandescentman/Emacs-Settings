@@ -43,31 +43,33 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 
 
-* setup
-#+begin_src emacs-lisp
-;; Let Emacs parse a single space as a sentence boundary
-(setq sentence-end-double-space nil)
-
-(defun my-captain-sentence-start ()
-  "Return the buffer position of the start of the current sentence."
-  (save-excursion
-    ;; E.g., search backwards for a punctuation char + single space:
-    ;; This is a naive approach, adjust as needed:
-    (re-search-backward "[.?!]\\s-+" nil t)
-    (forward-char 1) ; move past the punctuation
-    (skip-chars-forward " \t") ; skip spaces
-    (point)))
-
-;; Then tell Captain to use it:
-(setq-local captain-sentence-start-function #'my-captain-sentence-start)
-
-(setq-local captain-sentence-start-function
-            #'my-captain-sentence-start)
-#+end_src
-
 * Captain
 #+begin_src emacs-lisp
 (require 'captain)   ;; load Captain
+(add-hook 'text-mode-hook
+          (lambda ()
+            (captain-mode 1)
+            (setq captain-predicate (lambda () t))))
+
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (captain-mode 1)
+            ;; E.g., only in comments:
+            (setq captain-predicate
+                  (lambda () (nth 4 (syntax-ppss))))))
+
+;; If you only want Captain in Org, with some constraints:
+(add-hook 'org-mode-hook
+          (lambda ()
+            (captain-mode 1)
+            (setq captain-predicate
+                  (lambda ()
+                    ;; For instance, don't do it in src blocks:
+                    (not (org-in-src-block-p))))))
+#+end_src
+
+* spacecraft mode
+#+begin_src emacs-lisp
 
 (defvar spacecraft-mode-map
   (let ((map (make-sparse-keymap)))
@@ -77,23 +79,6 @@ Don't expand past certain delimiters, e.g. line break, ), and "
     map)
   "Keymap for `spacecraft-mode'.")
 
-(defun spacecraft-predicate ()
-  "Should the captain auto-capitalize right now?"
-  ;; Reuse your existing `auto-capitalize-predicate` checks:
-  (and (not buffer-read-only)
-       (functionp auto-capitalize-predicate)
-       (funcall auto-capitalize-predicate)))
-
-(defun spacecraft-sentence-start ()
-  "Return the start of the current sentence.
-By default, Captain uses `bounds-of-thing-at-point', but you can
-override with your `my/beginning-of-sentence-p'."
-  ;; E.g. if you want a naive approach, do:
-  (car (bounds-of-thing-at-point 'sentence))
-
-  ;; OR if you have something like `my/beginning-of-sentence-p`, you might
-  ;; do a custom search.  For now, let's do the naive approach:
-)
 
 ;;;***autoload
 (define-minor-mode spacecraft-mode
@@ -206,25 +191,6 @@ override with your `my/beginning-of-sentence-p'."
 
 #+END_SRC
 
-
-** prep
-#+begin_src emacs-lisp
-(defvar auto-capitalize--cap-next-word nil
-  "Non-nil means the next typed word should be capitalized immediately.")
-
-(defun auto-capitalize--maybe-capitalize-next-word ()
-  "If `auto-capitalize--cap-next-word' is non-nil and we just typed a new word, capitalize it."
-  (when auto-capitalize--cap-next-word
-    (let ((ch (char-before (point))))
-      (when (and ch (eq (char-syntax ch) ?w))
-        ;; Upcase the character we just typed
-        (save-excursion
-          (backward-char 1)
-          (replace-match (upcase (string ch)) t t))
-        (setq auto-capitalize--cap-next-word nil)))))
-
-;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
-#+end_src
 
 ** downcase
 #+begin_src emacs-lisp
@@ -779,7 +745,9 @@ Also converts full stops to commas."
 (looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
 
        )
-  (smart-punctuation "."))
+  (smart-punctuation ".")
+(captain--run)
+)
   (save-excursion
     (unless
         (or
@@ -813,21 +781,6 @@ Also converts full stops to commas."
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 
-(defun auto-capitalize--maybe-capitalize-next-word ()
-  "If `auto-capitalize--cap-next-word' is non-nil and we're typing a new word, capitalize it."
-  (when auto-capitalize--cap-next-word
-    (let ((ch (char-before (point))))
-      ;; If we typed a letter in a new word
-      (when (and ch (eq (char-syntax ch) ?w))
-        ;; Replace the just-typed letter with uppercase
-        (save-excursion
-          (backward-char 1)
-          (let ((case-fold-search nil))
-            (replace-match (upcase (string ch)) t t)))
-;(setq auto-capitalize--cap-next-word nil)
-))))
-
-;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
 
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
@@ -840,6 +793,7 @@ Also converts full stops to commas."
  (progn (delete-region (mark) (point)))))
 
   (smart-punctuation ",")
+(captain--run)
 (unless
 (or
 
