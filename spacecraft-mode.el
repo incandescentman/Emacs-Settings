@@ -256,12 +256,11 @@ override with your `my/beginning-of-sentence-p'."
  (just-one-space))
 
 
+(define-key org-mode-map (kbd "<SPC>") 'smart-space)
+;; Or, if you just want a literal space:
+;; (define-key org-mode-map (kbd "<SPC>") 'insert-space)
 
-;; (define-key org-mode-map (kbd "<SPC>") 'smart-space)
-(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
-(global-set-key (kbd "M-SPC") 'smart-period-or-smart-space)
-(define-key org-mode-map (kbd "<M-SPC>") 'smart-period-or-smart-space)
-;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
+(global-set-key (kbd "M-SPC") 'insert-space)
 
 (defun my/fix-space ()
   "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
