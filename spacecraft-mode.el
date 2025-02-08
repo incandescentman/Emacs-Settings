@@ -5,7 +5,7 @@
 
     (or
 (looking-back-safe "\\\\)\n*")
-(looking-back-safe "[[:punct:]]*\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
               (line-beginning-position) t)
 
 (looking-back-safe ":t[ ]*")
@@ -90,8 +90,7 @@ override with your `my/beginning-of-sentence-p'."
     (captain-mode -1)))
 
 (defun looking-back-safe (regexp &optional limit noerror)
-  "Like `looking-back' but up to LIMIT or `(line-beginning-position)'.
-NOERROR is t by default."
+  "Like `looking-back' but no error if mismatch, up to LIMIT or `(line-beginning-position)'."
   (looking-back regexp (or limit (line-beginning-position)) (or noerror t)))
 
 (setq never-downcase-words '("Internet" "Jay" "Dixit" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday" "York" "Canada" "I" "U" "I'm" "I'll" "I've" "I'd" "OK"))
@@ -111,7 +110,7 @@ NOERROR is t by default."
                  "\\([Ee]\\.g\\|[Uu]\\.S\\|[Uu]\\.K\\|Ph\\.D\\|\\bal\\|Mr\\|Mrs\\|[M]s\\|cf\\|[N]\\.B\\|[U]\\.N\\|[E]\\.R\\|[M]\\.C\\|[Vv]S\\|[Ii]\\.e\\|\\.\\.\\)\\.[^.\n]*\\|E.R\\|\\!\"[ ]*\\|\\?\"[ ]*"
                  (- (point) 20)))))))
 
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
+(setq auto-capitalize-words '("fn" "\\bI\\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 
 (defun downcase-or-endless-downcase ()
   (interactive)
@@ -165,82 +164,6 @@ NOERROR is t by default."
         (setq auto-capitalize--cap-next-word nil)))))
 
 ;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
-
-(defun downcase-or-endless-downcase ()
-(interactive)
-(if
-(or
-(looking-back-safe "\\.\\.\\.[ ]*[\n\t ]*")
-(looking-back-safe "i.e.[ ]*")
-(looking-back-safe "[0-9]\\.[ ]*")
-(looking-back-safe "e.g.[ ]*")
-(looking-back-safe "vs.[ ]*")
-(looking-back-safe "U.K.[ ]*")
-(looking-back-safe "U.S.[ ]*")
-(looking-back-safe "vs.[ ]*")
-(looking-back-safe "^"))
-    (call-interactively 'downcase-word)
-    (call-interactively 'endless/downcase)))
-
-(defun endless/convert-punctuation (rg rp)
-  "Look for regexp RG around point, and replace with RP.
-Only applies to text-mode."
-  (let ((f "\\(%s\\)\\(%s\\)")
-        (space "?:[[:blank:]\n\r]*"))
-    ;; We obviously don't want to do this in prog-mode.
-    (if (and (derived-mode-p 'text-mode)
-             (or (looking-at (format f space rg))
-                 (looking-back-safe (format f rg space))))
-        (replace-match rp nil nil nil 1))))
-
-(defun endless/capitalize ()
-  "Capitalize region or word.
-Also converts commas to full stops, and kills
-extraneous space at beginning of line."
-  (interactive)
-  (endless/convert-punctuation "," ".")
-  (if (use-region-p)
-      (call-interactively 'capitalize-region)
-    ;; A single space at the start of a line:
-    (when (looking-at "^\\s-\\b")
-      ;; get rid of it!
-      (delete-char 1))
-    (call-interactively 'capitalize-word)))
-
-(defun endless/downcase ()
-  "Downcase region or word.
-Also converts full stops to commas."
-  (interactive)
-  (endless/convert-punctuation "\\." ",")
-  (if (use-region-p)
-      (call-interactively 'downcase-region)
-    (call-interactively 'downcase-word)))
-
-(defun endless/upcase ()
-  "Upcase region or word."
-  (interactive)
-  (if (use-region-p)
-      (call-interactively 'upcase-region)
-    (call-interactively 'upcase-word)))
-
-(defun capitalize-or-endless/capitalize ()
-(interactive)
-(if
-
-; If
-(or
-(looking-back-safe "^")
-)
-    (call-interactively 'capitalize-word); then
-    (call-interactively 'endless/capitalize); else
-
-)
-)
-
-(global-set-key "\M-c" 'capitalize-or-endless/capitalize)
-(global-set-key "\M-l" 'downcase-or-endless-downcase)
-(global-set-key (kbd "M-u") 'endless/upcase)
-(global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
 
 (defun smart-space ()
   "Insert space and then clean up whitespace."
@@ -771,7 +694,9 @@ Also converts full stops to commas."
                           (save-excursion (my/fix-space)))))
                   ;; Fallback if no match found
                   (goto-char old-point)
-                  (insert new-punct))))))))))
+                  (insert new-punct)
+(my/fix-space)
+)))))))))
 
 (defun smart-period ()
   (interactive)
@@ -781,6 +706,8 @@ Also converts full stops to commas."
               (looking-back-safe "\\bi\\.e[[:punct:]]*[ ]*" nil)
               (looking-back-safe "\\be\\.g[[:punct:]]*[ ]*" nil))
     (smart-punctuation ".")
+;; You can do a final call to `my/fix-space` here if you like:
+  (my/fix-space)
     ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
 ; (auto-capitalize--handler (point) (point) 0)
 )
