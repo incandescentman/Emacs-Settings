@@ -24,7 +24,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
     (or
 (looking-back-safe "\\\\)\n*")
-(looking-back-safe "[[:punct:]]*\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
               (line-beginning-position) t)
 
 (looking-back-safe ":t[ ]*")
@@ -153,11 +153,11 @@ override with your `my/beginning-of-sentence-p'."
 
 ** words to never upcase (always downcase)
 #+BEGIN_SRC emacs-lisp
-(setq auto-capitalize-words '("fn" "\bI\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
+(setq auto-capitalize-words '("fn" "\\bI\\b" "setq" "iPhone" "IPad" "nil" "use" "ediff" "btw" "nyc" "file" "http" "provide" "load" "require" "alias" "looking-at" "blockquote" "http" "https" "eBay" "omg" "zk" "http" "https" "looking" "or" "youarehere"))
 #+END_SRC
 
 
-* downcase-or-endless-downcase
+** downcase-or-endless-downcase
 #+BEGIN_SRC emacs-lisp
 (defun downcase-or-endless-downcase ()
   (interactive)
@@ -177,7 +177,7 @@ override with your `my/beginning-of-sentence-p'."
 #+END_SRC
 
 
-* capitalize sentence
+** capitalize sentence
 #+BEGIN_SRC emacs-lisp
 (defun capitalize-sentence ()
   (interactive)
@@ -191,7 +191,7 @@ override with your `my/beginning-of-sentence-p'."
 
 #+END_SRC
 
-* downcase sentence
+** downcase sentence
 #+BEGIN_SRC emacs-lisp
 (defun downcase-sentence ()
   (interactive)
@@ -206,8 +206,6 @@ override with your `my/beginning-of-sentence-p'."
 
 #+END_SRC
 
-
-* spacecraft-mode - superior handling of whitespace for writing and editing prose
 
 ** prep
 #+begin_src emacs-lisp
@@ -305,6 +303,8 @@ Also converts full stops to commas."
 (global-set-key "\M-l" 'downcase-or-endless-downcase)
 (global-set-key (kbd "M-u") 'endless/upcase)
 (global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
+* spacecraft-mode - superior handling of whitespace for writing and editing prose
+
 #+end_src
 
 
@@ -395,7 +395,7 @@ Also converts full stops to commas."
     (delete-horizontal-space))))
 #+END_SRC
 
-. This.
+
 ** insert-space
 #+BEGIN_SRC emacs-lisp
 
@@ -662,8 +662,9 @@ Also converts full stops to commas."
 
 
 
+* Smart punctuation
 
-*** smart-punctuation exceptions
+** smart-punctuation exceptions
 
    #+BEGIN_SRC emacs-lisp
 (defvar *smart-punctuation-marks*
@@ -675,7 +676,7 @@ Also converts full stops to commas."
    #+END_SRC
 
 
-*** smart-punctuation (auxiliary)
+** smart-punctuation (auxiliary)
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-punctuation (new-punct &optional not-so-smart)
@@ -890,11 +891,13 @@ Also converts full stops to commas."
                           (save-excursion (my/fix-space)))))
                   ;; Fallback if no match found
                   (goto-char old-point)
-                  (insert new-punct))))))))))
+                  (insert new-punct)
+(my/fix-space)
+)))))))))
 
 #+END_SRC
 
-*** smart-period
+** smart-period
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
@@ -904,6 +907,8 @@ Also converts full stops to commas."
               (looking-back-safe "\\bi\\.e[[:punct:]]*[ ]*" nil)
               (looking-back-safe "\\be\\.g[[:punct:]]*[ ]*" nil))
     (smart-punctuation ".")
+;; You can do a final call to `my/fix-space` here if you like:
+  (my/fix-space)
     ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
 ; (auto-capitalize--handler (point) (point) 0)
 )
@@ -957,7 +962,7 @@ Also converts full stops to commas."
 (define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
-*** smart-comma
+** smart-comma
 #+BEGIN_SRC emacs-lisp
 (defun smart-comma ()
   (interactive)
@@ -1027,7 +1032,7 @@ Also converts full stops to commas."
 ;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
-*** smart-exclamation-point
+** smart-exclamation-point
 #+BEGIN_SRC emacs-lisp
 (defun smart-exclamation-point ()
   (interactive)
@@ -1044,7 +1049,7 @@ Also converts full stops to commas."
 ;; (define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
-*** smart-hyphen
+** smart-hyphen
 (defun smart-hyphen ()
   (interactive)
   (smart-punctuation "-"))
@@ -1053,7 +1058,7 @@ Also converts full stops to commas."
 ;; (define-key orgalist-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
-*** smart-semicolon
+** smart-semicolon
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-semicolon ()
@@ -1075,7 +1080,7 @@ Also converts full stops to commas."
 ;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
 #+END_SRC
 
-*** smart-colon
+** smart-colon
 
 #+BEGIN_SRC emacs-lisp
 (defun smart-colon ()
@@ -1103,7 +1108,7 @@ Also converts full stops to commas."
 ;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
-*** comma-or-smart-comma
+** comma-or-smart-comma
 #+BEGIN_SRC emacs-lisp
 (defun comma-or-smart-comma ()
 (interactive)
@@ -1119,7 +1124,7 @@ Also converts full stops to commas."
 #+END_SRC
 
 
-*** colon-or-smart-colon
+** colon-or-smart-colon
 #+BEGIN_SRC emacs-lisp
 (defun line-starts-with-hash-p ()
  (save-excursion
