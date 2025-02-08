@@ -322,23 +322,22 @@ Also converts full stops to commas."
   (unless
       (or
 (let ((case-fold-search nil)
-(looking-back-safe "\\bi\\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
+(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
 )
-(looking-back-safe "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back-safe "\\be\\.\\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
 
-(looking-back-safe "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
+(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
 
-(looking-back-safe ">") ; don't expand days of the week inside timestamps
+(looking-back ">") ; don't expand days of the week inside timestamps
 
-(looking-back-safe "][\n\t ]*") ; don't expand past closing square brackets ]
+(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
        ))
   (smart-expand))
 
 (insert "\ ")
 (just-one-space)
 )
-
 
 
 
@@ -364,8 +363,8 @@ Also converts full stops to commas."
 
 
 
-(define-key org-mode-map (kbd "<SPC>") 'smart-space)
-;; (define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
+;; (define-key org-mode-map (kbd "<SPC>") 'smart-space)
+(define-key orgalist-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
 (global-set-key (kbd "M-SPC") 'insert-space)
 (define-key org-mode-map (kbd "<M-SPC>") 'insert-space)
 ;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
