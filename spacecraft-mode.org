@@ -281,37 +281,6 @@ Also converts full stops to commas."
 (smart-space)
 ))
 
-(defun smart-space ()
-  "Insert space and then clean up whitespace."
-  (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
-
-;; (if (org-at-heading-p)
- ;;    (insert-normal-space-in-org-heading)
-
-  (unless
-      (or
-(let ((case-fold-search nil)
-(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
-)
-(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
-
-(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
-
-(looking-back ">") ; don't expand days of the week inside timestamps
-
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
-       ))
-  (smart-expand))
-
-(insert "\ ")
-
-(just-one-space)
-(run-hooks 'post-self-insert-hook)
-)
-
 
 (defun smart-space ()
   "Insert space and then clean up whitespace."
