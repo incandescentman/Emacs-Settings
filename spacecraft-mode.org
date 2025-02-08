@@ -11,6 +11,9 @@
 ;; (user-full-name)
 
 
+https://chatgpt.com/share/e/67a6e6b2-a1b4-8001-b66a-a60df4a01948
+
+
 * Captain
 #+begin_src emacs-lisp
 (require 'captain)   ;; load Captain
@@ -304,7 +307,9 @@ Also converts full stops to commas."
   (smart-expand))
 
 (insert "\ ")
+
 (just-one-space)
+(run-hooks 'post-self-insert-hook)
 )
 
 
@@ -335,6 +340,7 @@ Also converts full stops to commas."
 
 (insert "\ ")
 (just-one-space)
+(run-hooks 'post-self-insert-hook)
 )
 
 

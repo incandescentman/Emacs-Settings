@@ -28,6 +28,13 @@
     (skip-chars-forward ".?! \t\r\n")
     (point)))
 
+(defun my/captain-sentence-start ()
+  (save-excursion
+    (re-search-backward "[.?!]\\s-+" nil t)
+    (skip-chars-forward ".?! \t\n\r")
+    (point)))
+(setq-local captain-sentence-start-function #'my/captain-sentence-start)
+
 (add-hook 'org-mode-hook
           (lambda ()
             (captain-mode 1)
@@ -161,7 +168,9 @@
   (smart-expand))
 
 (insert "\ ")
+
 (just-one-space)
+(run-hooks 'post-self-insert-hook)
 )
 
 
@@ -192,6 +201,7 @@
 
 (insert "\ ")
 (just-one-space)
+(run-hooks 'post-self-insert-hook)
 )
 
 
