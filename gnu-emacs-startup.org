@@ -295,7 +295,8 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
           (with-temp-buffer
             (insert txt)
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
-          (message "Text with em dashes copied to macOS pasteboard.")))
+;; (message "Text with em dashes copied to macOS pasteboard.")
+))
     (message "No region selected")))
 
 #+end_src
