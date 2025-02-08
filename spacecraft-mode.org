@@ -900,47 +900,48 @@ Also converts full stops to commas."
 #+BEGIN_SRC emacs-lisp
 (defun smart-period ()
   (interactive)
-  (when (use-region-p)
-    (delete-region (region-beginning) (region-end)))
-  (unless (or (looking-back-safe "\\bvs.[ ]*" nil)
-              (looking-back-safe "\\bi\\.e[[:punct:]]*[ ]*" nil)
-              (looking-back-safe "\\be\\.g[[:punct:]]*[ ]*" nil))
-    (smart-punctuation ".")
-;; You can do a final call to `my/fix-space` here if you like:
-  (my/fix-space)
-    ;; Optionally, call `auto-capitalize--handler' or set a "cap next word" flag:
-; (auto-capitalize--handler (point) (point) 0)
-)
+(cond (mark-active
+ (progn (delete-region (mark) (point)))))
+(unless
+      (or
+(looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
+(looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra periods to ie.
+(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
+
+       )
+  (smart-punctuation "."))
   (save-excursion
-    (unless (or (looking-at "[ ]*$")
-                (looking-at "\"[[:punct:]]*[ ]*$")
-                (looking-at "\\)[ ]*$"))
-      (capitalize-unless-org-heading)))
-  ;; If two periods or commas in a row, remove the second one:
-  (when (or (and (looking-at "\\.")
-                 (looking-back-safe "\\." nil))
-            (and (looking-at ",")
-                 (looking-back-safe "," nil)))
-    (delete-char 1)))
+    (unless
+        (or
+         (looking-at "[ ]*$")
+         (looking-at "\][[:punct:]]*[ ]*$")
+         (looking-at "[[:punct:]]*[ ]*$")
+         (looking-at "\"[[:punct:]]*[ ]*$")
+         (looking-at "\)[ ]*$")
+         (looking-at "\)")
+         ) ; or
+    (capitalize-unless-org-heading)
+      ) ; unless
+) ; save excursion
 
-(defun auto-capitalize--handler (beg end length)
-  "The `after-change-functions' handler for `auto-capitalize-mode'."
-  (when (and auto-capitalize-state
-             (or (null auto-capitalize-predicate)
-                 (funcall auto-capitalize-predicate)))
-    ;; If we inserted punctuation recognized as an end-of-sentence...
-    (when (and (eq this-command 'self-insert-command)
-               (member (char-before end) '(?. ?! ??)))
-; (setq auto-capitalize--cap-next-word t)
+;; if two periods or two commas in a row, delete the second one
+(when
+(or
+(and
+(looking-at "\\.")
+(looking-back "\\.")
+)
+(and
+(looking-at ",")
+(looking-back ",")
+))
+(delete-char 1)
 )
 
-    ;; Original logic to capitalize the *previous* word if needed:
-    (cond
-     ((auto-capitalize--inserted-non-word-p beg end length)
+  )
 
-      (auto-capitalize--capitalize-previous-word))
-     ;; or yank logic...
-     )))
+
+(define-key org-mode-map (kbd ".") 'smart-period)
 
 (defun auto-capitalize--maybe-capitalize-next-word ()
   "If `auto-capitalize--cap-next-word' is non-nil and we're typing a new word, capitalize it."
