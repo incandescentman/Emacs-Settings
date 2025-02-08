@@ -1,0 +1,90 @@
+
+** prep
+#+begin_src emacs-lisp
+(defvar auto-capitalize--cap-next-word nil
+  "Non-nil means the next typed word should be capitalized immediately.")
+
+(defun auto-capitalize--maybe-capitalize-next-word ()
+  "If `auto-capitalize--cap-next-word' is non-nil and we just typed a new word, capitalize it."
+  (when auto-capitalize--cap-next-word
+    (let ((ch (char-before (point))))
+      (when (and ch (eq (char-syntax ch) ?w))
+        ;; Upcase the character we just typed
+        (save-excursion
+          (backward-char 1)
+          (replace-match (upcase (string ch)) t t))
+        (setq auto-capitalize--cap-next-word nil)))))
+
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+
+(defun auto-capitalize--maybe-capitalize-next-word ()
+  "If `auto-capitalize--cap-next-word' is non-nil and we're typing a new word, capitalize it."
+  (when auto-capitalize--cap-next-word
+    (let ((ch (char-before (point))))
+      ;; If we typed a letter in a new word
+      (when (and ch (eq (char-syntax ch) ?w))
+        ;; Replace the just-typed letter with uppercase
+        (save-excursion
+          (backward-char 1)
+          (let ((case-fold-search nil))
+            (replace-match (upcase (string ch)) t t)))
+;(setq auto-capitalize--cap-next-word nil)
+))))
+
+;; (add-hook 'post-self-insert-hook #'auto-capitalize--maybe-capitalize-next-word)
+
+#+end_src
+
+
+
+#+begin_src emacs-lisp
+;; Let Emacs parse a single space as a sentence boundary
+(setq sentence-end-double-space nil)
+
+(defun my-captain-sentence-start ()
+  "Return the buffer position of the start of the current sentence."
+  (save-excursion
+    ;; E.g., search backwards for a punctuation char + single space:
+    ;; This is a naive approach, adjust as needed:
+    (re-search-backward "[.?!]\\s-+" nil t)
+    (forward-char 1) ; move past the punctuation
+    (skip-chars-forward " \t") ; skip spaces
+    (point)))
+
+;; Then tell Captain to use it:
+(setq-local captain-sentence-start-function #'my-captain-sentence-start)
+
+(setq-local captain-sentence-start-function
+            #'my-captain-sentence-start)
+
+
+
+
+
+(defvar spacecraft-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;; If you want to override some keys:
+    ;; (define-key map (kbd ".") 'smart-period)
+    ;; ...
+    map)
+  "Keymap for `spacecraft-mode'.")
+
+(defun spacecraft-predicate ()
+  "Should the captain auto-capitalize right now?"
+  ;; Reuse your existing `auto-capitalize-predicate` checks:
+  (and (not buffer-read-only)
+       (functionp auto-capitalize-predicate)
+       (funcall auto-capitalize-predicate)))
+
+(defun spacecraft-sentence-start ()
+  "Return the start of the current sentence.
+By default, Captain uses `bounds-of-thing-at-point', but you can
+override with your `my/beginning-of-sentence-p'."
+  ;; E.g. if you want a naive approach, do:
+  (car (bounds-of-thing-at-point 'sentence))
+
+  ;; OR if you have something like `my/beginning-of-sentence-p`, you might
+  ;; do a custom search.  For now, let's do the naive approach:
+)
+#+end_src
+
