@@ -401,12 +401,11 @@ Also converts full stops to commas."
  (just-one-space))
 
 
+(define-key org-mode-map (kbd "<SPC>") 'smart-space)
+;; Or, if you just want a literal space:
+;; (define-key org-mode-map (kbd "<SPC>") 'insert-space)
 
-;; (define-key org-mode-map (kbd "<SPC>") 'smart-space)
-(define-key org-mode-map (kbd "<SPC>") 'smart-period-or-smart-space)
-(global-set-key (kbd "M-SPC") 'smart-period-or-smart-space)
-(define-key org-mode-map (kbd "<M-SPC>") 'smart-period-or-smart-space)
-;; (define-key orgalist-mode-map (kbd "<M-SPC>") 'insert-space)
+(global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
 
 
