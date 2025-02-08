@@ -1,25 +1,3 @@
-(defun smart-expand ()
-  (interactive)
-
-  (unless
-
-    (or
-(looking-back-safe "\\\\)\n*")
-(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
-              (line-beginning-position) t)
-
-(looking-back-safe ":t[ ]*")
-(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
-
-(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
-
-
-;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
-)
-    (expand-abbrev)
-)
-)
-
 (require 'captain)   ;; load Captain
 (add-hook 'text-mode-hook
           (lambda ()
@@ -41,6 +19,21 @@
                   (lambda ()
                     ;; For instance, don't do it in src blocks:
                     (not (org-in-src-block-p))))))
+
+(defun my-simple-sentence-start ()
+  "Return a naive guess of sentence start: any punctuation plus whitespace."
+  (save-excursion
+(message "Captain is checking for sentence start near point=%s" (point))
+(re-search-backward "[.?!]\\s-+" nil t)
+    (skip-chars-forward ".?! \t\r\n")
+    (point)))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (captain-mode 1)
+            (setq captain-predicate (lambda () (not (org-in-src-block-p))))
+            (setq captain-sentence-start-function
+                  #'my-simple-sentence-start)))
 
 (defvar spacecraft-mode-map
   (let ((map (make-sparse-keymap)))
@@ -546,7 +539,7 @@
 
        )
   (smart-punctuation ".")
-(captain--run)
+(run-hooks 'post-self-insert-hook)
 )
   (save-excursion
     (unless
@@ -590,7 +583,7 @@
  (progn (delete-region (mark) (point)))))
 
   (smart-punctuation ",")
-(captain--run)
+(run-hooks 'post-self-insert-hook)
 (unless
 (or
 
@@ -945,3 +938,25 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
           (pasteboard-paste-without-smart-quotes)))
     ;; Code branch
     (pasteboard-paste-no-spaces)))
+
+(defun smart-expand ()
+  (interactive)
+
+  (unless
+
+    (or
+(looking-back-safe "\\\\)\n*")
+(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+              (line-beginning-position) t)
+
+(looking-back-safe ":t[ ]*")
+(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+
+(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
+
+
+;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+)
+    (expand-abbrev)
+)
+)

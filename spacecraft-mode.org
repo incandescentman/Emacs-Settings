@@ -11,38 +11,6 @@
 ;; (user-full-name)
 
 
-* smart-expand
-Don't expand past certain delimiters, e.g. line break, ), and "
-
-
-#+BEGIN_SRC emacs-lisp
-
-(defun smart-expand ()
-  (interactive)
-
-  (unless
-
-    (or
-(looking-back-safe "\\\\)\n*")
-(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
-              (line-beginning-position) t)
-
-(looking-back-safe ":t[ ]*")
-(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
-
-(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
-
-
-;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
-)
-    (expand-abbrev)
-)
-)
-
-#+END_SRC
-
-
-
 * Captain
 #+begin_src emacs-lisp
 (require 'captain)   ;; load Captain
@@ -66,6 +34,31 @@ Don't expand past certain delimiters, e.g. line break, ), and "
                   (lambda ()
                     ;; For instance, don't do it in src blocks:
                     (not (org-in-src-block-p))))))
+#+end_src
+
+** fix captain
+#+begin_src emacs-lisp
+(defun my-simple-sentence-start ()
+  "Return a naive guess of sentence start: any punctuation plus whitespace."
+  (save-excursion
+(message "Captain is checking for sentence start near point=%s" (point))
+(re-search-backward "[.?!]\\s-+" nil t)
+    (skip-chars-forward ".?! \t\r\n")
+    (point)))
+
+(defun my/captain-sentence-start ()
+  (save-excursion
+    (re-search-backward "[.?!]\\s-+" nil t)
+    (skip-chars-forward ".?! \t\n\r")
+    (point)))
+(setq-local captain-sentence-start-function #'my/captain-sentence-start)
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (captain-mode 1)
+            (setq captain-predicate (lambda () (not (org-in-src-block-p))))
+            (setq captain-sentence-start-function
+                  #'my-simple-sentence-start)))
 #+end_src
 
 * spacecraft mode
@@ -746,7 +739,7 @@ Also converts full stops to commas."
 
        )
   (smart-punctuation ".")
-(captain--run)
+(run-hooks 'post-self-insert-hook)
 )
   (save-excursion
     (unless
@@ -793,7 +786,7 @@ Also converts full stops to commas."
  (progn (delete-region (mark) (point)))))
 
   (smart-punctuation ",")
-(captain--run)
+(run-hooks 'post-self-insert-hook)
 (unless
 (or
 
@@ -1232,6 +1225,38 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
     ;; Code branch
     (pasteboard-paste-no-spaces)))
 #+end_src
+
+
+* smart-expand
+Don't expand past certain delimiters, e.g. line break, ), and "
+
+
+#+BEGIN_SRC emacs-lisp
+
+(defun smart-expand ()
+  (interactive)
+
+  (unless
+
+    (or
+(looking-back-safe "\\\\)\n*")
+(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
+              (line-beginning-position) t)
+
+(looking-back-safe ":t[ ]*")
+(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
+
+(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
+
+
+;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+)
+    (expand-abbrev)
+)
+)
+
+#+END_SRC
+
 
 
 * Local Variables & The End
