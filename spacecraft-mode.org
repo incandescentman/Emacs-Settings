@@ -51,35 +51,51 @@ or nil if none was found."
           (point))    ;; This is the new sentence start
       nil)))           ;; Otherwise, no sentence boundary found, so return nil
 
-
 (defun my-sentence-start-with-bullets ()
-  "Return the start of a sentence by punctuation or beginning of line.
-If this line starts with a bullet (-, +, *), return nil (no auto-cap)."
+  "Return the start of a sentence by punctuation or the line-beginning.
+Skip capitalization if the line is an Org bullet."
   (save-excursion
-    ;; Try to find punctuation + whitespace going backward:
+    (let* ((found-punct
+            (re-search-backward "[.?!]\\s-+" nil t))
+           (pos
+            (if found-punct
+                (progn
+                  (skip-chars-forward ".?! \t\r\n")
+                  (point))
+              ;; fallback to beginning-of-line
+              (beginning-of-line)
+              (point))))
+      ;; If we're on a bullet, return nil so Captain doesn't capitalize:
+      (when (looking-at-p "^[ \t]*[-+*][ \t]+")
+        (setq pos nil))
+      pos)))
+
+(defun my-sentence-start-with-bullets-and-buffer-start ()
+  (save-excursion
     (if (re-search-backward "[.?!]\\s-+" nil t)
         (progn
-          ;; Skip the punctuation & whitespace so we're right at the
-          ;; first character of the new "sentence."
           (skip-chars-forward ".?! \t\r\n")
           (point))
-      ;; Otherwise, fallback to the beginning of the line:
-      (beginning-of-line)
-
-      ;; If the line is a bullet, return nil so we skip capitalization:
-      (if (looking-at-p "^[ \t]*[-+*][ \t]+")
-          nil
-        ;; Otherwise, return that position:
-        (point)))))
-
+      ;; Fallback: start-of-line or start-of-buffer
+      (or
+       (when (> (point) (point-min))
+         (beginning-of-line)
+         (unless (looking-at-p "^[ \t]*[-+*][ \t]+")
+           (point)))
+       ;; If that was nil, treat point-min as the boundary:
+       (point-min)))))
 
 
 (add-hook 'org-mode-hook
-          (lambda ()
-            (captain-mode 1)
-            (setq captain-predicate (lambda () (not (org-in-src-block-p))))
-            (setq captain-sentence-start-function
-                  #'my-simple-sentence-start)))
+  (lambda ()
+    (require 'captain)
+    (captain-mode 1)
+    ;; Only auto-capitalize if not in an Org src block:
+    (setq captain-predicate
+          (lambda () (not (org-in-src-block-p))))
+    (setq captain-sentence-start-function
+          #'my-sentence-start-with-bullets-and-buffer-start)))
+
 #+end_src
 
 * spacecraft mode
