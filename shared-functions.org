@@ -3538,16 +3538,15 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 #+BEGIN_SRC emacs-lisp
 (defun narrow-or-widen-dwim (p)
   "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or defun,
-whichever applies first. Narrowing to org-src-block actually
-calls `org-edit-src-code'.
+Dwim means: region, org-src-block, org-subtree, or defun.
+Narrowing to org-src-block actually calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer is
 already narrowed."
   (interactive "P")
   (declare (interactive-only))
   (cond
-   ;; If already narrowed and no prefix arg, widen.
+   ;; Already narrowed and no prefix arg => widen.
    ((and (buffer-narrowed-p) (not p))
     (widen))
 
@@ -3561,25 +3560,31 @@ already narrowed."
      ;; If inside a src block, edit that code block.
      ((org-in-src-block-p)
       (org-edit-src-code)
-      (delete-other-windows))  ; optional: show only that code buffer
+      (delete-other-windows))  ; optional
 
      ;; If inside a generic Org block (#+begin_.. #+end_..), narrow to it.
      ((org-in-block-p nil)
       (org-narrow-to-block))
 
-     ;; If we're on a headline, narrow to the subtree.
-     ((org-at-heading-p)
-      (org-narrow-to-subtree))
+     ;; If we're anywhere in a heading's subtree, move to the heading and narrow.
+     ((save-excursion
+        (condition-case nil
+            (progn
+              (org-back-to-heading t)
+              t)
+          (error nil)))
+      (save-excursion
+        (org-back-to-heading t)
+        (org-narrow-to-subtree)))
 
      ;; Otherwise, do nothing or show a message.
-     (t
-      (message "Not at src block, block, or heading; cannot narrow."))))
+     (t (message "Not at src block, block, or heading; cannot narrow."))))
 
-   ;; For LaTeX mode, narrow to the current environment.
+   ;; In LaTeX mode, narrow to environment.
    ((derived-mode-p 'latex-mode)
     (LaTeX-narrow-to-environment))
 
-   ;; Otherwise, fall back to `narrow-to-defun`.
+   ;; Fallback to defun.
    (t
     (narrow-to-defun))))
 #+END_SRC

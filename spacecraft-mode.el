@@ -642,7 +642,7 @@ Skip capitalization if the line is an Org bullet."
          (looking-at "\\][[:punct:]]*[ ]*$")
          (looking-at "[[:punct:]]*[ ]*$")
          (looking-at "\"[[:punct:]]*[ ]*$")
-         (looking-at "\\)[ ]*$")
+         (looking-at ")[ ]*$")
          (looking-at "\\)")
          ) ; or
     (capitalize-unless-org-heading)
@@ -889,7 +889,7 @@ certain words/contexts (like \"I\")."
            (looking-at "[[:punct:]]*[ ]*$")      ; line break
            (looking-at "\"[[:punct:]]*[ ]*$")    ; quote + line break
            (looking-at ")[ ]*$")                ; right paren + line break
-           ;; (looking-at "\\)[ ]*$") <-- removed to avoid unmatched )
+           ;; (looking-at ")[ ]*$") <-- removed to avoid unmatched )
            (looking-at "\")[ ]*$")              ; quote + right paren + line break
 (looking-at ")[[:space:]]*$")    ; Right paren, optional whitespace to EOL
 (looking-at "\")[[:space:]]*$")  ; Quote, then right paren, optional whitespace to EOL
@@ -941,7 +941,7 @@ certain words/contexts (like \"I\")."
 (looking-at "[[:punct:]]*[ ]*[[:punct:]]*I'")  ; never downcase I'm I've etc.
 (looking-at "[[:punct:]]*[ ]*$") ; zero or more whitespaces followed by zero or more punctuation followed by zero or more whitespaces followed by a line break
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-(looking-at "\\)[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
+(looking-at ")[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 (looking-at (sentence-end)) ; quotation mark followed by "zero or more whitespace then end of line?"
        (looking-at (user-full-name))
 
