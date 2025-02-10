@@ -917,97 +917,98 @@ before packages are loaded."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(counsel-search-engine 'google)
- '(deft-directory
-   "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)
- '(dired-preview-delay 0.2)
- '(evil-want-Y-yank-to-eol nil)
- '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
- '(flycheck-disabled-checkers '(proselint))
- '(gptel-model "gpt-4")
- '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
- '(line-number-mode t)
- '(marginalia-align 'left nil nil "Customized with use-package marginalia")
- '(mode-line-compact 'long)
- '(org-attach-expert nil)
- '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
- '(org-ellipsis " 🪜 ")
- '(org-export-preserve-breaks nil)
- '(org-html-prefer-user-labels t)
- '(org-noter-auto-save-last-location t)
- '(org-noter-insert-note-no-questions t)
- '(org-safe-remote-resources
-   '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
- '(org-sidebar-jump-indirect t)
- '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
- '(org-superstar-headline-bullets-list '(42 42 42 42))
- '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
- '(org-superstar-remove-leading-stars t)
- '(org-tempo-keywords-alist
-   '(("l " . "src emacs-lisp ")
-     ("H" . "html")
-     ("A" . "ascii")
-     ("i" . "index")))
- '(org-transclusion-exclude-elements '(property-drawer))
- '(org-transclusion-extensions
-   '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
- '(org-transclusion-include-first-section nil)
- '(org-twbs-head-include-default-style nil)
- '(org-twbs-head-include-scripts nil)
- '(org-twbs-htmlize-output-type 'css)
- '(package-selected-packages
-   '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
- '(paradox-github-token t)
- '(safe-local-variable-values
-   '((org-config-files-local-mode . t)
-     (org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
-     (org-timestamp-custom-formats "%b %d:" . "<%d/%m/%Y %a %H:%M>")
-     (org-timestamp-custom-formats "%b %d" . "<%d/%m/%Y %a %H:%M>")
-     (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")
-     (eval when
-           (fboundp 'rainbow-mode)
-           (rainbow-mode 1))))
- '(sp-escape-wrapped-region nil)
- '(tab-bar-close-button-show nil)
- '(tab-bar-new-button-show nil)
- '(warning-suppress-log-types '((use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(beacon ((t (:inherit highlight))))
- '(bold ((t (:inherit font-lock-warning-face :weight bold))))
- '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
- '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
- '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
- '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
- '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
- '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
- '(org-done ((t (:background "light green"))))
- '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
- '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
- '(org-headline-done ((t (:strike-through t))))
- '(org-level-6 ((t (:extend nil :foreground "#0077CC" :slant normal :weight bold :height 1.0))))
- '(org-link ((t (:inherit link :underline nil))))
- '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
- '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
- '(org-transclusion ((t (:extend t :background "light steel blue" :foreground "black"))))
- '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow"))))
- '(org-transclusion-source ((t (:background "#ebf6fa"))))
- '(org-transclusion-source-edit ((t (:background "#fff3da"))))
- '(org-transclusion-source-fringe ((t nil)))
- '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
- '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
- '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
- '(variable-pitch ((t (:family "\"Courier\" "))))
- '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(counsel-search-engine 'google)
+   '(deft-directory
+     "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)
+   '(dired-preview-delay 0.2)
+   '(evil-want-Y-yank-to-eol nil)
+   '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
+   '(flycheck-disabled-checkers '(proselint))
+   '(gptel-model "gpt-4")
+   '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
+   '(line-number-mode t)
+   '(marginalia-align 'left nil nil "Customized with use-package marginalia")
+   '(mode-line-compact 'long)
+   '(org-attach-expert nil)
+   '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
+   '(org-ellipsis " 🪜 ")
+   '(org-export-preserve-breaks nil)
+   '(org-html-prefer-user-labels t)
+   '(org-noter-auto-save-last-location t)
+   '(org-noter-insert-note-no-questions t)
+   '(org-safe-remote-resources
+     '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
+   '(org-sidebar-jump-indirect t)
+   '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
+   '(org-superstar-headline-bullets-list '(42 42 42 42))
+   '(org-superstar-item-bullet-alist '((42 . 183) (43 . 183) (45 . 183)))
+   '(org-superstar-remove-leading-stars t)
+   '(org-tempo-keywords-alist
+     '(("l " . "src emacs-lisp ")
+       ("H" . "html")
+       ("A" . "ascii")
+       ("i" . "index")))
+   '(org-transclusion-exclude-elements '(property-drawer))
+   '(org-transclusion-extensions
+     '(org-transclusion-src-lines org-transclusion-font-lock org-transclusion-indent-mode))
+   '(org-transclusion-include-first-section nil)
+   '(org-twbs-head-include-default-style nil)
+   '(org-twbs-head-include-scripts nil)
+   '(org-twbs-htmlize-output-type 'css)
+   '(package-selected-packages
+     '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
+   '(paradox-github-token t)
+   '(safe-local-variable-values
+     '((org-config-files-local-mode . t)
+       (org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
+       (org-timestamp-custom-formats "%b %d:" . "<%d/%m/%Y %a %H:%M>")
+       (org-timestamp-custom-formats "%b %d" . "<%d/%m/%Y %a %H:%M>")
+       (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")
+       (eval when
+             (fboundp 'rainbow-mode)
+             (rainbow-mode 1))))
+   '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")
+   '(sp-escape-wrapped-region nil)
+   '(tab-bar-close-button-show nil)
+   '(tab-bar-new-button-show nil)
+   '(warning-suppress-log-types '((use-package))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(beacon ((t (:inherit highlight))))
+   '(bold ((t (:inherit font-lock-warning-face :weight bold))))
+   '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
+   '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
+   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
+   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+   '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
+   '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
+   '(org-done ((t (:background "light green"))))
+   '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
+   '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
+   '(org-headline-done ((t (:strike-through t))))
+   '(org-level-6 ((t (:extend nil :foreground "#0077CC" :slant normal :weight bold :height 1.0))))
+   '(org-link ((t (:inherit link :underline nil))))
+   '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
+   '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
+   '(org-transclusion ((t (:extend t :background "light steel blue" :foreground "black"))))
+   '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow"))))
+   '(org-transclusion-source ((t (:background "#ebf6fa"))))
+   '(org-transclusion-source-edit ((t (:background "#fff3da"))))
+   '(org-transclusion-source-fringe ((t nil)))
+   '(tab-bar ((t (:inherit (default variable-pitch) :background "black" :foreground "black" :height 2.0))))
+   '(tab-bar-tab ((t (:inherit tab-bar :box 1))))
+   '(tab-bar-tab-group-inactive ((t (:inherit (shadow tab-bar-tab-inactive) :foreground "black"))))
+   '(variable-pitch ((t (:family "\"Courier\" "))))
+   '(zz-fringe-for-narrowing ((t (:background "#darkgrey")))))
+  )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

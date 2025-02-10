@@ -995,17 +995,15 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
   (unless
 
     (or
-(looking-back-safe "\\\\)\n*")
-(looking-back-safe "[[:punct:]]*\\\\)[[:space:]]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*"
-              (line-beginning-position) t)
+       (looking-back "\)\n*")
+(looking-back "[[:punct:]]*\)[ ]*[[:punct:]]*[\n\t ]*[[:punct:]]*>*")
+(looking-back ":t[ ]*")
+(looking-back "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
 
-(looking-back-safe ":t[ ]*")
-(looking-back-safe "][\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing square brackets ]
-
-(looking-back-safe ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
+(looking-back ">[\n\t ]*[[:punct:]]*[\n\t ]*") ; don't expand past closing email addresses]
 
 
-;; (looking-back-safe "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
+;; (looking-back "\\\w") ; for some reason this matches all words, not just ones that start with a backslash
 )
     (expand-abbrev)
 )
