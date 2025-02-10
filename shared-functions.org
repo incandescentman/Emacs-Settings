@@ -3538,40 +3538,43 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 #+BEGIN_SRC emacs-lisp
 (defun narrow-or-widen-dwim (p)
   "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or defun.
-Narrowing to org-src-block actually calls `org-edit-src-code'.
+Dwim means: region, org-src-block, org-subtree, or defun,
+whichever applies first. Narrowing to org-src-block actually
+calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer is
 already narrowed."
   (interactive "P")
   (declare (interactive-only))
   (cond
-   ;; Already narrowed and no prefix arg => widen.
-   ((and (buffer-narrowed-p) (not p))
-    (widen))
+   ;; 1) If we're inside an *Org src editing* buffer, exit it.
+   ((bound-and-true-p org-src-mode)
+    (org-edit-src-exit))
 
-   ;; If region is active, narrow to that region.
-   ((region-active-p)
-    (narrow-to-region (region-beginning) (region-end)))
-
-   ;; If in Org mode, pick the right narrowing command.
+   ;; 2) Otherwise, if we're in Org mode, decide how to narrow.
    ((derived-mode-p 'org-mode)
     (cond
+     ;; If already narrowed and no prefix arg, widen.
+     ((and (buffer-narrowed-p) (not p))
+      (widen))
+
+     ;; If region is active, narrow to region.
+     ((region-active-p)
+      (narrow-to-region (region-beginning) (region-end)))
+
      ;; If inside a src block, edit that code block.
      ((org-in-src-block-p)
       (org-edit-src-code)
-      (delete-other-windows))  ; optional
+      (delete-other-windows))
 
-     ;; If inside a generic Org block (#+begin_.. #+end_..), narrow to it.
+     ;; If inside a generic Org block, narrow to it.
      ((org-in-block-p nil)
       (org-narrow-to-block))
 
-     ;; If we're anywhere in a heading's subtree, move to the heading and narrow.
+     ;; If we're in a heading or anywhere under it, go back to heading & narrow.
      ((save-excursion
         (condition-case nil
-            (progn
-              (org-back-to-heading t)
-              t)
+            (progn (org-back-to-heading t) t)
           (error nil)))
       (save-excursion
         (org-back-to-heading t)
@@ -3580,13 +3583,15 @@ already narrowed."
      ;; Otherwise, do nothing or show a message.
      (t (message "Not at src block, block, or heading; cannot narrow."))))
 
-   ;; In LaTeX mode, narrow to environment.
+   ;; 3) If we're in LaTeX mode, narrow to environment.
    ((derived-mode-p 'latex-mode)
     (LaTeX-narrow-to-environment))
 
-   ;; Fallback to defun.
+   ;; 4) Otherwise, fall back to `narrow-to-defun`.
    (t
-    (narrow-to-defun))))
+    (if (and (buffer-narrowed-p) (not p))
+        (widen)
+      (narrow-to-defun)))))
 #+END_SRC
 
 
