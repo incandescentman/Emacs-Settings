@@ -3538,20 +3538,42 @@ With prefix P, don't widen, just narrow even if buffer is
 already narrowed."
   (interactive "P")
   (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((region-active-p)
-         (narrow-to-region (region-beginning) (region-end)))
-        ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing
-         ;; command. Remove this first conditional if you
-         ;; don't want it.
-         (cond ((ignore-errors (org-edit-src-code))
-                (delete-other-windows))
-               ((ignore-errors (org-narrow-to-block) t))
-               (t (org-narrow-to-subtree))))
-        ((derived-mode-p 'latex-mode)
-         (LaTeX-narrow-to-environment))
-        (t (narrow-to-defun))))
+  (cond
+   ;; If already narrowed and no prefix arg, widen.
+   ((and (buffer-narrowed-p) (not p))
+    (widen))
+
+   ;; If region is active, narrow to that region.
+   ((region-active-p)
+    (narrow-to-region (region-beginning) (region-end)))
+
+   ;; If in Org mode, pick the right narrowing command.
+   ((derived-mode-p 'org-mode)
+    (cond
+     ;; If inside a src block, edit that code block.
+     ((org-in-src-block-p)
+      (org-edit-src-code)
+      (delete-other-windows))  ; optional: show only that code buffer
+
+     ;; If inside a generic Org block (#+begin_.. #+end_..), narrow to it.
+     ((org-in-block-p)
+      (org-narrow-to-block))
+
+     ;; If we're on a headline, narrow to the subtree.
+     ((org-at-heading-p)
+      (org-narrow-to-subtree))
+
+     ;; Otherwise, do nothing or show a message.
+     (t
+      (message "Not at src block, block, or heading; cannot narrow."))))
+
+   ;; For LaTeX mode, narrow to the current environment.
+   ((derived-mode-p 'latex-mode)
+    (LaTeX-narrow-to-environment))
+
+   ;; Otherwise, fall back to `narrow-to-defun`.
+   (t
+    (narrow-to-defun))))
 #+END_SRC
 
 
