@@ -850,7 +850,7 @@ Skip capitalization if the line is an Org bullet."
 
 (looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
 
-(looking-at "\\)[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
+(looking-at ")[ ]*$") ; A right paren followed by "zero or more" whitespace, then end of line
 
 (looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
 (looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
@@ -862,6 +862,44 @@ Skip capitalization if the line is an Org bullet."
 
        )
 
+    (save-excursion
+      (downcase-word 1))))
+
+
+(defadvice capitalize-word (after capitalize-word-advice activate)
+  "After capitalizing the new first word in a sentence, downcase the
+next word if it's no longer the start of the sentence. We skip downcasing
+certain words/contexts (like \"I\")."
+
+  (unless (or
+           ;; If looking at a quote right after capitalizing, skip downcasing
+           (looking-at "[ ]*\"")
+
+           ;; Never downcase the word "I"
+           (looking-at "[[:punct:]]*[ ]*I\\b")
+           (looking-at "[[:punct:]]*[ ]*I'")
+           (looking-at "[[:punct:]]*[ ]*\"I\\b")
+           (looking-at "[[:punct:]]*[ ]*\"I'")
+
+           ;; Or the word "OK"
+           (looking-at "[[:punct:]]*[ ]*OK\\b")
+
+           ;; Don't downcase if we're at the end of a sentence/line
+           (looking-at (sentence-end))
+           (looking-at "[[:punct:]]*[ ]*$")      ; line break
+           (looking-at "\"[[:punct:]]*[ ]*$")    ; quote + line break
+           (looking-at ")[ ]*$")                ; right paren + line break
+           ;; (looking-at "\\)[ ]*$") <-- removed to avoid unmatched )
+           (looking-at "\")[ ]*$")              ; quote + right paren + line break
+(looking-at ")[[:space:]]*$")    ; Right paren, optional whitespace to EOL
+(looking-at "\")[[:space:]]*$")  ; Quote, then right paren, optional whitespace to EOL
+           (looking-at "[[:punct:]]*[ ]*\")$")   ; alternate right-paren check
+           (looking-at "[[:punct:]]*[ ]*http")   ; "http" etc.
+
+           ;; An optional check for your full name (if you never want it downcased)
+           (looking-at (user-full-name)))
+
+    ;; Move ahead by one word and downcase it
     (save-excursion
       (downcase-word 1))))
 

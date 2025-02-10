@@ -2960,8 +2960,16 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 * org-links
 ** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'?
 #+BEGIN_SRC emacs-lisp
-(advice-add #'org-remove-angle-brackets :before-until
-            (lambda (s) (if (string-prefix-p "mailto:" s) s)))
+(with-eval-after-load 'org
+  ;; Make lines that begin with 1+ colons look like they begin with ❱ instead
+  (font-lock-add-keywords
+   'org-mode
+   '(("^\\(:+\\) "                      ; Lines that start with one or more colons and a space
+      (1 (prog1 nil
+           ;; This call composes the matched text (the colons) into a single ❱ character
+           (compose-region (match-beginning 1)
+                           (match-end 1)
+                           ?❱)))))))
 #+END_SRC
 source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert-link-to-accept-mail-addresses-like-name-namesome-addr][org mode - How to allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? - Emacs Stack Exchange]]
 
@@ -3556,7 +3564,7 @@ already narrowed."
       (delete-other-windows))  ; optional: show only that code buffer
 
      ;; If inside a generic Org block (#+begin_.. #+end_..), narrow to it.
-     ((org-in-block-p)
+     ((org-in-block-p nil)
       (org-narrow-to-block))
 
      ;; If we're on a headline, narrow to the subtree.
