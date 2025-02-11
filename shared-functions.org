@@ -4926,7 +4926,7 @@ Go through `org-structure-template-alist' and
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
 
-(add-hook 'org-mode-hook #'flycheck-mode)
+;; (add-hook 'org-mode-hook #'flycheck-mode)
 ;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
 
 #+end_src
@@ -8403,10 +8403,12 @@ Only required if Emacs < 29.3.
 * flycheck
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-:defer
   :ensure t
-  :init (global-flycheck-mode))
-
+  :init
+  (global-flycheck-mode)  ; Enable Flycheck globally
+  :config
+  ;; Turn off Flycheck in Org mode:
+  (add-hook 'org-mode-hook (lambda () (flycheck-mode -1))))
 #+END_SRC
 
 

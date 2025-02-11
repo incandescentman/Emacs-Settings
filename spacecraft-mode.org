@@ -1070,9 +1070,10 @@ No space. Does that make sense? Thanks!
   "Backward kill word correctly. Then check to see if the point is at the beginning of the sentence. If yes, then kill-word-correctly and endless/capitalize to capitalize the first letter of the word that becomes the first word in the sentence. Otherwise simply kill-word-correctly."
   (interactive)
 (call-interactively 'backward-kill-word-correctly)
-  (let ((fix-capitalization (my/beginning-of-sentence-p)))
-    (when fix-capitalization
-      (save-excursion (capitalize-unless-org-heading)))))
+  ;; (let ((fix-capitalization (my/beginning-of-sentence-p)))
+  ;;   (when fix-capitalization
+  ;;     (save-excursion (capitalize-unless-org-heading))))
+)
 #+END_SRC
 
 ** defadvice capitalize-word
