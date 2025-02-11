@@ -190,7 +190,8 @@ Skip capitalization if the line is an Org bullet."
     (just-one-space))
 
   ;; 4) Now run post-self-insert-hook outside the silent block
-  (run-hooks 'post-self-insert-hook))
+;; (run-hooks 'post-self-insert-hook)
+)
 
 
 ;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
