@@ -14,6 +14,29 @@
 https://chatgpt.com/share/e/67a6e6b2-a1b4-8001-b66a-a60df4a01948
 
 
+
+* capitalist-mode
+#+begin_src emacs-lisp
+(defvar capitalist-mode nil
+ "Mode variable for capitalist-mode.")
+
+(defun capitalist-mode-on ()
+ "Turn on capitalist-mode."
+ (interactive)
+ (setq capitalist-mode t)
+ (message "Capitalist mode is now ON."))
+
+(defun capitalist-mode-off ()
+ "Turn off capitalist-mode."
+ (interactive)
+ (setq capitalist-mode nil)
+ (message "Capitalist mode is now OFF."))
+
+(capitalist-mode-on)
+(add-hook 'org-mode-hook 'capitalist-mode-on)
+#+end_src
+
+
 * Captain
 #+begin_src emacs-lisp
 (require 'captain)   ;; load Captain
