@@ -1002,6 +1002,25 @@ I tried to implement this myself, below. My hack seems to work, but it seems slo
 )
 (my/fix-space
 )))
+
+(defun backward-kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (atomic-change-group
+    (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
+        (kill-region (match-end 0) (match-beginning 0))
+      (backward-kill-word 1))
+
+    (my/fix-space)
+
+    ;; I added this ↓↓↓ ***********************
+    (when (and
+           (not (looking-back-safe "--")) ; I added this
+           (not (looking-back-safe "^"))) ; I added this
+      (smart-space))
+    ;; I added this ↑↑↑ ***********************
+
+    (my/fix-space)))
 #+END_SRC
 
 *** NOTE-TO-JAY Question
