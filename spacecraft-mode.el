@@ -11,15 +11,6 @@
             (setq captain-predicate
                   (lambda () (nth 4 (syntax-ppss))))))
 
-;; If you only want Captain in Org, with some constraints:
-(add-hook 'org-mode-hook
-          (lambda ()
-            (captain-mode 1)
-            (setq captain-predicate
-                  (lambda ()
-                    ;; For instance, don't do it in src blocks:
-                    (not (org-in-src-block-p))))))
-
 (defun my-simple-sentence-start ()
   "Return a naive guess of sentence start: any punctuation plus whitespace,
 or nil if none was found."
@@ -179,33 +170,27 @@ Skip capitalization if the line is an Org bullet."
 (defun smart-space ()
   "Insert space and then clean up whitespace."
   (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
+  (with-silent-modifications
+    ;; 1) If region is active, delete it
+    (when (use-region-p)
+      (delete-region (region-beginning) (region-end)))
 
-;; (if (org-at-heading-p)
- ;;    (insert-normal-space-in-org-heading)
+    ;; 2) If allowed, expand
+    (unless (or
+             (looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*" nil)
+             (looking-back "\\bvs.[ ]*" nil)
+             (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil)
+             (looking-back "^[[:punct:]]*[ ]*" nil)
+             (looking-back ">" nil)
+             (looking-back "][\n\t ]*" nil))
+      (smart-expand))
 
-  (unless
-      (or
-(let ((case-fold-search nil)
-(looking-back "\\bi\.e[[:punct:][:punct:]]*[ ]*") ; don't add extra spaces to ie.
-)
-(looking-back "\\bvs.[ ]*") ; don't add extra spaces to vs.
-(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra spaces to eg.
+    ;; 3) Insert a space, condense to one space
+    (insert " ")
+    (just-one-space))
 
-(looking-back "^[[:punct:]]*[ ]*") ; don't expand previous lines - brilliant!
-
-(looking-back ">") ; don't expand days of the week inside timestamps
-
-(looking-back "][\n\t ]*") ; don't expand past closing square brackets ]
-       ))
-  (smart-expand))
-
-(insert "\ ")
-(just-one-space)
-(run-hooks 'post-self-insert-hook)
-)
-
+  ;; 4) Now run post-self-insert-hook outside the silent block
+  (run-hooks 'post-self-insert-hook))
 
 
 ;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
@@ -1008,3 +993,15 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
     (expand-abbrev)
 )
 )
+
+(remove-hook 'post-self-insert-hook #'captain--run)
+
+
+;; If you only want Captain in Org, with some constraints:
+;;(add-hook 'org-mode-hook
+;; (lambda ()
+;; (captain-mode 1)
+;; (setq captain-predicate
+;; (lambda ()
+                    ;; For instance, don't do it in src blocks:
+;; (not (org-in-src-block-p))))))

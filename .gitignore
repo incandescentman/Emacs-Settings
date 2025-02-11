@@ -38,3 +38,4 @@ spacemacs.d/spacemacs.env
 spacemacs.env
 spacemacs.d/.spacemacs.env
 /spacemacs.d
+spacecraft-mode.el
