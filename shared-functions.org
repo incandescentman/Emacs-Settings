@@ -2958,22 +2958,6 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
 
 
 * org-links
-** allow org-insert-link to accept mail addresses like 'Name <name@some.address>'?
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'org
-  ;; Make lines that begin with 1+ colons look like they begin with ❱ instead
-  (font-lock-add-keywords
-   'org-mode
-   '(("^\\(:+\\) "                      ; Lines that start with one or more colons and a space
-      (1 (prog1 nil
-           ;; This call composes the matched text (the colons) into a single ❱ character
-           (compose-region (match-beginning 1)
-                           (match-end 1)
-                           ?❱)))))))
-#+END_SRC
-source: [[http://emacs.stackexchange.com/questions/12743/how-to-allow-org-insert-link-to-accept-mail-addresses-like-name-namesome-addr][org mode - How to allow org-insert-link to accept mail addresses like 'Name <name@some.address>'? - Emacs Stack Exchange]]
-
-
 * update packages
  (run-with-idle-timer 6000 t 'endless/upgrade)
 
@@ -4924,7 +4908,7 @@ Go through `org-structure-template-alist' and
 ;; (add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-(add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
+;; (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
 
 ;; (add-hook 'org-mode-hook #'flycheck-mode)
 ;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))

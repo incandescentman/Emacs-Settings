@@ -358,6 +358,31 @@ Also converts full stops to commas."
 )
 
 
+(defun smart-space ()
+  "Insert space and then clean up whitespace."
+  (interactive)
+  (atomic-change-group
+    ;; 1) If region is active, delete it
+    (when (use-region-p)
+      (delete-region (region-beginning) (region-end)))
+
+    ;; 2) If allowed, expand
+    (unless (or
+             (looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*" nil)
+             (looking-back "\\bvs.[ ]*" nil)
+             (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil)
+             (looking-back "^[[:punct:]]*[ ]*" nil)
+             (looking-back ">" nil)
+             (looking-back "][\n\t ]*" nil))
+      (smart-expand))
+
+    ;; 3) Insert a space, condense to one space
+    (insert " ")
+    (just-one-space)))
+
+
+
+
 ;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
 (defun insert-smart-space-in-org-heading ()
  "Insert space and then clean up whitespace."
@@ -983,26 +1008,6 @@ Rúdi: desired behavior is that when invoking backward-kill-word-correctly to de
 I tried to implement this myself, below. My hack seems to work, but it seems slow... Is it possible to make it faster or no? maybe just than a look at the below and see if you think I implemented it in the best way.
 
 #+BEGIN_SRC emacs-lisp
-(defun backward-kill-word-correctly ()
-  "Kill word."
-  (interactive)
-(with-silent-modifications
-  (if (re-search-backward "\\>\\W*[[:punct:]]+\\W*\\=" nil t)
-      (kill-region (match-end 0) (match-beginning 0))
-    (backward-kill-word 1))
-  (my/fix-space)
-
-;; I added this ↓↓↓ #######################
-(when (and
-(not (looking-back-safe "--")) ; I added this
-(not (looking-back-safe "^"))) ; I added this
-;; I added this ↑↑↑ #######################
-
-(smart-space)
-)
-(my/fix-space
-)))
-
 (defun backward-kill-word-correctly ()
   "Kill word."
   (interactive)
