@@ -713,16 +713,19 @@ If the `**` is not at the beginning of a line followed by a space, the function 
    smart-quote-regexp-replacements))
 
 (defun replace-non-heading-double-asterisks (beg end)
-  "Replace '**' with '*' unless '**' is at the beginning of a line followed by a space."
+  "Replace '*' with '*' unless it's part of an Org heading line at the beginning."
   (interactive "r")
   (save-excursion
     (goto-char beg)
     (while (re-search-forward "\\*\\*" end t)
-      (if (and (= (line-beginning-position) (- (point) 2))
-               (looking-at " "))
-          (forward-char 2) ; Skip this occurrence
-        (replace-match "*" t t)))))
-
+      (let ((match-beg (match-beginning 0)))
+        (when match-beg
+          (goto-char match-beg)
+          ;; If line begins with stars + space => a heading, so skip
+          (if (looking-at "^\\*+ ")
+              (forward-char 2) ;; skip these two stars
+            ;; Otherwise replace as normal
+            (replace-match "*" t t)))))))
 
 (defgroup smart-quotes nil
   "Customization group for smart quote replacements."
