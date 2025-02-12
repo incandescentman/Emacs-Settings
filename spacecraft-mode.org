@@ -881,7 +881,7 @@ Also converts full stops to commas."
          (looking-at "[[:punct:]]*[ ]*$")
          (looking-at "\"[[:punct:]]*[ ]*$")
          (looking-at ")[ ]*$")
-         (looking-at "\\)")
+         (looking-at ")")
          ) ; or
     (capitalize-unless-org-heading)
       ) ; unless
