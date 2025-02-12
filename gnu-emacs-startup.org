@@ -1653,24 +1653,6 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (defun kill-word-correctly-and-capitalize ()
   "Kill the word correctly. If at the beginning of a sentence, also capitalize."
   (interactive)
-  (with-silent-modifications
-    ;; 1. Move forward if at a space
-    (when (looking-at " ")
-      (forward-char 1))
-
-    ;; 2. Check if we're at the beginning of a sentence
-    (let ((fix-capitalization (my/beginning-of-sentence-p)))
-      ;; 3. Kill the word
-      (call-interactively 'kill-word-correctly)
-
-      ;; 4. If needed, capitalize
-(capitalize-unless-org-heading)
-)))
-  ;; No post-self-insert-hook is forced here, so fewer partial edits
-
-(defun kill-word-correctly-and-capitalize ()
-  "Kill the word correctly. If at the beginning of a sentence, also capitalize."
-  (interactive)
   (atomic-change-group
     ;; 1) Move forward if at a space
     (when (looking-at " ")
