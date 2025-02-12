@@ -300,7 +300,8 @@ for lists and checklists while respecting typical Org conventions."
        ;; 8) Fallback to a simple newline.
        (t
         (newline)))
-    (org-element-cache-resume)))
+    ;; (org-element-cache-resume)
+    ))
 
 
 ;;------------------------------------------------------------------------------
