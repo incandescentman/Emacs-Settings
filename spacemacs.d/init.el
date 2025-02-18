@@ -156,6 +156,7 @@ This function should only modify configuration layer settings."
                                       bui
                                       ;; buffer-stack
                                       caps-lock
+                                      captain
                                       change-inner
                                       ;; cheatsheet
                                       company
