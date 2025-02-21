@@ -1355,7 +1355,7 @@ Don't expand past certain delimiters, e.g. line break, ), and "
 
 * fix org element errors
 #+begin_src emacs-lisp
-(setq org-element-use-cache nil)
+;; (setq org-element-use-cache nil)
 #+end_src
 
 * Local Variables & The End
