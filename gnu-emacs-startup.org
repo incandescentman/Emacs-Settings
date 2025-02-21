@@ -273,30 +273,23 @@ or a mode derived from `prog-mode`, copy text verbatim (no replacements).
 Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
   (interactive)
   (if (use-region-p)
-      (if (or (eq major-mode 'shell-script-mode)
-              (eq major-mode 'emacs-lisp-mode)
-              (bound-and-true-p org-config-files-local-mode)
-              (derived-mode-p 'prog-mode))
-          ;; Just copy verbatim
-          (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
-            (shell-command-to-string
-             (format "echo -n %s | pbcopy" (shell-quote-argument txt)))
-            (message "Copied text verbatim."))
-        ;; Otherwise do the dash replacements
-        (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
-               (txt (with-temp-buffer
-                      (insert txt)
-                      (replace-regexp-in-string "---" "—" (point-min) (point-max))
-                      (buffer-string)))
-               (txt (with-temp-buffer
-                      (insert txt)
-                      (replace-regexp-in-string "--" "—" (point-min) (point-max))
-                      (buffer-string))))
-          (with-temp-buffer
-            (insert txt)
-            (shell-command-on-region (point-min) (point-max) "pbcopy"))
-;; (message "Text with em dashes copied to macOS pasteboard.")
-))
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (or (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode)
+                (derived-mode-p 'prog-mode))
+            ;; Just copy verbatim
+            (progn
+              (shell-command-to-string
+               (format "echo -n %s | pbcopy" (shell-quote-argument txt)))
+              (message "Copied text verbatim."))
+          ;; Otherwise do the dash replacements
+          (let* ((txt (replace-regexp-in-string "---" "—" txt))
+                 (txt (replace-regexp-in-string "--" "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Text with em dashes copied to macOS pasteboard."))))
     (message "No region selected")))
 
 #+end_src
