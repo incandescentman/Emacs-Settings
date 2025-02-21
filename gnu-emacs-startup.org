@@ -278,20 +278,20 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
                 (eq major-mode 'emacs-lisp-mode)
                 (bound-and-true-p org-config-files-local-mode)
                 (derived-mode-p 'prog-mode))
-            ;; Just copy verbatim
+            ;; Just copy verbatim using a temp buffer
             (progn
-              (shell-command-to-string
-               (format "echo -n %s | pbcopy" (shell-quote-argument txt)))
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
               (message "Copied text verbatim."))
           ;; Otherwise do the dash replacements
           (let* ((txt (replace-regexp-in-string "---" "—" txt))
-                 (txt (replace-regexp-in-string "--" "—" txt)))
+                 (txt (replace-regexp-in-string "--"  "—" txt)))
             (with-temp-buffer
               (insert txt)
               (shell-command-on-region (point-min) (point-max) "pbcopy"))
             (message "Text with em dashes copied to macOS pasteboard."))))
     (message "No region selected")))
-
 #+end_src
 
 ** to the end
