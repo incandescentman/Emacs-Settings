@@ -226,22 +226,26 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 ** pasteboard-paste-spaces-maybe
     #+BEGIN_SRC emacs-lisp
-
 (defun pasteboard-paste-spaces-maybe ()
-  "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
-
-In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`), always use `pasteboard-paste-without-smart-quotes`.
-
-In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
-use the original logic: if the character before or after point is in a predefined set,
-use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-quotes`."
+  "Paste from pasteboard, choosing the method based on the current mode.
+In prose modes, always remove smart quotes. In shell-script-mode and
+emacs-lisp-mode, always use pasteboard-paste-no-spaces. In all other
+code modes, use the surrounding-character logic to decide."
   (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      ;; Prose: always use without-smart-quotes.
-      (pasteboard-paste-without-smart-quotes)
-    ;; Code: use the original surrounding-character logic.
+  (cond
+   ;; 1) If in Org (without local config) or derived from text-mode → always use `pasteboard-paste-without-smart-quotes`.
+   ((or (and (eq major-mode 'org-mode)
+             (not (bound-and-true-p org-config-files-local-mode)))
+        (derived-mode-p 'text-mode))
+    (pasteboard-paste-without-smart-quotes))
+
+   ;; 2) If in shell-script-mode or emacs-lisp-mode → always use `pasteboard-paste-no-spaces`.
+   ((or (eq major-mode 'sh-mode)
+        (eq major-mode 'emacs-lisp-mode))
+    (pasteboard-paste-no-spaces))
+
+   ;; 3) Otherwise → "code fallback" with surrounding-char check.
+   (t
     (let* ((prev-char (char-before))
            (next-char (char-after))
            (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
@@ -249,7 +253,7 @@ use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-
                               (member next-char char-set))))
       (if use-no-spaces
           (pasteboard-paste-no-spaces)
-        (pasteboard-paste-without-smart-quotes)))))
+        (pasteboard-paste-without-smart-quotes))))))
     #+END_SRC
 
 
