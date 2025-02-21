@@ -2809,7 +2809,7 @@ AdrianKubala:
     '(("W" kill-new "save to kill ring")
      ("I" insert "insert in buffer")))
 (define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
-(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-raw)
 (setq ivy-height 25)
 (setq ivy-display-style 'fancy)
 
@@ -4099,7 +4099,7 @@ cmd)
 
 * yasnippet fixes
 #+BEGIN_SRC emacs-lisp
-(defun yas/pasteboard-without-spaces ()
+(defun yas/pasteboard-raw ()
  "Return content of OS X system pasteboard via `pbpaste'."
  (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
 #+END_SRC
@@ -8541,7 +8541,7 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
  (yas-expand-snippet (yas-lookup-snippet "outreach")))
 
 (defun expand-outreach-snippet-paste-copy-all ()
- "Expand the 'outreach' snippet, paste clipboard text into the buffer using `pasteboard-paste-spaces-maybe`, and then select the entire buffer and copy it."
+ "Expand the 'outreach' snippet, paste clipboard text into the buffer using `pasteboard-paste-adaptive`, and then select the entire buffer and copy it."
  (interactive)
  ;; Expand the snippet
  (expand-outreach-snippet)
@@ -8549,7 +8549,7 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
  (run-at-time "0.1 sec" nil
         (lambda ()
          ;; Paste clipboard text into buffer
-         (pasteboard-paste-spaces-maybe)
+         (pasteboard-paste-adaptive)
          ;; Select the entire buffer
          (goto-char (point-min))
          (push-mark (point-max) nil t)
@@ -8558,7 +8558,7 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
          (pasteboard-copy))))
 
 (defun expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT ()
- "Expand the 'outreach' snippet, paste clipboard text into the buffer using `pasteboard-paste-spaces-maybe`, and then select the entire buffer and copy it."
+ "Expand the 'outreach' snippet, paste clipboard text into the buffer using `pasteboard-paste-adaptive`, and then select the entire buffer and copy it."
  (interactive)
  ;; Expand the snippet
  (expand-outreach-snippet)
@@ -8566,7 +8566,7 @@ If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
  (run-at-time "0.1 sec" nil
         (lambda ()
          ;; Paste clipboard text into buffer
-         (pasteboard-paste-spaces-maybe)
+         (pasteboard-paste-adaptive)
          ;; Select the entire buffer
          (goto-char (point-min))
          (push-mark (point-max) nil t)

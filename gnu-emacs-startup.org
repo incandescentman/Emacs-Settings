@@ -224,25 +224,25 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+end_src
 
-** pasteboard-paste-spaces-maybe
+** pasteboard-paste-adaptive
     #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-spaces-maybe ()
+(defun pasteboard-paste-adaptive ()
   "Paste from pasteboard, choosing the method based on the current mode.
 In prose modes, always remove smart quotes. In shell-script-mode and
-emacs-lisp-mode, always use pasteboard-paste-no-spaces. In all other
+emacs-lisp-mode, always use pasteboard-paste-raw. In all other
 code modes, use the surrounding-character logic to decide."
   (interactive)
   (cond
-   ;; 1) If in Org (without local config) or derived from text-mode → always use `pasteboard-paste-without-smart-quotes`.
+   ;; 1) If in Org (without local config) or derived from text-mode → always use `pasteboard-paste-clean`.
    ((or (and (eq major-mode 'org-mode)
              (not (bound-and-true-p org-config-files-local-mode)))
         (derived-mode-p 'text-mode))
-    (pasteboard-paste-without-smart-quotes))
+    (pasteboard-paste-clean))
 
-   ;; 2) If in shell-script-mode or emacs-lisp-mode → always use `pasteboard-paste-no-spaces`.
+   ;; 2) If in shell-script-mode or emacs-lisp-mode → always use `pasteboard-paste-raw`.
    ((or (eq major-mode 'sh-mode)
         (eq major-mode 'emacs-lisp-mode))
-    (pasteboard-paste-no-spaces))
+    (pasteboard-paste-raw))
 
    ;; 3) Otherwise → "code fallback" with surrounding-char check.
    (t
@@ -252,8 +252,8 @@ code modes, use the surrounding-character logic to decide."
            (use-no-spaces (or (member prev-char char-set)
                               (member next-char char-set))))
       (if use-no-spaces
-          (pasteboard-paste-no-spaces)
-        (pasteboard-paste-without-smart-quotes))))))
+          (pasteboard-paste-raw)
+        (pasteboard-paste-clean))))))
     #+END_SRC
 
 
@@ -383,9 +383,9 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
   )
 #+END_SRC
 
-*** pasteboard-paste-without-smart-quotes (and without spaces)
+*** pasteboard-paste-clean (and without spaces)
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-without-smart-quotes ()
+(defun pasteboard-paste-clean ()
   "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
   (interactive)
   (let ((beg (point)))
@@ -397,9 +397,9 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
 
 #+END_SRC
 
-*** pasteboard-paste-no-spaces
+*** pasteboard-paste-raw
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-no-spaces ()
+(defun pasteboard-paste-raw ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
@@ -457,7 +457,7 @@ are adjusted so they become subheadings under the current Org heading."
     ;; Insert the adjusted text at point
     (insert text)))
 
-(defun pasteboard-paste-adjusted-subtrees-spaces-maybe ()
+(defun pasteboard-paste-adjusted-subtrees-adaptive ()
   "Paste Org text from pasteboard, adjust heading levels to be subheadings,
 and handle spacing based on surrounding punctuation."
   (interactive)
@@ -597,7 +597,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste-no-spaces)
+           (pasteboard-paste-raw)
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
@@ -978,9 +978,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
 
 
-(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-without-smart-quotes)
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key org-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
+(define-key text-mode-map (kbd "s-v") 'pasteboard-paste-clean)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-raw)
 
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
@@ -994,8 +994,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
 (define-key key-minor-mode-map (kbd "s-x") ' pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe)
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe)
-(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-spaces-maybe)
-(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-spaces-maybe)
+(define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-adaptive)
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
 (define-key key-minor-mode-map (kbd "C-x C-j") 'dired-up-directory)
@@ -1015,7 +1015,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-no-spaces)
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-raw)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'copy-minibuffer-contents)
 (define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
@@ -1922,7 +1922,7 @@ The last line sets the path to where saveplace stores your position data. Change
 (defun replace-inner ()
   (interactive)
 (change-inner)
-  (pasteboard-paste-no-spaces)
+  (pasteboard-paste-raw)
   )
 #+END_SRC
 
