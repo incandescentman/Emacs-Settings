@@ -331,31 +331,6 @@ Also converts full stops to commas."
 ))
 
 
-(defun smart-space ()
-  "Insert space and then clean up whitespace."
-  (interactive)
-  (with-silent-modifications
-    ;; 1) If region is active, delete it
-    (when (use-region-p)
-      (delete-region (region-beginning) (region-end)))
-
-    ;; 2) If allowed, expand
-    (unless (or
-             (looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*" nil)
-             (looking-back "\\bvs.[ ]*" nil)
-             (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil)
-             (looking-back "^[[:punct:]]*[ ]*" nil)
-             (looking-back ">" nil)
-             (looking-back "][\n\t ]*" nil))
-      (smart-expand))
-
-    ;; 3) Insert a space, condense to one space
-    (insert " ")
-    (just-one-space))
-
-  ;; 4) Now run post-self-insert-hook outside the silent block
-;; (run-hooks 'post-self-insert-hook)
-)
 
 
 (defun smart-space ()

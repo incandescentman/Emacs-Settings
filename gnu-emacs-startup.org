@@ -993,7 +993,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-s-v") 'html2org-clipboard)
 (define-key key-minor-mode-map (kbd "C-s-c") 'ox-clip-formatted-copy)
 (define-key key-minor-mode-map (kbd "s-x") ' pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe)
-(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe)
+(define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-and-replace-em-dashes-in-clipboard)
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-adaptive)
 
