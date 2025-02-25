@@ -4783,7 +4783,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura.css"
+    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.31.css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
     "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
     "none")
@@ -6411,8 +6411,6 @@ The links are of the form <link>::split::<name>."
 
 (define-key key-minor-mode-map (kbd "s-6") 'org-mac-bing-insert-frontmost-url)
  #+end_SRC
-
-test
 
 ** don't number windows
 #+begin_src emacs-lisp
