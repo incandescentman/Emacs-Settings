@@ -106,7 +106,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       edit-server-new-frame t)
 
 ;; Eshell Settings
-(add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
+(setq eshell-load-hook '((lambda () (abbrev-mode -1))))
 
 ;; Ido Settings
 (setq ido-use-faces t
@@ -8155,40 +8155,49 @@ Philosophy:
 
 
 #+begin_src emacs-lisp
+;; Configurable variable for filler word replacements.
+(defvar my-filler-word-replacements
+  '(("kind of like" . "")
+    (", you know, " . ", ")
+    ("you know, " . "")
+    ("you know" . "")
+    (", I mean, " . ", ")
+    ("I mean, " . "")
+    ("I mean" . "")
+    ("kind of" . "")
+    (", like, " . ", ")
+    ("sort of" . "")
+("\\bok\\b" . "OK")  ;; now matches only whole word "ok"
+("okay" . "OK")  ;; now matches only whole word "ok"
+    ("\\b\\(um\\|umm\\)\\b" . "")
+    ("\\buh\\b" . "")
+    (", right?" . ".")
+    (", right." . "."))
+  "A list of filler words (or phrases) paired with their replacements.
+You can update or extend this list without modifying the function code.")
+
 (defun remove-filler-words ()
-  "Remove filler words from the text and report what was removed."
+  "Remove filler words from the text and report what was removed.
+Uses a configurable list of filler word replacements and performs case-insensitive matching."
   (interactive)
   (let ((counts (make-hash-table :test 'equal))
         (report-string ""))
     (save-excursion
-      (dolist (filler '(("kind of like" . "")
-                        (", you know, " . ", ")
-                        ("you know, " . "")
-                        ("you know" . "")
-                        (", I mean, " . ", ")
-                        ("I mean, " . "")
-                        ("I mean" . "")
-                        ("kind of" . "")
-                        (", like, " . ", ")
-                        ("sort of" . "")
-                        ("okay" . "OK")
-                        ("\\b\\(um\\|umm\\)\\b" . "")
-                        ("\\buh\\b" . "")
-                        (", right?" . ".")
-                        (", right." . ".")))
-        (goto-char (point-min))
-        (let ((search-func (if (string-match-p "\\\\b" (car filler))
-                               're-search-forward
-                             'search-forward))
-              (count 0))
-          (while (funcall search-func (car filler) nil t)
-            (setq count (1+ count))
-            (if (string= (car filler) "\\buh\\b")
-                (unless (looking-at "-huh")
-                  (replace-match (cdr filler)))
-              (replace-match (cdr filler))))
-          (when (> count 0)
-            (puthash (car filler) count counts)))))
+      (let ((case-fold-search t))  ; Enable case-insensitive searching
+        (dolist (filler my-filler-word-replacements)
+          (goto-char (point-min))
+          (let ((search-func (if (string-match-p "\\\\b" (car filler))
+                                 're-search-forward
+                               'search-forward))
+                (count 0))
+            (while (funcall search-func (car filler) nil t)
+              (setq count (1+ count))
+              (if (string= (car filler) "\\buh\\b")
+                  (unless (looking-at "-huh")
+                    (replace-match (cdr filler)))
+                (replace-match (cdr filler))))
+            (when (> count 0)
+              (puthash (car filler) count counts))))))
 
     (while (cleanup-doubled-punctuation))
 
@@ -8204,7 +8213,7 @@ Philosophy:
              (concat report-string
                      (format
                       (cond
-                       ((string= key "okay") "Replaced %d instances of \"okay\" with \"OK\". ")
+                       ((string= key "OK") "Replaced %d instances of \"OK\" with \"OK\". ")
                        ((string= key ", right?") "Replaced %d instances of \", right?\" with \".\". ")
                        ((string= key "\\b\\(um\\|umm\\)\\b") "Removed %d instances of \"um\" or \"umm\". ")
                        ((string= key "\\buh\\b") "Removed %d instances of \"uh\". ")
@@ -8218,7 +8227,7 @@ Philosophy:
       (message report-string))))
 
 (defun cleanup-doubled-punctuation ()
-  "Clean up doubled punctuation, returns t if a replacement was made."
+  "Clean up doubled punctuation. Returns t if a replacement was made."
   (let ((replaced nil))
     (dolist (pair '((",," . ",")
                     (".," . ".")
@@ -8229,46 +8238,42 @@ Philosophy:
         (replace-match (cdr pair))
         (setq replaced t)))
     replaced))
-#+end_src
 
-
-* remove doubled words
-#+begin_src emacs-lisp
 (defconst duplicate-word-exclusions
-  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally" "yeah" "blah"))
+  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally" "yeah" "blah")
+  "A list of words to exclude from duplicate removal.")
 
 (defun remove-duplicated-words ()
-  "Remove duplicated words, excluding certain grammatical duplicates."
+  "Remove duplicated words, excluding certain grammatical duplicates.
+Performs case-insensitive matching to catch all variations."
   (interactive)
   (let ((removed-words (make-hash-table :test 'equal))
         (report-string ""))
     (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward
-              "\\b\\(\\w+\\)\\b\\s-+\\1\\b" nil t)
-        (let ((matched-word (match-string 1)))
-          (unless (member matched-word duplicate-word-exclusions)
-            (puthash matched-word (1+ (gethash matched-word removed-words 0)) removed-words)
-            (replace-match matched-word))))
-    ;; Constructing the report string
+      (let ((case-fold-search t))  ; Enable case-insensitive matching
+        (goto-char (point-min))
+        (while (re-search-forward "\\b\\(\\w+\\)\\b\\s-+\\1\\b" nil t)
+          (let ((matched-word (match-string 1)))
+            (unless (member matched-word duplicate-word-exclusions)
+              (puthash matched-word (1+ (gethash matched-word removed-words 0)) removed-words)
+              (replace-match matched-word))))))
+    ;; Construct and display the report
     (maphash (lambda (key value)
                (setq report-string (concat report-string (format "\"%s\" %d times, " key value))))
              removed-words)
-    ;; Reporting the changes
     (if (string= report-string "")
         (message "No duplicated words removed.")
-      (message (concat "Removed duplicated words: " (substring report-string 0 -2) "."))))))
+      (message (concat "Removed duplicated words: " (substring report-string 0 -2) ".")))))
 
 (defalias 'remove-doubled-words 'remove-duplicated-words)
 
 (defun whittle ()
-(interactive)
-(remove-filler-words)
-(remove-duplicated-words)
-(remove-doubled-words)
-  )
+  "Perform text cleanup by removing filler words and duplicated words.
+Note: The duplicate word removal is invoked only once to avoid redundancy."
+  (interactive)
+  (remove-filler-words)
+  (remove-duplicated-words))
 #+end_src
-
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()
@@ -8338,39 +8343,36 @@ Philosophy:
 Only required if Emacs < 29.3.
 
 #+begin_src emacs-lisp
-(setq org-preview-latex-default-process 'verbatim)
+;; (setq org-preview-latex-default-process 'verbatim)
 #+end_src
-
 
 
 * detect and open street addresses
 #+begin_src emacs-lisp
 (defun open-labeled-address-in-google-maps ()
- "Find and open a labeled address in Google Maps while displaying the address in the minibuffer."
- (interactive)
- (save-excursion
-  (let (address-bound start end)
-   ;; Search backward for the label 'address:' or 'Address:', considering possible extra whitespace
-   (if (re-search-backward "^\\s-*\\(?:address:\\|Address:\\)\\s-*" nil t)
-     (progn
-      ;; Check if the address starts on the same line or the next line
-      (if (looking-at "$")
-        (forward-line 1)) ; Move to the beginning of the next line if the label line is empty
-      (setq start (point))
-      ;; Search forward for the first occurrence of a 5-digit ZIP code followed by optional whitespace and a newline
-      (if (re-search-forward "\\([0-9]\\{5\\}\\)\\s-*$" nil t)
-        (progn
-         (setq end (match-end 0)) ; Capture up to the end of the ZIP code
-         (setq address-bound (buffer-substring-no-properties start end))
-         (setq address-bound (replace-regexp-in-string "\n+" " " (string-trim address-bound)))
-         ;; Display the address in the minibuffer
-         (message "Opening %s" address-bound)
-         ;; Open the address in Google Maps
-         (browse-url (concat "https://www.google.com/maps/search/?api=1&query="
-                   (url-hexify-string address-bound))))
-       (message "ZIP code not found after label!")))
-    (message "No address label found!")))))
-
+  "Find and open a labeled address in Google Maps, displaying the address in the minibuffer."
+  (interactive)
+  (save-excursion
+    (let (address start end)
+      (if (re-search-backward "^\\s-*\\(?:address:\\|Address:\\)\\s-*" nil t)
+          (progn
+            ;; Move past the label
+            (goto-char (match-end 0))
+            ;; Skip empty lines after the label
+            (while (looking-at-p "^\\s-*$")
+              (forward-line 1))
+            (setq start (point))
+            ;; Search forward for a ZIP code line ending
+            (if (re-search-forward "\\b[0-9]\\{5\\}\\b\\s-*$" nil t)
+                (progn
+                  (setq end (match-end 0))
+                  (setq address (buffer-substring-no-properties start end))
+                  (setq address (replace-regexp-in-string "[ \t\n]+" " " (string-trim address)))
+                  (message "Opening address: %s" address)
+                  (browse-url (concat "https://www.google.com/maps/search/?api=1&query="
+                                      (url-hexify-string address))))
+              (message "ZIP code not found after address label!")))
+        (message "No address label found!")))))
 #+end_src
 
 
