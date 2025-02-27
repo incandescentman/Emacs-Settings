@@ -4,6 +4,16 @@
 ;;; (abbrev-mode)
 ;; (user-full-name)
 
+* Basic Emacs Setup
+** Package Archives and Initialization
+** General Settings
+** Minor Modes
+* Org-mode Configuration
+** Org General Settings
+** Org Export Settings
+* Appearance and UI
+** Fonts and Frames
+* Custom Functions
 
 * Intro / About:ARCHIVE:
 #+OPTIONS: f:t
@@ -40,10 +50,10 @@
 ** use-package blocks
 #+BEGIN_SRC emacs-lisp
 (use-package ox-LaTeX
-:defer
+:defer t
   )
 (use-package ox-html
-  :defer)
+  :defer t)
 #+END_SRC
 
 * General Emacs Settings
@@ -56,7 +66,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; General Settings
 (setq user-full-name "Jay Dixit"
       abbrev-all-caps nil
-      blink-cursor-mode nil
+      blink-cursor-mode -1
       calendar-latitude 40.7
       case-fold-search t
       ccm-recenter-at-end-of-file t
@@ -96,7 +106,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       edit-server-new-frame t)
 
 ;; Eshell Settings
-(setq eshell-load-hook '((lambda () (abbrev-mode -1))))
+(add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
 
 ;; Ido Settings
 (setq ido-use-faces t
@@ -196,15 +206,12 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+begin_src emacs-lisp
 
 
-(defun adjust-font-size-for-all-frames (&optional frame)
- (interactive)
- (dolist (monitor (display-monitor-attributes-list))
- (dolist (frame (cdr (assoc 'frames monitor)))
-  (if (> (frame-pixel-width frame) 2540)
-(set-face-attribute 'default frame :font "Monaco" :height 230)
-;; (restore-to-two-thirds-size-and-position)
-
-  (set-face-attribute 'default frame :font "Monaco" :height 200)))))
+(defun adjust-font-size-for-frame (&optional frame)
+  "Adjust font size based on frame width."
+  (let ((frame (or frame (selected-frame))))
+    (set-face-attribute 'default frame
+                        :font "Monaco"
+                        :height (if (> (frame-pixel-width frame) 2540) 230 200))))
 
 ;; The function is also invoked automatically when a new frame is created or when invoked manually.
 
@@ -222,6 +229,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 [[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
 
 #+BEGIN_SRC emacs-lisp
+;; Highlight completed checklist items in org-mode
 (font-lock-add-keywords
  'org-mode
  `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
@@ -236,8 +244,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
   ; (setq org-use-property-inheritance t)
-  (setq org-ctrl-k-protect-subtree t)
-  (setq org-fontify-quote-and-verse-blocks t)
+    (setq org-fontify-quote-and-verse-blocks t)
   ;; blank lines before new headings
   (setq org-blank-before-new-entry
         '((heading . always)

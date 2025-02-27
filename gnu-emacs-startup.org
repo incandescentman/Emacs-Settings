@@ -296,6 +296,30 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
               (shell-command-on-region (point-min) (point-max) "pbcopy"))
             (message "Text with em dashes copied to macOS pasteboard."))))
     (message "No region selected")))
+
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS pasteboard.
+Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
+  (interactive)
+  (if (use-region-p)
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (or (derived-mode-p 'prog-mode)
+                (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode))
+            ;; Verbatim copy
+            (progn
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
+              (message "Copied text verbatim."))
+          ;; Replacement copy
+          (let ((txt (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Copied text with em dashes."))))
+    (message "No region selected.")))
 #+end_src
 
 ** to the end
