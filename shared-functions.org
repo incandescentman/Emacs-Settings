@@ -206,7 +206,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+begin_src emacs-lisp
 
 
-(defun adjust-font-size-for-frame (&optional frame)
+(defun adjust-font-size-for-all-frames (&optional frame)
   "Adjust font size based on frame width."
   (let ((frame (or frame (selected-frame))))
     (set-face-attribute 'default frame
@@ -565,18 +565,59 @@ Works!
                    nil ("-d" "en_US") nil utf-8)))
   (my/fix-ispell-contraction))
 
-;; 5) A helper for adding words to your personal dictionary:
+
+
+(use-package flyspell
+  :ensure nil ;; built-in package
+  :hook ((text-mode . flyspell-mode)
+         (org-mode  . flyspell-mode))
+  :bind (:map flyspell-mode-map
+              ("C-." . nil)) ;; Disable default binding
+  :config
+  ;; Flyspell settings
+  (setq flyspell-abbrev-p t
+        flyspell-use-global-abbrev-table-p t
+        flyspell-mark-duplications-exceptions
+        '((nil "that" "had" "really" "very" "much")
+          ("\\`francais" "nous" "vous")))
+
+  ;; Ispell/Hunspell setup
+  (setq-default ispell-program-name (executable-find "hunspell")
+                ispell-dictionary   "en_US-large"
+                ispell-personal-dictionary (expand-file-name "~/Library/Spelling/personal.dic")
+                ispell-really-hunspell t)
+
+  (setenv "DICPATH" (expand-file-name "~/Library/Spelling"))
+  (setenv "DICTIONARY" "en_US")
+
+  ;; Skip org-mode source blocks during spell check
+  (defun my-org-setup-flyspell ()
+    (make-local-variable 'ispell-skip-region-alist)
+    (add-to-list 'ispell-skip-region-alist
+                 '("^#\\+begin_src" . "^#\\+end_src")))
+  (add-hook 'org-mode-hook #'my-org-setup-flyspell)
+
+  ;; Fix contractions in ispell/hunspell
+  (defun my/fix-ispell-contractions ()
+    "Enable correct handling of contractions (e.g., shouldn't)."
+    (add-to-list 'ispell-dictionary-alist
+                 '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
+                   nil ("-d" "en_US-large") nil utf-8)))
+  (my/fix-ispell-contractions))
+
+
 (defun add-word-to-personal-dictionary ()
+  "Quickly add the word under cursor to personal dictionary."
   (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil
-                           (car word)
-                           current-location
-                           (cadr word)
-                           (caddr word)
-                           current-location))))
+  (let* ((word-info (flyspell-get-word))
+         (word (car word-info)))
+    (if word
+        (flyspell-do-correct 'save nil word (point)
+                             (cadr word-info)
+                             (caddr word-info)
+                             (point))
+      (message "No word under cursor."))))
+
 
 #+END_SRC
 
@@ -584,8 +625,11 @@ Works!
 ** mouse
 *** Stop accidentally highlighting org-mode links all the time:
 #+BEGIN_SRC emacs-lisp
+;; Disable mouse highlights globally
 (setq mouse-highlight nil)
-(setq-local cursor-in-non-selected-windows nil)
+
+;; Avoid cursor in non-selected windows
+(setq-default cursor-in-non-selected-windows nil)
 
 #+END_SRC
 
@@ -602,20 +646,15 @@ Works!
 Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal][Setting Emacs Split to Horizontal - Stack Overflow]]
 
 #+BEGIN_SRC emacs-lisp
-;; (setq org-indirect-buffer-display 'current-window)
-(setq split-height-threshold nil)
+
+
+;; Always split windows vertically (side-by-side)
 (setq split-width-threshold 0)
+(setq split-height-threshold nil)
 
-(setq split-width-threshold 80) ; Increase this value as needed
-(setq split-height-threshold 20) ; Increase this value as needed
-
-
-
-(setq split-width-threshold 0)  ; Always split vertically
-(setq split-height-threshold nil) ; Prevent horizontal splits
-(setq window-min-width 20)    ; Set a minimum width
-(setq window-min-height 5)    ; Set a minimum height
-
+;; Minimum size for split windows
+(setq window-min-width 20)
+(setq window-min-height 5)
 #+END_SRC
 
 
@@ -697,10 +736,7 @@ is this still necessary?
 #+END_SRC
 
 *** Typography
-**** TODO Replace smart quotes with straight quotes
-If `**` is at the beginning of the line and followed by a space, the function should skips the replacement
-
-If the `**` is not at the beginning of a line followed by a space, the function should replaces it with a single `*`.
+**** Replace smart quotes with straight quotes
 
 #+BEGIN_SRC emacs-lisp
 
@@ -720,7 +756,7 @@ If the `**` is not at the beginning of a line followed by a space, the function 
    smart-quote-regexp-replacements))
 
 (defun replace-non-heading-double-asterisks (beg end)
-  "Replace '*' with '*' unless it's part of an Org heading line at the beginning."
+  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
   (interactive "r")
   (save-excursion
     (goto-char beg)
@@ -833,16 +869,6 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
 
 #+END_SRC
 
-**** Paste and replace quotes
-Haven't used this next one:
-#+BEGIN_SRC emacs-lisp
-(defun paste-and-replace-quotes ()
-  "Yank (paste) and replace smart quotes from the source with ascii quotes."
-  (interactive)
-  (clipboard-yank)
-  (replace-smart-quotes (mark) (point)))
-#+END_SRC
-
 *** Indentation
 Automatically indenting yanked text if in programming-modes:
 #+BEGIN_SRC emacs-lisp
@@ -862,16 +888,6 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "Do indentation, as long as the region isn't too large."
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
-#+END_SRC
-
-*** Miscellaneous
-;; (setq vc-handled-backends ())
-;; (remove-hook 'find-file-hooks 'vc-find-file-hook)
-(setq vc-handled-backends nil)
-
-*** Color themes
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'custom-theme-load-path "~/emacs/emacs-settings/sublime-themes-jay/")
 #+END_SRC
 
 * My custom functions/settings
