@@ -8151,75 +8151,47 @@ Philosophy:
 #+begin_src emacs-lisp
 ;; Configurable variable for filler word replacements.
 (defvar my-filler-word-replacements
-  '(("kind of like" . "")
-    (", you know, " . ", ")
-    ("you know, " . "")
-    ("you know" . "")
-    (", I mean, " . ", ")
-    ("I mean, " . "")
-    ("I mean" . "")
-    ("kind of" . "")
-    (", like, " . ", ")
-    ("sort of" . "")
-("\\bok\\b" . "OK")  ;; now matches only whole word "ok"
-("okay" . "OK")  ;; now matches only whole word "ok"
-    ("\\b\\(um\\|umm\\)\\b" . "")
-    ("\\buh\\b" . "")
-    (", right?" . ".")
-    (", right." . "."))
-  "A list of filler words (or phrases) paired with their replacements.
-You can update or extend this list without modifying the function code.")
+  ;; Each one is a full regex that accounts for punctuation/spaces:
+  '(("\\bkind of like\\b[[:punct:]]*\\s-*" . "")
+    ("\\byou know\\b[[:punct:]]*\\s-*"     . "")
+    ("\\bI mean\\b[[:punct:]]*\\s-*"       . "")
+    ;; ...
+    ("\\bok\\b" . "OK")
+    ("\\bOK\\b" . "OK")
+    ("\\b\\(um\\|umm\\|uh\\)\\b" . "")
+    (", right[.?!]\\b" . "."))
+  "A list of filler regex -> replacement pairs.")
 
 (defun remove-filler-words ()
-  "Remove filler words from the text and report what was removed.
-Uses a configurable list of filler word replacements and performs case-insensitive matching."
+  "Remove filler words from the text and report what was removed."
   (interactive)
   (let ((counts (make-hash-table :test 'equal))
         (report-string ""))
     (save-excursion
-      (let ((case-fold-search t))  ; Enable case-insensitive searching
+      (let ((case-fold-search t))  ; case-insensitive
         (dolist (filler my-filler-word-replacements)
           (goto-char (point-min))
-          (let ((search-func (if (string-match-p "\\\\b" (car filler))
-                                 're-search-forward
-                               'search-forward))
-                (count 0))
-            (while (funcall search-func (car filler) nil t)
+          (let ((count 0))
+            (while (re-search-forward (car filler) nil t)
               (setq count (1+ count))
-              (if (string= (car filler) "\\buh\\b")
-                  (unless (looking-at "-huh")
-                    (replace-match (cdr filler)))
-                (replace-match (cdr filler))))
+              (replace-match (cdr filler)))
             (when (> count 0)
               (puthash (car filler) count counts))))))
 
     (while (cleanup-doubled-punctuation))
 
-    ;; Remove stray commas
-    (goto-char (point-min))
-    (while (search-forward " , " nil t)
-      (replace-match ", "))
-
     ;; Construct the report string
-;; Construct the report string
-(maphash
- (lambda (key value)
-   (setq report-string
-         (concat report-string
-                 (format
-                  (cond
-                   ((string= key "\\bok\\b") "Replaced %d instances of \"ok\" with \"OK\".\n")
-                   ((string= key ", right?") "Replaced %d instances of \", right?\" with \".\".\n")
-                   ((string= key "\\b\\(um\\|umm\\)\\b") "Removed %d instances of \"um\" or \"umm\".\n")
-                   ((string= key "\\buh\\b") "Removed %d instances of \"uh\".\n")
-                   (t "Removed %d instances of \"%s\".\n"))
-                  value key))))
- counts)
-
-    ;; Report the changes
+    (maphash
+     (lambda (key value)
+       (setq report-string
+             (concat report-string
+                     (format "Removed %d instances of %s.\n"
+                             value key))))
+     counts)
     (if (string= report-string "")
-        (message "No changes made.")
+        (message "No filler words found.")
       (message report-string))))
+
 
 (defun cleanup-doubled-punctuation ()
   "Clean up doubled punctuation. Returns t if a replacement was made."
