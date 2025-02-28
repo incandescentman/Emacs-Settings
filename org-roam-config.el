@@ -90,7 +90,7 @@
    ;; goto
    ("s-u o" . org-roam-dailies-find-date)
    ("s-u ." . org-roam-dailies-goto-date)
-   ("s-u p" . org-roam-yesterday)
+   ("s-u p" . org-roam-dailies-goto-previous-note)
    ("s-u n" . org-roam-dailies-goto-next-note)
    ("s-j"   . org-roam-dailies-goto-today)
    ("C-S-d" . org-roam-dailies-goto-today)

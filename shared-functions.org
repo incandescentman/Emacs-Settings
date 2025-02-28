@@ -4812,7 +4812,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.31.css"
+    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
     "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
     "none")
@@ -8750,4 +8750,21 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 
 #+begin_src emacs-lisp
 ;; (remove-hook 'before-save-hook #'org-roam-link-replace-all)
+#+end_src
+
+
+* isearch-forward-word-at-point
+#+begin_src emacs-lisp
+(defun isearch-forward-word-at-point ()
+  "Search forward for the next occurrence of the word at point.
+If invoked again, move to the next instance of the word."
+  (interactive)
+  (let ((word (thing-at-point 'word t)))  ;; Get word at point, non-nil for empty words
+    (if (not word)
+        (message "No word at point")
+      (if (eq last-command this-command)
+          (isearch-repeat-forward)  ;; Continue searching if repeated
+        (progn
+          (isearch-forward nil 1)
+          (isearch-yank-string word))))))
 #+end_src
