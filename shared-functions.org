@@ -2521,20 +2521,26 @@ Useful for working with files and references:
 
 * save some buffers
 #+BEGIN_SRC emacs-lisp
-(defun jay/save-some-buffers ()
-  "Save certain buffers without confirmation based on specific criteria."
+(defun jay/save-all-buffers ()
+  "Automatically save all open buffers that have an associated file, without confirmation."
   (interactive)
-  (save-some-buffers 'no-confirm
-    (lambda ()
+  (save-some-buffers t (lambda (&rest _) buffer-file-name)))
+
+(defun jay/save-all-buffers-debug ()
+  "Debug version: Log each buffer considered for saving and apply specific criteria."
+  (interactive)
+  (save-some-buffers nil
+    (lambda (&rest _)
+      (message "Considered: %s in mode %s" (buffer-name) major-mode)
       (or
        (and buffer-file-name (equal buffer-file-name abbrev-file-name))
        (and buffer-file-name (memq major-mode
                                    '(latex-mode emacs-lisp-mode fundamental-mode
-                                                conf-mode markdown-mode js2-mode json-mode
-                                                graphviz-dot-mode python-mode text-mode
-                                                snippet-mode css-mode xml-mode nxml-mode
-                                                fountain-mode nmxml-mode web-mode gitconfig-mode
-                                                gitignore-mode sh-mode)))
+                                     conf-mode markdown-mode js2-mode json-mode
+                                     graphviz-dot-mode python-mode text-mode
+                                     snippet-mode css-mode xml-mode nxml-mode
+                                     fountain-mode nmxml-mode web-mode gitconfig-mode
+                                     gitignore-mode sh-mode)))
        (and (or buffer-file-name (buffer-modified-p))
             (derived-mode-p 'org-mode))))))
 #+END_SRC
@@ -6656,19 +6662,6 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
   org-attach-id-uuid-folder-format))
 #+end_src
 
-** Emojify
-#+begin_src emacs-lisp
-(use-package emojify
-:defer
-:hook (after-init . global-emojify-mode)
- :bind (:map key-minor-mode-map
-     ("C-s-SPC" . emojify-insert-emoji))
- :custom
- (emojify-download-emojis-p t)
- (emojify-emoji-styles '(unicode)))
-#+end_SRC
-
-
 * org-roam browsing history
 #+begin_src emacs-lisp
 (winner-mode +1)
@@ -8152,6 +8145,7 @@ Philosophy:
  	 	"you know what I mean"
  	 	"you see"
 
+.............................................
 
 
 #+begin_src emacs-lisp
