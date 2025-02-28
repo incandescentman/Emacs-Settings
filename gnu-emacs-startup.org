@@ -1296,7 +1296,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-S") 'org-mac-link-skim-insert)
 (define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer) ; select all
 (define-key key-minor-mode-map (kbd "s-w") 'delete-window) ; close
-(define-key key-minor-mode-map (kbd "s-s") 'jay/save-all-buffers-debug ) ; save all
+(define-key key-minor-mode-map (kbd "s-s") 'jay/save-all-buffers) ; save all
 
 (define-key key-minor-mode-map (kbd "C-s-r") 'consult-find)
 #+END_SRC

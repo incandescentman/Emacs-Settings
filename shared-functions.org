@@ -8201,19 +8201,20 @@ Uses a configurable list of filler word replacements and performs case-insensiti
       (replace-match ", "))
 
     ;; Construct the report string
-    (maphash
-     (lambda (key value)
-       (setq report-string
-             (concat report-string
-                     (format
-                      (cond
-                       ((string= key "OK") "Replaced %d instances of \"OK\" with \"OK\". ")
-                       ((string= key ", right?") "Replaced %d instances of \", right?\" with \".\". ")
-                       ((string= key "\\b\\(um\\|umm\\)\\b") "Removed %d instances of \"um\" or \"umm\". ")
-                       ((string= key "\\buh\\b") "Removed %d instances of \"uh\". ")
-                       (t "Removed %d instances of \"%s\". "))
-                      value key))))
-     counts)
+;; Construct the report string
+(maphash
+ (lambda (key value)
+   (setq report-string
+         (concat report-string
+                 (format
+                  (cond
+                   ((string= key "\\bok\\b") "Replaced %d instances of \"ok\" with \"OK\".\n")
+                   ((string= key ", right?") "Replaced %d instances of \", right?\" with \".\".\n")
+                   ((string= key "\\b\\(um\\|umm\\)\\b") "Removed %d instances of \"um\" or \"umm\".\n")
+                   ((string= key "\\buh\\b") "Removed %d instances of \"uh\".\n")
+                   (t "Removed %d instances of \"%s\".\n"))
+                  value key))))
+ counts)
 
     ;; Report the changes
     (if (string= report-string "")
