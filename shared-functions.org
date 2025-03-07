@@ -8805,4 +8805,8 @@ If invoked again, move to the next instance of the word."
 * Diary
 #+begin_src emacs-lisp
 (setq diary-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.org")
+(load "/Users/jaydixit/emacs/emacs-settings/timeless-calendar-parser.el")
+(find-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.org")
 #+end_src
+
+
