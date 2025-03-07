@@ -4925,6 +4925,39 @@ Go through `org-structure-template-alist' and
  #'mc/edit-beginnings-of-lines)
 (define-key endless/mc-map "\C-e"
  #'mc/edit-ends-of-lines)
+(define-key endless/mc-map (kbd ">") #'mc/cycle-forward)
+(define-key endless/mc-map (kbd "<") #'mc/cycle-backward)
+
+(use-package hydra
+  :ensure t)
+
+(defhydra hydra-mc (:hint nil)
+  "
+Multiple cursors:
+
+ Mark:   _n_ext   _p_revious   _a_ll   _l_ines      Unmark: _u_ next  _U_ prev
+ Edit:   _i_nsert nums   edit _b_egin   edit _e_nd   _s_ort   _r_everse
+ Cycle:  _>_ forward   _<_ backward
+ Other:  _h_ide unmatched   _q_uit
+"
+  ("n" mc/mark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("a" mc/mark-all-like-this)
+  ("l" mc/edit-lines)
+  ("u" mc/unmark-next-like-this)
+  ("U" mc/unmark-previous-like-this)
+  ("i" mc/insert-numbers)
+  ("b" mc/edit-beginnings-of-lines)
+  ("e" mc/edit-ends-of-lines)
+  ("s" mc/sort-regions)
+  ("r" mc/reverse-regions)
+  (">" mc/cycle-forward)
+  ("<" mc/cycle-backward)
+  ("h" mc-hide-unmatched-lines-mode)
+  ("q" nil))
+
+;; Bind hydra to your existing keymap
+(define-key endless/mc-map (kbd "H") #'hydra-mc/body)
 
 
 #+END_SRC
@@ -8767,4 +8800,9 @@ If invoked again, move to the next instance of the word."
         (progn
           (isearch-forward nil 1)
           (isearch-yank-string word))))))
+#+end_src
+
+* Diary
+#+begin_src emacs-lisp
+(setq diary-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.org")
 #+end_src
