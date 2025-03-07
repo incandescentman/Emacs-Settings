@@ -3306,35 +3306,41 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 * olivetti
 #+BEGIN_SRC emacs-lisp
+;; --------------------------------------------------------------------
+;; 2) Olivetti for a centered text area
+;; --------------------------------------------------------------------
 (use-package olivetti
-:defer
-:config
-(setq olivetti-body-width 120)
-(unbind-key (kbd "C-c [") olivetti-mode-map)
-(unbind-key (kbd "C-c ]") olivetti-mode-map)
-(setq org-tags-column 40)
-)
+  :ensure t
+  :hook
+  (org-mode        . olivetti-mode)
+  (markdown-mode   . olivetti-mode)
+  (text-mode       . olivetti-mode)
+  (message-mode    . olivetti-mode)
+  (emacs-lisp-mode . olivetti-mode)
+  (css-mode        . olivetti-mode)
+  (Custom-mode     . olivetti-mode)
+  (helpful-mode    . olivetti-mode)
+  (sh-mode         . olivetti-mode)
+  (web-mode        . olivetti-mode)
+  (fundamental-mode . olivetti-mode)
+  (help-mode       . olivetti-mode)
+  (prog-mode       . olivetti-mode)
+  (magit-status-mode . olivetti-mode)
+  (dired-mode      . olivetti-mode)
+  (Info-mode       . olivetti-mode)
+  (eww-mode        . olivetti-mode)
+  ;; Turn on visual-line-mode whenever we enter olivetti-mode:
+  (olivetti-mode   . turn-on-visual-line-mode)
+  :config
+  ;; Set your desired body width here:
+  (setq olivetti-body-width 80)
 
-(add-hook 'olivetti-mode-hook 'turn-on-visual-line-mode)
-(add-hook 'text-mode-hook 'olivetti-mode 1)
-;; (add-hook 'org-mode-hook 'olivetti-mode 1)
-(add-hook 'message-mode-hook 'olivetti-mode 1 'append)
-(add-hook 'emacs-lisp-mode-hook 'olivetti-mode 1)
-(add-hook 'css-mode-hook 'olivetti-mode 1)
-(add-hook 'Custom-mode-hook 'olivetti-mode 1)
-(add-hook 'helpful-mode-hook 'olivetti-mode 1)
-(add-hook 'sh-mode-hook 'olivetti-mode 1)
-(add-hook 'web-mode-hook 'olivetti-mode 1)
-(add-hook 'fundamental-mode-hook 'olivetti-mode 1)
-(add-hook 'web-mode-hook 'olivetti-mode 1)
-(add-hook 'help-mode-hook 'olivetti-mode 1)
-(add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
-(add-hook 'srecode-template-mode-hook 'olivetti-mode 1)
-(add-hook 'prog-mode-hook 'olivetti-mode 1)
-(add-hook 'magit-status-mode-hook 'olivetti-mode 1)
-(add-hook 'dired-mode-hook 'olivetti-mode 1)
-(add-hook 'Info-mode-hook 'olivetti-mode 1)
-(add-hook 'eww-mode-hook 'olivetti-mode 1)
+  ;; Unbind these if you like:
+  (unbind-key (kbd "C-c [") olivetti-mode-map)
+  (unbind-key (kbd "C-c ]") olivetti-mode-map)
+
+  ;; Optional: keep org-tags aligned
+  (setq org-tags-column 40))
 #+END_SRC
 
 
@@ -8804,112 +8810,134 @@ If invoked again, move to the next instance of the word."
 
 * Diary
 #+begin_src emacs-lisp
-(setq diary-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.md")
-(load "/Users/jaydixit/emacs/emacs-settings/timeless-calendar-parser.el")
-(find-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.md")
+(setq diary-file " ")
+
+(setq diary-file " /Users/jay/Dropbox/github/timeless/jay-diary.md "
+      calendar-mark-diary-entries-flag t
+      calendar-view-diary-initially-flag t
+      diary-display-function 'fancy-diary-display)
+
+(setq diary-comment-start "#"
+      diary-comment-end "") ;; empty means comments end at EOL
 #+end_src
 
 
 * Markdown customizations
 #+begin_src emacs-lisp
-;; === Markdown Mode Setup ===
+
+
+;;; Markdown and Calendar Setup
+
+;; --------------------------------------------------------------------
+;; 1) markdown-mode + bullet behavior
+;; --------------------------------------------------------------------
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'" . markdown-mode)
   :config
-  ;; 1) Auto-insert "  - " on Enter:
-
-
-  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet)
-
-  ;; 2) Set indentation for lists
+  ;; Indentation for lists
   (setq markdown-list-indent-width 2)
+  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet)
+  (define-key markdown-mode-map (kbd "<tab>") #'my-markdown-cycle))
 
-  ;; 3) Enable visual-line-mode for nicer wrapping
-  (add-hook 'markdown-mode-hook #'visual-line-mode))
 
+(defvar my-markdown--last-command-removed-bullet nil
+  "Non-nil if the last call to `my-markdown-newline-with-bullet'
+removed an empty bullet line.")
 
 (defun my-markdown-newline-with-bullet ()
-  "Insert a new bullet if current line is `  - ` plus some text.
-If it's an empty bullet (just `  - ` and optional whitespace), remove it.
-Otherwise call `markdown-enter-key'."
+  "Insert or remove Markdown bullets intelligently.
+- If line is an empty bullet (`  - `), remove it completely and leave one blank line.
+- If line is a bullet plus text, insert another bullet on the next line.
+- If the previous command removed a bullet and we're now on a blank line,
+  do nothing extra (second Enter press).
+- Otherwise, call `markdown-enter-key'."
   (interactive)
   (cond
-   ;; 1) If line is empty bullet (just two spaces + dash + optional whitespace)
+   ;; -----------------------------
+   ;; (1) Empty bullet line: remove entirely
+   ;; -----------------------------
    ((save-excursion
       (beginning-of-line)
       (looking-at "^  -\\s*$"))
-    ;; Remove the bullet and start a blank line
-    (delete-region (line-beginning-position) (line-end-position))
-    (newline))
+    ;; Remove the line including its trailing newline
+    (delete-region (line-beginning-position)
+                   (progn (forward-line 1) (point)))
+    ;; If the next line is not empty, insert a blank line
+    (unless (or (eobp) (looking-at "^\\s-*$"))
+      (newline))
+    (setq my-markdown--last-command-removed-bullet t))
 
-   ;; 2) If line is a bullet with text after the dash
+   ;; -----------------------------
+   ;; (2) Bullet plus text: continue the list
+   ;; -----------------------------
    ((save-excursion
       (beginning-of-line)
-      ;; e.g. "  - Something" => we check for at least one non-whitespace char
       (looking-at "^  - +[^[:space:]]"))
-    ;; Go to end of this line, press enter, insert a new bullet
     (end-of-line)
     (newline)
-    (insert "  - "))
+    (insert "  - ")
+    (setq my-markdown--last-command-removed-bullet nil))
 
-   ;; 3) Otherwise, just do normal Markdown Enter
+   ;; -----------------------------
+   ;; (3) Second Enter press on the newly blank line: do nothing
+   ;; -----------------------------
+   ((and (or (bobp) (save-excursion
+                      (beginning-of-line)
+                      (looking-at "^\\s-*$")))
+         my-markdown--last-command-removed-bullet)
+    (setq my-markdown--last-command-removed-bullet nil)
+    (message "Escaped bullet list."))
+
+   ;; -----------------------------
+   ;; (4) Fallback
+   ;; -----------------------------
    (t
+    (setq my-markdown--last-command-removed-bullet nil)
     (markdown-enter-key))))
 
-(with-eval-after-load 'markdown-mode
-  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet))
+  ;; Wrap lines visually (no hard breaks)
+  (add-hook 'markdown-mode-hook #'visual-line-mode)
+
+  ;; Outline settings: treat #, ##, ### as headings
+  (setq outline-regexp "^\$begin:math:text$#+\\$end:math:text$ "
+        outline-level
+        (lambda ()
+          (save-excursion
+            (looking-at "^\$begin:math:text$#+\\$end:math:text$")
+            (length (match-string 1)))))
+  (add-hook 'markdown-mode-hook #'outline-minor-mode)
 
 
-;; Example of customizing a markdown face
-(custom-set-faces
- '(markdown-header-face-1 ((t (:foreground "CornflowerBlue" :weight bold)))))
-
-(add-hook 'markdown-mode-hook 'outline-minor-mode)
-
-(defface markdown-date-face
-  '((t (:inherit font-lock-keyword-face :height 1.1 :weight bold)))
-  "Face for date entries in markdown calendar.")
-
-(font-lock-add-keywords
- 'markdown-mode
- '(("^[0-9]+/[0-9]+/[0-9]+" . 'markdown-date-face)))
-
-(use-package olivetti
-  :ensure t
-  :config
-  (setq olivetti-body-width 80))
-
-(add-hook 'markdown-mode-hook 'olivetti-mode)
-
-(font-lock-add-keywords
- 'markdown-mode
- '(("^** [A-Za-z]+ [0-9]+" . '(:inherit markdown-header-face-2 :height 1.3))))
+  ;; Highlight dates like "3/30/2025" in a special face
+  (defface markdown-date-face
+    '((t (:inherit font-lock-keyword-face :height 1.1 :weight bold)))
+    "Face for date entries in markdown calendar.")
+  (font-lock-add-keywords
+   'markdown-mode
+   '(("^[0-9]+/[0-9]+/[0-9]+" . 'markdown-date-face)))
 
 
-#+end_src
-
-** outline levels
-#+begin_src emacs-lisp
-(defun my-markdown-outline-level ()
-  "Return the heading level for the current markdown heading."
+;; --------------------------------------------------------------------
+;; 3) (Optional) Visual Indentation with Overlays
+;; --------------------------------------------------------------------
+(defun my-markdown-current-level ()
+  "Return the heading level of the nearest markdown heading above this line.
+If none found, returns 1."
   (save-excursion
-    (looking-at "^\\(#+\\)")
-    (length (match-string 1))))
-
-(with-eval-after-load 'markdown-mode
-  ;; Tell Outline how to identify headings in Markdown
-  (setq outline-regexp "^\\(#+\\) "
-        outline-level #'my-markdown-outline-level)
-  ;; Turn on `outline-minor-mode` whenever we enter markdown-mode
-  (add-hook 'markdown-mode-hook #'outline-minor-mode))
+    (let ((level 1))
+      (while (and (not (bobp)) (>= (point) (point-min)))
+        (when (looking-at "^\$begin:math:text$#+\\$end:math:text$ ")
+          (setq level (length (match-string 1)))
+          (goto-char (point-min)))  ;; Stop after finding one
+        (forward-line -1))
+      level)))
 
 (defun my-markdown-visual-indent ()
   "Visually indent lines under Markdown headings using overlays.
-Indents each line by 2*(heading-level-1) spaces, if inside a heading."
+Indents each line by 2*(heading-level-1) spaces if inside a heading."
   (interactive)
   (let ((inhibit-read-only t))
-    ;; Clear existing overlays we created before (so we can recalc).
     (remove-overlays (point-min) (point-max) 'my-markdown-indent t)
     (save-excursion
       (goto-char (point-min))
@@ -8918,68 +8946,24 @@ Indents each line by 2*(heading-level-1) spaces, if inside a heading."
           (when (> level 1)
             (let* ((spaces (make-string (* 2 (1- level)) ?\s))
                    (ov (make-overlay (point) (point))))
-              ;; Mark this overlay as ours
               (overlay-put ov 'my-markdown-indent t)
-              ;; Insert a display property so the line appears indented
               (overlay-put ov 'display spaces)))
           (forward-line 1))))))
 
-(defun my-markdown-current-level ()
-  "Return the heading level of the nearest markdown heading above this line.
-Returns 1 if none found, i.e., 'top level'."
-  (save-excursion
-    (let ((level 1)
-          (pos (point)))
-      (while (and (not (bobp)) (>= (point) (point-min)))
-        (when (looking-at "^\\(#+\\) ")
-          (setq level (length (match-string 1)))
-          (goto-char (point-min)))  ;; break out by jumping to start
-        (forward-line -1))
-      level)))
-
-;; Auto-run our indentation whenever the buffer changes.
-;; This is simplistic and might be slow for very large files.
-(defun my-markdown-visual-indent-refresh ()
+(defun my-markdown-visual-indent-refresh (_beg _end _len)
   (when (eq major-mode 'markdown-mode)
     (my-markdown-visual-indent)))
 
-(add-hook 'after-change-functions
-          (lambda (_beg _end _len) (my-markdown-visual-indent-refresh)))
+(add-hook 'markdown-mode-hook #'my-markdown-visual-indent)
+(add-hook 'after-change-functions #'my-markdown-visual-indent-refresh)
 
-(add-hook 'markdown-mode-hook
-          (lambda () (my-markdown-visual-indent)))
-#+end_src
-
-** outline mode for markdown
-#+begin_src emacs-lisp
-(defun my-markdown-hierarchy-setup ()
-  "Setup visual hierarchy for markdown files using outline-minor-mode."
-  (outline-minor-mode 1)
-  (setq-local outline-regexp "#+ ")
-
-  ;; Define custom cycle function that doesn't actually modify the buffer
-  (defun my-markdown-cycle ()
-    "Toggle visibility of current section."
-    (interactive)
-    (if (outline-on-heading-p)
-        (outline-toggle-children)
-      (outline-back-to-heading)))
-
-
-  ;; Set a left margin based on heading level
-  (setq-local left-margin-width 2)
-  (set-window-buffer (selected-window) (current-buffer))
-
-  ;; Use visual-line-mode for better wrapping
-  (visual-line-mode 1)
-
-  ;; Customize colors for each heading level for better visual hierarchy
-  (font-lock-add-keywords
-   nil
-   '(("^# .*$" . '(:inherit markdown-header-face-1 :height 1.5))
-     ("^** .*$" . '(:inherit markdown-header-face-2 :height 1.3 :foreground "deep sky blue"))
-     ("^*** .*$" . '(:inherit markdown-header-face-3 :height 1.1 :foreground "medium sea green")))
-   t))
-
-(add-hook 'markdown-mode-hook 'my-markdown-hierarchy-setup)
+;; --------------------------------------------------------------------
+;; 4) Optional: Custom <tab> folding
+;; --------------------------------------------------------------------
+(defun my-markdown-cycle ()
+  "Toggle visibility of current heading's children in markdown."
+  (interactive)
+  (if (outline-on-heading-p)
+      (outline-toggle-children)
+    (outline-back-to-heading)))
 #+end_src
