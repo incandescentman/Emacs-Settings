@@ -453,7 +453,7 @@ Works!
  (when (eq major-mode 'org-mode)
   (let ((case-fold-search t)
      (back-end-re (regexp-opt
-            '("HTML" "ASCII" "LATEX" "ODT" "MARKDOWN" "MD" "ORG"
+            '("HTML" "ASCII" "LATEX" "ODT" "ORG"
              "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
             t)))
    (org-with-wide-buffer
@@ -1648,7 +1648,7 @@ To enable Edit with Emacs in Chrome:
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
 
-(setq auto-mode-alist (cons '("\\.md" . org-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 #+END_SRC
@@ -8804,9 +8804,9 @@ If invoked again, move to the next instance of the word."
 
 * Diary
 #+begin_src emacs-lisp
-(setq diary-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.org")
+(setq diary-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.md")
 (load "/Users/jaydixit/emacs/emacs-settings/timeless-calendar-parser.el")
-(find-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.org")
+(find-file "/Users/jaydixit/Dropbox/github/timeless/jay-diary.md")
 #+end_src
 
 
