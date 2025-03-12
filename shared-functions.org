@@ -40,6 +40,12 @@
     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
     ("tromey" . "https://tromey.com/elpa/")))
 (package-initialize)
+
+(use-package use-package
+  :custom
+
+  (package-native-compile t)
+  (warning-minimum-level :emergency))
 #+END_SRC
 
 ** use-package verbosity
@@ -438,9 +444,9 @@ This is so I can do structure headlines, for myself, that aren't part of the act
 Pretty cool actually. Leaving it in.
 
 #+BEGIN_SRC emacs-lisp
-(use-package ox-extra
-)
-(ox-extras-activate '(ignore-headlines))
+(with-eval-after-load 'ox
+  (require 'ox-extra)
+  (ox-extras-activate '(ignore-headlines)))
 #+END_SRC
 
 Works!
@@ -917,6 +923,7 @@ Aquamacs:
 ;; from prelude
 ;; http://bit.ly/1Woabxz
 (use-package uniquify
+:ensure nil
 :defer
 :init
 (setq uniquify-buffer-name-style 'forward)
@@ -992,7 +999,7 @@ read-file-name-completion-ignore-case t)
 
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
-(use-package reveal-in-finder
+(use-package reveal-in-osx-finder
   :bind)
 #+END_SRC
 
@@ -1088,6 +1095,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 #+BEGIN_SRC emacs-lisp
 ;; (add-hook 'after-init-hook 'org-agenda-list)
 (use-package org-inlinetask
+  :ensure nil ;; <- don't try to install it
   :defer)
 ;; Overwrite the current window with the agenda
 ;; (setq org-agenda-window-setup 'current-window)
@@ -8967,3 +8975,13 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
       (outline-toggle-children)
     (outline-back-to-heading)))
 #+end_src
+
+
+* Ricing
+[[https://lucidmanager.org/productivity/ricing-org-mode/][Ricing Org Mode: A Beautiful Writing Environment]]
+
+#+BEGIN_EXAMPLE emacs-lisp
+
+
+#+END_EXAMPLE
+
