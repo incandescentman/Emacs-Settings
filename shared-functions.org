@@ -8981,7 +8981,5 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 [[https://lucidmanager.org/productivity/ricing-org-mode/][Ricing Org Mode: A Beautiful Writing Environment]]
 
 #+BEGIN_EXAMPLE emacs-lisp
-
-
+(load "/Users/jaydixit/emacs/emacs-settings/org-visual-style.el")
 #+END_EXAMPLE
-
