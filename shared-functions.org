@@ -999,7 +999,7 @@ read-file-name-completion-ignore-case t)
 
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
-(use-package reveal-in-osx-finder
+(use-package reveal-in-finder
   :bind)
 #+END_SRC
 
@@ -8840,7 +8840,7 @@ If invoked again, move to the next instance of the word."
 #+begin_src emacs-lisp
 (setq diary-file " ")
 
-(setq diary-file " /Users/jay/Dropbox/github/timeless/jay-diary.md "
+(setq diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
       diary-display-function 'fancy-diary-display)
