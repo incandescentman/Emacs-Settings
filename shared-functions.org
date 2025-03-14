@@ -2412,13 +2412,32 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
 ** remove hyperlinks in buffer
 #+begin_src emacs-lisp
 (defun remove-hyperlinks ()
- "Remove all Org mode style links from the current buffer."
- (interactive)
- (save-excursion
-  (goto-char (point-min))
-  (while (re-search-forward "\\[\\[\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]" nil t)
-   (replace-match "\\2"))))
+  "Remove Org bracket links depending on context:
+- If region is active, remove only links in the region.
+- Else if point is on a link, remove just that link.
+- Otherwise, prompt to remove all links in the buffer."
+  (interactive)
+  (require 'org)  ; Make sure org functions/variables are loaded
+  (cond
+   ;; 1) If region is highlighted, remove links only in that region:
+   ((use-region-p)
+    (save-restriction
+      (narrow-to-region (region-beginning) (region-end))
+      (goto-char (point-min))
+      (while (re-search-forward org-bracket-link-regexp nil t)
+        (replace-match (match-string 2) t t))))
 
+   ;; 2) Else, if point is on a link, remove just that link:
+   ((org-in-regexp org-bracket-link-regexp 1)
+    (let ((visible-text (match-string-no-properties 2)))
+      (replace-match visible-text t t)))
+
+   ;; 3) Otherwise, prompt and remove all links in buffer:
+   (t
+    (when (y-or-n-p "Remove all hyperlinks in the buffer? ")
+      (goto-char (point-min))
+      (while (re-search-forward org-bracket-link-regexp nil t)
+        (replace-match (match-string 2) t t))))))
 
 (defun remove-org-links-and-newlines ()
  "Remove all Org mode style links from the current buffer, also removing any newlines from the description."
