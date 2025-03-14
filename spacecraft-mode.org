@@ -392,20 +392,14 @@ Also converts full stops to commas."
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
 (defun my/point-surrounded-by-quotes-p ()
-  "Return non-nil if point is at or between quotation marks."
+  "Return non-nil if point is at or next to a quote on either side."
   (or
-   ;; Point is directly at a quote
-   (and (char-after) (member (char-after) '(?\" ?')))
-   ;; Point is right after a quote
-   (and (char-before) (member (char-before) '(?\" ?')))
-   ;; Point is between quotes (original check)
-   (and (char-before) (char-after)
-        (member (char-before) '(?\" ?'))
-        (member (char-after) '(?\" ?')))))
+   ;; Cursor is on a quote
+   (and (char-after)  (member (char-after)  '(?\" ?')))
+   ;; Cursor is right after a quote
+   (and (char-before) (member (char-before) '(?\" ?')))))
 
 (defun my/fix-space ()
-  "Delete spaces/tabs around point, leaving one space except at line start or punctuation.
-Skip this if point is surrounded by quotes."
   (interactive)
   (let (inhibit-modification-hooks)
     (unless (my/point-surrounded-by-quotes-p)
