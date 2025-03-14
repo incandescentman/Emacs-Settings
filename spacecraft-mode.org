@@ -391,23 +391,30 @@ Also converts full stops to commas."
 
 ** my/fix-space
 #+BEGIN_SRC emacs-lisp
-(defun my/fix-space ()
-  "Delete all spaces and tabs around point, leaving one space except at the beginning of a line and before a punctuation mark."
-  (interactive)
-(let (inhibit-modification-hooks)
-  (just-one-space)
-  (when (and (or
-              (looking-back-safe "^[[:space:]]+")
-              (looking-back-safe "-[[:space:]]+")
-              (looking-at "[.,:;!?»)-]")
-              (looking-back-safe"( ")
-              (looking-at " )")
-              )
-             (not (looking-back-safe "^-[[:space:]]+"))
-             (not (looking-back-safe " - "))
+(defun my/point-surrounded-by-quotes-p ()
+  "Return non-nil if point is directly between a quote character on each side."
+  (let ((char-before (char-before))
+        (char-after (char-after)))
+    (and char-before char-after
+         ;; If you only want ASCII quotes, do:
+         (member char-before '(?\" ?'))
+         (member char-after  '(?\" ?')))))
 
-)
-    (delete-horizontal-space))))
+(defun my/fix-space ()
+  "Delete spaces/tabs around point, leaving one space except at line start or punctuation.
+Skip this if point is surrounded by quotes."
+  (interactive)
+  (let (inhibit-modification-hooks)
+    (unless (my/point-surrounded-by-quotes-p)
+      (just-one-space)
+      (when (and (or (looking-back-safe "^[[:space:]]+")
+                     (looking-back-safe "-[[:space:]]+")
+                     (looking-at "[.,:;!?»)-]")
+                     (looking-back-safe "( ")
+                     (looking-at " )"))
+                 (not (looking-back-safe "^-[[:space:]]+"))
+                 (not (looking-back-safe " - ")))
+        (delete-horizontal-space)))))
 #+END_SRC
 
 

@@ -224,7 +224,110 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+end_src
 
-** insert-link-from-clipboard and
+** pasteboard-copy
+
+*** pasteboard copy
+#+BEGIN_SRC emacs-lisp
+
+(defun pasteboard-copy ()
+  "Copy region to OS X system pasteboard."
+  (interactive)
+  (let* ((txt (buffer-substring (region-beginning) (region-end))))
+    (shell-command-to-string
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+#+END_SRC
+
+*** and replace em dashes
+#+begin_src emacs-lisp
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS system pasteboard.
+If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
+or a mode derived from `prog-mode`, copy text verbatim (no replacements).
+Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
+  (interactive)
+  (if (use-region-p)
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (or (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode)
+                (derived-mode-p 'prog-mode))
+            ;; Just copy verbatim using a temp buffer
+            (progn
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
+              (message "Copied text verbatim."))
+          ;; Otherwise do the dash replacements
+          (let* ((txt (replace-regexp-in-string "---" "—" txt))
+                 (txt (replace-regexp-in-string "--"  "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Text with em dashes copied to macOS pasteboard."))))
+    (message "No region selected")))
+
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS pasteboard.
+Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
+  (interactive)
+  (if (use-region-p)
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (or (derived-mode-p 'prog-mode)
+                (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode))
+            ;; Verbatim copy
+            (progn
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
+              (message "Copied text verbatim."))
+          ;; Replacement copy
+          (let ((txt (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Copied text with em dashes."))))
+    (message "No region selected.")))
+#+end_src
+
+*** to the end
+#+begin_src emacs-lisp
+(defun pasteboard-copy-to-end-of-buffer ()
+  "Copy text from point to the end of the buffer to OS X system pasteboard."
+  (interactive)
+  (let* ((txt (buffer-substring (point) (point-max))))
+    (shell-command-to-string
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+
+#+end_src
+
+*** pasteboard-copy-and-convert-to-markdown-link
+#+BEGIN_SRC emacs-lisp
+(defun pasteboard-copy-and-convert-to-markdown-link ()
+  "Copy region to OS X system pasteboard, converting Org-style links to Markdown format."
+  (interactive)
+  (if (use-region-p)
+      (let* ((txt (buffer-substring (region-beginning) (region-end)))
+             (txt-updated-links
+              (replace-regexp-in-string
+               "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
+               (lambda (m)
+                 ;; The match data is set up so match-string works
+                 (concat "[" (or (match-string 3 m)
+                                 (match-string 1 m))
+                         "](" (match-string 1 m) ")"))
+               txt)))
+        (shell-command-to-string
+         (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
+        (message "Copied and converted Org links to Markdown."))
+    (message "No region selected")))
+#+END_SRC
+
+** pasteboard-paste
+
+
+*** adaptive
 
 ** pasteboard-paste-adaptive
     #+BEGIN_SRC emacs-lisp
@@ -281,106 +384,10 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 #+END_SRC
 
 
-** pasteboard-copy
-#+BEGIN_SRC emacs-lisp
 
-(defun pasteboard-copy ()
-  "Copy region to OS X system pasteboard."
-  (interactive)
-  (let* ((txt (buffer-substring (region-beginning) (region-end))))
-    (shell-command-to-string
-     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
-#+END_SRC
-
-** and replace em dashes
-#+begin_src emacs-lisp
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS system pasteboard.
-If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
-or a mode derived from `prog-mode`, copy text verbatim (no replacements).
-Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
-  (interactive)
-  (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
-        (if (or (eq major-mode 'shell-script-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (bound-and-true-p org-config-files-local-mode)
-                (derived-mode-p 'prog-mode))
-            ;; Just copy verbatim using a temp buffer
-            (progn
-              (with-temp-buffer
-                (insert txt)
-                (shell-command-on-region (point-min) (point-max) "pbcopy"))
-              (message "Copied text verbatim."))
-          ;; Otherwise do the dash replacements
-          (let* ((txt (replace-regexp-in-string "---" "—" txt))
-                 (txt (replace-regexp-in-string "--"  "—" txt)))
-            (with-temp-buffer
-              (insert txt)
-              (shell-command-on-region (point-min) (point-max) "pbcopy"))
-            (message "Text with em dashes copied to macOS pasteboard."))))
-    (message "No region selected")))
-
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS pasteboard.
-Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
-  (interactive)
-  (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
-        (if (or (derived-mode-p 'prog-mode)
-                (eq major-mode 'shell-script-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (bound-and-true-p org-config-files-local-mode))
-            ;; Verbatim copy
-            (progn
-              (with-temp-buffer
-                (insert txt)
-                (shell-command-on-region (point-min) (point-max) "pbcopy"))
-              (message "Copied text verbatim."))
-          ;; Replacement copy
-          (let ((txt (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
-            (with-temp-buffer
-              (insert txt)
-              (shell-command-on-region (point-min) (point-max) "pbcopy"))
-            (message "Copied text with em dashes."))))
-    (message "No region selected.")))
-#+end_src
-
-** to the end
-#+begin_src emacs-lisp
-(defun pasteboard-copy-to-end-of-buffer ()
-  "Copy text from point to the end of the buffer to OS X system pasteboard."
-  (interactive)
-  (let* ((txt (buffer-substring (point) (point-max))))
-    (shell-command-to-string
-     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
-
-#+end_src
-
-** pasteboard-copy-and-convert-to-markdown-link
-#+BEGIN_SRC emacs-lisp
-(defun pasteboard-copy-and-convert-to-markdown-link ()
-  "Copy region to OS X system pasteboard, converting Org-style links to Markdown format."
-  (interactive)
-  (if (use-region-p)
-      (let* ((txt (buffer-substring (region-beginning) (region-end)))
-             (txt-updated-links
-              (replace-regexp-in-string
-               "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
-               (lambda (m)
-                 ;; The match data is set up so match-string works
-                 (concat "[" (or (match-string 3 m)
-                                 (match-string 1 m))
-                         "](" (match-string 1 m) ")"))
-               txt)))
-        (shell-command-to-string
-         (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
-        (message "Copied and converted Org links to Markdown."))
-    (message "No region selected")))
-#+END_SRC
-
-** pasteboard-paste
 *** pasteboard-paste (with smart quotes by default)
+
+
 
 #+BEGIN_SRC emacs-lisp
 
