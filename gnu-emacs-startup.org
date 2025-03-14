@@ -224,8 +224,13 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+end_src
 
-** insert-link-from-clipboard
-#+begin_src emacs-lisp
+** insert-link-from-clipboard and
+
+** pasteboard-paste-adaptive
+    #+BEGIN_SRC emacs-lisp
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+
 (defun org-insert-link-from-clipboard (beg end)
   "Replace text in region with an Org bracket link using the macOS clipboard URL."
   (interactive "r")
@@ -239,25 +244,20 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
              region-text url)
     (delete-region beg end)
     (insert bracket-link)))
-#+end_src
-
-** pasteboard-paste-adaptive
-    #+BEGIN_SRC emacs-lisp
-(setq select-enable-clipboard t)
-(setq select-enable-primary t)
 
 (defun pasteboard-paste-adaptive ()
   "Paste from pasteboard, choosing the method based on current mode.
 If there's an active region and the clipboard contains a likely URL,
 insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   (interactive)
-  (let* ((raw-clip (gui-get-selection 'CLIPBOARD))
+  (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
          ;; Downcase + trim to help matching
-         (clipboard-text (downcase (string-trim (or raw-clip "")))))
+         (clipboard-text (downcase raw-clip)))
     (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
     (cond
      ;; 1) If region is active + matches a simple URL pattern → bracket link
      ((and (use-region-p)
+           (not (string-empty-p raw-clip))
            (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
       (message "DEBUG: Inserting bracket link.")
       (org-insert-link-from-clipboard (region-beginning) (region-end)))
@@ -279,7 +279,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
         (if use-no-spaces
             (pasteboard-paste-raw)
           (pasteboard-paste-clean)))))))
-    #+END_SRC
+#+END_SRC
 
 
 ** pasteboard-copy
