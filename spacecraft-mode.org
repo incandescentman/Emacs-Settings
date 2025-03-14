@@ -414,70 +414,38 @@ Also converts full stops to commas."
         (delete-horizontal-space)))))
 #+END_SRC
 
-
 ** insert-space
 #+BEGIN_SRC emacs-lisp
-
-
 (defun insert-space ()
+  "Insert a space (or special space if in an Org heading). If a region is active, delete it first."
   (interactive)
-(if (org-at-heading-p)
-(insert-smart-space-in-org-heading)
-(cond (mark-active
-   (progn (delete-region (mark) (point)))))
-  (insert " ")
-))
+  (if (org-at-heading-p)
+      (insert-smart-space-in-org-heading)
+    (when (use-region-p)
+      (delete-region (region-beginning) (region-end)))
+    (insert " ")))
+
 (defun insert-normal-space-in-org-heading ()
- (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
- (insert " ")
-)
-;; this is probably convuluted logic to invert the behavior of the SPC key when in org-heading
+  "Insert a normal space in an Org heading, deleting any active region first."
+  (interactive)
+  (when (use-region-p)
+    (delete-region (region-beginning) (region-end)))
+  (insert " "))
+;; This is probably convuluted logic to invert the behavior of the SPC key when in org-heading. or maybe not
 
 
-(defun insert-period ()
-"Inserts a fuckin' period!"
- (interactive)
-(cond (mark-active
-   (progn (delete-region (mark) (point)))))
+(defun my/insert-char-with-region-deletion (char)
+  "If region is active, delete it, then insert CHAR."
+  (interactive)
+  (when (use-region-p)
+    (delete-region (region-beginning) (region-end)))
+  (insert char))
 
- (insert ".")
-)
-
-
-(defun insert-comma ()
- (interactive)
-(cond (mark-active
-   (progn (delete-region (mark) (point)))))
- (insert ",")
-)
-
-(defun insert-exclamation-point ()
- (interactive)
-(cond (mark-active
-  (progn (delete-region (mark) (point)))))
- (insert "!")
-)
-
-
-(defun insert-colon ()
-"Insert a goodamn colon!"
- (interactive)
-(cond (mark-active
-  (progn (delete-region (mark) (point)))))
- (insert ":")
-)
-
-(defun insert-question-mark ()
-"Insert a freaking question mark!!"
- (interactive)
-(cond (mark-active
- (progn (delete-region (mark) (point)))))
- (insert "?")
-)
-
-
+(defun insert-period ()           (interactive) (my/insert-char-with-region-deletion ?.))
+(defun insert-comma ()           (interactive) (my/insert-char-with-region-deletion ?,))
+(defun insert-exclamation-point() (interactive) (my/insert-char-with-region-deletion ?!))
+(defun insert-colon ()           (interactive) (my/insert-char-with-region-deletion ?:))
+(defun insert-question-mark ()   (interactive) (my/insert-char-with-region-deletion ??))
 #+END_SRC
 
 
