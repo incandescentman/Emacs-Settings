@@ -2452,6 +2452,22 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
 
 #+end_src
 
+
+** Insert link from clipboard
+#+begin_src emacs-lisp
+(defun org-insert-link-from-clipboard (beg end)
+  "Replace text in region with an Org link, using the URL from the MacOS clipboard."
+  (interactive "r")
+  (unless (use-region-p)
+    (error "No region selected."))
+  ;; On macOS, you can use gui-get-selection to grab from the system clipboard.
+  ;; Alternatively, you could use (shell-command-to-string \"pbpaste\") if you prefer.
+  (let* ((url (string-trim (gui-get-selection 'CLIPBOARD)))
+         (region-text (buffer-substring-no-properties beg end)))
+    (delete-region beg end)
+    (insert (format "[[%s][%s]]" url region-text)))))
+#+end_src
+
 * Working with files
 ** Reopen last closed file, very useful:
 #+BEGIN_SRC emacs-lisp
