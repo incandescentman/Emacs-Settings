@@ -326,10 +326,7 @@ Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
 
 ** pasteboard-paste
 
-
-*** adaptive
-
-** pasteboard-paste-adaptive
+*** pasteboard-paste-adaptive
     #+BEGIN_SRC emacs-lisp
 (setq select-enable-clipboard t)
 (setq select-enable-primary t)
