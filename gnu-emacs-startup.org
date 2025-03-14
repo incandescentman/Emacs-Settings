@@ -224,36 +224,61 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+end_src
 
+** insert-link-from-clipboard
+#+begin_src emacs-lisp
+(defun org-insert-link-from-clipboard (beg end)
+  "Replace text in region with an Org bracket link using the macOS clipboard URL."
+  (interactive "r")
+  (unless (use-region-p)
+    (error "No region selected."))
+
+  (let* ((url (string-trim (shell-command-to-string "pbpaste")))
+         (region-text (buffer-substring-no-properties beg end))
+         (bracket-link (format "[[%s][%s]]" url region-text)))
+    (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'"
+             region-text url)
+    (delete-region beg end)
+    (insert bracket-link)))
+#+end_src
+
 ** pasteboard-paste-adaptive
     #+BEGIN_SRC emacs-lisp
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+
 (defun pasteboard-paste-adaptive ()
-  "Paste from pasteboard, choosing the method based on the current mode.
-In prose modes, always remove smart quotes. In shell-script-mode and
-emacs-lisp-mode, always use pasteboard-paste-raw. In all other
-code modes, use the surrounding-character logic to decide."
+  "Paste from pasteboard, choosing the method based on current mode.
+If there's an active region and the clipboard contains a likely URL,
+insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   (interactive)
-  (cond
-   ;; 1) If in Org (without local config) or derived from text-mode → always use `pasteboard-paste-clean`.
-   ((or (and (eq major-mode 'org-mode)
-             (not (bound-and-true-p org-config-files-local-mode)))
-        (derived-mode-p 'text-mode))
-    (pasteboard-paste-clean))
+  (let* ((raw-clip (gui-get-selection 'CLIPBOARD))
+         ;; Downcase + trim to help matching
+         (clipboard-text (downcase (string-trim (or raw-clip "")))))
+    (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+    (cond
+     ;; 1) If region is active + matches a simple URL pattern → bracket link
+     ((and (use-region-p)
+           (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
+      (message "DEBUG: Inserting bracket link.")
+      (org-insert-link-from-clipboard (region-beginning) (region-end)))
 
-   ;; 2) If in shell-script-mode or emacs-lisp-mode → always use `pasteboard-paste-raw`.
-   ((or (eq major-mode 'sh-mode)
-        (eq major-mode 'emacs-lisp-mode))
-    (pasteboard-paste-raw))
-
-   ;; 3) Otherwise → "code fallback" with surrounding-char check.
-   (t
-    (let* ((prev-char (char-before))
-           (next-char (char-after))
-           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-           (use-no-spaces (or (member prev-char char-set)
-                              (member next-char char-set))))
-      (if use-no-spaces
-          (pasteboard-paste-raw)
-        (pasteboard-paste-clean))))))
+     ;; 2) Otherwise → original logic
+     ((or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-paste-clean))
+     ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'emacs-lisp-mode))
+      (pasteboard-paste-raw))
+     (t
+      (let* ((prev-char (char-before))
+             (next-char (char-after))
+             (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+             (use-no-spaces (or (member prev-char char-set)
+                                (member next-char char-set))))
+        (if use-no-spaces
+            (pasteboard-paste-raw)
+          (pasteboard-paste-clean)))))))
     #+END_SRC
 
 
