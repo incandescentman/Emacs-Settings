@@ -9093,4 +9093,19 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 
 (define-key key-minor-mode-map (kbd "M-h i") 'my/open-latest-emacs-manual)
 
+
+;; Override the default Emacs manual path in Info
+(with-eval-after-load 'info
+  (let ((my-emacs-manual "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"))
+    ;; Remove any existing "emacs" entry that might be outdated
+    (setq Info-directory-list
+          (delete "/opt/homebrew/share/info" Info-directory-list))
+    ;; Add the directory containing your custom manual
+    (add-to-list 'Info-directory-list
+                 (file-name-directory my-emacs-manual))
+    ;; Override the Emacs manual menu entry
+    (defun info-emacs-manual ()
+      "Go to the Emacs manual."
+      (interactive)
+      (info my-emacs-manual))))
 #+end_src
