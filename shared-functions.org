@@ -2617,29 +2617,6 @@ Useful for working with files and references:
 #+END_EXAMPLE
 
 
-* Things I want to learn
-** Need to add "cleanup buffer safe" here from whattheemacsd.com
-#+BEGIN_SRC emacs-lisp
-
-(defun cleanup-buffer-safe ()
- "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
- (interactive)
- (untabify-buffer)
- (delete-trailing-whitespace)
- (set-buffer-file-coding-system 'utf-8))
-
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
-
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-#+END_SRC
-
 * Keybindings
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
@@ -4094,9 +4071,6 @@ cmd)
 (global-set-key (kbd "C-c e") #'eval-adaptive)
 
 #+END_SRC
-
-#+RESULTS:
-: eval-adaptive
 
 *** document
 **** kill to buffer end
@@ -9108,4 +9082,51 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
       "Go to the Emacs manual."
       (interactive)
       (info my-emacs-manual))))
+#+end_src
+
+* A hacky way to not clobber final bullet of buffer in bulleted lists on save
+#+begin_src emacs-lisp
+
+
+(defun cleanup-buffer-safe ()
+ "Perform a bunch of safe operations on the whitespace content of a buffer.
+Does not indent buffer, because it is used for a before-save-hook, and that
+might be bad."
+ (interactive)
+ (untabify-buffer)
+ (delete-trailing-whitespace)
+ (set-buffer-file-coding-system 'utf-8))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-region (point-min) (point-max)))
+
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+(defun delete-trailing-whitespace-except-final-space ()
+  "Delete trailing whitespace like `delete-trailing-whitespace', but preserves
+a single space at the end of the buffer if point is there."
+  (interactive)
+  (let ((preserve-final-space
+         (and (eobp)
+              (= (char-before) ?\s)
+              (= (- (point-max) (point)) 0))))
+    (delete-trailing-whitespace)
+    (when preserve-final-space
+      (goto-char (point-max))
+      (insert " "))))
+
+;; Replace the standard function in before-save-hook
+(defun my-before-save-hook ()
+  (unless (eq major-mode 'markdown-mode) ;; Optional: exclude certain modes
+    (delete-trailing-whitespace-except-final-space)))
+
+;; Remove the standard hook if it exists
+(remove-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Add your custom version
+(add-hook 'before-save-hook 'my-before-save-hook)
+
 #+end_src
