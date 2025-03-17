@@ -1093,7 +1093,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
-(define-key org-mode-map (kbd "C-c e") 'eval-subtree)
+(define-key org-mode-map (kbd "C-c e") 'eval-adaptive)
 
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
@@ -1159,7 +1159,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s->") 'load-gnu-startup)
 (define-key key-minor-mode-map (kbd "s-?") 'load-spacecraft-mode)
 (define-key key-minor-mode-map (kbd "s->") 'load-gnu-startup)
-(define-key key-minor-mode-map (kbd "s-.") 'consult-outline)
+(define-key key-minor-mode-map (kbd "s-.") 'calendar)
 (define-key key-minor-mode-map (kbd "s-'") 'choose-refile-method-and-refile)
 
 
@@ -1333,6 +1333,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ...
 
+
 *** available key bindings
 #+begin_src emacs-lisp
 ;; (define-key key-minor-mode-map (kbd "s-A") 'available)
@@ -1346,6 +1347,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-Y") 'available) ;; ⌘-Y
 ;; (define-key key-minor-mode-map (kbd "s-.") 'available) ;; s-.
 ;; (define-key key-minor-mode-map (kbd "s-:") 'available) ;; s-:
+(define-key key-minor-mode-map (kbd "s-;") 'consult-outline) ;; s-:
 ;; (define-key key-minor-mode-map (kbd "C-\\") 'available) ;; C-\
 
 ;; available
