@@ -9085,6 +9085,12 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 
 * Emacs info
 #+begin_src emacs-lisp
-;; (setq Info-directory-list '("/opt/homebrew/share/info"))
-;; (setq Info-default-directory-list '("/opt/homebrew/share/info" t))
+(setq Info-directory-list '("/opt/homebrew/share/info"))
+(setq Info-default-directory-list '("/opt/homebrew/share/info"))
+(defun my/open-latest-emacs-manual ()
+  (interactive)
+  (info "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"))
+
+(define-key key-minor-mode-map (kbd "M-h i") 'my/open-latest-emacs-manual)
+
 #+end_src
