@@ -8889,9 +8889,25 @@ If invoked again, move to the next instance of the word."
 (setq diary-comment-start "#"
       diary-comment-end "") ;; empty means comments end at EOL
 
+
 (add-hook 'calendar-mode-hook
           (lambda ()
-            (local-set-key (kbd "RET") #'diary-view-entries)))
+            (local-set-key (kbd "RET") #'diary-view-entries)
+            (local-set-key (kbd "o")
+                           (lambda ()
+                             (interactive)
+                             (let* ((calendar-window (selected-window))
+                                    (today (calendar-current-date)) ; (month day year)
+                                    (month (number-to-string (nth 0 today)))
+                                    (day   (number-to-string (nth 1 today)))
+                                    (year  (number-to-string (nth 2 today)))
+                                    (date-str (format "%s/%s/%s" month day year)))
+                               (find-file-other-window diary-file)
+                               (goto-char (point-min))
+                               (if (search-forward date-str nil t)
+                                   (beginning-of-line)
+                                 (message "🟡 Could not find entry for %s" date-str))
+                               (select-window calendar-window))))))
 #+end_src
 
 
