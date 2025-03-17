@@ -1093,7 +1093,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 
 (define-key emacs-lisp-mode-map (kbd "C-c e") 'eval-buffer)
-(define-key org-mode-map (kbd "C-c e") 'eval-)
+(define-key org-mode-map (kbd "C-c e") 'eval-adaptive)
 
 (define-key key-minor-mode-map (kbd "C-c r") 'eval-region)
 
