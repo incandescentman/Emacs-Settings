@@ -5405,11 +5405,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+end_src
 
 
-* delete trailing whitespace
-#+begin_src emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
 * trailing lines
 #+begin_src emacs-lisp
 (setq delete-trailing-lines nil)
@@ -8455,6 +8450,9 @@ Only required if Emacs < 29.3.
  :foreground "yellow"
  :background "yellow")
 
+
+(load "/Users/jay/Dropbox/github/org-transclusion-power-pack/org-transclusion-power-pack.el")
+
 #+end_src
 
 
@@ -9087,14 +9085,14 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 * A hacky way to not clobber final bullet of buffer in bulleted lists on save
 #+begin_src emacs-lisp
 
-
 (defun cleanup-buffer-safe ()
  "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
 might be bad."
  (interactive)
  (untabify-buffer)
- (delete-trailing-whitespace)
+ ;; Replace the standard delete-trailing-whitespace with our custom version
+ (my-delete-trailing-whitespace-except-final-and-point-line)
  (set-buffer-file-coding-system 'utf-8))
 
 (defun cleanup-buffer ()
@@ -9106,27 +9104,52 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 
-(defun delete-trailing-whitespace-except-final-space ()
-  "Delete trailing whitespace like `delete-trailing-whitespace', but preserves
-a single space at the end of the buffer if point is there."
-  (interactive)
-  (let ((preserve-final-space
-         (and (eobp)
-              (= (char-before) ?\s)
-              (= (- (point-max) (point)) 0))))
-    (delete-trailing-whitespace)
-    (when preserve-final-space
-      (goto-char (point-max))
-      (insert " "))))
-
-;; Replace the standard function in before-save-hook
+;; Also update the before-save-hook if you have it
 (defun my-before-save-hook ()
   (unless (eq major-mode 'markdown-mode) ;; Optional: exclude certain modes
-    (delete-trailing-whitespace-except-final-space)))
+    (my-delete-trailing-whitespace-except-final-and-point-line)))
 
-;; Remove the standard hook if it exists
-(remove-hook 'before-save-hook 'delete-trailing-whitespace)
-;; Add your custom version
+(defun my-delete-trailing-whitespace-except-final-and-point-line ()
+  "Delete trailing whitespace but preserve:
+1) A single space at the very end of the buffer (if it was there),
+2) A single trailing space on the line where `point' is, if it existed."
+  (interactive)
+  (save-excursion
+    (let* ((orig-point (point))
+           (keep-final-space
+            ;; Was there exactly one space at the end of the buffer?
+            (save-excursion
+              (goto-char (point-max))
+              (and (eq (char-before) ?\s)
+                   (or (bobp) (not (eq (char-before (1- (point))) ?\s))))))
+
+           (keep-point-line-space
+            ;; If point is at a line that ends with exactly one space,
+            ;; remember to restore it. (Doesn't matter if point is physically at the end,
+            ;; as long as the line itself ended with one space.)
+            (save-excursion
+              (end-of-line)
+              (and (> (point) (line-beginning-position))
+                   (eq (char-before) ?\s)
+                   (or (bolp) (not (eq (char-before (1- (point))) ?\s))))
+              )))
+
+      ;; Remove all trailing whitespace in the buffer
+      (delete-trailing-whitespace)
+
+      ;; Restore final space if it was there
+      (when keep-final-space
+        (goto-char (point-max))
+        (unless (eq (char-before) ?\s)
+          (insert " ")))
+
+      ;; Restore a single space at the end of the line where point is
+      ;; if it previously ended with exactly one space.
+      (when keep-point-line-space
+        (goto-char orig-point)
+        (end-of-line)
+        (unless (eq (char-before) ?\s)
+          (insert " "))))))
+
 (add-hook 'before-save-hook 'my-before-save-hook)
-
 #+end_src
