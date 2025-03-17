@@ -8891,24 +8891,25 @@ If invoked again, move to the next instance of the word."
 
 
 (add-hook 'calendar-mode-hook
-          (lambda ()
-            (local-set-key (kbd "RET") #'diary-view-entries)
-            (local-set-key (kbd "o")
-                           (lambda ()
-                             (interactive)
-                             (let* ((calendar-window (selected-window))
-                                    (today (calendar-cursor-to-date)) ;; use cursor date, not always today
-                                    (month (number-to-string (nth 0 today)))
-                                    (day   (number-to-string (nth 1 today)))
-                                    (year  (number-to-string (nth 2 today)))
-                                    (date-str (format "%s/%s/%s" month day year)))
-                               (find-file-other-window diary-file)
-                               (goto-char (point-min))
-                               (if (re-search-forward (concat "^" (regexp-quote date-str)) nil t)
-                                   (beginning-of-line)
-                                 (message "🟡 Could not find entry for %s" date-str))
-;; (select-window calendar-window)
-)))))
+  (lambda ()
+    (local-set-key (kbd "RET") #'diary-view-entries)
+    (local-set-key (kbd "o")
+      (lambda ()
+        (interactive)
+        (let* ((calendar-window (selected-window))
+               ;; This picks up the date under the cursor rather than "today."
+               (date (calendar-cursor-to-date))
+               (month (number-to-string (nth 0 date)))
+               (day   (number-to-string (nth 1 date)))
+               (year  (number-to-string (nth 2 date)))
+               (date-str (format "%s/%s/%s" month day year)))
+          (find-file-other-window diary-file)
+          (goto-char (point-min))
+          (if (search-forward date-str nil t)
+              (beginning-of-line)
+            (message "🟡 Could not find entry for %s" date-str))
+          (select-window calendar-window))))))
+
 #+end_src
 
 
