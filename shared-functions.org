@@ -4056,7 +4056,48 @@ cmd)
  (eval-buffer)
  (org-edit-src-exit)
  )
+
+
+(defun eval-adaptive ()
+  "Smart eval:
+- If region is active, eval the region.
+- If in an Org-mode Emacs Lisp source block, eval the block.
+- If in an Emacs Lisp buffer, eval the buffer.
+- Otherwise, notify the user."
+  (interactive)
+  (cond
+   ;; If region is active, eval the region
+   ((use-region-p)
+    (eval-region (region-beginning) (region-end))
+    (message "✅ Evaluated region"))
+
+   ;; If in an Org-mode Emacs Lisp src block, eval that block
+((and (derived-mode-p 'org-mode)
+      (org-in-src-block-p))
+ (let* ((context (org-element-context))
+        (lang (org-element-property :language context))
+        (body (org-element-property :value context)))
+   (if (string= lang "emacs-lisp")
+       (progn
+         (eval (read (concat "(progn\n" body "\n)")))
+         (message "✅ Evaluated Emacs Lisp src block"))
+     (message "⚠️ Not an Emacs Lisp src block"))))
+
+   ;; If in an Emacs Lisp buffer, eval the whole buffer
+   ((derived-mode-p 'emacs-lisp-mode)
+    (eval-buffer)
+    (message "✅ Evaluated buffer"))
+
+   ;; Otherwise, do nothing
+   (t
+    (message "⚠️ No matching eval context"))))
+
+(global-set-key (kbd "C-c e") #'eval-adaptive)
+
 #+END_SRC
+
+#+RESULTS:
+: eval-adaptive
 
 *** document
 **** kill to buffer end
@@ -4492,7 +4533,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
         (replace-match "#+BEGIN_SRC \\1")
         (re-search-forward "#\\+END_EXAMPLE" nil t)
         (replace-match "#+END_SRC"))
-       (t (message "Not in a src or example block!"))))))
+       (t (message "Not in a src or example block goddammit!"))))))
 #+END_SRC
 
 
@@ -8838,15 +8879,19 @@ If invoked again, move to the next instance of the word."
 
 * Diary
 #+begin_src emacs-lisp
-(setq diary-file " ")
+;; (require 'diary-lib)
 
 (setq diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
-      diary-display-function 'fancy-diary-display)
+      diary-display-function 'diary-fancy-display)
 
 (setq diary-comment-start "#"
       diary-comment-end "") ;; empty means comments end at EOL
+
+(add-hook 'calendar-mode-hook
+          (lambda ()
+            (local-set-key (kbd "RET") #'diary-view-entries)))
 #+end_src
 
 
