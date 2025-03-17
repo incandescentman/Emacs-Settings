@@ -3347,8 +3347,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (emacs-lisp-mode . olivetti-mode)
   (css-mode        . olivetti-mode)
   (Custom-mode     . olivetti-mode)
-  (helpful-mode    . olivetti-mode)
-  (sh-mode         . olivetti-mode)
+    (sh-mode         . olivetti-mode)
   (web-mode        . olivetti-mode)
   (fundamental-mode . olivetti-mode)
   (help-mode       . olivetti-mode)
@@ -7299,7 +7298,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
 replacing Emacs built-in documenation
-#+begin_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; Note that the built-in `describe-function' includes both functions
 ;; and macros. `helpful-function' is functions only, so we provide
 ;; `helpful-callable' as a drop-in replacement.
@@ -7318,7 +7317,7 @@ replacing Emacs built-in documenation
 ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
 ;; already links to the manual, if a function is referenced there.
 (global-set-key (kbd "M-h F") #'helpful-function)
-#+end_SRC
+#+END_EXAMPLE
 
 
 * workgroups
@@ -8878,7 +8877,7 @@ If invoked again, move to the next instance of the word."
 #+end_src
 
 * Diary
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
@@ -8926,7 +8925,7 @@ If invoked again, move to the next instance of the word."
       (interactive)
       (calendar-goto-today)
       (my-calendar-jump-to-diary-entry))))
-#+end_src
+#+END_SRC
 
 
 * Markdown customizations
@@ -9082,3 +9081,10 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 #+BEGIN_EXAMPLE emacs-lisp
 (load "/Users/jaydixit/emacs/emacs-settings/org-visual-style.el")
 #+END_EXAMPLE
+
+
+* Emacs info
+#+begin_src emacs-lisp
+;; (setq Info-directory-list '("/opt/homebrew/share/info"))
+;; (setq Info-default-directory-list '("/opt/homebrew/share/info" t))
+#+end_src

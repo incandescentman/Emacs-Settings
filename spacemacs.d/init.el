@@ -193,7 +193,7 @@ This function should only modify configuration layer settings."
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
                                       ;; gptel
-                                      helpful
+                                      ;; helpful
                                       ;; ido-hacks
                                       ;; jinx
                                       key-seq
@@ -385,6 +385,7 @@ It should only modify the values of Spacemacs settings."
    ;;
    ;; (default nil)
    dotspacemacs-enable-emacs-pdumper nil
+
 
    ;; Name of executable file pointing to emacs 27+. This executable must be
    ;; in your PATH.
@@ -878,6 +879,18 @@ before packages are loaded."
       (kill-local-variable 'abbrev-mode)))
 
 
+
+  (setq Info-default-directory-list '("/opt/homebrew/share/info"))
+  (setq Info-directory-list '("/opt/homebrew/share/info"))
+
+  (with-eval-after-load 'info
+    (setq Info-directory-list '("/opt/homebrew/share/info")))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (setq Info-directory-list '("/opt/homebrew/share/info"))))
+
+  (setq Info-additional-directory-list nil)
 
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
   (load "/Users/jay/gnulisp/smart-return.el")
