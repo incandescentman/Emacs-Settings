@@ -927,6 +927,7 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(calendar-week-start-day 1)
    '(counsel-search-engine 'google)
    '(deft-directory
      "/Users/jay/Library/Mobile Documents/27N4MQEA55~pro~writer/Documents/" t)

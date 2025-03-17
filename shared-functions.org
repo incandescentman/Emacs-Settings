@@ -8879,21 +8879,22 @@ If invoked again, move to the next instance of the word."
 
 * Diary
 #+begin_src emacs-lisp
-;; (require 'diary-lib)
-
 (setq diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
-      diary-display-function 'diary-fancy-display)
+      diary-display-function 'diary-fancy-display
+      diary-comment-start "#"
+      diary-comment-end "")
 
-(setq diary-comment-start "#"
-      diary-comment-end "") ;; empty means comments end at EOL
+;; Monday is the first day of the week (since the weekend, obviously, is a unit)
+(setq calendar-week-start-day 1)
 
-
-(add-hook 'calendar-mode-hook
-  (lambda ()
-    (local-set-key (kbd "RET") #'diary-view-entries)
-    (local-set-key (kbd "o") #'my-calendar-jump-to-diary-entry) ))
+(setq calendar-month-header
+      '(propertize
+        (format "%s %d"
+                (calendar-month-name month)
+                year)
+        'font-lock-face 'calendar-month-header))
 
 
 (defun my-calendar-jump-to-diary-entry ()
@@ -8913,22 +8914,13 @@ If invoked again, move to the next instance of the word."
     (select-window calendar-window)))
 
 (with-eval-after-load 'calendar
-  ;; 1) Make "o" call `my-calendar-jump-to-diary-entry`
+  ;; Make "RET" show diary entries
+  (define-key calendar-mode-map (kbd "RET") #'diary-view-entries)
+
+  ;; Make "o" jump to the date under cursor
   (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
 
-  ;; 2) Make "t" jump to today, then call the same function
-  (define-key calendar-mode-map (kbd "t")
-    (lambda ()
-      (interactive)
-      (calendar-goto-today)
-      (my-calendar-jump-to-diary-entry))))
-
-
-(with-eval-after-load 'calendar
-  ;; 1) Make "o" call `my-calendar-jump-to-diary-entry`
-  (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
-
-  ;; 2) Make "t" jump to today, then call the same function
+  ;; Make "t" jump to today, then jump to diary entry
   (define-key calendar-mode-map (kbd "t")
     (lambda ()
       (interactive)
