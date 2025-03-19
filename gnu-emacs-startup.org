@@ -1779,38 +1779,6 @@ The saveplace package is part of Emacs, and remembers the position of point - ev
 
 The last line sets the path to where saveplace stores your position data. Change it at your peril!
 
-* embolden next word
-   #+BEGIN_SRC emacs-lisp
-(define-minor-mode embolden-next-word
-    "Make the next word you type bold."
-  nil
-  :lighter " EMBOLDEN"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "SPC") (lambda ()
-                      (interactive)
-                      (expand-abbrev)
-                      (save-excursion
-                        (goto-char (get-register 'p))
-                        (insert "*"))
-                      (insert "* ")
-                      (embolden-next-word -1)))
-        (define-key map (kbd ".") (lambda ()
-                    (interactive)
-                    (expand-abbrev)
-                    (save-excursion
-                      (goto-char (get-register 'p))
-                      (insert "*"))
-                    (insert "*. ")
-                    (embolden-next-word -1)))
-            map)
-  (if embolden-next-word
-      (set-register 'p (point))
-    (set-register 'p nil)))
-
-(global-set-key "\C-o" 'embolden-or-bold)
-(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
-   #+END_SRC
-
 * cycle-hyphenation
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation ()
@@ -2002,15 +1970,39 @@ doesn't work.
 #+BEGIN_SRC emacs-lisp
 
 (defun embolden-or-bold (arg)
+  "Wrap active region or the NEXT word in asterisks.
+Strips out any existing asterisks from the text first."
   (interactive "p")
   (if (region-active-p)
-      ;;      (wrap-region-trigger arg "*")
+      ;; If there's a highlighted region, wrap it
       (let ((s (replace-regexp-in-string
-                "[*]" "" (delete-and-extract-region (region-beginning) (region-end)))))
+                "[*]" ""
+                (delete-and-extract-region (region-beginning)
+                                           (region-end)))))
         (insert "*")
         (insert s)
         (insert "*"))
+    ;; Otherwise, embolden the NEXT word
     (embolden-next-word)))
+
+(defun embolden-next-word ()
+  "Move to the next word, remove any existing asterisks, and wrap in `*...*`."
+  ;; 1. Move to the END of the next word
+  (forward-word 1)
+  (let ((word-end (point)))
+    ;; 2. Move back to the START of that word
+    (backward-word 1)
+    (let ((word-start (point)))
+      ;; 3. Grab the text of the word, strip asterisks, then wrap in `*...*`
+      (let* ((text (buffer-substring-no-properties word-start word-end))
+             (cleaned (replace-regexp-in-string "[*]" "" text)))
+        (delete-region word-start word-end)   ;; remove old word
+        (insert "*" cleaned "*")))))          ;; insert *word*
+
+(global-set-key "\C-o" 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "M-o") 'embolden-or-bold)
+
 
 #+END_SRC
 
