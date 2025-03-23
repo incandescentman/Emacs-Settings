@@ -46,6 +46,7 @@
         org-toggle-heading
         org-toggle-heading-same-level
         pasteboard-cut-and-capitalize
+        pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe
         pasteboard-paste-adaptive
         pasteboard-paste-no-spaces
         pasteboard-paste-spaces-maybe
