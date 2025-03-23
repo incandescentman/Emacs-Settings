@@ -1999,9 +1999,8 @@ Strips out any existing asterisks from the text first."
         (delete-region word-start word-end)   ;; remove old word
         (insert "*" cleaned "*")))))          ;; insert *word*
 
-(global-set-key "\C-o" 'embolden-or-bold)
-(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
 (define-key key-minor-mode-map (kbd "M-o") 'embolden-or-bold)
+(define-key key-minor-mode-map (kbd "C-o") 'embolden-or-bold)
 
 
 #+END_SRC
