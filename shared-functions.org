@@ -2771,29 +2771,33 @@ AdrianKubala:
 
 ** projectile
 #+BEGIN_SRC emacs-lisp
+(use-package vertico
+  :init
+  (vertico-mode))
+
 (use-package projectile
-:defer
-:config
-(setq projectile-completion-system (quote helm))
-(setq projectile-enable-caching nil)
-;; (setq projectile-globally-ignored-buffers (quote ("docx ")))
-(setq projectile-globally-ignored-file-suffixes (quote ("docx " "jpg" "png" "tmp" "tex" "html" "pdf" "pptx" "tmp")))
-(setq projectile-globally-ignored-directories
-   (quote
-    (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn"".tmp" "archived-work" "images" "excel-mindnode-omni" "archive")))
+  :diminish projectile-mode
+  :init
+  (projectile-mode +1)
 
+  :custom
+  (projectile-completion-system 'default) ;; Vertico integrates via default
+  (projectile-enable-caching t)
 
-(setq projectile-globally-ignored-files
-  (quote
-  ("TAGS" ".DS_Store" ".projectile" ".dropbox")))
+  (projectile-globally-ignored-file-suffixes '("docx" "jpg" "png" "tmp" "tex" "html" "pdf" "pptx" "tmp"))
 
+  (projectile-globally-ignored-directories
+   '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" ".tmp" "archived-work" "images" "excel-mindnode-omni" "archive"))
 
-:bind (:map projectile-mode-map
-( "s-o" . nil)
-))
+  (projectile-globally-ignored-files '("TAGS" ".DS_Store" ".projectile" ".dropbox"))
 
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
 
-#+END_SRC
+  :bind
+  (:map projectile-mode-map
+        ("s-o" . nil)))
+#+END_SRC 
 
 ** isearch
 
