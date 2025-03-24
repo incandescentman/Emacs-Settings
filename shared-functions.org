@@ -9181,7 +9181,7 @@ Including indent-buffer, which should not be called automatically on save."
 |--------------+--------------------------+--------------|
 
 #+begin_src emacs-lisp
-(defun jay/date-format-HTML-export-chooser ()
+(defun jay/org-export-date-format-chooser ()
   "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
   (interactive)
   (let* ((formats '("U.S. short: 12/25"
