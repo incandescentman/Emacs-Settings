@@ -335,7 +335,7 @@ Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
   (let* ((url (string-trim (shell-command-to-string "pbpaste")))
          (region-text (buffer-substring-no-properties beg end))
          (bracket-link (format "[[%s][%s]]" url region-text)))
-;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
+    ;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
     (delete-region beg end)
     (insert bracket-link)))
 
@@ -347,13 +347,13 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   ;; Get raw text from pbpaste and trim whitespace
   (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
          (clipboard-text (downcase raw-clip)))
-;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+    ;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
     (cond
      ;; 1) If region is active and the clipboard looks like a URL → bracket link
      ((and (use-region-p)
            (not (string-empty-p raw-clip))
            (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-;;  (message "DEBUG: Inserting bracket link.")
+      ;;  (message "DEBUG: Inserting bracket link.")
       (org-insert-link-from-clipboard (region-beginning) (region-end)))
 
      ;; 2) Otherwise, do original logic
@@ -367,7 +367,8 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
      (t
       (let* ((prev-char (char-before))
              (next-char (char-after))
-             (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+             (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+
              (use-no-spaces (or (member prev-char char-set)
                                 (member next-char char-set))))
         (if use-no-spaces
@@ -519,7 +520,7 @@ and handle spacing based on surrounding punctuation."
                                 0))))
          (prev-char (char-before))
          (next-char (char-after))
-         (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
+         (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
     ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))
