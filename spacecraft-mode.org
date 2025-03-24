@@ -1245,7 +1245,7 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
       ;; Prose branch
       (let* ((prev-char (char-before))
              (next-char (char-after))
-             (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+             (char-set '(?: ?' ?\) ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
              (near-punctuation (or (member prev-char char-set)
                                    (member next-char char-set))))
         (if near-punctuation

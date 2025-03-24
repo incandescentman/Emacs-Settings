@@ -87,7 +87,7 @@ use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-
     ;; Code: use the original surrounding-character logic.
     (let* ((prev-char (char-before))
            (next-char (char-after))
-           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+(char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
            (use-no-spaces (or (member prev-char char-set)
                               (member next-char char-set))))
       (if use-no-spaces
@@ -319,7 +319,7 @@ and handle spacing based on surrounding punctuation."
                                 0))))
          (prev-char (char-before))
          (next-char (char-after))
-         (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
+         (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
     ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))

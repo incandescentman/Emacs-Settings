@@ -20,22 +20,35 @@
           (buffer-string)
         (error "pbpaste timed out")))))
 
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
-  "Copy to the macOS pasteboard using a command selected by the current mode.
-
-When working with prose (in `org-mode` without `org-config-files-local-mode`
-or in a mode derived from `text-mode`), call
-`pasteboard-copy-and-replace-em-dashes-in-clipboard` to replace dash sequences
-with em dashes.
-
-When working with code (any mode other than `org-mode` or in `org-mode` when
-`org-config-files-local-mode` is active), call `pasteboard-copy` to copy verbatim."
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS system pasteboard.
+If we're in `shell-script-mode`, `emacs-lisp-mode`,
+`org-config-files-local-mode`, or a mode derived from `prog-mode`,
+then copy text verbatim (no replacements).
+Otherwise, replace occurrences of `---` or `--` with an em dash."
   (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (pasteboard-copy-and-replace-em-dashes-in-clipboard)
-    (pasteboard-copy)))
+  (if (use-region-p)
+      (let ((txt (buffer-substring-no-properties
+                  (region-beginning) (region-end))))
+        (if (or (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode)
+                (derived-mode-p 'prog-mode))
+            ;; Copy verbatim
+            (progn
+              ;; Safely copy verbatim, including newlines
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
+              (message "Copied text verbatim."))
+          ;; Otherwise, replace --- or -- with em dash
+          (setq txt (replace-regexp-in-string
+                     "\\(?:---\\|--\\)" "—" txt))
+          (with-temp-buffer
+            (insert txt)
+            (shell-command-on-region (point-min) (point-max) "pbcopy"))
+          (message "Text with em dashes copied to macOS pasteboard.")))
+    (message "No region selected.")))
 
 (defun pasteboard-paste-spaces-maybe ()
   "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
@@ -54,7 +67,7 @@ use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-
     ;; Code: use the original surrounding-character logic.
     (let* ((prev-char (char-before))
            (next-char (char-after))
-           (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+(char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
            (use-no-spaces (or (member prev-char char-set)
                               (member next-char char-set))))
       (if use-no-spaces
@@ -254,7 +267,7 @@ and handle spacing based on surrounding punctuation."
                                 0))))
          (prev-char (char-before))
          (next-char (char-after))
-         (char-set '(?: ?' ?( ?) ?| ?[ ?] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
+         (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
 
     ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))
