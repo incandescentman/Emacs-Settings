@@ -9123,6 +9123,13 @@ Including indent-buffer, which should not be called automatically on save."
 #+end_src
 
 
+* Trust local variables
+#+begin_src emacs-lisp
+(put 'enable-local-eval 'safe-local-variable #'booleanp)
+(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
+(setq enable-local-variables :all)
+#+end_src
+
 * Date and time
 
 ** Better time-stamps in org-export
@@ -9152,27 +9159,42 @@ Including indent-buffer, which should not be called automatically on save."
  - Inserts file-local variables at buffer end, enabling custom date display per file.
 
 #+begin_src emacs-lisp
-;; (setq-default org-display-custom-times nil)
-(setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>"))
-
-(defun jay/org-buffer-date-format-chooser ()
-  "Insert file-local variables to customize Org timestamps displayed in the current buffer."
+(defun jay/org-export-date-format-chooser ()
+  "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
   (interactive)
-  (let* ((options '(("Short Format (Mon Dec 24)"
-                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%a %b %d>\" . \"<%a %b %d %H:%M>\"))")
-                    ("Long Format (Monday December 24, 2024)"
-                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%A %B %e, %Y>\" . \"<%01m/%01e %01I:%M %p>\"))")))
-         (choice (completing-read "Choose buffer timestamp format: " (mapcar 'car options)))
-         (format-line (cdr (assoc choice options))))
-    (if format-line
-        (progn
-          (goto-char (point-max))
-          (insert "\n# Local Variables:\n")
-          (insert (format "# %s\n" format-line))
-          (insert "# eval: (setq-local org-display-custom-times t)\n")
-          (insert "# End:\n")
-          (message "Inserted file-local variables for: %s" choice))
-      (message "Invalid choice"))))
+  (let* ((formats '("U.S. short: 12/25"
+                    "U.S. numeric: 12/25/2025"
+                    "ISO standard: 2025-12-25"
+                    "Short: Dec 25, 2025"
+                    "Medium: Mon Dec 25, 2025"
+                    "Full: Monday Dec 25, 2025"
+                    "Long: Monday December 25, 2025"))
+         (choice (completing-read "Choose date format: " formats nil t))
+         (format-string (pcase choice
+                          ("U.S. short: 12/25" "%m/%d")
+                          ("U.S. numeric: 12/25/2025" "%m/%d/%Y")
+                          ("ISO standard: 2025-12-25" "%Y-%m-%d")
+                          ("Short: Dec 25, 2025" "%b %d, %Y")
+                          ("Medium: Mon Dec 25, 2025" "%a %b %d, %Y")
+                          ("Full: Monday Dec 25, 2025" "%A %b %d, %Y")
+                          ("Long: Monday December 25, 2025" "%A %B %d, %Y")))
+         (file-local (format "# %s Variables:\n# org-export-date-timestamp-format: \"%s\"\n# %s:\n"
+                             "Local" format-string "End")))
+
+    ;; Set global variable
+    (setq org-export-date-timestamp-format format-string)
+    (message "Global Org export date format set to '%s'" format-string)
+
+    ;; Copy file-local definition to clipboard
+    (call-process-shell-command (format "echo -n '%s' | pbcopy" file-local))
+    (message "File-local variable copied to clipboard.")
+
+    ;; Prompt to insert into buffer
+    (when (string= (completing-read "Insert file-local variable into buffer? " '("no" "yes") nil t nil nil "no") "yes")
+      (save-excursion
+        (goto-char (point-max))
+        (insert (concat "\n" file-local)))
+      (message "Inserted file-local variable for date format '%s'" format-string))))
 #+end_src
 
 
@@ -9188,6 +9210,7 @@ Including indent-buffer, which should not be called automatically on save."
 | Full         | Monday Dec 25, 2025      | %A %b %d, %Y |
 | Long         | Monday December 25, 2025 | %A %B %d, %Y |
 |--------------+--------------------------+--------------|
+
 
 #+begin_src emacs-lisp
 (defun jay/org-export-date-format-chooser ()
@@ -9209,7 +9232,8 @@ Including indent-buffer, which should not be called automatically on save."
                           ("Medium: Mon Dec 25, 2025" "%a %b %d, %Y")
                           ("Full: Monday Dec 25, 2025" "%A %b %d, %Y")
                           ("Long: Monday December 25, 2025" "%A %B %d, %Y")))
-         (file-local (format "# Local Variables:\n# org-export-date-timestamp-format: \"%s\"\n# End:\n" format-string)))
+         (file-local (format "# %s Variables:\n# org-export-date-timestamp-format: \"%s\"\n# %s:\n"
+                             "Local" format-string "End")))
 
     ;; Set global variable
     (setq org-export-date-timestamp-format format-string)
@@ -9227,17 +9251,15 @@ Including indent-buffer, which should not be called automatically on save."
       (message "Inserted file-local variable for date format '%s'" format-string))))
 #+end_src
 
-* Trust local variables
-#+begin_src emacs-lisp
-(put 'enable-local-eval 'safe-local-variable #'booleanp)
-(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
-(setq enable-local-variables :all)
-#+end_src
+
+
+
+
+* Local Variables & The End
+These have to be at the end.
 
 # Local Variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-
-
