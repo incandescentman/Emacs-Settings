@@ -2106,10 +2106,8 @@ different → different
 * Local Variables & The End
 These have to be at the end.
 
-#+BEGIN_SRC
-# Local Variables:
+# Local variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-#+END_SRC

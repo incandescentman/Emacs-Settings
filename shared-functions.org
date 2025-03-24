@@ -2593,7 +2593,7 @@ If the current buffer is unnamed, prompt for filename and save only that buffer.
   ;; Ensure current buffer is saved if it has a filename (even if file doesn't exist yet)
   (when (and buffer-file-name (buffer-modified-p))
     (save-buffer)))
- 
+
 #+END_SRC
 
 ** find-file tricks
@@ -8793,20 +8793,6 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 
 
 
-* Trust local variables
-#+begin_src emacs-lisp
-(put 'enable-local-eval 'safe-local-variable #'booleanp)
-(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
-(setq enable-local-variables :all)
-#+end_src
-
-# Local Variables:
-# org-config-files-local-mode: t
-# enable-local-eval: t
-# eval: (org-config-files-local-mode 1)
-# End:
-
-
 * Org element errors
 
 #+begin_src emacs-lisp
@@ -9240,3 +9226,18 @@ Including indent-buffer, which should not be called automatically on save."
         (insert (concat "\n" file-local)))
       (message "Inserted file-local variable for date format '%s'" format-string))))
 #+end_src
+
+* Trust local variables
+#+begin_src emacs-lisp
+(put 'enable-local-eval 'safe-local-variable #'booleanp)
+(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
+(setq enable-local-variables :all)
+#+end_src
+
+# Local Variables:
+# org-config-files-local-mode: t
+# enable-local-eval: t
+# eval: (org-config-files-local-mode 1)
+# End:
+
+
