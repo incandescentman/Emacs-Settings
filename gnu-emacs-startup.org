@@ -1,8 +1,3 @@
-# Local Variables:
-# org-config-files-local-mode: t
-# enable-local-eval: t
-# eval: (org-config-files-local-mode 1)
-# End:
 
 These are emm dashes --- emm dashes.
 
@@ -2106,7 +2101,7 @@ different → different
 * Local Variables & The End
 These have to be at the end.
 
-# Local variables:
+# Local Variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
