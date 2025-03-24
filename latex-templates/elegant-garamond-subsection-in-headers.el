@@ -1,7 +1,7 @@
-(provide 'elegant-garamond)
+(provide 'elegant-garamond-subsection)
 
 (add-to-list 'org-latex-classes
-             '("elegant-garamond"
+             '("elegant-garamond-subsection"
                "
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot, margin=1.5in, hmargin=1.5in, vmargin=0.5in]{geometry} % Set margins
@@ -106,9 +106,9 @@
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
-\\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
-\\rhead{\\scshape{\\leftmark}}
+\\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}}
+\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\rhead{\\leftmark}
 \\cfoot{\\thepage}
 
 % Paragraph and Indentation Settings
