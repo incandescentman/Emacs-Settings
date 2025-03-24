@@ -158,7 +158,7 @@
     colupper=black,
     boxrule=0.5pt,
     rounded corners,
-    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,
+    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\sffamily,
     width=0.8\\textwidth,
     left=0pt,
     right=0pt,
