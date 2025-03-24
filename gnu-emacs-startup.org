@@ -1062,7 +1062,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "C-x p")'pop-to-mark-command)
 
 ;; projectile
-;; (define-key key-minor-mode-map (kbd "s-P") 'projectile-commander)
+(define-key key-minor-mode-map (kbd "s-P") 'projectile-find-file)
+
 
 (define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
 
