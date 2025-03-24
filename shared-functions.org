@@ -2571,6 +2571,29 @@ Useful for working with files and references:
                                      gitignore-mode sh-mode)))
        (and (or buffer-file-name (buffer-modified-p))
             (derived-mode-p 'org-mode))))))
+
+
+(defun jay/save-all-buffers ()
+  "Save all named buffers without prompting.
+If the current buffer is unnamed, prompt for filename and save only that buffer."
+  (interactive)
+  ;; Save all buffers already associated with files silently
+  (save-some-buffers t (lambda () buffer-file-name))
+  ;; Handle current buffer specifically
+  (unless buffer-file-name
+    (when (y-or-n-p (format "Current buffer '%s' is unsaved. Save now? " (buffer-name)))
+      (call-interactively 'write-file))))
+
+
+(defun jay/save-all-buffers ()
+  "Save all file-visiting buffers silently. Ensure current buffer is saved even if it's a new file."
+  (interactive)
+  ;; Save all buffers with filenames silently
+  (save-some-buffers t (lambda () buffer-file-name))
+  ;; Ensure current buffer is saved if it has a filename (even if file doesn't exist yet)
+  (when (and buffer-file-name (buffer-modified-p))
+    (save-buffer)))
+ 
 #+END_SRC
 
 ** find-file tricks
@@ -9146,7 +9169,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (setq-default org-display-custom-times nil)
 (setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>"))
 
-(defun jay/org-buffer-date-timestamp-chooser ()
+(defun jay/org-buffer-date-format-chooser ()
   "Insert file-local variables to customize Org timestamps displayed in the current buffer."
   (interactive)
   (let* ((options '(("Short Format (Mon Dec 24)"
