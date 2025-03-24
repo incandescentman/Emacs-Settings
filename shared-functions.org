@@ -280,7 +280,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 (setq org-export-with-timestamps (quote active))
 (setq org-export-with-toc nil)
 
- (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
+ (setq org-export-date-timestamp-format "%Y-%m-%d %I:%M%p")
  (setq org-export-date-timestamp-format "%B %d, %Y")
 
  (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
@@ -2566,7 +2566,7 @@ Useful for working with files and references:
                                    '(latex-mode emacs-lisp-mode fundamental-mode
                                      conf-mode markdown-mode js2-mode json-mode
                                      graphviz-dot-mode python-mode text-mode
-                                     snippet-mode css-mode xml-mode nxml-mode
+                         javascript-mode            snippet-mode css-mode xml-mode nxml-mode
                                      fountain-mode nmxml-mode web-mode gitconfig-mode
                                      gitignore-mode sh-mode)))
        (and (or buffer-file-name (buffer-modified-p))
@@ -2797,7 +2797,7 @@ AdrianKubala:
   :bind
   (:map projectile-mode-map
         ("s-o" . nil)))
-#+END_SRC 
+#+END_SRC
 
 ** isearch
 
@@ -5301,32 +5301,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+end_src
 
 
-* custom time format
-#+begin_src emacs-lisp
-;; (setq-default org-display-custom-times nil)
-(setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>"))
-
-(defun insert-date-time-stamp-file-local-variable ()
-  "Insert file-local variables to set custom `org-time-stamp-custom-formats` into the current buffer."
-  (interactive)
-  (let* ((options '(("Short Format (Mon Dec 24)"
-                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%a %b %d>\" . \"<%a %b %d %H:%M>\"))")
-                    ("Long Format (Monday December 24, 2024)"
-                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%A %B %e, %Y>\" . \"<%01m/%01e %01I:%M %p>\"))")))
-         (choice (completing-read "Choose a date-time format: " (mapcar 'car options)))
-         (format-line (cdr (assoc choice options))))
-    (if format-line
-        (progn
-          (goto-char (point-max)) ;; Move to the end of the buffer
-          (insert "\n# Local Variables:\n")
-          (insert (format "# %s\n" format-line))
-          (insert "# eval: (setq-local org-display-custom-times t)\n")
-          (insert "# End:\n")
-          (message "Inserted file-local variables for: %s" choice))
-      (message "Invalid choice"))))
-
-#+end_src
-
 
 
 * clean up tex files
@@ -5336,25 +5310,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl")))
 #+end_src
 
-
-* Better time-stamps in org-export
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'org-export-filter-timestamp-functions
-             #'endless/filter-timestamp)
-(defun endless/filter-timestamp (trans back _comm)
-  "Remove <> around time-stamps."
-  (pcase back
-    ((or `jekyll `html)
-     (replace-regexp-in-string "&[lg]t;" "" trans))
-    (`latex
-     (replace-regexp-in-string "[<>]" "" trans))))
-
-(setq-default org-display-custom-times t)
-;;; Before you ask: No, removing the <> here doesn't work.
-(setq org-time-stamp-custom-formats
-   '("<%A %b %e, %Y>" . "<%d/%m/%y %a %H:%M>"))
-
-#+END_EXAMPLE
 
 
 * koma letter
@@ -9156,4 +9111,109 @@ Including indent-buffer, which should not be called automatically on save."
           (insert " "))))))
 
 (add-hook 'before-save-hook 'my-before-save-hook)
+#+end_src
+
+
+* Date and time
+
+** Better time-stamps in org-export
+#+begin_EXAMPLE emacs-lisp
+(add-to-list 'org-export-filter-timestamp-functions
+             #'endless/filter-timestamp)
+(defun endless/filter-timestamp (trans back _comm)
+  "Remove <> around time-stamps."
+  (pcase back
+    ((or `jekyll `html)
+     (replace-regexp-in-string "&[lg]t;" "" trans))
+    (`latex
+     (replace-regexp-in-string "[<>]" "" trans))))
+
+(setq-default org-display-custom-times t)
+;;; Before you ask: No, removing the <> here doesn't work.
+(setq org-time-stamp-custom-formats
+   '("<%A %b %e, %Y>" . "<%d/%m/%y %a %H:%M>"))
+
+#+END_EXAMPLE
+
+
+** Org-mode Timestamp Format Helper
+ - Defines global custom timestamp formats for Org-mode files.
+ - Provides an interactive command to insert timestamp format customizations locally.
+ - Offers two timestamp styles: a concise format and a detailed format.
+ - Inserts file-local variables at buffer end, enabling custom date display per file.
+
+#+begin_src emacs-lisp
+;; (setq-default org-display-custom-times nil)
+(setq org-time-stamp-custom-formats '("<%A %B %e, %Y>" . "<%01m/%01e %01I:%M %p>"))
+
+(defun jay/org-buffer-date-timestamp-chooser ()
+  "Insert file-local variables to customize Org timestamps displayed in the current buffer."
+  (interactive)
+  (let* ((options '(("Short Format (Mon Dec 24)"
+                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%a %b %d>\" . \"<%a %b %d %H:%M>\"))")
+                    ("Long Format (Monday December 24, 2024)"
+                     "eval: (setq-local org-time-stamp-custom-formats '(\"<%A %B %e, %Y>\" . \"<%01m/%01e %01I:%M %p>\"))")))
+         (choice (completing-read "Choose buffer timestamp format: " (mapcar 'car options)))
+         (format-line (cdr (assoc choice options))))
+    (if format-line
+        (progn
+          (goto-char (point-max))
+          (insert "\n# Local Variables:\n")
+          (insert (format "# %s\n" format-line))
+          (insert "# eval: (setq-local org-display-custom-times t)\n")
+          (insert "# End:\n")
+          (message "Inserted file-local variables for: %s" choice))
+      (message "Invalid choice"))))
+#+end_src
+
+
+** date/time format chooser
+|--------------+--------------------------+--------------|
+| Name         | Example                  | Format       |
+|--------------+--------------------------+--------------|
+| U.S. short   | 12/25                    | %m/%d        |
+| U.S. numeric | 12/25/2025               | %m/%d/%Y     |
+| ISO standard | 2025-12-25               | %Y-%m-%d     |
+| Short        | Dec 25, 2025             | %b %d, %Y    |
+| Medium       | Mon Dec 25, 2025         | %a %b %d, %Y |
+| Full         | Monday Dec 25, 2025      | %A %b %d, %Y |
+| Long         | Monday December 25, 2025 | %A %B %d, %Y |
+|--------------+--------------------------+--------------|
+
+#+begin_src emacs-lisp
+(defun jay/date-format-HTML-export-chooser ()
+  "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
+  (interactive)
+  (let* ((formats '("U.S. short: 12/25"
+                    "U.S. numeric: 12/25/2025"
+                    "ISO standard: 2025-12-25"
+                    "Short: Dec 25, 2025"
+                    "Medium: Mon Dec 25, 2025"
+                    "Full: Monday Dec 25, 2025"
+                    "Long: Monday December 25, 2025"))
+         (choice (completing-read "Choose date format: " formats nil t))
+         (format-string (pcase choice
+                          ("U.S. short: 12/25" "%m/%d")
+                          ("U.S. numeric: 12/25/2025" "%m/%d/%Y")
+                          ("ISO standard: 2025-12-25" "%Y-%m-%d")
+                          ("Short: Dec 25, 2025" "%b %d, %Y")
+                          ("Medium: Mon Dec 25, 2025" "%a %b %d, %Y")
+                          ("Full: Monday Dec 25, 2025" "%A %b %d, %Y")
+                          ("Long: Monday December 25, 2025" "%A %B %d, %Y")))
+         (file-local (format "# Local Variables:\n# org-export-date-timestamp-format: \"%s\"\n# End:\n" format-string)))
+
+    ;; Set global variable
+    (setq org-export-date-timestamp-format format-string)
+    (message "Global Org export date format set to '%s'" format-string)
+
+    ;; Copy file-local definition to clipboard
+    (call-process-shell-command (format "echo -n '%s' | pbcopy" file-local))
+    (message "File-local variable copied to clipboard.")
+
+    ;; Prompt to insert into buffer
+    (when (string= (completing-read "Insert file-local variable into buffer? " '("no" "yes") nil t nil nil "no") "yes")
+      (save-excursion
+        (goto-char (point-max))
+        (insert (concat "\n" file-local)))
+      (message "Inserted file-local variable for date format '%s'" format-string))))
 #+end_src
