@@ -62,7 +62,7 @@
   % Set monospaced font to Helvetica Neue LT Pro
   \\setmonofont[
     Path = /Users/jay/Library/Fonts/,
-    UprightFont = HelveticaNeueLTPro-MdCn,
+    UprightFont = HelveticaNeueLTPro-Lt,
     BoldFont = HelveticaNeueLTPro-BdCn,
     Extension = .otf
   ]{Helvetica Neue LT Pro}
@@ -151,6 +151,7 @@
 }
 
 % Quote Environment Customization Using tcolorbox
+
 \\tcbset{
   myquote/.style={
     colback=azure,
@@ -158,15 +159,17 @@
     colupper=black,
     boxrule=0.5pt,
     rounded corners,
-    fontupper=\\singlespacing\\fontsize{11}{13}\\selectfont\\sffamily,
+    fontupper=\\singlespacing\\fontsize{11}{13}\\selectfont\\ttfamily,
     width=0.8\\textwidth,
-    left=0pt,
-    right=0pt,
-    boxalign=center,
+    enlarge left by=0pt,
+    enlarge right by=0pt,
+    box align=center,
     halign=flush left,
-    before skip=1em,
+    before skip=0pt,     % Removes extra vertical space at top
     after skip=1em,
-    parskip=1em
+    parbox=false,        % Essential: allows proper paragraph breaks
+    parskip=0.8em,       % Ensures spacing between paragraphs
+    center
   }
 }
 
@@ -188,13 +191,13 @@
 }
 
 \\titleformat{\\section}
-  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+  {\\normalfont\\ttfamily\\color{spacegrey}}
   {}
   {0em}
   {\\mysectiontitle}
 
 \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
+\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
