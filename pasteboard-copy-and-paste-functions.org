@@ -33,40 +33,6 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
         (error "pbpaste timed out")))))
 #+end_src
 
-** different behavior depending on whether I'm working with code or prose
-
-#+begin_src emacs-lisp
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS system pasteboard.
-If we're in `shell-script-mode`, `emacs-lisp-mode`,
-`org-config-files-local-mode`, or a mode derived from `prog-mode`,
-then copy text verbatim (no replacements).
-Otherwise, replace occurrences of `---` or `--` with an em dash."
-  (interactive)
-  (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties
-                  (region-beginning) (region-end))))
-        (if (or (eq major-mode 'shell-script-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (bound-and-true-p org-config-files-local-mode)
-                (derived-mode-p 'prog-mode))
-            ;; Copy verbatim
-            (progn
-              ;; Safely copy verbatim, including newlines
-              (with-temp-buffer
-                (insert txt)
-                (shell-command-on-region (point-min) (point-max) "pbcopy"))
-              (message "Copied text verbatim."))
-          ;; Otherwise, replace --- or -- with em dash
-          (setq txt (replace-regexp-in-string
-                     "\\(?:---\\|--\\)" "—" txt))
-          (with-temp-buffer
-            (insert txt)
-            (shell-command-on-region (point-min) (point-max) "pbcopy"))
-          (message "Text with em dashes copied to macOS pasteboard.")))
-    (message "No region selected.")))
-#+end_src
-
 ** pasteboard-paste-spaces-maybe
     #+BEGIN_SRC emacs-lisp
 
@@ -142,6 +108,35 @@ Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard
             (shell-command-on-region (point-min) (point-max) "pbcopy"))
           (message "Text with em dashes copied to macOS pasteboard.")))
     (message "No region selected")))
+
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes ()
+  "Cut region and put on OS X pasteboard, replacing dash sequences with em dashes.
+Then delete the region, fix spacing, and, if at the beginning of a sentence,
+capitalize the text (unless it's an Org heading)."
+  (interactive)
+  ;; Use the copy-and-replace function instead of pasteboard-copy.
+  (pasteboard-copy-and-replace-em-dashes-in-clipboard)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe ()
+  "Cut region and put it on the OS X pasteboard using a command selected by the current mode.
+
+When working with prose (in `org-mode` without `org-config-files-local-mode`
+or in a mode derived from `text-mode`), replace dash sequences with em dashes.
+When working with code (any mode other than `org-mode` or in `org-mode` when
+`org-config-files-local-mode` is active), cut region and copy verbatim by calling
+`pasteboard-cut-and-capitalize`."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-cut-and-capitalize-and-replace-em-dashes)
+    (pasteboard-cut-and-capitalize)))
+
 
 #+end_src
 
@@ -384,33 +379,6 @@ and handle spacing based on surrounding punctuation."
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
 
-(defun pasteboard-cut-and-capitalize-and-replace-em-dashes ()
-  "Cut region and put on OS X pasteboard, replacing dash sequences with em dashes.
-Then delete the region, fix spacing, and, if at the beginning of a sentence,
-capitalize the text (unless it's an Org heading)."
-  (interactive)
-  ;; Use the copy-and-replace function instead of pasteboard-copy.
-  (pasteboard-copy-and-replace-em-dashes-in-clipboard)
-  (delete-region (region-beginning) (region-end))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
-
-(defun pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe ()
-  "Cut region and put it on the OS X pasteboard using a command selected by the current mode.
-
-When working with prose (in `org-mode` without `org-config-files-local-mode`
-or in a mode derived from `text-mode`), replace dash sequences with em dashes.
-When working with code (any mode other than `org-mode` or in `org-mode` when
-`org-config-files-local-mode` is active), cut region and copy verbatim by calling
-`pasteboard-cut-and-capitalize`."
-  (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (pasteboard-cut-and-capitalize-and-replace-em-dashes)
-    (pasteboard-cut-and-capitalize)))
 #+END_SRC
 
 ** wrapped-search-forward
