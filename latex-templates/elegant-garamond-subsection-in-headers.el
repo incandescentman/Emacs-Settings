@@ -165,14 +165,15 @@
     enlarge right by=0pt,
     box align=center,
     halign=flush left,
-    before skip=0pt,     % Removes extra vertical space at top
-    after skip=1em,
-    parbox=false,        % Essential: allows proper paragraph breaks
-    parskip=0.8em,       % Ensures spacing between paragraphs
+    before skip=0pt,        % Removes external vertical space above box
+    after skip=1em,         % Maintains external space below box
+    parbox=false,           % Allows natural paragraph handling
+    parskip=0.8em,          % Controls spacing between paragraphs
+    top=0pt,                % Removes internal vertical padding at top
+    bottom=0pt,             % Optionally adjust bottom padding
     center
   }
 }
-
 \\renewenvironment{quote}
 {%
   \\begin{tcolorbox}[myquote]
