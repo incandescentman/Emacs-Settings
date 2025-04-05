@@ -6543,6 +6543,27 @@ The links are of the form <link>::split::<name>."
     (insert org-link)
 ;; (message "Inserted Org link: %s" org-link)
 ))
+
+;; or in Safari format
+(defun org-mac-link-chrome-insert-frontmost-url (arg)
+  "Insert URL and title from frontmost Chrome tab as Org-mode link.
+With prefix ARG, insert using 'safari' custom link type."
+  (interactive "P")
+  (let* ((as-command
+          "tell application \"Google Chrome\"
+               set theURL to URL of active tab of front window
+               set theTitle to title of active tab of front window
+               return theURL & \"§§§\" & theTitle
+           end tell")
+         (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command)))))
+         (components (split-string as-result "§§§"))
+         (url (string-trim (nth 0 components)))
+         (title (org-mac-link--clean-title (string-trim (nth 1 components))))
+         (org-link (if arg
+                       (format "[[safari:%s][%s]]" url title) ; Safari format if universal arg
+                     (format "[[%s][%s]]" url title))))       ; Default format otherwise
+    (insert org-link)))
+
 #+end_src
 
 * org-refile-region-to-org-heading-or-roam-node
@@ -9252,6 +9273,27 @@ Including indent-buffer, which should not be called automatically on save."
 #+end_src
 
 
+
+* Open in Safari
+For banks etc that require text message verification, since Safari integrates with Messages and Chrome doesn't.
+
+Example link format:
+- [[safari:https://www.equifax.com/personal/help/place-lift-remove-security-freeze/][Equifax]]
+- [[safari:https://www.experian.com/blogs/ask-experian/how-to-add-a-security-freeze-to-your-credit-file/][Experian]]
+- [[safari:https://www.transunion.com/credit-freeze/credit-freeze-faq#adding-freeze-0][TransUnion]]
+
+To insert link from chrome in Safari link format:
+c-u s-L
+
+
+
+#+begin_src emacs-lisp
+(org-link-set-parameters "safari"
+                         :follow (lambda (url)
+                                   (start-process "open-safari" nil "open" "-a" "Safari" url))
+                         :export (lambda (url description backend)
+                                   (format "<a href=\"%s\">%s</a>" url (or description url))))
+#+end_src
 
 
 
