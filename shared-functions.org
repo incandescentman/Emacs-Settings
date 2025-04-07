@@ -8529,7 +8529,7 @@ When deleting a file, don't use vc-delete-file
 
 * query replace all files in current directory
 #+begin_src emacs-lisp
-(defun query-replace-all-files-in-current-directory (from-string to-string &optional regexp-flag)
+(defun multi-file-replace-query-replace-all-files-in-current-directory (from-string to-string &optional regexp-flag)
  "Query replace FROM-STRING with TO-STRING in all files in the current directory.
 If REGEXP-FLAG is non-nil, treat FROM-STRING as a regular expression."
  (interactive

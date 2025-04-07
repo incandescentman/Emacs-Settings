@@ -351,6 +351,7 @@ This function should only modify configuration layer settings."
                                     xterm-mouse
                                     xterm-mouse-mode
 
+                                    savehist
                                     magit
                                     persp-mode
                                     popup
@@ -1006,7 +1007,7 @@ This function is called at the very end of Spacemacs initialization."
    '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
    '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
    '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
-   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.4 :family "Garamond"))))
+   '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.2 :family "Garamond"))))
    '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
    '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
    '(org-done ((t (:background "light green"))))
