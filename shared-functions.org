@@ -4062,40 +4062,49 @@ cmd)
 
 
 (defun eval-adaptive ()
-  "Smart eval:
+  \"Smart eval:
 - If region is active, eval the region.
 - If in an Org-mode Emacs Lisp source block, eval the block.
+- If in a Yasnippet buffer, load the snippet buffer as an org-mode snippet.
 - If in an Emacs Lisp buffer, eval the buffer.
-- Otherwise, notify the user."
+- Otherwise, notify the user.\"
   (interactive)
   (cond
    ;; If region is active, eval the region
    ((use-region-p)
     (eval-region (region-beginning) (region-end))
-    (message "✅ Evaluated region"))
+    (message \"✅ Evaluated region\"))
 
    ;; If in an Org-mode Emacs Lisp src block, eval that block
-((and (derived-mode-p 'org-mode)
-      (org-in-src-block-p))
- (let* ((context (org-element-context))
-        (lang (org-element-property :language context))
-        (body (org-element-property :value context)))
-   (if (string= lang "emacs-lisp")
-       (progn
-         (eval (read (concat "(progn\n" body "\n)")))
-         (message "✅ Evaluated Emacs Lisp src block"))
-     (message "⚠️ Not an Emacs Lisp src block"))))
+   ((and (derived-mode-p 'org-mode)
+         (org-in-src-block-p))
+    (let* ((context (org-element-context))
+           (lang (org-element-property :language context))
+           (body (org-element-property :value context)))
+      (if (string= lang \"emacs-lisp\")
+          (progn
+            (eval (read (concat \"(progn\\n\" body \"\\n)\")))
+            (message \"✅ Evaluated Emacs Lisp src block\"))
+        (message \"⚠️ Not an Emacs Lisp src block\"))))
+
+   ;; If in a Yasnippet buffer, load the snippet buffer as org-mode
+   ((derived-mode-p 'snippet-mode)
+    (yas-load-snippet-buffer 'org-mode)
+    (message \"✅ Loaded Yasnippet buffer for org-mode\"))
 
    ;; If in an Emacs Lisp buffer, eval the whole buffer
    ((derived-mode-p 'emacs-lisp-mode)
     (eval-buffer)
-    (message "✅ Evaluated buffer"))
+    (message \"✅ Evaluated buffer\"))
 
    ;; Otherwise, do nothing
    (t
-    (message "⚠️ No matching eval context"))))
+    (message \"⚠️ No matching eval context\"))))
 
 (global-set-key (kbd "C-c e") #'eval-adaptive)
+
+
+
 
 #+END_SRC
 
