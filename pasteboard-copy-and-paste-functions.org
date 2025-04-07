@@ -1,3 +1,4 @@
+
 * isolate Emacs kill ring from the OSX system pasteboard (clipboard).
 Very important, I use this all the time.  These are custom functions to separate
 the OSX clipboard from Emacs' kill ring, effectively giving me two separate
@@ -33,36 +34,31 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
         (error "pbpaste timed out")))))
 #+end_src
 
-** pasteboard-paste-spaces-maybe
-    #+BEGIN_SRC emacs-lisp
+** different behavior depending on whether I'm working with code or prose
 
-(defun pasteboard-paste-spaces-maybe ()
-  "Paste from pasteboard, choosing the method based on the current working mode and (if in code) surrounding characters.
+#+begin_src emacs-lisp
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
+  "Copy to the macOS pasteboard using a command selected by the current mode.
 
-In prose (in `org-mode` without `org-config-files-local-mode` or in a mode derived from `text-mode`), always use `pasteboard-paste-without-smart-quotes`.
+When working with prose (in `org-mode` without `org-config-files-local-mode`
+or in a mode derived from `text-mode`), call
+`pasteboard-copy-and-replace-em-dashes-in-clipboard` to replace dash sequences
+with em dashes.
 
-In code (any mode other than the above, or in `org-mode` when `org-config-files-local-mode` is enabled),
-use the original logic: if the character before or after point is in a predefined set,
-use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-quotes`."
+When working with code (any mode other than `org-mode` or in `org-mode` when
+`org-config-files-local-mode` is active), call `pasteboard-copy` to copy verbatim."
   (interactive)
   (if (or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
-      ;; Prose: always use without-smart-quotes.
-      (pasteboard-paste-without-smart-quotes)
-    ;; Code: use the original surrounding-character logic.
-    (let* ((prev-char (char-before))
-           (next-char (char-after))
-(char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-           (use-no-spaces (or (member prev-char char-set)
-                              (member next-char char-set))))
-      (if use-no-spaces
-          (pasteboard-paste-no-spaces)
-        (pasteboard-paste-without-smart-quotes)))))
-    #+END_SRC
+      (pasteboard-copy-and-replace-em-dashes-in-clipboard)
+    (pasteboard-copy)))
 
+#+end_src
 
 ** pasteboard-copy
+
+*** pasteboard copy
 #+BEGIN_SRC emacs-lisp
 
 (defun pasteboard-copy ()
@@ -73,71 +69,61 @@ use `pasteboard-paste-no-spaces`, otherwise use `pasteboard-paste-without-smart-
      (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
 #+END_SRC
 
-** and replace em dashes 1
+*** and replace em dashes
 #+begin_src emacs-lisp
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
   "Copy selected region to macOS system pasteboard.
-If we're in `shell-script-mode`, `emacs-lisp-mode`,
-`org-config-files-local-mode`, or a mode derived from `prog-mode`,
-then copy text verbatim (no replacements).
-Otherwise, replace occurrences of `---` or `--` with an em dash."
+If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
+or a mode derived from `prog-mode`, copy text verbatim (no replacements).
+Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
   (interactive)
   (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties
-                  (region-beginning) (region-end))))
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
         (if (or (eq major-mode 'shell-script-mode)
                 (eq major-mode 'emacs-lisp-mode)
                 (bound-and-true-p org-config-files-local-mode)
                 (derived-mode-p 'prog-mode))
-            ;; Copy verbatim
+            ;; Just copy verbatim using a temp buffer
             (progn
-              ;; Safely copy verbatim, including newlines
               (with-temp-buffer
                 (insert txt)
                 (shell-command-on-region (point-min) (point-max) "pbcopy"))
               (message "Copied text verbatim."))
-          ;; Otherwise, replace --- or -- with em dash
-          (setq txt (replace-regexp-in-string
-                     "---\\|--" "—" txt))
-          (with-temp-buffer
-            (insert txt)
-            (shell-command-on-region (point-min) (point-max) "pbcopy"))
-          (message "Text with em dashes copied to macOS pasteboard.")))
+          ;; Otherwise do the dash replacements
+          (let* ((txt (replace-regexp-in-string "---" "—" txt))
+                 (txt (replace-regexp-in-string "--"  "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Text with em dashes copied to macOS pasteboard."))))
+    (message "No region selected")))
+
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
+  "Copy selected region to macOS pasteboard.
+Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
+  (interactive)
+  (if (use-region-p)
+      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
+        (if (or (derived-mode-p 'prog-mode)
+                (eq major-mode 'shell-script-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (bound-and-true-p org-config-files-local-mode))
+            ;; Verbatim copy
+            (progn
+              (with-temp-buffer
+                (insert txt)
+                (shell-command-on-region (point-min) (point-max) "pbcopy"))
+              (message "Copied text verbatim."))
+          ;; Replacement copy
+          (let ((txt (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+            (with-temp-buffer
+              (insert txt)
+              (shell-command-on-region (point-min) (point-max) "pbcopy"))
+            (message "Copied text with em dashes."))))
     (message "No region selected.")))
-
-
-(defun pasteboard-cut-and-capitalize-and-replace-em-dashes ()
-  "Cut region and put on OS X pasteboard, replacing dash sequences with em dashes.
-Then delete the region, fix spacing, and, if at the beginning of a sentence,
-capitalize the text (unless it's an Org heading)."
-  (interactive)
-  ;; Use the copy-and-replace function instead of pasteboard-copy.
-  (pasteboard-copy-and-replace-em-dashes-in-clipboard)
-  (delete-region (region-beginning) (region-end))
-  (my/fix-space)
-  (save-excursion
-    (when (my/beginning-of-sentence-p)
-      (capitalize-unless-org-heading))))
-
-(defun pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe ()
-  "Cut region and put it on the OS X pasteboard using a command selected by the current mode.
-
-When working with prose (in `org-mode` without `org-config-files-local-mode`
-or in a mode derived from `text-mode`), replace dash sequences with em dashes.
-When working with code (any mode other than `org-mode` or in `org-mode` when
-`org-config-files-local-mode` is active), cut region and copy verbatim by calling
-`pasteboard-cut-and-capitalize`."
-  (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (pasteboard-cut-and-capitalize-and-replace-em-dashes)
-    (pasteboard-cut-and-capitalize)))
-
-
 #+end_src
 
-** to the end
+*** to the end
 #+begin_src emacs-lisp
 (defun pasteboard-copy-to-end-of-buffer ()
   "Copy text from point to the end of the buffer to OS X system pasteboard."
@@ -148,7 +134,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+end_src
 
-** pasteboard-copy-and-convert-to-markdown-link
+*** pasteboard-copy-and-convert-to-markdown-link
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-copy-and-convert-to-markdown-link ()
   "Copy region to OS X system pasteboard, converting Org-style links to Markdown format."
@@ -171,7 +157,67 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 #+END_SRC
 
 ** pasteboard-paste
+
+*** pasteboard-paste-adaptive
+    #+BEGIN_SRC emacs-lisp
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+
+(defun org-insert-link-from-clipboard (beg end)
+  "Replace text in region with an Org bracket link using the macOS clipboard URL."
+  (interactive "r")
+  (unless (use-region-p)
+    (error "No region selected."))
+
+  (let* ((url (string-trim (shell-command-to-string "pbpaste")))
+         (region-text (buffer-substring-no-properties beg end))
+         (bracket-link (format "[[%s][%s]]" url region-text)))
+    ;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
+    (delete-region beg end)
+    (insert bracket-link)))
+
+(defun pasteboard-paste-adaptive ()
+  "Paste from the macOS pasteboard, choosing method based on current mode and context.
+If there's an active region and the clipboard contains a URL,
+insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
+  (interactive)
+  ;; Get raw text from pbpaste and trim whitespace
+  (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
+         (clipboard-text (downcase raw-clip)))
+    ;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+    (cond
+     ;; 1) If region is active and the clipboard looks like a URL → bracket link
+     ((and (use-region-p)
+           (not (string-empty-p raw-clip))
+           (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
+      ;;  (message "DEBUG: Inserting bracket link.")
+      (org-insert-link-from-clipboard (region-beginning) (region-end)))
+
+     ;; 2) Otherwise, do original logic
+     ((or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-paste-clean))
+     ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'emacs-lisp-mode))
+      (pasteboard-paste-raw))
+     (t
+      (let* ((prev-char (char-before))
+             (next-char (char-after))
+             (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+
+             (use-no-spaces (or (member prev-char char-set)
+                                (member next-char char-set))))
+        (if use-no-spaces
+            (pasteboard-paste-raw)
+          (pasteboard-paste-clean)))))))
+#+END_SRC
+
+
+
 *** pasteboard-paste (with smart quotes by default)
+
+
 
 #+BEGIN_SRC emacs-lisp
 
@@ -222,9 +268,9 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   )
 #+END_SRC
 
-*** pasteboard-paste-without-smart-quotes (and without spaces)
+*** pasteboard-paste-clean (and without spaces)
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-without-smart-quotes ()
+(defun pasteboard-paste-clean ()
   "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
   (interactive)
   (let ((beg (point)))
@@ -236,9 +282,9 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 #+END_SRC
 
-*** pasteboard-paste-no-spaces
+*** pasteboard-paste-raw
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-no-spaces ()
+(defun pasteboard-paste-raw ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
@@ -296,7 +342,7 @@ are adjusted so they become subheadings under the current Org heading."
     ;; Insert the adjusted text at point
     (insert text)))
 
-(defun pasteboard-paste-adjusted-subtrees-spaces-maybe ()
+(defun pasteboard-paste-adjusted-subtrees-adaptive ()
   "Paste Org text from pasteboard, adjust heading levels to be subheadings,
 and handle spacing based on surrounding punctuation."
   (interactive)
@@ -376,7 +422,35 @@ and handle spacing based on surrounding punctuation."
     (when (my/beginning-of-sentence-p)
       (capitalize-unless-org-heading))))
 
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes ()
+  "Cut region and put on OS X pasteboard, replacing dash sequences with em dashes.
+Then delete the region, fix spacing, and, if at the beginning of a sentence,
+capitalize the text (unless it's an Org heading)."
+  (interactive)
+  ;; Use the copy-and-replace function instead of pasteboard-copy.
+  (pasteboard-copy-and-replace-em-dashes-in-clipboard)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe ()
+  "Cut region and put it on the OS X pasteboard using a command selected by the current mode.
+
+When working with prose (in `org-mode` without `org-config-files-local-mode`
+or in a mode derived from `text-mode`), replace dash sequences with em dashes.
+When working with code (any mode other than `org-mode` or in `org-mode` when
+`org-config-files-local-mode` is active), cut region and copy verbatim by calling
+`pasteboard-cut-and-capitalize`."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-cut-and-capitalize-and-replace-em-dashes)
+    (pasteboard-cut-and-capitalize)))
 #+END_SRC
+
 
 ** wrapped-search-forward
 #+BEGIN_SRC emacs-lisp
@@ -409,7 +483,7 @@ and handle spacing based on surrounding punctuation."
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste-no-spaces)
+           (pasteboard-paste-raw)
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
