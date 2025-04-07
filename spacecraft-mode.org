@@ -1215,7 +1215,7 @@ I tried to add exceptions for "line-end" and also for user-full name.
 
 
 * new to review
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun pasteboard-paste-no-spaces-with-smart-quotes ()
   "Paste from system clipboard with no extra spaces, but still replace smart quotes and links.
 
@@ -1253,7 +1253,7 @@ Useful in prose when you're adjacent to punctuation but still want the text clea
           (pasteboard-paste-without-smart-quotes)))
     ;; Code branch
     (pasteboard-paste-no-spaces)))
-#+end_src
+#+END_EXAMPLE
 
 
 * smart-expand

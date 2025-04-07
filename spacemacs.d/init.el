@@ -985,10 +985,19 @@ This function is called at the very end of Spacemacs initialization."
    '(paradox-github-token t)
    '(safe-local-variable-values
      '((org-config-files-local-mode . t)
+
+       (org-config-files-local-mode . t)
+       (enable-local-eval . t)
+       (lexical-binding . t)
+       (eval org-config-files-local-mode)
+
        (org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
        (org-timestamp-custom-formats "%b %d:" . "<%d/%m/%Y %a %H:%M>")
        (org-timestamp-custom-formats "%b %d" . "<%d/%m/%Y %a %H:%M>")
        (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")
+
+
+
        (eval when
              (fboundp 'rainbow-mode)
              (rainbow-mode 1))))
