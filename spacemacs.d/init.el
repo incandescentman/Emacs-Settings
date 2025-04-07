@@ -961,8 +961,6 @@ This function is called at the very end of Spacemacs initialization."
    '(org-html-prefer-user-labels t)
    '(org-noter-auto-save-last-location t)
    '(org-noter-insert-note-no-questions t)
-   '(org-safe-remote-resources
-     '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
    '(org-sidebar-jump-indirect t)
    '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
    '(org-superstar-headline-bullets-list '(42 42 42 42))
@@ -983,25 +981,6 @@ This function is called at the very end of Spacemacs initialization."
    '(package-selected-packages
      '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
    '(paradox-github-token t)
-   '(safe-local-variable-values
-     '(
-
-       (org-config-files-local-mode . t)
-       (enable-local-eval . t)
-       (lexical-binding . t)
-       (eval org-config-files-local-mode)
-       (org-export-allow-bind-keywords . t)
-       (org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
-       (org-timestamp-custom-formats "%b %d:" . "<%d/%m/%Y %a %H:%M>")
-       (org-timestamp-custom-formats "%b %d" . "<%d/%m/%Y %a %H:%M>")
-       (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")
-
-
-
-
-       (eval when
-             (fboundp 'rainbow-mode)
-             (rainbow-mode 1))))
    '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")
    '(sp-escape-wrapped-region nil)
    '(tab-bar-close-button-show nil)

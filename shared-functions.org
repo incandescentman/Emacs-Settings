@@ -9150,13 +9150,6 @@ Including indent-buffer, which should not be called automatically on save."
 #+end_src
 
 
-* Trust local variables
-#+begin_src emacs-lisp
-(put 'enable-local-eval 'safe-local-variable #'booleanp)
-(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
-(setq enable-local-variables :all)
-#+end_src
-
 * Date and time
 
 ** Better time-stamps in org-export
@@ -9302,6 +9295,58 @@ c-u s-L
 #+end_src
 
 
+* org-roam fail gracefully
+#+begin_src emacs-lisp
+(condition-case err
+    (progn
+      (org-roam-setup)
+      (org-roam-db-autosync-enable))
+  (error
+   (warn "Org-roam setup failed: %s" (error-message-string err))))
+
+(setq org-element-use-cache nil)
+#+end_src
+
+
+
+* Trust local variables
+
+#+begin_src emacs-lisp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Allow local variables to be set without prompting:
+(setq enable-local-variables :all)
+
+;; 1) Mark `enable-local-eval` as safe (boolean).
+(put 'enable-local-eval 'safe-local-variable #'booleanp)
+
+;; 2) Mark `org-config-files-local-mode` as safe (boolean).
+(put 'org-config-files-local-mode 'safe-local-variable #'booleanp)
+
+;; 3) Mark `lexical-binding` as safe (boolean).
+(put 'lexical-binding 'safe-local-variable #'booleanp)
+
+;; 4) Whitelist exact eval forms (Emacs compares them using `equal`).
+(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode 1))
+(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode t))
+(add-to-list 'safe-local-eval-forms '(org-config-files-local-mode))
+(add-to-list 'safe-local-eval-forms '(when (fboundp 'rainbow-mode) (rainbow-mode 1)))
+
+;; 5) If you still want to mark other local variables as safe by value:
+(dolist (var '((org-config-files-local-mode . t)
+               (enable-local-eval . t)
+               (lexical-binding . t)
+               (org-export-allow-bind-keywords . t)
+               (org-timestamp-custom-formats "%a %b %d:" . "<%d/%m/%Y %a %H:%M>")
+               (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")))
+  (add-to-list 'safe-local-variable-values var))
+
+;; 6) Mark remote Org resources as safe (unrelated to eval, but good to keep).
+(setq org-safe-remote-resources
+      '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
