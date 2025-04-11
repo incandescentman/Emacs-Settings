@@ -402,6 +402,89 @@ and handle spacing based on surrounding punctuation."
 
 #+end_src
 
+
+
+*** paste adjusted subtrees adaptive
+
+doesn't work yet
+
+it doesn't do the adjusted subtrees
+
+o3
+#+BEGIN_EXAMPLE emacs-lisp
+;;;; ------------------------------------------------------------
+;;;; 1.  Grab‑adaptive helper – NO side‑effects in current buffer
+;;;; ------------------------------------------------------------
+
+(defun pasteboard--adaptive-as-string ()
+  "Return the text that `pasteboard-paste-adaptive' would insert,
+without modifying the current buffer."
+  (with-temp-buffer
+    ;; Give the temp buffer the same major mode you’re in so the
+    ;; adaptive logic follows the same code paths.
+    (let ((major-mode major-mode)) (funcall major-mode))
+    (pasteboard-paste-adaptive)      ; inserts into *this* temp buffer
+    (buffer-string)))                ; hand the text back as a string
+
+;;;; ------------------------------------------------------------
+;;;; 2.  Your subtree‑adjusting paste, now using the helper above
+;;;; ------------------------------------------------------------
+
+(defun pasteboard-paste-adjusted-subtrees-adaptive ()
+  "Paste Org text from the clipboard, shift headings so they
+become sub‑headings of the point’s heading, and handle spacing
+around punctuation (borrows adaptive‑paste logic)."
+  (interactive)
+  (let* ((text (pasteboard--adaptive-as-string))  ; << changed line
+         (current-level
+          (save-excursion
+            (if (org-before-first-heading-p) 0
+              (or (org-current-level)
+                  (progn (org-back-to-heading t) (org-current-level))
+                  0))))
+         (prev-char (char-before))
+         (next-char (char-after))
+(char-set
+       '( ?:  ?'  ?\( ?\)  ?|  ?\[ ?\]  ?/  ?\\  ?\"  ?=  ?<  ?>  ?{  ?}  ?$ )))
+
+    ;; Clean up CL‑style CRs that sometimes appear in pbpaste output
+    (setq text (replace-regexp-in-string "\r" "" text))
+
+    ;; ---------- Re‑level the pasted subtree ----------
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (let ((min-level nil))
+        (while (re-search-forward "^\$begin:math:text$\\\\*+\\$end:math:text$ " nil t)
+          (let ((level (length (match-string 1))))
+            (when (or (null min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          (let ((shift (- (+ current-level 1) min-level)))
+            (goto-char (point-min))
+            (while (re-search-forward "^\$begin:math:text$\\\\*+\\$end:math:text$" nil t)
+              (let* ((stars (match-string 1))
+                     (level (length stars))
+                     (new-level (max 1 (+ level shift))))
+                (replace-match (make-string new-level ?*) t t))))))
+      (setq text (buffer-string)))
+
+    ;; ---------- Insert + straight‑quote replacements ----------
+    (let ((start (point)))
+      (insert text)
+      (let ((end-pos (point)))
+        (unless (or (member prev-char char-set)
+                    (member next-char char-set))
+          (save-excursion
+            (goto-char start)
+            (while (ignore-errors (re-search-forward "['’]" end-pos t))
+              (replace-match "'" t t))
+            (goto-char start)
+            (while (ignore-errors (re-search-forward "[\"“”]" end-pos t))
+              (replace-match "\"" t t))))))))
+#+END_EXAMPLE
+
+
 ** pasteboard-cut
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-cut ()
