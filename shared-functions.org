@@ -797,6 +797,8 @@ is this still necessary?
     ("…" . "...")
     ("• " . "- ")
     ("•" . "-")
+    ("⸻" . "-----")
+    ("ﬀ" . "ff")
     ("·" . "-")
     ("‧" . "-")
     ("⁃" . "-")
@@ -9345,7 +9347,7 @@ c-u s-L
 (setq org-safe-remote-resources
       '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
+
 #+end_src
 
 * Local Variables & The End
