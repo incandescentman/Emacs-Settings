@@ -184,22 +184,22 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 
 
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
- "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
- (interactive)
- (let* ((clipboard-content (shell-command-to-string "pbpaste"))
-     (clean-content (string-trim clipboard-content))
-     (start (point))
-     (end (if mark-active (mark) (point))))
-  (if (string-empty-p clean-content)
-    (message "Clipboard is empty.")
-   (let ((converted-content
-       (replace-regexp-in-string
-       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
-       "[[\\2][\\1]]"
-       clean-content)))
-    (delete-region start end)
-    (insert converted-content)
-    (message "Content pasted and converted successfully.")))))
+  "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
+  (interactive)
+  (let* ((clipboard-content (shell-command-to-string "pbpaste"))
+         (clean-content (string-trim clipboard-content))
+         (start (point))
+         (end (if mark-active (mark) (point))))
+    (if (string-empty-p clean-content)
+        (message "Clipboard is empty.")
+      (let ((converted-content
+             (replace-regexp-in-string
+              "\\[\\([^][]+\\)\\](\\([^)]+\\))"
+              "[[\\2][\\1]]"
+              clean-content)))
+        (delete-region start end)
+        (insert converted-content)
+        (message "Content pasted and converted successfully.")))))
 
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -229,16 +229,39 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
     ;; If you have other cleanup functions, call them here.
     ))
 
+(defun pasteboard-paste-clean (&optional raw)
+  "Paste from the macOS clipboard and normalise the text.
+
+With a prefix argument RAW (C-u), insert the clipboard verbatim.
+Otherwise:
+  • run `replace-smart-quotes`   ; pair-based replacements
+  • run `replace-smart-quotes-regexp` ; regexp-based tweaks
+  • run `convert-markdown-links-to-org-mode`."
+  (interactive "P")
+  (let ((beg (point)))
+    (pasteboard-paste)              ; your low‑level paste helper
+    (unless raw
+      (let ((end (point)))
+        ;; First the literal pair map…
+        (replace-smart-quotes beg end)
+        ;; …then the regexp map for catch‑alls
+        (replace-smart-quotes-regexp beg end)
+        ;; finally Markdown‑>Org links
+        (convert-markdown-links-to-org-mode beg end)))))
+
+;; Make sure THREE‑EM DASH U+2E3B really is in the active pair list.
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
+
 (defun pasteboard-paste-raw ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-	(end (if mark-active
-		 (mark)
-	       (point))))
+        (end (if mark-active
+                 (mark)
+               (point))))
     (shell-command-on-region start end
-			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t)
+                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+                             nil t)
     (save-excursion
       )))
 
@@ -424,12 +447,12 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (x-select-text (current-kill 0)))
 
 (defun push-MacOS-clipboard-to-kill-ring ()
- "Push the content of the MacOS clipboard to the Emacs kill ring."
- (interactive)
- (let ((clipboard-content (shell-command-to-string "pbpaste")))
-  (when (and clipboard-content (not (string= clipboard-content "")))
-   (kill-new clipboard-content)
-   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+  "Push the content of the MacOS clipboard to the Emacs kill ring."
+  (interactive)
+  (let ((clipboard-content (shell-command-to-string "pbpaste")))
+    (when (and clipboard-content (not (string= clipboard-content "")))
+      (kill-new clipboard-content)
+      (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 
 (defun gist-buffer-to-pasteboard ()
   (interactive)

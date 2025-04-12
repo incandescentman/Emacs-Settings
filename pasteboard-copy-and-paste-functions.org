@@ -280,16 +280,28 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 
 *** pasteboard-paste-clean (and without spaces)
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-clean ()
-  "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
-  (interactive)
-  (let ((beg (point)))
-    (pasteboard-paste) ; Paste the content from the clipboard.
-    (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
-    (convert-markdown-links-to-org-mode beg (point)) ; Convert Markdown links to Org-mode.
-    ;; If you have other cleanup functions, call them here.
-    ))
+(defun pasteboard-paste-clean (&optional raw)
+  "Paste from macOS clipboard, then normalise the text.
 
+With a prefix argument RAW (C-u) insert verbatim.
+Otherwise run, in order:
+  1. `replace-smart-quotes`          ; simple pair replacements
+  2. `replace-smart-quotes-regexp`   ; regexp clean‑ups
+  3. `convert-markdown-links-to-org-mode`."
+  (interactive "P")
+  ;; Remember where the paste starts.
+  (let ((beg (point)))
+    (pasteboard-paste)                       ; your low‑level paste
+    (unless raw
+      ;; Use a marker so END keeps tracking if we shorten/lengthen text.
+      (let ((end (copy-marker (point) t)))
+        (replace-smart-quotes beg end)
+        (replace-smart-quotes-regexp beg end)
+        (convert-markdown-links-to-org-mode beg end)
+        (set-marker end nil)))))             ; tidy marker
+
+;; Ensure THREE‑EM‑DASH (U+2E3B) is actually mapped.
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
 #+END_SRC
 
 *** pasteboard-paste-raw
