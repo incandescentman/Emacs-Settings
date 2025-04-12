@@ -37,23 +37,15 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ** different behavior depending on whether I'm working with code or prose
 
 #+begin_src emacs-lisp
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
-  "Copy to the macOS pasteboard using a command selected by the current mode.
+(defun pasteboard-copy-adaptive (&optional arg)
+  "Adaptive copy command.
 
-When working with prose (in `org-mode` without `org-config-files-local-mode`
-or in a mode derived from `text-mode`), call
-`pasteboard-copy-and-replace-em-dashes-in-clipboard` to replace dash sequences
-with em dashes.
-
-When working with code (any mode other than `org-mode` or in `org-mode` when
-`org-config-files-local-mode` is active), call `pasteboard-copy` to copy verbatim."
-  (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (pasteboard-copy-and-replace-em-dashes-in-clipboard)
-    (pasteboard-copy)))
-
+With a prefix ARG (e.g. C-u), call `pasteboard-copy-raw'.
+With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
+  (interactive "P")
+  (if arg
+      (call-interactively #'pasteboard-copy-verbatim)
+    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
 #+end_src
 
 ** pasteboard-copy
@@ -68,6 +60,24 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
     (shell-command-to-string
      (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
 #+END_SRC
+
+*** pasteboard copy raw
+#+begin_src emacs-lisp
+(defun pasteboard-copy-verbatim (beg end)
+  "Copy region between BEG and END to the macOS pasteboard verbatim.
+
+Unlike the old echo→pbcopy helper, this uses Emacs' built-in
+`x-select-text`, so it follows the identical encoding path that
+`kill-region` uses when `x-select-enable-clipboard` is non-nil."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  ;; Grab the bytes exactly as they live in the buffer.
+  (let ((txt (buffer-substring-no-properties beg end)))
+    ;; Same function `kill-region` calls under the hood.
+    (x-select-text txt))
+  (message "Copied %d characters verbatim." (- end beg)))
+#+end_src
 
 *** and replace em dashes
 #+begin_src emacs-lisp
