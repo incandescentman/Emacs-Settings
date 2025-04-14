@@ -1,6 +1,9 @@
 (message "DEBUG: About to load helpers...")
 (defvar te nil)
 (setq debug-on-error t)
+(advice-add 'load :before (lambda (f &rest _) (message ">>> LOADING %s" f)))
+
+(setq debug-on-error t)
 (defun trace-load (file &rest _)
   (message ">>> LOADING %s" file))
 (advice-add 'load :before #'trace-load)
