@@ -20,22 +20,15 @@
           (buffer-string)
         (error "pbpaste timed out")))))
 
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard-maybe ()
-  "Copy to the macOS pasteboard using a command selected by the current mode.
+(defun pasteboard-copy-adaptive (&optional arg)
+  "Adaptive copy command.
 
-When working with prose (in `org-mode` without `org-config-files-local-mode`
-or in a mode derived from `text-mode`), call
-`pasteboard-copy-and-replace-em-dashes-in-clipboard` to replace dash sequences
-with em dashes.
-
-When working with code (any mode other than `org-mode` or in `org-mode` when
-`org-config-files-local-mode` is active), call `pasteboard-copy` to copy verbatim."
-  (interactive)
-  (if (or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (pasteboard-copy-and-replace-em-dashes-in-clipboard)
-    (pasteboard-copy)))
+With a prefix ARG (e.g. C-u), call `pasteboard-copy-raw'.
+With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
+  (interactive "P")
+  (if arg
+      (call-interactively #'pasteboard-copy-verbatim)
+    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -43,6 +36,21 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (let* ((txt (buffer-substring (region-beginning) (region-end))))
     (shell-command-to-string
      (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+
+(defun pasteboard-copy-verbatim (beg end)
+  "Copy region between BEG and END to the macOS pasteboard verbatim.
+
+Unlike the old echo→pbcopy helper, this uses Emacs' built-in
+`x-select-text`, so it follows the identical encoding path that
+`kill-region` uses when `x-select-enable-clipboard` is non-nil."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  ;; Grab the bytes exactly as they live in the buffer.
+  (let ((txt (buffer-substring-no-properties beg end)))
+    ;; Same function `kill-region` calls under the hood.
+    (x-select-text txt))
+  (message "Copied %d characters verbatim." (- end beg)))
 
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
   "Copy selected region to macOS system pasteboard.
@@ -184,22 +192,22 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 
 
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
-  "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
-  (interactive)
-  (let* ((clipboard-content (shell-command-to-string "pbpaste"))
-         (clean-content (string-trim clipboard-content))
-         (start (point))
-         (end (if mark-active (mark) (point))))
-    (if (string-empty-p clean-content)
-        (message "Clipboard is empty.")
-      (let ((converted-content
-             (replace-regexp-in-string
-              "\\[\\([^][]+\\)\\](\\([^)]+\\))"
-              "[[\\2][\\1]]"
-              clean-content)))
-        (delete-region start end)
-        (insert converted-content)
-        (message "Content pasted and converted successfully.")))))
+ "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
+ (interactive)
+ (let* ((clipboard-content (shell-command-to-string "pbpaste"))
+     (clean-content (string-trim clipboard-content))
+     (start (point))
+     (end (if mark-active (mark) (point))))
+  (if (string-empty-p clean-content)
+    (message "Clipboard is empty.")
+   (let ((converted-content
+       (replace-regexp-in-string
+       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
+       "[[\\2][\\1]]"
+       clean-content)))
+    (delete-region start end)
+    (insert converted-content)
+    (message "Content pasted and converted successfully.")))))
 
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -219,49 +227,39 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
                                         ; (reflash-indentation)
   )
 
-(defun pasteboard-paste-clean ()
-  "Paste from the system clipboard, replace smart quotes, and convert Markdown links to Org-mode format."
-  (interactive)
-  (let ((beg (point)))
-    (pasteboard-paste) ; Paste the content from the clipboard.
-    (replace-smart-quotes beg (point)) ; Replace smart quotes in the pasted content.
-    (convert-markdown-links-to-org-mode beg (point)) ; Convert Markdown links to Org-mode.
-    ;; If you have other cleanup functions, call them here.
-    ))
-
 (defun pasteboard-paste-clean (&optional raw)
-  "Paste from the macOS clipboard and normalise the text.
+  "Paste from macOS clipboard, then normalise the text.
 
-With a prefix argument RAW (C-u), insert the clipboard verbatim.
-Otherwise:
-  • run `replace-smart-quotes`   ; pair-based replacements
-  • run `replace-smart-quotes-regexp` ; regexp-based tweaks
-  • run `convert-markdown-links-to-org-mode`."
+With a prefix argument RAW (C-u) insert verbatim.
+Otherwise run, in order:
+  1. `replace-smart-quotes`          ; simple pair replacements
+  2. `replace-smart-quotes-regexp`   ; regexp clean‑ups
+  3. `convert-markdown-links-to-org-mode`."
   (interactive "P")
+  ;; Remember where the paste starts.
   (let ((beg (point)))
-    (pasteboard-paste)              ; your low‑level paste helper
+    (pasteboard-paste)                       ; your low‑level paste
     (unless raw
-      (let ((end (point)))
-        ;; First the literal pair map…
+      ;; Use a marker so END keeps tracking if we shorten/lengthen text.
+      (let ((end (copy-marker (point) t)))
         (replace-smart-quotes beg end)
-        ;; …then the regexp map for catch‑alls
         (replace-smart-quotes-regexp beg end)
-        ;; finally Markdown‑>Org links
-        (convert-markdown-links-to-org-mode beg end)))))
+        (convert-markdown-links-to-org-mode beg end)
+        (set-marker end nil)))))             ; tidy marker
 
-;; Make sure THREE‑EM DASH U+2E3B really is in the active pair list.
+;; Ensure THREE‑EM‑DASH (U+2E3B) is actually mapped.
 (add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
 
 (defun pasteboard-paste-raw ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point))))
+	(end (if mark-active
+		 (mark)
+	       (point))))
     (shell-command-on-region start end
-                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-                             nil t)
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
     (save-excursion
       )))
 
@@ -447,12 +445,12 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (x-select-text (current-kill 0)))
 
 (defun push-MacOS-clipboard-to-kill-ring ()
-  "Push the content of the MacOS clipboard to the Emacs kill ring."
-  (interactive)
-  (let ((clipboard-content (shell-command-to-string "pbpaste")))
-    (when (and clipboard-content (not (string= clipboard-content "")))
-      (kill-new clipboard-content)
-      (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+ "Push the content of the MacOS clipboard to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (when (and clipboard-content (not (string= clipboard-content "")))
+   (kill-new clipboard-content)
+   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 
 (defun gist-buffer-to-pasteboard ()
   (interactive)
