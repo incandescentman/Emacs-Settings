@@ -127,6 +127,7 @@
 
 
 
+% \\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}} % for subsections in the headers instead of sections
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}
