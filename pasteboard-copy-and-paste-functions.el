@@ -52,56 +52,35 @@ Unlike the old echo→pbcopy helper, this uses Emacs' built-in
     (x-select-text txt))
   (message "Copied %d characters verbatim." (- end beg)))
 
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS system pasteboard.
-If we're in `shell-script-mode`, `emacs-lisp-mode`, `org-config-files-local-mode`,
-or a mode derived from `prog-mode`, copy text verbatim (no replacements).
-Otherwise, replace occurrences of `---` and `--` with em dashes in the clipboard text."
-  (interactive)
-  (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
-        (if (or (eq major-mode 'shell-script-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (bound-and-true-p org-config-files-local-mode)
-                (derived-mode-p 'prog-mode))
-            ;; Just copy verbatim using a temp buffer
-            (progn
-              (with-temp-buffer
-                (insert txt)
-                (shell-command-on-region (point-min) (point-max) "pbcopy"))
-              (message "Copied text verbatim."))
-          ;; Otherwise do the dash replacements
-          (let* ((txt (replace-regexp-in-string "---" "—" txt))
-                 (txt (replace-regexp-in-string "--"  "—" txt)))
-            (with-temp-buffer
-              (insert txt)
-              (shell-command-on-region (point-min) (point-max) "pbcopy"))
-            (message "Text with em dashes copied to macOS pasteboard."))))
-    (message "No region selected")))
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard (&optional arg)
+  "Copy region to macOS pasteboard.
 
-(defun pasteboard-copy-and-replace-em-dashes-in-clipboard ()
-  "Copy selected region to macOS pasteboard.
-Verbatim in code modes; otherwise, replace '---' and '--' with em dashes."
-  (interactive)
-  (if (use-region-p)
-      (let ((txt (buffer-substring-no-properties (region-beginning) (region-end))))
-        (if (or (derived-mode-p 'prog-mode)
-                (eq major-mode 'shell-script-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (bound-and-true-p org-config-files-local-mode))
-            ;; Verbatim copy
-            (progn
-              (with-temp-buffer
-                (insert txt)
-                (shell-command-on-region (point-min) (point-max) "pbcopy"))
-              (message "Copied text verbatim."))
-          ;; Replacement copy
-          (let ((txt (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
-            (with-temp-buffer
-              (insert txt)
-              (shell-command-on-region (point-min) (point-max) "pbcopy"))
-            (message "Copied text with em dashes."))))
-    (message "No region selected.")))
+No ARG → behave contextually (verbatim in code, replacement in text).
+ARG positive or plain C-u → force verbatim.
+ARG zero or negative       → force replacement."
+  (interactive "P")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
+         ;; Decide which behaviour to use.
+         (verbatim
+          (cond
+           ;; Forced by user
+           (arg
+            (> (prefix-numeric-value arg) 0))
+           ;; Heuristic (original behaviour)
+           (t (or (derived-mode-p 'prog-mode)
+                  (eq major-mode 'shell-script-mode)
+                  (eq major-mode 'emacs-lisp-mode)
+                  (bound-and-true-p org-config-files-local-mode))))))
+    (with-temp-buffer
+      (insert (if verbatim
+                  txt
+                (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+      (shell-command-on-region (point-min) (point-max) "pbcopy"))
+    (message (if verbatim
+                 "Copied text verbatim."
+               "Copied text with em dashes."))))
 
 (defun pasteboard-copy-to-end-of-buffer ()
   "Copy text from point to the end of the buffer to OS X system pasteboard."
