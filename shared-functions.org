@@ -2551,51 +2551,20 @@ Useful for working with files and references:
 
 * save some buffers
 #+BEGIN_SRC emacs-lisp
-(defun jay/save-all-buffers ()
-  "Automatically save all open buffers that have an associated file, without confirmation."
-  (interactive)
-  (save-some-buffers t (lambda (&rest _) buffer-file-name)))
-
-(defun jay/save-all-buffers-debug ()
-  "Debug version: Log each buffer considered for saving and apply specific criteria."
-  (interactive)
-  (save-some-buffers nil
-    (lambda (&rest _)
-      (message "Considered: %s in mode %s" (buffer-name) major-mode)
-      (or
-       (and buffer-file-name (equal buffer-file-name abbrev-file-name))
-       (and buffer-file-name (memq major-mode
-                                   '(latex-mode emacs-lisp-mode fundamental-mode
-                                     conf-mode markdown-mode js2-mode json-mode
-                                     graphviz-dot-mode python-mode text-mode
-                         javascript-mode            snippet-mode css-mode xml-mode nxml-mode
-                                     fountain-mode nmxml-mode web-mode gitconfig-mode
-                                     gitignore-mode sh-mode)))
-       (and (or buffer-file-name (buffer-modified-p))
-            (derived-mode-p 'org-mode))))))
-
+;; -*- lexical-binding: t; -*-
 
 (defun jay/save-all-buffers ()
-  "Save all named buffers without prompting.
-If the current buffer is unnamed, prompt for filename and save only that buffer."
+  "Silently save every buffer that is visiting a file.
+If the file does not yet exist on disk, create it without
+confirmation.  Non–file‑visiting buffers are ignored."
   (interactive)
-  ;; Save all buffers already associated with files silently
-  (save-some-buffers t (lambda () buffer-file-name))
-  ;; Handle current buffer specifically
-  (unless buffer-file-name
-    (when (y-or-n-p (format "Current buffer '%s' is unsaved. Save now? " (buffer-name)))
-      (call-interactively 'write-file))))
-
-
-(defun jay/save-all-buffers ()
-  "Save all file-visiting buffers silently. Ensure current buffer is saved even if it's a new file."
-  (interactive)
-  ;; Save all buffers with filenames silently
-  (save-some-buffers t (lambda () buffer-file-name))
-  ;; Ensure current buffer is saved if it has a filename (even if file doesn't exist yet)
-  (when (and buffer-file-name (buffer-modified-p))
-    (save-buffer)))
-
+  (let ((confirm-nonexistent-file-or-buffer nil)) ; suppress “create file?” prompt
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when buffer-file-name
+          (when (or (buffer-modified-p)
+                    (not (file-exists-p buffer-file-name)))
+            (save-buffer)))))))
 #+END_SRC
 
 ** find-file tricks
@@ -6457,57 +6426,36 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 )
 
 (defun org-mac-paste-applescript-links (as-link-list)
- "Paste in a list of links from an applescript handler.
-The links are of the form <link>::split::<name>."
- (let* ((noquote-as-link-list
-	 (if (string-prefix-p "\"" as-link-list)
-	   (substring as-link-list 1 -1)
-	  as-link-list))
-	 (link-list
-	 (mapcar (lambda (x) (if (string-match "\\`\"\\(.*\\)\"\\'" x)
-				 (setq x (match-string 1 x)))
-		  x)
-		 (split-string noquote-as-link-list "[\r\n]+")))
-	 split-link URL description orglink orglink-insert rtn orglink-list)
-  (while link-list
-   (setq split-link (split-string (pop link-list) "::split::"))
-   (setq URL (car split-link))
-   (setq description (cadr split-link))
-   (when (not (string= URL ""))
-	(setq orglink (org-make-link-string URL description))
-	(push orglink orglink-list)))
-  (setq rtn (mapconcat 'identity orglink-list "\n"))
-  (kill-new rtn)
-  rtn))
+  "Convert AS-LINK-LIST returned by AppleScript to Org links and yank it.
 
+Input format is one link per line, each line:
+   \"URL::split::Title\""
+  (let* ((raw (string-trim as-link-list "\"" "\""))
+         (lines (split-string raw "[\r\n]+" t))
+         (links (cl-loop for l in lines
+                         for parts = (split-string l "::split::")
+                         for url  = (car parts)
+                         for desc = (cadr parts)
+                         unless (string-empty-p url)
+                         collect (org-make-link-string url desc))))
+    (kill-new (string-join links "\n"))
+    (car kill-ring)))
 
-(defun org-as-mac-bing-get-frontmost-url ()
- (let ((result
-	 (do-applescript
-	 (concat
-	  "set frontmostApplication to path to frontmost application\n"
-	  "tell application \"Bing\"\n"
-	  "	set theUrl to get URL of active tab of first window\n"
-	  "	set theResult to (get theUrl) & \"::split::\" & (get name of window 1)\n"
-	  "end tell\n"
-	  "activate application (frontmostApplication as text)\n"
-	  "set links to {}\n"
-	  "copy theResult to the end of links\n"
-	  "return links as string\n"))))
-  (replace-regexp-in-string
-   "^\"\\|\"$" "" (car (split-string result "[\r\n]+" t)))))
-
-(defun org-mac-bing-get-frontmost-url ()
- (interactive)
- (message "Applescript: Getting Bing url...")
- (org-mac-paste-applescript-links (org-as-mac-bing-get-frontmost-url)))
-
-;;;###autoload
-(defun org-mac-bing-insert-frontmost-url ()
- (interactive)
- (insert (org-mac-bing-get-frontmost-url)))
-
-(define-key key-minor-mode-map (kbd "s-6") 'org-mac-bing-insert-frontmost-url)
+(defun org-mac-link-skim-open (uri _)
+  "Open a Skim link URI.
+Accepted formats:
+  skim://path/to/file.pdf::123   ; jump to page 123
+  skim://path/to/file.pdf        ; just open the PDF"
+  (let* ((pos   (string-match "::\\([0-9]+\\)\\'" uri)) ; position of "::"
+         (page  (if pos (match-string 1 uri) "1"))      ; default to page 1
+         (doc   (if pos (substring uri 0 pos) uri)))
+    (org-mac-link-do-applescript
+     (format
+      "tell application \"Skim\"
+         activate
+         open \"%s\"
+         go document 1 to page %s of document 1
+       end tell" doc page))))
  #+end_SRC
 
 ** don't number windows
@@ -8238,7 +8186,7 @@ Philosophy:
 .............................................
 
 
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; Configurable variable for filler word replacements.
 (defvar my-filler-word-replacements
   ;; Each one is a full regex that accounts for punctuation/spaces:
@@ -8330,7 +8278,7 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
   (interactive)
   (remove-filler-words)
   (remove-duplicated-words))
-#+end_src
+#+END_EXAMPLE
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()
