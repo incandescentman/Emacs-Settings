@@ -9103,42 +9103,64 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 #+begin_src emacs-lisp
-(defun jay/org-export-date-format-chooser ()
-  "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
+
+(defconst jay/org-date-format-chooser
+  '(("U.S. short: 12/25"                    . "%m/%d")
+    ("U.S. numeric: 12/25/2025"             . "%m/%d/%Y")
+    ("ISO standard: 2025-12-25"             . "%Y-%m-%d")
+    ("Short: Dec 25, 2025"                  . "%b %d, %Y")
+    ("Medium: Mon Dec 25, 2025"             . "%a %b %d, %Y")
+    ("Full: Monday Dec 25, 2025"            . "%A %b %d, %Y")
+    ("Long: Monday December 25, 2025"       . "%A %B %d, %Y"))
+  "Menu labels (with examples) → `format-time-string' specs.")
+
+(defun jay/org-date-format-chooser ()
+  "Interactively set Org date formats for export, overlays, or both.
+
+• Prompts first for the target (export / overlays / both).
+• Prompts for a format string (with examples) for each chosen target.
+• Sets the appropriate global variables.
+• Copies a commented Local Variables block to the kill‑ring and, on
+  confirmation, inserts it at the end of the current buffer."
   (interactive)
-  (let* ((formats '("U.S. short: 12/25"
-                    "U.S. numeric: 12/25/2025"
-                    "ISO standard: 2025-12-25"
-                    "Short: Dec 25, 2025"
-                    "Medium: Mon Dec 25, 2025"
-                    "Full: Monday Dec 25, 2025"
-                    "Long: Monday December 25, 2025"))
-         (choice (completing-read "Choose date format: " formats nil t))
-         (format-string (pcase choice
-                          ("U.S. short: 12/25" "%m/%d")
-                          ("U.S. numeric: 12/25/2025" "%m/%d/%Y")
-                          ("ISO standard: 2025-12-25" "%Y-%m-%d")
-                          ("Short: Dec 25, 2025" "%b %d, %Y")
-                          ("Medium: Mon Dec 25, 2025" "%a %b %d, %Y")
-                          ("Full: Monday Dec 25, 2025" "%A %b %d, %Y")
-                          ("Long: Monday December 25, 2025" "%A %B %d, %Y")))
-         (file-local (format "# %s Variables:\n# org-export-date-timestamp-format: \"%s\"\n# %s:\n"
-                             "Local" format-string "End")))
-
-    ;; Set global variable
-    (setq org-export-date-timestamp-format format-string)
-    (message "Global Org export date format set to '%s'" format-string)
-
-    ;; Copy file-local definition to clipboard
-    (call-process-shell-command (format "echo -n '%s' | pbcopy" file-local))
-    (message "File-local variable copied to clipboard.")
-
-    ;; Prompt to insert into buffer
-    (when (string= (completing-read "Insert file-local variable into buffer? " '("no" "yes") nil t nil nil "no") "yes")
+  (let* ((target (completing-read
+                  "Configure: " '("export" "overlays" "both") nil t nil nil "both"))
+         (need-export  (member target '("export" "both")))
+         (need-overlay (member target '("overlays" "both")))
+         (exp-fmt  (and need-export
+                        (cdr (assoc (completing-read
+                                     "Export format: "
+                                     (mapcar #'car jay/org-date-formats) nil t)
+                                    jay/org-date-formats))))
+         (ov-fmt   (and need-overlay
+                        (cdr (assoc (completing-read
+                                     "Overlay format: "
+                                     (mapcar #'car jay/org-date-formats) nil t)
+                                    jay/org-date-formats))))
+         (block "# Local Variables:\n"))
+    ;; ── apply selections ─────────────────────────────────────────────
+    (when need-export
+      (setq org-export-date-timestamp-format exp-fmt)
+      (setq block (concat block
+                          (format "# org-export-date-timestamp-format: \"%s\"\n"
+                                  exp-fmt))))
+    (when need-overlay
+      (setq org-display-custom-times t)
+      (setq org-time-stamp-custom-formats
+            (cons (format "<%s>" ov-fmt) (format "<%s>" ov-fmt)))
+      (setq block (concat block
+                          (format "# org-time-stamp-custom-formats: '(\"<%s>\" . \"<%s>\")\n"
+                                  ov-fmt ov-fmt))))
+    (setq block (concat block "# End:\n"))
+    ;; ── clipboard + optional insert ─────────────────────────────────
+    (kill-new block)
+    (when (yes-or-no-p "Insert Local Variables block here? ")
       (save-excursion
         (goto-char (point-max))
-        (insert (concat "\n" file-local)))
-      (message "Inserted file-local variable for date format '%s'" format-string))))
+        (insert "\n" block)))
+    ;; ── feedback ────────────────────────────────────────────────────
+    (message "Updated %s format%s.  Block copied (M-y to yank)."
+             target (if (string= target "both") "s" ""))))
 #+end_src
 
 
