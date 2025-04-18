@@ -3560,62 +3560,104 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 ** narrow or widen
 #+BEGIN_SRC emacs-lisp
-(defun narrow-or-widen-dwim (p)
-  "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or defun,
-whichever applies first. Narrowing to org-src-block actually
-calls `org-edit-src-code'.
+;; Smart DWIM narrowing/widening command for Org, LaTeX, and code buffers.
+;; No package boilerplate — just the function and helpers.
 
-With prefix P, don't widen, just narrow even if buffer is
-already narrowed."
+;;; Code:
+
+(defgroup narrow-or-widen-dwim nil
+  "Smart narrowing/widening helper."
+  :group 'editing)
+
+(defcustom narrow-or-widen-dwim-single-window t
+  "If non-nil, close other windows when entering `org-edit-src-code'."
+  :type 'boolean
+  :group 'narrow-or-widen-dwim)
+
+(defun narrow-or-widen-dwim--maybe-widen (prefix)
+  "If the buffer is narrowed and PREFIX is nil, widen it.
+Return non-nil when widening happened."
+  (when (and (buffer-narrowed-p) (not prefix))
+    (widen)
+    t))
+
+(defun narrow-or-widen-dwim--in-subtree-p ()
+  "Return non-nil when point is inside an Org subtree (heading or its body)."
+  (save-excursion
+    (condition-case nil
+        (progn (org-back-to-heading t) t)
+      (error nil))))
+
+;;;###autoload
+(defun narrow-or-widen-dwim (p)
+  "Do‑what‑I‑mean narrowing or widening.
+
+Without a prefix argument, widen if the buffer is already narrowed.
+Otherwise narrow intelligently to:
+  • the active region,
+  • the current Org src block (opening an indirect edit buffer),
+  • the current Org block (quote/example/etc.),
+  • the current Org subtree,
+  • the Org element at point (drawer, property drawer, table, footnote),
+  • the current LaTeX environment, or
+  • the current defun in programming modes.
+
+With a prefix argument P (\[universal-argument]), *always* narrow even if the
+buffer is already narrowed; never widen."
   (interactive "P")
   (declare (interactive-only))
-  (cond
-   ;; 1) If we're inside an *Org src editing* buffer, exit it.
-   ((bound-and-true-p org-src-mode)
-    (org-edit-src-exit))
-
-   ;; 2) Otherwise, if we're in Org mode, decide how to narrow.
-   ((derived-mode-p 'org-mode)
+  ;; First, widen if appropriate. If we did, we're done.
+  (unless (narrow-or-widen-dwim--maybe-widen p)
     (cond
-     ;; If already narrowed and no prefix arg, widen.
-     ((and (buffer-narrowed-p) (not p))
-      (widen))
+     ;; 1) Inside an *Org src editing* indirect buffer – exit it.
+     ((bound-and-true-p org-src-mode)
+      (org-edit-src-exit))
 
-     ;; If region is active, narrow to region.
-     ((region-active-p)
-      (narrow-to-region (region-beginning) (region-end)))
+     ;; 2) In Org mode – choose the right narrowing target.
+     ((derived-mode-p 'org-mode)
+      (cond
+       ;; Active region ⇒ narrow to that region.
+       ((region-active-p)
+        (narrow-to-region (region-beginning) (region-end)))
 
-     ;; If inside a src block, edit that code block.
-     ((org-in-src-block-p)
-      (org-edit-src-code)
-      (delete-other-windows))
+       ;; Inside a src block ⇒ open indirect edit buffer.
+       ((org-in-src-block-p)
+        (org-edit-src-code)
+        (when narrow-or-widen-dwim-single-window
+          (delete-other-windows)))
 
-     ;; If inside a generic Org block, narrow to it.
-     ((org-in-block-p nil)
-      (org-narrow-to-block))
+       ;; Inside any Org block (quote/example/etc.) ⇒ narrow to block.
+       ((org-in-block-p nil)
+        (org-narrow-to-block))
 
-     ;; If we're in a heading or anywhere under it, go back to heading & narrow.
-     ((save-excursion
-        (condition-case nil
-            (progn (org-back-to-heading t) t)
-          (error nil)))
-      (save-excursion
-        (org-back-to-heading t)
-        (org-narrow-to-subtree)))
+       ;; Within a subtree ⇒ narrow to subtree.
+       ((narrow-or-widen-dwim--in-subtree-p)
+        (save-excursion
+          (org-back-to-heading t)
+          (org-narrow-to-subtree)))
 
-     ;; Otherwise, do nothing or show a message.
-     (t (message "Not at src block, block, or heading; cannot narrow."))))
+       ;; Other Org element at point (drawer, table, footnote) ⇒ element.
+       ((let* ((elem (org-element-at-point)))
+          (when (memq (org-element-type elem)
+                      '(table footnote-definition property-drawer drawer))
+            elem))
+        (org-narrow-to-element))
 
-   ;; 3) If we're in LaTeX mode, narrow to environment.
-   ((derived-mode-p 'latex-mode)
-    (LaTeX-narrow-to-environment))
+       (t (user-error "Point is not in a narrowable Org context"))))
 
-   ;; 4) Otherwise, fall back to `narrow-to-defun`.
-   (t
-    (if (and (buffer-narrowed-p) (not p))
-        (widen)
+     ;; 3) LaTeX mode ⇒ narrow to current environment.
+     ((derived-mode-p 'latex-mode)
+      (LaTeX-narrow-to-environment))
+
+     ;; 4) Fallback ⇒ defun.
+     (t
       (narrow-to-defun)))))
+
+;; Optional: bind globally
+;; (global-set-key (kbd "C-c n") #'narrow-or-widen-dwim)
+
+(provide 'narrow-or-widen-dwim)
+;;; narrow-or-widen-dwim.el ends here
 #+END_SRC
 
 
@@ -6423,7 +6465,11 @@ https://protesilaos.com/codelog/2021-03-25-emacs-eww/
 ** edge
 #+begin_src emacs-lisp
 (use-package org-mac-link
-)
+  :ensure t        ;; auto‑install if needed (remove if you vendor it)
+  :defer nil       ;; load immediately so your redefs take effect
+  :config
+  ;; (Anything that depends on org-mac-link being loaded can live here.)
+  )
 
 (defun org-mac-paste-applescript-links (as-link-list)
   "Convert AS-LINK-LIST returned by AppleScript to Org links and yank it.
@@ -6451,11 +6497,19 @@ Accepted formats:
          (doc   (if pos (substring uri 0 pos) uri)))
     (org-mac-link-do-applescript
      (format
-      "tell application \"Skim\"
-         activate
-         open \"%s\"
-         go document 1 to page %s of document 1
-       end tell" doc page))))
+ "tell application \"Skim\"
+    activate
+    open (quoted form of POSIX file \"%s\")
+    go document 1 to page %s of document 1
+  end tell" doc page)
+     )))
+
+;;;###autoload
+(defun org-mac-bing-insert-frontmost-url () …)
+;;;###autoload
+(defun org-mac-bing-get-frontmost-url () …)
+;;;###autoload
+(defun org-mac-link-skim-open (uri _) …)
  #+end_SRC
 
 ** don't number windows

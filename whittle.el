@@ -81,7 +81,7 @@
             (replace-match (match-string 1))))))
     (whittle--report removed "duplicated word")))
 
-(defun whittle/whittle (&optional beg end)
+(defun whittle (&optional beg end)
   "Run both filler‑word and duplicate‑word cleaners on region or buffer."
   (interactive "r")
   (whittle/remove-filler-words beg end)
