@@ -1,4 +1,7 @@
 (setq debug-on-error t)
+;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
+(defvar smart-quotes-replacement-pairs nil
+  "Alist of smart‑quote glyphs and their ASCII replacements.")
 
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
@@ -312,8 +315,8 @@ This function should only modify configuration layer settings."
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
-vim-powerline                
-                    adaptive-wrap
+                                    vim-powerline
+                                    adaptive-wrap
                                     auto-encryption-mode
                                     clean-aindent-mode
                                     company

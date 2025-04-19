@@ -9103,42 +9103,40 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 #+begin_src emacs-lisp
-
-(defconst jay/org-date-format-chooser
-  '(("U.S. short: 12/25"                    . "%m/%d")
-    ("U.S. numeric: 12/25/2025"             . "%m/%d/%Y")
-    ("ISO standard: 2025-12-25"             . "%Y-%m-%d")
-    ("Short: Dec 25, 2025"                  . "%b %d, %Y")
-    ("Medium: Mon Dec 25, 2025"             . "%a %b %d, %Y")
-    ("Full: Monday Dec 25, 2025"            . "%A %b %d, %Y")
-    ("Long: Monday December 25, 2025"       . "%A %B %d, %Y"))
+;; Stop org-expiry from stamping a CREATED property on new headings
+(setq org-expiry-insert-created nil)
+(remove-hook 'org-insert-heading-hook #'org-expiry-insert-created)
+ 
+(defconst jay/org-date-formats
+  '(("U.S. short: 12/25"              . "%m/%d")
+    ("U.S. numeric: 12/25/2025"       . "%m/%d/%Y")
+    ("ISO standard: 2025-12-25"       . "%Y-%m-%d")
+    ("Short: Dec 25, 2025"            . "%b %d, %Y")
+    ("Medium: Mon Dec 25, 2025"       . "%a %b %d, %Y")
+    ("Full: Monday Dec 25, 2025"      . "%A %b %d, %Y")
+    ("Long: Monday December 25, 2025" . "%A %B %d, %Y"))
   "Menu labels (with examples) → `format-time-string' specs.")
 
 (defun jay/org-date-format-chooser ()
-  "Interactively set Org date formats for export, overlays, or both.
-
-• Prompts first for the target (export / overlays / both).
-• Prompts for a format string (with examples) for each chosen target.
-• Sets the appropriate global variables.
-• Copies a commented Local Variables block to the kill‑ring and, on
-  confirmation, inserts it at the end of the current buffer."
+  "Set Org date formats for export, overlays, or both—always showing
+time as \"7:00pm\" when the timestamp includes a clock."
   (interactive)
   (let* ((target (completing-read
                   "Configure: " '("export" "overlays" "both") nil t nil nil "both"))
          (need-export  (member target '("export" "both")))
          (need-overlay (member target '("overlays" "both")))
-         (exp-fmt  (and need-export
-                        (cdr (assoc (completing-read
-                                     "Export format: "
-                                     (mapcar #'car jay/org-date-formats) nil t)
-                                    jay/org-date-formats))))
-         (ov-fmt   (and need-overlay
-                        (cdr (assoc (completing-read
-                                     "Overlay format: "
-                                     (mapcar #'car jay/org-date-formats) nil t)
-                                    jay/org-date-formats))))
+         (exp-fmt (and need-export
+                       (cdr (assoc (completing-read
+                                    "Export format: "
+                                    (mapcar #'car jay/org-date-formats) nil t)
+                                   jay/org-date-formats))))
+         (ov-fmt  (and need-overlay
+                       (cdr (assoc (completing-read
+                                    "Overlay format: "
+                                    (mapcar #'car jay/org-date-formats) nil t)
+                                   jay/org-date-formats))))
          (block "# Local Variables:\n"))
-    ;; ── apply selections ─────────────────────────────────────────────
+    ;; ── apply selections ───────────────────────────────────────────
     (when need-export
       (setq org-export-date-timestamp-format exp-fmt)
       (setq block (concat block
@@ -9146,20 +9144,22 @@ Including indent-buffer, which should not be called automatically on save."
                                   exp-fmt))))
     (when need-overlay
       (setq org-display-custom-times t)
-      (setq org-time-stamp-custom-formats
-            (cons (format "<%s>" ov-fmt) (format "<%s>" ov-fmt)))
-      (setq block (concat block
-                          (format "# org-time-stamp-custom-formats: '(\"<%s>\" . \"<%s>\")\n"
-                                  ov-fmt ov-fmt))))
+      (let* ((date-only ov-fmt)
+             (date-time (concat ov-fmt " %-I:%M%P"))) ; 7:00pm
+        (setq org-time-stamp-custom-formats
+              (cons (format "<%s>" date-only)
+                    (format "<%s>" date-time)))
+        (setq block (concat block
+                            (format "# org-time-stamp-custom-formats: '(\"<%s>\" . \"<%s>\")\n"
+                                    date-only date-time)))))
     (setq block (concat block "# End:\n"))
-    ;; ── clipboard + optional insert ─────────────────────────────────
+    ;; ── clipboard + optional insert ───────────────────────────────
     (kill-new block)
     (when (yes-or-no-p "Insert Local Variables block here? ")
       (save-excursion
         (goto-char (point-max))
         (insert "\n" block)))
-    ;; ── feedback ────────────────────────────────────────────────────
-    (message "Updated %s format%s.  Block copied (M-y to yank)."
+    (message "Updated %s format%s. Block copied (M-y to yank)."
              target (if (string= target "both") "s" ""))))
 #+end_src
 
