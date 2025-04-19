@@ -1,3 +1,174 @@
+#+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t; -*-
+#+END_SRC
+
+* Replace smart quotes with straight quotes
+
+#+BEGIN_SRC emacs-lisp
+(setq smart-quote-regexp-replacements
+      '(
+        ("\\(\\w\\)- " . "\\1")
+        ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
+
+
+(defun replace-smart-quotes-regexp (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (mapcar
+   (lambda (r)
+     (save-excursion
+       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
+   smart-quote-regexp-replacements))
+
+(defun replace-non-heading-double-asterisks (beg end)
+  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "\\*\\*" end t)
+      (let ((match-beg (match-beginning 0)))
+        (when match-beg
+          (goto-char match-beg)
+          ;; If line begins with stars + space => a heading, so skip
+          (if (looking-at "^\\*+ ")
+              (forward-char 2) ;; skip these two stars
+            ;; Otherwise replace as normal
+            (replace-match "*" t t)))))))
+
+(defgroup smart-quotes nil
+  "Customization group for smart quote replacements."
+  :group 'convenience)
+
+(defcustom smart-quotes-replacement-pairs
+  '(("“" . "\"")
+    ("”" . "\"")
+    ("‘" . "'")
+    ("’" . "'")
+    ("‚" . "'")
+    ("‛" . "'")
+    ("„" . "\"")
+    ("‟" . "\"")
+    ("‹" . "'")
+    ("›" . "'")
+    ("«" . "\"")
+    ("»" . "\"")
+    ("–" . "-")
+    ("" . "")
+    ("" . "")
+    ("—" . "---")
+    ("…" . "...")
+    ("• " . "- ")
+    ("•" . "-")
+    (" " . " ")
+    ("⸻" . "-----")
+    ("ﬀ" . "ff")
+    ("·" . "-")
+    ("‧" . "-")
+    ("⁃" . "-")
+    ("‐" . "-")
+    ("‑" . "-")
+    ("‒" . "-")
+    ("‾" . "-")
+    (" " . " ")       ; Non-breaking space
+    (" " . " ")       ; Narrow no-break space
+    ("\u200B" . "")   ; Zero-width space
+    ("\u200C" . "")   ; Zero-width non-joiner
+    ("\u200D" . "")   ; Zero-width joiner
+    ("\t" . " ")      ; Tab character replaced with a space
+    ("#####" . "*****")
+    ("####" . "****")
+    ("###" . "***")
+    ("##" . "**")
+    ("- \\*\\* TODO" . "*** TODO")
+    ("okay" . "OK")
+    ("  SCHEDULED" . " SCHEDULED")
+    ("  DEADLINE" . " DEADLINE"))
+  "Alist of replacement pairs for `replace-smart-quotes` function."
+  :type '(alist :key-type string :value-type string)
+  :group 'smart-quotes)
+
+(require 'cl-lib)  ; Ensure cl-lib is loaded for cl-every
+
+
+(defun replace-smart-quotes (beg end)
+  "Replace smart quotes and format text appropriately in the specified region.
+
+The replacements are defined in the `smart-quotes-replacement-pairs` variable."
+  (interactive "r")
+  ;; Ensure beg <= end
+  (when (> beg end)
+    (let ((temp beg))
+      (setq beg end)
+      (setq end temp)))
+  ;; Error checking for smart-quotes-replacement-pairs
+  (unless (and (boundp 'smart-quotes-replacement-pairs)
+               (listp smart-quotes-replacement-pairs)
+               (cl-every (lambda (pair)
+                           (and (consp pair)
+                                (stringp (car pair))
+                                (stringp (cdr pair))))
+                         smart-quotes-replacement-pairs))
+    (error "Invalid `smart-quotes-replacement-pairs` format; must be a list of string pairs"))
+  ;; Convert end into a marker that adjusts with buffer changes
+  (let ((end-marker (copy-marker end)))
+    (save-excursion
+      ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
+      (goto-char beg)
+      (while (re-search-forward "\\*\\*" end-marker t)
+
+(if (and (= (line-beginning-position) (- (point) 2))
+         (looking-at "\\(?: \\|\\*\\)"))
+    ;; Just move past the pair; leave heading stars intact
+    (forward-char 1)
+  (replace-match "*" t t))
+
+)
+      ;; Remove lines that contain only '---' (possibly with surrounding spaces)
+      (goto-char beg)
+      (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
+        (replace-match "" t t))
+      ;; Remove space before "-" at the beginning of lines
+      (goto-char beg)
+      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
+        (replace-match "\\1-" nil nil))
+      ;; Perform replacements using the external `smart-quotes-replacement-pairs`
+      (dolist (pair smart-quotes-replacement-pairs)
+        (goto-char beg)
+        (while (re-search-forward (regexp-quote (car pair)) end-marker t)
+          (replace-match (cdr pair) t t))))))
+
+
+#+END_SRC
+
+
+* don't forget any 🙂
+#+begin_src emacs-lisp
+(dolist (pair '(("\u2019" . "'")   ; ’  RIGHT SINGLE QUOTATION MARK
+                ("\u02BC" . "'")   ; ʼ  MODIFIER LETTER APOSTROPHE
+                ("\uFF07" . "'"))) ; ＇ FULLWIDTH APOSTROPHE
+  (add-to-list 'smart-quotes-replacement-pairs pair))
+#+end_src
+
+* convert markdown to org on paste
+#+begin_src emacs-lisp
+(defun convert-markdown-headings-to-org (beg end)
+  "Turn #, ##, ### etc. at bol into *, *, ** … in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(#+\\) " end t)
+      (replace-match (make-string (length (match-string 1)) ?*) t t)))
+
+  ;; Leave an extra space so '* Heading' becomes '* Heading', not '*Heading'
+  )
+
+(defun convert-markdown-blockquotes-to-org (beg end)
+  "Turn '> ' at bol into ': ' (Org quote) in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^> " end t)
+      (replace-match ": " t t)))
+  )
+#+end_src
 
 * isolate Emacs kill ring from the OSX system pasteboard (clipboard).
 Very important, I use this all the time.  These are custom functions to separate
@@ -276,6 +447,9 @@ Otherwise run, in order:
       (let ((end (copy-marker (point) t)))
         (replace-smart-quotes beg end)
         (replace-smart-quotes-regexp beg end)
+
+        (convert-markdown-headings-to-org beg end)
+        (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
         (set-marker end nil)))))             ; tidy marker
 
@@ -538,147 +712,6 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
 
 
 
-** Replace smart quotes with straight quotes
-
-#+BEGIN_SRC emacs-lisp
-
-(setq smart-quote-regexp-replacements
-      '(
-        ("\\(\\w\\)- " . "\\1")
-        ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
-
-
-(defun replace-smart-quotes-regexp (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (mapcar
-   (lambda (r)
-     (save-excursion
-       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
-   smart-quote-regexp-replacements))
-
-(defun replace-non-heading-double-asterisks (beg end)
-  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
-  (interactive "r")
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "\\*\\*" end t)
-      (let ((match-beg (match-beginning 0)))
-        (when match-beg
-          (goto-char match-beg)
-          ;; If line begins with stars + space => a heading, so skip
-          (if (looking-at "^\\*+ ")
-              (forward-char 2) ;; skip these two stars
-            ;; Otherwise replace as normal
-            (replace-match "*" t t)))))))
-
-(defgroup smart-quotes nil
-  "Customization group for smart quote replacements."
-  :group 'convenience)
-
-(defcustom smart-quotes-replacement-pairs
-  '(("“" . "\"")
-    ("”" . "\"")
-    ("‘" . "'")
-    ("’" . "'")
-    ("‚" . "'")
-    ("‛" . "'")
-    ("„" . "\"")
-    ("‟" . "\"")
-    ("‹" . "'")
-    ("›" . "'")
-    ("«" . "\"")
-    ("»" . "\"")
-    ("–" . "-")
-    ("" . "")
-    ("" . "")
-    ("—" . "---")
-    ("…" . "...")
-    ("• " . "- ")
-    ("•" . "-")
-    (" " . " ")
-    ("⸻" . "")
-    ("⸻" . "")
-    ("⸻" . "-----")
-    ("ﬀ" . "ff")
-    ("·" . "-")
-    ("‧" . "-")
-    ("⁃" . "-")
-    ("‐" . "-")
-    ("‑" . "-")
-    ("‒" . "-")
-    ("‾" . "-")
-    (" " . " ")       ; Non-breaking space
-    (" " . " ")       ; Narrow no-break space
-    ("\u200B" . "")   ; Zero-width space
-    ("\u200C" . "")   ; Zero-width non-joiner
-    ("\u200D" . "")   ; Zero-width joiner
-    ("\t" . " ")      ; Tab character replaced with a space
-    (":**" . ":*")
-    ("#####" . "*****")
-    ("####" . "****")
-    ("###" . "***")
-    ("##" . "**")
-    ("- \\*\\* TODO" . "*** TODO")
-    ("okay" . "OK")
-    ("  SCHEDULED" . " SCHEDULED")
-    ("  DEADLINE" . " DEADLINE"))
-  "Alist of replacement pairs for `replace-smart-quotes` function."
-  :type '(alist :key-type string :value-type string)
-  :group 'smart-quotes)
-
-(require 'cl-lib)  ; Ensure cl-lib is loaded for cl-every
-
-
-(defun replace-smart-quotes (beg end)
-  "Replace smart quotes and format text appropriately in the specified region.
-
-The replacements are defined in the `smart-quotes-replacement-pairs` variable."
-  (interactive "r")
-  ;; Ensure beg <= end
-  (when (> beg end)
-    (let ((temp beg))
-      (setq beg end)
-      (setq end temp)))
-  ;; Error checking for smart-quotes-replacement-pairs
-  (unless (and (boundp 'smart-quotes-replacement-pairs)
-               (listp smart-quotes-replacement-pairs)
-               (cl-every (lambda (pair)
-                           (and (consp pair)
-                                (stringp (car pair))
-                                (stringp (cdr pair))))
-                         smart-quotes-replacement-pairs))
-    (error "Invalid `smart-quotes-replacement-pairs` format; must be a list of string pairs"))
-  ;; Convert end into a marker that adjusts with buffer changes
-  (let ((end-marker (copy-marker end)))
-    (save-excursion
-      ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
-      (goto-char beg)
-      (while (re-search-forward "\\*\\*" end-marker t)
-
-(if (and (= (line-beginning-position) (- (point) 2))
-         (looking-at "\\(?: \\|\\*\\)"))
-    ;; Just move past the pair; leave heading stars intact
-    (forward-char 1)
-  (replace-match "*" t t))
- 
-)
-      ;; Remove lines that contain only '---' (possibly with surrounding spaces)
-      (goto-char beg)
-      (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
-        (replace-match "" t t))
-      ;; Remove space before "-" at the beginning of lines
-      (goto-char beg)
-      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
-        (replace-match "\\1-" nil nil))
-      ;; Perform replacements using the external `smart-quotes-replacement-pairs`
-      (dolist (pair smart-quotes-replacement-pairs)
-        (goto-char beg)
-        (while (re-search-forward (regexp-quote (car pair)) end-marker t)
-          (replace-match (cdr pair) t t))))))
-
-
-#+END_SRC
 * wrapped-search-forward
 #+BEGIN_SRC emacs-lisp
 

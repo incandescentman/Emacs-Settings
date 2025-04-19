@@ -768,6 +768,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k o s") 'org-schedule)
 (define-key key-minor-mode-map (kbd "s-k o d") 'org-deadline)
 
+
 (define-key key-minor-mode-map (kbd "s-k t s") 'org-toggle-time-stamp-overlays)
 
 (define-key key-minor-mode-map (kbd "M-x") 'execute-extended-command) ; call helm-M-x instead of regular M-x
