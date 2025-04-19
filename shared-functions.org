@@ -1049,8 +1049,8 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("xyz" . "Red")
      ("tk" . "Red")
      ("tktks" . "Red")
-     ("Q" . "Red")
-     ("QUESTION" . "Red")
+   ("Q" . (:foreground "white" :background "#C92228")) 
+("QUESTION" . (:foreground "white" :background "#C92228"))
      ("GOAL" . "DarkGreen")
      ("PROG" . "#7cb8bb")
      ("OKAY" . "#7cb8bb")
@@ -9106,7 +9106,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; Stop org-expiry from stamping a CREATED property on new headings
 (setq org-expiry-insert-created nil)
 (remove-hook 'org-insert-heading-hook #'org-expiry-insert-created)
- 
+
 (defconst jay/org-date-formats
   '(("U.S. short: 12/25"              . "%m/%d")
     ("U.S. numeric: 12/25/2025"       . "%m/%d/%Y")
