@@ -1049,7 +1049,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("xyz" . "Red")
      ("tk" . "Red")
      ("tktks" . "Red")
-   ("Q" . (:foreground "white" :background "#C92228")) 
+   ("Q " . (:foreground "white" :background "#C92228")) 
 ("QUESTION" . (:foreground "white" :background "#C92228"))
      ("GOAL" . "DarkGreen")
      ("PROG" . "#7cb8bb")

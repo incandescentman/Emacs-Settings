@@ -154,6 +154,75 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
 (dolist (pair '(("”" . "\"")   ; U+201D RIGHT DOUBLE QUOTATION MARK
                 ("“" . "\""))) ; U+201C LEFT  DOUBLE QUOTATION MARK
   (add-to-list 'smart-quotes-replacement-pairs pair))
+
+;; smart-quotes-replacements.el — build pair list incrementally with explicit add-to-list calls -*- lexical-binding: t; -*-
+
+;; Ensure the variable exists.
+(defvar smart-quotes-replacement-pairs nil
+  "Alist of (FROM . TO) strings used by `replace-smart-quotes'.")
+
+;; ---------------------------------------------------------------------------
+;; Core replacements (added one by one so they’re easy to tweak/remove later)
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("“" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("”" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‘" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("’" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‚" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‛" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("„" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‟" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‹" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("›" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("«" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("»" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("–" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("—" . "---") t)
+(add-to-list 'smart-quotes-replacement-pairs '("…" . "...") t)
+(add-to-list 'smart-quotes-replacement-pairs '("• " . "- ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("•" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)   ; narrow NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "——") t) ; 3‑em dash → 2‑em (edit as desired)
+(add-to-list 'smart-quotes-replacement-pairs '("ﬀ" . "ff") t)
+(add-to-list 'smart-quotes-replacement-pairs '("·" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‧" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("⁃" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‐" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‑" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‒" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‾" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)    ; NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("\u200B" . "") t) ; ZW space
+(add-to-list 'smart-quotes-replacement-pairs '("\u200C" . "") t) ; ZWNJ
+(add-to-list 'smart-quotes-replacement-pairs '("\u200D" . "") t) ; ZWJ
+(add-to-list 'smart-quotes-replacement-pairs '("\t" . " ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("#####" . "*****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("####" . "****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("###" . "***") t)
+(add-to-list 'smart-quotes-replacement-pairs '("##" . "**") t)
+(add-to-list 'smart-quotes-replacement-pairs '("- \\*\\* TODO" . "*** TODO") t)
+(add-to-list 'smart-quotes-replacement-pairs '("okay" . "OK") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  SCHEDULED" . " SCHEDULED") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  DEADLINE" . " DEADLINE") t)
+
+;; ---------------------------------------------------------------------------
+;; Extra apostrophes & dashes caught in the wild
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2019" . "'") t) ; RIGHT SINGLE QUOTATION MARK
+(add-to-list 'smart-quotes-replacement-pairs '("\u02BC" . "'") t) ; MODIFIER LETTER APOSTROPHE
+(add-to-list 'smart-quotes-replacement-pairs '("\uFF07" . "'") t) ; FULLWIDTH APOSTROPHE
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2011" . "-") t) ; NB‑hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2010" . "-") t) ; Unicode hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u00AD" . "-") t) ; soft hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2E3B" . "-----") t) ; THREE‑EM DASH
+
+(provide 'smart-quotes-replacements)
+
 #+end_src
 
 * no weird spaces
