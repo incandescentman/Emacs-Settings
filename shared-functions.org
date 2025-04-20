@@ -1049,7 +1049,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("xyz" . "Red")
      ("tk" . "Red")
      ("tktks" . "Red")
-   ("Q " . (:foreground "white" :background "#C92228")) 
+   ("Q " . (:foreground "white" :background "#C92228"))
 ("QUESTION" . (:foreground "white" :background "#C92228"))
      ("GOAL" . "DarkGreen")
      ("PROG" . "#7cb8bb")
@@ -6358,7 +6358,7 @@ Accepted formats:
   (let* ((pos   (string-match "::\\([0-9]+\\)\\'" uri)) ; position of "::"
          (page  (if pos (match-string 1 uri) "1"))      ; default to page 1
          (doc   (if pos (substring uri 0 pos) uri)))
-    (org-mac-link-do-applescript
+    (do-applescript
      (format
  "tell application \"Skim\"
     activate
@@ -7639,7 +7639,7 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 (defun org-mac-link-applescript-get-skim-page-link ()
  "AppleScript to get the link to the page in the Skim.app."
- (org-mac-link-do-applescript
+ (do-applescript
  (concat
  "tell application \"Skim\"\n"
  "set theDoc to front document\n"
