@@ -1,137 +1,126 @@
-(setq smart-quote-regexp-replacements
-      '(
-        ("\\(\\w\\)- " . "\\1")
-        ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
+;; -*- lexical-binding: t; -*-
 
+(dolist (pair '(("\u2019" . "'")   ; ’  RIGHT SINGLE QUOTATION MARK
+                ("\u02BC" . "'")   ; ʼ  MODIFIER LETTER APOSTROPHE
+                ("\uFF07" . "'"))) ; ＇ FULLWIDTH APOSTROPHE
+  (add-to-list 'smart-quotes-replacement-pairs pair))
 
-(defun replace-smart-quotes-regexp (beg end)
-  "Replace 'smart quotes' in buffer or region with ascii quotes."
-  (interactive "r")
-  (mapcar
-   (lambda (r)
-     (save-excursion
-       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
-   smart-quote-regexp-replacements))
+;; Ensure THREE‑EM‑DASH (U+2E3B) is actually mapped.
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
+;; Make sure curly double‑quotes convert to straight ASCII quotes.
+(dolist (pair '(("”" . "\"")   ; U+201D RIGHT DOUBLE QUOTATION MARK
+                ("“" . "\""))) ; U+201C LEFT  DOUBLE QUOTATION MARK
+  (add-to-list 'smart-quotes-replacement-pairs pair))
 
-(defun replace-non-heading-double-asterisks (beg end)
-  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
-  (interactive "r")
+;; smart-quotes-replacements.el — build pair list incrementally with explicit add-to-list calls -*- lexical-binding: t; -*-
+
+;; Ensure the variable exists.
+(defvar smart-quotes-replacement-pairs nil
+  "Alist of (FROM . TO) strings used by `replace-smart-quotes'.")
+
+;; ---------------------------------------------------------------------------
+;; Core replacements (added one by one so they’re easy to tweak/remove later)
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("“" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("”" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‘" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("’" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‚" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‛" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("„" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‟" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‹" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("›" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("«" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("»" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("–" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("—" . "---") t)
+(add-to-list 'smart-quotes-replacement-pairs '("…" . "...") t)
+(add-to-list 'smart-quotes-replacement-pairs '("• " . "- ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("•" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)   ; narrow NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "——") t) ; 3‑em dash → 2‑em (edit as desired)
+(add-to-list 'smart-quotes-replacement-pairs '("ﬀ" . "ff") t)
+(add-to-list 'smart-quotes-replacement-pairs '("·" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‧" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("⁃" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‐" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‑" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‒" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‾" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)    ; NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("\u200B" . "") t) ; ZW space
+(add-to-list 'smart-quotes-replacement-pairs '("\u200C" . "") t) ; ZWNJ
+(add-to-list 'smart-quotes-replacement-pairs '("\u200D" . "") t) ; ZWJ
+(add-to-list 'smart-quotes-replacement-pairs '("\t" . " ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("#####" . "*****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("####" . "****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("###" . "***") t)
+(add-to-list 'smart-quotes-replacement-pairs '("##" . "**") t)
+(add-to-list 'smart-quotes-replacement-pairs '("- \\*\\* TODO" . "*** TODO") t)
+(add-to-list 'smart-quotes-replacement-pairs '("okay" . "OK") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  SCHEDULED" . " SCHEDULED") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  DEADLINE" . " DEADLINE") t)
+
+;; ---------------------------------------------------------------------------
+;; Extra apostrophes & dashes caught in the wild
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2019" . "'") t) ; RIGHT SINGLE QUOTATION MARK
+(add-to-list 'smart-quotes-replacement-pairs '("\u02BC" . "'") t) ; MODIFIER LETTER APOSTROPHE
+(add-to-list 'smart-quotes-replacement-pairs '("\uFF07" . "'") t) ; FULLWIDTH APOSTROPHE
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2011" . "-") t) ; NB‑hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2010" . "-") t) ; Unicode hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u00AD" . "-") t) ; soft hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2E3B" . "-----") t) ; THREE‑EM DASH
+
+(provide 'smart-quotes-replacements)
+
+(defun replace-weird-spaces (beg end)
+  "Replace NBSP, narrow NBSP, thin, hair, and zero‑width spaces with ASCII space."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "\\*\\*" end t)
-      (let ((match-beg (match-beginning 0)))
-        (when match-beg
-          (goto-char match-beg)
-          ;; If line begins with stars + space => a heading, so skip
-          (if (looking-at "^\\*+ ")
-              (forward-char 2) ;; skip these two stars
-            ;; Otherwise replace as normal
-            (replace-match "*" t t)))))))
+    (while (re-search-forward "[\u00A0\u202F\u2009\u200A\u200B\u200C\u200D]" end t)
+      (replace-match " " t t))))
 
-(defgroup smart-quotes nil
-  "Customization group for smart quote replacements."
-  :group 'convenience)
+(defun ensure-heading-emoji-space (beg end)
+  "Turn \"***🔁\" into \"*** 🔁\" in Org headings.
 
-(defcustom smart-quotes-replacement-pairs
-  '(("“" . "\"")
-    ("”" . "\"")
-    ("‘" . "'")
-    ("’" . "'")
-    ("‚" . "'")
-    ("‛" . "'")
-    ("„" . "\"")
-    ("‟" . "\"")
-    ("‹" . "'")
-    ("›" . "'")
-    ("«" . "\"")
-    ("»" . "\"")
-    ("–" . "-")
-    ("" . "")
-    ("" . "")
-    ("—" . "---")
-    ("…" . "...")
-    ("• " . "- ")
-    ("•" . "-")
-    (" " . " ")
-    ("⸻" . "")
-    ("⸻" . "")
-    ("⸻" . "-----")
-    ("ﬀ" . "ff")
-    ("·" . "-")
-    ("‧" . "-")
-    ("⁃" . "-")
-    ("‐" . "-")
-    ("‑" . "-")
-    ("‒" . "-")
-    ("‾" . "-")
-    (" " . " ")       ; Non-breaking space
-    (" " . " ")       ; Narrow no-break space
-    ("\u200B" . "")   ; Zero-width space
-    ("\u200C" . "")   ; Zero-width non-joiner
-    ("\u200D" . "")   ; Zero-width joiner
-    ("\t" . " ")      ; Tab character replaced with a space
-    (":**" . ":*")
-    ("#####" . "*****")
-    ("####" . "****")
-    ("###" . "***")
-    ("##" . "**")
-    ("- \\*\\* TODO" . "*** TODO")
-    ("okay" . "OK")
-    ("  SCHEDULED" . " SCHEDULED")
-    ("  DEADLINE" . " DEADLINE"))
-  "Alist of replacement pairs for `replace-smart-quotes` function."
-  :type '(alist :key-type string :value-type string)
-  :group 'smart-quotes)
+Looks at the first non‑space char right after the stars; if it’s
+non‑ASCII (code‑point > 127) and there’s no space already, insert one."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(\\*+\\)\\([^[:space:]]\\)" end t)
+      (let* ((stars  (match-string 1))
+             (char   (match-string 2))
+             (cp     (string-to-char char)))
+        (when (and (> cp 127)
+                   ;; only if we *haven’t* already got a space
+                   (not (string-match-p " " (buffer-substring (match-beginning 0)
+                                                              (match-end 0)))))
+          (replace-match (concat stars " " char) t t))))))
 
-(require 'cl-lib)  ; Ensure cl-lib is loaded for cl-every
+(defun convert-markdown-headings-to-org (beg end)
+  "Turn #, ##, ### etc. at bol into *, *, * … in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(#+\\) " end t)
+      (replace-match (make-string (length (match-string 1)) ?*) t t)))
 
+  ;; Leave an extra space so '* Heading' becomes '* Heading', not '*Heading'
+  )
 
-(defun replace-smart-quotes (beg end)
-  "Replace smart quotes and format text appropriately in the specified region.
-
-The replacements are defined in the `smart-quotes-replacement-pairs` variable."
-  (interactive "r")
-  ;; Ensure beg <= end
-  (when (> beg end)
-    (let ((temp beg))
-      (setq beg end)
-      (setq end temp)))
-  ;; Error checking for smart-quotes-replacement-pairs
-  (unless (and (boundp 'smart-quotes-replacement-pairs)
-               (listp smart-quotes-replacement-pairs)
-               (cl-every (lambda (pair)
-                           (and (consp pair)
-                                (stringp (car pair))
-                                (stringp (cdr pair))))
-                         smart-quotes-replacement-pairs))
-    (error "Invalid `smart-quotes-replacement-pairs` format; must be a list of string pairs"))
-  ;; Convert end into a marker that adjusts with buffer changes
-  (let ((end-marker (copy-marker end)))
-    (save-excursion
-      ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
-      (goto-char beg)
-      (while (re-search-forward "\\*\\*" end-marker t)
-
-(if (and (= (line-beginning-position) (- (point) 2))
-         (looking-at "\\(?: \\|\\*\\)"))
-    ;; Just move past the pair; leave heading stars intact
-    (forward-char 1)
-  (replace-match "*" t t))
-
-)
-      ;; Remove lines that contain only '---' (possibly with surrounding spaces)
-      (goto-char beg)
-      (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
-        (replace-match "" t t))
-      ;; Remove space before "-" at the beginning of lines
-      (goto-char beg)
-      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
-        (replace-match "\\1-" nil nil))
-      ;; Perform replacements using the external `smart-quotes-replacement-pairs`
-      (dolist (pair smart-quotes-replacement-pairs)
-        (goto-char beg)
-        (while (re-search-forward (regexp-quote (car pair)) end-marker t)
-          (replace-match (cdr pair) t t))))))
+(defun convert-markdown-blockquotes-to-org (beg end)
+  "Turn '> ' at bol into ': ' (Org quote) in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^> " end t)
+      (replace-match ": " t t)))
+  )
 
 (setq interprogram-cut-function nil)
 (setq interprogram-paste-function nil)
@@ -358,11 +347,12 @@ Otherwise run, in order:
       (let ((end (copy-marker (point) t)))
         (replace-smart-quotes beg end)
         (replace-smart-quotes-regexp beg end)
+        (replace-weird-spaces beg end)
+        (convert-markdown-headings-to-org beg end)
+(ensure-heading-emoji-space beg end)
+        (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
         (set-marker end nil)))))             ; tidy marker
-
-;; Ensure THREE‑EM‑DASH (U+2E3B) is actually mapped.
-(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
 
 (defun pasteboard-paste-raw ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
