@@ -48,6 +48,7 @@
         pasteboard-cut-and-capitalize
         pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe
         pasteboard-paste-adaptive
+        pasteboard-paste-adjusted-subtrees-adaptive
         pasteboard-paste-no-spaces
         pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
@@ -68,7 +69,10 @@
         beginning-of-buffer
         counsel-recentf
         insert-period
+        isearch-forward-ignore-case
+        jay/save-all-buffers
         jay/save-some-buffers
         mark-whole-buffer
         pasteboard-copy
+        toggle-fullscreen
         ))

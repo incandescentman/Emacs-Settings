@@ -7654,7 +7654,8 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
  "if theTitle ends with \".pdf\" then\n" ;; Check for .pdf at the end of the title
  " set theTitle to text 1 thru -5 of theTitle\n" ;; Remove the last 4 characters (.pdf)
  "end if\n"
- "set theLink to \"skim://\" & thePath & \"::\" & thePage\n" ;; Removed extra space before ::split::
+ "set theLink to thePath & \"::\" & thePage\n" ;; Removed extra space before ::split::
+
  "end tell\n"
  "return theLink & \" ::split::\" & theTitle & \", p. \" & thePage as string\n"))) ;; Separated link and content
 
@@ -9240,6 +9241,20 @@ c-u s-L
 
 #+end_src
 
+* fix footnotes
+#+begin_src emacs-lisp
+(defun jay/fix-org-footnotes ()
+  "Convert ‘([[fn:: URL][LABEL]])’ → ‘[fn:: [[URL][LABEL]]]’ in the
+current Org buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    ;; 1 = URL, 2 = label
+    (let ((re "(\\[\\[fn::\\s-*\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]\\))"))
+      (while (re-search-forward re nil t)
+        (replace-match "[fn:: [[\\1][\\2]]]" t nil)))))
+#+end_src
+
 * Local Variables & The End
 These have to be at the end.
 
@@ -9248,3 +9263,4 @@ These have to be at the end.
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
+

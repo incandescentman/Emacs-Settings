@@ -2,7 +2,7 @@
 ;; -*- lexical-binding: t; -*-
 #+END_SRC
 
-* Replace smart quotes with straight quotes :ARCHIVE:
+* Replace smart quotes with straight quotes
 
 #+BEGIN_SRC emacs-lisp
 (setq smart-quote-regexp-replacements
