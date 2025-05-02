@@ -1043,6 +1043,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("TODO" . "#cc9393")
      ("NEXT" . "#dca3a3")
      ("IMPORTANT" . "#dc8cc3")
+     ("CONCLUSION" . "#dc8cc3")
      ("REJECTED" . "Red")
      ("TK" . "Red")
      ("tktk" . "Red")
