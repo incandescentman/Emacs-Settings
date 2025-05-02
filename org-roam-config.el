@@ -7,7 +7,9 @@
   :hook
   (after-init . org-roam-db-autosync-mode)
   :custom
-  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam"))
+  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam")
+(setq org-roam-directory-exclude-regexp "^documents/")
+)
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
 
