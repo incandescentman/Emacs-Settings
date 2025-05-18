@@ -3028,30 +3028,30 @@ Single Capitals as you type."
 ** yasnippets
 #+BEGIN_SRC emacs-lisp
 (defun yas-expand-and-copy-to-clipboard (&optional field)
- "Expand snippet at point and copy the expansion to the clipboard.
+  "Expand snippet at point and copy the expansion to the clipboard.
 
 Optional argument FIELD is for non-interactive use and is an
 object satisfying `yas--field-p' to restrict the expansion to."
- (interactive)
- (let ((yas-triggers-in-field t)
-    (yas-fallback-behavior nil))
-  (setq field (yas-expand-from-trigger-key field))
-  (when field
-   (when (eq field t)
-    (let ((snippet (car (yas-active-snippets))))
-     (setq field (yas--snippet-exit snippet))))
-   (gui-select-text (yas--field-start field)
-            (yas--field-end field))
-   (clipboard-kill-ring-save (yas--field-start field)
-                (yas--field-end field)))))
+  (interactive)
+  (let ((yas-triggers-in-field t)
+        (yas-fallback-behavior nil))
+    (setq field (yas-expand-from-trigger-key field))
+    (when field
+      (when (eq field t)
+        (let ((snippet (car (yas-active-snippets))))
+          (setq field (yas--snippet-exit snippet))))
+      (gui-select-text (yas--field-start field)
+                       (yas--field-end field))
+      (clipboard-kill-ring-save (yas--field-start field)
+                                (yas--field-end field)))))
+
 (use-package yasnippet
   :defer t
   :ensure t
   :bind
   (("C-c e" . yas-load-snippet-buffer)
    ("." . insert-period))
-  :init
-:hook ((org-mode . yas-minor-mode)
+  :hook ((org-mode . yas-minor-mode)
          (text-mode . yas-minor-mode))
   :config
   ;; Load yasnippet directories
@@ -3068,7 +3068,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (setq yas/key-syntaxes '("w_" "w_." "^ ")) ; default is '("w" "w_" "w_." "^ ")
 
   ;; Suppress backquote warnings
-  (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
   (defun suppress-backquote-warnings ()
     (interactive)
     (add-to-list 'warning-suppress-types '(yasnippet backquote-change))))
@@ -3078,7 +3077,10 @@ object satisfying `yas--field-p' to restrict the expansion to."
 ;; after installing yasnippet but before you open any files
 (with-eval-after-load 'yasnippet
   (yas-global-mode 1))
- 
+
+(with-eval-after-load 'org
+  (add-hook 'org-tab-first-hook #'yas-org-very-safe-expand))
+
 #+END_SRC
 
 ** fix yasnippet org-mode conflict
@@ -3088,12 +3090,9 @@ object satisfying `yas--field-p' to restrict the expansion to."
  (let ((yas-fallback-behavior 'return-nil))
   (yas-expand)))
 
-(add-hook 'org-mode-hook
-     (lambda ()
-      (make-variable-buffer-local 'yas--trigger-key)
-      (setq yas-trigger-key [tab])
-      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-      (define-key yas-keymap [tab] 'yas-next-field)))
+;; put this near the top of your yas config, outside any hook
+(setq yas-trigger-key "<tab>")   ; string form is what yas expects
+
 #+END_SRC
 
 ** create new yasnippet
