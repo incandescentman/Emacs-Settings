@@ -899,6 +899,17 @@ before packages are loaded."
 
   (setq Info-additional-directory-list nil)
 
+
+  ;; 1. ordinary “safe local variables”
+  (add-to-list 'safe-local-variable-values '(lexical-binding . t))
+  (put 'org-config-files-local-mode 'safe-local-variable #'booleanp)
+  (put 'enable-local-eval        'safe-local-variable #'booleanp)
+
+  ;; 2. eval forms you’re willing to trust (Emacs 29+; see note below)
+  (when (boundp 'safe-local-eval-forms)
+    (add-to-list 'safe-local-eval-forms
+                 '(org-config-files-local-mode 1)))
+
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
   (load "/Users/jay/gnulisp/smart-return.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
