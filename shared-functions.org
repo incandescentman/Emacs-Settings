@@ -3075,6 +3075,10 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 
+;; after installing yasnippet but before you open any files
+(with-eval-after-load 'yasnippet
+  (yas-global-mode 1))
+ 
 #+END_SRC
 
 ** fix yasnippet org-mode conflict
