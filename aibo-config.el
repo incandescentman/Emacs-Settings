@@ -52,9 +52,6 @@
 
 ;; (add-to-list 'ivy-ignore-buffers "\\*Aibo"))
 
-;; disable warning
-;; toggle-debug-on-error
-
 
 (defvar aibo:mode-map
   (let ((map (make-sparse-keymap)))
