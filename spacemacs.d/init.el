@@ -8,6 +8,7 @@
 ;; It must be stored in your home directory.
 
 
+
 (defmacro org-assert-version ()
   "Assert compile time and runtime version match."
   ;; We intentionally use a more permissive `org-release' instead of

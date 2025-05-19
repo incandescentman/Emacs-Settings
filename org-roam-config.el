@@ -8,11 +8,10 @@
   (after-init . org-roam-db-autosync-mode)
   :custom
   (org-roam-directory (file-truename "/Users/jay/Dropbox/roam")
-(setq org-roam-directory-exclude-regexp "^documents/")
-)
+                      (setq org-roam-directory-exclude-regexp "^documents/")
+                      )
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
-
 
   ;; Capture templates
 
@@ -239,3 +238,17 @@ If region is active, then use it instead of the node at point."
 
 
 (setq org-roam-db-update-method 'idle)
+
+;; Don’t rebuild the DB while Emacs is still booting
+(setq org-roam-db-sync-on-startup nil)
+
+;; Kick off a full scan 5 s after the UI appears
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-at-time "5 sec" nil #'org-roam-db-sync)))
+
+(setq org-roam-file-exclude-regexp
+      "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$")
+
+(setq org-roam-db-location
+      (expand-file-name "org-roam.db" (xdg-cache-home)))
