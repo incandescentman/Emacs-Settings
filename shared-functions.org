@@ -3534,7 +3534,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
 
 
 * if then else indentation
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
 (put 'if 'lisp-indent-function nil)
 #+END_SRC
 
@@ -5825,7 +5825,7 @@ Then pressing "Backspace" will produce:
 
 If you want to disable this behavior, add this to your ~init.el~:
 
-#+begin_SRC
+#+begin_SRC emacs-lisp
 (setq org-autolist-enable-delete nil)
 #+END_SRC
 
@@ -5871,10 +5871,6 @@ Gives me all the offline dictionaries I've previously installed! Is great.
 :custom
 sdcv-popup-function 'showtip)
 #+end_SRC
-
-** command line
-Lots more options here: [[/Users/jay/Dropbox/apps/bash/dictionary-scripts.sh]]
-
 
 * consult ripgrep
 Avoid recentering errors. Works!
@@ -6623,18 +6619,8 @@ This will display a Quicklook of the file at point in macOS."
 (add-to-list 'org-file-apps '(directory . emacs))
 #+END_SRC
 
-Alternatively you can modify the link description as follows:
-
-
-[[file+emacs:~/projects][Projects]]
 
 Use this notation in the org mode to create a link:
-
-[[/path/to/file.php::line][string-to-display]]
-If you want the file name to be displayed, use just
-
-[[/path/to/file.php::line]]
-
 
 It will open the link in Emacs with typing C-c C-o.
 
@@ -7878,7 +7864,7 @@ After evaluating your init-file you can use links analog to the example:
 
 
 * garbage collection
-[[/Users/jay/Dropbox/roam/emacs/20231030235900-garbage_collection_emacs.or][📄 Garbage Collection Emacs]]
+[[/Users/jay/Dropbox/roam/emacs/20231030235900-garbage_collection_emacs.org][📄 Garbage Collection Emacs]]
 
 [[https://github.com/doomemacs/doomemacs/issues/3108][org-mode slow but fixed with garbage collection delay on mac · Issue #3108 · doomemacs/doomemacs · GitHub]]
 #+begin_src emacs-lisp
@@ -9007,7 +8993,7 @@ c-u s-L
   (error
    (warn "Org-roam setup failed: %s" (error-message-string err))))
 
-(setq org-element-use-cache nil)
+
 #+end_src
 
 
@@ -9153,6 +9139,22 @@ otherwise report success. Handy for hunting the one bad note."
 (use-package amx            ; modern Smex replacement
   :ensure t
   :init  (amx-mode 1))      ; turn it on immediately
+#+end_src
+
+
+* Fix minibuffer
+
+#+begin_src emacs-lisp
+;; (setq debug-on-quit nil)
+
+(dolist (map '(minibuffer-local-map
+               minibuffer-local-ns-map
+               minibuffer-local-completion-map
+               minibuffer-local-must-match-map
+               minibuffer-local-isearch-map
+               ivy-minibuffer-map))      ; drop this line if not using Ivy
+  (when (boundp map)
+    (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit)))
 #+end_src
 
 * Local Variables & The End
