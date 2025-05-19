@@ -78,8 +78,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       ccm-recenter-at-end-of-file t
       clean-buffer-list-delay-general 1
       column-number-mode nil
-      debug-on-error t
-      display-time-mode t
+            display-time-mode t
       grep-highlight-matches 'always
       initial-major-mode 'org-mode
       make-backup-files t
@@ -2431,50 +2430,6 @@ confirmation.  Non–file‑visiting buffers are ignored."
                     (not (file-exists-p buffer-file-name)))
             (save-buffer)))))))
 #+END_SRC
-
-** find-file tricks
-[[http://oremacs.com/2015/01/09/ido-find-file-tilde/][tilde in ido-find-file ]]- doesn't work with smex
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun oleh-ido-setup-hook ()
-  (define-key ido-file-dir-completion-map "~"
-    (lambda ()
-      (interactive)
-      (ido-set-current-directory "~/")
-      (setq ido-exit 'refresh)
-      (exit-minibuffer))))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-
-(defun ido-find-file-jump (dir)
-  "Return a command that sends DIR to `ido-find-file'."
-  `(lambda ()
-     (interactive)
-     (ido-set-current-directory ,dir)
-     (setq ido-exit 'refresh)
-     (exit-minibuffer)))
-
-
-
-(defvar oleh-ido-shortcuts
-  '(("~/" "~")
-    ("~/Dropbox/source/site-lisp/" "!")
-
-    ))
-
-(mapc (lambda (x)
-        (setcar x (ido-find-file-jump (car x))))
-      oleh-ido-shortcuts)
-
-(defun oleh-ido-setup-hook ()
-  (mapc
-   (lambda (x)
-     (define-key ido-file-dir-completion-map (cadr x) (car x)))
-   oleh-ido-shortcuts))
-
-(add-hook 'ido-setup-hook 'oleh-ido-setup-hook)
-#+END_EXAMPLE
-
 
 * Keybindings
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
@@ -9112,8 +9067,11 @@ current Org buffer."
 
 * Trying to fix Roam startup errors
 #+begin_src emacs-lisp
-(setq debug-on-quit t)
-(add-to-list 'debug-ignored-errors 'minibuffer-quit) 
+(setq debug-on-quit nil)
+(add-to-list 'debug-ignored-errors 'minibuffer-quit)
+
+(add-to-list 'debug-ignored-errors 'outline-before-first-heading)
+
 #+end_src
 
 * C-g to escape
@@ -9122,6 +9080,79 @@ current Org buffer."
 (with-eval-after-load 'evil
   (define-key minibuffer-local-map (kbd "C-g") #'keyboard-quit)
   (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit)) ; optional
+#+end_src
+
+
+* Org-roam debugging
+#+BEGIN_EXAMPLE emacs-lisp
+(let* ((dir "/Users/jay/Dropbox/roam-hold/book/")      ; folder to scan
+       (log "/Users/jay/Downloads/org-roam-parse.log") ; progress file
+       (timeout 8))                                    ; seconds per file
+  ;; --- wipe or create the log file ---
+  (when (file-exists-p log)
+    (delete-file log))
+  (write-region "" nil log nil 'silent)                ; touch empty file
+
+  ;; --- scan each .org file ---
+  (dolist (f (directory-files-recursively dir "\\.org$"))
+    (write-region (format "START %s\n" f) nil log 'append 'silent)
+    (with-temp-buffer
+      (insert-file-contents f)
+      (let ((status
+             (condition-case err
+                 (with-timeout (timeout 'timeout)
+                   (org-element-parse-buffer)
+                   'done)       ; parsed in time
+               (error err))))   ; Lisp error
+        (write-region
+         (format "%s %s\n"
+                 (if (eq status 'done) "DONE" "ERR")
+                 (if (eq status 'done) f status))
+         nil log 'append 'silent))))
+  (write-region "SCAN-COMPLETE\n" nil log 'append 'silent)
+  (message "Finished --- inspect %s" log))
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp
+(defun jay/debug-find-corrupted-file (&optional file)
+  "Prompt for an Org file (default ~/Downloads) and try to parse it.
+If `org-element-parse-buffer` throws an error, print the error;
+otherwise report success. Handy for hunting the one bad note."
+  (interactive
+   (list
+    (read-file-name
+     "Org file to test: "
+     "/Users/jay/Downloads/"   ;; start here
+     nil t                     ;; must exist, no default
+     nil                       ;; no initial input
+     (lambda (f) (string-match-p "\\.org\\'" f))))) ;; only .org files
+  (let ((debug-on-error nil))                  ;; don't drop into debugger
+    (let ((result
+           (with-temp-buffer
+             (insert-file-contents file)
+             (condition-case err
+                 (progn (org-element-parse-buffer) 'ok)
+               (error err)))))
+      (if (eq result 'ok)
+          (message "✅  %s parsed with no errors" file)
+        (message "❌  %s --- %S" file result)))))
+
+(defun jay/org-quick-parse ()
+  "Parse current buffer; minibuffer prints ✅ or the error symbol."
+  (interactive)
+  (let ((debug-on-error nil))
+    (condition-case err
+        (progn (org-element-parse-buffer)
+               (message "✅  %s parses fine" (buffer-name)))
+      (error (message "❌  %s --- %S" (buffer-name) err)))))
+#+end_src
+
+
+* Amx
+#+begin_src emacs-lisp
+(use-package amx            ; modern Smex replacement
+  :ensure t
+  :init  (amx-mode 1))      ; turn it on immediately
 #+end_src
 
 * Local Variables & The End

@@ -1,14 +1,13 @@
 (message "DEBUG: About to load helpers...")
 (defvar te nil)
-(setq debug-on-error t)
+
 (advice-add 'load :before (lambda (f &rest _) (message ">>> LOADING %s" f)))
 
-(setq debug-on-error t)
+
 (defun trace-load (file &rest _)
   (message ">>> LOADING %s" file))
 (advice-add 'load :before #'trace-load)
 
-;; You are a supersmart emacs expert programmer, an expert in Spacemacs and emacs-lisp configuration. I am a user, using Mac OSX Sierra version 13.2.1, Spacemacs version 0.999.0, Emacs version 28.2, and org-mode version 9.6.1. Review my Spacemacs config file below and give me suggestions for improvement.
 
 ;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
 
