@@ -1023,7 +1023,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
   ("ACTION" :foreground "medium sea green" :weight bold)
   ("WAITING" :background "yellow" :foreground "purple" :weight bold)
   ("EVENT" :background "gray25" :foreground "white" :weight bold)
-  ("PROJECT" :background "firebrick" :foreground "white" :weight bold)
+    ("PROJECT" :background "firebrick" :foreground "white" :weight bold)
   ("STARTED" :background "dodger blue" :foreground "white" :weight bold)
   ("DONE" :background "white" :foreground "black" :weight bold)))
 
@@ -1044,6 +1044,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("NEXT" . "#dca3a3")
      ("IMPORTANT" . "#dc8cc3")
      ("CONCLUSION" . "#dc8cc3")
+     ("SENT" . "#dc8cc3")
      ("REJECTED" . "Red")
      ("TK" . "Red")
      ("tktk" . "Red")
@@ -6089,7 +6090,7 @@ For example, to list recently accessed files using the -t flag, you can run:
 I also took out the -R flag. I don't know why it was there?
 
 ** don't forget to update the fasd database
-#+begin_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun update-fasd-database (&rest _)
  "Update the fasd database with the current buffer's file."
  (when (and (executable-find "fasd") buffer-file-name)
@@ -6109,7 +6110,7 @@ I also took out the -R flag. I don't know why it was there?
 (add-hook 'find-file-hook 'update-fasd-database)
 (add-hook 'find-file-hook 'fasd-add-file-to-db)
 (add-hook 'dired-mode-hook 'fasd-add-file-to-db)
-#+END_EXAMPLE
+#+END_SRC
 
 
 
@@ -9107,6 +9108,20 @@ current Org buffer."
     (let ((re "(\\[\\[fn::\\s-*\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]\\))"))
       (while (re-search-forward re nil t)
         (replace-match "[fn:: [[\\1][\\2]]]" t nil)))))
+#+end_src
+
+* Trying to fix Roam startup errors
+#+begin_src emacs-lisp
+(setq debug-on-quit t)
+(add-to-list 'debug-ignored-errors 'minibuffer-quit) 
+#+end_src
+
+* C-g to escape
+#+begin_src emacs-lisp
+;; Let C-g always abort in minibuffer, even under Evil
+(with-eval-after-load 'evil
+  (define-key minibuffer-local-map (kbd "C-g") #'keyboard-quit)
+  (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit)) ; optional
 #+end_src
 
 * Local Variables & The End
