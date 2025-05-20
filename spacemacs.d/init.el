@@ -192,6 +192,7 @@ This function should only modify configuration layer settings."
                                       ;; embark
                                       ;; epc
                                       ;; eww
+                                      exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
