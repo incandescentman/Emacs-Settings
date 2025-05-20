@@ -1,4 +1,7 @@
-(setq debug-on-error t)
+;; (setq debug-on-error t)
+
+
+
 ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
 (defvar smart-quotes-replacement-pairs nil
   "Alist of smart‑quote glyphs and their ASCII replacements.")
@@ -884,7 +887,7 @@ before packages are loaded."
     (message "org-config-files-local-mode is now %s" org-config-files-local-mode)
     (if org-config-files-local-mode
         (setq-local abbrev-mode nil)
-      (kill-local-variable 'abbrev-mode)))
+        (kill-local-variable 'abbrev-mode)))
 
 
 
@@ -959,6 +962,7 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(amx-history-length 199)
    '(calendar-week-start-day 1)
    '(counsel-search-engine 'google)
    '(deft-directory
