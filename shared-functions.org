@@ -5942,127 +5942,62 @@ depending on which one is appropriate based on the context."
 This is my goto way for navigating. It feels like it is reading your mind.
 
 #+begin_src emacs-lisp
+;;;; 0.  make Emacs start with your full shell environment  ;;;;
+
+(use-package exec-path-from-shell              ; install first!
+  :config
+  ;; import PATH plus anything fasd relies on
+  (dolist (var '("PATH" "FASD_DATA" "FASD_OPTS"))
+    (exec-path-from-shell-copy-env var)))
+
+;;;; 1.  fasd ----------------------------------------------------
+
 (use-package fasd
+  :commands (fasd-find-file)     ;; autoload only when you call it
+  :init
+  ;; do NOT auto-prompt --- the command runs with an empty query
+  (setq fasd-enable-initial-prompt nil)
+  :config
+  ;; ------------------------------------------------------------
+  ;;  record every file we *really* visit in Emacs
+  ;; ------------------------------------------------------------
+  (defun my/fasd--add-current ()
+    (when (and buffer-file-name (executable-find "fasd"))
+      (start-process "fasd" nil "fasd" "--add" buffer-file-name)))
+  (add-hook 'find-file-hook #'my/fasd--add-current)
+  (add-hook 'dired-after-readin-hook #'my/fasd--add-current)
 
-:custom
- (fasd-enable-initial-prompt nil)
- :config
- ;; global-fasd-mode records new files in the fasd database,
- ;; even if they haven't been opened from the command line
- (global-fasd-mode 1)
- )
+  ;; ------------------------------------------------------------
+  ;;  one single dispatcher
+  ;; ------------------------------------------------------------
+  (defun fasd-find-file (&optional prefix query)
+    "Jump to a file/dir with fasd.
+PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
+    (interactive "P")
+    (unless (executable-find "fasd")
+      (user-error "fasd executable not found in PATH"))
+    ;; --- build the CLI we know works for us -------------------
+    (let* ((type-opt (pcase (prefix-numeric-value prefix)
+                       (-1 " -f")             ; files only
+                       ((pred (> 1)) "")      ; both
+                       (_  " -d")))           ; dirs only
+           ;; Here we use  -s (score) + -l (list)
+           ;; *Remove/adjust* flags until `M-! fasd ...` gives what you want
+           (cmd (string-trim
+                 (format "fasd -sl%s %s"
+                         type-opt
+                         (shell-quote-argument (or query "")))))
+           (cands (split-string (shell-command-to-string cmd) "\n" t)))
+      (unless cands
+        (user-error "fasd returned nothing (cmd was: %s)" cmd))
+      (let ((choice (completing-read "fasd: " cands nil t)))
+        (if (file-directory-p choice)
+            (dired choice)
+          (find-file choice))))))
+
+;; nice key:
+(global-set-key (kbd "C-c f") #'fasd-find-file)
 #+end_src
-
-** make fasd work even when not using Ivy
-#+begin_src emacs-lisp
-(defun fasd-find-file (prefix &optional query)
- "Use fasd to open a file, or a directory with dired.
-If PREFIX is positive consider only directories.
-If PREFIX is -1 consider only files.
-If PREFIX is nil consider files and directories.
-QUERY can be passed optionally to avoid the prompt."
-
- (interactive "P")
- (if (not (executable-find "fasd"))
-   (error "Fasd executable cannot be found. It is required by `fasd.el'. Cannot use `fasd-find-file'")
-  (unless query (setq query (if fasd-enable-initial-prompt
-                 (read-from-minibuffer "Fasd query: ")
-                "")))
-  (let* ((prompt "Fasd query: ")
-      (results
-      (split-string
-       (shell-command-to-string
-       (concat "fasd -t -l -R" ; Add the -t option here
-           (pcase (prefix-numeric-value prefix)
-            (`-1 " -f ")
-            ((pred (< 1)) " -d ")
-            (_ (concat " " fasd-standard-search " ")))
-           query))
-       "\n" t))
-      (file (when results
-          ;; set `this-command' to `fasd-find-file' is required because
-          ;; `read-from-minibuffer' modifies its value, while `ivy-completing-read'
-          ;; assumes it to be its caller
-          (setq this-command 'fasd-find-file)
-          (completing-read prompt results nil t))))
-   (if (not file)
-     (message "Fasd found nothing for query `%s'" query)
-    (fasd-find-file-action file)))))
-
-
-
-(defun fasd-find-file (prefix &optional query)
- "Use fasd to open a file, or a directory with dired.
-If PREFIX is positive consider only directories.
-If PREFIX is -1 consider only files.
-If PREFIX is nil consider files and directories.
-QUERY can be passed optionally to avoid the prompt."
-
- (interactive "P")
- (if (not (executable-find "fasd"))
-   (error "Fasd executable cannot be found. It is required by 'fasd.el'. Cannot use fasd-find-file'")
-  (unless query
-   (setq query (if fasd-enable-initial-prompt
-           (read-from-minibuffer "Fasd query: ")
-          "")))
-  (let* ((prompt "Fasd query: ")
-      (command (concat "fasd -t -l -R "
-              (pcase (prefix-numeric-value prefix)
-               (-1 " -f ")
-               ((pred (< 1)) " -d ")
-               (_ ""))
-              " " query))
-      (results (split-string
-           (shell-command-to-string command)
-           "\n" t))
-      (file (when results
-          ;; Debug: print the command and results
-          (message "fasd command: %s" command)
-          (message "fasd results: %s" results)
-          ;; set this-command to 'fasd-find-file' as required
-          ;; because 'read-from-minibuffer' modifies its value
-          ;; while 'ivy-completing-read' assumes it to be its caller
-          (setq this-command 'fasd-find-file)
-          (completing-read prompt results nil t))))
-   (if (not file)
-     (message "Fasd found nothing for query '%s'" query)
-    (fasd-find-file-action file)))))
-
-#+end_src
-
-I added the -t flag above. Ugh, didn't work 🤷🏻‍♂️
-
-The -t flag in fasd stands for "time" and means that the matching will be done based on the recent access time of files or directories. When you use the -t flag, fasd will rank the files or directories according to their access time and present them in that order.
-
-By default, fasd sorts the results based on a combination of frequency (how often a file or directory is accessed) and recency (how recently it was accessed). The -t flag modifies this behavior to consider only the recency of access, giving you a list of files or directories that you accessed most recently, regardless of how often you've accessed them.
-
-For example, to list recently accessed files using the -t flag, you can run:
-
-I also took out the -R flag. I don't know why it was there?
-
-** don't forget to update the fasd database
-#+BEGIN_SRC emacs-lisp
-(defun update-fasd-database (&rest _)
- "Update the fasd database with the current buffer's file."
- (when (and (executable-find "fasd") buffer-file-name)
-  (start-process "*fasd*" nil "fasd" "--add" buffer-file-name)))
-
-(defun fasd-add-file-to-db ()
- "Add current file or directory to the Fasd database."
-  (let ((file (if (string= major-mode "dired-mode")
-          dired-directory
-         (buffer-file-name))))
-   (when (and file
-         (stringp file)
-         (file-readable-p file))
-    (start-process "*fasd*" nil "fasd" "--add" file))))
-
-
-(add-hook 'find-file-hook 'update-fasd-database)
-(add-hook 'find-file-hook 'fasd-add-file-to-db)
-(add-hook 'dired-mode-hook 'fasd-add-file-to-db)
-#+END_SRC
-
 
 
 * Google things from within emacs
@@ -9139,12 +9074,12 @@ otherwise report success. Handy for hunting the one bad note."
 (use-package amx
   :ensure t                           ; if you use straight-el/ELPA
   :init
-  (setq amx-history-length 50         ; remember last 50 commands
+  (setq amx-history-length 99         ; remember last 99 commands
         amx-save-file (locate-user-emacs-file "amx-items"))  ; default
   :config
   (amx-mode 1)                        ; replace default M-x
   (savehist-mode 1))                  ; persist command/history rings
-#+end_src 
+#+end_src
 
 
 * Fix minibuffer
