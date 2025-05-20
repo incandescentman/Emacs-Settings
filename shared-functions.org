@@ -9157,6 +9157,27 @@ otherwise report success. Handy for hunting the one bad note."
     (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit)))
 #+end_src
 
+* Prevent org-roam parsing crashes
+#+begin_src emacs-lisp
+;; in dotspacemacs/user-init or early in user-config
+;; (setq org-element-use-cache nil)
+
+(setq org-element-use-cache t)
+
+(setq org-element--cache-self-verify 'backtrace) ; default is nil
+
+(with-eval-after-load 'org-roam
+  (defun my/org-roam-safe-update (fn file &rest args)
+    (condition-case err
+        (apply fn file args)
+      (error
+       (message "org-roam: skipped %s (%s)"
+                file (error-message-string err)))))
+  (advice-add 'org-roam-db-update-file :around #'my/org-roam-safe-update))
+ 
+#+end_src
+
+
 * Local Variables & The End
 These have to be at the end.
 
