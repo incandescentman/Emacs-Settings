@@ -1,62 +1,72 @@
+;;; org-roam.el --- resilient startup  -*- lexical-binding: t; -*-
+
 (use-package org-roam
-  :defer
-  :after org
-  :delight
-  :config
-  (require 'ol)
-  :hook
-  (after-init . org-roam-db-autosync-mode)
+  ;; --------------------------------------------------
+  :defer t
+  :after  org
+
+  ;; -------------- early start-up ---------------------
+  :init
+  ;; 0 → autosync OFF while init is still running
+  (setq org-roam-db-autosync-mode nil)
+
+  ;; -------------- user options -----------------------
   :custom
-  (org-roam-directory (file-truename "/Users/jay/Dropbox/roam")
-                      (setq org-roam-directory-exclude-regexp "^documents/")
-                      )
-  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag)))
+  (org-roam-directory               (file-truename "~/Dropbox/roam"))
+  (org-roam-directory-exclude-regexp "^documents/")
+  (org-roam-node-display-template
+   (concat "${title:*} "
+           (propertize "${tags:15}" 'face 'org-tag)))
   (org-roam-dailies-directory "journal/")
 
-  ;; Capture templates
-
-  ;; %A, %B %d, %Y
-  (org-roam-dailies-capture-templates
-   '(("j" "default" entry
-      "* %?"
-      :target (file+head "%<%Y-%m-%d>.org"
-                         "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:
-- Links :: \n
-* %<%A, %B %d, %Y>
-\n
-** Today [0/1]
-"))))
-  ;; - %<Week %w, day %j>\n
+  ;; -------------- main configuration -----------------
   :config
+  ;; 1. core setup
+  (require 'ol)            ; org-link helpers
   (org-roam-setup)
-  (org-roam-db-autosync-mode)
-  ;; (advice-add #'org-roam-buffer-persistent-set :after #'org-roam-buffer-redisplay-h) ;; need to define this or remove
-  (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
 
+  ;; 2. *robust* DB updates ----------------------------
+  (setq org-roam-db-update-method 'idle)   ; <── your choice
 
+  ;; guard every *single-file* update
+  (defun my/org-roam--safe-update (fn file &rest args)
+    "Run FN for FILE, but swallow any error so Emacs stays up."
+    (condition-case err
+        (apply fn file args)
+      (error (message "org-roam: skipped %s (%s)"
+                      file (error-message-string err)))))
+  (advice-add 'org-roam-db-update-file :around #'my/org-roam--safe-update)
 
-  ;; Add custom functions and advice
-  ;; (global-page-break-lines-mode 0)
-  (advice-add #'org-roam-fontify-like-in-org-mode :around (lambda (fn &rest args) (save-excursion (apply fn args))))
+  ;; 3. first full scan *after* UI is ready -------------
+  (setq org-roam-db-sync-on-startup nil)   ; don’t stall init
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-at-time "5 sec" nil #'org-roam-db-sync)))
 
-  (setq org-roam-completion-everywhere t)
-  ;; doesn't work for some reason
-  ;; so that org-roam links can be followed
-  ;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
-  ;; if necessary, consider using org-roam-buffer-refresh
+  ;; 4. dailies (unchanged) -----------------------------
+  (setq org-roam-dailies-capture-templates
+        '(("j" "Journal" entry
+           "* %?"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n"))))
 
+  ;; 5. finally enable autosync when idle for 5 s -------
+  (run-with-idle-timer
+   5 nil
+   (lambda ()
+     (message "Launching org-roam autosync…")
+     (org-roam-db-autosync-mode 1))))
 
-  )
-
-
+;; minor-mode lighter off
+(delight 'org-roam-mode)
 
 
 ;; Include org-roam-protocol and org-roam-export after org-roam
-(use-package org-roam-protocol
-  :after org-roam)
+;; (use-package org-roam-protocol
+;;   :after org-roam)
 
-(use-package org-roam-export
-  :after org-roam)
+;; (use-package org-roam-export
+;;   :after org-roam)
 
 
 (add-to-list 'org-agenda-custom-commands
@@ -162,27 +172,6 @@ If region is active, then use it instead of the node at point."
 (define-key key-minor-mode-map (kbd "s-u P") 'org-roam-create-sequence-previous)
 (define-key key-minor-mode-map (kbd "s-u N") 'org-roam-create-sequence-next)
 
-
-(setq org-roam-db-update-method 'immediate)
-
-;; Setting org-roam-db-update-method to 'immediate ensures real-time updates but can impact performance for large note sets. Monitor performance and consider alternative methods if necessary.
-
-
-(setq org-roam-db-update-method 'idle)
-
-;; Don’t rebuild the DB while Emacs is still booting
-(setq org-roam-db-sync-on-startup nil)
-
-;; Kick off a full scan 5 s after the UI appears
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (run-at-time "5 sec" nil #'org-roam-db-sync)))
-
-(setq org-roam-file-exclude-regexp
-      "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$")
-
-(setq org-roam-db-location
-      (expand-file-name "org-roam.db" (xdg-cache-home)))
 
 
 
