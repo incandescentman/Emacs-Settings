@@ -1645,7 +1645,7 @@ Defines ~ibuffer-do-replace-string~:
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|jka\\|123244\\|ediff\\|Org parse" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|width\\|jka\\|123244\\|ediff\\|Org parse" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -9136,10 +9136,15 @@ otherwise report success. Handy for hunting the one bad note."
 
 * Amx
 #+begin_src emacs-lisp
-(use-package amx            ; modern Smex replacement
-  :ensure t
-  :init  (amx-mode 1))      ; turn it on immediately
-#+end_src
+(use-package amx
+  :ensure t                           ; if you use straight-el/ELPA
+  :init
+  (setq amx-history-length 50         ; remember last 50 commands
+        amx-save-file (locate-user-emacs-file "amx-items"))  ; default
+  :config
+  (amx-mode 1)                        ; replace default M-x
+  (savehist-mode 1))                  ; persist command/history rings
+#+end_src 
 
 
 * Fix minibuffer
@@ -9166,6 +9171,26 @@ otherwise report success. Handy for hunting the one bad note."
 
 (setq org-element--cache-self-verify 'backtrace) ; default is nil
 
+
+#+end_src
+
+* Fix indent error
+#+begin_src emacs-lisp
+;; ────────────────────────────────────────────────────────────
+;; Guard org-indent's idle timer against rare parser errors
+;; ────────────────────────────────────────────────────────────
+(with-eval-after-load 'org-indent
+  (defun my/org-indent-safe-agent (orig-fn &rest args)
+    "Run ORIG-FN but ignore the occasional parser error."
+    (ignore-errors
+      (apply orig-fn args)))
+
+  (ignore-errors                    ; remove duplicate wrapper, if any
+    (advice-remove 'org-indent-initialize-agent
+                   #'my/org-indent-safe-agent))
+
+  (advice-add 'org-indent-initialize-agent
+              :around #'my/org-indent-safe-agent))
 
 #+end_src
 
