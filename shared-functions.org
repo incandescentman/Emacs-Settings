@@ -9065,26 +9065,39 @@ current Org buffer."
 #+begin_src emacs-lisp
 (defun jay/debug-find-corrupted-file (&optional file)
   "Prompt for an Org file (default ~/Downloads) and try to parse it.
-If `org-element-parse-buffer` throws an error, print the error;
-otherwise report success. Handy for hunting the one bad note."
+
+If `org-element-parse-buffer` signals an error, print the error.
+Otherwise report success and, on confirmation, move the file to
+~/Dropbox/roam/notes/ (directory must already exist)."
   (interactive
    (list
     (read-file-name
      "Org file to test: "
-     "/Users/jay/Downloads/"   ;; start here
+     "~/Downloads/"            ;; start here
      nil t                     ;; must exist, no default
      nil                       ;; no initial input
      (lambda (f) (string-match-p "\\.org\\'" f))))) ;; only .org files
-  (let ((debug-on-error nil))                  ;; don't drop into debugger
-    (let ((result
-           (with-temp-buffer
-             (insert-file-contents file)
-             (condition-case err
-                 (progn (org-element-parse-buffer) 'ok)
-               (error err)))))
-      (if (eq result 'ok)
-          (message "✅  %s parsed with no errors" file)
-        (message "❌  %s --- %S" file result)))))
+  (let* ((debug-on-error nil)            ;; don't drop into debugger
+         (result
+          (with-temp-buffer
+            (insert-file-contents file)
+            (condition-case err
+                (progn (org-element-parse-buffer) 'ok)
+              (error err)))))
+    (cond
+     ;; ✅ parsed fine - maybe move it
+     ((eq result 'ok)
+      (message "✅  %s parsed with no errors" file)
+      (when (yes-or-no-p "Move it to ~/Dropbox/roam/notes/? ")
+        (let* ((dest-dir  "~/Dropbox/roam/notes/")
+               (dest-file (expand-file-name (file-name-nondirectory file)
+                                            dest-dir)))
+          (rename-file file dest-file 1) ;; 1 = overwrite with confirmation
+          (message "Moved to %s" dest-file))))
+     ;; ❌ parse error - show the error object
+     (t
+      (message "❌  %s --- %S" file result))))) 
+
 
 (defun jay/debug-scan-org-tree (root)
   "Recursively scan ROOT for *.org files that choke `org-element-parse-buffer'.
@@ -9143,7 +9156,7 @@ It returns a list, so you can later jump to the first culprit:
 
 #+end_example
 
-* Amx 
+* Amx
 #+begin_src emacs-lisp
 (use-package amx
   :ensure t                           ; if you use straight-el/ELPA
