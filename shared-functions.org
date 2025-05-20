@@ -9086,18 +9086,64 @@ otherwise report success. Handy for hunting the one bad note."
           (message "✅  %s parsed with no errors" file)
         (message "❌  %s --- %S" file result)))))
 
-(defun jay/org-quick-parse ()
-  "Parse current buffer; minibuffer prints ✅ or the error symbol."
+(defun jay/debug-scan-org-tree (root)
+  "Recursively scan ROOT for *.org files that choke `org-element-parse-buffer'.
+Print a quick report in *Messages* and return a list of problematic files."
+  (interactive "DDirectory to scan: ")
+  (require 'org)                         ;; make sure Org is loaded
+  (let ((bad nil)
+        (total 0))
+    (dolist (file (directory-files-recursively root "\\.org\\'"))
+      (setq total (1+ total))
+      (with-temp-buffer
+        (insert-file-contents file nil nil nil 'replace)
+        (condition-case err
+            (org-element-parse-buffer)
+          (error
+           (push (cons file err) bad)))))
+    (if bad
+        (progn
+          (message "❌  %d / %d Org files failed to parse:" (length bad) total)
+          (dolist (p (reverse bad))
+            (message "    %s  ---  %S" (car p) (cdr p))))
+      (message "✅  All %d Org files parsed cleanly" total))
+    bad))
+
+
+(defun jay/debug-current-buffer ()
+  "Parse the current Org buffer and echo success or first error."
   (interactive)
-  (let ((debug-on-error nil))
-    (condition-case err
-        (progn (org-element-parse-buffer)
-               (message "✅  %s parses fine" (buffer-name)))
-      (error (message "❌  %s --- %S" (buffer-name) err)))))
+  (condition-case err
+      (progn (org-element-parse-buffer) (message "✅ no parse errors"))
+    (error (message "❌ %S" err))))
 #+end_src
 
 
-* Amx
+That little when-let is not something you normally keep sitting in your init file---it's a throw-away helper you run once (or whenever you want to hunt down the next corrupt file).
+Pick whichever workflow feels most natural:
+
+Goal Where / how to run it Steps
+One-off check right now M-: (eval-expression) - Hit M-: ↵  - Paste the two-line form - RET
+Run from scratch *scratch* buffer - Open *scratch*  (C-x b *scratch*)- Paste the formPut point after it and C-j (or select the region and C-M-x)
+Reusable command Add a wrapper to your config elisp (defun jay/scan-roam-and-open-first-bad () (interactive) (when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam"))) (find-file (caar bad))))  Restart (or M-x eval-buffer) and invoke with M-x jay/scan-roam-and-open-first-bad.  Bind it to a key if you like.
+Automatic run at startup after-init-hook (only if you really want that) elisp (add-hook 'after-init-hook (lambda () (when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam"))) (find-file (caar bad)))))
+
+Most people just evaluate it ad-hoc (first or second row).
+If you turn it into a command (third row), you keep your init file tidy and gain an easy way to re-run the check whenever you suspect the parser is choking again.
+
+Let me know if you'd like a key-binding or projectile-style transient menu for it!
+
+
+It returns a list, so you can later jump to the first culprit:
+
+
+#+begin_example emacs-lisp
+(when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam")))
+  (find-file (caar bad)))   ;; opens the first offending file
+
+#+end_example
+
+* Amx 
 #+begin_src emacs-lisp
 (use-package amx
   :ensure t                           ; if you use straight-el/ELPA
