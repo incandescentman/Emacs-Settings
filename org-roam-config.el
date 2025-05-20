@@ -34,19 +34,6 @@
   (setq org-roam-db-location "/Users/jay/dropbox/roam/org-roam.db")
 
 
-  (setq org-roam-mode-sections
-        (list #'org-roam-backlinks-section
-              #'org-roam-reflinks-section
-              'org-roam-unlinked-references-section
-              ))
-
-  (defun org-roam-yesterday ()
-    (interactive)
-    (condition-case nil
-        (progn
-          (jay/save-some-buffers)
-          (org-roam-dailies-goto-previous-note))
-      (error (message "Failed to go to yesterday's note"))))
 
   ;; Add custom functions and advice
   ;; (global-page-break-lines-mode 0)
@@ -58,64 +45,8 @@
   ;; source: [[https://github.com/org-roam/org-roam/issues/1732][clicking on any link within *org-roam* buffer fails with an error message · Issue #1732 · org-roam/org-roam]]
   ;; if necessary, consider using org-roam-buffer-refresh
 
-  (defun org-roam-backlinks-buffer ()
-    (interactive)
-    (org-roam-buffer-toggle)
-    (other-window 1)
-    )
 
-  (defun org-roam-search-nodes ()
-    "Search org-roam directory using consult-ripgrep. With live-preview."
-    (interactive)
-    (counsel-rg nil org-roam-directory nil nil))
-
-  ;; rename some org-roam functions
-  (defalias 'org-roam-heading-add 'org-id-get-create)
-  (defalias 'org-roam-find-node 'org-roam-node-find)
-  (defalias 'org-roam-insert-node 'org-roam-node-insert)
-
-
-  :bind
-  (
-   ("s-u f" . org-roam-find-node)
-   ("S-s-<up>" . org-roam-backlinks-buffer)
-   ;; ("S-s-<down>" . projectile-ripgrep)
-   ;;   ("S-s-<down>" . deadgrep)
-   ("s-u l" . org-roam-buffer-toggle)
-   ("s-u i" . org-roam-node-insert)
-   ("s-u c" . org-roam-capture)
-   ("S-s-<left>" . org-roam-node-insert)
-   ("S-s-<right>" . org-roam-node-find)
-   ("s-u r" . org-roam-refile)
-
-   ;; goto
-   ("s-u o" . org-roam-dailies-find-date)
-   ("s-u ." . org-roam-dailies-goto-date)
-   ("s-u p" . org-roam-dailies-goto-previous-note)
-   ("s-u n" . org-roam-dailies-goto-next-note)
-   ("s-j"   . org-roam-dailies-goto-today)
-   ("C-S-d" . org-roam-dailies-goto-today)
-   ("s-u y" . org-roam-dailies-goto-yesterday)
-   ("s-u t" . org-transclusion-make-from-link)
-   ("s-u T" . org-roam-dailies-goto-tomorrow)
-   ("s-u Y" . org-roam-dailies-yesterday)
-
-   ;; capture
-   ("s-u k" . org-roam-dailies-capture-date)
-
-   ;; search
-   ("s-/ sn" . org-roam-search-nodes)
-   (":" . insert-colon)
-
-   ("s-u h" . org-roam-heading-add) ;; org-roam create heading
-   ("s-u a" . org-roam-alias-add)
-
-   ;;   ("s-T" . org-roam-tags)
-
-   ;; ("C-c r d a" . org-agenda)
-   ;; ("C-c r d s" . org-schedule)
-
-   ))
+  )
 
 
 
@@ -156,52 +87,52 @@ If region is active, then use it instead of the node at point."
          level reversed)
     (if (equal (org-roam-node-at-point) node)
         (user-error "Target is the same as current node")
-      (if regionp
-          (progn
-            (kill-new (buffer-substring-no-properties region-start region-end))
-            (org-save-markers-in-region region-start region-end))
-        (progn
-          (if (org-before-first-heading-p)
-              (org-roam-demote-entire-buffer))
-          (org-copy-subtree 1 nil t)))
-      (with-current-buffer nbuf
-        (org-with-wide-buffer
-         (goto-char (org-roam-node-point node))
-         (setq level (org-get-valid-level (funcall outline-level) 1)
-               reversed (org-notes-order-reversed-p))
-         (goto-char
-          (if reversed
-              (or (outline-next-heading) (point-max))
-            (or (save-excursion (org-get-next-sibling))
-                (org-end-of-subtree t t)
-                (point-max))))
-         (unless (bolp) (newline))
-         (if regionp
-             (insert (current-kill 0))
-           (org-paste-subtree level nil nil t))
-         (and org-auto-align-tags
-              (let ((org-loop-over-headlines-in-active-region nil))
-                (org-align-tags)))
-         (when (fboundp 'deactivate-mark) (deactivate-mark))))
-      (if regionp
-          (progn
-            (goto-char region-end)
-            (delete-region region-start region-end))
-        (org-preserve-local-variables
-         (delete-region
-          (and (org-back-to-heading t) (point))
-          (min (1+ (buffer-size)) (org-end-of-subtree t t) (point)))))
-      ;; If the buffer end-up empty after the refile, kill it and delete its
-      ;; associated file.
-      (when (eq (buffer-size) 0)
-        (if (buffer-file-name)
-            (delete-file (buffer-file-name)))
-        (set-buffer-modified-p nil)
-        ;; If this was done during capture, abort the capture process.
-        (when (and org-capture-mode
-                   (buffer-base-buffer (current-buffer)))
-          (org-capture-kill))
-        (kill-buffer (current-buffer))))))
+        (if regionp
+            (progn
+              (kill-new (buffer-substring-no-properties region-start region-end))
+              (org-save-markers-in-region region-start region-end))
+            (progn
+              (if (org-before-first-heading-p)
+                  (org-roam-demote-entire-buffer))
+              (org-copy-subtree 1 nil t)))
+        (with-current-buffer nbuf
+          (org-with-wide-buffer
+           (goto-char (org-roam-node-point node))
+           (setq level (org-get-valid-level (funcall outline-level) 1)
+                 reversed (org-notes-order-reversed-p))
+           (goto-char
+            (if reversed
+                (or (outline-next-heading) (point-max))
+                (or (save-excursion (org-get-next-sibling))
+                    (org-end-of-subtree t t)
+                    (point-max))))
+           (unless (bolp) (newline))
+           (if regionp
+               (insert (current-kill 0))
+               (org-paste-subtree level nil nil t))
+           (and org-auto-align-tags
+                (let ((org-loop-over-headlines-in-active-region nil))
+                  (org-align-tags)))
+           (when (fboundp 'deactivate-mark) (deactivate-mark))))
+        (if regionp
+            (progn
+              (goto-char region-end)
+              (delete-region region-start region-end))
+            (org-preserve-local-variables
+             (delete-region
+              (and (org-back-to-heading t) (point))
+              (min (1+ (buffer-size)) (org-end-of-subtree t t) (point)))))
+        ;; If the buffer end-up empty after the refile, kill it and delete its
+        ;; associated file.
+        (when (eq (buffer-size) 0)
+          (if (buffer-file-name)
+              (delete-file (buffer-file-name)))
+          (set-buffer-modified-p nil)
+          ;; If this was done during capture, abort the capture process.
+          (when (and org-capture-mode
+                     (buffer-base-buffer (current-buffer)))
+            (org-capture-kill))
+          (kill-buffer (current-buffer))))))
 
 ;; TODO learn how to use this
 (use-package consult-org-roam)
@@ -252,3 +183,37 @@ If region is active, then use it instead of the node at point."
 
 (setq org-roam-db-location
       (expand-file-name "org-roam.db" (xdg-cache-home)))
+
+
+
+
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            'org-roam-unlinked-references-section
+            ))
+
+(defun org-roam-yesterday ()
+  (interactive)
+  (condition-case nil
+      (progn
+        (jay/save-some-buffers)
+        (org-roam-dailies-goto-previous-note))
+    (error (message "Failed to go to yesterday's note"))))
+
+
+(defun org-roam-backlinks-buffer ()
+  (interactive)
+  (org-roam-buffer-toggle)
+  (other-window 1)
+  )
+
+(defun org-roam-search-nodes ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (counsel-rg nil org-roam-directory nil nil))
+
+;; rename some org-roam functions
+(defalias 'org-roam-heading-add 'org-id-get-create)
+(defalias 'org-roam-find-node 'org-roam-node-find)
+(defalias 'org-roam-insert-node 'org-roam-node-insert)
