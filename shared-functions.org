@@ -9159,7 +9159,7 @@ otherwise report success. Handy for hunting the one bad note."
 
 
 #+begin_src emacs-lisp
-;; (setq debug-on-error t)
+ (setq debug-on-error t)
 #+end_src
 
 * Local Variables & The End
