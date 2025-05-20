@@ -5995,8 +5995,36 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
             (dired choice)
           (find-file choice))))))
 
-;; nice key:
-(global-set-key (kbd "C-c f") #'fasd-find-file)
+
+
+(defun my/fasd--add (path)
+  "Register PATH in the fasd database, if fasd is available."
+  (when (and path                       ; a real file/dir
+             (executable-find "fasd")   ; the binary is in PATH
+             (file-exists-p path))
+    ;; run asynchronously - never blocks Emacs
+    (start-process "fasd" nil "fasd" "--add" (expand-file-name path))))
+
+(add-hook 'find-file-hook          ; every real file you visit
+          (lambda () (my/fasd--add (buffer-file-name))))
+
+(add-hook 'dired-after-readin-hook ; every directory you enter in Dired
+          (lambda () (my/fasd--add
+                     (if (stringp dired-directory)
+                         dired-directory
+                       (car dired-directory)))))
+
+(with-eval-after-load 'org-roam
+  ;; every time you *visit* a node's file (find / create)
+  (advice-add 'org-roam-node-visit :after
+              (lambda (node &rest _)
+                (my/fasd--add (org-roam-node-file node))))
+
+  ;; when a brand-new note is created through a capture template the file
+  ;; does not yet exist when `node-visit` runs - add it after capture
+  (advice-add 'org-roam-capture--finalize :after
+              (lambda (&rest _)
+                (my/fasd--add (buffer-file-name)))))
 #+end_src
 
 
@@ -9129,6 +9157,10 @@ otherwise report success. Handy for hunting the one bad note."
 
 #+end_src
 
+
+#+begin_src emacs-lisp
+;; (setq debug-on-error t)
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
