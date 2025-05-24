@@ -1,6 +1,6 @@
 ;; (setq debug-on-error t)
 
-
+(setq native-comp-enable-subr-trampolines nil)
 
 ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
 (defvar smart-quotes-replacement-pairs nil
