@@ -897,7 +897,7 @@ before packages are loaded."
     (message "org-config-files-local-mode is now %s" org-config-files-local-mode)
     (if org-config-files-local-mode
         (setq-local abbrev-mode nil)
-        (kill-local-variable 'abbrev-mode)))
+      (kill-local-variable 'abbrev-mode)))
 
 
 

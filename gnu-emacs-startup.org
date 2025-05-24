@@ -283,6 +283,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-K") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "s-k RET") 'kill-current-buffer)
+(define-key key-minor-mode-map (kbd "s-k s-k") 'kill-current-buffer)
 
 ;; (define-key key-minor-mode-map (kbd "s-k") 'avy-goto-char)
 ;; (define-key key-minor-mode-map (kbd "s-p") 'org-html-export-to-html-and-open)

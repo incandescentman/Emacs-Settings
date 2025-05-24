@@ -553,7 +553,7 @@ Works!
                  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US-large") nil utf-8)))
   (my/fix-ispell-contractions))
-#+END_SRC 
+#+END_SRC
 
 * UI / customization of appearance and editing environment
 ** mouse
@@ -9174,6 +9174,15 @@ It returns a list, so you can later jump to the first culprit:
 
 #+begin_src emacs-lisp
  (setq debug-on-error t)
+#+end_src
+
+* Display emoji correctly
+#+begin_src emacs-lisp
+(run-with-timer 1 nil
+  (lambda ()
+    (when (display-graphic-p)
+      (set-fontset-font t 'emoji (font-spec :family "Apple Color Emoji") nil 'prepend)
+      (set-fontset-font t 'unicode (font-spec :family "Apple Color Emoji") nil 'prepend))))
 #+end_src
 
 * Local Variables & The End
