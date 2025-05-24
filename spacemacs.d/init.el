@@ -1,14 +1,4 @@
-;; (setq debug-on-error t)
-
-
-
-(setq native-comp-enable-subr-trampolines nil)
-
-;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
-(defvar smart-quotes-replacement-pairs nil
-  "Alist of smart‑quote glyphs and their ASCII replacements.")
-
-;; -*- mode: emacs-lisp; lexical-binding: t -*-
+;; -*- Mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -861,6 +851,28 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+
+  ;; (setq debug-on-error t)
+
+
+
+  (setq native-comp-enable-subr-trampolines nil)
+
+  ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
+  (defvar smart-quotes-replacement-pairs nil
+    "Alist of smart‑quote glyphs and their ASCII replacements.")
+
+  ;; --- tell Flyspell / Ispell to use Hunspell --------------------
+  (setq-default ispell-program-name "/opt/homebrew/bin/hunspell"
+                ispell-really-hunspell t
+                ispell-dictionary      "en_US-large"
+                ispell-personal-dictionary
+                (expand-file-name "~/Library/Spelling/personal.dic"))
+
+  (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
+  (setenv "DICTIONARY" "en_US")
+
+
   )
 
 (defun dotspacemacs/user-config ()
