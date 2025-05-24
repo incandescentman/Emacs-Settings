@@ -3,6 +3,11 @@
 ;;----------------------------------------------------------------
 ;;  org-roam  — resilient + idle-sync setup
 ;;----------------------------------------------------------------
+
+;; Make Super-u behave like a leader key
+(define-prefix-command 'jay/super-u-map)
+(global-set-key (kbd "s-u") 'jay/super-u-map)
+
 (use-package org-roam
   :defer t
   :after  org

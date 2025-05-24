@@ -1,6 +1,5 @@
 ;; (setq debug-on-error t)
 
-(setq ispell-program-name "/opt/homebrew/bin/hunspell")
 
 
 (setq native-comp-enable-subr-trampolines nil)
@@ -195,7 +194,7 @@ This function should only modify configuration layer settings."
                                       ;; embark
                                       ;; epc
                                       ;; eww
-                                      ;;                                      exec-path-from-shell
+                                      exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
@@ -664,7 +663,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
 
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
