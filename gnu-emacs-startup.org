@@ -31,8 +31,8 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
-(setq abbrev-file-name "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
+(read-abbrev-file "/Users/jay/emacs/abbrevs/.abbrev_defs")
+(setq abbrev-file-name "/Users/jay/emacs/abbrevs/.abbrev_defs")
 (setq save-abbrevs t)
 (setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
@@ -314,6 +314,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
   )
 
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
+
+(define-key key-minor-mode-map (kbd "C-\\") 'palimpsest-move-region-to-bottom)
 
 (define-key key-minor-mode-map (kbd "C-'") 'palimpsest-move-region-to-bottom)
 ;; TODO learn this key binding!!
