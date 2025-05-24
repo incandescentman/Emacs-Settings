@@ -231,7 +231,6 @@ This function should only modify configuration layer settings."
                                       org-roam
                                       org-roam-ui
                                       ;; org-superstar
-org-yt
                                       ox-clip
                                       ;; ox-gfm
                                       ox-timeline
