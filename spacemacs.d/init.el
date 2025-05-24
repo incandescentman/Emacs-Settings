@@ -1,5 +1,8 @@
 ;; (setq debug-on-error t)
 
+(setq ispell-program-name "/opt/homebrew/bin/hunspell")
+
+
 (setq native-comp-enable-subr-trampolines nil)
 
 ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
@@ -228,6 +231,7 @@ This function should only modify configuration layer settings."
                                       org-roam
                                       org-roam-ui
                                       ;; org-superstar
+org-yt
                                       ox-clip
                                       ;; ox-gfm
                                       ox-timeline
