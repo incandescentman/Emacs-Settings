@@ -523,57 +523,9 @@ Works!
 
 * Spellcheck / flyspell
 
-** old flyspell
-#+begin_example emacs-lisp
-(use-package flyspell
-  :ensure nil  ;; flyspell is built into Emacs, not an external package
-  ;; We don't do :defer t here because :hook already defers loading
-  :hook
-  ((text-mode . flyspell-mode)
-   (org-mode  . flyspell-mode))
-  :bind (:map flyspell-mode-map
-              ;; Example unbinding of C-.
-              ("C-." . nil))
-  :config
-  ;; 1) Put all your variable settings here with `setq` instead of quoting.
-  (setq flyspell-abbrev-p t
-        flyspell-use-global-abbrev-table-p t
-        flyspell-mark-duplications-exceptions
-        '( (nil "that" "had" "really" "very" "much")
-           ("\\`francais" "nous" "vous")))
-  ;; 2) Configure ispell / Hunspell
-  (setq-default ispell-program-name (executable-find "hunspell")
-                ispell-dictionary   "en_US-large"
-                ispell-personal-dictionary "/Users/jay/Library/Spelling/personal.dic"
-                ispell-really-hunspell t)
-  (setenv "DICPATH" (concat (getenv "HOME") "/Library/Spelling"))
-  (setenv "DICTIONARY" "en_US")
-
-  ;; 3) If you want to skip Org source blocks, define a small helper function
-  (defun my-org-setup-flyspell ()
-    ;; Ensure we skip code blocks for this buffer
-    (when (derived-mode-p 'org-mode)
-      (make-local-variable 'ispell-skip-region-alist)
-      (add-to-list 'ispell-skip-region-alist
-                   '("^#\\+begin_src" . "^#\\+end_src"))))
-  (add-hook 'org-mode-hook #'my-org-setup-flyspell)
-
-  ;; 4) If you sometimes need to fix the contractions, do so:
-  (defun my/fix-ispell-contraction ()
-    "Fix contractions (e.g. shouldn't)."
-    (add-to-list 'ispell-dictionary-alist
-                 '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']"
-                   nil ("-d" "en_US") nil utf-8)))
-  (my/fix-ispell-contraction))
-
-#+end_example
-
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
-
-
-
 
 (use-package flyspell
   :ensure nil ;; built-in package
@@ -612,6 +564,9 @@ Works!
                  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US-large") nil utf-8)))
   (my/fix-ispell-contractions))
+
+
+
 
 
 (defun add-word-to-personal-dictionary ()
