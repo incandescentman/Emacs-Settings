@@ -8090,7 +8090,7 @@ Only required if Emacs < 29.3.
  :background "yellow")
 
 
-(load "/Users/jay/Dropbox/github/org-transclusion-power-pack/org-transclusion-power-pack.el")
+(load "/Users/jay/emacs/external-packages/org-transclusion-power-pack/org-transclusion-power-pack.el")
 
 #+end_src
 
