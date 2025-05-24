@@ -9096,7 +9096,7 @@ Otherwise report success and, on confirmation, move the file to
           (message "Moved to %s" dest-file))))
      ;; ❌ parse error - show the error object
      (t
-      (message "❌  %s --- %S" file result))))) 
+      (message "❌  %s --- %S" file result)))))
 
 
 (defun jay/debug-scan-org-tree (root)
@@ -9129,6 +9129,29 @@ Print a quick report in *Messages* and return a list of problematic files."
   (condition-case err
       (progn (org-element-parse-buffer) (message "✅ no parse errors"))
     (error (message "❌ %S" err))))
+
+(defun jay/find-suspect-lines (&optional max-indent max-len)
+  "Echo line numbers with very deep bullet indent or very long length.
+Defaults: MAX-INDENT = 40 spaces, MAX-LEN = 800 chars."
+  (interactive)
+  (let* ((max-indent (or max-indent 40))
+         (max-len   (or max-len   800))
+         (re-bullet "^[ \t]*[-+*]\\|^[ \t]*[0-9]+[.)]"))
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let* ((bol (point))
+               (eol (line-end-position))
+               (len (- eol bol))
+               (indent (progn
+                         (skip-chars-forward " \t")
+                         (current-column))))
+          (when (or (and (looking-at re-bullet) (>= indent max-indent))
+                    (> len max-len))
+            (message "⚠️  line %d: indent %d, length %d"
+                     (line-number-at-pos) indent len)))
+        (forward-line 1)))))
+
 #+end_src
 
 
