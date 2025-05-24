@@ -522,10 +522,9 @@ Works!
 * The Writing Environment
 
 * Spellcheck / flyspell
-** flyspell setup
-#+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t; -*-
 
+** old flyspell
+#+begin_example emacs-lisp
 (use-package flyspell
   :ensure nil  ;; flyspell is built into Emacs, not an external package
   ;; We don't do :defer t here because :hook already defers loading
@@ -566,6 +565,13 @@ Works!
                  '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US") nil utf-8)))
   (my/fix-ispell-contraction))
+
+#+end_example
+
+** flyspell setup
+#+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t; -*-
+
 
 
 
