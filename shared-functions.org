@@ -525,64 +525,45 @@ Works!
 
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t; -*-
-
 (use-package flyspell
-  :ensure nil ;; built-in package
+  :ensure nil                       ; built-in
   :hook ((text-mode . flyspell-mode)
          (org-mode  . flyspell-mode))
   :bind (:map flyspell-mode-map
-              ("C-." . nil)) ;; Disable default binding
+              ("C-." . nil))        ; free C-. for something else
   :config
-  ;; Flyspell settings
+  ;;--- Flyspell UI/behaviour ------------------------------------
   (setq flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
         flyspell-mark-duplications-exceptions
         '((nil "that" "had" "really" "very" "much")
           ("\\`francais" "nous" "vous")))
 
-  ;; Ispell/Hunspell setup
-  (setq-default ispell-program-name (executable-find "hunspell")
-                ispell-dictionary   "en_US-large"
-                ispell-personal-dictionary (expand-file-name "~/Library/Spelling/personal.dic")
-                ispell-really-hunspell t)
-
-  (setenv "DICPATH" (expand-file-name "~/Library/Spelling"))
-  (setenv "DICTIONARY" "en_US")
-
-  ;; Skip org-mode source blocks during spell check
+  ;; Skip Org source blocks
   (defun my-org-setup-flyspell ()
     (make-local-variable 'ispell-skip-region-alist)
     (add-to-list 'ispell-skip-region-alist
                  '("^#\\+begin_src" . "^#\\+end_src")))
   (add-hook 'org-mode-hook #'my-org-setup-flyspell)
 
-  ;; Fix contractions in ispell/hunspell
+  ;; Improve handling of English contractions when Hunspell is used
   (defun my/fix-ispell-contractions ()
-    "Enable correct handling of contractions (e.g., shouldn't)."
     (add-to-list 'ispell-dictionary-alist
                  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US-large") nil utf-8)))
   (my/fix-ispell-contractions))
 
-
-
-
-
+;; ---------------------------------------------------------------
+;; helper to add words quickly
 (defun add-word-to-personal-dictionary ()
-  "Quickly add the word under cursor to personal dictionary."
+  "Add the word at point to the personal Hunspell dictionary."
   (interactive)
-  (let* ((word-info (flyspell-get-word))
-         (word (car word-info)))
+  (pcase-let ((`(,word ,start ,end)
+               (flyspell-get-word)))
     (if word
-        (flyspell-do-correct 'save nil word (point)
-                             (cadr word-info)
-                             (caddr word-info)
-                             (point))
+        (flyspell-do-correct 'save nil word start end end (point))
       (message "No word under cursor."))))
-
-
-#+END_SRC
+#+END_SRC 
 
 * UI / customization of appearance and editing environment
 ** mouse
