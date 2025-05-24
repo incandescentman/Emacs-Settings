@@ -526,43 +526,33 @@ Works!
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
-  :ensure nil                       ; built-in
+  :ensure nil                      ; built-in
   :hook ((text-mode . flyspell-mode)
          (org-mode  . flyspell-mode))
   :bind (:map flyspell-mode-map
-              ("C-." . nil))        ; free C-. for something else
-  :config
-  ;;--- Flyspell UI/behaviour ------------------------------------
+              ("C-." . nil))      ; unbind default
+  :init
+  ;; buffer-local tuning
   (setq flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
         flyspell-mark-duplications-exceptions
-        '((nil "that" "had" "really" "very" "much")
-          ("\\`francais" "nous" "vous")))
-
-  ;; Skip Org source blocks
+        '( (nil "that" "had" "really" "very" "much")
+           ("\\`francais" "nous" "vous")))
+  :config
+  ;; Skip code blocks in Org
   (defun my-org-setup-flyspell ()
-    (make-local-variable 'ispell-skip-region-alist)
-    (add-to-list 'ispell-skip-region-alist
-                 '("^#\\+begin_src" . "^#\\+end_src")))
+    (when (derived-mode-p 'org-mode)
+      (make-local-variable 'ispell-skip-region-alist)
+      (add-to-list 'ispell-skip-region-alist
+                   '("^#\\+begin_src" . "^#\\+end_src"))))
   (add-hook 'org-mode-hook #'my-org-setup-flyspell)
 
-  ;; Improve handling of English contractions when Hunspell is used
+  ;; Better handling of contractions
   (defun my/fix-ispell-contractions ()
     (add-to-list 'ispell-dictionary-alist
                  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US-large") nil utf-8)))
   (my/fix-ispell-contractions))
-
-;; ---------------------------------------------------------------
-;; helper to add words quickly
-(defun add-word-to-personal-dictionary ()
-  "Add the word at point to the personal Hunspell dictionary."
-  (interactive)
-  (pcase-let ((`(,word ,start ,end)
-               (flyspell-get-word)))
-    (if word
-        (flyspell-do-correct 'save nil word start end end (point))
-      (message "No word under cursor."))))
 #+END_SRC 
 
 * UI / customization of appearance and editing environment
@@ -1786,7 +1776,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
 (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
-(setq org-content (replace-regexp-in-string "￼" "" org-content))
+(setq org-content (replace-regexp-in-string "" "" org-content))
  (setq org-content (replace-regexp-in-string " " " " org-content))
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
 (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
@@ -1845,7 +1835,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
 (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
-(setq org-content (replace-regexp-in-string "￼" "" org-content))
+(setq org-content (replace-regexp-in-string "" "" org-content))
  (setq org-content (replace-regexp-in-string " " " " org-content))
  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
 (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
