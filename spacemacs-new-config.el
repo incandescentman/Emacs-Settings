@@ -112,7 +112,7 @@
 (org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
 ;; (load "/Users/jay/emacs/archive/email.el")
 ;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
-(load "/Users/jay/emacs/prelude/core/prelude-core.el")
+(load "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
 (load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
 ;; (load "/Users/jay/gnulisp/book-functions.el")
@@ -219,9 +219,9 @@
 ;; if Emacs is running in terminal
 (if (is-in-terminal)
     (iterm-mode)
-  ;; (load-theme 'zenburn)
-  (org-mode)
-  )
+    ;; (load-theme 'zenburn)
+    (org-mode)
+    )
 
 ;; (iterm-mode)
 
