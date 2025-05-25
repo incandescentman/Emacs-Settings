@@ -72,13 +72,6 @@
 ;;   (normal-top-level-add-subdirs-to-load-path))
 
 
-;; I downloaded the updated version of org from GNU Elpa here and it seemed to work: https://elpa.gnu.org/packages/org.html
-(use-package org
-  :defer
-  :custom
-  (org-hide-leading-stars t)
-  (org-adapt-indentation nil)
-  )
 
 
 (setq vc-follow-symlinks t)
