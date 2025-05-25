@@ -45,7 +45,7 @@ Automatically load abbreviations table:
   (interactive)
   (org-indent-mode 1)
   (recenter-top-bottom)
-(adjust-font-size-for-all-frames)
+sed--adjust-font-size
   )
 #+END_SRC
 
@@ -98,7 +98,7 @@ Automatically load abbreviations table:
    (if (frame-parameter nil 'fullscreen)
        nil
      'fullboth))
-  (adjust-font-size-for-all-frames))
+  (sed--adjust-font-size))
 
 ;; Bind F11 and F17 to toggle-fullscreen.
 (unless (fboundp 'toggle-frame-fullscreen)
