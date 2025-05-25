@@ -4,30 +4,6 @@
 ;; early-init.el *or* init.el, before you start loading any .org configs
 (require 'ob-tangle)
 
-(with-eval-after-load 'org
-  (defun jd/org-auto-tangle ()
-    (when (and (derived-mode-p 'org-mode)
-               (member "t" (cdr (assoc "auto_tangle"
-                                       (org-collect-keywords '("auto_tangle"))))))
-      (org-babel-tangle)))
-  (add-hook 'after-save-hook #'jd/org-auto-tangle))
-
-(with-eval-after-load 'org    ; 2️⃣ define + register the helper
-  (defun jd/org-auto-tangle ()
-    "Tangle this Org buffer on save when it has #+auto_tangle: t."
-    (when (and (derived-mode-p 'org-mode)
-               (member "t"
-                       (cdr (assoc "auto_tangle"
-                                   (org-collect-keywords '("auto_tangle"))))))
-      (org-babel-tangle)))
-
-  ;; Global hook is fine; predicate prevents work on non-Org files.
-  (add-hook 'after-save-hook #'jd/org-auto-tangle))
-
-;; use a buffer-local hook to avoid running the predicate on every file type
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'after-save-hook #'jd/org-auto-tangle nil t)))
 
 
 
@@ -60,7 +36,7 @@
   :demand t
   :init (gcmh-mode 1))
 
-(setq message-log-max 4000)
+(setq message-log-max t)
 ;; (use-package benchmark-init
 ;;   :ensure t
 
@@ -127,23 +103,19 @@
   :load-path "/Users/jay/emacs/emacs-settings/")
 
 (use-package counsel
-  :defer)
+  )
 
 
 (autoload 'whittle "whittle" nil t)
 
 
 
-
-;; --- 5. load *tangled* config pieces ----------------------------------------
-(dolist (file '("gnu-emacs-startup.el"
-                "shared-functions.el"
-                "spacecraft-mode.el"
-                "pasteboard-copy-and-paste-functions.el"
-                "search-commands.el"
-                "fonts-and-themes.el"))
-  (load (expand-file-name file "~/emacs/emacs-settings/")))
-
+(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
+(org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
+(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
+(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
@@ -274,9 +246,9 @@
 ;; if Emacs is running in terminal
 (if (is-in-terminal)
     (iterm-mode)
-    ;; (load-theme 'zenburn)
-    (org-mode)
-    )
+  ;; (load-theme 'zenburn)
+  (org-mode)
+  )
 
 ;; (iterm-mode)
 
