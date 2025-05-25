@@ -1,3 +1,23 @@
+;; ------------- init.el (or early-load file) --------------------------
+(require 'ob-tangle)          ; 1️⃣ make sure tangling is available
+
+(with-eval-after-load 'org    ; 2️⃣ define + register the helper
+  (defun jd/org-auto-tangle ()
+    "Tangle this Org buffer on save when it has #+auto_tangle: t."
+    (when (and (derived-mode-p 'org-mode)
+               (member "t"
+                       (cdr (assoc "auto_tangle"
+                                   (org-collect-keywords '("auto_tangle"))))))
+      (org-babel-tangle)))
+
+  ;; Global hook is fine; predicate prevents work on non-Org files.
+  (add-hook 'after-save-hook #'jd/org-auto-tangle))
+
+
+
+
+
+
 ;; debugging steps. Commenting these out now that it seems to be working.
 
 ;; (message "DEBUG: About to load helpers...")
@@ -98,6 +118,11 @@
 
 
 (autoload 'whittle "whittle" nil t)
+
+
+
+
+
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")

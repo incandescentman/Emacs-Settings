@@ -1,4 +1,5 @@
-#+BEGIN_SRC emacs-lisp
+#+auto_tangle: t
+#+BEGIN_SRC emacs-lisp 
 ;; -*- lexical-binding: t; -*-
 #+END_SRC
 
