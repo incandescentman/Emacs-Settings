@@ -1,3 +1,5 @@
+#+auto_tangle: t
+
 * Red cursor mode
 
 This customization with the big blocky boxy red cursor makes me so happy.

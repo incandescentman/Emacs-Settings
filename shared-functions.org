@@ -1,4 +1,5 @@
-;; -*- lexical-binding: t -*-
+#+auto_tangle: t
+;; -*- lexical-binding: t -*- 
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
 ;;; (abbrev-mode)

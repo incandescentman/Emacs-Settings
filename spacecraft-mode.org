@@ -1,4 +1,5 @@
-# Local Variables:
+#+auto_tangle: t
+# Local Variables: 
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (my-org-config-mode 1)
