@@ -763,6 +763,7 @@ read-file-name-completion-ignore-case t)
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
+:defer t
   :bind)
 #+END_SRC
 
@@ -930,7 +931,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 **  hl-todo
 #+begin_src emacs-lisp
 (use-package hl-todo
-:defer
+:defer t
 ; ensure t
 :hook (org-mode . hl-todo-mode)
  :config
