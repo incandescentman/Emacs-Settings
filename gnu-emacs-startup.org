@@ -52,7 +52,7 @@ sed--adjust-font-size
 * org predicates
   #+BEGIN_SRC emacs-lisp
 (use-package org-element
-:defer
+:defer t
   )
 
   (defun org-checkbox-p ()
@@ -113,7 +113,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
 
 #+begin_EXAMPLE emacs-lisp
 (use-package tab-bar
-:defer
+:defer t
  :config
  (tab-bar-mode -1))
  #+END_EXAMPLE
@@ -1561,7 +1561,7 @@ different → different
 * web-mode
 #+BEGIN_SRC emacs-lisp
     (use-package web-mode
-      :defer
+      :defer t
       :init
       (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
        (rainbow-mode)
@@ -1576,7 +1576,7 @@ different → different
 * mw-thesaurus
 #+BEGIN_SRC emacs-lisp
 (use-package mw-thesaurus
-  :defer)
+  :defer t)
 (load "/Users/jay/emacs/emacs-secret/secret-codes.el")
 (define-key key-minor-mode-map (kbd "M-s-t") 'mw-thesaurus-lookup-at-point)
 #+END_SRC
