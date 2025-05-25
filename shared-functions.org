@@ -1125,7 +1125,7 @@ I think this is to make parent ~DONE~ states automatically update:
 
 (advice-add 'org-kill-line   :after #'sed--update-parent-cookie)
 (advice-add 'kill-whole-line :after #'sed--update-parent-cookie)
-#+END_SRC 
+#+END_SRC
 
 *** checkbox-list-complete
 Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
@@ -2517,6 +2517,7 @@ AdrianKubala:
   (vertico-mode))
 
 (use-package projectile
+:defer t
   :diminish projectile-mode
   :init
   (projectile-mode +1)
@@ -2862,7 +2863,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 ;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 (use-package rainbow-delimiters
-:defer)
+:defer t)
 (set-face-attribute 'rainbow-delimiters-unmatched-face nil
                     :foreground 'unspecified
                     :inherit 'error)
@@ -3023,7 +3024,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 * tiny-expand
 #+BEGIN_SRC emacs-lisp
 (use-package tiny
-  :defer
+  :defer t
 :config
 (tiny-setup-default)
 )
@@ -4035,7 +4036,7 @@ into the main dumped emacs"
 #+BEGIN_SRC emacs-lisp
 
 (use-package crux
-:defer
+:defer t
 :bind
 ( "M-`" . crux-swap-windows)
 ( "s-k rf" .  crux-rename-file-and-buffer)
@@ -4338,7 +4339,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 * ox-clip
 #+BEGIN_SRC emacs-lisp
 (use-package ox-clip
-  :defer)
+  :defer t)
 #+END_SRC
 
 * org-def
@@ -4364,7 +4365,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 * beacon
 #+BEGIN_EXAMPLE emacs-lisp
 (use-package beacon
-:defer
+:defer t
  :init
 
  (beacon-mode 1)
@@ -4377,13 +4378,13 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 ** tufte export to HTML
 #+BEGIN_SRC emacs-lisp
 (use-package ox-tufte
-  :defer)
+  :defer t)
 #+END_SRC
 
 ** tufte export to LaTeX
 #+begin_src emacs-lisp
 (use-package ox-tufte-LaTeX
-:defer
+:defer t
   :ensure nil
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
   )
@@ -4517,7 +4518,7 @@ See also spacemacs/describe-system-info
 * shell-pop
 #+BEGIN_SRC emacs-lisp
 (use-package shell-pop
-:defer
+:defer t
  :bind (("C-t" . shell-pop))
  :config
  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
@@ -4751,7 +4752,7 @@ Go through `org-structure-template-alist' and
 * multiple cursors
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
-  :defer)
+  :defer t)
 (setq mc/list-file "/Users/jay/emacs/emacs-settings/mc-lists.el")
 
 
@@ -4780,6 +4781,7 @@ Go through `org-structure-template-alist' and
 (define-key endless/mc-map (kbd "<") #'mc/cycle-backward)
 
 (use-package hydra
+:defer t
   :ensure t)
 
 (defhydra hydra-mc (:hint nil)
@@ -5000,7 +5002,7 @@ Pretty cool here:
 
 #+begin_src emacs-lisp
 (use-package ido-vertical-mode
-  :defer)
+  :defer t)
 (ido-mode 1)
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-and-C-p-only)
@@ -5224,7 +5226,7 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 * Warnings
 #+begin_src emacs-lisp
 (use-package warnings
-  :defer)
+  :defer t)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
 #+end_src
 
@@ -5345,7 +5347,7 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 Use key chord
 #+BEGIN_SRC emacs-lisp
 (use-package key-chord
-  :defer)
+  :defer t)
 (key-chord-mode 1)
 #+END_SRC
 
@@ -5384,7 +5386,7 @@ To use this function, highlight the region you want to add numbering to and then
 #+begin_EXAMPLE emacs-lisp
 
 (use-package org-panes
-:defer
+:defer t
  :ensure nil
  :config (setq org-panes-split-overview-horizontally t)
      (setq org-panes-main-size 70))
@@ -5405,10 +5407,10 @@ To use this function, highlight the region you want to add numbering to and then
      #+END_EXAMPLE
 
 * word count
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package wc-goal-mode
-:defer)
-#+end_src
+:defer t)
+#+END_EXAMPLE
 
 
 * org-roam
@@ -5424,7 +5426,7 @@ To use this function, highlight the region you want to add numbering to and then
 #+begin_src emacs-lisp
 ;; Example configuration for Consult
 (use-package consult
-:defer
+:defer t
  :after (consult-eglot)
  ;; Replace bindings. Lazily loaded due by `use-package'.
  :bind (
