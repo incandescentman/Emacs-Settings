@@ -5610,7 +5610,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
-:defer
+:defer t
  :ensure t ; only need to install it, embark loads it after consult if found
  :hook
  (embark-collect-mode . consult-preview-at-point-mode))
@@ -5648,7 +5648,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+begin_EXAMPLE emacs-lisp
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/chatgpt-shell-main")
 (use-package chatgpt-shell
-  :defer)
+  :defer t)
 
 
 #+END_EXAMPLE
@@ -5680,7 +5680,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+begin_src emacs-lisp
 
 (use-package openwith
-  :defer)
+  :defer t)
 (setq openwith-associations '(("\\.pdf\\'" "open" (file))))
 (openwith-mode t)
 #+end_src
@@ -5716,7 +5716,7 @@ during the first export:
 * org-autolist
 #+begin_EXAMPLE emacs-lisp
 (use-package org-autolist
-:defer
+:defer t
 :hook (org-mode . org-autolist-mode))
 (add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
 
@@ -5800,7 +5800,7 @@ Gives me all the offline dictionaries I've previously installed! Is great.
 
 #+begin_src emacs-lisp
 (use-package sdcv
-:defer
+:defer t
 :custom
 sdcv-popup-function 'showtip)
 #+end_SRC
@@ -5958,7 +5958,7 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
 * Google things from within emacs
 #+begin_SRC emacs-lisp
 (use-package google-this
-:defer
+:defer t
 :custom
 (google-this-browse-url-function 'eww-browse-url)
   )
@@ -5996,7 +5996,7 @@ v: view-source
 
 #+begin_src emacs-lisp
 (use-package eww
-:defer
+:defer t
 :bind
   (
    :map eww-mode-map
