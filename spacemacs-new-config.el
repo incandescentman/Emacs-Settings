@@ -196,19 +196,29 @@
 
 (setq company-global-modes '(not org-mode))
 
-(toggle-fullscreen)
-(menu-bar-mode -1)
-(toggle-menu-bar-mode-from-frame)
+
+
+
 (setq org-hide-leading-stars t)
 
-;; (electric-pair-mode 1)
-(smartparens-mode 1)
-(smartparens-global-mode 1)
 
-;; (add-hook 'ido-setup-hook (lambda ()
-;;                            (define-key ido-completion-map (kbd "<left>") 'ido-prev-match)
-;;                            (define-key ido-completion-map (kbd "<right>") 'ido-next-match)
-;;                            ) t)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (toggle-menu-bar-mode-from-frame)
+            (scrollbar-init)
+            (menu-bar-mode -1)
+            (smartparens-mode 1)
+            (smartparens-global-mode 1)
+            ))
+
+(toggle-fullscreen)
+
+
+
+
+;; (electric-pair-mode 1)
+
+
 
 ;; (defadvice load-theme (before theme-dont-propagate activate)
 ;;   (mapcar #'disable-theme custom-enabled-themes))
