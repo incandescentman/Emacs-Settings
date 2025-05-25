@@ -1,12 +1,14 @@
-(message "DEBUG: About to load helpers...")
-(defvar te nil)
+;; debugging steps. Commenting these out now that it seems to be working.
 
-(advice-add 'load :before (lambda (f &rest _) (message ">>> LOADING %s" f)))
+;; (message "DEBUG: About to load helpers...")
+;; (defvar te nil)
+
+;; (advice-add 'load :before (lambda (f &rest _) (message ">>> LOADING %s" f)))
 
 
-(defun trace-load (file &rest _)
-  (message ">>> LOADING %s" file))
-(advice-add 'load :before #'trace-load)
+;; (defun trace-load (file &rest _)
+;;   (message ">>> LOADING %s" file))
+;; (advice-add 'load :before #'trace-load)
 
 
 ;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
@@ -15,8 +17,15 @@
 ;; Performance optimizations
 ;; --------------------
 
-(add-to-list 'load-path "/Users/jay/emacs/emacs-settings/gcmh.el")
-(gcmh-mode 1)
+
+
+
+;; 2) --- use GCMH via use-package -----------------------
+(use-package gcmh
+  :ensure t
+  :demand t
+  :init (gcmh-mode 1))
+
 (setq message-log-max t)
 ;; (use-package benchmark-init
 ;;   :ensure t
