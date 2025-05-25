@@ -124,16 +124,17 @@
 
 
 
-
+;; --- 5. load *tangled* config pieces ----------------------------------------
+(dolist (file '("gnu-emacs-startup.el"
+                "shared-functions.el"
+                "spacecraft-mode.el"
+                "pasteboard-copy-and-paste-functions.el"
+                "search-commands.el"
+                "fonts-and-themes.el"))
+  (load (expand-file-name file "~/emacs/emacs-settings/")))
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
-(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.el")
-(org-babel-load-file "~/emacs/emacs-settings/shared-functions.el")
-(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.el")
-(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.el")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.el")
 ;; (load "/Users/jay/emacs/archive/email.el")
 ;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
 (load "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
@@ -236,11 +237,19 @@
             (menu-bar-mode -1)
             (smartparens-mode 1)
             (smartparens-global-mode 1)
-            (toggle-fullscreen)
             ))
 
 
+;;; --- Full-screen at start-up ---------------------------------------------
+(defun jd/enter-fullscreen-once ()
+  "Make the initial GUI frame full-screen, then remove the hook."
+  (when (and (display-graphic-p)      ; skip if running in a tty
+             (fboundp 'toggle-frame-fullscreen))  ; built-in since Emacs 24
+    (toggle-frame-fullscreen))
+  ;; Only need to run once:
+  (remove-hook 'window-setup-hook #'jd/enter-fullscreen-once))
 
+(add-hook 'window-setup-hook #'jd/enter-fullscreen-once)
 
 
 ;; (electric-pair-mode 1)
