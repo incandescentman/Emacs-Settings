@@ -1,40 +1,50 @@
-;;; Keys.el --- all my key bindings  -*- lexical-binding: t; -*-
+;;; keys.el --- all my key bindings  -*- lexical-binding: t; -*-
 
-;;;; 0. Override Minor Mode Definition
+;;;; 0.  Override Minor Mode Definition
 (defvar key-minor-mode-map (make-sparse-keymap)
-  "Keymap that should win against major-mode maps.")
+  "Keymap that should win against major‑mode maps.")
 
+;; NOTE → make it *global* so one activation covers every buffer.
 (define-minor-mode key-minor-mode
-  "Enable my global keys in spite of major-mode maps."
-  :init-value nil
-  :lighter " key"
-  :keymap key-minor-mode-map)
+  "Enable my global keys in spite of major‑mode maps."
+  :init-value t                ; turned on once we load this file
+  :global     t               ; <<< important – fixes missing bindings
+  :lighter     " key"
+  :keymap     key-minor-mode-map)
 
 ;; Disable the override map inside the minibuffer
 (add-hook 'minibuffer-setup-hook (lambda () (key-minor-mode -1)))
 
-;;;; 1. Helper Functions
+;;;; 1. Helper Functions ------------------------------------------------
+
 (defun visit-messages-buffer ()
   "Switch to the *Messages* buffer in another window."
   (interactive)
   (view-echo-area-messages)
   (other-window 1))
 
-(defun copy-minibuffer-contents ()
-  "Copy the contents of the minibuffer."
+(defun visit-messages-buffer-full-screen ()
+  "Visit the *Messages* buffer in full screen."
   (interactive)
-  (beginning-of-visual-line)
-  (end-of-buffer)
-  (copy-region-as-kill (mark) (point))
-  ;; This custom function must be defined elsewhere in your configuration
-  ;; (push-kill-ring-pasteboard-to-MacOS-clipboard)
-  )
+  (with-current-buffer (messages-buffer)
+    (goto-char (point-max))
+    (switch-to-buffer (current-buffer))))
 
-;;;; 2. Keybinding Definitions
+(defun copy-minibuffer-contents (&optional _arg)
+  "Copy the entire contents of the minibuffer to the kill‑ring."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (goto-char (point-min))
+    (push-mark (point) t t)
+    (goto-char (point-max))
+    (copy-region-as-kill (region-beginning) (region-end))))
+
+;;;; 2. Keybinding Tables ----------------------------------------------
+
 (defconst my/global-key-bindings
-  '(;; =================================================================
+  '(;; ==================================================================
     ;; File Finding & Navigation
-    ;; =================================================================
+    ;; ==================================================================
     ("s-R"           . fasd-find-file)
     ("s-r"           . counsel-recentf)
     ("C-s-r"         . consult-find)
@@ -42,19 +52,19 @@
     ("s-k e e"       . fasd-find-file)
     ("s-k f z"       . counsel-fzf)
     ("s-P"           . projectile-find-file)
-    ("s-\\"          . visit-most-recent-file)
-    ("C-x C-j"       . dired-up-directory)
-    ("C-x C-d"       . consult-dir) ; Using consult-dir as the final choice
+    ("s-\\"         . visit-most-recent-file)
+    ("C-x C-d"       . dired) ; keep dired here – consult-dir is on "C-x C-j"
+    ("C-x C-j"       . consult-dir)
 
-    ;; =================================================================
+    ;; ==================================================================
     ;; Search & Replace
-    ;; =================================================================
+    ;; ==================================================================
     ("C-s"           . consult-line)
     ("s-f"           . isearch-forward-ignore-case)
     ("s-F"           . pasteboard-search-for-clipboard-contents)
     ("s-h"           . replace-string)
     ("s-g"           . isearch-repeat-forward)
-    ("C-s-g "        . consult-ripgrep-current-directory) ; Note the trailing space
+    ("C-s-g "        . consult-ripgrep-current-directory)
     ("s-G"           . counsel-projectile-ag)
     ("C-s-f"         . isearch-forward-word-at-point)
     ("s-k ag"        . affe-grep)
@@ -62,9 +72,9 @@
     ("M-s b"         . book-search)
     ("M-s c"         . current-buffers-search)
 
-    ;; =================================================================
+    ;; ==================================================================
     ;; Window Management
-    ;; =================================================================
+    ;; ==================================================================
     ("M-1"           . winum-select-window-1)
     ("M-2"           . winum-select-window-2)
     ("M-3"           . winum-select-window-3)
@@ -78,9 +88,9 @@
     ("M-0"           . copy-region-to-other-window)
     ("s-+"           . copy-region-to-other-window)
 
-    ;; =================================================================
-    ;; Org-mode Core
-    ;; =================================================================
+    ;; ==================================================================
+    ;; Org‑mode Core
+    ;; ==================================================================
     ("s-d"           . org-todo)
     ("M-d"           . org-todo)
     ("M-s-9"         . org-todo)
@@ -97,6 +107,9 @@
     ("s-K"           . org-cut-subtree)
     ("s-k v"         . org-paste-subtree)
     ("s-k x"         . org-cut-subtree)
+    ("s->"           . load-gnu-startup) ; keep this final binding for s->
+    ("s-k c s"       . org-schedule)
+    ("C-c C-s"       . org-schedule)
     ("s-k t d"       . org-todo-list)
     ("s-k a f"       . org-attach)
     ("s-L"           . org-mac-link-chrome-insert-frontmost-url)
@@ -111,9 +124,7 @@
     ("C-<tab>"       . org-cycle-force-archived)
     ("s-k t s"       . org-toggle-time-stamp-overlays)
 
-    ;; =================================================================
-    ;; Org Navigation
-    ;; =================================================================
+    ;; Navigation -------------------------------------------------------
     ("M-]"           . org-next-visible-heading)
     ("M-["           . org-previous-visible-heading)
     ("C-M-]"         . org-next-subtree-and-narrow)
@@ -121,30 +132,24 @@
     ("C-]"           . org-next-subtree-same-level-and-narrow)
     ("ESC ESC"       . org-previous-subtree-same-level-and-narrow)
 
-    ;; =================================================================
-    ;; Org Tables
-    ;; =================================================================
+    ;; Tables -----------------------------------------------------------
     ("s-k t c"       . org-table-create)
     ("s-k r t"       . org-render-table-at-point)
     ("s-k d c"       . org-table-delete-column)
     ("s-k i c"       . org-table-insert-column)
     ("s-k i r"       . org-table-insert-row)
 
-    ;; =================================================================
-    ;; Org Formatting
-    ;; =================================================================
+    ;; Formatting -------------------------------------------------------
     ("C-M-8"         . org-toggle-heading)
     ("M-8"           . org-toggle-heading-same-level)
     ("M-*"           . org-toggle-todo-heading)
     ("M-a"           . org-priority-up)
     ("s-k t t"       . toggle-between-src-and-example-block)
 
-    ;; =================================================================
-    ;; Text Manipulation & Clipboard
-    ;; =================================================================
+    ;; Text & Clipboard -------------------------------------------------
     ("M-t"           . titlecase-dwim)
-    ("C-w"           . copy-region-as-kill-and-push-to-clipboard) ; Note: Overrides default cut
-    ("s-c"           . pasteboard-copy-adaptive)
+    ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
+    ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-adjusted-subtrees-adaptive)
     ("s-x"           . pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe)
@@ -158,22 +163,18 @@
     ("M-_"           . em-dash)
     ("s-k r l"       . remove-link)
 
-    ;; =================================================================
-    ;; macOS Standard Keybindings
-    ;; =================================================================
+    ;; macOS‑style bindings --------------------------------------------
     ("s-a"           . mark-whole-buffer)
     ("s-s"           . jay/save-all-buffers)
     ("s-z"           . undo-fu-only-undo)
     ("s-y"           . undo-fu-only-redo-fail-with-heart)
-    ("[s-up]"        . beginning-of-buffer)
-    ("[s-down]"      . end-of-buffer)
+    ("<s-up>"        . beginning-of-buffer)
+    ("<s-down>"      . end-of-buffer)   ; <–– Fix: correct key syntax
     ("s-="           . embiggen-text)
     ("s--"           . ensmallen-text)
     ("s-,"           . customize-group)
 
-    ;; =================================================================
-    ;; Buffer Management
-    ;; =================================================================
+    ;; Buffers ----------------------------------------------------------
     ("s-b"           . narrow-or-widen-dwim)
     ("s-B"           . consult-buffer)
     ("s-k RET"       . kill-current-buffer)
@@ -184,9 +185,15 @@
     ("s-t"           . new-buffer)
     ("s-I"           . clone-indirect-buffer-new-window-and-focus)
 
-    ;; =================================================================
-    ;; Editing & Movement
-    ;; =================================================================
+    ;; Help & Docs ------------------------------------------------------
+    ("M-h"           . help-command)
+    ("M-h M-k"       . describe-key)
+    ("s-D"           . define-word-at-point)
+    ("s-T"           . mw-thesaurus-lookup-dwim)
+    ("s-k g t"       . google-translate-at-point)
+    ("C-s-]"         . help-go-forward)
+
+    ;; Editing Helpers --------------------------------------------------
     ("C-d"           . kill-word-correctly-and-capitalize)
     ("C-k"           . my/kill-line-dwim)
     ("C-l"           . reflash-indentation)
@@ -199,7 +206,7 @@
     ("M-="           . er/expand-region)
     ("C-="           . er/expand-region)
     ("M-'"           . insert-one-double-quote)
-    ("M-\""          . open-abbrevs)
+    ("M-\""        . open-abbrevs)
     ("M-."           . insert-period)
     ("M-,"           . insert-comma)
     ("M-?"           . insert-question-mark)
