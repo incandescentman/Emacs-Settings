@@ -8,34 +8,84 @@
 (define-prefix-command 'jay/super-u-map)
 (global-set-key (kbd "s-u") 'jay/super-u-map)
 
+(use-package org-roam
+  :defer t
+  :after  org
+
+  ;; ------------ pre-load tweaks --------------------------------
+  :init
+  (setq org-roam-db-autosync-mode nil)   ;; keep disabled while init runs
+
+  ;; ------------ user options -----------------------------------
+  :custom
+  (org-roam-directory               (file-truename "~/Dropbox/roam"))
+  (org-roam-database-connector 'sqlite-builtin)
+  ;;  (org-roam-directory               (file-truename "~/Dropbox/roam-dummy"))
+  (org-roam-directory-exclude-regexp "^documents/")
+  (org-roam-node-display-template
+   (concat "${title:*} "
+           (propertize "${tags:15}" 'face 'org-tag)))
+  (org-roam-dailies-directory "journal/")
+  (org-roam-file-exclude-regexp
+   "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$")
+  (org-roam-db-location
+   (expand-file-name "org-roam.db" (xdg-cache-home)))
+
+  ;; ------------ key-bindings -----------------------------------
+
+  ;; ------------ main configuration -----------------------------
+  :config
+  ;; 1. core setup
+  (require 'ol)            ; org-link helpers
+  (org-roam-setup)
+
+  ;; 2. resilient DB updates -------------------------------------
+  (setq org-roam-db-update-method 'idle)
+
+  (defun my/org-roam--safe-update (orig-fn &rest args)
+    "Run ORIG-FN safely; if it errors just log and skip FILE."
+    (condition-case err
+        (apply orig-fn args)
+      (error
+       (message "org-roam: skipped %s (%s)"
+                (or (car args) "<buffer>")
+                (error-message-string err)))))
+
+  (ignore-errors
+    (advice-remove 'org-roam-db-update-file #'my/org-roam--safe-update))
+  (advice-add 'org-roam-db-update-file :around #'my/org-roam--safe-update)
+
+
+  ;; 3. first full scan 5 s after Emacs finishes booting
+  (setq org-roam-db-sync-on-startup nil)
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-at-time "35 sec" nil #'org-roam-db-sync)))
+
+  ;; 4. dailies template
+  (setq org-roam-dailies-capture-templates
+        '(("j" "Journal" entry
+           "* %?"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n"))))
+
+  ;; 5. enable autosync after 5 s of user idleness
+  (run-with-idle-timer
+   5 nil
+   (lambda ()
+     (message "Launching org-roam autosync…")
+     (org-roam-db-autosync-mode 1)
+     ))
+
+  ;; hide the lighter
+  :delight org-roam-mode)
+
 ;; Include org-roam-protocol and org-roam-export after org-roam
 ;; (use-package org-roam-protocol
 ;;   :after org-roam)
 
 ;; (use-package org-roam-export
 ;;   :after org-roam)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 (add-to-list 'org-agenda-custom-commands
