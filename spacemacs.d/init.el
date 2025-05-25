@@ -134,7 +134,7 @@ This function should only modify configuration layer settings."
                                         ; smex
      ;; speed-reading
      spell-checking
-     ;; syntax-checking ; this is the layer with flycheck
+     syntax-checking ; this is the layer with flycheck
      ;; treemacs
      ;; typography
      ;; xkcd
@@ -149,7 +149,7 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-
+                                      amx
                                       org-transclusion
                                       ctrlf
                                       web-mode
