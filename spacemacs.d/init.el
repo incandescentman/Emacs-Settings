@@ -175,6 +175,7 @@ This function should only modify configuration layer settings."
                                       counsel-fd
                                       counsel-projectile
                                       crux
+                                      dash
                                       deadgrep
                                       define-word
                                       dired-quick-sort
@@ -202,6 +203,7 @@ This function should only modify configuration layer settings."
                                       ;; lister ;; (for delve)
                                       ;; magit
                                         ; markdown-mode
+                                      magit-section
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
@@ -241,6 +243,7 @@ This function should only modify configuration layer settings."
                                       rg
                                       ripgrep
                                       rspec-mode
+                                      s
                                       ;; scratch
                                       ;; scratch-message
                                       sdcv
@@ -897,7 +900,7 @@ before packages are loaded."
     (message "org-config-files-local-mode is now %s" org-config-files-local-mode)
     (if org-config-files-local-mode
         (setq-local abbrev-mode nil)
-      (kill-local-variable 'abbrev-mode)))
+        (kill-local-variable 'abbrev-mode)))
 
 
 
