@@ -16,7 +16,7 @@ https://chatgpt.com/share/e/67a6e6b2-a1b4-8001-b66a-a60df4a01948
 
 
 * capitalist-mode
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defvar capitalist-mode nil
  "Mode variable for capitalist-mode.")
 
@@ -34,7 +34,7 @@ https://chatgpt.com/share/e/67a6e6b2-a1b4-8001-b66a-a60df4a01948
 
 (capitalist-mode-on)
 (add-hook 'org-mode-hook 'capitalist-mode-on)
-#+end_src
+#+END_EXAMPLE
 
 
 * Captain
