@@ -9,10 +9,9 @@
 * environment settings
 ** Handle Emacs UTF-8 input
 #+BEGIN_SRC emacs-lisp
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(setenv "LANG" "en_US.UTF-8")
+;; early-init.el  ── locale in one place
+(set-language-environment "UTF-8")   ; everything speaks UTF-8
+(setenv "LANG" "en_US.UTF-8")        ; tell subprocesses
 #+END_SRC
 
 ** Sticky windows
@@ -1259,10 +1258,6 @@ provided the (transient) mark is active."
 ;; Save point position between sessions
 
 #+BEGIN_SRC emacs-lisp
-;; Save point position between sessions
-(use-package saveplace
-:defer
- :init (save-place-mode))
 #+END_SRC
 
 The saveplace package is part of Emacs, and remembers the position of point - even between emacs sessions.
@@ -1503,10 +1498,6 @@ Strips out any existing asterisks from the text first."
   '(org-quote ((t (:inherit default))))
   ;; '(org-link ((t (:underline nil))))
   '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
-
-
-
-  (org-mode)
     ))
 #+END_SRC
 
@@ -1568,15 +1559,11 @@ different → different
 
 * web-mode
 #+BEGIN_SRC emacs-lisp
-    (use-package web-mode
-      :defer t
-      :init
-      (add-hook 'web-mode-hook (lambda () (abbrev-mode -1)))
-       (rainbow-mode)
-       (rspec-mode)
-       (setq web-mode-markup-indent-offset 2)
-      :bind (:map web-mode-map
-      ("s-O" . prelude-open-with)))
+(use-package web-mode
+  :defer t
+  :hook ((web-mode . rainbow-mode)
+         (web-mode . rspec-mode))
+  :custom (web-mode-markup-indent-offset 2))
 #+END_SRC
 
 
