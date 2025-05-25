@@ -5847,13 +5847,14 @@ This is my goto way for navigating. It feels like it is reading your mind.
 
 
 
-(use-package exec-path-from-shell
-  :demand t
-  :custom
-  (exec-path-from-shell-arguments '("-l"))   ; no "-i"
-  :config
-  (exec-path-from-shell-initialize)
-)
+;; (use-package exec-path-from-shell
+;;   :demand t
+;;   :custom
+;;   (exec-path-from-shell-arguments '("-l"))   ; no "-i"
+;;   :config
+;;   (exec-path-from-shell-initialize)
+;; )
+
 
 (setenv "FASD_DATA" (expand-file-name "~/.fasd"))
 
