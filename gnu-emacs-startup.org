@@ -167,6 +167,14 @@ autosaves?
 #+END_SRC
 
 
+* load keys
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; Now, load your keybindings file.
+;; 'keys' corresponds to the (provide 'keys) line at the end of keys.el
+(require 'keys)
+#+end_src
 
 * keybindings
 ** Create custom keybinding prefix
