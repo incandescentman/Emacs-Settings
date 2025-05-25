@@ -1,5 +1,5 @@
 #+auto_tangle: t
-;; -*- lexical-binding: t -*- 
+;; -*- lexical-binding: t -*-
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
 ;;; (abbrev-mode)
@@ -2523,7 +2523,7 @@ AdrianKubala:
 
 *** swiper
 **** ivy
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ivy
 
 
@@ -2537,7 +2537,7 @@ AdrianKubala:
 (setq ivy-display-style 'fancy)
 
 )
-#+END_EXAMPLE
+#+END_SRC
 
 **** swiper
 #+BEGIN_EXAMPLE emacs-lisp
@@ -2550,7 +2550,7 @@ AdrianKubala:
 #+END_EXAMPLE
 
 **** swiper hydra
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -2614,7 +2614,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-#+END_EXAMPLE
+#+END_SRC
 
 ** searching
 
