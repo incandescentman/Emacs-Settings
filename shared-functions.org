@@ -1551,7 +1551,7 @@ Defines ~ibuffer-do-replace-string~:
 ** recentf
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-:defer
+:defer t
 :config
 (setq recentf-save-file "/Users/jay/emacs/recentf/recentf")
 (setq recentf-max-menu-items 100)
@@ -1693,7 +1693,7 @@ dired-omit-extensions
 * Word count
 #+begin_src emacs-lisp
 (use-package wc-mode
-
+:defer t
 :config
 (add-hook 'org-mode-hook 'wc-mode)
 
@@ -7016,11 +7016,16 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 * smartparens
 #+begin_src emacs-lisp
-(require 'smartparens)
+;; Ensure the library is loaded before keybinding
+(use-package smartparens
+  :defer nil                       ; <--- load immediately
+  :config
 (smartparens-mode 1)
 (smartparens-global-mode 1)
 
 (setq sp-escape-quotes-after-insert nil)
+
+)
 #+end_src
 
 
