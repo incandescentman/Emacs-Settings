@@ -4051,6 +4051,11 @@ into the main dumped emacs"
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
+(use-package undo-fu-session
+  :init
+  (setq undo-fu-session-compression nil)   ;; nil = never compress
+  (undo-fu-session-global-mode))
+
 (defun undo-fu-only-redo-fail-silently ()
  "Redo the last undone change if possible, silently fail if no more redo steps."
  (interactive)
@@ -4065,13 +4070,6 @@ into the main dumped emacs"
   (user-error (message "❤️"))))
 
 (setq undo-tree-auto-save-history nil)
-
-;; Install and configure undo-fu-session to save undo history between sessions
-(use-package undo-fu-session
- :ensure t
- :config
-;; (undo-fu-session-global-mode) ; do not persist undo tree across sessions
-)
 
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
@@ -8818,7 +8816,7 @@ c-u s-L
 
 
 * org-roam fail gracefully
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (condition-case err
     (progn
       (org-roam-setup)
@@ -8827,7 +8825,7 @@ c-u s-L
    (warn "Org-roam setup failed: %s" (error-message-string err))))
 
 
-#+end_src
+#+END_EXAMPLE
 
 
 
@@ -9137,6 +9135,17 @@ It returns a list, so you can later jump to the first culprit:
 ;; Speed up macOS open events
 (setq ns-pop-up-frames nil)  ; Don't create new frames
 (setq ns-use-native-fullscreen nil)  ; Faster fullscreen
+#+end_src
+
+* Profiler
+#+begin_src emacs-lisp
+
+(require 'profiler)
+(profiler-start 'cpu)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (profiler-report)
+            (profiler-stop)))
 #+end_src
 
 * Local Variables & The End
