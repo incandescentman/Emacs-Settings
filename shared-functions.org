@@ -1480,7 +1480,10 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 * ~eshell~
 #+BEGIN_SRC emacs-lisp
+
 (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
+
+(setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/Users/jay/work/bin:/Users/jay/Dropbox/GitHub/terminal_velocity/bin:/Users/jay/.pyenv/shims:/Users/jay/.pyenv/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin://Applications/Topaz Photo AI.app/Contents/Resources/bin:/Library/TeX/texbin:/Applications/iTerm.app/Contents/Resources/utilities:/Users/jay/Dropbox/apps/bash-scripts:/Users/jay/.rvm/bin")
 ;; (use-package eshell-autojump)
 #+END_SRC
 
@@ -5842,14 +5845,21 @@ This is my goto way for navigating. It feels like it is reading your mind.
 #+begin_src emacs-lisp
 ;;;; 0.  make Emacs start with your full shell environment  ;;;;
 
-(use-package exec-path-from-shell
-  :config
-  ;; Force FASD_DATA to point to the actual database
-  (setenv "FASD_DATA" (expand-file-name "~/.fasd"))
 
-  ;; import PATH and other vars
-  (dolist (var '("PATH" "FASD_OPTS"))
-    (exec-path-from-shell-copy-env var)))
+
+(use-package exec-path-from-shell
+  :demand t
+  :custom
+  (exec-path-from-shell-arguments '("-l"))   ; no "-i"
+  :config
+  (exec-path-from-shell-initialize)
+)
+
+(setenv "FASD_DATA" (expand-file-name "~/.fasd"))
+
+  ;; ;; import PATH and other vars
+  ;; (dolist (var '("PATH" "FASD_OPTS"))
+  ;;   (exec-path-from-shell-copy-env var)))
 
 ;;;; 1.  fasd ----------------------------------------------------
 
@@ -5871,7 +5881,7 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
   ;; --- build the CLI we know works for us -------------------
   (let* ((type-opt (pcase (prefix-numeric-value prefix)
                      ((pred (< 0)) " -f")     ; negative = files only
-                     ((pred (> 1)) " -d")     ; >1 = dirs only  
+                     ((pred (> 1)) " -d")     ; >1 = dirs only
                      (_ "")))                 ; default = both
          ;; Here we use  -s (score) + -l (list)
          (cmd (string-trim
@@ -5884,8 +5894,8 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
     (let ((choice (completing-read "fasd: " cands nil t)))
       (if (file-directory-p choice)
           (dired choice)
-        (find-file choice))))) 
-) 
+        (find-file choice)))))
+)
 
 ;; ------------------------------------------------------------
 ;;  Global function to add paths to fasd
@@ -9135,6 +9145,21 @@ It returns a list, so you can later jump to the first culprit:
     (when (display-graphic-p)
       (set-fontset-font t 'emoji (font-spec :family "Apple Color Emoji") nil 'prepend)
       (set-fontset-font t 'unicode (font-spec :family "Apple Color Emoji") nil 'prepend))))
+#+end_src
+
+* Server
+#+begin_src emacs-lisp
+;; ~/.emacs.d/init.el  --- very top is fine
+(require 'server)
+(unless (server-running-p)
+  (server-start))          ; one-time TCP/Unix socket
+#+end_src
+
+* open faster
+#+begin_src emacs-lisp
+;; Speed up macOS open events
+(setq ns-pop-up-frames nil)  ; Don't create new frames
+(setq ns-use-native-fullscreen nil)  ; Faster fullscreen
 #+end_src
 
 * Local Variables & The End
