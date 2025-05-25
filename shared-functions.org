@@ -5519,7 +5519,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
   #+begin_SRC emacs-lisp
 (use-package org-roam-ui
-:defer
+:defer t
   :after org-roam
 ;;     normally we'd recommend hooking orui after org-roam, but since org-roam does not have
 ;;     a hookable mode anymore, you're advised to pick something yourself
@@ -5539,7 +5539,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+begin_src emacs-lisp
 (use-package orderless
 
- :defer
+ :defer t
  :ensure t
  :custom
  (completion-styles '(orderless))
@@ -5550,7 +5550,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 * vertico
 #+begin_src emacs-lisp
 (use-package marginalia
-:defer
+:defer t
 :ensure t
  :delight
  :custom
@@ -5560,7 +5560,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  (marginalia-mode))
 
  (use-package vertico
-:defer
+:defer t
 :ensure t
    :init
  (vertico-mode)
@@ -5582,7 +5582,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 #+begin_EXAMPLE emacs-lisp
 
 (use-package embark
-:defer
+:defer t
  :ensure t
 
  :bind
