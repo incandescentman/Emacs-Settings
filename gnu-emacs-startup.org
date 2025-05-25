@@ -31,11 +31,19 @@
 Automatically load abbreviations table:
 #+BEGIN_SRC emacs-lisp
 (setq-default abbrev-mode t)
-(read-abbrev-file "/Users/jay/emacs/abbrevs/.abbrev_defs")
+
 (setq abbrev-file-name "/Users/jay/emacs/abbrevs/.abbrev_defs")
 (setq save-abbrevs t)
 (setq save-abbrevs 'silently)
 (setq only-global-abbrevs t)
+
+
+(run-with-idle-timer
+ 1 nil
+ (lambda ()
+   (save-place-mode 1)
+   (setq-default abbrev-mode t)
+   (read-abbrev-file "/Users/jay/emacs/abbrevs/.abbrev_defs")))
 #+END_SRC
 
 * reflash-indentation

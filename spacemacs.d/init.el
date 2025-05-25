@@ -873,6 +873,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq native-comp-jit-compilation nil)
 
 
+
+  ;; dotspacemacs/user-init  (or early in init.el)
+  (setq package-quickstart t            ; Emacs ≥27: load autoload cache
+        dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
+        dotspacemacs-enable-package-cleanup nil) ; don't touch packages
+
+
+
+
   ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
   (defvar smart-quotes-replacement-pairs nil
     "Alist of smart‑quote glyphs and their ASCII replacements.")
