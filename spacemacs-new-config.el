@@ -13,7 +13,10 @@
   ;; Global hook is fine; predicate prevents work on non-Org files.
   (add-hook 'after-save-hook #'jd/org-auto-tangle))
 
-
+;; use a buffer-local hook to avoid running the predicate on every file type
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook #'jd/org-auto-tangle nil t)))
 
 
 
@@ -46,7 +49,7 @@
   :demand t
   :init (gcmh-mode 1))
 
-(setq message-log-max t)
+(setq message-log-max 4000)
 ;; (use-package benchmark-init
 ;;   :ensure t
 
@@ -108,9 +111,8 @@
 
 
 (use-package wc-goal-mode
-  :defer
+  :defer t
   :ensure t
-  :defer
   :load-path "/Users/jay/emacs/emacs-settings/")
 
 (use-package counsel
@@ -126,12 +128,12 @@
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
-(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
-(org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
-(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
-(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.el")
+(org-babel-load-file "~/emacs/emacs-settings/shared-functions.el")
+(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.el")
+(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.el")
+(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.el")
 ;; (load "/Users/jay/emacs/archive/email.el")
 ;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
 (load "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
@@ -234,9 +236,9 @@
             (menu-bar-mode -1)
             (smartparens-mode 1)
             (smartparens-global-mode 1)
+            (toggle-fullscreen)
             ))
 
-(toggle-fullscreen)
 
 
 
@@ -323,7 +325,7 @@
 ;; (server-reflash)
 ;;  (triplicate-code)
 ;; (embiggen-text)
-(scrollbar-init)
+
 
 ;; (setq max-lisp-eval-depth 10000)
 ;;; When opening a file that is a symbolic link, don't ask whether I
