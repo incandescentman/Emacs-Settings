@@ -1411,29 +1411,33 @@ To enable Edit with Emacs in Chrome:
 
 ** Open everything in its right mode; use ~org-mode~ whenever possible
 #+BEGIN_SRC emacs-lisp
+;; ------------------------------------------------------------------
+;; File-extension → major-mode rules  (prepend to keep highest priority)
+;; ------------------------------------------------------------------
+(setq auto-mode-alist
+      (append
+       '(("\\.txt\\'"                       . org-mode)
+         ("\\.calca\\'"                     . org-mode)
+         ("\\.tmode\\'"                     . text-mode)
+         ("\\.msg\\'"                       . message-mode)
+         ("\\.org\\'"                       . org-mode)
+         ("\\.org_archive\\'"               . org-mode)
+         ("\\.txt_archive\\'"               . org-mode)
+         ("README\\'"                       . org-mode)
+         ("shared-functions\\'"             . emacs-lisp-mode)
+         ("gnu-emacs-startup\\'"            . emacs-lisp-mode)
+         ("\\.css\\'"                       . css-mode)
+         ("\\.rb\\'"                        . ruby-mode)
+         ("Rakefile\\'"                     . ruby-mode)
+         ("\\.js\\(?:on\\)?\\'"             . js2-mode)
+         ("\\.xml\\'"                       . nxml-mode)
+         ("\\.fountain\\'"                  . fountain-mode)
+         ("COMMIT_EDITMSG\\'"               . diff-mode)
+         ("\\.md\\'"                        . markdown-mode)
+         ("\\.abbrev_defs\\'"               . emacs-lisp-mode)
+         ("\\.html?\\'"                     . web-mode))
+       auto-mode-alist))                    ; keep earlier rules, too
 
-(setq auto-mode-alist (cons '("\\.txt" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.calca" . org-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.tmode" . text-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.msg" . message-mode) auto-mode-alist))
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-;; (add-to-list 'auto-mode-alist '("\\.abbrev_defs\\'" . org-mode))
-(add-to-list 'auto-mode-alist '("README$" . org-mode))
-(add-to-list 'auto-mode-alist '("shared-functions$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("gnu-emacs-startup$" . emacs-lisp-mode))
-(add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-(add-to-list 'auto-mode-alist '("\\.fountain$" . fountain-mode))
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
-
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\|txt_archive\\)$" . org-mode))
-
-(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.abbrev_defs" . emacs-lisp-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.html" . web-mode) auto-mode-alist))
 #+END_SRC
 
 ** Enable highlighting of text similar to standard word processors
@@ -1584,81 +1588,32 @@ Defines ~ibuffer-do-replace-string~:
 
 Make it so that recentf does not record the following uninteresting file types:
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'recentf-exclude "*Org tags*")
-(add-to-list 'recentf-exclude "*emacs-settings*")
-(add-to-list 'recentf-exclude "*sent mail*")
-(add-to-list 'recentf-exclude "/var/")
-(add-to-list 'recentf-exclude "cache")
-(add-to-list 'recentf-exclude "Applications")
-(add-to-list 'recentf-exclude "Before")
-(add-to-list 'recentf-exclude "Calendar")
-(add-to-list 'recentf-exclude "LaTeX")
-(add-to-list 'recentf-exclude "Shared")
-(add-to-list 'recentf-exclude "System")
-(add-to-list 'recentf-exclude "\\.Icon")
-(add-to-list 'recentf-exclude "\\.avi")
-(add-to-list 'recentf-exclude "\\.bmk")
-(add-to-list 'recentf-exclude "\\.bmp")
-(add-to-list 'recentf-exclude "\\.doc")
-(add-to-list 'recentf-exclude "\\.docx")
-(add-to-list 'recentf-exclude "\\.emacs.d")
-(add-to-list 'recentf-exclude "\\.flv")
-(add-to-list 'recentf-exclude "\\.gif")
-(add-to-list 'recentf-exclude "\\.git")
-(add-to-list 'recentf-exclude "\\.gz")
-(add-to-list 'recentf-exclude "\\.html")
-(add-to-list 'recentf-exclude "\\.ics")
-(add-to-list 'recentf-exclude "\\.jabber")
-(add-to-list 'recentf-exclude "\\.jpeg")
-(add-to-list 'recentf-exclude "\\.jpg")
-(add-to-list 'recentf-exclude "\\.mkv")
-(add-to-list 'recentf-exclude "\\.mov")
-(add-to-list 'recentf-exclude "\\.mp4")
-(add-to-list 'recentf-exclude "\\.mpeg")
-(add-to-list 'recentf-exclude "\\.mpg")
-(add-to-list 'recentf-exclude "\\.odg")
-(add-to-list 'recentf-exclude "\\.odp")
-(add-to-list 'recentf-exclude "\\.ods")
-(add-to-list 'recentf-exclude "\\.odt")
-(add-to-list 'recentf-exclude "\\.ogg")
-(add-to-list 'recentf-exclude "\\.ogm")
-(add-to-list 'recentf-exclude "\\.pdf")
-(add-to-list 'recentf-exclude "\\.png")
-(add-to-list 'recentf-exclude "\\.ppt")
-(add-to-list 'recentf-exclude "\\.tex")
-(add-to-list 'recentf-exclude "\\.tif")
-(add-to-list 'recentf-exclude "\\.wav")
-(add-to-list 'recentf-exclude "\\.wmv")
-(add-to-list 'recentf-exclude "\\.xls")
-(add-to-list 'recentf-exclude "\\.xlsx")
-(add-to-list 'recentf-exclude "agenda")
-(add-to-list 'recentf-exclude "archive")
-(add-to-list 'recentf-exclude "bookmark")
-(add-to-list 'recentf-exclude "bookmarks")
-(add-to-list 'recentf-exclude "cache")
-(add-to-list 'recentf-exclude "contacts")
-(add-to-list 'recentf-exclude "elpa")
-(add-to-list 'recentf-exclude "gnugol")
-(add-to-list 'recentf-exclude "helm")
-; (add-to-list 'recentf-exclude "ido")
-(add-to-list 'recentf-exclude "ido.hist")
-(add-to-list 'recentf-exclude "ido.last")
-(add-to-list 'recentf-exclude "koma")
-(add-to-list 'recentf-exclude "message")
-(add-to-list 'recentf-exclude "mu2")
-(add-to-list 'recentf-exclude "org-clock-save.el")
-(add-to-list 'recentf-exclude "paths")
-(add-to-list 'recentf-exclude "persp-auto")
-(add-to-list 'recentf-exclude "recent-addresses")
-(add-to-list 'recentf-exclude "recentf")
-(add-to-list 'recentf-exclude "roam/notes")
-(add-to-list 'recentf-exclude "rollback-info")
-; (add-to-list 'recentf-exclude "scp")
-(add-to-list 'recentf-exclude "shared")
-(add-to-list 'recentf-exclude "ssh:")
-;; (add-to-list 'recentf-exclude "-hours")
-;; (add-to-list 'recentf-exclude "todo")
+;; ------------------------------------------------------------------
+;; recentf — paths & patterns we never want to record
+;; ------------------------------------------------------------------
+(setq recentf-exclude
+      '(
+        ;; folders / globs
+        "/var/"          "elpa"          "cache"          "archive"
+        "contacts"       "gnugol"        "helm"           "ido\\.hist"
+        "ido\\.last"     "koma"          "message"        "mu2"
+        "org-clock-save\\.el" "paths"    "persp-auto"     "recent-addresses"
+        "recentf"        "roam/notes"    "rollback-info"  "ssh:"  "shared"
+        "agenda"         "bookmark"      "bookmarks"      "Applications"
+        "Before"         "Calendar"      "LaTeX"          "Shared"
+        "System"         "cache"         "*Org tags*"     "*emacs-settings*"
+        "*sent mail*"
 
+        ;; VCS / config dirs
+        "\\.git" "\\.emacs\\.d"
+
+        ;; binary or bulky file types
+        "\\.\\(?:avi\\|bmk\\|bmp\\|flv\\|gif\\|gz\\|ics\\|jabber\\|jpe?g\\|mkv\\|mov\\|mp[34g]\\|mpeg\\|ogg\\|ogm\\|pdf\\|png\\|pptx?\\|tif\\|wav\\|wmv\\|xls[x]?\\)\\'"
+        ;; office / markup you never reopen from recentf
+        "\\.\\(?:docx?\\|od[tspg]\\|tex\\|html?\\)\\'"
+        ;; src you skip
+        "\\.Icon" "\\.css" "\\.xml"
+        ))
 #+END_SRC
 
 ** grep-ignore
@@ -3418,26 +3373,23 @@ buffer is already narrowed; never widen."
 
 ** org insert easy template source blocks
 #+BEGIN_SRC emacs-lisp
-
-(use-package org-tempo
-; do not defer!
-  )
-
-                                        ; do not defer, is needed for these structure templates
-
-(add-to-list 'org-structure-template-alist '("sr" . "src"))
-
-(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-
-;; (add-to-list 'org-structure-template-alist '("p" . "src python"))
-
-(add-to-list 'org-structure-template-alist '("le" . "example"))
-
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-
-;; (add-to-list 'org-structure-template-alist '("la" . "Export latex"))
-
-(add-to-list 'org-structure-template-alist '("v" . " verse"))
+;; ------------------------------------------------------------------
+;; Org structure templates ­– <sr TAB> etc.
+;; ------------------------------------------------------------------
+(use-package org ; pulls in org-tempo automatically in modern Org
+  :init
+  ;; org-tempo must load *before* we touch the alist
+  (require 'org-tempo)
+  :config
+  ;; Prepend our shortcuts once, not 5×
+  (setq org-structure-template-alist
+        (append
+         '(("sr" . "src")                 ; generic <sr
+           ("sh" . "src sh")              ; shell
+           ("el" . "src emacs-lisp")      ; elisp
+           ("le" . "example")             ; example block
+           ("v"  . "verse"))              ; verse block
+         org-structure-template-alist)))
 #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
