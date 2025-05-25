@@ -206,25 +206,19 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 ** Appearance
 #+begin_src emacs-lisp
+;; A. keep the new, cached version -- recommended
+(defun sed--adjust-font-size (&optional frame)
+  "Resize default font once per frame size."
+  (let* ((frame (or frame (selected-frame)))
+         (w     (frame-pixel-width frame)))
+    (unless (equal w (frame-parameter frame 'sed--last-width))
+      (set-frame-parameter frame 'sed--last-width w)
+      (set-face-attribute 'default frame
+                          :font "Monaco"
+                          :height (if (> w 2540) 230 200)))))
 
-
-(defun adjust-font-size-for-all-frames (&optional frame)
-  "Adjust font size based on frame width."
-  (let ((frame (or frame (selected-frame))))
-    (set-face-attribute 'default frame
-                        :font "Monaco"
-                        :height (if (> (frame-pixel-width frame) 2540) 230 200))))
-
-;; The function is also invoked automatically when a new frame is created or when invoked manually.
-
-(add-hook 'after-make-frame-functions 'adjust-font-size-for-all-frames)
-(add-hook 'server-after-make-frame-hook 'adjust-font-size-for-all-frames)
-
-;; Additionally, the function is bound to the keyboard shortcut C-x C-\,
-;; so it can be quickly invoked without entering M-x.
-;; Uncomment the following line to enable this shortcut.
-;; (global-set-key (kbd "C-x C-\\") 'adjust-font-size-for-all-frames)
-
+(add-hook 'after-make-frame-functions #'sed--adjust-font-size)
+(add-hook 'window-size-change-functions #'sed--adjust-font-size)
 #+end_src
 
 ** fontify item checklists
@@ -783,15 +777,25 @@ read-file-name-completion-ignore-case t)
 *** archiving
 #+BEGIN_SRC emacs-lisp
 
-(defadvice org-archive-subtree (around my-org-archive-subtree activate)
+;; ---------------------------------------------------------------------
+;; Around-advice: tweak `org-archive-location`, then run the real command
+;; ---------------------------------------------------------------------
+
+(defun sed--org-archive-subtree (orig-fn &rest args)
+  "Archive subtree under a heading named after its parent.
+Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
   (let ((org-archive-location
-	 (if (save-excursion (org-back-to-heading)
-			     (> (org-outline-level) 1))
-	     (concat (car (split-string org-archive-location "::"))
-		     "::* "
-		     (car (org-get-outline-path)))
-	   org-archive-location)))
-    ad-do-it))
+         (if (save-excursion
+               (org-back-to-heading)
+               (> (org-outline-level) 1))
+             ;; archive into a drawer under the parent's headline
+             (concat (car (split-string org-archive-location "::"))
+                     "::* "
+                     (car (org-get-outline-path)))
+           org-archive-location)))
+    (apply orig-fn args)))                 ; run the original command
+
+(advice-add 'org-archive-subtree :around #'sed--org-archive-subtree)
 #+END_SRC
 
 *** org-mode speed commands
@@ -1111,12 +1115,17 @@ I think this is to make parent ~DONE~ states automatically update:
 	(org-back-to-heading)
 	(org-update-parent-todo-statistics)))))
 
-(defadvice org-kill-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
+;;; -----------------------------------------------------------
+;;; Keep parent TODO cookies in sync after killing a line
+;;; -----------------------------------------------------------
 
-(defadvice kill-whole-line (after fix-cookies activate)
-  (myorg-update-parent-cookie))
-#+END_SRC
+(defun sed--update-parent-cookie (&rest _)
+  "Refresh parent checkbox / todo statistics after editing."
+  (myorg-update_parent_cookie))   ; your existing helper
+
+(advice-add 'org-kill-line   :after #'sed--update-parent-cookie)
+(advice-add 'kill-whole-line :after #'sed--update-parent-cookie)
+#+END_SRC 
 
 *** checkbox-list-complete
 Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
