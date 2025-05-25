@@ -780,7 +780,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 (define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
-
+(define-key key-minor-mode-map (kbd "s-G") #'counsel-projectile-rg)
+ 
 (define-key org-mode-map (kbd "C-c C-s") 'org-schedule)
 (define-key key-minor-mode-map (kbd "C-c C-s") 'org-schedule)
 (define-key key-minor-mode-map (kbd "s-k o s") 'org-schedule)
