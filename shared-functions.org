@@ -497,6 +497,7 @@ Works!
          (org-mode  . flyspell-mode))
   :bind (:map flyspell-mode-map
               ("C-." . nil))      ; unbind default
+:defer t
   :init
   ;; buffer-local tuning
   (setq flyspell-abbrev-p t
@@ -933,7 +934,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 ; ensure t
 :hook (org-mode . hl-todo-mode)
  :config
- (global-hl-todo-mode)
+
  (setq hl-todo-include-modes '(org-mode))
  (setq hl-todo-keyword-faces
     '(("HOLD" . "#d0bf8f")
@@ -1349,7 +1350,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 ** org-mac-link
 #+BEGIN_SRC emacs-lisp
 (use-package org-mac-link
-:defer
+:defer t
   )
 #+END_SRC
 
@@ -2698,7 +2699,11 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
 ;; (use-package palimpsest)
-(palimpsest-mode 1)
+(add-hook 'after-init-hook
+          (lambda ()
+            (palimpsest-mode 1)
+            (global-hl-todo-mode 1)
+            (projectile-mode  1)))
 (define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)
 #+END_SRC
 
