@@ -39,7 +39,7 @@
     ("melpa" . "https://melpa.org/packages/")
     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
     ("tromey" . "https://tromey.com/elpa/")))
-(package-initialize)
+
 
 (use-package use-package
   :custom
@@ -486,6 +486,7 @@ Works!
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+:defer t
   :ensure nil                      ; built-in
   :hook ((text-mode . flyspell-mode)
          (org-mode  . flyspell-mode))
@@ -757,7 +758,7 @@ read-file-name-completion-ignore-case t)
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
-:defer t
+
   :bind)
 #+END_SRC
 
@@ -2238,20 +2239,6 @@ Add 'filename' to the kill ring *without duplicating it* if it's already there.
 #+BEGIN_SRC emacs-lisp
 
 
-(defun path-copy-path-to-clipboard ()
- "Copy the full current filename and path to the clipboard."
- (interactive)
- (let ((filename (if (equal major-mode 'dired-mode)
-           default-directory
-          (buffer-file-name))))
-  (when (and filename (not (equal filename (car kill-ring))))
-   (with-temp-buffer
-    (insert filename)
-    (clipboard-kill-region (point-min) (point-max)))
-   (kill-new filename))
-  (when filename
-   (message "Copied to clipboard: %s" filename)))
- (push-kill-ring-pasteboard-to-MacOS-clipboard))
 
 
 (defun path-copy-path-to-clipboard ()
@@ -2815,7 +2802,6 @@ The trick is to not use different colored delimiters! The reason I need the rain
 
 #+BEGIN_EXAMPLE emacs-lisp
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-;; (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 (use-package rainbow-delimiters
 :defer t)
