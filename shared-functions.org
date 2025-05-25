@@ -2568,7 +2568,7 @@ AdrianKubala:
 
 *** swiper
 **** ivy
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package ivy
 
 
@@ -2582,20 +2582,20 @@ AdrianKubala:
 (setq ivy-display-style 'fancy)
 
 )
-#+END_SRC
+#+END_EXAMPLE
 
 **** swiper
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (global-set-key (kbd "C-s") 'swiper)
 (setq ivy-re-builders-alist
  '((t . ivy--regex-plus)))
 
 (define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
 
-#+END_SRC
+#+END_EXAMPLE
 
 **** swiper hydra
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -2659,7 +2659,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** searching
 
@@ -6526,7 +6526,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 
 *** open recent directories
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; open recent directory, rquires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
@@ -6548,7 +6548,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 ;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
 ;; c-x C-d runs the command ido-list-directory
-#+END_SRC
+#+END_EXAMPLE
 
 **** dired-quick-sort
 #+BEGIN_SRC emacs-lisp
@@ -9112,7 +9112,8 @@ It returns a list, so you can later jump to the first culprit:
                minibuffer-local-completion-map
                minibuffer-local-must-match-map
                minibuffer-local-isearch-map
-               ivy-minibuffer-map))      ; drop this line if not using Ivy
+;;  ivy-minibuffer-map
+))      ; drop this line if not using Ivy
   (when (boundp map)
     (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit)))
 #+end_src
