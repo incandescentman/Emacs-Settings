@@ -1492,13 +1492,19 @@ Strips out any existing asterisks from the text first."
 
 * color theme advice
 #+BEGIN_SRC emacs-lisp
-  (defadvice load-theme (after load-theme-advice activate)
-  (custom-set-faces
-  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
-  '(org-quote ((t (:inherit default))))
-  ;; '(org-link ((t (:underline nil))))
-  '(org-done ((,class (:weight bold :box (:line-width 1 :color "#BBBBBB") :foreground "#BBBBBB" :background "green"))))
-    ))
+(defun my/apply-extra-faces (&rest _ignore)
+  "Tweak a few faces after a new theme becomes active."
+  (let ((class '((class color) (min-colors 89))))   ;; keep old spec working
+    (custom-set-faces
+     '(bold       ((t (:inherit font-lock-warning-face :weight bold))))
+     '(org-quote  ((t (:inherit default))))
+     ;; '(org-link ((t (:underline nil))))             ; ← enable if desired
+     `(org-done   ((,class (:weight bold
+                           :box (:line-width 1 :color "#BBBBBB")
+                           :foreground "#BBBBBB" :background "green"))))))
+  nil)                                              ;; keep advice chain happy
+
+(advice-add #'load-theme :after #'my/apply-extra-faces)
 #+END_SRC
 
 
