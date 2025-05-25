@@ -9141,12 +9141,14 @@ It returns a list, so you can later jump to the first culprit:
 * Profiler
 #+begin_src emacs-lisp
 
-(require 'profiler)
-(profiler-start 'cpu)
+(require 'profiler)              ; just in case
+(unless (profiler-running-p)     ; <-- safeguard
+  (profiler-start 'cpu))
 (add-hook 'emacs-startup-hook
           (lambda ()
             (profiler-report)
             (profiler-stop)))
+(provide 'shared-functions)
 #+end_src
 
 * Local Variables & The End

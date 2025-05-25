@@ -1,5 +1,16 @@
 ;; ------------- init.el (or early-load file) --------------------------
 (require 'ob-tangle)          ; 1️⃣ make sure tangling is available
+(setq debug-on-error t)
+;; early-init.el *or* init.el, before you start loading any .org configs
+(require 'ob-tangle)
+
+(with-eval-after-load 'org
+  (defun jd/org-auto-tangle ()
+    (when (and (derived-mode-p 'org-mode)
+               (member "t" (cdr (assoc "auto_tangle"
+                                       (org-collect-keywords '("auto_tangle"))))))
+      (org-babel-tangle)))
+  (add-hook 'after-save-hook #'jd/org-auto-tangle))
 
 (with-eval-after-load 'org    ; 2️⃣ define + register the helper
   (defun jd/org-auto-tangle ()
@@ -132,6 +143,7 @@
                 "search-commands.el"
                 "fonts-and-themes.el"))
   (load (expand-file-name file "~/emacs/emacs-settings/")))
+
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
