@@ -857,7 +857,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
 
-
+  ;; early in init.el / early-init.el
+  (let ((old-gc gc-cons-threshold)
+        (old-handlers file-name-handler-alist))
+    (setq gc-cons-threshold (* 256 1024 1024)      ; 256 MB
+          file-name-handler-alist nil)
+    (add-hook 'emacs-startup-hook
+              (lambda ()
+                (setq gc-cons-threshold (* 16 1024 1024)   ; 16 MB again
+                      file-name-handler-alist old-handlers))))
 
   (setq native-comp-enable-subr-trampolines nil)
 
