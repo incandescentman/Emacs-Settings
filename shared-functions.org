@@ -1481,9 +1481,24 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 * ~eshell~
 #+BEGIN_SRC emacs-lisp
 
-(setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
+;; (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 
-(setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/Users/jay/work/bin:/Users/jay/Dropbox/GitHub/terminal_velocity/bin:/Users/jay/.pyenv/shims:/Users/jay/.pyenv/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin://Applications/Topaz Photo AI.app/Contents/Resources/bin:/Library/TeX/texbin:/Applications/iTerm.app/Contents/Resources/utilities:/Users/jay/Dropbox/apps/bash-scripts:/Users/jay/.rvm/bin")
+(setenv "PATH"
+        (mapconcat
+         #'identity
+         '("/opt/homebrew/bin" "/opt/homebrew/sbin"
+;; "/Users/jay/work/bin"
+;; "/Users/jay/Dropbox/GitHub/terminal_velocity/bin"
+;; "/Users/jay/.pyenv/shims" "/Users/jay/.pyenv/bin"
+           "/usr/local/bin"                ; Homebrew Intel fallback
+           "/usr/bin" "/bin" "/usr/sbin" "/sbin"
+           "/Library/TeX/texbin"
+           "/Applications/iTerm.app/Contents/Resources/utilities"
+           "/Users/jay/Dropbox/apps/bash-scripts"
+;; "/Users/jay/.rvm/bin"
+)
+         ":"))
+
 ;; (use-package eshell-autojump)
 #+END_SRC
 
@@ -5858,7 +5873,7 @@ This is my goto way for navigating. It feels like it is reading your mind.
 
 (setenv "FASD_DATA" (expand-file-name "~/.fasd"))
 
-  ;; ;; import PATH and other vars
+  ;; import PATH and other vars
   ;; (dolist (var '("PATH" "FASD_OPTS"))
   ;;   (exec-path-from-shell-copy-env var)))
 
