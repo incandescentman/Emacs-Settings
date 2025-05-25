@@ -39,7 +39,7 @@
 ;; --------------------
 ;; Don't give org-assert-version error
 ;; --------------------
-(require 'org-macs)
+;; (require 'org-macs)
 
 ;;; Temporarily disable the file name handler.
 (setq default-file-name-handler-alist file-name-handler-alist)
@@ -83,11 +83,6 @@
 
 (setq vc-follow-symlinks t)
 
-(use-package flyspell
-  :defer
-  :ensure t
-  :hook (prog-mode . flyspell-prog-mode))
-;; (flyspell-mode)
 
 
 (setq default-frame-alist
