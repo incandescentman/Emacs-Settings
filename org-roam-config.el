@@ -107,7 +107,8 @@
    5 nil
    (lambda ()
      (message "Launching org-roam autosync…")
-     (org-roam-db-autosync-mode 1)))
+     (org-roam-db-autosync-mode 1)
+     ))
 
   ;; hide the lighter
   :delight org-roam-mode)
@@ -257,3 +258,11 @@ If region is active, then use it instead of the node at point."
 (defalias 'org-roam-heading-add 'org-id-get-create)
 (defalias 'org-roam-find-node 'org-roam-node-find)
 (defalias 'org-roam-insert-node 'org-roam-node-insert)
+
+
+(defun patch/emacsql-close (connection &rest args)
+  "Prevent calling emacsql-close if connection handle is nil."
+  (when (oref connection handle)
+    t))
+
+(advice-add 'emacsql-close :before-while #'patch/emacsql-close)
