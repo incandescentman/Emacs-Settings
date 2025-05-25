@@ -861,6 +861,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq native-comp-enable-subr-trampolines nil)
 
+  (setq native-comp-async-report-warnings-errors 'silent)
+  (setq native-comp-jit-compilation nil)
+
+
   ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
   (defvar smart-quotes-replacement-pairs nil
     "Alist of smart‑quote glyphs and their ASCII replacements.")
