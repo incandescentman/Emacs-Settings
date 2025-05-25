@@ -2,8 +2,8 @@
 
 ;; Find LaTeX on my system
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2024/bin/universal-darwin")
-  )
+    (add-to-list 'exec-path "/usr/local/texlive/2025/bin/universal-darwin")
+    )
 
 ;; XeLaTeX customisations
 

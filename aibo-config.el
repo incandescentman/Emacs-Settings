@@ -4,11 +4,15 @@
 
 ;; Ensure use-package is installed
 
+
+;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;; turn this back on downarrow
+
 ;; 1. Import environment variables using exec-path-from-shell
-(use-package exec-path-from-shell
-  :config
-  (setq exec-path-from-shell-variables '("PATH" "PYTHONPATH" "VIRTUAL_ENV"))
-  (exec-path-from-shell-initialize))
+;; (use-package exec-path-from-shell
+;;   :config
+;;   (setq exec-path-from-shell-variables '("PATH" "PYTHONPATH" "VIRTUAL_ENV"))
+;;   (exec-path-from-shell-initialize))
 
 ;; 2. Activate pyvenv and set the virtual environment
 (use-package pyvenv
