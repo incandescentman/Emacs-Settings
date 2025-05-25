@@ -5862,29 +5862,30 @@ This is my goto way for navigating. It feels like it is reading your mind.
   ;; ------------------------------------------------------------
   ;;  one single dispatcher
   ;; ------------------------------------------------------------
-  (defun fasd-find-file (&optional prefix query)
-    "Jump to a file/dir with fasd.
+(defun fasd-find-file (&optional prefix query)
+  "Jump to a file/dir with fasd.
 PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
-    (interactive "P")
-    (unless (executable-find "fasd")
-      (user-error "fasd executable not found in PATH"))
-    ;; --- build the CLI we know works for us -------------------
-    (let* ((type-opt (pcase (prefix-numeric-value prefix)
-                       (-1 " -f")             ; files only
-                       ((pred (> 1)) "")      ; both
-                       (_  " -d")))           ; dirs only
-           ;; Here we use  -s (score) + -l (list)
-           (cmd (string-trim
-                 (format "fasd -sl%s %s"
-                         type-opt
-                         (shell-quote-argument (or query "")))))
-           (cands (split-string (shell-command-to-string cmd) "\n" t)))
-      (unless cands
-        (user-error "fasd returned nothing (cmd was: %s)" cmd))
-      (let ((choice (completing-read "fasd: " cands nil t)))
-        (if (file-directory-p choice)
-            (dired choice)
-          (find-file choice))))))
+  (interactive "P")
+  (unless (executable-find "fasd")
+    (user-error "fasd executable not found in PATH"))
+  ;; --- build the CLI we know works for us -------------------
+  (let* ((type-opt (pcase (prefix-numeric-value prefix)
+                     ((pred (< 0)) " -f")     ; negative = files only
+                     ((pred (> 1)) " -d")     ; >1 = dirs only  
+                     (_ "")))                 ; default = both
+         ;; Here we use  -s (score) + -l (list)
+         (cmd (string-trim
+               (format "fasd -sl%s %s"
+                       type-opt
+                       (shell-quote-argument (or query "")))))
+         (cands (split-string (shell-command-to-string cmd) "\n" t)))
+    (unless cands
+      (user-error "fasd returned nothing (cmd was: %s)" cmd))
+    (let ((choice (completing-read "fasd: " cands nil t)))
+      (if (file-directory-p choice)
+          (dired choice)
+        (find-file choice))))) 
+) 
 
 ;; ------------------------------------------------------------
 ;;  Global function to add paths to fasd
