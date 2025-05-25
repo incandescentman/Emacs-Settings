@@ -447,40 +447,6 @@ Pretty cool actually. Leaving it in.
 
 Works!
 
-*** correct org-mode export
-#+BEGIN_SRC emacs-lisp
-(defun org-repair-export-blocks ()
- "Repair export blocks and INCLUDE keywords in current buffer."
- (interactive)
- (when (eq major-mode 'org-mode)
-  (let ((case-fold-search t)
-     (back-end-re (regexp-opt
-            '("HTML" "ASCII" "LATEX" "ODT" "ORG"
-             "MAN" "BEAMER" "TEXINFO" "GROFF" "KOMA-LETTER")
-            t)))
-   (org-with-wide-buffer
-    (goto-char (point-min))
-    (let ((block-re (concat "^[ \t]*#\\+BEGIN_" back-end-re)))
-     (save-excursion
-      (while (re-search-forward block-re nil t)
-       (let ((element (save-match-data (org-element-at-point))))
-        (when (eq (org-element-type element) 'special-block)
-         (save-excursion
-          (goto-char (org-element-property :end element))
-          (save-match-data (search-backward "_"))
-          (forward-char)
-          (insert "EXPORT")
-          (delete-region (point) (line-end-position)))
-         (replace-match "EXPORT \\1" nil nil nil 1))))))
-    (let ((include-re
-       (format "^[ \t]*#\\+INCLUDE: .*?%s[ \t]*$" back-end-re)))
-     (while (re-search-forward include-re nil t)
-      (let ((element (save-match-data (org-element-at-point))))
-       (when (and (eq (org-element-type element) 'keyword)
-            (string= (org-element-property :key element) "INCLUDE"))
-        (replace-match "EXPORT \\1" nil nil nil 1)))))))))
-#+END_SRC
-
 ** Flyspell skip source blocks
 ** Archiving / hooking
 
@@ -5232,9 +5198,9 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 * org 9.6 suppress a weird error message
 [[https://github.com/nobiot/org-transclusion/issues/105][Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting · Issue #105 · nobiot/org-transclusion]]
 
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (setq warning-suppress-types (append warning-suppress-types '((org-element-cache))))
-#+end_src
+#+END_EXAMPLE
 
 
 * Export to .docx
@@ -5876,29 +5842,23 @@ This is my goto way for navigating. It feels like it is reading your mind.
 #+begin_src emacs-lisp
 ;;;; 0.  make Emacs start with your full shell environment  ;;;;
 
-(use-package exec-path-from-shell              ; install first!
+(use-package exec-path-from-shell
   :config
-  ;; import PATH plus anything fasd relies on
-  (dolist (var '("PATH" "FASD_DATA" "FASD_OPTS"))
+  ;; Force FASD_DATA to point to the actual database
+  (setenv "FASD_DATA" (expand-file-name "~/.fasd"))
+
+  ;; import PATH and other vars
+  (dolist (var '("PATH" "FASD_OPTS"))
     (exec-path-from-shell-copy-env var)))
 
 ;;;; 1.  fasd ----------------------------------------------------
 
 (use-package fasd
-  :commands (fasd-find-file)     ;; autoload only when you call it
+  :commands (fasd-find-file)
   :init
   ;; do NOT auto-prompt --- the command runs with an empty query
   (setq fasd-enable-initial-prompt nil)
   :config
-  ;; ------------------------------------------------------------
-  ;;  record every file we *really* visit in Emacs
-  ;; ------------------------------------------------------------
-  (defun my/fasd--add-current ()
-    (when (and buffer-file-name (executable-find "fasd"))
-      (start-process "fasd" nil "fasd" "--add" buffer-file-name)))
-  (add-hook 'find-file-hook #'my/fasd--add-current)
-  (add-hook 'dired-after-readin-hook #'my/fasd--add-current)
-
   ;; ------------------------------------------------------------
   ;;  one single dispatcher
   ;; ------------------------------------------------------------
@@ -5914,7 +5874,6 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
                        ((pred (> 1)) "")      ; both
                        (_  " -d")))           ; dirs only
            ;; Here we use  -s (score) + -l (list)
-           ;; *Remove/adjust* flags until `M-! fasd ...` gives what you want
            (cmd (string-trim
                  (format "fasd -sl%s %s"
                          type-opt
@@ -5927,36 +5886,28 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
             (dired choice)
           (find-file choice))))))
 
-
-
+;; ------------------------------------------------------------
+;;  Global function to add paths to fasd
+;; ------------------------------------------------------------
 (defun my/fasd--add (path)
   "Register PATH in the fasd database, if fasd is available."
   (when (and path                       ; a real file/dir
              (executable-find "fasd")   ; the binary is in PATH
              (file-exists-p path))
     ;; run asynchronously - never blocks Emacs
-    (start-process "fasd" nil "fasd" "--add" (expand-file-name path))))
+    (start-process "fasd-add" nil "fasd" "--add" (expand-file-name path))))
 
+;; ------------------------------------------------------------
+;;  Hook it up to file visits
+;; ------------------------------------------------------------
 (add-hook 'find-file-hook          ; every real file you visit
-          (lambda () (my/fasd--add (buffer-file-name))))
+          (lambda () (my/fasd--add buffer-file-name)))
 
 (add-hook 'dired-after-readin-hook ; every directory you enter in Dired
           (lambda () (my/fasd--add
-                     (if (stringp dired-directory)
-                         dired-directory
-                       (car dired-directory)))))
-
-(with-eval-after-load 'org-roam
-  ;; every time you *visit* a node's file (find / create)
-  (advice-add 'org-roam-node-visit :after
-              (lambda (node &rest _)
-                (my/fasd--add (org-roam-node-file node))))
-
-  ;; when a brand-new note is created through a capture template the file
-  ;; does not yet exist when `node-visit` runs - add it after capture
-  (advice-add 'org-roam-capture--finalize :after
-              (lambda (&rest _)
-                (my/fasd--add (buffer-file-name)))))
+                      (if (stringp dired-directory)
+                          dired-directory
+                        (car dired-directory)))))
 #+end_src
 
 
@@ -8376,8 +8327,8 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 (setq debug-on-message
       "org-element--cache: Added org-data parent to non-headline element")
 
-(setq debug-on-message
-      "org-element--cache: Added org-data parent to non-headline element:")
+;; put in dotspacemacs/user-init
+(setq org-element-cache-persistent nil)   ; rebuild cache on each startup
 #+END_SRC
 
 
@@ -9171,9 +9122,9 @@ It returns a list, so you can later jump to the first culprit:
 
 #+end_src
 
-
+* Disable annoying cache warnings
 #+begin_src emacs-lisp
- (setq debug-on-error t)
+(setq org-element-cache-diagnostic-output nil)
 #+end_src
 
 * Display emoji correctly
