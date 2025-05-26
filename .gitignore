@@ -41,3 +41,4 @@ spacemacs.d/.spacemacs.env
 spacecraft-mode.el
 spacecraft-mode.el
 .DS_Store
+*.elc

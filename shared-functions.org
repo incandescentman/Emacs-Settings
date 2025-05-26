@@ -9206,26 +9206,31 @@ It returns a list, so you can later jump to the first culprit:
 
 * Olivetti
 #+begin_src emacs-lisp
-;;; smarter-olivetti.el
-(defun jd/olivetti-maybe ()
-  "Enable Olivetti only when ONE window is visible, once."
+;;;-------------------------------------------------------------------
+;;; tab-bar : only when there is more than one window
+;;;-------------------------------------------------------------------
+(defun jd/show-tab-bar-when-many-windows (&optional _frame)
+  "Turn `tab-bar-mode' on when more than one window is visible, off
+otherwise.  The optional _FRAME arg is required by the hook."
+  (tab-bar-mode (if (> (count-windows) 1) 1 -1)))
+
+(add-hook 'window-configuration-change-hook #'jd/show-tab-bar-when-many-windows)
+;; If you also want the test to run after a frame is resized:
+;; (add-hook 'window-size-change-functions   #'jd/show-tab-bar-when-many-windows)
+
+;;;-------------------------------------------------------------------
+;;; Olivetti : keep it active only for a single-window text/org view
+;;;-------------------------------------------------------------------
+(defun jd/olivetti-maybe (&optional _frame)
+  "Enable `olivetti-mode' only when exactly one window is showing a
+text-ish buffer.  Disable it otherwise.  _FRAME is ignored."
   (if (= (count-windows) 1)
       (when (derived-mode-p 'text-mode 'org-mode)
         (unless olivetti-mode (olivetti-mode 1)))
     (when olivetti-mode (olivetti-mode -1))))
 
-;; run *only* after real changes, not on every scroll
-(add-hook 'window-size-change-functions #'jd/olivetti-maybe)
-;; once at startup
-(add-hook 'after-change-major-mode-hook #'jd/olivetti-maybe)
-
-(defun jd/show-tab-bar-when-many-windows ()
-  (tab-bar-mode (if (> (count-windows) 1) 1 -1)))
-
-(add-hook 'window-size-change-functions #'jd/show-tab-bar-when-many-windows)
-
-(setq page-break-lines-modes nil)        ; or a small list of modes
-
+(add-hook 'window-configuration-change-hook #'jd/olivetti-maybe)
+(add-hook 'window-size-change-functions      #'jd/olivetti-maybe)
 #+end_src
 
 * Tame noisy idle timers
@@ -9256,6 +9261,26 @@ It returns a list, so you can later jump to the first culprit:
 (require 'profiler)
 (unless (profiler-running-p) (profiler-start 'cpu))
 
+#+end_src
+
+
+* Automatically tangle those files
+#+begin_src emacs-lisp
+
+(add-hook 'after-save-hook #'my/auto-tangle-org-file)
+
+(defun my/auto-tangle-org-file ()
+  "Automatically tangle and byte-compile org file on save"
+  (when (and (eq major-mode 'org-mode)
+             (string-match-p "/emacs-settings/" (buffer-file-name)))
+    (require 'ob-tangle)  ; Add this line
+    (let* ((org-file (buffer-file-name))
+           (el-file (concat (file-name-sans-extension org-file) ".el"))
+           (elc-file (concat el-file "c")))
+      (org-babel-tangle)
+      (when (file-exists-p el-file)
+        (byte-compile-file el-file)
+        (message "Tangled and compiled: %s" (file-name-nondirectory el-file))))))
 #+end_src
 
 

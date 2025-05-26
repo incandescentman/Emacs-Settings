@@ -84,14 +84,30 @@
 
 (autoload 'whittle "whittle" nil t)
 
+(defun my/load-compiled-org-file (org-file)
+  "Load byte-compiled version of org file, compiling if needed"
+  (require 'org)
+  (require 'ob-tangle)  ; This is crucial!
+  (let* ((el-file (concat (file-name-sans-extension org-file) ".el"))
+         (elc-file (concat el-file "c")))
+    ;; If .elc doesn't exist or is older than .org, tangle and compile
+    (when (or (not (file-exists-p elc-file))
+              (file-newer-than-file-p org-file elc-file))
+      (org-babel-tangle-file org-file)
+      (when (file-exists-p el-file)
+        (byte-compile-file el-file)))
+    ;; Load the compiled version
+    (if (file-exists-p elc-file)
+        (load elc-file)
+      (load el-file))))
 
-
-(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
-(org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
-(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
-(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+;; Load your config files
+(my/load-compiled-org-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
+(my/load-compiled-org-file "~/emacs/emacs-settings/shared-functions.org")
+(my/load-compiled-org-file "~/emacs/emacs-settings/spacecraft-mode.org")
+(my/load-compiled-org-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
+(my/load-compiled-org-file "/Users/jay/emacs/emacs-settings/search-commands.org")
+(my/load-compiled-org-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
