@@ -1,13 +1,3 @@
-;; ------------- init.el (or early-load file) --------------------------
-(require 'ob-tangle)          ; 1️⃣ make sure tangling is available
-(setq debug-on-error t)
-;; early-init.el *or* init.el, before you start loading any .org configs
-(require 'ob-tangle)
-
-
-
-
-
 ;; debugging steps. Commenting these out now that it seems to be working.
 
 ;; (message "DEBUG: About to load helpers...")
@@ -246,9 +236,9 @@
 ;; if Emacs is running in terminal
 (if (is-in-terminal)
     (iterm-mode)
-  ;; (load-theme 'zenburn)
-  (org-mode)
-  )
+    ;; (load-theme 'zenburn)
+    (org-mode)
+    )
 
 ;; (iterm-mode)
 

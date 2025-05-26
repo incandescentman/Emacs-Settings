@@ -4,6 +4,8 @@
 
 
 
+
+
 (defmacro org-assert-version ()
   "Assert compile time and runtime version match."
   ;; We intentionally use a more permissive `org-release' instead of
@@ -150,6 +152,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       amx
+bind-map
+evil-evilified-state
                                       org-transclusion
                                       ctrlf
                                       web-mode
