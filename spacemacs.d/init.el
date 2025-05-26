@@ -854,11 +854,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (package-refresh-contents))
 
 
-  ;; 3. wc-goal-mode – local file
-  (use-package wc-goal-mode
-    :load-path "~/emacs/emacs-settings/"   ; directory that contains wc-goal-mode.el
-    :commands wc-goal-mode)
-
 
   ;; early in init.el / early-init.el
   (let ((old-gc gc-cons-threshold)
