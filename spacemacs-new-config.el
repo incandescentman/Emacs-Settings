@@ -78,6 +78,7 @@
   :load-path "/Users/jay/emacs/emacs-settings/")
 
 (use-package counsel
+  :defer t
   )
 
 
@@ -99,9 +100,11 @@
 (autoload 'prelude-core "prelude-core" nil t)
 
 (load "/Users/jay/emacs/emacs-settings/skeletons.el")
-(load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
-(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
+(autoload 'prelude-key-chord "prelude-key-chord" nil t)
+
+
+(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
 
 ;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
