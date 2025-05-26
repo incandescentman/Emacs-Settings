@@ -8,7 +8,7 @@
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup
 #+TITLE: Jay Dixit's GNU Emacs setup
 * environment settings
-** Handle Emacs UTF-8 input
+** Handle Emacs UTF-8 input.
 #+BEGIN_SRC emacs-lisp
 ;; early-init.el  ── locale in one place
 (set-language-environment "UTF-8")   ; everything speaks UTF-8

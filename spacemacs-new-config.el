@@ -3,7 +3,7 @@
 ;; --------------------
 
 
-
+(setq load-prefer-newer t)              ; do this once, near top of init
 
 ;; 2) --- use GCMH via use-package -----------------------
 (use-package gcmh
@@ -84,35 +84,60 @@
 
 (autoload 'whittle "whittle" nil t)
 
-;; Replace your existing function with this updated version
-(defun my/load-compiled-org-file (org-file)
-  "Load byte-compiled version of org file, compiling if needed"
-  (require 'org)
-  (require 'ob-tangle)
-  (let* ((el-file (concat (file-name-sans-extension org-file) ".el"))
-         (elc-file (concat el-file "c")))
-    ;; If .elc doesn't exist or is older than .org, tangle and compile
-    (when (or (not (file-exists-p elc-file))
-              (file-newer-than-file-p org-file elc-file))
-      (org-babel-tangle-file org-file)
-      (when (file-exists-p el-file)
-        (byte-compile-file el-file)
-        ;; Hide the compile log buffer after compilation
-        (when (get-buffer "*Compile-Log*")
-          (kill-buffer "*Compile-Log*"))))
-    ;; Load the compiled version
-    (if (file-exists-p elc-file)
-        (load elc-file)
-        (load el-file))))
+;; suppress auto evilifaction errors
+(with-eval-after-load 'evil-evilified-state
+  (add-to-list 'evil-evilified-state-modes 'org-agenda-mode))
 
 
-;; Load your config files
-(my/load-compiled-org-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
-(my/load-compiled-org-file "~/emacs/emacs-settings/shared-functions.org")
-(my/load-compiled-org-file "~/emacs/emacs-settings/spacecraft-mode.org")
-(my/load-compiled-org-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org")
-(my/load-compiled-org-file "/Users/jay/emacs/emacs-settings/search-commands.org")
-(my/load-compiled-org-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+
+
+;;
+;;; helpers ---------------------------------------------------------------
+(defun my/compiled-path (el-file)
+  "Return the best existing artefact for EL-FILE: .eln ▸ .elc ▸ EL-FILE."
+  (let ((eln (and (fboundp 'native-compiled-file)
+                  (native-compiled-file el-file)))
+        (elc (byte-compile-dest-file el-file)))
+    (cond ((and eln (file-exists-p eln)) eln)
+          ((file-exists-p elc)           elc)
+          (t                             el-file))))
+
+(defun my/load-org-config (org-file)
+  "Tangle ORG-FILE to Emacs-Lisp, compile if needed, then load it."
+  (require 'org) (require 'ob-tangle)
+  (let* ((org-file (expand-file-name org-file))
+         (el-file  (concat (file-name-sans-extension org-file) ".el"))
+         (bin      (my/compiled-path el-file)))
+
+    ;; (Re)tangle  ⟶  *.el  (explicitly for emacs-lisp)
+    (when (or (not (file-exists-p el-file))
+              (file-newer-than-file-p org-file el-file))
+      (org-babel-tangle-file org-file el-file "emacs-lisp"))
+
+    ;; Only attempt to load if the .el now exists
+    (when (file-exists-p el-file)
+      ;; (Re)compile if needed …                               ▼ Emacs 29+
+      (when (or (not (file-exists-p bin))
+                (file-newer-than-file-p el-file bin))
+        (if (fboundp 'native-compile) (native-compile el-file)
+            (byte-compile-file el-file)))
+
+      (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))
+      (load (file-name-sans-extension el-file) nil 'nomessage))))
+
+
+
+;; ─── load all your literate files ─────────────────────────────
+(dolist (f '("~/emacs/emacs-settings/gnu-emacs-startup.org"
+             "~/emacs/emacs-settings/shared-functions.org"
+             "~/emacs/emacs-settings/spacecraft-mode.org"
+             "~/emacs/emacs-settings/pasteboard-copy-and-paste-functions.org"
+             "~/emacs/emacs-settings/search-commands.org"
+             "~/emacs/emacs-settings/fonts-and-themes.org"))
+  (my/load-org-config f))
+
+
+
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
