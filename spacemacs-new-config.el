@@ -84,10 +84,11 @@
 
 (autoload 'whittle "whittle" nil t)
 
+;; Replace your existing function with this updated version
 (defun my/load-compiled-org-file (org-file)
   "Load byte-compiled version of org file, compiling if needed"
   (require 'org)
-  (require 'ob-tangle)  ; This is crucial!
+  (require 'ob-tangle)
   (let* ((el-file (concat (file-name-sans-extension org-file) ".el"))
          (elc-file (concat el-file "c")))
     ;; If .elc doesn't exist or is older than .org, tangle and compile
@@ -95,11 +96,15 @@
               (file-newer-than-file-p org-file elc-file))
       (org-babel-tangle-file org-file)
       (when (file-exists-p el-file)
-        (byte-compile-file el-file)))
+        (byte-compile-file el-file)
+        ;; Hide the compile log buffer after compilation
+        (when (get-buffer "*Compile-Log*")
+          (kill-buffer "*Compile-Log*"))))
     ;; Load the compiled version
     (if (file-exists-p elc-file)
         (load elc-file)
-      (load el-file))))
+        (load el-file))))
+
 
 ;; Load your config files
 (my/load-compiled-org-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
