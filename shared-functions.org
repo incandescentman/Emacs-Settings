@@ -9251,6 +9251,23 @@ It returns a list, so you can later jump to the first culprit:
   (setq gcmh-idle-delay 30))
 #+end_src
 
+* Profiler guard
+#+begin_src emacs-lisp
+(require 'profiler)
+(unless (profiler-running-p) (profiler-start 'cpu))
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+;; user-init---load as early as possible
+(use-package benchmark-init
+  :ensure t
+  :demand t
+  :config
+  ;; stop measuring right after init so it doesn't slow runtime
+  (add-hook 'after-init-hook #'benchmark-init/deactivate))
+#+end_src 
 
 * Local Variables & The End
 These have to be at the end.

@@ -1,18 +1,3 @@
-;; debugging steps. Commenting these out now that it seems to be working.
-
-;; (message "DEBUG: About to load helpers...")
-;; (defvar te nil)
-
-;; (advice-add 'load :before (lambda (f &rest _) (message ">>> LOADING %s" f)))
-
-
-;; (defun trace-load (file &rest _)
-;;   (message ">>> LOADING %s" file))
-;; (advice-add 'load :before #'trace-load)
-
-
-;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org
-
 ;; --------------------
 ;; Performance optimizations
 ;; --------------------
