@@ -152,8 +152,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       amx
-bind-map
-evil-evilified-state
+                                      bind-map
+                                      evil-evilified-state
                                       org-transclusion
                                       ctrlf
                                       web-mode
@@ -883,6 +883,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
         dotspacemacs-enable-package-cleanup nil) ; don't touch packages
 
+  ;; ---------------------------------------------------------------------
+  ;; 1. pick a stash dir and make sure it exists
+  (defconst jd/cache-dir "~/.emacs.d/.cache/var/")
+  (make-directory jd/cache-dir t)
+
+  ;; 2. point the two offenders there
+  (setq amx-items-file          (expand-file-name "amx-items"           jd/cache-dir)
+        package-quickstart-file (expand-file-name "package-quickstart.el" jd/cache-dir))
+  ;; ---------------------------------------------------------------------
 
 
 
