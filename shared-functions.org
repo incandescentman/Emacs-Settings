@@ -6752,7 +6752,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+end_src
 * disable Olivetti on split
-#+begin_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun activate-olivetti-in-split ()
  (when (not (bound-and-true-p disable-olivetti-auto-toggle))
   (if (< (window-width) 80)
@@ -6763,7 +6763,7 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (add-hook 'org-mode-hook (lambda ()
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
 
-#+END_SRC
+#+END_EXAMPLE
 
 * helpful
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
@@ -9150,6 +9150,107 @@ It returns a list, so you can later jump to the first culprit:
             (profiler-stop)))
 (provide 'shared-functions)
 #+end_src
+
+* Scroll without hiccupping
+#+begin_src emacs-lisp
+;;; -------------------------------------------------------------
+;;;  Smooth scrolling & redisplay – macOS / Cocoa build
+;;; -------------------------------------------------------------
+
+;; 1.  Core scrolling knobs
+(setq auto-window-vscroll        nil   ; never resize during redisplay
+      scroll-step               1      ; scroll one line at a time
+      scroll-conservatively     101    ; always scroll by `scroll-step'
+      inhibit-compacting-font-caches t ; avoid GC of font cache
+      redisplay-dont-pause      t)     ; keep scrolling responsive
+
+;; 2.  Disable the precision pixel-scrolling that can flicker on macOS < 14
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode -1))
+
+;; 3.  macOS–specific graphics tweaks
+(setq ns-use-live-resize   nil          ; don’t live-update while resizing
+      ns-use-thin-smoothing t)          ; sub-pixel text-antialias
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
+(setq frame-resize-pixelwise t)         ; Emacs 29+: keep 1-pixel granularity
+
+;; 4.  Long-lines protection (prevents redisplay blow-ups >10 k columns)
+(when (require 'so-long nil t)
+  (global-so-long-mode 1))
+
+;; 5.  Optional cosmetics (remove if you like line numbers / hl-line)
+(global-display-line-numbers-mode 0)
+(global-hl-line-mode 0)
+
+;;; -------------------------------------------------------------
+;;;  Flyspell – on where useful, off where noisy
+;;; -------------------------------------------------------------
+;; Enable for writing modes
+(dolist (hook '(text-mode-hook markdown-mode-hook message-mode-hook))
+  (add-hook hook #'flyspell-mode))
+
+;; Disable for code & Org src blocks
+(add-hook 'prog-mode-hook       (lambda () (flyspell-mode -1)))
+(add-hook 'org-src-mode-hook    (lambda () (flyspell-mode -1)))
+
+(setq flyspell-delay               1.0   ; don’t spell-check on every keystroke
+      flyspell-issue-message-flag  nil)  ; silence “misspelled word” echo area
+
+;;; -------------------------------------------------------------
+;;;  JIT lock tuning – defer heavy font-lock on huge buffers
+;;; -------------------------------------------------------------
+(setq jit-lock-defer-time   0.25   ; delay refontification when scrolling fast
+      jit-lock-stealth-time 1.0)   ; how long we stay in “stealth” fontify
+#+end_src
+
+
+* Olivetti
+#+begin_src emacs-lisp
+;;; smarter-olivetti.el
+(defun jd/olivetti-maybe ()
+  "Enable Olivetti only when ONE window is visible, once."
+  (if (= (count-windows) 1)
+      (when (derived-mode-p 'text-mode 'org-mode)
+        (unless olivetti-mode (olivetti-mode 1)))
+    (when olivetti-mode (olivetti-mode -1))))
+
+;; run *only* after real changes, not on every scroll
+(add-hook 'window-size-change-functions #'jd/olivetti-maybe)
+;; once at startup
+(add-hook 'after-change-major-mode-hook #'jd/olivetti-maybe)
+
+(defun jd/show-tab-bar-when-many-windows ()
+  (tab-bar-mode (if (> (count-windows) 1) 1 -1)))
+
+(add-hook 'window-size-change-functions #'jd/show-tab-bar-when-many-windows)
+
+(setq page-break-lines-modes nil)        ; or a small list of modes
+
+#+end_src
+
+* Tame noisy idle timers
+#+begin_src emacs-lisp
+
+;; 1.  Savehist → every 30 min
+(with-eval-after-load 'savehist
+  (setq savehist-autosave-interval (* 30 60)))
+
+;; 2.  AMX database rebuild → only when idle 30 s
+(with-eval-after-load 'amx
+  (cancel-function-timers #'amx-idle-update)
+  (run-with-idle-timer 30 t #'amx-idle-update))
+
+;; 3.  recentf - keep a single 10 min timer
+(with-eval-after-load 'recentf
+  (dolist (t (memq 'recentf-save-list timer-list))
+    (cancel-timer t))
+  (run-with-idle-timer 600 t #'recentf-save-list))
+
+;; 4.  GCMH - collect when idle ≥30 s
+(with-eval-after-load 'gcmh
+  (setq gcmh-idle-delay 30))
+#+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
