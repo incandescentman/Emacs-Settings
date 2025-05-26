@@ -4052,29 +4052,33 @@ into the main dumped emacs"
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
-(use-package undo-fu-session
-  :init
-  (setq undo-fu-session-compression nil)   ;; nil = never compress
-  (undo-fu-session-global-mode))
+  (use-package undo-fu-session
+    :init
+    (setq undo-fu-session-compression nil)   ;; nil = never compress
+    (undo-fu-session-global-mode))
 
-(defun undo-fu-only-redo-fail-silently ()
- "Redo the last undone change if possible, silently fail if no more redo steps."
- (interactive)
- (ignore-errors
-  (undo-fu-only-redo)))
+  (defun undo-fu-only-redo-fail-silently ()
+   "Redo the last undone change if possible, silently fail if no more redo steps."
+   (interactive)
+   (ignore-errors
+    (undo-fu-only-redo)))
 
-(defun undo-fu-only-redo-fail-with-heart ()
- "Redo the last undone change if possible."
- (interactive)
- (condition-case nil
-   (undo-fu-only-redo)
-  (user-error (message "❤️"))))
+  (defun undo-fu-only-redo-fail-with-heart ()
+   "Redo the last undone change if possible."
+   (interactive)
+   (condition-case nil
+     (undo-fu-only-redo)
+    (user-error (message "❤️"))))
 
-(setq undo-tree-auto-save-history nil)
+  (setq undo-tree-auto-save-history nil)
 
-(setq undo-limit 67108864) ; 64mb.
-(setq undo-strong-limit 100663296) ; 96mb.
-(setq undo-outer-limit 1006632960) ; 960mb.
+  (setq undo-limit 67108864) ; 64mb.
+  (setq undo-strong-limit 100663296) ; 96mb.
+  (setq undo-outer-limit 1006632960) ; 960mb.
+
+(with-eval-after-load 'undo-fu-session
+  (setq undo-fu-session-incompatible-files-behaviour 'delete)) ; 'rename or nil
+  
 #+END_SRC
 
 * Emacs 25
@@ -4563,7 +4567,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 
 * poet-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; (add-hook 'org-mode-hook
 ;;         (lambda ()
 ;;         (variable-pitch-mode 1)))
@@ -4589,7 +4593,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;; (turn-off-auto-capitalize-mode)
 
 )
-#+END_SRC
+#+END_EXAMPLE
 
 
 * default org-css
@@ -6751,20 +6755,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
       (message "Refiled to Org-roam file %s" current-heading)))))))
 
 #+end_src
-* disable Olivetti on split
-#+BEGIN_EXAMPLE emacs-lisp
-(defun activate-olivetti-in-split ()
- (when (not (bound-and-true-p disable-olivetti-auto-toggle))
-  (if (< (window-width) 80)
-    (olivetti-mode -1)
-   (olivetti-mode 1))))
-
-
-(add-hook 'org-mode-hook (lambda ()
-              (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
-
-#+END_EXAMPLE
-
 * helpful
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
@@ -9206,31 +9196,19 @@ It returns a list, so you can later jump to the first culprit:
 
 * Olivetti
 #+begin_src emacs-lisp
-;;;-------------------------------------------------------------------
-;;; tab-bar : only when there is more than one window
-;;;-------------------------------------------------------------------
-(defun jd/show-tab-bar-when-many-windows (&optional _frame)
-  "Turn `tab-bar-mode' on when more than one window is visible, off
-otherwise.  The optional _FRAME arg is required by the hook."
-  (tab-bar-mode (if (> (count-windows) 1) 1 -1)))
+(defun jd/show-tab-bar-when-many-windows (&optional frame)
+  "Turn `tab-bar-mode' on when more than one window is visible, off otherwise."
+  (with-selected-frame (or frame (selected-frame))
+    (tab-bar-mode (if (> (count-windows) 1) 1 -1))))
 
-(add-hook 'window-configuration-change-hook #'jd/show-tab-bar-when-many-windows)
-;; If you also want the test to run after a frame is resized:
-;; (add-hook 'window-size-change-functions   #'jd/show-tab-bar-when-many-windows)
+(defun jd/olivetti-maybe (&optional frame)
+  "Enable `olivetti-mode' only when exactly one window shows text/org."
+  (with-selected-frame (or frame (selected-frame))
+    (if (= (count-windows) 1)
+        (when (derived-mode-p 'text-mode 'org-mode)
+          (unless olivetti-mode (olivetti-mode 1)))
+      (when olivetti-mode (olivetti-mode -1)))))
 
-;;;-------------------------------------------------------------------
-;;; Olivetti : keep it active only for a single-window text/org view
-;;;-------------------------------------------------------------------
-(defun jd/olivetti-maybe (&optional _frame)
-  "Enable `olivetti-mode' only when exactly one window is showing a
-text-ish buffer.  Disable it otherwise.  _FRAME is ignored."
-  (if (= (count-windows) 1)
-      (when (derived-mode-p 'text-mode 'org-mode)
-        (unless olivetti-mode (olivetti-mode 1)))
-    (when olivetti-mode (olivetti-mode -1))))
-
-(add-hook 'window-configuration-change-hook #'jd/olivetti-maybe)
-(add-hook 'window-size-change-functions      #'jd/olivetti-maybe)
 #+end_src
 
 * Tame noisy idle timers
@@ -9284,6 +9262,16 @@ text-ish buffer.  Disable it otherwise.  _FRAME is ignored."
 #+end_src
 
 
+#+begin_src emacs-lisp
+;; Temporarily add this to your init to see what's happening
+(defun debug-window-creation ()
+  "Debug what's creating windows"
+  (message "Window count: %d, Buffer: %s"
+           (count-windows)
+           (buffer-name (current-buffer))))
+
+(add-hook 'window-configuration-change-hook #'debug-window-creation)
+#+end_src
 * Local Variables & The End
 These have to be at the end.
 
