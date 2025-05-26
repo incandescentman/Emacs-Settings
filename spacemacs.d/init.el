@@ -138,6 +138,7 @@ This function should only modify configuration layer settings."
                                       affe
                                       amx
                                       auto-complete
+                                      benchmark-init
                                       beacon
                                       bind-key
                                       bind-map
@@ -844,6 +845,8 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
+
+
 
   ;; early in init.el / early-init.el
   (let ((old-gc gc-cons-threshold)
