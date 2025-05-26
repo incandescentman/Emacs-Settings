@@ -4078,7 +4078,7 @@ into the main dumped emacs"
 
 (with-eval-after-load 'undo-fu-session
   (setq undo-fu-session-incompatible-files-behaviour 'delete)) ; 'rename or nil
-  
+
 #+END_SRC
 
 * Emacs 25
@@ -9262,7 +9262,7 @@ It returns a list, so you can later jump to the first culprit:
 #+end_src
 
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; Temporarily add this to your init to see what's happening
 (defun debug-window-creation ()
   "Debug what's creating windows"
@@ -9271,7 +9271,9 @@ It returns a list, so you can later jump to the first culprit:
            (buffer-name (current-buffer))))
 
 (add-hook 'window-configuration-change-hook #'debug-window-creation)
-#+end_src
+#+END_SRC
+
+
 * Local Variables & The End
 These have to be at the end.
 
