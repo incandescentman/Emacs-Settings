@@ -91,10 +91,17 @@
 
 
 
-;;
-;;; helpers ---------------------------------------------------------------
+;;; -----------------------------------------------------------
+;;; helpers ----------------------------------------------------
+(defun my/native-comp-available-p ()
+  "Return non-nil only when the native compiler *really* works."
+  (and (fboundp 'native-compile)          ; symbol exists
+       (require 'comp nil t)             ; library is loaded (≥ 28)
+       (functionp 'native-comp-available-p)
+       (native-comp-available-p)))       ; linked with libgccjit
+
 (defun my/compiled-path (el-file)
-  "Return the best existing artefact for EL-FILE: .eln ▸ .elc ▸ EL-FILE."
+  "Best existing artefact for EL-FILE: .eln ▸ .elc ▸ EL-FILE."
   (let ((eln (and (fboundp 'native-compiled-file)
                   (native-compiled-file el-file)))
         (elc (byte-compile-dest-file el-file)))
@@ -103,31 +110,33 @@
           (t                             el-file))))
 
 (defun my/load-org-config (org-file)
-  "Tangle ORG-FILE to Emacs-Lisp, compile if needed, then load it."
+  "Tangle ORG-FILE → *.el, compile if needed, then load it."
   (require 'org) (require 'ob-tangle)
   (let* ((org-file (expand-file-name org-file))
          (el-file  (concat (file-name-sans-extension org-file) ".el"))
          (bin      (my/compiled-path el-file)))
 
-    ;; (Re)tangle  ⟶  *.el  (explicitly for emacs-lisp)
+    ;; 1 ─ Tangle (only emacs-lisp blocks)
     (when (or (not (file-exists-p el-file))
               (file-newer-than-file-p org-file el-file))
       (org-babel-tangle-file org-file el-file "emacs-lisp"))
 
-    ;; Only attempt to load if the .el now exists
+    ;; 2 ─ (Re)compile when necessary
+    (when (and (file-exists-p el-file)
+               (or (not (file-exists-p bin))
+                   (file-newer-than-file-p el-file bin)))
+      (if (my/native-comp-available-p)
+          (native-compile el-file)         ; ← only when safe
+          (byte-compile-file el-file)))
+
+    ;; 3 ─ Hide *Compile-Log*
+    (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))
+
+    ;; 4 ─ Load the code
     (when (file-exists-p el-file)
-      ;; (Re)compile if needed …                               ▼ Emacs 29+
-      (when (or (not (file-exists-p bin))
-                (file-newer-than-file-p el-file bin))
-        (if (fboundp 'native-compile) (native-compile el-file)
-            (byte-compile-file el-file)))
-
-      (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))
       (load (file-name-sans-extension el-file) nil 'nomessage))))
+;;; -----------------------------------------------------------
 
-
-
-;; ─── load all your literate files ─────────────────────────────
 (dolist (f '("~/emacs/emacs-settings/gnu-emacs-startup.org"
              "~/emacs/emacs-settings/shared-functions.org"
              "~/emacs/emacs-settings/spacecraft-mode.org"
@@ -135,7 +144,6 @@
              "~/emacs/emacs-settings/search-commands.org"
              "~/emacs/emacs-settings/fonts-and-themes.org"))
   (my/load-org-config f))
-
 
 
 

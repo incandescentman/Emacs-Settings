@@ -1,0 +1,695 @@
+;; -*- lexical-binding: t; -*-
+
+(setq smart-quote-regexp-replacements
+      '(
+        ("\\(\\w\\)- " . "\\1")
+        ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
+
+
+(defun replace-smart-quotes-regexp (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (mapcar
+   (lambda (r)
+     (save-excursion
+       (replace-regexp (car r) (cdr r) nil beg (min end (point-max)))))
+   smart-quote-regexp-replacements))
+
+(defun replace-non-heading-double-asterisks (beg end)
+  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "\\*\\*" end t)
+      (let ((match-beg (match-beginning 0)))
+        (when match-beg
+          (goto-char match-beg)
+          ;; If line begins with stars + space => a heading, so skip
+          (if (looking-at "^\\*+ ")
+              (forward-char 2) ;; skip these two stars
+            ;; Otherwise replace as normal
+            (replace-match "*" t t)))))))
+
+(defgroup smart-quotes nil
+  "Customization group for smart quote replacements."
+  :group 'convenience)
+
+(defcustom smart-quotes-replacement-pairs
+  '(("“" . "\"")
+    ("”" . "\"")
+    ("‘" . "'")
+    ("’" . "'")
+    ("‚" . "'")
+    ("‛" . "'")
+    ("„" . "\"")
+    ("‟" . "\"")
+    ("‹" . "'")
+    ("›" . "'")
+    ("«" . "\"")
+    ("»" . "\"")
+    ("–" . "-")
+    ("" . "")
+    ("" . "")
+    ("—" . "---")
+    ("…" . "...")
+    ("• " . "- ")
+    ("•" . "-")
+    (" " . " ")
+    ("⸻" . "-----")
+    ("ﬀ" . "ff")
+    ("·" . "-")
+    ("‧" . "-")
+    ("⁃" . "-")
+    ("‐" . "-")
+    ("‑" . "-")
+    ("‒" . "-")
+    ("‾" . "-")
+    (" " . " ")       ; Non-breaking space
+    (" " . " ")       ; Narrow no-break space
+    ("\u200B" . "")   ; Zero-width space
+    ("\u200C" . "")   ; Zero-width non-joiner
+    ("\u200D" . "")   ; Zero-width joiner
+    ("\t" . " ")      ; Tab character replaced with a space
+    ("#####" . "*****")
+    ("####" . "****")
+    ("###" . "***")
+    ("##" . "**")
+    ("- \\*\\* TODO" . "*** TODO")
+    ("okay" . "OK")
+    ("  SCHEDULED" . " SCHEDULED")
+    ("  DEADLINE" . " DEADLINE"))
+  "Alist of replacement pairs for `replace-smart-quotes` function."
+  :type '(alist :key-type string :value-type string)
+  :group 'smart-quotes)
+
+(require 'cl-lib)  ; Ensure cl-lib is loaded for cl-every
+
+
+(defun replace-smart-quotes (beg end)
+  "Replace smart quotes and format text appropriately in the specified region.
+
+The replacements are defined in the `smart-quotes-replacement-pairs` variable."
+  (interactive "r")
+  ;; Ensure beg <= end
+  (when (> beg end)
+    (let ((temp beg))
+      (setq beg end)
+      (setq end temp)))
+  ;; Error checking for smart-quotes-replacement-pairs
+  (unless (and (boundp 'smart-quotes-replacement-pairs)
+               (listp smart-quotes-replacement-pairs)
+               (cl-every (lambda (pair)
+                           (and (consp pair)
+                                (stringp (car pair))
+                                (stringp (cdr pair))))
+                         smart-quotes-replacement-pairs))
+    (error "Invalid `smart-quotes-replacement-pairs` format; must be a list of string pairs"))
+  ;; Convert end into a marker that adjusts with buffer changes
+  (let ((end-marker (copy-marker end)))
+    (save-excursion
+      ;; Replace '**' with '*' unless '**' is at the beginning of a line followed by a space
+      (goto-char beg)
+      (while (re-search-forward "\\*\\*" end-marker t)
+
+(if (and (= (line-beginning-position) (- (point) 2))
+         (looking-at "\\(?: \\|\\*\\)"))
+    ;; Just move past the pair; leave heading stars intact
+    (forward-char 1)
+  (replace-match "*" t t))
+
+)
+      ;; Remove lines that contain only '---' (possibly with surrounding spaces)
+      (goto-char beg)
+      (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
+        (replace-match "" t t))
+      ;; Remove space before "-" at the beginning of lines
+      (goto-char beg)
+      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
+        (replace-match "\\1-" nil nil))
+      ;; Perform replacements using the external `smart-quotes-replacement-pairs`
+      (dolist (pair smart-quotes-replacement-pairs)
+        (goto-char beg)
+        (while (re-search-forward (regexp-quote (car pair)) end-marker t)
+          (replace-match (cdr pair) t t))))))
+
+(dolist (pair '(("\u2019" . "'")   ; ’  RIGHT SINGLE QUOTATION MARK
+                ("\u02BC" . "'")   ; ʼ  MODIFIER LETTER APOSTROPHE
+                ("\uFF07" . "'"))) ; ＇ FULLWIDTH APOSTROPHE
+  (add-to-list 'smart-quotes-replacement-pairs pair))
+
+;; Ensure THREE‑EM‑DASH (U+2E3B) is actually mapped.
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "")) ; or "-----"
+;; Make sure curly double‑quotes convert to straight ASCII quotes.
+(dolist (pair '(("”" . "\"")   ; U+201D RIGHT DOUBLE QUOTATION MARK
+                ("“" . "\""))) ; U+201C LEFT  DOUBLE QUOTATION MARK
+  (add-to-list 'smart-quotes-replacement-pairs pair))
+
+;; smart-quotes-replacements.el — build pair list incrementally with explicit add-to-list calls -*- lexical-binding: t; -*-
+
+;; Ensure the variable exists.
+(defvar smart-quotes-replacement-pairs nil
+  "Alist of (FROM . TO) strings used by `replace-smart-quotes'.")
+
+;; ---------------------------------------------------------------------------
+;; Core replacements (added one by one so they’re easy to tweak/remove later)
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("“" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("”" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‘" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("’" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‚" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‛" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("„" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‟" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‹" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("›" . "'") t)
+(add-to-list 'smart-quotes-replacement-pairs '("«" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("»" . "\"") t)
+(add-to-list 'smart-quotes-replacement-pairs '("–" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("" . "") t)
+(add-to-list 'smart-quotes-replacement-pairs '("—" . "---") t)
+(add-to-list 'smart-quotes-replacement-pairs '("…" . "...") t)
+(add-to-list 'smart-quotes-replacement-pairs '("• " . "- ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("•" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)   ; narrow NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("⸻" . "——") t) ; 3‑em dash → 2‑em (edit as desired)
+(add-to-list 'smart-quotes-replacement-pairs '("ﬀ" . "ff") t)
+(add-to-list 'smart-quotes-replacement-pairs '("·" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‧" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("⁃" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‐" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‑" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‒" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '("‾" . "-") t)
+(add-to-list 'smart-quotes-replacement-pairs '(" " . " ") t)    ; NBSP
+(add-to-list 'smart-quotes-replacement-pairs '("\u200B" . "") t) ; ZW space
+(add-to-list 'smart-quotes-replacement-pairs '("\u200C" . "") t) ; ZWNJ
+(add-to-list 'smart-quotes-replacement-pairs '("\u200D" . "") t) ; ZWJ
+(add-to-list 'smart-quotes-replacement-pairs '("\t" . " ") t)
+(add-to-list 'smart-quotes-replacement-pairs '("#####" . "*****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("####" . "****") t)
+(add-to-list 'smart-quotes-replacement-pairs '("###" . "***") t)
+(add-to-list 'smart-quotes-replacement-pairs '("##" . "**") t)
+(add-to-list 'smart-quotes-replacement-pairs '("- \\*\\* TODO" . "*** TODO") t)
+(add-to-list 'smart-quotes-replacement-pairs '("okay" . "OK") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  SCHEDULED" . " SCHEDULED") t)
+(add-to-list 'smart-quotes-replacement-pairs '("  DEADLINE" . " DEADLINE") t)
+
+;; ---------------------------------------------------------------------------
+;; Extra apostrophes & dashes caught in the wild
+;; ---------------------------------------------------------------------------
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2019" . "'") t) ; RIGHT SINGLE QUOTATION MARK
+(add-to-list 'smart-quotes-replacement-pairs '("\u02BC" . "'") t) ; MODIFIER LETTER APOSTROPHE
+(add-to-list 'smart-quotes-replacement-pairs '("\uFF07" . "'") t) ; FULLWIDTH APOSTROPHE
+
+(add-to-list 'smart-quotes-replacement-pairs '("\u2011" . "-") t) ; NB‑hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2010" . "-") t) ; Unicode hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u00AD" . "-") t) ; soft hyphen
+(add-to-list 'smart-quotes-replacement-pairs '("\u2E3B" . "-----") t) ; THREE‑EM DASH
+
+(provide 'smart-quotes-replacements)
+
+(defun replace-weird-spaces (beg end)
+  "Replace NBSP, narrow NBSP, thin, hair, and zero‑width spaces with ASCII space."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "[\u00A0\u202F\u2009\u200A\u200B\u200C\u200D]" end t)
+      (replace-match " " t t))))
+
+(defun ensure-heading-emoji-space (beg end)
+  "Turn \"***🔁\" into \"*** 🔁\" in Org headings.
+
+Looks at the first non‑space char right after the stars; if it’s
+non‑ASCII (code‑point > 127) and there’s no space already, insert one."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(\\*+\\)\\([^[:space:]]\\)" end t)
+      (let* ((stars  (match-string 1))
+             (char   (match-string 2))
+             (cp     (string-to-char char)))
+        (when (and (> cp 127)
+                   ;; only if we *haven’t* already got a space
+                   (not (string-match-p " " (buffer-substring (match-beginning 0)
+                                                              (match-end 0)))))
+          (replace-match (concat stars " " char) t t))))))
+
+(defun convert-markdown-headings-to-org (beg end)
+  "Turn #, ##, ### etc. at bol into *, *, * … in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(#+\\) " end t)
+      (replace-match (make-string (length (match-string 1)) ?*) t t)))
+
+  ;; Leave an extra space so '* Heading' becomes '* Heading', not '*Heading'
+  )
+
+(defun convert-markdown-blockquotes-to-org (beg end)
+  "Turn '> ' at bol into ': ' (Org quote) in the region."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^> " end t)
+      (replace-match ": " t t)))
+  )
+
+(setq interprogram-cut-function nil)
+(setq interprogram-paste-function nil)
+
+(defun safe-replace (pattern replacement beg end)
+  "Safely replace PATTERN with REPLACEMENT between BEG and END."
+  (save-excursion
+    (goto-char beg)
+    (let ((last-point (point)))
+      (while (re-search-forward pattern end t)
+        (unless (> (point) last-point)  ; Prevent infinite loops
+          (error "Infinite loop detected in regex replacement."))
+        (setq last-point (point))
+        (replace-match replacement t t)))))
+
+(defun safe-pbpaste ()
+  "Run pbpaste with a timeout to prevent hanging."
+  (let ((default-directory "/tmp/"))  ; Avoid issues with remote TRAMP paths
+    (with-temp-buffer
+      (if (zerop (call-process "gtimeout" nil t nil "2" "pbpaste"))  ; Requires coreutils for `gtimeout`
+          (buffer-string)
+        (error "pbpaste timed out")))))
+
+(defun pasteboard-copy-adaptive (&optional arg)
+  "Adaptive copy command.
+
+With a prefix ARG (e.g. C-u), call `pasteboard-copy-raw'.
+With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
+  (interactive "P")
+  (if arg
+      (call-interactively #'pasteboard-copy-verbatim)
+    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+
+(defun pasteboard-copy ()
+  "Copy region to OS X system pasteboard."
+  (interactive)
+  (let* ((txt (buffer-substring (region-beginning) (region-end))))
+    (shell-command-to-string
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+
+(defun pasteboard-copy-verbatim (beg end)
+  "Copy region between BEG and END to the macOS pasteboard verbatim.
+
+Unlike the old echo→pbcopy helper, this uses Emacs' built-in
+`x-select-text`, so it follows the identical encoding path that
+`kill-region` uses when `x-select-enable-clipboard` is non-nil."
+  (interactive "r")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  ;; Grab the bytes exactly as they live in the buffer.
+  (let ((txt (buffer-substring-no-properties beg end)))
+    ;; Same function `kill-region` calls under the hood.
+    (x-select-text txt))
+  (message "Copied %d characters verbatim." (- end beg)))
+
+(defun pasteboard-copy-and-replace-em-dashes-in-clipboard (&optional arg)
+  "Copy region to macOS pasteboard.
+
+No ARG → behave contextually (verbatim in code, replacement in text).
+ARG positive or plain C-u → force verbatim.
+ARG zero or negative       → force replacement."
+  (interactive "P")
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (let* ((txt (buffer-substring-no-properties (region-beginning) (region-end)))
+         ;; Decide which behaviour to use.
+         (verbatim
+          (cond
+           ;; Forced by user
+           (arg
+            (> (prefix-numeric-value arg) 0))
+           ;; Heuristic (original behaviour)
+           (t (or (derived-mode-p 'prog-mode)
+                  (eq major-mode 'shell-script-mode)
+                  (eq major-mode 'emacs-lisp-mode)
+                  (bound-and-true-p org-config-files-local-mode))))))
+    (with-temp-buffer
+      (insert (if verbatim
+                  txt
+                (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+      (shell-command-on-region (point-min) (point-max) "pbcopy"))
+    (message (if verbatim
+                 "Copied text verbatim."
+               "Copied text with em dashes."))))
+
+(defun pasteboard-copy-to-end-of-buffer ()
+  "Copy text from point to the end of the buffer to OS X system pasteboard."
+  (interactive)
+  (let* ((txt (buffer-substring (point) (point-max))))
+    (shell-command-to-string
+     (format "echo -n %s | pbcopy" (shell-quote-argument txt)))))
+
+(defun pasteboard-copy-and-convert-to-markdown-link ()
+  "Copy region to OS X system pasteboard, converting Org-style links to Markdown format."
+  (interactive)
+  (if (use-region-p)
+      (let* ((txt (buffer-substring (region-beginning) (region-end)))
+             (txt-updated-links
+              (replace-regexp-in-string
+               "\\[\\[\\([^]]*\\)\\]\\(\\[\\([^]]*\\)\\]\\)?\\]"
+               (lambda (m)
+                 ;; The match data is set up so match-string works
+                 (concat "[" (or (match-string 3 m)
+                                 (match-string 1 m))
+                         "](" (match-string 1 m) ")"))
+               txt)))
+        (shell-command-to-string
+         (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
+        (message "Copied and converted Org links to Markdown."))
+    (message "No region selected")))
+
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
+
+(defun org-insert-link-from-clipboard (beg end)
+  "Replace text in region with an Org bracket link using the macOS clipboard URL."
+  (interactive "r")
+  (unless (use-region-p)
+    (error "No region selected."))
+
+  (let* ((url (string-trim (shell-command-to-string "pbpaste")))
+         (region-text (buffer-substring-no-properties beg end))
+         (bracket-link (format "[[%s][%s]]" url region-text)))
+    ;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
+    (delete-region beg end)
+    (insert bracket-link)))
+
+(defun pasteboard-paste-adaptive ()
+  "Paste from the macOS pasteboard, choosing method based on current mode and context.
+If there's an active region and the clipboard contains a URL,
+insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
+  (interactive)
+  ;; Get raw text from pbpaste and trim whitespace
+  (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
+         (clipboard-text (downcase raw-clip)))
+    ;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+    (cond
+     ;; 1) If region is active and the clipboard looks like a URL → bracket link
+     ((and (use-region-p)
+           (not (string-empty-p raw-clip))
+           (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
+      ;;  (message "DEBUG: Inserting bracket link.")
+      (org-insert-link-from-clipboard (region-beginning) (region-end)))
+
+     ;; 2) Otherwise, do original logic
+     ((or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-paste-clean))
+     ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'emacs-lisp-mode))
+      (pasteboard-paste-raw))
+     (t
+      (let* ((prev-char (char-before))
+             (next-char (char-after))
+             (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+
+             (use-no-spaces (or (member prev-char char-set)
+                                (member next-char char-set))))
+        (if use-no-spaces
+            (pasteboard-paste-raw)
+          (pasteboard-paste-clean)))))))
+
+(defun convert-markdown-links-to-org-mode (beg end)
+  "Convert Markdown links to Org-mode links in the specified region."
+  (interactive "r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^)]+\\))" end t)
+      (replace-match "[[\\2][\\1]]" t))))
+
+
+
+(defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
+ "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
+ (interactive)
+ (let* ((clipboard-content (shell-command-to-string "pbpaste"))
+     (clean-content (string-trim clipboard-content))
+     (start (point))
+     (end (if mark-active (mark) (point))))
+  (if (string-empty-p clean-content)
+    (message "Clipboard is empty.")
+   (let ((converted-content
+       (replace-regexp-in-string
+       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
+       "[[\\2][\\1]]"
+       clean-content)))
+    (delete-region start end)
+    (insert converted-content)
+    (message "Content pasted and converted successfully.")))))
+
+(defun pasteboard-paste ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+        (end (if mark-active
+                 (mark)
+               (point)))
+        (ins-text
+         (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")))
+    (delete-region start end)
+    (insert ins-text)
+    (my/fix-space)
+    (save-excursion
+      (goto-char start)
+      (my/fix-space)))
+                                        ; (reflash-indentation)
+  )
+
+(defun pasteboard-paste-clean (&optional raw)
+  "Paste from macOS clipboard, then normalise the text.
+
+With a prefix argument RAW (C-u) insert verbatim.
+Otherwise run, in order:
+  1. `replace-smart-quotes`          ; simple pair replacements
+  2. `replace-smart-quotes-regexp`   ; regexp clean‑ups
+  3. `convert-markdown-links-to-org-mode`."
+  (interactive "P")
+  ;; Remember where the paste starts.
+  (let ((beg (point)))
+    (pasteboard-paste)                       ; your low‑level paste
+    (unless raw
+      ;; Use a marker so END keeps tracking if we shorten/lengthen text.
+      (let ((end (copy-marker (point) t)))
+        (replace-smart-quotes beg end)
+        (replace-smart-quotes-regexp beg end)
+        (replace-weird-spaces beg end)
+        (convert-markdown-headings-to-org beg end)
+(ensure-heading-emoji-space beg end)
+        (convert-markdown-blockquotes-to-org beg end)
+        (convert-markdown-links-to-org-mode beg end)
+        (set-marker end nil)))))             ; tidy marker
+
+(defun pasteboard-paste-raw ()
+  "Paste from OS X system pasteboard via `pbpaste' to point."
+  (interactive)
+  (let ((start (point))
+	(end (if mark-active
+		 (mark)
+	       (point))))
+    (shell-command-on-region start end
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
+    (save-excursion
+      )))
+
+(defun pasteboard-paste-adjusted-subtrees ()
+  "Paste text from the system pasteboard, adjusting Org headings to be subheadings.
+This function ensures that all Org-mode headings in the pasted text
+are adjusted so they become subheadings under the current Org heading."
+  (interactive)
+  (let* ((text (shell-command-to-string "pbpaste"))
+         ;; Ensure we have the correct current heading level
+         (current-level (save-excursion
+                          (if (org-before-first-heading-p)
+                              0
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0)))))
+    ;; Clean up the text by removing carriage returns
+    (setq text (replace-regexp-in-string "\r" "" text))
+    ;; Adjust the heading levels in the pasted text
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (let ((min-level nil))
+        ;; Find the minimum heading level in the pasted text
+        (while (re-search-forward "^\\(\\*+\\) " nil t)
+          (let ((level (length (match-string 1))))
+            (when (or (not min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          ;; Calculate the shift needed to adjust heading levels
+          (let ((shift (- (+ current-level 1) min-level)))
+            (goto-char (point-min))
+            ;; Adjust each heading in the pasted text
+            (while (re-search-forward "^\\(\\*+\\)" nil t)
+              (let* ((stars (match-string 1))
+                     (level (length stars))
+                     (new-level (max 1 (+ level shift))))
+                (replace-match (make-string new-level ?*) t t)))))
+        ;; Retrieve the adjusted text
+        (setq text (buffer-string))))
+    ;; Insert the adjusted text at point
+    (insert text)))
+
+(defun pasteboard-paste-adjusted-subtrees-adaptive ()
+  "Paste Org text from pasteboard, adjust heading levels to be subheadings,
+and handle spacing based on surrounding punctuation."
+  (interactive)
+  (let* ((text (shell-command-to-string "pbpaste"))
+         (current-level (save-excursion
+                          (if (org-before-first-heading-p)
+                              0
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0))))
+         (prev-char (char-before))
+         (next-char (char-after))
+         (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
+
+    ;; Clean up the text by removing carriage returns
+    (setq text (replace-regexp-in-string "\r" "" text))
+
+    ;; Adjust the heading levels in the pasted text
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (let ((min-level nil))
+        (while (re-search-forward "^\\(\\*+\\) " nil t)
+          (let ((level (length (match-string 1))))
+            (when (or (null min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          (let ((shift (- (+ current-level 1) min-level)))
+            (goto-char (point-min))
+            (while (re-search-forward "^\\(\\*+\\)" nil t)
+              (let* ((stars (match-string 1))
+                     (level (length stars))
+                     (new-level (max 1 (+ level shift))))
+                (replace-match (make-string new-level ?*) t t))))))
+      (setq text (buffer-string)))
+
+    ;; Insert the text at point and perform quote replacements if appropriate
+    (let ((start (point)))
+      (insert text)
+      (let ((end-pos (point)))
+        ;; If we're NOT next to punctuation, do quote replacements
+        (unless (or (member prev-char char-set)
+                    (member next-char char-set))
+          (save-excursion
+            (goto-char start)
+            ;; Replace various types of apostrophes with a straight '
+            (ignore-errors
+              (while (re-search-forward "['']" end-pos t)
+                (replace-match "'" t t)))
+            (goto-char start)
+            ;; Replace straight or curly double quotes with a straight "
+            (ignore-errors
+              (while (re-search-forward "[\"""]" end-pos t)
+                (replace-match "\"" t t)))))))))
+
+(defun pasteboard-cut ()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  )
+
+(defun pasteboard-cut-and-capitalize ()
+  "Cut region and put on OS X system pasteboard."
+  (interactive)
+  (pasteboard-copy)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes ()
+  "Cut region and put on OS X pasteboard, replacing dash sequences with em dashes.
+Then delete the region, fix spacing, and, if at the beginning of a sentence,
+capitalize the text (unless it's an Org heading)."
+  (interactive)
+  ;; Use the copy-and-replace function instead of pasteboard-copy.
+  (pasteboard-copy-and-replace-em-dashes-in-clipboard)
+  (delete-region (region-beginning) (region-end))
+  (my/fix-space)
+  (save-excursion
+    (when (my/beginning-of-sentence-p)
+      (capitalize-unless-org-heading))))
+
+(defun pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe ()
+  "Cut region and put it on the OS X pasteboard using a command selected by the current mode.
+
+When working with prose (in `org-mode` without `org-config-files-local-mode`
+or in a mode derived from `text-mode`), replace dash sequences with em dashes.
+When working with code (any mode other than `org-mode` or in `org-mode` when
+`org-config-files-local-mode` is active), cut region and copy verbatim by calling
+`pasteboard-cut-and-capitalize`."
+  (interactive)
+  (if (or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (pasteboard-cut-and-capitalize-and-replace-em-dashes)
+    (pasteboard-cut-and-capitalize)))
+
+(defvar-local failed-search nil)
+
+(defun wrapped-search-forward (str)
+  (interactive "sWrappedSearch:")
+  (if (and
+       failed-search
+       (>= (car failed-search) (point))
+       (string-equal (cdr failed-search) str))
+      (let ((p (save-excursion
+                 (goto-char 0)
+                 (search-forward str nil t))))
+        (if p
+            (progn
+              (goto-char p)
+              (setq-local failed-search nil))
+          (message "WrappedSearch: Not found.")))
+    (let ((p (search-forward str nil t)))
+      (unless p
+        (setq-local failed-search (cons (point) str))
+        (message "Search: Not found.")))))
+
+(defun pasteboard-search-for-clipboard-contents ()
+  (interactive)
+  (let ((search-term
+         (with-temp-buffer
+           (pasteboard-paste-raw)
+           (buffer-string))))
+    (wrapped-search-forward search-term)))
+
+(setq x-select-enable-clipboard t)
+
+(defun push-kill-ring-pasteboard-to-MacOS-clipboard ()
+  (interactive)
+  (x-select-text (current-kill 0)))
+
+(defun push-MacOS-clipboard-to-kill-ring ()
+ "Push the content of the MacOS clipboard to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (when (and clipboard-content (not (string= clipboard-content "")))
+   (kill-new clipboard-content)
+   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+
+(defun gist-buffer-to-pasteboard ()
+  (interactive)
+  (gist-buffer)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard)
+  )
