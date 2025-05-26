@@ -2550,7 +2550,7 @@ AdrianKubala:
 #+END_EXAMPLE
 
 **** swiper hydra
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun ivy-dired-mark (arg)
  (interactive "p")
  (dotimes (_i arg)
@@ -2614,7 +2614,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 
 (define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
 
-#+END_SRC
+#+END_EXAMPLE
 
 ** searching
 

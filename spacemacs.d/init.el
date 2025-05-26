@@ -98,49 +98,33 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
 
-     ;; ag-general
-     ;; ag-lang-tools
      auto-completion
      ;; better-defaults
-     compleseus
+     (compleseus :variables
+                 compleseus-engine 'vertico)
      ;; chrome
      ;; deft
      ;; emoji
      ;; floobits
-     ;; helm
+
      ;; html
-     ;; ivy
      ;; jay
      ;; markdown
-     ;; mu4e
      emacs-lisp
-     ;;     eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
-      :defer
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
-      org-export-backends '(ascii html icalendar latex md)
-                                        ; org-enable-hugo-support to
-
-      :config
-      (require 'ox-extra)
-      (ox-extra-activate '(ignore-headlines))
-      )
+      org-export-backends '(ascii html icalendar latex md))
      osx
      ;; pdf
      ;; python
-     ;; shell
-     ;; shell-scripts
-                                        ; smex
-     ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
      ;; treemacs
      ;; typography
      ;; xkcd
-
      )
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -151,93 +135,71 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-                                      amx
-                                      bind-map
-                                      evil-evilified-state
-                                      org-transclusion
-                                      ctrlf
-                                      web-mode
-                                      ox-twbs
-                                      mwim
                                       affe
+                                      amx
+                                      auto-complete
                                       beacon
                                       bind-key
+                                      bind-map
                                       bui
-                                      ;; buffer-stack
                                       caps-lock
                                       captain
                                       change-inner
-                                      ;; cheatsheet
                                       company
-                                      consult-dir
-                                      ;; consult-notes
                                       consult-ag
+                                      consult-dir
                                       consult-org-roam
-                                      ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
                                       counsel-fd
                                       counsel-projectile
                                       crux
+                                      ctrlf
                                       dash
                                       deadgrep
                                       define-word
                                       dired-quick-sort
-                                      ;; dired-sort-menu
                                       discover-my-major
                                       emacsql
-                                      ;; embark
-                                      ;; epc
-                                      ;; eww
+                                      evil-evilified-state
                                       exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      ;; frame-cmds
                                       fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
                                       google-this
-                                      ;; gptel
-                                      ;; helpful
-                                      ;; ido-hacks
-                                      ;; jinx
                                       key-seq
-                                      ;; lister ;; (for delve)
-                                      ;; magit
-                                        ; markdown-mode
                                       magit-section
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
+                                      mwim
                                       olivetti
                                       openwith
                                       orderless
-                                      org-ai
+                                      ;; org-ai
+                                      org-contrib
                                       org-autolist
                                       org-bookmark-heading
-                                      ;; org-contrib
-                                      ;; org-drill
-                                      ;; org-fstree
                                       org-mac-link
                                       org-pomodoro
                                       org-ql
                                       org-roam
                                       org-roam-ui
-                                      ;; org-superstar
+                                      org-transclusion
                                       ox-clip
-                                      ;; ox-gfm
                                       ox-timeline
                                       ox-tufte
+                                      ox-twbs
                                       palimpsest
                                       paredit
                                       peg
                                       persist
-                                      ;; persp-mode
                                       point-stack
                                       popup
-                                      ;; project-explorer
                                       projectile-ripgrep
                                       quelpa-use-package
                                       rainbow-mode
@@ -248,14 +210,10 @@ This function should only modify configuration layer settings."
                                       ripgrep
                                       rspec-mode
                                       s
-                                      ;; scratch
-                                      ;; scratch-message
                                       sdcv
-                                      ;; simple-httpd
-                                      ;; stripe-buffer
+                                      smex
                                       sudo-edit
                                       sync-recentf
-                                        ; tabbar
                                       tiny
                                       titlecase
                                       ts
@@ -263,56 +221,82 @@ This function should only modify configuration layer settings."
                                       visible-mark
                                       wc-goal-mode
                                       wc-mode
-                                      ;; web-mode
+                                      web-mode
                                       with-editor
                                       wrap-region
-                                      ;; xah-replace-pairs
-
                                       ;; ag
-                                      auto-complete
+                                      ;; benchmark-init
                                       ;; blimp
                                       ;; bongo
+                                      ;; buffer-stack
+                                      ;; cheatsheet
                                       ;; command-log-mode
+                                      ;; consult-notes
                                       ;; cyberpunk-theme
                                       ;; dired-hacks-utils
                                       ;; dired-single
+                                      ;; dired-sort-menu
                                       ;; early-init
+                                      ;; embark
                                       ;; emms
+                                      ;; epc
+                                      ;; eww
                                       ;; fastdef
                                       ;; focus
                                       ;; fountain-mode
+                                      ;; frame-cmds
                                       ;; frame-restore
                                       ;; gist
+                                      ;; gptel
                                       ;; graphviz-dot-mode
+                                      ;; helpful
+                                      ;; ido-hacks
                                       ;; imenu-list
+                                      ;; jinx
                                       ;; key-chord
+                                      ;; lister ;; (for delve)
+                                      ;; magit
                                       ;; magit-section
+                                      ;; markdown-mode
                                       ;; mpv
                                       ;; multicolumn
                                       ;; nm
+                                      ;; org-contrib
                                       ;; org-download
+                                      ;; org-drill
+                                      ;; org-fstree
                                       ;; org-mime
                                       ;; org-noter
                                       ;; org-noter-pdftools
                                       ;; org-pdftools
                                       ;; org-sidebar
+                                      ;; org-superstar
                                       ;; ox-epub
+                                      ;; ox-gfm
                                       ;; ox-twbs
+                                      ;; persp-mode
                                       ;; plain-org-wiki
                                       ;; polymode
+                                      ;; project-explorer
+                                      ;; scratch
+                                      ;; scratch-message
+                                      ;; simple-httpd
                                       ;; solarized-theme
                                       ;; spotify
+                                      ;; stripe-buffer
                                       ;; sublime-themes
+                                      ;; tabbar
                                       ;; tldr
                                       ;; transcribe
+                                      ;; web-mode
                                       ;; websocket
                                       ;; writeroom-mode
                                       ;; wttrin
+                                      ;; xah-replace-pairs
                                       ;; xml-rpc
                                       ;; yahoo-weather
                                       ;; zenburn-theme
                                       ;; zone
-                                      smex
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -949,6 +933,10 @@ before packages are loaded."
               (setq Info-directory-list '("/opt/homebrew/share/info"))))
 
   (setq Info-additional-directory-list nil)
+
+  ;; Enable special export keywords such as #+EXCLUDE_TAGS, #+IGNORE_HEADLINES …
+  ;; ▸ Activate extra export keywords (IGNORE_HEADLINES etc.)
+
 
 
   ;; 1. ordinary “safe local variables”
