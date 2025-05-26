@@ -186,7 +186,7 @@
 ;; (use-package rg)
 
 (use-package reveal-in-finder
-  :defer
+  :defer t
   )
 
 ;; (recenter-top-bottom)
@@ -282,9 +282,6 @@
 
 
 
-;; To permanently enable mode line display of org clock, add this snippet to your dotspacemacs/user-config function:
-;; (setq spaceline-org-clock-p t)
-
 (setq user-init-file "/Users/jay/emacs/emacs-settings/spacemacs.d/init.el")
 
 (setq case-fold-search t)
@@ -322,9 +319,9 @@
 
 
 (use-package server
-  :defer)
+  )
 (when (server-running-p)
   (server-force-delete))
-;; (server-start)
+(server-start)
 
 (redbold)
