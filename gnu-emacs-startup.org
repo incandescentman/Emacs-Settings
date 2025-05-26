@@ -1,5 +1,5 @@
 #+auto_tangle: t
-* NOTE-TO-JAY file settings             :ARCHIVE: 
+* NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
 #+TODO: | NOTE-TO-JAY NOTE-TO-RUDI NOTE-TO-RÚDI
@@ -134,7 +134,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
   (tab-bar-mode 1)
  (tab-bar-mode -1)))
 
-(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
+
 #+END_SRC
 
 
