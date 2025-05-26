@@ -111,7 +111,8 @@
 
 (defun my/load-org-config (org-file)
   "Tangle ORG-FILE → *.el, compile if needed, then load it."
-  (require 'org) (require 'ob-tangle)
+
+  (require 'ob-tangle)
   (let* ((org-file (expand-file-name org-file))
          (el-file  (concat (file-name-sans-extension org-file) ".el"))
          (bin      (my/compiled-path el-file)))
