@@ -94,19 +94,27 @@
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
-;; (load "/Users/jay/emacs/archive/email.el")
-;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
 (load "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
+
+(autoload 'prelude-core "prelude-core" nil t)
+
 (load "/Users/jay/emacs/emacs-settings/skeletons.el")
 (load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
+(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
+
+
+
+;; (load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+
 ;; (load "/Users/jay/gnulisp/book-functions.el")
-(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+;; (load "/Users/jay/emacs/archive/email.el")
+;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
+
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
 ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
 ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
-(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 ;;(load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
 
 ;; (monaco-font)

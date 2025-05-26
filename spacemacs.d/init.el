@@ -964,10 +964,29 @@ before packages are loaded."
     (add-to-list 'safe-local-eval-forms
                  '(org-config-files-local-mode 1)))
 
+
+
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
-  (load "/Users/jay/gnulisp/smart-return.el")
-  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
-  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
+
+
+
+  (autoload 'smart-return        ; symbol to autoload
+    "smart-return"              ; file that defines it  (without .el)
+    nil                         ; no docstring override (use the one in the file)
+    t)
+
+
+  (autoload 'buffer-stack        ; symbol to autoload
+    "buffer-stack"              ; file that defines it  (without .el)
+    nil                         ; no docstring override (use the one in the file)
+    t)
+
+  (autoload 'frame-cmds        ; symbol to autoload
+    "frame-cmds"              ; file that defines it  (without .el)
+    nil                         ; no docstring override (use the one in the file)
+    t)
+
+
   (load "/Users/jay/emacs/local-config.el")
   ;;  (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
   ;; (load "/Users/jay/emacs/emacs-settings/aibo-power-pack.el")
