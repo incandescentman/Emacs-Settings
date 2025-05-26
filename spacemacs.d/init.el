@@ -138,7 +138,6 @@ This function should only modify configuration layer settings."
                                       affe
                                       amx
                                       auto-complete
-                                      benchmark-init
                                       beacon
                                       bind-key
                                       bind-map
@@ -226,7 +225,6 @@ This function should only modify configuration layer settings."
                                       with-editor
                                       wrap-region
                                       ;; ag
-                                      ;; benchmark-init
                                       ;; blimp
                                       ;; bongo
                                       ;; buffer-stack
@@ -846,6 +844,20 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
 
+  ;; user-init  (before any packages are installed)
+  (setq package-archives
+        '(("gnu"   . "https://elpa.gnu.org/packages/")
+          ("melpa" . "https://melpa.org/packages/")))
+  (package-initialize)
+
+  (unless package-archive-contents          ; first run, grab index
+    (package-refresh-contents))
+
+
+  ;; 3. wc-goal-mode – local file
+  (use-package wc-goal-mode
+    :load-path "~/emacs/emacs-settings/"   ; directory that contains wc-goal-mode.el
+    :commands wc-goal-mode)
 
 
   ;; early in init.el / early-init.el
