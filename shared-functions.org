@@ -9271,6 +9271,10 @@ It returns a list, so you can later jump to the first culprit:
            (buffer-name (current-buffer))))
 
 (add-hook 'window-configuration-change-hook #'debug-window-creation)
+
+
+
+(delete-other-windows)
 #+END_SRC
 
 
