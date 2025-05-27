@@ -210,18 +210,18 @@ This function should only modify configuration layer settings."
                                       ripgrep
                                       rspec-mode
                                       s
-                                      sdcv
+                                      ;; sdcv
                                       smex
                                       sudo-edit
                                       sync-recentf
-                                      tiny
+                                      ;; tiny
                                       titlecase
                                       ts
                                       unfill
                                       visible-mark
                                       wc-goal-mode
                                       wc-mode
-                                      web-mode
+                                      ;; web-mode
                                       with-editor
                                       wrap-region
                                       ;; ag
