@@ -183,9 +183,9 @@ This function should only modify configuration layer settings."
                                       ;; org-ai
                                       org-contrib
                                       org-autolist
-                                      org-bookmark-heading
+                                      ;; org-bookmark-heading
                                       org-mac-link
-                                      org-pomodoro
+                                      ;; org-pomodoro
                                       org-ql
                                       org-roam
                                       org-roam-ui
@@ -193,7 +193,7 @@ This function should only modify configuration layer settings."
                                       ox-clip
                                       ox-timeline
                                       ox-tufte
-                                      ox-twbs
+                                      ;; ox-twbs
                                       palimpsest
                                       paredit
                                       peg
@@ -203,9 +203,9 @@ This function should only modify configuration layer settings."
                                       projectile-ripgrep
                                       quelpa-use-package
                                       rainbow-mode
-                                      re-builder
+                                      ;; re-builder
                                       recentf
-                                      regex-tool
+                                      ;; regex-tool
                                       rg
                                       ripgrep
                                       rspec-mode
