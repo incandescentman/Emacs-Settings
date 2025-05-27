@@ -854,6 +854,21 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
     (package-refresh-contents))
 
 
+;; Disable idle tasks until after startup
+(setq my/deferred-timers
+      '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect))
+
+(dolist (t my/deferred-timers)
+  (when (timerp (symbol-value t))
+    (cancel-timer (symbol-value t))))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-at-time 5 nil      ;; start 5 s after UI is up
+                         (lambda ()
+                           (dolist (t my/deferred-timers)
+                             (funcall t))))))
+ 
 
   ;; early in init.el / early-init.el
   (let ((old-gc gc-cons-threshold)
