@@ -842,18 +842,17 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  ;; (setq debug-on-error t)
-  (add-to-list 'load-path "~/emacs/emacs-settings")
+;;; ────────────────────────────────────────────────────────────────────
+;;; Load-path tweaks (happens immediately) ----------------------------
+  (add-to-list 'load-path "~/emacs/emacs-settings")   ;; prepend once
 
-
-
-  ;; Disable idle tasks until after startup
-;;; delay noisy background timers until the UI is up --------------------
-  (defvar my/deferred-fns
+;;; ────────────────────────────────────────────────────────────────────
+;;; Delay “noisy” background timers until 5 s after UI is up ----------
+  (defconst my/deferred-fns
     '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect)
-    "Functions whose idle timers are postponed until 5 s after start-up.")
+    "Idle-timer functions we postpone until Emacs has started.")
 
-  (dolist (fn my/deferred-fns)
+  (dolist (fn my/deferred-fns)            ; cancel all their current timers
     (cancel-function-timers fn))
 
   (add-hook 'emacs-startup-hook
@@ -863,63 +862,53 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                              (dolist (fn my/deferred-fns)
                                (funcall fn))))))
 
-
-  (defvar my/deferred-fns
-    '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect))
-  (dolist (fn my/deferred-fns) (cancel-function-timers fn))
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-at-time 5 nil
-                           (lambda ()
-                             (dolist (fn my/deferred-fns) (funcall fn))))))
-
-  ;; early in init.el / early-init.el
-  (let ((old-gc gc-cons-threshold)
+;;; ────────────────────────────────────────────────────────────────────
+;;; GC & file-handler throttle ----------------------------------------
+  (let ((old-gc       gc-cons-threshold)
         (old-handlers file-name-handler-alist))
     (setq gc-cons-threshold (* 256 1024 1024)      ; 256 MB
           file-name-handler-alist nil)
     (add-hook 'emacs-startup-hook
               (lambda ()
-                (setq gc-cons-threshold (* 16 1024 1024)   ; 16 MB again
-                      file-name-handler-alist old-handlers))))
+                (setq gc-cons-threshold (* 16 1024 1024)     ; back to 16 MB
+                      file-name-handler-alist old-handlers))
+              'append))                                   ; run last
 
-  (setq native-comp-enable-subr-trampolines nil)
+;;; ────────────────────────────────────────────────────────────────────
+;;; Native-comp tweaks (guarded so older Emacsen don’t warn) ----------
+  (with-eval-after-load 'comp           ; only when the ‘comp’ pkg exists
+    (setq native-comp-enable-subr-trampolines          nil
+          native-comp-async-report-warnings-errors     'silent
+          native-comp-jit-compilation                 nil))
 
-  (setq native-comp-async-report-warnings-errors 'silent)
-  (setq native-comp-jit-compilation nil)
+;;; ────────────────────────────────────────────────────────────────────
+;;; Spacemacs / package tweaks ----------------------------------------
+  (setq package-quickstart                t      ; use quickstart cache
+        dotspacemacs-check-for-update     nil    ; skip version ping
+        dotspacemacs-enable-package-cleanup nil) ; don’t auto-delete pkgs
 
-
-
-  ;; dotspacemacs/user-init  (or early in init.el)
-  (setq package-quickstart t            ; Emacs ≥27: load autoload cache
-        dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
-        dotspacemacs-enable-package-cleanup nil) ; don't touch packages
-
-  ;; ---------------------------------------------------------------------
-  ;; 1. pick a stash dir and make sure it exists
-  (defconst jd/cache-dir "~/.emacs.d/.cache/var/")
+;;; Move caches out of $HOME ------------------------------------------
+  (defconst jd/cache-dir (expand-file-name "~/.emacs.d/.cache/var/"))
   (make-directory jd/cache-dir t)
+  (setq amx-items-file          (expand-file-name "amx-items" jd/cache-dir)
+        package-quickstart-file (expand-file-name "package-quickstart.el"
+                                                  jd/cache-dir))
 
-  ;; 2. point the two offenders there
-  (setq amx-items-file          (expand-file-name "amx-items"           jd/cache-dir)
-        package-quickstart-file (expand-file-name "package-quickstart.el" jd/cache-dir))
-  ;; ---------------------------------------------------------------------
+;;; ────────────────────────────────────────────────────────────────────
+;;; Misc. -------------------------------------------------------------
+  ;; safety net for smart-quotes package
+  (defvar smart-quotes-replacement-pairs nil)
 
-
-
-  ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
-  (defvar smart-quotes-replacement-pairs nil
-    "Alist of smart‑quote glyphs and their ASCII replacements.")
-
-  ;; --- tell Flyspell / Ispell to use Hunspell --------------------
+  ;; Hunspell setup
   (setq-default ispell-program-name "/opt/homebrew/bin/hunspell"
                 ispell-really-hunspell t
                 ispell-dictionary      "en_US-large"
                 ispell-personal-dictionary
                 (expand-file-name "~/Library/Spelling/personal.dic"))
-
-  (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
+  (setenv "DICPATH"    (expand-file-name "~/Library/Spelling"))
   (setenv "DICTIONARY" "en_US")
+
+;;; ────────────────────────────────────────────────────────────────────
 
 
   )
