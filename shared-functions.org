@@ -9252,7 +9252,11 @@ It returns a list, so you can later jump to the first culprit:
 
 #+end_src
 
-
+* company
+#+begin_src emacs-lisp
+(use-package company
+:defer t)
+#+end_src
 
 
 * Local Variables & The End

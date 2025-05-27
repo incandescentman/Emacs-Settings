@@ -137,15 +137,15 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       affe
                                       amx
-                                      auto-complete
-                                      beacon
+                                      ;;        auto-complete
+                                      ;; beacon
                                       bind-key
                                       bind-map
                                       bui
                                       caps-lock
                                       captain
                                       change-inner
-                                      company
+                                      ;; company
                                       consult-ag
                                       consult-dir
                                       consult-org-roam
@@ -156,7 +156,7 @@ This function should only modify configuration layer settings."
                                       crux
                                       ctrlf
                                       dash
-                                      deadgrep
+                                      ;; deadgrep
                                       define-word
                                       dired-quick-sort
                                       discover-my-major
