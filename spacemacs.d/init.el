@@ -843,7 +843,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
-
+  (add-to-list 'load-path "~/emacs/emacs-settings" 0) ; 0 ⇒ first position
   ;; user-init  (before any packages are installed)
   (setq package-archives
         '(("gnu"   . "https://elpa.gnu.org/packages/")

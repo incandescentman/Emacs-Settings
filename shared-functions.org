@@ -9243,34 +9243,12 @@ It returns a list, so you can later jump to the first culprit:
 
 
 
-#+BEGIN_SRC emacs-lisp
-;; Temporarily add this to your init to see what's happening
-(defun debug-window-creation ()
-  "Debug what's creating windows"
-  (message "Window count: %d, Buffer: %s"
-           (count-windows)
-           (buffer-name (current-buffer))))
-
-(add-hook 'window-configuration-change-hook #'debug-window-creation)
-
-
-
-#+END_SRC
-
 #+begin_src emacs-lisp
-
+(delete-other-windows)
 (message "Test message from shared-functions.org - timestamp: %s"
 (current-time-string))
 
-
-
-;; this
-
-;; this
-
-;;this
-
-;; this;
+(message "fool")
 #+end_src
 
 
