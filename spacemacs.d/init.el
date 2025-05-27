@@ -843,32 +843,35 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
-  (add-to-list 'load-path "~/emacs/emacs-settings" 0) ; 0 ⇒ first position
-  ;; user-init  (before any packages are installed)
-  (setq package-archives
-        '(("gnu"   . "https://elpa.gnu.org/packages/")
-          ("melpa" . "https://melpa.org/packages/")))
-  (package-initialize)
-
-  (unless package-archive-contents          ; first run, grab index
-    (package-refresh-contents))
+  (add-to-list 'load-path "~/emacs/emacs-settings")
 
 
-;; Disable idle tasks until after startup
-(setq my/deferred-timers
-      '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect))
 
-(dolist (t my/deferred-timers)
-  (when (timerp (symbol-value t))
-    (cancel-timer (symbol-value t))))
+  ;; Disable idle tasks until after startup
+;;; delay noisy background timers until the UI is up --------------------
+  (defvar my/deferred-fns
+    '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect)
+    "Functions whose idle timers are postponed until 5 s after start-up.")
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (run-at-time 5 nil      ;; start 5 s after UI is up
-                         (lambda ()
-                           (dolist (t my/deferred-timers)
-                             (funcall t))))))
- 
+  (dolist (fn my/deferred-fns)
+    (cancel-function-timers fn))
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-at-time 5 nil
+                           (lambda ()
+                             (dolist (fn my/deferred-fns)
+                               (funcall fn))))))
+
+
+  (defvar my/deferred-fns
+    '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect))
+  (dolist (fn my/deferred-fns) (cancel-function-timers fn))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-at-time 5 nil
+                           (lambda ()
+                             (dolist (fn my/deferred-fns) (funcall fn))))))
 
   ;; early in init.el / early-init.el
   (let ((old-gc gc-cons-threshold)

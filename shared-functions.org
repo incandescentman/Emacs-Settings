@@ -9041,7 +9041,7 @@ It returns a list, so you can later jump to the first culprit:
 * Amx
 #+begin_src emacs-lisp
 (use-package amx
-:defer t
+:defer nil
   :ensure t                           ; if you use straight-el/ELPA
   :init
   (setq amx-history-length 99         ; remember last 99 commands
