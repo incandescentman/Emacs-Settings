@@ -109,33 +109,58 @@
           ((file-exists-p elc)           elc)
           (t                             el-file))))
 
+
+
 (defun my/load-org-config (org-file)
   "Tangle ORG-FILE → *.el, compile if needed, then load it."
+  (require 'ob-tangle) ; Ensure tangling functions are available
+  (let* ((org-file   (expand-file-name org-file))
+         (el-file    (concat (file-name-sans-extension org-file) ".el"))
+         ;; Get the path to the best *existing* compiled artifact or the .el file
+         (existing-bin (my/compiled-path el-file)))
 
-  (require 'ob-tangle)
-  (let* ((org-file (expand-file-name org-file))
-         (el-file  (concat (file-name-sans-extension org-file) ".el"))
-         (bin      (my/compiled-path el-file)))
+    ;; Fast path: if a compiled version exists and it's newer than the .org source, just load it.
+    ;; `existing-bin` could be .eln, .elc, or .el itself if nothing compiled yet.
+    ;; We only take the fast path if `existing-bin` is NOT the .el file (i.e., it's a compiled version)
+    ;; AND this compiled version is up-to-date with respect to the .org file.
+    (if (and existing-bin
+             (not (string= el-file existing-bin)) ; Ensure 'existing-bin' is a compiled file, not the .el itself
+             (file-exists-p existing-bin)
+             (file-newer-than-file-p existing-bin org-file))
+        (progn
+          ;; (message "Fast path: Loading pre-compiled %s (for %s)" existing-bin org-file)
+          (load (file-name-sans-extension el-file) nil 'nomessage))
 
-    ;; 1 ─ Tangle (only emacs-lisp blocks)
-    (when (or (not (file-exists-p el-file))
-              (file-newer-than-file-p org-file el-file))
-      (org-babel-tangle-file org-file el-file "emacs-lisp"))
+      ;; Slow path: (Re)tangle and/or (re)compile, then load.
+      (progn
+        ;; (message "Slow path: Processing %s" org-file)
+        ;; 1 ─ Tangle if .el is missing or .org is newer
+        (when (or (not (file-exists-p el-file))
+                  (file-newer-than-file-p org-file el-file))
+          ;; (message "Tangling %s -> %s" org-file el-file)
+          (org-babel-tangle-file org-file el-file "emacs-lisp"))
 
-    ;; 2 ─ (Re)compile when necessary
-    (when (and (file-exists-p el-file)
-               (or (not (file-exists-p bin))
-                   (file-newer-than-file-p el-file bin)))
-      (if (my/native-comp-available-p)
-          (native-compile el-file)         ; ← only when safe
-          (byte-compile-file el-file)))
+        ;; Proceed only if tangling produced the .el file
+        (when (file-exists-p el-file)
+          ;; Update `bin` to reflect the best compiled version *after* potential re-tangle/re-compile
+          ;; This check is for the state *before* we potentially compile *now*.
+          (let ((current-compiled-artifact (my/compiled-path el-file)))
+            ;; 2 ─ (Re)compile if .el is newer than its current compiled artifact,
+            ;;     or if the compiled artifact doesn't exist (e.g. current-compiled-artifact is el-file itself).
+            (when (or (not (file-exists-p current-compiled-artifact))
+                      (string= el-file current-compiled-artifact) ; .el file is the "bin", so it needs compilation
+                      (file-newer-than-file-p el-file current-compiled-artifact))
+              ;; (message "Compiling %s..." el-file)
+              (if (my/native-comp-available-p)
+                  (native-compile el-file)
+                (byte-compile-file el-file))
+              ;; 3 ─ Hide *Compile-Log*
+              (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))))
 
-    ;; 3 ─ Hide *Compile-Log*
-    (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))
+          ;; 4 ─ Load the code
+          ;; (message "Loading (after potential tangle/compile) %s" (file-name-sans-extension el-file))
+          (load (file-name-sans-extension el-file) nil 'nomessage))))))
 
-    ;; 4 ─ Load the code
-    (when (file-exists-p el-file)
-      (load (file-name-sans-extension el-file) nil 'nomessage))))
 ;;; -----------------------------------------------------------
 
 (dolist (f '("~/emacs/emacs-settings/gnu-emacs-startup.org"
