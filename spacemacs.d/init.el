@@ -161,19 +161,19 @@ This function should only modify configuration layer settings."
                                       dired-quick-sort
                                       discover-my-major
                                       emacsql
-                                      evil-evilified-state
+                                      ;; evil-evilified-state
                                       exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      fuzzy
+                                      ;; fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
-                                      google-this
+                                      ;; google-this
                                       key-seq
                                       magit-section
-                                      maxframe
+                                      ;; maxframe
                                       multiple-cursors
                                       mw-thesaurus
                                       mwim
