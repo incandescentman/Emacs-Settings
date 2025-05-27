@@ -4324,7 +4324,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 ** tufte export to LaTeX
 #+begin_src emacs-lisp
-(use-package ox-tufte-LaTeX
+(use-package ox-tufte-latex
 :defer t
   :ensure nil
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
@@ -6609,7 +6609,7 @@ directory
 ~M-x counsel-fd-file-jump~ to jump to a file under current directory
 
 #+begin_src emacs-lisp
-(use-package counsel-found
+(use-package counsel-fd
   :defer)
 #+end_src
 
@@ -9242,25 +9242,6 @@ It returns a list, so you can later jump to the first culprit:
 #+end_src
 
 
-* Automatically tangle those files
-#+begin_src emacs-lisp
-
-(add-hook 'after-save-hook #'my/auto-tangle-org-file)
-
-(defun my/auto-tangle-org-file ()
-  "Automatically tangle and byte-compile org file on save"
-  (when (and (eq major-mode 'org-mode)
-             (string-match-p "/emacs-settings/" (buffer-file-name)))
-    (require 'ob-tangle)  ; Add this line
-    (let* ((org-file (buffer-file-name))
-           (el-file (concat (file-name-sans-extension org-file) ".el"))
-           (elc-file (concat el-file "c")))
-      (org-babel-tangle)
-      (when (file-exists-p el-file)
-        (byte-compile-file el-file)
-        (message "Tangled and compiled: %s" (file-name-nondirectory el-file))))))
-#+end_src
-
 
 #+BEGIN_SRC emacs-lisp
 ;; Temporarily add this to your init to see what's happening
@@ -9274,8 +9255,25 @@ It returns a list, so you can later jump to the first culprit:
 
 
 
-(delete-other-windows)
 #+END_SRC
+
+#+begin_src emacs-lisp
+
+(message "Test message from shared-functions.org - timestamp: %s"
+(current-time-string))
+
+
+
+;; this
+
+;; this
+
+;;this
+
+;; this;
+#+end_src
+
+
 
 
 * Local Variables & The End

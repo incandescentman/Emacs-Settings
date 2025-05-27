@@ -89,6 +89,35 @@
   (add-to-list 'evil-evilified-state-modes 'org-agenda-mode))
 
 
+;; Automatically tangle config files
+
+
+
+
+(defun my/auto-tangle-org-file ()
+  "Automatically tangle and byte-compile org file on save"
+  (when (and (eq major-mode 'org-mode)
+             (string-match-p "/emacs-settings/" (buffer-file-name)))
+    (message ">>> AUTO-TANGLE running for %s" (buffer-name))
+    (require 'ob-tangle)
+    (let* ((org-file (buffer-file-name))
+           (el-file (concat (file-name-sans-extension org-file) ".el"))
+           (elc-file (concat el-file "c")))
+      (message "DEBUG: Tangling %s to %s" org-file el-file)
+
+      ;; Use the same tangle method as your load function
+      (org-babel-tangle-file org-file el-file "emacs-lisp")
+
+      (message "DEBUG: After tangling, .el file exists: %s" (file-exists-p el-file))
+
+      (when (file-exists-p el-file)
+        (message "DEBUG: Compiling %s" el-file)
+        (byte-compile-file el-file)
+        (when (get-buffer "*Compile-Log*")
+          (kill-buffer "*Compile-Log*"))
+        (message "Tangled and compiled: %s" (file-name-nondirectory el-file))))))
+
+(add-hook 'after-save-hook #'my/auto-tangle-org-file)
 
 
 ;;; -----------------------------------------------------------
@@ -131,35 +160,35 @@
           ;; (message "Fast path: Loading pre-compiled %s (for %s)" existing-bin org-file)
           (load (file-name-sans-extension el-file) nil 'nomessage))
 
-      ;; Slow path: (Re)tangle and/or (re)compile, then load.
-      (progn
-        ;; (message "Slow path: Processing %s" org-file)
-        ;; 1 ─ Tangle if .el is missing or .org is newer
-        (when (or (not (file-exists-p el-file))
-                  (file-newer-than-file-p org-file el-file))
-          ;; (message "Tangling %s -> %s" org-file el-file)
-          (org-babel-tangle-file org-file el-file "emacs-lisp"))
+        ;; Slow path: (Re)tangle and/or (re)compile, then load.
+        (progn
+          ;; (message "Slow path: Processing %s" org-file)
+          ;; 1 ─ Tangle if .el is missing or .org is newer
+          (when (or (not (file-exists-p el-file))
+                    (file-newer-than-file-p org-file el-file))
+            ;; (message "Tangling %s -> %s" org-file el-file)
+            (org-babel-tangle-file org-file el-file "emacs-lisp"))
 
-        ;; Proceed only if tangling produced the .el file
-        (when (file-exists-p el-file)
-          ;; Update `bin` to reflect the best compiled version *after* potential re-tangle/re-compile
-          ;; This check is for the state *before* we potentially compile *now*.
-          (let ((current-compiled-artifact (my/compiled-path el-file)))
-            ;; 2 ─ (Re)compile if .el is newer than its current compiled artifact,
-            ;;     or if the compiled artifact doesn't exist (e.g. current-compiled-artifact is el-file itself).
-            (when (or (not (file-exists-p current-compiled-artifact))
-                      (string= el-file current-compiled-artifact) ; .el file is the "bin", so it needs compilation
-                      (file-newer-than-file-p el-file current-compiled-artifact))
-              ;; (message "Compiling %s..." el-file)
-              (if (my/native-comp-available-p)
-                  (native-compile el-file)
-                (byte-compile-file el-file))
-              ;; 3 ─ Hide *Compile-Log*
-              (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))))
+          ;; Proceed only if tangling produced the .el file
+          (when (file-exists-p el-file)
+            ;; Update `bin` to reflect the best compiled version *after* potential re-tangle/re-compile
+            ;; This check is for the state *before* we potentially compile *now*.
+            (let ((current-compiled-artifact (my/compiled-path el-file)))
+              ;; 2 ─ (Re)compile if .el is newer than its current compiled artifact,
+              ;;     or if the compiled artifact doesn't exist (e.g. current-compiled-artifact is el-file itself).
+              (when (or (not (file-exists-p current-compiled-artifact))
+                        (string= el-file current-compiled-artifact) ; .el file is the "bin", so it needs compilation
+                        (file-newer-than-file-p el-file current-compiled-artifact))
+                ;; (message "Compiling %s..." el-file)
+                (if (my/native-comp-available-p)
+                    (native-compile el-file)
+                    (byte-compile-file el-file))
+                ;; 3 ─ Hide *Compile-Log*
+                (when-let ((buf (get-buffer "*Compile-Log*"))) (kill-buffer buf))))
 
-          ;; 4 ─ Load the code
-          ;; (message "Loading (after potential tangle/compile) %s" (file-name-sans-extension el-file))
-          (load (file-name-sans-extension el-file) nil 'nomessage))))))
+            ;; 4 ─ Load the code
+            ;; (message "Loading (after potential tangle/compile) %s" (file-name-sans-extension el-file))
+            (load (file-name-sans-extension el-file) nil 'nomessage))))))
 
 ;;; -----------------------------------------------------------
 
