@@ -188,7 +188,7 @@ This function should only modify configuration layer settings."
                                       ;; org-pomodoro
                                       org-ql
                                       org-roam
-                                      org-roam-ui
+                                      ;; org-roam-ui
                                       org-transclusion
                                       ox-clip
                                       ox-timeline
@@ -211,7 +211,7 @@ This function should only modify configuration layer settings."
                                       rspec-mode
                                       s
                                       ;; sdcv
-                                      smex
+                                      ;; smex
                                       sudo-edit
                                       sync-recentf
                                       ;; tiny
@@ -846,6 +846,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 ;;; Load-path tweaks (happens immediately) ----------------------------
   (add-to-list 'load-path "~/emacs/emacs-settings")   ;; prepend once
 
+  ;; Add at very top of init
+  (defvar jd/startup-time (current-time))
+
+  ;; Add at very end of init or use emacs-startup-hook
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "Emacs started in %.2f seconds"
+                       (float-time (time-subtract (current-time) jd/startup-time)))))
+
 ;;; ────────────────────────────────────────────────────────────────────
 ;;; Delay “noisy” background timers until 5 s after UI is up ----------
   (defconst my/deferred-fns
@@ -873,6 +882,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 (setq gc-cons-threshold (* 16 1024 1024)     ; back to 16 MB
                       file-name-handler-alist old-handlers))
               'append))                                   ; run last
+
+  (setq inhibit-compacting-font-caches t)   ; don't compact font cache during GC
 
 ;;; ────────────────────────────────────────────────────────────────────
 ;;; Native-comp tweaks (guarded so older Emacsen don’t warn) ----------
