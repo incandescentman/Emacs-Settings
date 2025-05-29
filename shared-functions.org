@@ -9139,7 +9139,7 @@ It returns a list, so you can later jump to the first culprit:
           (lambda ()
             (profiler-report)
             (profiler-stop)))
-(provide 'shared-functions)
+
 #+end_src
 
 * Scroll without hiccupping
@@ -9236,11 +9236,6 @@ It returns a list, so you can later jump to the first culprit:
 #+end_src
 
 * Profiler guard
-#+begin_src emacs-lisp
-(require 'profiler)
-(unless (profiler-running-p) (profiler-start 'cpu))
-
-#+end_src
 
 
 
@@ -9256,6 +9251,12 @@ It returns a list, so you can later jump to the first culprit:
 #+begin_src emacs-lisp
 (use-package company
 :defer t)
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package palimpsest)
 #+end_src
 
 
