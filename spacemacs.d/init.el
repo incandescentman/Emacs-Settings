@@ -60,7 +60,6 @@ Version mismatch is commonly encountered in the following situations:
 ;; (org-assert-version)
 
 
-
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -188,7 +187,7 @@ This function should only modify configuration layer settings."
                                       ;; org-pomodoro
                                       org-ql
                                       org-roam
-                                      org-roam-ui
+                                      ;; org-roam-ui
                                       org-transclusion
                                       ox-clip
                                       ox-timeline
@@ -211,7 +210,7 @@ This function should only modify configuration layer settings."
                                       rspec-mode
                                       s
                                       ;; sdcv
-                                      smex
+                                      ;; smex
                                       sudo-edit
                                       sync-recentf
                                       ;; tiny
@@ -842,9 +841,51 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+(setq dotspacemacs-additional-packages
+      '(bind-map evil-evilified-state))
+
+
+(require 'package)
+
+;; (a) Rebuild the archive list the very first time
+(setq package-archives
+      '(("gnu"   . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")))
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; (b) Make sure every bootstrap dependency is present *before* spacemacs/layers load
+(dolist (pkg '(evil           ; base Evil
+               evil-collection
+               evil-evilified-state ;  ← defines the missing variable
+               bind-map
+               use-package
+               general))
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
+
+(require 'evil)
+(require 'evil-collection)        ; optional but normal in Spacemacs
+(require 'evil-evilified-state)   ; <— defines `evil-evilified-state-map`
+(require 'bind-map)               ; now it can see the variable
+
+(require 'org-contrib)
+
+(load "/Users/jay/emacs/spacemacs/elpa/evil-evilified-state-20250525.211339/evil-evilified-state.el")
+
+
 ;;; ────────────────────────────────────────────────────────────────────
 ;;; Load-path tweaks (happens immediately) ----------------------------
   (add-to-list 'load-path "~/emacs/emacs-settings")   ;; prepend once
+
+  ;; Add at very top of init
+  (defvar jd/startup-time (current-time))
+
+  ;; Add at very end of init or use emacs-startup-hook
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "Emacs started in %.2f seconds"
+                       (float-time (time-subtract (current-time) jd/startup-time)))))
 
 ;;; ────────────────────────────────────────────────────────────────────
 ;;; Delay “noisy” background timers until 5 s after UI is up ----------
@@ -873,6 +914,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 (setq gc-cons-threshold (* 16 1024 1024)     ; back to 16 MB
                       file-name-handler-alist old-handlers))
               'append))                                   ; run last
+
+  (setq inhibit-compacting-font-caches t)   ; don't compact font cache during GC
 
 ;;; ────────────────────────────────────────────────────────────────────
 ;;; Native-comp tweaks (guarded so older Emacsen don’t warn) ----------
