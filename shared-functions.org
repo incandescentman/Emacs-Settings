@@ -9252,11 +9252,11 @@ It returns a list, so you can later jump to the first culprit:
 (use-package company
 :defer t)
 
-#+end_src
 
-
-#+begin_src emacs-lisp
 (use-package palimpsest)
+
+
+
 #+end_src
 
 
