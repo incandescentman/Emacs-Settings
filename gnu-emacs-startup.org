@@ -1,3 +1,4 @@
+#+auto_tangle: t
 * NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -7,7 +8,7 @@
 #+TITLE: #+TITLE: Jay Dixit's GNU Emacs setup
 #+TITLE: Jay Dixit's GNU Emacs setup
 * environment settings
-** Handle Emacs UTF-8 input
+** Handle Emacs UTF-8 input.
 #+BEGIN_SRC emacs-lisp
 ;; early-init.el  ── locale in one place
 (set-language-environment "UTF-8")   ; everything speaks UTF-8
@@ -133,7 +134,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
   (tab-bar-mode 1)
  (tab-bar-mode -1)))
 
-(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
+
 #+END_SRC
 
 
@@ -780,6 +781,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 (define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
 (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
+(define-key key-minor-mode-map (kbd "s-G") #'counsel-projectile-rg)
 
 (define-key org-mode-map (kbd "C-c C-s") 'org-schedule)
 (define-key key-minor-mode-map (kbd "C-c C-s") 'org-schedule)

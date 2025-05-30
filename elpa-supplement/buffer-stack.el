@@ -261,21 +261,21 @@ switching buffers and then continue switching buffers."
         (message "Tried to bury bottom-most buffer!")
         (unless (= (length buffer-stack) 1)
           (buffer-stack-move -1)))
-    (let ((buffer (current-buffer)))
-      (when (buffer-stack-switching-p)
-        (buffer-stack-assert-not-empty)
-        ;; send to bottom of stack
-        (setq buffer-stack (delq buffer buffer-stack))
-        (when (buffer-stack-tracked-p buffer)
-          (setq buffer-stack (nconc buffer-stack (list buffer)))))
-      ;; bury in the real list
-      (buffer-stack-bury-buffer buffer)
-      ;; pull the "next" buffer to the top
-      (buffer-stack-move 0)
-      (if (= (length buffer-stack) 1)
-          ;; buffer-stack-move already beeped
-          (message "Tried to bury bottom-most buffer!")
-        (buffer-stack-show-position)))))
+      (let ((buffer (current-buffer)))
+        (when (buffer-stack-switching-p)
+          (buffer-stack-assert-not-empty)
+          ;; send to bottom of stack
+          (setq buffer-stack (delq buffer buffer-stack))
+          (when (buffer-stack-tracked-p buffer)
+            (setq buffer-stack (nconc buffer-stack (list buffer)))))
+        ;; bury in the real list
+        (buffer-stack-bury-buffer buffer)
+        ;; pull the "next" buffer to the top
+        (buffer-stack-move 0)
+        (if (= (length buffer-stack) 1)
+            ;; buffer-stack-move already beeped
+            (message "Tried to bury bottom-most buffer!")
+            (buffer-stack-show-position)))))
 
 ;;; private functions
 
@@ -305,33 +305,33 @@ This is THE switching command; all other motions are based on this."
         ;; only one buffer, so we don't have to move
         (or buffer-stack-quiet
             (beep))
-      ;; find the new index
-      (if (> direction 0)
-          (cl-incf buffer-stack-index)
-        (if (< direction 0)
-            (cl-decf buffer-stack-index)))
-      (if (< buffer-stack-index 0)
-          ;; go backwards to the last buffer
-          (progn (setq buffer-stack-index max-index)
-                 ;; this works correctly in GNU Emacs
-                 (setq buffer (nth buffer-stack-index buffer-stack))
-                 (or buffer-stack-quiet
-                     (beep)))
-        (if (> buffer-stack-index max-index)
-            ;; wrap to the first buffer
-            (progn (setq buffer-stack-index 0)
-                   (buffer-stack-bury-buffer (current-buffer))
-                   (setq buffer (first buffer-stack))
+        ;; find the new index
+        (if (> direction 0)
+            (cl-incf buffer-stack-index)
+            (if (< direction 0)
+                (cl-decf buffer-stack-index)))
+        (if (< buffer-stack-index 0)
+            ;; go backwards to the last buffer
+            (progn (setq buffer-stack-index max-index)
+                   ;; this works correctly in GNU Emacs
+                   (setq buffer (nth buffer-stack-index buffer-stack))
                    (or buffer-stack-quiet
                        (beep)))
-          ;; the usual case, we put the top buffer before the indexed
-          ;; buffer and the indexed buffer on top
-          (setq buffer (nth buffer-stack-index buffer-stack))
-          (unless (eq (current-buffer) buffer)
-            ;; If we were already at the top of the stack and moved 0,
-            ;; this would try and bury the buffer before itself -- so
-            ;; don't do it in that case.
-            (buffer-stack-bury-buffer (current-buffer) buffer)))))
+            (if (> buffer-stack-index max-index)
+                ;; wrap to the first buffer
+                (progn (setq buffer-stack-index 0)
+                       (buffer-stack-bury-buffer (current-buffer))
+                       (setq buffer (first buffer-stack))
+                       (or buffer-stack-quiet
+                           (beep)))
+                ;; the usual case, we put the top buffer before the indexed
+                ;; buffer and the indexed buffer on top
+                (setq buffer (nth buffer-stack-index buffer-stack))
+                (unless (eq (current-buffer) buffer)
+                  ;; If we were already at the top of the stack and moved 0,
+                  ;; this would try and bury the buffer before itself -- so
+                  ;; don't do it in that case.
+                  (buffer-stack-bury-buffer (current-buffer) buffer)))))
     ;; now we move
     (switch-to-buffer buffer)
     (setq buffer-stack-last-buffer buffer)))
@@ -339,34 +339,34 @@ This is THE switching command; all other motions are based on this."
 (defun buffer-stack-bury-buffer (buffer &optional before)
   "Emulate xemacs's bury-buffer for GNU Emacs."
   (if (featurep 'xemacs) (bury-buffer buffer before)
-    ;; GNU Emacs 21.2.1 has a bug where it buries the buffer in the
-    ;; wrong frame, so here we reimplement burying a buffer.
-    ;; Unfortunately we do not bury in the global list like we should,
-    ;; so if you switch frame-local off the global list will
-    ;; probably be wrong. Why are you switching frame-local off?
-    (if buffer-stack-frame-local
-        (let* ((frame (selected-frame))
-               (new-list (buffer-list frame))
-               (rest new-list))
-          (setq new-list (delq buffer new-list))
-          (if (null new-list)
-              (setq new-list (list buffer))
-            (if (null before)
-                (setq new-list (nconc new-list (list buffer)))
-              (if (eq before (car new-list))
-                  (setq new-list (cons buffer new-list))
-                (while (not (or (null (cdr rest)) (eq (cadr rest) before)))
-                  (setq rest (cdr rest)))
-                (setcdr rest (cons buffer (cdr rest)))
-                )))
-          (modify-frame-parameters frame (list (cons 'buffer-list new-list))))
-      ;; This works on the global list and will work for the frame
-      ;; list too once that bug is fixed.
-      (dolist (b (buffer-list nil))
-        (when (eq b before)
-          (bury-buffer buffer))
-        (unless (eq b buffer)
-          (bury-buffer b))))))
+      ;; GNU Emacs 21.2.1 has a bug where it buries the buffer in the
+      ;; wrong frame, so here we reimplement burying a buffer.
+      ;; Unfortunately we do not bury in the global list like we should,
+      ;; so if you switch frame-local off the global list will
+      ;; probably be wrong. Why are you switching frame-local off?
+      (if buffer-stack-frame-local
+          (let* ((frame (selected-frame))
+                 (new-list (buffer-list frame))
+                 (rest new-list))
+            (setq new-list (delq buffer new-list))
+            (if (null new-list)
+                (setq new-list (list buffer))
+                (if (null before)
+                    (setq new-list (nconc new-list (list buffer)))
+                    (if (eq before (car new-list))
+                        (setq new-list (cons buffer new-list))
+                        (while (not (or (null (cdr rest)) (eq (cadr rest) before)))
+                          (setq rest (cdr rest)))
+                        (setcdr rest (cons buffer (cdr rest)))
+                        )))
+            (modify-frame-parameters frame (list (cons 'buffer-list new-list))))
+          ;; This works on the global list and will work for the frame
+          ;; list too once that bug is fixed.
+          (dolist (b (buffer-list nil))
+            (when (eq b before)
+              (bury-buffer buffer))
+            (unless (eq b buffer)
+              (bury-buffer b))))))
 
 (defun buffer-stack-rebuild ()
   "Create `buffer-stack' from the buffer list."
@@ -375,15 +375,15 @@ This is THE switching command; all other motions are based on this."
 (defun buffer-stack-clean (buffer-list)
   "Remove untracked buffers from a list by side effect."
   (let ((rest buffer-list)
-	buffer
+        buffer
         last)
     (while (not (null rest))
       (setq buffer (car rest))
       (if (buffer-stack-tracked-p buffer)
           (setq last rest)
-        (if last
-            (setcdr last (cdr rest))
-          (setq buffer-list (cdr rest))))
+          (if last
+              (setcdr last (cdr rest))
+              (setq buffer-list (cdr rest))))
       (setq rest (cdr rest)))
     buffer-list))
 
@@ -399,9 +399,9 @@ This is THE switching command; all other motions are based on this."
 (defun buffer-stack-frame ()
   (if buffer-stack-frame-local
       (selected-frame)
-    (if (featurep 'xemacs)
-        t
-      nil)))
+      (if (featurep 'xemacs)
+          t
+          nil)))
 
 (defun buffer-stack-assert-not-empty ()
   (if (null buffer-stack)
@@ -430,10 +430,10 @@ That's number/total."
         (max-index (- (length buffer-stack) 1)))
     (if (eq buffer-stack-index 0)
         (setq up-buffer-index max-index)
-      (setq up-buffer-index (- buffer-stack-index 1)))
+        (setq up-buffer-index (- buffer-stack-index 1)))
     (if (eq buffer-stack-index max-index)
         (setq down-buffer-index 0)
-      (setq down-buffer-index (+ buffer-stack-index 1)))
+        (setq down-buffer-index (+ buffer-stack-index 1)))
     (message (concat "DOWN: "
                      (buffer-name (nth down-buffer-index buffer-stack))
                      " ---- " "UP: "
@@ -457,4 +457,5 @@ That's number/total."
   "Non-nil if buffer is in buffer-stack-tracked."
   (member (buffer-name buffer) buffer-stack-tracked))
 
+(provide 'buffer-stack)
 ;;; buffer-stack.el ends here
