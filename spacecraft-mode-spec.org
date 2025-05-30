@@ -1,4 +1,4 @@
-
+#+auto_tangle: t
 * o1 pro
 Below is a *proposed spec sheet* describing the *intended logic* and *desired behavior* of your "spacecraft-mode" (and related code). The aim is to unify your current usage of "auto-capitalization," "smart punctuation," and "whitespace-fixing" into *clear, consistent rules* that match how iOS (and other "intelligent text editing" systems) typically handle typed text. Once the spec is settled, you can refactor your Emacs Lisp code to implement it cleanly.
 

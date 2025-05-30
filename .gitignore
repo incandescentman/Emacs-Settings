@@ -53,3 +53,4 @@ url/cache/
 *Spacemacs/straight/package.el checkouts
 elpa/
 straight/ 
+*.elc
