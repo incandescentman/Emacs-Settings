@@ -1130,7 +1130,7 @@ I think this is to make parent ~DONE~ states automatically update:
 #+END_SRC
 
 *** checkbox-list-complete
-Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code reques that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
+Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
 
 #+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-list
@@ -4052,33 +4052,29 @@ into the main dumped emacs"
 
 * undo-tree-mode
 #+BEGIN_SRC emacs-lisp
-  (use-package undo-fu-session
-    :init
-    (setq undo-fu-session-compression nil)   ;; nil = never compress
-    (undo-fu-session-global-mode))
+(use-package undo-fu-session
+  :init
+  (setq undo-fu-session-compression nil)   ;; nil = never compress
+  (undo-fu-session-global-mode))
 
-  (defun undo-fu-only-redo-fail-silently ()
-   "Redo the last undone change if possible, silently fail if no more redo steps."
-   (interactive)
-   (ignore-errors
-    (undo-fu-only-redo)))
+(defun undo-fu-only-redo-fail-silently ()
+ "Redo the last undone change if possible, silently fail if no more redo steps."
+ (interactive)
+ (ignore-errors
+  (undo-fu-only-redo)))
 
-  (defun undo-fu-only-redo-fail-with-heart ()
-   "Redo the last undone change if possible."
-   (interactive)
-   (condition-case nil
-     (undo-fu-only-redo)
-    (user-error (message "❤️"))))
+(defun undo-fu-only-redo-fail-with-heart ()
+ "Redo the last undone change if possible."
+ (interactive)
+ (condition-case nil
+   (undo-fu-only-redo)
+  (user-error (message "❤️"))))
 
-  (setq undo-tree-auto-save-history nil)
+(setq undo-tree-auto-save-history nil)
 
-  (setq undo-limit 67108864) ; 64mb.
-  (setq undo-strong-limit 100663296) ; 96mb.
-  (setq undo-outer-limit 1006632960) ; 960mb.
-
-(with-eval-after-load 'undo-fu-session
-  (setq undo-fu-session-incompatible-files-behaviour 'delete)) ; 'rename or nil
-
+(setq undo-limit 67108864) ; 64mb.
+(setq undo-strong-limit 100663296) ; 96mb.
+(setq undo-outer-limit 1006632960) ; 960mb.
 #+END_SRC
 
 * Emacs 25
@@ -4324,7 +4320,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 ** tufte export to LaTeX
 #+begin_src emacs-lisp
-(use-package ox-tufte-latex
+(use-package ox-tufte-LaTeX
 :defer t
   :ensure nil
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
@@ -4567,7 +4563,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 
 * poet-mode
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (add-hook 'org-mode-hook
 ;;         (lambda ()
 ;;         (variable-pitch-mode 1)))
@@ -4593,7 +4589,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;; (turn-off-auto-capitalize-mode)
 
 )
-#+END_EXAMPLE
+#+END_SRC
 
 
 * default org-css
@@ -6584,7 +6580,7 @@ Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
 ******* dired-preview
 #+begin_src sh
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
-(use-package dired-preview)
+(require 'dired-preview)
 
 #+end_src
 
@@ -6609,7 +6605,7 @@ directory
 ~M-x counsel-fd-file-jump~ to jump to a file under current directory
 
 #+begin_src emacs-lisp
-(use-package counsel-fd
+(use-package counsel-found
   :defer)
 #+end_src
 
@@ -6755,6 +6751,20 @@ Emacs sessions are independent of each other, so global variables like move-or-c
       (message "Refiled to Org-roam file %s" current-heading)))))))
 
 #+end_src
+* disable Olivetti on split
+#+begin_SRC emacs-lisp
+(defun activate-olivetti-in-split ()
+ (when (not (bound-and-true-p disable-olivetti-auto-toggle))
+  (if (< (window-width) 80)
+    (olivetti-mode -1)
+   (olivetti-mode 1))))
+
+
+(add-hook 'org-mode-hook (lambda ()
+              (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
+
+#+END_SRC
+
 * helpful
 [[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
 
@@ -9041,7 +9051,6 @@ It returns a list, so you can later jump to the first culprit:
 * Amx
 #+begin_src emacs-lisp
 (use-package amx
-:defer nil
   :ensure t                           ; if you use straight-el/ELPA
   :init
   (setq amx-history-length 99         ; remember last 99 commands
@@ -9132,130 +9141,19 @@ It returns a list, so you can later jump to the first culprit:
 * Profiler
 #+begin_src emacs-lisp
 
-(require 'profiler)              ; just in case
-(unless (profiler-running-p)     ; <-- safeguard
-  (profiler-start 'cpu))
+(require 'profiler)
+(profiler-start 'cpu)
 (add-hook 'emacs-startup-hook
           (lambda ()
             (profiler-report)
             (profiler-stop)))
-
 #+end_src
 
-* Scroll without hiccupping
+* silence warnings
 #+begin_src emacs-lisp
-;;; -------------------------------------------------------------
-;;;  Smooth scrolling & redisplay – macOS / Cocoa build
-;;; -------------------------------------------------------------
-
-;; 1.  Core scrolling knobs
-(setq auto-window-vscroll        nil   ; never resize during redisplay
-      scroll-step               1      ; scroll one line at a time
-      scroll-conservatively     101    ; always scroll by `scroll-step'
-      inhibit-compacting-font-caches t ; avoid GC of font cache
-      redisplay-dont-pause      t)     ; keep scrolling responsive
-
-;; 2.  Disable the precision pixel-scrolling that can flicker on macOS < 14
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode -1))
-
-;; 3.  macOS–specific graphics tweaks
-(setq ns-use-live-resize   nil          ; don’t live-update while resizing
-      ns-use-thin-smoothing t)          ; sub-pixel text-antialias
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . nil))
-(setq frame-resize-pixelwise t)         ; Emacs 29+: keep 1-pixel granularity
-
-;; 4.  Long-lines protection (prevents redisplay blow-ups >10 k columns)
-(when (require 'so-long nil t)
-  (global-so-long-mode 1))
-
-;; 5.  Optional cosmetics (remove if you like line numbers / hl-line)
-(global-display-line-numbers-mode 0)
-(global-hl-line-mode 0)
-
-;;; -------------------------------------------------------------
-;;;  Flyspell – on where useful, off where noisy
-;;; -------------------------------------------------------------
-;; Enable for writing modes
-(dolist (hook '(text-mode-hook markdown-mode-hook message-mode-hook))
-  (add-hook hook #'flyspell-mode))
-
-;; Disable for code & Org src blocks
-(add-hook 'prog-mode-hook       (lambda () (flyspell-mode -1)))
-(add-hook 'org-src-mode-hook    (lambda () (flyspell-mode -1)))
-
-(setq flyspell-delay               1.0   ; don’t spell-check on every keystroke
-      flyspell-issue-message-flag  nil)  ; silence “misspelled word” echo area
-
-;;; -------------------------------------------------------------
-;;;  JIT lock tuning – defer heavy font-lock on huge buffers
-;;; -------------------------------------------------------------
-(setq jit-lock-defer-time   0.25   ; delay refontification when scrolling fast
-      jit-lock-stealth-time 1.0)   ; how long we stay in “stealth” fontify
-#+end_src
-
-
-* Olivetti
-#+begin_src emacs-lisp
-(defun jd/show-tab-bar-when-many-windows (&optional frame)
-  "Turn `tab-bar-mode' on when more than one window is visible, off otherwise."
-  (with-selected-frame (or frame (selected-frame))
-    (tab-bar-mode (if (> (count-windows) 1) 1 -1))))
-
-(defun jd/olivetti-maybe (&optional frame)
-  "Enable `olivetti-mode' only when exactly one window shows text/org."
-  (with-selected-frame (or frame (selected-frame))
-    (if (= (count-windows) 1)
-        (when (derived-mode-p 'text-mode 'org-mode)
-          (unless olivetti-mode (olivetti-mode 1)))
-      (when olivetti-mode (olivetti-mode -1)))))
-
-#+end_src
-
-* Tame noisy idle timers
-#+begin_src emacs-lisp
-
-;; 1.  Savehist → every 30 min
-(with-eval-after-load 'savehist
-  (setq savehist-autosave-interval (* 30 60)))
-
-;; 2.  AMX database rebuild → only when idle 30 s
-(with-eval-after-load 'amx
-  (cancel-function-timers #'amx-idle-update)
-  (run-with-idle-timer 30 t #'amx-idle-update))
-
-;; 3.  recentf - keep a single 10 min timer
-(with-eval-after-load 'recentf
-  (dolist (t (memq 'recentf-save-list timer-list))
-    (cancel-timer t))
-  (run-with-idle-timer 600 t #'recentf-save-list))
-
-;; 4.  GCMH - collect when idle ≥30 s
-(with-eval-after-load 'gcmh
-  (setq gcmh-idle-delay 30))
-#+end_src
-
-* Profiler guard
-
-
-
-#+begin_src emacs-lisp
-(delete-other-windows)
-(message "Test message from shared-functions.org - timestamp: %s"
-(current-time-string))
-
-
-#+end_src
-
-* company
-#+begin_src emacs-lisp
-(use-package company
-:defer t)
-
-(use-package palimpsest)
-
-
-#+end_src
+(setq native-comp-async-report-warnings-errors 'silent)
+(global-display-line-numbers-mode 1)
+#+end_src 
 
 
 * Local Variables & The End

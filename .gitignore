@@ -41,4 +41,15 @@ spacemacs.d/.spacemacs.env
 spacecraft-mode.el
 spacecraft-mode.el
 .DS_Store
+
+
+*Emacs build artifacts
 *.elc
+*.eln            # native-comp output (Emacs 28+)
+auto-save-list/
+tramp/
+url/cache/
+
+*Spacemacs/straight/package.el checkouts
+elpa/
+straight/ 

@@ -4,8 +4,6 @@
 
 
 
-
-
 (defmacro org-assert-version ()
   "Assert compile time and runtime version match."
   ;; We intentionally use a more permissive `org-release' instead of
@@ -98,33 +96,49 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
 
+     ;; ag-general
+     ;; ag-lang-tools
      auto-completion
      ;; better-defaults
-     (compleseus :variables
-                 compleseus-engine 'vertico)
+     compleseus
      ;; chrome
      ;; deft
      ;; emoji
      ;; floobits
-
+     ;; helm
      ;; html
+     ;; ivy
      ;; jay
      ;; markdown
+     ;; mu4e
      emacs-lisp
+     ;;     eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
+      :defer
       :variables
       org-enable-roam-protocol t
       org-enable-roam-support t
-      org-export-backends '(ascii html icalendar latex md))
+      org-export-backends '(ascii html icalendar latex md)
+                                        ; org-enable-hugo-support to
+
+      :config
+      (require 'ox-extra)
+      (ox-extra-activate '(ignore-headlines))
+      )
      osx
      ;; pdf
      ;; python
+     ;; shell
+     ;; shell-scripts
+                                        ; smex
+     ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
      ;; treemacs
      ;; typography
      ;; xkcd
+
      )
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -135,86 +149,111 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-                                      affe
+  org-contrib 
                                       amx
-                                      ;;        auto-complete
-                                      ;; beacon
+                                      org-transclusion
+                                      ctrlf
+                                      web-mode
+                                      ox-twbs
+                                      mwim
+                                      affe
+                                      beacon
                                       bind-key
-                                      bind-map
                                       bui
+                                      ;; buffer-stack
                                       caps-lock
                                       captain
                                       change-inner
-                                      ;; company
-                                      consult-ag
+                                      ;; cheatsheet
+                                      company
                                       consult-dir
+                                      ;; consult-notes
+                                      consult-ag
                                       consult-org-roam
+                                      ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
                                       counsel-fd
                                       counsel-projectile
                                       crux
-                                      ctrlf
                                       dash
-                                      ;; deadgrep
+                                      deadgrep
                                       define-word
                                       dired-quick-sort
+                                      ;; dired-sort-menu
                                       discover-my-major
                                       emacsql
-                                      ;; evil-evilified-state
+                                      ;; embark
+                                      ;; epc
+                                      ;; eww
                                       exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
-                                      ;; fuzzy
+                                      ;; frame-cmds
+                                      fuzzy
                                       gcmh ; The Garbage Collector Magic Hack
-                                      ;; google-this
+                                      google-this
+                                      ;; gptel
+                                      ;; helpful
+                                      ;; ido-hacks
+                                      ;; jinx
                                       key-seq
+                                      ;; lister ;; (for delve)
+                                      ;; magit
+                                        ; markdown-mode
                                       magit-section
-                                      ;; maxframe
+                                      maxframe
                                       multiple-cursors
                                       mw-thesaurus
-                                      mwim
                                       olivetti
                                       openwith
                                       orderless
-                                      ;; org-ai
-                                      org-contrib
+                                      org-ai
                                       org-autolist
-                                      ;; org-bookmark-heading
+                                      org-bookmark-heading
+                                      ;; org-contrib
+                                      ;; org-drill
+                                      ;; org-fstree
                                       org-mac-link
-                                      ;; org-pomodoro
+                                      org-pomodoro
                                       org-ql
                                       org-roam
-                                      ;; org-roam-ui
-                                      org-transclusion
+                                      org-roam-ui
+                                      ;; org-superstar
                                       ox-clip
+                                      ;; ox-gfm
                                       ox-timeline
                                       ox-tufte
-                                      ;; ox-twbs
                                       palimpsest
                                       paredit
                                       peg
                                       persist
+                                      ;; persp-mode
                                       point-stack
                                       popup
+                                      ;; project-explorer
                                       projectile-ripgrep
                                       quelpa-use-package
                                       rainbow-mode
-                                      ;; re-builder
+                                      re-builder
                                       recentf
-                                      ;; regex-tool
+                                      regex-tool
                                       rg
                                       ripgrep
                                       rspec-mode
                                       s
-                                      ;; sdcv
-                                      ;; smex
+                                      ;; scratch
+                                      ;; scratch-message
+                                      sdcv
+                                      ;; simple-httpd
+                                      ;; stripe-buffer
                                       sudo-edit
                                       sync-recentf
-                                      ;; tiny
+                                        ; tabbar
+                                      tiny
                                       titlecase
                                       ts
                                       unfill
@@ -224,78 +263,53 @@ This function should only modify configuration layer settings."
                                       ;; web-mode
                                       with-editor
                                       wrap-region
+                                      ;; xah-replace-pairs
+
                                       ;; ag
+                                      auto-complete
                                       ;; blimp
                                       ;; bongo
-                                      ;; buffer-stack
-                                      ;; cheatsheet
                                       ;; command-log-mode
-                                      ;; consult-notes
                                       ;; cyberpunk-theme
                                       ;; dired-hacks-utils
                                       ;; dired-single
-                                      ;; dired-sort-menu
                                       ;; early-init
-                                      ;; embark
                                       ;; emms
-                                      ;; epc
-                                      ;; eww
                                       ;; fastdef
                                       ;; focus
                                       ;; fountain-mode
-                                      ;; frame-cmds
                                       ;; frame-restore
                                       ;; gist
-                                      ;; gptel
                                       ;; graphviz-dot-mode
-                                      ;; helpful
-                                      ;; ido-hacks
                                       ;; imenu-list
-                                      ;; jinx
                                       ;; key-chord
-                                      ;; lister ;; (for delve)
-                                      ;; magit
                                       ;; magit-section
-                                      ;; markdown-mode
                                       ;; mpv
                                       ;; multicolumn
                                       ;; nm
-                                      ;; org-contrib
                                       ;; org-download
-                                      ;; org-drill
-                                      ;; org-fstree
                                       ;; org-mime
                                       ;; org-noter
                                       ;; org-noter-pdftools
                                       ;; org-pdftools
                                       ;; org-sidebar
-                                      ;; org-superstar
                                       ;; ox-epub
-                                      ;; ox-gfm
                                       ;; ox-twbs
-                                      ;; persp-mode
                                       ;; plain-org-wiki
                                       ;; polymode
-                                      ;; project-explorer
-                                      ;; scratch
-                                      ;; scratch-message
-                                      ;; simple-httpd
                                       ;; solarized-theme
                                       ;; spotify
-                                      ;; stripe-buffer
                                       ;; sublime-themes
-                                      ;; tabbar
                                       ;; tldr
                                       ;; transcribe
-                                      ;; web-mode
                                       ;; websocket
                                       ;; writeroom-mode
                                       ;; wttrin
-                                      ;; xah-replace-pairs
                                       ;; xml-rpc
                                       ;; yahoo-weather
                                       ;; zenburn-theme
                                       ;; zone
+                                      smex
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -842,84 +856,46 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-;;; ────────────────────────────────────────────────────────────────────
-;;; Load-path tweaks (happens immediately) ----------------------------
-  (add-to-list 'load-path "~/emacs/emacs-settings")   ;; prepend once
+  ;; (setq debug-on-error t)
 
-  ;; Add at very top of init
-  (defvar jd/startup-time (current-time))
-
-  ;; Add at very end of init or use emacs-startup-hook
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (message "Emacs started in %.2f seconds"
-                       (float-time (time-subtract (current-time) jd/startup-time)))))
-
-;;; ────────────────────────────────────────────────────────────────────
-;;; Delay “noisy” background timers until 5 s after UI is up ----------
-  (defconst my/deferred-fns
-    '(recentf-save-list savehist-autosave gcmh-idle-garbage-collect)
-    "Idle-timer functions we postpone until Emacs has started.")
-
-  (dolist (fn my/deferred-fns)            ; cancel all their current timers
-    (cancel-function-timers fn))
-
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-at-time 5 nil
-                           (lambda ()
-                             (dolist (fn my/deferred-fns)
-                               (funcall fn))))))
-
-;;; ────────────────────────────────────────────────────────────────────
-;;; GC & file-handler throttle ----------------------------------------
-  (let ((old-gc       gc-cons-threshold)
+  ;; early in init.el / early-init.el
+  (let ((old-gc gc-cons-threshold)
         (old-handlers file-name-handler-alist))
     (setq gc-cons-threshold (* 256 1024 1024)      ; 256 MB
           file-name-handler-alist nil)
     (add-hook 'emacs-startup-hook
               (lambda ()
-                (setq gc-cons-threshold (* 16 1024 1024)     ; back to 16 MB
-                      file-name-handler-alist old-handlers))
-              'append))                                   ; run last
+                (setq gc-cons-threshold (* 16 1024 1024)   ; 16 MB again
+                      file-name-handler-alist old-handlers))))
 
-  (setq inhibit-compacting-font-caches t)   ; don't compact font cache during GC
+  (setq native-comp-enable-subr-trampolines nil)
 
-;;; ────────────────────────────────────────────────────────────────────
-;;; Native-comp tweaks (guarded so older Emacsen don’t warn) ----------
-  (with-eval-after-load 'comp           ; only when the ‘comp’ pkg exists
-    (setq native-comp-enable-subr-trampolines          nil
-          native-comp-async-report-warnings-errors     'silent
-          native-comp-jit-compilation                 nil))
+  (setq native-comp-async-report-warnings-errors 'silent)
+  (setq native-comp-jit-compilation nil)
 
-;;; ────────────────────────────────────────────────────────────────────
-;;; Spacemacs / package tweaks ----------------------------------------
-  (setq package-quickstart                t      ; use quickstart cache
-        dotspacemacs-check-for-update     nil    ; skip version ping
-        dotspacemacs-enable-package-cleanup nil) ; don’t auto-delete pkgs
 
-;;; Move caches out of $HOME ------------------------------------------
-  (defconst jd/cache-dir (expand-file-name "~/.emacs.d/.cache/var/"))
-  (make-directory jd/cache-dir t)
-  (setq amx-items-file          (expand-file-name "amx-items" jd/cache-dir)
-        package-quickstart-file (expand-file-name "package-quickstart.el"
-                                                  jd/cache-dir))
 
-;;; ────────────────────────────────────────────────────────────────────
-;;; Misc. -------------------------------------------------------------
-  ;; safety net for smart-quotes package
-  (defvar smart-quotes-replacement-pairs nil)
+  ;; dotspacemacs/user-init  (or early in init.el)
+  (setq package-quickstart t            ; Emacs ≥27: load autoload cache
+        dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
+        dotspacemacs-enable-package-cleanup nil) ; don't touch packages
 
-  ;; Hunspell setup
+
+
+
+  ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
+  (defvar smart-quotes-replacement-pairs nil
+    "Alist of smart‑quote glyphs and their ASCII replacements.")
+
+  ;; --- tell Flyspell / Ispell to use Hunspell --------------------
   (setq-default ispell-program-name "/opt/homebrew/bin/hunspell"
                 ispell-really-hunspell t
                 ispell-dictionary      "en_US-large"
                 ispell-personal-dictionary
                 (expand-file-name "~/Library/Spelling/personal.dic"))
-  (setenv "DICPATH"    (expand-file-name "~/Library/Spelling"))
-  (setenv "DICTIONARY" "en_US")
 
-;;; ────────────────────────────────────────────────────────────────────
+  (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
+  (setenv "DICTIONARY" "en_US")
 
 
   )
@@ -962,10 +938,6 @@ before packages are loaded."
 
   (setq Info-additional-directory-list nil)
 
-  ;; Enable special export keywords such as #+EXCLUDE_TAGS, #+IGNORE_HEADLINES …
-  ;; ▸ Activate extra export keywords (IGNORE_HEADLINES etc.)
-
-
 
   ;; 1. ordinary “safe local variables”
   (add-to-list 'safe-local-variable-values '(lexical-binding . t))
@@ -977,29 +949,10 @@ before packages are loaded."
     (add-to-list 'safe-local-eval-forms
                  '(org-config-files-local-mode 1)))
 
-
-
   (load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")
-
-
-
-  (autoload 'smart-return        ; symbol to autoload
-    "smart-return"              ; file that defines it  (without .el)
-    nil                         ; no docstring override (use the one in the file)
-    t)
-
-
-  (autoload 'buffer-stack        ; symbol to autoload
-    "buffer-stack"              ; file that defines it  (without .el)
-    nil                         ; no docstring override (use the one in the file)
-    t)
-
-  (autoload 'frame-cmds        ; symbol to autoload
-    "frame-cmds"              ; file that defines it  (without .el)
-    nil                         ; no docstring override (use the one in the file)
-    t)
-
-
+  (load "/Users/jay/gnulisp/smart-return.el")
+  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
+  (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
   (load "/Users/jay/emacs/local-config.el")
   ;;  (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
   ;; (load "/Users/jay/emacs/emacs-settings/aibo-power-pack.el")
