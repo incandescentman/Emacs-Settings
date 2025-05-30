@@ -1,5 +1,5 @@
 #+auto_tangle: t
-;; -*- lexical-binding: t -*- 
+;; -*- lexical-binding: t -*-
 ;;;   Current time:      (current-time-string)
 ;;;   Last command:      last-command
 ;;; (abbrev-mode)
@@ -9148,6 +9148,13 @@ It returns a list, so you can later jump to the first culprit:
             (profiler-report)
             (profiler-stop)))
 #+end_src
+
+* silence warnings
+#+begin_src emacs-lisp
+(setq native-comp-async-report-warnings-errors 'silent)
+(global-display-line-numbers-mode 1)
+#+end_src 
+
 
 * Local Variables & The End
 These have to be at the end.
