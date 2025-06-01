@@ -149,7 +149,7 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-  org-contrib 
+                                      org-contrib
                                       amx
                                       org-transclusion
                                       ctrlf
@@ -856,6 +856,12 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+
+
+  ;; Disable server mode to prevent deadlocks
+  (setq dotspacemacs-enable-server nil
+        dotspacemacs-persistent-server nil)
+
   ;; (setq debug-on-error t)
 
   ;; early in init.el / early-init.el
@@ -906,6 +912,61 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+;;; --- macOS 15.5 deadlock workaround ----------------------------------------
+  (when (eq system-type 'darwin)
+    (setq process-adaptive-read-buffering nil
+          process-connection-type nil))
+
+;;; --- Org mode performance & stability --------------------------------------
+  ;; Disable cache until deadlock is resolved
+  (setq org-element-use-cache nil
+        org-element-cache-persistent nil
+        org-persist-disable-when-emacs-Q t
+        org-fold-core-style 'text-properties
+        org-agenda-inhibit-startup t
+        org-startup-folded 'showeverything
+        org-startup-indented nil)
+
+;;; --- I/O & subprocesses ----------------------------------------------------
+  ;; LSP: throttle file-watchers and increase pipe buffer
+  (setq lsp-enable-file-watchers nil
+        lsp-idle-delay 0.5
+        read-process-output-max (* 2 1024 1024))
+
+  ;; Kill noisy language-server buffers silently when Emacs exits
+  (add-hook 'lsp-after-initialize-hook
+            (lambda ()
+              (when (get-buffer-process (current-buffer))
+                (set-process-query-on-exit-flag
+                 (get-buffer-process (current-buffer)) nil))))
+
+  ;; VC: drop Git polling (macOS bug in 29.x)
+  (setq vc-handled-backends '(SVN Hg Bzr RCS CVS SCCS))
+
+  ;; TRAMP: avoid ssh ControlMaster hangs on Sonoma/Sequoia
+  (setq tramp-ssh-controlmaster-options "-o ControlPath=none"
+        tramp-verbose 0)
+
+  ;; Give Emacs 5 s to wait for process I/O, then move on
+  (setq accept-process-output-timeout 5)
+
+;;; --- Memory & GC -----------------------------------------------------------
+  (setq gc-cons-threshold (* 64 1024 1024)
+        gc-cons-percentage 0.1)
+
+;;; --- Files & locks ---------------------------------------------------------
+  (setq create-lockfiles nil
+        auto-save-default t
+        auto-save-interval 300)
+
+;;; --- Emergency exit --------------------------------------------------------
+  ;; Panic button: C-c C-! to save and exit
+  (global-set-key (kbd "C-c C-!")
+                  (lambda () (interactive)
+                    (save-some-buffers t)
+                    (kill-emacs)))
+
   (setq gc-cons-threshold 100000000) ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
   (setq read-process-output-max (* 1024 1024))
                                         ; Set (setq gc-cons-threshold 100000000) and (setq read-process-output-max (* 1024 1024)) early in your config.
