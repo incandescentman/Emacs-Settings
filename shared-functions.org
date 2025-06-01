@@ -1378,13 +1378,6 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 #+END_SRC
 
-** Edit with Emacs
-To enable Edit with Emacs in Chrome:
-#+BEGIN_SRC emacs-lisp
-;; (use-package edit-server)
-;; (edit-server-start)
-#+END_SRC
-
 * Miscellaneous/unsorted settings
 #+BEGIN_SRC emacs-lisp
 '(cua-enable-cua-keys (quote shift))
@@ -7927,12 +7920,6 @@ Only required if Emacs < 29.3.
 #+end_src
 
 
-* server start
-#+begin_src emacs-lisp
-(add-hook 'after-init-hook 'server-start)
-;; (server-start)
-#+end_src
-
 * org-transclusion
 ** org-transclusion-config
 #+begin_src emacs-lisp
@@ -7983,10 +7970,6 @@ Only required if Emacs < 29.3.
 #+end_src
 
 
-
-#+begin_src emacs-lisp
-(server-start)
-#+end_src
 
 
 
@@ -8044,13 +8027,6 @@ When deleting a file, don't use vc-delete-file
      (call-process "/opt/homebrew/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
-#+end_src
-
-* server
-#+begin_src emacs-lisp
-(require 'server)
-(unless (server-running-p)
- (server-start))
 #+end_src
 
 * query replace all files in current directory
@@ -9123,14 +9099,6 @@ It returns a list, so you can later jump to the first culprit:
       (set-fontset-font t 'unicode (font-spec :family "Apple Color Emoji") nil 'prepend))))
 #+end_src
 
-* Server
-#+begin_src emacs-lisp
-;; ~/.emacs.d/init.el  --- very top is fine
-(require 'server)
-(unless (server-running-p)
-  (server-start))          ; one-time TCP/Unix socket
-#+end_src
-
 * open faster
 #+begin_src emacs-lisp
 ;; Speed up macOS open events
@@ -9153,8 +9121,7 @@ It returns a list, so you can later jump to the first culprit:
 #+begin_src emacs-lisp
 (setq native-comp-async-report-warnings-errors 'silent)
 (global-display-line-numbers-mode 1)
-#+end_src 
-
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
