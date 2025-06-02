@@ -108,6 +108,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 
 ;; Edit Server Settings
+(require 'server)
 (setq edit-server-default-major-mode 'org-mode
       edit-server-new-frame t)
 
@@ -5831,7 +5832,7 @@ This is my goto way for navigating. It feels like it is reading your mind.
   :ensure t
   :after ivy)
 
-(use-package fasd 
+(use-package fasd
   :commands (fasd-find-file)
   :init
   ;; do NOT auto-prompt --- the command runs with an empty query

@@ -150,24 +150,22 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       org-contrib
-                                      amx
+
                                       org-transclusion
                                       ctrlf
                                       web-mode
                                       ox-twbs
                                       mwim
-                                      affe
-                                      beacon
+                                      ;;                      affe
+                                      ;;                     beacon
                                       bind-key
                                       bui
                                       ;; buffer-stack
                                       caps-lock
                                       captain
                                       change-inner
-                                      ;; cheatsheet
                                       company
                                       consult-dir
-                                      ;; consult-notes
                                       consult-ag
                                       consult-org-roam
                                       ;; benchmark-init
