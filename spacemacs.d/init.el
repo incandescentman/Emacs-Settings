@@ -880,6 +880,19 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq native-comp-deferred-compilation nil)
 
 
+  ;; Silence native-comp warnings
+  (setq native-comp-async-report-warnings-errors 'silent)
+
+  ;; Or if you want to see only errors, not warnings:
+  ;; (setq native-comp-async-report-warnings-errors nil)
+
+  ;; Silence byte-compiler warnings
+  (setq byte-compile-warnings '(not obsolete))
+
+  ;; Silence warnings during startup
+  (setq warning-minimum-level :error)
+
+
   ;; dotspacemacs/user-init  (or early in init.el)
   (setq package-quickstart t            ; Emacs ≥27: load autoload cache
         dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
