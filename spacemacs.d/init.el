@@ -864,6 +864,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
 
+  (add-to-list 'native-comp-eln-load-path "~/.cache/emacs/aot")
+
   ;; early in init.el / early-init.el
   (let ((old-gc gc-cons-threshold)
         (old-handlers file-name-handler-alist))
