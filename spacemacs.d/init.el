@@ -874,11 +874,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 (setq gc-cons-threshold (* 16 1024 1024)   ; 16 MB again
                       file-name-handler-alist old-handlers))))
 
-  (setq native-comp-enable-subr-trampolines nil)
-
-  (setq native-comp-async-report-warnings-errors 'silent)
+  ;; In ~/.emacs.d/early-init.el
   (setq native-comp-jit-compilation nil)
-
+  (setq package-native-compile nil)
+  (setq native-comp-deferred-compilation nil)
 
 
   ;; dotspacemacs/user-init  (or early in init.el)
