@@ -3186,18 +3186,18 @@ which is suitable for passing to `advice-add'."
 
 * wrap region
 #+BEGIN_SRC emacs-lisp
-;; (use-package wrap-region)
-;; (wrap-region-add-wrapper "*" "*" "*")
-;; (wrap-region-add-wrapper "\/" "\/" "\/")
-
-
 ;; wrap-region
 (use-package wrap-region
   :defer
   :ensure t
   :config
+  ;; Fix cl deprecation warning
+  (require 'cl-lib)
+  
+  ;; Add your custom wrapper
   (wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
-
+  
+  ;; Define your wrapper function
   (defun wrap-region-define-wrappers ()
     "Defines defaults wrappers."
     (mapc
@@ -3212,6 +3212,8 @@ which is suitable for passing to `advice-add'."
        ;; ("<"  ">")
        ;; ("<"  ">")
        )))
+  
+  ;; Add mode-specific wrappers
   (wrap-region-add-wrappers
    '(
      ;;     ("*" "*" nil org-mode)
@@ -3222,9 +3224,9 @@ which is suitable for passing to `advice-add'."
      ("*" "*" nil (org-mode message-mode))
      ("/" "/" nil (org-mode message-mode))
      ("$" "$" nil (org-mode latex-mode))
-     ))
+     )))
 
-  )
+
 #+END_SRC
 Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
 
