@@ -234,16 +234,16 @@ This function should only modify configuration layer settings."
                                       projectile-ripgrep
                                       quelpa-use-package
                                       rainbow-mode
-                                      re-builder
+                                      ;; re-builder
                                       recentf
-                                      regex-tool
+                                      ;; regex-tool
                                       rg
                                       ripgrep
                                       rspec-mode
                                       s
                                       ;; scratch
                                       ;; scratch-message
-                                      sdcv
+                                      ;;  sdcv
                                       ;; simple-httpd
                                       ;; stripe-buffer
                                       sudo-edit
