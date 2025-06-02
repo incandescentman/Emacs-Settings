@@ -4181,7 +4181,7 @@ If I'm in =web-mode=, I'd like to:
 
 Use =web-mode= with embedded Ruby files, regular HTML, and PHP.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defun hrs/add-auto-mode (mode &rest patterns)
   "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
   (dolist (pattern patterns)
@@ -4194,7 +4194,7 @@ Use =web-mode= with embedded Ruby files, regular HTML, and PHP.
   "\\.html$"
   "\\.php$"
   "\\.rhtml$")
-#+END_SRC
+#+END_EXAMPLE
 
 
 When editing a code snippet, use the current window rather than popping open a
@@ -7992,13 +7992,13 @@ Only required if Emacs < 29.3.
 (show-smartparens-global-mode t)
 
 ;; web-mode configuration
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;;(require 'web-mode)
+;;(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
-(add-hook 'web-mode-hook
-     (lambda ()
-      (setq web-mode-enable-auto-pairing nil)
-      (setq web-mode-enable-auto-closing nil)))
+;; (add-hook 'web-mode-hook
+;;      (lambda ()
+;;       (setq web-mode-enable-auto-pairing nil)
+;;       (setq web-mode-enable-auto-closing nil)))
 
 ;; Disable smartparens in web-mode
 (add-hook 'web-mode-hook 'turn-off-smartparens-mode)
