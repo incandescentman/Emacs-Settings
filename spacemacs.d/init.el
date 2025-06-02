@@ -164,7 +164,7 @@ This function should only modify configuration layer settings."
                                       caps-lock
                                       captain
                                       change-inner
-                                      company
+                                      ;; company
                                       consult-dir
                                       consult-ag
                                       consult-org-roam
