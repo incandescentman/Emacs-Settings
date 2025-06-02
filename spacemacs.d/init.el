@@ -249,7 +249,7 @@ This function should only modify configuration layer settings."
                                       sudo-edit
                                       sync-recentf
                                         ; tabbar
-                                      tiny
+                                      ;; tiny
                                       titlecase
                                       ts
                                       unfill
@@ -305,7 +305,7 @@ This function should only modify configuration layer settings."
                                       ;; yahoo-weather
                                       ;; zenburn-theme
                                       ;; zone
-                                      smex
+                                      ;; smex
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
