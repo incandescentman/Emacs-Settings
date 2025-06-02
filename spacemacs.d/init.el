@@ -866,20 +866,19 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (add-to-list 'native-comp-eln-load-path "~/.cache/emacs/aot")
 
-  ;; early in init.el / early-init.el
-  (let ((old-gc gc-cons-threshold)
-        (old-handlers file-name-handler-alist))
-    (setq gc-cons-threshold (* 256 1024 1024)      ; 256 MB
-          file-name-handler-alist nil)
-    (add-hook 'emacs-startup-hook
-              (lambda ()
-                (setq gc-cons-threshold (* 16 1024 1024)   ; 16 MB again
-                      file-name-handler-alist old-handlers))))
 
   ;; In ~/.emacs.d/early-init.el
-  (setq native-comp-jit-compilation nil)
-  (setq package-native-compile nil)
-  (setq native-comp-deferred-compilation nil)
+
+  (setq package-native-compile t)
+
+  ;; user-init, ONE copy only:
+  (setq native-comp-jit-compilation t
+        native-comp-deferred-compilation t
+        gc-cons-threshold (* 64 1024 1024)
+        gc-cons-percentage 0.1
+        package-quickstart t
+        dotspacemacs-enable-package-quickstart t)
+
 
 
   ;; Silence native-comp warnings
