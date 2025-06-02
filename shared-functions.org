@@ -9120,9 +9120,18 @@ It returns a list, so you can later jump to the first culprit:
 
 (setq native-comp-jit-compilation t
       package-native-compile    t)
+#+end_src
+
+* Panic button
+#+begin_src emacs-lisp
+
+;;; --- Emergency exit --------------------------------------------------------
+;; Panic button: C-c C-! to save and exit
+(global-set-key (kbd "C-c C-!")
+                (lambda () (interactive)
+                  (save-some-buffers t)
+                  (kill-emacs)))
 #+end_src 
-
-
 
 * Local Variables & The End
 These have to be at the end.
