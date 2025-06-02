@@ -151,7 +151,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       org-transclusion
                                       ctrlf
-                                      web-mode
+                                      ;;                      web-mode
                                       ox-twbs
                                       mwim
                                       ;;                      affe
@@ -182,7 +182,7 @@ This function should only modify configuration layer settings."
                                       ;; embark
                                       ;; epc
                                       ;; eww
-                                      exec-path-from-shell
+                                      ;;                    exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
@@ -200,14 +200,14 @@ This function should only modify configuration layer settings."
                                       ;; lister ;; (for delve)
                                       ;; magit
                                         ; markdown-mode
-                                      magit-section
+                                      ;;                  magit-section
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
                                       olivetti
                                       openwith
                                       orderless
-                                      org-ai
+                                      ;; org-ai
                                       org-autolist
                                       org-bookmark-heading
                                       org-contrib
