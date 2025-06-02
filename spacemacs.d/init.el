@@ -221,7 +221,7 @@ This function should only modify configuration layer settings."
                                       org-pomodoro
                                       org-ql
                                       org-roam
-                                      org-roam-ui
+                                      ;; org-roam-ui
                                       ;; org-superstar
                                       ox-clip
                                       ;; ox-gfm
@@ -1068,7 +1068,6 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(amx-history-length 199)
    '(calendar-week-start-day 1)
    '(counsel-search-engine 'google)
    '(deft-directory
@@ -1077,7 +1076,6 @@ This function is called at the very end of Spacemacs initialization."
    '(evil-want-Y-yank-to-eol nil)
    '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
    '(flycheck-disabled-checkers '(proselint))
-   '(gptel-model "gpt-4")
    '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
    '(line-number-mode t)
    '(marginalia-align 'left nil nil "Customized with use-package marginalia")
@@ -1106,8 +1104,6 @@ This function is called at the very end of Spacemacs initialization."
    '(org-twbs-head-include-default-style nil)
    '(org-twbs-head-include-scripts nil)
    '(org-twbs-htmlize-output-type 'css)
-   '(package-selected-packages
-     '(smex emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-roam-ui org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack popup quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit tiny titlecase unfill visible-mark wc-mode web-mode wrap-region xah-replace-pairs))
    '(paradox-github-token t)
    '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")
    '(sp-escape-wrapped-region nil)
