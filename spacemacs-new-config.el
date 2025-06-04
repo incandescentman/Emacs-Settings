@@ -1,5 +1,6 @@
 ;; ------------- init.el (or early-load file) --------------------------
-(require 'ob-tangle)          ; 1️⃣ make sure tangling is available
+(use-package ob-tangle
+  :defer t)          ; 1️⃣ make sure tangling is available
 
 (with-eval-after-load 'org    ; 2️⃣ define + register the helper
   (defun jd/org-auto-tangle ()
