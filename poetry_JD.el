@@ -18,11 +18,16 @@
 ;; tools for those. Look for dict.el, thesaurus.el, etc. There's no
 ;; point in my duplicating them.
 
-;; Tested only on Linux Mint 17 and Emacs 24.3. Will probably work on
-;; any reasonable distro and reasonable Emacs. Windoze?  Mac? I don't
-;; use these so I don't know. You would need an equivalent to the
-;; 'rhyme' command line utility and/or w3m. If you use one of these
-;; systems and get this to work please let me know.
+;; Tested only on Linux Mint 17-20, Arch Linux, and Emacs 24-27. Will
+;; probably work on any reasonable distro and reasonable Emacs.
+;; Windoze?  Mac? I don't use these so I don't know. You would need an
+;; equivalent to the 'rhyme' command line utility and/or w3m. If you
+;; use one of these systems and get this to work please let me know.
+
+;; Update: Shaun Lee reports correct operation on a Mac, and he offers
+;; a 'homebrew' for installing the 'rhyme' package at
+;; https://github.com/shaunplee/homebrew-rhyme .
+;; Thank you, Shaun!
 
 ;; Comments are welcome. Send to bobnewell@bobnewell.net. But I don't
 ;; promise anything and this isn't an offer of support. (There, I've
@@ -50,6 +55,11 @@
 ;; overall better approach would be welcome! I've got a lot of kludged
 ;; rules right now and this gets more fragile with ev'ry change.
 
+;; The most accurate foot-counters I've found online are dictionary
+;; based (usually employing the CMU dictionary). Such an approach may
+;; be too slow and bulky for elisp use, but I may still try it some
+;; day.
+
 ;; Foot counting is tested mostly against Tennyson's "Idylls of the
 ;; King" which turns out to be a pretty good (tough) test text with
 ;; rather strict iambic pentameter. poetry.el does surprisingly well,
@@ -71,8 +81,16 @@
 ;; I don't plan on announcing new versions unless they are really
 ;; a major change.
 
-(defvar poetry-version-no "0.14 alpha")
+(defvar poetry-version-no "0.15 alpha")
 
+;; 2021-01-24 0.15 Changed http fetches to https. Obrigado to Vagner Rener
+;;                 for suggesting this.
+;; 2016-05-25 0.14 Incorporated Shaun Lee's reports of success with
+;;                 a Mac.
+;; 2015-08-10 0.14 Added some additional notes after doing some
+;;                 further research into foot counting. No version
+;;                 number change as the code is the same. I've
+;;                 neglected poetry.el for half a year and counting.
 ;; 2015-03-02 0.14 Tweaks per Stephan's message. Now distributed
 ;;                 as .el rather than .zip; remove refs to variable
 ;;                 poetry--line-number-cache; change 2nd arg from t to
@@ -114,7 +132,7 @@
 ;; 2015-02-12 0.00 Initial coding and release.
 ;;                 Bob Newell, Honolulu, Hawai`i.
 
-;; Three things are here right now.
+;; Four things are here right now.
 
 ;; 1. A poetry-mode that shows the foot count for each line in the
 ;; left margin. M-x poetry mode to turn it on and the same to turn it
@@ -201,16 +219,19 @@
 ;; 1. A better rhyming dictionary that includes imperfect rhymes. But
 ;;    the dictionary here is pretty good, and the net access dictionaries
 ;;    offer a lot more.
-;; 2. Continue to include foot count improvements, but this is a very
+;; 2. This one is a bit fanciful, but combining the rhyme pattern template
+;;    with automatic display of possible rhymes is something I saw on
+;;    tranquility.com (an excellent on-line poetry editing tool). Might I
+;;    be able to provide similar functionality?
+;; 3. Continue to include foot count improvements, but this is a very
 ;;    hard problem and won't ever be done. Note that we are counting
 ;;    feet, not syllables, which makes things even harder. I'm looking
-;;    into the 2005 'Scandroid' program which has some good ideas.
-;; 3. Is there a way to integrate with org-mode? Perhaps display foot
+;;    into the 2005 'Scandroid' program which has some good ideas. And,
+;;    as noted above (somewhere) a dictionary approach is a possibility.
+;; 4. Is there a way to integrate with org-mode? Perhaps display foot
 ;;    counts only in a poetry block? This may not be so easy.
 
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-
-
+(require 'linum)
 
 ;; Constants and variables. I prefer for now to define variables with
 ;; global scope (no 'let' stuff) as this makes debugging a lot easier,
@@ -255,11 +276,13 @@
     ;; look for a consonant (cluster), vowel, consonant, 'e', and then
     ;; either V+CVC or CVCV. Fails on longer words like 'heretofore'.
     ;; I keep it limited because otherwise a lot of words like 'together'
-    ;; scan improperly. 'eyelid' and 'pavement' also miss.
-                                        ;      "^[^aeiou]+[aeiou][^aeiou]e[^aeiou]+[aeiouy][^aeiou][aeiou]$"
+    ;; scan improperly. 'eyelid' 'whereof' and 'pavement' also miss.
     "^...e[^aeiou]+[aeiouy][^aeiou][aeiou]$"
                                         ;      "^..e[^aeiou]+[aeiouy][^aeiou][aeiou]$"
+    ;; C+VCeVCVC 'moreover' etc.
     "^[^aeiou]+[aeiou][^aeiou]e[aeiou][^aeiou][aeiou][^aeiou]$"
+    ;; C+VCeCVC+ 'blameless' etc.
+    "^[^aeiou]+[aeiou][^aeiou]e[^aeiou]+[aeiou][^aeiou]+$"
 
     ))
 
@@ -571,7 +594,7 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   (interactive)
   ;; This is fragile as the API can change any time.
   ;; The site can even go down!
-  (w3m (concat "http://www.rhymezone.com/r/rhyme.cgi?Word="
+  (w3m (concat "https://www.rhymezone.com/r/rhyme.cgi?Word="
                (thing-at-point 'word)
                "&typeofrhyme=perfect&org1=syl&org2=l&org3=y"))
   )
@@ -581,7 +604,7 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   (interactive)
   ;; This is fragile as the API can change any time.
   ;; The site can even go down!
-  (w3m (concat "http://www.rhymer.com/RhymingDictionary/"
+  (w3m (concat "https://www.rhymer.com/RhymingDictionary/"
                (thing-at-point 'word)
                ".html"))
   )
@@ -592,7 +615,7 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   (interactive)
   ;; This is fragile as the API can change any time.
   ;; The site can even go down!
-  (w3m (concat "http://wikirhymer.com/words/"
+  (w3m (concat "https://wikirhymer.com/words/"
                (thing-at-point 'word)))
   )
 
@@ -601,7 +624,7 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   (interactive)
   ;; This is fragile as the API can change any time.
   ;; The site can even go down!
-  (w3m (concat "http://www.prime-rhyme.com/"
+  (w3m (concat "https://www.prime-rhyme.com/"
                (thing-at-point 'word)
                ".html"))
   )
@@ -611,9 +634,11 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   (interactive)
   ;; This is fragile as the API can change any time.
   ;; The site can even go down!
-  (w3m (concat "http://www.b-rhymes.com/rhyme/word/"
+  (w3m (concat "https://www.b-rhymes.com/rhyme/word/"
                (thing-at-point 'word)))
   )
+
+;; End rhyming stuff.
 
 
 (defun poetry-mode-pretty ()
@@ -623,9 +648,6 @@ it may cause the margin to be resized and line numbers to be recomputed.")
   ;; (olivetti-mode 1)
   (stripe-buffer-mode 1))
 
-
-
-;; End rhyming stuff.
 
 (provide 'poetry)
 

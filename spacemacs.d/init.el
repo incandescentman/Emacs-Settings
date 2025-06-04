@@ -303,6 +303,7 @@ This function should only modify configuration layer settings."
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
+                                    poetry
                                     vim-powerline
                                     adaptive-wrap
                                     auto-encryption-mode
