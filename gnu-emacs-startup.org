@@ -1,3 +1,4 @@
+#+auto_tangle: t 
 * NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE

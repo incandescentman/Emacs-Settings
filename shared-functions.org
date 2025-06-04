@@ -108,7 +108,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 
 ;; Edit Server Settings
-(require 'server)
+
 (setq edit-server-default-major-mode 'org-mode
       edit-server-new-frame t)
 
@@ -2160,7 +2160,7 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
 - Else if point is on a link, remove just that link.
 - Otherwise, prompt to remove all links in the buffer."
   (interactive)
-  (require 'org)  ; Make sure org functions/variables are loaded
+;;  (require 'org)  ; Make sure org functions/variables are loaded
   (cond
    ;; 1) If region is highlighted, remove links only in that region:
    ((use-region-p)
@@ -5585,29 +5585,6 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 
 #+END_EXAMPLE
 
-* org-superstar
-#+BEGIN_EXAMPLE emacs-lisp
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-(setq org-superstar-prettify-item-bullets t)
-
-;; additional indentation for sub-items in a list
-(setq org-list-indent-offset 1)
-
-
-;; (setq org-superstar-headline-bullets-list '(""))
-;; ;; This is usually the default, but keep in mind it must be nil
-;; (setq org-hide-leading-stars nil)
-;; ;; This line is necessary.
-;; (setq org-superstar-leading-bullet nil)
-;; ;; If you use Org Indent you also need to add this, otherwise the
-;; ;; above has no effect while Indent is enabled.
-;; (setq org-indent-mode-turns-on-hiding-stars nil)
-;; (setq org-superstar-remove-leading-stars t)
-
-
-#+END_EXAMPLE
-
 * openwith
 #+begin_src emacs-lisp
 
@@ -7989,7 +7966,8 @@ Only required if Emacs < 29.3.
 * smartparens fix
 #+begin_src emacs-lisp
 ;; smartparens configuration
-(require 'smartparens-config)
+(use-package smartparens-config
+:defer t)
 (smartparens-global-mode t)
 (show-smartparens-global-mode t)
 
