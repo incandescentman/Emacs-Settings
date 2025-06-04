@@ -844,6 +844,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
 
+  (setq org-babel-use-quick-and-dirty-noweb-expansion t)
 
   ;; Disable server mode to prevent deadlocks
   (setq dotspacemacs-enable-server nil
