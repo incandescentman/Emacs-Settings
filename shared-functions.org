@@ -3193,10 +3193,10 @@ which is suitable for passing to `advice-add'."
   :config
   ;; Fix cl deprecation warning
   (require 'cl-lib)
-  
+
   ;; Add your custom wrapper
   (wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
-  
+
   ;; Define your wrapper function
   (defun wrap-region-define-wrappers ()
     "Defines defaults wrappers."
@@ -3212,7 +3212,7 @@ which is suitable for passing to `advice-add'."
        ;; ("<"  ">")
        ;; ("<"  ">")
        )))
-  
+
   ;; Add mode-specific wrappers
   (wrap-region-add-wrappers
    '(
@@ -9140,6 +9140,12 @@ package-native-compile    t)
                   (save-some-buffers t)
                   (kill-emacs)))
 #+end_src
+
+* debug on error
+#+begin_src emacs-lisp
+(setq debug-on-error 1)
+#+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
