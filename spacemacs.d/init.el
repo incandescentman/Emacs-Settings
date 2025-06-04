@@ -112,7 +112,6 @@ This function should only modify configuration layer settings."
      ;; markdown
      ;; mu4e
      emacs-lisp
-     ;;     eww
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
       :defer
@@ -127,12 +126,7 @@ This function should only modify configuration layer settings."
       (ox-extra-activate '(ignore-headlines))
       )
      osx
-     ;; pdf
-     ;; python
-     ;; shell
      ;; shell-scripts
-                                        ; smex
-     ;; speed-reading
      spell-checking
      syntax-checking ; this is the layer with flycheck
      ;; treemacs
@@ -153,14 +147,13 @@ This function should only modify configuration layer settings."
                                       affe
                                       org-transclusion
                                       ctrlf
-                                      ;;                      web-mode
+                                      ;; web-mode
                                       ox-twbs
                                       mwim
-                                      ;;                      affe
-                                      ;;                     beacon
+                                      ;; beacon
                                       bind-key
                                       bui
-                                      ;; buffer-stack
+                                      buffer-stack
                                       caps-lock
                                       captain
                                       change-inner
@@ -183,8 +176,7 @@ This function should only modify configuration layer settings."
                                       emacsql
                                       ;; embark
                                       ;; epc
-                                      ;; eww
-                                      ;;                    exec-path-from-shell
+                                      ;; exec-path-from-shell
                                       expand-region
                                       f
                                       fancy-narrow
@@ -192,17 +184,15 @@ This function should only modify configuration layer settings."
                                       flyspell-lazy
                                       ;; frame-cmds
                                       fuzzy
-                                      gcmh ; The Garbage Collector Magic Hack
+                                      gcmh ;; The Garbage Collector Magic Hack
                                       google-this
-                                      ;; gptel
                                       ;; helpful
                                       ;; ido-hacks
                                       ;; jinx
                                       key-seq
                                       ;; lister ;; (for delve)
                                       ;; magit
-                                        ; markdown-mode
-                                      ;;                  magit-section
+                                      ;; markdown-mode
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
