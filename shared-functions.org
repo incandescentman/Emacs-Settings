@@ -7527,7 +7527,7 @@ After evaluating your init-file you can use links analog to the example:
 
 
 
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 (load "/Users/jay/emacs/external-packages/org-yt/org-yt.el")
 (require 'org-yt)
@@ -7551,7 +7551,7 @@ After evaluating your init-file you can use links analog to the example:
 (org-link-set-parameters
  "imghttps"
  :image-data-fun #'org-image-link)
-#+end_src
+#+END_EXAMPLE
 
 
 * Insert image link from clipboard
@@ -9140,6 +9140,32 @@ package-native-compile    t)
 (use-package server
 :defer t)
 #+end_src
+
+* quickstart
+#+begin_src emacs-lisp
+(defun jd/maintain-quickstart ()
+  "Regenerate `package-quickstart.el' whenever package list changes."
+  (let* ((qs-file package-quickstart-file)
+         (stamp   (file-attribute-modification-time
+                   (file-attributes qs-file))))
+    ;; Refresh if file is missing or older than 24 h
+    (when (or (not (file-exists-p qs-file))
+              (> (float-time (time-subtract (current-time) stamp))
+                 (* 24 60 60)))
+      (message "⟳  Refreshing package-quickstart...")
+      (package-quickstart-refresh))))
+
+;; Run once per boot, after packages are loaded:
+(add-hook 'after-init-hook #'jd/maintain-quickstart)
+
+
+;; Auto-refresh quickstart after package operations
+(advice-add 'package-install :after
+            (lambda (&rest _) (package-quickstart-refresh)))
+(advice-add 'package-delete :after
+            (lambda (&rest _) (package-quickstart-refresh)))
+#+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
