@@ -760,7 +760,7 @@ read-file-name-completion-ignore-case t)
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
-
+:defer t
   :bind)
 #+END_SRC
 
@@ -6606,8 +6606,8 @@ directory
 ~M-x counsel-fd-file-jump~ to jump to a file under current directory
 
 #+begin_src emacs-lisp
-(use-package counsel-found
-  :defer)
+(use-package counsel-fd
+  :defer t)
 #+end_src
 
 
@@ -9109,17 +9109,6 @@ It returns a list, so you can later jump to the first culprit:
 (setq ns-use-native-fullscreen nil)  ; Faster fullscreen
 #+end_src
 
-* Profiler
-#+begin_src emacs-lisp
-
-(require 'profiler)
-(profiler-start 'cpu)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (profiler-report)
-            (profiler-stop)))
-#+end_src
-
 * silence warnings
 #+begin_src emacs-lisp
 ;; (setq native-comp-async-report-warnings-errors 'silent)
@@ -9146,6 +9135,11 @@ package-native-compile    t)
 (setq debug-on-error 1)
 #+end_src
 
+* server
+#+begin_src emacs-lisp
+(use-package server
+:defer t)
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
