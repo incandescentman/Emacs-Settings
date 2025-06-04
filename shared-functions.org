@@ -1117,14 +1117,13 @@ I think this is to make parent ~DONE~ states automatically update:
       (ignore-errors
 	(org-back-to-heading)
 	(org-update-parent-todo-statistics)))))
-
 ;;; -----------------------------------------------------------
 ;;; Keep parent TODO cookies in sync after killing a line
 ;;; -----------------------------------------------------------
 
 (defun sed--update-parent-cookie (&rest _)
   "Refresh parent checkbox / todo statistics after editing."
-  (myorg-update_parent_cookie))   ; your existing helper
+  (myorg-update-parent-cookie))   ; your existing helper
 
 (advice-add 'org-kill-line   :after #'sed--update-parent-cookie)
 (advice-add 'kill-whole-line :after #'sed--update-parent-cookie)
@@ -9141,9 +9140,12 @@ package-native-compile    t)
 * server
 #+begin_src emacs-lisp
 (use-package server
-:defer t)
+  :ensure nil        ;; <- built-in, don't look on MELPA
+  :defer t)
 
-(with-eval-after-load 'server (unless (server-running-p) (server-start)))
+(with-eval-after-load 'server
+  (unless (server-running-p)
+    (server-start)))
 
 #+end_src
 
