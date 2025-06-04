@@ -153,7 +153,6 @@ This function should only modify configuration layer settings."
                                       ;; beacon
                                       bind-key
                                       bui
-                                      buffer-stack
                                       caps-lock
                                       captain
                                       change-inner
