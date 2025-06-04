@@ -6578,10 +6578,14 @@ Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
 #+end_src
 
 
-******* dired-preview
+** dired-preview
 #+begin_src sh
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
-(require 'dired-preview)
+
+(use-package dired-preview
+:defer t)
+
+
 
 #+end_src
 
@@ -7528,9 +7532,8 @@ After evaluating your init-file you can use links analog to the example:
 
 
 #+BEGIN_EXAMPLE emacs-lisp
+(autoload 'org-yt-follow "org-yt")
 
-(load "/Users/jay/emacs/external-packages/org-yt/org-yt.el")
-(require 'org-yt)
 
 (defun org-image-link (protocol link _description)
  "Interpret LINK as base64-encoded image data."
@@ -9139,6 +9142,9 @@ package-native-compile    t)
 #+begin_src emacs-lisp
 (use-package server
 :defer t)
+
+(with-eval-after-load 'server (unless (server-running-p) (server-start)))
+
 #+end_src
 
 * quickstart
@@ -9166,6 +9172,10 @@ package-native-compile    t)
             (lambda (&rest _) (package-quickstart-refresh)))
 #+end_src
 
+* counsel
+#+begin_src emacs-lisp
+(use-package counsel :defer t)
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.

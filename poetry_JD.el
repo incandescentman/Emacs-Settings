@@ -208,7 +208,9 @@
 ;; 3. Is there a way to integrate with org-mode? Perhaps display foot
 ;;    counts only in a poetry block? This may not be so easy.
 
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+
 
 ;; Constants and variables. I prefer for now to define variables with
 ;; global scope (no 'let' stuff) as this makes debugging a lot easier,
