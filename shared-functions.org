@@ -9039,14 +9039,19 @@ It returns a list, so you can later jump to the first culprit:
 
 * Amx
 #+begin_src emacs-lisp
+
 (use-package amx
-  :ensure t                           ; if you use straight-el/ELPA
+  :ensure t
   :init
-  (setq amx-history-length 99         ; remember last 99 commands
-        amx-save-file (locate-user-emacs-file "amx-items"))  ; default
+  ;; Tell AMX *before it loads* which back-ends to use.
+  (setq amx-backend 'standard; no Ido/Vertico
+        amx-history-length 99                     ; keep 99 commands
+        amx-save-file     (locate-user-emacs-file "amx-items"))
   :config
-  (amx-mode 1)                        ; replace default M-x
-  (savehist-mode 1))                  ; persist command/history rings
+  (amx-mode 1)     ; replace default M-x
+  (savehist-mode 1))
+
+
 #+end_src
 
 

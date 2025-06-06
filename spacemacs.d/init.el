@@ -1093,6 +1093,8 @@ This function is called at the very end of Spacemacs initialization."
    '(org-twbs-head-include-default-style nil)
    '(org-twbs-head-include-scripts nil)
    '(org-twbs-htmlize-output-type 'css)
+   '(package-selected-packages
+     '(emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit titlecase unfill visible-mark wc-mode wrap-region xah-replace-pairs))
    '(paradox-github-token t)
    '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")
    '(sp-escape-wrapped-region nil)

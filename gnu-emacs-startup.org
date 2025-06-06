@@ -158,14 +158,18 @@ Manually remove the scrollbar if default setting fails when creating a new frame
   )
 #+END_SRC
 
-Forgot what this does, I think it's in case Emacs crashes maybe to recover
-autosaves?
+
 #+BEGIN_SRC emacs-lisp
-(defadvice recover-session (around disable-dired-omit-for-recover activate)
-  (let ((dired-mode-hook dired-mode-hook))
-    (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
-    ad-do-it))
-#+END_SRC
+(require 'dired)                          ; ensure hook is defined
+
+(defun my/recover-session-show-autosaves (orig-fun &rest args)
+  "Run `recover-session' with Dired-Omit temporarily disabled."
+  (let ((dired-mode-hook
+         (remove 'enable-dired-omit-mode dired-mode-hook)))
+    (apply orig-fun args)))
+
+(advice-add 'recover-session :around #'my/recover-session-show-autosaves)
+#+END_SRC 
 
 
 * load keys
