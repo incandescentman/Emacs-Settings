@@ -1,4 +1,4 @@
-#+auto_tangle: t 
+#+auto_tangle: t
 * NOTE-TO-JAY file settings             :ARCHIVE:
 #+OPTIONS: f:t
 #+ TODO: TODO PLEASE-TEST TESTING PLEASE-DEBUG | DONE
@@ -546,7 +546,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-adaptive)
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
-(define-key key-minor-mode-map (kbd "C-x C-j") 'dired-up-directory)
+(define-key key-minor-mode-map (kbd "C-x C-j") 'jay-up-directory)
 
 
 ;; (define-key org-mode-map (kbd "s-O") 'uo-byword-file)
