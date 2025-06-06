@@ -6401,6 +6401,20 @@ This will open \"Finder.app\" at current location."
  (interactive)
  (find-alternate-file ".."))
 
+(defun jay-up-directory ()
+  "If in Dired, go up.  Otherwise open parent dir in Dired."
+  (interactive)
+  (cond
+   ;; Already in Dired → behave like the native command
+   ((derived-mode-p 'dired-mode)
+    (find-alternate-file ".."))
+   ;; Visiting a real file → open its parent directory
+   (buffer-file-name
+    (dired (file-name-directory buffer-file-name)))
+   ;; Fallback: prompt for a directory
+   (t
+    (call-interactively #'dired))))
+
 
 (defun dired-copy-path-at-point ()
  "Copy the full path of the at `point' to the `kill-ring'.
