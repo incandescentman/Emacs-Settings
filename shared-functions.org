@@ -760,7 +760,7 @@ read-file-name-completion-ignore-case t)
 ** Reveal in finder
 #+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
-:defer t
+
   :bind)
 #+END_SRC
 
@@ -3564,7 +3564,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 *** Find LaTeX on my system
 #+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2024/bin/universal-darwin")
+    (add-to-list 'exec-path "/usr/local/texlive/2025/bin/universal-darwin")
   )
 #+END_SRC
 
@@ -3585,24 +3585,33 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 #+BEGIN_SRC emacs-lisp
 
 (defun jay-load-latex ()
-(interactive)
+  (interactive)
+  (let ((base "/Users/jay/emacs/emacs-settings/latex-templates/")
+        (files '("elegant.el"
+                 "beautiful-racket.el"
+                 "elegant-garamond.el"
+                 "blue-invoice.el"
+                 "blue-invoice-with-letterhead.el"
+                 "jay-latex-yosemite-setup.el")))
+    (dolist (file files)
+      (let ((full-path (expand-file-name file base)))
+        (when (file-exists-p full-path)
+          (load full-path))))))
 
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant.el")
+
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el")
+
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el")
-(load "/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el")
+
 ;; (use-package blue-ruin)
 ;; (use-package blue-invoice)
 ;; (use-package blue-ruin-no-cover)
-  )
+
 #+END_SRC
 
 *** fix latex verbatim
@@ -4596,9 +4605,11 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+"/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/bold.css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
     "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
+"/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/iphone.css"
     "none")
   "List of CSS file options for Org HTML export.")
 
@@ -8012,7 +8023,7 @@ When deleting a file, don't use vc-delete-file
     (let ((vc-backend (vc-backend filename)))
      (when vc-backend
       (vc-delete-file filename))
-     (call-process "/opt/homebrew/bin/trash" nil nil nil filename)
+     (call-process "/opt/homebrew/Cellar/trash/0.9.2/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
 #+end_src
