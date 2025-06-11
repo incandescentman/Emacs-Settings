@@ -169,7 +169,7 @@ Manually remove the scrollbar if default setting fails when creating a new frame
     (apply orig-fun args)))
 
 (advice-add 'recover-session :around #'my/recover-session-show-autosaves)
-#+END_SRC 
+#+END_SRC
 
 
 * load keys
@@ -230,6 +230,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; mk - mykeybindings
 
 
+
+
 (defun setup-org-mode-keys ()
  (define-key org-mode-map (kbd "<return>") 'smart-return))
 
@@ -238,6 +240,9 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 ;; learn this key binding!!!
 (define-key key-minor-mode-map (kbd "M-s-d") 'counsel-find-file)
+
+(define-key key-minor-mode-map (kbd "s-k g c") 'goto-char)
+(define-key key-minor-mode-map (kbd "s-k g l") 'goto-line)
 
 (define-key key-minor-mode-map (kbd "C-<tab>") 'org-cycle-force-archived)
 
