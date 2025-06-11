@@ -52,12 +52,17 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 ]
 
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
-\\setmonofont{Myriad Pro} % for nice quotes
+\\setmonofont{Courier New} % for nice quotes
+
 % \\setmonofont{Adobe Garamond Pro} % for beautiful LaTeX Formulae
+
+
+
 
 
 %\\usepackage[mathletters]{ucs}
 %\\usepackage[utf8x]{inputenc}
+
 
 
 \\usepackage[obeyspaces]{url}
@@ -320,7 +325,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
     colupper=moonrockgrey,
     boxrule=0.5pt,
     rounded corners,
-    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont\\ttfamily,
+    fontupper=\\singlespacing\\fontsize{9}{11}\\selectfont,
     width=0.8\\textwidth,
     left=0pt,
     right=0pt,
