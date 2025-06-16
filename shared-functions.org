@@ -488,16 +488,18 @@ Works!
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
-:defer t
   :ensure nil                      ; built-in
+  :defer t
   :hook ((text-mode . flyspell-mode)
          (org-mode  . flyspell-mode))
   :bind (:map flyspell-mode-map
               ("C-." . nil))      ; unbind default
-:defer t
   :init
-  ;; buffer-local tuning
-  (setq flyspell-abbrev-p t
+  (setq ispell-program-name "hunspell"
+        ispell-dictionary "en_US"
+        ispell-personal-dictionary "~/emacs/Spelling/personal.dic"
+        ispell-extra-args '("-d" "en_US")
+        flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
         flyspell-mark-duplications-exceptions
         '( (nil "that" "had" "really" "very" "much")
@@ -511,12 +513,20 @@ Works!
                    '("^#\\+begin_src" . "^#\\+end_src"))))
   (add-hook 'org-mode-hook #'my-org-setup-flyspell)
 
-  ;; Better handling of contractions
+  ;; Handle contractions
   (defun my/fix-ispell-contractions ()
     (add-to-list 'ispell-dictionary-alist
                  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
                    nil ("-d" "en_US-large") nil utf-8)))
   (my/fix-ispell-contractions))
+
+(defun add-word-to-personal-dictionary ()
+  (interactive)
+  (let ((current-location (point))
+        (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
 #+END_SRC
 
 * UI / customization of appearance and editing environment

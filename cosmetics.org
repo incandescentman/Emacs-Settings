@@ -1,12 +1,12 @@
 
 
 ** org-mode settings
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 (setq org-indent-mode t)
 (setq org-indent-indentation-per-level 2)
 
 #+END_SRC
- 
+
 
 * moved from gnu-emacs-startup.org
 ** UI/Appearance
@@ -56,7 +56,7 @@
       '(
         (width . 160) ; character
         (height . 42) ; lines
-(cursor-color . "red") 
+(cursor-color . "red")
         ))
 ;; (zenburn)
 ;; (monaco-font)
@@ -71,17 +71,11 @@
 
 * hunspell
 
-   #+BEGIN_SRC emacs-lisp 
+   #+BEGIN_SRC emacs-lisp
 
 (flyspell-mode-on)
 
-(defun add-word-to-personal-dictionary ()
-  (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location)))) 
-   #+END_SRC
+#+END_SRC
 
 ** References:
 [[http://emacswiki.org/emacs/InteractiveSpell#toc2][EmacsWiki: Interactive Spell]]
@@ -94,7 +88,7 @@
 [[http://www.lonecpluspluscoder.com/2015/03/setting-up-emacs-spell-checking-on-os-x/][Setting up Emacs spell checking on OS X - The Lone C++ Coder's Blog]]
 
 
-* Guide key 
+* Guide key
 I think this is something similar ([[https://github.com/kai2nenobu/guide-key][source]]):
 #+BEGIN_SRC emacs-lisp
 (use-package 'guide-key)
@@ -117,7 +111,7 @@ I think this is something similar ([[https://github.com/kai2nenobu/guide-key][so
 ;;  "serenity"
 ;;  (interactive)
 ;;  (setq org-bullets-bullet-list (quote ("  ")))
-;;  (org-serenity-mode)  
+;;  (org-serenity-mode)
 ;;  (org-bullets-mode)
 ;; )
 #+END_SRC
