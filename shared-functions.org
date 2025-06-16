@@ -9191,23 +9191,23 @@ package-native-compile    t)
 #+begin_src emacs-lisp
 ;; Usage: mark region or use whole buffer, then  M-x md-ref-footnotes-to-org
 
-(require 'subr-x)                            ; for `string-trim'
+(require 'subr-x)                            ; `string-trim'
 
 (defun md-ref-footnotes-to-org (&optional beg end)
-  "Convert *reference-style* Markdown footnotes to Org-mode footnotes.
+  "Convert reference-style Markdown footnotes to Org-mode footnotes.
 
-If point is in an active region, operate only on that region.
-Otherwise process the whole buffer.
+Inline markers like
+   ([anthropic.com][8], [anthropic.com][7])
+become
+   [fn:8], [fn:7]
 
-Markdown we expect
-  ([anthropic.com][1])
-  ...
-  [1]: https://example.com \"Title\"
+Definitions like
+   [8]: https://example.com \"Title\"
+become
+   [fn:8] [[https://example.com][Title]].
 
-Org we emit
-  [fn:1]
-  ...
-  [fn:1] [[https://example.com][Title]]"
+With an active region, operate only on that region; otherwise
+process the whole buffer."
   (interactive (when (use-region-p)
                  (list (region-beginning) (region-end))))
   (save-excursion
@@ -9215,13 +9215,14 @@ Org we emit
       (when beg (narrow-to-region beg end))
 
       ;; ---------- 1. inline markers ----------
-      ;; ([whatever][N])  ➜  [fn:N]
+      ;; Every “[something][N]” ➜ “[fn:N]”
       (goto-char (point-min))
       (while (re-search-forward
-              (rx "(" "[" (+? (not "]")) "]"
-                  "[" (group (+ digit)) "]" ")")
+              (rx "[" (+? (not "]")) "]"          ; link text (non-captured)
+                  "[" (group (+ digit)) "]")      ; capture N
               nil t)
-        (replace-match "[fn:\\1]" nil nil))
+        ;; Skip if we've already converted: the replacement has no second […]
+        (replace-match (format "[fn:%s]" (match-string 1)) t t))
 
       ;; ---------- 2. footnote definitions ----------
       ;; [N]: URL  \"Title\"  ➜  [fn:N] [[URL][Title]]
@@ -9229,7 +9230,7 @@ Org we emit
       (while (re-search-forward
               (rx line-start "[" (group (+ digit)) "]:"
                   (+ blank)
-                  (group (+ (not (any blank))))      ; URL
+                  (group (+ (not (any blank))))          ; URL
                   (? (+ blank) "\"" (group (+? (not "\""))) "\""))
               nil t)
         (let* ((num   (match-string 1))
@@ -9239,7 +9240,6 @@ Org we emit
            (format "[fn:%s] [[%s][%s]]" num url title) t t))))
 
     (message "Markdown reference footnotes → Org footnotes complete.")))
-
 #+end_src
 
 * Local Variables & The End
