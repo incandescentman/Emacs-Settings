@@ -9189,23 +9189,17 @@ package-native-compile    t)
 
 * convert footnotes to org format
 #+begin_src emacs-lisp
+;;; md-ref-footnotes-to-org.el --- convert reference footnotes → Org  -*- lexical-binding: t; -*-
+;; Author: you
 ;; Usage: mark region or use whole buffer, then  M-x md-ref-footnotes-to-org
-
-(require 'subr-x)                            ; `string-trim'
-
+(require 'subr-x)                            ; for `string-trim'
 (defun md-ref-footnotes-to-org (&optional beg end)
   "Convert reference-style Markdown footnotes to Org-mode footnotes.
-
-Inline markers like
-   ([anthropic.com][8], [anthropic.com][7])
-become
-   [fn:8], [fn:7]
-
-Definitions like
-   [8]: https://example.com \"Title\"
-become
-   [fn:8] [[https://example.com][Title]].
-
+Inline examples:
+   ([anthropic.com][8], [anthropic.com][7])  →  [fn:8], [fn:7]
+   ( [foo][1] )                              →  [fn:1]
+Definition examples:
+   [8]: https://example.com \"Title\"        →  [fn:8] [[https://example.com][Title]]
 With an active region, operate only on that region; otherwise
 process the whole buffer."
   (interactive (when (use-region-p)
@@ -9213,22 +9207,38 @@ process the whole buffer."
   (save-excursion
     (save-restriction
       (when beg (narrow-to-region beg end))
-
-      ;; ---------- 1. inline markers ----------
-      ;; Every “[something][N]” ➜ “[fn:N]”
+      ;; ------------------------------------------------------------
+      ;; 1. INLINE MARKERS   [text][N]  →  [fn:N]
+      ;; ------------------------------------------------------------
       (goto-char (point-min))
       (while (re-search-forward
-              (rx "[" (+? (not "]")) "]"          ; link text (non-captured)
-                  "[" (group (+ digit)) "]")      ; capture N
+              (rx "[" (+? (not "]")) "]"
+                  "[" (group (+ digit)) "]")
               nil t)
-        ;; Skip if we've already converted: the replacement has no second […]
         (replace-match (format "[fn:%s]" (match-string 1)) t t))
-
-      ;; ---------- 2. footnote definitions ----------
-      ;; [N]: URL  \"Title\"  ➜  [fn:N] [[URL][Title]]
+      ;; ------------------------------------------------------------
+      ;; 2. STRIP PARENTHESES AROUND FOOTNOTE REFERENCES
+      ;;    ([fn:8])  →  [fn:8]
+      ;;    ([fn:8], [fn:7])  →  [fn:8], [fn:7]
+      ;; ------------------------------------------------------------
       (goto-char (point-min))
       (while (re-search-forward
-              (rx line-start "[" (group (+ digit)) "]:"
+              ;; Match parentheses containing one or more [fn:N] references
+              (rx "("
+                  (group (0+ space)
+                         "[fn:" (+ digit) "]"
+                         (0+ (seq (0+ space) "," (0+ space) "[fn:" (+ digit) "]"))
+                         (0+ space))
+                  ")")
+              nil t)
+        (replace-match (match-string 1) t t))
+      ;; ------------------------------------------------------------
+      ;; 3. FOOTNOTE DEFINITIONS   [N]: URL \"Title\"  →  Org form
+      ;; ------------------------------------------------------------
+      (goto-char (point-min))
+      (while (re-search-forward
+              (rx line-start
+                  "[" (group (+ digit)) "]:"
                   (+ blank)
                   (group (+ (not (any blank))))          ; URL
                   (? (+ blank) "\"" (group (+? (not "\""))) "\""))
@@ -9238,8 +9248,9 @@ process the whole buffer."
                (title (string-trim (or (match-string 3) url))))
           (replace-match
            (format "[fn:%s] [[%s][%s]]" num url title) t t))))
-
     (message "Markdown reference footnotes → Org footnotes complete.")))
+(provide 'md-ref-footnotes-to-org)
+;;; md-ref-footnotes-to-org.el ends here
 #+end_src
 
 * Local Variables & The End
