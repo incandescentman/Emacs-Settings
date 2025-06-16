@@ -9187,6 +9187,61 @@ package-native-compile    t)
 (use-package counsel :defer t)
 #+end_src
 
+* convert footnotes to org format
+#+begin_src emacs-lisp
+;; Usage: mark region or use whole buffer, then  M-x md-ref-footnotes-to-org
+
+(require 'subr-x)                            ; for `string-trim'
+
+(defun md-ref-footnotes-to-org (&optional beg end)
+  "Convert *reference-style* Markdown footnotes to Org-mode footnotes.
+
+If point is in an active region, operate only on that region.
+Otherwise process the whole buffer.
+
+Markdown we expect
+  ([anthropic.com][1])
+  ...
+  [1]: https://example.com \"Title\"
+
+Org we emit
+  [fn:1]
+  ...
+  [fn:1] [[https://example.com][Title]]"
+  (interactive (when (use-region-p)
+                 (list (region-beginning) (region-end))))
+  (save-excursion
+    (save-restriction
+      (when beg (narrow-to-region beg end))
+
+      ;; ---------- 1. inline markers ----------
+      ;; ([whatever][N])  ➜  [fn:N]
+      (goto-char (point-min))
+      (while (re-search-forward
+              (rx "(" "[" (+? (not "]")) "]"
+                  "[" (group (+ digit)) "]" ")")
+              nil t)
+        (replace-match "[fn:\\1]" nil nil))
+
+      ;; ---------- 2. footnote definitions ----------
+      ;; [N]: URL  \"Title\"  ➜  [fn:N] [[URL][Title]]
+      (goto-char (point-min))
+      (while (re-search-forward
+              (rx line-start "[" (group (+ digit)) "]:"
+                  (+ blank)
+                  (group (+ (not (any blank))))      ; URL
+                  (? (+ blank) "\"" (group (+? (not "\""))) "\""))
+              nil t)
+        (let* ((num   (match-string 1))
+               (url   (match-string 2))
+               (title (string-trim (or (match-string 3) url))))
+          (replace-match
+           (format "[fn:%s] [[%s][%s]]" num url title) t t))))
+
+    (message "Markdown reference footnotes → Org footnotes complete.")))
+
+#+end_src
+
 * Local Variables & The End
 These have to be at the end.
 
