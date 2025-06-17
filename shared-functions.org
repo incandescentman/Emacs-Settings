@@ -488,58 +488,52 @@ Works!
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
-  :ensure nil                      ; built-in
-  :defer t
+  :ensure nil                    ; built-in
   :hook ((text-mode . flyspell-mode)
          (org-mode  . flyspell-mode))
   :bind (:map flyspell-mode-map
-              ("C-." . nil))      ; unbind default
+              ("C-." . nil))     ; unbind default
   :init
-  (setq ispell-program-name "hunspell"
-        ispell-dictionary "en_US"
+  ;; --- Hunspell setup ---
+;; Add to your :init block *instead* of the previous setq for this var
+(add-to-list
+ 'ispell-dictionary-alist
+ '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
+   nil ("-d" "en_US-large") nil utf-8))
+  (setq ispell-program-name "hunspell" 
+        ispell-dictionary   "en_US-large"           ; default dict
         ispell-personal-dictionary "~/emacs/Spelling/personal.dic"
-        ispell-extra-args '("-d" "en_US")
+        ispell-hunspell-dictionary-paths-alist
+        '(("en_US"       "~/emacs/Spelling")
+          ("en_US-large" "~/emacs/Spelling")
+          ("american"    "~/emacs/Spelling")
+          ("english"     "~/emacs/Spelling"))
+        ;; teach Flyspell about contractions etc.
+        ispell-dictionary-alist
+        '(("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
+           nil ("-d" "en_US-large") nil utf-8))
         flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
         flyspell-mark-duplications-exceptions
-        '( (nil "that" "had" "really" "very" "much")
-           ("\\`francais" "nous" "vous")))
+        '((nil "that" "had" "really" "very" "much")
+          ("\\`francais\\>" "nous" "vous")))
   :config
-  ;; Skip code blocks in Org
-  (defun my-org-setup-flyspell ()
+  ;; Skip #+begin_src ... #+end_src blocks in Org
+  (defun my/org-setup-flyspell ()
     (when (derived-mode-p 'org-mode)
       (make-local-variable 'ispell-skip-region-alist)
       (add-to-list 'ispell-skip-region-alist
                    '("^#\\+begin_src" . "^#\\+end_src"))))
-  (add-hook 'org-mode-hook #'my-org-setup-flyspell)
+  (add-hook 'org-mode-hook #'my/org-setup-flyspell))
 
-  ;; Handle contractions
-  (defun my/fix-ispell-contractions ()
-    (add-to-list 'ispell-dictionary-alist
-                 '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
-                   nil ("-d" "en_US-large") nil utf-8)))
-  (my/fix-ispell-contractions))
-
+;; Helper: save word at point to personal dictionary
 (defun add-word-to-personal-dictionary ()
+  "Add the word at point to `ispell-personal-dictionary`."
   (interactive)
-  (let ((current-location (point))
-        (word (flyspell-get-word)))
-    (when (consp word)
-      (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
-
-
-;; Use Hunspell and point it at ~/emacs/Spelling
-(setq ispell-program-name "hunspell")
-
-;; Directory that holds american.aff, english.dic, en_US-large.*
-(setq ispell-hunspell-dictionary-paths-alist
-      '(("en_US"     "~/emacs/Spelling")
-        ("en_US-large" "~/emacs/Spelling")
-        ("american" "~/emacs/Spelling")
-        ("english"  "~/emacs/Spelling")))
-
-;; Make en_US the default
-(setq ispell-dictionary "en_US")   ; or "en_US-large"
+  (when-let* ((word-data (flyspell-get-word))
+              (word      (car word-data)))
+    (flyspell-do-correct 'save nil word (point) (cadr word-data)
+                         (caddr word-data) (point))))
 #+END_SRC
 
 * UI / customization of appearance and editing environment
