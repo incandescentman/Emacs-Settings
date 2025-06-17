@@ -9061,8 +9061,10 @@ It returns a list, so you can later jump to the first culprit:
   (amx-mode 1)     ; replace default M-x
   (savehist-mode 1))
 
-
-#+end_src
+'(amx-save-file "/Users/jay/emacs/local-emacs-config/amx-items")
+'(package-quickstart-file
+     " /Users/jay/emacs/local-emacs-config/package-quickstart.el ")
+#+end_src 
 
 
 * Fix minibuffer
