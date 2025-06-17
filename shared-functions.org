@@ -527,6 +527,19 @@ Works!
     (when (consp word)
       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
 
+
+;; Use Hunspell and point it at ~/emacs/Spelling
+(setq ispell-program-name "hunspell")
+
+;; Directory that holds american.aff, english.dic, en_US-large.*
+(setq ispell-hunspell-dictionary-paths-alist
+      '(("en_US"     "~/emacs/Spelling")
+        ("en_US-large" "~/emacs/Spelling")
+        ("american" "~/emacs/Spelling")
+        ("english"  "~/emacs/Spelling")))
+
+;; Make en_US the default
+(setq ispell-dictionary "en_US")   ; or "en_US-large"
 #+END_SRC
 
 * UI / customization of appearance and editing environment
@@ -9060,11 +9073,10 @@ It returns a list, so you can later jump to the first culprit:
   :config
   (amx-mode 1)     ; replace default M-x
   (savehist-mode 1))
-
-'(amx-save-file "/Users/jay/emacs/local-emacs-config/amx-items")
-'(package-quickstart-file
+(setq amx-save-file "/Users/jay/emacs/local-emacs-config/amx-items")
+(setq package-quickstart-file
      " /Users/jay/emacs/local-emacs-config/package-quickstart.el ")
-#+end_src 
+#+end_src
 
 
 * Fix minibuffer
