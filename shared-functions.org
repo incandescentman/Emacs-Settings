@@ -9131,7 +9131,11 @@ It returns a list, so you can later jump to the first culprit:
 
 * silence warnings
 #+begin_src emacs-lisp
-;; (setq native-comp-async-report-warnings-errors 'silent)
+;; Native comp quality-of-life
+(setq native-comp-async-report-warnings-errors 'silent  ; hide noisy byte-native diffs
+      comp-deferred-compilation           t           ; JIT-compile packages in the background
+      comp-deferred-compilation-black-list '("/mu4e.*\\.el$")) ; skip anything poky
+
 (global-display-line-numbers-mode 1)
 
 
@@ -9261,6 +9265,28 @@ process the whole buffer."
     (message "Markdown reference footnotes → Org footnotes complete.")))
 (provide 'md-ref-footnotes-to-org)
 ;;; md-ref-footnotes-to-org.el ends here
+#+end_src
+
+* line breaks
+#+begin_src emacs-lisp
+(defun asterisk-to-dash ()
+  "Replace every newline-star sequence with newline-dash in the
+current buffer.  Safe (save-excursion) and repeatable."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\n* " nil t)
+      (replace-match "\n- "))))
+
+(defun add-spaces-to-em-dashes ()
+  "Turn foo---bar into foo --- bar, but leave cases like foo --- bar alone."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    ;; Look for alphanumeric, three dashes, alphanumeric.
+    (while (re-search-forward "\\([[:alnum:]]\\)---\\([[:alnum:]]\\)" nil t)
+      ;; Replace with same chars but spaces around the dashes.
+      (replace-match "\\1 --- \\2" nil nil))))
 #+end_src
 
 * Local Variables & The End
