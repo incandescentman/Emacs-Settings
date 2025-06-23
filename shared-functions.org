@@ -12,6 +12,21 @@
 * Org-mode Configuration
 ** Org General Settings
 ** Org Export Settings
+
+*** ignore
+
+#+begin_src emacs-lisp
+
+(defun my/org-remove-links-and-source-lines (backend)
+  "Remove lines starting with 'Links ::' or 'Source ::' before export."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\s-*\\(- Links ::\\|- Source ::\\).*$" nil t)
+      (replace-match ""))))
+
+(add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
+#+end_src
+
 * Appearance and UI
 ** Fonts and Frames
 * Custom Functions
@@ -4639,6 +4654,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
 "/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/bold.css"
+"/Users/jay/Library/CloudStorage/Dropbox/web-design/custom-css/chatgpt-images.css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
     "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
@@ -9315,10 +9331,118 @@ current buffer.  Safe (save-excursion) and repeatable."
     ;; Pass 2 – promote space-hyphen-space to spaced triple hyphen
     (goto-char (point-min))
     (while (re-search-forward " - " nil t)
+(replace-match " --- " nil nil))))
+
+
+(defun normalize-dashes ()
+  "• Add spaces around a naked em-dash marker (---).
+• Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- )."
+  (interactive)
+  (save-excursion
+    ;; Pass 1 – space out triple-hyphens between *any* non-whitespace chars
+    (goto-char (point-min))
+    (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
+      (replace-match "\\1 --- \\2" nil nil))
+
+    ;; Pass 2 – turn space-hyphen-space into spaced em-dash
+    (goto-char (point-min))
+    (while (re-search-forward " - " nil t)
       (replace-match " --- " nil nil))))
 #+end_src
 
+* ChatGPT export
 
+** export bare link images
+#+begin_src emacs-lisp
+(defun my/org-wrap-bare-image-paths (_backend)
+  "Turn any line that consists only of a pathname ending in
+   .png/.jpg/.jpeg/.gif into  [[file:...]].
+   Handles absolute paths (/...),  ./relative/...,  ../relative/...,  or
+   plain relative like  mob-wife/foo.png."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward
+            ;; line with optional spaces, *any* path that contains a slash and ends
+            ;; in the right extension, then only spaces + EOL
+            "^\\s-*\\([^[:space:]]*/[^[:space:]]*\\.\\(?:png\\|jpe?g\\|gif\\)\\)\\s-*$"
+            nil t)
+      (let* ((raw (match-string 1))
+             ;; encode spaces only
+             (encoded (replace-regexp-in-string " " "%20" raw t t)))
+        (replace-match (format "[[file:%s]]" encoded) t t))))
+  (buffer-string))
+
+(add-hook 'org-export-before-processing-hook #'my/org-wrap-bare-image-paths)
+
+#+end_src
+
+#+begin_src emacs-lisp
+(defun my/org-insert-image-links-from-dir (dir &optional as-bare-paths)
+  "Insert Org links for every image in DIR.
+If AS-BARE-PATHS is non-nil (or called with a prefix key),
+insert the *bare relative pathname* instead of [[file:...]].
+Supported extensions: png, jpg, jpeg, gif, svg, webp."
+  (interactive "DDirectory with images: \nP")
+  (let* ((img-ext '("png" "jpg" "jpeg" "gif" "svg" "webp"))
+         (here    (file-name-directory (or (buffer-file-name) default-directory)))
+         (files   (seq-filter
+                   (lambda (f)
+                     (and (file-regular-p f)
+                          (member (downcase (file-name-extension f)) img-ext)))
+                   (directory-files dir t "^[^.].*"))))   ; skip . and ..
+    (unless files
+      (user-error "No image files found in %s" dir))
+    (dolist (f (sort files #'string<))
+      (let ((rel (file-relative-name f here)))
+        (insert (if as-bare-paths
+                    rel
+                  (format "[[file:%s]]" rel)))
+        (insert "\n")))))
+
+#+end_src
+
+** slugs
+#+begin_src emacs-lisp
+;;; --- batch exporter: one HTML file per heading -----------------------------
+
+(defun my/slugify (s)
+  "Turn a heading title S into a filesystem-safe slug."
+  (let* ((down  (downcase
+                 (replace-regexp-in-string "[^[:alnum:]]+" "-" s)))
+         (clean (replace-regexp-in-string "^-\\|-\\'" "" down)))
+    (replace-regexp-in-string "-+" "-" clean)))
+
+(defun my/org-export-headings-to-html ()
+  "Export every level-2 subtree in the current Org buffer to its own
+HTML file, then generate index.org → index.html linking to them."
+  (interactive)
+  (unless (buffer-file-name)
+    (user-error "Save this buffer first - exporter needs a filename"))
+  (let* ((base-dir (file-name-directory (buffer-file-name)))
+         (index-links '()))
+    ;; 1) export every level-2 heading
+    (org-map-entries
+     (lambda ()
+       (when (= (org-outline-level) 2)
+         (let* ((title (nth 4 (org-heading-components)))
+                (slug  (concat (my/slugify title) ".html"))
+                (outfile (expand-file-name slug base-dir)))
+           (message "Exporting %s → %s" title slug)
+           ;; export *only* this subtree
+           (save-restriction
+             (org-narrow-to-subtree)
+             (org-export-to-file 'html outfile nil nil nil t))
+           (push (format "- [[file:%s][%s]]" slug title) index-links))))
+     nil 'file)
+    ;; 2) build index.org and export it
+    (with-temp-buffer
+      (insert "* ChatGPT Use Cases for Mamie - Index\n\n")
+      (dolist (l (nreverse index-links)) (insert l "\n"))
+      (write-file (expand-file-name "index.org" base-dir))
+      (org-export-to-file 'html (expand-file-name "index.html" base-dir)))
+    (message "✅ Done - created %d pages + index"
+             (length index-links))))
+#+end_src 
 
 * Local Variables & The End
 These have to be at the end.
