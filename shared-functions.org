@@ -9302,15 +9302,20 @@ current buffer.  Safe (save-excursion) and repeatable."
     (while (search-forward "\n* " nil t)
       (replace-match "\n- "))))
 
-(defun add-spaces-to-em-dashes ()
-  "Turn foo---bar into foo --- bar, but leave cases like foo --- bar alone."
+(defun normalize-dashes ()
+  "1) Turn “foo---bar” into “foo --- bar”.
+2) Turn a single space-hyphen-space (“ - ”) into spaced em-dash style (“ --- ”)."
   (interactive)
   (save-excursion
+    ;; Pass 1 – add spaces around existing triple hyphens
     (goto-char (point-min))
-    ;; Look for alphanumeric, three dashes, alphanumeric.
     (while (re-search-forward "\\([[:alnum:]]\\)---\\([[:alnum:]]\\)" nil t)
-      ;; Replace with same chars but spaces around the dashes.
-      (replace-match "\\1 --- \\2" nil nil))))
+      (replace-match "\\1 --- \\2" nil nil))
+
+    ;; Pass 2 – promote space-hyphen-space to spaced triple hyphen
+    (goto-char (point-min))
+    (while (re-search-forward " - " nil t)
+      (replace-match " --- " nil nil))))
 #+end_src
 
 
