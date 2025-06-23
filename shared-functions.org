@@ -500,7 +500,7 @@ Works!
  'ispell-dictionary-alist
  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
    nil ("-d" "en_US-large") nil utf-8))
-  (setq ispell-program-name "hunspell" 
+  (setq ispell-program-name "hunspell"
         ispell-dictionary   "en_US-large"           ; default dict
         ispell-personal-dictionary "~/emacs/Spelling/personal.dic"
         ispell-hunspell-dictionary-paths-alist
@@ -526,14 +526,30 @@ Works!
                    '("^#\\+begin_src" . "^#\\+end_src"))))
   (add-hook 'org-mode-hook #'my/org-setup-flyspell))
 
-;; Helper: save word at point to personal dictionary
+
 (defun add-word-to-personal-dictionary ()
-  "Add the word at point to `ispell-personal-dictionary`."
+  "Add the misspelled word at point to `ispell-personal-dictionary'."
   (interactive)
-  (when-let* ((word-data (flyspell-get-word))
-              (word      (car word-data)))
-    (flyspell-do-correct 'save nil word (point) (cadr word-data)
-                         (caddr word-data) (point))))
+  (require 'flyspell)           ; just in case
+  (pcase (flyspell-get-word)    ; returns (word start end) *only if* it's an error
+    (`(,word ,start ,end)
+     (flyspell-do-correct 'save nil word start end nil nil)
+     (message "Added "%s" to personal dictionary" word))
+    (_ (user-error "Point isn't on a highlighted misspelling"))))
+
+
+(defun add-word-to-personal-dictionary ()
+  "Add the word at point to the personal dictionary (bypassing Flyspell)."
+  (interactive)
+  (require 'ispell)
+  (let ((word (or (thing-at-point 'word t)
+                  (user-error "No word at point"))))
+    ;; Tell the ispell process to add WORD
+    (ispell-send-string (format "*%s\n" word))
+    ;; Tell ispell to save the personal dictionary now
+    (ispell-send-string "#\n")
+    (ispell-pdict-save t)
+    (message "Added \"%s\" to personal dictionary" word)))
 #+END_SRC
 
 * UI / customization of appearance and editing environment
@@ -9211,11 +9227,11 @@ package-native-compile    t)
 
 * convert footnotes to org format
 #+begin_src emacs-lisp
-;;; md-ref-footnotes-to-org.el --- convert reference footnotes → Org  -*- lexical-binding: t; -*-
+;;; footnotes--convert-markdown-footnotes-to-org.el --- convert reference footnotes → Org  -*- lexical-binding: t; -*-
 ;; Author: you
-;; Usage: mark region or use whole buffer, then  M-x md-ref-footnotes-to-org
+;; Usage: mark region or use whole buffer, then  M-x footnotes--convert-markdown-footnotes-to-org
 (require 'subr-x)                            ; for `string-trim'
-(defun md-ref-footnotes-to-org (&optional beg end)
+(defun footnotes--convert-markdown-footnotes-to-org (&optional beg end)
   "Convert reference-style Markdown footnotes to Org-mode footnotes.
 Inline examples:
    ([anthropic.com][8], [anthropic.com][7])  →  [fn:8], [fn:7]
@@ -9271,8 +9287,8 @@ process the whole buffer."
           (replace-match
            (format "[fn:%s] [[%s][%s]]" num url title) t t))))
     (message "Markdown reference footnotes → Org footnotes complete.")))
-(provide 'md-ref-footnotes-to-org)
-;;; md-ref-footnotes-to-org.el ends here
+(provide 'footnotes--convert-markdown-footnotes-to-org)
+;;; footnotes--convert-markdown-footnotes-to-org.el ends here
 #+end_src
 
 * line breaks
@@ -9296,6 +9312,8 @@ current buffer.  Safe (save-excursion) and repeatable."
       ;; Replace with same chars but spaces around the dashes.
       (replace-match "\\1 --- \\2" nil nil))))
 #+end_src
+
+
 
 * Local Variables & The End
 These have to be at the end.

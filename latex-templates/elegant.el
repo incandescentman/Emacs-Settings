@@ -26,6 +26,39 @@
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABLE CONFIGURATION FOR AUTOMATIC TEXT WRAPPING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Load required packages for table handling
+\\usepackage{array}
+\\usepackage{tabularx}
+\\usepackage{longtable}
+\\usepackage{tabu}
+\\usepackage{booktabs}
+
+% Define new column types for automatic text wrapping
+\\newcolumntype{L}[1]{>{\\raggedright\\arraybackslash}p{#1}}
+\\newcolumntype{C}[1]{>{\\centering\\arraybackslash}p{#1}}
+\\newcolumntype{R}[1]{>{\\raggedleft\\arraybackslash}p{#1}}
+
+% Make default columns in tabularx wrap text
+\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
+
+% Set default table font size
+\\AtBeginEnvironment{tabularx}{\\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{tabular}{\\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{longtable}{\\fontsize{10}{12}\\selectfont}
+
+% Enable automatic table width adjustment
+\\setlength{\\LTpre}{0pt}
+\\setlength{\\LTpost}{0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 \\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 
 
@@ -143,7 +176,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\rhead{{\\nouppercase{\\leftmark}}}
 % \\rhead{\\@title: {\\nouppercase{\\leftmark}}}
 
-\\lhead{\\bfseries\\@author} % title of the document as left header
+\\lhead{\\bfseries\\@author} % author as left header
 
 %\\renewcommand{\\footrulewidth}{0.4pt}
 

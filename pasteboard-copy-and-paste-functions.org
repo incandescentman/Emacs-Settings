@@ -1,5 +1,5 @@
 #+auto_tangle: t
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 #+END_SRC
 
@@ -46,6 +46,7 @@
     ("‘" . "'")
     ("’" . "'")
     ("‚" . "'")
+    ("ﬃ" . "ffi")
     ("‛" . "'")
     ("„" . "\"")
     ("‟" . "\"")
