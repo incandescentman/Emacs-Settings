@@ -11,7 +11,6 @@
                 ("you know")
                 ("i mean")
                 ("\\(um+\\|uh\\)")   ; escaped once
-                ("ok" . "OK")
                 ("right[.?!]" . ".")
                 (",[[:space:]]*like[[:space:]]*," . " ")   ; <‑‑ NEW
                 ))) ; already a char‑class; fine as string
@@ -39,7 +38,7 @@
   "Return (START . END) covering either the active region or the buffer."
   (if (use-region-p)
       (cons beg end)
-    (cons (point-min) (point-max))))
+      (cons (point-min) (point-max))))
 
 ;;; Main functions ------------------------------------------------------------
 
@@ -106,11 +105,11 @@
   "Display a message summarising TABLE about WHAT was removed."
   (if (= (hash-table-count table) 0)
       (message "No %ss removed." what)
-    (let ((parts '()))
-      (maphash (lambda (k v) (push (format "\"%s\" × %d" k v) parts)) table)
-      (message "Removed %s: %s"
-               what
-               (string-join (nreverse parts) ", ")))))
+      (let ((parts '()))
+        (maphash (lambda (k v) (push (format "\"%s\" × %d" k v) parts)) table)
+        (message "Removed %s: %s"
+                 what
+                 (string-join (nreverse parts) ", ")))))
 
 (provide 'whittle)
 ;;; whittle.el ends here

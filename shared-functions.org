@@ -9412,37 +9412,43 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
          (clean (replace-regexp-in-string "^-\\|-\\'" "" down)))
     (replace-regexp-in-string "-+" "-" clean)))
 
+
 (defun my/org-export-headings-to-html ()
-  "Export every level-2 subtree in the current Org buffer to its own
-HTML file, then generate index.org → index.html linking to them."
+  "Export each level-2 subtree to its own HTML file, plus index.html.
+   Adds ../css/chatgpt-images.css to every page."
   (interactive)
   (unless (buffer-file-name)
     (user-error "Save this buffer first - exporter needs a filename"))
   (let* ((base-dir (file-name-directory (buffer-file-name)))
+         ;; The CSS lives one directory above base-dir
+         (css-path (file-relative-name
+                    (expand-file-name "../css/chatgpt-images.css" base-dir)
+                    base-dir))
+         (css-tag  (format "<link rel=\"stylesheet\" href=\"%s\"/>" css-path))
          (index-links '()))
-    ;; 1) export every level-2 heading
+    ;; ---------- export each level-2 heading ----------
     (org-map-entries
      (lambda ()
        (when (= (org-outline-level) 2)
          (let* ((title (nth 4 (org-heading-components)))
                 (slug  (concat (my/slugify title) ".html"))
                 (outfile (expand-file-name slug base-dir)))
-           (message "Exporting %s → %s" title slug)
-           ;; export *only* this subtree
            (save-restriction
              (org-narrow-to-subtree)
-             (org-export-to-file 'html outfile nil nil nil t))
+             (let ((org-html-head-extra css-tag))
+               (org-export-to-file 'html outfile nil nil nil nil)))
            (push (format "- [[file:%s][%s]]" slug title) index-links))))
      nil 'file)
-    ;; 2) build index.org and export it
+    ;; ---------- build the index ----------
     (with-temp-buffer
       (insert "* ChatGPT Use Cases for Mamie - Index\n\n")
       (dolist (l (nreverse index-links)) (insert l "\n"))
       (write-file (expand-file-name "index.org" base-dir))
-      (org-export-to-file 'html (expand-file-name "index.html" base-dir)))
-    (message "✅ Done - created %d pages + index"
-             (length index-links))))
-#+end_src 
+      (let ((org-html-head-extra css-tag))
+        (org-export-to-file 'html (expand-file-name "index.html" base-dir))))
+    (message "✅ Exported %d pages + index" (length index-links))))
+
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
