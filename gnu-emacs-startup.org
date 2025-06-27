@@ -48,13 +48,12 @@ Automatically load abbreviations table:
 
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
-(defun reflash-indentation ()
+(defun jay/reflash-indentation ()
   "Fix spacing on the screen."
   (interactive)
   (org-indent-mode 1)
   (recenter-top-bottom)
-sed--adjust-font-size
-  )
+  (jay/adjust-font-size))
 #+END_SRC
 
 * org predicates
@@ -88,7 +87,7 @@ sed--adjust-font-size
 #+BEGIN_SRC emacs-lisp
 (defvar maxframe-maximized-p nil "Indicates whether maxframe is in fullscreen mode.")
 
-(defun toggle-maxframe ()
+(defun jay/toggle-maxframe ()
   "Toggle maximized frame."
   (interactive)
   (setq maxframe-maximized-p (not maxframe-maximized-p))
@@ -96,9 +95,9 @@ sed--adjust-font-size
       (maximize-frame)
     (restore-frame)))
 
-(define-key global-map [(s-return)] 'toggle-maxframe)
+(define-key global-map [(s-return)] 'jay/toggle-maxframe)
 
-(defun toggle-fullscreen ()
+(defun jay/toggle-fullscreen ()
   "Toggle full screen."
   (interactive)
   (set-frame-parameter
@@ -106,13 +105,13 @@ sed--adjust-font-size
    (if (frame-parameter nil 'fullscreen)
        nil
      'fullboth))
-  (sed--adjust-font-size))
+  (jay/adjust-font-size))
 
 ;; Bind F11 and F17 to toggle-fullscreen.
 (unless (fboundp 'toggle-frame-fullscreen)
   (progn
-    (global-set-key (kbd "<f11>") 'toggle-fullscreen)
-    (global-set-key (kbd "<f17>") 'toggle-fullscreen)))
+    (global-set-key (kbd "<f11>") 'jay/toggle-fullscreen)
+    (global-set-key (kbd "<f17>") 'jay/toggle-fullscreen)))
 #+END_SRC
 
 
@@ -127,15 +126,15 @@ So Emacs text doesn't appear on the MacBook Pro notch.
  #+END_EXAMPLE
 
 
-#+begin_SRC emacs-lisp
-(defun my-toggle-tab-bar-mode ()
- "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
- (if (frame-parameter nil 'fullscreen)
-  (tab-bar-mode 1)
- (tab-bar-mode -1)))
+#+BEGIN_SRC emacs-lisp
+(defun jay/toggle-tab-bar-mode ()
+  "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
+  (if (frame-parameter nil 'fullscreen)
+      (tab-bar-mode 1)
+    (tab-bar-mode -1)))
 
-(add-hook 'window-configuration-change-hook #'my-toggle-tab-bar-mode)
-#+END_SRC
+(add-hook 'window-configuration-change-hook #'jay/toggle-tab-bar-mode)
+# +END_SRC
 
 
 * other functions

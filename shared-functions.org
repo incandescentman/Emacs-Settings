@@ -224,7 +224,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ** Appearance
 #+begin_src emacs-lisp
 ;; A. keep the new, cached version -- recommended
-(defun sed--adjust-font-size (&optional frame)
+(defun jay/adjust-font-size (&optional frame)
   "Resize default font once per frame size."
   (let* ((frame (or frame (selected-frame)))
          (w     (frame-pixel-width frame)))
@@ -234,8 +234,8 @@ I should probably eventually break these out of custom-set-variables and organiz
                           :font "Monaco"
                           :height (if (> w 2540) 230 200)))))
 
-(add-hook 'after-make-frame-functions #'sed--adjust-font-size)
-(add-hook 'window-size-change-functions #'sed--adjust-font-size)
+(add-hook 'after-make-frame-functions #'jay/adjust-font-size)
+(add-hook 'window-size-change-functions #'jay/adjust-font-size)
 #+end_src
 
 ** fontify item checklists

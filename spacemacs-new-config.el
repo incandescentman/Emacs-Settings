@@ -231,13 +231,13 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (toggle-menu-bar-mode-from-frame)
-            (scrollbar-init)
+            ;;(scrollbar-init)
             (menu-bar-mode -1)
             (smartparens-mode 1)
             (smartparens-global-mode 1)
             ))
 
-(toggle-fullscreen)
+(jay/toggle-fullscreen)
 
 
 
@@ -324,7 +324,7 @@
 ;; (server-reflash)
 ;;  (triplicate-code)
 ;; (embiggen-text)
-(scrollbar-init)
+;;(scrollbar-init)
 
 ;; (setq max-lisp-eval-depth 10000)
 ;;; When opening a file that is a symbolic link, don't ask whether I
