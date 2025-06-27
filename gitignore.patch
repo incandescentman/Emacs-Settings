@@ -1,0 +1,84 @@
+--- .gitignore	2025-06-04 16:58:28
++++ new.gitignore	2025-06-27 19:17:04
+@@ -1,56 +1,37 @@
++# Emacs backup and auto-save
++*~
++\#*\#
++.\#*
++auto-save-list/
+ 
+-flycheck
+-
+-ido.hist
+-recent-addresses
+-.savefile
+-.elc
++# Ignore archive directory
+ archive/
+-shared-functions.el
+ 
+-*.savefile
++# Compiled files
++*.elc
++*.eln            # native-comp output (Emacs 28+)
+ 
+-gnu-emacs-startup.el
++# ELPA / straight build directories
++elpa/
++straight/
+ 
+-fonts-and-themes.el
+-*emacs-lisp*
++# Personal secrets
++pastebin-credentials.el
++secret-codes.el
+ 
+-tufte-org-mode-master/tufte-book.pdf
++# Org Babel tangled files
++*.el
++*.elc
++*.eln
+ 
+-tufte-org-mode-master/tufte-book.pdf
++# Personal export artifacts
++*.pdf
++*.epub
++*.docx
+ 
+-tufte-org-mode-master/tufte-handout-no-examples.pdf
+-
+-tufte-org-mode-master/tufte-handout.html
+-
+-tufte-org-mode-master/tufte-handout.pdf
+-
+-tufte-org-mode-master/tufte-latex.pdf
+-
+-spacemacs.d/.savefile/recentf
+-pastebin-credentials.el
+-secret-codes.el
+-spacemacs.d/unique_lines.txt
+-*old/
+-spacemacs.d/.DS_Store
+-spacemacs.d/spacemacs.env
+-spacemacs.d/spacemacs.env
+-spacemacs.env
+-spacemacs.d/.spacemacs.env
+-/spacemacs.d
+-spacecraft-mode.el
+-spacecraft-mode.el
++# macOS
+ .DS_Store
+ 
+-
+-*Emacs build artifacts
+-*.elc
+-*.eln            # native-comp output (Emacs 28+)
+-auto-save-list/
++# Tramp and URL caches
+ tramp/
+ url/cache/
+-
+-*Spacemacs/straight/package.el checkouts
+-elpa/
+-straight/ 
+-diff.txt

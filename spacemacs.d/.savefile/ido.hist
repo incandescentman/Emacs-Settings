@@ -1,0 +1,41 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/jay/" . "Downloads/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/jay/Downloads/"
+ "/Users/jay/downloads/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "aaaaaaaa"
+ "aaaaaaa"
+ "ddddddd"
+ "dddddddd"
+ "dddddde"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/jay/Downloads/" (26684 47660 421015 576000) "258A0821-3.jpg" "fasd/" "fix.el" "Airtable.dmg" "s-l1600 (1).webp" "jay-site/" "Claude_jay_dixit_speaker_site.html" "258A0631-3.webp" "kodak.png" "new-laptop.org" "elpa.bak.1748584431/" "mocktails.pdf" ".localized" "mocktails.txt" "test.el" ".DS_Store" "s-l1600.webp" "../" "./")
+
+ ("/Users/jay/" (26684 58026 978815 519000) "updateall.log" ".zsh_sessions/" ".bash_history" "Backups/" ".gitconfig" ".cache/" "Downloads/" ".bash_profile" ".spacemacs" ".pyenv/" "Documents/" "bclean.el" ".npm/" ".gitflow_export" "spacemacs/" ".Trash/" "Dropbox/" ".profile" "Movies/" ".ssh/" ".emacs.d.broken-20250525-2135/" "github/" ".dropbox/" ".fzf.bash" "elisp" "Public/" ".iterm2/" ".fzf.zsh" ".fasd" ".bash_sessions/" ".cups/" ".gitignore_global" ".emacs.d/" "bash" "emacs/" "iCloud Drive (Archive)/" ".emacs.d.backup.1748583079/" "emacs-settings/" ".lesshst" "emacs.broken.20250530-0111/" "Library/" "Desktop/" ".zsh_history" ".spacemacs.d/" ".nvm/" ".emacs.d-backup-20250525/" "Pictures/" "Projects/" "bootstrap.el" ".local/" ".bash_profile~" ".zshrc" "starship/" "Dropbox (Old)/" ".bashrc" "gnulisp/" "bin/" ".hgignore_global" ".CFUserTextEncoding" ".DS_Store" "bootstrap2.el" "emacs-hang-sample.txt" ".bashrc~" "CloudStorage/" "Music/" ".emacs.d_backup-2025/" ".config/" "../" "./")
+
+ ("/Users/jay/Dropbox/" (26674 21194 823668 942000) "writing/" "Current Miscellany/" ".htaccess" "P/" "Dell.dbx-external-drive/" "archive-not-in-use/" "books-source/" "favorite-new-york-places/" "openai-roam/" "OpenAI/" "Proposals/" "darkest-timeline.txt" "reference/" "Story 3.docx" "Computer History Museum Presentation June 2023/" "pages-documents/" "travel/" "Hook/" "jonathan-hudson-james-palatier-sales-storytelling/" "Meditation for Sunjay/" "apps/" "emacs-lisp-not-currently-in-use/" "dixit-downtown-project-resources/" "lectures-and-classes/" "Downloads/" "sprint/" "Redemption (Backup Conflicts)/" "kerri/" "Fonts/" "empire/" "the-science-of-morning-pages.txt" "Book Proposals/" "desire.oo3/" "someecards/" "export/" "consumer/" "photography-inspiration-album/" "ChatGPT/" "Documents/" "dictionaries/" "Nazism Online.pdf" "MindNode/" "jay-document-template/" "Upwork/" "sunjay_worf.m4a" "podcast-subscriptions.opml" "current-projects/" "copy" "DESKTOP ITMS alias" "Wayne Camp/" "authoritarian/" "kanban-roam/" "projects-with-others/" "Enneagram/" ".Trash/" "book.git.bfg-report/" "whatwasIdoing.txt" "hosting/" "Zoom/" "roam-backups/" "I Hope It's Sunny Out 15 pdf.pdf" "terminal-velocity-notes/" "notable/" "bruges.pdf" ".tags_and_ratings.plist" "Mindfulness And Acceptance Of Anxiety/" "kanban/" "graphviz/" "Photos Library.photoslibrary/" "Migrated Paper Docs/" "Camille_bless the telephone.m4a" "christopher-hitchens-videos/" "suspect/" "tom-cruise-oblivion-what-confused-gif.html" "video-of-jay/" ".kanban/" "don't try to always behave in a perfect way.txt" "Sandbox/" "ancestry/" "fear-poems/" "Second-Calibre/" "File Feb 16, 8 57 28 PM.jpeg" "storytelling-assets/" "github/" ".dropbox" "Public/" "audio/" "synth/" "Shared Symlink Backups/" "mind-maps/" "Camera Uploads/" "edit/" "endless-summer/" ".picasa.ini" "File Feb 28, 12 07 54 PM.jpeg" "roam-hold/" "ebay/" "Calibre Library/" "editing-exemplary-before-and-after/" "MFA/" "life/" "Archives/" "Return/" "signal-flare-biz-plan/" "Pics/" "photos-to-print/" "historical-interest/" "harmon-story-circle/" "historical-documents/" "rebecca/" "old-mu/" "doing/" "roam/" "DESKTOP ITMS/" "Photography/" "headlines/" "audio-2023-book-interviews/" "dixit-passport-photo.jpeg" "Photos from iPhoto/" "jay-podcast/" "audiobooks/" "dixit_emacs-for-writers-2015-09-14.screenflow/" "mail/" "_otherlaptop/" "praise/" "book-interviews-audio/" "Mackup/" ".QT-30b3-cb191c69-bfffe65c-00" "AI-art/" "Dropbox reports/" "reflect-self-portraits/" "bedford/" "book-new/" "Roam Backups/" "Kings/" "web-design/" "alfred-preferences/" "research-assistant/" "Redemption.dbx-external-drive/" "hobbies/" "performer/" ".DS_Store" "screenshots/" "Mobile Uploads/" "Books2/" "Nightfall and Other Stories - Isaac Asimov/" "cooper-funny-ideas.msg" "valued-life-path-blank.pdf" "iPhoto Library.migratedphotolibrary/" "parental-narrative-archive/" "logseq/" "keynote-presentations/" "big-life.mindnode/" "jekyll/" "housekeeping/" "Preferences/" "skin-care.html" "sc/" "Goodside x SXSW/" "darkest-timeline.html" "Assistance/" "camille_fast car v2 - 2019_06_21 14.32.m4a" "Saved from Web/" "roam-dummy/" "Camille Inge — fast car - 2019_06_17 18.29.m4a" "../" "./")
+
+ ("/Users/jay/Dropbox/writing/" (26673 23125 674612 522000) "funding/" "writer-style-icon/" "writing-teacher/" "therapy/" "sunjay-schelling-points.txt" "pro-bono/" "spike-lee-do-the-right-thing-journal.txt" "readings/" "writing-samples/" "p2p/" "storytelling/" "teaching/" "self/" "nvALT22/" "Dada-interviews/" "editing/" "stories/" "writing-book/" ".picasa.ini" "hook-notes/" "jaykumar-volunteer/" "org-brain/" "psychology/" "prosperous/" "notationaldata/" "goals/" "ask/" "signal-flare-assets/" "creative-writing/" "dayone.dayone/" "science-newsletter/" "schedule/" "mentor-texts/" "wayne/" "both/" "../" "./")
+
+ ("/Users/jay/downloads/" (26674 48515 597602 693000) "fasd/" "jay-site/" "Claude_jay_dixit_speaker_site.html" "ddddddd" "new-laptop.org" "mocktails.pdf" ".localized" "mocktails.txt" ".DS_Store" "../" "./")
+
+ ("/Users/jay/emacs/" (26674 43389 994804 74000) "cached-path.txt" "Spelling/" "backup/" "local-config.el" "recentf/" "spacemacs/" "local-emacs-config/" "emacs-settings/" "emacs-secret/" "interesting-snippets/" "abbrevs/" "starship/" ".savefile/" "external-packages/" ".DS_Store" "snippets/" "../" "./")
+
+ ("/Users/jay/emacs/emacs-settings/" (26674 48481 848282 433000) "ivy-smex.el" "org-visual-style.el" "wn-org.el" "html2org.txt" ".git/" "spacemacs-new-config.el" "skeletons.el" "search-commands.org" "pasteboard-copy-and-paste-functions.el" "prelude-key-chord.el" "jay-custom-color-themes/" "latex-templates/" "pomidor/" "tufte-org-mode-master/" "server-start.el" "wc-goal-mode.el" "elpa-supplement/" ".projectile" "key-seq.el" "email-sending.org" "fonts-and-themes.org" ".gitignore" "hydras.el" "reveal-in-finder.el" "gnu-emacs-startup.org" "highlight-tail.el" "whittle.el" "cosmetics.org" "fiverr-koma.el" "auto-capitalize.el" "README.md" "init.el" "jay-osx.el" "org-roam-review.el" "spacecraft-mode-spec.org" "hydras.org" "search-commands.el" "koma-letter-template.pdf" "key-chord.org" "forecast.el" "gcmh.el" "spacecraft-mode.org" "gnu-emacs-startup.el" "poetry_JD.el" "spacemacs.d/" "koma-letter-template.org" "pasteboard-copy-and-paste-functions.org" "learning-emacs.org" "jay-org-in-item-p.el" "smart-return.el" "gnulisp/" "ox-koma-letter.el" "fonts-and-themes.el" "archive/" "org-roam-config.el" ".DS_Store" "book-proposal-function.el" "dired+.el" "spacecraft-mode.el" "aibo-power-pack.el" "mc-lists.el" "shared-functions.el" "shared-functions.org" "aibo-config.el" ".gitignore.bak" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
