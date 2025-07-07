@@ -1478,7 +1478,9 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
          ("COMMIT_EDITMSG\\'"               . diff-mode)
          ("\\.md\\'"                        . markdown-mode)
          ("\\.abbrev_defs\\'"               . emacs-lisp-mode)
-         ("\\.html?\\'"                     . web-mode))
+         ("\\.html?\\'"                     . web-mode)
+         ("\\.astro?\\'"                    . web-mode)
+)
        auto-mode-alist))                    ; keep earlier rules, too
 
 #+END_SRC
@@ -9101,7 +9103,7 @@ It returns a list, so you can later jump to the first culprit:
   (savehist-mode 1))
 (setq amx-save-file "/Users/jay/emacs/local-emacs-config/amx-items")
 (setq package-quickstart-file
-     " /Users/jay/emacs/local-emacs-config/package-quickstart.el ")
+     "/Users/jay/emacs/local-emacs-config/package-quickstart.el")
 #+end_src
 
 

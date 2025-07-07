@@ -625,7 +625,7 @@ It should only modify the values of Spacemacs settings."
    ;; If t, enable the `package-quickstart' feature to avoid full package
    ;; loading, otherwise no `package-quickstart' attemption (default nil).
    ;; Refer the FAQ.org "package-quickstart" section for details.
-   dotspacemacs-enable-package-quickstart t
+   dotspacemacs-enable-package-quickstart nil
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
@@ -865,11 +865,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         native-comp-deferred-compilation t
         gc-cons-threshold (* 64 1024 1024)
         gc-cons-percentage 0.1
-        package-quickstart t
-        dotspacemacs-enable-package-quickstart t)
+        package-quickstart nil
+        dotspacemacs-enable-package-quickstart nil)
 
 
-
+(setq dotspacemacs-elpa-quickstart nil)
   ;; Silence native-comp warnings
   (setq native-comp-async-report-warnings-errors 'silent)
 
@@ -884,7 +884,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
 
   ;; dotspacemacs/user-init  (or early in init.el)
-  (setq package-quickstart t            ; Emacs ≥27: load autoload cache
+  (setq package-quickstart nil            ; Emacs ≥27: load autoload cache
         dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
         dotspacemacs-enable-package-cleanup nil) ; don't touch packages
 
