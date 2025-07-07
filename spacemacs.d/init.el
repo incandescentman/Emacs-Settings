@@ -865,8 +865,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         native-comp-deferred-compilation t
         gc-cons-threshold (* 64 1024 1024)
         gc-cons-percentage 0.1
-        package-quickstart nil
-        dotspacemacs-enable-package-quickstart nil)
+        )
 
 
   (setq dotspacemacs-elpa-quickstart t)
@@ -886,7 +885,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; dotspacemacs/user-init  (or early in init.el)
   (setq package-quickstart nil            ; Emacs ≥27: load autoload cache
         dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
-        dotspacemacs-enable-package-cleanup nil) ; don't touch packages
+        dotspacemacs-enable-package-cleanup nil ; don't touch packages
+        dotspacemacs-enable-package-quickstart nil)
 
 
 
