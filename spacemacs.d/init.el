@@ -869,7 +869,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         dotspacemacs-enable-package-quickstart nil)
 
 
-  (setq dotspacemacs-elpa-quickstart nil)
+  (setq dotspacemacs-elpa-quickstart t)
   ;; Silence native-comp warnings
   (setq native-comp-async-report-warnings-errors 'silent)
 
