@@ -329,6 +329,7 @@ ARG zero or negative       → force replacement."
            (t (or (derived-mode-p 'prog-mode)
                   (eq major-mode 'shell-script-mode)
                   (eq major-mode 'emacs-lisp-mode)
+                  (eq major-mode 'web-mode)
                   (bound-and-true-p org-config-files-local-mode))))))
     (with-temp-buffer
       (insert (if verbatim
@@ -404,7 +405,9 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
           (derived-mode-p 'text-mode))
       (pasteboard-paste-clean))
      ((or (eq major-mode 'sh-mode)
-          (eq major-mode 'emacs-lisp-mode))
+          (eq major-mode 'emacs-lisp-mode)
+          (eq major-mode 'web-mode)
+)
       (pasteboard-paste-raw))
      (t
       (let* ((prev-char (char-before))

@@ -128,6 +128,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
 
 #+BEGIN_SRC emacs-lisp
 (defun jay/toggle-tab-bar-mode ()
+(interactive)
   "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
   (if (frame-parameter nil 'fullscreen)
       (tab-bar-mode 1)
