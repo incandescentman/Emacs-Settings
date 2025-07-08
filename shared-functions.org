@@ -9430,16 +9430,45 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 
 #+end_src
 
-* emacs instance
+* Emacs server
+
+** fullscreen on each instance
 #+begin_src emacs-lisp
-;; ~/.spacemacs  ─ put this in dotspacemacs/user-config
+;; For full screen instead
 (add-hook 'after-make-frame-functions
           (lambda (frame)
-            ;; Select the new frame so commands act on it
             (select-frame frame)
-            ;; Maximise it (Emacs 28+)  ─ alternatives below
-            (toggle-frame-maximized)))
-#+end_src 
+            (toggle-frame-fullscreen)
+(org-roam-dailies-goto-today)
+)) 
+
+
+#+end_src
+
+** silence warnings
+#+begin_src emacs-lisp
+(with-eval-after-load 'info
+  (set-face-attribute 'info-index-match nil
+                      :foreground 'unspecified
+                      :background "#3a3a3a"))  ; or any color you prefer
+
+
+;; Better winner-mode fix
+(setq winner-dont-bind-my-keys t)  ; Optional: if you have key conflicts
+(with-eval-after-load 'winner
+  (setq winner-boring-buffers-regexp
+        "\\*[hH]elm.*\\*\\|\\*Compile-Log\\*\\|\\*Messages\\*"))
+
+;; 1. Silence winner-mode bug (put in user-config)
+(with-eval-after-load 'winner
+  (advice-add 'winner-save-old-configurations
+              :around (lambda (orig &rest args)
+                        (ignore-errors (apply orig args)))))
+
+;; 2. Ensure the Info face is legal (one-time in *Customize* or edit custom-set-faces)
+(with-eval-after-load 'info
+  (set-face-attribute 'info-index-match nil :foreground 'unspecified))
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
