@@ -1,5 +1,5 @@
 #+auto_tangle: t
-# Local Variables: 
+# Local Variables:
 # org-config-files-local-mode: t
 # enable-local-eval: t
 # eval: (my-org-config-mode 1)
@@ -709,7 +709,10 @@ Also converts full stops to commas."
 
    #+BEGIN_SRC emacs-lisp
 (defvar *smart-punctuation-marks*
-  ".,;:!?-")
+  ".,;:!?—-")
+
+;; put this *after* the package that defines smart-punctuation
+(setq *smart-punctuation-marks* ".,;:!?—-")
 
 (setq *smart-punctuation-exceptions*
   (list "?!" ".." "..." "............................................." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
