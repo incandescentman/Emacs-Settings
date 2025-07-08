@@ -9494,7 +9494,9 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
    ;; ① Global npm/yarn/pnpm install (easiest):
    '(astro-mode . ("astro-ls" "--stdio"
                    :initializationOptions
-                   (:typescript (:tsdk "./node_modules/typescript/lib"))))
+                   (:typescript (:tsdk "/Users/jay/Library/CloudStorage/Dropbox/github/square-satellite/node_modules/typescript/lib"))))
+
+
 
    ;; ② Project-local devDependency → uncomment next block *and* comment
    ;;    the global line above.  Uses npx to locate the binary.
