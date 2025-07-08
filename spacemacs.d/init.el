@@ -147,7 +147,7 @@ This function should only modify configuration layer settings."
                                       affe
                                       org-transclusion
                                       ctrlf
-                                      ;; web-mode
+                                      web-mode
                                       ox-twbs
                                       mwim
                                       ;; beacon
@@ -1194,7 +1194,7 @@ This function is called at the very end of Spacemacs initialization."
      unfill
      visible-mark
      wc-mode
-     ;; web-mode
+     web-mode
      wrap-region
      ;; writeroom-mode
      xah-replace-pairs

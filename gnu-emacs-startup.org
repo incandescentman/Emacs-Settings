@@ -530,7 +530,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "M-\"") 'open-abbrevs)
 
 (define-key key-minor-mode-map (kbd "s-|") 'path-copy-path-to-clipboard)
-(define-key key-minor-mode-map (kbd "<s-return>") 'toggle-fullscreen)
+(define-key key-minor-mode-map (kbd "<s-return>") 'jay/toggle-fullscreen)
 
 
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
