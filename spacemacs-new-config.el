@@ -341,10 +341,5 @@
 
 
 
-(use-package server
-  :defer)
-(when (server-running-p)
-  (server-force-delete))
-;; (server-start)
 
 (redbold)

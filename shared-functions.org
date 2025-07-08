@@ -4606,16 +4606,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 #+END_SRC
 
 
-* server reflash
-#+BEGIN_SRC emacs-lisp
-(defun server-reflash ()
-  (interactive)
-  (server-force-delete)
-  (server-start)
-  )
-#+END_SRC
-
-
 * poet-mode
 #+BEGIN_SRC emacs-lisp
 ;; (add-hook 'org-mode-hook
@@ -9201,18 +9191,6 @@ package-native-compile    t)
 (setq debug-on-error 1)
 #+end_src
 
-* server
-#+begin_src emacs-lisp
-(use-package server
-  :ensure nil        ;; <- built-in, don't look on MELPA
-  :defer t)
-
-(with-eval-after-load 'server
-  (unless (server-running-p)
-    (server-start)))
-
-#+end_src
-
 * quickstart
 #+begin_src emacs-lisp
 (defun jd/maintain-quickstart ()
@@ -9451,6 +9429,17 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
     (message "✅ Exported %d pages + index" (length index-links))))
 
 #+end_src
+
+* emacs instance
+#+begin_src emacs-lisp
+;; ~/.spacemacs  ─ put this in dotspacemacs/user-config
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            ;; Select the new frame so commands act on it
+            (select-frame frame)
+            ;; Maximise it (Emacs 28+)  ─ alternatives below
+            (toggle-frame-maximized)))
+#+end_src 
 
 * Local Variables & The End
 These have to be at the end.
