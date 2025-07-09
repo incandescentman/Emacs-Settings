@@ -84,35 +84,35 @@ Automatically load abbreviations table:
 * fullscreen settings
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
-#+BEGIN_EXAMPLE emacs-lisp
-(defvar maxframe-maximized-p nil "Indicates whether maxframe is in fullscreen mode.")
+#+BEGIN_SRC emacs-lisp
 
-(defun jay/toggle-maxframe ()
-  "Toggle maximized frame."
-  (interactive)
-  (setq maxframe-maximized-p (not maxframe-maximized-p))
-  (if maxframe-maximized-p
-      (maximize-frame)
-    (restore-frame)))
-
-(define-key global-map [(s-return)] 'jay/toggle-maxframe)
-
+;; Modern fullscreen toggle that works with native macOS fullscreen
 (defun jay/toggle-fullscreen ()
-  "Toggle full screen."
+  "Toggle fullscreen mode with proper macOS support."
   (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (if (frame-parameter nil 'fullscreen)
-       nil
-     'fullboth))
-  (jay/adjust-font-size))
+  (let ((fullscreen-p (frame-parameter nil 'fullscreen)))
+    (set-frame-parameter
+     nil 'fullscreen
+     (if fullscreen-p nil 'fullboth))
+    ;; Adjust font size if you have that function
+    (when (fboundp 'jay/adjust-font-size)
+      (jay/adjust-font-size))
+    ;; Report status
+    (message "Fullscreen %s" (if fullscreen-p "disabled" "enabled"))))
 
-;; Bind F11 and F17 to toggle-fullscreen.
-(unless (fboundp 'toggle-frame-fullscreen)
-  (progn
-    (global-set-key (kbd "<f11>") 'jay/toggle-fullscreen)
-    (global-set-key (kbd "<f17>") 'jay/toggle-fullscreen)))
-#+END_EXAMPLE
+;; Alternative: Toggle between maximized and normal (no fullscreen)
+(defun jay/toggle-maximized ()
+  "Toggle between maximized and normal frame size."
+  (interactive)
+  (let ((maximized-p (eq (frame-parameter nil 'fullscreen) 'maximized)))
+    (set-frame-parameter
+     nil 'fullscreen
+     (if maximized-p nil 'maximized))
+    ;; Adjust font size if available
+    (when (fboundp 'jay/adjust-font-size)
+      (jay/adjust-font-size))
+    (message "Frame %s" (if maximized-p "restored" "maximized"))))
+#+END_SRC 
 
 
 * tabbar
@@ -1149,7 +1149,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'spacemacs/toggle-fullscreen)
+(define-key key-minor-mode-map (kbd "<s-return>") 'jay/toggle-fullscreen)
  #+END_SRC
 
 
