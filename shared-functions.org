@@ -9522,6 +9522,45 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 ;;; ------------------------------------------------------------------
 #+end_src
 
+* ChatGPT conversion
+
+
+#+begin_src emacs-lisp
+
+(defun convert-markdown-to-org-code-blocks-simple ()
+  "Simple version that replaces based on presence/absence of language specifier."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (save-excursion
+      ;; First pass: Replace opening fences (those with language specifiers)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([[:space:]]*\\)\\(````?\\)\\([[:alnum:]]+\\)[[:space:]]*$" nil t)
+        (replace-match "\\1#+begin_src \\3" t))
+
+      ;; Second pass: Replace closing fences (those without language specifiers)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([[:space:]]*\\)\\(````?\\)[[:space:]]*$" nil t)
+        (replace-match "\\1#+end_src \n" t))
+
+      ;; Handle backticks in language specification
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([[:alnum:]]+\\)" nil t)
+        (replace-match "\\1#+begin_src \\2" t)))))
+
+
+;; Optional: Create keybindings
+;; (global-set-key (kbd "C-c m o") 'convert-markdown-to-org-code-blocks)
+;; (global-set-key (kbd "C-c m s") 'convert-markdown-to-org-code-blocks-simple)
+;; (global-set-key (kbd "C-c m S") 'convert-markdown-to-org-code-blocks-stateful)
+#+end_src
+
+
+
+#+begin_src emacs-lisp
+(setq debug-on-message "Invalid face reference: t")
+#+end_src
+
+
 * Local Variables & The End
 These have to be at the end.
 
