@@ -9554,192 +9554,128 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 ;; (global-set-key (kbd "C-c m S") 'convert-markdown-to-org-code-blocks-stateful)
 #+end_src
 
-* Detect display
+* Notch Management
 #+begin_src emacs-lisp
-;; Interactive Display Detection Tests - Fixed Version
+;; MacBook Pro Notch Tab Bar Auto-Management
+(use-package tab-bar
+  :defer t
+  :config
+  (tab-bar-mode -1))
 
 (defun jay/get-frame-position ()
   "Get the actual numeric position of the frame, evaluating any symbolic expressions."
   (let ((left (frame-parameter nil 'left))
         (top (frame-parameter nil 'top)))
-    ;; Handle symbolic positions like (+ -1728)
-    (cons (if (numberp left)
-              left
-            (eval left))
-          (if (numberp top)
-              top
-            (eval top)))))
+    (cons (if (numberp left) left (eval left))
+          (if (numberp top) top (eval top)))))
 
-(defun jay/test-display-info ()
-  "Show detailed information about current display and frame position."
+(defun jay/on-macbook-display-p ()
+  "Check if current frame is on MacBook Pro built-in display.
+Returns t if on built-in Retina display, nil if on external monitor."
+  (when (eq system-type 'darwin)
+    (let* ((pos (jay/get-frame-position))
+           (frame-x (car pos))
+           (frame-y (cdr pos))
+           (displays (display-monitor-attributes-list))
+           (current-display nil))
+
+      ;; Find which display the frame is on
+      (dolist (display displays)
+        (let* ((geometry (cdr (assoc 'geometry display)))
+               (x (nth 0 geometry))
+               (y (nth 1 geometry))
+               (width (nth 2 geometry))
+               (height (nth 3 geometry)))
+          (when (and geometry
+                     (>= frame-x x)
+                     (<= frame-x (+ x width))
+                     (>= frame-y y)
+                     (<= frame-y (+ y height)))
+            (setq current-display display))))
+
+      ;; Check if current display is the built-in display
+      (when current-display
+        (let ((display-name (cdr (assoc 'name current-display))))
+          (and display-name
+               (string-match-p "Built-in\\|Retina Display" display-name)))))))
+
+(defun jay/update-tab-bar-for-display ()
+  "Update tab-bar-mode based on current display.
+Enable tab-bar only when on MacBook Pro built-in display to hide the notch."
   (interactive)
-  (let* ((pos (jay/get-frame-position))
-         (frame-x (car pos))
-         (frame-y (cdr pos))
-         (frame-width (frame-pixel-width))
-         (frame-height (frame-pixel-height))
-         (fullscreen (frame-parameter nil 'fullscreen))
+  (let ((on-macbook (jay/on-macbook-display-p)))
+    (if on-macbook
+        (progn
+          (tab-bar-mode 1)
+          (message "Tab bar enabled (on MacBook display)"))
+      (progn
+        (tab-bar-mode -1)
+        (message "Tab bar disabled (on external display)")))))
+
+;; Auto-update functions
+(defun jay/frame-move-hook (frame)
+  "Hook to run when frame might have moved."
+  (when (eq frame (selected-frame))
+    (jay/update-tab-bar-for-display)))
+
+(defun jay/setup-display-aware-tab-bar ()
+  "Setup automatic tab bar management based on display."
+  (when (eq system-type 'darwin)
+    ;; Remove any existing hooks first
+    (remove-hook 'move-frame-functions 'jay/frame-move-hook)
+    (remove-hook 'window-size-change-functions 'jay/frame-move-hook)
+    (remove-hook 'focus-in-hook 'jay/update-tab-bar-for-display)
+
+    ;; Add hooks for various events that might indicate display change
+    (add-hook 'move-frame-functions 'jay/frame-move-hook)
+    (add-hook 'window-size-change-functions 'jay/frame-move-hook)
+    (add-hook 'focus-in-hook 'jay/update-tab-bar-for-display)
+
+    ;; Also update when creating new frames
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (with-selected-frame frame
+                  (jay/update-tab-bar-for-display))))
+
+    ;; Set initial state
+    (jay/update-tab-bar-for-display)))
+
+;; Modified fullscreen toggle that updates tab bar
+(defun jay/toggle-fullscreen ()
+  "Toggle fullscreen mode with automatic tab bar management."
+  (interactive)
+  (let ((fullscreen-p (frame-parameter nil 'fullscreen)))
+    (set-frame-parameter
+     nil 'fullscreen
+     (if fullscreen-p nil 'fullboth))
+    ;; Update tab bar after changing fullscreen state
+    (run-with-timer 0.1 nil 'jay/update-tab-bar-for-display)
+    ;; Adjust font size if available
+    (when (fboundp 'jay/adjust-font-size)
+      (jay/adjust-font-size))))
+
+;; Debug function to check current status
+(defun jay/debug-display-detection ()
+  "Show current display detection status."
+  (interactive)
+  (let* ((on-macbook (jay/on-macbook-display-p))
+         (pos (jay/get-frame-position))
          (displays (display-monitor-attributes-list))
-         (current-monitor nil)
-         (monitor-info ""))
+         (display-info (mapconcat
+                       (lambda (d)
+                         (format "%s: %s"
+                                 (or (cdr (assoc 'name d)) "Unknown")
+                                 (cdr (assoc 'geometry d))))
+                       displays ", ")))
+    (message "Position: %s | On MacBook: %s | Displays: %s"
+             pos (if on-macbook "YES" "NO") display-info)))
 
-    ;; Find which monitor the frame is on
-    (dolist (monitor displays)
-      (let* ((geometry (assoc 'geometry monitor))
-             (x (nth 1 geometry))
-             (y (nth 2 geometry))
-             (width (nth 3 geometry))
-             (height (nth 4 geometry)))
-        (when (and geometry  ; Make sure geometry exists
-                   (>= frame-x x)
-                   (<= frame-x (+ x width))
-                   (>= frame-y y)
-                   (<= frame-y (+ y height)))
-          (setq current-monitor monitor))))
+;; Initialize on load
+(when (eq system-type 'darwin)
+  (run-with-timer 1 nil 'jay/setup-display-aware-tab-bar))
 
-    ;; Build info string
-    (setq monitor-info
-          (format "=== Frame Information ===
-Position: (%d, %d)
-Raw position values: left=%S, top=%S
-Size: %dx%d pixels
-Fullscreen: %s
-
-=== Display Information ===
-Number of displays: %d
-
-=== All Displays ===
-%s
-
-=== Current Display ===
-%s
-
-=== Quick Checks ===
-Likely on built-in display: %s
-Frame near origin: %s"
-                  frame-x frame-y
-                  (frame-parameter nil 'left)
-                  (frame-parameter nil 'top)
-                  frame-width frame-height
-                  (or fullscreen "nil")
-                  (length displays)
-                  (mapconcat (lambda (d)
-                             (format "Display: %s\nGeometry: %s\nWorkarea: %s\n"
-                                     (or (cdr (assoc 'name d)) "Unknown")
-                                     (cdr (assoc 'geometry d))
-                                     (cdr (assoc 'workarea d))))
-                           displays "\n")
-                  (if current-monitor
-                      (format "Name: %s\nGeometry: %s"
-                              (or (cdr (assoc 'name current-monitor)) "Unknown")
-                              (cdr (assoc 'geometry current-monitor)))
-                    "Could not determine current monitor")
-                  (if (and (<= (abs frame-x) 200) (<= (abs frame-y) 200)) "YES" "NO")
-                  (if (and (<= (abs frame-x) 50) (<= (abs frame-y) 50)) "YES" "NO")))
-
-    ;; Show in a buffer
-    (with-output-to-temp-buffer "*Display Info*"
-      (princ monitor-info))
-
-    ;; Also show key info in minibuffer
-    (message "Frame at (%d,%d), %d displays detected"
-             frame-x frame-y (length displays))))
-
-(defun jay/test-display-detection-simple ()
-  "Simple test to check if we can detect built-in vs external display."
-  (interactive)
-  (let* ((pos (jay/get-frame-position))
-         (x (car pos))
-         (y (cdr pos))
-         (displays (display-monitor-attributes-list))
-         (display-names (mapcar (lambda (d)
-                                (or (cdr (assoc 'name d)) "Unknown"))
-                              displays)))
-    (message "Frame position: (%d, %d) | Displays: %s | Likely built-in: %s"
-             x y
-             (string-join display-names ", ")
-             (if (and (<= (abs x) 200) (<= (abs y) 200)) "YES" "NO"))))
-
-(defun jay/test-move-detection ()
-  "Test if we can detect when frame moves between displays.
-Move this frame between displays and watch the messages."
-  (interactive)
-  (let ((timer nil)
-        (last-x nil)
-        (last-y nil))
-    (setq timer
-          (run-with-timer
-           0 0.5
-           (lambda ()
-             (let* ((pos (jay/get-frame-position))
-                    (x (car pos))
-                    (y (cdr pos)))
-               (when (or (not (equal x last-x))
-                        (not (equal y last-y)))
-                 (setq last-x x)
-                 (setq last-y y)
-                 (message "Frame moved to (%d, %d) - Built-in display: %s"
-                         x y
-                         (if (and (<= (abs x) 200) (<= (abs y) 200)) "YES" "NO")))))))
-    ;; Stop after 30 seconds
-    (run-with-timer 30 nil (lambda ()
-                            (cancel-timer timer)
-                            (message "Display detection test stopped.")))))
-
-(defun jay/test-system-profiler ()
-  "Test if we can detect MacBook model with notch."
-  (interactive)
-  (if (eq system-type 'darwin)
-      (let* ((model (shell-command-to-string
-                    "system_profiler SPHardwareDataType | grep 'Model Name' | awk -F': ' '{print $2}' | tr -d '\n'"))
-             (identifier (shell-command-to-string
-                         "system_profiler SPHardwareDataType | grep 'Model Identifier' | awk -F': ' '{print $2}' | tr -d '\n'"))
-             (has-notch (or (string-match-p "MacBook Pro \\(14-inch\\|16-inch\\).*202[1-9]" model)
-                           (string-match-p "MacBookPro1[89]\\|MacBookPro2[0-9]" identifier))))
-        (with-output-to-temp-buffer "*MacBook Info*"
-          (princ (format "=== MacBook Detection ===\n"))
-          (princ (format "Model: %s\n" model))
-          (princ (format "Identifier: %s\n" identifier))
-          (princ (format "Has notch: %s\n\n" (if has-notch "YES" "NO")))
-          (princ "Models with notch:\n")
-          (princ "- MacBook Pro 14-inch (2021 or newer)\n")
-          (princ "- MacBook Pro 16-inch (2021 or newer)\n")
-          (princ "- MacBookPro18,x and higher\n"))
-        (message "Model: %s | Has notch: %s" model (if has-notch "YES" "NO")))
-    (message "Not on macOS")))
-
-(defun jay/test-frame-on-display ()
-  "Test which display the current frame is on using a different method."
-  (interactive)
-  (let* ((pos (jay/get-frame-position))
-         (frame-x (car pos))
-         (frame-y (cdr pos))
-         (displays (display-monitor-attributes-list))
-         (found-display nil))
-    ;; Try to determine which display we're on
-    (dolist (display displays)
-      (let* ((name (or (cdr (assoc 'name display)) "Unknown"))
-             (geometry (cdr (assoc 'geometry display)))
-             (x (nth 0 geometry))
-             (y (nth 1 geometry)))
-        (when (and (<= (abs (- frame-x x)) 500)
-                   (<= (abs (- frame-y y)) 500))
-          (setq found-display name))))
-
-    (message "Frame at (%d, %d) - Display: %s - Built-in: %s"
-             frame-x frame-y
-             (or found-display "Unknown")
-             (if (or (string-match-p "Built-in\\|Color LCD" (or found-display ""))
-                     (and (<= (abs frame-x) 200) (<= (abs frame-y) 200)))
-                 "YES" "NO"))))
-
-;; Quick test function to run all tests
-(defun jay/test-all-display-detection ()
-  "Run all display detection tests."
-  (interactive)
-  (jay/test-display-info)
-  (sit-for 1)
-  (jay/test-system-profiler))
+;; Manual toggle if needed
+(global-set-key (kbd "s-M-t") 'jay/update-tab-bar-for-display)
 #+end_src
 
 
