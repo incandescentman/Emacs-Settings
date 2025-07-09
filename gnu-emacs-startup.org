@@ -84,7 +84,7 @@ Automatically load abbreviations table:
 * fullscreen settings
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (defvar maxframe-maximized-p nil "Indicates whether maxframe is in fullscreen mode.")
 
 (defun jay/toggle-maxframe ()
@@ -112,7 +112,7 @@ Automatically load abbreviations table:
   (progn
     (global-set-key (kbd "<f11>") 'jay/toggle-fullscreen)
     (global-set-key (kbd "<f17>") 'jay/toggle-fullscreen)))
-#+END_SRC
+#+END_EXAMPLE
 
 
 * tabbar
@@ -134,7 +134,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
       (tab-bar-mode 1)
     (tab-bar-mode -1)))
 
-(add-hook 'window-configuration-change-hook #'jay/toggle-tab-bar-mode)
+;; (add-hook 'window-configuration-change-hook #'jay/toggle-tab-bar-mode)
 #+END_SRC
 
 
@@ -1149,7 +1149,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 (define-key org-mode-map (kbd "<C-S-M-return>") 'smart-org-insert-todo-subheading)
 (define-key org-mode-map (kbd "<C-s-return>") 'smart-org-insert-todo-subheading)
 (define-key key-minor-mode-map (kbd "<s-S-return>") 'smart-org-insert-todo-heading-dwim)
-(define-key key-minor-mode-map (kbd "<s-return>") 'jay/toggle-fullscreen)
+(define-key key-minor-mode-map (kbd "<s-return>") 'spacemacs/toggle-fullscreen)
  #+END_SRC
 
 

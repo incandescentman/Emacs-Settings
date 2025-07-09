@@ -230,14 +230,14 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (toggle-menu-bar-mode-from-frame)
+            ;;            (toggle-menu-bar-mode-from-frame)
             ;;(scrollbar-init)
             (menu-bar-mode -1)
             (smartparens-mode 1)
             (smartparens-global-mode 1)
             ))
 
-(jay/toggle-fullscreen)
+;; (jay/toggle-fullscreen)
 
 
 

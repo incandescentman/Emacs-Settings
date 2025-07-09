@@ -9158,7 +9158,7 @@ It returns a list, so you can later jump to the first culprit:
 #+begin_src emacs-lisp
 ;; Speed up macOS open events
 (setq ns-pop-up-frames nil)  ; Don't create new frames
-(setq ns-use-native-fullscreen nil)  ; Faster fullscreen
+
 #+end_src
 
 * silence warnings
@@ -9433,7 +9433,7 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 * Emacs server
 
 ** fullscreen on each instance
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 ;; For full screen instead
 (add-hook 'after-make-frame-functions
           (lambda (frame)
@@ -9443,7 +9443,7 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 ))
 
 
-#+end_src
+#+END_EXAMPLE
 
 ** silence warnings
 #+begin_src emacs-lisp
@@ -9555,9 +9555,8 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 #+end_src
 
 
-
 #+begin_src emacs-lisp
-(setq debug-on-message "Invalid face reference: t")
+
 #+end_src
 
 

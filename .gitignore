@@ -20,7 +20,6 @@ pastebin-credentials.el
 secret-codes.el
 
 # Org Babel tangled files
-*.el
 *.elc
 *.eln
 
@@ -35,3 +34,7 @@ secret-codes.el
 # Tramp and URL caches
 tramp/
 url/cache/
+spacecraft-mode.el
+shared-functions.el
+gnu-emacs-startup.el
+fonts-and-themes.el
