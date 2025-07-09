@@ -9607,10 +9607,10 @@ Enable tab-bar only when on MacBook Pro built-in display to hide the notch."
     (if on-macbook
         (progn
           (tab-bar-mode 1)
-          (message "Tab bar enabled (on MacBook display)"))
+          (message "📍 Tab bar engaged, sir—presumably to shield one's brow from the indignity of the notch. This meddling notch shall trouble you no more. 🎩"))
       (progn
         (tab-bar-mode -1)
-        (message "Tab bar disabled (on external display)")))))
+        (message "🧳 I've discreetly dismissed the tab bar, sir. Your external display may now proceed unencumbered. 🎩")))))
 
 ;; Auto-update functions
 (defun jay/frame-move-hook (frame)
@@ -9667,8 +9667,8 @@ Enable tab-bar only when on MacBook Pro built-in display to hide the notch."
                                  (or (cdr (assoc 'name d)) "Unknown")
                                  (cdr (assoc 'geometry d))))
                        displays ", ")))
-    (message "Position: %s | On MacBook: %s | Displays: %s"
-             pos (if on-macbook "YES" "NO") display-info)))
+    (message "🔍 Position: %s | MacBook display: %s, sir | Monitors in residence: %s"
+             pos (if on-macbook "Indeed" "I'm afraid not") display-info)))
 
 ;; Initialize on load
 (when (eq system-type 'darwin)
