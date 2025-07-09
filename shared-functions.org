@@ -9600,17 +9600,23 @@ Returns t if on built-in Retina display, nil if on external monitor."
                (string-match-p "Built-in\\|Retina Display" display-name)))))))
 
 (defun jay/update-tab-bar-for-display ()
-  "Update tab-bar-mode based on current display.
-Enable tab-bar only when on MacBook Pro built-in display to hide the notch."
+  "Enable the tab bar *only* when the frame is both on the MacBook display
+and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight."
   (interactive)
-  (let ((on-macbook (jay/on-macbook-display-p)))
-    (if on-macbook
+  (let* ((fullscreen-state (frame-parameter nil 'fullscreen))
+         (on-macbook      (jay/on-macbook-display-p))
+         ;; We regard either 'fullboth (native fullscreen) or 'maximized
+         ;; as warranting notch-defence duty.
+         (should-show     (and on-macbook
+                               (memq fullscreen-state '(fullboth maximized)))))
+    (if should-show
         (progn
           (tab-bar-mode 1)
-          (message "📍 Tab bar engaged, sir—presumably to shield one's brow from the indignity of the notch. This meddling notch shall trouble you no more. 🎩"))
+          (message "🍙🚫 Notch hidden 🎩✨"))
       (progn
         (tab-bar-mode -1)
-        (message "🧳 I've discreetly dismissed the tab bar, sir. Your external display may now proceed unencumbered. 🎩")))))
+;; (message "🎩 Notch hiding disabled.")
+))))
 
 ;; Auto-update functions
 (defun jay/frame-move-hook (frame)

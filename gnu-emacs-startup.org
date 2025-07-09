@@ -85,20 +85,32 @@ Automatically load abbreviations table:
 [[http://amitp.blogspot.ca/2008/05/emacs-full-screen-on-mac-os-x.html][(Source)]]
 
 #+BEGIN_SRC emacs-lisp
-
-;; Modern fullscreen toggle that works with native macOS fullscreen
 (defun jay/toggle-fullscreen ()
-  "Toggle fullscreen mode with proper macOS support."
+  "Toggle fullscreen mode with proper macOS support and reliably manage tab-bar-mode for notch concealment."
   (interactive)
-  (let ((fullscreen-p (frame-parameter nil 'fullscreen)))
+  (let ((was-fullscreen (frame-parameter nil 'fullscreen)))
+    ;; Toggle fullscreen
     (set-frame-parameter
      nil 'fullscreen
-     (if fullscreen-p nil 'fullboth))
-    ;; Adjust font size if you have that function
+     (if was-fullscreen nil 'fullboth))
+
+    ;; Adjust font size if applicable
     (when (fboundp 'jay/adjust-font-size)
       (jay/adjust-font-size))
-    ;; Report status
-    (message "Fullscreen %s" (if fullscreen-p "disabled" "enabled"))))
+
+    ;; Update tab bar after brief delay
+    (run-with-timer
+     0.1 nil
+     (lambda ()
+       (let ((on-macbook (jay/on-macbook-display-p))
+             (now-fullscreen (frame-parameter nil 'fullscreen)))
+         (if now-fullscreen
+             (progn
+               (when on-macbook (tab-bar-mode 1))
+               (message "🧭 Fullscreen engaged, sir. Tab bar deployed in ceremonial defense of the notch."))
+           (progn
+             (tab-bar-mode -1)
+             (message "🎩 Fullscreen dismissed. Tab bar has made itself scarce, as propriety demands."))))))))
 
 ;; Alternative: Toggle between maximized and normal (no fullscreen)
 (defun jay/toggle-maximized ()
@@ -112,7 +124,7 @@ Automatically load abbreviations table:
     (when (fboundp 'jay/adjust-font-size)
       (jay/adjust-font-size))
     (message "Frame %s" (if maximized-p "restored" "maximized"))))
-#+END_SRC 
+#+END_SRC
 
 
 * tabbar
