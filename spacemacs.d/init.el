@@ -134,7 +134,7 @@ This function should only modify configuration layer settings."
                                       key-seq
                                       ;; lister ;; (for delve)
                                       ;; magit
-                                      ;; markdown-mode
+                                      markdown-mode
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
@@ -294,8 +294,6 @@ This function should only modify configuration layer settings."
                                     persp-mode
                                     popup
                                     polymide
-                                    markdown-mode
-
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.

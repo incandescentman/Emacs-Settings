@@ -9557,6 +9557,9 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 * Notch Management
 #+begin_src emacs-lisp
 ;; MacBook Pro Notch Tab Bar Auto-Management
+(defvar jay/--last-notch-state nil
+  "Remember whether the tab bar is currently shown to hide the notch.")
+
 (use-package tab-bar
   :defer t
   :config
@@ -9625,25 +9628,16 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
     (jay/update-tab-bar-for-display)))
 
 (defun jay/setup-display-aware-tab-bar ()
-  "Setup automatic tab bar management based on display."
+  "Activate minimal hooks for notch-hiding logic."
   (when (eq system-type 'darwin)
-    ;; Remove any existing hooks first
-    (remove-hook 'move-frame-functions 'jay/frame-move-hook)
-    (remove-hook 'window-size-change-functions 'jay/frame-move-hook)
-    (remove-hook 'focus-in-hook 'jay/update-tab-bar-for-display)
-
-    ;; Add hooks for various events that might indicate display change
-    (add-hook 'move-frame-functions 'jay/frame-move-hook)
-    (add-hook 'window-size-change-functions 'jay/frame-move-hook)
-    (add-hook 'focus-in-hook 'jay/update-tab-bar-for-display)
-
-    ;; Also update when creating new frames
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (with-selected-frame frame
-                  (jay/update-tab-bar-for-display))))
-
-    ;; Set initial state
+    ;; Clear any old hooks
+    (remove-hook 'focus-in-hook            #'jay/update-tab-bar-for-display)
+    (remove-hook 'after-make-frame-functions
+                 (lambda (f) (with-selected-frame f
+                               (jay/update-tab-bar-for-display))))
+    ;; Re-add just one lightweight hook
+    (add-hook 'focus-in-hook #'jay/update-tab-bar-for-display)
+    ;; Initial check at startup
     (jay/update-tab-bar-for-display)))
 
 ;; Modified fullscreen toggle that updates tab bar
@@ -9680,8 +9674,6 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (when (eq system-type 'darwin)
   (run-with-timer 1 nil 'jay/setup-display-aware-tab-bar))
 
-;; Manual toggle if needed
-(global-set-key (kbd "s-M-t") 'jay/update-tab-bar-for-display)
 #+end_src
 
 
