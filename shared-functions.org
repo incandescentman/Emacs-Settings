@@ -9294,9 +9294,22 @@ process the whole buffer."
 current buffer.  Safe (save-excursion) and repeatable."
   (interactive)
   (save-excursion
-    (goto-char (point-min))
+;; (goto-char (point-min))
     (while (search-forward "\n* " nil t)
       (replace-match "\n- "))))
+
+
+
+(defun asterisk-to-dash-and-convert-markdown-to-org-code-blocks ()
+  "Replace every newline-star sequence with newline-dash from point to end of buffer.
+Also calls `convert-markdown-to-org-code-blocks-simple`."
+  (interactive)
+  (save-excursion
+    (while (search-forward "\n* " nil t)
+      (replace-match "\n")))
+  (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
+    (convert-markdown-to-org-code-blocks-simple)))
+
 
 (defun normalize-dashes ()
   "1) Turn “foo---bar” into “foo --- bar”.
