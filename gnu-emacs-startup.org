@@ -124,8 +124,21 @@ Automatically load abbreviations table:
     (when (fboundp 'jay/adjust-font-size)
       (jay/adjust-font-size))
     (message "Frame %s" (if maximized-p "restored" "maximized"))))
+
 #+END_SRC
 
+
+* maximize when relaunching
+#+begin_src emacs-lisp
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            ;; Ensure the code runs in the context of the new frame
+            (with-selected-frame frame
+              (jay/toggle-fullscreen))))
+
+(with-eval-after-load 'server      ; ensure `server.el` is loaded first
+  (add-hook 'server-switch-hook #'jay/toggle-fullscreen))
+#+end_src 
 
 * tabbar
 So Emacs text doesn't appear on the MacBook Pro notch.
@@ -135,10 +148,7 @@ So Emacs text doesn't appear on the MacBook Pro notch.
 :defer t
  :config
  (tab-bar-mode -1))
- #+END_SRC
 
-
-#+BEGIN_SRC emacs-lisp
 (defun jay/toggle-tab-bar-mode ()
 (interactive)
   "Toggle `tab-bar-mode' based on the current frame fullscreen state in order to hide the MacBook Pro notch when in fullscreen mode."
