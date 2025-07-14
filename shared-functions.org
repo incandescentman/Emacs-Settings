@@ -1477,6 +1477,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
          ("\\.fountain\\'"                  . fountain-mode)
          ("COMMIT_EDITMSG\\'"               . diff-mode)
          ("\\.md\\'"                        . markdown-mode)
+         ("\\.mdx\\'"                        . markdown-mode)
          ("\\.abbrev_defs\\'"               . emacs-lisp-mode)
          ("\\.html?\\'"                     . web-mode)
          ("\\.astro?\\'"                    . web-mode)
@@ -9300,13 +9301,21 @@ current buffer.  Safe (save-excursion) and repeatable."
 
 
 
-(defun asterisk-to-dash-and-convert-markdown-to-org-code-blocks ()
-  "Replace every newline-star sequence with newline-dash from point to end of buffer.
-Also calls `convert-markdown-to-org-code-blocks-simple`."
+(defun asterisk-to-dash-and-convert-code-blocks-to-org ()
+  "From point to end of buffer:
+   • Change '\\n* ' to '\\n- '.
+   • Change a line starting with two spaces + '* ' to two spaces + '- '.
+   Then run `convert-markdown-to-org-code-blocks-simple` if it exists."
   (interactive)
+  ;; 1. newline *  → newline -
   (save-excursion
     (while (search-forward "\n* " nil t)
-      (replace-match "\n")))
+      (replace-match "\n- ")))
+  ;; 2. line-start two-spaces *  → two-spaces -
+  (save-excursion
+    (while (re-search-forward "^  \\* " nil t)
+      (replace-match "  - ")))
+  ;; 3. optional post-processing
   (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
     (convert-markdown-to-org-code-blocks-simple)))
 

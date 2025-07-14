@@ -38,3 +38,4 @@ spacecraft-mode.el
 shared-functions.el
 gnu-emacs-startup.el
 fonts-and-themes.el
+pasteboard-copy-and-paste-functions.el
