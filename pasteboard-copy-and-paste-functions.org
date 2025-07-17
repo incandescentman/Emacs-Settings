@@ -889,3 +889,15 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (push-kill-ring-pasteboard-to-MacOS-clipboard)
   )
   #+END_SRC
+
+
+
+* Local Variables & The End
+These have to be at the end.
+
+# Local Variables:
+# org-config-files-local-mode: t
+# enable-local-eval: t
+# eval: (org-config-files-local-mode 1)
+# End:
+

@@ -9508,8 +9508,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 * Astro
 
 #+begin_src emacs-lisp
-;;; --- Astro + Eglot -------------------------------------------------
-
 ;; Core major-mode foundation
 (use-package web-mode
   :ensure t)
@@ -9518,38 +9516,37 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 (define-derived-mode astro-mode web-mode "Astro")
 (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode))
 
-;; LSP client
 (use-package eglot
   :ensure t
   :config
-  ;; Tell Eglot how to start Astro's language-server
-  (add-to-list
-   'eglot-server-programs
-   ;; ------- choose ONE of the two recipes below --------------------
-   ;; ① Global npm/yarn/pnpm install (easiest):
-   '(astro-mode . ("astro-ls" "--stdio"
-                   :initializationOptions
-                   (:typescript (:tsdk "/Users/jay/Library/CloudStorage/Dropbox/github/square-satellite/node_modules/typescript/lib"))))
+  ;; Use project.el's built-in vc-project type
+  (require 'project)
 
+  ;; Add package.json as a project root marker
+  (add-to-list 'project-vc-extra-root-markers "package.json")
 
+  ;; IMPORTANT: Clear any existing astro-mode entries first
+  (setq eglot-server-programs
+        (assq-delete-all 'astro-mode eglot-server-programs))
 
-   ;; ② Project-local devDependency → uncomment next block *and* comment
-   ;;    the global line above.  Uses npx to locate the binary.
-   ;; '(astro-mode . ("npx" "--no" "@astrojs/language-server" "--stdio"
-   ;;                 :initializationOptions
-   ;;                 (:typescript (:tsdk "./node_modules/typescript/lib"))))
-   )
+(add-to-list
+ 'eglot-server-programs
+ `(astro-mode
+   . ("npx" "@astrojs/language-server" "--stdio"
+      :initializationOptions
+      (:typescript
+       (:tsdk ,(expand-file-name
+                "/Users/jay/Library/CloudStorage/Dropbox/github/socratic-astro/node_modules/typescript/lib"))))))
 
-  ;; Spin up Eglot automatically in .astro buffers
+  ;; Start the LS automatically when you open an .astro file
   (add-hook 'astro-mode-hook #'eglot-ensure))
 
-;; Optional: run "format" (Prettier via Astro-LS) every time you save
+;; Format-on-save only if Eglot is already managing the buffer
 (defun my/astro-format-before-save ()
-  (when (derived-mode-p 'astro-mode)
+  (when (and (derived-mode-p 'astro-mode)
+             (eglot-managed-p))
     (eglot-format-buffer)))
-
 (add-hook 'before-save-hook #'my/astro-format-before-save)
-
 #+end_src
 ------------------------------------------------------------------
 Prerequisites outside Emacs (run in your project or globally):
@@ -9709,7 +9706,41 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (when (eq system-type 'darwin)
   (run-with-timer 1 nil 'jay/setup-display-aware-tab-bar))
 
+
+
 #+end_src
+
+;; Modified fullscreen toggle that updates tab bar
+(defun jay/toggle-fullscreen ()
+  "Toggle fullscreen mode with automatic tab bar management."
+  (interactive)
+  (let ((fullscreen-p (frame-parameter nil 'fullscreen)))
+    (set-frame-parameter
+     nil 'fullscreen
+     (if fullscreen-p nil 'fullboth))
+    ;; Update tab bar after changing fullscreen state
+    (run-with-timer 0.1 nil 'jay/update-tab-bar-for-display)
+    ;; Adjust font size if available
+    (when (fboundp 'jay/adjust-font-size)
+      (jay/adjust-font-size))))
+
+;; Debug function to check current status
+(defun jay/debug-display-detection ()
+  "Show current display detection status."
+  (interactive)
+  (let* ((on-macbook (jay/on-macbook-display-p))
+         (pos (jay/get-frame-position))
+         (displays (display-monitor-attributes-list))
+         (display-info (mapconcat
+                       (lambda (d)
+                         (format "%s: %s"
+                                 (or (cdr (assoc 'name d)) "Unknown")
+                                 (cdr (assoc 'geometry d))))
+                       displays ", ")))
+    (message "🔍 Position: %s | MacBook display: %s, sir | Monitors in residence: %s"
+             pos (if on-macbook "Indeed" "I'm afraid not") display-info)))
+
+
 
 
 * Local Variables & The End

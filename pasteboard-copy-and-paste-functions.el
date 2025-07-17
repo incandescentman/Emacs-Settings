@@ -27,8 +27,8 @@
           ;; If line begins with stars + space => a heading, so skip
           (if (looking-at "^\\*+ ")
               (forward-char 2) ;; skip these two stars
-              ;; Otherwise replace as normal
-              (replace-match "*" t t)))))))
+            ;; Otherwise replace as normal
+            (replace-match "*" t t)))))))
 
 (defgroup smart-quotes nil
   "Customization group for smart quote replacements."
@@ -112,13 +112,13 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
       (goto-char beg)
       (while (re-search-forward "\\*\\*" end-marker t)
 
-        (if (and (= (line-beginning-position) (- (point) 2))
-                 (looking-at "\\(?: \\|\\*\\)"))
-            ;; Just move past the pair; leave heading stars intact
-            (forward-char 1)
-            (replace-match "*" t t))
+(if (and (= (line-beginning-position) (- (point) 2))
+         (looking-at "\\(?: \\|\\*\\)"))
+    ;; Just move past the pair; leave heading stars intact
+    (forward-char 1)
+  (replace-match "*" t t))
 
-        )
+)
       ;; Remove lines that contain only '---' (possibly with surrounding spaces)
       (goto-char beg)
       (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
@@ -275,7 +275,7 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
     (with-temp-buffer
       (if (zerop (call-process "gtimeout" nil t nil "2" "pbpaste"))  ; Requires coreutils for `gtimeout`
           (buffer-string)
-          (error "pbpaste timed out")))))
+        (error "pbpaste timed out")))))
 
 (defun pasteboard-copy-adaptive (&optional arg)
   "Adaptive copy command.
@@ -285,7 +285,7 @@ With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
   (interactive "P")
   (if arg
       (call-interactively #'pasteboard-copy-verbatim)
-      (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -334,11 +334,11 @@ ARG zero or negative       → force replacement."
     (with-temp-buffer
       (insert (if verbatim
                   txt
-                  (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+                (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
       (shell-command-on-region (point-min) (point-max) "pbcopy"))
     (message (if verbatim
                  "Copied text verbatim."
-                 "Copied text with em dashes."))))
+               "Copied text with em dashes."))))
 
 (defun pasteboard-copy-to-end-of-buffer ()
   "Copy text from point to the end of the buffer to OS X system pasteboard."
@@ -364,7 +364,7 @@ ARG zero or negative       → force replacement."
         (shell-command-to-string
          (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
         (message "Copied and converted Org links to Markdown."))
-      (message "No region selected")))
+    (message "No region selected")))
 
 (setq select-enable-clipboard t)
 (setq select-enable-primary t)
@@ -407,7 +407,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'web-mode)
-          )
+)
       (pasteboard-paste-raw))
      (t
       (let* ((prev-char (char-before))
@@ -418,7 +418,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
                                 (member next-char char-set))))
         (if use-no-spaces
             (pasteboard-paste-raw)
-            (pasteboard-paste-clean)))))))
+          (pasteboard-paste-clean)))))))
 
 (defun convert-markdown-links-to-org-mode (beg end)
   "Convert Markdown links to Org-mode links in the specified region."
@@ -431,22 +431,22 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 
 
 (defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
-  "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
-  (interactive)
-  (let* ((clipboard-content (shell-command-to-string "pbpaste"))
-         (clean-content (string-trim clipboard-content))
-         (start (point))
-         (end (if mark-active (mark) (point))))
-    (if (string-empty-p clean-content)
-        (message "Clipboard is empty.")
-        (let ((converted-content
-               (replace-regexp-in-string
-                "\\[\\([^][]+\\)\\](\\([^)]+\\))"
-                "[[\\2][\\1]]"
-                clean-content)))
-          (delete-region start end)
-          (insert converted-content)
-          (message "Content pasted and converted successfully.")))))
+ "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
+ (interactive)
+ (let* ((clipboard-content (shell-command-to-string "pbpaste"))
+     (clean-content (string-trim clipboard-content))
+     (start (point))
+     (end (if mark-active (mark) (point))))
+  (if (string-empty-p clean-content)
+    (message "Clipboard is empty.")
+   (let ((converted-content
+       (replace-regexp-in-string
+       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
+       "[[\\2][\\1]]"
+       clean-content)))
+    (delete-region start end)
+    (insert converted-content)
+    (message "Content pasted and converted successfully.")))))
 
 (defun pasteboard-paste ()
   "Paste from OS X system pasteboard via `pbpaste' to point."
@@ -454,7 +454,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   (let ((start (point))
         (end (if mark-active
                  (mark)
-                 (point)))
+               (point)))
         (ins-text
          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")))
     (delete-region start end)
@@ -485,8 +485,7 @@ Otherwise run, in order:
         (replace-smart-quotes-regexp beg end)
         (replace-weird-spaces beg end)
         (convert-markdown-headings-to-org beg end)
-        (asterisk-to-dash-and-convert-code-blocks-to-org)
-        (ensure-heading-emoji-space beg end)
+(ensure-heading-emoji-space beg end)
         (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
         (set-marker end nil)))))             ; tidy marker
@@ -495,12 +494,12 @@ Otherwise run, in order:
   "Paste from OS X system pasteboard via `pbpaste' to point."
   (interactive)
   (let ((start (point))
-        (end (if mark-active
-                 (mark)
-                 (point))))
+	(end (if mark-active
+		 (mark)
+	       (point))))
     (shell-command-on-region start end
-                             "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-                             nil t)
+			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
+			     nil t)
     (save-excursion
       )))
 
@@ -514,11 +513,11 @@ are adjusted so they become subheadings under the current Org heading."
          (current-level (save-excursion
                           (if (org-before-first-heading-p)
                               0
-                              (or (org-current-level)
-                                  (progn
-                                    (org-back-to-heading t)
-                                    (org-current-level))
-                                  0)))))
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0)))))
     ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))
     ;; Adjust the heading levels in the pasted text
@@ -554,11 +553,11 @@ and handle spacing based on surrounding punctuation."
          (current-level (save-excursion
                           (if (org-before-first-heading-p)
                               0
-                              (or (org-current-level)
-                                  (progn
-                                    (org-back-to-heading t)
-                                    (org-current-level))
-                                  0))))
+                            (or (org-current-level)
+                                (progn
+                                  (org-back-to-heading t)
+                                  (org-current-level))
+                                0))))
          (prev-char (char-before))
          (next-char (char-after))
          (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
@@ -648,7 +647,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
       (pasteboard-cut-and-capitalize-and-replace-em-dashes)
-      (pasteboard-cut-and-capitalize)))
+    (pasteboard-cut-and-capitalize)))
 
 (defvar-local failed-search nil)
 
@@ -665,11 +664,11 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
             (progn
               (goto-char p)
               (setq-local failed-search nil))
-            (message "WrappedSearch: Not found.")))
-      (let ((p (search-forward str nil t)))
-        (unless p
-          (setq-local failed-search (cons (point) str))
-          (message "Search: Not found.")))))
+          (message "WrappedSearch: Not found.")))
+    (let ((p (search-forward str nil t)))
+      (unless p
+        (setq-local failed-search (cons (point) str))
+        (message "Search: Not found.")))))
 
 (defun pasteboard-search-for-clipboard-contents ()
   (interactive)
@@ -686,12 +685,12 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (x-select-text (current-kill 0)))
 
 (defun push-MacOS-clipboard-to-kill-ring ()
-  "Push the content of the MacOS clipboard to the Emacs kill ring."
-  (interactive)
-  (let ((clipboard-content (shell-command-to-string "pbpaste")))
-    (when (and clipboard-content (not (string= clipboard-content "")))
-      (kill-new clipboard-content)
-      (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+ "Push the content of the MacOS clipboard to the Emacs kill ring."
+ (interactive)
+ (let ((clipboard-content (shell-command-to-string "pbpaste")))
+  (when (and clipboard-content (not (string= clipboard-content "")))
+   (kill-new clipboard-content)
+   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 
 (defun gist-buffer-to-pasteboard ()
   (interactive)
