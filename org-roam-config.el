@@ -113,7 +113,7 @@
   (global-set-key (kbd "s-u .") #'org-roam-dailies-goto-date)
   (global-set-key (kbd "s-u p") #'org-roam-dailies-goto-previous-note)
   (global-set-key (kbd "s-u n") #'org-roam-dailies-goto-next-note)
-  (global-set-key (kbd "s-j")   #'org-roam-dailies-goto-today)
+  (global-set-key (kbd "s-:")   #'org-roam-dailies-goto-today)
   (global-set-key (kbd "C-S-d") #'org-roam-dailies-goto-today)
   (global-set-key (kbd "s-u y") #'org-roam-dailies-goto-yesterday)
   (global-set-key (kbd "s-u Y") #'org-roam-dailies-yesterday)
