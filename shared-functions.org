@@ -5132,9 +5132,17 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 * saveplace
 #+begin_src emacs-lisp
+
+;; Add near the TOP of your config, before other packages
 (use-package saveplace
-  :defer)
-(setq-default save-place t)
+  :ensure nil  ; built-in
+  :init
+  (setq save-place-file (expand-file-name ".cache/places" user-emacs-directory))
+  :config
+  (save-place-mode 1)
+  ;; Debug: log when saving places
+  (advice-add 'save-place-to-alist :after
+              (lambda () (message "Saved place for %s" (buffer-file-name)))))
 #+end_src
 
 
@@ -9710,6 +9718,8 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 
 #+end_src
 
+* non active
+#+begin_example emacs-lisp
 ;; Modified fullscreen toggle that updates tab bar
 (defun jay/toggle-fullscreen ()
   "Toggle fullscreen mode with automatic tab bar management."
@@ -9740,6 +9750,13 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
     (message "🔍 Position: %s | MacBook display: %s, sir | Monitors in residence: %s"
              pos (if on-macbook "Indeed" "I'm afraid not") display-info)))
 
+
+#+end_example
+
+* debug save place
+#+begin_src emacs-lisp
+
+#+end_src
 
 
 
