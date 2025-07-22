@@ -1690,6 +1690,20 @@ dired-omit-extensions
 
 #+END_SRC
 
+#+begin_src emacs-lisp
+;; Enable hiding details by default in all Dired buffers
+(with-eval-after-load 'dired
+  (require 'dired-x)
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode))
+
+;; Show only filenames (one per line) in Dired
+(setq dired-listing-switches "-1a")
+
+;; Optional: Ensure it also works for dired buffers created in other ways
+(with-eval-after-load 'dired
+  (setq dired-hide-details-hide-symlink-targets nil)  ; Show symlink targets
+  (setq dired-hide-details-hide-information-lines t)) ; Hide the "total" line
+#+end_src
 
 * Word count
 #+begin_src emacs-lisp
@@ -3352,17 +3366,17 @@ buffer is already narrowed; never widen."
   ;; First, widen if appropriate. If we did, we're done.
   (unless (narrow-or-widen-dwim--maybe-widen p)
     (cond
-     ;; 1) Inside an *Org src editing* indirect buffer – exit it.
+     ;; 1) Active region in ANY mode ⇒ narrow to that region.
+     ((region-active-p)
+      (narrow-to-region (region-beginning) (region-end)))
+
+     ;; 2) Inside an *Org src editing* indirect buffer -- exit it.
      ((bound-and-true-p org-src-mode)
       (org-edit-src-exit))
 
-     ;; 2) In Org mode – choose the right narrowing target.
+     ;; 3) In Org mode -- choose the right narrowing target.
      ((derived-mode-p 'org-mode)
       (cond
-       ;; Active region ⇒ narrow to that region.
-       ((region-active-p)
-        (narrow-to-region (region-beginning) (region-end)))
-
        ;; Inside a src block ⇒ open indirect edit buffer.
        ((org-in-src-block-p)
         (org-edit-src-code)
@@ -3388,16 +3402,13 @@ buffer is already narrowed; never widen."
 
        (t (user-error "Point is not in a narrowable Org context"))))
 
-     ;; 3) LaTeX mode ⇒ narrow to current environment.
+     ;; 4) LaTeX mode ⇒ narrow to current environment.
      ((derived-mode-p 'latex-mode)
       (LaTeX-narrow-to-environment))
 
-     ;; 4) Fallback ⇒ defun.
+     ;; 5) Fallback ⇒ defun.
      (t
       (narrow-to-defun)))))
-
-;; Optional: bind globally
-;; (global-set-key (kbd "C-c n") #'narrow-or-widen-dwim)
 
 (provide 'narrow-or-widen-dwim)
 ;;; narrow-or-widen-dwim.el ends here

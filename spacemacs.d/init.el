@@ -143,12 +143,12 @@ This function should only modify configuration layer settings."
                                       orderless
                                       ;; org-ai
                                       org-autolist
-                                      org-bookmark-heading
+                                      ;; org-bookmark-heading
                                       org-contrib
                                       ;; org-drill
                                       ;; org-fstree
                                       org-mac-link
-                                      org-pomodoro
+                                      ;; org-pomodoro
                                       org-ql
                                       org-roam
                                       ;; org-roam-ui
