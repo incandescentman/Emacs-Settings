@@ -277,15 +277,54 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
           (buffer-string)
         (error "pbpaste timed out")))))
 
-(defun pasteboard-copy-adaptive (&optional arg)
-  "Adaptive copy command.
+(defun pasteboard-copy-adaptive ()
+  "Copy to the macOS pasteboard, choosing method based on current mode and context.
+Adapts behavior based on major mode and surrounding context."
+  (interactive)
+  (let (choice)  ;; will record which branch we took
+    (cond
+     ;; 1) In shell/elisp/web/markdown modes → verbatim copy (preserve everything)
+     ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'emacs-lisp-mode)
+          (eq major-mode 'web-mode)
+          (eq major-mode 'markdown-mode)
+          (eq major-mode 'gfm-mode)  ; GitHub Flavored Markdown
+          (derived-mode-p 'markdown-mode))
+      (setq choice "copy-verbatim")
+      (call-interactively #'pasteboard-copy-verbatim))
 
-With a prefix ARG (e.g. C-u), call `pasteboard-copy-raw'.
-With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
-  (interactive "P")
-  (if arg
-      (call-interactively #'pasteboard-copy-verbatim)
-    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+     ;; 2) In MDX files (regardless of mode) → verbatim copy
+     ((and buffer-file-name
+           (string-match-p "\\.mdx\\'" buffer-file-name))
+      (setq choice "copy-verbatim (MDX file)")
+      (call-interactively #'pasteboard-copy-verbatim))
+
+     ;; 3) In programming modes → verbatim copy
+     ((derived-mode-p 'prog-mode)
+      (setq choice "verbatim")
+      (call-interactively #'pasteboard-copy-verbatim))
+
+     ;; 4) In Org/text modes → clean copy (replace em-dashes, etc.)
+     ((or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (setq choice "so clean")
+      (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+
+     ;; 5) Fallback: if copying code-like content, use verbatim
+     (t
+      (if (and (use-region-p)
+               (save-excursion
+                 (goto-char (region-beginning))
+                 (looking-at-p "\\s-*[({[]\\|^\\s-*[#;]\\|https?://")))
+          (progn
+            (setq choice "copy-verbatim (code-like)")
+            (call-interactively #'pasteboard-copy-verbatim))
+        (setq choice "copy-clean (default)")
+        (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+
+    ;; Report what we did
+    (message "Copied text %s" choice)))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -387,38 +426,49 @@ ARG zero or negative       → force replacement."
 If there's an active region and the clipboard contains a URL,
 insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   (interactive)
-  ;; Get raw text from pbpaste and trim whitespace
   (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
-         (clipboard-text (downcase raw-clip)))
-    ;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+         (clipboard-text (downcase raw-clip))
+         choice)  ;; will record which branch we took
     (cond
      ;; 1) If region is active and the clipboard looks like a URL → bracket link
      ((and (use-region-p)
            (not (string-empty-p raw-clip))
            (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-      ;;  (message "DEBUG: Inserting bracket link.")
+      (setq choice "bracket-link")
       (org-insert-link-from-clipboard (region-beginning) (region-end)))
 
-     ;; 2) Otherwise, do original logic
+     ;; 2) In Org/text modes → clean paste
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
+      (setq choice "verbatim")
       (pasteboard-paste-clean))
+
+     ;; 3) In shell/elisp/web → raw paste
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
-          (eq major-mode 'web-mode)
-)
+          (eq major-mode 'web-mode))
+      (setq choice "raw")
       (pasteboard-paste-raw))
+
+     ;; 4) Fallback: decide based on surrounding chars
      (t
       (let* ((prev-char (char-before))
              (next-char (char-after))
              (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-
-             (use-no-spaces (or (member prev-char char-set)
-                                (member next-char char-set))))
+             use-no-spaces)
+        (setq use-no-spaces
+              (or (member prev-char char-set)
+                  (member next-char char-set)))
         (if use-no-spaces
-            (pasteboard-paste-raw)
-          (pasteboard-paste-clean)))))))
+            (progn
+              (setq choice "paste-raw")
+              (pasteboard-paste-raw))
+          (setq choice "paste-clean")
+          (pasteboard-paste-clean)))))
+
+    ;; Finally, report what we did
+    (message "Pasted: %s" choice)))
 
 (defun convert-markdown-links-to-org-mode (beg end)
   "Convert Markdown links to Org-mode links in the specified region."

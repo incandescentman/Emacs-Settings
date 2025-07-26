@@ -76,6 +76,7 @@
     (let ((s (downcase s)))
       (replace-regexp-in-string "[^a-z0-9]+" "-" (org-trim s) nil))))
 
+
 (defun org-astro--format-date (date-raw info)
   "Format DATE-RAW into a string suitable for Astro front matter.
 Handles both Org timestamps and plain 'YYYY-MM-DD' strings.
@@ -83,17 +84,28 @@ INFO is the export options plist."
   (let ((date-fmt (plist-get info :astro-date-format)))
     (format-time-string
      date-fmt
-     (if (string-match-p org-ts-regexp-both date-raw)
-         (org-time-string-to-time date-raw)
-         (let* ((parsed (parse-time-string date-raw))
-                (sec    (or (nth 0 parsed) 0))
-                (min    (or (nth 1 parsed) 0))
-                (hour   (or (nth 2 parsed) 0))
-                (day    (nth 3 parsed))
-                (mon    (nth 4 parsed))
-                (year   (nth 5 parsed))
-                (zone   (nth 8 parsed)))
-           (encode-time sec min hour day mon year zone))))))
+     (cond
+      ;; Handle Org timestamps
+      ((string-match-p org-ts-regexp-both date-raw)
+       (org-time-string-to-time date-raw))
+      ;; Handle plain dates like "2025-07-26"
+      ((string-match "^\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)$" date-raw)
+       (encode-time 0 0 0
+                    (string-to-number (match-string 3 date-raw))  ; day
+                    (string-to-number (match-string 2 date-raw))  ; month
+                    (string-to-number (match-string 1 date-raw))  ; year
+                    nil nil nil))
+      ;; Fallback to parse-time-string
+      (t
+       (let* ((parsed (parse-time-string date-raw))
+              (sec    (or (nth 0 parsed) 0))
+              (min    (or (nth 1 parsed) 0))
+              (hour   (or (nth 2 parsed) 0))
+              (day    (nth 3 parsed))
+              (mon    (nth 4 parsed))
+              (year   (nth 5 parsed))
+              (zone   (nth 8 parsed)))
+         (encode-time sec min hour day mon year zone)))))))
 
 (defun org-astro--gen-yaml-front-matter (data)
   "Generate a YAML front-matter string from an alist DATA."
