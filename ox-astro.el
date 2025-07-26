@@ -56,10 +56,8 @@
   :group 'org-export
   :version "26.3")
 
-(defcustom org-astro-date-format "%Y-%m-%dT%T:00:00Z"
-  "Date format used for exporting 'publishDate' in front-matter.
-The format should be compatible with `format-time-string' and ideally
-produce an ISO 8601 compliant date string, as is common in Astro."
+(defcustom org-astro-date-format "%Y-%m-%dT%H:%M:%SZ"
+  "Date format used for exporting 'publishDate' in front-matter."
   :group 'org-export-astro
   :type 'string)
 
@@ -113,19 +111,17 @@ INFO is the export options plist."
                              ((listp val) ; For tags
                               (concat "\n"
                                       (mapconcat
-                                       (lambda (item) (format " - %s" item))
-                                       val "\n")))
+                                       (lambda (item) (format "- %s" item))  ; Remove space before -
+                                       val "\n")
+                                      "\n"))  ; Add newline after tags
                              ((stringp val)
-                              ;; Don't quote image path if it starts with ~ or /
-                              (if (and (memq key '(image imageAlt))
-                                       (string-match-p "^[~/]" val))
-                                  (format "%s\n" val)
-                                  (format "\"%s\"\n"
-                                          (replace-regexp-in-string "\"" "\\\\\"" val))))
+                              ;; Remove quotes for all values
+                              (format "%s\n" val))
                              (t
                               (format "%s\n" val))))))))
         ;; close front-matter block
         (concat yaml-str "---\n"))))
+
 
 (defun org-astro--get-front-matter (info)
   "Return the Astro front-matter string.
@@ -176,13 +172,12 @@ Handles internal links to headings by creating anchor links."
         (org-md-link link desc info))))
 
 (defun org-astro-heading (heading contents info)
-  "Transcode a HEADING element, adding an ID for anchor links."
+  "Transcode a HEADING element."
   (let* ((title (org-export-data (org-element-property :title heading) info))
-         (slug (org-astro--slugify title))
          (level (+ (org-element-property :level heading)
                    (or (plist-get info :headline-offset) 0)))
          (header (format "%s %s" (make-string level ?#) title)))
-    (format "%s {#%s}\n\n%s" header slug (or contents ""))))
+    (format "%s\n\n%s" header (or contents ""))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Filter Functions
@@ -190,12 +185,17 @@ Handles internal links to headings by creating anchor links."
 
 (defun org-astro-body-filter (body _backend info)
   "Add front-matter and imports to the BODY of the document."
-  (let ((front-matter (org-astro--get-front-matter info))
-        (imports (or (plist-get info :astro-imports) "")))
+  (let* ((tree (org-element-parse-buffer))
+         (front-matter (org-astro--get-front-matter info))
+         (auto-imports (org-astro--generate-imports info tree))
+         (manual-imports (plist-get info :astro-imports))
+         (all-imports (if (and auto-imports manual-imports)
+                          (concat auto-imports "\n" manual-imports)
+                          (or auto-imports manual-imports))))
     (concat front-matter
-            (if (string-blank-p imports)
-                ""
-                (concat imports "\n\n"))
+            (if (and all-imports (not (string-blank-p all-imports)))
+                (concat all-imports "\n\n")
+                "")
             body)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -232,11 +232,72 @@ Otherwise, export to the directory specified by
       async subtreep visible-only body-only)))
 
 
+
+(defun org-astro--extract-image-filename (path)
+  "Extract just the filename without extension from PATH."
+  (file-name-sans-extension (file-name-nondirectory path)))
+
+(defun org-astro--collect-images-from-tree (tree info)
+  "Collect all image paths from the parse TREE."
+  (let (images)
+    (org-element-map tree 'link
+      (lambda (link)
+        (let ((type (org-element-property :type link))
+              (path (org-element-property :path link)))
+          (when (and (string= type "file")
+                     (string-match-p "\\(?:png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
+            (push path images))))
+      info)
+    images))
+
+(defun org-astro--generate-imports (info tree)
+  "Generate import statements for all images in the document."
+  (let* ((front-image (or (plist-get info :astro-image)
+                          (plist-get info :cover-image)))
+         (content-images (org-astro--collect-images-from-tree tree info))
+         (all-images (delete-dups
+                      (delq nil
+                            (append (when front-image (list front-image))
+                                    content-images))))
+         imports)
+    (dolist (img all-images)
+      (let ((var-name (org-astro--extract-image-filename img)))
+        ;; Make variable names valid JS identifiers
+        (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
+        (push (format "import %s from '%s';" var-name img) imports)))
+    (when imports
+      (mapconcat 'identity (nreverse imports) "\n"))))
+
+
 (defun org-astro-debug-info ()
   "Debug function to inspect export info."
   (interactive)
   (let ((info (org-export-get-environment 'astro)))
     (pp info)))
+
+
+(defun org-astro--generate-imports (info tree)
+  "Generate import statements for all images in the document."
+  (let* ((front-image (or (plist-get info :astro-image)
+                          (plist-get info :cover-image)))
+         (content-images (org-astro--collect-images-from-tree tree info))
+         imports)
+
+    ;; Handle the front matter image specially - always import as 'hero'
+    (when front-image
+      (push (format "import hero from '%s';" front-image) imports))
+
+    ;; Handle other images in the content
+    (dolist (img content-images)
+      ;; Skip if it's the same as the front image (already imported as hero)
+      (unless (equal img front-image)
+        (let ((var-name (org-astro--extract-image-filename img)))
+          (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
+          (push (format "import %s from '%s';" var-name img) imports))))
+
+    (when imports
+      (mapconcat 'identity (nreverse imports) "\n"))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition

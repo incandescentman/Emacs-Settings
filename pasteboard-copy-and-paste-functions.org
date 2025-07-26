@@ -316,15 +316,54 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 ** different behavior depending on whether I'm working with code or prose
 
 #+begin_src emacs-lisp
-(defun pasteboard-copy-adaptive (&optional arg)
-  "Adaptive copy command.
+(defun pasteboard-copy-adaptive ()
+  "Copy to the macOS pasteboard, choosing method based on current mode and context.
+Adapts behavior based on major mode and surrounding context."
+  (interactive)
+  (let (choice)  ;; will record which branch we took
+    (cond
+     ;; 1) In shell/elisp/web/markdown modes → verbatim copy (preserve everything)
+     ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'emacs-lisp-mode)
+          (eq major-mode 'web-mode)
+          (eq major-mode 'markdown-mode)
+          (eq major-mode 'gfm-mode)  ; GitHub Flavored Markdown
+          (derived-mode-p 'markdown-mode))
+      (setq choice "copy-verbatim")
+      (call-interactively #'pasteboard-copy-verbatim))
 
-With a prefix ARG (e.g. C-u), call `pasteboard-copy-raw'.
-With no prefix, call `pasteboard-copy-and-replace-em-dashes-in-clipboard'."
-  (interactive "P")
-  (if arg
-      (call-interactively #'pasteboard-copy-verbatim)
-    (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+     ;; 2) In MDX files (regardless of mode) → verbatim copy
+     ((and buffer-file-name
+           (string-match-p "\\.mdx\\'" buffer-file-name))
+      (setq choice "copy-verbatim (MDX file)")
+      (call-interactively #'pasteboard-copy-verbatim))
+
+     ;; 3) In programming modes → verbatim copy
+     ((derived-mode-p 'prog-mode)
+      (setq choice "verbatim")
+      (call-interactively #'pasteboard-copy-verbatim))
+
+     ;; 4) In Org/text modes → clean copy (replace em-dashes, etc.)
+     ((or (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode)))
+          (derived-mode-p 'text-mode))
+      (setq choice "so clean")
+      (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+
+     ;; 5) Fallback: if copying code-like content, use verbatim
+     (t
+      (if (and (use-region-p)
+               (save-excursion
+                 (goto-char (region-beginning))
+                 (looking-at-p "\\s-*[({[]\\|^\\s-*[#;]\\|https?://")))
+          (progn
+            (setq choice "copy-verbatim (code-like)")
+            (call-interactively #'pasteboard-copy-verbatim))
+        (setq choice "copy-clean (default)")
+        (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+
+    ;; Report what we did
+    (message "Copied text %s" choice)))
 #+end_src
 
 ** pasteboard-copy
