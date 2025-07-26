@@ -450,38 +450,49 @@ ARG zero or negative       → force replacement."
 If there's an active region and the clipboard contains a URL,
 insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
   (interactive)
-  ;; Get raw text from pbpaste and trim whitespace
   (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
-         (clipboard-text (downcase raw-clip)))
-    ;;  (message "DEBUG: region? %s, raw-clip='%s'" (use-region-p) raw-clip)
+         (clipboard-text (downcase raw-clip))
+         choice)  ;; will record which branch we took
     (cond
      ;; 1) If region is active and the clipboard looks like a URL → bracket link
      ((and (use-region-p)
            (not (string-empty-p raw-clip))
            (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-      ;;  (message "DEBUG: Inserting bracket link.")
+      (setq choice "bracket-link")
       (org-insert-link-from-clipboard (region-beginning) (region-end)))
 
-     ;; 2) Otherwise, do original logic
+     ;; 2) In Org/text modes → clean paste
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
+      (setq choice "paste-clean")
       (pasteboard-paste-clean))
+
+     ;; 3) In shell/elisp/web → raw paste
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
-          (eq major-mode 'web-mode)
-)
+          (eq major-mode 'web-mode))
+      (setq choice "paste-raw")
       (pasteboard-paste-raw))
+
+     ;; 4) Fallback: decide based on surrounding chars
      (t
       (let* ((prev-char (char-before))
              (next-char (char-after))
              (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-
-             (use-no-spaces (or (member prev-char char-set)
-                                (member next-char char-set))))
+             use-no-spaces)
+        (setq use-no-spaces
+              (or (member prev-char char-set)
+                  (member next-char char-set)))
         (if use-no-spaces
-            (pasteboard-paste-raw)
-          (pasteboard-paste-clean)))))))
+            (progn
+              (setq choice "paste-raw")
+              (pasteboard-paste-raw))
+          (setq choice "paste-clean")
+          (pasteboard-paste-clean)))))
+
+    ;; Finally, report what we did
+    (message "Adaptive paste chose: %s" choice)))
 #+END_SRC
 
 

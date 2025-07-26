@@ -203,13 +203,14 @@ Handles internal links to headings by creating anchor links."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(defun org-astro-export-as-mdx (&optional async)
+(defun org-astro-export-as-mdx (&optional async subtreep visible-only body-only)
   "Export current buffer to an Astro-compatible MDX buffer."
   (interactive)
-  (org-export-to-buffer 'astro "*Astro MDX Export*" async))
+  (org-export-to-buffer 'astro "*Astro MDX Export*"
+    async subtreep visible-only body-only))
 
 ;;;###autoload
-(defun org-astro-export-to-mdx (&optional async)
+(defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
   "Export current buffer to an Astro-compatible MDX file.
 If a POSTS_FOLDER keyword is present, export to that directory.
 Otherwise, export to the directory specified by
@@ -226,8 +227,16 @@ Otherwise, export to the directory specified by
                                                   default-directory))))
                         (make-directory d :parents)
                         d)))
-         (outfile (org-export-output-file-name ".mdx" nil pub-dir)))
-    (org-export-to-file 'astro outfile async)))
+         (outfile (org-export-output-file-name ".mdx" subtreep pub-dir)))
+    (org-export-to-file 'astro outfile
+      async subtreep visible-only body-only)))
+
+
+(defun org-astro-debug-info ()
+  "Debug function to inspect export info."
+  (interactive)
+  (let ((info (org-export-get-environment 'astro)))
+    (pp info)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
