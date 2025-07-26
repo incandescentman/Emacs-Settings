@@ -9769,7 +9769,27 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 
 #+end_src
 
+* org-supertag
+[[https://github.com/yibie/org-supertag][yibie/org-supertag: Make tag system great again, based on org-mode.]]
 
+#+begin_example emacs-lisp
+(use-package org-supertag
+  :load-path ("~/emacs/emacs-settings/org-supertag") ; points at the sub-dir
+  :after org
+  :init
+  ;; directory you want SimTag to watch
+  (setq org-supertag-sync-directories '("~/Dropbox/roam"))
+  :config
+  (org-supertag-setup))
+#+end_example
+
+* hunspell exclude large buffers
+#+begin_src emacs-lisp
+(defun my/skip-flyspell-on-large-buffers ()
+  (when (> (buffer-size) (* 1 1024 1024)) ; >1 MB
+    (flyspell-mode -1)))
+(add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers)
+#+end_src 
 
 * Local Variables & The End
 These have to be at the end.
