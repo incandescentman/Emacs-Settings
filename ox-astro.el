@@ -130,8 +130,10 @@
                                        (lambda (item) (format "  - %s" item))
                                        val "\n")
                                       "\n"))
-                             (t (format "%s
-"                                        (if (and (stringp val) (string-match-p ":" val))                                            (format "\"%%s\"" (replace-regexp-in-string """ "\\\"" val))                                          val))))))))
+                             (t (format "%s\n"
+                                        (if (and (stringp val) (string-match-p ":" val))
+                                            (format "\"%s\"" (replace-regexp-in-string "\"" "\\\"" val))
+                                          val)))))))))
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (info)
@@ -191,7 +193,7 @@
         (let* ((target (org-export-resolve-fuzzy-link link info))
                (title (org-element-property :raw-value target))
                (slug (org-astro--slugify title)))
-          (format "[%s](#%s)" (or desc title) slug))
+          (concat "[" (or desc title) "](" (string ?#) slug ")"))
         (org-md-link link desc info))))
 
 (defun org-astro-heading (heading contents info)
@@ -238,7 +240,7 @@
         (let ((type (org-element-property :type link))
               (path (org-element-property :path link)))
           (when (and (string= type "file")
-                     (string-match-p "\\(?:png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
+                     (string-match-p "\\(png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
             (push path images)))))
     images))
 
