@@ -67,10 +67,11 @@
   :type 'string)
 
 (defcustom org-astro-default-author-image
-  "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/writers-notebook/src/assets/images/authors/jay-dixit-512.png"
-  "Default author image path if not specified in the Org file."
+  "~/assets/images/authors/jay-dixit-512.png"   ;; <─ only this line changed
+  "Default author image path if not specified in the Org file.
+Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   :group 'org-export-astro
-  :type 'file)
+  :type 'string)   ;; treat it as raw front-matter text, not a local file
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Helper Functions
