@@ -199,7 +199,8 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
 
 (defun org-astro-heading (heading contents info)
   "Transcode a HEADING element."
-  (let* ((title (org-export-data (org-element-property :title heading) info))
+  (let* ((title (org-export-data (org-element-property :title heading)
+                               (cons :with-smart-quotes (cons nil info))))
          (level (+ (org-element-property :level heading)
                    (or (plist-get info :headline-offset) 0)))
          (header (format "%s %s" (make-string level ?#) title)))
