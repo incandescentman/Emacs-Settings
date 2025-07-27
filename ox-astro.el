@@ -1,7 +1,7 @@
-;;; ox-astro.el --- Astro MDX Back-End for Org Export Engine  -*- lexical-binding: t -*-
+;;; ox-astro.el --- Astro MDX Back-End for Org Export Engine  -*- lexical-binding: t -*-
 
 ;; Author: Gemini & Jay Dixit
-;; Version: 0.5.2
+;; Version: 0.6.0
 ;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: Org, markdown, docs, astro
 ;; URL: https://github.com/your-repo/ox-astro
@@ -15,11 +15,11 @@
 
 ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -31,8 +31,8 @@
 
 ;; To start using this exporter, add the below to your Emacs config:
 ;;
-;;   (with-eval-after-load 'ox
-;;     (require 'ox-astro))
+;;   (with-eval-after-load 'ox
+;;     (require 'ox-astro))
 ;;
 ;; # Workflow
 ;;
@@ -66,6 +66,12 @@
   :group 'org-export-astro
   :type 'string)
 
+(defcustom org-astro-default-author-image
+  "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/writers-notebook/src/assets/images/authors/jay_cannes_jon-whiten-eyes-square.png"
+  "Default author image path if not specified in the Org file."
+  :group 'org-export-astro
+  :type 'file)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -75,7 +81,6 @@
   (when (stringp s)
     (let ((s (downcase s)))
       (replace-regexp-in-string "[^a-z0-9]+" "-" (org-trim s) nil))))
-
 
 (defun org-astro--format-date (date-raw info)
   "Format DATE-RAW into a string suitable for Astro front matter.
@@ -98,14 +103,21 @@ INFO is the export options plist."
       ;; Fallback to parse-time-string
       (t
        (let* ((parsed (parse-time-string date-raw))
-              (sec    (or (nth 0 parsed) 0))
-              (min    (or (nth 1 parsed) 0))
-              (hour   (or (nth 2 parsed) 0))
-              (day    (nth 3 parsed))
-              (mon    (nth 4 parsed))
-              (year   (nth 5 parsed))
-              (zone   (nth 8 parsed)))
+              (sec   (or (nth 0 parsed) 0))
+              (min   (or (nth 1 parsed) 0))
+              (hour  (or (nth 2 parsed) 0))
+              (day   (nth 3 parsed))
+              (mon   (nth 4 parsed))
+              (year  (nth 5 parsed))
+              (zone  (nth 8 parsed)))
          (encode-time sec min hour day mon year zone)))))))
+
+(defun org-astro--filename-to-alt-text (path)
+  "Generate a human-readable alt text from an image PATH."
+  (when (stringp path)
+    (let* ((filename (file-name-sans-extension (file-name-nondirectory path)))
+           (human-readable (replace-regexp-in-string "[-_]" " " filename)))
+      (capitalize human-readable))))
 
 (defun org-astro--gen-yaml-front-matter (data)
   "Generate a YAML front-matter string from an alist DATA."
@@ -127,41 +139,56 @@ INFO is the export options plist."
                                        val "\n")
                                       "\n"))
                              ((stringp val)
-                              ;; Use format with ~S for values that might contain special characters
-                              ;; but for file paths we want them as-is.
-                              ;; Let's assume the path is clean now.
-                              (format "%s\n" val))
+                              ;; The path is already clean and correctly formatted.
+                              (format "'%s'\n" val))
                              (t
                               (format "%s\n" val))))))))
         ;; close front-matter block
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter (info)
-  "Return the Astro front-matter string.
-INFO is a plist used as a communication channel."
-  (let* ((title (plist-get info :title))
+  "Return the Astro front-matter string. INFO is a plist."
+  (let* (;; Get the posts-folder, needed for processing image paths.
+         (posts-folder (or (plist-get info :posts-folder)
+                           (plist-get info :astro-posts-folder)))
+
+         ;; --- Metadata ---
+         (title (plist-get info :title))
          (author (plist-get info :author))
-         (author-image (or (plist-get info :astro-author-image)
-                           (plist-get info :author-image)))  ; Add this
-         (excerpt (or (plist-get info :astro-excerpt)
-                      (plist-get info :excerpt)))
-         (image (or (plist-get info :astro-image)
-                    (plist-get info :cover-image)))
+         (excerpt (or (plist-get info :astro-excerpt) (plist-get info :excerpt)))
+         (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
+         (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
+
+         ;; --- Publish Date (with fallback to current time) ---
+         (publish-date
+          (let ((date-raw (or (plist-get info :astro-publish-date)
+                              (plist-get info :publish-date)
+                              (plist-get info :date))))
+            (if date-raw
+                (org-astro--format-date date-raw info)
+                ;; If no date is specified, use the current time.
+                (format-time-string (plist-get info :astro-date-format) (current-time)))))
+
+         ;; --- Author Image (with fallback to default) ---
+         (author-image-raw (or (plist-get info :astro-author-image)
+                               (plist-get info :author-image)
+                               org-astro-default-author-image))
+         (author-image (and author-image-raw posts-folder
+                            (org-astro--process-image-path author-image-raw posts-folder)))
+
+         ;; --- Cover Image & Alt Text (with generated alt text) ---
+         (image-raw (or (plist-get info :astro-image)
+                        (plist-get info :cover-image)))
+         (image (and image-raw posts-folder
+                     (org-astro--process-image-path image-raw posts-folder)))
          (image-alt (or (plist-get info :astro-image-alt)
-                        (plist-get info :cover-image-alt)))
-         (tags-raw (or (plist-get info :astro-tags)
-                       (plist-get info :tags)))
-         (tags (when tags-raw
-                 (org-split-string tags-raw "[, \n]+")))
-         (publish-date (or (plist-get info :astro-publish-date)
-                           (let ((date-raw (or (plist-get info :publish-date)
-                                               (plist-get info :date))))
-                             (when date-raw
-                               (org-astro--format-date date-raw info))))))
+                        (plist-get info :cover-image-alt)
+                        (and image (org-astro--filename-to-alt-text image)))))
+
     (org-astro--gen-yaml-front-matter
      `((title . ,title)
        (author . ,author)
-       (authorImage . ,author-image)  ; Add this - note camelCase
+       (authorImage . ,author-image)
        (publishDate . ,publish-date)
        (excerpt . ,excerpt)
        (image . ,image)
@@ -173,18 +200,17 @@ INFO is a plist used as a communication channel."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-astro-link (link desc info)
-  "Transcode a LINK object for Astro MDX.
-Handles internal links to headings by creating anchor links."
+  "Transcode a LINK object for Astro MDX."
   (let ((type (org-element-property :type link))
         (path (org-element-property :path link)))
     (if (and (string= type "fuzzy")
              (not (string-match-p "://" path)))
-        ;; Internal fuzzy link
+        ;; Internal fuzzy link to a heading
         (let* ((target (org-export-resolve-fuzzy-link link info))
                (title (org-element-property :raw-value target))
                (slug (org-astro--slugify title)))
           (format "[%s](#%s)" (or desc title) slug))
-        ;; fallback to default
+        ;; fallback to default markdown link
         (org-md-link link desc info))))
 
 (defun org-astro-heading (heading contents info)
@@ -227,10 +253,7 @@ Handles internal links to headings by creating anchor links."
 
 ;;;###autoload
 (defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
-  "Export current buffer to an Astro-compatible MDX file.
-If a POSTS_FOLDER keyword is present, export to that directory.
-Otherwise, export to the directory specified by
-`org-astro-default-posts-folder'."
+  "Export current buffer to an Astro-compatible MDX file."
   (interactive)
   (let* ((info (org-export-get-environment 'astro))
          (posts-folder (or (plist-get info :astro-posts-folder)
@@ -247,13 +270,11 @@ Otherwise, export to the directory specified by
     (org-export-to-file 'astro outfile
       async subtreep visible-only body-only)))
 
-
-
 (defun org-astro--extract-image-filename (path)
   "Extract just the filename without extension from PATH."
   (file-name-sans-extension (file-name-nondirectory path)))
 
-(defun org-astro--collect-images-from-tree (tree info)
+(defun org-astro--collect-images-from-tree (tree)
   "Collect all image paths from the parse TREE."
   (let (images)
     (org-element-map tree 'link
@@ -262,50 +283,33 @@ Otherwise, export to the directory specified by
               (path (org-element-property :path link)))
           (when (and (string= type "file")
                      (string-match-p "\\(?:png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
-            (push path images))))
-      info)
+            (push path images)))))
     images))
 
 (defun org-astro--generate-imports (info tree)
   "Generate import statements for all images in the document."
-  (let* ((front-image-raw (or (plist-get info :astro-image)
-                              (plist-get info :cover-image)))
-         ;; Clean the front-image path
-         (front-image (when front-image-raw (replace-regexp-in-string "^'\\|'$" "" (org-trim front-image-raw))))
-         (content-images (org-astro--collect-images-from-tree tree info))
+  (let* ((author-image (or (plist-get info :astro-author-image)
+                           (plist-get info :author-image)
+                           org-astro-default-author-image))
+         (front-image (or (plist-get info :astro-image)
+                          (plist-get info :cover-image)))
+         (content-images (org-astro--collect-images-from-tree tree))
+         (all-images (delete-dups (delq nil (append (list author-image) (list front-image) content-images))))
          imports)
-
-    ;; Handle the front matter image
-    (when front-image
-      (push (format "import hero from '%s';" front-image) imports))
-
-    ;; Handle other images in the content
-    (dolist (img content-images)
-      (let ((clean-img (replace-regexp-in-string "^'\\|'$" "" (org-trim img))))
-        (unless (equal clean-img front-image)
-          (let ((var-name (org-astro--extract-image-filename clean-img)))
-            (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
-            (push (format "import %s from '%s';" var-name clean-img) imports)))))
-
+    (dolist (img all-images)
+      (let* ((clean-img (replace-regexp-in-string "^'\\|'$" "" (org-trim img)))
+             (var-name (org-astro--extract-image-filename clean-img)))
+        (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
+        (push (format "import %s from '%s';" var-name clean-img) imports)))
     (when imports
       (mapconcat 'identity (nreverse imports) "\n"))))
-
-
-(defun org-astro-debug-info ()
-  "Debug function to inspect export info."
-  (interactive)
-  (let ((info (org-export-get-environment 'astro)))
-    (pp info)))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMAGE HANDLING
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-astro--get-assets-folder (posts-folder)
-  "Get the assets/images folder based on POSTS-FOLDER.
-Assumes standard Astro project structure where posts are in src/content/blog
-and images are in src/assets/images."
+  "Get the assets/images folder based on POSTS-FOLDER."
   (when posts-folder
     (let* ((posts-dir (file-name-as-directory (expand-file-name posts-folder)))
            ;; Go up from content/blog to src
@@ -315,98 +319,26 @@ and images are in src/assets/images."
                        (directory-file-name posts-dir))))))
       (expand-file-name "assets/images/posts/" src-dir))))
 
-
-
 (defun org-astro--process-image-path (image-path posts-folder)
-  "Process IMAGE-PATH, copying if needed and returning relative path.
-POSTS-FOLDER is the destination folder for blog posts."
+  "Process IMAGE-PATH, copying if needed and returning relative path."
   (when (and image-path posts-folder)
-    ;; Strip leading/trailing whitespace and then any surrounding quotes.
     (let* ((clean-path (replace-regexp-in-string
                         "^'\\|'$" ""
                         (replace-regexp-in-string
                          "^\"\\|\"$" "" (org-trim image-path))))
            (expanded-path (expand-file-name clean-path))
            (assets-folder (org-astro--get-assets-folder posts-folder)))
-
-      (if (and (file-exists-p expanded-path)
-               (file-name-absolute-p clean-path)
-               assets-folder)
+      (if (and (file-exists-p expanded-path) assets-folder)
           (let* ((filename (file-name-nondirectory expanded-path))
                  (dest-path (expand-file-name filename assets-folder)))
             (make-directory assets-folder t)
-
             (unless (file-exists-p dest-path)
               (message "Copying %s to %s" expanded-path dest-path)
-              (copy-file expanded-path dest-path t)) ; Overwrite existing file
-
-            ;; Return the path without quotes for use in imports
+              (copy-file expanded-path dest-path t))
+            ;; Return the path for Astro's import syntax
             (format "~/assets/images/posts/%s" filename))
-          ;; Return original path if not absolute or file doesn't exist
+          ;; Return original path if it cannot be processed
           image-path))))
-
-
-
-
-(defun org-astro--update-image-keywords ()
-  "Update image keywords in the current buffer with processed paths."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let* ((info (org-export-get-environment 'astro))
-           (posts-folder (or (plist-get info :astro-posts-folder)
-                             (plist-get info :posts-folder))))
-      (when posts-folder
-        ;; Process #+COVER_IMAGE
-        (goto-char (point-min))
-        (when (re-search-forward "^#\\+COVER_IMAGE:\\s-*\\(.+\\)$" nil t)
-          (let* ((current-path (match-string 1))
-                 (new-path (org-astro--process-image-path current-path posts-folder)))
-            (when (and new-path (not (string= current-path new-path)))
-              (replace-match (format "#+COVER_IMAGE: %s" new-path)))))
-
-        ;; Process #+ASTRO_IMAGE
-        (goto-char (point-min))
-        (when (re-search-forward "^#\\+ASTRO_IMAGE:\\s-*\\(.+\\)$" nil t)
-          (let* ((current-path (match-string 1))
-                 (new-path (org-astro--process-image-path current-path posts-folder)))
-            (when (and new-path (not (string= current-path new-path)))
-              (replace-match (format "#+ASTRO_IMAGE: %s" new-path)))))))))
-
-;; Update the export functions to process images before export
-;;;###autoload
-(defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
-  "Export current buffer to an Astro-compatible MDX file.
-If a POSTS_FOLDER keyword is present, export to that directory.
-Otherwise, export to the directory specified by
-`org-astro-default-posts-folder'."
-  (interactive)
-  ;; Process images first
-  (org-astro--update-image-keywords)
-  (let* ((info (org-export-get-environment 'astro))
-         (posts-folder (or (plist-get info :astro-posts-folder)
-                           (plist-get info :posts-folder)))
-         (pub-dir (if posts-folder
-                      (file-name-as-directory
-                       (expand-file-name (org-trim posts-folder)))
-                      (let ((d (file-name-as-directory
-                                (expand-file-name org-astro-default-posts-folder
-                                                  default-directory))))
-                        (make-directory d :parents)
-                        d)))
-         (outfile (org-export-output-file-name ".mdx" subtreep pub-dir)))
-    (org-export-to-file 'astro outfile
-      async subtreep visible-only body-only)))
-
-;; Add a convenience function to just process images without exporting
-;;;###autoload
-(defun org-astro-process-images ()
-  "Process and copy images in the current Org buffer.
-Updates image paths to use relative ~/assets/images/posts/ format."
-  (interactive)
-  (org-astro--update-image-keywords)
-  (message "Images processed and paths updated."))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
@@ -429,28 +361,25 @@ Updates image paths to use relative ~/assets/images/posts/ format."
   :filters-alist
   '((:filter-body . org-astro-body-filter))
 
-  ;; The format for each entry is:
-  ;; (PLIST-KEYWORD ORG-KEYWORD OPTION-KEY DEFAULT-VAR BEHAVIOR-SYMBOL)
-  ;; Most are nil, but the structure must be correct.
   :options-alist
-  '((:title              "TITLE"                nil nil nil)
-    (:author             "AUTHOR"               nil nil nil)
-    (:author-image       "AUTHOR_IMAGE"         nil nil nil)  ; Add this line
-    (:date               "DATE"                 nil nil nil)
-    (:publish-date       "PUBLISH_DATE"         nil nil nil)
-    (:excerpt            "EXCERPT"              nil nil nil)
-    (:tags               "TAGS"                 nil nil 'newline)
-    (:cover-image        "COVER_IMAGE"          nil nil nil)
-    (:cover-image-alt    "COVER_IMAGE_ALT"      nil nil nil)
-    (:posts-folder       "POSTS_FOLDER"         nil nil nil)
-    (:astro-publish-date "ASTRO_PUBLISH_DATE"   nil nil nil)
-    (:astro-excerpt      "ASTRO_EXCERPT"        nil nil nil)
-    (:astro-image        "ASTRO_IMAGE"          nil nil nil)
-    (:astro-image-alt    "ASTRO_IMAGE_ALT"      nil nil nil)
-    (:astro-author-image "ASTRO_AUTHOR_IMAGE"   nil nil nil)  ; Add this too
-    (:astro-tags         "ASTRO_TAGS"           nil nil 'newline)
-    (:astro-imports      "ASTRO_IMPORTS"        nil nil 'newline)
-    (:astro-posts-folder "ASTRO_POSTS_FOLDER"   nil nil nil)
+  '((:title              "TITLE"               nil nil nil)
+    (:author             "AUTHOR"              nil nil nil)
+    (:author-image       "AUTHOR_IMAGE"        nil nil nil)
+    (:date               "DATE"                nil nil nil)
+    (:publish-date       "PUBLISH_DATE"        nil nil nil)
+    (:excerpt            "EXCERPT"             nil nil nil)
+    (:tags               "TAGS"                nil nil 'newline)
+    (:cover-image        "COVER_IMAGE"         nil nil nil)
+    (:cover-image-alt    "COVER_IMAGE_ALT"     nil nil nil)
+    (:posts-folder       "POSTS_FOLDER"        nil nil nil)
+    (:astro-publish-date "ASTRO_PUBLISH_DATE"  nil nil nil)
+    (:astro-excerpt      "ASTRO_EXCERPT"       nil nil nil)
+    (:astro-image        "ASTRO_IMAGE"         nil nil nil)
+    (:astro-image-alt    "ASTRO_IMAGE_ALT"     nil nil nil)
+    (:astro-author-image "ASTRO_AUTHOR_IMAGE"  nil nil nil)
+    (:astro-tags         "ASTRO_TAGS"          nil nil 'newline)
+    (:astro-imports      "ASTRO_IMPORTS"       nil nil 'newline)
+    (:astro-posts-folder "ASTRO_POSTS_FOLDER"  nil nil nil)
     (:astro-date-format  nil "date-format" org-astro-date-format nil)))
 
 (provide 'ox-astro)
