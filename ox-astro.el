@@ -123,17 +123,18 @@ INFO is the export options plist."
                              ((listp val) ; For tags
                               (concat "\n"
                                       (mapconcat
-                                       (lambda (item) (format "- %s" item))  ; Remove space before -
+                                       (lambda (item) (format "  - %s" item))
                                        val "\n")
-                                      "\n"))  ; Add newline after tags
+                                      "\n"))
                              ((stringp val)
-                              ;; Remove quotes for all values
+                              ;; Use format with ~S for values that might contain special characters
+                              ;; but for file paths we want them as-is.
+                              ;; Let's assume the path is clean now.
                               (format "%s\n" val))
                              (t
                               (format "%s\n" val))))))))
         ;; close front-matter block
         (concat yaml-str "---\n"))))
-
 
 (defun org-astro--get-front-matter (info)
   "Return the Astro front-matter string.
@@ -267,19 +268,25 @@ Otherwise, export to the directory specified by
 
 (defun org-astro--generate-imports (info tree)
   "Generate import statements for all images in the document."
-  (let* ((front-image (or (plist-get info :astro-image)
-                          (plist-get info :cover-image)))
+  (let* ((front-image-raw (or (plist-get info :astro-image)
+                              (plist-get info :cover-image)))
+         ;; Clean the front-image path
+         (front-image (when front-image-raw (replace-regexp-in-string "^'\\|'$" "" (org-trim front-image-raw))))
          (content-images (org-astro--collect-images-from-tree tree info))
-         (all-images (delete-dups
-                      (delq nil
-                            (append (when front-image (list front-image))
-                                    content-images))))
          imports)
-    (dolist (img all-images)
-      (let ((var-name (org-astro--extract-image-filename img)))
-        ;; Make variable names valid JS identifiers
-        (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
-        (push (format "import %s from '%s';" var-name img) imports)))
+
+    ;; Handle the front matter image
+    (when front-image
+      (push (format "import hero from '%s';" front-image) imports))
+
+    ;; Handle other images in the content
+    (dolist (img content-images)
+      (let ((clean-img (replace-regexp-in-string "^'\\|'$" "" (org-trim img))))
+        (unless (equal clean-img front-image)
+          (let ((var-name (org-astro--extract-image-filename clean-img)))
+            (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
+            (push (format "import %s from '%s';" var-name clean-img) imports)))))
+
     (when imports
       (mapconcat 'identity (nreverse imports) "\n"))))
 
@@ -331,48 +338,36 @@ and images are in src/assets/images."
       (expand-file-name "assets/images/posts/" src-dir))))
 
 
+
 (defun org-astro--process-image-path (image-path posts-folder)
   "Process IMAGE-PATH, copying if needed and returning relative path.
 POSTS-FOLDER is the destination folder for blog posts."
   (when (and image-path posts-folder)
-    ;; Strip quotes from the entire path, not just filename
-    (let* ((clean-path (replace-regexp-in-string "^['\"]\\|['\"]$" "" image-path))
+    ;; Strip leading/trailing whitespace and then any surrounding quotes.
+    (let* ((clean-path (replace-regexp-in-string
+                        "^'\\|'$" ""
+                        (replace-regexp-in-string
+                         "^\"\\|\"$" "" (org-trim image-path))))
            (expanded-path (expand-file-name clean-path))
            (assets-folder (org-astro--get-assets-folder posts-folder)))
-
-      ;; Debug messages
-      (message "Processing image:")
-      (message "  Original path: %s" image-path)
-      (message "  Clean path: %s" clean-path)
-      (message "  Expanded path: %s" expanded-path)
-      (message "  Assets folder: %s" assets-folder)
-      (message "  File exists? %s" (file-exists-p expanded-path))
 
       (if (and (file-exists-p expanded-path)
                (file-name-absolute-p clean-path)
                assets-folder)
           (let* ((filename (file-name-nondirectory expanded-path))
                  (dest-path (expand-file-name filename assets-folder)))
-            ;; Create assets folder if it doesn't exist
             (make-directory assets-folder t)
 
-            ;; Copy file if it doesn't exist at destination
-            (if (file-exists-p dest-path)
-                (message "File already exists at: %s" dest-path)
-                (progn
-                  (message "Copying %s to %s" expanded-path dest-path)
-                  (copy-file expanded-path dest-path)
-                  (message "Copy complete!")))
+            (unless (file-exists-p dest-path)
+              (message "Copying %s to %s" expanded-path dest-path)
+              (copy-file expanded-path dest-path t)) ; Overwrite existing file
 
-            ;; Return relative path with ~/
+            ;; Return the path without quotes for use in imports
             (format "~/assets/images/posts/%s" filename))
           ;; Return original path if not absolute or file doesn't exist
-          (progn
-            (message "Not processing: absolute=%s, exists=%s, assets=%s"
-                     (file-name-absolute-p clean-path)
-                     (file-exists-p expanded-path)
-                     (not (null assets-folder)))
-            image-path)))))
+          image-path))))
+
+
 
 
 (defun org-astro--update-image-keywords ()
