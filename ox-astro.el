@@ -174,8 +174,8 @@
       (authorImage . ,author-image)
       (publishDate . ,publish-date)
       (excerpt . ,excerpt)
-      (image . ,image)
-      (imageAlt . ,image-alt)
+      (Image . ,image)
+      (ImageAlt . ,image-alt)
       (tags . ,tags))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
