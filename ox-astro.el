@@ -67,7 +67,7 @@
   :type 'string)
 
 (defcustom org-astro-default-author-image
-  "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/writers-notebook/src/assets/images/authors/20241201_0003_jay-dixit-512.png"
+  "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/writers-notebook/src/assets/images/authors/jay-dixit-512.png"
   "Default author image path if not specified in the Org file."
   :group 'org-export-astro
   :type 'file)
@@ -133,7 +133,7 @@
                              (t (format "%s\n"
                                         (if (and (stringp val) (string-match-p ":" val))
                                             (format "\"%s\"" (replace-regexp-in-string "\"" "\\\"" val))
-                                          val)))))))))
+                                            val)))))))))
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (info)
