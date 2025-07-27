@@ -298,28 +298,6 @@ Otherwise, export to the directory specified by
     (pp info)))
 
 
-(defun org-astro--generate-imports (info tree)
-  "Generate import statements for all images in the document."
-  (let* ((front-image (or (plist-get info :astro-image)
-                          (plist-get info :cover-image)))
-         (content-images (org-astro--collect-images-from-tree tree info))
-         imports)
-
-    ;; Handle the front matter image specially - always import as 'hero'
-    (when front-image
-      (push (format "import hero from '%s';" front-image) imports))
-
-    ;; Handle other images in the content
-    (dolist (img content-images)
-      ;; Skip if it's the same as the front image (already imported as hero)
-      (unless (equal img front-image)
-        (let ((var-name (org-astro--extract-image-filename img)))
-          (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
-          (push (format "import %s from '%s';" var-name img) imports))))
-
-    (when imports
-      (mapconcat 'identity (nreverse imports) "\n"))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMAGE HANDLING
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
