@@ -130,7 +130,8 @@
                                        (lambda (item) (format "  - %s" item))
                                        val "\n")
                                       "\n"))
-                             (t (format "%s\n" val))))))))
+                             (t (format "%s
+"                                        (if (and (stringp val) (string-match-p ":" val))                                            (format "\"%%s\"" (replace-regexp-in-string """ "\\\"" val))                                          val))))))))
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (info)
