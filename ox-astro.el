@@ -313,6 +313,127 @@ Otherwise, export to the directory specified by
     (when imports
       (mapconcat 'identity (nreverse imports) "\n"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; IMAGE HANDLING
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun org-astro--get-assets-folder (posts-folder)
+  "Get the assets/images folder based on POSTS-FOLDER.
+Assumes standard Astro project structure where posts are in src/content/blog
+and images are in src/assets/images."
+  (when posts-folder
+    (let* ((posts-dir (file-name-as-directory (expand-file-name posts-folder)))
+           ;; Go up from content/blog to src
+           (src-dir (file-name-directory
+                     (directory-file-name
+                      (file-name-directory
+                       (directory-file-name posts-dir))))))
+      (expand-file-name "assets/images/posts/" src-dir))))
+
+
+(defun org-astro--process-image-path (image-path posts-folder)
+  "Process IMAGE-PATH, copying if needed and returning relative path.
+POSTS-FOLDER is the destination folder for blog posts."
+  (when (and image-path posts-folder)
+    ;; Strip quotes from the entire path, not just filename
+    (let* ((clean-path (replace-regexp-in-string "^['\"]\\|['\"]$" "" image-path))
+           (expanded-path (expand-file-name clean-path))
+           (assets-folder (org-astro--get-assets-folder posts-folder)))
+
+      ;; Debug messages
+      (message "Processing image:")
+      (message "  Original path: %s" image-path)
+      (message "  Clean path: %s" clean-path)
+      (message "  Expanded path: %s" expanded-path)
+      (message "  Assets folder: %s" assets-folder)
+      (message "  File exists? %s" (file-exists-p expanded-path))
+
+      (if (and (file-exists-p expanded-path)
+               (file-name-absolute-p clean-path)
+               assets-folder)
+          (let* ((filename (file-name-nondirectory expanded-path))
+                 (dest-path (expand-file-name filename assets-folder)))
+            ;; Create assets folder if it doesn't exist
+            (make-directory assets-folder t)
+
+            ;; Copy file if it doesn't exist at destination
+            (if (file-exists-p dest-path)
+                (message "File already exists at: %s" dest-path)
+                (progn
+                  (message "Copying %s to %s" expanded-path dest-path)
+                  (copy-file expanded-path dest-path)
+                  (message "Copy complete!")))
+
+            ;; Return relative path with ~/
+            (format "~/assets/images/posts/%s" filename))
+          ;; Return original path if not absolute or file doesn't exist
+          (progn
+            (message "Not processing: absolute=%s, exists=%s, assets=%s"
+                     (file-name-absolute-p clean-path)
+                     (file-exists-p expanded-path)
+                     (not (null assets-folder)))
+            image-path)))))
+
+
+(defun org-astro--update-image-keywords ()
+  "Update image keywords in the current buffer with processed paths."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let* ((info (org-export-get-environment 'astro))
+           (posts-folder (or (plist-get info :astro-posts-folder)
+                             (plist-get info :posts-folder))))
+      (when posts-folder
+        ;; Process #+COVER_IMAGE
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+COVER_IMAGE:\\s-*\\(.+\\)$" nil t)
+          (let* ((current-path (match-string 1))
+                 (new-path (org-astro--process-image-path current-path posts-folder)))
+            (when (and new-path (not (string= current-path new-path)))
+              (replace-match (format "#+COVER_IMAGE: %s" new-path)))))
+
+        ;; Process #+ASTRO_IMAGE
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+ASTRO_IMAGE:\\s-*\\(.+\\)$" nil t)
+          (let* ((current-path (match-string 1))
+                 (new-path (org-astro--process-image-path current-path posts-folder)))
+            (when (and new-path (not (string= current-path new-path)))
+              (replace-match (format "#+ASTRO_IMAGE: %s" new-path)))))))))
+
+;; Update the export functions to process images before export
+;;;###autoload
+(defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
+  "Export current buffer to an Astro-compatible MDX file.
+If a POSTS_FOLDER keyword is present, export to that directory.
+Otherwise, export to the directory specified by
+`org-astro-default-posts-folder'."
+  (interactive)
+  ;; Process images first
+  (org-astro--update-image-keywords)
+  (let* ((info (org-export-get-environment 'astro))
+         (posts-folder (or (plist-get info :astro-posts-folder)
+                           (plist-get info :posts-folder)))
+         (pub-dir (if posts-folder
+                      (file-name-as-directory
+                       (expand-file-name (org-trim posts-folder)))
+                      (let ((d (file-name-as-directory
+                                (expand-file-name org-astro-default-posts-folder
+                                                  default-directory))))
+                        (make-directory d :parents)
+                        d)))
+         (outfile (org-export-output-file-name ".mdx" subtreep pub-dir)))
+    (org-export-to-file 'astro outfile
+      async subtreep visible-only body-only)))
+
+;; Add a convenience function to just process images without exporting
+;;;###autoload
+(defun org-astro-process-images ()
+  "Process and copy images in the current Org buffer.
+Updates image paths to use relative ~/assets/images/posts/ format."
+  (interactive)
+  (org-astro--update-image-keywords)
+  (message "Images processed and paths updated."))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
