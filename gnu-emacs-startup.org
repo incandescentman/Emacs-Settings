@@ -48,7 +48,7 @@ Automatically load abbreviations table:
 
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
-(defun jay/reflash-indentation ()
+(defun reflash-indentation ()
   "Fix spacing on the screen."
   (interactive)
   (org-indent-mode 1)
@@ -138,7 +138,7 @@ Automatically load abbreviations table:
 
 (with-eval-after-load 'server      ; ensure `server.el` is loaded first
   (add-hook 'server-switch-hook #'jay/toggle-fullscreen))
-#+end_src 
+#+end_src
 
 * tabbar
 So Emacs text doesn't appear on the MacBook Pro notch.

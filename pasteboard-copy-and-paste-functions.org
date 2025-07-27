@@ -510,6 +510,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
      ;; 3) In shell/elisp/web → raw paste
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
+          (eq major-mode 'mardown-mode)
           (eq major-mode 'web-mode))
       (setq choice "raw")
       (pasteboard-paste-raw))

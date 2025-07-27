@@ -140,6 +140,8 @@ INFO is the export options plist."
 INFO is a plist used as a communication channel."
   (let* ((title (plist-get info :title))
          (author (plist-get info :author))
+         (author-image (or (plist-get info :astro-author-image)
+                           (plist-get info :author-image)))  ; Add this
          (excerpt (or (plist-get info :astro-excerpt)
                       (plist-get info :excerpt)))
          (image (or (plist-get info :astro-image)
@@ -158,6 +160,7 @@ INFO is a plist used as a communication channel."
     (org-astro--gen-yaml-front-matter
      `((title . ,title)
        (author . ,author)
+       (authorImage . ,author-image)  ; Add this - note camelCase
        (publishDate . ,publish-date)
        (excerpt . ,excerpt)
        (image . ,image)
@@ -318,7 +321,7 @@ Otherwise, export to the directory specified by
 (org-export-define-derived-backend 'astro 'md
   :menu-entry
   '(?a "Export to Astro"
-       ((?X "As MDX buffer" org-astro-export-as-mdx)
+       ((?a "As MDX buffer" org-astro-export-as-mdx)
         (?x "To MDX file" org-astro-export-to-mdx)
         (?o "To MDX file and open"
             (lambda (_a _s _v _b)
@@ -338,6 +341,7 @@ Otherwise, export to the directory specified by
   :options-alist
   '((:title              "TITLE"                nil nil nil)
     (:author             "AUTHOR"               nil nil nil)
+    (:author-image       "AUTHOR_IMAGE"         nil nil nil)  ; Add this line
     (:date               "DATE"                 nil nil nil)
     (:publish-date       "PUBLISH_DATE"         nil nil nil)
     (:excerpt            "EXCERPT"              nil nil nil)
@@ -349,6 +353,7 @@ Otherwise, export to the directory specified by
     (:astro-excerpt      "ASTRO_EXCERPT"        nil nil nil)
     (:astro-image        "ASTRO_IMAGE"          nil nil nil)
     (:astro-image-alt    "ASTRO_IMAGE_ALT"      nil nil nil)
+    (:astro-author-image "ASTRO_AUTHOR_IMAGE"   nil nil nil)  ; Add this too
     (:astro-tags         "ASTRO_TAGS"           nil nil 'newline)
     (:astro-imports      "ASTRO_IMPORTS"        nil nil 'newline)
     (:astro-posts-folder "ASTRO_POSTS_FOLDER"   nil nil nil)
