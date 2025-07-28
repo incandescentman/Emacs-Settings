@@ -112,6 +112,16 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
            (human-readable (replace-regexp-in-string "[-_]" " " filename)))
       (capitalize human-readable))))
 
+(defun org-astro--get-task-nesting-level (heading)
+  "Calculate nesting level for a TODO task by counting TODO ancestors."
+  (let ((level 0)
+        (current heading))
+    (while (setq current (org-element-parent current))
+      (when (and (eq (org-element-type current) 'headline)
+                 (org-element-property :todo-keyword current))
+        (setq level (1+ level))))
+    level))
+
 (defun org-astro--gen-yaml-front-matter (data)
   "Generate a YAML front-matter string from an alist DATA."
   (if (null data)
@@ -198,13 +208,36 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
         (org-md-link link desc info))))
 
 (defun org-astro-heading (heading contents info)
-  "Transcode a HEADING element."
-  (let* ((title (org-export-data (org-element-property :title heading)
-                               (cons :with-smart-quotes (cons nil info))))
-         (level (+ (org-element-property :level heading)
-                   (or (plist-get info :headline-offset) 0)))
-         (header (format "%s %s" (make-string level ?#) title)))
-    (format "%s\n\n%s" header (or contents ""))))
+  "Transcode a HEADING element.
+If it has a TODO keyword, convert it to a Markdown task list item."
+  (let ((todo-keyword (org-element-property :todo-keyword heading)))
+    (if todo-keyword
+        ;; It's a TODO item, format as a task list.
+        (let* ((title (org-export-data (org-element-property :title heading)
+                                     (cons :with-smart-quotes (cons nil info))))
+               (nesting-level (org-astro--get-task-nesting-level heading))
+               (indent (make-string (* 2 nesting-level) ? ))
+               (donep (member todo-keyword org-done-keywords))
+               (checkbox (if donep "[x]" "[ ]"))
+               (trimmed-contents (if contents (org-trim contents) ""))
+               (indented-contents
+                (if (> (length trimmed-contents) 0)
+                    (let ((content-indent (make-string (+ 2 (* 2 nesting-level)) ? )))
+                      (concat "\n" content-indent
+                              (replace-regexp-in-string
+                               "\n"
+                               (concat "\n" content-indent)
+                               trimmed-contents)))
+                  "")))
+          (format "%s- %s %s%s\n" indent checkbox title indented-contents))
+      ;; It's a regular heading.
+      (let* ((title (org-export-data (org-element-property :title heading)
+                                   (cons :with-smart-quotes (cons nil info))))
+             (level (+ (org-element-property :level heading)
+                       (or (plist-get info :headline-offset) 0)))
+             (header (format "%s %s" (make-string level ?#) title)))
+        (format "%s\n\n%s" header (or contents ""))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Filter Functions
