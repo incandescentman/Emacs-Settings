@@ -88,22 +88,7 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   (let ((date-fmt (plist-get info :astro-date-format)))
     (format-time-string
      date-fmt
-     (cond
-      ((string-match-p org-ts-regexp-both date-raw)
-       (org-time-string-to-time date-raw))
-      ((string-match "^\\([0-9]\\{4\\}\\)-\\([0-9]\\{2\\}\\)-\\([0-9]\\{2\\}\\)$" date-raw)
-       (encode-time 0 0 0
-                    (string-to-number (match-string 3 date-raw))
-                    (string-to-number (match-string 2 date-raw))
-                    (string-to-number (match-string 1 date-raw))
-                    nil nil nil))
-      (t
-       (let* ((parsed (parse-time-string date-raw))
-              (sec   (or (nth 0 parsed) 0)) (min   (or (nth 1 parsed) 0))
-              (hour  (or (nth 2 parsed) 0)) (day   (nth 3 parsed))
-              (mon   (nth 4 parsed)) (year  (nth 5 parsed))
-              (zone  (nth 8 parsed)))
-         (encode-time sec min hour day mon year zone)))))))
+     (org-time-string-to-time date-raw))))
 
 (defun org-astro--filename-to-alt-text (path)
   "Generate a human-readable alt text from an image PATH."
@@ -138,13 +123,15 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
                              ((listp val)
                               (concat "\n"
                                       (mapconcat
-                                       (lambda (item) (format "  - %s" item))
+                                       (lambda (item) (format "- %s" item))
                                        val "\n")
                                       "\n"))
                              (t (format "%s\n"
-                                        (if (and (stringp val) (string-match-p ":" val))
+                                        (if (and (stringp val)
+                                                 (string-match-p ":" val)
+                                                 (not (eq key 'publishDate)))
                                             (format "\"%s\"" (replace-regexp-in-string "\"" "\\\"" val))
-                                            val)))))))))
+                                          val)))))))))
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (info)
@@ -248,24 +235,24 @@ If it has a TODO keyword, convert it to a Markdown task list item."
   (let* ((tree (org-element-parse-buffer))
          (front-matter-data (org-astro--get-front-matter-data info))
          (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
-         (auto-imports (org-astro--generate-imports front-matter-data tree info))
+         ;; --- Handle Imports ---
+         (cover-image-path (cdr (assoc 'Image front-matter-data)))
+         (auto-imports
+          (when cover-image-path
+            (format "import hero from '%s';" cover-image-path)))
          (manual-imports (plist-get info :astro-imports))
          (all-imports (if (and auto-imports manual-imports)
                           (concat auto-imports "\n" manual-imports)
-                          (or auto-imports manual-imports))))
+                        (or auto-imports manual-imports))))
     (concat front-matter-string
             (if (and all-imports (not (string-blank-p all-imports)))
                 (concat all-imports "\n\n")
-                "")
+              "")
             body)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun org-astro--extract-image-filename (path)
-  "Extract just the filename without extension from PATH."
-  (file-name-sans-extension (file-name-nondirectory path)))
 
 (defun org-astro--collect-images-from-tree (tree)
   "Collect all image paths from the parse TREE."
@@ -278,28 +265,6 @@ If it has a TODO keyword, convert it to a Markdown task list item."
                      (string-match-p "\\(png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
             (push path images)))))
     images))
-
-(defun org-astro--generate-imports (front-matter-data tree info)
-  "Generate import statements for all images in the document."
-  (let* ((posts-folder (or (plist-get info :posts-folder)
-                           (plist-get info :astro-posts-folder)))
-         (author-image (cdr (assoc 'authorImage front-matter-data)))
-         (front-image (cdr (assoc 'image front-matter-data)))
-         (content-images-raw (org-astro--collect-images-from-tree tree))
-         (content-images (mapcar (lambda (img)
-                                   (org-astro--process-image-path img posts-folder "posts/"))
-                                 content-images-raw))
-         (all-images (delete-dups (delq nil (append (list author-image)
-                                                    (list front-image)
-                                                    content-images))))
-         imports)
-    (dolist (img all-images)
-      (let* ((clean-img (replace-regexp-in-string "^'\\|'$" "" (org-trim img)))
-             (var-name (org-astro--extract-image-filename clean-img)))
-        (setq var-name (replace-regexp-in-string "[^a-zA-Z0-9]" "_" var-name))
-        (push (format "import %s from '%s';" var-name clean-img) imports)))
-    (when imports
-      (mapconcat 'identity (nreverse imports) "\n"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMAGE HANDLING
@@ -351,12 +316,19 @@ If it has a TODO keyword, convert it to a Markdown task list item."
          (pub-dir (if posts-folder
                       (file-name-as-directory
                        (expand-file-name (org-trim posts-folder)))
-                      (let ((d (file-name-as-directory
-                                (expand-file-name org-astro-default-posts-folder
-                                                  default-directory))))
-                        (make-directory d :parents)
-                        d)))
-         (outfile (org-export-output-file-name ".mdx" subtreep pub-dir)))
+                    (let ((d (file-name-as-directory
+                              (expand-file-name org-astro-default-posts-folder
+                                                default-directory))))
+                      (make-directory d :parents)
+                      d)))
+         (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
+         (out-dir (file-name-directory default-outfile))
+         (out-filename (file-name-nondirectory default-outfile))
+         (final-filename
+          (replace-regexp-in-string
+           "_" "-"
+           (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
+         (outfile (expand-file-name final-filename out-dir)))
     (org-export-to-file 'astro outfile
       async subtreep visible-only body-only)))
 

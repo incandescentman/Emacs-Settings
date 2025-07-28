@@ -441,7 +441,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
-      (setq choice "verbatim")
+      (setq choice "clean")
       (pasteboard-paste-clean))
 
      ;; 3) In shell/elisp/web → raw paste
@@ -449,7 +449,7 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'mardown-mode)
           (eq major-mode 'web-mode))
-      (setq choice "raw")
+      (setq choice "verbatim")
       (pasteboard-paste-raw))
 
      ;; 4) Fallback: decide based on surrounding chars

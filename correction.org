@@ -1,0 +1,34 @@
+
+
+* Current behavior for frontmatter
+---
+title: Teaching Writing in the Age of AI
+author: Jay Dixit
+authorImage: ~/assets/images/authors/jay-dixit-512.png
+publishDate: "2025-07-28T07:57:21Z"
+excerpt: Five principles for educators
+Image: warmContemplation
+ImageAlt: Student writing by hand at a library desk beside an open laptop, sunlight streaming in, symbolizing thoughtful AI use in education
+tags:
+ - writing
+ - creativity
+ - education
+---
+import warmContemplation from '~/assets/images/posts/warm-contemplation.png';
+
+
+* Desired behavior for frontmatter
+---
+title: Teaching Writing in the Age of AI
+author: Jay Dixit
+authorImage: ~/assets/images/authors/jay-dixit-512.png
+publishDate: 2025-07-28T05:55:33Z
+excerpt: Five principles for educators
+image: ~/assets/images/posts/warm-contemplation.png
+ImageAlt: Student writing by hand at a library desk beside an open laptop, sunlight streaming in, symbolizing thoughtful AI use in education
+tags:
+- writing
+- creativity
+- education
+---
+import hero from '~/assets/images/posts/warm-contemplation.png';
