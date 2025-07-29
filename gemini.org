@@ -2,8 +2,6 @@
 * Instructions
 Currently, the astro exporter looks for a line like this:
 
-#+POSTS_FOLDER: /Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog
-
 in order to know the destination folder for the mdx export
 
 let's declare a variable (is that what you call it?) of known posts folders

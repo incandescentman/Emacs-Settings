@@ -1,0 +1,25 @@
+---
+title: Instructions
+author: Jay Dixit
+publishDate: 2025-07-29T17:34:20Z
+excerpt: "Currently, the astro exporter looks for a line like this:
+"
+---
+# Instructions
+
+Currently, the astro exporter looks for a line like this:
+
+in order to know the destination folder for the mdx export
+
+let&rsquo;s declare a variable (is that what you call it?) of known posts folders
+
+e.g.
+
+-   /Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog
+-   /Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog
+-   /Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/data/posts
+
+etc
+
+Then, if the org source file does not specify a posts folder, we prompt the user to select one from the list. does that make sense?
+

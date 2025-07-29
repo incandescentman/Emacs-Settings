@@ -73,6 +73,16 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   :group 'org-export-astro
   :type 'string)   ;; treat it as raw front-matter text, not a local file
 
+(defcustom org-astro-known-posts-folders
+  '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
+    ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
+    ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/data/posts"))
+  "An alist of known directories for exporting Astro posts.
+Each element is a cons cell of the form (NICKNAME . PATH)."
+  :group 'org-export-astro
+  :type '(alist :key-type (string :tag "Nickname")
+                :value-type (directory :tag "Path")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Internal Helper Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -353,16 +363,17 @@ If it has a TODO keyword, convert it to a Markdown task list item."
   (if (string-equal ".mdx" (file-name-extension (buffer-file-name)))
       (message "Cannot export from an .mdx file. Run this from the source .org file.")
     (let* ((info (org-export-get-environment 'astro))
-           (posts-folder (or (plist-get info :astro-posts-folder)
-                             (plist-get info :posts-folder)))
-           (pub-dir (if posts-folder
-                        (file-name-as-directory
-                         (expand-file-name (org-trim posts-folder)))
-                      (let ((d (file-name-as-directory
-                                (expand-file-name org-astro-default-posts-folder
-                                                  default-directory))))
-                        (make-directory d :parents)
-                        d)))
+           (posts-folder
+            (or (plist-get info :astro-posts-folder)
+                (plist-get info :posts-folder)
+                (let* ((selection (completing-read "Select a posts folder: "
+                                                  org-astro-known-posts-folders
+                                                  nil t)))
+                  (when selection
+                    (cdr (assoc selection org-astro-known-posts-folders))))))
+           (pub-dir (when posts-folder
+                      (file-name-as-directory
+                       (expand-file-name (org-trim posts-folder)))))
            (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
            (out-dir (file-name-directory default-outfile))
            (out-filename (file-name-nondirectory default-outfile))
@@ -371,8 +382,10 @@ If it has a TODO keyword, convert it to a Markdown task list item."
              "_" "-"
              (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
            (outfile (expand-file-name final-filename out-dir)))
-      (org-export-to-file 'astro outfile
-        async subtreep visible-only body-only))))
+      (when pub-dir
+        (make-directory pub-dir :parents)
+        (org-export-to-file 'astro outfile
+          async subtreep visible-only body-only)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
