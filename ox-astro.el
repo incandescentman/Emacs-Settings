@@ -139,21 +139,31 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   (let* (;; Get the posts-folder, needed for processing image paths.
          (posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
-         ;; --- Metadata with defaults ---
-         (title (or (plist-get info :title)
-                    (let ((headline (org-element-map tree 'headline 'identity nil 'first-match)))
-                      (if headline
-                          (org-export-data (org-element-property :title headline) info)
-                        "Untitled Post"))))
+         ;; --- Metadata with defaults (respecting narrowing) ---
+         (title
+          (or (let ((kw (org-element-map tree 'keyword
+                          (lambda (k) (when (string-equal "TITLE" (org-element-property :key k)) k))
+                          nil 'first-match)))
+                (when kw (org-element-property :value kw)))
+              (let ((headline (org-element-map tree 'headline 'identity nil 'first-match)))
+                (when headline
+                  (org-export-data (org-element-property :title headline) info)))
+              "Untitled Post"))
          (author (or (plist-get info :author) "Jay Dixit"))
-         (excerpt (or (plist-get info :astro-excerpt)
-                      (plist-get info :excerpt)
-                      (let ((paragraph (org-element-map tree 'paragraph
-                                         'org-element-contents
-                                         nil 'first-match)))
-                        (if paragraph
-                            (org-export-data paragraph info)
-                          ""))))
+         (excerpt
+          (or (let ((kw (org-element-map tree 'keyword
+                          (lambda (k)
+                            (when (or (string-equal "ASTRO_EXCERPT" (org-element-property :key k))
+                                      (string-equal "EXCERPT" (org-element-property :key k)))
+                              k))
+                          nil 'first-match)))
+                (when kw (org-element-property :value kw)))
+              (let ((paragraph (org-element-map tree 'paragraph
+                                  'org-element-contents
+                                  nil 'first-match)))
+                (when paragraph
+                  (org-export-data paragraph info)))
+              ""))
          (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
          (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
          ;; --- Publish Date (with fallback to current time) ---
