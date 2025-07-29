@@ -590,7 +590,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-P") 'projectile-find-file)
 
 
-(define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
+;; (define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
 
 ;; and make it work in the minibuffer too
 (define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-raw)
@@ -638,7 +638,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-d") 'kill-word-correctly-and-capitalize)
 ;; (define-key key-minor-mode-map (kbd "m-d") 'kill-word-correctly-and-capitalize)
-(define-key key-minor-mode-map (kbd "M-d") 'org-todo)
+;; (define-key key-minor-mode-map (kbd "M-d") 'org-todo)
 
 (define-key key-minor-mode-map (kbd "M-s-9") 'org-todo)
 
@@ -714,10 +714,10 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-+") 'copy-region-to-other-window)
 (define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
 
-(define-key org-mode-map (kbd "s-l") 'org-insert-link)
+(define-key org-mode-map (kbd "s-;") 'org-insert-link)
 
 (define-key key-minor-mode-map (kbd "s-B") 'consult-buffer)
-
+(define-key key-minor-mode-map (kbd "C-s-SPC") 'cape-emoji)
 (define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
 (define-key key-minor-mode-map (kbd "s-D") 'define-word-at-point)
 
@@ -846,7 +846,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-g") 'isearch-repeat-forward)
 (define-key key-minor-mode-map (kbd "s-k e e") 'fasd-find-file)
 
-(define-key key-minor-mode-map (kbd "s-d") 'org-todo)
+(define-key key-minor-mode-map (kbd "s-j") 'org-todo)
 (define-key key-minor-mode-map (kbd "s-L") 'org-mac-link-chrome-insert-frontmost-url)
 (define-key key-minor-mode-map (kbd "s-S") 'org-mac-link-skim-insert)
 (define-key key-minor-mode-map (kbd "s-a") 'mark-whole-buffer) ; select all
@@ -874,7 +874,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-Y") 'available) ;; ⌘-Y
 ;; (define-key key-minor-mode-map (kbd "s-.") 'available) ;; s-.
 ;; (define-key key-minor-mode-map (kbd "s-:") 'available) ;; s-:
-(define-key key-minor-mode-map (kbd "s-;") 'consult-outline) ;; s-:
+(define-key key-minor-mode-map (kbd "s-l") 'consult-outline) ;;
 ;; (define-key key-minor-mode-map (kbd "C-\\") 'available) ;; C-\
 
 ;; available

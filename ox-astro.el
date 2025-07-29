@@ -184,15 +184,25 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-astro-link (link desc info)
-  "Transcode a LINK object for Astro MDX."
+  "Transcode a LINK object for Astro MDX.
+This handles raw URLs specially to format them as [url](url)
+instead of <url>."
   (let ((type (org-element-property :type link))
-        (path (org-element-property :path link)))
-    (if (and (string= type "fuzzy") (not (string-match-p "://" path)))
-        (let* ((target (org-export-resolve-fuzzy-link link info))
-               (title (org-element-property :raw-value target))
-               (slug (org-astro--slugify title)))
-          (concat "[" (or desc title) "](" (string ?#) slug ")"))
-        (org-md-link link desc info))))
+        (path (org-element-property :path link))
+        (raw-link (org-element-property :raw-link link)))
+    (cond
+     ;; Fuzzy links for internal headings
+     ((and (string= type "fuzzy") (not (string-match-p "://" path)))
+      (let* ((target (org-export-resolve-fuzzy-link link info))
+             (title (org-element-property :raw-value target))
+             (slug (org-astro--slugify title)))
+        (concat "[" (or desc title) "](" (string ?#) slug ")")))
+     ;; Raw URLs (no description)
+     ((and (not desc) (member type '("http" "https" "ftp" "mailto")))
+      (format "[%s](%s)" raw-link raw-link))
+     ;; Defer to default markdown for all other links
+     (t
+      (org-md-link link desc info)))))
 
 (defun org-astro-heading (heading contents info)
   "Transcode a HEADING element.
@@ -249,6 +259,10 @@ If it has a TODO keyword, convert it to a Markdown task list item."
                 (concat all-imports "\n\n")
               "")
             body)))
+
+(defun org-astro-final-output-filter (output _backend _info)
+  "Replace en-dash HTML entity with a literal en-dash."
+  (replace-regexp-in-string "&#x2013;" "–" output t t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
@@ -310,27 +324,29 @@ If it has a TODO keyword, convert it to a Markdown task list item."
 (defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
   "Export current buffer to an Astro-compatible MDX file."
   (interactive)
-  (let* ((info (org-export-get-environment 'astro))
-         (posts-folder (or (plist-get info :astro-posts-folder)
-                           (plist-get info :posts-folder)))
-         (pub-dir (if posts-folder
-                      (file-name-as-directory
-                       (expand-file-name (org-trim posts-folder)))
-                    (let ((d (file-name-as-directory
-                              (expand-file-name org-astro-default-posts-folder
-                                                default-directory))))
-                      (make-directory d :parents)
-                      d)))
-         (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
-         (out-dir (file-name-directory default-outfile))
-         (out-filename (file-name-nondirectory default-outfile))
-         (final-filename
-          (replace-regexp-in-string
-           "_" "-"
-           (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
-         (outfile (expand-file-name final-filename out-dir)))
-    (org-export-to-file 'astro outfile
-      async subtreep visible-only body-only)))
+  (if (string-equal ".mdx" (file-name-extension (buffer-file-name)))
+      (message "Cannot export from an .mdx file. Run this from the source .org file.")
+    (let* ((info (org-export-get-environment 'astro))
+           (posts-folder (or (plist-get info :astro-posts-folder)
+                             (plist-get info :posts-folder)))
+           (pub-dir (if posts-folder
+                        (file-name-as-directory
+                         (expand-file-name (org-trim posts-folder)))
+                      (let ((d (file-name-as-directory
+                                (expand-file-name org-astro-default-posts-folder
+                                                  default-directory))))
+                        (make-directory d :parents)
+                        d)))
+           (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
+           (out-dir (file-name-directory default-outfile))
+           (out-filename (file-name-nondirectory default-outfile))
+           (final-filename
+            (replace-regexp-in-string
+             "_" "-"
+             (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
+           (outfile (expand-file-name final-filename out-dir)))
+      (org-export-to-file 'astro outfile
+        async subtreep visible-only body-only))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
@@ -351,7 +367,8 @@ If it has a TODO keyword, convert it to a Markdown task list item."
     (headline . org-astro-heading))
 
   :filters-alist
-  '((:filter-body . org-astro-body-filter))
+  '((:filter-body . org-astro-body-filter)
+    (:filter-final-output . org-astro-final-output-filter))
 
   :options-alist
   '((:title              "TITLE"               nil nil nil)

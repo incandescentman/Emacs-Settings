@@ -9799,6 +9799,31 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 #+end_src
 
 
+* cape emoji
+#+begin_src emacs-lisp
+(use-package cape
+  :defer t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-emoji))
+
+;; --- choose your modifier once --------------------------
+(defconst my/emoji-tone "🏽")     ;; U+1F3FD  (medium skin tone)
+;; --------------------------------------------------------
+
+(defun my/emoji-tonify (emoji)
+  "If EMOJI can take a skin-tone, append MY/EMOJI-TONE to it."
+  (if (string-match-p "\\p{Emoji_Modifier_Base}" emoji)
+      (concat emoji my/emoji-tone)
+    emoji))
+
+;; Advice Cape's inserter so every completion runs through our filter.
+(advice-add #'cape--completion-insert
+            :filter-args (lambda (args)
+                           (setcar args (my/emoji-tonify (car args)))
+                           args))
+#+end_src 
+
+
 * Local Variables & The End
 These have to be at the end.
 

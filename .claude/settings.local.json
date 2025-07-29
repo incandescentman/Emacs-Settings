@@ -3,7 +3,8 @@
     "allow": [
       "Bash(sed:*)",
       "Bash(emacs:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(pnpm run:*)"
     ],
     "deny": []
   }
