@@ -139,10 +139,26 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   (let* (;; Get the posts-folder, needed for processing image paths.
          (posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
+         (tree (org-element-parse-buffer))
          ;; --- Metadata with defaults ---
-         (title (plist-get info :title))
+         (title (or (plist-get info :title)
+                    (let ((headline (org-element-map tree 'headline
+                                      (lambda (h)
+                                        (when (= (org-element-property :level h) 1)
+                                          h))
+                                      nil 'first-match)))
+                      (if headline
+                          (org-export-data (org-element-property :title headline) info)
+                        "Untitled Post"))))
          (author (or (plist-get info :author) "Jay Dixit"))
-         (excerpt (or (plist-get info :astro-excerpt) (plist-get info :excerpt)))
+         (excerpt (or (plist-get info :astro-excerpt)
+                      (plist-get info :excerpt)
+                      (let ((paragraph (org-element-map tree 'paragraph
+                                         'org-element-contents
+                                         nil 'first-match)))
+                        (if paragraph
+                            (org-export-data paragraph info)
+                          ""))))
          (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
          (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
          ;; --- Publish Date (with fallback to current time) ---
