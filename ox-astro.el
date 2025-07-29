@@ -134,19 +134,14 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
                                           val)))))))))
         (concat yaml-str "---\n"))))
 
-(defun org-astro--get-front-matter-data (info)
+(defun org-astro--get-front-matter-data (tree info)
   "Build an alist of final front-matter data, applying defaults."
   (let* (;; Get the posts-folder, needed for processing image paths.
          (posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
-         (tree (org-element-parse-buffer))
          ;; --- Metadata with defaults ---
          (title (or (plist-get info :title)
-                    (let ((headline (org-element-map tree 'headline
-                                      (lambda (h)
-                                        (when (= (org-element-property :level h) 1)
-                                          h))
-                                      nil 'first-match)))
+                    (let ((headline (org-element-map tree 'headline 'identity nil 'first-match)))
                       (if headline
                           (org-export-data (org-element-property :title headline) info)
                         "Untitled Post"))))
@@ -258,8 +253,8 @@ If it has a TODO keyword, convert it to a Markdown task list item."
 
 (defun org-astro-body-filter (body _backend info)
   "Add front-matter and imports to the BODY of the document."
-  (let* ((tree (org-element-parse-buffer))
-         (front-matter-data (org-astro--get-front-matter-data info))
+  (let* ((tree (plist-get info :parse-tree))  ; Use the already-parsed tree from export
+         (front-matter-data (org-astro--get-front-matter-data tree info))
          (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
          ;; --- Handle Imports ---
          (cover-image-path (cdr (assoc 'image front-matter-data)))
