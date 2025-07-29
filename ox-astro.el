@@ -152,7 +152,7 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
                               (plist-get info :date))))
             (if date-raw
                 (org-astro--format-date date-raw info)
-                (format-time-string (plist-get info :astro-date-format) (current-time)))))
+              (format-time-string (plist-get info :astro-date-format) (current-time)))))
          ;; --- Author Image (with default and specific path) ---
          (author-image-raw (or (plist-get info :astro-author-image)
                                (plist-get info :author-image)
@@ -175,8 +175,8 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
       (authorImage . ,author-image)
       (publishDate . ,publish-date)
       (excerpt . ,excerpt)
-      (Image . ,image)
-      (ImageAlt . ,image-alt)
+      (image . ,image)
+      (imageAlt . ,image-alt)
       (tags . ,tags))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -246,7 +246,7 @@ If it has a TODO keyword, convert it to a Markdown task list item."
          (front-matter-data (org-astro--get-front-matter-data info))
          (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
          ;; --- Handle Imports ---
-         (cover-image-path (cdr (assoc 'Image front-matter-data)))
+         (cover-image-path (cdr (assoc 'image front-matter-data)))
          (auto-imports
           (when cover-image-path
             (format "import hero from '%s';" cover-image-path)))

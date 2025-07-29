@@ -4,7 +4,9 @@
       "Bash(sed:*)",
       "Bash(emacs:*)",
       "Bash(mv:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dev:*)"
     ],
     "deny": []
   }

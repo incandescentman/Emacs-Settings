@@ -1,0 +1,16 @@
+
+* Instructions
+
+Let's make sure that when we export from org to mdx, we make sure to always include the required frontmatter
+
+these are all required:
+
+title*: *title: Expected type `"string"`, received `"date"`
+  excerpt*: *excerpt: Required
+  Image*: *Image: Required
+  ImageAlt*: *ImageAlt: Required
+
+So. if the org source file doesn't have a title, add a title drawn from the top-level org heading in the org buffer being exported.
+
+if there is no excerpt provided, use the first non-heading sentence of the buffer as the excerpt.
+
