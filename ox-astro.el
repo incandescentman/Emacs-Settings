@@ -282,8 +282,13 @@ If it has a TODO keyword, convert it to a Markdown task list item."
             body)))
 
 (defun org-astro-final-output-filter (output _backend _info)
-  "Replace en-dash HTML entity with a literal en-dash."
-  (replace-regexp-in-string "&#x2013;" "–" output t t))
+  "Replace HTML entities with their literal characters."
+  (let* ((pass1 (replace-regexp-in-string "&#x2013;" "–" output t t))
+         (pass2 (replace-regexp-in-string "&rsquo;" "'" pass1 t t))
+         (pass3 (replace-regexp-in-string "&lsquo;" "'" pass2 t t))
+         (pass4 (replace-regexp-in-string "&rdquo;" "\"" pass3 t t))
+         (pass5 (replace-regexp-in-string "&ldquo;" "\"" pass4 t t)))
+    pass5))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
@@ -392,7 +397,8 @@ If it has a TODO keyword, convert it to a Markdown task list item."
     (:filter-final-output . org-astro-final-output-filter))
 
   :options-alist
-  '((:title              "TITLE"               nil nil nil)
+  '((:smart-quotes       nil                   org-md-use-smart-quotes nil)
+    (:title              "TITLE"               nil nil nil)
     (:author             "AUTHOR"              nil nil nil)
     (:author-image       "AUTHOR_IMAGE"        nil nil nil)
     (:date               "DATE"                nil nil nil)
