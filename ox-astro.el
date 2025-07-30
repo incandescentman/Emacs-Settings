@@ -235,15 +235,6 @@ instead of <url>."
      (t
       (org-md-link link desc info)))))
 
-(defun org-astro-quote-block (quote-block contents info)
-  "Transcode a QUOTE-BLOCK element to Markdown format."
-  (when contents
-    (concat
-     (mapconcat (lambda (line) (concat "> " line))
-                (split-string (org-trim contents) "\n")
-                "\n")
-     "\n\n")))
-
 (defun org-astro-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element into fenced Markdown format."
   (if (not (org-export-read-attribute :attr_md src-block :textarea))
@@ -312,13 +303,26 @@ If it has a TODO keyword, convert it to a Markdown task list item."
             body)))
 
 (defun org-astro-final-output-filter (output _backend _info)
-  "Replace HTML entities with their literal characters."
-  (let* ((pass1 (replace-regexp-in-string "&#x2013;" "–" output t t))
-         (pass2 (replace-regexp-in-string "&rsquo;" "'" pass1 t t))
-         (pass3 (replace-regexp-in-string "&lsquo;" "'" pass2 t t))
-         (pass4 (replace-regexp-in-string "&rdquo;" "\"" pass3 t t))
-         (pass5 (replace-regexp-in-string "&ldquo;" "\"" pass4 t t)))
-    pass5))
+  "Final filter for Astro export.
+- Replaces HTML entities with literal characters.
+- Converts indented example blocks to Markdown blockquotes."
+  (let* ((s output)
+         ;; HTML entities
+         (s (replace-regexp-in-string "&#x2013;" "–" s t t))
+         (s (replace-regexp-in-string "&rsquo;" "'" s t t))
+         (s (replace-regexp-in-string "&lsquo;" "'" s t t))
+         (s (replace-regexp-in-string "&rdquo;" "\"" s t t))
+         (s (replace-regexp-in-string "&ldquo;" "\"" s t t))
+         ;; Indented blocks to blockquotes
+         (lines (split-string s "\n"))
+         (processed-lines
+          (mapcar (lambda (line)
+                    (if (string-prefix-p "    " line)
+                        (concat "> " (substring line 4))
+                      line))
+                  lines))
+         (s (mapconcat 'identity processed-lines "\n")))
+    s))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
@@ -422,8 +426,7 @@ If it has a TODO keyword, convert it to a Markdown task list item."
                (org-astro-export-to-mdx))))))
 
   :translate-alist
-  '((quote-block . org-astro-quote-block)
-    (src-block . org-astro-src-block)
+  '((src-block . org-astro-src-block)
     (link . org-astro-link)
     (headline . org-astro-heading))
 
