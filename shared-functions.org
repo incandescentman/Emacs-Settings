@@ -3431,6 +3431,7 @@ buffer is already narrowed; never widen."
          '(("sr" . "src")                 ; generic <sr
            ("sh" . "src sh")              ; shell
            ("el" . "src emacs-lisp")      ; elisp
+           ("u" . "src user")             ; user
            ("le" . "example")             ; example block
            ("v"  . "verse"))              ; verse block
          org-structure-template-alist)))
@@ -9821,7 +9822,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
             :filter-args (lambda (args)
                            (setcar args (my/emoji-tonify (car args)))
                            args))
-#+end_src 
+#+end_src
 
 
 * Local Variables & The End

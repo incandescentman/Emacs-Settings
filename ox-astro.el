@@ -235,7 +235,27 @@ instead of <url>."
      (t
       (org-md-link link desc info)))))
 
+(defun org-astro-quote-block (quote-block contents info)
+  "Transcode a QUOTE-BLOCK element to Markdown format."
+  (when contents
+    (concat
+     (mapconcat (lambda (line) (concat "> " line))
+                (split-string (org-trim contents) "\n")
+                "\n")
+     "\n\n")))
+
+(defun org-astro-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element into fenced Markdown format."
+  (if (not (org-export-read-attribute :attr_md src-block :textarea))
+      (let* ((lang (org-element-property :language src-block))
+             (code (org-export-format-code-default src-block info)))
+        (when (and (string= lang "user") (string-match-p "---" code))
+          (setq code (replace-regexp-in-string "---" "—" code)))
+        (format "```%s\n%s\n```" (or lang "") code))
+    (org-html-textarea-block src-block contents info)))
+
 (defun org-astro-heading (heading contents info)
+
   "Transcode a HEADING element.
 If it has a TODO keyword, convert it to a Markdown task list item."
   (let ((todo-keyword (org-element-property :todo-keyword heading)))
@@ -402,7 +422,9 @@ If it has a TODO keyword, convert it to a Markdown task list item."
                (org-astro-export-to-mdx))))))
 
   :translate-alist
-  '((link . org-astro-link)
+  '((quote-block . org-astro-quote-block)
+    (src-block . org-astro-src-block)
+    (link . org-astro-link)
     (headline . org-astro-heading))
 
   :filters-alist
