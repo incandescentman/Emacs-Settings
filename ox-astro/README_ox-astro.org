@@ -33,17 +33,17 @@ To use this exporter, save the `ox-astro.el` file to your Emacs load path and ad
 The exporter automatically generates YAML front matter based on keywords in your Org file.
 
 **Supported Keys:**
-| Org Keyword          | YAML Key      | Description                                                                                             |
-|----------------------+---------------+---------------------------------------------------------------------------------------------------------|
-| `#+TITLE`            | `title`       | The title of the post.                                                                                  |
-| `#+AUTHOR`           | `author`      | The author's name. Defaults to "Jay Dixit".                                                             |
-| `#+DATE`             | `publishDate` | The publication date.                                                                                   |
-| `#+EXCERPT`          | `excerpt`     | A short summary of the post.                                                                            |
-| `#+COVER_IMAGE`      | `image`       | Path to the post's cover image.                                                                         |
-| `#+COVER_IMAGE_ALT`  | `imageAlt`    | Alt text for the cover image.                                                                           |
-| `#+TAGS`             | `tags`        | A comma- or space-separated list of tags.                                                               |
-| `#+AUTHOR_IMAGE`     | `authorImage` | Path to the author's image.                                                                             |
-| `#+POSTS_FOLDER`     | (none)        | Specifies the export destination folder.                                                                |
+| Org Keyword         | YAML Key      | Description                                 |
+|---------------------+---------------+---------------------------------------------|
+| `#+TITLE`           | `title`       | The title of the post.                      |
+| `#+AUTHOR`          | `author`      | The author's name. Defaults to "Jay Dixit". |
+| `#+DATE`            | `publishDate` | The publication date.                       |
+| `#+EXCERPT`         | `excerpt`     | A short summary of the post.                |
+| `#+COVER_IMAGE`     | `image`       | Path to the post's cover image.             |
+| `#+COVER_IMAGE_ALT` | `imageAlt`    | Alt text for the cover image.               |
+| `#+TAGS`            | `tags`        | A comma- or space-separated list of tags.   |
+| `#+AUTHOR_IMAGE`    | `authorImage` | Path to the author's image.                 |
+| `#+POSTS_FOLDER`    | (none)        | Specifies the export destination folder.    |
 
 **Fallback Logic:**
 - If `#+TITLE` is not found, the exporter uses the first level-1 headline in the buffer (or the top-level headline if the buffer is narrowed).
