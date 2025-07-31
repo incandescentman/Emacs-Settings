@@ -239,12 +239,14 @@ instead of <url>."
   "Transcode a SRC-BLOCK element into fenced Markdown format."
   (if (not (org-export-read-attribute :attr_md src-block :textarea))
       (let* ((lang (org-element-property :language src-block))
-             (code (org-export-format-code-default src-block info)))
+             ;; Use :value to get raw content, preserving internal newlines.
+             (code (org-element-property :value src-block)))
         (when (and (string= lang "user") (string-match-p "---" code))
           (setq code (replace-regexp-in-string "---" "—" code)))
-        ;; Remove trailing whitespace to prevent an extra blank line before
-        ;; the closing fence.
-        (setq code (replace-regexp-in-string "[ \t\n]+$" "" code))
+        ;; Chomp the single trailing newline from the block's value to prevent
+        ;; a blank line before the closing fence.
+        (when (string-suffix-p "\n" code)
+          (setq code (substring code 0 -1)))
         (format "```%s\n%s\n```" (or lang "") code))
     (org-html-textarea-block src-block contents info)))
 
