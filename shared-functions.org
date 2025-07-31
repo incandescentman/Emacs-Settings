@@ -9794,6 +9794,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 
 * org astro
 #+begin_src emacs-lisp
+(load "/Users/jay/emacs/emacs-settings/ox-astro/ox-astro.el")
   (with-eval-after-load 'ox
     (require 'ox-astro))
 
