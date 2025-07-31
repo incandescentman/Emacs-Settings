@@ -243,10 +243,8 @@ instead of <url>."
              (code (org-element-property :value src-block)))
         (when (and (string= lang "user") (string-match-p "---" code))
           (setq code (replace-regexp-in-string "---" "—" code)))
-        ;; Chomp the single trailing newline from the block's value to prevent
-        ;; a blank line before the closing fence.
-        (when (string-suffix-p "\n" code)
-          (setq code (substring code 0 -1)))
+        ;; Remove any trailing newlines to prevent extra space at the end.
+        (setq code (replace-regexp-in-string "\\`\n+\\|\\s-+\\'" "" code))
         (format "```%s\n%s\n```" (or lang "") code))
     (org-html-textarea-block src-block contents info)))
 
