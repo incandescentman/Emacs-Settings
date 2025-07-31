@@ -317,52 +317,61 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 #+begin_src emacs-lisp
 (defun pasteboard-copy-adaptive ()
-  "Copy to the macOS pasteboard, choosing method based on current mode and context.
-Adapts behavior based on major mode and surrounding context."
+  "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text."
   (interactive)
-  (let (choice)  ;; will record which branch we took
+  (let (choice)                               ; record which branch we took
     (cond
-     ;; 1) In shell/elisp/web/markdown modes → verbatim copy (preserve everything)
+     ;; ————————————————————— verbatim buckets —————————————————————
+     ;; 1) Shell / Elisp / Web / Markdown / Backtrace
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'web-mode)
           (eq major-mode 'markdown-mode)
-          (eq major-mode 'gfm-mode)  ; GitHub Flavored Markdown
-          (derived-mode-p 'markdown-mode))
-      (setq choice "copy-verbatim")
+          (eq major-mode 'gfm-mode)
+          (derived-mode-p 'markdown-mode)
+          (derived-mode-p 'backtrace-mode))
+      (setq choice "verbatim (mode match)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 2) In MDX files (regardless of mode) → verbatim copy
+     ;; 2) Org buffer **with** org-config-files-local-mode enabled
+     ((and (eq major-mode 'org-mode)
+           (bound-and-true-p org-config-files-local-mode))
+      (setq choice "verbatim (org-local)")
+      (call-interactively #'pasteboard-copy-verbatim))
+
+     ;; 3) Any file ending in .mdx
      ((and buffer-file-name
            (string-match-p "\\.mdx\\'" buffer-file-name))
-      (setq choice "copy-verbatim (MDX file)")
+      (setq choice "verbatim (.mdx)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 3) In programming modes → verbatim copy
+     ;; 4) Any programming mode
      ((derived-mode-p 'prog-mode)
-      (setq choice "verbatim")
+      (setq choice "verbatim (prog)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 4) In Org/text modes → clean copy (replace em-dashes, etc.)
-     ((or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (setq choice "so clean")
+     ;; ————————————————————— clean buckets —————————————————————
+     ;; 5) Org or generic text (when org-config-files-local-mode is off)
+     ((or (eq major-mode 'text-mode)
+          (and (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode))))
+      (setq choice "clean")
       (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
 
-     ;; 5) Fallback: if copying code-like content, use verbatim
+     ;; ———————————————————— heuristic fallback ———————————————————
      (t
       (if (and (use-region-p)
                (save-excursion
                  (goto-char (region-beginning))
-                 (looking-at-p "\\s-*[({[]\\|^\\s-*[#;]\\|https?://")))
+                 (looking-at-p
+                  "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
           (progn
-            (setq choice "copy-verbatim (code-like)")
+            (setq choice "verbatim (heuristic)")
             (call-interactively #'pasteboard-copy-verbatim))
-        (setq choice "copy-clean (default)")
-        (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+        (setq choice "clean (default)")
+        (call-interactively
+         #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
 
-    ;; Report what we did
     (message "Copied text %s" choice)))
 #+end_src
 
@@ -954,4 +963,6 @@ These have to be at the end.
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
+
+
 

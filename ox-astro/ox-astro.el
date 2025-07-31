@@ -166,7 +166,7 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                               (plist-get info :date))))
             (if date-raw
                 (org-astro--format-date date-raw info)
-              (format-time-string (plist-get info :astro-date-format) (current-time)))))
+                (format-time-string (plist-get info :astro-date-format) (current-time)))))
          (author-image-raw (or (plist-get info :astro-author-image)
                                (plist-get info :author-image)
                                org-astro-default-author-image))
@@ -204,8 +204,10 @@ Otherwise, use the default Markdown paragraph transcoding."
          (is-image-path nil)
          path)
     (when (and child (eq 'plain-text (org-element-type child)))
-      (let ((text (org-trim (org-element-property :value child))))
-        (when (and (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
+      (let* ((raw-text (org-element-property :value child))
+             (text (when (stringp raw-text) (org-trim raw-text))))
+        (when (and text
+                   (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
                    (file-exists-p (expand-file-name text)))
           (setq is-image-path t)
           (setq path text))))
@@ -393,6 +395,67 @@ under the key `:astro-body-images-imports`."
          (s (mapconcat 'identity processed-lines "\n")))
     s))
 
+(defun org-astro--get-front-matter-data (info)
+  "Build an alist of final front-matter data, applying defaults."
+  (let* (;; Get the posts-folder, needed for processing image paths.
+         (posts-folder (or (plist-get info :posts-folder)
+                           (plist-get info :astro-posts-folder)))
+         (tree (org-element-parse-buffer))
+         ;; --- Metadata with defaults ---
+         (title (or (plist-get info :title)
+                    (let ((headline (org-element-map tree 'headline
+                                      (lambda (h)
+                                        (when (= (org-element-property :level h) 1)
+                                          h))
+                                      nil 'first-match)))
+                      (if headline
+                          (org-export-data (org-element-property :title headline) info)
+                          "Untitled Post"))))
+         (author (or (plist-get info :author) "Jay Dixit"))
+         (excerpt (or (plist-get info :astro-excerpt)
+                      (plist-get info :excerpt)
+                      (let ((paragraph (org-element-map tree 'paragraph
+                                         'org-element-contents
+                                         nil 'first-match)))
+                        (if paragraph
+                            (org-export-data paragraph info)
+                            ""))))
+         (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
+         (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
+         ;; --- Publish Date (with fallback to current time) ---
+         (publish-date
+          (let ((date-raw (or (plist-get info :astro-publish-date)
+                              (plist-get info :publish-date)
+                              (plist-get info :date))))
+            (if date-raw
+                (org-astro--format-date date-raw info)
+                (format-time-string (plist-get info :astro-date-format) (current-time)))))
+         ;; --- Author Image (with default and specific path) ---
+         (author-image-raw (or (plist-get info :astro-author-image)
+                               (plist-get info :author-image)
+                               org-astro-default-author-image))
+         (author-image (and author-image-raw posts-folder
+                            (org-astro--process-image-path
+                             author-image-raw posts-folder "authors/")))
+         ;; --- Cover Image & Alt Text (with generated alt text) ---
+         (image-raw (or (plist-get info :astro-image)
+                        (plist-get info :cover-image)))
+         (image (and image-raw posts-folder
+                     (org-astro--process-image-path
+                      image-raw posts-folder "posts/")))
+         (image-alt (or (plist-get info :astro-image-alt)
+                        (plist-get info :cover-image-alt)
+                        (and image (org-astro--filename-to-alt-text image)))))
+    ;; Return the alist of final data
+    `((title . ,title)
+      (author . ,author)
+      (authorImage . ,author-image)
+      (publishDate . ,publish-date)
+      (excerpt . ,excerpt)
+      (image . ,image)
+      (imageAlt . ,image-alt)
+      (tags . ,tags))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -415,9 +478,10 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
         (let* ((children (org-element-contents p))
                (child (and (= 1 (length children)) (car children))))
           (when (and child (eq 'plain-text (org-element-type child)))
-            (let ((text (org-trim (org-element-property :value child))))
-              ;; Check if it's a path to an existing image file
-              (when (and (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
+            (let* ((raw-text (org-element-property :value child))
+                   (text (when (stringp raw-text) (org-trim raw-text))))
+              (when (and text
+                         (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
                          (file-exists-p (expand-file-name text)))
                 (push text images)))))))
     ;; Return a list with no duplicates
@@ -454,7 +518,7 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
               (copy-file expanded-path dest-path t))
             ;; Return the path for Astro's import syntax
             (format "~/assets/images/%s%s" sub-dir filename))
-        image-path))))
+          image-path))))
 
 ;;;###autoload
 (defun org-astro-export-as-mdx (&optional async subtreep visible-only body-only)
