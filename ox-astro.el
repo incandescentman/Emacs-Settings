@@ -241,12 +241,12 @@ instead of <url>."
       (let* ((lang (org-element-property :language src-block))
              ;; Use :value to get raw content, preserving internal newlines.
              (code (org-element-property :value src-block)))
-        (when (and (string= lang "user") (string-match-p "---" code))
+        (when (and (member lang '("user" "prompt")) (string-match-p "---" code))
           (setq code (replace-regexp-in-string "---" "—" code)))
         ;; Remove any trailing newlines to prevent extra space at the end.
         (setq code (replace-regexp-in-string "\\`\n+\\|\\s-+\\'" "" code))
         (format "```%s\n%s\n```" (or lang "") code))
-      (org-html-textarea-block src-block contents info)))
+    (org-html-textarea-block src-block contents info)))
 
 (defun org-astro-heading (heading contents info)
 
