@@ -131,35 +131,29 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
 
 
 (defun org-astro--get-front-matter-data (tree info)
-  "Build an alist of final front-matter data, applying defaults."
-  (let* ((posts-folder (or (plist-get info :posts-folder)
+  "Build an alist of final front-matter data, applying defaults.
+This function takes the parse TREE and the export INFO plist as arguments."
+  (let* (;; Get the posts-folder, needed for processing image paths.
+         (posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
-         (title
-          (or (let ((kw (org-element-map tree 'keyword
-                          (lambda (k) (when (string-equal "TITLE" (org-element-property :key k)) k))
-                          nil 'first-match)))
-                (when kw (org-element-property :value kw)))
-              (let ((headline (org-element-map tree 'headline 'identity nil 'first-match)))
-                (when headline
-                  (org-export-data (org-element-property :title headline) info)))
-              "Untitled Post"))
+         ;; --- Metadata with defaults ---
+         (title (or (plist-get info :title)
+                    (let ((headline (org-element-map tree 'headline
+                                      (lambda (h)
+                                        (when (= (org-element-property :level h) 1) h))
+                                      nil 'first-match)))
+                      (if headline
+                          (org-export-data (org-element-property :title headline) info)
+                          "Untitled Post"))))
          (author (or (plist-get info :author) "Jay Dixit"))
          (excerpt
-          (or (let ((kw (org-element-map tree 'keyword
-                          (lambda (k)
-                            (when (or (string-equal "ASTRO_EXCERPT" (org-element-property :key k))
-                                      (string-equal "EXCERPT" (org-element-property :key k)))
-                              k))
-                          nil 'first-match)))
-                (when kw (replace-regexp-in-string "[*]+" "" (org-element-property :value kw))))
-              (let ((paragraph (org-element-map tree 'paragraph
-                                 'org-element-contents
-                                 nil 'first-match)))
-                (when paragraph
-                  (replace-regexp-in-string "[*]+" "" (org-export-data paragraph info))))
-              ""))  ; <-- Fixed: removed extra closing parenthesis here
+          (or (plist-get info :astro-excerpt)
+              (plist-get info :excerpt)
+              (let ((p (org-element-map tree 'paragraph 'identity nil 'first-match)))
+                (when p (org-export-data p (plist-put info :with-affiliated-keywords nil))))))
          (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
-         (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
+         (tags (when tags-raw (delete-dups (org-split-string tags-raw "[, \n]+"))))
+         ;; --- Publish Date (with fallback to current time) ---
          (publish-date
           (let ((date-raw (or (plist-get info :astro-publish-date)
                               (plist-get info :publish-date)
@@ -167,12 +161,14 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
             (if date-raw
                 (org-astro--format-date date-raw info)
                 (format-time-string (plist-get info :astro-date-format) (current-time)))))
+         ;; --- Author Image (with default and specific path) ---
          (author-image-raw (or (plist-get info :astro-author-image)
                                (plist-get info :author-image)
                                org-astro-default-author-image))
          (author-image (and author-image-raw posts-folder
                             (org-astro--process-image-path
                              author-image-raw posts-folder "authors/")))
+         ;; --- Cover Image & Alt Text (with generated alt text) ---
          (image-raw (or (plist-get info :astro-image)
                         (plist-get info :cover-image)))
          (image (and image-raw posts-folder
@@ -395,66 +391,7 @@ under the key `:astro-body-images-imports`."
          (s (mapconcat 'identity processed-lines "\n")))
     s))
 
-(defun org-astro--get-front-matter-data (info)
-  "Build an alist of final front-matter data, applying defaults."
-  (let* (;; Get the posts-folder, needed for processing image paths.
-         (posts-folder (or (plist-get info :posts-folder)
-                           (plist-get info :astro-posts-folder)))
-         (tree (org-element-parse-buffer))
-         ;; --- Metadata with defaults ---
-         (title (or (plist-get info :title)
-                    (let ((headline (org-element-map tree 'headline
-                                      (lambda (h)
-                                        (when (= (org-element-property :level h) 1)
-                                          h))
-                                      nil 'first-match)))
-                      (if headline
-                          (org-export-data (org-element-property :title headline) info)
-                          "Untitled Post"))))
-         (author (or (plist-get info :author) "Jay Dixit"))
-         (excerpt (or (plist-get info :astro-excerpt)
-                      (plist-get info :excerpt)
-                      (let ((paragraph (org-element-map tree 'paragraph
-                                         'org-element-contents
-                                         nil 'first-match)))
-                        (if paragraph
-                            (org-export-data paragraph info)
-                            ""))))
-         (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
-         (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
-         ;; --- Publish Date (with fallback to current time) ---
-         (publish-date
-          (let ((date-raw (or (plist-get info :astro-publish-date)
-                              (plist-get info :publish-date)
-                              (plist-get info :date))))
-            (if date-raw
-                (org-astro--format-date date-raw info)
-                (format-time-string (plist-get info :astro-date-format) (current-time)))))
-         ;; --- Author Image (with default and specific path) ---
-         (author-image-raw (or (plist-get info :astro-author-image)
-                               (plist-get info :author-image)
-                               org-astro-default-author-image))
-         (author-image (and author-image-raw posts-folder
-                            (org-astro--process-image-path
-                             author-image-raw posts-folder "authors/")))
-         ;; --- Cover Image & Alt Text (with generated alt text) ---
-         (image-raw (or (plist-get info :astro-image)
-                        (plist-get info :cover-image)))
-         (image (and image-raw posts-folder
-                     (org-astro--process-image-path
-                      image-raw posts-folder "posts/")))
-         (image-alt (or (plist-get info :astro-image-alt)
-                        (plist-get info :cover-image-alt)
-                        (and image (org-astro--filename-to-alt-text image)))))
-    ;; Return the alist of final data
-    `((title . ,title)
-      (author . ,author)
-      (authorImage . ,author-image)
-      (publishDate . ,publish-date)
-      (excerpt . ,excerpt)
-      (image . ,image)
-      (imageAlt . ,image-alt)
-      (tags . ,tags))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Main Export Functions
@@ -553,10 +490,13 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
                "_" "-"
                (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
              (outfile (expand-file-name final-filename out-dir)))
-        (when pub-dir
+
+        (when pub-dir ;; <--- This already helps, but you can be more explicit
           (make-directory pub-dir :parents)
-          (org-export-to-file 'astro outfile
-            async subtreep visible-only body-only)))))
+          (org-export-to-file 'astro outfile async subtreep visible-only body-only))
+        (unless pub-dir
+          (message "Astro export cancelled: No posts folder selected.")))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
