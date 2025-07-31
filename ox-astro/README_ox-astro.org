@@ -1,0 +1,106 @@
+* ox-astro: An Org Mode Exporter for Astro MDX
+
+`ox-astro.el` is a specialized back-end for the Org export engine, designed to convert Org mode files into Astro-compatible MDX (`.mdx`) files. It streamlines the process of writing blog posts and documentation in Org mode for publication on an Astro website.
+
+The exporter automates many of the tedious parts of content creation, including front-matter generation, image handling, and Markdown-specific formatting, allowing you to focus on writing.
+
+* Installation and Setup
+
+To use this exporter, save the `ox-astro.el` file to your Emacs load path and add the following to your configuration (`init.el`):
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'ox
+  (require 'ox-astro))
+#+end_src
+
+* Core Features
+
+- **MDX Export**: Converts Org files to `.mdx` format, ready for Astro.
+- **Automatic Front Matter**: Generates YAML front matter from Org keywords and content.
+- **Smart Image Handling**: Copies linked images to your Astro project's assets folder and generates the necessary import statements.
+- **Interactive Workflow**: Prompts for a destination folder if one isn't specified, making it easy to work with multiple Astro projects.
+- **Advanced Formatting**: Intelligently handles Org-specific syntax and converts it to the correct Markdown equivalent.
+
+* How to Use
+
+1.  Open the Org file you want to export.
+2.  Run the command `M-x org-astro-export-to-mdx`.
+3.  If the destination folder is not specified in the file, you will be prompted to select one from your pre-configured list.
+4.  The `.mdx` file will be generated in the selected destination.
+
+* Front Matter Generation
+
+The exporter automatically generates YAML front matter based on keywords in your Org file.
+
+**Supported Keys:**
+| Org Keyword          | YAML Key      | Description                                                                                             |
+|----------------------+---------------+---------------------------------------------------------------------------------------------------------|
+| `#+TITLE`            | `title`       | The title of the post.                                                                                  |
+| `#+AUTHOR`           | `author`      | The author's name. Defaults to "Jay Dixit".                                                             |
+| `#+DATE`             | `publishDate` | The publication date.                                                                                   |
+| `#+EXCERPT`          | `excerpt`     | A short summary of the post.                                                                            |
+| `#+COVER_IMAGE`      | `image`       | Path to the post's cover image.                                                                         |
+| `#+COVER_IMAGE_ALT`  | `imageAlt`    | Alt text for the cover image.                                                                           |
+| `#+TAGS`             | `tags`        | A comma- or space-separated list of tags.                                                               |
+| `#+AUTHOR_IMAGE`     | `authorImage` | Path to the author's image.                                                                             |
+| `#+POSTS_FOLDER`     | (none)        | Specifies the export destination folder.                                                                |
+
+**Fallback Logic:**
+- If `#+TITLE` is not found, the exporter uses the first level-1 headline in the buffer (or the top-level headline if the buffer is narrowed).
+- If `#+EXCERPT` is not found, it uses the first paragraph of the document.
+- If `#+DATE` is not found, it uses the current time.
+- If `#+COVER_IMAGE_ALT` is not found, it generates a human-readable alt text from the image's filename (e.g., `my-awesome-image.png` becomes "My awesome image").
+
+* Image Handling
+
+The exporter simplifies image management by automatically processing and importing them.
+
+1.  **Automatic Copying**: When you link to a local image in your Org file (e.g., `[[file:./images/my-pic.png]]`), the exporter copies it to the appropriate subfolder (`posts/` or `authors/`) inside your Astro project's `src/assets/images/` directory. This path is determined from your selected `posts-folder`.
+2.  **Hero Import**: For the cover image specified by `#+COVER_IMAGE`, the exporter automatically adds an import statement to the top of the `.mdx` file, making it available to your Astro layouts.
+   #+begin_src javascript
+   import hero from '~/assets/images/posts/my-pic.png';
+   #+end_src
+
+* Special Formatting Rules
+
+`ox-astro` includes several rules to convert Org syntax to modern Markdown.
+
+**TODO Items**
+Org TODO items are converted into Markdown task lists.
+- `*** TODO Buy milk` becomes `- [ ] Buy milk`
+- `*** DONE Pay bills` becomes `- [x] Pay bills`
+
+**Code Blocks (`user`, `prompt`, `quote`)**
+Source blocks with the language `user`, `prompt`, or `quote` receive special treatment to format them as conversational prompts or pull quotes.
+- They are exported as fenced code blocks (e.g., ```user).
+- Any `---` within the block is converted to an em dash (—).
+- Blank lines inside the block are preserved.
+- Extraneous newlines at the end of the block are removed.
+
+**Example Blocks**
+Org example blocks (lines prefixed with `:`) are converted to Markdown blockquotes.
+: This is an example.
+becomes:
+> This is an example.
+
+**Raw URLs**
+Bare URLs in your Org file are automatically converted to clickable Markdown links.
+`https://gemini.google.com` becomes `[https://gemini.google.com](https://gemini.google.com)`.
+
+**Literal Characters**
+The exporter ensures that apostrophes, quotation marks, and en dashes are exported as literal characters instead of HTML entities (`&rsquo;`, `&#x2013;`, etc.), keeping the Markdown source clean.
+
+* Customization
+
+You can customize the exporter's behavior using `M-x customize-group` and selecting `org-export-astro`.
+
+- `org-astro-known-posts-folders` :: A list of your frequently used destination folders, each with a convenient nickname. This list is used to prompt you for a destination when exporting.
+  Example:
+  #+begin_src emacs-lisp
+  '(("socratic" . "/path/to/project-a/src/content/blog")
+    ("jaydocs" . "/path/to/project-b/src/content/blog"))
+  #+end_src
+
+- `org-astro-default-author-image` :: Sets a default path for the author's image if one is not specified in the Org file.
+
+- `org-astro-date-format` :: A string to control the format of the `publishDate` in the front matter.

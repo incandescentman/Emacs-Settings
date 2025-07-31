@@ -167,12 +167,12 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                                       (string-equal "EXCERPT" (org-element-property :key k)))
                               k))
                           nil 'first-match)))
-                (when kw (org-element-property :value kw)))
+                (when kw (replace-regexp-in-string "[*]" "" (org-element-property :value kw))))
               (let ((paragraph (org-element-map tree 'paragraph
                                  'org-element-contents
                                  nil 'first-match)))
                 (when paragraph
-                  (org-export-data paragraph info)))
+                  (replace-regexp-in-string "[*]" "" (org-export-data paragraph info))))
               ""))
          (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
          (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
@@ -241,7 +241,7 @@ instead of <url>."
       (let* ((lang (org-element-property :language src-block))
              ;; Use :value to get raw content, preserving internal newlines.
              (code (org-element-property :value src-block)))
-        (when (and (member lang '("user" "prompt")) (string-match-p "---" code))
+        (when (and (member lang '("user" "prompt" "quote")) (string-match-p "---" code))
           (setq code (replace-regexp-in-string "---" "—" code)))
         ;; Remove any trailing newlines to prevent extra space at the end.
         (setq code (replace-regexp-in-string "\\`\n+\\|\\s-+\\'" "" code))
