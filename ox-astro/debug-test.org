@@ -1,0 +1,8 @@
+#+TITLE: Debug Raw Images
+#+AUTHOR: Jay Dixit
+
+This is a test.
+
+/Users/jay/emacs/emacs-settings/ox-astro/test-image.png
+
+More text.

@@ -4118,7 +4118,7 @@ into the main dumped emacs"
 
 
 * undo-tree-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 (use-package undo-fu-session
   :init
   (setq undo-fu-session-compression nil)   ;; nil = never compress
@@ -4142,7 +4142,7 @@ into the main dumped emacs"
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
 (setq undo-outer-limit 1006632960) ; 960mb.
-#+END_SRC
+#+END_EXAMPLE
 
 * Emacs 25
 ** don't create new frames

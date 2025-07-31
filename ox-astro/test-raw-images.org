@@ -1,0 +1,21 @@
+#+TITLE: Test Raw Image Paths
+#+AUTHOR: Jay Dixit
+
+* Introduction
+
+This is a test document.
+
+*** ✅ Volume Goals
+foo
+
+/Users/jay/Downloads/Volume.png
+
+More text here.
+
+** Another Section
+
+Some other content.
+
+/Users/jay/Downloads/another-image.jpg
+
+Final paragraph.
