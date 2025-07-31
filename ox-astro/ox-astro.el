@@ -243,7 +243,7 @@ Otherwise, use the default Markdown paragraph transcoding."
           (if image-data
               (let ((var-name (plist-get image-data :var-name))
                     (alt-text (org-astro--filename-to-alt-text path)))
-                (format "<img src={%s} alt=\"%s\" />" var-name alt-text))
+                (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
               ;; Fallback: if image wasn't processed by the filter, just output the path as text.
               contents))
         ;; Not an image path, use default paragraph handling
@@ -268,7 +268,7 @@ If the text contains raw image paths on their own lines, convert them to <img> t
                      (if image-data
                          (let ((var-name (plist-get image-data :var-name))
                                (alt-text (org-astro--filename-to-alt-text trimmed-line)))
-                           (format "<img src={%s} alt=\"%s\" />" var-name alt-text))
+                           (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
                          ;; Fallback: if image wasn't processed, return empty string to remove the raw path
                          ""))
                    ;; Not an image path, keep original line
@@ -293,9 +293,8 @@ This handles raw URLs, fuzzy links, and local image files specially."
         (if image-data
             (let ((var-name (plist-get image-data :var-name))
                   (alt-text (or desc (org-astro--filename-to-alt-text path))))
-              ;; Use a standard <img> tag. Astro can optimize it, and it's
-              ;; more robust than assuming a specific component is available.
-              (format "<img src={%s} alt=\"%s\" />" var-name alt-text))
+              ;; Use Astro's Image component for optimized image handling
+              (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
             ;; Fallback for images not found in pre-processed list
             (org-md-link link desc info))))
 
@@ -387,7 +386,6 @@ under the key `:astro-body-images-imports`."
     ;; Store the collected data in the info plist and global variable for other functions to use.
     (when image-imports-data
       (let ((final-data (nreverse image-imports-data)))
-        (message "DEBUG: Storing %d image imports: %s" (length final-data) final-data)
         (setq org-astro--current-body-images-imports final-data)
         (plist-put info :astro-body-images-imports final-data))))
   ;; Return the tree, as required for a parse-tree filter.
@@ -409,7 +407,6 @@ under the key `:astro-body-images-imports`."
                                   org-astro--current-body-images-imports))
          (body-imports-string
           (when body-images-imports
-            (message "DEBUG: Generating imports for: %s" body-images-imports)
             (mapconcat
              (lambda (item)
                (format "import %s from '%s';"
@@ -419,15 +416,22 @@ under the key `:astro-body-images-imports`."
              "\n")))
          ;; 3. Manual imports from #+ASTRO_IMPORTS
          (manual-imports (plist-get info :astro-imports))
-         ;; 4. Combine all imports, filtering out nil/empty values
+         ;; 4. Astro Image component import (always include if we have any body images)
+         (astro-image-import (when body-images-imports
+                               "import { Image } from 'astro:assets';"))
+         ;; 5. Combine all imports, filtering out nil/empty values
          (all-imports (mapconcat #'identity
-                                 (delq nil (list hero-import body-imports-string manual-imports))
+                                 (delq nil (list astro-image-import hero-import body-imports-string manual-imports))
                                  "\n")))
-    (concat front-matter-string
-            (if (and all-imports (not (string-blank-p all-imports)))
-                (concat all-imports "\n\n")
-                "")
-            body)))
+    ;; Remove any existing front matter from the body (markdown backend may have added it)
+    (let ((clean-body (if (string-match "^---\n.*?\n---\n" body)
+                          (replace-match "" nil nil body)
+                          body)))
+      (concat front-matter-string
+              (if (and all-imports (not (string-blank-p all-imports)))
+                  (concat all-imports "\n\n")
+                  "")
+              clean-body))))
 
 (defun org-astro-final-output-filter (output _backend info)
   "Final filter for Astro export.
@@ -445,21 +449,18 @@ under the key `:astro-body-images-imports`."
          (image-imports (or (plist-get info :astro-body-images-imports)
                             org-astro--current-body-images-imports))
          (s (progn
-              (message "DEBUG: Final filter - image-imports: %s" image-imports)
               (if image-imports
                   (replace-regexp-in-string
                    "!\\[\\([^]]*\\)\\](\\(/[^)]+\\.\\(?:png\\|jpe?g\\)\\))"
                    (lambda (match)
-                     (message "DEBUG: Processing markdown image: %s" match)
                      (let* ((alt (match-string 1 match))
                             (path (match-string 2 match))
                             (image-data (cl-find path image-imports
                                                  :key (lambda (item) (plist-get item :path))
                                                  :test #'string-equal)))
-                       (message "DEBUG: Found image-data: %s for path: %s" image-data path)
                        (if image-data
                            (let ((var-name (plist-get image-data :var-name)))
-                             (format "<img src={%s} alt=\"%s\" />" var-name (or alt "")))
+                             (format "<Image src={%s} alt=\"%s\" />" var-name (or alt "")))
                            match)))
                    s)
                   s)))
@@ -504,7 +505,6 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
               (when (and text
                          (string-match-p "^/.*\\.\\(png\\|jpe?g\\)$" text)
                          (file-exists-p text))
-                (message "DEBUG: Found raw image path: %s" text)
                 (push text images)))))))
     ;; Return a list with no duplicates
     (delete-dups (nreverse images))))
