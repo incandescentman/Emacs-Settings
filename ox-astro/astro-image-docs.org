@@ -1,0 +1,824 @@
+* Images
+
+
+Astro provides several ways for you to use images on your site, whether
+they are stored locally inside your project, linked to from an external
+URL, or managed in a CMS or CDN.
+
+Astro
+provides [[https://docs.astro.build/en/guides/images/#image-][image]] and [[https://docs.astro.build/en/guides/images/#picture-][picture]] components, [[https://docs.astro.build/en/guides/images/#images-in-markdown-files][Markdown
+image
+syntax]] processing, [[https://docs.astro.build/en/guides/images/#svg-components][SVG
+components]],
+and [[https://docs.astro.build/en/guides/images/#generating-images-with-getimage][an
+image generating function]] to optimize and/or transform your images.
+Additionally, you can
+configure [[https://docs.astro.build/en/guides/images/#responsive-image-behavior][automatically
+resizing responsive images]] by default, or set responsive properties on
+individual image and picture components.
+
+You can always choose to use images and SVG files using native HTML
+elements in ~.astro~ or Markdown files, or the standard way for your
+file type (e.g. ~<img />~ in MDX and JSX). However, Astro does not
+perform any processing or optimization of these images.
+
+See
+the full API reference for
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components.
+
+** Where to store images
+
+
+*** ~src/~ vs ~public/~
+
+
+We recommend that local images are kept in ~src/~ when possible so that
+Astro can transform, optimize, and bundle them. Files in
+the ~public/~ directory are always served or copied into the build
+folder as-is, with no processing.
+
+Your local images stored in ~src/~ can be used by all files in your
+project: ~.astro~, ~.md~, ~.mdx~, ~.mdoc~, and other UI frameworks as
+file imports. Images can be stored in any folder, including alongside
+your content.
+
+Store your images in the ~public/~ folder if you want to avoid any
+processing. These images are available to your project files as URL
+paths on your domain and allow you to have a direct public link to them.
+For example, your site favicon will commonly be placed in the root of
+this folder where browsers can identify it.
+
+*** Remote images
+
+
+You can also choose to store your images remotely, in
+a [[https://docs.astro.build/en/guides/cms/][content management system
+(CMS)]] or [[https://docs.astro.build/en/guides/media/][digital asset
+management (DAM)]] platform. Astro can fetch your data remotely using
+APIs or display images from their full URL path.
+
+For extra protection when dealing with external sources, Astro's image
+components and helper function will only process (e.g. optimize,
+transform) images
+from [[https://docs.astro.build/en/guides/images/#authorizing-remote-images][authorized
+image sources specified in your configuration]]. Remote images from
+other sources will be displayed with no processing.
+
+** Images in ~.astro~ files
+
+
+*Options:* ~<Image />~, ~<Picture />~, ~<img>~, ~<svg>~, SVG components
+
+Astro's templating language allows you to render optimized images with
+the
+Astro [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] component
+and generate multiple sizes and formats with the
+Astro [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] component.
+Both components also
+accept [[https://docs.astro.build/en/guides/images/#responsive-image-behavior][responsive
+image properties]] for resizing based on container size and responding
+to device screen size and resolution.
+
+Additionally, you can import and
+use [[https://docs.astro.build/en/guides/images/#svg-components][SVG
+files as Astro components]] in ~.astro~ components.
+
+All native HTML tags, including ~<img>~ and ~<svg>~, are also available
+in ~.astro~ components. [[https://docs.astro.build/en/guides/images/#display-unprocessed-images-with-the-html-img-tag][Images
+rendered with HTML tags]] will not be processed (e.g. optimized,
+transformed) and will be copied into your build folder as-is.
+
+For all images in ~.astro~ files, *the value of the
+image ~src~ attribute is determined by the location of your image file*:
+
+- A local image from your project ~src/~ folder uses an import from the
+  file's relative path.
+
+  The image and picture components use the named import directly
+  (e.g. ~src~{rocket}~), while the ~<img>= tag uses the ~src~ object
+  property of the import (e.g. ~src~{rocket.src}=).
+
+- Remote and ~public/~ images use a URL path.
+
+  Provide a full URL for remote images
+  (e.g. ~src~"https://www.example.com/images/my-remote-image.jpg"=), or
+  a relative URL path on your site that corresponds to your file's
+  location in your ~public/~ folder
+  (e.g. ~src~"/images/my-public-image.jpg"= for an image located
+  in ~public/images/my-public-image.jpg~).
+
+#+caption: src/pages/blog/my-images.astro
+
+#+begin_example
+---import { Image } from 'astro:assets';import localBirdImage from '../../images/subfolder/localBirdImage.png';---<Image src={localBirdImage} alt="A bird sitting on a nest of eggs." /><Image src="/images/bird-in-public-folder.jpg" alt="A bird." width="50" height="50" /><Image src="https://example.com/remote-bird.jpg" alt="A bird." width="50" height="50" />
+<img src={localBirdImage.src} alt="A bird sitting on a nest of eggs."><img src="/images/bird-in-public-folder.jpg" alt="A bird."><img src="https://example.com/remote-bird.jpg" alt="A bird.">
+#+end_example
+
+See
+the full API reference for
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components
+including required and optional properties.
+
+[[https://docs.astro.build/houston_chef.webp]]*Related
+recipe:*[[https://docs.astro.build/en/recipes/dynamically-importing-images/][Dynamically
+import images]]
+
+** Images in Markdown files
+
+
+*Options:* ~![]()~, ~<img>~ (with public or remote images)
+
+Use standard Markdown ~![alt](src)~ syntax in your ~.md~ files. Your
+local images stored in ~src/~ and remote images will be processed and
+optimized. When
+you [[https://docs.astro.build/en/reference/configuration-reference/#imagelayout][configure
+responsive images globally]], these images will also
+be [[https://docs.astro.build/en/guides/images/#responsive-image-behavior][responsive]].
+
+Images stored in the ~public/~ folder are never optimized.
+
+#+caption: src/pages/post-1.md
+
+#+begin_example
+# My Markdown Page
+<!-- Local image stored in src/assets/ --><!-- Use a relative file path or import alias -->![A starry night sky.](../assets/stars.png)
+<!-- Image stored in public/images/ --><!-- Use the file path relative to public/ -->![A starry night sky.](/images/stars.png)
+<!-- Remote image on another server --><!-- Use the full URL of the image -->![Astro](https://example.com/images/remote-image.png)
+#+end_example
+
+The HTML ~<img>~ tag can also be used to display images stored
+in ~public/~ or remote images without any image optimization or
+processing. However, ~<img>~ is not supported for your local images
+in ~src~.
+
+The ~<Image />~ and ~<Picture />~ components are unavailable
+in ~.md~ files. If you require more control over your image attributes,
+we recommend
+using [[https://docs.astro.build/en/guides/integrations-guide/mdx/][Astro's
+MDX integration]] to add support for ~.mdx~ file format. MDX allows
+additional [[https://docs.astro.build/en/guides/images/#images-in-mdx-files][image
+options available in MDX]], including combining components with Markdown
+syntax.
+
+** Images in MDX files
+
+
+*Options:* ~<Image />~, ~<Picture />~, ~<img />~, ~![]()~, SVG
+components
+
+You can use Astro's ~<Image />~ and ~<Picture />~ components in
+your ~.mdx~ files by importing both the component and your image. Use
+them just as they
+are [[https://docs.astro.build/en/guides/images/#images-in-astro-files][used
+in ~.astro~ files]]. The JSX ~<img />~ tag is also supported for
+unprocessed images
+and [[https://docs.astro.build/en/guides/images/#display-unprocessed-images-with-the-html-img-tag][uses
+the same image import as the HTML ~<img>~ tag]].
+
+Additionally, there is support
+for [[https://docs.astro.build/en/guides/images/#images-in-markdown-files][standard
+Markdown ~![alt](src)~ syntax]] with no import required.
+
+#+caption: src/pages/post-1.mdx
+
+#+begin_example
+---title: My Page title---import { Image } from 'astro:assets';import rocket from '../assets/rocket.png';
+# My MDX Page
+// Local image stored in the the same folder![Houston in the wild](houston.png)
+// Local image stored in src/assets/<Image src={rocket} alt="A rocketship in space." /><img src={rocket.src} alt="A rocketship in space." />![A rocketship in space](../assets/rocket.png)
+// Image stored in public/images/<Image src="/images/stars.png" alt="A starry night sky." /><img src="/images/stars.png" alt="A starry night sky." />![A starry night sky.](/images/stars.png)
+// Remote image on another server<Image src="https://example.com/images/remote-image.png" /><img src="https://example.com/images/remote-image.png" />![Astro](https://example.com/images/remote-image.png)
+#+end_example
+
+See
+the full API reference for
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components.
+
+** Images in UI framework components
+
+
+*Image options:* the framework's own image syntax (e.g. ~<img />~ in
+JSX, ~<img>~ in Svelte)
+
+[[https://docs.astro.build/en/guides/images/#display-unprocessed-images-with-the-html-img-tag][Local
+images must first be imported]] to access their image properties such
+as ~src~. Then, they can be rendered as you normally would in that
+framework's own image syntax:
+
+#+caption: src/components/ReactImage.jsx
+
+#+begin_example
+import stars from "../assets/stars.png";
+export default function ReactImage() {  return (    <img src={stars.src} alt="A starry night sky." />  )}
+#+end_example
+
+#+caption: src/components/SvelteImage.svelte
+
+#+begin_example
+<script>  import stars from '../assets/stars.png';</script>
+<img src={stars.src} alt="A starry night sky." />
+#+end_example
+
+Astro components (e.g. ~<Image />~, ~<Picture />~, SVG components) are
+unavailable inside UI framework components
+because [[https://docs.astro.build/en/guides/framework-components/#can-i-use-astro-components-inside-my-framework-components][a
+client island must contain only valid code for its own framework]].
+
+But, you can pass the static content generated by these components to a
+framework component inside
+a ~.astro~ file [[https://docs.astro.build/en/guides/framework-components/#passing-children-to-framework-components][as
+children]] or using
+a [[https://docs.astro.build/en/guides/framework-components/#can-i-use-astro-components-inside-my-framework-components][named ~<slot/>~]]:
+
+#+caption: src/components/ImageWrapper.astro
+
+#+begin_example
+---import ReactComponent from './ReactComponent.jsx';import { Image } from 'astro:assets';import stars from '~/stars/docline.png';---
+<ReactComponent>  <Image src={stars} alt="A starry night sky." /></ReactComponent>
+#+end_example
+
+** Astro components for images
+
+
+Astro provides two built-in Astro components for images
+(~<Image />~ and ~<Picture />~) and also allows you to import SVG files
+and use them as Astro components. These components may be used in any
+files that can import and render ~.astro~ components.
+
+*** ~<Image />~
+
+
+Use the built-in ~<Image />~ Astro component to display optimized
+versions of:
+
+- your local images located within the ~src/~ folder
+- [[https://docs.astro.build/en/guides/images/#authorizing-remote-images][configured
+  remote images]] from authorized sources
+
+~<Image />~ can transform a local or authorized remote image's
+dimensions, file type, and quality for control over your displayed
+image. This transformation happens at build time for prerendered pages.
+When your page is rendered on demand, this transformation will occur on
+the fly when the page is viewed. The resulting ~<img>~ tag
+includes ~alt~, ~loading~, and ~decoding~ attributes and infers image
+dimensions to avoid Cumulative Layout Shift (CLS).
+
+What
+is Cumulative Layout Shift?
+
+[[https://web.dev/cls/][Cumulative Layout Shift (CLS)]] is a Core Web
+Vital metric for measuring how much content shifted on your page during
+loading. The ~<Image />~ component optimizes for CLS by automatically
+setting the correct ~width~ and ~height~ for your images.
+
+#+caption: src/components/MyComponent.astro
+
+#+begin_example
+---// import the Image component and the imageimport { Image } from 'astro:assets';import myImage from '../assets/my_image.png'; // Image is 1600x900---
+<!-- `alt` is mandatory on the Image component --><Image src={myImage} alt="A description of my image." />
+#+end_example
+
+#+begin_example
+<!-- Prerendered output --><!-- Image is optimized, proper attributes are enforced --><img  src="/_astro/my_image.hash.webp"  width="1600"  height="900"  decoding="async"  loading="lazy"  alt="A description of my image."/>
+<!-- Output rendered on demand--><!-- src will use an endpoint generated on demand--><img  src="/_image?href=%2F_astro%2Fmy_image.hash.webp&amp;w=1600&amp;h=900&amp;f=webp"  <!-- ... -->/>
+#+end_example
+
+The ~<Image />~ component
+accepts [[https://docs.astro.build/en/reference/modules/astro-assets/#image-properties][several
+component properties]] as well as any attributes accepted by the
+HTML ~<img>~ tag.
+
+The following example provides a ~class~ to the image component which
+will apply to the final ~<img>~ element.
+
+#+caption: src/pages/index.astro
+
+#+begin_example
+---import { Image } from 'astro:assets';import myImage from '../assets/my_image.png';---
+<!-- `alt` is mandatory on the Image component --><Image src={myImage} alt="" class="my-class" />
+#+end_example
+
+#+begin_example
+<!-- Prerendered output --><img  src="/_astro/my_image.hash.webp"  width="1600"  height="900"  decoding="async"  loading="lazy"  class="my-class"  alt=""/>
+#+end_example
+
+Tip
+
+You can also use the ~<Image />~ component for images in
+the ~public/~ folder, or remote images not specifically configured in
+your project, even though these images will not be optimized or
+processed. The resulting image will be the same as using the
+HTML ~<img>~.
+
+However, using the image component for all images provides a consistent
+authoring experience and prevents Cumulative Layout Shift (CLS) even for
+your unoptimized images.
+
+*** ~<Picture />~
+
+
+*Added in:* ~astro@3.3.0~
+
+Use the built-in ~<Picture />~ Astro component to generate
+a ~<picture>~ tag with multiple formats and/or sizes of your image. This
+allows you to specify preferred file formats to display and at the same
+time, provide a fallback format. Like
+the [[https://docs.astro.build/en/guides/images/#image-][~<Image />~ component]],
+images will be processed at build time for prerendered pages. When your
+page is rendered on demand, processing will occur on the fly when the
+page is viewed.
+
+The following example uses the ~<Picture />~ component to transform a
+local ~.png~ file into a web-friendly ~avif~ and ~webp~ format as well
+as the ~.png~ =<img>~ that can be displayed as a fallback when needed:
+
+#+caption: src/pages/index.astro
+
+#+begin_example
+---import { Picture } from 'astro:assets';import myImage from '../assets/my_image.png'; // Image is 1600x900---
+<!-- `alt` is mandatory on the Picture component --><Picture src~{myImage} formats={['avif', 'webp']} alt="A description of my image." />
+#+end_example
+
+#+begin_example
+<!-- Prerendered output --><picture>  <source srcset="/_astro/my_image.hash.avif" type="image/avif" />  <source srcset="/_astro/my_image.hash.webp" type="image/webp" />  <img    src="/_astro/my_image.hash.png"    width="1600"    height="900"    decoding="async"    loading="lazy"    alt="A description of my image."  /></picture>
+#+end_example
+
+See
+details
+about [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-properties][the ~<Picture />~ component
+properties]] in the ~astro:assets~ reference.
+
+*** Responsive image behavior
+
+
+*Added in:* ~astro@5.10.0~
+
+Responsive images are images that adjust to improve performance across
+different devices. These images can resize to fit their container, and
+can be served in different sizes depending on your visitor's screen size
+and resolution.
+
+With [[https://docs.astro.build/en/reference/modules/astro-assets/#responsive-image-properties][responsive
+image properties]] applied to
+the ~<Image />~ or ~<Picture />~ components, Astro will automatically
+generate the required ~srcset~ and ~sizes~ values for your images, and
+apply the
+necessary [[https://docs.astro.build/en/guides/images/#responsive-image-styles][styles
+to ensure they resize correctly]].
+
+When this responsive behavior
+is [[https://docs.astro.build/en/reference/configuration-reference/#imagelayout][configured
+globally]], it will apply to all image components and also to any local
+and remote images
+using [[https://docs.astro.build/en/guides/images/#images-in-markdown-files][the
+Markdown ~![]()~ syntax]].
+
+Images in your ~public/~ folder are never optimized, and responsive
+images are not supported.
+
+Note
+
+A single responsive image will generate multiple images of different
+sizes so that the browser can show the best one to your visitor.
+
+For prerendered pages, this happens during the build and may increase
+the build time of your project, especially if you have a large number of
+images.
+
+For pages rendered on-demand, the images are generated as-needed when a
+page is visited. This has no impact on build times but may increase the
+number of image transformations performed when an image is displayed.
+Depending on your image service this may incur additional costs.
+
+Read
+more
+about [[https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images][responsive
+images on MDN web docs]].
+
+**** Generated HTML output for responsive images
+
+
+When a layout is set, either by default or on an individual component,
+images have automatically generated ~srcset~ and ~sizes~ attributes
+based on the image's dimensions and the layout type. Images
+with ~constrained~ and ~full-width~ layouts will have styles applied to
+ensure they resize according to their container.
+
+#+caption: src/components/MyComponent.astro
+
+#+begin_example
+---import { Image } from 'astro:assets';import myImage from '../assets/my_image.png';---<Image src={myImage} alt="A description of my image." layout='constrained' width={800} height={600} />
+#+end_example
+
+This ~<Image />~ component will generate the following HTML output on a
+prerendered page:
+
+#+begin_example
+<img  src="/_astro/my_image.hash3.webp"  srcset="/_astro/my_image.hash1.webp 640w,      /_astro/my_image.hash2.webp 750w,      /_astro/my_image.hash3.webp 800w,      /_astro/my_image.hash4.webp 828w,      /_astro/my_image.hash5.webp 1080w,      /_astro/my_image.hash6.webp 1280w,      /_astro/my_image.hash7.webp 1600w"  alt="A description of my image"  sizes="(min-width: 800px) 800px, 100vw"  loading="lazy"  decoding="async"  fetchpriority="auto"  width="800"  height="600"  style="--fit: cover; --pos: center;"  data-astro-image="constrained">
+#+end_example
+
+**** Responsive image styles
+
+
+Setting [[https://docs.astro.build/en/reference/configuration-reference/#imageresponsivestyles][~image.responsiveStyles: true~]] applies
+a small number of global styles to ensure that your images resize
+correctly. In most cases, you will want to enable these as a default;
+your images will not be responsive without additional styles.
+
+However, if you prefer to handle responsive image styling yourself, or
+need
+to [[https://docs.astro.build/en/guides/images/#responsive-images-with-tailwind-4][override
+these defaults when using Tailwind 4]], leave the default ~false~ value
+configured.
+
+The global styles applied by Astro will depend on the layout type, and
+are designed to produce the best result for the
+generated ~srcset~ and ~sizes~ attributes. These are the default styles:
+
+#+caption: Responsive Image Styles
+
+#+begin_example
+:where([data-astro-image]) {  object-fit: var(--fit);  object-position: var(--pos);}:where([data-astro-image='full-width']) {  width: 100%;}:where([data-astro-image='constrained']) {  max-width: 100%;}
+#+end_example
+
+The styles use
+the [[https://developer.mozilla.org/en-US/docs/Web/CSS/:where][~:where()~ pseudo-class]],
+which has
+a [[https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity][specificity]] of
+0, meaning that it is easy to override with your own styles. Any CSS
+selector will have a higher specificity than ~:where()~, so you can
+easily override the styles by adding your own styles to target the
+image.
+
+You can override the ~object-fit~ and ~object-position~ styles on a
+per-image basis by setting the ~fit~ and ~position~ props on
+the ~<Image />~ or ~<Picture />~ component.
+
+**** Responsive images with Tailwind 4
+
+
+Tailwind 4 is compatible with Astro's default responsive styles.
+However, Tailwind
+uses [[https://developer.mozilla.org/en-US/docs/Web/CSS/@layer][cascade
+layers]], meaning that its rules are always lower specificity than rules
+that don't use layers, including Astro's responsive styles. Therefore,
+Astro's styling will take precedence over Tailwind styling. To use
+Tailwind rules instead of Astro's default styling, do not
+enable [[https://docs.astro.build/en/reference/configuration-reference/#imageresponsivestyles][Astro's
+default responsive styles]].
+
+*** SVG components
+
+
+*Added in:* ~astro@5.7.0~
+
+Astro allows you to import SVG files and use them as Astro components.
+Astro will inline the SVG content into your HTML output.
+
+Reference the default import of any local ~.svg~ file. Since this import
+is treated as an Astro component, you must use the same conventions
+(e.g. capitalization) as
+when [[https://docs.astro.build/en/reference/astro-syntax/#dynamic-tags][using
+dynamic tags]].
+
+#+caption: src/components/MyAstroComponent.astro
+
+#+begin_example
+---import Logo from './path/to/svg/file.svg';---
+<Logo />
+#+end_example
+
+Your SVG component, like ~<Image />~ or any other Astro component, is
+unavailable inside UI framework components, but
+can [[https://docs.astro.build/en/guides/images/#images-in-ui-framework-components][be
+passed to a framework component]] inside a ~.astro~ component.
+
+**** SVG component attributes
+
+
+You can pass props such as ~width~, ~height~, ~fill~, ~stroke~, and any
+other attribute accepted by
+the [[https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg][native ~<svg>~ element]].
+These attributes will automatically be applied to the
+underlying ~<svg>~ element. If a property is present in the
+original ~.svg~ file and is passed to the component, the value passed to
+the component will override the original value.
+
+#+caption: src/components/MyAstroComponent.astro
+
+#+begin_example
+---import Logo from '../assets/logo.svg';---
+<Logo width={64} height={64} fill="currentColor" />
+#+end_example
+
+*** Creating custom image components
+
+
+You can create a custom, reusable image component by wrapping
+the ~<Image />~ or ~<Picture/>~ component in another Astro component.
+This allows you to set default attributes and styles only once.
+
+For example, you could create a component for your blog post images that
+receives attributes as props and applies consistent styles to each
+image:
+
+#+caption: src/components/BlogPostImage.astro
+
+#+begin_example
+---import { Image } from 'astro:assets';
+const { src, ...attrs } ~ Astro.props;---<Image src~{src} {...attrs} />
+<style>  img {    margin-block: 2.5rem;    border-radius: 0.75rem;  }</style>
+#+end_example
+
+** Display unprocessed images with the HTML ~<img>~ tag
+
+
+The [[https://docs.astro.build/en/reference/astro-syntax/][Astro
+template syntax]] also supports writing an ~<img>~ tag directly, with
+full control over its final output. These images will not be processed
+and optimized. It accepts all HTML ~<img>~ tag properties, and the only
+required property is ~src~. However, it is strongly recommended to
+include [[https://docs.astro.build/en/guides/images/#alt-text][the ~alt~ property
+for accessibility]].
+
+*** images in ~src/~
+
+
+Local images must be imported from the relative path from the
+existing ~.astro~ file, or you can configure and use
+an [[https://docs.astro.build/en/guides/imports/#aliases][import
+alias]]. Then, you can access the image's ~src~ and other properties to
+use in the ~<img>~ tag.
+
+Imported image assets match the following signature:
+
+#+begin_example
+interface ImageMetadata {  src: string;  width: number;  height: number;  format: string;}
+#+end_example
+
+The following example uses the image's
+own ~height~ and ~width~ properties to avoid Cumulative Layout Shift
+(CLS) and improve Core Web Vitals:
+
+#+caption: src/pages/posts/post-1.astro
+
+#+begin_example
+---// import local imagesimport myDog from '../../images/pets/local-dog.jpg';---// access the image properties<img src={myDog.src} width={myDog.width} height={myDog.height} alt="A barking dog." />
+#+end_example
+
+*** Images in ~public/~
+
+
+For images located within ~public/~ use the image's file path relative
+to the public folder as the ~src~ value:
+
+#+begin_example
+<img src="/images/public-cat.jpg" alt="A sleeping cat." >
+#+end_example
+
+*** Remote images
+
+
+For remote images, use the image's full URL as the ~src~ value:
+
+#+begin_example
+<img src="https://example.com/remote-cat.jpg" alt="A sleeping cat." >
+#+end_example
+
+*** Choosing ~<Image />~ vs ~<img>~
+
+
+The ~<Image />~ component optimizes your image and infers width and
+height (for images it can process) based on the original aspect ratio to
+avoid CLS. It is the preferred way to use images in ~.astro~ files
+whenever possible.
+
+Use the HTML ~<img>~ element when you cannot use
+the ~<Image />~ component, for example:
+
+- for unsupported image formats
+- when you do not want your image optimized by Astro
+- to access and change the ~src~ attribute dynamically client-side
+
+** Using Images from a CMS or CDN
+
+
+Image CDNs work
+with [[https://docs.astro.build/en/guides/images/#images-in-astro-files][all
+Astro image options]]. Use an image's full URL as the ~src~ attribute in
+the ~<Image />~ component, an ~<img>~ tag, or in Markdown notation. For
+image optimization with remote images,
+also [[https://docs.astro.build/en/guides/images/#authorizing-remote-images][configure
+your authorized domains or URL patterns]].
+
+Alternatively, the CDN may provide its own SDKs to more easily integrate
+in an Astro project. For example, Cloudinary supports
+an [[https://astro.cloudinary.dev/][Astro SDK]] which allows you to
+easily drop in images with their ~CldImage~ component or
+a [[https://cloudinary.com/documentation/node_integration][Node.js
+SDK]] that can generate URLs to use with an ~<img>~ tag in a Node.js
+environment.
+
+See
+the full API reference for
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components.
+
+** Authorizing remote images
+
+
+You can configure lists of authorized image source URL domains and
+patterns for image optimization
+using [[https://docs.astro.build/en/reference/configuration-reference/#imagedomains][~image.domains~]] and [[https://docs.astro.build/en/reference/configuration-reference/#imageremotepatterns][~image.remotePatterns~]].
+This configuration is an extra layer of safety to protect your site when
+showing images from an external source.
+
+Remote images from other sources will not be optimized, but using
+the ~<Image />~ component for these images will prevent Cumulative
+Layout Shift (CLS).
+
+For example, the following configuration will only allow remote images
+from ~astro.build~ to be optimized:
+
+#+caption: astro.config.mjs
+
+#+begin_example
+export default defineConfig({  image: {    domains: ["astro.build"],  }});
+#+end_example
+
+The following configuration will only allow remote images from HTTPS
+hosts:
+
+#+caption: astro.config.mjs
+
+#+begin_example
+export default defineConfig({  image: {    remotePatterns: [{ protocol: "https" }],  }});
+#+end_example
+
+** Images in content collections
+
+
+You can declare an associated image for a content collections entry,
+such as a blog post's cover image, in your frontmatter using its path
+relative to the current folder:
+
+#+caption: src/content/blog/my-post.md
+
+#+begin_example
+---title: "My first blog post"cover: "./firstpostcover.jpeg" # will resolve to "src/content/blog/firstblogcover.jpeg"coverAlt: "A photograph of a sunset behind a mountain range."---
+This is a blog post
+#+end_example
+
+The ~image~ helper for the content collections schema lets you validate
+and import the image.
+
+#+caption: src/content.config.ts
+
+#+begin_example
+import { defineCollection, z } from "astro:content";
+const blogCollection ~ defineCollection({  schema: ({ image }) ~> z.object({    title: z.string(),    cover: image(),    coverAlt: z.string(),  }),});
+export const collections = {  blog: blogCollection,};
+#+end_example
+
+The image will be imported and transformed into metadata, allowing you
+to pass it as a ~src~ to ~<Image/>~, ~<img>~, or ~getImage()~ in an
+Astro component.
+
+The example below shows a blog index page that renders the cover photo
+and title of each blog post from the previous schema:
+
+#+caption: src/pages/blog.astro
+
+#+begin_example
+---import { Image } from "astro:assets";import { getCollection } from "astro:content";const allBlogPosts ~ await getCollection("blog");---
+{  allBlogPosts.map((post) ~> (    <div>      <Image src={post.data.cover} alt={post.data.coverAlt} />      <h2>        <a href={"/blog/" + post.slug}>{post.data.title}</a>      </h2>    </div>  ))}
+#+end_example
+
+** Generating images with ~getImage()~
+
+
+The ~getImage()~ function is intended for generating images destined to
+be used somewhere else than directly in HTML, for example in
+an [[https://docs.astro.build/en/guides/endpoints/#server-endpoints-api-routes][API
+Route]]. When you need options that
+the ~<Picture>~ and ~<Image>~ components do not currently support, you
+can use the ~getImage()~ function to create your own
+custom ~<Image />~ component.
+
+See
+more in
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#getimage][~getImage()~ reference]].
+
+[[https://docs.astro.build/houston_chef.webp]]*Related
+recipe:*[[https://docs.astro.build/en/recipes/build-custom-img-component/][Build
+a custom image component]]
+
+** Alt Text
+
+
+Not all users can see images in the same way, so accessibility is an
+especially important concern when using images. Use the ~alt~ attribute
+to provide [[https://www.w3.org/WAI/tutorials/images/][descriptive alt
+text]] for images.
+
+This attribute is required for both
+the ~<Image />~ and ~<Picture />~ components. If no alt text is
+provided, a helpful error message will be provided reminding you to
+include the ~alt~ attribute.
+
+If the image is merely decorative (i.e. doesn't contribute to the
+understanding of the page), set ~alt~""= so that screen readers know to
+ignore the image.
+
+** Default image service
+
+
+[[https://github.com/lovell/sharp][Sharp]] is the default image service
+used for ~astro:assets~. You can further configure the image service
+using
+the [[https://docs.astro.build/en/reference/configuration-reference/#imageservice][~image.service~]] option.
+
+Note
+
+When using a [[https://pnpm.io/pnpm-vs-npm#npms-flat-tree][strict
+package manager]] like ~pnpm~, you may need to manually install Sharp
+into your project even though it is an Astro dependency:
+
+#+caption: Terminal window
+
+#+begin_example
+pnpm add sharp
+#+end_example
+
+*** Configure no-op passthrough service
+
+
+If
+your [[https://astro.build/integrations/?search=&categories%5B%5D=adapters][adapter]] does
+not support Astro's built-in Sharp image optimization (e.g. Deno,
+Cloudflare), you can configure a no-op image service to allow you to use
+the ~<Image />~ and ~<Picture />~ components. Note that Astro does not
+perform any image transformation and processing in these environments.
+However, you can still enjoy the other benefits of using ~astro:assets~,
+including no Cumulative Layout Shift (CLS), the
+enforced ~alt~ attribute, and a consistent authoring experience.
+
+Configure the ~passthroughImageService()~ to avoid Sharp image
+processing:
+
+#+caption: astro.config.mjs
+
+#+begin_example
+import { defineConfig, passthroughImageService } from 'astro/config';
+export default defineConfig({  image: {    service: passthroughImageService()  }});
+#+end_example
+
+** Asset Caching
+
+
+Astro stores processed image assets in a cache directory during site
+builds for both local
+and [[https://docs.astro.build/en/guides/images/#authorizing-remote-images][remote
+images from authorized sources]]. By preserving the cache directory
+between builds, processed assets are reused, improving build time and
+bandwidth usage.
+
+The default cache directory is ~./node_modules/.astro~, however this can
+be changed using
+the [[https://docs.astro.build/en/reference/configuration-reference/#cachedir][~cacheDir~]] configuration
+setting.
+
+*** Remote Images
+
+
+Remote images in the asset cache are managed based
+on [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching][HTTP
+Caching]], and respect
+the [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control][Cache-Control
+header]] returned by the remote server. Images are cached if the
+Cache-Control header allows, and will be used until they are no
+longer [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#fresh_and_stale_based_on_age][fresh]].
+
+**** Revalidation
+
+
+*Added in:* ~astro@5.1.0~
+
+[[https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#validation][Revalidation]] reduces
+bandwidth usage and build time by checking with the remote server
+whether an expired cached image is still up-to-date. If the server
+indicates that the image is still fresh, the cached version is reused,
+otherwise the image is redownloaded.
+
+Revalidation requires that the remote server
+send [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified][Last-Modified]] and/or [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag][Etag
+(entity tag)]] headers with its responses. This feature is available for
+remote servers that support
+the [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since][If-Modified-Since]] and [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match][If-None-Match]] headers.
+
+** Community Integrations
+
+
+There are several
+third-party [[https://astro.build/integrations?search=images][community
+image integrations]] for optimizing and working with images in your
+Astro project.
