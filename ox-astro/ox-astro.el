@@ -1,7 +1,8 @@
-;;; ox-astro.el --- Astro MDX Back-End for Org Export Engine  -*- lexical-binding: t -*-
-
+;;; ox-astro.el --- Astro MDX Back-End for Org Export Engine
+;; -*- lexical-binding: t -*-
+;;
 ;; Author: Gemini & Jay Dixit
-;; Version: 0.7.0
+;; Version: 0.9.0
 ;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: Org, markdown, docs, astro
 ;; URL: https://github.com/your-repo/ox-astro
@@ -15,11 +16,11 @@
 
 ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -31,8 +32,8 @@
 
 ;; To start using this exporter, add the below to your Emacs config:
 ;;
-;;   (with-eval-after-load 'ox
-;;     (require 'ox-astro))
+;;   (with-eval-after-load 'ox
+;;     (require 'ox-astro))
 ;;
 ;; # Workflow
 ;;
@@ -45,6 +46,7 @@
 
 (require 'ox-md)
 (require 'org)
+(require 'cl-lib)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; User-Configurable Variables
@@ -67,11 +69,11 @@
   :type 'string)
 
 (defcustom org-astro-default-author-image
-  "~/assets/images/authors/jay-dixit-512.png"   ;; <─ only this line changed
+  "~/assets/images/authors/jay-dixit-512.png"
   "Default author image path if not specified in the Org file.
 Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
   :group 'org-export-astro
-  :type 'string)   ;; treat it as raw front-matter text, not a local file
+  :type 'string)
 
 (defcustom org-astro-known-posts-folders
   '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
@@ -90,8 +92,8 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
 (defun org-astro--slugify (s)
   "Convert string S to a slug."
   (when (stringp s)
-    (let ((s (downcase s)))
-      (replace-regexp-in-string "[^a-z0-9]+" "-" (org-trim s) nil))))
+    (let ((s (downcase s))
+          (replace-regexp-in-string "[^a-z0-9]+" "-" (org-trim s) nil)))))
 
 (defun org-astro--format-date (date-raw info)
   "Format DATE-RAW into a string suitable for Astro front matter."
@@ -107,6 +109,16 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
            (human-readable (replace-regexp-in-string "[-_]" " " filename)))
       (capitalize human-readable))))
 
+(defun org-astro--path-to-var-name (path)
+  "Convert a file PATH to a camelCase JS variable name."
+  (when (stringp path)
+    (let* ((filename (file-name-sans-extension (file-name-nondirectory path)))
+           (parts (split-string filename "[-_]")))
+      (if (null parts)
+          ""
+          (concat (car parts)
+                  (mapconcat #'capitalize (cdr parts) ""))))))
+
 (defun org-astro--get-task-nesting-level (heading)
   "Calculate nesting level for a TODO task by counting TODO ancestors."
   (let ((level 0)
@@ -117,39 +129,11 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
         (setq level (1+ level))))
     level))
 
-(defun org-astro--gen-yaml-front-matter (data)
-  "Generate a YAML front-matter string from an alist DATA."
-  (if (null data)
-      ""
-      (let ((yaml-str "---\n"))
-        (dolist (pair data)
-          (let ((key (car pair))
-                (val (cdr pair)))
-            (when val
-              (setq yaml-str
-                    (concat yaml-str
-                            (format "%s: " (symbol-name key))
-                            (cond
-                             ((listp val)
-                              (concat "\n"
-                                      (mapconcat
-                                       (lambda (item) (format "- %s" item))
-                                       val "\n")
-                                      "\n"))
-                             (t (format "%s\n"
-                                        (if (and (stringp val)
-                                                 (string-match-p ":" val)
-                                                 (not (eq key 'publishDate)))
-                                            (format "\"%s\"" (replace-regexp-in-string "\"" "\\\"" val))
-                                            val)))))))))
-        (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (tree info)
   "Build an alist of final front-matter data, applying defaults."
-  (let* (;; Get the posts-folder, needed for processing image paths.
-         (posts-folder (or (plist-get info :posts-folder)
+  (let* ((posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
-         ;; --- Metadata with defaults (respecting narrowing) ---
          (title
           (or (let ((kw (org-element-map tree 'keyword
                           (lambda (k) (when (string-equal "TITLE" (org-element-property :key k)) k))
@@ -167,31 +151,28 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                                       (string-equal "EXCERPT" (org-element-property :key k)))
                               k))
                           nil 'first-match)))
-                (when kw (replace-regexp-in-string "[*]" "" (org-element-property :value kw))))
+                (when kw (replace-regexp-in-string "[*]+" "" (org-element-property :value kw))))
               (let ((paragraph (org-element-map tree 'paragraph
                                  'org-element-contents
                                  nil 'first-match)))
                 (when paragraph
-                  (replace-regexp-in-string "[*]" "" (org-export-data paragraph info))))
-              ""))
+                  (replace-regexp-in-string "[*]+" "" (org-export-data paragraph info))))
+              ""))  ; <-- Fixed: removed extra closing parenthesis here
          (tags-raw (or (plist-get info :astro-tags) (plist-get info :tags)))
          (tags (when tags-raw (org-split-string tags-raw "[, \n]+")))
-         ;; --- Publish Date (with fallback to current time) ---
          (publish-date
           (let ((date-raw (or (plist-get info :astro-publish-date)
                               (plist-get info :publish-date)
                               (plist-get info :date))))
             (if date-raw
                 (org-astro--format-date date-raw info)
-                (format-time-string (plist-get info :astro-date-format) (current-time)))))
-         ;; --- Author Image (with default and specific path) ---
+              (format-time-string (plist-get info :astro-date-format) (current-time)))))
          (author-image-raw (or (plist-get info :astro-author-image)
                                (plist-get info :author-image)
                                org-astro-default-author-image))
          (author-image (and author-image-raw posts-folder
                             (org-astro--process-image-path
                              author-image-raw posts-folder "authors/")))
-         ;; --- Cover Image & Alt Text (with generated alt text) ---
          (image-raw (or (plist-get info :astro-image)
                         (plist-get info :cover-image)))
          (image (and image-raw posts-folder
@@ -214,23 +195,68 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
 ;;; Transcode Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun org-astro-paragraph (paragraph contents info)
+  "Transcode a PARAGRAPH element.
+If the paragraph is a raw image path, convert it to an <img> tag.
+Otherwise, use the default Markdown paragraph transcoding."
+  (let* ((children (org-element-contents paragraph))
+         (child (and (= 1 (length children)) (car children)))
+         (is-image-path nil)
+         path)
+    (when (and child (eq 'plain-text (org-element-type child)))
+      (let ((text (org-trim (org-element-property :value child))))
+        (when (and (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
+                   (file-exists-p (expand-file-name text)))
+          (setq is-image-path t)
+          (setq path text))))
+
+    (if is-image-path
+        (let* ((image-imports (plist-get info :astro-body-images-imports))
+               (image-data (cl-find path image-imports
+                                    :key (lambda (item) (plist-get item :path))
+                                    :test #'string-equal)))
+          (if image-data
+              (let ((var-name (plist-get image-data :var-name))
+                    (alt-text (org-astro--filename-to-alt-text path)))
+                (format "<img src={%s} alt=\"%s\" />" var-name alt-text))
+              ;; Fallback: if image wasn't processed by the filter, just output the path as text.
+              contents))
+        ;; Not an image path, use default paragraph handling
+        (org-md-paragraph paragraph contents info))))
+
 (defun org-astro-link (link desc info)
   "Transcode a LINK object for Astro MDX.
-This handles raw URLs specially to format them as [url](url)
-instead of <url>."
+This handles raw URLs, fuzzy links, and local image files specially."
   (let ((type (org-element-property :type link))
-        (path (org-element-property :path link))
-        (raw-link (org-element-property :raw-link link)))
+        (path (org-element-property :path link)))
     (cond
+     ;; Handle local image links in the body
+     ((and (string= type "file")
+           (string-match-p "\\.\\(png\\|jpe\\?g\\|gif\\|svg\\|webp\\)$" path))
+      (let* ((image-imports (plist-get info :astro-body-images-imports))
+             (image-data (cl-find path image-imports
+                                  :key (lambda (item) (plist-get item :path))
+                                  :test #'string-equal)))
+        (if image-data
+            (let ((var-name (plist-get image-data :var-name))
+                  (alt-text (or desc (org-astro--filename-to-alt-text path))))
+              ;; Use a standard <img> tag. Astro can optimize it, and it's
+              ;; more robust than assuming a specific component is available.
+              (format "<img src={%s} alt=\"%s\" />" var-name alt-text))
+            ;; Fallback for images not found in pre-processed list
+            (org-md-link link desc info))))
+
      ;; Fuzzy links for internal headings
      ((and (string= type "fuzzy") (not (string-match-p "://" path)))
       (let* ((target (org-export-resolve-fuzzy-link link info))
              (title (org-element-property :raw-value target))
              (slug (org-astro--slugify title)))
         (concat "[" (or desc title) "](" (string ?#) slug ")")))
+
      ;; Raw URLs (no description)
      ((and (not desc) (member type '("http" "https" "ftp" "mailto")))
-      (format "[%s](%s)" raw-link raw-link))
+      (format "[%s](%s)" (org-element-property :raw-link link) (org-element-property :raw-link link)))
+
      ;; Defer to default markdown for all other links
      (t
       (org-md-link link desc info)))))
@@ -246,7 +272,7 @@ instead of <url>."
         ;; Remove any trailing newlines to prevent extra space at the end.
         (setq code (replace-regexp-in-string "\\`\n+\\|\\s-+\\'" "" code))
         (format "```%s\n%s\n```" (or lang "") code))
-    (org-html-textarea-block src-block contents info)))
+      (org-html-textarea-block src-block contents info)))
 
 (defun org-astro-heading (heading contents info)
 
@@ -285,20 +311,60 @@ If it has a TODO keyword, convert it to a Markdown task list item."
 ;;; Filter Functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun org-astro-prepare-images-filter (tree _backend info)
+  "Find all local images, process them, and store import data in INFO.
+This filter runs on the parse TREE before transcoding. It collects
+all local image links, copies them to the Astro assets
+directory, and prepares a list of import statements to be added
+to the final MDX file. The data is stored in the INFO plist
+under the key `:astro-body-images-imports`."
+  (let* ((posts-folder (or (plist-get info :posts-folder)
+                           (plist-get info :astro-posts-folder)))
+         ;; Collect all image links from the document body.
+         (image-paths (org-astro--collect-images-from-tree tree))
+         image-imports-data)
+    (when posts-folder
+      (dolist (path image-paths)
+        ;; For each image, copy it to assets and get its new path.
+        (let* ((astro-path (org-astro--process-image-path path posts-folder "posts/"))
+               (var-name (org-astro--path-to-var-name path)))
+          (when (and astro-path var-name)
+            (push `(:path ,path :var-name ,var-name :astro-path ,astro-path)
+                  image-imports-data)))))
+    ;; Store the collected data in the info plist for other functions to use.
+    (when image-imports-data
+      (setf (plist-get info :astro-body-images-imports) (nreverse image-imports-data))))
+  ;; Return the tree, as required for a parse-tree filter.
+  tree)
+
 (defun org-astro-body-filter (body _backend info)
   "Add front-matter and imports to the BODY of the document."
-  (let* ((tree (plist-get info :parse-tree))  ; Use the already-parsed tree from export
+  (let* ((tree (plist-get info :parse-tree))
          (front-matter-data (org-astro--get-front-matter-data tree info))
          (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
-         ;; --- Handle Imports ---
+         ;; --- Handle All Imports ---
+         ;; 1. Cover image ("hero") import
          (cover-image-path (cdr (assoc 'image front-matter-data)))
-         (auto-imports
+         (hero-import
           (when cover-image-path
             (format "import hero from '%s';" cover-image-path)))
+         ;; 2. Body image imports (collected by our filter)
+         (body-images-imports (plist-get info :astro-body-images-imports))
+         (body-imports-string
+          (when body-images-imports
+            (mapconcat
+             (lambda (item)
+               (format "import %s from '%s';"
+                       (plist-get item :var-name)
+                       (plist-get item :astro-path)))
+             body-images-imports
+             "\n")))
+         ;; 3. Manual imports from #+ASTRO_IMPORTS
          (manual-imports (plist-get info :astro-imports))
-         (all-imports (if (and auto-imports manual-imports)
-                          (concat auto-imports "\n" manual-imports)
-                          (or auto-imports manual-imports))))
+         ;; 4. Combine all imports, filtering out nil/empty values
+         (all-imports (mapconcat #'identity
+                                 (delq nil (list hero-import body-imports-string manual-imports))
+                                 "\n")))
     (concat front-matter-string
             (if (and all-imports (not (string-blank-p all-imports)))
                 (concat all-imports "\n\n")
@@ -332,16 +398,30 @@ If it has a TODO keyword, convert it to a Markdown task list item."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-astro--collect-images-from-tree (tree)
-  "Collect all image paths from the parse TREE."
+  "Collect all image paths from the parse TREE.
+This includes both `[[file:...]]` links and raw image paths on their own line."
   (let (images)
+    ;; 1. Collect from `link` elements
     (org-element-map tree 'link
       (lambda (link)
         (let ((type (org-element-property :type link))
               (path (org-element-property :path link)))
           (when (and (string= type "file")
-                     (string-match-p "\\(png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
+                     (string-match-p "\\.\\(png\\|jpg\\|jpeg\\|gif\\|svg\\|webp\\)$" path))
             (push path images)))))
-    images))
+    ;; 2. Collect from raw paths in paragraphs
+    (org-element-map tree 'paragraph
+      (lambda (p)
+        (let* ((children (org-element-contents p))
+               (child (and (= 1 (length children)) (car children))))
+          (when (and child (eq 'plain-text (org-element-type child)))
+            (let ((text (org-trim (org-element-property :value child))))
+              ;; Check if it's a path to an existing image file
+              (when (and (string-match-p "\\.\\(png\\|jpe\\?g\\)$" text)
+                         (file-exists-p (expand-file-name text)))
+                (push text images)))))))
+    ;; Return a list with no duplicates
+    (delete-dups (nreverse images))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; IMAGE HANDLING
@@ -374,7 +454,7 @@ If it has a TODO keyword, convert it to a Markdown task list item."
               (copy-file expanded-path dest-path t))
             ;; Return the path for Astro's import syntax
             (format "~/assets/images/%s%s" sub-dir filename))
-          image-path))))
+        image-path))))
 
 ;;;###autoload
 (defun org-astro-export-as-mdx (&optional async subtreep visible-only body-only)
@@ -431,10 +511,12 @@ If it has a TODO keyword, convert it to a Markdown task list item."
   :translate-alist
   '((src-block . org-astro-src-block)
     (link . org-astro-link)
-    (headline . org-astro-heading))
+    (headline . org-astro-heading)
+    (paragraph . org-astro-paragraph))
 
   :filters-alist
-  '((:filter-body . org-astro-body-filter)
+  '((:filter-parse-tree . org-astro-prepare-images-filter)
+    (:filter-body . org-astro-body-filter)
     (:filter-final-output . org-astro-final-output-filter))
 
   :options-alist

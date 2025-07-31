@@ -48,7 +48,7 @@ The exporter automatically generates YAML front matter based on keywords in your
 **Fallback Logic:**
 - If ~#+TITLE~ is not found, the exporter uses the first level-1 headline in the buffer (or the top-level headline if the buffer is narrowed).
 - If ~#+EXCERPT~ is not found, it uses the first paragraph of the document.
-- If ~#+DATE~ is not found, it uses the current date.
+- If ~#+DATE~ is not found, it uses the current time.
 - If ~#+COVER_IMAGE_ALT~ is not found, it generates a human-readable alt text from the image's filename (e.g., ~my-awesome-image.png~ becomes "My awesome image").
 
 * Image Handling
