@@ -510,7 +510,9 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
      ;; 3) In shell/elisp/web → raw paste
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
-          (eq major-mode 'mardown-mode)
+          (eq major-mode 'markdown-mode)
+          (eq major-mode 'gfm-mode)  ; GitHub Flavored Markdown
+          (derived-mode-p 'markdown-mode)
           (eq major-mode 'web-mode))
       (setq choice "verbatim")
       (pasteboard-paste-raw))
@@ -528,8 +530,8 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
             (progn
               (setq choice "paste-raw")
               (pasteboard-paste-raw))
-          (setq choice "paste-clean")
-          (pasteboard-paste-clean)))))
+            (setq choice "paste-clean")
+            (pasteboard-paste-clean)))))
 
     ;; Finally, report what we did
     (message "Pasted: %s" choice)))
