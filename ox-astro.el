@@ -76,7 +76,7 @@ Uses Astro’s “~/” alias, which maps to the project’s src/ directory."
 (defcustom org-astro-known-posts-folders
   '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
     ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-    ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/data/posts"))
+    ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
   "An alist of known directories for exporting Astro posts.
 Each element is a cons cell of the form (NICKNAME . PATH)."
   :group 'org-export-astro
@@ -141,7 +141,7 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                                                  (string-match-p ":" val)
                                                  (not (eq key 'publishDate)))
                                             (format "\"%s\"" (replace-regexp-in-string "\"" "\\\"" val))
-                                          val)))))))))
+                                            val)))))))))
         (concat yaml-str "---\n"))))
 
 (defun org-astro--get-front-matter-data (tree info)
@@ -169,8 +169,8 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                           nil 'first-match)))
                 (when kw (org-element-property :value kw)))
               (let ((paragraph (org-element-map tree 'paragraph
-                                  'org-element-contents
-                                  nil 'first-match)))
+                                 'org-element-contents
+                                 nil 'first-match)))
                 (when paragraph
                   (org-export-data paragraph info)))
               ""))
@@ -183,7 +183,7 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
                               (plist-get info :date))))
             (if date-raw
                 (org-astro--format-date date-raw info)
-              (format-time-string (plist-get info :astro-date-format) (current-time)))))
+                (format-time-string (plist-get info :astro-date-format) (current-time)))))
          ;; --- Author Image (with default and specific path) ---
          (author-image-raw (or (plist-get info :astro-author-image)
                                (plist-get info :author-image)
@@ -246,7 +246,7 @@ instead of <url>."
         ;; Remove any trailing newlines to prevent extra space at the end.
         (setq code (replace-regexp-in-string "\\`\n+\\|\\s-+\\'" "" code))
         (format "```%s\n%s\n```" (or lang "") code))
-    (org-html-textarea-block src-block contents info)))
+      (org-html-textarea-block src-block contents info)))
 
 (defun org-astro-heading (heading contents info)
 
@@ -256,7 +256,7 @@ If it has a TODO keyword, convert it to a Markdown task list item."
     (if todo-keyword
         ;; It's a TODO item, format as a task list.
         (let* ((title (org-export-data (org-element-property :title heading)
-                                     (cons :with-smart-quotes (cons nil info))))
+                                       (cons :with-smart-quotes (cons nil info))))
                (nesting-level (org-astro--get-task-nesting-level heading))
                (indent (make-string (* 2 nesting-level) ? ))
                (donep (member todo-keyword org-done-keywords))
@@ -270,15 +270,15 @@ If it has a TODO keyword, convert it to a Markdown task list item."
                                "\n"
                                (concat "\n" content-indent)
                                trimmed-contents)))
-                  "")))
+                    "")))
           (format "%s- %s %s%s\n" indent checkbox title indented-contents))
-      ;; It's a regular heading.
-      (let* ((title (org-export-data (org-element-property :title heading)
-                                   (cons :with-smart-quotes (cons nil info))))
-             (level (+ (org-element-property :level heading)
-                       (or (plist-get info :headline-offset) 0)))
-             (header (format "%s %s" (make-string level ?#) title)))
-        (format "%s\n\n%s" header (or contents ""))))))
+        ;; It's a regular heading.
+        (let* ((title (org-export-data (org-element-property :title heading)
+                                       (cons :with-smart-quotes (cons nil info))))
+               (level (+ (org-element-property :level heading)
+                         (or (plist-get info :headline-offset) 0)))
+               (header (format "%s %s" (make-string level ?#) title)))
+          (format "%s\n\n%s" header (or contents ""))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -298,11 +298,11 @@ If it has a TODO keyword, convert it to a Markdown task list item."
          (manual-imports (plist-get info :astro-imports))
          (all-imports (if (and auto-imports manual-imports)
                           (concat auto-imports "\n" manual-imports)
-                        (or auto-imports manual-imports))))
+                          (or auto-imports manual-imports))))
     (concat front-matter-string
             (if (and all-imports (not (string-blank-p all-imports)))
                 (concat all-imports "\n\n")
-              "")
+                "")
             body)))
 
 (defun org-astro-final-output-filter (output _backend _info)
@@ -322,7 +322,7 @@ If it has a TODO keyword, convert it to a Markdown task list item."
           (mapcar (lambda (line)
                     (if (string-prefix-p "    " line)
                         (concat "> " (substring line 4))
-                      line))
+                        line))
                   lines))
          (s (mapconcat 'identity processed-lines "\n")))
     s))
@@ -389,30 +389,30 @@ If it has a TODO keyword, convert it to a Markdown task list item."
   (interactive)
   (if (string-equal ".mdx" (file-name-extension (buffer-file-name)))
       (message "Cannot export from an .mdx file. Run this from the source .org file.")
-    (let* ((info (org-export-get-environment 'astro))
-           (posts-folder
-            (or (plist-get info :astro-posts-folder)
-                (plist-get info :posts-folder)
-                (let* ((selection (completing-read "Select a posts folder: "
-                                                  org-astro-known-posts-folders
-                                                  nil t)))
-                  (when selection
-                    (cdr (assoc selection org-astro-known-posts-folders))))))
-           (pub-dir (when posts-folder
-                      (file-name-as-directory
-                       (expand-file-name (org-trim posts-folder)))))
-           (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
-           (out-dir (file-name-directory default-outfile))
-           (out-filename (file-name-nondirectory default-outfile))
-           (final-filename
-            (replace-regexp-in-string
-             "_" "-"
-             (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
-           (outfile (expand-file-name final-filename out-dir)))
-      (when pub-dir
-        (make-directory pub-dir :parents)
-        (org-export-to-file 'astro outfile
-          async subtreep visible-only body-only)))))
+      (let* ((info (org-export-get-environment 'astro))
+             (posts-folder
+              (or (plist-get info :astro-posts-folder)
+                  (plist-get info :posts-folder)
+                  (let* ((selection (completing-read "Select a posts folder: "
+                                                     org-astro-known-posts-folders
+                                                     nil t)))
+                    (when selection
+                      (cdr (assoc selection org-astro-known-posts-folders))))))
+             (pub-dir (when posts-folder
+                        (file-name-as-directory
+                         (expand-file-name (org-trim posts-folder)))))
+             (default-outfile (org-export-output-file-name ".mdx" subtreep pub-dir))
+             (out-dir (file-name-directory default-outfile))
+             (out-filename (file-name-nondirectory default-outfile))
+             (final-filename
+              (replace-regexp-in-string
+               "_" "-"
+               (replace-regexp-in-string "^[0-9]+-" "" out-filename)))
+             (outfile (expand-file-name final-filename out-dir)))
+        (when pub-dir
+          (make-directory pub-dir :parents)
+          (org-export-to-file 'astro outfile
+            async subtreep visible-only body-only)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
