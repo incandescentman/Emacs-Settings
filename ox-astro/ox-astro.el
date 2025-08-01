@@ -423,10 +423,11 @@ under the key `:astro-body-images-imports`."
                 "")
             body)))
 
-(defun org-astro-final-output-filter (output _backend _info)
+(defun org-astro-final-output-filter (output _backend info)
   "Final filter for Astro export.
 - Replaces HTML entities with literal characters.
-- Converts indented example blocks to Markdown blockquotes."
+- Converts indented example blocks to Markdown blockquotes.
+- Converts markdown image syntax with absolute paths to Image components."
   (let* ((s output)
          ;; HTML entities
          (s (replace-regexp-in-string "&#x2013;" "–" s t t))
@@ -434,6 +435,24 @@ under the key `:astro-body-images-imports`."
          (s (replace-regexp-in-string "&lsquo;" "'" s t t))
          (s (replace-regexp-in-string "&rdquo;" "\"" s t t))
          (s (replace-regexp-in-string "&ldquo;" "\"" s t t))
+         ;; Convert markdown image syntax with absolute paths to Image components
+         (image-imports (plist-get info :astro-body-images-imports))
+         (s (if image-imports
+                (replace-regexp-in-string
+                 "!\\[\\([^]]*\\)\\](\\(/[^)]+\\.\\(?:png\\|jpe?g\\)\\))"
+                 (lambda (match)
+                   (let* ((alt (match-string 1 match))
+                          (path (match-string 2 match))
+                          (image-data (cl-find path image-imports
+                                               :key (lambda (item) (plist-get item :path))
+                                               :test #'string-equal)))
+                     (if image-data
+                         (let ((var-name (plist-get image-data :var-name))
+                               (alt-text (or (org-astro--filename-to-alt-text path) alt "Image")))
+                           (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
+                         match)))
+                 s)
+              s))
          ;; Indented blocks to blockquotes
          (lines (split-string s "\n"))
          (processed-lines
