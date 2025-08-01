@@ -392,12 +392,7 @@ under the key `:astro-body-images-imports`."
          (front-matter-data (org-astro--get-front-matter-data tree info))
          (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
          ;; --- Handle All Imports ---
-         ;; 1. Cover image import
-         (cover-image-path (cdr (assoc 'image front-matter-data)))
-         (hero-import
-          (when cover-image-path
-            (format "import hero from '%s';" cover-image-path)))
-         ;; 2. Body image imports (collected by our filter)
+         ;; 1. Body image imports (collected by our filter)
          (body-images-imports (plist-get info :astro-body-images-imports))
          (body-imports-string
           (when body-images-imports
@@ -408,14 +403,14 @@ under the key `:astro-body-images-imports`."
                        (plist-get item :astro-path)))
              body-images-imports
              "\n")))
-         ;; 3. Manual imports from #+ASTRO_IMPORTS
+         ;; 2. Manual imports from #+ASTRO_IMPORTS
          (manual-imports (plist-get info :astro-imports))
-         ;; 4. Astro Image component import (always include if we have any body images)
+         ;; 3. Astro Image component import (always include if we have any body images)
          (astro-image-import (when body-images-imports
                                "import { Image } from 'astro:assets';"))
-         ;; 5. Combine all imports, filtering out nil/empty values
+         ;; 4. Combine all imports, filtering out nil/empty values
          (all-imports (mapconcat #'identity
-                                 (delq nil (list astro-image-import hero-import body-imports-string manual-imports))
+                                 (delq nil (list astro-image-import body-imports-string manual-imports))
                                  "\n")))
     (concat front-matter-string
             (if (and all-imports (not (string-blank-p all-imports)))
