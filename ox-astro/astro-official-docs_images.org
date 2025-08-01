@@ -1,18 +1,36 @@
 * Images
 
 
-Astro provides several ways for you to use images on your site, whether they are stored locally inside your project, linked to from an external URL, or managed in a CMS or CDN.
+Astro provides several ways for you to use images on your site, whether
+they are stored locally inside your project, linked to from an external
+URL, or managed in a CMS or CDN.
 
-Astro provides [[https://docs.astro.build/en/guides/images/#image-][image]] and [[https://docs.astro.build/en/guides/images/#picture-][picture]] components, [[https://docs.astro.build/en/guides/images/#images-in-markdown-files][Markdown image syntax]] processing, [[https://docs.astro.build/en/guides/images/#svg-components][SVG components]], and [[https://docs.astro.build/en/guides/images/#generating-images-with-getimage][an image generating function]] to optimize and/or transform your images. Additionally, you can configure [[https://docs.astro.build/en/guides/images/#responsive-image-behavior][automatically resizing responsive images]] by default, or set responsive properties on individual image and picture components.
+Astro
+provides [[https://docs.astro.build/en/guides/images/#image-][image]] and [[https://docs.astro.build/en/guides/images/#picture-][picture]] components, [[https://docs.astro.build/en/guides/images/#images-in-markdown-files][Markdown
+image
+syntax]] processing, [[https://docs.astro.build/en/guides/images/#svg-components][SVG
+components]],
+and [[https://docs.astro.build/en/guides/images/#generating-images-with-getimage][an
+image generating function]] to optimize and/or transform your images.
+Additionally, you can
+configure [[https://docs.astro.build/en/guides/images/#responsive-image-behavior][automatically
+resizing responsive images]] by default, or set responsive properties on
+individual image and picture components.
 
-You can always choose to use images and SVG files using native HTML elements in ~.astro~ or Markdown files, or the standard way for your file type (e.g. ~<img />~ in MDX and JSX). However, Astro does not perform any processing or optimization of these images.
+You can always choose to use images and SVG files using native HTML
+elements in ~.astro~ or Markdown files, or the standard way for your
+file type (e.g. ~<img />~ in MDX and JSX). However, Astro does not
+perform any processing or optimization of these images.
 
-See the full API reference for the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components.
+See
+the full API reference for
+the [[https://docs.astro.build/en/reference/modules/astro-assets/#image-][~<Image />~]] and [[https://docs.astro.build/en/reference/modules/astro-assets/#picture-][~<Picture />~]] components.
 
 ** Where to store images
 
 
 *** ~src/~ vs ~public/~
+
 
 We recommend that local images are kept in ~src/~ when possible so that
 Astro can transform, optimize, and bundle them. Files in

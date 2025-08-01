@@ -2,7 +2,6 @@
 
 /A quick-reference for future posts/
 
---------------
 
 *** 1. The two ways Astro turns an image file into HTML
 
@@ -26,8 +25,8 @@
 
   You get a variable (~Poster~) that you can drop wherever you want
   with
-  ~<Image src~{Poster} alt="Descriptive alt" />=.
 
+<Image src={Poster} alt="Descriptive alt" />.
 --------------
 
 *** 2. When to use which
