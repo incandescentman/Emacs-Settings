@@ -359,77 +359,77 @@ If it has a TODO keyword, convert it to a Markdown task list item."
           (format "%s\n\n%s" header (or contents ""))))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Filter Functions
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-astro-prepare-images-filter (tree _backend info)
-  "Find all local images, process them, and store import data in INFO.
-This filter runs on the parse TREE before transcoding. It collects
-all local image links, copies them to the Astro assets
-directory, and prepares a list of import statements to be added
-to the final MDX file. The data is stored in the INFO plist
-under the key `:astro-body-images-imports`."
+  "Find all local images, process them, and store import data in INFO."
   (let* ((posts-folder (or (plist-get info :posts-folder)
                            (plist-get info :astro-posts-folder)))
-         ;; Collect all image links from the document body.
          (image-paths (org-astro--collect-images-from-tree tree))
          image-imports-data)
     (when posts-folder
       (dolist (path image-paths)
-        ;; For each image, copy it to assets and get its new path.
         (let* ((astro-path (org-astro--process-image-path path posts-folder "posts/"))
                (var-name (org-astro--path-to-var-name path)))
           (when (and astro-path var-name)
             (push `(:path ,path :var-name ,var-name :astro-path ,astro-path)
                   image-imports-data)))))
-    ;; Store the collected data in the info plist and global variable for other functions to use.
     (when image-imports-data
       (let ((final-data (nreverse image-imports-data)))
         (setq org-astro--current-body-images-imports final-data)
         (plist-put info :astro-body-images-imports final-data))))
-  ;; Return the tree, as required for a parse-tree filter.
   tree)
 
+;; Remove or simplify the body filter since template handles everything
+(defun org-astro-body-filter (body _backend _info)
+  "Pass through body content without modification."
+  body)
 
-(defun org-astro-body-filter (body _backend info)
-  "Add front-matter and imports to the BODY of the document."
-  (let* ((tree (plist-get info :parse-tree))
-         (front-matter-data (org-astro--get-front-matter-data tree info))
-         (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
-         ;; --- Handle All Imports ---
-         ;; 1. Cover image ("hero") import
-         (cover-image-path (cdr (assoc 'image front-matter-data)))
-         (hero-import
-          (when cover-image-path
-            (format "import hero from '%s';" cover-image-path)))
-         ;; 2. Body image imports (collected by our filter)
-         (body-images-imports (or (plist-get info :astro-body-images-imports)
-                                  org-astro--current-body-images-imports))
-         (body-imports-string
-          (when body-images-imports
-            (mapconcat
-             (lambda (item)
-               (format "import %s from '%s';"
-                       (plist-get item :var-name)
-                       (plist-get item :astro-path)))
-             body-images-imports
-             "\n")))
-         ;; 3. Manual imports from #+ASTRO_IMPORTS
-         (manual-imports (plist-get info :astro-imports))
-         ;; 4. Astro Image component import (always include if we have any body images)
-         (astro-image-import (when body-images-imports
-                               "import { Image } from 'astro:assets';"))
-         ;; 5. Combine all imports, filtering out nil/empty values
-         (all-imports (mapconcat #'identity
-                                 (delq nil (list astro-image-import hero-import body-imports-string manual-imports))
-                                 "\n")))
-    (concat front-matter-string
-            (if (and all-imports (not (string-blank-p all-imports)))
-                (concat all-imports "\n\n")
-                "")
-            body)))
+(defun org-astro-final-output-filter (output _backend info)
+  "Final filter for Astro export."
+  (let* ((s output)
+         ;; HTML entities
+         (s (replace-regexp-in-string "&#x2013;" "–" s t t))
+         (s (replace-regexp-in-string "&rsquo;" "'" s t t))
+         (s (replace-regexp-in-string "&lsquo;" "'" s t t))
+         (s (replace-regexp-in-string "&rdquo;" "\"" s t t))
+         (s (replace-regexp-in-string "&ldquo;" "\"" s t t))
+         ;; Convert markdown image syntax with absolute paths to <img> tags
+         (image-imports (or (plist-get info :astro-body-images-imports)
+                            org-astro--current-body-images-imports))
+         (s (if image-imports
+                (replace-regexp-in-string
+                 "!\\[\\([^]]*\\)\\](\\(/[^)]+\\.\\(?:png\\|jpe?g\\)\\))"
+                 (lambda (match)
+                   (let* ((alt (match-string 1 match))
+                          (path (match-string 2 match))
+                          (image-data (cl-find path image-imports
+                                               :key (lambda (item) (plist-get item :path))
+                                               :test #'string-equal)))
+                     (if image-data
+                         (let ((var-name (plist-get image-data :var-name)))
+                           (format "<Image src={%s} alt=\"%s\" />" var-name (or alt "")))
+                         match)))
+                 s)
+                s))
+         ;; Indented blocks to blockquotes
+         (lines (split-string s "\n"))
+         (processed-lines
+          (mapcar (lambda (line)
+                    (if (string-prefix-p "    " line)
+                        (concat "> " (substring line 4))
+                        line))
+                  lines))
+         (s (mapconcat 'identity processed-lines "\n")))
+    ;; Clear the global variable after export
+    (setq org-astro--current-body-images-imports nil)
+    s))
 
+
+(defun org-astro--strip-front-matter (s)
+  "Remove a leading YAML front‑matter block from S."
+  (replace-regexp-in-string
+   "\\`---[[:space:]]*\n\\(?:.\\|\n\\)*?^---[[:space:]]*\n" "" s nil nil))
 
 (defun org-astro-final-output-filter (output _backend info)
   "Final filter for Astro export.
@@ -601,8 +601,6 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
               ;; Delete the file if it exists to ensure a clean export
               (when (file-exists-p outfile)
                 (delete-file outfile))
-              ;; Clear any export cache
-              (org-export-remove-in-buffer-options)
               (org-export-to-file 'astro outfile async subtreep visible-only body-only)
               outfile)  ; Return the output file path
             (progn
@@ -611,10 +609,65 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
 
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Backend Definition
+
+(defun org-astro-inner-template (contents info)
+  "Return body of document without any front matter.
+This overrides the markdown inner-template to ensure we only get content."
+  contents)
+
+(defun org-astro-template (contents info)
+  "Return complete document string after Astro MDX conversion.
+CONTENTS is the transcoded contents string. INFO is a plist
+holding export options."
+  ;; Aggressively strip ALL front matter patterns
+  (setq contents
+        (replace-regexp-in-string
+         "\\`\\(?:---\n\\(?:.*\n\\)*?---\n+\\)+"
+         ""
+         contents))
+
+  (let* ((tree (plist-get info :parse-tree))
+         (front-matter-data (org-astro--get-front-matter-data tree info))
+         (front-matter-string (org-astro--gen-yaml-front-matter front-matter-data))
+         ;; --- Handle All Imports ---
+         (cover-image-path (cdr (assoc 'image front-matter-data)))
+         (hero-import
+          (when cover-image-path
+            (format "import hero from '%s';" cover-image-path)))
+         (body-images-imports (or (plist-get info :astro-body-images-imports)
+                                  org-astro--current-body-images-imports))
+         (body-imports-string
+          (when body-images-imports
+            (mapconcat
+             (lambda (item)
+               (format "import %s from '%s';"
+                       (plist-get item :var-name)
+                       (plist-get item :astro-path)))
+             body-images-imports
+             "\n")))
+         (manual-imports (plist-get info :astro-imports))
+         (astro-image-import (when body-images-imports
+                               "import { Image } from 'astro:assets';"))
+         (all-imports (mapconcat #'identity
+                                 (delq nil (list astro-image-import hero-import body-imports-string manual-imports))
+                                 "\n")))
+    (concat front-matter-string
+            (when (and all-imports (not (string-blank-p all-imports)))
+              (concat all-imports "\n\n"))
+            contents)))
+
+(defun org-astro-debug-template (contents info)
+  "Debug version of template to see what's being passed."
+  (message "=== DEBUG: Template received ===")
+  (message "Contents length: %d" (length contents))
+  (message "First 500 chars:\n%s" (substring contents 0 (min 500 (length contents))))
+  (message "=== END DEBUG ===")
+  (org-astro-template contents info))
 
 (org-export-define-derived-backend 'astro 'md
   :menu-entry
@@ -631,15 +684,66 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
     (link . org-astro-link)
     (headline . org-astro-heading)
     (paragraph . org-astro-paragraph)
-    (plain-text . org-astro-plain-text))
+    (plain-text . org-astro-plain-text)
+    (inner-template . org-astro-inner-template)
+    (template . org-astro-debug-template))  ; Use debug version temporarily
 
   :filters-alist
   '((:filter-parse-tree . org-astro-prepare-images-filter)
-    (:filter-body . org-astro-body-filter)
     (:filter-final-output . org-astro-final-output-filter))
 
   :options-alist
-  '((:smart-quotes       nil                   org-md-use-smart-quotes nil)
+  '((:with-toc nil "toc" nil) ; Disable table of contents by default
+    (:with-title nil "title" nil) ; Don't let markdown add title
+    (:with-author nil "author" nil) ; Don't let markdown add author
+    (:with-date nil "date" nil) ; Don't let markdown add date
+    (:smart-quotes       nil                   org-md-use-smart-quotes nil)
+    (:title              "TITLE"               nil nil nil)
+    (:author             "AUTHOR"              nil nil nil)
+    (:author-image       "AUTHOR_IMAGE"        nil nil nil)
+    (:date               "DATE"                nil nil nil)
+    (:publish-date       "PUBLISH_DATE"        nil nil nil)
+    (:excerpt            "EXCERPT"             nil nil nil)
+    (:tags               "TAGS"                nil nil 'newline)
+    (:cover-image        "COVER_IMAGE"         nil nil nil)
+    (:cover-image-alt    "COVER_IMAGE_ALT"     nil nil nil)
+    (:posts-folder       "POSTS_FOLDER"        nil nil nil)
+    (:astro-publish-date "ASTRO_PUBLISH_DATE"  nil nil nil)
+    (:astro-excerpt      "ASTRO_EXCERPT"       nil nil nil)
+    (:astro-image        "ASTRO_IMAGE"         nil nil nil)
+    (:astro-image-alt    "ASTRO_IMAGE_ALT"     nil nil nil)
+    (:astro-author-image "ASTRO_AUTHOR_IMAGE"  nil nil nil)
+    (:astro-tags         "ASTRO_TAGS"          nil nil 'newline)
+    (:astro-imports      "ASTRO_IMPORTS"       nil nil 'newline)
+    (:astro-posts-folder "ASTRO_POSTS_FOLDER"  nil nil nil)
+    (:astro-date-format  nil "date-format" org-astro-date-format nil)))
+
+(org-export-define-derived-backend 'astro 'md
+  :menu-entry
+  '(?a "Export to Astro"
+       ((?a "As MDX buffer" org-astro-export-as-mdx)
+        (?x "To MDX file" org-astro-export-to-mdx)
+        (?o "To MDX file and open"
+            (lambda (_a _s _v _b)
+              (org-open-file
+               (org-astro-export-to-mdx))))))
+
+  :translate-alist
+  '((src-block . org-astro-src-block)
+    (link . org-astro-link)
+    (headline . org-astro-heading)
+    (paragraph . org-astro-paragraph)
+    (plain-text . org-astro-plain-text)
+    ;; Override template to prevent markdown from adding its own front matter
+    (template . org-astro-template))
+
+  :filters-alist
+  '((:filter-parse-tree . org-astro-prepare-images-filter)
+    (:filter-final-output . org-astro-final-output-filter))
+
+  :options-alist
+  '((:with-toc nil "toc" nil) ; Disable table of contents by default
+    (:smart-quotes       nil                   org-md-use-smart-quotes nil)
     (:title              "TITLE"               nil nil nil)
     (:author             "AUTHOR"              nil nil nil)
     (:author-image       "AUTHOR_IMAGE"        nil nil nil)
