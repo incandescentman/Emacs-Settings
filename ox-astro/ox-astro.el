@@ -329,29 +329,40 @@ Otherwise, use the default Markdown paragraph transcoding."
 
 (defun org-astro-plain-text (text info)
   "Transcode a plain-text element.
-If the text contains raw image paths on their own lines, convert them to <img> tags."
+If the text contains raw image paths on their own lines, convert them to <img> tags.
+If the text contains raw URLs on their own lines, convert them to LinkPeek components."
   (let* ((lines (split-string text "\n"))
          (image-imports (plist-get info :astro-body-images-imports))
+         (has-linkpeek nil)
          (processed-lines
           (mapcar
            (lambda (line)
              (let ((trimmed-line (org-trim line)))
-               (if (and trimmed-line
-                        (string-match-p "^/.*\\.\\(png\\|jpe?g\\)$" trimmed-line)
-                        (file-exists-p trimmed-line))
-                   ;; This is a raw image path - convert to img tag
-                   (let ((image-data (cl-find trimmed-line image-imports
-                                              :key (lambda (item) (plist-get item :path))
-                                              :test #'string-equal)))
-                     (if image-data
-                         (let ((var-name (plist-get image-data :var-name))
-                               (alt-text (or (org-astro--filename-to-alt-text trimmed-line) "Image")))
-                           (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
-                         ;; Fallback: if image wasn't processed, return empty string to remove the raw path
-                         ""))
-                   ;; Not an image path, keep original line
-                   line)))
+               (cond
+                ;; Raw image path
+                ((and trimmed-line
+                      (string-match-p "^/.*\\.\\(png\\|jpe?g\\)$" trimmed-line)
+                      (file-exists-p trimmed-line))
+                 (let ((image-data (cl-find trimmed-line image-imports
+                                            :key (lambda (item) (plist-get item :path))
+                                            :test #'string-equal)))
+                   (if image-data
+                       (let ((var-name (plist-get image-data :var-name))
+                             (alt-text (or (org-astro--filename-to-alt-text trimmed-line) "Image")))
+                         (format "<Image src={%s} alt=\"%s\" />" var-name alt-text))
+                       ;; Fallback: if image wasn't processed, return empty string to remove the raw path
+                       "")))
+                ;; Raw URL
+                ((and trimmed-line
+                      (string-match-p "^https?://[^[:space:]]+$" trimmed-line))
+                 (setq has-linkpeek t)
+                 (format "<LinkPeek href=\"%s\"></LinkPeek>" trimmed-line))
+                ;; Regular line
+                (t line))))
            lines)))
+    ;; Store LinkPeek usage in info for import generation
+    (when has-linkpeek
+      (plist-put info :astro-uses-linkpeek t))
     (mapconcat 'identity processed-lines "\n")))
 
 
@@ -408,9 +419,13 @@ under the key `:astro-body-images-imports`."
          ;; 3. Astro Image component import (always include if we have any body images)
          (astro-image-import (when body-images-imports
                                "import { Image } from 'astro:assets';"))
-         ;; 4. Combine all imports, filtering out nil/empty values
+         ;; 4. LinkPeek component import (if raw URLs are used - check body for raw URL patterns)
+         (linkpeek-import (when (or (plist-get info :astro-uses-linkpeek)
+                                    (string-match-p "\\[\\(https?://[^]]+\\)\\](\\1)" body))
+                            "import LinkPeek from '../../components/ui/LinkPeek.astro';"))
+         ;; 5. Combine all imports, filtering out nil/empty values
          (all-imports (mapconcat #'identity
-                                 (delq nil (list astro-image-import body-imports-string manual-imports))
+                                 (delq nil (list astro-image-import linkpeek-import body-imports-string manual-imports))
                                  "\n")))
     (concat front-matter-string
             (if (and all-imports (not (string-blank-p all-imports)))
@@ -448,6 +463,15 @@ under the key `:astro-body-images-imports`."
                          match)))
                  s)
               s))
+         ;; Convert markdown links that are raw URLs to LinkPeek components
+         (s (replace-regexp-in-string
+             "\\[\\(https?://[^]]+\\)\\](\\(\\1\\))"
+             (lambda (match)
+               (let ((url (match-string 1 match)))
+                 ;; Mark that we're using LinkPeek (for import)
+                 (plist-put info :astro-uses-linkpeek t)
+                 (format "<LinkPeek href=\"%s\"></LinkPeek>" url)))
+             s))
          ;; Indented blocks to blockquotes
          (lines (split-string s "\n"))
          (processed-lines
