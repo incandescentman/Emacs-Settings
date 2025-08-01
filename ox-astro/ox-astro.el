@@ -145,8 +145,8 @@ Each element is a cons cell of the form (NICKNAME . PATH)."
           (cond
            ((eq key 'tags)
             (when (listp value)
-              (push (format "tags: [%s]" 
-                            (mapconcat (lambda (tag) (format "\"%s\"" tag)) value ", ")) 
+              (push (format "tags: [%s]"
+                            (mapconcat (lambda (tag) (format "\"%s\"" tag)) value ", "))
                     yaml-lines)))
            ((stringp value)
             (push (format "%s: \"%s\"" key value) yaml-lines))
@@ -391,6 +391,7 @@ under the key `:astro-body-images-imports`."
   ;; Return the tree, as required for a parse-tree filter.
   tree)
 
+
 (defun org-astro-body-filter (body _backend info)
   "Add front-matter and imports to the BODY of the document."
   (let* ((tree (plist-get info :parse-tree))
@@ -423,15 +424,12 @@ under the key `:astro-body-images-imports`."
          (all-imports (mapconcat #'identity
                                  (delq nil (list astro-image-import hero-import body-imports-string manual-imports))
                                  "\n")))
-    ;; Remove any existing front matter from the body (markdown backend may have added it)
-    (let ((clean-body (if (string-match "^---\n.*?\n---\n" body)
-                          (replace-match "" nil nil body)
-                          body)))
-      (concat front-matter-string
-              (if (and all-imports (not (string-blank-p all-imports)))
-                  (concat all-imports "\n\n")
-                  "")
-              clean-body))))
+    (concat front-matter-string
+            (if (and all-imports (not (string-blank-p all-imports)))
+                (concat all-imports "\n\n")
+                "")
+            body)))
+
 
 (defun org-astro-final-output-filter (output _backend info)
   "Final filter for Astro export.
@@ -550,6 +548,7 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
     async subtreep visible-only body-only))
 
 ;;;###autoload
+;;;###autoload
 (defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
   "Export current buffer to an Astro-compatible MDX file."
   (interactive)
@@ -574,14 +573,14 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
                               (beginning-of-line)
                               (kill-line)
                               (insert (format "#+POSTS_FOLDER: %s" selection)))
-                          ;; Add new POSTS_FOLDER keyword after other keywords
-                          (let ((insert-point (point-min)))
-                            (while (and (re-search-forward "^#\\+[A-Z_]+:" nil t)
-                                        (not (looking-at-p "^\\s-*$")))
-                              (setq insert-point (line-end-position)))
-                            (goto-char insert-point)
-                            (end-of-line)
-                            (insert (format "\n#+POSTS_FOLDER: %s" selection))))
+                            ;; Add new POSTS_FOLDER keyword after other keywords
+                            (let ((insert-point (point-min)))
+                              (while (and (re-search-forward "^#\\+[A-Z_]+:" nil t)
+                                          (not (looking-at-p "^\\s-*$")))
+                                (setq insert-point (line-end-position)))
+                              (goto-char insert-point)
+                              (end-of-line)
+                              (insert (format "\n#+POSTS_FOLDER: %s" selection))))
                         (save-buffer))
                       selected-path))))
              (pub-dir (when posts-folder
@@ -599,11 +598,18 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
         (if pub-dir
             (progn
               (make-directory pub-dir :parents)
+              ;; Delete the file if it exists to ensure a clean export
+              (when (file-exists-p outfile)
+                (delete-file outfile))
+              ;; Clear any export cache
+              (org-export-remove-in-buffer-options)
               (org-export-to-file 'astro outfile async subtreep visible-only body-only)
               outfile)  ; Return the output file path
             (progn
               (message "Astro export cancelled: No posts folder selected.")
               nil)))))
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
