@@ -546,6 +546,21 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
             (format "~/assets/images/%s%s" sub-dir filename))
           image-path))))
 
+(defun org-astro--insert-keyword-at-end-of-block (key value)
+  "Insert #+KEY: VALUE at the end of the Org keyword block."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((insert-point (point-min))
+          (found-keywords nil))
+      ;; Find the last line that is a keyword
+      (while (re-search-forward "^#\\+[A-Z_]+:" nil t)
+        (setq found-keywords t)
+        (setq insert-point (point-at-eol)))
+      (goto-char insert-point)
+      ;; If we found keywords, insert after them. Otherwise, at the top.
+      (if found-keywords (end-of-line))
+      (insert (format "\n#+%s: %s" (upcase key) value)))))
+
 ;;;###autoload
 (defun org-astro-export-as-mdx (&optional async subtreep visible-only body-only)
   "Export current buffer to an Astro-compatible MDX buffer."
@@ -555,12 +570,62 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
 
 ;;;###autoload
 (defun org-astro-export-to-mdx (&optional async subtreep visible-only body-only)
-  "Export current buffer to an Astro-compatible MDX file."
+  "Export current buffer to an Astro-compatible MDX file.
+If title, excerpt, or publish date are missing, they will be
+generated and added to the Org source file."
   (interactive)
   (if (string-equal ".mdx" (file-name-extension (buffer-file-name)))
       (message "Cannot export from an .mdx file. Run this from the source .org file.")
-      (let* ((info (org-export-get-environment 'astro))
-             (posts-folder-from-file (or (plist-get info :astro-posts-folder)
+    (let ((info (org-export-get-environment 'astro))
+          (buffer-modified-p nil))
+      ;; --- Ensure essential front-matter exists, writing back if not ---
+      (save-excursion
+        (let* ((tree (org-element-parse-buffer))
+               (title-present (plist-get info :title))
+               (excerpt-present (or (plist-get info :astro-excerpt) (plist-get info :excerpt)))
+               (date-present (or (plist-get info :astro-publish-date) (plist-get info :publish-date) (plist-get info :date))))
+
+          ;; 1. Handle Title
+          (unless title-present
+            (let* ((headline (org-element-map tree 'headline 'identity nil 'first-match))
+                   (title (when headline (org-export-data (org-element-property :title headline) info))))
+              (when (and title (not (string-blank-p title)))
+                (org-astro--insert-keyword-at-end-of-block "TITLE" title)
+                (setq buffer-modified-p t))))
+
+          ;; 2. Handle Excerpt
+          (unless excerpt-present
+            (let* ((paragraph (org-element-map tree 'paragraph 'identity nil 'first-match))
+                   (excerpt-text
+                    (when paragraph
+                      (let* ((raw-text (org-export-data (org-element-contents paragraph) info))
+                             ;; Remove markdown formatting and newlines
+                             (clean-text (replace-regexp-in-string "[*_/]" "" raw-text))
+                             (single-line-text (replace-regexp-in-string "\n" " " clean-text))
+                             ;; Find the first sentence
+                             (first-sentence
+                              (if (string-match "\(.+?[.?!]\)" single-line-text)
+                                  (match-string 1 single-line-text)
+                                ;; Fallback for short texts without punctuation
+                                single-line-text)))
+                        (org-trim first-sentence)))))
+              (when (and excerpt-text (not (string-blank-p excerpt-text)))
+                (org-astro--insert-keyword-at-end-of-block "EXCERPT" excerpt-text)
+                (setq buffer-modified-p t))))
+
+          ;; 3. Handle Date
+          (unless date-present
+            (let ((date-str (format-time-string (org-time-stamp-format 'long 'inactive) (current-time))))
+              (org-astro--insert-keyword-at-end-of-block "PUBLISH_DATE" date-str)
+              (setq buffer-modified-p t)))))
+
+      ;; If we modified the buffer, save it and refresh the export environment
+      (when buffer-modified-p
+        (save-buffer)
+        (setq info (org-export-get-environment 'astro)))
+
+      ;; --- Original export logic continues below ---
+      (let* ((posts-folder-from-file (or (plist-get info :astro-posts-folder)
                                          (plist-get info :posts-folder)))
              (resolved-posts-folder (and posts-folder-from-file
                                          (cdr (assoc posts-folder-from-file org-astro-known-posts-folders))))
@@ -581,14 +646,8 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
                               (beginning-of-line)
                               (kill-line)
                               (insert (format "#+POSTS_FOLDER: %s" selection)))
-                            ;; Add new POSTS_FOLDER keyword after other keywords
-                            (let ((insert-point (point-min)))
-                              (while (and (re-search-forward "^#\\+[A-Z_]+:" nil t)
-                                          (not (looking-at-p "^\\s-*$")))
-                                (setq insert-point (line-end-position)))
-                              (goto-char insert-point)
-                              (end-of-line)
-                              (insert (format "\n#+POSTS_FOLDER: %s" selection))))
+                          ;; Add new POSTS_FOLDER keyword
+                          (org-astro--insert-keyword-at-end-of-block "POSTS_FOLDER" selection)))
                         (save-buffer))
                       selected-path))))
              (pub-dir (when posts-folder
@@ -610,7 +669,7 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
               outfile)  ; Return the output file path
             (progn
               (message "Astro export cancelled: No posts folder selected.")
-              nil)))))
+              nil))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
