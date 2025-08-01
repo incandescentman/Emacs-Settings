@@ -560,12 +560,15 @@ This includes both `[[file:...]]` links and raw image paths on their own line."
   (if (string-equal ".mdx" (file-name-extension (buffer-file-name)))
       (message "Cannot export from an .mdx file. Run this from the source .org file.")
       (let* ((info (org-export-get-environment 'astro))
+             (posts-folder-from-file (or (plist-get info :astro-posts-folder)
+                                         (plist-get info :posts-folder)))
+             (resolved-posts-folder (and posts-folder-from-file
+                                         (cdr (assoc posts-folder-from-file org-astro-known-posts-folders))))
              (posts-folder
-              (or (plist-get info :astro-posts-folder)
-                  (plist-get info :posts-folder)
+              (or resolved-posts-folder
                   (let* ((selection (completing-read "Select a posts folder: "
                                                      org-astro-known-posts-folders
-                                                     nil t))
+                                                     nil t posts-folder-from-file))
                          (selected-path (when selection
                                           (cdr (assoc selection org-astro-known-posts-folders)))))
                     (when selected-path
