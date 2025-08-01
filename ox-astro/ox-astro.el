@@ -669,7 +669,7 @@ generated and added to the Org source file."
               outfile)  ; Return the output file path
             (progn
               (message "Astro export cancelled: No posts folder selected.")
-              nil))))))
+              nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Backend Definition
