@@ -9826,20 +9826,6 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 #+end_src
 
 
-* don't italicize email addresses
-#+begin_src emacs-lisp
-(with-eval-after-load 'org
-  ;; Stricter rules to avoid false positives like email addresses
-  (setq org-emphasis-regexp-components
-        '(" \t('\"{"          ;; pre
-          "- \t.,:!?;'\")}\n" ;; post
-          " \t\r\n"           ;; border
-          "."                ;; body (allow any)
-          1))                ;; max newlines in emphasis
-
-  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
-#+end_src 
-
 * Local Variables & The End
 These have to be at the end.
 
