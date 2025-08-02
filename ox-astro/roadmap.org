@@ -1,0 +1,39 @@
+#+title: Ox-Astro Refactoring and Improvement Roadmap
+
+Of course. After reviewing the code, here are my thoughts on its structure, functionality, and potential areas for improvement.
+
+Overall, the code is well-structured and provides a significant amount of custom functionality beyond a basic Markdown export. The suggestions below are aimed at increasing its robustness, maintainability, and user-configurability.
+
+Here is a breakdown of potential refactoring and improvements:
+
+* Structure and Organization
+** File Splitting: Your plan to split the file into ox-astro.el, ox-astro-config.el, and ox-astro-functions.el is the most significant structural improvement you can make. It correctly separates concerns and will make the codebase much easier to navigate and maintain.
+** Function Naming: The use of the org-astro-- prefix for internal helper functions is a good convention and is used consistently.
+
+* Functionality and Robustness
+** Image Path Handling
+   - *Current:* The function org-astro-paragraph and org-astro-plain-text look for image paths that are absolute (e.g., /path/to/image.png). It doesn't handle images specified with paths relative to the Org file itself.
+   - *Suggestion:* Enhance the logic to resolve image paths. If a path is not absolute, it should be treated as relative to the directory containing the Org file (buffer-file-name). This would make it more flexible.
+
+** Image File Collisions
+   - *Current:* Images are copied to the assets folder using their original filenames. If you have two different images named screenshot.png in different source directories, they will overwrite each other in the destination assets/images/posts/ folder.
+   - *Suggestion:* To prevent collisions, consider prepending a unique identifier or a content hash to the filename upon copying. For example, screenshot.png could become a1b2c3d4-screenshot.png. This guarantees that every image has a unique path.
+
+** Consolidate Link Handling
+   - *Current:* Link handling is split. org-astro-link handles some cases, but the org-astro-final-output-filter also does a regex-based replacement to convert raw links into <LinkPeek> components.
+   - *Suggestion:* Move all link-related logic into the org-astro-link function. It should be the single source of truth for how links are transcoded. Relying on a final regex filter is more brittle than handling it in the dedicated element function.
+
+* Configuration and Usability
+** Hardcoded Component Paths
+   - *Current:* The path to the LinkPeek component is hardcoded as ../../components/ui/LinkPeek.astro. This makes the exporter specific to a single project's directory structure.
+   - *Suggestion:* Make this configurable. Add a defcustom variable, for example org-astro-linkpeek-component-path, so users can easily change the import path to match their own project setup.
+
+** Decouple Metadata Generation
+   - *Current:* The main interactive function org-astro-export-to-mdx contains the logic for checking, generating, and writing back missing front-matter (title, excerpt, date) to the source Org file.
+   - *Suggestion:* Factor this logic out into a separate, clearly named helper function like org-astro--ensure-front-matter. This would make org-astro-export-to-mdx cleaner, as its primary responsibility would be orchestrating the export, not modifying the source file's content directly within its body.
+
+** Error Handling
+   - *Current:* File operations like copy-file are not wrapped in error handlers. If a copy fails (e.g., due to file permissions), the export process will halt with a generic Emacs Lisp error.
+   - *Suggestion:* Wrap file I/O operations in condition-case to catch potential errors. This would allow you to provide more user-friendly error messages (e.g., "Failed to copy image to assets. Check permissions.") and prevent the process from crashing.
+
+These changes would improve the exporter's maintainability, make it more robust against edge cases, and increase its flexibility for use across different Astro projects.
