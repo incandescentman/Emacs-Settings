@@ -996,6 +996,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
     '(("HOLD" . "#d0bf8f")
      ("TODO" . "#cc9393")
      ("NEXT" . "#dca3a3")
+     ("REQUESTED" . "#dc8cc3")
      ("IMPORTANT" . "#dc8cc3")
      ("CONCLUSION" . "#dc8cc3")
      ("SENT" . "#dc8cc3")
@@ -4118,7 +4119,7 @@ into the main dumped emacs"
 
 
 * undo-tree-mode
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package undo-fu-session
   :init
   (setq undo-fu-session-compression nil)   ;; nil = never compress
@@ -4142,7 +4143,7 @@ into the main dumped emacs"
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
 (setq undo-outer-limit 1006632960) ; 960mb.
-#+END_EXAMPLE
+#+END_SRC
 
 * Emacs 25
 ** don't create new frames
@@ -9807,7 +9808,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 * cape emoji
 #+begin_src emacs-lisp
 (use-package cape
-  :defer t
+  :defer
   :init
   (add-to-list 'completion-at-point-functions #'cape-emoji))
 
