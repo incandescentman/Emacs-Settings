@@ -2203,18 +2203,37 @@ A useful function: remove a hyperlink but leave the link description:
 
 ** new
 #+begin_src emacs-lisp
-(defun remove-link-at-point ()
-  "Replace an org link by its description or if empty its address"
- (interactive)
- (if (org-in-regexp org-link-bracket-re 1)
-   (save-excursion
-    (let ((remove (list (match-beginning 0) (match-end 0)))
-       (description
-        (if (match-end 2)
-          (org-match-string-no-properties 2)
-         (org-match-string-no-properties 1))))
-     (apply 'delete-region remove)
-     (insert description)))))
+(defun remove-links/jay (beg end)
+  "Replace an Org bracket link at point with its description (or address if no description).
+If a region is active, do this for *all* bracket links in the region.
+
+Bracket links look like [[url][desc]] or [[url]]."
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list nil nil)))
+  (if (use-region-p)
+      ;; Region: process every match inside the region safely.
+      (save-excursion
+        (save-restriction
+          (narrow-to-region beg end)
+          (goto-char (point-min))
+          (while (re-search-forward org-link-bracket-re nil t)
+            (let ((desc (if (match-end 2)
+                            (match-string-no-properties 2)
+                          (match-string-no-properties 1))))
+              (replace-match desc t t))))
+        (message "Removed links in highlighted region"))
+    ;; No region: behave like your original function at point.
+    (if (org-in-regexp org-link-bracket-re 1)
+        (save-excursion
+          (let* ((remove (list (match-beginning 0) (match-end 0)))
+                 (description (if (match-end 2)
+                                  (org-match-string-no-properties 2)
+                                (org-match-string-no-properties 1))))
+            (apply #'delete-region remove)
+            (insert description))
+          (message "Removed link at point"))
+      (message "No link at point"))))
 #+end_src
 Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link][in org-mode, how to remove a link? - Emacs Stack Exchange]]
 
@@ -4073,6 +4092,17 @@ into the main dumped emacs"
    (progn (delete-region (mark) (point)))))
 (expand-abbrev)
 (insert "—")
+  )
+#+END_SRC
+
+** true en dash (clone)
+#+BEGIN_SRC emacs-lisp
+(defun true-en-dash ()
+(interactive)
+(cond (mark-active
+   (progn (delete-region (mark) (point)))))
+(expand-abbrev)
+(insert "-")
   )
 #+END_SRC
 

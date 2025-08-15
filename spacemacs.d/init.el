@@ -1042,7 +1042,8 @@ This function is called at the very end of Spacemacs initialization."
    '(sp-escape-wrapped-region nil)
    '(tab-bar-close-button-show nil)
    '(tab-bar-new-button-show nil)
-   '(warning-suppress-log-types '((use-package))))
+   '(warning-suppress-log-types '((use-package)))
+   '(wc-modeline-format "[Words: %tw Chars: %tc"))
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
