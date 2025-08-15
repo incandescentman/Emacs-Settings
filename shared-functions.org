@@ -3473,6 +3473,7 @@ Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-b
   ("el" . "src emacs-lisp")
   ("la" . "export latex")
   ("q" . "quote")
+
   ("s" . "src")
   ("sh" . "src sh")
   ("f" . "example fountain")

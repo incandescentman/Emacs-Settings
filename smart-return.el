@@ -266,8 +266,69 @@ The new line will have the same bullet, but a blank checkbox [ ]."
                   (setq start match-end))))
           found)))))
 
+
+
 ;;------------------------------------------------------------------------------
-;; MAIN SMART-RETURN FUNCTION - Complete replacement
+;; 6) KEY BINDINGS
+;;------------------------------------------------------------------------------
+
+;; Bind `smart-return' to RET in Org-mode buffers.
+(define-key org-mode-map (kbd "RET") #'smart-return)
+
+
+
+;;------------------------------------------------------------------------------
+;; PREVIEW FRAME HANDLING
+;;------------------------------------------------------------------------------
+
+(defvar smart-return-preview-frame nil
+  "The frame used for previewing files.")
+
+(defun smart-return-get-or-create-preview-frame ()
+  "Get the preview frame, creating it if necessary."
+  ;; Check if preview frame exists and is live
+  (if (and smart-return-preview-frame
+           (frame-live-p smart-return-preview-frame))
+      smart-return-preview-frame
+      ;; Create new frame with reasonable size
+      (setq smart-return-preview-frame
+            (make-frame '((name . "File Preview")
+                          (width . 100)
+                          (height . 40))))))
+
+(defun smart-return-open-file-in-preview-frame (file)
+  "Open FILE in the preview frame and return focus to current frame."
+  (let ((current-frame (selected-frame))
+        (preview-frame (smart-return-get-or-create-preview-frame)))
+    ;; Select the preview frame and open the file
+    (select-frame preview-frame)
+    (raise-frame preview-frame)
+    (find-file file)
+    ;; Return focus to the original frame
+    (select-frame-set-input-focus current-frame)))
+
+(defun smart-return-get-file-link-at-point ()
+  "If point is on a file+emacs: link, return the file path, else nil."
+  (save-excursion
+    (let ((line (thing-at-point 'line t))
+          (col (- (point) (line-beginning-position))))
+      (when line
+        (save-match-data
+          (let ((start 0)
+                file-path)
+            (while (and (not file-path)
+                        (string-match "\\[\\[file\\+emacs:\\([^]]+\\)\\]\\[" line start))
+              (let ((match-start (match-beginning 0))
+                    (match-end (match-end 0))
+                    (path (match-string 1 line)))
+                (if (and (>= col match-start)
+                         (<= col match-end))
+                    (setq file-path path)
+                    (setq start match-end))))
+            file-path))))))
+
+;;------------------------------------------------------------------------------
+;; MODIFIED SMART-RETURN FUNCTION
 ;;------------------------------------------------------------------------------
 
 (defun smart-return ()
@@ -276,15 +337,13 @@ The new line will have the same bullet, but a blank checkbox [ ]."
 Decision Tree:
 1) Escape an empty list item, if `org-in-empty-item-p' is t.
 2) If the URL at point is an image, display it in Emacs.
-3) If on an Org link and `org-return-follows-link' is set, open it.
-4) If a region is active, delete it and call `org-return-indent'.
-5) If on a checklist item, insert a new checklist item.
-6) If on any other list item, insert a new bullet/item.
-7) If in Org-mode (and none of the above conditions match), do `org-return'.
-8) Otherwise, just insert a newline.
-
-This function aims to make \"Enter\" in Org-mode more intuitive
-for lists and checklists while respecting typical Org conventions."
+3) If on a file+emacs link, open in preview frame.
+4) If on an Org link and `org-return-follows-link' is set, open it.
+5) If a region is active, delete it and call `org-return-indent'.
+6) If on a checklist item, insert a new checklist item.
+7) If on any other list item, insert a new bullet/item.
+8) If in Org-mode (and none of the above conditions match), do `org-return'.
+9) Otherwise, just insert a newline."
   (interactive)
   (cond
    ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
@@ -293,15 +352,11 @@ for lists and checklists while respecting typical Org conventions."
     (org-element-cache-pause)
     (unwind-protect
         (progn
-          ;; Move to beginning of item and remove bullet/checkbox.
           (org-beginning-of-item)
           (delete-region (point) (line-end-position))
-          ;; Insert a newline to end the list context.
           (newline)
-          ;; If Org auto-inserted a new list bullet or number on the new line, remove it.
           (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
             (delete-region (point) (line-end-position)))
-          ;; Remove any leftover indentation, etc.
           (delete-horizontal-space))
       (org-element-cache-resume)))
 
@@ -309,38 +364,59 @@ for lists and checklists while respecting typical Org conventions."
    ((org-url-at-point-is-image-p)
     (display-online-image-in-new-buffer (thing-at-point 'url)))
 
-   ;; 3) If point is on an Org link and link-following is enabled, open it.
+   ;; 3) NEW: If on a file+emacs link, open in preview frame
+   ((smart-return-get-file-link-at-point)
+    (smart-return-open-file-in-preview-frame
+     (smart-return-get-file-link-at-point)))
+
+   ;; 4) If point is on any other Org link and link-following is enabled, open it normally.
    ((and (org-link-at-point-p) org-return-follows-link)
     (org-open-at-point))
 
-   ;; 4) If a region is active, delete it and indent.
+   ;; 5) If a region is active, delete it and indent.
    ((use-region-p)
     (delete-region (region-beginning) (region-end))
     (org-return-indent))
 
-   ;; 5) If in a list and the item is a checklist, insert a new `[ ]`.
+   ;; 6) If in a list and the item is a checklist, insert a new `[ ]`.
    ((and (org-at-item-p) (smart-return--at-checklist-p))
     (smart-return--insert-checklist-item))
 
-   ;; 6) If in a list but not a checklist, insert a new bullet.
+   ;; 7) If in a list but not a checklist, insert a new bullet.
    ((org-at-item-p)
     (org-insert-item))
 
-   ;; 7) Otherwise, if in Org-mode, do the normal `org-return'.
+   ;; 8) Otherwise, if in Org-mode, do the normal `org-return'.
    ((derived-mode-p 'org-mode)
     (org-return))
 
-   ;; 8) Fallback to a simple newline.
+   ;; 9) Fallback to a simple newline.
    (t
     (newline))))
 
-
 ;;------------------------------------------------------------------------------
-;; 6) KEY BINDINGS
+;; OPTIONAL: Command to close the preview frame
 ;;------------------------------------------------------------------------------
 
-;; Bind `smart-return' to RET in Org-mode buffers.
-(define-key org-mode-map (kbd "RET") #'smart-return)
+(defun smart-return-close-preview-frame ()
+  "Close the preview frame if it exists."
+  (interactive)
+  (when (and smart-return-preview-frame
+             (frame-live-p smart-return-preview-frame))
+    (delete-frame smart-return-preview-frame)
+    (setq smart-return-preview-frame nil)))
+
+;; You might want to bind this to a key
+;; (global-set-key (kbd "C-c p c") 'smart-return-close-preview-frame)
+
+
+
+
+
+
+
+
+
 
 (provide 'smart-return)
 
