@@ -50,8 +50,7 @@
 ;;
 ;; 3. LINK HANDLING
 ;;    ----------------
-;;    Condition: (org-link-at-point-p) AND (org-return-follows-link)
-;;      - Determines if the point is on an Org-mode link and if link
+;;    Condition: (org-link-at-point-p) AND (org-return-follows-link;;      - Determines if the point is on an Org-mode link and if link
 ;;        following is enabled.
 ;;
 ;;    Action:
@@ -117,6 +116,9 @@
 (require 'cl-lib)
 
 
+
+
+
 ;;------------------------------------------------------------------------------
 ;; 1) EMPTY LIST ITEM DETECTION (including checklists)
 ;;------------------------------------------------------------------------------
@@ -164,24 +166,24 @@ etc."
            (if (plist-get status :error)
                (message "Error retrieving image: %s"
                         (plist-get status :error))
-             (goto-char (point-min))
-             (re-search-forward "\r?\n\r?\n" nil 'move)
-             (let ((image-data (buffer-substring-no-properties
-                                (point) (point-max))))
-               (with-current-buffer (get-buffer-create "*Online Image*")
-                 (let ((inhibit-read-only t))
-                   (erase-buffer)
-                   (kill-all-local-variables)
-                   (insert-image (create-image image-data nil t))
-                   (set-buffer-modified-p nil)
-                   (image-mode))
-                 (display-buffer (current-buffer))))
-             (kill-buffer (current-buffer))
-             (message "Image fetched and displayed successfully."))))
+               (goto-char (point-min))
+               (re-search-forward "\r?\n\r?\n" nil 'move)
+               (let ((image-data (buffer-substring-no-properties
+                                  (point) (point-max))))
+                 (with-current-buffer (get-buffer-create "*Online Image*")
+                   (let ((inhibit-read-only t))
+                     (erase-buffer)
+                     (kill-all-local-variables)
+                     (insert-image (create-image image-data nil t))
+                     (set-buffer-modified-p nil)
+                     (image-mode))
+                   (display-buffer (current-buffer))))
+               (kill-buffer (current-buffer))
+               (message "Image fetched and displayed successfully."))))
         ;; If all goes well, return t
         t)
-    (message "Invalid URL provided.")
-    nil))
+      (message "Invalid URL provided.")
+      nil))
 
 
 ;;------------------------------------------------------------------------------
@@ -240,6 +242,34 @@ The new line will have the same bullet, but a blank checkbox [ ]."
   (setq org-element-use-cache t))
 
 
+;;------------------------------------------------------------------------------
+;; LINK DETECTION - Use only this version, delete the other one!
+;;------------------------------------------------------------------------------
+
+(defun org-link-at-point-p ()
+  "Return t if the point is on an Org-mode link."
+  ;; Simple regex-based detection that works without org-element
+  (let ((line (thing-at-point 'line t))
+        (col (- (point) (line-beginning-position))))
+    (when line
+      (save-match-data
+        (let ((start 0)
+              (found nil))
+          (while (and (not found)
+                      (string-match "\\[\\[\\([^]]+\\)\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
+                                    line start))
+            (let ((match-start (match-beginning 0))
+                  (match-end (match-end 0)))
+              (if (and (>= col match-start)
+                       (<= col match-end))
+                  (setq found t)
+                  (setq start match-end))))
+          found)))))
+
+;;------------------------------------------------------------------------------
+;; MAIN SMART-RETURN FUNCTION - Complete replacement
+;;------------------------------------------------------------------------------
+
 (defun smart-return ()
   "Perform a context-aware Return in Org-mode.
 
@@ -256,52 +286,53 @@ Decision Tree:
 This function aims to make \"Enter\" in Org-mode more intuitive
 for lists and checklists while respecting typical Org conventions."
   (interactive)
-  (org-element-cache-pause) ;; <---- Pause the parser
-  (unwind-protect
-      (cond
-       ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
-       ((org-in-empty-item-p)
-        ;; Move to beginning of item and remove bullet/checkbox.
-        (org-beginning-of-item)
-        (delete-region (point) (line-end-position))
-        ;; Insert a newline to end the list context.
-        (newline)
-        ;; If Org auto-inserted a new list bullet or number on the new line, remove it.
-        (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
-          (delete-region (point) (line-end-position)))
-        ;; Remove any leftover indentation, etc.
-        (delete-horizontal-space))
+  (cond
+   ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
+   ((org-in-empty-item-p)
+    ;; Only pause the cache for this specific operation
+    (org-element-cache-pause)
+    (unwind-protect
+        (progn
+          ;; Move to beginning of item and remove bullet/checkbox.
+          (org-beginning-of-item)
+          (delete-region (point) (line-end-position))
+          ;; Insert a newline to end the list context.
+          (newline)
+          ;; If Org auto-inserted a new list bullet or number on the new line, remove it.
+          (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
+            (delete-region (point) (line-end-position)))
+          ;; Remove any leftover indentation, etc.
+          (delete-horizontal-space))
+      (org-element-cache-resume)))
 
-       ;; 2) If the URL at point is an image, display it in Emacs.
-       ((org-url-at-point-is-image-p)
-        (display-online-image-in-new-buffer (thing-at-point 'url)))
+   ;; 2) If the URL at point is an image, display it in Emacs.
+   ((org-url-at-point-is-image-p)
+    (display-online-image-in-new-buffer (thing-at-point 'url)))
 
-       ;; 3) If point is on an Org link and link-following is enabled, open it.
-       ((and (org-link-at-point-p) org-return-follows-link)
-        (org-open-at-point))
+   ;; 3) If point is on an Org link and link-following is enabled, open it.
+   ((and (org-link-at-point-p) org-return-follows-link)
+    (org-open-at-point))
 
-       ;; 4) If a region is active, delete it and indent.
-       ((use-region-p)
-        (delete-region (region-beginning) (region-end))
-        (org-return-indent))
+   ;; 4) If a region is active, delete it and indent.
+   ((use-region-p)
+    (delete-region (region-beginning) (region-end))
+    (org-return-indent))
 
-       ;; 5) If in a list and the item is a checklist, insert a new `[ ]`.
-       ((and (org-at-item-p) (smart-return--at-checklist-p))
-        (smart-return--insert-checklist-item))
+   ;; 5) If in a list and the item is a checklist, insert a new `[ ]`.
+   ((and (org-at-item-p) (smart-return--at-checklist-p))
+    (smart-return--insert-checklist-item))
 
-       ;; 6) If in a list but not a checklist, insert a new bullet.
-       ((org-at-item-p)
-        (org-insert-item))
+   ;; 6) If in a list but not a checklist, insert a new bullet.
+   ((org-at-item-p)
+    (org-insert-item))
 
-       ;; 7) Otherwise, if in Org-mode, do the normal `org-return'.
-       ((derived-mode-p 'org-mode)
-        (org-return))
+   ;; 7) Otherwise, if in Org-mode, do the normal `org-return'.
+   ((derived-mode-p 'org-mode)
+    (org-return))
 
-       ;; 8) Fallback to a simple newline.
-       (t
-        (newline)))
-    ;; (org-element-cache-resume)
-    ))
+   ;; 8) Fallback to a simple newline.
+   (t
+    (newline))))
 
 
 ;;------------------------------------------------------------------------------
