@@ -9368,22 +9368,27 @@ current buffer.  Safe (save-excursion) and repeatable."
 
 (defun asterisk-to-dash-and-convert-code-blocks-to-org ()
   "From point to end of buffer:
-   • Change '\\n* ' to '\\n- '.
-   • Change a line starting with two spaces + '* ' to two spaces + '- '.
-   Then run `convert-markdown-to-org-code-blocks-simple` if it exists."
+   - Change '\\n* ' to '\\n'.
+   - Change a line starting with two spaces + '* ' to two spaces + ''.
+   Then run `convert-markdown-to-org-code-blocks-simple` if it exists,
+   and finally `redundant-delete-redundant-asterisks-in-org-headings` if it exists."
   (interactive)
   ;; 1. newline *  → newline -
   (save-excursion
     (while (search-forward "\n* " nil t)
-      (replace-match "\n- ")))
+      (replace-match "\n")))
   ;; 2. line-start two-spaces *  → two-spaces -
   (save-excursion
     (while (re-search-forward "^  \\* " nil t)
       (replace-match "  - ")))
-  ;; 3. optional post-processing
+  ;; 3. optional post-processing: convert code blocks
   (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
-    (convert-markdown-to-org-code-blocks-simple)))
-
+    (save-excursion
+      (convert-markdown-to-org-code-blocks-simple)))
+  ;; 4. optional cleanup: remove redundant asterisks in Org headings
+  (when (fboundp 'redundant-delete-redundant-asterisks-in-org-headings)
+    (save-excursion
+      (redundant-delete-redundant-asterisks-in-org-headings))))
 
 (defun normalize-dashes ()
   "1) Turn “foo---bar” into “foo --- bar”.

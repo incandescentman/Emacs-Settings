@@ -111,40 +111,29 @@
 
 ;;; Code:
 
+
 (require 'org)
 (require 'url)
 (require 'cl-lib)
-
-
-
-
 
 ;;------------------------------------------------------------------------------
 ;; 1) EMPTY LIST ITEM DETECTION (including checklists)
 ;;------------------------------------------------------------------------------
 
 (defun org-in-empty-item-p ()
-  "Return t if the point is in an empty Org list item.
-An empty item is one that only has a bullet (or a numbered marker)
-and, optionally, a checkbox ([ ] or [X]) with no further text. For example:
--
-- [ ]
-1) [X]
-etc."
+  "Return t if the point is in an empty Org list item."
   (when (org-at-item-p)
     (save-excursion
       (beginning-of-line)
-      ;; Match bullets (- + *) or numbered items (1. 1) plus optional checkbox.
       (looking-at-p
        "[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+\\(?:\\[[ Xx]\\][ \t]*\\)?$"))))
 
-
 ;;------------------------------------------------------------------------------
 ;; 2) IMAGE HANDLING
 ;;------------------------------------------------------------------------------
 
 (defun org-url-at-point-is-image-p ()
-  "Return t if the URL at point points to an image file (based on file extension)."
+  "Return t if the URL at point points to an image file."
   (let* ((url (thing-at-point 'url))
          (image-extensions
           '("png" "jpg" "jpeg" "gif" "bmp" "svg" "webp" "tiff" "ico" "heic" "avif"))
@@ -155,7 +144,7 @@ etc."
       (string-match-p regexp url))))
 
 (defun display-online-image-in-new-buffer (url)
-  "Fetch and display an image from URL in a new buffer using `url-retrieve'."
+  "Fetch and display an image from URL in a new buffer."
   (interactive "sEnter image URL: ")
   (if (and url (string-match-p "^https?://" url))
       (progn
@@ -180,75 +169,16 @@ etc."
                    (display-buffer (current-buffer))))
                (kill-buffer (current-buffer))
                (message "Image fetched and displayed successfully."))))
-        ;; If all goes well, return t
         t)
       (message "Invalid URL provided.")
       nil))
 
-
 ;;------------------------------------------------------------------------------
-;; 3) LINK HANDLING
-;;------------------------------------------------------------------------------
-
-(defun org-link-at-point-p ()
-  "Return t if the point is exactly on an Org-mode link."
-  (let* ((context (org-element-context)))
-    (when (eq (org-element-type context) 'link)
-      (let ((begin (org-element-property :begin context))
-            (end   (org-element-property :end context)))
-        (and (>= (point) begin)
-             (< (point) end))))))
-
-
-;;------------------------------------------------------------------------------
-;; 4) CHECKLIST HANDLING
-;;------------------------------------------------------------------------------
-
-(defun smart-return--at-checklist-p ()
-  "Return non-nil if the current item is a checklist item.
-A checklist item is assumed to start with a bullet (e.g. '- ' or '+ ') followed
-by a checkbox marker ([ ] or [X])."
-  (save-excursion
-    (beginning-of-line)
-    (looking-at "^[ \t]*[-+*][ \t]+\\[[ Xx]\\][ \t]+")))
-
-(defun smart-return--insert-checklist-item ()
-  "Insert a new checklist item on a new line, preserving indentation.
-The new line will have the same bullet, but a blank checkbox [ ]."
-  (let ((indent (current-indentation))
-        bullet)
-    ;; Capture the bullet character, but always insert "[ ]".
-    (save-excursion
-      (beginning-of-line)
-      (when (looking-at
-             "^[ \t]*\\([-+*]\\)[ \t]+\\(\\[[ Xx]\\]\\)[ \t]+")
-        ;; Instead of preserving the current checkbox state, force an unchecked box.
-        (setq bullet (concat (match-string 1) " [ ] "))))
-    (unless bullet
-      (setq bullet "- [ ] "))
-    (end-of-line)
-    (newline)
-    (insert (make-string indent ?\s) bullet)))
-
-
-;;------------------------------------------------------------------------------
-;; 5) MAIN SMART-RETURN FUNCTION
-;;------------------------------------------------------------------------------
-
-(defun org-element-cache-pause ()
-  (setq org-element-use-cache nil))
-
-(defun org-element-cache-resume ()
-  (setq org-element-use-cache t))
-
-
-;;------------------------------------------------------------------------------
-;; LINK DETECTION - Use only this version, delete the other one!
+;; 3) LINK HANDLING - ONLY ONE DEFINITION!
 ;;------------------------------------------------------------------------------
 
 (defun org-link-at-point-p ()
   "Return t if the point is on an Org-mode link."
-  ;; Simple regex-based detection that works without org-element
   (let ((line (thing-at-point 'line t))
         (col (- (point) (line-beginning-position))))
     (when line
@@ -266,137 +196,101 @@ The new line will have the same bullet, but a blank checkbox [ ]."
                   (setq start match-end))))
           found)))))
 
-
-
 ;;------------------------------------------------------------------------------
-;; 6) KEY BINDINGS
+;; 4) CHECKLIST HANDLING
 ;;------------------------------------------------------------------------------
 
-;; Bind `smart-return' to RET in Org-mode buffers.
-(define-key org-mode-map (kbd "RET") #'smart-return)
+(defun smart-return--at-checklist-p ()
+  "Return non-nil if the current item is a checklist item."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at "^[ \t]*[-+*][ \t]+\\[[ Xx]\\][ \t]+")))
 
-
+(defun smart-return--insert-checklist-item ()
+  "Insert a new checklist item on a new line."
+  (let ((indent (current-indentation))
+        bullet)
+    (save-excursion
+      (beginning-of-line)
+      (when (looking-at
+             "^[ \t]*\\([-+*]\\)[ \t]+\\(\\[[ Xx]\\]\\)[ \t]+")
+        (setq bullet (concat (match-string 1) " [ ] "))))
+    (unless bullet
+      (setq bullet "- [ ] "))
+    (end-of-line)
+    (newline)
+    (insert (make-string indent ?\s) bullet)))
 
 ;;------------------------------------------------------------------------------
-;; PREVIEW FRAME HANDLING
+;; 5) CACHE FUNCTIONS
 ;;------------------------------------------------------------------------------
+
+(defun org-element-cache-pause ()
+  (setq org-element-use-cache nil))
+
+(defun org-element-cache-resume ()
+  (setq org-element-use-cache t))
+
+;;------------------------------------------------------------------------------
+;; 6) PREVIEW FRAME HANDLING FOR file+emacs LINKS
+;;------------------------------------------------------------------------------
+
+
+;;; FIXED VERSION - Properly detect file+emacs links
 
 (defvar smart-return-preview-frame nil
   "The frame used for previewing files.")
 
 (defun smart-return-get-or-create-preview-frame ()
   "Get the preview frame, creating it if necessary."
-  ;; Check if preview frame exists and is live
   (if (and smart-return-preview-frame
            (frame-live-p smart-return-preview-frame))
       smart-return-preview-frame
-      ;; Create new frame with reasonable size
       (setq smart-return-preview-frame
             (make-frame '((name . "File Preview")
-                          (width . 100)
+                          (width . 120)
                           (height . 40))))))
 
 (defun smart-return-open-file-in-preview-frame (file)
   "Open FILE in the preview frame and return focus to current frame."
   (let ((current-frame (selected-frame))
-        (preview-frame (smart-return-get-or-create-preview-frame)))
-    ;; Select the preview frame and open the file
-    (select-frame preview-frame)
-    (raise-frame preview-frame)
+        (current-window (selected-window)))
+    ;; Open file in preview frame
+    (select-frame (smart-return-get-or-create-preview-frame))
+    (raise-frame)
     (find-file file)
-    ;; Return focus to the original frame
-    (select-frame-set-input-focus current-frame)))
+    ;; Return focus with a small delay
+    (run-at-time 0.1 nil
+                 (lambda (frame window)
+                   (select-frame-set-input-focus frame)
+                   (select-window window)
+                   (raise-frame frame))
+                 current-frame current-window)))
 
-(defun smart-return-get-file-link-at-point ()
-  "If point is on a file+emacs: link, return the file path, else nil."
-  (save-excursion
-    (let ((line (thing-at-point 'line t))
-          (col (- (point) (line-beginning-position))))
-      (when line
-        (save-match-data
-          (let ((start 0)
-                file-path)
-            (while (and (not file-path)
-                        (string-match "\\[\\[file\\+emacs:\\([^]]+\\)\\]\\[" line start))
-              (let ((match-start (match-beginning 0))
-                    (match-end (match-end 0))
-                    (path (match-string 1 line)))
-                (if (and (>= col match-start)
-                         (<= col match-end))
-                    (setq file-path path)
-                    (setq start match-end))))
-            file-path))))))
+;; FIXED ADVICE - Check the raw link text for file+emacs
+(defun smart-return-advice-org-open (orig-fun &rest args)
+  "Advice to intercept file+emacs links."
+  (let ((context (org-element-context)))
+    (if (eq (org-element-type context) 'link)
+        (let* ((begin (org-element-property :begin context))
+               (end (org-element-property :end context))
+               (link-text (buffer-substring-no-properties begin end))
+               (path (org-element-property :path context)))
+          ;; Check if this is a file+emacs link by examining the raw text
+          (if (string-match "\\[\\[file\\+emacs:" link-text)
+              (progn
+                (message "Intercepted file+emacs link: %s" path)
+                (smart-return-open-file-in-preview-frame path)
+                ;; Don't call the original function
+                nil)
+              ;; Call original for other links
+              (apply orig-fun args)))
+        ;; Not a link, call original
+        (apply orig-fun args))))
 
-;;------------------------------------------------------------------------------
-;; MODIFIED SMART-RETURN FUNCTION
-;;------------------------------------------------------------------------------
-
-(defun smart-return ()
-  "Perform a context-aware Return in Org-mode.
-
-Decision Tree:
-1) Escape an empty list item, if `org-in-empty-item-p' is t.
-2) If the URL at point is an image, display it in Emacs.
-3) If on a file+emacs link, open in preview frame.
-4) If on an Org link and `org-return-follows-link' is set, open it.
-5) If a region is active, delete it and call `org-return-indent'.
-6) If on a checklist item, insert a new checklist item.
-7) If on any other list item, insert a new bullet/item.
-8) If in Org-mode (and none of the above conditions match), do `org-return'.
-9) Otherwise, just insert a newline."
-  (interactive)
-  (cond
-   ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
-   ((org-in-empty-item-p)
-    ;; Only pause the cache for this specific operation
-    (org-element-cache-pause)
-    (unwind-protect
-        (progn
-          (org-beginning-of-item)
-          (delete-region (point) (line-end-position))
-          (newline)
-          (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
-            (delete-region (point) (line-end-position)))
-          (delete-horizontal-space))
-      (org-element-cache-resume)))
-
-   ;; 2) If the URL at point is an image, display it in Emacs.
-   ((org-url-at-point-is-image-p)
-    (display-online-image-in-new-buffer (thing-at-point 'url)))
-
-   ;; 3) NEW: If on a file+emacs link, open in preview frame
-   ((smart-return-get-file-link-at-point)
-    (smart-return-open-file-in-preview-frame
-     (smart-return-get-file-link-at-point)))
-
-   ;; 4) If point is on any other Org link and link-following is enabled, open it normally.
-   ((and (org-link-at-point-p) org-return-follows-link)
-    (org-open-at-point))
-
-   ;; 5) If a region is active, delete it and indent.
-   ((use-region-p)
-    (delete-region (region-beginning) (region-end))
-    (org-return-indent))
-
-   ;; 6) If in a list and the item is a checklist, insert a new `[ ]`.
-   ((and (org-at-item-p) (smart-return--at-checklist-p))
-    (smart-return--insert-checklist-item))
-
-   ;; 7) If in a list but not a checklist, insert a new bullet.
-   ((org-at-item-p)
-    (org-insert-item))
-
-   ;; 8) Otherwise, if in Org-mode, do the normal `org-return'.
-   ((derived-mode-p 'org-mode)
-    (org-return))
-
-   ;; 9) Fallback to a simple newline.
-   (t
-    (newline))))
-
-;;------------------------------------------------------------------------------
-;; OPTIONAL: Command to close the preview frame
-;;------------------------------------------------------------------------------
+;; Remove old advice and add new
+(advice-remove 'org-open-at-point #'smart-return-advice-org-open)
+(advice-add 'org-open-at-point :around #'smart-return-advice-org-open)
 
 (defun smart-return-close-preview-frame ()
   "Close the preview frame if it exists."
@@ -406,18 +300,25 @@ Decision Tree:
     (delete-frame smart-return-preview-frame)
     (setq smart-return-preview-frame nil)))
 
-;; You might want to bind this to a key
-;; (global-set-key (kbd "C-c p c") 'smart-return-close-preview-frame)
+;; Alternative: Override the file link handler to check for +emacs
+(defun smart-return-org-file-open (path)
+  "Custom file opener that checks for +emacs protocol."
+  (if (string-match "^\\+emacs:" path)
+      ;; Remove the +emacs: prefix and open in preview frame
+      (let ((real-path (substring path 6)))
+        (smart-return-open-file-in-preview-frame real-path))
+      ;; Otherwise use the default file opener
+      (org-open-file path)))
+
+;; Register our custom file handler
+(org-link-set-parameters "file" :follow #'smart-return-org-file-open)
 
 
+;;------------------------------------------------------------------------------
+;; 10) KEY BINDINGS
+;;------------------------------------------------------------------------------
 
-
-
-
-
-
-
+(define-key org-mode-map (kbd "RET") #'smart-return)
 
 (provide 'smart-return)
-
 ;;; smart-return.el ends here
