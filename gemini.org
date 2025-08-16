@@ -1,67 +1,20 @@
+One feature doesn't work. clicking on a file+emacs:/Users/jay/Library/CloudStorage/Dropbox/openai-roam/logistics/20240426140707-directory.org type link
 
-* Instructions
+It is supposed to open it in a separate frame, then return focus to the main buffer. but nothing happens
 
-** Input:
-#+begin_src user
-here's the opening of my article guiding students to be more thoughtful about when and how they use AI:
-
-Roy Lee is an undergrad at Columbia University. Or at least he was ---
-before he got kicked out for cheating.
-
-In a much discussed article in New York Magazine, Lee describes how he used
-ChatGPT to write his essays instead of doing the work himself.
-
-"I'd just dump the prompt into ChatGPT and hand in whatever it spat
-out," Lee explains. "At the end, I'd put on the finishing touches. I'd
-just insert 20 percent of my humanity, my voice, into it."
-
-Why did Lee feel so comfortable offloading his coursework to ChatGPT? Because, Lee says, most college assignments are "not relevant." Rather, they're "hackable by AI."
+I added some debugging to see what's going on, here's the output:
 
 
-^ can we use a more withering word than "comfortable" in this sentence?
-
-#+end_src
-
-^ Note that the user mistakenly included an empty line at the end of the block
-
-** Current output:
-```user
-here's the opening of my article guiding students to be more thoughtful about when and how they use AI:
-
-Roy Lee is an undergrad at Columbia University. Or at least he was ---
-before he got kicked out for cheating.
-
-In a much discussed article in New York Magazine, Lee describes how he used
-ChatGPT to write his essays instead of doing the work himself.
-
-"I'd just dump the prompt into ChatGPT and hand in whatever it spat
-out," Lee explains. "At the end, I'd put on the finishing touches. I'd
-just insert 20 percent of my humanity, my voice, into it."
-
-Why did Lee feel so comfortable offloading his coursework to ChatGPT? Because, Lee says, most college assignments are "not relevant." Rather, they're "hackable by AI."
-
-
-^ can we use a more withering word than "comfortable" in this sentence?
-
-```
-
-** Desired output:
-```user
-here's the opening of my article guiding students to be more thoughtful about when and how they use AI:
-
-Roy Lee is an undergrad at Columbia University. Or at least he was ---
-before he got kicked out for cheating.
-
-In a much discussed article in New York Magazine, Lee describes how he used
-ChatGPT to write his essays instead of doing the work himself.
-
-"I'd just dump the prompt into ChatGPT and hand in whatever it spat
-out," Lee explains. "At the end, I'd put on the finishing touches. I'd
-just insert 20 percent of my humanity, my voice, into it."
-
-Why did Lee feel so comfortable offloading his coursework to ChatGPT? Because, Lee says, most college assignments are "not relevant." Rather, they're "hackable by AI."
-
-
-^ can we use a more withering word than "comfortable" in this sentence?
-```
-
+Previewing file: /Users/jay/Library/CloudStorage/Dropbox/openai-roam/groups/20240515134049-nonprofit_journalism_institutes.org
+Warning: setting attribute ':foreground' of face 'info-index-match': nil value is invalid, use 'unspecified' instead.
+🍙🚫 Notch hidden 🎩✨ [2 times]
+Returning focus to original frame.
+🍙🚫 Notch hidden 🎩✨
+Previewing file: /Users/jay/Library/CloudStorage/Dropbox/openai-roam/groups/20240515134154-poynter_institute.org
+🍙🚫 Notch hidden 🎩✨
+Returning focus to original frame.
+🍙🚫 Notch hidden 🎩✨
+Previewing file: /Users/jay/Library/CloudStorage/Dropbox/openai-roam/journal/2025-02-11.org
+🍙🚫 Notch hidden 🎩✨
+Returning focus to original frame.
+🍙🚫 Notch hidden 🎩✨
