@@ -3436,6 +3436,29 @@ buffer is already narrowed; never widen."
 
 
 ** org insert easy template source blocks
+
+
+#+begin_src emacs-lisp
+(setq org-structure-template-alist
+ '(("a" . "export ascii")
+  ("c" . "center")
+  ("C" . "comment")
+  ("e" . "example")
+  ("x" . "example")
+  ("le" . "example")
+  ("E" . "export")
+  ("h" . "export html")
+  ("l" . "src emacs-lisp")
+  ("el" . "src emacs-lisp")
+  ("la" . "export latex")
+  ("q" . "src quote")
+  ("s" . "src")
+  ("sh" . "src sh")
+  ("f" . "example fountain")
+  ("v" . "example verse")))
+#+end_src
+
+
 #+BEGIN_SRC emacs-lisp
 ;; ------------------------------------------------------------------
 ;; Org structure templates ­– <sr TAB> etc.
@@ -3458,26 +3481,6 @@ buffer is already narrowed; never widen."
 #+END_SRC
 
 Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
-(setq org-structure-template-alist
- '(("a" . "export ascii")
-  ("c" . "center")
-  ("C" . "comment")
-  ("e" . "example")
-  ("x" . "example")
-  ("le" . "example")
-  ("E" . "export")
-  ("h" . "export html")
-  ("l" . "src emacs-lisp")
-  ("el" . "src emacs-lisp")
-  ("la" . "export latex")
-  ("q" . "quote")
-  ("s" . "src")
-  ("sh" . "src sh")
-  ("f" . "example fountain")
-  ("v" . "example verse")))
-#+end_src
 
 
 
@@ -9859,6 +9862,23 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
                            args))
 #+end_src
 
+* Org web tools
+[[https://github.com/alphapapa/org-web-tools][alphapapa/org-web-tools: View, capture, and archive Web pages in Org-mode]]
+
+#+begin_src emacs-lisp
+(use-package org-web-tools)
+
+;; strip out images
+(with-eval-after-load 'org-web-tools
+  (add-to-list 'org-web-tools-pandoc-replacements
+               '("\\[\\[data:image/[^]]+\\]\\(?:\\[[^]]*\\]\\)?\\]" . "")
+               t))
+
+  ;; Remove internal anchor links (like [[#installation]])
+  (add-to-list 'org-web-tools-pandoc-replacements
+               '("\\[\\[#[^]]+\\]\\(?:\\[[^]]*\\]\\)?\\]" . "")
+               t))
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.
