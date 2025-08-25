@@ -8675,7 +8675,7 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 #+end_src
 
 * A hacky way to not clobber final bullet of buffer in bulleted lists on save
-#+begin_src emacs-lisp
+#+BEGIN_EXAMPLE emacs-lisp
 
 (defun cleanup-buffer-safe ()
  "Perform a bunch of safe operations on the whitespace content of a buffer.
@@ -8744,7 +8744,7 @@ Including indent-buffer, which should not be called automatically on save."
           (insert " "))))))
 
 (add-hook 'before-save-hook 'my-before-save-hook)
-#+end_src
+#+END_EXAMPLE
 
 
 * Date and time
@@ -9865,8 +9865,9 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 * Org web tools
 [[https://github.com/alphapapa/org-web-tools][alphapapa/org-web-tools: View, capture, and archive Web pages in Org-mode]]
 
-#+begin_src emacs-lisp
-(use-package org-web-tools)
+#+BEGIN_EXAMPLE emacs-lisp
+
+(require 'org-web-tools)
 
 ;; strip out images
 (with-eval-after-load 'org-web-tools
@@ -9878,6 +9879,14 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
   (add-to-list 'org-web-tools-pandoc-replacements
                '("\\[\\[#[^]]+\\]\\(?:\\[[^]]*\\]\\)?\\]" . "")
                t))
+#+END_EXAMPLE
+
+* ox-astro
+#+begin_src emacs-lisp
+(setq org-astro-known-posts-folders
+      '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
+        ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
+        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))) 
 #+end_src
 
 * Local Variables & The End
