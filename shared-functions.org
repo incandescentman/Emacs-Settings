@@ -9388,35 +9388,45 @@ current buffer.  Safe (save-excursion) and repeatable."
 
 
 (defun normalize-dashes ()
-  "1) Turn “foo---bar” into “foo --- bar”.
-2) Turn a single space-hyphen-space (“ - ”) into spaced em-dash style (“ --- ”)."
-  (interactive)
-  (save-excursion
-    ;; Pass 1 – add spaces around existing triple hyphens
-    (goto-char (point-min))
-    (while (re-search-forward "\\([[:alnum:]]\\)---\\([[:alnum:]]\\)" nil t)
-      (replace-match "\\1 --- \\2" nil nil))
-
-    ;; Pass 2 – promote space-hyphen-space to spaced triple hyphen
-    (goto-char (point-min))
-    (while (re-search-forward " - " nil t)
-(replace-match " --- " nil nil))))
-
-
-(defun normalize-dashes ()
   "• Add spaces around a naked em-dash marker (---).
 • Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- )."
   (interactive)
   (save-excursion
-    ;; Pass 1 – space out triple-hyphens between *any* non-whitespace chars
+    ;; Pass 1 -- space out triple-hyphens between *any* non-whitespace chars
     (goto-char (point-min))
     (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
       (replace-match "\\1 --- \\2" nil nil))
-
-    ;; Pass 2 – turn space-hyphen-space into spaced em-dash
+    
+    ;; Pass 2 -- turn various forms of space-hyphen-space into spaced em-dash
+    ;; Handle regular ASCII hyphen-minus
     (goto-char (point-min))
-    (while (re-search-forward " - " nil t)
+    (while (re-search-forward "\\s-+-\\s-+" nil t)
+      (replace-match " --- " nil nil))
+    
+    ;; Also handle en-dash if present
+    (goto-char (point-min))
+    (while (re-search-forward "\\s-+–\\s-+" nil t)
+      (replace-match " --- " nil nil))
+    
+    ;; Also handle em-dash if present (to normalize spacing)
+    (goto-char (point-min))
+    (while (re-search-forward "\\s-+—\\s-+" nil t)
       (replace-match " --- " nil nil))))
+
+(defun diagnose-dashes ()
+  "Show what dash-like characters are in the buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((found nil))
+      (while (re-search-forward "\\s-+[-–—]\\s-+" nil t)
+        (let* ((match (match-string 0))
+               (char-codes (mapcar (lambda (c) (format "%c (U+%04X)" c c)) 
+                                 (string-to-list match))))
+          (setq found t)
+          (message "Found: %s → %s" match (string-join char-codes " "))))
+      (unless found
+        (message "No space-dash-space patterns found")))))
 #+end_src
 
 * ChatGPT export
