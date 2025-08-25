@@ -321,8 +321,13 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   (interactive)
   (let (choice)                               ; record which branch we took
     (cond
-     ;; ————————————————————— verbatim buckets —————————————————————
-     ;; 1) Shell / Elisp / Web / Markdown / Backtrace
+     ;; ------------------------------------------ verbatim buckets ------------------------------------------
+     ;; 1) Messages buffer - ALWAYS verbatim
+     ((string= (buffer-name) "*Messages*")
+      (setq choice "verbatim (Messages buffer)")
+      (call-interactively #'pasteboard-copy-verbatim))
+     
+     ;; 2) Shell / Elisp / Web / Markdown / Backtrace
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'web-mode)
@@ -333,32 +338,32 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
       (setq choice "verbatim (mode match)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 2) Org buffer **with** org-config-files-local-mode enabled
+     ;; 3) Org buffer **with** org-config-files-local-mode enabled
      ((and (eq major-mode 'org-mode)
            (bound-and-true-p org-config-files-local-mode))
       (setq choice "verbatim (org-local)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 3) Any file ending in .mdx
+     ;; 4) Any file ending in .mdx
      ((and buffer-file-name
            (string-match-p "\\.mdx\\'" buffer-file-name))
       (setq choice "verbatim (.mdx)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; 4) Any programming mode
+     ;; 5) Any programming mode
      ((derived-mode-p 'prog-mode)
       (setq choice "verbatim (prog)")
       (call-interactively #'pasteboard-copy-verbatim))
 
-     ;; ————————————————————— clean buckets —————————————————————
-     ;; 5) Org or generic text (when org-config-files-local-mode is off)
+     ;; ------------------------------------------ clean buckets ------------------------------------------
+     ;; 6) Org or generic text (when org-config-files-local-mode is off)
      ((or (eq major-mode 'text-mode)
           (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode))))
       (setq choice "clean")
       (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
 
-     ;; ———————————————————— heuristic fallback ———————————————————
+     ;; ---------------------------------------- heuristic fallback --------------------------------------
      (t
       (if (and (use-region-p)
                (save-excursion
