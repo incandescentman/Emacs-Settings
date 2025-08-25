@@ -9367,7 +9367,6 @@ current buffer.  Safe (save-excursion) and repeatable."
       (replace-match "\n- "))))
 
 
-
 (defun asterisk-to-dash-and-convert-code-blocks-to-org ()
   "From point to end of buffer:
    • Change '\\n* ' to '\\n- '.
@@ -9389,25 +9388,11 @@ current buffer.  Safe (save-excursion) and repeatable."
   (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
     (convert-markdown-to-org-code-blocks-simple)))
 
-(defun diagnose-dashes ()
-  "Show what dash-like characters are in the buffer."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let ((found nil))
-      (while (re-search-forward "\\s-+[-–—]\\s-+" nil t)
-        (let* ((match (match-string 0))
-               (char-codes (mapcar (lambda (c) (format "%c (U+%04X)" c c)) 
-                                 (string-to-list match))))
-          (setq found t)
-          (message "Found: %s → %s" match (string-join char-codes " "))))
-      (unless found
-        (message "No space-dash-space patterns found")))))
 
 (defun normalize-dashes ()
   "• Add spaces around a naked em-dash marker (---).
 • Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- ).
-• Leave bullet point dashes (at start of lines) unchanged."
+• Never convert bullet point dashes (at start of lines or after only whitespace)."
   (interactive)
   (let ((count 0))
     (save-excursion
@@ -9416,23 +9401,18 @@ current buffer.  Safe (save-excursion) and repeatable."
       (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
         (replace-match "\\1 --- \\2" nil nil))
 
-      ;; Pass 2 -- turn literal space-hyphen-space into spaced em-dash
+      ;; Pass 2 -- turn space-hyphen-space into spaced em-dash
+      ;; BUT only when NOT at beginning of line or after whitespace only
       (goto-char (point-min))
-      (while (search-forward " - " nil t)
-        (replace-match " --- " nil nil)
-        (setq count (1+ count)))
+      (while (re-search-forward "\\(.\\) - " nil t)
+        ;; Check if the character before space-hyphen-space is not whitespace
+        ;; and we're not at the beginning of a line
+        (let ((char-before (match-string 1)))
+          (unless (string-match-p "^[ \t\n]$" char-before)
+            (replace-match "\\1 --- " nil nil)
+            (setq count (1+ count)))))
       
       (message "Replaced %d space-hyphen-space patterns" count))))
-
-(defun test-dash-replacement ()
-  "Test dash replacement on current line."
-  (interactive)
-  (let ((line (thing-at-point 'line t)))
-    (message "Original: %s" line)
-    (when (string-match " - " line)
-      (message "Found ' - ' at position %d" (match-beginning 0)))
-    (setq line (replace-regexp-in-string " - " " --- " line))
-    (message "After replacement: %s" line)))
 #+end_src
 
 * ChatGPT export
