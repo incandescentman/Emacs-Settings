@@ -9372,6 +9372,7 @@ current buffer.  Safe (save-excursion) and repeatable."
   "From point to end of buffer:
    • Change '\\n* ' to '\\n- '.
    • Change a line starting with two spaces + '* ' to two spaces + '- '.
+   • Normalize dashes (add spaces around --- and convert ' - ' to ' --- ').
    Then run `convert-markdown-to-org-code-blocks-simple` if it exists."
   (interactive)
   ;; 1. newline *  → newline -
@@ -9382,36 +9383,11 @@ current buffer.  Safe (save-excursion) and repeatable."
   (save-excursion
     (while (re-search-forward "^  \\* " nil t)
       (replace-match "  - ")))
-  ;; 3. optional post-processing
+  ;; 3. normalize dashes
+  (normalize-dashes)
+  ;; 4. optional post-processing
   (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
     (convert-markdown-to-org-code-blocks-simple)))
-
-
-(defun normalize-dashes ()
-  "• Add spaces around a naked em-dash marker (---).
-• Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- )."
-  (interactive)
-  (save-excursion
-    ;; Pass 1 -- space out triple-hyphens between *any* non-whitespace chars
-    (goto-char (point-min))
-    (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
-      (replace-match "\\1 --- \\2" nil nil))
-    
-    ;; Pass 2 -- turn various forms of space-hyphen-space into spaced em-dash
-    ;; Handle regular ASCII hyphen-minus
-    (goto-char (point-min))
-    (while (re-search-forward "\\s-+-\\s-+" nil t)
-      (replace-match " --- " nil nil))
-    
-    ;; Also handle en-dash if present
-    (goto-char (point-min))
-    (while (re-search-forward "\\s-+–\\s-+" nil t)
-      (replace-match " --- " nil nil))
-    
-    ;; Also handle em-dash if present (to normalize spacing)
-    (goto-char (point-min))
-    (while (re-search-forward "\\s-+—\\s-+" nil t)
-      (replace-match " --- " nil nil))))
 
 (defun diagnose-dashes ()
   "Show what dash-like characters are in the buffer."
@@ -9427,6 +9403,36 @@ current buffer.  Safe (save-excursion) and repeatable."
           (message "Found: %s → %s" match (string-join char-codes " "))))
       (unless found
         (message "No space-dash-space patterns found")))))
+
+(defun normalize-dashes ()
+  "• Add spaces around a naked em-dash marker (---).
+• Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- ).
+• Leave bullet point dashes (at start of lines) unchanged."
+  (interactive)
+  (let ((count 0))
+    (save-excursion
+      ;; Pass 1 -- space out triple-hyphens between *any* non-whitespace chars
+      (goto-char (point-min))
+      (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
+        (replace-match "\\1 --- \\2" nil nil))
+
+      ;; Pass 2 -- turn literal space-hyphen-space into spaced em-dash
+      (goto-char (point-min))
+      (while (search-forward " - " nil t)
+        (replace-match " --- " nil nil)
+        (setq count (1+ count)))
+      
+      (message "Replaced %d space-hyphen-space patterns" count))))
+
+(defun test-dash-replacement ()
+  "Test dash replacement on current line."
+  (interactive)
+  (let ((line (thing-at-point 'line t)))
+    (message "Original: %s" line)
+    (when (string-match " - " line)
+      (message "Found ' - ' at position %d" (match-beginning 0)))
+    (setq line (replace-regexp-in-string " - " " --- " line))
+    (message "After replacement: %s" line)))
 #+end_src
 
 * ChatGPT export
