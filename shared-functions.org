@@ -4367,13 +4367,6 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 #+END_SRC
 
-* fix image links
-#+BEGIN_SRC emacs-lisp
-(defun fix-image-links ()
-(interactive)
-)
-#+END_SRC
-
 * ox-clip
 #+BEGIN_SRC emacs-lisp
 (use-package ox-clip
@@ -7604,56 +7597,6 @@ point with completion.
 #+END_EXAMPLE
 
 
-* display online images
-** 1
-Display online images in new buffer on return
-
-#+begin_src emacs-lisp
-(use-package url
-  :defer)
-
-#+end_src
-
-** 2
-[[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
-
-And again we have a use-case for image data not stored on harddisk. (The other two use-cases are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64 encoded images in org buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying previews of youtube videos]].)
-
-Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the following elisp code into your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
-
-After evaluating your init-file you can use links analog to the example:
-
-~[[imghttp://tn-home.de/Pic/tn-home.png]]~
-
-
-
-
-#+BEGIN_EXAMPLE emacs-lisp
-(autoload 'org-yt-follow "org-yt")
-
-
-(defun org-image-link (protocol link _description)
- "Interpret LINK as base64-encoded image data."
- (cl-assert (string-match "\\`img" protocol) nil
-       "Expected protocol type starting with img")
- (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
-  (cl-assert buf nil
-        "Download of image \"%s\" failed." link)
-  (with-current-buffer buf
-   (goto-char (point-min))
-   (re-search-forward "\r?\n\r?\n")
-   (buffer-substring-no-properties (point) (point-max)))))
-
-(org-link-set-parameters
- "imghttp"
- :image-data-fun #'org-image-link)
-
-(org-link-set-parameters
- "imghttps"
- :image-data-fun #'org-image-link)
-#+END_EXAMPLE
-
-
 * Insert image link from clipboard
 #+begin_src emacs-lisp
 (defun insert-image-link-from-clipboard ()
@@ -9884,6 +9827,110 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
         ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
         ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))) 
 #+end_src
+
+* Kill unwanted buffers on startup
+#+begin_src emacs-lisp
+
+;; Completely disable native compilation warnings/errors logging
+(setq native-comp-async-report-warnings-errors 'silent) 
+
+;; Prevent *Async-native-compile-log* from popping up
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Kill *info* buffer if it exists at startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (get-buffer "*info*")
+              (kill-buffer "*info*"))))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (get-buffer "*info*")
+              (kill-buffer "*info*")))) 
+
+(defvar my-auto-kill-buffers
+  '("*info*" "*Async-native-compile-log*")
+  "List of buffers to kill after startup.")
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (dolist (buf my-auto-kill-buffers)
+              (when (get-buffer buf)
+                (kill-buffer buf))))) 
+
+(advice-add 'info :override (lambda (&rest _) (message "Suppressed *info* at startup"))) 
+
+#+end_src
+
+* org-srs
+#+begin_src emacs-lisp
+;; Then configure
+(use-package fsrs
+  :ensure nil  ;; already installed via package-vc
+  :defer t)
+
+(use-package org-srs
+  :ensure nil  ;; already installed via package-vc
+  :after fsrs
+  :hook (org-mode . org-srs-embed-overlay-mode)
+  :bind (:map org-mode-map
+         ("<f5>" . org-srs-review-rate-easy)
+         ("<f6>" . org-srs-review-rate-good)
+         ("<f7>" . org-srs-review-rate-hard)
+         ("<f8>" . org-srs-review-rate-again))) 
+
+
+#+end_src
+
+* display online images
+** 1
+Display online images in new buffer on return
+
+#+begin_src emacs-lisp
+(use-package url
+  :defer)
+
+#+end_src
+
+** 2
+[[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
+
+And again we have a use-case for image data not stored on harddisk. (The other two use-cases are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64 encoded images in org buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying previews of youtube videos]].)
+
+Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the following elisp code into your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
+
+After evaluating your init-file you can use links analog to the example:
+
+~[[imghttp://tn-home.de/Pic/tn-home.png]]~
+
+
+
+
+#+BEGIN_EXAMPLE emacs-lisp
+(autoload 'org-yt-follow "org-yt")
+
+
+(defun org-image-link (protocol link _description)
+ "Interpret LINK as base64-encoded image data."
+ (cl-assert (string-match "\\`img" protocol) nil
+       "Expected protocol type starting with img")
+ (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
+  (cl-assert buf nil
+        "Download of image \"%s\" failed." link)
+  (with-current-buffer buf
+   (goto-char (point-min))
+   (re-search-forward "\r?\n\r?\n")
+   (buffer-substring-no-properties (point) (point-max)))))
+
+(org-link-set-parameters
+ "imghttp"
+ :image-data-fun #'org-image-link)
+
+(org-link-set-parameters
+ "imghttps"
+ :image-data-fun #'org-image-link)
+#+END_EXAMPLE
+
 
 * Local Variables & The End
 These have to be at the end.

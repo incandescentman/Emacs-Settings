@@ -628,7 +628,7 @@ Otherwise run, in order:
         (replace-smart-quotes-regexp beg end)
         (replace-weird-spaces beg end)
         (convert-markdown-headings-to-org beg end)
-(ensure-heading-emoji-space beg end)
+;; (ensure-heading-emoji-space beg end)
         (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
         (set-marker end nil)))))             ; tidy marker

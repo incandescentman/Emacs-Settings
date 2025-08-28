@@ -53,6 +53,7 @@
         pasteboard-paste-spaces-maybe
         pasteboard-paste-without-smart-quotes
         reflash-indentation
+        remove-hyperlinks
         return
         right-word
         smart-forward-sentence
