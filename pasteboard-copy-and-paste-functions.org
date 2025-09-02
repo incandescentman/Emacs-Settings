@@ -260,14 +260,11 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
 * convert markdown to org on paste
 #+begin_src emacs-lisp
 (defun convert-markdown-headings-to-org (beg end)
-  "Turn #, ##, ### etc. at bol into *, *, * … in the region."
+  "Turn #, ##, ### etc. at bol into *, **, *** etc. in the region."
   (save-excursion
     (goto-char beg)
     (while (re-search-forward "^\\(#+\\) " end t)
-      (replace-match (make-string (length (match-string 1)) ?*) t t)))
-
-  ;; Leave an extra space so '* Heading' becomes '* Heading', not '*Heading'
-  )
+      (replace-match (concat (make-string (length (match-string 1)) ?*) " ") t t))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
   "Turn '> ' at bol into ': ' (Org quote) in the region."
@@ -627,15 +624,15 @@ Otherwise run, in order:
         (replace-smart-quotes beg end)
         (replace-smart-quotes-regexp beg end)
         (replace-weird-spaces beg end)
-        (convert-markdown-headings-to-org beg end)
-        ;; (ensure-heading-emoji-space beg end)
+;; (ensure-heading-emoji-space beg end)
         (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
         ;; Add the asterisk-to-dash conversion here
         (save-restriction
           (narrow-to-region beg end)
           (goto-char beg)
-          (asterisk-to-dash-and-convert-code-blocks-to-org))
+          (asterisk-to-dash-and-convert-code-blocks-to-org)
+(convert-markdown-headings-to-org beg end))
         (set-marker end nil)))))             ; tidy marker
 #+END_SRC
 
