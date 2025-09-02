@@ -735,11 +735,10 @@ are adjusted so they become subheadings under the current Org heading."
     (insert text)))
 
 (defun pasteboard-paste-adjusted-subtrees-adaptive ()
-  "Paste Org text from pasteboard, adjust heading levels to be subheadings,
-and handle spacing based on surrounding punctuation."
+  "Paste from pasteboard using adaptive paste logic, then adjust Org heading levels
+to be subheadings under the current heading."
   (interactive)
-  (let* ((text (shell-command-to-string "pbpaste"))
-         (current-level (save-excursion
+  (let* ((current-level (save-excursion
                           (if (org-before-first-heading-p)
                               0
                             (or (org-current-level)
@@ -747,50 +746,36 @@ and handle spacing based on surrounding punctuation."
                                   (org-back-to-heading t)
                                   (org-current-level))
                                 0))))
-         (prev-char (char-before))
-         (next-char (char-after))
-         (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?})))
-
-    ;; Clean up the text by removing carriage returns
-    (setq text (replace-regexp-in-string "\r" "" text))
-
-    ;; Adjust the heading levels in the pasted text
-    (with-temp-buffer
-      (insert text)
-      (goto-char (point-min))
-      (let ((min-level nil))
-        (while (re-search-forward "^\\(\\*+\\) " nil t)
-          (let ((level (length (match-string 1))))
-            (when (or (null min-level) (< level min-level))
-              (setq min-level level))))
-        (when min-level
-          (let ((shift (- (+ current-level 1) min-level)))
-            (goto-char (point-min))
-            (while (re-search-forward "^\\(\\*+\\)" nil t)
-              (let* ((stars (match-string 1))
-                     (level (length stars))
-                     (new-level (max 1 (+ level shift))))
-                (replace-match (make-string new-level ?*) t t))))))
-      (setq text (buffer-string)))
-
-    ;; Insert the text at point and perform quote replacements if appropriate
-    (let ((start (point)))
-      (insert text)
-      (let ((end-pos (point)))
-        ;; If we're NOT next to punctuation, do quote replacements
-        (unless (or (member prev-char char-set)
-                    (member next-char char-set))
-          (save-excursion
-            (goto-char start)
-            ;; Replace various types of apostrophes with a straight '
-            (ignore-errors
-              (while (re-search-forward "['']" end-pos t)
-                (replace-match "'" t t)))
-            (goto-char start)
-            ;; Replace straight or curly double quotes with a straight "
-            (ignore-errors
-              (while (re-search-forward "[\"""]" end-pos t)
-                (replace-match "\"" t t)))))))))
+         (paste-start-pos (point)))
+    
+    ;; First, use pasteboard-paste-adaptive to get all its smart features
+    ;; (markdown conversion, smart quotes, link conversion, etc.)
+    (pasteboard-paste-adaptive)
+    
+    ;; Now adjust the heading levels of what was just pasted
+    (let ((paste-end-pos (point)))
+      (when (> paste-end-pos paste-start-pos)
+        (save-excursion
+          (goto-char paste-start-pos)
+          ;; Find the minimum heading level in the pasted text
+          (let ((min-level nil))
+            (while (re-search-forward "^\\(\\*+\\) " paste-end-pos t)
+              (let ((level (length (match-string 1))))
+                (when (or (not min-level) (< level min-level))
+                  (setq min-level level))))
+            
+            ;; If we found headings, adjust them to be under current heading
+            (when min-level
+              (let ((shift (- (+ current-level 1) min-level)))
+                ;; Only shift if necessary
+                (when (not (zerop shift))
+                  (goto-char paste-start-pos)
+                  (while (re-search-forward "^\\(\\*+\\)" paste-end-pos t)
+                    (let* ((stars (match-string 1))
+                           (level (length stars))
+                           (new-level (max 1 (+ level shift))))
+                      (replace-match (make-string new-level ?*) t t))))))))))
+    (message "Pasted with adjusted heading levels")))
 
 #+end_src
 
