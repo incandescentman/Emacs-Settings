@@ -611,12 +611,12 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
 #+BEGIN_SRC emacs-lisp
 (defun pasteboard-paste-clean (&optional raw)
   "Paste from macOS clipboard, then normalise the text.
-
 With a prefix argument RAW (C-u) insert verbatim.
 Otherwise run, in order:
   1. `replace-smart-quotes`          ; simple pair replacements
   2. `replace-smart-quotes-regexp`   ; regexp clean‑ups
-  3. `convert-markdown-links-to-org-mode`."
+  3. `convert-markdown-links-to-org-mode`
+  4. `asterisk-to-dash-and-convert-code-blocks-to-org`."
   (interactive "P")
   ;; Remember where the paste starts.
   (let ((beg (point)))
@@ -628,12 +628,15 @@ Otherwise run, in order:
         (replace-smart-quotes-regexp beg end)
         (replace-weird-spaces beg end)
         (convert-markdown-headings-to-org beg end)
-;; (ensure-heading-emoji-space beg end)
+        ;; (ensure-heading-emoji-space beg end)
         (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
+        ;; Add the asterisk-to-dash conversion here
+        (save-restriction
+          (narrow-to-region beg end)
+          (goto-char beg)
+          (asterisk-to-dash-and-convert-code-blocks-to-org))
         (set-marker end nil)))))             ; tidy marker
-
-
 #+END_SRC
 
 *** pasteboard-paste-raw
