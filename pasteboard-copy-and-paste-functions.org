@@ -495,13 +495,33 @@ ARG zero or negative       → force replacement."
     (delete-region beg end)
     (insert bracket-link)))
 
+(defun is-org-roam-buffer-p ()
+  "Check if the current buffer is an org-roam buffer by looking for ID property at the beginning."
+  (save-excursion
+    (goto-char (point-min))
+    (and (eq major-mode 'org-mode)
+         (looking-at-p "^:PROPERTIES:\n:ID:\\s-+[^\n]+\n:END:"))))
+
+(defun demote-org-headings-in-region (beg end)
+  "Demote all Org headings in the region between BEG and END by one level."
+  (save-excursion
+    (let ((end-marker (copy-marker end)))
+      (goto-char beg)
+      (while (re-search-forward "^\\(\\*+\\)" end-marker t)
+        (let ((stars (match-string 1)))
+          (replace-match (concat "*" stars) t t)))
+      (set-marker end-marker nil))))
+
 (defun pasteboard-paste-adaptive ()
   "Paste from the macOS pasteboard, choosing method based on current mode and context.
 If there's an active region and the clipboard contains a URL,
-insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
+insert an Org bracket link. Otherwise, fall back to the usual adaptive paste.
+In org-roam buffers, automatically demote headings by one level."
   (interactive)
   (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
          (clipboard-text (downcase raw-clip))
+         (is-org-roam (is-org-roam-buffer-p))
+         (paste-start-pos (point))  ; Save position as integer
          choice)  ;; will record which branch we took
     (cond
      ;; 1) If region is active and the clipboard looks like a URL → bracket link
@@ -520,7 +540,6 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
           (eq major-mode 'web-mode))
       (setq choice "verbatim")
       (pasteboard-paste-raw))
-
 
      ;; 2) In Org/text modes → clean paste
      ((or (and (eq major-mode 'org-mode)
@@ -545,8 +564,23 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
             (setq choice "paste-clean")
             (pasteboard-paste-clean)))))
 
+    ;; Now point is at the end of the pasted content
+    (let ((paste-end-pos (point)))
+      ;; If we're in an org-roam buffer and pasted org content, demote headings
+      (when (and is-org-roam
+                 (not (string= choice "bracket-link"))
+                 (not (string= choice "verbatim"))
+                 (> paste-end-pos paste-start-pos))
+        (save-excursion
+          (goto-char paste-start-pos)
+          ;; Check if there are any headings to demote
+          (when (re-search-forward "^\\*+ " paste-end-pos t)
+            (goto-char paste-start-pos)
+            (demote-org-headings-in-region paste-start-pos paste-end-pos)
+            (setq choice (concat choice " (org-roam demoted)")))))
+    
     ;; Finally, report what we did
-    (message "Pasted: %s" choice)))
+    (message "Pasted: %s" choice))))
 #+END_SRC
 
 
@@ -596,10 +630,12 @@ insert an Org bracket link. Otherwise, fall back to the usual adaptive paste."
          (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")))
     (delete-region start end)
     (insert ins-text)
-    (my/fix-space)
-    (save-excursion
-      (goto-char start)
-      (my/fix-space)))
+    (let ((paste-end (point)))  ; Save where the paste ended
+      (my/fix-space)
+      (save-excursion
+        (goto-char start)
+        (my/fix-space))
+      (goto-char paste-end)))  ; Ensure point is at the end of pasted text
                                         ; (reflash-indentation)
   )
 #+END_SRC
@@ -630,9 +666,11 @@ Otherwise run, in order:
         ;; Add the asterisk-to-dash conversion here
         (save-restriction
           (narrow-to-region beg end)
-          (goto-char beg)
+          (goto-char (point-min))
           (asterisk-to-dash-and-convert-code-blocks-to-org)
-(convert-markdown-headings-to-org beg end))
+          (convert-markdown-headings-to-org (point-min) (point-max)))
+        ;; Move point to end of pasted region
+        (goto-char end)
         (set-marker end nil)))))             ; tidy marker
 #+END_SRC
 

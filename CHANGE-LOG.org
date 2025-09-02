@@ -1,0 +1,27 @@
+* 2025-09-02
+
+** Fixed markdown-to-org heading conversion and added org-roam heading demotion
+
+*** Problems fixed:
+1. **Markdown heading conversion was removing spaces**: The `convert-markdown-headings-to-org` function was replacing both the `#` characters AND the space after them with just asterisks, causing headings like `# Title` to become `*Title` instead of `* Title`.
+   - Solution: Changed `replace-match` to include a space after the asterisks using `concat`.
+
+2. **Org-roam heading auto-demotion wasn't working**: When pasting content into org-roam buffers, headings weren't being demoted to subheadings as intended.
+   - Multiple issues discovered:
+     - Point tracking: Using markers incorrectly - they move with text insertions
+     - The `pasteboard-paste` function wasn't leaving point at the end of pasted text
+     - The `pasteboard-paste-clean` function wasn't explicitly moving point to the end
+     - Inside `save-restriction` blocks, needed to use `(point-min)` and `(point-max)` instead of the original `beg` and `end` positions
+
+*** Key learnings:
+1. **Emacs markers vs positions**: Markers move with text changes, which can cause unexpected behavior when tracking regions. Sometimes plain integer positions are more reliable.
+
+2. **Point management in paste functions**: When chaining multiple functions that manipulate text, it's crucial to be explicit about where point should end up. Don't assume functions leave point in a particular place.
+
+3. **Narrowing gotchas**: When using `save-restriction` and `narrow-to-region`, functions called inside the narrowed region should use `(point-min)` and `(point-max)` rather than positions from outside the narrowing.
+
+4. **Debug incrementally**: Adding detailed debug messages at each step helped identify exactly where the logic was failing (paste regions were identical, headings weren't being found, etc.).
+
+*** Features added:
+- **Automatic org-roam detection**: Function `is-org-roam-buffer-p` detects org-roam buffers by checking for `:PROPERTIES:` block with `:ID:` at the beginning
+- **Automatic heading demotion in org-roam**: When pasting into org-roam buffers, all headings are automatically demoted by one level so they become subheadings

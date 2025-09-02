@@ -7,7 +7,11 @@
       "Bash(pnpm run:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm dev:*)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Read(/Users/jay/Library/CloudStorage/Dropbox/roam/vibecoding/**)",
+      "Read(/Users/jay/Library/CloudStorage/Dropbox/roam/vibecoding/**)",
+      "Read(/Users/jay/Library/CloudStorage/Dropbox/roam/vibecoding/**)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
