@@ -1,0 +1,22 @@
+Here’s a battle-tested way to do photo galleries in Astro that scales cleanly, stays fast on Vercel, and doesn’t bloat your builds.
+
+# The architecture (what works best)
+
+* **Store images in object storage + CDN** (not in the repo): Supabase Storage (with its built-in on-the-fly image transformations), Cloudinary, or ImageKit. For you, **Supabase Storage + Transformations** is the smoothest fit. It serves resized/optimized variants via URL params (WebP/AVIF, width, quality), so you don’t rebuild the site every time you add photos. ([Supabase][1])
+* **Keep only metadata in the repo** (albums, captions, tags) using **Astro Content Collections**. You get types, schema validation, and fast queries. ([Astro Docs][2])
+* **Render with a modern lightbox** such as **PhotoSwipe**; it plays nicely with Astro and is simple to wire up. ([launchfa.st][3], [DEV Community][4])
+* **Use a masonry-style layout** for visual density. Native CSS Masonry is arriving (and increasingly supported); otherwise use CSS columns or a lightweight JS fallback. ([MDN Web Docs][5], [Chrome for Developers][6], [CSS-Tricks][7])
+* **Lean on responsive images & lazy-loading**. In Astro, the built-in image tools are great for local assets; for remote/CDN images, you still get `<img loading="lazy">` + `srcset/sizes` via your provider. (Astro’s image guide explains where its optimizer applies.) ([Astro Docs][8])
+
+# Why not put photos in the repo?
+
+* Thousands of images = huge git history + long builds.
+* Astro’s optimizer targets **local** images; for remote stores you should offload transforms to a service (Supabase/Cloudinary/etc.). ([Astro Docs][8])
+
+# Concrete setup (Supabase-first)
+
+1. **Buckets & URLs**
+
+* Create a bucket per collection (e.g., `events/tiFF-2025`, `portraits/…`).
+* Serve via the public CDN URL. Supabase adds **image transformations** via URL params like `?width=1600&quality=70&format=webp`. ([Supabase][1])
+
