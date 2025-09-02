@@ -9932,6 +9932,11 @@ After evaluating your init-file you can use links analog to the example:
 #+END_EXAMPLE
 
 
+* org-astro
+#+begin_src emacs-lisp
+(setq org-astro-debug-images t)
+#+end_src
+
 * Local Variables & The End
 These have to be at the end.
 
