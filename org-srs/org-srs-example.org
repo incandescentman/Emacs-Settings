@@ -1,0 +1,139 @@
+* Flashcards
+** Basic
+The basic type of flashcards uses the front of the card as the
+question and the back as the answer, allowing three formats for
+defining the card.
+*** Which organization does GNU Emacs belong to?
+:PROPERTIES:
+:ID:       ee07c84a-c34a-4b74-a8cd-e7335a6ba3fc
+:END:
+:SRSITEMS:
+#+NAME: srsitem:ee07c84a-c34a-4b74-a8cd-e7335a6ba3fc
+| ! | timestamp            | rating | stability |        difficulty | state     |
+|---+----------------------+--------+-----------+-------------------+-----------|
+|   | 2024-12-16T15:25:21Z |        |       0.0 |               0.0 | :new      |
+|   | 2025-08-26T19:22:58Z | :good  |    2.3065 | 2.118103970459015 | :learning |
+| * | 2025-08-26T19:32:58Z |        |           |                   |           |
+:END:
+Free Software Foundation
+*** License of GNU Emacs
+:PROPERTIES:
+:ID:       52fbd16c-6501-4e2d-a0a3-fe41a039ebc0
+:END:
+:SRSITEMS:
+#+NAME: srsitem:52fbd16c-6501-4e2d-a0a3-fe41a039ebc0
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:23Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:23Z |        |           |            |       |
+:END:
+Under which license is GNU Emacs open-source?
+**** Back
+GPL-3.0
+*** Meaning of "EMACS"
+:PROPERTIES:
+:ID:       3f20ee00-3428-45d3-8789-7b87e5c12b26
+:END:
+:SRSITEMS:
+#+NAME: srsitem:3f20ee00-3428-45d3-8789-7b87e5c12b26
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:25Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:25Z |        |           |            |       |
+:END:
+**** Front
+What does "EMACS" stand for in GNU Emacs?
+**** Back
+Editing MACroS
+** Reversible
+The reversible type of flashcards allows the front and back to serve
+as both questions and answers.
+*** Equivalent Key Bindings in Emacs
+:PROPERTIES:
+:ID:       ccd6de96-116e-400b-8974-b57052d9909f
+:END:
+:SRSITEMS:
+#+NAME: srsitem:ccd6de96-116e-400b-8974-b57052d9909f::card::front
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:31Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:31Z |        |           |            |       |
+#+NAME: srsitem:ccd6de96-116e-400b-8974-b57052d9909f::card::back
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:31Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:31Z |        |           |            |       |
+:END:
+What is the equivalent of the following key binding in Emacs?
+**** Front
+=ESC=
+**** Back
+=C-[=
+* Cloze Deletions
+Cloze deletions hide the clozed part as the answer, while the
+remaining context acts as part of the question, and these can appear
+in various Org elements.
+** Origin of Emacs
+:PROPERTIES:
+:ID:       f0c46e65-d71f-4ae4-a1db-8b5b03796017
+:END:
+:SRSITEMS:
+#+NAME: srsitem:f0c46e65-d71f-4ae4-a1db-8b5b03796017::cloze::e4d3d3f
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:36Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:36Z |        |           |            |       |
+#+NAME: srsitem:f0c46e65-d71f-4ae4-a1db-8b5b03796017::cloze::c95befb
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:36Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:36Z |        |           |            |       |
+#+NAME: srsitem:f0c46e65-d71f-4ae4-a1db-8b5b03796017::cloze::dec6192
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:36Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:36Z |        |           |            |       |
+:END:
+The original Emacs was written in {{e4d3d3f}{1976}{year}} by
+{{c95befb}{David A. Moon}} and {{dec6192}{Guy L. Steele Jr}}.
+** Comparison between Lisp Dialects
+:PROPERTIES:
+:ID:       bdd18002-63fa-4b56-9e35-cb18bc2b7d00
+:END:
+:SRSITEMS:
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::9fa8b72
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::eaf6e4b
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::0257ce9
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::f994fe7
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::afbcf2f
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+#+NAME: srsitem:bdd18002-63fa-4b56-9e35-cb18bc2b7d00::cloze::159bafb
+| ! | timestamp            | rating | stability | difficulty | state |
+|---+----------------------+--------+-----------+------------+-------|
+|   | 2024-12-16T15:25:39Z |        |       0.0 |        0.0 | :new  |
+| * | 2024-12-16T15:25:39Z |        |           |            |       |
+:END:
+| Dialects   | Function definition                 | Variable definition        |
+|------------+-------------------------------------+----------------------------|
+| Emacs Lisp | {{9fa8b72}{(defun f (args..) ..)}}  | {{eaf6e4b}{(defvar v ..)}} |
+| Scheme     | {{0257ce9}{(define (f args..) ..)}} | {{f994fe7}{(define v ..)}} |
+| Clojure    | {{afbcf2f}{(defn f [args..] ..)}}   | {{159bafb}{(def v ..)}}    |

@@ -1,0 +1,205 @@
+#+TITLE: Org-srs
+Org Spaced Repetition System
+* Introduction
+Org-srs is a feature-rich and extensible spaced repetition system
+integrated within Org-mode, allowing you to learn and review knowledge
+without leaving your Org workflow.
+* Features
+- *Everything in Org* \\
+  All data in Org-srs, including configurations and review records,
+  are stored as plain text in your Org files. This makes version
+  control easy, and by simply syncing your Org files, you can review
+  seamlessly across different devices (especially the native Emacs on
+  Android).
+- *Flexible* \\
+  In Org-srs, the smallest review unit is an "item" (similar to a card
+  in Anki). A content piece reviewed through one or more items is
+  called an "entry" (similar to a note in Anki). An item can be a
+  flashcard with a front (question) and back (answer), a cloze
+  deletion, etc. This means an entry can hold different types of items
+  to meet various review needs. For example, you can review the same
+  content using both flashcards and cloze deletions simultaneously if
+  needed.
+- *Configurable* \\
+  Org-srs options can be finely controlled, allowing you to set
+  different values for the same configuration option at the global,
+  file, entry, or item level to suit your review preferences.
+- *Extensible* \\
+  Org-srs is designed to be modular. The core provides maintenance of
+  review records, finding, and planning due items, without relying on
+  any specific algorithm or review method. You can extend it with more
+  algorithms and review methods as needed by specializing the
+  corresponding generic functions.
+- *Embeddable* \\
+  If you're reviewing your own notes, maintaining additional entries
+  for review can be tedious. If you modify your notes or add, delete,
+  or modify cloze deletions, manually updating the created review
+  entries can be a nightmare. Org-srs supports non-invasive embedding
+  of review entries into your notes. This means that whenever you
+  change the content of your notes, you can update the exported entry
+  with one command, without polluting the export of your Org files. By
+  using Org as the target export format, you can easily remove the
+  Org-srs markers used in the process.
+- *Batch Operations* \\
+  You can batch-export entries that need to be reviewed using regexp,
+  or batch apply cloze deletions to Org elements (e.g., tables).
+- *Modern* \\
+  By default, it integrates the FSRS algorithm to help you review more
+  efficiently and effectively. You can also optimize the parameters
+  based on the content and your review habits.
+* Installation
+Org-srs is currently not available on MELPA. Below is an example of
+installation using the ~:vc~ keyword in ~use-package~ (on Emacs 30 and
+above) for reference. You can also choose to use ~straight.el~ or Quelpa
+according to your preference:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fsrs
+    :ensure t
+    :defer t)
+
+  (use-package org-srs
+    :vc (:url "https://github.com/bohonghuang/org-srs.git" :rev "HEAD")
+    :defer t
+    :hook (org-mode . org-srs-embed-overlay-mode)
+    :bind (:map org-mode-map
+           ("<f5>" . org-srs-review-rate-easy)
+           ("<f6>" . org-srs-review-rate-good)
+           ("<f7>" . org-srs-review-rate-hard)
+           ("<f8>" . org-srs-review-rate-again)))
+#+END_SRC
+* Usage
+Here are some demonstrations and descriptions for the main features of
+Org-srs. You can also open file [[https://github.com/bohonghuang/org-srs/blob/doc/org-srs-example.org][org-srs-example.org]] in Emacs and
+execute command ~org-srs-review-start~ to start an example review
+session right out of the box.
+** Flashcards
+[[https://github.com/user-attachments/assets/eaafff3c-6463-438d-8780-9cd4c17826cd][Demo]]
+
+A basic form of review that you can see in most spaced repetition
+software. It consists of a card's front (question) and back (answer).
+You can easily create a flashcard by using ~org-srs-item-create~ in an
+entry and selecting ~card~. There are multiple supported formats for the
+front and back of a flashcard:
+
+#+BEGIN_SRC org
+  # Card 1
+  ,* The card front
+  The card back
+  ,* Card 2
+  The card front
+  ,** Back
+  The card back
+  ,* Card 3
+  ,** Front
+  The card front
+  ,** Back
+  The card back
+#+END_SRC
+** Cloze Deletion
+[[https://github.com/user-attachments/assets/176fb6ef-87a2-42b9-ad4e-7639b6371254][Demo]]
+
+This feature allows you to cloze any content you want to review (such
+as a word, a list item, or a table field) and hide it during the
+review process. There are two ways to create a cloze item:
+1) Select the content you want to cloze, execute the
+   ~org-srs-item-create~ command, and then select ~cloze~.
+2) Use ~org-srs-item-cloze-dwim~ for context-sensitive cloze creation
+   (note that you can use ~org-srs-item-uncloze-dwim~ to undo the
+   cloze). Afterward, you need to manually execute
+   ~org-srs-item-cloze-update~ to create the corresponding items for all
+   cloze deletions at once.
+
+By default, each cloze deletion’s ID is the first 7 characters of the
+SHA-1 hash of its content. This means you can freely insert, delete,
+swap, or modify them. However, it is recommended to execute
+~org-srs-item-cloze-update~ after each modification to ensure that the
+changes of clozes are always tracked by Org-srs.
+
+The syntax for a cloze deletion is as follows:
+
+#+BEGIN_SRC org
+  {{<cloze-id>}{<content>}{<hint>}}
+#+END_SRC
+** Embedding
+[[https://github.com/user-attachments/assets/5e55a3ff-c1eb-48b6-9f56-5c15c012fc63][Demo]]
+
+A good part of Org-srs is the ability to export content from within
+your notes that you want to review. After modifying your notes, you
+can directly update the corresponding entry in your notes. The main
+command for this feature is the context-sensitive ~org-srs-embed-dwim~,
+whose logic is as follows:
+1. If point is on an element without a corresponding exported entry,
+   that element will be exported as the content of the entry. If the
+   exported element contains clozes, corresponding items will
+   automatically be created; otherwise, the content will be exported
+   as the back of a flashcard. You will need to fill in the entry’s
+   title in the pop-up buffer. The default export path is the current
+   Org file's relative path to ~org-directory~ under the =org-srs=
+   directory in ~org-directory~. For example, if your ~org-directory~ is
+   =~/org= and the current file is =~/org/foo/bar.org=, the file where the
+   entry is exported will be =~/org/org-srs/foo/bar.org=.
+2. If point is on an element that already has a corresponding exported
+   entry, the exported entry will be updated with the current
+   element's content.
+3. If point is on a marker (shown as =#+SRS= when
+   ~org-srs-embed-overlay-mode~ is on) representing an embedded Org-srs
+   entry, it will jump to the corresponding exported entry.
+
+Additionally, if you need to cloze or uncloze the content to be
+exported, you can use ~org-srs-embed-cloze-dwim~ and
+~org-srs-embed-uncloze-dwim~.
+* Configuration
+See the ~org-srs~ customization group, where all the customizable
+variables are documented.
+** Per-directory Configuration
+#+BEGIN_SRC emacs-lisp
+  ;; .dir-locals.el
+  ((org-mode . ((org-srs-review-new-items-per-day . 30)
+                (org-srs-review-max-reviews-per-day . 100))))
+#+END_SRC
+** Per-file Configuration
+#+BEGIN_SRC org
+  :PROPERTIES:
+  :SRS_REVIEW_NEW_ITEMS_PER_DAY: 30
+  :SRS_REVIEW_MAX_REVIEWS_PER_DAY: 100
+  :END:
+  ,#+TITLE: Title
+
+  # or:
+
+  # Local Variables:
+  # org-srs-review-new-items-per-day: 30
+  # org-srs-review-max-reviews-per-day: 100
+  # End:
+#+END_SRC
+** Per-entry Configuration
+#+BEGIN_SRC org
+  ,* Entry
+  :PROPERTIES:
+  :SRS_REVIEW_NEW_ITEMS_PER_DAY: 30
+  :SRS_REVIEW_MAX_REVIEWS_PER_DAY: 100
+  :END:
+#+END_SRC
+** Per-item Configuration
+#+BEGIN_SRC org
+  # Note that the following options are only provided as reference
+  # examples; these two options are not valid for a single item.
+  :SRSITEMS:
+  ,#+NAME: srsitem:569a2e48-633d-4b8c-82b5-f3df9b29bb69::cloze::d0ee345
+  ,#+ATTR_SRS: :new-items-per-day 30 :review-max-reviews-per-day 100
+  | ! | timestamp            | rating | stability | difficulty | state |
+  |---+----------------------+--------+-----------+------------+-------|
+  |   | 2024-12-07T13:54:06Z |        |       0.0 |        0.0 | :new  |
+  | * | 2024-12-07T13:54:34Z |        |           |            |       |
+  :END:
+#+END_SRC
+
+#+BEGIN_COMMENT
+Keep this block at the bottom of the file.
+It instructs Emacs to ignore examples
+of local variables sections above, see
+<info:emacs#Specifying File Variables>
+The following line contains the form feed 0x0c character.
+
+#+END_COMMENT
