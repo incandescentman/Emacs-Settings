@@ -9765,18 +9765,6 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers)
 #+end_src
 
-* org astro
-#+begin_src emacs-lisp
-
-(add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
-
-(use-package ox-astro
-:load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
-:after ox
-:ensure nil)
-#+end_src
-
-
 * cape emoji
 #+begin_src emacs-lisp
 (use-package cape
@@ -9932,10 +9920,42 @@ After evaluating your init-file you can use links analog to the example:
 #+END_EXAMPLE
 
 
-* org-astro
+* org astro
 #+begin_src emacs-lisp
+
+(add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
+
+
+(use-package ox-astro
+:load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
+:after ox
+:ensure nil)
+
 (setq org-astro-debug-images t)
+
+
+
+  (setq org-astro-source-root-folders
+        '("/Users/jay/Library/CloudStorage/Dropbox/roam"))
+
+(setq org-astro-source-root-folder
+        "/Users/jay/Library/CloudStorage/Dropbox/roam")
+
+
+;; Configure source root folder for ox-astro
+  (setq org-astro-source-root-folder
+        "/Users/jay/Library/CloudStorage/Dropbox/roam")
+
+  ;; Configure known posts folders with folder structure preservation
+  (setq org-astro-known-posts-folders
+        '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
+          ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
+          ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
+          ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"
+                           :preserve-folder-structure t)))) 
+
 #+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
