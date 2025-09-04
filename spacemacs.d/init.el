@@ -791,6 +791,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
 
+  ;; Define required toggle variables
+  (setq org-enable-transclusion-support t)
+  (setq org-enable-bootstrap-support t)
 
   ;; (setq debug-on-error t)
 

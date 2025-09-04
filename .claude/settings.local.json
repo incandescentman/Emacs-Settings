@@ -14,7 +14,13 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Read(//Users/jay/emacs/spacemacs/elpa/**)",
-      "Read(//Users/jay/emacs/spacemacs/.cache/**)"
+      "Read(//Users/jay/emacs/spacemacs/.cache/**)",
+      "Read(//Users/jay/emacs/spacemacs/elpa/**)",
+      "Read(//Users/jay/.emacs.d/**)",
+      "Read(//Users/jay/emacs/spacemacs/**)",
+      "Bash(pkill:*)",
+      "Bash(git checkout:*)",
+      "Read(//Users/jay/**)"
     ],
     "deny": []
   }

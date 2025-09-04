@@ -9922,30 +9922,24 @@ After evaluating your init-file you can use links analog to the example:
 
 * org astro
 #+begin_src emacs-lisp
-
-  (add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
-
-  (use-package ox-astro
-    :load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
-    :after ox
-    :ensure nil)
-
-  (setq org-astro-debug-images t)
-
-  ;; Configure source root folder for ox-astro
-  (setq org-astro-source-root-folder
-        "/Users/jay/Library/CloudStorage/Dropbox/roam")
-
-  ;; Configure known posts folders with folder structure preservation
-  (setq org-astro-known-posts-folders
-        '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
-          ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
-          ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
-          ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"
-          ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"
-          ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
-                           :preserve-folder-structure t))
-))
+(add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
+(use-package ox-astro
+  :load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
+  :after ox
+  :ensure nil)
+(setq org-astro-debug-images t)
+;; Configure source root folder for ox-astro
+(setq org-astro-source-root-folder
+      "/Users/jay/Library/CloudStorage/Dropbox/roam")
+;; Configure known posts folders with folder structure preservation
+(setq org-astro-known-posts-folders
+      '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
+        ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
+        ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
+        ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"))
+        ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"))
+        ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
+                      :preserve-folder-structure t))))
 #+end_src
 
 * org-roam multiple databases
