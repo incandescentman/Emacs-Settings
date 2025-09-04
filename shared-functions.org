@@ -9948,6 +9948,35 @@ After evaluating your init-file you can use links analog to the example:
 ))
 #+end_src
 
+* org-roam multiple databases
+
+#+begin_src emacs-lisp
+;; --- Org-roam contexts --- --- -- --- -- --- -- --- -- --- -- --- -- --- --
+
+(defun jay/org-roam--use (dir)
+  "Switch org-roam to DIR and resync DB."
+  (setq org-roam-directory (file-truename dir))
+  (setq org-roam-db-location (expand-file-name "org-roam.db" org-roam-directory))
+  ;; Optional per-context dailies folder:
+  ;; (setq org-roam-dailies-directory "daily/")
+  (org-roam-db-sync)
+  (message "org-roam → %s" org-roam-directory))
+
+(defun jay/org-roam-use-main ()
+  "Main notes."
+  (interactive)
+  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/roam/"))
+
+(defun jay/org-roam-use-life ()
+  "Life archive."
+  (interactive)
+  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/"))
+
+
+
+
+#+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
