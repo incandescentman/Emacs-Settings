@@ -9923,26 +9923,16 @@ After evaluating your init-file you can use links analog to the example:
 * org astro
 #+begin_src emacs-lisp
 
-(add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
+  (add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
 
+  (use-package ox-astro
+    :load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
+    :after ox
+    :ensure nil)
 
-(use-package ox-astro
-:load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
-:after ox
-:ensure nil)
+  (setq org-astro-debug-images t)
 
-(setq org-astro-debug-images t)
-
-
-
-  (setq org-astro-source-root-folders
-        '("/Users/jay/Library/CloudStorage/Dropbox/roam"))
-
-(setq org-astro-source-root-folder
-        "/Users/jay/Library/CloudStorage/Dropbox/roam")
-
-
-;; Configure source root folder for ox-astro
+  ;; Configure source root folder for ox-astro
   (setq org-astro-source-root-folder
         "/Users/jay/Library/CloudStorage/Dropbox/roam")
 
@@ -9952,8 +9942,10 @@ After evaluating your init-file you can use links analog to the example:
           ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
           ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
           ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"
-                           :preserve-folder-structure t)))) 
-
+          ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"
+          ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
+                           :preserve-folder-structure t))
+))
 #+end_src
 
 
