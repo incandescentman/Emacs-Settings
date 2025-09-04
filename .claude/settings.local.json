@@ -12,7 +12,9 @@
       "Read(/Users/jay/Library/CloudStorage/Dropbox/roam/vibecoding/**)",
       "Read(/Users/jay/Library/CloudStorage/Dropbox/roam/vibecoding/**)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Read(//Users/jay/emacs/spacemacs/elpa/**)",
+      "Read(//Users/jay/emacs/spacemacs/.cache/**)"
     ],
     "deny": []
   }
