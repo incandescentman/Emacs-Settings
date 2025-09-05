@@ -305,7 +305,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
 ;; (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
  (setq org-export-with-clocks t)
- (setq org-export-with-drawers t)
  (setq org-export-with-section-numbers nil)
 (setq org-export-with-planning nil)
 (setq org-export-allow-bind-keywords t)
@@ -436,7 +435,6 @@ Note: disable this when trying to export to org-html-themes!
 
 *** export with drawers
 #+BEGIN_SRC emacs-lisp
-(setq org-export-with-drawers t)
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
   (setq content (org-remove-indentation content))
@@ -524,9 +522,6 @@ Works!
           ("american"    "~/emacs/Spelling")
           ("english"     "~/emacs/Spelling"))
         ;; teach Flyspell about contractions etc.
-        ispell-dictionary-alist
-        '(("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
-           nil ("-d" "en_US-large") nil utf-8))
         flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
         flyspell-mark-duplications-exceptions
