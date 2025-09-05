@@ -191,13 +191,12 @@ etc."
 ;;------------------------------------------------------------------------------
 
 (defun org-link-at-point-p ()
-  "Return t if the point is exactly on an Org-mode link."
-  (let* ((context (org-element-context)))
-    (when (eq (org-element-type context) 'link)
-      (let ((begin (org-element-property :begin context))
-            (end   (org-element-property :end context)))
-        (and (>= (point) begin)
-             (< (point) end))))))
+  "Return t if the point is exactly on an Org-mode link.
+This returns nil if the point is at the position immediately after the link."
+  ;; Check if we're on a link AND not right after the closing brackets
+  (and (not (looking-back "\\]\\]" 2))  ; Not right after ]]
+       (let ((context (org-element-context)))
+         (eq (org-element-type context) 'link))))
 
 
 ;;------------------------------------------------------------------------------
@@ -242,29 +241,6 @@ The new line will have the same bullet, but a blank checkbox [ ]."
   (setq org-element-use-cache t))
 
 
-;;------------------------------------------------------------------------------
-;; LINK DETECTION - Use only this version, delete the other one!
-;;------------------------------------------------------------------------------
-
-(defun org-link-at-point-p ()
-  "Return t if the point is on an Org-mode link."
-  ;; Simple regex-based detection that works without org-element
-  (let ((line (thing-at-point 'line t))
-        (col (- (point) (line-beginning-position))))
-    (when line
-      (save-match-data
-        (let ((start 0)
-              (found nil))
-          (while (and (not found)
-                      (string-match "\\[\\[\\([^]]+\\)\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
-                                    line start))
-            (let ((match-start (match-beginning 0))
-                  (match-end (match-end 0)))
-              (if (and (>= col match-start)
-                       (<= col match-end))
-                  (setq found t)
-                  (setq start match-end))))
-          found)))))
 
 ;;------------------------------------------------------------------------------
 ;; MAIN SMART-RETURN FUNCTION - Complete replacement
