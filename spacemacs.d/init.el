@@ -131,6 +131,7 @@ This function should only modify configuration layer settings."
                                       ;; helpful
                                       ;; ido-hacks
                                       ;; jinx
+                                      js2-mode
                                       key-seq
                                       ;; lister ;; (for delve)
                                       ;; magit
