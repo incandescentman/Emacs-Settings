@@ -543,18 +543,7 @@ Works!
 
 
 (defun add-word-to-personal-dictionary ()
-  "Add the misspelled word at point to `ispell-personal-dictionary'."
-  (interactive)
-  (require 'flyspell)           ; just in case
-  (pcase (flyspell-get-word)    ; returns (word start end) *only if* it's an error
-    (`(,word ,start ,end)
-     (flyspell-do-correct 'save nil word start end nil nil)
-     (message "Added "%s" to personal dictionary" word))
-    (_ (user-error "Point isn't on a highlighted misspelling"))))
-
-
-(defun add-word-to-personal-dictionary ()
-  "Add the word at point to the personal dictionary (bypassing Flyspell)."
+  "Add the word at point to the personal dictionary."
   (interactive)
   (require 'ispell)
   (let ((word (or (thing-at-point 'word t)
@@ -2101,7 +2090,7 @@ Transpose windows, useful:
 	(set-window-buffer (selected-window) next-win)
 	(set-window-buffer (funcall selector) this-win)
 	(select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1-arg) (1+ arg))))))
+      (setq arg (if (> arg 0) (1- arg) (1+ arg))))))
 #+END_SRC
 
 * move stuff around
