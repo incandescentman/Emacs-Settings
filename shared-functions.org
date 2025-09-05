@@ -1205,7 +1205,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 (defun my-org-extract-link ()
   "Extract the link location at point and put it on the killring."
   (interactive)
-  (when (org-in-regexp org-bracket-link-regexp 1)
+  (when (org-in-regexp org-link-bracket-re 1)
     (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
 #+END_SRC
 
@@ -2241,11 +2241,11 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
     (save-restriction
       (narrow-to-region (region-beginning) (region-end))
       (goto-char (point-min))
-      (while (re-search-forward org-bracket-link-regexp nil t)
+      (while (re-search-forward org-link-bracket-re nil t)
         (replace-match (match-string 2) t t))))
 
    ;; 2) Else, if point is on a link, remove just that link:
-   ((org-in-regexp org-bracket-link-regexp 1)
+   ((org-in-regexp org-link-bracket-re 1)
     (let ((visible-text (match-string-no-properties 2)))
       (replace-match visible-text t t)))
 
@@ -2253,7 +2253,7 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
    (t
     (when (y-or-n-p "Remove all hyperlinks in the buffer? ")
       (goto-char (point-min))
-      (while (re-search-forward org-bracket-link-regexp nil t)
+      (while (re-search-forward org-link-bracket-re nil t)
         (replace-match (match-string 2) t t))))))
 
 (defun remove-org-links-and-newlines ()
