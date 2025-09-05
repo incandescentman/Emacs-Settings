@@ -518,9 +518,7 @@ Works!
         ispell-personal-dictionary "~/emacs/Spelling/personal.dic"
         ispell-hunspell-dictionary-paths-alist
         '(("en_US"       "~/emacs/Spelling")
-          ("en_US-large" "~/emacs/Spelling")
-          ("american"    "~/emacs/Spelling")
-          ("english"     "~/emacs/Spelling"))
+          ("en_US-large" "~/emacs/Spelling"))
         ;; teach Flyspell about contractions etc.
         flyspell-abbrev-p t
         flyspell-use-global-abbrev-table-p t
