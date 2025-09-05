@@ -2104,7 +2104,7 @@ Transpose windows, useful:
 
 (defun my-org-files-list ()
  (delq nil
-  (mapc (lambda (buffer)
+  (mapcar (lambda (buffer)
    (buffer-file-name buffer))
    (org-buffer-list 'files t))))
 
