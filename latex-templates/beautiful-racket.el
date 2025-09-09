@@ -152,6 +152,21 @@
 
 
 \\usepackage{listings}
+
+\\lstset{
+  breaklines=true,          % Enable line breaking
+  breakatwhitespace=true,   % Break at whitespace when possible
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  breakindent=0pt,
+  breakautoindent=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},  % Visual indicator for wrapped lines
+  frame=single,              % Optional: adds a frame
+  xleftmargin=2em,
+  framexleftmargin=1.5em
+}
+
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
 
@@ -293,6 +308,10 @@
 
 \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
 \\usepackage{tcolorbox}       % For creating and customizing colored boxes
+\\tcbuselibrary{breakable}
+
+
+
 \\usepackage{setspace}        % For \\singlespacing (optional, if not already loaded)
 
 \\usepackage{setspace}
@@ -316,9 +335,12 @@
     width=0.8\\textwidth,
     left=1em,
     right=1em,
-    before skip=1em, % space before the box
-    after skip=1em,  % space after the box
-    parskip=1em
+    before skip=1em,
+    after skip=1em,
+    parskip=1em,
+    breakable,              % Add this line!
+    pad at break*=1em,      % Optional: padding at break points
+    vfill before first      % Optional: avoid breaking immediately
   }
 }
 
