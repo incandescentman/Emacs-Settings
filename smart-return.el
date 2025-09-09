@@ -194,7 +194,8 @@ etc."
   "Return t if the point is exactly on an Org-mode link.
 This returns nil if the point is at the position immediately after the link."
   ;; Check if we're on a link AND not right after the closing brackets
-  (and (not (looking-back "\\]\\]" 2))  ; Not right after ]]
+  (and (not (and (>= (point) 3)  ; Ensure we have at least 2 chars before point
+                 (looking-back "\\]\\]" (max (point-min) (- (point) 2)))))
        (let ((context (org-element-context)))
          (eq (org-element-type context) 'link))))
 
