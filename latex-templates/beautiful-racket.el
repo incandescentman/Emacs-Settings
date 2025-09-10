@@ -208,279 +208,289 @@
 \\newlist{mylist}{enumerate}{10}
 
 
-% control line spacing in bulleted list
-\\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
-% see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
-%\\setlist{topsep=0pt} % for a line between list items
-
-
-\\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-
-\\setlistdepth{10}
-\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\renewlist{itemize}{itemize}{10}
-
-
-\\renewcommand{\\contentsname}{Table of Contents}
-
-
-
-\\renewcommand{\\descriptionlabel}[1]{%
- {\\hspace{\\labelsep}\\bfseries\\textsc{#1}}}
-
-
-\\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
-
-
-\\definecolor{azure}{HTML}{f2feff}
-
-\\usepackage{tikz}
-\\usetikzlibrary{backgrounds}
-\\makeatletter
-
-\\tikzset{%
-  fancy quotes/.style={
-    text width=\\fq@width pt,
-    align=justify,
-    inner sep=1em,
-    anchor=north west,
-    minimum width=\\linewidth,
-  },
-  fancy quotes width/.initial={.8\\linewidth},
-  fancy quotes marks/.style={
-    scale=8,
-    text=black,
-    inner sep=0pt,
-  },
-  fancy quotes opening/.style={
-    fancy quotes marks,
-  },
-  fancy quotes closing/.style={
-    fancy quotes marks,
-  },
-  fancy quotes background/.style={
-    show background rectangle,
-    inner frame xsep=0pt,
-    background rectangle/.style={
-      fill=azure,
-      rounded corners,
-    },
-  }
-}
-
-\\newenvironment{fancyquotes}[1][]{%
-\\noindent
-\\tikzpicture[fancy quotes background]
-\\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
-\\tikz@scan@one@point\\pgfutil@firstofone(fq@ul.east)
-\\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
-\\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \\bgroup}
-{\\egroup;
-\\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
-\\endtikzpicture}
-\\makeatother
-
-%\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
+% Fix quotation mark handling in LaTeX output
+% csquotes provides smart quote handling that correctly interprets
+% opening vs closing quotes based on context
+\\usepackage{csquotes}
+% Tell csquotes to treat straight quotes as smart quotes
+% This ensures quoted text renders with proper opening/closing marks
+% instead of two closing marks
+\\MakeOuterQuote{\"}
+
+
+               % control line spacing in bulleted list
+               \\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
+               % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
+               %\\setlist{topsep=0pt} % for a line between list items
+
+
+               \\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+
+               \\setlistdepth{10}
+               \\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\renewlist{itemize}{itemize}{10}
+
+
+               \\renewcommand{\\contentsname}{Table of Contents}
+
+
+
+               \\renewcommand{\\descriptionlabel}[1]{%
+               {\\hspace{\\labelsep}\\bfseries\\textsc{#1}}}
+
+
+               \\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
+
+
+               \\definecolor{azure}{HTML}{f2feff}
+
+               \\usepackage{tikz}
+               \\usetikzlibrary{backgrounds}
+               \\makeatletter
+
+               \\tikzset{%
+               fancy quotes/.style={
+               text width=\\fq@width pt,
+               align=justify,
+               inner sep=1em,
+               anchor=north west,
+               minimum width=\\linewidth,
+               },
+               fancy quotes width/.initial={.8\\linewidth},
+               fancy quotes marks/.style={
+               scale=8,
+               text=black,
+               inner sep=0pt,
+               },
+               fancy quotes opening/.style={
+               fancy quotes marks,
+               },
+               fancy quotes closing/.style={
+               fancy quotes marks,
+               },
+               fancy quotes background/.style={
+               show background rectangle,
+               inner frame xsep=0pt,
+               background rectangle/.style={
+               fill=azure,
+               rounded corners,
+               },
+               }
+               }
+
+               \\newenvironment{fancyquotes}[1][]{%
+               \\noindent
+               \\tikzpicture[fancy quotes background]
+               \\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
+               \\tikz@scan@one@point\\pgfutil@firstofone(fq@ul.east)
+               \\pgfmathsetmacro{\\fq@width}{\\linewidth - 2*\\pgf@x}
+               \\node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \\bgroup}
+               {\\egroup;
+               \\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
+               \\endtikzpicture}
+               \\makeatother
+
+               %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
 
-\\newenvironment{indentedsection}
-{  {\\adjustwidth{2em}{0pt}}
-  {\\endadjustwidth}
-}
+               \\newenvironment{indentedsection}
+               {  {\\adjustwidth{2em}{0pt}}
+               {\\endadjustwidth}
+               }
 
-\\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
-\\usepackage{tcolorbox}       % For creating and customizing colored boxes
-\\tcbuselibrary{breakable}
+               \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
+               \\usepackage{tcolorbox}       % For creating and customizing colored boxes
+               \\tcbuselibrary{breakable}
 
 
 
-\\usepackage{setspace}        % For \\singlespacing (optional, if not already loaded)
+               \\usepackage{setspace}        % For \\singlespacing (optional, if not already loaded)
 
-\\usepackage{setspace}
-\\usepackage{lipsum}
+               \\usepackage{setspace}
+               \\usepackage{lipsum}
 
 
-% Define custom colors if not already defined
-\\definecolor{powderblue}{HTML}{f5f7ff}
-\\definecolor{stormybluegrey}{HTML}{708090}
-\\definecolor{moonrockgrey}{HTML}{5D5D5D}
+               % Define custom colors if not already defined
+               \\definecolor{powderblue}{HTML}{f5f7ff}
+               \\definecolor{stormybluegrey}{HTML}{708090}
+               \\definecolor{moonrockgrey}{HTML}{5D5D5D}
 
 
 
-\\tcbset{
-  myquote/.style={
-    colback=powderblue,
-    colframe=stormybluegrey,
-    colupper=moonrockgrey,
-    boxrule=0.5pt,
-    rounded corners,
-    width=0.8\\textwidth,
-    left=1em,
-    right=1em,
-    before skip=1em,
-    after skip=1em,
-    parskip=1em,
-    breakable,              % Add this line!
-    pad at break*=1em,      % Optional: padding at break points
-    vfill before first      % Optional: avoid breaking immediately
-  }
-}
+               \\tcbset{
+               myquote/.style={
+               colback=powderblue,
+               colframe=stormybluegrey,
+               colupper=moonrockgrey,
+               boxrule=0.5pt,
+               rounded corners,
+               width=0.8\\textwidth,
+               left=1em,
+               right=1em,
+               before skip=1em,
+               after skip=1em,
+               parskip=1em,
+               breakable,              % Add this line!
+               pad at break*=1em,      % Optional: padding at break points
+               vfill before first      % Optional: avoid breaking immediately
+               }
+               }
 
-\\renewenvironment{quote}
-{%
-  \\begin{center}%
-  \\begin{tcolorbox}[myquote]%
-}
-{%
-  \\end{tcolorbox}%
-  \\end{center}%
-}
+               \\renewenvironment{quote}
+               {%
+               \\begin{center}%
+               \\begin{tcolorbox}[myquote]%
+               }
+               {%
+               \\end{tcolorbox}%
+               \\end{center}%
+               }
 
 
-\\usepackage[sc]{titlesec}
+               \\usepackage[sc]{titlesec}
 
 
 
-\\newlength\\TitleOverhang
-\\setlength\\TitleOverhang{1.5cm}
+               \\newlength\\TitleOverhang
+               \\setlength\\TitleOverhang{1.5cm}
 
-\\newcommand\\Overhang[1]{%
- \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
-}
+               \\newcommand\\Overhang[1]{%
+               \\llap{\\makebox[\\TitleOverhang][l]{#1}}%
+               }
 
 
-% \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{150pt}{40pt}
-%\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
-\\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
+               % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
+               \\titlespacing*{\\section}{0pt}{150pt}{40pt}
+               %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
+               \\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
-\\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
+               \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
-\\newcommand{\\mysectiontitle}[1]{%
-  \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
-}
+               \\newcommand{\\mysectiontitle}[1]{%
+               \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
+               }
 
-\\usepackage{titlesec}
-\\usepackage{xcolor}
+               \\usepackage{titlesec}
+               \\usepackage{xcolor}
 
-\\titleformat{\\section}
-  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
-  {}
-  {0em}
-  {\\thispagestyle{plain}\\hfill\\mysectiontitle}
+               \\titleformat{\\section}
+               {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+               {}
+               {0em}
+               {\\thispagestyle{plain}\\hfill\\mysectiontitle}
 
-{\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
+               {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
-\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
+               \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
-\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+               \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
+               \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
-\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
+               \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 
-\\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
+               \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
 
-\\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
+               \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
 
 
-\\newenvironment{changemargin}[2]{%
-\\begin{list}{}{%
-\\setlength{\\topsep}{0pt}%
-\\setlength{\\leftmargin}{#1}%
-\\setlength{\\rightmargin}{#2}%
-\\setlength{\\listparindent}{\\parindent}%
-\\setlength{\\itemindent}{\\parindent}%
-\\setlength{\\parsep}{\\parskip}%
-}%
-\\item[]}{\\end{list}}
+               \\newenvironment{changemargin}[2]{%
+               \\begin{list}{}{%
+               \\setlength{\\topsep}{0pt}%
+               \\setlength{\\leftmargin}{#1}%
+               \\setlength{\\rightmargin}{#2}%
+               \\setlength{\\listparindent}{\\parindent}%
+               \\setlength{\\itemindent}{\\parindent}%
+               \\setlength{\\parsep}{\\parskip}%
+               }%
+               \\item[]}{\\end{list}}
 
-\\newenvironment{tagline}% environment name
-{% begin code
-  \\vspace{-36pt}
-  \\Large
-  \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
-  \\begin{itshape}%
-    \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}%
-{% end code
-  \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
-}
+               \\newenvironment{tagline}% environment name
+               {% begin code
+               \\vspace{-36pt}
+               \\Large
+               \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
+               \\begin{itshape}%
+               \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+               }%
+               {% end code
+               \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
+               }
 
 
-\\newenvironment{fauxtitle}% environment name
-{% begin code
-%\\vspace{12pt}
-\\Large
-\\begin{bfseries}%
-  \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
-}%
-{% end code
-  \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
-}
+               \\newenvironment{fauxtitle}% environment name
+               {% begin code
+               %\\vspace{12pt}
+               \\Large
+               \\begin{bfseries}%
+               \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
+               }%
+               {% end code
+               \\end{bfseries}\\vspace{12pt}\\ignorespacesafterend
+               }
 
 
 
-\\newenvironment{fauxcenter}% environment name
-{% begin code
+               \\newenvironment{fauxcenter}% environment name
+               {% begin code
 
-\\Large
-\\begin{center}
+               \\Large
+               \\begin{center}
 
-}%
-{% end code
-\\end{center}\\ignorespacesafterend
-}
+               }%
+               {% end code
+               \\end{center}\\ignorespacesafterend
+               }
 
 
 
 
-\\newenvironment{causationstatement}% environment name
-{% begin code
-\\vspace{-30pt}
-\\ttfamily
-\\bfseries
-\\begin{center}
+               \\newenvironment{causationstatement}% environment name
+               {% begin code
+               \\vspace{-30pt}
+               \\ttfamily
+               \\bfseries
+               \\begin{center}
 
-}%
-{% end code
-\\end{center}\\ignorespacesafterend
-}
+               }%
+               {% end code
+               \\end{center}\\ignorespacesafterend
+               }
 
 
 
 
 
 
-\\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
-\\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
+               \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+               \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
-\\renewcommand\\maketitle{}
+               \\renewcommand\\maketitle{}
 
 
 
-      [NO-DEFAULT-PACKAGES]
-      [NO-PACKAGES]"
+               [NO-DEFAULT-PACKAGES]
+               [NO-PACKAGES]"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
