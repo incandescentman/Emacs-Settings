@@ -4666,7 +4666,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 (defvar my-org-css-options
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
-    "/Users/jay/Dropbox/github/incandescentman.github.io/css/neocortex.css"
+    "/Users/jay/Dropbox/github/incandescentman/css/neocortex.css"
 "/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/bold.css"
 "/Users/jay/Library/CloudStorage/Dropbox/web-design/custom-css/chatgpt-images.css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
@@ -8081,21 +8081,40 @@ the buffer, and kills it when done."
      (list from to regexp)))
 
   (let* ((dir   default-directory)
-         (files (directory-files-recursively dir ".*" nil)))
-    (dolist (file files)
-      (when (file-regular-p file)
-        (find-file file)
-        (save-excursion
-          (goto-char (point-min))
-          (if regexp-flag
-              (progn (message "Regexp replacing in %s..." file)
-                     (while (re-search-forward from-string nil t)
-                       (replace-match to-string)))
-            (message "Replacing in %s..." file)
-            (while (search-forward from-string nil t)
-              (replace-match to-string))))
-        (save-buffer)
-        (kill-buffer)))))
+         (files (directory-files-recursively dir ".*" nil))
+         ;; Temporarily disable openwith-mode to prevent external program interference
+         (openwith-mode-enabled (and (boundp 'openwith-mode) openwith-mode)))
+
+    ;; Turn off openwith-mode if it's active
+    (when openwith-mode-enabled
+      (openwith-mode -1))
+
+    (unwind-protect
+        (dolist (file files)
+          (when (file-regular-p file)
+            ;; Use find-file-literally to avoid file handlers and mode hooks
+            (let ((buf (find-file-noselect file t t)))
+              (with-current-buffer buf
+                (let ((inhibit-read-only t))
+                  ;; Read the file contents properly
+                  (erase-buffer)
+                  (insert-file-contents file)
+                  (goto-char (point-min))
+                  (let ((replacements 0))
+                    (if regexp-flag
+                        (while (re-search-forward from-string nil t)
+                          (replace-match to-string)
+                          (setq replacements (1+ replacements)))
+                      (while (search-forward from-string nil t)
+                        (replace-match to-string)
+                        (setq replacements (1+ replacements))))
+                    (when (> replacements 0)
+                      (message "Replaced %d occurrences in %s" replacements file)
+                      (write-region nil nil file nil 'quiet)))
+                  (kill-buffer buf))))))
+      ;; Re-enable openwith-mode if it was active
+      (when openwith-mode-enabled
+        (openwith-mode 1)))))
 
 ;; Optional convenient alias:
 
@@ -9795,7 +9814,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (setq org-astro-known-posts-folders
       '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
         ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))) 
+        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))) 
 #+end_src
 
 * Kill unwanted buffers on startup
@@ -9917,7 +9936,7 @@ After evaluating your init-file you can use links analog to the example:
 (setq org-astro-known-posts-folders
       '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
         ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
-        ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socraticai/src/content/blog"))
+        ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
         ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"))
         ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"))
         ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
@@ -9946,11 +9965,12 @@ After evaluating your init-file you can use links analog to the example:
 (defun jay/org-roam-use-life ()
   "Life archive."
   (interactive)
-  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/"))
+  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/")) 
+#+end_src
 
-
-
-
+* ox-json
+#+begin_src emacs-lisp
+(require 'ox-json)
 #+end_src
 
 

@@ -195,7 +195,7 @@ This function should only modify configuration layer settings."
                                       with-editor
                                       wrap-region
                                       ;; xah-replace-pairs
-
+                                      ox-json
                                       ;; ag
                                       auto-complete
                                       ;; blimp
@@ -1015,6 +1015,13 @@ This function is called at the very end of Spacemacs initialization."
    '(line-number-mode t)
    '(marginalia-align 'left nil nil "Customized with use-package marginalia")
    '(mode-line-compact 'long)
+   '(org-astro-known-posts-folders
+     '(("blog" :path "~/projects/my-astro-site/src/content/blog")
+       ("jaydocs" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
+       ("socraticai" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
+       ("astro-roam" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content")
+       ("my-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content")
+       ("my-mind" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content" :preserve-folder-structure t)))
    '(org-attach-expert nil)
    '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
    '(org-ellipsis " 🪜 ")
