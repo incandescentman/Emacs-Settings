@@ -191,13 +191,11 @@ etc."
 ;;------------------------------------------------------------------------------
 
 (defun org-link-at-point-p ()
-  "Return t if the point is exactly on an Org-mode link.
+  "Return t if the point is exactly on an Org-mode link that can be opened.
 This returns nil if the point is at the position immediately after the link."
-  ;; Check if we're on a link AND not right after the closing brackets
-  (and (not (and (>= (point) 3)  ; Ensure we have at least 2 chars before point
-                 (looking-back "\\]\\]" (max (point-min) (- (point) 2)))))
-       (let ((context (org-element-context)))
-         (eq (org-element-type context) 'link))))
+  ;; Use org-in-regexp to check if we're actually within link brackets
+  ;; This is more reliable than org-element-context for our purposes
+  (org-in-regexp org-link-bracket-re 1))
 
 
 ;;------------------------------------------------------------------------------
