@@ -5674,6 +5674,24 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
   :defer t)
 (setq openwith-associations '(("\\.pdf\\'" "open" (file))))
 (openwith-mode t)
+
+;; Prevent OpenWith from interfering with non-interactive file reads
+;; during Org exports/publishing (e.g., resolving file: links to PDFs).
+;; Some Org backends briefly open linked files to inspect them; OpenWith
+;; would otherwise hijack that and raise an error by launching an external app.
+;;
+;; We advise the main export entry points to temporarily disable
+;; `openwith-mode` for the duration of the export, restoring it afterward.
+(defun jay/with-openwith-disabled (orig-fun &rest args)
+  (let ((was-enabled (and (boundp 'openwith-mode) openwith-mode)))
+    (when was-enabled (openwith-mode -1))
+    (unwind-protect
+        (apply orig-fun args)
+      (when was-enabled (openwith-mode 1)))))
+
+(with-eval-after-load 'org
+  (advice-add 'org-export-to-file :around #'jay/with-openwith-disabled)
+  (advice-add 'org-export-as :around #'jay/with-openwith-disabled))
 #+end_src
 
 
@@ -9814,7 +9832,10 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (setq org-astro-known-posts-folders
       '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
         ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))) 
+        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
+
+        ("kanban" . "/Users/jay/Library/CloudStorage/Dropbox/github/rising-action-kanban/content")
+)) 
 #+end_src
 
 * Kill unwanted buffers on startup
@@ -9982,4 +10003,3 @@ These have to be at the end.
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-
