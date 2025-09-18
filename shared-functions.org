@@ -9995,6 +9995,18 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 
+* auto-revert mode
+#+begin_src emacs-lisp
+;; Auto-reload files changed on disk
+(global-auto-revert-mode 1)
+
+;; Nice-to-haves
+(setq auto-revert-use-notify t            ; use file system events when possible
+      auto-revert-interval 1              ; fallback poll interval (seconds)
+      auto-revert-verbose nil             ; no echo area messages
+      global-auto-revert-non-file-buffers t) ; also refresh Dired, etc. 
+#+end_src
+
 * Local Variables & The End
 These have to be at the end.
 
