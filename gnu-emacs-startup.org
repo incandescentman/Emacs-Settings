@@ -1106,7 +1106,7 @@ sentence. Otherwise kill forward but preserve any punctuation at the sentence en
 
     (and
      (looking-back "^")
-     (looking-at ".+")
+     (looking-at-p "\\S-")
      )                               ; if
     (org-toggle-heading-same-level) ; then
  (call-rebinding-org-blank-behaviour 'org-meta-return)) ; else
