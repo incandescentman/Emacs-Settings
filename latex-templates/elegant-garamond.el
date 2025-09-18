@@ -146,7 +146,7 @@
 \\renewcommand{\\labelitemx}{\\raisedtinybullet}
 
 % Apply the Custom Bullet to All Itemize Levels
-\\forloop{level}{1}{\\value{level} <= 10}{%
+\\forloop{level}{1}{\\value{level} < 11}{%
   \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
 
@@ -176,6 +176,15 @@
 }
 {%
   \\end{tcolorbox}
+}
+
+% Subtitle environment definition
+\\newenvironment{subtitle}%
+{% begin code
+\\vspace{-0.7\\baselineskip}\\Large\\itshape
+}%
+{% end code
+\\par\\bigskip
 }
 
 % Titlesec Configuration
