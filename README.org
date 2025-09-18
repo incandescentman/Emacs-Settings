@@ -1,0 +1,150 @@
+#+TITLE: Jay's Emacs Configuration
+#+AUTHOR: Jay
+#+DATE: 2025-09-18
+
+* Overview
+This is a sophisticated Emacs configuration that uses Spacemacs as its foundation while incorporating extensive customizations through literate programming (org-mode files that tangle to elisp) and modular design patterns.
+
+* Configuration Architecture
+
+** Core Structure
+- *Framework*: Spacemacs (with option for standalone GNU Emacs)
+- *Primary Config*: [[file:spacemacs.d/init.el][spacemacs.d/init.el]] (Spacemacs layers and configuration)
+- *Secondary Config*: [[file:gnu-emacs-startup.el][gnu-emacs-startup.el]] (standalone GNU Emacs option)
+- *Shared Functions*: [[file:shared-functions.org][shared-functions.org]] → [[file:shared-functions.el][shared-functions.el]] (large collection of utilities)
+- *Additional Config*: [[file:spacemacs-new-config.el][spacemacs-new-config.el]] (loaded by Spacemacs init)
+
+** Key Components
+
+*** Literate Programming Files (*.org → *.el)
+- [[file:shared-functions.org][shared-functions.org]] - Core utilities and functions
+- [[file:pasteboard-copy-and-paste-functions.org][pasteboard-copy-and-paste-functions.org]] - macOS clipboard integration
+- [[file:spacecraft-mode.org][spacecraft-mode.org]] - Custom writing mode
+- [[file:gnu-emacs-startup.org][gnu-emacs-startup.org]] - Alternative startup configuration
+- [[file:fonts-and-themes.org][fonts-and-themes.org]] - Appearance configuration
+- Auto-tangling enabled via =#+auto_tangle: t= header
+
+*** Platform Integration
+- [[file:jay-osx.el][jay-osx.el]] - macOS specific settings and =key-minor-mode-map= definition
+- [[file:pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] - Enhanced clipboard operations
+- [[file:reveal-in-finder.el][reveal-in-finder.el]] - Finder integration
+
+*** Org-Mode Extensions
+- [[file:org-roam-config.el][org-roam-config.el]] - Knowledge management with org-roam
+- [[file:org-yt.el][org-yt.el]] - YouTube link support
+- [[file:org-visual-style.el][org-visual-style.el]] - Visual enhancements for org-mode
+
+*** UI and Editing
+- [[file:keys.el][keys.el]] - Global keybinding overrides
+- [[file:fonts-and-themes.el][fonts-and-themes.el]] - Dynamic font sizing and theme management
+- [[file:smart-return.el][smart-return.el]] - Context-aware return key behavior
+- [[file:spacecraft-mode.el][spacecraft-mode.el]] - Distraction-free writing environment
+
+*** Utility Modules
+- [[file:search-commands.el][search-commands.el]] - Enhanced search functionality
+- [[file:hydras.el][hydras.el]] - Hydra configurations for quick commands
+- [[file:skeletons.el][skeletons.el]] - Code templates and snippets
+- [[file:auto-capitalize.el][auto-capitalize.el]] - Smart capitalization
+
+** Loading Order
+1. Spacemacs core initialization
+2. Layer configuration (org, auto-completion, compleseus, etc.)
+3. =spacemacs-new-config.el=
+4. =jay-osx.el= (provides key-minor-mode-map)
+5. =gnu-emacs-startup.el=
+6. =shared-functions.el=
+7. Various feature modules (deferred or immediate)
+8. Local configuration (=local-config.el=)
+
+* Recent Fixes
+
+** 2025-09-18: org-id-locations Corruption Fix
+*** Problem
+When using org-roam with symlinked directories (particularly with iCloud/Dropbox paths like =~/Library/CloudStorage/Dropbox/roam/=), the =org-id-locations= variable was getting corrupted. Instead of being a hash table as expected, it would become a list, causing errors like:
+#+BEGIN_EXAMPLE
+wrong-type-argument hash-table-p (("~/Library/CloudStorage/Dropbox/roam/...") ...)
+#+END_EXAMPLE
+
+This error would occur when:
+- Creating new org-roam nodes
+- Running =org-roam-capture=
+- Any operation that calls =org-id-add-location=
+
+*** Root Cause
+The issue stems from org-roam's advice on =org-id-add-location= function (=org-roam--handle-absent-org-id-locations-file-a=) which doesn't properly handle the case where =org-id-locations= gets corrupted into a list format, possibly due to:
+- Symlink path resolution inconsistencies
+- The =.org-id-locations= file being saved/loaded in the wrong format
+- Race conditions during initialization
+
+*** Solution Approach
+Created a comprehensive fix that:
+1. *Ensures data structure integrity*: Always converts =org-id-locations= to a hash table when corruption is detected
+2. *Adds protective advice*: Wraps critical functions to catch and fix corruption on-the-fly
+3. *Removes problematic advice*: Replaces org-roam's conflicting advice with a fixed version
+4. *Auto-loads on startup*: Integrates into =org-roam-config.el= for permanent fix
+
+*** Implementation
+Two new files were created:
+
+**** [[file:fix-org-id-locations.el][fix-org-id-locations.el]]
+- Manual fix utilities for converting corrupted list to hash table
+- =fix-org-id-locations= function for one-time conversion
+- =reset-org-id-locations= function as fallback
+
+**** [[file:org-roam-id-fix.el][org-roam-id-fix.el]]
+- Permanent runtime fix that auto-applies
+- =ensure-org-id-locations-hash-table= function that validates/fixes data structure
+- Advice functions that wrap =org-id-add-location= and =org-id-locations-load=
+- Automatically loaded by =org-roam-config.el=
+
+*** Usage
+The fix is now automatic, but if issues persist:
+1. Run =M-x fix-org-id-locations= to manually fix corruption
+2. Or run =M-x reset-org-id-locations= to completely reset and rebuild
+3. Then run =M-x org-roam-db-sync= to rebuild the database
+
+** 2025-09-05: Configuration Cleanup
+*** Issues Resolved
+1. *Duplicate function definition*: Removed duplicate =add-word-to-personal-dictionary=
+2. *Function errors*: Fixed =plusp= → =(> arg 0)= and =(1-arg)= → =(1- arg)=
+3. *Deprecated variables*: Updated =org-bracket-link-regexp= → =org-link-bracket-re=
+4. *Wrong function*: Changed =mapc= → =mapcar= in =my-org-files-list=
+5. *Duplicate ispell config*: Cleaned up redundant dictionary settings
+6. *Duplicate exports*: Consolidated multiple =org-export-with-drawers= settings
+7. *Hunspell warnings*: Removed unsupported "american" and "english" dictionary entries
+
+* Configuration Patterns
+
+** Good Practices Already in Place
+- Literate programming for documentation
+- Modular file organization
+- Deferred loading for performance
+- Platform-specific customizations isolated
+- Version control with recovery scripts
+- Custom layer for Spacemacs integration
+
+** Areas for Enhancement
+- Dependency management between modules
+- Better separation of concerns
+- More consistent error handling
+- Automated testing/validation
+- Performance monitoring
+
+* Key Dependencies
+- *External*: Spacemacs, org-roam, Hunspell, various ELPA packages
+- *Internal*: =key-minor-mode-map= (defined in jay-osx.el)
+- *Paths*: ~/emacs/Spelling/, ~/Dropbox/writing/, various project directories
+
+* Notes for Future Sessions
+1. Review startup messages for any remaining warnings
+2. Profile load times to identify bottlenecks (if performance becomes an issue)
+3. Consider migrating to use-package for all package configuration
+4. Review and update deprecated org-mode variables
+5. Set up proper error handling for missing dependencies
+
+* Note on File Size
+- [[file:shared-functions.org][shared-functions.org]]: ~316KB (9983 lines)
+  - *Splitting not recommended*: For a personal config, having everything in one searchable file is actually more convenient than managing multiple files with inter-dependencies. The monolithic approach is working well - Emacs handles it fine, and it's easier to maintain when you know where everything is
+- [[file:spacemacs.d/init.el][spacemacs.d/init.el]]: ~50K lines
+- [[file:gnu-emacs-startup.el][gnu-emacs-startup.el]]: ~46K lines
+- [[file:pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]: ~33K lines

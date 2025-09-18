@@ -4,6 +4,10 @@
 ;;  org-roam  — resilient + idle-sync setup
 ;;----------------------------------------------------------------
 
+;; Fix org-id-locations corruption issue with symlinks
+(load (expand-file-name "org-roam-id-fix.el"
+                        (file-name-directory load-file-name)) t)
+
 ;; Make Super-u behave like a leader key
 (define-prefix-command 'jay/super-u-map)
 (global-set-key (kbd "s-u") 'jay/super-u-map)
