@@ -141,15 +141,9 @@
 % Ensure consistent spacing after periods in your document by using the xspace package:
 \\usepackage{xspace}
 
-\\newenvironment{fauxsubtitle}
-{
+\\newenvironment{fauxsubtitle}{\\par\\bigskip\\Large\\itshape}{\\par\\bigskip}
 
-\\Large
-\\itshape
-}
-
-
-
+\\newenvironment{subtitle}{\\begin{fauxsubtitle}}{\\end{fauxsubtitle}}
 
 \\usepackage{listings}
 
@@ -312,9 +306,8 @@
 
 
                \\newenvironment{indentedsection}
-               {  {\\adjustwidth{2em}{0pt}}
-               {\\endadjustwidth}
-               }
+               {{\\adjustwidth{2em}{0pt}}
+               {\\endadjustwidth}}
 
                \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
                \\usepackage{tcolorbox}       % For creating and customizing colored boxes
@@ -391,6 +384,8 @@
                \\usepackage{titlesec}
                \\usepackage{xcolor}
 
+
+
                \\titleformat{\\section}
                {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
                {}
@@ -402,7 +397,8 @@
 
                \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\color{spacegrey}}
 
                \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
                \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}

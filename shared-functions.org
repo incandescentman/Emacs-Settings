@@ -294,7 +294,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 ;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
 
-(setq org-latex-default-class "elegant")
+(setq org-latex-default-class "elegant-garamond")
 
 (setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
 
