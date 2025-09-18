@@ -3666,7 +3666,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
         (when (file-exists-p full-path)
           (load full-path))))
     ;; Also load the subtitle processing configuration
-    (load "/Users/jay/emacs/emacs-settings/latex-subtitles.el")))
+    (load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")))
 
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
 ;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
