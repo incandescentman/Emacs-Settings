@@ -51,6 +51,10 @@
 
   ;; ---------- postpone the heavy stuff ----------------------------
   :config
+  ;; Load database fixes
+  (load (expand-file-name "org-roam-db-fix.el"
+                          (file-name-directory load-file-name)) t)
+
   ;; 1) Make every single-file refresh resilient (never raise an error)
   (defun my/org-roam--safe-update (orig-fn &rest args)
     (condition-case err
@@ -65,18 +69,29 @@
   (run-with-idle-timer
    1  nil
    (lambda ()
-     (require 'org-roam)            ; autoloaded anyway, but explicit is clear
-     (require 'ol)                  ; org-link helpers
-     (org-roam-setup)
-     ;; First full scan (runs async) …
-     (org-roam-db-sync)))
+     (condition-case err
+         (progn
+           (require 'org-roam)            ; autoloaded anyway, but explicit is clear
+           (require 'ol)                  ; org-link helpers
+           (org-roam-setup)
+           ;; First full scan (runs async) …
+           (org-roam-db-sync))
+       (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
   ;; 3) Turn *auto* sync on only after we have been idle for 5 s
   (run-with-idle-timer
    5 nil
    (lambda ()
-     (message "⮡ enabling org-roam autosync …")
-     (org-roam-db-autosync-mode 1)))
+     (condition-case err
+         (progn
+           (message "⮡ enabling org-roam autosync …")
+           ;; Ensure database connection before enabling autosync
+           (when (and (boundp 'org-roam-db)
+                      (not (emacsql-live-p org-roam-db)))
+             (setq org-roam-db nil)
+             (org-roam-db))
+           (org-roam-db-autosync-mode 1))
+       (error (message "Failed to enable autosync: %s" (error-message-string err))))))
 
   ;; 4) Capture templates (light-weight, keep them here)
   (setq org-roam-dailies-capture-templates

@@ -103,6 +103,60 @@ The fix is now automatic, but if issues persist:
 2. Or run =M-x reset-org-id-locations= to completely reset and rebuild
 3. Then run =M-x org-roam-db-sync= to rebuild the database
 
+** 2025-09-18: org-roam SQLite Database Connection Fix
+*** Problem
+After fixing the org-id-locations corruption, a new error emerged:
+#+BEGIN_EXAMPLE
+(emacsql-error sqlitep nil)
+#+END_EXAMPLE
+
+This error occurred during =org-roam-db-autosync-mode= activation, indicating the SQLite database connection was failing or the database handle was invalid.
+
+*** Root Cause
+The error happens when:
+- The database connection becomes stale or disconnected
+- The idle timer tries to enable autosync mode without checking connection status
+- Database operations are attempted without proper error handling
+- The emacsql connection object is nil or closed but org-roam tries to use it
+
+*** Solution Approach
+Created comprehensive database connection management:
+1. *Robust error handling*: Wrapped all database operations in condition-case blocks
+2. *Connection validation*: Check if connection is alive before operations
+3. *Automatic reconnection*: Attempt to reconnect if connection is dead
+4. *Diagnostic tools*: Added functions to diagnose and fix database issues
+5. *Safe rebuild option*: Backup and rebuild database if corruption detected
+
+*** Implementation
+Created [[file:org-roam-db-fix.el][org-roam-db-fix.el]] with:
+
+**** Diagnostic and Repair Functions
+- =org-roam-db-diagnose=: Check database status, connection, and configuration
+- =org-roam-db-clear-and-rebuild=: Backup existing DB and rebuild from scratch
+- =org-roam-db-safe-sync=: Sync with automatic error recovery
+
+**** Automatic Fixes
+- Advice on =org-roam-db-sync= to handle emacsql errors gracefully
+- Auto-reconnection logic when connection is detected as dead
+- Error messages instead of crashes when database operations fail
+
+**** Integration with org-roam-config.el
+- Added error handling to idle timers that initialize org-roam
+- Database connection validation before enabling autosync
+- Load =org-roam-db-fix.el= automatically in config
+
+*** Changes Made to org-roam-config.el
+1. Added loading of =org-roam-db-fix.el= in the =:config= section
+2. Wrapped idle timer functions in condition-case for error handling
+3. Added connection validation before =org-roam-db-autosync-mode= activation
+4. Ensured database reconnection if connection is dead
+
+*** Usage
+If database errors occur:
+1. Run =M-x org-roam-db-diagnose= to check database status
+2. Run =M-x org-roam-db-safe-sync= for safe sync with error recovery
+3. Run =M-x org-roam-db-clear-and-rebuild= as last resort (backs up first)
+
 ** 2025-09-05: Configuration Cleanup
 *** Issues Resolved
 1. *Duplicate function definition*: Removed duplicate =add-word-to-personal-dictionary=
