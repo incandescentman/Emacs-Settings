@@ -1,11 +1,27 @@
 (defun my-org-latex-subtitle-filter (contents backend info)
-  "Convert lines starting with ~ to subtitle environment in LaTeX export."
+  "Convert lines starting with ~ to subtitle environment in LaTeX export.
+   Uses different subtitle environments based on the heading level:
+   - subtitle for sections
+   - subsubtitle for subsections
+   - subsubsubtitle for subsubsections"
   (when (eq backend 'latex)
-    ;; Replace the escaped tilde pattern with subtitle environment
+    ;; Handle subtitles after sections
     (setq contents
           (replace-regexp-in-string
-           "\\\\textasciitilde{}[[:space:]]*\\(.+\\)"
-           "\\\\begin{subtitle}\n\\1\n\\\\end{subtitle}"
+           "\\(\\\\section{[^}]+}\\)\n\\(\\\\label{[^}]+}\\)\n\\\\textasciitilde{}[[:space:]]*\\(.+\\)"
+           "\\1\n\\2\n\\\\begin{subtitle}\n\\3\n\\\\end{subtitle}"
+           contents))
+    ;; Handle subtitles after subsections
+    (setq contents
+          (replace-regexp-in-string
+           "\\(\\\\subsection{[^}]+}\\)\n\\(\\\\label{[^}]+}\\)\n\\\\textasciitilde{}[[:space:]]*\\(.+\\)"
+           "\\1\n\\2\n\\\\begin{subsubtitle}\n\\3\n\\\\end{subsubtitle}"
+           contents))
+    ;; Handle subtitles after subsubsections
+    (setq contents
+          (replace-regexp-in-string
+           "\\(\\\\subsubsection{[^}]+}\\)\n\\(\\\\label{[^}]+}\\)\n\\\\textasciitilde{}[[:space:]]*\\(.+\\)"
+           "\\1\n\\2\n\\\\begin{subsubsubtitle}\n\\3\n\\\\end{subsubsubtitle}"
            contents)))
   contents)
 

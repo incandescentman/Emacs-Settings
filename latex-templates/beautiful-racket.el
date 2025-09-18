@@ -141,15 +141,36 @@
 % Ensure consistent spacing after periods in your document by using the xspace package:
 \\usepackage{xspace}
 
-\\newenvironment{fauxsubtitle}
-{
-
-\\Large
-\\itshape
+% Subtitle environments for different heading levels
+% For section - using Large (which is appropriate for 12pt base document)
+\\newenvironment{subtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\large\\itshape
+}%
+{%
+\\par\\bigskip
 }
 
-% Alias for fauxsubtitle with cleaner name
-\\newenvironment{subtitle}{\\begin{fauxsubtitle}}{\\end{fauxsubtitle}}
+% For subsection - slightly smaller
+\\newenvironment{subsubtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\normalsize\\itshape
+}%
+{%
+\\par\\bigskip
+}
+
+% For subsubsection - even smaller
+\\newenvironment{subsubsubtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\small\\itshape
+}%
+{%
+\\par\\bigskip
+}
 
 
 \\usepackage{listings}
