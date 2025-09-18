@@ -1,0 +1,70 @@
+* LaTeX Subtitle Support for Org-Mode Export
+
+This module adds support for subtitles in LaTeX export from org-mode files using the tilde (~) syntax.
+
+** Features
+
+- Lines starting with =~= in org files are converted to LaTeX subtitle environments
+- Different subtitle sizes based on heading level:
+  - =\section= → =subtitle= environment (28pt in elegant-garamond, large in beautiful-racket)
+  - =\subsection= → =subsubtitle= environment (17pt/normalsize)
+  - =\subsubsection= → =subsubsubtitle= environment (13pt/small)
+- Works with both numbered and unnumbered sections
+- Automatically fixes already-converted subtitle environments to use correct levels
+
+** Usage
+
+*** In Org Files
+
+Simply prefix any line with =~= to make it a subtitle:
+
+#+begin_example
+* Main Section
+~ This becomes a section subtitle
+
+** Subsection
+~ This becomes a subsection subtitle
+
+*** Subsubsection
+~ This becomes a subsubsection subtitle
+#+end_example
+
+*** Loading
+
+The module is automatically loaded when you run =jay-load-latex= or when LaTeX export is triggered.
+
+To manually load:
+#+begin_src emacs-lisp
+(load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")
+#+end_src
+
+** Files
+
+- [[file:latex-subtitles.el][latex-subtitles.el]] - Main filter implementation
+- [[file:latex-subtitle-test-file.org][latex-subtitle-test-file.org]] - Test file demonstrating subtitle usage
+
+** Technical Details
+
+The implementation uses an =org-export-filter-final-output-functions= filter that:
+1. Tracks the current heading level while processing the LaTeX output
+2. Converts =\textasciitilde{}= (escaped tildes) to appropriate subtitle environments
+3. Also fixes existing =\begin{subtitle}= environments to use the correct level based on context
+
+** LaTeX Template Requirements
+
+The LaTeX templates (elegant-garamond, beautiful-racket) define the subtitle environments:
+
+#+begin_src latex
+% For sections
+\newenvironment{subtitle}{...}{...}
+
+% For subsections
+\newenvironment{subsubtitle}{...}{...}
+
+% For subsubsections
+\newenvironment{subsubsubtitle}{...}{...}
+#+end_src
+
+These are already defined in:
+- =latex-templates/elegant-garamond.el=
+- =latex-templates/beautiful-racket.el=
