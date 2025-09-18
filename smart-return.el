@@ -192,7 +192,7 @@ etc."
 
 (defun org-link-at-point-p ()
   "Return non-nil when point is directly on an Org link.
-Treat point at the first character *after* the link as "not on the link" so
+Treat point at the first character *after* the link as not on the link so
 that pressing Return there falls back to normal newline behavior."
   (let ((pos (point)))
     (save-excursion

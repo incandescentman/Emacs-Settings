@@ -141,10 +141,6 @@
 % Ensure consistent spacing after periods in your document by using the xspace package:
 \\usepackage{xspace}
 
-\\newenvironment{fauxsubtitle}{\\par\\bigskip\\Large\\itshape}{\\par\\bigskip}
-
-\\newenvironment{subtitle}{\\begin{fauxsubtitle}}{\\end{fauxsubtitle}}
-
 \\usepackage{listings}
 
 \\lstset{
@@ -202,16 +198,6 @@
 \\newlist{mylist}{enumerate}{10}
 
 
-% Fix quotation mark handling in LaTeX output
-% csquotes provides smart quote handling that correctly interprets
-% opening vs closing quotes based on context
-\\usepackage{csquotes}
-% Tell csquotes to treat straight quotes as smart quotes
-% This ensures quoted text renders with proper opening/closing marks
-% instead of two closing marks
-\\MakeOuterQuote{\"}
-
-
                % control line spacing in bulleted list
                \\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
                % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
@@ -230,16 +216,16 @@
                \\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
                \\setlistdepth{10}
-               \\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,1]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,2]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,3]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,4]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,5]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,6]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,7]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,8]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,9]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\setlist[itemize,10]{label=\\raise0.25ex\\hbox{\\tiny$\\bullet$}}
                \\renewlist{itemize}{itemize}{10}
 
 
@@ -305,9 +291,7 @@
                %\\setlength{\\intextsep}{10pt plus 1.0pt minus 2.0pt}
 
 
-               \\newenvironment{indentedsection}
-               {{\\adjustwidth{2em}{0pt}}
-               {\\endadjustwidth}}
+               \\newenvironment{indentedsection}{\\begin{adjustwidth}{2em}{0pt}}{\\end{adjustwidth}}
 
                \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
                \\usepackage{tcolorbox}       % For creating and customizing colored boxes
@@ -392,22 +376,19 @@
                {0em}
                {\\thispagestyle{plain}\\hfill\\mysectiontitle}
 
-               {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
+
+\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\selectfont\\raggedright}
 
 
-               \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
-
-
-\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\color{spacegrey}}
+\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\selectfont\\raggedright\\color{spacegrey}}
 
                \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
                \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
-               \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
+\\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\selectfont\\raggedright}
 
-               \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}\\raggedright\\sffamily}
-
-               \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}\\raggedright\\sffamily}
+               \\DeclareTextFontCommand{\\nonsubsection}{\\sffamily\\itshape\\fontsize{18}{22}\\selectfont\\raggedright}
+               \\DeclareTextFontCommand{\\nonsubsubsection}{\\sffamily\\fontsize{18}{22}\\selectfont\\raggedright}
 
 
                \\newenvironment{changemargin}[2]{%
@@ -433,6 +414,14 @@
                \\end{itshape}\\end{changemargin}\\vspace{24pt}\\ignorespacesafterend % Close changemargin
                }
 
+
+               \\newenvironment{subtitle}% subtitle environment
+               {% begin code
+               \\par\\bigskip\\Large\\itshape
+               }%
+               {% end code
+               \\par\\bigskip
+               }
 
                \\newenvironment{fauxtitle}% environment name
                {% begin code
