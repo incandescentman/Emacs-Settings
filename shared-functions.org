@@ -9350,14 +9350,24 @@ current buffer.  Safe (save-excursion) and repeatable."
 (defun normalize-dashes ()
   "• Add spaces around a naked em-dash marker (---).
 • Promote a space-hyphen-space ( - ) to a spaced em-dash ( --- ).
-• Never convert bullet point dashes (at start of lines or after only whitespace)."
+• Never convert bullet point dashes (at start of lines or after only whitespace).
+• Preserve Markdown table separator lines that rely on repeated hyphens."
   (interactive)
-  (let ((count 0))
+  (let ((count 0)
+        (markdown-table-line-p
+         (lambda (pos)
+           (save-excursion
+             (goto-char pos)
+             (beginning-of-line)
+             (looking-at-p "^[ \t]*|.*|[ \t]*$")))))
     (save-excursion
       ;; Pass 1 -- space out triple-hyphens between *any* non-whitespace chars
       (goto-char (point-min))
       (while (re-search-forward "\\(\\S-\\)---\\(\\S-\\)" nil t)
-        (replace-match "\\1 --- \\2" nil nil))
+        (let ((table-line (funcall markdown-table-line-p (match-beginning 0))))
+          (if table-line
+              (goto-char (match-end 0))
+            (replace-match "\\1 --- \\2" nil nil))))
 
       ;; Pass 2 -- turn space-hyphen-space into spaced em-dash
       ;; BUT only when NOT at beginning of line or after whitespace only
@@ -9365,11 +9375,15 @@ current buffer.  Safe (save-excursion) and repeatable."
       (while (re-search-forward "\\(.\\) - " nil t)
         ;; Check if the character before space-hyphen-space is not whitespace
         ;; and we're not at the beginning of a line
-        (let ((char-before (match-string 1)))
-          (unless (string-match-p "^[ \t\n]$" char-before)
+        (let* ((char-before (match-string 1))
+               (table-line (funcall markdown-table-line-p (match-beginning 0))))
+          (unless (or table-line
+                      (string-match-p "^[ \t\n]$" char-before))
             (replace-match "\\1 --- " nil nil)
-            (setq count (1+ count)))))
-      
+            (setq count (1+ count)))
+          (unless table-line
+            (goto-char (match-end 0)))))
+
       (message "Replaced %d space-hyphen-space patterns" count))))
 #+end_src
 
