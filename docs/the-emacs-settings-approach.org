@@ -1,0 +1,23 @@
+#+TITLE: The Emacs Settings Approach
+#+DATE: 2025-09-24
+#+DESCRIPTION: Philosophy and guiding principles behind Jay Dixit's Emacs configuration.
+
+* Background and Motivation
+The configuration in this repository has grown from years of tailoring Spacemacs/Emacs into a writing-first environment. It balances fast capture of ideas, careful text formatting, and deep integration with Org Mode, while staying macOS-native so clipboard, fonts, and system automations feel seamless.
+
+* Core Principles
+- **Org-first workflow** :: Org Mode is the canonical format for notes, tasks, and documentation. All major features either generate Org data or respect its structure.
+- **Literate configuration** :: Most custom code lives in `*.org` files that are tangled into `*.el`, keeping rationale next to implementation.
+- **macOS integration** :: Pasteboard helpers, system keybindings, and shell snippets assume macOS tools such as `pbpaste`, `osascript`, and Spotlight-style key chords.
+- **Writing flow over raw speed** :: Decisions prioritize clean typography, predictable formatting, and low-friction editing over minimal keystrokes.
+- **Single source of truth** :: Shared helpers reside in `shared-functions` and `pasteboard` modules to avoid drift across files.
+
+* Purpose Statement
+Provide a dependable, documented Emacs environment where writing, outlining, and knowledge-management tasks “just work,” especially when moving text between macOS applications and Org buffers.
+
+* Key Terminology and Concepts
+- **Pasteboard** :: macOS system clipboard helpers that sanitize text before insertion (see `pasteboard-copy-and-paste-functions.org`).
+- **Tangle** :: Exporting code blocks from Org files into `.el` files for runtime loading.
+- **Hydras** :: Modal keybinding menus (defined in `hydras.org`) that surface grouped commands.
+- **Jay/ prefix** :: Custom utility namespace used in shared helpers (`shared-functions.el`).
+- **Change Log First** :: Notable fixes land in `CHANGE-LOG.org` before code, keeping history visible.

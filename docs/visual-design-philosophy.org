@@ -1,0 +1,34 @@
+#+TITLE: Visual Design Philosophy
+#+DATE: 2025-09-24
+#+DESCRIPTION: Principles for typography, color, and visual behavior inside this Emacs configuration.
+
+* Core Design Principles
+- Favor high-contrast themes (`spacemacs-light`, custom `whiteboard`) for long-form writing.
+- Cursor visibility matters; default to incarnadine red unless intentionally themed otherwise.
+- Frame adjustments (width, transparency) support focused sessions and presentation modes.
+
+* Color System and Usage Rules
+- Primary theme palette derives from Spacemacs light variants; custom themes live under `jay-custom-color-themes/`.
+- Cursor defaults to `red`; alternative accents (magenta) only for transient modes.
+- Transparency utilities (`transparent-serenity`, `rainy-highway-mode`) must keep text legible against backgrounds ≥ 60% opacity.
+
+* Typography Hierarchy
+- Font switchers expose curated faces: `georgia-font` for prose, `jetbrains-font`/`hack-font` for code, `large-type` for readability.
+- Maintain frame width harmony (`set-frame-width` inside font helpers) so wrapping remains predictable in Org buffers.
+- Use `set-font-size` for ad hoc adjustments instead of manual `M-x set-face-attribute` to keep frames consistent.
+
+* Component Patterns
+- Hydras and pop-ups should inherit default fonts; avoid per-hydra font overrides.
+- Tables rely on monospaced faces; ensure `org-table` face tracks the current default font.
+
+* Interactive Behaviors
+- Transparency toggles must restore cursor color via `incarnadine-cursor`.
+- Theme-switching commands should call `load-theme` and immediately reapply cursor settings.
+
+* View-Specific Guidance
+- Presentation/reading mode: call `large-type` + `whiteboard` + optional `transparent-serenity`.
+- Coding sessions: `jetbrains-font` or `hack-font` paired with `spacemacs-light` keeps alignment crisp.
+
+* Evolution Principles
+- When adding a new theme, document it here, include rationale, and ensure fallback to `incarnadine-cursor`.
+- Prefer adding new font helpers in `fonts-and-themes.el` rather than ad hoc `set-face-attribute` snippets scattered elsewhere.

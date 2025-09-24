@@ -1,0 +1,33 @@
+#+TITLE: Design and Architecture
+#+DATE: 2025-09-24
+#+DESCRIPTION: How the Emacs configuration is structured and why the major decisions exist.
+
+* System Architecture Overview
+- Spacemacs provides the base distribution; `init.el` configures layers, additional packages, and default behavior.
+- Literate modules (`gnu-emacs-startup.org`, `pasteboard-copy-and-paste-functions.org`, `shared-functions.org`, …) tangle into accompanying `.el` files that are loaded during startup.
+- Supporting `.elc` byte-compiled artifacts live beside their sources for faster boot.
+
+* State Management Approach
+- Persistent settings rely on Spacemacs/Emacs defaults (e.g., `custom-file` handled by Spacemacs) while per-session state is kept minimal.
+- Org-specific state such as `org-id` caches is refreshed on demand via helper scripts (`fix-org-id-locations.el`, `org-roam-config.el`).
+- Shared helper functions (prefixed `jay/` or defined in `shared-functions`) encapsulate stateful operations so buffer-local mutations stay predictable.
+
+* Integration Points
+- macOS pasteboard commands (`pbpaste`, `pbcopy`) power the cleaning pipeline in `pasteboard-paste-clean`.
+- External binaries surfaced through Spacemacs layers: `ripgrep` for search, `aspell`/`hunspell` for spell checking, `org-roam` database via `emacsql`.
+- Custom color themes loaded from `jay-custom-color-themes/` and shell helpers such as `safe-emacs-test.sh` for sandboxed launches.
+
+* Data Flow and Storage Patterns
+- Clipboard workflow: `pasteboard-paste` inserts raw text → `pasteboard-paste-clean` normalizes punctuation, spacing, markdown/org conversions → `shared-functions` utilities perform downstream formatting.
+- Org capture and review use `org-roam` files under user directories; this repo focuses on editing surface rather than storing content.
+- Fonts/themes functions modify frame parameters at runtime without touching persistent files.
+
+* Recent Updates
+- 2025-09-24 :: Preserved Markdown table separators inside `normalize-dashes` to keep header gutters intact during paste-cleaning.
+- 2025-09-24 :: Stopped stripping zero-width joiners so compound emoji survive clipboard normalization.
+
+* Technical Rationale for Major Decisions
+- **Spacemacs base**: retains ecosystem of layers, minimizing bespoke package pinning.
+- **Org-first modules**: consolidating Org tweaks avoids duplication across disparate init files.
+- **Copy/paste pipeline**: sanitizing text at insertion prevents downstream formatting fixes and keeps macOS ↔ Emacs transitions lossless.
+- **Shared utility library**: centralizing helpers (`shared-functions`) reduces risk of diverging copies sprinkled through other modules.

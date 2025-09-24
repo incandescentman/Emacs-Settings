@@ -1,0 +1,35 @@
+#+TITLE: Pasteboard Architecture
+#+DATE: 2025-09-24
+#+DESCRIPTION: Deep dive into the macOS pasteboard helpers that back clean pasting.
+
+* Overview
+- Entry points: `pasteboard-paste`, `pasteboard-paste-clean`, `pasteboard-paste-raw`, and `pasteboard-paste-adjusted-subtrees`.
+- Goal: Move text from macOS apps into Org buffers while normalizing typography, Markdown, and Org semantics.
+
+* Evolution History
+- Early version just called `shell-command-on-region` with `pbpaste`.
+- Added multi-stage cleaners (`replace-smart-quotes`, markdown converters) to support blogging and knowledge-base workflows.
+- 2025-09-24 regression fix: table separator protection via smarter `normalize-dashes`.
+- 2025-09-24 regression fix: emoji joiner preservation inside `replace-weird-spaces`.
+
+* Current Implementation Details
+- `pasteboard-paste-clean` records `(beg . end)` markers, runs the raw paste, then executes cleaners in order:
+  1. `replace-smart-quotes`
+  2. `replace-smart-quotes-regexp`
+  3. `replace-weird-spaces`
+  4. `convert-markdown-blockquotes-to-org`
+  5. `convert-markdown-links-to-org-mode`
+  6. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org`, `convert-markdown-headings-to-org`
+  7. Final caret moves to end marker.
+- `normalize-dashes` (in `shared-functions`) now skips lines that look like Markdown tables.
+- Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` ot remove carriage returns.
+
+* Performance and Reliability Considerations
+- Cleaning runs in-buffer; large pastes pay the cost per regex pass—acceptable for short articles but consider profiling if >5k lines.
+- Use markers to avoid mis-calculating the end point when cleaners change text length.
+- Failure cases usually stem from outside dependencies (`pbpaste`, shell pipeline). Keep Terminal permissions granted under System Preferences → Security & Privacy → Accessibility.
+
+* Lessons Learned
+- Treat each sanitizer as a suspect when formats break; add fixtures before altering their logic.
+- Keep macOS-specific shell invocations isolated so Linux builds can fall back to `xclip` in the future.
+- Update `/docs/instructions.org` whenever key bindings or cleaner order changes to prevent drift.

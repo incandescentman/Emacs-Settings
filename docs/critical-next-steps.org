@@ -1,0 +1,20 @@
+#+TITLE: Critical Next Steps
+#+DATE: 2025-09-24
+#+DESCRIPTION: Active technical debt and improvement roadmap.
+
+* Active Improvements
+** Harden Pasteboard Regression Tests
+- Why it matters: Sanitizer regressions escape easily; tables and emoji already bit us.
+- Scope remaining: Create automated fixtures (ERT or batch scripts) that run `pasteboard-paste-clean` against representative inputs.
+- Recommended plan: 1) Collect sample inputs under `test-fixtures/`. 2) Write batch Emacs script exercising cleaners. 3) Add to CI or pre-push hook.
+- Status: Not started.
+
+** Document Hydras and Keymaps
+- Why it matters: Discoverability of modal keybindings is low for anyone new to the setup.
+- Scope remaining: Inventory hydras in `hydras.org`, surface keybinding cheatsheet in `/docs/instructions.org`.
+- Recommended plan: 1) Generate listing via `rg "defhydra"`. 2) Summarize purpose + entry chord. 3) Link from instructions.
+- Status: In progress (handwritten notes only).
+
+* Stretch Goals
+- Port critical helpers to packaged modules for easier reuse across machines.
+- Introduce automated linting (e.g., `checkdoc`, `package-lint`) before committing large refactors.

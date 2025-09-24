@@ -1,0 +1,26 @@
+#+TITLE: Backup System Runbook
+#+DATE: 2025-09-24
+#+DESCRIPTION: How we safeguard the Emacs configuration and recover from disasters.
+
+* Purpose
+Ensure configuration changes are recoverable through layered backups (automatic file versions, Git history, and full `.emacs.d` snapshots).
+
+* Routine Backup Procedure
+1. Commit logical chunks to Git (`git status`, `git add`, `git commit`) and push to `origin/main` at least once per working session.
+2. Let Emacs create per-save backups: `shared-functions.el` configures `before-save-hook` to write numbered copies under `~/emacs/backup/per-save` and per-session copies under `~/.emacs.d/backup/per-session`.
+3. Weekly, run `./safe-emacs-test.sh` or launch a clean instance to ensure backups aren’t corrupt.
+
+* Verification Steps
+- Spot-check the latest per-save file in `~/emacs/backup/per-save` to confirm timestamps advance.
+- Run `git log -1` to make sure the latest commits contain the intended doc/code changes.
+- If relying on Dropbox/Time Machine, confirm the `~/emacs/emacs-settings` folder is included.
+
+* Recovery Procedure
+1. For small mistakes, open the numbered backup via `C-x C-f` → `~/emacs/backup/per-save/<file>~`.
+2. To reset packages/cache without losing config, run `./nuclear-recovery.sh` and follow the prompts; restore via the printed backup path if needed.
+3. For catastrophic loss, clone the repository again or restore from `git` + the Time Machine snapshot.
+
+* Related Scripts
+- `nuclear-recovery.sh` — creates a full `.emacs.d` snapshot before wiping caches.
+- `recover-spacemacs.sh` — targeted recovery for ELPA packages with automated backups.
+- `safe-emacs-test.sh` — launches a scratch Emacs without touching the main session, useful for validating restored configs.

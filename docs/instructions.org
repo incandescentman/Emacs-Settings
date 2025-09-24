@@ -1,0 +1,49 @@
+#+TITLE: Operational Instructions
+#+DATE: 2025-09-24
+#+DESCRIPTION: How to install, use, and maintain the Emacs configuration.
+
+* Installation and Setup
+1. `git clone git@github.com:incandescentman/Emacs-Settings.git ~/emacs/emacs-settings`
+2. Symlink `init.el` into your home directory as the Spacemacs entry point: `ln -s ~/emacs/emacs-settings/init.el ~/.spacemacs`
+3. Launch Emacs; allow Spacemacs to download layers and packages (first boot can take several minutes).
+4. Run `SPC f e R` (or `M-m f e R`) to reload the configuration after package install completes.
+5. Optional: byte-compile the tangled `.el` files with `SPC f e c` or `(byte-recompile-directory "~/emacs/emacs-settings" 0)` for faster startup.
+
+* Feature Overview
+** Clipboard hygiene
+- `s-v` (`pasteboard-paste-clean`) inserts macOS clipboard text and normalizes quotes, markdown, and Org formatting.
+- `C-u s-v` bypasses cleaning for raw paste.
+** Org-centric tooling
+- Org Roam layer enabled; capture templates expect `org-roam` database.
+- `pasteboard-paste-adjusted-subtrees` demotes headings when pasting into existing Org trees.
+** Appearance controls
+- Commands like `medium-type`, `large-type`, `spacemacs-light`, and `whiteboard` adjust fonts and themes on demand.
+** Navigation/search
+- `SPC /` and `SPC s` family rely on ripgrep (`deadgrep`, `consult-ag`) for project searches.
+
+* Workflows
+** Cleaning text copied from the web
+1. Copy source content on macOS.
+2. In the target Org buffer, hit `s-v`.
+3. Verify headings, lists, and tables; Markdown tables keep their separators post-2025-09-24 fix.
+** Switching visual modes for presentations
+1. Call `large-type` for 350-height font.
+2. Toggle theme via `whiteboard` or `matrix` as needed.
+3. Restore preferred size with `medium-type`.
+** Safe testing of config changes
+1. From terminal run `./safe-emacs-test.sh` to launch Emacs without touching the main session.
+2. Edit `.org` sources, then `C-c C-v t` to tangle and reload.
+
+* Content Formats and Editing
+- Literate Org files contain `#+begin_src emacs-lisp` blocks; use `C-c C-v t` to tangle or enable `#+auto_tangle: t` headers.
+- Keep documentation updates in `CHANGE-LOG.org` and `/docs` synchronized when making behavioral changes.
+
+* Data Management Procedures
+- Track changes with Git; commit with descriptive messages referencing affected modules and update the changelog before pushing.
+- Back up local configuration by pushing to `origin/main` and (optionally) mirroring to Dropbox or Time Machine.
+- Run `safe-emacs-test.sh` before major upgrades to ensure reproducibility.
+
+* Troubleshooting
+- **Packages missing** :: Run `SPC f e R` or delete `~/.emacs.d/elpa` to refresh; ensure `brew install ripgrep pandoc` for external dependencies.
+- **Pasteboard commands fail** :: Confirm `pbpaste` is available (macOS only) and Terminal has permission to access the clipboard.
+- **Slow startup** :: Recompile with `(byte-recompile-directory "~/emacs/emacs-settings" 0)` and prune unused layers in `init.el`.

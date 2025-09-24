@@ -28,6 +28,14 @@ Markdown tables pasted via `pasteboard-paste-clean` were having their separator 
 *** Solution:
 Adjusted `normalize-dashes` to detect Markdown table lines (those bounded by `|` pipes) and skip the em-dash spacing transformations inside them. This keeps sentence-level em-dash cleanup intact while leaving table gutter rows untouched.
 
+** Documented the configuration using the vibecoding playbook
+
+*** Update:
+Added `/docs` with project philosophy, architecture, operational instructions, codebase wisdom, visual design guidelines, critical next steps, pasteboard architecture, experimental playbook, and backup runbook.
+
+*** Why it matters:
+Aligns the Emacs settings repo with the standardized documentation approach so future changes carry rationale, runbooks, and recovery guidance alongside the code.
+
 * 2025-09-02
 
 ** Fixed markdown-to-org heading conversion and added org-roam heading demotion

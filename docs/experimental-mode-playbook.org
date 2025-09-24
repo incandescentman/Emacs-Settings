@@ -1,0 +1,26 @@
+#+TITLE: Experimental Mode Playbook
+#+DATE: 2025-09-24
+#+DESCRIPTION: How to prototype risky ideas without destabilizing daily work.
+
+* Enabling Experimental Mode
+1. Create a feature branch (`git checkout -b experiment/<topic>`).
+2. Add prototypes to `spacemacs.d/init-working.el` or dedicated `*-experimental.org` files rather than core modules.
+3. Gate new code with feature flags (e.g., `(defvar jay/experimental-enabled t)` in the experimental file) so it can be toggled at eval time.
+4. Launch Emacs via `./safe-emacs-test.sh` to isolate from the main session.
+
+* Prototype to Production Workflow
+1. Prove the idea in the experimental file while running in the safe test instance.
+2. Capture notes, pitfalls, and commands in `/docs/codebase-wisdom.org` as you learn.
+3. Once stable, migrate the code into the appropriate literate module (`gnu-emacs-startup.org`, `shared-functions.org`, etc.) and tangle.
+4. Remove or disable the experimental flag and delete temporary hooks.
+
+* Evaluation Criteria
+- Does the feature respect Org-first workflows and avoid breaking existing keybindings?
+- Can the behavior be toggled or scoped to a buffer so it doesn’t surprise unrelated modes?
+- Are external dependencies (CLI tools, packages) documented and installable?
+- Did we capture regression fixtures or tests if it touches pasteboard sanitizers or formatting helpers?
+
+* Documentation Requirements
+- Summarize the experiment and outcome in `/docs/the-emacs-settings-approach.org` (principles) or the relevant feature doc.
+- Record any fixes or surprises in `/docs/codebase-wisdom.org` with timestamps.
+- Update `/docs/design-architecture.org` if the change alters module responsibilities or data flow.

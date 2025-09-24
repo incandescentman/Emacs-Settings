@@ -1,0 +1,47 @@
+#+TITLE: Codebase Wisdom
+#+DATE: 2025-09-24
+#+DESCRIPTION: Debugging post-mortems and prevention checklists.
+
+* Pasteboard Emoji Split: Save The Joiners
+  Date: 2025-09-24
+
+** The Bug
+Compound emoji (🧑‍🤝‍🧑) arrived as disjoint characters after `pasteboard-paste-clean`.
+
+** The Truth
+`replace-weird-spaces` stripped zero-width joiners/non-joiners, breaking emoji ligatures that depend on them.
+
+** Why This Took 2 Hours
+1. Assumed the culprit was the Markdown cleaners instead of whitespace normalization.
+2. Ignored the change log until reproducing with `insert-char` proved the joiner vanished.
+3. Forgot to log debug output from each pipeline stage.
+
+** The Fix
+Removed U+200C/U+200D from the regex so the cleaning pass leaves joiners intact.
+
+** Lessons Learned / Prevention Checklist
+- Inspect transformations after each sanitizer; don’t assume later steps are guilty.
+- Document every Unicode codepoint we normalize in the docstring.
+- Add regression snippets to `/docs/codebase-wisdom.org` when weird Unicode is involved.
+
+* Markdown Table Dash Explosion: Respect the Separator
+  Date: 2025-09-24
+
+** The Bug
+Pasting GitHub-flavored markdown tables produced separator rows packed with spaced em-dashes instead of `-----`.
+
+** The Truth
+`normalize-dashes` saw `---` inside table rows and expanded them into em-dash text between non-whitespace characters.
+
+** Why This Took 1.5 Hours
+1. Never suspected the dash normalizer because the function pre-dated the table work.
+2. Diffed the entire paste pipeline instead of isolating the dash pass early.
+3. Lacked a targeted fixture for Markdown table pastes.
+
+** The Fix
+Teach `normalize-dashes` to detect `|…|` table lines and skip dash rewrites inside them.
+
+** Lessons Learned / Prevention Checklist
+- Add focused fixtures (see `/tmp/md-table-sample.txt`) before changing sanitizers.
+- When a helper handles generic punctuation, audit domain-specific inputs (tables, code fences) separately.
+- Update `/docs` alongside code so the tribal knowledge persists.
