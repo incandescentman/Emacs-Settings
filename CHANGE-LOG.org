@@ -1,3 +1,25 @@
+* 2025-09-24
+
+** Fixed emoji breaking in pasteboard-paste-clean
+
+*** Problem fixed:
+The `pasteboard-paste-clean` function was breaking compound emojis like 🧑‍🤝‍🧑 (people holding hands), turning them into separated components like 🧑🤝🧑.
+
+*** Root cause:
+The `replace-weird-spaces` function was replacing Unicode Zero-Width Joiner (ZWJ, U+200D) and Zero-Width Non-Joiner (ZWNJ, U+200C) characters with regular spaces. These characters are essential for compound emoji rendering:
+- ZWJ (U+200D) joins emoji components together to form compound emojis
+- ZWNJ (U+200C) prevents unwanted joining in certain contexts
+
+*** Solution:
+Removed `\u200C` and `\u200D` from the regex pattern in `replace-weird-spaces` function (pasteboard-copy-and-paste-functions.org:236). The function now only replaces:
+- U+00A0 (Non-Breaking Space)
+- U+202F (Narrow Non-Breaking Space)
+- U+2009 (Thin Space)
+- U+200A (Hair Space)
+- U+200B (Zero-Width Space)
+
+While preserving ZWJ and ZWNJ for proper emoji and text rendering.
+
 * 2025-09-02
 
 ** Fixed markdown-to-org heading conversion and added org-roam heading demotion
