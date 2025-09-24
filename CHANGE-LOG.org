@@ -20,6 +20,14 @@ Removed `\u200C` and `\u200D` from the regex pattern in `replace-weird-spaces` f
 
 While preserving ZWJ and ZWNJ for proper emoji and text rendering.
 
+** Preserved Markdown table separators in pasteboard paste
+
+*** Problem fixed:
+Markdown tables pasted via `pasteboard-paste-clean` were having their separator rows mangled, because the repeated hyphens were converted into spaced em-dashes.
+
+*** Solution:
+Adjusted `normalize-dashes` to detect Markdown table lines (those bounded by `|` pipes) and skip the em-dash spacing transformations inside them. This keeps sentence-level em-dash cleanup intact while leaving table gutter rows untouched.
+
 * 2025-09-02
 
 ** Fixed markdown-to-org heading conversion and added org-roam heading demotion
