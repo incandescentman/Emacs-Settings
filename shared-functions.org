@@ -1027,13 +1027,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
         ((looking-back "^\\*+[ ]*") ;; one or more stars
          (previous-line)
          (end-of-line))
-
-;; this is to "don't delete the hyphen markers for plain-text lists"
-;; I didn't like it so I turned it off
-; (
-; (looking-back "^[ ]*- ")
-; (previous-line)
-; (end-of-line))
 (t
 (org-delete-backward-char N)
 )))
@@ -4879,7 +4872,8 @@ In collapsed view, hide empty lines between subtrees
 
 * Demote sequence for list bullets
 #+begin_src emacs-lisp
-(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+")))
+(setq org-list-bullet-list '("-"))
+(setq org-list-demote-modify-bullet nil) 
 #+end_src
 
 
