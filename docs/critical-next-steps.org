@@ -13,7 +13,7 @@
 - Why it matters: Even solo usage benefits from a future-you reference when returning after a break.
 - Scope remaining: Inventory hydras in `hydras.org`, surface keybinding cheatsheet in `/docs/instructions.org`.
 - Recommended plan: (Optional) 1) Generate listing via `rg "defhydra"`. 2) Summarize purpose + entry chord. 3) Link from instructions.
-- Status: Deferred (solo user).
+- Status: Tabled (solo user).
 
 * Stretch Goals
 - Port critical helpers to packaged modules for easier reuse across machines.
