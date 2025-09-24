@@ -9,11 +9,11 @@
 - Recommended plan: 1) Collect sample inputs under `test-fixtures/`. 2) Write batch Emacs script exercising cleaners. 3) Add to CI or pre-push hook.
 - Status: Not started.
 
-** Document Hydras and Keymaps
-- Why it matters: Discoverability of modal keybindings is low for anyone new to the setup.
+** OPTIONAL Document Hydras and Keymaps
+- Why it matters: Even solo usage benefits from a future-you reference when returning after a break.
 - Scope remaining: Inventory hydras in `hydras.org`, surface keybinding cheatsheet in `/docs/instructions.org`.
-- Recommended plan: 1) Generate listing via `rg "defhydra"`. 2) Summarize purpose + entry chord. 3) Link from instructions.
-- Status: In progress (handwritten notes only).
+- Recommended plan: (Optional) 1) Generate listing via `rg "defhydra"`. 2) Summarize purpose + entry chord. 3) Link from instructions.
+- Status: Deferred (solo user).
 
 * Stretch Goals
 - Port critical helpers to packaged modules for easier reuse across machines.
