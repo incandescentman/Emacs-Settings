@@ -7209,7 +7209,9 @@ Otherwise, call `org-return'."
         (thing-at-point 'symbol))))
   (if (and tag (string-prefix-p "#" tag))
     (org-inline-tags-search-project-wide)
-   (smart-return indent))))
+   (if (fboundp 'smart-return)
+     (smart-return indent)
+    (org-return indent)))))
 
 
 
@@ -7231,8 +7233,8 @@ t: todo
 u: urgent
 p: tweet
 i: insight
-c: cook-ideas-over-time\n")))
-  (setq selected-tag (cdr (assoc selected-key tag-alist)))
+c: cook-ideas-over-time\n"))
+     (selected-tag (cdr (assoc selected-key tag-alist))))
   (if selected-tag
     (insert (format " #%s" selected-tag))
    (error "Invalid tag selection"))))
