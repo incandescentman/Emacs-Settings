@@ -7169,7 +7169,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
 
 * org-inline-tags
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defface org-inline-tags-face
  '((t (:foreground "orange" :weight bold)))
  "Face for custom inline tags in plain list items.")
@@ -7259,7 +7259,7 @@ c: cook-ideas-over-time\n")))
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
-#+END_EXAMPLE
+#+END_SRC
 
 
 ** auto-link notes
