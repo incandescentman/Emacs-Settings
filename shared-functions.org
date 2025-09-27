@@ -7174,8 +7174,48 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
  '((t (:foreground "orange" :weight bold)))
  "Face for custom inline tags in plain list items.")
 
-(font-lock-add-keywords 'org-mode
- '(("#\\(\\w+\\(-\\w+\\)*\\)" 0 'org-inline-tags-face)))
+;; Simple font-lock keyword approach
+(defun org-inline-tags-setup-font-lock ()
+  "Setup font-lock for inline tags in org-mode."
+  ;; Use a simple regex that matches tags
+  (font-lock-add-keywords
+   nil
+   '(("\\(#\\w+\\(?:-\\w+\\)*\\)"
+      (1 'org-inline-tags-face t)))
+   t))
+
+;; Function to fontify all tags in current buffer
+(defun org-inline-tags-fontify-buffer ()
+  "Manually fontify all inline tags in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "#\\w+\\(?:-\\w+\\)*" nil t)
+      (let ((start (match-beginning 0))
+            (end (match-end 0)))
+        (put-text-property start end 'face 'org-inline-tags-face)
+        (put-text-property start end 'font-lock-face 'org-inline-tags-face)))))
+
+;;;###autoload
+(defun org-inline-tags-mode-enable ()
+  "Enable org-inline-tags highlighting and functionality."
+  (interactive)
+  ;; Add to hook for future buffers
+  (add-hook 'org-mode-hook 'org-inline-tags-setup-font-lock)
+  ;; Apply to current buffer if in org-mode
+  (when (derived-mode-p 'org-mode)
+    (org-inline-tags-setup-font-lock)
+    ;; First apply font-lock rules
+    (font-lock-mode 1)
+    (font-lock-flush)
+    (font-lock-ensure)
+    ;; Then manually fontify existing tags
+    (org-inline-tags-fontify-buffer))
+  (message "Org inline tags mode enabled"))
+
+;; Safe initialization - only run if org-mode is loaded
+(with-eval-after-load 'org
+  (add-hook 'org-mode-hook 'org-inline-tags-setup-font-lock))
 
 
 ;;;***autoload

@@ -1,0 +1,75 @@
+#+TITLE: Change Log
+#+AUTHOR: Jay Dixit
+#+DATE: [2025-01-27 Mon]
+
+* 2025-01-27: Fixed org-inline-tags font-lock highlighting
+
+** Problem
+The org-inline-tags feature was defined but tags like #todo, #review, #inlinetags were not appearing in the configured orange color. They remained the same color as surrounding text.
+
+** Struggles & Difficulties Encountered
+
+*** 1. Initial Font-Lock Function Approach Failed
+- First attempted to use a function `org-inline-tags--composed-face` in the font-lock rule
+- Font-lock expected either a face name or a properly structured face expression, not a function call that returns a face
+- The function was never actually being called by the font-lock system
+
+*** 2. Conflict with Existing Org-Mode Font-Lock Rules
+- Encountered error: "No match 2 in highlight (2 'org-headline-done prepend)"
+- Our font-lock pattern was somehow interfering with org-mode's existing font-lock rules
+- The error suggested font-lock was trying to access match group 2 that didn't exist in our pattern
+
+*** 3. Partial Fontification Issue
+- Even after fixing the errors, tags would only turn orange when typing a space after them
+- Existing tags in the buffer were not being fontified
+- Font-lock was only applying to newly typed text, not retroactively to existing content
+
+** Solution
+
+The final working solution combined two approaches:
+
+*** 1. Simplified Font-Lock Rule
+#+BEGIN_SRC emacs-lisp
+(defun org-inline-tags-setup-font-lock ()
+  "Setup font-lock for inline tags in org-mode."
+  (font-lock-add-keywords
+   nil
+   '(("\\(#\\w+\\(?:-\\w+\\)*\\)"
+      (1 'org-inline-tags-face t)))
+   t))
+#+END_SRC
+
+- Used a simple direct face name instead of a function
+- Match group 1 captures just the tag content
+- The `t` flag overwrites any existing face (instead of `prepend` which was causing conflicts)
+
+*** 2. Manual Buffer Fontification
+#+BEGIN_SRC emacs-lisp
+(defun org-inline-tags-fontify-buffer ()
+  "Manually fontify all inline tags in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "#\\w+\\(?:-\\w+\\)*" nil t)
+      (let ((start (match-beginning 0))
+            (end (match-end 0)))
+        (put-text-property start end 'face 'org-inline-tags-face)
+        (put-text-property start end 'font-lock-face 'org-inline-tags-face)))))
+#+END_SRC
+
+- Manually searches through buffer and applies face properties
+- Sets both `face` and `font-lock-face` properties to ensure persistence
+- Called immediately when enabling the mode to fontify existing tags
+
+** Key Learnings
+
+1. **Font-lock expects specific structures**: Can't just pass a function that returns a face; must use either a face name directly or a matcher function that follows font-lock conventions
+
+2. **Existing font-lock rules can conflict**: When adding keywords to modes with complex font-lock setups like org-mode, conflicts with existing patterns are common
+
+3. **Font-lock doesn't retroactively apply**: Need to manually fontify existing buffer content or force a complete refontification
+
+4. **Both `face` and `font-lock-face` properties may be needed**: Setting both ensures the highlighting persists through various buffer operations
+
+** Files Modified
+- `/Users/jay/emacs/emacs-settings/shared-functions.org` (org-inline-tags section starting at line 7171)
