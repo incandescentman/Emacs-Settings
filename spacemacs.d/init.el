@@ -162,7 +162,6 @@ This function should only modify configuration layer settings."
                                       paredit
                                       peg
                                       persist
-                                      ;; persp-mode
                                       point-stack
                                       popup
                                       ;; project-explorer
@@ -292,7 +291,6 @@ This function should only modify configuration layer settings."
 
                                     savehist
                                     magit
-                                    persp-mode
                                     popup
                                     polymide
                                     )
@@ -690,7 +688,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "ack" "grep")
 
    ;; The backend used for undo/redo functionality. Possible values are
    ;; `undo-fu', `undo-redo' and `undo-tree' see also `evil-undo-system'.
@@ -1132,7 +1130,6 @@ This function is called at the very end of Spacemacs initialization."
      palimpsest
      paredit
      ;; peg
-     ;; persp-mode
      ;; plain-org-wiki
      point-stack
      ;; polymode
