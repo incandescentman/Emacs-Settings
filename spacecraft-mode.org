@@ -335,26 +335,27 @@ Also converts full stops to commas."
 
 
 (defun smart-space ()
-  "Insert space and then clean up whitespace."
+  "Insert a space and normalise whitespace without fragmenting Org cache updates."
   (interactive)
-  (atomic-change-group
-    ;; 1) If region is active, delete it
-    (when (use-region-p)
-      (delete-region (region-beginning) (region-end)))
+  (combine-after-change-calls
+    (atomic-change-group
+      ;; 1) If region is active, delete it
+      (when (use-region-p)
+        (delete-region (region-beginning) (region-end)))
 
-    ;; 2) If allowed, expand
-    (unless (or
-             (looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*" nil)
-             (looking-back "\\bvs.[ ]*" nil)
-             (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil)
-             (looking-back "^[[:punct:]]*[ ]*" nil)
-             (looking-back ">" nil)
-             (looking-back "][\n\t ]*" nil))
-      (smart-expand))
+      ;; 2) If allowed, expand
+      (unless (or
+               (looking-back "\\bi\\.e[[:punct:][:punct:]]*[ ]*" nil)
+               (looking-back "\\bvs.[ ]*" nil)
+               (looking-back "\\be\\.g[[:punct:]]*[ ]*" nil)
+               (looking-back "^[[:punct:]]*[ ]*" nil)
+               (looking-back ">" nil)
+               (looking-back "][\n\t ]*" nil))
+        (smart-expand))
 
-    ;; 3) Insert a space, condense to one space
-    (insert " ")
-    (just-one-space)))
+      ;; 3) Insert a space, condense to one space
+      (insert " ")
+      (just-one-space))))
 
 
 
@@ -1021,45 +1022,35 @@ No space. Does that make sense? Thanks!
   "Determines whether capitalization should occur after deleting a single character.")
 
 (defun my/delete-backward-and-capitalize ()
-  "When there is an active region, delete it and then fix up the whitespace"
+  "Delete backward, clean whitespace, and capitalise intelligently as one edit."
   (interactive)
-(when (looking-back-safe "^[*]+ ")
-(kill-line 0)
-(insert " ") ; this line is super hacky I put it here because when I tried to use "unless", the rest of the function, and then this at the end, it didn't work; however, this does produce the behavior I desire
-)
-
-  (let ((capitalize capitalize-after-deleting-single-char))
-    (if (use-region-p)
-        (progn
-          (delete-region (region-beginning) (region-end))
-          (setf capitalize t))
-      (new-org-delete-backward-char 1))
-    (save-excursion
-      (when (or (looking-at "[[:space:]]")
-    (looking-back-safe "[[:space:]]"))
-;; unless there's already exactly one space between words, since I need to be able to delete backward past spaces
-(unless (and
-(looking-back-safe "\\w ")
-(looking-at "\\w")
-)
-  (my/fix-space))))
-    (when (and capitalize (my/beginning-of-sentence-p))
-      (save-excursion
-        (capitalize-unless-org-heading))))
-(when
-
-(or
-(and
-(looking-at "\\.")
-(looking-back-safe "\\.")
-)
-(and
-(looking-at ",")
-(looking-back-safe ",")
-))
-(delete-char 1)
-)
-)
+  (let* ((at-heading (looking-back-safe "^[*]+ "))
+         (has-region (use-region-p))
+         (region-beg (when has-region (region-beginning)))
+         (region-end (when has-region (region-end)))
+         (capitalize (if has-region t capitalize-after-deleting-single-char)))
+    (combine-after-change-calls
+      (atomic-change-group
+        (when at-heading
+          (kill-line 0)
+          (insert " "))
+        (if has-region
+            (delete-region region-beg region-end)
+          (new-org-delete-backward-char 1))
+        (save-excursion
+          (when (or (looking-at "[[:space:]]")
+                    (looking-back-safe "[[:space:]]"))
+            (unless (and (looking-back-safe "\\w ")
+                         (looking-at "\\w"))
+              (my/fix-space))))
+        (when (and capitalize (my/beginning-of-sentence-p))
+          (save-excursion
+            (capitalize-unless-org-heading)))
+        (when (or (and (looking-at "\\.")
+                       (looking-back-safe "\\."))
+                  (and (looking-at ",")
+                       (looking-back-safe ",")))
+          (delete-char 1))))))
 #+END_SRC
 
 ** backward-kill-word-correctly-and-capitalize
@@ -1315,6 +1306,5 @@ These have to be at the end.
 # eval: (org-config-files-local-mode 1)
 # End:
 #+END_SRC
-
 
 

@@ -218,101 +218,72 @@ by a checkbox marker ([ ] or [X])."
 (defun smart-return--insert-checklist-item ()
   "Insert a new checklist item on a new line, preserving indentation.
 The new line will have the same bullet, but a blank checkbox [ ]."
-  (let ((indent (current-indentation))
-        bullet)
-    ;; Capture the bullet character, but always insert "[ ]".
-    (save-excursion
-      (beginning-of-line)
-      (when (looking-at
-             "^[ \t]*\\([-+*]\\)[ \t]+\\(\\[[ Xx]\\]\\)[ \t]+")
-        ;; Instead of preserving the current checkbox state, force an unchecked box.
-        (setq bullet (concat (match-string 1) " [ ] "))))
-    (unless bullet
-      (setq bullet "- [ ] "))
-    (end-of-line)
-    (newline)
-    (insert (make-string indent ?\s) bullet)))
+  (combine-after-change-calls
+    (atomic-change-group
+      (let* ((indent (current-indentation))
+             (bullet (save-excursion
+                       (beginning-of-line)
+                       (if (looking-at "^[ \t]*\\([-+*]\\)[ \t]+\\(\\[[ Xx]\\]\\)[ \t]+")
+                           (concat (match-string 1) " [ ] ")
+                         "- [ ] "))))
+        (end-of-line)
+        (newline)
+        (insert (make-string indent ? ) bullet)))))
 
 
 ;;------------------------------------------------------------------------------
 ;; 5) MAIN SMART-RETURN FUNCTION
 ;;------------------------------------------------------------------------------
 
-(defun org-element-cache-pause ()
-  (setq org-element-use-cache nil))
-
-(defun org-element-cache-resume ()
-  (setq org-element-use-cache t))
-
-
-
-;;------------------------------------------------------------------------------
-;; MAIN SMART-RETURN FUNCTION - Complete replacement
-;;------------------------------------------------------------------------------
-
 (defun smart-return ()
-  "Perform a context-aware Return in Org-mode.
+  "Perform a context-aware Return in Org-mode without invalidating the cache.
 
-Decision Tree:
-1) Escape an empty list item, if `org-in-empty-item-p' is t.
-2) If the URL at point is an image, display it in Emacs.
-3) If on an Org link and `org-return-follows-link' is set, open it.
-4) If a region is active, delete it and call `org-return-indent'.
-5) If on a checklist item, insert a new checklist item.
-6) If on any other list item, insert a new bullet/item.
-7) If in Org-mode (and none of the above conditions match), do `org-return'.
-8) Otherwise, just insert a newline.
-
-This function aims to make \"Enter\" in Org-mode more intuitive
-for lists and checklists while respecting typical Org conventions."
+This function gathers all contextual state before performing any buffer
+modification and wraps custom edits in `combine-after-change-calls' so that
+Org's cache only has to resynchronise once."
   (interactive)
-  (cond
-   ;; 1) If in an empty list item (or empty checklist item), "escape" the list.
-   ((org-in-empty-item-p)
-    ;; Only pause the cache for this specific operation
-    (org-element-cache-pause)
-    (unwind-protect
-        (progn
-          ;; Move to beginning of item and remove bullet/checkbox.
-          (org-beginning-of-item)
-          (delete-region (point) (line-end-position))
-          ;; Insert a newline to end the list context.
+  (let* ((in-empty-item (org-in-empty-item-p))
+         (url-is-image (org-url-at-point-is-image-p))
+         (on-link (org-link-at-point-p))
+         (has-region (use-region-p))
+         (region-beg (when has-region (region-beginning)))
+         (region-end (when has-region (region-end)))
+         (at-item (org-at-item-p))
+         (at-checklist (and at-item (smart-return--at-checklist-p)))
+         (in-org-mode (derived-mode-p 'org-mode))
+         item-begin
+         item-end)
+    (when in-empty-item
+      (save-excursion
+        (org-beginning-of-item)
+        (setq item-begin (point)
+              item-end (line-end-position))))
+    (cond
+     (in-empty-item
+      (combine-after-change-calls
+        (atomic-change-group
+          (delete-region item-begin item-end)
           (newline)
-          ;; If Org auto-inserted a new list bullet or number on the new line, remove it.
           (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
-            (delete-region (point) (line-end-position)))
-          ;; Remove any leftover indentation, etc.
-          (delete-horizontal-space))
-      (org-element-cache-resume)))
-
-   ;; 2) If the URL at point is an image, display it in Emacs.
-   ((org-url-at-point-is-image-p)
-    (display-online-image-in-new-buffer (thing-at-point 'url)))
-
-   ;; 3) If point is on an Org link and link-following is enabled, open it.
-   ((and (org-link-at-point-p) org-return-follows-link)
-    (org-open-at-point))
-
-   ;; 4) If a region is active, delete it and indent.
-   ((use-region-p)
-    (delete-region (region-beginning) (region-end))
-    (org-return-indent))
-
-   ;; 5) If in a list and the item is a checklist, insert a new `[ ]`.
-   ((and (org-at-item-p) (smart-return--at-checklist-p))
-    (smart-return--insert-checklist-item))
-
-   ;; 6) If in a list but not a checklist, insert a new bullet.
-   ((org-at-item-p)
-    (org-insert-item))
-
-   ;; 7) Otherwise, if in Org-mode, do the normal `org-return'.
-   ((derived-mode-p 'org-mode)
-    (org-return))
-
-   ;; 8) Fallback to a simple newline.
-   (t
-    (newline))))
+            (delete-region (match-beginning 0) (match-end 0)))
+          (delete-horizontal-space))))
+     (url-is-image
+      (display-online-image-in-new-buffer (thing-at-point 'url)))
+     ((and on-link org-return-follows-link)
+      (org-open-at-point))
+     (has-region
+     (combine-after-change-calls
+       (atomic-change-group
+         (delete-region region-beg region-end)
+          (org-return t))))
+     (at-checklist
+      (smart-return--insert-checklist-item))
+     (at-item
+      (org-insert-item))
+     (in-org-mode
+      (org-return))
+     (t
+      (newline)))))
 
 
 ;;------------------------------------------------------------------------------

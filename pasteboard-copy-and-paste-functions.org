@@ -1,6 +1,7 @@
 #+auto_tangle: t
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
+(require 'subr-x)
 #+END_SRC
 
 * Replace smart quotes with straight quotes
@@ -483,13 +484,13 @@ ARG zero or negative       → force replacement."
 (setq select-enable-clipboard t)
 (setq select-enable-primary t)
 
-(defun org-insert-link-from-clipboard (beg end)
+(defun org-insert-link-from-clipboard (beg end &optional url)
   "Replace text in region with an Org bracket link using the macOS clipboard URL."
   (interactive "r")
   (unless (use-region-p)
     (error "No region selected."))
 
-  (let* ((url (string-trim (shell-command-to-string "pbpaste")))
+  (let* ((url (string-trim (or url (pasteboard--clipboard-string))))
          (region-text (buffer-substring-no-properties beg end))
          (bracket-link (format "[[%s][%s]]" url region-text)))
     ;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
@@ -513,182 +514,137 @@ ARG zero or negative       → force replacement."
           (replace-match (concat "*" stars) t t)))
       (set-marker end-marker nil))))
 
+(defun pasteboard--clipboard-string ()
+  "Return the current macOS clipboard as a normalised string."
+  (shell-command-to-string "pbpaste | perl -p -e 's/\\r$//' | tr '\\r' '\\n'"))
+
+(defun convert-markdown-links-to-org-mode (beg end)
+  "Convert [label](url) style links in region to Org [[url][label]] links."
+  (interactive "r")
+  (save-excursion
+    (let ((end-marker (copy-marker end)))
+      (goto-char beg)
+      (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^()]+\\))" end-marker t)
+        (replace-match "[[\\2][\\1]]" t))
+      (set-marker end-marker nil))))
+
+(defun pasteboard--clean-string (text)
+  "Apply the same normalisation steps as `pasteboard-paste-clean' to TEXT."
+  (with-temp-buffer
+    (insert text)
+    (let ((beg (point-min))
+          (end (point-max)))
+      (replace-smart-quotes beg end)
+      (replace-smart-quotes-regexp beg end)
+      (replace-weird-spaces beg end)
+      (convert-markdown-blockquotes-to-org beg end)
+      (convert-markdown-links-to-org-mode beg end)
+      (save-restriction
+        (narrow-to-region beg end)
+        (goto-char (point-min))
+        (asterisk-to-dash-and-convert-code-blocks-to-org)
+        (convert-markdown-headings-to-org (point-min) (point-max)))
+      (buffer-string))))
+
+(defun pasteboard--demote-headings-in-string (text)
+  "Demote all Org headings found in TEXT by one level."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (while (re-search-forward "^\\(\\*+\\)" nil t)
+      (let ((stars (match-string 1)))
+        (replace-match (concat "*" stars) t t)))
+    (buffer-string)))
+
 (defun pasteboard-paste-adaptive ()
-  "Paste from the macOS pasteboard, choosing method based on current mode and context.
-If there's an active region and the clipboard contains a URL,
-insert an Org bracket link. Otherwise, fall back to the usual adaptive paste.
-In org-roam buffers, automatically demote headings by one level."
+  "Paste from the macOS pasteboard, choosing behaviour based on context while keeping Org's cache stable."
   (interactive)
-  (let* ((raw-clip (string-trim (shell-command-to-string "pbpaste")))
-         (clipboard-text (downcase raw-clip))
+  (let* ((clipboard-raw (pasteboard--clipboard-string))
+         (trimmed (string-trim clipboard-raw))
+         (clipboard-text (downcase trimmed))
          (is-org-roam (is-org-roam-buffer-p))
-         (paste-start-pos (point))  ; Save position as integer
-         choice)  ;; will record which branch we took
+         choice)
     (cond
-     ;; 1) If region is active and the clipboard looks like a URL → bracket link
      ((and (use-region-p)
-           (not (string-empty-p raw-clip))
+           (not (string-empty-p trimmed))
            (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
       (setq choice "bracket-link")
-      (org-insert-link-from-clipboard (region-beginning) (region-end)))
-
-     ;; 3) In shell/elisp/web → raw paste
+      (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
      ((or (eq major-mode 'sh-mode)
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'markdown-mode)
-          (eq major-mode 'gfm-mode)  ; GitHub Flavored Markdown
+          (eq major-mode 'gfm-mode)
           (derived-mode-p 'markdown-mode)
           (eq major-mode 'web-mode))
       (setq choice "verbatim")
-      (pasteboard-paste-raw))
-
-     ;; 2) In Org/text modes → clean paste
+      (pasteboard-paste-raw clipboard-raw))
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
-      (setq choice "clean")
-      (pasteboard-paste-clean))
-
-     ;; 4) Fallback: decide based on surrounding chars
+      (let* ((cleaned (pasteboard--clean-string clipboard-raw))
+             (final (if (and is-org-roam (string-match-p "^\\*+ " cleaned))
+                        (progn
+                          (setq choice "clean (org-roam demoted)")
+                          (pasteboard--demote-headings-in-string cleaned))
+                      (progn
+                        (setq choice "clean")
+                        cleaned))))
+        (pasteboard-paste final)))
      (t
       (let* ((prev-char (char-before))
              (next-char (char-after))
              (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-             use-no-spaces)
-        (setq use-no-spaces
-              (or (member prev-char char-set)
-                  (member next-char char-set)))
+             (use-no-spaces (or (member prev-char char-set)
+                                (member next-char char-set))))
         (if use-no-spaces
             (progn
               (setq choice "paste-raw")
-              (pasteboard-paste-raw))
-            (setq choice "paste-clean")
-            (pasteboard-paste-clean)))))
+              (pasteboard-paste-raw clipboard-raw))
+          (setq choice "paste-clean")
+          (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
+    (when choice
+      (message "Pasted: %s" choice))))
 
-    ;; Now point is at the end of the pasted content
-    (let ((paste-end-pos (point)))
-      ;; If we're in an org-roam buffer and pasted org content, demote headings
-      (when (and is-org-roam
-                 (not (string= choice "bracket-link"))
-                 (not (string= choice "verbatim"))
-                 (> paste-end-pos paste-start-pos))
-        (save-excursion
-          (goto-char paste-start-pos)
-          ;; Check if there are any headings to demote
-          (when (re-search-forward "^\\*+ " paste-end-pos t)
-            (goto-char paste-start-pos)
-            (demote-org-headings-in-region paste-start-pos paste-end-pos)
-            (setq choice (concat choice " (org-roam demoted)")))))
-    
-    ;; Finally, report what we did
-    (message "Pasted: %s" choice))))
-#+END_SRC
-
-
-
-*** pasteboard-paste (with smart quotes by default)
-
-
-
-#+BEGIN_SRC emacs-lisp
-
-(defun convert-markdown-links-to-org-mode (beg end)
-  "Convert Markdown links to Org-mode links in the specified region."
-  (interactive "r")
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^)]+\\))" end t)
-      (replace-match "[[\\2][\\1]]" t))))
-
-
-
-(defun pasteboard-paste-and-convert-markdown-links-to-org-mode ()
- "Paste from OS X system pasteboard and convert Markdown links to Org-mode format."
- (interactive)
- (let* ((clipboard-content (shell-command-to-string "pbpaste"))
-     (clean-content (string-trim clipboard-content))
-     (start (point))
-     (end (if mark-active (mark) (point))))
-  (if (string-empty-p clean-content)
-    (message "Clipboard is empty.")
-   (let ((converted-content
-       (replace-regexp-in-string
-       "\\[\\([^][]+\\)\\](\\([^)]+\\))"
-       "[[\\2][\\1]]"
-       clean-content)))
-    (delete-region start end)
-    (insert converted-content)
-    (message "Content pasted and converted successfully.")))))
-
-(defun pasteboard-paste ()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
+(defun pasteboard-paste (&optional text)
+  "Paste TEXT (or the current clipboard) at point, normalising whitespace."
   (interactive)
-  (let ((start (point))
-        (end (if mark-active
-                 (mark)
-               (point)))
-        (ins-text
-         (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'")))
-    (delete-region start end)
-    (insert ins-text)
-    (let ((paste-end (point)))  ; Save where the paste ended
-      (my/fix-space)
-      (save-excursion
-        (goto-char start)
-        (my/fix-space))
-      (goto-char paste-end)))  ; Ensure point is at the end of pasted text
-                                        ; (reflash-indentation)
-  )
+  (let* ((start (point))
+         (end (if mark-active (mark) (point)))
+         (ins-text (or text (pasteboard--clipboard-string))))
+    (combine-after-change-calls
+      (atomic-change-group
+        (delete-region start end)
+        (insert ins-text)
+        (let ((paste-end (point)))
+          (my/fix-space)
+          (save-excursion
+            (goto-char start)
+            (my/fix-space))
+          (goto-char paste-end))))))
 #+END_SRC
 
 *** pasteboard-paste-clean (and without spaces)
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-clean (&optional raw)
-  "Paste from macOS clipboard, then normalise the text.
-With a prefix argument RAW (C-u) insert verbatim.
-Otherwise run, in order:
-  1. `replace-smart-quotes`          ; simple pair replacements
-  2. `replace-smart-quotes-regexp`   ; regexp clean‑ups
-  3. `convert-markdown-links-to-org-mode`
-  4. `asterisk-to-dash-and-convert-code-blocks-to-org`."
+(defun pasteboard-paste-clean (&optional raw text)
+  "Paste from the macOS clipboard and normalise the text in a single edit."
   (interactive "P")
-  ;; Remember where the paste starts.
-  (let ((beg (point)))
-    (pasteboard-paste)                       ; your low‑level paste
-    (unless raw
-      ;; Use a marker so END keeps tracking if we shorten/lengthen text.
-      (let ((end (copy-marker (point) t)))
-        (replace-smart-quotes beg end)
-        (replace-smart-quotes-regexp beg end)
-        (replace-weird-spaces beg end)
-;; (ensure-heading-emoji-space beg end)
-        (convert-markdown-blockquotes-to-org beg end)
-        (convert-markdown-links-to-org-mode beg end)
-        ;; Add the asterisk-to-dash conversion here
-        (save-restriction
-          (narrow-to-region beg end)
-          (goto-char (point-min))
-          (asterisk-to-dash-and-convert-code-blocks-to-org)
-          (convert-markdown-headings-to-org (point-min) (point-max)))
-        ;; Move point to end of pasted region
-        (goto-char end)
-        (set-marker end nil)))))             ; tidy marker
+  (let* ((source (or text (pasteboard--clipboard-string)))
+         (insert-text (if raw source (pasteboard--clean-string source))))
+    (pasteboard-paste insert-text)))
 #+END_SRC
 
 *** pasteboard-paste-raw
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-raw ()
-  "Paste from OS X system pasteboard via `pbpaste' to point."
+(defun pasteboard-paste-raw (&optional text)
+  "Paste verbatim text at point, bypassing smart cleanup."
   (interactive)
-  (let ((start (point))
-	(end (if mark-active
-		 (mark)
-	       (point))))
-    (shell-command-on-region start end
-			     "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"
-			     nil t)
-    (save-excursion
-      )))
+  (let* ((start (point))
+         (end (if mark-active (mark) (point)))
+         (ins-text (or text (pasteboard--clipboard-string))))
+    (combine-after-change-calls
+      (atomic-change-group
+        (delete-region start end)
+        (insert ins-text)))))
 #+END_SRC
 
 *** pasteboard paste and adjust heading levels
@@ -992,6 +948,4 @@ These have to be at the end.
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-
-
 
