@@ -35,6 +35,9 @@
 2. Edit `.org` sources, then `C-c C-v t` to tangle and reload.
 
 * Content Formats and Editing
+** Transclude
+Command-Shift-Down to add a transclude node!
+** Literate programming
 - Literate Org files contain `#+begin_src emacs-lisp` blocks; use `C-c C-v t` to tangle or enable `#+auto_tangle: t` headers.
 - Keep documentation updates in `CHANGE-LOG.org` and `/docs` synchronized when making behavioral changes.
 

@@ -3,6 +3,22 @@
 ## Overview
 This is a sophisticated Emacs configuration that uses Spacemacs as its foundation while incorporating extensive customizations through literate programming (org-mode files that tangle to elisp) and modular design patterns.
 
+## Documentation Files
+
+The following documentation files provide detailed information about various aspects of this configuration:
+
+- [`docs/instructions.org`](docs/instructions.org) - Operational instructions for installation, usage, and maintenance
+- [`docs/change-log.org`](docs/change-log.org) - History of changes and updates to the configuration
+- [`docs/codebase-wisdom.org`](docs/codebase-wisdom.org) - Non-obvious insights and lessons learned from debugging
+- [`docs/design-architecture.org`](docs/design-architecture.org) - Design principles and architectural decisions
+- [`docs/the-emacs-settings-approach.org`](docs/the-emacs-settings-approach.org) - Philosophy and approach of this configuration
+- [`docs/visual-design-philosophy.org`](docs/visual-design-philosophy.org) - Visual design principles and theming approach
+- [`docs/pasteboard-architecture.org`](docs/pasteboard-architecture.org) - Architecture of the clipboard integration system
+- [`docs/org-element-cache-fix.org`](docs/org-element-cache-fix.org) - Documentation of org-element cache fixes
+- [`docs/backup-system.org`](docs/backup-system.org) - Backup and recovery system documentation
+- [`docs/critical-next-steps.org`](docs/critical-next-steps.org) - Priority items for future development
+- [`docs/experimental-mode-playbook.org`](docs/experimental-mode-playbook.org) - Guide for experimental mode features
+
 ## Configuration Architecture
 
 ### Core Structure
