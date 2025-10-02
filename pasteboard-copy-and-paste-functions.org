@@ -540,7 +540,7 @@ ARG zero or negative       → force replacement."
       (convert-markdown-blockquotes-to-org beg end)
       (convert-markdown-links-to-org-mode beg end)
       (save-restriction
-        (narrow-to-region beg end)
+        (narrow-to-region (point-min) (point-max))
         (goto-char (point-min))
         (asterisk-to-dash-and-convert-code-blocks-to-org)
         (convert-markdown-headings-to-org (point-min) (point-max)))
@@ -948,4 +948,3 @@ These have to be at the end.
 # enable-local-eval: t
 # eval: (org-config-files-local-mode 1)
 # End:
-

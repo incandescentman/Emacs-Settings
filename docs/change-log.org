@@ -9,6 +9,7 @@
 ** Summary
 - Wrapped high-frequency editing commands (`smart-return`, `smart-space`, and `my/delete-backward-and-capitalize`) in `combine-after-change-calls` transactions so Org’s cache only re-syncs once per keystroke
 - Reworked pasteboard helpers to pre-process text in temp buffers before insertion and added reusable clipboard utilities
+- Guarded the pasteboard cleaner’s narrowing step with refreshed `(point-min)/(point-max)` bounds so Markdown conversions no longer raise `args-out-of-range`
 - Added a focus-in hook that force-resets the element cache for Dropbox-synchronised org-roam buffers to avoid stale offsets after external edits
 - Verified the previous org-element cache warnings no longer reproduce with the hardened helpers
 - Restored the `convert-markdown-links-to-org-mode` helper so the new pasteboard pipeline can safely normalise Markdown links before insertion

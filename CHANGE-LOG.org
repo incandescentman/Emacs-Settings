@@ -1,3 +1,17 @@
+* 2025-10-02
+
+** Prevented pasteboard cleaner from narrowing past buffer bounds
+
+*** Problem fixed:
+Calling `pasteboard-paste-adaptive` with Markdown content triggered an `args-out-of-range` error inside `narrow-to-region`. The earlier cleanup passes shortened the temp buffer, but the saved `beg`/`end` values still reflected the pre-normalisation size, so narrowing tried to use stale coordinates.
+
+*** Solution:
+Updated `pasteboard--clean-string` to recalculate the bounds when calling `narrow-to-region`, using the current `(point-min)` and `(point-max)` of the temp buffer. This keeps the narrowing in sync with any edits performed by the preceding conversion helpers.
+
+*** Notes:
+- Tangling `pasteboard-copy-and-paste-functions.org` regenerates the fixed helper in `pasteboard-copy-and-paste-functions.el`.
+- Verified paste operations succeed after the change without throwing debugger interrupts.
+
 * 2025-09-24
 
 ** Fixed emoji breaking in pasteboard-paste-clean
