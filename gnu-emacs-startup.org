@@ -46,6 +46,15 @@ Automatically load abbreviations table:
    (read-abbrev-file "/Users/jay/emacs/abbrevs/.abbrev_defs")))
 #+END_SRC
 
+* Support batch startup
+#+BEGIN_SRC emacs-lisp
+;; Ensure dependent keymaps exist even when this file is loaded in batch
+;; without the broader Spacemacs environment.
+(require 'org nil t)
+(require 'help-mode nil t)
+(require 'flyspell nil t)
+#+END_SRC
+
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
 (defun reflash-indentation ()
@@ -216,7 +225,8 @@ Use ⌘-m as prefix for my own custom keybindings:
 ;; (global-set-key (kbd "s-k") nil)
 (global-unset-key (kbd "s-k"))
 
-(define-key evil-normal-state-map (kbd "s-k") nil)
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "s-k") nil))
   (global-unset-key (kbd "s-k"))
   (defvar s-k-map (make-keymap)
     "Keymap for local bindings and functions, prefixed by (Command-M)")
@@ -318,7 +328,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k n s") 'yas/new-snippet)
 ;; (define-key key-minor-mode-map (kbd "s-k n") 'yas/new-snippet)
 
-(define-key help-mode-map (kbd "C-s-]") 'help-go-back)
+(with-eval-after-load 'help-mode
+  (define-key help-mode-map (kbd "C-s-]") 'help-go-back))
 (define-key key-minor-mode-map (kbd "C-s-]") 'help-go-forward)
 
 
@@ -375,7 +386,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "C-;") 'org-def)
 
-(define-key flyspell-mode-map (kbd "C-;") 'org-def)
+(with-eval-after-load 'flyspell
+  (define-key flyspell-mode-map (kbd "C-;") 'org-def))
 
 (define-key key-minor-mode-map (kbd "s-k u p") 'unfill-paragraph)
 
@@ -1558,7 +1570,8 @@ Strips out any existing asterisks from the text first."
 
 
 
-(global-unset-key (kbd "] cr"))
+(ignore-errors
+  (global-unset-key (kbd "] cr")))
 (define-key key-minor-mode-map (kbd "] cr") 'load-roam-config)
 (define-key key-minor-mode-map (kbd "] cs") 'load-search-config)
 (define-key key-minor-mode-map (kbd "] ci") 'load-spacemacs-config)
