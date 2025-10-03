@@ -5,82 +5,11 @@
 ;;; (abbrev-mode)
 ;; (user-full-name)
 
-* Basic Emacs Setup
+* Environment Setup
 ** Package Archives and Initialization
-** General Settings
-** Minor Modes
-* Org-mode Configuration
-** Org General Settings
-** Org Export Settings
-
-*** ignore
-
-#+begin_src emacs-lisp
-
-(defun my/org-remove-links-and-source-lines (backend)
-  "Remove lines starting with 'Links ::' or 'Source ::' before export."
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^\\s-*\\(- Links ::\\|- Source ::\\).*$" nil t)
-      (replace-match ""))))
-
-(add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
-#+end_src
-
-* Appearance and UI
-** Fonts and Frames
-* Custom Functions
-
-* Intro / About:ARCHIVE:
-#+OPTIONS: f:t
-
-#+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
-
-- System: Mac OSX Sierra version 13.1
-- Emacs version: Emacs 28.2 (Carbon Version)
-- Spacemacs version 0.999.0
-- org-mode version 9.6.1
-- Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
-- If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
-- =brew tap railwaycat/emacsmacport=
-- [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
-
-* Package & Load Paths
-** Load the proper repositories (package archives)
-#+BEGIN_SRC emacs-lisp
-;; Set package archives
-(setq package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-    ("melpa" . "https://melpa.org/packages/")
-    ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-    ("tromey" . "https://tromey.com/elpa/")))
-
-
-(use-package use-package
-  :custom
-
-;;(package-native-compile t)
-  (warning-minimum-level :emergency))
-#+END_SRC
-
-** use-package verbosity
-#+begin_src emacs-lisp
-(setq use-package-verbose nil) ;; Set to t for debugging
-#+end_src
-
-** use-package blocks
-#+BEGIN_SRC emacs-lisp
-(use-package ox-LaTeX
-:defer t
-  )
-(use-package ox-html
-  :defer t)
-#+END_SRC
-
-* General Emacs Settings
-** Basic variables
-*** Setting variables
+** General Emacs Settings
+*** Basic variables
+**** Setting variables
 I should probably eventually break these out of custom-set-variables and organize them according to their function.
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t -*-
@@ -218,10 +147,10 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 
 
-** Startup, UI, and appearance
+*** Startup, UI, and appearance
 
 
-** Appearance
+*** Appearance
 #+begin_src emacs-lisp
 ;; A. keep the new, cached version -- recommended
 (defun jay/adjust-font-size (&optional frame)
@@ -238,7 +167,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 (add-hook 'window-size-change-functions #'jay/adjust-font-size)
 #+end_src
 
-** fontify item checklists
+*** fontify item checklists
 [[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
 
 #+BEGIN_SRC emacs-lisp
@@ -249,7 +178,75 @@ I should probably eventually break these out of custom-set-variables and organiz
  'append)
 #+END_SRC
 
-** Minor modes
+*** Minor modes
+** Minor Modes
+** Package & Load Paths
+*** Load the proper repositories (package archives)
+#+BEGIN_SRC emacs-lisp
+;; Set package archives
+(setq package-archives
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+    ("melpa" . "https://melpa.org/packages/")
+    ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+    ("tromey" . "https://tromey.com/elpa/")))
+
+
+(use-package use-package
+  :custom
+
+;;(package-native-compile t)
+  (warning-minimum-level :emergency))
+#+END_SRC
+
+*** use-package verbosity
+#+begin_src emacs-lisp
+(setq use-package-verbose nil) ;; Set to t for debugging
+#+end_src
+
+*** use-package blocks
+#+BEGIN_SRC emacs-lisp
+(use-package ox-LaTeX
+:defer t
+  )
+(use-package ox-html
+  :defer t)
+#+END_SRC
+* Org-mode Configuration
+** Org General Settings
+** Org Export Settings
+
+*** ignore
+
+#+begin_src emacs-lisp
+
+(defun my/org-remove-links-and-source-lines (backend)
+  "Remove lines starting with 'Links ::' or 'Source ::' before export."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\s-*\\(- Links ::\\|- Source ::\\).*$" nil t)
+      (replace-match ""))))
+
+(add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
+#+end_src
+
+* Appearance and UI
+** Fonts and Frames
+* Custom Functions
+
+* Intro / About:ARCHIVE:
+#+OPTIONS: f:t
+
+#+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
+
+- System: Mac OSX Sierra version 13.1
+- Emacs version: Emacs 28.2 (Carbon Version)
+- Spacemacs version 0.999.0
+- org-mode version 9.6.1
+- Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
+- If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
+- =brew tap railwaycat/emacsmacport=
+- [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
+- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
 
 * Org-Specific Config
 ** Basic org settings
