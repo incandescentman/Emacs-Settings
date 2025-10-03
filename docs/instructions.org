@@ -11,8 +11,8 @@
 
 * Feature Overview
 ** Clipboard hygiene
-- `s-v` (`pasteboard-paste-clean`) inserts macOS clipboard text and normalizes quotes, markdown, and Org formatting.
-- `C-u s-v` bypasses cleaning for raw paste.
+- `s-v` (`pasteboard-paste-adaptive`) chooses the paste pipeline automatically—text buffers get the cleaner, code buffers call `pasteboard-paste-verbatim`.
+- Run `M-x pasteboard-paste-verbatim` (alias: `pasteboard-paste-raw`) to force a byte-for-byte paste in any buffer.
 ** Org-centric tooling
 - Org Roam layer enabled; capture templates expect `org-roam` database.
 - `pasteboard-paste-adjusted-subtrees` demotes headings when pasting into existing Org trees.

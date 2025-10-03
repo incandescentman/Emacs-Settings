@@ -577,7 +577,7 @@ ARG zero or negative       → force replacement."
           (derived-mode-p 'markdown-mode)
           (eq major-mode 'web-mode))
       (setq choice "verbatim")
-      (pasteboard-paste-raw clipboard-raw))
+      (pasteboard-paste-verbatim clipboard-raw))
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
@@ -599,7 +599,7 @@ ARG zero or negative       → force replacement."
         (if use-no-spaces
             (progn
               (setq choice "paste-raw")
-              (pasteboard-paste-raw clipboard-raw))
+              (pasteboard-paste-verbatim clipboard-raw))
           (setq choice "paste-clean")
           (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
     (when choice
@@ -633,9 +633,9 @@ ARG zero or negative       → force replacement."
     (pasteboard-paste insert-text)))
 #+END_SRC
 
-*** pasteboard-paste-raw
+*** pasteboard-paste-verbatim
 #+BEGIN_SRC emacs-lisp
-(defun pasteboard-paste-raw (&optional text)
+(defun pasteboard-paste-verbatim (&optional text)
   "Paste verbatim text at point, bypassing smart cleanup."
   (interactive)
   (let* ((start (point))
@@ -645,6 +645,8 @@ ARG zero or negative       → force replacement."
       (atomic-change-group
         (delete-region start end)
         (insert ins-text)))))
+
+(defalias 'pasteboard-paste-raw #'pasteboard-paste-verbatim)
 #+END_SRC
 
 *** pasteboard paste and adjust heading levels
@@ -902,7 +904,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
   (interactive)
   (let ((search-term
          (with-temp-buffer
-           (pasteboard-paste-raw)
+          (pasteboard-paste-verbatim)
            (buffer-string))))
     (wrapped-search-forward search-term)))
 

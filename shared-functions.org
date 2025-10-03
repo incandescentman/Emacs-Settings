@@ -2585,7 +2585,7 @@ AdrianKubala:
     '(("W" kill-new "save to kill ring")
      ("I" insert "insert in buffer")))
 (define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
-(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-raw)
+(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-verbatim)
 (setq ivy-height 25)
 (setq ivy-display-style 'fancy)
 

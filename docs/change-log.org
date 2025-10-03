@@ -4,6 +4,25 @@
 
 * 2025-10-03: Fixed region deletion bug in my/delete-backward-and-capitalize
 
+* 2025-10-06: Renamed raw paste helper to pasteboard-paste-verbatim
+
+** Context
+The clipboard helpers used `pasteboard-copy-verbatim` for copying but `pasteboard-paste-raw` for the matching paste, which made the pair harder to discover and remember.
+
+** Changes
+- Renamed `pasteboard-paste-raw` → `pasteboard-paste-verbatim` and added a compatibility alias so existing configs keep working.
+- Updated keymaps (`keys.el`, `gnu-emacs-startup.org`, `shared-functions.org`) and docs to reference the new name.
+- Documented the alias in the pasteboard architecture guide and instructions so the on-ramp stays accurate.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `keys.el`
+- `gnu-emacs-startup.org`
+- `shared-functions.org`
+- `docs/pasteboard-architecture.org`
+- `docs/org-element-cache-fix.org`
+- `docs/instructions.org`
+
 ** Problem
 When selecting all text in a buffer (or any region) and calling `my/delete-backward-and-capitalize`, the function would fail to delete the entire highlighted text.
 

@@ -2,6 +2,23 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Sentence Boundary Probes Can Roll Back Atomic Changes
+  Date: 2025-10-06
+
+** The Bug
+`my/delete-backward-and-capitalize` appeared to do nothing when run on a selected region—especially `mark-whole-buffer` followed by the command.
+
+** The Truth
+Inside the command, `my/beginning-of-sentence-p` calls `forward-sentence` to detect sentence starts. When the region spans the whole buffer, the delete happens first, leaving an empty buffer. `forward-sentence` then signals `end-of-buffer`, and because we are inside an `atomic-change-group`, Emacs rolls back the entire transaction, silently restoring the buffer.
+
+** The Fix
+Wrap the sentence probe in `ignore-errors` and guard against a nil return so we bail out gracefully instead of throwing.
+
+** Lessons Learned / Prevention Checklist
+- Treat navigation helpers invoked inside `atomic-change-group` or `combine-after-change-calls` as potential rollback triggers; guard them against `error`.
+- When a command "does nothing," rerun with `toggle-debug-on-error`—silent rollbacks usually come from trapped errors.
+- Add fixtures that cover empty-buffer or whole-buffer deletions whenever a helper mixes editing and sentence/paragraph navigation.
+
 * Region Boundary Invalidation: Capture After Modification Check
   Date: 2025-10-03
 

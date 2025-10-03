@@ -315,7 +315,7 @@
     ))
 
 (defconst my/minibuffer-bindings
-  '(("s-v"           . pasteboard-paste-raw)
+  '(("s-v"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut)
     ("s-c"           . copy-minibuffer-contents)
     ("s-a"           . copy-minibuffer-contents)))
@@ -366,7 +366,7 @@
   (define-key text-mode-map (kbd "s-v") #'pasteboard-paste-clean))
 
 (with-eval-after-load 'emacs-lisp-mode
-  (define-key emacs-lisp-mode-map (kbd "s-v") #'pasteboard-paste-raw)
+  (define-key emacs-lisp-mode-map (kbd "s-v") #'pasteboard-paste-verbatim)
   (define-key emacs-lisp-mode-map (kbd "C-c e") #'eval-buffer)
   (define-key emacs-lisp-mode-map (kbd "M-K") #'kill-sexp))
 

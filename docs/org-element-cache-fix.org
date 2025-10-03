@@ -19,7 +19,7 @@
   - `smart-space` and `my/delete-backward-and-capitalize` batch their edits via `combine-after-change-calls` and `atomic-change-group`, preventing piecemeal cache updates.
 - `pasteboard-copy-and-paste-functions.org`
   - Added helper utilities (`pasteboard--clipboard-string`, `pasteboard--clean-string`, `pasteboard--demote-headings-in-string`, `convert-markdown-links-to-org-mode`).
-  - `pasteboard-paste-adaptive`, `pasteboard-paste-clean`, and `pasteboard-paste-raw` pre-process clipboard text in temp buffers before inserting it once.
+- `pasteboard-paste-adaptive`, `pasteboard-paste-clean`, and `pasteboard-paste-verbatim` pre-process clipboard text in temp buffers before inserting it once.
 - `shared-functions.org`
   - Added a `focus-in-hook` handler that runs `org-element-cache-reset 'force` for Dropbox-backed org-roam buffers after external syncs.
 

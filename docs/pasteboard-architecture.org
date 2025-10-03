@@ -3,7 +3,8 @@
 #+DESCRIPTION: Deep dive into the macOS pasteboard helpers that back clean pasting.
 
 * Overview
-- Entry points: `pasteboard-paste`, `pasteboard-paste-clean`, `pasteboard-paste-raw`, and `pasteboard-paste-adjusted-subtrees`.
+- Copy entry points: `pasteboard-copy-adaptive`, `pasteboard-copy-verbatim`, and `pasteboard-copy-and-replace-em-dashes-in-clipboard` (default text-mode cleaner).
+- Paste entry points: `pasteboard-paste`, `pasteboard-paste-clean`, `pasteboard-paste-verbatim` (`pasteboard-paste-raw` alias), and `pasteboard-paste-adjusted-subtrees`.
 - Goal: Move text from macOS apps into Org buffers while normalizing typography, Markdown, and Org semantics.
 
 * Evolution History

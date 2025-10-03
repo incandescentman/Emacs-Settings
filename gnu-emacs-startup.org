@@ -556,7 +556,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key org-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
 (define-key text-mode-map (kbd "s-v") 'pasteboard-paste-clean)
-(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-raw)
+(define-key emacs-lisp-mode-map (kbd "s-v") 'pasteboard-paste-verbatim)
 
 (define-key key-minor-mode-map (kbd "s-h") 'replace-string)
 
@@ -593,7 +593,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-E") 'new-email-from-subtree-no-signature)
 
 ;; and make it work in the minibuffer too
-(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-raw)
+(define-key minibuffer-local-map (kbd "s-v") 'pasteboard-paste-verbatim)
 (define-key minibuffer-local-map (kbd "s-x") 'pasteboard-cut)
 (define-key minibuffer-local-map (kbd "s-c") 'copy-minibuffer-contents)
 (define-key minibuffer-local-map (kbd "s-a") 'copy-minibuffer-contents)
@@ -999,10 +999,14 @@ Make ~kill-sentence~ work in a more intuitive way:
     (backward-char)))
 
 (defun my/beginning-of-sentence-p ()
-  "Return  t if point is at the beginning of a sentence."
-  (let ((start (point))
-        (beg (save-excursion (forward-sentence) (forward-sentence -1))))
-    (eq start beg)))
+  "Return t if point is at the beginning of a sentence."
+  (let* ((start (point))
+         (beg (save-excursion
+                (ignore-errors
+                  (forward-sentence)
+                  (forward-sentence -1)
+                  (point)))))
+    (and beg (eq start beg))))
 
 (defun my/kill-sentence-dwim ()
   "Kill the current sentence up to and possibly including the punctuation.
@@ -1473,7 +1477,7 @@ The last line sets the path to where saveplace stores your position data. Change
 (defun replace-inner ()
   (interactive)
 (change-inner)
-  (pasteboard-paste-raw)
+  (pasteboard-paste-verbatim)
   )
 #+END_SRC
 
