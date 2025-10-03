@@ -1,6 +1,34 @@
-#+TITLE: Change Log
+#+TITLE: Work Log
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
+
+* 2025-10-03: Fixed region deletion bug in my/delete-backward-and-capitalize
+
+** Problem
+When selecting all text in a buffer (or any region) and calling `my/delete-backward-and-capitalize`, the function would fail to delete the entire highlighted text.
+
+** Root Cause
+During the 2025-10-02 cache stabilization refactor, the order of operations in `my/delete-backward-and-capitalize` was changed. The function would:
+1. Check if at an org heading (`at-heading`)
+2. Capture region boundaries (`region-beg`, `region-end`)
+3. Execute heading cleanup logic (`kill-line 0`, `insert " "`)
+4. Try to delete the region using now-invalid boundaries
+
+The heading cleanup at step 3 would modify the buffer, invalidating the region boundaries captured in step 2.
+
+** Solution
+Modified the `let*` binding to check `has-region` first, then only set `at-heading` to true when there is no active region:
+
+#+BEGIN_SRC emacs-lisp
+(let* ((has-region (use-region-p))
+       (at-heading (and (not has-region) (looking-back-safe "^[*]+ ")))
+       ...)
+#+END_SRC
+
+This ensures the heading cleanup logic never runs when a region is active, preventing buffer modification before region deletion.
+
+** Files Modified
+- `spacecraft-mode.org:1027-1028` - Reordered `let*` bindings to prevent heading logic from invalidating region boundaries
 
 * 2025-01-27: Fixed org-inline-tags font-lock highlighting
 

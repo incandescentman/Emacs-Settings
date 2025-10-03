@@ -2,6 +2,46 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Region Boundary Invalidation: Capture After Modification Check
+  Date: 2025-10-03
+
+** The Bug
+When selecting all text in a buffer and calling `my/delete-backward-and-capitalize`, the function would fail to delete the highlighted region correctly.
+
+** The Truth
+During cache stabilization refactoring, region boundaries were captured in a `let*` binding BEFORE checking if buffer modifications (like heading cleanup) would run. The heading cleanup (`kill-line 0`) invalidated the captured positions before they were used for deletion.
+
+** Why This Happened
+The refactor moved from a messy but working version (where heading check was at the top, outside main logic) to a cleaner `let*` binding structure. The developer ordered the bindings logically but didn't account for the critical timing: positions must be captured AFTER determining whether intervening modifications will occur, or modifications must be prevented when positions are needed.
+
+** The Fix
+Changed from:
+#+BEGIN_SRC emacs-lisp
+(let* ((at-heading (looking-back-safe "^[*]+ "))
+       (has-region (use-region-p))
+       (region-beg (when has-region (region-beginning)))
+       (region-end (when has-region (region-end)))
+       ...)
+#+END_SRC
+
+To:
+#+BEGIN_SRC emacs-lisp
+(let* ((has-region (use-region-p))
+       (at-heading (and (not has-region) (looking-back-safe "^[*]+ ")))
+       (region-beg (when has-region (region-beginning)))
+       (region-end (when has-region (region-end)))
+       ...)
+#+END_SRC
+
+Now `at-heading` is only true when there's no region, preventing buffer modifications before region deletion.
+
+** Lessons Learned / Prevention Checklist
+- When refactoring for cleanliness, watch for position captures that depend on buffer state
+- In `let*` bindings that capture positions: either (1) capture AFTER all checks that might modify buffer, or (2) guard modifications to prevent them when positions are needed
+- Buffer positions are invalidated by ANY text modification between capture and use - even "harmless" cleanup
+- Test region-based operations during refactoring, especially when reordering logic
+- The same pattern could affect other functions: check for `(region-beginning)` or `(region-end)` captured before buffer modifications
+
 * Pasteboard Emoji Split: Save The Joiners
   Date: 2025-09-24
 

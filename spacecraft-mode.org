@@ -1024,8 +1024,8 @@ No space. Does that make sense? Thanks!
 (defun my/delete-backward-and-capitalize ()
   "Delete backward, clean whitespace, and capitalise intelligently as one edit."
   (interactive)
-  (let* ((at-heading (looking-back-safe "^[*]+ "))
-         (has-region (use-region-p))
+  (let* ((has-region (use-region-p))
+         (at-heading (and (not has-region) (looking-back-safe "^[*]+ ")))
          (region-beg (when has-region (region-beginning)))
          (region-end (when has-region (region-end)))
          (capitalize (if has-region t capitalize-after-deleting-single-char)))
