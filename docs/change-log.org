@@ -13,6 +13,7 @@ Running `emacs --batch -L . --load gnu-emacs-startup.el` tripped over mode maps 
 - Wrapped the Evil, Help, Flyspell, and Org keybinding adjustments in `with-eval-after-load` guards and required the corresponding libraries in the startup file so batch loads no longer abort.
 - Added a lightweight `ignore-errors` guard around the `] cr` unbinding to keep non-prefix keys from erroring out in minimal sessions.
 - Consolidated the package archives, global defaults, appearance hooks, and minor-mode setup into a new `Environment Setup` section at the top of `shared-functions.org` to make the bootstrap flow easier to skim.
+- Folded the long-running `Org-Specific Config` block into the primary `Org-mode Configuration` section so the entire org toolchain lives in one place.
 
 ** Files Modified
 - `gnu-emacs-startup.org`
