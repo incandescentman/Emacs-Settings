@@ -150,7 +150,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 *** Startup, UI, and appearance
 
 
-*** Appearance
+*** Fonts and Frames
 #+begin_src emacs-lisp
 ;; A. keep the new, cached version -- recommended
 (defun jay/adjust-font-size (&optional frame)
@@ -229,8 +229,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 (add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
 #+end_src
 
-* Appearance and UI
-** Fonts and Frames
 * Custom Functions
 
 * Intro / About:ARCHIVE:
@@ -248,10 +246,10 @@ I should probably eventually break these out of custom-set-variables and organiz
 - [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
 - [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
 
-* Org-Specific Config
-** Basic org settings
-** org setup
-** Some favorite ~org~ settings:
+** Additional Org Settings
+*** Basic org settings
+*** org setup
+*** Some favorite ~org~ settings:
 #+BEGIN_SRC emacs-lisp
   ; (setq org-use-property-inheritance t)
     (setq org-fontify-quote-and-verse-blocks t)
@@ -268,10 +266,10 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 #+END_SRC
 
-** org capture
-** org agenda
+*** org capture
+*** org agenda
 
-** org-export
+*** org-export
 #+BEGIN_SRC emacs-lisp
 (setq org-export-with-smart-quotes t)
 (setq org-export-exclude-tags (quote ("noexport" "extra")))
@@ -367,7 +365,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 
 
-*** org-html-export-to-html-and-open
+**** org-html-export-to-html-and-open
 I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
 
  (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
@@ -382,7 +380,7 @@ The post-processing step is handed the path to your new file; you could use some
     (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
 #+END_SRC
 
-*** Change section numbering depending on what export format I use
+**** Change section numbering depending on what export format I use
 Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
 
 Note: disable this when trying to export to org-html-themes!
@@ -430,7 +428,7 @@ Note: disable this when trying to export to org-html-themes!
 
 #+end_src
 
-*** export with drawers
+**** export with drawers
 #+BEGIN_SRC emacs-lisp
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
@@ -440,7 +438,7 @@ Note: disable this when trying to export to org-html-themes!
 
 #+END_SRC
 
-*** Omit headlines tagged with :ignore: --- but do still export the text in that section
+**** Omit headlines tagged with :ignore: --- but do still export the text in that section
 This is so I can do structure headlines, for myself, that aren't part of the actual article text.
 
 Pretty cool actually. Leaving it in.
@@ -453,8 +451,8 @@ Pretty cool actually. Leaving it in.
 
 Works!
 
-** Flyspell skip source blocks
-** Archiving / hooking
+*** Flyspell skip source blocks
+*** Archiving / hooking
 
 * Writing Environment
 ** Spellcheck / flyspell
