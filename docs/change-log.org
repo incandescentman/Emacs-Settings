@@ -4,6 +4,21 @@
 
 * 2025-10-03: Fixed region deletion bug in my/delete-backward-and-capitalize
 
+* 2025-10-06: Harden gnu-emacs batch startup and begin shared-functions reorg
+
+** Context
+Running `emacs --batch -L . --load gnu-emacs-startup.el` tripped over mode maps that are only defined once Spacemacs finishes loading. At the same time, the top of `shared-functions.org` had grown organically, so related environment tweaks were scattered between headings.
+
+** Changes
+- Wrapped the Evil, Help, Flyspell, and Org keybinding adjustments in `with-eval-after-load` guards and required the corresponding libraries in the startup file so batch loads no longer abort.
+- Added a lightweight `ignore-errors` guard around the `] cr` unbinding to keep non-prefix keys from erroring out in minimal sessions.
+- Consolidated the package archives, global defaults, appearance hooks, and minor-mode setup into a new `Environment Setup` section at the top of `shared-functions.org` to make the bootstrap flow easier to skim.
+
+** Files Modified
+- `gnu-emacs-startup.org`
+- `gnu-emacs-startup.el`
+- `shared-functions.org`
+
 * 2025-10-06: Renamed raw paste helper to pasteboard-paste-verbatim
 
 ** Context
