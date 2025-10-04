@@ -2,6 +2,22 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-03: Fixed smart-return link following by removing ARCHIVE tag
+
+** Problem
+Pressing RET on org links stopped following them after the 2025-10-02 cache stabilization commit.
+
+** Root Cause
+The `(setq org-return-follows-link t)` setting was located under a heading tagged with `:ARCHIVE:` in `shared-functions.org`. Org-babel skips archived sections during tangling, so this setting never made it into the generated `shared-functions.el` file.
+
+** Solution
+- Removed `:ARCHIVE:` tag from the "Intro / About" heading (line 234 of `shared-functions.org`)
+- Fixed malformed comment syntax in `smart-return.el` (line 53) where closing parenthesis was missing
+
+** Files Modified
+- `shared-functions.org:234` - Removed `:ARCHIVE:` tag
+- `smart-return.el:53` - Fixed comment syntax
+
 * 2025-10-03: Fixed region deletion bug in my/delete-backward-and-capitalize
 
 * 2025-10-06: Harden gnu-emacs batch startup and begin shared-functions reorg

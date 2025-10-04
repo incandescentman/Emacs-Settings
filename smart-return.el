@@ -50,7 +50,8 @@
 ;;
 ;; 3. LINK HANDLING
 ;;    ----------------
-;;    Condition: (org-link-at-point-p) AND (org-return-follows-link;;      - Determines if the point is on an Org-mode link and if link
+;;    Condition: (org-link-at-point-p) AND (org-return-follows-link)
+;;      - Determines if the point is on an Org-mode link and if link
 ;;        following is enabled.
 ;;
 ;;    Action:

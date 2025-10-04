@@ -231,7 +231,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 * Custom Functions
 
-* Intro / About:ARCHIVE:
+* Intro / About
 #+OPTIONS: f:t
 
 #+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
