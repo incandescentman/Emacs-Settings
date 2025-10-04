@@ -9589,24 +9589,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
               :around (lambda (orig &rest args)
                         (ignore-errors (apply orig args)))))
 
-;; Teach older Emacs builds about newer `declare` keywords used by dependencies.
-(defun jay/byte-run--set-important-return-value (fn _args value)
-  (list 'function-put (list 'quote fn)
-        ''important-return-value (list 'quote value)))
-
-(with-eval-after-load 'byte-run
-  (let ((entry (list 'important-return-value #'jay/byte-run--set-important-return-value)))
-    (unless (assq 'important-return-value defun-declarations-alist)
-      (push entry defun-declarations-alist))
-    (unless (assq 'important-return-value macro-declarations-alist)
-      (push entry macro-declarations-alist))))
-
-;; Silence noisy "use cl-incf instead" warnings triggered by third party packages.
-(with-eval-after-load 'cl-macs
-  (when (get 'incf 'byte-obsolete-info)
-    (put 'incf 'byte-obsolete-info nil))
-  (when (get 'decf 'byte-obsolete-info)
-    (put 'decf 'byte-obsolete-info nil)))
 #+end_src
 
 * Astro
