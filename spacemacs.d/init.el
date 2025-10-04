@@ -824,6 +824,57 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; Silence warnings during startup
   (setq warning-minimum-level :error)
 
+  ;; Teach the byte-compiler about newer declare keywords and hush obsolete CL aliases
+  (load "byte-run" nil t)
+  (load "macroexp" nil t)
+  (require 'cl-macs)
+
+  (defun jay/byte-run--set-important-return-value (fn _args value)
+    (list 'function-put (list 'quote fn)
+          ''important-return-value (list 'quote value)))
+
+  (defun jay/register-important-return-value ()
+    (dolist (table '(defun-declarations-alist macro-declarations-alist))
+      (when (boundp table)
+        (let* ((alist (symbol-value table))
+               (entry (list 'important-return-value
+                            #'jay/byte-run--set-important-return-value)))
+          (set table (cons entry (assq-delete-all 'important-return-value alist)))))))
+
+  (defun jay/clear-obsolete-cl-warnings ()
+    (dolist (sym '(incf decf loop case function* destructuring-bind))
+      (put sym 'byte-obsolete-info nil)))
+
+  (jay/register-important-return-value)
+  (jay/clear-obsolete-cl-warnings)
+
+  (with-eval-after-load 'byte-run
+    (jay/register-important-return-value))
+  (with-eval-after-load 'cl-lib
+    (jay/clear-obsolete-cl-warnings))
+  (with-eval-after-load 'cl-macs
+    (jay/clear-obsolete-cl-warnings))
+  (with-eval-after-load 'cl
+    (jay/clear-obsolete-cl-warnings))
+
+  (defun jay/set-face-attribute-unspecified (orig face frame &rest args)
+    (let ((plist args)
+          (pairs '()))
+      (while plist
+        (let ((prop (pop plist))
+              (val (pop plist)))
+          (when (and (memq prop '(:foreground :background))
+                     (or (null val)
+                         (and (stringp val)
+                              (string-match-p "^unspecified-" val))))
+            (setq val 'unspecified))
+          (push (cons prop val) pairs)))
+      (apply orig face frame
+             (cl-loop for (prop . val) in (nreverse pairs)
+                      append (list prop val)))))
+
+  (advice-add 'set-face-attribute :around #'jay/set-face-attribute-unspecified)
+
 
   ;; dotspacemacs/user-init  (or early in init.el)
   (setq package-quickstart nil            ; Emacs ≥27: load autoload cache
@@ -872,6 +923,16 @@ before packages are loaded."
         org-agenda-inhibit-startup t
         org-startup-folded 'showeverything
         org-startup-indented nil)
+
+  (autoload 'shift-select-mode "delsel" nil t)
+  (shift-select-mode 1)
+  (require 'org)
+  (setq org-support-shift-select 'always)
+  (defun jay/org-enable-shift-select ()
+    (setq-local org-support-shift-select 'always)
+    (with-temp-file "/tmp/org-shift.log" (insert (format "%S" org-support-shift-select))))
+  (add-hook 'org-mode-hook #'jay/org-enable-shift-select)
+  (message "[user-config] hook now %S" org-mode-hook)
 
 ;;; --- I/O & subprocesses ----------------------------------------------------
   ;; LSP: throttle file-watchers and increase pipe buffer
