@@ -924,15 +924,7 @@ before packages are loaded."
         org-startup-folded 'showeverything
         org-startup-indented nil)
 
-  (autoload 'shift-select-mode "delsel" nil t)
-  (shift-select-mode 1)
-  (require 'org)
-  (setq org-support-shift-select 'always)
-  (defun jay/org-enable-shift-select ()
-    (setq-local org-support-shift-select 'always)
-    (with-temp-file "/tmp/org-shift.log" (insert (format "%S" org-support-shift-select))))
-  (add-hook 'org-mode-hook #'jay/org-enable-shift-select)
-  (message "[user-config] hook now %S" org-mode-hook)
+  
 
 ;;; --- I/O & subprocesses ----------------------------------------------------
   ;; LSP: throttle file-watchers and increase pipe buffer

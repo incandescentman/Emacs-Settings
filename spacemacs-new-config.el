@@ -3,6 +3,7 @@
   :defer t)          ; 1️⃣ make sure tangling is available
 
 (with-eval-after-load 'org    ; 2️⃣ define + register the helper
+  (setq org-support-shift-select 'always)
   (defun jd/org-auto-tangle ()
     "Tangle this Org buffer on save when it has #+auto_tangle: t."
     (when (and (derived-mode-p 'org-mode)

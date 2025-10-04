@@ -102,3 +102,20 @@ Teach `normalize-dashes` to detect `|…|` table lines and skip dash rewrites in
 - Add focused fixtures (see `/tmp/md-table-sample.txt`) before changing sanitizers.
 - When a helper handles generic punctuation, audit domain-specific inputs (tables, code fences) separately.
 - Update `/docs` alongside code so the tribal knowledge persists.
+
+* Shift-Selection Regression: Autoloads Can Short-Circuit Startup
+  Date: 2025-10-06
+
+** The Bug
+`org-support-shift-select` unexpectedly reset to `nil`, so using `S-<arrow>` in Org threw the “customize `org-support-shift-select`” error even though the variable was set to `'always` in `shared-functions.org`.
+
+** The Truth
+While trying to silence warnings we autoloaded `shift-select-mode` inside `dotspacemacs/user-config`.  The file `delsel.el` does not define that symbol, so Spacemacs threw “failed to define function shift-select-mode” early in startup.  The failure aborted the rest of `user-config`, preventing our Org customization from ever running and leaving the variable at its default `nil`.
+
+** The Fix
+Remove the bogus autoload, keep the simple `(setq org-support-shift-select 'always)` in `shared-functions.org`, and reinforce it once Org loads (`spacemacs-new-config.el`’s `with-eval-after-load 'org`).  No autoloads, no extra hooks.
+
+** Lessons Learned / Prevention Checklist
+- Don’t autoload symbols blindly—confirm the library actually defines them.
+- When startup fails partway through `dotspacemacs/user-config`, Spacemacs continues with partially applied settings.  Always scan `*Messages*` for early errors after tweaking startup code.
+- Prefer a single, unconditional `setq` for global knobs; layer on `with-eval-after-load` only when a package truly needs it.
