@@ -15,7 +15,7 @@ Running `emacs --batch -L . --load gnu-emacs-startup.el` tripped over mode maps 
 - Consolidated the package archives, global defaults, appearance hooks, and minor-mode setup into a new `Environment Setup` section at the top of `shared-functions.org` to make the bootstrap flow easier to skim.
 - Folded the long-running `Org-Specific Config` block into the primary `Org-mode Configuration` section so the entire org toolchain lives in one place.
 - Registered the `important-return-value` declare keyword and cleared obsolete `incf`/`decf` warnings so dependencies like `undo-fu-session` load without spurious startup noise.
-- Debounced the notch-hiding notifier so it only logs once when the tab bar actually toggles on.
+- Debounced the notch-hiding notifier so it only logs when the tab bar actually toggles.
 
 ** Files Modified
 - `gnu-emacs-startup.org`

@@ -9723,9 +9723,6 @@ Returns t if on built-in Retina display, nil if on external monitor."
 (defvar jay/tab-bar-last-state nil
   "Remember whether the notch-hiding tab bar is currently shown.")
 
-(defvar jay/tab-bar-message-shown nil
-  "Track whether the notch status message already ran this session.")
-
 (defun jay/update-tab-bar-for-display ()
   "Enable the tab bar *only* when the frame is both on the MacBook display
 and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight."
@@ -9737,13 +9734,11 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
          (should-show     (and on-macbook
                                (memq fullscreen-state '(fullboth maximized)))))
     (when (not (eq should-show jay/tab-bar-last-state))
-          (setq jay/tab-bar-last-state should-show)
+      (setq jay/tab-bar-last-state should-show)
       (if should-show
           (progn
             (tab-bar-mode 1)
-            (unless jay/tab-bar-message-shown
-              (message "🍙🚫 Notch hidden 🎩✨")
-              (setq jay/tab-bar-message-shown t)))
+            (message "🍙🚫 Notch hidden 🎩✨"))
         (tab-bar-mode -1)))))
 
 ;; Auto-update functions
