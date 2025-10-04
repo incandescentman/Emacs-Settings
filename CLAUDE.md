@@ -129,6 +129,7 @@ The following documentation files provide detailed information about various asp
 3. Consider migrating to use-package for all package configuration
 4. Review and update deprecated org-mode variables
 5. Set up proper error handling for missing dependencies
+6. Add a tiny batch smoke-test (`emacs --batch --load ~/.emacs.d/init.el --eval "(with-temp-buffer (org-mode) (message \"shift %S\" org-support-shift-select))"`) after tweaking startup; this catches regressions like the `shift-select-mode` autoload failure before they land.
 
 ## Note on File Size
 - `shared-functions.org`: ~316KB (9983 lines) 
