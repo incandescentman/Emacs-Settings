@@ -824,52 +824,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; Silence warnings during startup
   (setq warning-minimum-level :error)
 
-  ;; Teach the byte-compiler about newer declare keywords and hush obsolete CL aliases
-  (load "byte-run" nil t)
-  (load "macroexp" nil t)
-  (require 'cl-macs)
-
-  (defun jay/byte-run--set-important-return-value (fn _args value)
-    (list 'function-put (list 'quote fn)
-          ''important-return-value (list 'quote value)))
-
-  (defun jay/register-important-return-value ()
-    (dolist (table '(defun-declarations-alist macro-declarations-alist))
-      (when (boundp table)
-        (let* ((alist (symbol-value table))
-               (entry (list 'important-return-value #'jay/byte-run--set-important-return-value)))
-          (set table (cons entry (assq-delete-all 'important-return-value alist)))))))
-
-  (defun jay/clear-obsolete-cl-warnings ()
-    (dolist (sym '(incf decf loop case function* destructuring-bind))
-      (put sym 'byte-obsolete-info nil)))
-
-  (jay/register-important-return-value)
-  (jay/clear-obsolete-cl-warnings)
-
-  (with-eval-after-load 'byte-run
-    (jay/register-important-return-value))
-  (with-eval-after-load 'cl-lib
-    (jay/clear-obsolete-cl-warnings))
-  (with-eval-after-load 'cl-macs
-    (jay/clear-obsolete-cl-warnings))
-  (with-eval-after-load 'cl
-    (jay/clear-obsolete-cl-warnings))
-
-  (defun jay/set-face-attribute-unspecified (orig face frame &rest args)
-    (let ((plist args)
-          (new-args '()))
-      (while plist
-        (let ((prop (pop plist))
-              (val (pop plist)))
-          (when (and (eq prop :foreground) (null val))
-            (setq val 'unspecified))
-          (push val new-args)
-          (push prop new-args)))
-      (apply orig face frame (nreverse new-args))))
-
-  (advice-add 'set-face-attribute :around #'jay/set-face-attribute-unspecified)
-
 
   ;; dotspacemacs/user-init  (or early in init.el)
   (setq package-quickstart nil            ; Emacs ≥27: load autoload cache
