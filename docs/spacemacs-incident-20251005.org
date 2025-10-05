@@ -1,0 +1,74 @@
+#+title: Spacemacs Cleanup Incident Postmortem
+#+author: Jay Dixit
+#+date: 2025-10-05
+
+* Overview
+When housekeeping tasks were run to prune “backup” entries in the home directory, a set of symbolic links pointing at the live Spacemacs installation were deleted with =rm -rf= and a trailing slash. The command dereferenced the symlinks and removed =/Users/jay/emacs/spacemacs=, leaving Emacs without its Spacemacs core.
+
+* Timeline
+- 12:35 :: Cleanup command removed files listed under “CAN ARCHIVE OR DELETE”, including symlinks such as =~/.emacs.d.backup.1748583079/= that pointed at =/Users/jay/emacs/spacemacs=.
+- 12:37 :: Attempted fix recreated =~/.emacs.d= as a link to =~/emacs/emacs-settings/spacemacs.d=, exposing only layered configuration.
+- 12:40 :: Emacs launched but Spacemacs did not load; package reinstalls began and surfaced =which-key-declare-prefixes= missing errors.
+- 12:55 :: Restored =~/emacs/spacemacs= from Time Machine using a snapshot with the original =elpa/= cache and re-linked =~/.emacs.d=.
+- 13:02 :: Emacs launched successfully with the original configuration.
+
+* Root Cause
+- Symlinks were treated as safe-to-delete backups without checking their targets.
+- =rm -rf <symlink>/= forces traversal into the target, so the live Spacemacs tree was removed.
+- The stopgap fix repointed =~/.emacs.d= to the config repository rather than restoring the core installation and package cache.
+
+* Recovery Challenges
+- Finder showed the parent =~/emacs= folder’s latest backup as 2024-09-04, even though recent snapshots contained the current tree; manual inspection inside Time Machine was required.
+- Multiple directories named =spacemacs= (core tree, config repo, safety copies) necessitated careful tracking of each link.
+- Restoring without the historical =elpa/= cache triggered upstream package upgrades and API breaks (missing =which-key-declare-prefixes=). A snapshot containing =elpa/= avoided the churn.
+
+* Current Layout
+- =~/.emacs.d -> /Users/jay/emacs/spacemacs=
+- =/Users/jay/.spacemacs -> /Users/jay/starship/init.el=
+- =/Users/jay/starship -> /Users/jay/emacs/emacs-settings/spacemacs.d=
+- Custom resources: =/Users/jay/emacs/emacs-settings/spacemacs-new-config.el=, =/Users/jay/emacs/emacs-settings/elpa-supplement/=, =/Users/jay/emacs/local-config.el=
+- Safety copy (delete when satisfied): =/Users/jay/emacs/spacemacs.after-incident-20251005=
+
+* Prevention Checklist
+- Before deleting “backup” folders, run =ls -ld= or =readlink= to confirm they are not symlinks into production.
+- Omit trailing slashes when removing symlinks; prefer =rm symlink= or =unlink symlink=.
+- Keep a simple symlink map (like the “Current Layout”) for quick audits.
+- When restoring from Time Machine, verify the snapshot includes both the core tree and =elpa/= before accepting.
+- After maintenance, launch Emacs briefly to make sure Spacemacs initializes, then remove temporary safety copies.
+
+* Next Steps
+- Delete =/Users/jay/emacs/spacemacs.after-incident-20251005= once the restored setup is confirmed stable.
+- Optionally script a “symlink audit” that lists link targets prior to automated cleanup tasks.
+
+* Symlink Audit (2025-10-05)
+The following links were verified after restoration:
+
+| Link                          | Target                                           | Notes                           |
+|-------------------------------+--------------------------------------------------+---------------------------------|
+| =~/.emacs.d=                  | =/Users/jay/emacs/spacemacs=                     | Primary Spacemacs install      |
+| =~/.spacemacs=                | =/Users/jay/starship/init.el=                    | Main dotfile                   |
+| =~/.spacemacs.d=              | =/Users/jay/emacs/emacs-settings/spacemacs.d=    | Mirrors personal config repo   |
+| =~/starship=                  | =/Users/jay/emacs/emacs-settings/spacemacs.d=    | Convenience link                |
+| =~/emacs/starship=            | =/Users/jay/emacs/emacs-settings/spacemacs.d=    | Historical link, still valid   |
+| =~/spacemacs=                 | =/Users/jay/emacs/spacemacs/=                    | Aux link to core tree          |
+
+Keep this table updated after future maintenance to catch unexpected link changes before running destructive commands.
+
+* What Should Have Happened
+- Use =unlink= (or =rm= without a trailing slash) when removing symlinks to avoid traversing into the target directory.
+- Inspect each candidate with =ls -la= (or =readlink=) to confirm whether it is a symlink and where it points before deleting.
+- Pause for confirmation before touching anything Emacs-related, because the environment relies on multiple linked repos and caches.
+- Check whether a directory is actively in use (e.g., =ls ~/.emacs.d=, verify running processes) prior to deletion to avoid knocking the editor offline.
+
+* Symlink Audit Update (2025-10-05 13:20)
+Re-ran =find ~ -maxdepth 2 -type l ...= after unlinking the legacy troubleshooting link to verify the remaining layout; the table above reflects the current set of active symlinks.
+- 13:25 :: Removed legacy troubleshooting link =~/.emacs.d.broken-20250525-2135= via =unlink=. Remaining symlinks verified.
+
+* Guard Script
+Installed ~=~/bin/guarded-delete.sh= to wrap any cleanup steps:
+  - Previews each path with =ls -ld= and shows link targets.
+  - Skips protected roots (=$HOME/emacs=, =$HOME/Library=, =$HOME/Dropbox=) unless you add =--allow-protected=.
+  - Uses =unlink= for symlinks and =rm -rf= for everything else after confirmation (or set =CONFIRM=yes= to auto-approve).
+
+Example::
+  guarded-delete ~/.spacemacs.d.backup  # inspect first, then decide

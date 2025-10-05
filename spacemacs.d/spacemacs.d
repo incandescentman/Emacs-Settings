@@ -1,1 +1,0 @@
-/Users/jay/emacs/emacs-settings/spacemacs.d/
