@@ -116,6 +116,76 @@ While trying to silence warnings we autoloaded `shift-select-mode` inside `dotsp
 Remove the bogus autoload, keep the simple `(setq org-support-shift-select 'always)` in `shared-functions.org`, and reinforce it once Org loads (`spacemacs-new-config.el`’s `with-eval-after-load 'org`).  No autoloads, no extra hooks.
 
 ** Lessons Learned / Prevention Checklist
-- Don’t autoload symbols blindly—confirm the library actually defines them.
+- Don't autoload symbols blindly—confirm the library actually defines them.
 - When startup fails partway through `dotspacemacs/user-config`, Spacemacs continues with partially applied settings.  Always scan `*Messages*` for early errors after tweaking startup code.
 - Prefer a single, unconditional `setq` for global knobs; layer on `with-eval-after-load` only when a package truly needs it.
+
+* Markdown Bold Conversion: Order and Precision Matter
+  Date: 2025-10-05
+
+** The Bug
+When pasting markdown text like `## **Dates:** October 7-9`, the output was incorrectly formatted as `** **Dates:**` or `***Dates:*` instead of the desired `** *Dates:*`.
+
+** The Truth
+The issue had TWO layers:
+
+1. *Order of operations bug*: Originally, `replace-smart-quotes` ran BEFORE `convert-markdown-headings-to-org`:
+   - Input: `## **Dates:**`
+   - `replace-smart-quotes` converted `**` → `*`: `## *Dates:*`
+   - `convert-markdown-headings-to-org` converted `##` → `**`: `** *Dates:*`
+   - But this left the `##` unconverted in some cases
+
+2. *Heading detection bug*: The `**` → `*` replacement logic checked if the LINE started with asterisks, but then skipped ALL `**` on that line:
+   - Input (after heading conversion): `** **Dates:**`
+   - Check: "Does line start with `^\*+\s`?" → Yes (matches `** `)
+   - Action: Skip ALL `**` on the line (even the ones in `**Dates:**`)
+   - Result: `** **Dates:**` (nothing replaced)
+
+** The Fix
+1. *Fixed order*: Run `convert-markdown-headings-to-org` FIRST, before any asterisk processing in `pasteboard--clean-string`
+2. *Fixed heading detection*: Only skip `**` if it's PART OF the heading stars at line start:
+   #+begin_src elisp
+   (let* ((match-pos (match-beginning 0))
+          (line-start (line-beginning-position))
+          (at-line-start (= match-pos line-start)))
+     ;; Only skip if THIS specific ** is at line start AND part of heading
+     (if (and at-line-start (looking-at "^\\*+\\s-"))
+         nil  ; Skip - it's heading stars
+       (replace-match "*" t t)))  ; Replace - it's markdown bold
+   #+end_src
+
+** Lessons Learned / Prevention Checklist
+- When processing mixed markdown/org content, ORDER MATTERS: Convert structural elements (headings) FIRST, then process inline formatting (bold, italic)
+- Always check the SPECIFIC match location, not just the line pattern
+- Test with complex cases like `## **Bold:** text` that combine structural and inline markdown
+- Document cleaner order in architecture docs and enforce it with comments in code
+
+* Emoji in LaTeX Export: Filter at the Right Level
+  Date: 2025-10-05
+
+** The Bug
+Emoji like 📅 🎯 💡 were appearing in LaTeX output, causing compilation errors since standard LaTeX doesn't support emoji.
+
+** The Truth
+The initial fix only added an `org-export-filter-plain-text-functions` filter, but emoji in headings don't pass through the plain-text filter - they're part of the headline structure.
+
+** Why This Took Time
+Assumed all text passes through plain-text filters, not realizing org export has different filter types for different content structures (headlines, links, emphasis, etc.).
+
+** The Fix
+Add the emoji stripping filter to BOTH plain-text and headline filters:
+#+begin_src elisp
+(defun my-org-latex-strip-emoji (text backend info)
+  "Remove emoji from LaTeX export."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string "[🀀-🫿]" "" text)))
+
+(add-to-list 'org-export-filter-plain-text-functions 'my-org-latex-strip-emoji)
+(add-to-list 'org-export-filter-headline-functions 'my-org-latex-strip-emoji)
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Org export has different filter types for different content types (headlines, paragraphs, links, etc.)
+- Check the org-export-filter-* variables to ensure you're filtering at the right level
+- When a filter "doesn't work," verify the content type actually passes through that filter
+- Test with emoji in different locations (body text, headings, lists) to catch all cases

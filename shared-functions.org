@@ -1344,6 +1344,11 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
  (error nil))
 )
 
+(defun pomodoro-stop ()
+  "Stop the current org-pomodoro timer."
+  (interactive)
+  (org-pomodoro-kill))
+
 
 (add-hook 'org-pomodoro-finished-hook #'(lambda ()
 
@@ -1924,7 +1929,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  )
 
 
-(defun jd-org-today-and-book-orgpomodoro ()
+(defun jd-org-today-and-book ()
  "Insert a new heading with today's date and start org-pomodoro timer."
  (interactive)
  (insert "\n** ")
@@ -1933,7 +1938,7 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (insert "*** TODO bookwriting\n")
  (pomodoro-start))
 
-(defun jd-org-today-and-book-pomidor ()
+(defun pomidor-start ()
  "Insert a new heading with today's date and start pomidor timer."
  (interactive)
  (insert "\n** ")
@@ -1941,9 +1946,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (insert "\n")
  (insert "*** TODO bookwriting\n")
  (pomidor))
-
-;; Alias for backward compatibility - using pomidor version for now
-(defalias 'jd-org-today-and-book 'jd-org-today-and-book-pomidor)
 
 
 
