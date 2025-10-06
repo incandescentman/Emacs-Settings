@@ -74,8 +74,9 @@
            (require 'org-roam)            ; autoloaded anyway, but explicit is clear
            (require 'ol)                  ; org-link helpers
            (org-roam-setup)
-           ;; First full scan (runs async) …
-           (org-roam-db-sync))
+           ;; First full scan (runs async) - suppress save-place messages
+           (let ((inhibit-message t))
+             (org-roam-db-sync)))
        (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
   ;; 3) Turn *auto* sync on only after we have been idle for 5 s

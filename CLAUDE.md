@@ -8,7 +8,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 The following documentation files provide detailed information about various aspects of this configuration:
 
 - [`docs/instructions.org`](docs/instructions.org) - Operational instructions for installation, usage, and maintenance
-- [`docs/change-log.org`](docs/change-log.org) - History of changes and updates to the configuration
+- [`docs/work-log.org`](docs/work-log.org) - History of changes and updates to the configuration
 - [`docs/codebase-wisdom.org`](docs/codebase-wisdom.org) - Non-obvious insights and lessons learned from debugging
 - [`docs/design-architecture.org`](docs/design-architecture.org) - Design principles and architectural decisions
 - [`docs/the-emacs-settings-approach.org`](docs/the-emacs-settings-approach.org) - Philosophy and approach of this configuration

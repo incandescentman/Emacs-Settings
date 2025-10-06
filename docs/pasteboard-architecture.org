@@ -12,18 +12,19 @@
 - Added multi-stage cleaners (`replace-smart-quotes`, markdown converters) to support blogging and knowledge-base workflows.
 - 2025-09-24 regression fix: table separator protection via smarter `normalize-dashes`.
 - 2025-09-24 regression fix: emoji joiner preservation inside `replace-weird-spaces`.
+- 2025-10-05 critical fix: markdown bold `**text**` → org bold `*text*` conversion order and heading detection.
 
 * Current Implementation Details
-- `pasteboard-paste-clean` records `(beg . end)` markers, runs the raw paste, then executes cleaners in order:
-  1. `replace-smart-quotes`
-  2. `replace-smart-quotes-regexp`
-  3. `replace-weird-spaces`
-  4. `convert-markdown-blockquotes-to-org`
-  5. `convert-markdown-links-to-org-mode`
-  6. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org`, `convert-markdown-headings-to-org`
-  7. Final caret moves to end marker.
+- `pasteboard--clean-string` processes text in this order (ORDER MATTERS):
+  1. `convert-markdown-headings-to-org` - MUST run first before asterisk processing
+  2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, etc.
+  3. `replace-smart-quotes-regexp`
+  4. `replace-weird-spaces`
+  5. `convert-markdown-blockquotes-to-org`
+  6. `convert-markdown-links-to-org-mode`
+  7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
 - `normalize-dashes` (in `shared-functions`) now skips lines that look like Markdown tables.
-- Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` ot remove carriage returns.
+- Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` to remove carriage returns.
 
 * Performance and Reliability Considerations
 - Cleaning runs in-buffer; large pastes pay the cost per regex pass—acceptable for short articles but consider profiling if >5k lines.
@@ -34,3 +35,67 @@
 - Treat each sanitizer as a suspect when formats break; add fixtures before altering their logic.
 - Keep macOS-specific shell invocations isolated so Linux builds can fall back to `xclip` in the future.
 - Update `/docs/instructions.org` whenever key bindings or cleaner order changes to prevent drift.
+
+* Known Tricky Issues and Solutions
+
+** Markdown Bold Conversion (2025-10-05)
+
+*** The Problem
+When pasting markdown text like `## **Dates:** October 7-9`, the output was incorrectly formatted as `** **Dates:**` or `***Dates:*` instead of the desired `** *Dates:*`.
+
+*** Root Cause
+The issue had TWO layers:
+
+1. *Order of operations bug*: Originally, `replace-smart-quotes` ran BEFORE `convert-markdown-headings-to-org`:
+   - Input: `## **Dates:**`
+   - `replace-smart-quotes` converted `**` → `*`: `## *Dates:*`
+   - `convert-markdown-headings-to-org` converted `##` → `**`: `** *Dates:*`
+   - But this left the `##` unconverted in some cases
+
+2. *Heading detection bug*: The `**` → `*` replacement logic checked if the LINE started with asterisks, but then skipped ALL `**` on that line:
+   - Input (after heading conversion): `** **Dates:**`
+   - Check: "Does line start with `^\*+\s`?" → Yes (matches `** `)
+   - Action: Skip ALL `**` on the line (even the ones in `**Dates:**`)
+   - Result: `** **Dates:**` (nothing replaced)
+
+*** The Solution
+1. *Fixed order*: Run `convert-markdown-headings-to-org` FIRST, before any asterisk processing
+2. *Fixed heading detection*: Only skip `**` if it's PART OF the heading stars at line start:
+   #+begin_src elisp
+   (let* ((match-pos (match-beginning 0))
+          (line-start (line-beginning-position))
+          (at-line-start (= match-pos line-start)))
+     ;; Only skip if THIS specific ** is at line start AND part of heading
+     (if (and at-line-start (looking-at "^\\*+\\s-"))
+         nil  ; Skip - it's heading stars
+       (replace-match "*" t t)))  ; Replace - it's markdown bold
+   #+end_src
+
+*** Key Insight
+When processing mixed markdown/org content, ORDER MATTERS:
+1. Convert structural elements (headings) FIRST
+2. Then process inline formatting (bold, italic)
+3. Always check the SPECIFIC match location, not just the line pattern
+
+** Emoji in LaTeX Export (2025-10-05)
+
+*** The Problem
+Emoji like 📅 🎯 💡 were appearing in LaTeX output, causing compilation errors since standard LaTeX doesn't support emoji.
+
+*** Root Cause
+The initial fix only added an `org-export-filter-plain-text-functions` filter, but emoji in headings don't pass through the plain-text filter - they're part of the headline structure.
+
+*** The Solution
+Add the emoji stripping filter to BOTH plain-text and headline filters:
+#+begin_src elisp
+(defun my-org-latex-strip-emoji (text backend info)
+  "Remove emoji from LaTeX export."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string "[🀀-🫿]" "" text)))
+
+(add-to-list 'org-export-filter-plain-text-functions 'my-org-latex-strip-emoji)
+(add-to-list 'org-export-filter-headline-functions 'my-org-latex-strip-emoji)
+#+end_src
+
+*** Key Insight
+Org export has different filter types for different content types. Check the org-export-filter-* variables to ensure you're filtering at the right level.

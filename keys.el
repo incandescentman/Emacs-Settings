@@ -281,7 +281,7 @@
     ("s-k p s"       . pomodoro-start)
     ("C-c C-x p p"   . pomodoro-start)
     ("C-c C-x pi"    . pomodoro-start)
-    ("C-c C-x po"    . pomodoro-stop)
+    ("C-c C-x po"    . pomidor-stop)
 
     ;; =================================================================
     ;; Book Related

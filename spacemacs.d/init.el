@@ -909,6 +909,11 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
+;;; --- Load local packages ---------------------------------------------------
+  ;; Load pomidor (pomodoro timer)
+  (add-to-list 'load-path (expand-file-name "pomidor" user-emacs-directory))
+  (require 'pomidor nil t)
+
 ;;; --- macOS 15.5 deadlock workaround ----------------------------------------
   (when (eq system-type 'darwin)
     (setq process-adaptive-read-buffering nil
@@ -924,7 +929,7 @@ before packages are loaded."
         org-startup-folded 'showeverything
         org-startup-indented nil)
 
-  
+
 
 ;;; --- I/O & subprocesses ----------------------------------------------------
   ;; LSP: throttle file-watchers and increase pipe buffer
@@ -1069,7 +1074,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-astro-known-posts-folders
      '(("blog" :path "~/projects/my-astro-site/src/content/blog")
        ("jaydocs" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-       ("socratic " :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
+       ("socratic" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
        ("astro-roam" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content")
        ("my-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content")
        ("my-mind" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content" :preserve-folder-structure t)

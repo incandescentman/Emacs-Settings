@@ -977,6 +977,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("IMPORTANT" . "#dc8cc3")
      ("CONCLUSION" . "#dc8cc3")
      ("SENT" . "#dc8cc3")
+     ("ANSWER" . "#dc8cc3")
      ("REJECTED" . "Red")
      ("TK" . "Red")
      ("tktk" . "Red")
@@ -1593,7 +1594,7 @@ Defines ~ibuffer-do-replace-string~:
 ;; The below definitely works.
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|width\\|jka\\|123244\\|ediff\\|Org parse\\|EGLOT" (buffer-name buffer))
+  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|width\\|jka\\|123244\\|ediff\\|Org parse\\|EGLOT\\|later" (buffer-name buffer))
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
@@ -1923,25 +1924,26 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  )
 
 
-(defun jd-org-today-and-book ()
- "insert a new heading with today's date"
+(defun jd-org-today-and-book-orgpomodoro ()
+ "Insert a new heading with today's date and start org-pomodoro timer."
  (interactive)
-(insert "\n** ")
+ (insert "\n** ")
  (org-insert-time-stamp (current-time))
-(insert "\n")
-(insert "*** TODO bookwriting\n")
-(pomodoro-start)
-(pomidor)
- )
-
-
-(defun org-book-pomodoro ()
- "Insert a new heading with TODO bookwriting and start a pomodoro timer."
- (interactive)
-
+ (insert "\n")
  (insert "*** TODO bookwriting\n")
-(pomidor)
  (pomodoro-start))
+
+(defun jd-org-today-and-book-pomidor ()
+ "Insert a new heading with today's date and start pomidor timer."
+ (interactive)
+ (insert "\n** ")
+ (org-insert-time-stamp (current-time))
+ (insert "\n")
+ (insert "*** TODO bookwriting\n")
+ (pomidor))
+
+;; Alias for backward compatibility - using pomidor version for now
+(defalias 'jd-org-today-and-book 'jd-org-today-and-book-pomidor)
 
 
 
@@ -5150,11 +5152,11 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
   :ensure nil  ; built-in
   :init
   (setq save-place-file (expand-file-name ".cache/places" user-emacs-directory))
+  ;; Exclude org-roam files from save-place to avoid startup spam
+  (setq save-place-ignore-regexps
+        (list (rx (or "/roam/" "/org-roam/"))))
   :config
-  (save-place-mode -1)
-  ;; Debug: log when saving places
-  (advice-add 'save-place-to-alist :after
-              (lambda () (message "Saved place for %s" (buffer-file-name)))))
+  (save-place-mode -1))
 #+end_src
 
 
@@ -7285,6 +7287,19 @@ c: cook-ideas-over-time\n"))
 
 (add-to-list 'org-export-filter-plain-text-functions
     'my-org-add-class-to-hash-tags)
+
+;; Strip emoji from LaTeX exports
+(defun my-org-latex-strip-emoji (text backend info)
+  "Remove emoji from LaTeX export."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string "[🀀-🫿]" "" text)))
+
+(add-to-list 'org-export-filter-plain-text-functions
+    'my-org-latex-strip-emoji)
+
+;; Also apply to headlines where emoji often appear
+(add-to-list 'org-export-filter-headline-functions
+    'my-org-latex-strip-emoji)
 
 
 
@@ -9633,6 +9648,9 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
              (eglot-managed-p))
     (eglot-format-buffer)))
 (add-hook 'before-save-hook #'my/astro-format-before-save)
+
+;; overwrite mdx files
+(setq revert-without-query '(".*\\.mdx$")) 
 #+end_src
 ------------------------------------------------------------------
 Prerequisites outside Emacs (run in your project or globally):

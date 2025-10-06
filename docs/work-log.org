@@ -2,6 +2,29 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-06: Fixed pomodoro timer loading and created dual timer functions
+
+** Problem
+The `jd-org-today-and-book` function was failing with error "Symbol's function definition is void: pomidor". The function was calling both `(pomodoro-start)` (org-pomodoro) and `(pomidor)`, but the pomidor package wasn't being loaded at startup.
+
+** Solution
+- Added pomidor package loading to `spacemacs.d/init.el:914` in the `dotspacemacs/user-config` function
+- Created two separate versions of the date-and-timer function to test both timer packages:
+  - `jd-org-today-and-book-orgpomodoro` - Uses org-pomodoro timer
+  - `jd-org-today-and-book-pomidor` - Uses pomidor timer
+- Added backward compatibility alias so `jd-org-today-and-book` still works (currently points to pomidor version)
+- Fixed keybinding for stopping pomodoro: Changed `C-c C-x po` from non-existent `pomodoro-stop` to `pomidor-stop`
+
+** Files Modified
+- `spacemacs.d/init.el:912-915` - Added pomidor package loading with require statement
+- `shared-functions.org:1927-1946` - Split single function into two timer variants with alias
+- `keys.el:284` - Updated stop keybinding to use `pomidor-stop`
+
+** Notes
+- User will test both timer variants to decide which one to keep
+- The original functions were calling both timers simultaneously, which was redundant
+- Pomidor provides both `pomidor-stop` and `pomidor-quit` functions for canceling timers
+
 * 2025-10-03: Fixed smart-return link following by removing ARCHIVE tag
 
 ** Problem
