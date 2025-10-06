@@ -124,6 +124,7 @@ This function should only modify configuration layer settings."
                                       fancy-narrow
                                       fasd
                                       flyspell-lazy
+                                      fountain-mode
                                       ;; frame-cmds
                                       fuzzy
                                       gcmh ;; The Garbage Collector Magic Hack

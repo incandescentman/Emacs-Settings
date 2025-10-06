@@ -1947,6 +1947,14 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (insert "*** TODO bookwriting\n")
  (pomidor))
 
+(defun jd-pomodoro-sprint ()
+ "Insert a new heading with today's date and pomodoro sprint subheading, then start timer."
+ (interactive)
+ (insert "\n** ")
+ (org-insert-time-stamp (current-time))
+ (insert "\n")
+ (insert "*** TODO pomodoro sprint\n")
+ (pomodoro-start))
 
 
 (defun jd-clock-in ()

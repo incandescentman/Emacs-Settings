@@ -1369,7 +1369,8 @@ The last line sets the path to where saveplace stores your position data. Change
 
 * fountain
   #+BEGIN_SRC emacs-lisp
-(add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1)))
+(when (require 'orgalist nil 'noerror)
+  (add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1))))
 ;; (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
