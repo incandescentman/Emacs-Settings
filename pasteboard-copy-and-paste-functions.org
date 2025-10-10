@@ -569,7 +569,6 @@ ARG zero or negative       → force replacement."
   (let* ((clipboard-raw (pasteboard--clipboard-string))
          (trimmed (string-trim clipboard-raw))
          (clipboard-text (downcase trimmed))
-         (is-org-roam (is-org-roam-buffer-p))
          choice)
     (cond
      ((and (use-region-p)
@@ -588,15 +587,8 @@ ARG zero or negative       → force replacement."
      ((or (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
-      (let* ((cleaned (pasteboard--clean-string clipboard-raw))
-             (final (if (and is-org-roam (string-match-p "^\\*+ " cleaned))
-                        (progn
-                          (setq choice "clean (org-roam demoted)")
-                          (pasteboard--demote-headings-in-string cleaned))
-                      (progn
-                        (setq choice "clean")
-                        cleaned))))
-        (pasteboard-paste final)))
+      (setq choice "clean")
+      (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
      (t
       (let* ((prev-char (char-before))
              (next-char (char-after))

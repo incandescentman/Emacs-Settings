@@ -13,9 +13,12 @@
 - 2025-09-24 regression fix: table separator protection via smarter `normalize-dashes`.
 - 2025-09-24 regression fix: emoji joiner preservation inside `replace-weird-spaces`.
 - 2025-10-05 critical fix: markdown bold `**text**` → org bold `*text*` conversion order and heading detection.
+- 2025-10-10 critical fix: `pasteboard--demote-headings-in-string` regex pattern fixed to only match actual headings (with space after stars), not bold text at line start.
 
 * Current Implementation Details
-- `pasteboard--clean-string` processes text in this order (ORDER MATTERS):
+
+** Text Cleaning Pipeline
+`pasteboard--clean-string` processes text in this order (ORDER MATTERS):
   1. `convert-markdown-headings-to-org` - MUST run first before asterisk processing
   2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, etc.
   3. `replace-smart-quotes-regexp`
@@ -23,8 +26,83 @@
   5. `convert-markdown-blockquotes-to-org`
   6. `convert-markdown-links-to-org-mode`
   7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
+
+** Adaptive Paste Decision Tree
+`pasteboard-paste-adaptive` chooses paste behavior based on context (line 566-613):
+
+*** 1. URL + Active Region → Bracket Link
+- If clipboard contains URL (`https://` or `www.`) AND region is active
+- Creates org bracket link: `[[url][selected text]]`
+- Most specific check, evaluated first
+
+*** 2. Code Modes → Verbatim
+Paste without cleaning in:
+- Shell mode (`sh-mode`)
+- Emacs Lisp mode (`emacs-lisp-mode`)
+- Markdown mode (`markdown-mode`, `gfm-mode`)
+- Web mode (`web-mode`)
+
+*** 3. Text Modes → Clean + Optional Demotion
+In org-mode (without `org-config-files-local-mode`) or `text-mode`:
+- Apply `pasteboard--clean-string` transformations
+- If in org-roam buffer AND text starts with heading: also demote headings
+- Otherwise: just cleaned text
+
+*** 4. Heuristic Fallback
+For unmatched modes, inspect characters around point:
+- If prev/next char is punctuation (`:`, `'`, `(`, `|`, `[`, `/`, `\`, `"`, `=`, `<`, `>`, `{`, `}`):
+  - Paste verbatim (assume code/structured context)
+- Otherwise:
+  - Paste cleaned
+
+** Other Implementation Notes
 - `normalize-dashes` (in `shared-functions`) now skips lines that look like Markdown tables.
 - Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` to remove carriage returns.
+
+* Org-Roam Specific Behavior
+
+When `pasteboard-paste-adaptive` detects an org-roam buffer (by checking for `:ID:` property at buffer start), it applies an additional transformation to maintain proper heading hierarchy:
+
+** Detection
+- Function: `is-org-roam-buffer-p()` (line 505 in pasteboard-copy-and-paste-functions.org)
+- Checks if buffer is in `org-mode`
+- Looks for pattern: `^:PROPERTIES:\n:ID: ...\n:END:` at beginning of file
+
+** Demotion Behavior
+When pasting into an org-roam buffer AND the cleaned text contains org headings:
+- All headings are automatically demoted by one level
+- Function: `pasteboard--demote-headings-in-string` (line 556)
+- Pattern: `^\\(\\*+\\) ` (note the required space after asterisks)
+- Transformation: `** Heading` → `*** Heading`
+
+** Purpose
+Org-roam notes typically have a single top-level structure. When pasting external content with headings, automatically demoting them ensures they become sub-headings rather than competing with the note's main structure.
+
+** Example Flow
+#+BEGIN_EXAMPLE
+Clipboard (markdown):
+## Resources
+### Books
+**"How to Take Smart Notes"** by Sönke Ahrens
+
+Regular org-mode paste:
+** Resources
+*** Books
+*"How to Take Smart Notes"* by Sönke Ahrens
+
+Org-roam paste (demoted):
+*** Resources
+**** Books
+*"How to Take Smart Notes"* by Sönke Ahrens
+#+END_EXAMPLE
+
+** Critical Implementation Detail
+The demotion regex MUST include the space after asterisks: `^\\(\\*+\\) `
+
+- ✓ Correct: Only matches actual org headings like `** Heading`
+- ✗ Wrong: `^\\(\\*+\\)` would also match bold text like `*bold*` at line start
+
+This distinction prevents bold text at the beginning of lines from being incorrectly demoted (the 2025-10-10 bug fix).
 
 * Performance and Reliability Considerations
 - Cleaning runs in-buffer; large pastes pay the cost per regex pass—acceptable for short articles but consider profiling if >5k lines.
