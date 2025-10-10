@@ -31,6 +31,42 @@
 - Use markers to avoid mis-calculating the end point when cleaners change text length.
 - Failure cases usually stem from outside dependencies (`pbpaste`, shell pipeline). Keep Terminal permissions granted under System Preferences → Security & Privacy → Accessibility.
 
+* Critical Distinctions: Markdown Bold vs Org Headings
+
+** The Desiderata
+When processing text that could be markdown or org-mode, the system MUST distinguish between:
+- **Markdown bold text**: `**The Future Is Now**` - text surrounded by double asterisks
+- **Org headings**: `** Heading Text` - asterisks followed by SPACE then text
+- **Org bold text**: `*The Future Is Now*` - text surrounded by single asterisks
+
+** Expected Behavior
+Given this markdown input:
+#+BEGIN_EXAMPLE
+**The Future Is Now**
+
+When we think about the future...
+#+END_EXAMPLE
+
+The system MUST:
+1. Convert `**The Future Is Now**` → `*The Future Is Now*` (markdown bold to org bold)
+2. NOT treat it as an org heading (even though it starts with `**`)
+3. NOT demote it when in org-roam buffers
+4. Result in: `*The Future Is Now*` as bold text, not a heading
+
+** Implementation Requirements
+All functions that detect org headings MUST use the pattern `^\\*+ ` (with space) not just `^\\*+`:
+- ✓ Correct: `(re-search-forward "^\\(\\*+\\) " ...)` - only matches actual headings
+- ✗ Wrong: `(re-search-forward "^\\(\\*+\\)" ...)` - incorrectly matches bold text at line start
+
+** Test Cases
+The pasteboard system must handle these correctly:
+| Input (Markdown)           | Output (Org)              | Type           |
+|---------------------------+---------------------------+----------------|
+| `## Heading`              | `** Heading`              | Heading        |
+| `## **Bold Heading**`     | `** *Bold Heading*`       | Heading + Bold |
+| `**Bold at line start**`  | `*Bold at line start*`    | Bold only      |
+| `Regular **bold** text`   | `Regular *bold* text`     | Inline bold    |
+
 * Lessons Learned
 - Treat each sanitizer as a suspect when formats break; add fixtures before altering their logic.
 - Keep macOS-specific shell invocations isolated so Linux builds can fall back to `xclip` in the future.

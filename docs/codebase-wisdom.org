@@ -160,6 +160,33 @@ The issue had TWO layers:
 - Test with complex cases like `## **Bold:** text` that combine structural and inline markdown
 - Document cleaner order in architecture docs and enforce it with comments in code
 
+* Org Heading Regex: Always Require Space After Stars
+  Date: 2025-10-10
+
+** The Bug
+Bold text at the start of lines (`*"text"*`) was being treated as org headings by functions that match `^\\*+`, causing incorrect transformations.
+
+** The Truth
+Org headings ALWAYS have a space after the stars (`** Heading`), but many regex patterns forget this distinction and match ANY line starting with asterisks, including bold/emphasis markers at line start.
+
+** The Fix
+Change patterns from `"^\\(\\*+\\)"` to `"^\\(\\*+\\) "` when matching actual org headings. Include the space in replacements too:
+#+BEGIN_SRC emacs-lisp
+;; Wrong - matches bold text at line start
+(re-search-forward "^\\(\\*+\\)" nil t)
+
+;; Right - only matches org headings
+(re-search-forward "^\\(\\*+\\) " nil t)
+(replace-match (concat new-stars " ") t t)  ; Keep the space
+#+END_SRC
+
+** Lessons Learned / Prevention Checklist
+- Org structural elements (headings) vs inline formatting (bold) have distinct patterns
+- A heading is `^\\*+ ` (stars + space), bold is just `*text*`
+- When processing org text after markdown conversion, remember you're seeing org syntax not markdown
+- Test with bold/italic text at line boundaries - common edge case for pattern bugs
+- Document whether functions expect markdown input or org input
+
 * Emoji in LaTeX Export: Filter at the Right Level
   Date: 2025-10-05
 

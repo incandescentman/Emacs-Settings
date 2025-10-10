@@ -558,9 +558,9 @@ ARG zero or negative       → force replacement."
   (with-temp-buffer
     (insert text)
     (goto-char (point-min))
-    (while (re-search-forward "^\\(\\*+\\)" nil t)
+    (while (re-search-forward "^\\(\\*+\\) " nil t)
       (let ((stars (match-string 1)))
-        (replace-match (concat "*" stars) t t)))
+        (replace-match (concat "*" stars " ") t t)))
     (buffer-string)))
 
 (defun pasteboard-paste-adaptive ()
@@ -653,7 +653,7 @@ ARG zero or negative       → force replacement."
         (delete-region start end)
         (insert ins-text)))))
 
-(defalias 'pasteboard-paste-raw #'pasteboard-paste-verbatim)
+
 #+END_SRC
 
 *** pasteboard paste and adjust heading levels

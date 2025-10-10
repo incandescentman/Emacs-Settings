@@ -2,6 +2,106 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-10: Fixed pasteboard-paste-adaptive demoting bug in org-roam buffers
+
+** Problem Description
+When pasting markdown-formatted text into an org-roam buffer using `pasteboard-paste-adaptive`, bold text at the beginning of lines was being incorrectly "demoted" with extra asterisks, turning `*"How to Take Smart Notes"*` into `**"How to Take Smart Notes"*`.
+
+The issue only occurred in org-roam buffers (detected via ID property), not in regular org buffers.
+
+** Example of the Bug
+
+*** Clipboard content (markdown):
+#+BEGIN_EXAMPLE
+## **The Definitive Book**
+
+**"How to Take Smart Notes" by Sönke Ahrens** is the essential guide...
+#+END_EXAMPLE
+
+*** Expected result after paste (org):
+#+BEGIN_EXAMPLE
+*** *The Definitive Book*
+
+*"How to Take Smart Notes" by Sönke Ahrens* is the essential guide...
+#+END_EXAMPLE
+
+*** Actual buggy result in org-roam:
+#+BEGIN_EXAMPLE
+*** *The Definitive Book*
+
+**"How to Take Smart Notes" by Sönke Ahrens* is the essential guide...
+#+END_EXAMPLE
+
+Note the incorrect double asterisk at the beginning of the second line.
+
+** Root Cause Analysis
+
+The bug was in the `pasteboard--demote-headings-in-string` function which is called when pasting into org-roam buffers to demote headings by one level (so they become sub-headings).
+
+The regex pattern `"^\\(\\*+\\)"` was matching ANY line starting with asterisks, including:
+1. Actual org headings: `** Heading text`
+2. Bold text at line start: `*"How to Take Smart Notes"*`
+
+When the function found `*"How to...` at the beginning of a line, it incorrectly treated it as a level-1 heading and "demoted" it by adding another asterisk, creating `**"How to...`.
+
+** Solution
+
+Changed the regex pattern from `"^\\(\\*+\\)"` to `"^\\(\\*+\\) "` (added space requirement).
+
+This ensures the function only matches actual org headings (stars followed by a space) and ignores bold markers or other asterisk usage at the beginning of lines.
+
+*** Before (buggy):
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "^\\(\\*+\\)" nil t)
+  (let ((stars (match-string 1)))
+    (replace-match (concat "*" stars) t t)))
+#+END_SRC
+
+*** After (fixed):
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "^\\(\\*+\\) " nil t)
+  (let ((stars (match-string 1)))
+    (replace-match (concat "*" stars " ") t t)))
+#+END_SRC
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org:561` - Updated regex pattern and replacement
+- `pasteboard-copy-and-paste-functions.el:498-500` - Manually updated compiled version
+
+** Testing Verification
+
+Tested with the exact clipboard content that was failing:
+- Pasting in regular org buffer: Correctly converts markdown bold `**text**` to org bold `*text*`
+- Pasting in org-roam buffer: Correctly demotes headings while preserving bold formatting
+- Bold text at line start no longer incorrectly demoted
+
+** Key Learnings
+
+1. **Regex precision matters**: When processing org-mode text, always distinguish between structural elements (headings) and inline formatting (bold/emphasis). Org headings require a space after the stars.
+
+2. **Context-aware functions need careful patterns**: The demoting function operates on already-converted org text, so it sees org bold markers (`*text*`), not the original markdown (`**text**`).
+
+3. **Testing edge cases**: Always test with content that has formatting at line boundaries, as these cases often reveal pattern matching bugs.
+
+4. **Order of operations**: The paste flow is:
+   - Convert markdown to org (including `**` → `*`)
+   - THEN demote headings if in org-roam
+   - The bug occurred in step 2, operating on already-converted text
+
+** Related Functions in the Paste Pipeline
+- `pasteboard-paste-adaptive` - Main adaptive paste function
+- `pasteboard--clean-string` - Normalizes and converts markdown to org
+- `convert-markdown-headings-to-org` - Converts `#` to `*`
+- `replace-smart-quotes` - Handles bold conversion via replacement pairs
+- `pasteboard--demote-headings-in-string` - Demotes org headings (where bug was)
+
+** Notes for Future Debugging
+If similar issues occur, check:
+1. What format is the text in at each stage of processing?
+2. Are patterns distinguishing between structural and inline elements?
+3. Test with formatting at line starts/ends
+4. Consider the order of transformations
+
 * 2025-10-06: Pomodoro timer setup and documentation reorganization
 
 ** Session: Pomodoro Timer Fixes and Refinement
