@@ -117,6 +117,19 @@ Identified but not yet removed (awaiting testing):
 - Monitor for any broken functionality
 - Consider removing additional unused packages if first round succeeds
 
+* 2025-10-11: Hardened local configuration dictionary and PATH setup
+
+** Problem Description
+- `my/fix-ispell-contraction` was defined in `local-emacs-config/local-config.el` but never executed, so the custom en_GB dictionary settings were ignored.
+- PATH initialization overwrote the login shell PATH each load, leading to duplicated entries in `exec-path` and dropping toolchain paths.
+
+** Solution
+- Wrapped the dictionary setup in `(with-eval-after-load 'ispell ...)` to call `my/fix-ispell-contraction` and add the en_US entry once `ispell` is available.
+- Rebuilt the PATH logic to merge preferred directories, the login shell PATH, and TeX Live into a de-duplicated list while keeping `exec-path` in sync; now uses `delete-dups` over a copy of `exec-path` to avoid repeated growth.
+
+** Files Modified
+- `local-emacs-config/local-config.el` – dictionary hook and PATH handling improvements
+
 * 2025-10-10: Fixed pasteboard-paste-adaptive demoting bug in org-roam buffers
 
 ** Problem Description
