@@ -2,6 +2,55 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-11: Removed unused packages to improve startup time
+
+** Session: Package Cleanup for Performance
+Task: Identify and remove unused packages to reduce Emacs launch time
+
+** Packages Removed
+
+*** First Round - Definitely Unused (8 packages)
+- `bind-key` - Keybinding helper (redundant with use-package)
+- `bui` - Buffer UI library (unused dependency)
+- `change-inner` - Text object manipulation (unused)
+- `consult-ag` - Duplicate search functionality
+- `rspec-mode` - Ruby testing (not doing Ruby development)
+- `sudo-edit` - Edit files as sudo (unused)
+- `sync-recentf` - Recentf syncing (unused)
+- `visible-mark` - Mark visualization (unused)
+
+*** Second Round - Heavy/Slow Loading (2 packages)
+- `org-ql` (~50-100ms) - Query language with parsing overhead (unused)
+- `quelpa-use-package` (~100-300ms) - Builds packages from source (unused)
+
+** Expected Impact
+- **Total startup time improvement**: ~150-400ms from removing these 10 packages
+- Removed packages that had zero usage references in the codebase
+- Focused on slowest-loading packages first for maximum impact
+
+## Analysis Method
+Created script to search codebase for package usage patterns:
+- Searched for `(require 'package)` and `(use-package package)` patterns
+- Cross-referenced installed packages vs. actual usage
+- Identified heavy/slow-loading packages by known load times
+
+## Additional Candidates for Future Cleanup
+Identified but not yet removed (awaiting testing):
+- `org-contrib` (~100-200ms) - ox-extra is now in org core
+- `counsel`/`counsel-fd`/`counsel-projectile` (~100-180ms total) - Redundant with compleseus/vertico
+- `consult-projectile` (~30-70ms)
+- `with-editor` (~30-60ms) - Magit dependency, but magit is excluded
+- `projectile-ripgrep` (~20-40ms)
+- Various other unused packages with minimal load time impact
+
+** Files Modified
+- `spacemacs.d/init.el:88-200` - Removed 10 packages from `dotspacemacs-additional-packages`
+
+** Next Steps
+- Test Emacs startup and verify no missing package warnings
+- Monitor for any broken functionality
+- Consider removing additional unused packages if first round succeeds
+
 * 2025-10-10: Fixed pasteboard-paste-adaptive demoting bug in org-roam buffers
 
 ** Problem Description

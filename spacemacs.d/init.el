@@ -94,15 +94,11 @@ This function should only modify configuration layer settings."
                                       ox-twbs
                                       mwim
                                       ;; beacon
-                                      bind-key
-                                      bui
-                                      caps-lock
+                                        caps-lock
                                       captain
-                                      change-inner
-                                      ;; company
+                                       ;; company
                                       consult-dir
-                                      consult-ag
-                                      consult-org-roam
+                                       consult-org-roam
                                       ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
@@ -151,8 +147,7 @@ This function should only modify configuration layer settings."
                                       ;; org-fstree
                                       org-mac-link
                                       ;; org-pomodoro
-                                      org-ql
-                                      org-roam
+                                       org-roam
                                       ;; org-roam-ui
                                       ;; org-superstar
                                       ox-clip
@@ -167,29 +162,24 @@ This function should only modify configuration layer settings."
                                       popup
                                       ;; project-explorer
                                       projectile-ripgrep
-                                      quelpa-use-package
-                                      rainbow-mode
+                                       rainbow-mode
                                       ;; re-builder
                                       recentf
                                       ;; regex-tool
                                       rg
                                       ripgrep
-                                      rspec-mode
-                                      s
+                                       s
                                       ;; scratch
                                       ;; scratch-message
                                       ;;  sdcv
                                       ;; simple-httpd
                                       ;; stripe-buffer
-                                      sudo-edit
-                                      sync-recentf
-                                        ; tabbar
+                                          ; tabbar
                                       ;; tiny
                                       titlecase
                                       ts
                                       unfill
-                                      visible-mark
-                                      wc-goal-mode
+                                       wc-goal-mode
                                       wc-mode
                                       ;; web-mode
                                       with-editor
