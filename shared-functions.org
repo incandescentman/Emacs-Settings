@@ -5432,7 +5432,8 @@ To use this function, highlight the region you want to add numbering to and then
 
 * org-roam
 #+begin_src emacs-lisp
-(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
+;; org-roam-config.el is already loaded in spacemacs-new-config.el
+;; (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
  #+end_SRC
 

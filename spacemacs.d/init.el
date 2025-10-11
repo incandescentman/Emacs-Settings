@@ -890,6 +890,15 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
   (setenv "DICTIONARY" "en_US")
 
+  ;; Add dictionary entries for standard aliases to suppress warnings
+  (with-eval-after-load 'ispell
+    (add-to-list 'ispell-dictionary-alist
+                 '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
+    (add-to-list 'ispell-dictionary-alist
+                 '("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8))
+    (add-to-list 'ispell-dictionary-alist
+                 '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+
 
   )
 
