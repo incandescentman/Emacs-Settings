@@ -70,6 +70,18 @@ The following documentation files provide detailed information about various asp
 7. Various feature modules (deferred or immediate)
 8. Local configuration (`local-config.el`)
 
+## Recent Fixes Applied (2025-10-11)
+
+### File Watcher and Dropbox Sync Error Fix
+Fixed critical file-notify errors occurring when editing Dropbox files from iPhone:
+- **Problem**: "(void-function nil)" errors when Dropbox syncs files open in Emacs
+- **Solution**: Comprehensive file watcher suppression in `spacemacs.d/init.el:925-962`
+  - Disabled file notifications for cloud storage (Dropbox/iCloud/OneDrive)
+  - Switched to polling-based auto-revert (2-second intervals)
+  - Added error suppression for file-notify operations
+  - Excluded cloud storage from undo-fu-session tracking
+- **Documentation**: Full details in `docs/work-log.org`
+
 ## Recent Fixes Applied (2025-09-05)
 
 ### Issues Resolved
@@ -140,4 +152,5 @@ The following documentation files provide detailed information about various asp
 
 ---
 *Generated: 2025-09-05*
-*Last fixes: Cleaned up configuration errors and deprecated functions*
+*Updated: 2025-10-11*
+*Last fixes: Fixed file-notify errors with Dropbox sync and cloud storage*

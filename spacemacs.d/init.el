@@ -928,6 +928,39 @@ before packages are loaded."
         lsp-idle-delay 0.5
         read-process-output-max (* 2 1024 1024))
 
+  ;; Disable file notifications for cloud storage to prevent sync errors
+  (setq auto-revert-use-notify nil        ; Don't use file system events
+        auto-revert-avoid-polling nil     ; Use polling instead
+        auto-revert-interval 2)           ; Check every 2 seconds
+
+  ;; Fix file-notify errors with Dropbox and other cloud storage
+  (defun my/disable-file-notify-for-cloud-storage ()
+    "Disable file notifications for files in cloud storage directories."
+    (when (and buffer-file-name
+               (or (string-match-p "Dropbox" buffer-file-name)
+                   (string-match-p "iCloud" buffer-file-name)
+                   (string-match-p "OneDrive" buffer-file-name)
+                   (string-match-p "CloudStorage" buffer-file-name)))
+      (setq-local auto-revert-use-notify nil)
+      (setq-local buffer-stale-function
+                  (lambda (&optional _noconfirm)
+                    (not (verify-visited-file-modtime (current-buffer)))))))
+
+  (add-hook 'find-file-hook #'my/disable-file-notify-for-cloud-storage)
+  (add-hook 'after-revert-hook #'my/disable-file-notify-for-cloud-storage)
+
+  ;; Suppress file-notify errors globally
+  (defadvice file-notify-add-watch (around suppress-file-notify-errors activate)
+    "Suppress errors from file-notify-add-watch."
+    (condition-case nil
+        ad-do-it
+      (error nil)))
+
+  ;; Handle undo-fu-session issues with synced files
+  (with-eval-after-load 'undo-fu-session
+    (setq undo-fu-session-incompatible-files
+          '("\\.gpg$" "/Dropbox/" "/CloudStorage/" "/iCloud/" "\\.org_archive$")))
+
   ;; Kill noisy language-server buffers silently when Emacs exits
   (add-hook 'lsp-after-initialize-hook
             (lambda ()

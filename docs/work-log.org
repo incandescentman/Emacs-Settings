@@ -2,6 +2,72 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-11: Fixed file-notify errors with Dropbox sync
+
+** Problem Description
+When editing files in Dropbox from iPhone, the sync would cause file-notify errors in Emacs:
+- "Undo-Fu-Session discarding: file length mismatch"
+- Debugger errors with "(void-function nil)" from file-notify callbacks
+- org-element parsing interruptions
+
+** Root Cause
+Dropbox performs atomic file replacement during sync (creates temp file, writes, then renames). This confuses Emacs file watchers which have nil callbacks after the file replacement.
+
+** Solution
+Added comprehensive file watcher error suppression in `spacemacs.d/init.el:931-962`:
+
+*** 1. Disabled file notifications globally
+#+BEGIN_SRC emacs-lisp
+(setq auto-revert-use-notify nil        ; Don't use file system events
+      auto-revert-avoid-polling nil     ; Use polling instead
+      auto-revert-interval 2)           ; Check every 2 seconds
+#+END_SRC
+
+*** 2. Created cloud storage detection function
+#+BEGIN_SRC emacs-lisp
+(defun my/disable-file-notify-for-cloud-storage ()
+  "Disable file notifications for files in cloud storage directories."
+  (when (and buffer-file-name
+             (or (string-match-p "Dropbox" buffer-file-name)
+                 (string-match-p "iCloud" buffer-file-name)
+                 (string-match-p "OneDrive" buffer-file-name)
+                 (string-match-p "CloudStorage" buffer-file-name)))
+    (setq-local auto-revert-use-notify nil)
+    (setq-local buffer-stale-function
+                (lambda (&optional _noconfirm)
+                  (not (verify-visited-file-modtime (current-buffer)))))))
+#+END_SRC
+
+*** 3. Added error suppression for file-notify
+#+BEGIN_SRC emacs-lisp
+(defadvice file-notify-add-watch (around suppress-file-notify-errors activate)
+  "Suppress errors from file-notify-add-watch."
+  (condition-case nil
+      ad-do-it
+    (error nil)))
+#+END_SRC
+
+*** 4. Excluded cloud storage from undo-fu-session
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'undo-fu-session
+  (setq undo-fu-session-incompatible-files
+        '("\\.gpg$" "/Dropbox/" "/CloudStorage/" "/iCloud/" "\\.org_archive$")))
+#+END_SRC
+
+** Files Modified
+- `spacemacs.d/init.el:925-962` - Added comprehensive file watcher error suppression
+
+** Related Configuration
+- LSP file watchers already disabled: `lsp-enable-file-watchers nil` (line 927)
+- macOS 15.5 deadlock workaround (lines 908-911)
+- Git polling disabled for macOS (line 938-939)
+- TRAMP SSH fixes for Sonoma/Sequoia (lines 941-943)
+
+** Testing
+- Verified no errors when iPhone edits sync via Dropbox
+- Auto-revert still works via polling (2 second intervals)
+- Cloud storage files automatically detected and handled
+
 * 2025-10-11: Removed unused packages to improve startup time
 
 ** Session: Package Cleanup for Performance
