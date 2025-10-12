@@ -1312,7 +1312,11 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 
 ** globally enable palimpsest-mode
 #+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hook (lambda () (palimpsest-mode 1)))
+;; Ensure palimpsest is loaded before enabling the mode
+(require 'palimpsest nil t)
+(add-hook 'find-file-hook (lambda ()
+                            (when (featurep 'palimpsest)
+                              (palimpsest-mode 1))))
 #+END_SRC
 
 * org-mode other packages
@@ -2712,13 +2716,19 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
 * these seem to need to go at the end
 ** Palimpsest - best ever
 #+BEGIN_SRC emacs-lisp
-;; (use-package palimpsest)
-(add-hook 'after-init-hook
-          (lambda ()
-            (palimpsest-mode 1)
-            (global-hl-todo-mode 1)
-            (projectile-mode  1)))
-(define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)
+;; Load palimpsest package
+(use-package palimpsest
+  :ensure t
+  :config
+  ;; Enable globally after init
+  (add-hook 'after-init-hook
+            (lambda ()
+              (palimpsest-mode 1)
+              (global-hl-todo-mode 1)
+              (projectile-mode  1)))
+  ;; Define org-mode specific keybinding
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)))
 #+END_SRC
 
 C-C C-R to move text to the bottom of the buffer
