@@ -2,6 +2,29 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-13: Hardened adaptive paste for Org headings and folds
+
+** Problem Description
+- Pasting Org subtrees with `pasteboard-paste-adaptive` flattened heading levels because the smart quotes cleaner still collapsed every `**` pair to `*`, even when those asterisks belonged to the line's leading heading stars.
+- The same paste path intermittently raised “Calling `org-fold-core-region` with missing SPEC” after the 2025-10-02 cache refactor, aborting the paste in folded buffers.
+
+** Root Cause
+- The Markdown-era `** → *` rule ran before the text ever hit the real buffer, so headings lost stars inside the temp buffer that feeds the paste helper.
+- `replace-smart-quotes-regexp` called `replace-regexp`, which tries to manage Org folds; invoked non-interactively inside a temp buffer it lacked the required fold spec and signalled the error.
+
+** Solution
+- Added a guard that walks the line’s leading stars and only converts `**` pairs that appear after the heading boundary, keeping heading depth intact while still normalising inline bold.
+- Replaced the `replace-regexp` loop with explicit `re-search-forward`/`replace-match` iterations so the cleaner no longer triggers Org’s fold maintenance during temp-buffer work.
+- Documented both regressions and mitigations in `docs/codebase-wisdom.org` for future reference.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org` / `.el` – heading guard and fold-safe smart quote replacements
+- `docs/codebase-wisdom.org` – added post-mortem entry for the heading flattening and fold interaction
+
+** Expected Results After Restart
+- Pasting Org trees through `pasteboard-paste-adaptive` preserves heading levels while still converting inline bold.
+- No more “missing SPEC” errors when pasting into folded Org buffers.
+
 * 2025-10-11: Fixed ispell warnings and duplicate org-roam loading
 
 ** Problem Description

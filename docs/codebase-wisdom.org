@@ -2,6 +2,35 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org Heading Flattening: Structure vs Formatting
+  Date: 2025-10-13
+
+** The Bug
+Pasting an Org subtree via `pasteboard-paste-adaptive` turned every `**** TODO` entry into `*** TODO`, collapsing the heading hierarchy in-place.
+
+** The Truth
+The cleaning pass ran `replace-smart-quotes`, which still contained the Markdown-era rule “replace every `**` with `*`”. During the “clean” paste path we already had Org syntax, so that blanket replacement ate half of each heading’s star run before the text ever touched the buffer.
+
+** Why This Was Tricky
+- The regression only appeared in Org buffers that took the “clean” branch; Markdown/code buffers went through the verbatim branch and stayed fine.
+- Unit snippets focused on Markdown conversions, so pasting native Org trees wasn’t part of the smoke tests.
+- Watching the final buffer hid the culprit; the destructive change happened inside the temp buffer that feeds `pasteboard-paste`.
+
+** The Fix
+Teach the `** → *` loop to walk the line’s leading stars, record the first non-star position, and only convert `**` pairs that appear *after* that point. Tangled the change so both `.org` and `.el` stay in sync.
+
+** Lessons Learned / Prevention Checklist
+- Distinguish between structure (`^\\*+ ` headings) and inline formatting (`*bold*`) before reusing Markdown cleanup on Org text.
+- When editing temp buffers, add `(message ...)` or batch snippets to observe the intermediate state—otherwise you miss where the hierarchy was flattened.
+- Expand paste fixtures to include “pure Org” inputs with nested headings, inline bold, and emojis; they exercise the same sanitizers as Markdown pastes.
+- Any rule that blindly rewrites punctuation (`**`, `--`, etc.) must document the assumed input syntax and bail out when that assumption no longer holds.
+
+** Follow-up: Org-Fold + `replace-regexp`
+- Symptom: `pasteboard-paste-adaptive` raised “Calling `org-fold-core-region` with missing SPEC” while `replace-smart-quotes-regexp` ran in a temp buffer.
+- Cause: `replace-regexp` triggers Org’s fold maintenance, which expects the interactive search state; our non-interactive call provided no fold spec.
+- Fix: Replaced the `mapcar` call to `replace-regexp` with manual `re-search-forward`/`replace-match` loops so Org never tries to manage folds in the temp buffer.
+- Guardrail: Avoid `replace-regexp` (and other interactive wrappers) inside hidden buffers; prefer explicit loops that stay fold-agnostic.
+
 * Sentence Boundary Probes Can Roll Back Atomic Changes
   Date: 2025-10-06
 
