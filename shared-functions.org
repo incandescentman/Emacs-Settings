@@ -8686,29 +8686,38 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 
 * Emacs info
 #+begin_src emacs-lisp
-(setq Info-directory-list '("/opt/homebrew/share/info"))
-(setq Info-default-directory-list '("/opt/homebrew/share/info"))
+(defvar my-emacs-manual-path
+  "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"
+  "Optional override path for a local Emacs manual.")
+
 (defun my/open-latest-emacs-manual ()
   (interactive)
-  (info "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"))
+  (if (file-exists-p my-emacs-manual-path)
+      (info my-emacs-manual-path)
+    (call-interactively #'info)))
 
 (define-key key-minor-mode-map (kbd "M-h i") 'my/open-latest-emacs-manual)
 
-
 ;; Override the default Emacs manual path in Info
 (with-eval-after-load 'info
-  (let ((my-emacs-manual "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"))
-    ;; Remove any existing "emacs" entry that might be outdated
-    (setq Info-directory-list
-          (delete "/opt/homebrew/share/info" Info-directory-list))
-    ;; Add the directory containing your custom manual
-    (add-to-list 'Info-directory-list
-                 (file-name-directory my-emacs-manual))
-    ;; Override the Emacs manual menu entry
+  ;; Ensure Info knows about its default directories before adding overrides.
+  (setq Info-directory-list
+        (or Info-directory-list
+            (copy-sequence Info-default-directory-list)))
+  (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t)
+  ;; Add the local manual (if present) and provide a fallback if it is missing.
+  (if (file-exists-p my-emacs-manual-path)
+      (progn
+        (add-to-list 'Info-directory-list
+                     (file-name-directory my-emacs-manual-path))
+        (defun info-emacs-manual ()
+          "Open the locally installed Emacs manual."
+          (interactive)
+          (info my-emacs-manual-path)))
     (defun info-emacs-manual ()
-      "Go to the Emacs manual."
+      "Open the default Emacs manual."
       (interactive)
-      (info my-emacs-manual))))
+      (info "emacs"))))
 #+end_src
 
 * A hacky way to not clobber final bullet of buffer in bulleted lists on save

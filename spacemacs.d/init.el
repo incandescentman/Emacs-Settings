@@ -1018,19 +1018,11 @@ before packages are loaded."
         (setq-local abbrev-mode nil)
         (kill-local-variable 'abbrev-mode)))
 
-
-
-  (setq Info-default-directory-list '("/opt/homebrew/share/info"))
-  (setq Info-directory-list '("/opt/homebrew/share/info"))
-
   (with-eval-after-load 'info
-    (setq Info-directory-list '("/opt/homebrew/share/info")))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (setq Info-directory-list '("/opt/homebrew/share/info"))))
-
-  (setq Info-additional-directory-list nil)
+    (setq Info-directory-list
+          (or Info-directory-list
+              (copy-sequence Info-default-directory-list)))
+    (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t))
 
 
   ;; 1. ordinary “safe local variables”
