@@ -8476,6 +8476,9 @@ If invoked again, move to the next instance of the word."
 
 * Diary
 #+BEGIN_SRC emacs-lisp
+;; disable calendar highlighting 
+(setq calendar-mark-holidays-flag nil) 
+
 (setq diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
@@ -9990,19 +9993,8 @@ This updates the running Emacs session; use Customize to persist the change."
 ;; Prevent *Async-native-compile-log* from popping up
 (setq native-comp-async-report-warnings-errors nil)
 
-;; Kill *info* buffer if it exists at startup
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (when (get-buffer "*info*")
-              (kill-buffer "*info*"))))
-
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (when (get-buffer "*info*")
-              (kill-buffer "*info*")))) 
-
 (defvar my-auto-kill-buffers
-  '("*info*" "*Async-native-compile-log*")
+  '("*Async-native-compile-log*")
   "List of buffers to kill after startup.")
 
 (add-hook 'emacs-startup-hook
@@ -10010,8 +10002,6 @@ This updates the running Emacs session; use Customize to persist the change."
             (dolist (buf my-auto-kill-buffers)
               (when (get-buffer buf)
                 (kill-buffer buf))))) 
-
-(advice-add 'info :override (lambda (&rest _) (message "Suppressed *info* at startup"))) 
 
 #+end_src
 
