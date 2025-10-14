@@ -171,6 +171,9 @@ To restore the asterisk-to-dash conversion:
 - Confirmed via CLI `info` that `(emacs)Calendar/Diary` is not a real node; rewired local `info/dir` so both Calendar and Diary entries jump to `(emacs)Diary`.
 - Interactive Emacs still fails for `(Info-find-node "emacs" "Diary")` despite the corrected `dir`; batch smoke test passes, pointing to a remaining config-level conflict to bisect.
 - Keep in mind:
+
+- Culled unused top-level files (`CHANGE-LOG.org`, `astro-ts-mode.el.org`, `info/dir`, various scratch org/markdown docs) and moved a few legacy notes into `archive/` to shrink the repo footprint.
+
   - Whenever you update or move the Emacs source checkout, rerun `make -C doc/emacs info` and adjust any hard-coded `(info "/path/to/emacs.info")` helpers.
   - Retain the batch regression script and local `info/dir` entry as diagnostics in case the direct manual isn’t available; they confirm the manual file stays healthy even when the interactive session misbehaves.
 
