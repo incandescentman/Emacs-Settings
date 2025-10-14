@@ -25,6 +25,8 @@ When you launch the calendar, the window shows the current month centered, with 
 ~p~ - **Custom:** Backward one month
 ~N~ - **Custom:** Forward one year
 ~P~ - **Custom:** Backward one year
+~M-<right>~ (⌥→) - **Custom:** Forward one month
+~M-<left>~  (⌥←) - **Custom:** Backward one month
 ~>~ or ~C-x >~ - Scroll calendar forward (next month)
 ~<~ or ~C-x <~ - Scroll calendar backward (previous month)
 ~C-f~ or ~f~ or ~→~ - Move forward one day
