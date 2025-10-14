@@ -1,0 +1,281 @@
+#+TITLE: Emacs Calendar & Diary Usage Guide
+#+DATE: 2025-10-14
+#+AUTHOR: Claude
+
+* Overview
+This guide covers how to use Emacs Calendar with the custom diary integration configured in Jay's Emacs setup.
+
+When you launch the calendar, the window shows the current month centered, with the previous and next months above/below. Dates with diary entries are highlighted using the ~diary~ face (red in the Leuven Jay theme). Auto-revert relies on polling (file notifications are disabled for cloud storage), so updates appear automatically after a short delay.
+
+* Opening the Calendar
+
+** Commands
+~M-x calendar~ - Open the calendar (Spacemacs: ~SPC a d c~ unless remapped)
+~M-x diary~ - View diary entries
+
+** Exiting
+~q~ - Quit calendar (bury buffer). If you opened a separate diary window, close it normally (~q~ works there too when using fancy diary).
+
+* Basic Navigation
+
+** Moving Around
+~.~ - Go to today's date
+~t~ - **Custom:** Jump to today + open diary entry
+~>~ or ~C-x >~ - Scroll calendar forward (next month)
+~<~ or ~C-x <~ - Scroll calendar backward (previous month)
+~C-f~ or ~f~ or ~→~ - Move forward one day
+~C-b~ or ~b~ or ~←~ - Move backward one day
+~C-n~ or ~n~ or ~↓~ - Move down one week
+~C-p~ or ~p~ or ~↑~ - Move up one week
+~M-}~ - Forward one month
+~M-{~ - Backward one month
+~C-x ]~ - Forward one year
+~C-x [~ - Backward one year
+
+** Jumping to Specific Dates
+~g d~ - Go to specific date (prompts for date)
+~g c~ - Go to ISO calendar date
+~g w~ - Go to week number
+~g C~ - Go to Chinese/regional calendar date (many regional calendars available)
+~o~ - **Custom:** Jump to diary entry for date under cursor
+
+* Diary Integration
+
+** Custom Configuration
+- Diary file: ~/Users/jay/Dropbox/github/timeless/jay-diary.md~
+- Comment syntax: ~#~ ... (no closing delimiter)
+- Week starts: Monday (~calendar-week-start-day 1~) - the weekend is treated as a unit
+- Format: Entries are expected in ~M/D/YYYY~ format (no leading zeros required)
+
+** Viewing Diary Entries
+~RET~ - **Custom:** Show diary entries for selected date (uses fancy diary display)
+~d~ - Display all diary entries for selected date (standard view)
+~s~ - Show all diary entries for the entire three-month window
+~m~ - Mark diary entry days in calendar (force refresh)
+~u~ - Unmark diary entry days
+
+** Custom Functions
+
+*** ~my-calendar-jump-to-diary-entry~ (bound to ~o~)
+Opens the diary markdown file and searches for the date under cursor.
+
+*Behavior:*
+1. Extracts date from calendar cursor position
+2. Formats as ~M/D/YYYY~ (e.g., "10/14/2025")
+3. Opens diary file in other window
+4. Searches for that date string
+5. Positions cursor at beginning of entry line
+6. Returns focus to calendar window
+7. Shows warning if date not found: "🟡 Could not find entry for M/D/YYYY"
+
+*** Custom ~t~ binding
+Enhanced "go to today" that also opens today's diary entry.
+
+*Behavior:*
+1. Jumps calendar to today's date
+2. Automatically runs ~my-calendar-jump-to-diary-entry~
+3. Opens and positions in today's diary entry
+
+*** Fancy diary display
+~diary-display-function~ is set to ~diary-fancy-display~, giving a structured buffer with navigation keys. After entries exist in the ~*Fancy Diary Entries*~ buffer, you can use ~n~/~p~ to advance within the fancy list.
+
+* Standard Diary Entry Creation
+
+** From Calendar
+~i d~ - Insert diary entry for selected day
+~i w~ - Insert weekly diary entry
+~i m~ - Insert monthly diary entry
+~i y~ - Insert yearly diary entry
+~i a~ - Insert anniversary diary entry
+~i b~ - Insert block diary entry
+~i c~ - Insert cyclic diary entry
+
+* Holidays and Special Days
+
+~h~ - Show holidays for cursor month
+~x~ - Mark holidays in calendar
+~u~ - Unmark holidays
+~a~ - Show holidays for entire year
+
+*Note:* Holiday highlighting is disabled in your config via ~calendar-mark-holidays-flag nil~
+
+* Lunar Phases & Astronomical Data
+
+~M~ - Show lunar phases for month
+~S~ - Show sunrise/sunset times for cursor day (use prefix ~t~ commands under ~S~ for month-wide data)
+
+* Other Useful Commands
+
+** Calendar Display
+~q~ - Quit calendar (bury buffer)
+~?~ - Show calendar help
+~C-h m~ - Show calendar mode help
+
+** Marking and Highlighting
+~SPC~ - Scroll other window down
+~DEL~ - Scroll other window up
+
+* Export & Printing
+
+** Alternate Calendar Systems
+Prefix ~p~ - Print dates in alternate calendars (Bahá'í, Hebrew, ISO, etc.)
+
+** LaTeX Export
+Prefix ~t~ - Export LaTeX calendars (day, month, or year, portrait or landscape)
+
+** HTML Export
+Prefix ~H~ - Export HTML calendars for the current month or year
+
+* Calendar Faces & Visuals
+
+** Customizing Colors
+Diary markers use the ~diary~ face. Customize via ~M-x customize-face RET diary RET~ if you prefer a different color.
+
+Holidays use the ~holiday~ face. Disable with ~(setq calendar-mark-holidays-flag nil)~ or customize the face.
+
+Today's date uses the ~calendar-today~ face. In the Leuven Jay theme it shares the calendar month header colors.
+
+** Theme Integration
+The calendar integrates with your Emacs theme:
+- Diary dates: Red in Leuven Jay theme
+- Holiday dates: Blue (disabled by default in your config)
+- Today's date: Uses calendar-today face
+
+* Workflow Examples
+
+** Daily Review Workflow
+1. ~M-x calendar~ - Open calendar
+2. ~t~ - Jump to today and open today's diary entry
+3. Review/edit entry in diary window
+4. ~C-x o~ - Switch back to calendar if needed
+5. Navigate to other dates with arrow keys
+6. ~o~ - Open diary entries for specific past/future dates
+
+** Weekly Planning Workflow
+1. ~M-x calendar~ - Open calendar
+2. ~.~ - Go to today
+3. ~C-n~ - Move down to next week
+4. ~o~ - Check diary entries for each day
+5. Navigate with ~C-f~/~C-b~ through the week
+6. Use ~o~ to jump to diary file and add entries
+
+** Finding a Specific Date
+1. ~M-x calendar~ - Open calendar
+2. ~g d~ - Jump to date (enter date when prompted)
+3. ~o~ - Open diary entry for that date
+4. Edit entry as needed
+
+* Diary File Format
+
+Your diary uses Markdown format (~jay-diary.md~) with these conventions:
+
+** Date Format
+Entries should be formatted as: ~M/D/YYYY~
+
+Example:
+#+begin_example
+# 10/14/2025
+Had a great day working on Emacs configuration.
+
+# 10/15/2025
+Meeting with team at 2pm.
+#+end_example
+
+** Comments
+Lines starting with ~#~ can be used as comments (configured via ~diary-comment-start~).
+
+* Tips and Tricks
+
+1. **Quick Today Access:** Press ~t~ to instantly jump to today's diary entry
+2. **Calendar as Journal Navigator:** Keep calendar open in a split window while editing diary
+3. **Date Discovery:** Use calendar to find day-of-week for any date, then press ~o~ to create/view entry
+4. **Month Overview:** Press ~RET~ to see all diary entries for a date in the diary display buffer
+5. **Focus Management:** Custom functions preserve window focus by returning to calendar window
+
+* Configuration Reference
+
+Your calendar is configured with:
+- Week starts on Monday (~calendar-week-start-day 1~) - treats the weekend as a unit
+- Holidays not highlighted (~calendar-mark-holidays-flag nil~)
+- Diary entries marked in calendar (~calendar-mark-diary-entries-flag t~)
+- Diary shown on calendar open (~calendar-view-diary-initially-flag t~)
+- Fancy diary display (~diary-display-function 'diary-fancy-display~)
+- Custom month header format showing "Month Year"
+
+* Troubleshooting
+
+** "Could not find entry for date"
+If ~o~ shows this message, the date string doesn't exist in your diary file. The search looks for exact ~M/D/YYYY~ format.
+
+**Solution:** Manually add the date to your diary file in the expected format. Note: No leading zeros are required (e.g., "5/8/2025" works).
+
+** Diary not showing entries
+Check that:
+1. ~diary-file~ points to correct file: ~/Users/jay/Dropbox/github/timeless/jay-diary.md~
+2. Dates in diary file use ~M/D/YYYY~ format (no leading zeros required)
+3. File is accessible and not locked
+4. Buffer is saved - calendar won't detect unsaved changes immediately
+5. Wait for polling auto-revert cycle or run ~M-x revert-buffer~ in ~jay-diary.md~
+
+** Blue vs. black dates
+If some dates appear blue instead of black, that's holiday highlighting. Disable by setting ~(setq calendar-mark-holidays-flag nil)~ or customize the ~holiday~ face.
+
+** Fancy diary n/p undefined
+This happens when there is no ~*Fancy Diary Entries*~ buffer yet. Insert at least one entry so the buffer exists, then ~n~/~p~ will work for navigation within the fancy diary list.
+
+** Calendar not updating after edits
+The calendar uses polling-based auto-revert for cloud storage. Wait a few seconds for the automatic refresh, or manually run ~M-x revert-buffer~ in ~jay-diary.md~ to force an immediate update.
+
+** Calendar keybindings not working
+Ensure ~calendar-mode-map~ customizations are loaded:
+- Check that ~(with-eval-after-load 'calendar ...)~ has been evaluated
+- Restart Emacs if needed
+
+* Related Resources
+
+~C-h m~ in calendar-mode for full list of standard bindings
+~M-x describe-function RET calendar~ for calendar documentation
+~M-x describe-function RET diary~ for diary documentation
+[[info:emacs#Calendar/Diary][Emacs Manual: Calendar/Diary]]
+
+* Related Files
+
+Configuration sources:
+- ~shared-functions.org:8479-8525~ - Calendar and diary configuration code
+- ~~/Dropbox/github/timeless/jay-diary.md~ - Diary content (Markdown format)
+- ~jay-custom-color-themes/leuven-jay.el~ - Theme faces affecting calendar colors
+
+* Appendix: Diary Entry Types
+
+Your guide lists shortcuts to create various diary entries. Here’s what each type means, based on the Emacs manual.
+
+** ~i d~ - Insert Diary Entry (Single Day)
+This is the most common type of entry. It applies to a single, specific date.
+Example: ~10/31/2025 Halloween Party~
+
+** ~i w~ - Insert Weekly Diary Entry
+This creates an entry that recurs on the same day of the week.
+Example: ~%%(diary-weekly) Friday Backup~ will appear every Friday.
+
+** ~i m~ - Insert Monthly Diary Entry
+This creates an entry that recurs on the same day of the month.
+Example: ~%%(diary-monthly) 25 Monthly Report Due~ will appear on the 25th of every month.
+
+** ~i y~ - Insert Yearly Diary Entry
+This creates an entry that recurs on the same month and day every year.
+Example: ~%%(diary-yearly) 1/1 New Year's Day~ will appear every January 1st.
+
+** ~i a~ - Insert Anniversary Diary Entry
+Similar to a yearly entry, but it also calculates and displays the number of years that have passed since the original date. This is ideal for birthdays or historical anniversaries.
+Example: ~%%(diary-anniversary 10 31 1948) Arthur's birthday~
+
+** ~i b~ - Insert Block Diary Entry
+This creates an entry that spans a continuous range of dates.
+Example: ~%%(diary-block 6 24 2025 7 10 2025) Vacation~
+
+** ~i c~ - Insert Cyclic Diary Entry
+This creates an entry that recurs after a specified number of days from a starting date.
+Example: ~%%(diary-cyclic 50 3 1 2025) Renew medication~ will appear every 50 days, starting from March 1, 2025.
+
+** Other Advanced Entries
+The diary also supports more complex entries using Lisp expressions, such as "floating" entries for holidays like the last Thursday of a month. These are less common and typically require manual editing of the diary file.

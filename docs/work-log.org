@@ -2,6 +2,18 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-14: Updated Emacs Calendar documentation
+
+** Summary
+- Reviewed the local Emacs calendar guide (`emacs-calendar-instructions-claude.org`).
+- Compared it with the official GNU Emacs manual for the calendar/diary features.
+- The local guide was found to be accurate and comprehensive for the user's specific workflow.
+- Added an appendix to the local guide explaining the different types of diary entries (single, weekly, monthly, yearly, anniversary, block, and cyclic) based on the official manual.
+
+** Files Modified
+- `emacs-calendar-instructions-claude.org`: Added appendix with detailed explanations of diary entry types.
+- `docs/work-log.org`: Added this entry.
+
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
 ** Problem Description
@@ -58,6 +70,27 @@ To restore the asterisk-to-dash conversion:
 ** Root Cause
 - Narrowing spawns an indirect buffer that does not rerun `hl-todo-mode`, so the light-green overlay responsible for the usual appearance never activated.
 - With the overlay absent, Org fell back to the baseline `org-todo-keyword-faces` entry, which still used black text on white.
+
+* 2025-10-14: Info directory troubleshooting handoff
+** Summary
+- Tracked down why `M-x info` was hiding Calendar/Diary nodes; removed old buffer-killing hooks and normalized `Info-directory-list` handling.
+- Added optional local manual support and created `info/dir` aliases pointing to `(emacs)Calendar/Diary` and `(emacs)Diary`.
+- Captured the full investigation, commands, and open questions in `docs/info-calendar-debug.org` for follow-up.
+
+** Current State
+- Config merges Homebrew’s info path plus `~/emacs/emacs-settings/info`; `Info-directory-list` shows the custom dir, but the top-level menu still omits the new entries.
+- Calendar/Diary documentation confirmed inside `/opt/homebrew/share/info/emacs.info.gz` via `rg`.
+- Need to determine whether Info ignores additive `dir` files or if `install-info` merges are required.
+
+** Next Steps
+1. Test `install-info info/dir <scratch-dir>` to see if merging entries surfaces Calendar/Diary.
+2. Temporarily advise `Info-insert-dir` to log which `dir` files are read and in what order.
+3. Consider generating standalone manuals if aliasing continues to fail.
+
+** Files & Commits
+- `shared-functions.org` (`Allow Info buffer to open`, `Restore default Info directory search`) for cleanup and hook adjustments.
+- `spacemacs.d/init.el`, `spacemacs.d/init-working.el` synced with new Info lookup logic.
+- New notes: `docs/info-calendar-debug.org`, `info/dir`.
 
 ** Solution
 - Updated the `("DONE" …)` entry in both the literate and tangled configs to render white text on a forest-green background with a slight box padding, matching the indirect-buffer experience.
@@ -216,7 +249,7 @@ Added comprehensive file watcher error suppression in `spacemacs.d/init.el:931-9
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'undo-fu-session
   (setq undo-fu-session-incompatible-files
-        '("\\.gpg$" "/Dropbox/" "/CloudStorage/" "/iCloud/" "\\.org_archive$")))
+        '("\.gpg$" "/Dropbox/" "/CloudStorage/" "/iCloud/" "\.org_archive$")))
 #+END_SRC
 
 ** Files Modified
@@ -331,7 +364,7 @@ Note the incorrect double asterisk at the beginning of the second line.
 
 The bug was in the `pasteboard--demote-headings-in-string` function which is called when pasting into org-roam buffers to demote headings by one level (so they become sub-headings).
 
-The regex pattern `"^\\(\\*+\\)"` was matching ANY line starting with asterisks, including:
+The regex pattern `"^\\(\*+\)"` was matching ANY line starting with asterisks, including:
 1. Actual org headings: `** Heading text`
 2. Bold text at line start: `*"How to Take Smart Notes"*`
 
@@ -339,20 +372,20 @@ When the function found `*"How to...` at the beginning of a line, it incorrectly
 
 ** Solution
 
-Changed the regex pattern from `"^\\(\\*+\\)"` to `"^\\(\\*+\\) "` (added space requirement).
+Changed the regex pattern from `"^\\(\*+\)"` to `"^\\(\*+\) "` (added space requirement).
 
 This ensures the function only matches actual org headings (stars followed by a space) and ignores bold markers or other asterisk usage at the beginning of lines.
 
 *** Before (buggy):
 #+BEGIN_SRC emacs-lisp
-(while (re-search-forward "^\\(\\*+\\)" nil t)
+(while (re-search-forward "^\\(\*+\)" nil t)
   (let ((stars (match-string 1)))
     (replace-match (concat "*" stars) t t)))
 #+END_SRC
 
 *** After (fixed):
 #+BEGIN_SRC emacs-lisp
-(while (re-search-forward "^\\(\\*+\\) " nil t)
+(while (re-search-forward "^\\(\*+\) " nil t)
   (let ((stars (match-string 1)))
     (replace-match (concat "*" stars " ") t t)))
 #+END_SRC
@@ -577,7 +610,7 @@ The final working solution combined two approaches:
   "Setup font-lock for inline tags in org-mode."
   (font-lock-add-keywords
    nil
-   '(("\\(#\\w+\\(?:-\\w+\\)*\\)"
+   '(("\\(#\\w+\(?:-\\w+\)*\\)"
       (1 'org-inline-tags-face t)))
    t))
 #+END_SRC
@@ -593,7 +626,7 @@ The final working solution combined two approaches:
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "#\\w+\\(?:-\\w+\\)*" nil t)
+    (while (re-search-forward "#\\w+\(?:-\\w+\)*" nil t)
       (let ((start (match-beginning 0))
             (end (match-end 0)))
         (put-text-property start end 'face 'org-inline-tags-face)

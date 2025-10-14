@@ -1,0 +1,7 @@
+This is the file /Users/jay/emacs/emacs-settings/info/dir, which contains the
+topmost node of the Info hierarchy, called (dir)Top.
+
+File: dir,	Node: Top	This is the top of the INFO tree
+
+* Calendar: (emacs)Calendar/Diary.	Navigate the Emacs calendar and diary.
+* Diary: (emacs)Diary.	Editing and displaying diary entries.
