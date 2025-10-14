@@ -104,3 +104,14 @@ A series of attempts were made to resolve the issue of the Calendar/Diary info n
 ** Final Action: Reversion
 - *Action:* All changes to the `info/dir` and Homebrew `dir` files were reverted from the backups.
 - *Reason:* The troubleshooting steps were making the problem worse (i.e., breaking the ability to even see the `Calendar/Diary` node). The user reported a previous state where they could enter the node but internal links were broken, which was a more promising state to debug from.
+
+* Automated regression check (2025-10-14)
+- Added `scripts/check-info-calendar.el` to exercise the Info directory entry and ensure the expected Calendar/Diary subnodes resolve without errors (`emacs --batch -Q -l scripts/check-info-calendar.el`).
+- Current run confirms the `Calendar/Diary` entry and all submenu targets (Calendar Motion, Scroll Calendar, Diary, etc.) are discoverable in the stock Homebrew `emacs.info.gz`.
+- Use this script as a quick smoke test after tweaking Info configuration to catch regressions like the earlier “No such node or anchor” failures.
+- Refreshed the Info initialization hook in `shared-functions.org:8693` to re-run `info-initialize` after appending custom directories so that the default Emacs manuals stay in `Info-directory-list` (prevents the tiny 537-byte `*info*` buffers that triggered missing-node errors).
+
+* Follow-up debugging (2025-10-14 evening)
+- Verified batch runs succeed even with full `init.el`, but interactive `M-x info` still throws `Info-extract-pointer: No such node or anchor: "Calendar/Diary"`, indicating the GUI buffer never fully loads `/opt/homebrew/share/info/emacs.info.gz`.
+- Rechecked runtime state: `Info-directory-list` now contains ELPA dirs + single Homebrew + custom dir; duplicates eliminated.
+- Next hypotheses: confirm `auto-compression-mode` is enabled, ensure `.info.gz` appears in `Info-suffix-list`, and inspect `Info-current-file`/`Info-current-node` immediately after triggering the failing menu entry.

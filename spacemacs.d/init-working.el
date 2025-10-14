@@ -948,11 +948,11 @@ before packages are loaded."
         (setq-local abbrev-mode nil)
         (kill-local-variable 'abbrev-mode)))
 
-  (with-eval-after-load 'info
-    (setq Info-directory-list
-          (or Info-directory-list
-              (copy-sequence Info-default-directory-list)))
-    (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t))
+  ;; (with-eval-after-load 'info
+  ;;   (setq Info-directory-list
+  ;;         (or Info-directory-list
+  ;;             (copy-sequence Info-default-directory-list)))
+  ;;   (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t))
 
   ;; Enable special export keywords such as #+EXCLUDE_TAGS, #+IGNORE_HEADLINES …
   ;; ▸ Activate extra export keywords (IGNORE_HEADLINES etc.)

@@ -1019,12 +1019,7 @@ before packages are loaded."
         (kill-local-variable 'abbrev-mode)))
 
   (with-eval-after-load 'info
-    (setq Info-directory-list
-          (or Info-directory-list
-              (copy-sequence Info-default-directory-list)))
-    (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t))
-
-
+    (info-initialize))
   ;; 1. ordinary “safe local variables”
   (add-to-list 'safe-local-variable-values '(lexical-binding . t))
   (put 'org-config-files-local-mode 'safe-local-variable #'booleanp)

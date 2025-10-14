@@ -8685,7 +8685,7 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 
 
 * Emacs info
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defvar my-emacs-manual-path
   "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"
   "Optional override path for a local Emacs manual.")
@@ -8709,30 +8709,31 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 
 ;; Override the default Emacs manual path in Info
 (with-eval-after-load 'info
-  ;; Ensure Info knows about its default directories before adding overrides.
-  (when my-info-extra-dir
-    (add-to-list 'Info-additional-directory-list my-info-extra-dir t)
-    (add-to-list 'Info-default-directory-list my-info-extra-dir t))
-  (setq Info-directory-list
-        (or Info-directory-list
-            (copy-sequence Info-default-directory-list)))
-  (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t)
-  (when (file-directory-p my-info-extra-dir)
-    (add-to-list 'Info-directory-list my-info-extra-dir t))
+  (let* ((homebrew-info "/opt/homebrew/share/info")
+         (manual-dir (when (file-exists-p my-emacs-manual-path)
+                       (file-name-directory my-emacs-manual-path)))
+         (extra-dirs (delq nil (list (when (and homebrew-info
+                                                (file-directory-p homebrew-info))
+                                       homebrew-info)
+                                     (when (file-directory-p my-info-extra-dir)
+                                       my-info-extra-dir)
+                                     manual-dir))))
+    (info-initialize)
+    ;; Append our directories and dedupe to preserve defaults.
+    (dolist (dir extra-dirs)
+      (add-to-list 'Info-directory-list dir t))
+    (setq Info-directory-list (delete-dups (copy-sequence Info-directory-list))))
   ;; Add the local manual (if present) and provide a fallback if it is missing.
   (if (file-exists-p my-emacs-manual-path)
-      (progn
-        (add-to-list 'Info-directory-list
-                     (file-name-directory my-emacs-manual-path))
-        (defun info-emacs-manual ()
-          "Open the locally installed Emacs manual."
-          (interactive)
-          (info my-emacs-manual-path)))
+      (defun info-emacs-manual ()
+        "Open the locally installed Emacs manual."
+        (interactive)
+        (info my-emacs-manual-path))
     (defun info-emacs-manual ()
       "Open the default Emacs manual."
       (interactive)
       (info "emacs"))))
-#+end_src
+#+END_SRC
 
 * A hacky way to not clobber final bullet of buffer in bulleted lists on save
 #+BEGIN_EXAMPLE emacs-lisp

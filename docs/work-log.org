@@ -81,6 +81,7 @@ To restore the asterisk-to-dash conversion:
 - Config merges Homebrew’s info path plus `~/emacs/emacs-settings/info`; `Info-directory-list` shows the custom dir, but the top-level menu still omits the new entries.
 - Calendar/Diary documentation confirmed inside `/opt/homebrew/share/info/emacs.info.gz` via `rg`.
 - Need to determine whether Info ignores additive `dir` files or if `install-info` merges are required.
+- Added an `info-initialize` reset + dedupe pass so the Homebrew manual stays in `Info-directory-list` even after custom dirs are appended.
 
 ** Next Steps
 1. Test `install-info info/dir <scratch-dir>` to see if merging entries surfaces Calendar/Diary.
@@ -91,6 +92,7 @@ To restore the asterisk-to-dash conversion:
 - `shared-functions.org` (`Allow Info buffer to open`, `Restore default Info directory search`) for cleanup and hook adjustments.
 - `spacemacs.d/init.el`, `spacemacs.d/init-working.el` synced with new Info lookup logic.
 - New notes: `docs/info-calendar-debug.org`, `info/dir`.
+- New regression script: `scripts/check-info-calendar.el` validates all Calendar submenu nodes via batch Info runs.
 
 ** Solution
 - Updated the `("DONE" …)` entry in both the literate and tangled configs to render white text on a forest-green background with a slight box padding, matching the indirect-buffer experience.
