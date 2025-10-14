@@ -8470,6 +8470,18 @@ If invoked again, move to the next instance of the word."
                 year)
         'font-lock-face 'calendar-month-header))
 
+(defvar my-calendar--last-window nil
+  "Remember the last window showing the calendar buffer.")
+
+(defun my-calendar--remember-window (&rest _args)
+  "Record the current window as the active calendar window."
+  (when (and (string= (buffer-name) calendar-buffer)
+             (window-live-p (selected-window)))
+    (setq my-calendar--last-window (selected-window))))
+
+(add-hook 'calendar-mode-hook #'my-calendar--remember-window)
+(add-hook 'calendar-move-hook #'my-calendar--remember-window)
+
 (defun my-calendar-jump-to-diary-entry (&optional date keep-calendar-selected)
   "Open `diary-file` at DATE (list MONTH DAY YEAR).
 When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
@@ -8480,6 +8492,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
          (day   (number-to-string (nth 1 date)))
          (year  (number-to-string (nth 2 date)))
          (date-str (format "%s/%s/%s" month day year)))
+    (setq my-calendar--last-window calendar-window)
     (find-file-other-window diary-file)
     (goto-char (point-min))
     (if (search-forward date-str nil t)
@@ -8492,10 +8505,24 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
   "Show the fancy diary listing and open the Markdown entry for the date at point."
   (interactive)
   (let* ((calendar-window (selected-window))
-         (date (calendar-cursor-to-date t)))
+        (date (calendar-cursor-to-date t)))
     (diary-view-entries nil)
     (select-window calendar-window)
     (my-calendar-jump-to-diary-entry date)))
+
+(defun my-calendar-focus-calendar-window ()
+  "Return focus to the live calendar window without changing its date."
+  (interactive)
+  (let* ((calendar-buffer (get-buffer calendar-buffer))
+         (window (and (window-live-p my-calendar--last-window)
+                      (eq (window-buffer my-calendar--last-window) calendar-buffer)
+                      my-calendar--last-window)))
+    (unless (and (window-live-p window)
+                 (eq (window-buffer window) calendar-buffer))
+      (setq window (get-buffer-window calendar-buffer t)))
+    (if (and window (window-live-p window))
+        (select-window window)
+      (user-error "No active calendar window to focus"))))
 
 (defun my-calendar-edit-diary-entry ()
   "Open the diary entry for the date at point and leave focus in the diary buffer."
@@ -8543,6 +8570,15 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
       (interactive)
       (calendar-goto-today)
       (my-calendar-jump-to-diary-entry))))
+
+(defun my-calendar--setup-diary-shortcuts ()
+  "Install diary navigation shortcuts when editing the diary file."
+  (when (and buffer-file-name
+             (string= (expand-file-name buffer-file-name)
+                      (expand-file-name diary-file)))
+    (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)))
+
+(add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
 #+END_SRC
 
 

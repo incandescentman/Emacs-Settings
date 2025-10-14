@@ -59,6 +59,7 @@ When you launch the calendar, the window shows the current month centered, with 
 ~s~ - Show all diary entries for the entire three-month window
 ~m~ - Mark diary entry days in calendar (force refresh)
 ~u~ - Unmark diary entry days
+~s-.~ (⌘.) - **Custom:** From `jay-diary.md`, refocus the calendar window without changing its date
 
 ** Custom Functions
 

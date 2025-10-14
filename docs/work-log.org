@@ -31,10 +31,11 @@
 - Added intuitive bindings in `calendar-mode` so `n`/`p` move by month and `N`/`P` move by year.
 - Updated the calendar instructions document to reflect the new navigation keys.
 - Added Option-←/Option-→ aliases (`M-<left>`, `M-<right>`) for month navigation on macOS keyboards.
+- Created `my-calendar-focus-calendar-window` and bound `s-.` in `jay-diary.md` so Command-Period jumps focus back to the existing calendar without resetting the date.
 
 ** Files Modified
-- `shared-functions.org`: Bound new month/year navigation lambdas in `calendar-mode-map`.
-- `emacs-calendar-instructions-claude.org`: Documented the updated keybindings, including Option-arrow aliases.
+- `shared-functions.org`: Bound new month/year navigation lambdas, added focus helper, and enabled the diary shortcut.
+- `emacs-calendar-instructions-claude.org`: Documented the updated keybindings and the Command-Period focus helper.
 - `docs/work-log.org`: Added this entry.
 
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
