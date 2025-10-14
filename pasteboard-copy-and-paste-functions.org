@@ -565,6 +565,14 @@ Otherwise, demote from point to the end of the buffer."
       (replace-weird-spaces beg end)
       (convert-markdown-blockquotes-to-org beg end)
       (convert-markdown-links-to-org-mode beg end)
+      ;; DISABLED 2025-10-13: Asterisk-to-dash conversion
+      ;; This was converting markdown-style bullet asterisks to org-mode hyphens.
+      ;; To re-enable: uncomment the lines below
+      ;; (save-restriction
+      ;;   (narrow-to-region (point-min) (point-max))
+      ;;   (goto-char (point-min))
+      ;;   (when (fboundp 'asterisk-to-dash-and-convert-code-blocks-to-org)
+      ;;     (asterisk-to-dash-and-convert-code-blocks-to-org)))
       (buffer-string))))
 
 (defun pasteboard--demote-headings-in-string (text)
