@@ -21,12 +21,16 @@ When you launch the calendar, the window shows the current month centered, with 
 ** Moving Around
 ~.~ - Go to today's date
 ~t~ - **Custom:** Jump to today + open diary entry
+~n~ - **Custom:** Forward one month
+~p~ - **Custom:** Backward one month
+~N~ - **Custom:** Forward one year
+~P~ - **Custom:** Backward one year
 ~>~ or ~C-x >~ - Scroll calendar forward (next month)
 ~<~ or ~C-x <~ - Scroll calendar backward (previous month)
 ~C-f~ or ~f~ or ~→~ - Move forward one day
 ~C-b~ or ~b~ or ~←~ - Move backward one day
-~C-n~ or ~n~ or ~↓~ - Move down one week
-~C-p~ or ~p~ or ~↑~ - Move up one week
+~C-n~ or ~↓~ - Move down one week
+~C-p~ or ~↑~ - Move up one week
 ~M-}~ - Forward one month
 ~M-{~ - Backward one month
 ~C-x ]~ - Forward one year

@@ -25,6 +25,17 @@
 - `shared-functions.org`: Updated Jay Diary section with the new helpers and key bindings.
 - `docs/work-log.org`: Added this entry.
 
+* 2025-10-14: Calendar navigation shortcuts
+
+** Summary
+- Added intuitive bindings in `calendar-mode` so `n`/`p` move by month and `N`/`P` move by year.
+- Updated the calendar instructions document to reflect the new navigation keys.
+
+** Files Modified
+- `shared-functions.org`: Bound new month/year navigation lambdas in `calendar-mode-map`.
+- `emacs-calendar-instructions-claude.org`: Documented the updated keybindings.
+- `docs/work-log.org`: Added this entry.
+
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
 ** Problem Description

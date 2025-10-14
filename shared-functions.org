@@ -8508,6 +8508,24 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
   ;; Alternate binding that jumps to the diary and leaves point there
   (define-key calendar-mode-map (kbd "e") #'my-calendar-edit-diary-entry)
 
+  ;; Month / year navigation shortcuts
+  (define-key calendar-mode-map (kbd "n")
+    (lambda ()
+      (interactive)
+      (calendar-forward-month 1)))
+  (define-key calendar-mode-map (kbd "p")
+    (lambda ()
+      (interactive)
+      (calendar-backward-month 1)))
+  (define-key calendar-mode-map (kbd "N")
+    (lambda ()
+      (interactive)
+      (calendar-forward-year 1)))
+  (define-key calendar-mode-map (kbd "P")
+    (lambda ()
+      (interactive)
+      (calendar-backward-year 1)))
+
   ;; Make "o" jump to the date under cursor
   (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
 
