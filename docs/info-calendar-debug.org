@@ -42,7 +42,7 @@
   python3 - <<'PY'
   import gzip, re
   data = gzip.open("/opt/homebrew/share/info/emacs.info.gz", "rt", encoding="utf-8", errors="ignore").read()
-  for match in re.findall(r"\\* ([^:]+): \\((emacs)[^)]*\\)\\.", data):
+  for match in re.findall(r"\* ([^:]+): \((emacs)[^)]*\)\.", data):
       print(match)
   PY
   ```
@@ -105,15 +105,69 @@ A series of attempts were made to resolve the issue of the Calendar/Diary info n
 - *Action:* All changes to the `info/dir` and Homebrew `dir` files were reverted from the backups.
 - *Reason:* The troubleshooting steps were making the problem worse (i.e., breaking the ability to even see the `Calendar/Diary` node). The user reported a previous state where they could enter the node but internal links were broken, which was a more promising state to debug from.
 
-* Automated regression check (2025-10-14)
-- Added `scripts/check-info-calendar.el` to exercise the Info directory entry and ensure the expected Calendar/Diary subnodes resolve without errors (`emacs --batch -Q -l scripts/check-info-calendar.el`).
-- Current run confirms the `Calendar/Diary` entry and all submenu targets (Calendar Motion, Scroll Calendar, Diary, etc.) are discoverable in the stock Homebrew `emacs.info.gz`.
-- Use this script as a quick smoke test after tweaking Info configuration to catch regressions like the earlier “No such node or anchor” failures.
-- Refreshed the Info initialization hook in `shared-functions.org:8693` to re-run `info-initialize` after appending custom directories so that the default Emacs manuals stay in `Info-directory-list` (prevents the tiny 537-byte `*info*` buffers that triggered missing-node errors).
+* Second Session (Interactive Debugging)
 
-* Follow-up debugging (2025-10-14 evening)
-- Verified batch runs succeed even with full `init.el`, but interactive `M-x info` still throws `Info-extract-pointer: No such node or anchor: "Calendar/Diary"`, indicating the GUI buffer never fully loads `/opt/homebrew/share/info/emacs.info.gz`.
-- Rechecked runtime state: `Info-directory-list` now contains ELPA dirs + single Homebrew + custom dir; duplicates eliminated.
-- Next hypotheses: confirm `auto-compression-mode` is enabled, ensure `.info.gz` appears in `Info-suffix-list`, and inspect `Info-current-file`/`Info-current-node` immediately after triggering the failing menu entry.
-- Used the standalone `info` CLI (`info -f /opt/homebrew/share/info/emacs.info.gz -n Diary`) to confirm that `Calendar/Diary` is *not* an addressable node in the Homebrew manual—only `Diary` exists, with `Up: Calendar/Diary` as a virtual pointer.
-- Updated `info/dir` so both "Calendar" and "Diary" entries target the real `(emacs)Diary` node, eliminating the broken alias.
+** Summary
+This session focused on deep interactive debugging to understand why a clean batch script could find the Info nodes while the interactive Spacemacs session could not.
+
+** Key Findings & Actions
+1.  *Hypothesis: Stale `.elc` files.* The `Info-directory-list` was found to be "polluted" with duplicate entries, even after the relevant config code was disabled.
+    - *Action:* User deleted all `.elc` files in the configuration directory.
+    - *Result:* This successfully cleaned the `Info-directory-list`, but the "No such node" error remained. This proved that stale compiled files were a problem, but not the only problem.
+
+2.  *Hypothesis: `info+.el` Interference.* Using `describe-function` on `Info-find-node`, we discovered it was being redefined by a custom library, `info+.el`.
+    - *Action:* We traced the function and found that the custom version was causing a recursive loop by immediately calling `(info-initialize)`.
+    - *Action:* User excluded the `info+` package from their configuration, which successfully reverted `Info-find-node` to the standard, built-in version.
+    - *Result:* The error changed to `Info-find-node-2: No such node...`, confirming we were now using the standard Info functions, but the core issue persisted.
+
+3.  *Hypothesis: Documentation Version Mismatch.* The user astutely questioned whether the `emacs.info.gz` file being checked on the command line was the same one used by their interactive Emacs 29.4.
+    - *Action:* We performed a definitive, foolproof test by decompressing the specific Homebrew file (`/opt/homebrew/share/info/emacs.info.gz`) to plain text and searching it with `grep -F`.
+    - *Result:* This **proved conclusively** that the `Diary` node exists in the correct Emacs 29.4 documentation file. It also proved that `Calendar/Diary` does *not* exist as a jumpable node, only as a structural "Up" pointer. This confirmed that our previous `rg` results on the compressed file were a red herring.
+
+4.  *Hypothesis: Interactive Session State.* A clean batch script (`check-info-calendar.el`) could find the node, while the interactive session could not.
+
+** Final Conclusion
+All evidence points to a single conclusion: a package, layer, or custom setting within the user's interactive Spacemacs configuration is subtly breaking or corrupting the standard, built-in Info system. The Info files themselves are correct. The only remaining path to a solution is to **bisect the user's Spacemacs configuration**: start with a fresh, default configuration and incrementally re-introduce custom layers and settings until the "No such node" error reappears, thereby identifying the conflicting component.
+
+* Follow-up Session (Revert `dir` file)
+
+** Summary
+At the user's request, the main Homebrew `dir` file was reverted to its original state to undo all `install-info` operations from the troubleshooting sessions.
+
+** Actions
+1.  *Archive Current State:* The current, modified `dir` file (which included the custom "Diary" entry) was backed up for reference.
+    - *Backup Location:* `/tmp/dir.modified.bak`
+2.  *Restore Original State:* The original `dir` file was restored from the backup created at the beginning of our troubleshooting session.
+    - *Backup Source:* `/tmp/dir.bak`
+    - *Target File:* `/opt/homebrew/share/info/dir`
+
+** Result
+The main Homebrew Info directory file (`/opt/homebrew/share/info/dir`) has been reverted to its original state. The custom "Diary" menu item will no longer appear in the top-level Info menu. This provides a clean state for the user to proceed with bisecting their Spacemacs configuration.
+
+* Final Analysis and Unified Theory (2025-10-14)
+
+** Summary
+This section synthesizes the final diagnostic results with the user's newly discovered notes from a previous machine, leading to a unified theory that explains all observed symptoms.
+
+** Final Diagnostic State
+The user provided a final snapshot of the interactive session's state after removing the `info+` package:
+1.  `Info-directory-list` is still being "polluted" with numerous duplicate entries for the Homebrew info path. This confirms a persistent misconfiguration in the interactive Spacemacs environment that is unrelated to `info+.el`.
+2.  `(symbol-file 'Info-find-node)` now correctly points to the standard, built-in `.../lisp/info.elc`. This confirms `info+.el` is no longer interfering.
+3.  Despite using the standard function, `(Info-find-node "emacs" "Diary")` still fails, and the `*info*` buffer remains on the top-level `dir` file.
+
+** Insight from Discovered Notes (`20240425154404-emacs_additional_steps.org`)**
+The user found notes from a previous laptop detailing an identical problem. The key takeaways from that successful resolution were:
+- The Homebrew-provided `emacs.info` file was deemed incomplete or problematic.
+- All attempts to fix the issue by manipulating `Info-directory-list` or copying `.info` files were unreliable and ultimately failed.
+- **The only successful solution** was to clone the GNU Emacs source, build the `emacs.info` manual directly from source (`make -C doc/emacs info`), and then open the resulting `emacs.info` file directly by its full path, e.g., `(info "/path/to/built/emacs.info")`.
+
+** The Grand Unified Theory
+The combination of our diagnostic results and the user's historical notes leads to a clear conclusion:
+
+1.  The user's interactive Spacemacs environment aggressively mismanages `Info-directory-list`, polluting it with duplicates. This makes the entire Info directory lookup system (`M-x info`, `install-info`) unreliable and is the root cause of the inconsistent behavior.
+2.  The previous attempts to fix the problem by modifying the `dir` file were doomed to fail, as the user's own notes confirm this is a dead end.
+3.  The reason a clean batch script works is that it does not load the complex Spacemacs environment and therefore does not have a corrupted `Info-directory-list`.
+4.  The only robust solution is to bypass the broken directory system entirely.
+
+** The Path Forward
+The correct path forward is to adopt the user's previously successful solution: build the Info manual from the official GNU Emacs source and create a function to access it directly by its absolute file path. This is the only method that has been proven to work.

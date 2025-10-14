@@ -1,0 +1,120 @@
+:PROPERTIES:
+:ID:       20240425T154403.516951
+:END:
+#+TITLE: Emacs info steps
+#+FILETAGS: :emacs:
+- Links ::
+- Source ::
+
+
+
+* Emacs info
+Here's a clean summary of the steps you followed that *finally* got the full Emacs manual (with the Calendar section) working via a direct `info` call --- perfect for replicating on another machine.
+
+*** ✅ Goal: Access full Emacs manual, including Calendar section, from a recent source build.
+
+** 🪜 Steps That Worked
+
+*** 1. *Clone the GNU Emacs source repo*
+
+```bash
+git clone https://git.savannah.gnu.org/git/emacs.git
+cd emacs
+```
+
+*** 2. *Run the build prep scripts*
+
+```bash
+./autogen.sh
+./configure
+```
+
+*** 3. *Build the Info manual*
+
+```bash
+make -C doc/emacs info
+```
+
+This generates `emacs.info` and related files in `doc/emacs`.
+
+*** 4. *Open the full manual manually from that location in Emacs*
+
+In Emacs, run:
+
+```elisp
+(info "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info")
+```
+
+Replace the path as needed for your own system.
+
+** 📝 Optional Enhancements
+
+*** Define a function to open it quickly:
+
+```elisp
+(defun my/open-latest-emacs-manual ()
+  (interactive)
+  (info "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info")) ;; adjust path
+```
+
+Then run `M-x my/open-latest-emacs-manual` anytime.
+
+*** Or bind it to a key:
+
+```elisp
+(global-set-key (kbd "C-c e") #'my/open-latest-emacs-manual)
+```
+
+** 🧠 Notes
+
+- Copying `emacs.info` to `/opt/homebrew/share/info` *did not work reliably*.
+- Setting `Info-directory-list` also *did not help*, likely due to Spacemacs startup overwriting it or loading from package-specific dirs first.
+- So the simplest, most reliable solution is to *load the manual file directly via `info`*.
+
+Would you like me to turn that into a portable shell script or Emacs snippet you can drop into your config?
+
+Ah --- that's a super interesting detail, and it actually makes a lot of sense given how Emacs works under the hood.
+
+*** 🧠 What's Going On
+
+There are *two ways* Emacs finds and opens Info nodes:
+
+1. *`M-x info`*
+   This launches the Info browser and reads from the *global Info directory* (usually `/opt/homebrew/share/info`, `~/.emacs.d/elpa/*`, etc., as defined in `Info-directory-list`). If this doesn't include the *right* `emacs.info` file (with the Calendar node), you'll get that frustrating "No such node or anchor" error.
+
+2. *Feature-specific calls to `info`* (like `C-h i`, `C-h F`, or `calendar` help)
+   These often use the `info-lookup-symbol` or `find-library` mechanisms to *directly point to the correct file* --- especially if it was opened recently or hardcoded with full paths (as you now have with `(info "/Users/.../emacs.info")`).
+
+So now, any part of Emacs that directly refers to a real node in the correct manual works. But `M-x info` still points to an outdated or incomplete version --- probably the one installed via Homebrew.
+
+*** ✅ Current Behavior Summary
+
+| Action                                     | Works? | Notes                                                       |
+|--------------------------------------------+--------+-------------------------------------------------------------|
+| `M-x info` → Emacs manual                  | ❌     | Still using outdated `emacs.info` (missing Calendar)        |
+| `M-x calendar` → Help or Info              | ✅     | Uses correct `emacs.info` file you built manually           |
+| `(info "/Users/.../emacs.info")`             | ✅     | Explicitly opens correct file                               |
+| `C-h F calendar` or context-sensitive help | ✅     | Often routes correctly based on features or function source |
+
+*** 💡 Recommendation for Other Laptop
+
+To replicate:
+
+1. Clone Emacs and run `make -C doc/emacs info`
+2. Save the path to `doc/emacs/emacs.info`
+3. Optionally add this helper function:
+
+```elisp
+(defun my/open-correct-emacs-manual ()
+  (interactive)
+  (info "/path/to/emacs/doc/emacs/emacs.info"))
+```
+
+4. Optionally bind it to a key for quick access:
+
+```elisp
+(global-set-key (kbd "C-c e") #'my/open-correct-emacs-manual)
+```
+
+
+

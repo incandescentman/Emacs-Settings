@@ -94,11 +94,11 @@ This function should only modify configuration layer settings."
                                       ox-twbs
                                       mwim
                                       ;; beacon
-                                        caps-lock
+                                      caps-lock
                                       captain
-                                       ;; company
+                                      ;; company
                                       consult-dir
-                                       consult-org-roam
+                                      consult-org-roam
                                       ;; benchmark-init
                                       consult-projectile ;; searches filenames
                                       counsel
@@ -147,7 +147,7 @@ This function should only modify configuration layer settings."
                                       ;; org-fstree
                                       org-mac-link
                                       ;; org-pomodoro
-                                       org-roam
+                                      org-roam
                                       ;; org-roam-ui
                                       ;; org-superstar
                                       ox-clip
@@ -162,24 +162,24 @@ This function should only modify configuration layer settings."
                                       popup
                                       ;; project-explorer
                                       projectile-ripgrep
-                                       rainbow-mode
+                                      rainbow-mode
                                       ;; re-builder
                                       recentf
                                       ;; regex-tool
                                       rg
                                       ripgrep
-                                       s
+                                      s
                                       ;; scratch
                                       ;; scratch-message
                                       ;;  sdcv
                                       ;; simple-httpd
                                       ;; stripe-buffer
-                                          ; tabbar
+                                        ; tabbar
                                       ;; tiny
                                       titlecase
                                       ts
                                       unfill
-                                       wc-goal-mode
+                                      wc-goal-mode
                                       wc-mode
                                       ;; web-mode
                                       with-editor
@@ -265,6 +265,8 @@ This function should only modify configuration layer settings."
                                     hl-line
                                     hs-mode
                                     ;; ivy
+                                    info+
+                                    info-plus
                                     notmuch
                                     org-download
                                     org-superstar
@@ -1018,8 +1020,7 @@ before packages are loaded."
         (setq-local abbrev-mode nil)
         (kill-local-variable 'abbrev-mode)))
 
-  (with-eval-after-load 'info
-    (info-initialize))
+
   ;; 1. ordinary “safe local variables”
   (add-to-list 'safe-local-variable-values '(lexical-binding . t))
   (put 'org-config-files-local-mode 'safe-local-variable #'booleanp)
