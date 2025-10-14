@@ -2,6 +2,68 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added custom Info manual function
+
+** Summary
+- Created a new function `jay-info-emacs-manual` to open the custom-built Emacs info manual directly by its absolute path.
+- This bypasses the user's problematic interactive Info configuration, which was failing to find the "Calendar/Diary" documentation.
+- The function is defined in `shared-functions.org` and tangled to `shared-functions.el`.
+- The user will add their own keybinding for this function.
+
+** Why it should work
+By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` directly, we are telling Emacs exactly which file to open, completely avoiding the complex and fragile `Info-directory-list` lookup mechanism. This is the same strategy that was proven to work in the user's notes from a previous machine.
+
+** Files Modified
+- `shared-functions.org`: Added the `jay-info-emacs-manual` function.
+- `shared-functions.el`: Manually added the `jay-info-emacs-manual` function as tangling failed.
+- `keys.el`: Removed the temporary keybinding for `jay-info-emacs-manual`.
+- `docs/work-log.org`: Added this entry.
+
 * 2025-10-14: Updated Emacs Calendar documentation
 
 ** Summary

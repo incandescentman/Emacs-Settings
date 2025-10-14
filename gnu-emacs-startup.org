@@ -236,6 +236,12 @@ Use ⌘-m as prefix for my own custom keybindings:
 
 
 ** Custom Key Bindings
+*** Help
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'help-mode
+  (define-key help-map (kbd "i") 'jay-info-emacs-manual))
+#+END_SRC
+
 *** NOTE-TO-JAY TODO Custom keybindings
 Eventually replace these with this? https://github.com/noctuid/general.el
 

@@ -334,6 +334,8 @@
   (dolist (binding my/minibuffer-bindings)
     (define-key minibuffer-local-map (kbd (car binding)) (cdr binding)))
 
+  (define-key help-map (kbd "i") 'jay-info-emacs-manual)
+
   ;; This binding uses a package; handle separately or ensure package is loaded.
   ;; (bind-key "C-c <mouse-3>" 'right-click-context-menu)
 

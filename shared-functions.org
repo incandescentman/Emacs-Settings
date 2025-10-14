@@ -8414,14 +8414,16 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
 (provide 'my-org-config-mode)
 #+end_src
 
-* Local Variables & The End
+* Info
+** Open custom Emacs manual
 #+BEGIN_SRC emacs-lisp
-(setq debug-on-message
-      "org-element--cache: Added org-data parent to non-headline element")
-
-;; put in dotspacemacs/user-init
-(setq org-element-cache-persistent nil)   ; rebuild cache on each startup
+(defun jay-info-emacs-manual ()
+  "Open the custom-built Emacs info manual."
+  (interactive)
+  (info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info"))
 #+END_SRC
+
+* Local Variables & The End
 
 
 
