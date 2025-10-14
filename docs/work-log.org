@@ -14,6 +14,17 @@
 - `emacs-calendar-instructions-claude.org`: Added appendix with detailed explanations of diary entry types.
 - `docs/work-log.org`: Added this entry.
 
+* 2025-10-14: Calendar diary focus tweaks
+
+** Summary
+- Reworked the diary helper so `RET` in the calendar shows the fancy diary listing and keeps focus in the calendar window.
+- Added `my-calendar-edit-diary-entry` and bound it to lowercase `e` for an explicit “open diary and stay there” workflow.
+- Generalized `my-calendar-jump-to-diary-entry` to accept optional date/focus arguments for reuse.
+
+** Files Modified
+- `shared-functions.org`: Updated Jay Diary section with the new helpers and key bindings.
+- `docs/work-log.org`: Added this entry.
+
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
 ** Problem Description
@@ -83,6 +94,8 @@ To restore the asterisk-to-dash conversion:
 - Need to determine whether Info ignores additive `dir` files or if `install-info` merges are required.
 - Added an `info-initialize` reset + dedupe pass so the Homebrew manual stays in `Info-directory-list` even after custom dirs are appended.
 - Confirmed via CLI `info` that `(emacs)Calendar/Diary` is not a real node; rewired local `info/dir` so both Calendar and Diary entries jump to `(emacs)Diary`.
+
+- Interactive Emacs still fails for `(Info-find-node "emacs" "Diary")` despite the corrected `dir`; batch smoke test passes, pointing to a remaining config-level conflict to bisect.
 
 ** Next Steps
 1. Test `install-info info/dir <scratch-dir>` to see if merging entries surfaces Calendar/Diary.

@@ -6877,32 +6877,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 #+END_SRC
 
-* helpful
-[[https://github.com/Wilfred/helpful][Wilfred/helpful: A better Emacs *help* buffer]]
-
-replacing Emacs built-in documenation
-#+BEGIN_EXAMPLE emacs-lisp
-;; Note that the built-in `describe-function' includes both functions
-;; and macros. `helpful-function' is functions only, so we provide
-;; `helpful-callable' as a drop-in replacement.
-(global-set-key (kbd "M-h f") #'helpful-callable)
-
-(global-set-key (kbd "M-h v") #'helpful-variable)
-;; (global-set-key (kbd "M-h k") #'helpful-key)
-(global-set-key (kbd "M-h x") #'helpful-command)
-
-;; Lookup the current symbol at point. C-c C-d is a common keybinding
-;; for this in lisp modes.
-(global-set-key (kbd "C-c C-d") #'helpful-at-point)
-
-;; Look up *F*unctions (excludes macros).
-;;
-;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
-;; already links to the manual, if a function is referenced there.
-(global-set-key (kbd "M-h F") #'helpful-function)
-#+END_EXAMPLE
-
-
 * workgroups
 [[https://github.com/pashinin/workgroups2][pashinin/workgroups2: Workgroups2 - Emacs session manager]]
 
@@ -8474,7 +8448,7 @@ If invoked again, move to the next instance of the word."
           (isearch-yank-string word))))))
 #+end_src
 
-* Diary
+* Jay Diary 
 #+BEGIN_SRC emacs-lisp
 ;; disable calendar highlighting 
 (setq calendar-mark-holidays-flag nil) 
@@ -8496,12 +8470,12 @@ If invoked again, move to the next instance of the word."
                 year)
         'font-lock-face 'calendar-month-header))
 
-
-(defun my-calendar-jump-to-diary-entry ()
-  "Open the diary file at the date under the cursor in the Calendar."
+(defun my-calendar-jump-to-diary-entry (&optional date keep-calendar-selected)
+  "Open `diary-file` at DATE (list MONTH DAY YEAR).
+When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
   (interactive)
   (let* ((calendar-window (selected-window))
-         (date (calendar-cursor-to-date))  ;; gets the date at point in the Calendar
+         (date (or date (calendar-cursor-to-date t)))
          (month (number-to-string (nth 0 date)))
          (day   (number-to-string (nth 1 date)))
          (year  (number-to-string (nth 2 date)))
@@ -8511,11 +8485,28 @@ If invoked again, move to the next instance of the word."
     (if (search-forward date-str nil t)
         (beginning-of-line)
       (message "🟡 Could not find entry for %s" date-str))
-    (select-window calendar-window)))
+    (unless keep-calendar-selected
+      (select-window calendar-window))))
+
+(defun my-calendar-view-and-edit-entry ()
+  "Show the fancy diary listing and open the Markdown entry for the date at point."
+  (interactive)
+  (let* ((calendar-window (selected-window))
+         (date (calendar-cursor-to-date t)))
+    (diary-view-entries nil)
+    (select-window calendar-window)
+    (my-calendar-jump-to-diary-entry date)))
+
+(defun my-calendar-edit-diary-entry ()
+  "Open the diary entry for the date at point and leave focus in the diary buffer."
+  (interactive)
+  (my-calendar-jump-to-diary-entry (calendar-cursor-to-date t) t))
 
 (with-eval-after-load 'calendar
   ;; Make "RET" show diary entries
-  (define-key calendar-mode-map (kbd "RET") #'diary-view-entries)
+  (define-key calendar-mode-map (kbd "RET") #'my-calendar-view-and-edit-entry)
+  ;; Alternate binding that jumps to the diary and leaves point there
+  (define-key calendar-mode-map (kbd "e") #'my-calendar-edit-diary-entry)
 
   ;; Make "o" jump to the date under cursor
   (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
@@ -8684,56 +8675,6 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 #+END_EXAMPLE
 
 
-* Emacs info
-#+BEGIN_SRC emacs-lisp
-(defvar my-emacs-manual-path
-  "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"
-  "Optional override path for a local Emacs manual.")
-
-(defvar my-info-extra-dir
-  (cond
-   ((file-directory-p "/Users/jay/emacs/emacs-settings/info")
-    "/Users/jay/emacs/emacs-settings/info")
-   ((file-directory-p "/Users/jaydixit/emacs/emacs-settings/info")
-    "/Users/jaydixit/emacs/emacs-settings/info")
-   (t nil))
-  "Directory containing custom Info directory entries.")
-
-(defun my/open-latest-emacs-manual ()
-  (interactive)
-  (if (file-exists-p my-emacs-manual-path)
-      (info my-emacs-manual-path)
-    (call-interactively #'info)))
-
-(define-key key-minor-mode-map (kbd "M-h i") 'my/open-latest-emacs-manual)
-
-;; Override the default Emacs manual path in Info
-(with-eval-after-load 'info
-  (let* ((homebrew-info "/opt/homebrew/share/info")
-         (manual-dir (when (file-exists-p my-emacs-manual-path)
-                       (file-name-directory my-emacs-manual-path)))
-         (extra-dirs (delq nil (list (when (and homebrew-info
-                                                (file-directory-p homebrew-info))
-                                       homebrew-info)
-                                     (when (file-directory-p my-info-extra-dir)
-                                       my-info-extra-dir)
-                                     manual-dir))))
-    (info-initialize)
-    ;; Append our directories and dedupe to preserve defaults.
-    (dolist (dir extra-dirs)
-      (add-to-list 'Info-directory-list dir t))
-    (setq Info-directory-list (delete-dups (copy-sequence Info-directory-list))))
-  ;; Add the local manual (if present) and provide a fallback if it is missing.
-  (if (file-exists-p my-emacs-manual-path)
-      (defun info-emacs-manual ()
-        "Open the locally installed Emacs manual."
-        (interactive)
-        (info my-emacs-manual-path))
-    (defun info-emacs-manual ()
-      "Open the default Emacs manual."
-      (interactive)
-      (info "emacs"))))
-#+END_SRC
 
 * A hacky way to not clobber final bullet of buffer in bulleted lists on save
 #+BEGIN_EXAMPLE emacs-lisp
