@@ -115,3 +115,5 @@ A series of attempts were made to resolve the issue of the Calendar/Diary info n
 - Verified batch runs succeed even with full `init.el`, but interactive `M-x info` still throws `Info-extract-pointer: No such node or anchor: "Calendar/Diary"`, indicating the GUI buffer never fully loads `/opt/homebrew/share/info/emacs.info.gz`.
 - Rechecked runtime state: `Info-directory-list` now contains ELPA dirs + single Homebrew + custom dir; duplicates eliminated.
 - Next hypotheses: confirm `auto-compression-mode` is enabled, ensure `.info.gz` appears in `Info-suffix-list`, and inspect `Info-current-file`/`Info-current-node` immediately after triggering the failing menu entry.
+- Used the standalone `info` CLI (`info -f /opt/homebrew/share/info/emacs.info.gz -n Diary`) to confirm that `Calendar/Diary` is *not* an addressable node in the Homebrew manual—only `Diary` exists, with `Up: Calendar/Diary` as a virtual pointer.
+- Updated `info/dir` so both "Calendar" and "Diary" entries target the real `(emacs)Diary` node, eliminating the broken alias.

@@ -82,6 +82,7 @@ To restore the asterisk-to-dash conversion:
 - Calendar/Diary documentation confirmed inside `/opt/homebrew/share/info/emacs.info.gz` via `rg`.
 - Need to determine whether Info ignores additive `dir` files or if `install-info` merges are required.
 - Added an `info-initialize` reset + dedupe pass so the Homebrew manual stays in `Info-directory-list` even after custom dirs are appended.
+- Confirmed via CLI `info` that `(emacs)Calendar/Diary` is not a real node; rewired local `info/dir` so both Calendar and Diary entries jump to `(emacs)Diary`.
 
 ** Next Steps
 1. Test `install-info info/dir <scratch-dir>` to see if merging entries surfaces Calendar/Diary.
