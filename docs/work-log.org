@@ -2,28 +2,104 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-10-13: Hardened adaptive paste for Org headings and folds
+* 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
 ** Problem Description
-- Pasting Org subtrees with `pasteboard-paste-adaptive` flattened heading levels because the smart quotes cleaner still collapsed every `**` pair to `*`, even when those asterisks belonged to the line's leading heading stars.
-- The same paste path intermittently raised “Calling `org-fold-core-region` with missing SPEC” after the 2025-10-02 cache refactor, aborting the paste in folded buffers.
+When pasting text with markdown-style bullet lists using asterisks (e.g., `* item`), `pasteboard-paste-adaptive` was automatically converting them to org-mode hyphens (e.g., `- item`). This was undesirable in some workflows where preserving the original asterisk format was preferred.
 
 ** Root Cause
-- The Markdown-era `** → *` rule ran before the text ever hit the real buffer, so headings lost stars inside the temp buffer that feeds the paste helper.
-- `replace-smart-quotes-regexp` called `replace-regexp`, which tries to manage Org folds; invoked non-interactively inside a temp buffer it lacked the required fold spec and signalled the error.
+The `pasteboard--clean-string` function (called by `pasteboard-paste-adaptive`) was invoking `asterisk-to-dash-and-convert-code-blocks-to-org` from `shared-functions.org`, which performed the following conversions:
+- `\n* ` → `\n- ` (newline + asterisk + space → newline + dash + space)
+- `^  \* ` → `  - ` (line-start + two spaces + asterisk → two spaces + dash)
+
+This automatic conversion was part of the markdown-to-org normalization pipeline.
 
 ** Solution
-- Added a guard that walks the line’s leading stars and only converts `**` pairs that appear after the heading boundary, keeping heading depth intact while still normalising inline bold.
-- Replaced the `replace-regexp` loop with explicit `re-search-forward`/`replace-match` iterations so the cleaner no longer triggers Org’s fold maintenance during temp-buffer work.
-- Documented both regressions and mitigations in `docs/codebase-wisdom.org` for future reference.
+Commented out the call to `asterisk-to-dash-and-convert-code-blocks-to-org` in `pasteboard--clean-string` while preserving the code with clear instructions for re-enabling if needed:
+
+#+BEGIN_SRC emacs-lisp
+;; DISABLED 2025-10-13: Asterisk-to-dash conversion
+;; This was converting markdown-style bullet asterisks to org-mode hyphens.
+;; To re-enable: uncomment the lines below
+;; (save-restriction
+;;   (narrow-to-region (point-min) (point-max))
+;;   (goto-char (point-min))
+;;   (when (fboundp 'asterisk-to-dash-and-convert-code-blocks-to-org)
+;;     (asterisk-to-dash-and-convert-code-blocks-to-org)))
+#+END_SRC
+
+The function `asterisk-to-dash-and-convert-code-blocks-to-org` remains available in `shared-functions.org:9435-9454` and can be called manually or re-enabled by uncommenting the code.
 
 ** Files Modified
-- `pasteboard-copy-and-paste-functions.org` / `.el` – heading guard and fold-safe smart quote replacements
-- `docs/codebase-wisdom.org` – added post-mortem entry for the heading flattening and fold interaction
+- `pasteboard-copy-and-paste-functions.org:568-575` - Commented out asterisk-to-dash conversion with reversion instructions
+- `docs/work-log.org` - Added this entry
 
-** Expected Results After Restart
-- Pasting Org trees through `pasteboard-paste-adaptive` preserves heading levels while still converting inline bold.
-- No more “missing SPEC” errors when pasting into folded Org buffers.
+** Expected Results After Reload
+- Text pasted via `pasteboard-paste-adaptive` will preserve asterisks in bullet lists
+- Other markdown conversions (headings, blockquotes, links, smart quotes) continue to work normally
+- The conversion can be easily re-enabled by uncommenting 5 lines of code
+
+** Reverting This Change
+To restore the asterisk-to-dash conversion:
+1. Edit `pasteboard-copy-and-paste-functions.org` line 568-575
+2. Uncomment the `(save-restriction ...)` block
+3. Retangle the file or reload Emacs
+
+** Git Commits
+- `e1d4b3e2` - "Comment out asterisk-to-dash conversion in pasteboard-paste-adaptive"
+
+* 2025-10-13: Hardened adaptive paste for Org headings and folds
+* 2025-10-14: Unified DONE keyword styling in narrowed buffers
+
+** Problem Description
+- Cycling a TODO to DONE inside an Org subtree narrowed by `org-narrow-to-subtree` showed the keyword with the default black-on-white face instead of the light green used elsewhere.
+- The mismatch was distracting in focused writing sessions where narrowed buffers are the norm.
+
+** Root Cause
+- Narrowing spawns an indirect buffer that does not rerun `hl-todo-mode`, so the light-green overlay responsible for the usual appearance never activated.
+- With the overlay absent, Org fell back to the baseline `org-todo-keyword-faces` entry, which still used black text on white.
+
+** Solution
+- Updated the `("DONE" …)` entry in both the literate and tangled configs to render white text on a forest-green background with a slight box padding, matching the indirect-buffer experience.
+- Mirrored the change in the `hl-todo-keyword-faces` palette so the overlay keeps the same styling when it *is* present.
+
+** Files Modified
+- `shared-functions.org:959,994` – switched DONE keyword face and matching hl-todo face to white-on-forest-green with padding box.
+- `shared-functions.el:639,670` – tangled output reflects the same face adjustments.
+
+** Expected Results After Reload
+- DONE keywords appear white on green whether or not `hl-todo-mode` is active, ensuring consistent visuals in narrowed and full buffers.
+
+** Follow-up: Display-aware notch hiding
+
+- Added `jay/notch-display-identifiers` defcustom to extend the notch-hiding tab-bar logic beyond the built-in Retina panel.
+- Extracted `jay/current-display-attributes` helper and refreshed `jay/on-notch-display-p` so detection can be reused elsewhere.
+- Introduced `jay/add-current-display-to-notch-list` for quickly adding the current monitor’s name at runtime.
+- Both `shared-functions.org` and the tangled `shared-functions.el` now reflect the new helpers.
+
+* 2025-10-14: Display-aware notch hiding for tab bar
+
+** Problem Description
+- The tab-bar notch guard only activated on the built-in Retina panel, leaving fullscreen external monitors (with a real or improvised notch) uncovered.
+- Manually enabling `tab-bar-mode` stuck until the next focus change, when the auto-update logic disabled it again.
+
+** Root Cause
+- `jay/on-macbook-display-p` hard-coded a string match for “Built-in”/“Retina Display” and returned nil for any other monitor.
+- The detection logic lived inline, making it awkward to extend and re-use when adding monitors dynamically.
+
+** Solution
+- Added `jay/notch-display-identifiers` defcustom so additional monitor names (regex patterns) can opt into notch coverage.
+- Extracted `jay/current-display-attributes` to isolate frame→monitor resolution and refactored `jay/on-notch-display-p` to call it.
+- Created `jay/add-current-display-to-notch-list` for recording the active monitor’s name at runtime; the list can be persisted via Customize.
+
+** Files Modified
+- `shared-functions.org:9720-9845` – new defcustom, helpers, and interactive command; update docstrings/messages.
+- `shared-functions.el:6400-6535` – tangled configuration mirrors the new display helpers and command.
+- `docs/work-log.org` – logged the change.
+
+** Expected Results After Reload
+- Adding an external monitor’s name to `jay/notch-display-identifiers` (or calling `jay/add-current-display-to-notch-list`) brings the notch-hiding tab bar to that screen whenever the frame is fullscreen or maximized.
+- `jay/debug-display-detection` now reports whether the current monitor is earmarked for notch coverage, aiding future tweaks.
 
 * 2025-10-11: Fixed ispell warnings and duplicate org-roam loading
 
