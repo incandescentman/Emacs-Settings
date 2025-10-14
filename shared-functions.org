@@ -956,7 +956,9 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
   ("EVENT" :background "gray25" :foreground "white" :weight bold)
     ("PROJECT" :background "firebrick" :foreground "white" :weight bold)
   ("STARTED" :background "dodger blue" :foreground "white" :weight bold)
-  ("DONE" :background "white" :foreground "black" :weight bold)))
+  ("DONE" :foreground "white" :background "#228B22"
+          :box (:line-width (2 . 1) :color "#228B22")
+          :weight bold)))
 
 #+END_SRC
 
@@ -991,7 +993,8 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("OKAY" . "#7cb8bb")
      ("DONT" . "#5f7f5f")
      ("FAIL" . "#8c5353")
-     ("DONE" . "#afd8af")
+     ("DONE" . (:foreground "white" :background "#228B22"
+                            :box (:line-width (2 . 1) :color "#228B22")))
      ("ADMITTED" . "DarkGreen")
      ("NOTE" . "#d0bf8f")
      ("STARTED" . "#d0bf8f")
@@ -9713,9 +9716,18 @@ Prerequisites outside Emacs (run in your project or globally):
 
 * Notch Management
 #+begin_src emacs-lisp
-;; MacBook Pro Notch Tab Bar Auto-Management
-(defvar jay/--last-notch-state nil
-  "Remember whether the tab bar is currently shown to hide the notch.")
+;; Display-aware tab bar management to hide hardware notches (built-in or external).
+(defgroup jay/display nil
+  "Display detection helpers for Jay's Emacs configuration."
+  :group 'environment)
+
+(defcustom jay/notch-display-identifiers '("Built-in" "Retina Display")
+  "List of regex patterns identifying displays that need notch concealment.
+Each string is matched case-sensitively against the monitor name returned by
+`display-monitor-attributes-list'.  Add your external monitor's name here to
+enable tab-bar-based notch hiding on that display as well."
+  :type '(repeat (string :tag "Display name regexp"))
+  :group 'jay/display)
 
 (use-package tab-bar
   :defer t
@@ -9729,17 +9741,14 @@ Prerequisites outside Emacs (run in your project or globally):
     (cons (if (numberp left) left (eval left))
           (if (numberp top) top (eval top)))))
 
-(defun jay/on-macbook-display-p ()
-  "Check if current frame is on MacBook Pro built-in display.
-Returns t if on built-in Retina display, nil if on external monitor."
+(defun jay/current-display-attributes ()
+  "Return the attribute alist for the display containing the current frame."
   (when (eq system-type 'darwin)
     (let* ((pos (jay/get-frame-position))
            (frame-x (car pos))
            (frame-y (cdr pos))
            (displays (display-monitor-attributes-list))
            (current-display nil))
-
-      ;; Find which display the frame is on
       (dolist (display displays)
         (let* ((geometry (cdr (assoc 'geometry display)))
                (x (nth 0 geometry))
@@ -9752,22 +9761,32 @@ Returns t if on built-in Retina display, nil if on external monitor."
                      (>= frame-y y)
                      (<= frame-y (+ y height)))
             (setq current-display display))))
+      current-display)))
 
-      ;; Check if current display is the built-in display
-      (when current-display
-        (let ((display-name (cdr (assoc 'name current-display))))
-          (and display-name
-               (string-match-p "Built-in\\|Retina Display" display-name)))))))
+(defun jay/--display-needs-notch-p (display)
+  "Return non-nil when DISPLAY matches `jay/notch-display-identifiers'."
+  (let ((name (cdr (assoc 'name display))))
+    (when name
+      (cl-some (lambda (needle)
+                 (string-match-p needle name))
+               jay/notch-display-identifiers))))
+
+(defun jay/on-notch-display-p ()
+  "Check if current frame is on a display that should hide a notch.
+Matches the current monitor against `jay/notch-display-identifiers'."
+  (let ((current-display (jay/current-display-attributes)))
+    (and current-display
+         (jay/--display-needs-notch-p current-display))))
 
 (defun jay/update-tab-bar-for-display ()
-  "Enable the tab bar *only* when the frame is both on the MacBook display
-and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight."
+  "Enable the tab bar when the frame is on a configured notch display and fullscreen.
+Otherwise, keep it politely out of sight."
   (interactive)
   (let* ((fullscreen-state (frame-parameter nil 'fullscreen))
-         (on-macbook      (jay/on-macbook-display-p))
+         (on-notch-display (jay/on-notch-display-p))
          ;; We regard either 'fullboth (native fullscreen) or 'maximized
          ;; as warranting notch-defence duty.
-         (should-show     (and on-macbook
+         (should-show     (and on-notch-display
                                (memq fullscreen-state '(fullboth maximized)))))
     (if should-show
         (progn
@@ -9815,7 +9834,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (defun jay/debug-display-detection ()
   "Show current display detection status."
   (interactive)
-  (let* ((on-macbook (jay/on-macbook-display-p))
+  (let* ((on-notch-display (jay/on-notch-display-p))
          (pos (jay/get-frame-position))
          (displays (display-monitor-attributes-list))
          (display-info (mapconcat
@@ -9824,8 +9843,19 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
                                  (or (cdr (assoc 'name d)) "Unknown")
                                  (cdr (assoc 'geometry d))))
                        displays ", ")))
-    (message "🔍 Position: %s | MacBook display: %s, sir | Monitors in residence: %s"
-             pos (if on-macbook "Indeed" "I'm afraid not") display-info)))
+    (message "🔍 Position: %s | Notch display: %s | Monitors: %s"
+             pos (if on-notch-display "Yes" "No") display-info)))
+
+(defun jay/add-current-display-to-notch-list ()
+  "Add the current monitor's name to `jay/notch-display-identifiers'.
+This updates the running Emacs session; use Customize to persist the change."
+  (interactive)
+  (if-let* ((display (jay/current-display-attributes))
+            (name (cdr (assoc 'name display))))
+      (progn
+        (cl-pushnew name jay/notch-display-identifiers :test #'string=)
+        (message "➕ Added \"%s\" to jay/notch-display-identifiers (not persisted)" name))
+    (message "⚠️ Unable to detect current display name.")))
 
 ;; Initialize on load
 (when (eq system-type 'darwin)
@@ -9855,7 +9885,7 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
 (defun jay/debug-display-detection ()
   "Show current display detection status."
   (interactive)
-  (let* ((on-macbook (jay/on-macbook-display-p))
+  (let* ((on-notch-display (jay/on-notch-display-p))
          (pos (jay/get-frame-position))
          (displays (display-monitor-attributes-list))
          (display-info (mapconcat
@@ -9864,8 +9894,8 @@ and in fullscreen (or maximized) mode.  Otherwise, keep it politely out of sight
                                  (or (cdr (assoc 'name d)) "Unknown")
                                  (cdr (assoc 'geometry d))))
                        displays ", ")))
-    (message "🔍 Position: %s | MacBook display: %s, sir | Monitors in residence: %s"
-             pos (if on-macbook "Indeed" "I'm afraid not") display-info)))
+    (message "🔍 Position: %s | Notch display: %s | Monitors in residence: %s"
+             pos (if on-notch-display "Indeed" "I'm afraid not") display-info)))
 
 
 #+end_example
