@@ -8690,6 +8690,15 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
   "/Users/jaydixit/Downloads/emacs/doc/emacs/emacs.info"
   "Optional override path for a local Emacs manual.")
 
+(defvar my-info-extra-dir
+  (cond
+   ((file-directory-p "/Users/jay/emacs/emacs-settings/info")
+    "/Users/jay/emacs/emacs-settings/info")
+   ((file-directory-p "/Users/jaydixit/emacs/emacs-settings/info")
+    "/Users/jaydixit/emacs/emacs-settings/info")
+   (t nil))
+  "Directory containing custom Info directory entries.")
+
 (defun my/open-latest-emacs-manual ()
   (interactive)
   (if (file-exists-p my-emacs-manual-path)
@@ -8701,10 +8710,15 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
 ;; Override the default Emacs manual path in Info
 (with-eval-after-load 'info
   ;; Ensure Info knows about its default directories before adding overrides.
+  (when my-info-extra-dir
+    (add-to-list 'Info-additional-directory-list my-info-extra-dir t)
+    (add-to-list 'Info-default-directory-list my-info-extra-dir t))
   (setq Info-directory-list
         (or Info-directory-list
             (copy-sequence Info-default-directory-list)))
   (add-to-list 'Info-directory-list "/opt/homebrew/share/info" t)
+  (when (file-directory-p my-info-extra-dir)
+    (add-to-list 'Info-directory-list my-info-extra-dir t))
   ;; Add the local manual (if present) and provide a fallback if it is missing.
   (if (file-exists-p my-emacs-manual-path)
       (progn

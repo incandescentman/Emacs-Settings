@@ -1,0 +1,106 @@
+#+title: Info Directory Troubleshooting Log
+#+author: Jay
+#+date: <2025-10-14>
+
+* Context
+- Goal: expose Calendar and Diary manuals directly in the Info top-level menu so they appear alongside other Emacs documentation.
+- Environment: GNU Emacs macOS port (`/opt/homebrew/Cellar/emacs-mac@29/HEAD-47022e4/Emacs.app`) with Homebrew-provided Info manuals located under `/opt/homebrew/share/info`.
+
+* Configuration Changes
+- Removed legacy startup suppression that killed `*info*` buffers (`shared-functions.org:9993-10010`, commit `Allow Info buffer to open`).
+- Reset `Info-directory-list` handling so defaults are preserved instead of overwritten (`spacemacs.d/init.el:1018`, `spacemacs.d/init-working.el:948`, commit `Restore default Info directory search`).
+- Introduced optional local manual handling and helper command:
+  - `shared-functions.org:8686-8730` defines `my-emacs-manual-path`, `my-info-extra-dir`, and `my/open-latest-emacs-manual`.
+  - Hooks into `with-eval-after-load 'info` to merge default directories, append Homebrew dir, add custom dir, and redefine `info-emacs-manual` if the local manual exists.
+- Added custom Info directory entries:
+  - Created `info/dir` with two entries:
+    ```text
+    INFO-DIR-SECTION Emacs
+    * Calendar: (emacs)Calendar/Diary.
+    * Diary: (emacs)Diary.
+    ```
+  - Updated hook to add `my-info-extra-dir` to both `Info-directory-list` and `Info-additional-directory-list`.
+
+* Commands Executed
+- Inspected configuration for “*info*” suppression:
+  ```bash
+  rg "*info*" shared-functions.org
+  sed -n '9960,10040p' shared-functions.org
+  ```
+- Verified Homebrew Info directory contents:
+  ```bash
+  ls /opt/homebrew/share/info
+  head -n 20 /opt/homebrew/share/info/dir
+  ```
+- Confirmed Calendar/Diary nodes exist inside `emacs.info.gz`:
+  ```bash
+  gzip -dc /opt/homebrew/share/info/emacs.info.gz | rg "Node: Calendar/Diary"
+  gzip -dc /opt/homebrew/share/info/emacs.info.gz | rg "Node: Diary"
+  ```
+- Enumerated entries defined in `emacs.info.gz` (python probe):
+  ```bash
+  python3 - <<'PY'
+  import gzip, re
+  data = gzip.open("/opt/homebrew/share/info/emacs.info.gz", "rt", encoding="utf-8", errors="ignore").read()
+  for match in re.findall(r"\\* ([^:]+): \\((emacs)[^)]*\\)\\.", data):
+      print(match)
+  PY
+  ```
+- Checked Info directory variables inside Emacs:
+  ```elisp
+  (require 'info)
+  (message "%S" Info-directory-list)
+  ```
+  Result: `("/Users/jay/.emacs.d/elpa/.../info" ... "/opt/homebrew/share/info" "/opt/homebrew/Cellar/emacs-mac@29/.../info/" "/Users/jay/emacs/emacs-settings/info")`
+
+* Observations
+- After reload, `Info-directory-list` shows the custom directory, but `M-x info` still renders the original menu without the new Calendar/Diary entries.
+- Manual reload of the `Top` node (`g` `RET`) does not pick up the custom entries.
+- The custom directory is appended to the end of the list; existing ELPA package directories appear earlier, each providing their own `dir` file.
+- Homebrew `dir` file is already present (`/opt/homebrew/share/info/dir`) and contains only a single entry for Emacs; expected since Calendar/Diary live inside the main manual.
+
+* Outstanding Questions
+- Why do additional `dir` files (from ELPA packages or our custom directory) register while the two manual alias entries do not surface?
+- Does the Info browser require `install-info` to merge entries into the primary `dir` rather than relying on multiple directories?
+- Would copying or custom-building a dedicated `calendar.info`/`diary.info` improve discoverability more than alias entries?
+
+* Suggested Next Steps
+1. Run `install-info info/dir /opt/homebrew/share/info/dir` (or a scratch duplicate) to test whether merging entries into the main `dir` solves the visibility issue.
+2. Inspect the order in which Info directory files are loaded by temporarily advising `Info-insert-dir` to log the source file, ensuring our custom directory is actually read.
+3. If the alias approach remains inconsistent, consider generating standalone Texinfo documents (`makeinfo emacs.texi --node=Calendar/Diary`) and adding them as separate manuals.
+4. Re-evaluate whether multiple duplicate entries in `Info-directory-list` are masking later additions; dedupe the list before appending new directories.
+
+* Troubleshooting Attempts (2025-10-14 Gemini Session)
+
+** Summary
+A series of attempts were made to resolve the issue of the Calendar/Diary info nodes not appearing in the top-level Info menu. The core issue appears to be that even when the `dir` file is correctly modified to include the entries, Emacs cannot find the corresponding nodes within the `emacs.info.gz` file.
+
+** Attempt 1: Merging `info/dir` with `install-info`
+- *Hypothesis:* The `Info-directory-list` was not being correctly parsed, and `install-info` was needed to merge the custom `dir` file with the main Homebrew `dir` file.
+- *Action:*
+  1. Created a temporary directory (`/tmp/info-test`).
+  2. Copied the main Homebrew `dir` file to the temporary directory.
+  3. Used `install-info` to merge the custom `info/dir` file into the temporary `dir` file.
+  4. Verified that the merge was successful.
+  5. Ran `install-info` on the live Homebrew `dir` file.
+- *Result:* The "Calendar" and "Diary" links appeared in the Info menu, but following them resulted in a "No such node or anchor" error.
+
+** Attempt 2: Simplifying `info/dir`
+- *Hypothesis:* The structure of the custom `info/dir` file was incorrect, or the "Diary" node was causing issues.
+- *Action:*
+  1. Backed up the live `info/dir` and Homebrew `dir` files.
+  2. Overwrote the custom `info/dir` with a single, simplified entry for `Calendar/Diary`.
+  3. Ran `install-info` to apply the change.
+- *Result:* The "No such node or anchor" error persisted. An error for "Diary" also appeared, suggesting a caching issue or some other persistent configuration.
+
+** Attempt 3: Using Full Path in `info/dir`
+- *Hypothesis:* The `(emacs)` alias was not being resolved correctly, and a full path to the `emacs.info.gz` file was needed.
+- *Action:*
+  1. Restored the `dir` files from backup.
+  2. Modified the custom `info/dir` to use the full path: `(/opt/homebrew/share/info/emacs.info.gz)Calendar/Diary`.
+  3. Ran `install-info`.
+- *Result:* The "No such node or anchor" error persisted.
+
+** Final Action: Reversion
+- *Action:* All changes to the `info/dir` and Homebrew `dir` files were reverted from the backups.
+- *Reason:* The troubleshooting steps were making the problem worse (i.e., breaking the ability to even see the `Calendar/Diary` node). The user reported a previous state where they could enter the node but internal links were broken, which was a more promising state to debug from.
