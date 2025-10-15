@@ -4953,8 +4953,54 @@ want to use in the modeline *in lieu of* the original.")
 
 (add-to-list 'mode-line-cleaner-alist '(org-ai-mode . ""))
 
+(require 'project nil t)
+
+(defun jay/mode-line--project-name ()
+ "Return a short project name for the current buffer, if available."
+ (let (name)
+  (cond
+   ((and (fboundp 'projectile-project-p)
+         (ignore-errors (projectile-project-p)))
+    (setq name (ignore-errors (projectile-project-name))))
+   ((fboundp 'project-current)
+    (let* ((project (ignore-errors (project-current)))
+           (root (cond
+                  ((and project (fboundp 'project-root))
+                   (ignore-errors (project-root project)))
+                  ((car-safe project))))
+           (trimmed (and root
+                         (file-name-nondirectory
+                          (directory-file-name root)))))
+     (setq name trimmed)))
+   ((ignore-errors (vc-root-dir))
+    (setq name (file-name-nondirectory
+                (directory-file-name (vc-root-dir))))))
+  (when (and name
+             (not (equal name ""))
+             (not (equal name "-")))
+   name)))
+
+(defun jay/mode-line-project-segment ()
+ "Mode line segment showing the current project name."
+ (let ((name (jay/mode-line--project-name)))
+  (when name
+   (concat " · " name))))
+
 (setq-default mode-line-format
-       (remove '(vc-mode vc-mode) mode-line-format))
+       (let* ((current (remove '(vc-mode vc-mode) mode-line-format))
+              (segment '(:eval (jay/mode-line-project-segment)))
+              (result nil)
+              (inserted nil))
+        (dolist (elem current)
+         (push elem result)
+         (when (and (not inserted)
+                    (eq elem 'mode-line-buffer-identification))
+          (push segment result)
+          (setq inserted t)))
+        (setq result (nreverse result))
+        (if inserted
+         result
+        (append result (list segment)))))
 
 (setq evil-want-keybinding nil)
 (setq evil-mode-line-format nil)
@@ -8047,24 +8093,6 @@ and now it works. Don't understand why it was getting overwritten before, but wh
 (message "Final PATH: %s" (getenv "PATH"))
 #+end_src
 
-* Jay Call
-#+begin_src emacs-lisp
-(defun org-to-html-to-clipboard-hardcoded ()
-  "Convert hardcoded org-mode text to HTML and copy it to the MacOS clipboard as HTML."
-  (interactive)
-  (let* ((org-content "Feel free to suggest some times that work for you or book time with me directly [[https://calendar.app.google/aSu61Nzz3PmxeYVaA][here]].")
-         (html-content (org-export-string-as org-content 'html t))
-         (temp-file (make-temp-file "clipboard-html-" nil ".html")))
-    ;; Write the HTML content to a temporary file
-    (with-temp-file temp-file
-      (insert html-content))
-    ;; Use AppleScript to read the file and set the clipboard
-    (let ((script (format "set the clipboard to (read (POSIX file \"%s\")) as «class HTML»" temp-file)))
-      (do-applescript script))
-    ;; Delete the temporary file
-    (delete-file temp-file)))
-#+end_src
-
 * timestamp export format
 Remove the remove <> surrounding timestamps
 
@@ -8189,6 +8217,9 @@ If invoked again, move to the next instance of the word."
                 year)
         'font-lock-face 'calendar-month-header))
 
+(require 'cl-lib)
+(require 'subr-x)
+
 (defvar my-calendar--last-window nil
   "Remember the last window showing the calendar buffer.")
 
@@ -8248,6 +8279,171 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
   (interactive)
   (my-calendar-jump-to-diary-entry (calendar-cursor-to-date t) t))
 
+(defvar my-calendar-diary-history nil
+  "Minibuffer history for `my-calendar-insert-diary-entry'.")
+
+(defun my-calendar--diary-format-date (month day year)
+  "Return the canonical diary date string for MONTH, DAY and YEAR."
+  (format "%d/%d/%d" month day year))
+
+(defun my-calendar--diary-insert-year (year)
+  "Insert a new YEAR heading in `diary-file' in chronological order."
+  (let* ((pattern "^# \\([0-9]+\\)$")
+         (insert-point (point-max)))
+    (goto-char (point-min))
+    (cl-loop while (re-search-forward pattern nil t)
+             for existing = (string-to-number (match-string 1))
+             when (> existing year)
+             do (setq insert-point (match-beginning 0))
+                (cl-return))
+    (goto-char insert-point)
+    (unless (bolp)
+      (insert "\n"))
+    (insert (format "# %d\n\n" year))))
+
+(defun my-calendar--diary-year-region (year)
+  "Ensure YEAR heading exists and return its region as (START END)."
+  (let* ((year-regexp (format "^# %d$" year)))
+    (goto-char (point-min))
+    (unless (re-search-forward year-regexp nil t)
+      (my-calendar--diary-insert-year year)
+      (goto-char (point-min))
+      (re-search-forward year-regexp nil t))
+    (let ((start (match-beginning 0))
+          (end (save-excursion
+                 (goto-char (match-end 0))
+                 (if (re-search-forward "^# [0-9]+$" nil t)
+                     (match-beginning 0)
+                   (point-max)))))
+      (list start end))))
+
+(defun my-calendar--diary-insert-month (month year year-start year-end)
+  "Insert MONTH heading for YEAR between YEAR-START and YEAR-END."
+  (require 'calendar)
+  (let* ((month-name (calendar-month-name month))
+         (heading (format "## %s %d" month-name year))
+         (pattern "^## \\([[:alpha:]]+\\) [0-9]+$"))
+    (goto-char year-start)
+    (forward-line 1)
+    (let ((insert-point year-end))
+      (cl-loop while (re-search-forward pattern year-end t)
+               for existing-name = (match-string 1)
+               for existing-month = (cdr (assoc-string existing-name calendar-month-alist t))
+               when (and existing-month (> existing-month month))
+               do (setq insert-point (match-beginning 0))
+                  (cl-return))
+      (goto-char insert-point)
+      (unless (bolp)
+        (insert "\n"))
+      (insert heading "\n"))))
+
+(defun my-calendar--diary-month-region (month year)
+  "Ensure MONTH heading in YEAR exists and return region as (START END)."
+  (require 'calendar)
+  (pcase-let ((`(,year-start ,year-end) (my-calendar--diary-year-region year)))
+    (let* ((month-name (calendar-month-name month))
+           (heading (format "## %s %d" month-name year))
+           (month-regexp (concat "^" (regexp-quote heading) "$")))
+      (goto-char year-start)
+      (forward-line 1)
+      (unless (re-search-forward month-regexp year-end t)
+        (my-calendar--diary-insert-month month year year-start year-end)
+        (pcase-let ((`(,year-start* ,year-end*) (my-calendar--diary-year-region year)))
+          (setq year-start year-start*)
+          (setq year-end year-end*)
+          (goto-char year-start)
+          (forward-line 1)
+          (re-search-forward month-regexp year-end t)))
+      (forward-line 1)
+      (let ((month-start (point))
+            (month-end (save-excursion
+                         (if (re-search-forward "^\\(## \\|# \\)" year-end t)
+                             (match-beginning 0)
+                           year-end))))
+        (list month-start month-end)))))
+
+(defun my-calendar--diary-normalize-lines (text)
+  "Split TEXT into trimmed bullet lines, dropping blanks."
+  (let (lines)
+    (dolist (line (split-string text "\n"))
+      (setq line (string-trim line))
+      (unless (string-empty-p line)
+        (push line lines)))
+    (nreverse lines)))
+
+(defun my-calendar--describe-date (date)
+  "Return a readable string for DATE (list MONTH DAY YEAR)."
+  (require 'calendar)
+  (let ((month (nth 0 date))
+        (day   (nth 1 date))
+        (year  (nth 2 date)))
+    (format "%s %d, %d" (calendar-month-name month) day year)))
+
+(defun my-calendar--diary-insert-entry (date lines)
+  "Insert diary entry for DATE (MONTH DAY YEAR) using LINES."
+  (let* ((month (nth 0 date))
+         (day   (nth 1 date))
+         (year  (nth 2 date))
+         (date-line (my-calendar--diary-format-date month day year))
+         (buffer (find-file-noselect diary-file)))
+    (with-current-buffer buffer
+      (save-excursion
+        (pcase-let ((`(,month-start ,month-end) (my-calendar--diary-month-region month year)))
+          (save-restriction
+            (narrow-to-region month-start month-end)
+            (goto-char (point-min))
+            (let ((insert-point nil)
+                  (duplicate nil))
+              (while (and (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
+                          (not insert-point))
+                (let ((existing-month (string-to-number (match-string 1)))
+                      (existing-day (string-to-number (match-string 2)))
+                      (existing-year (string-to-number (match-string 3))))
+                  (cond
+                   ((and (= existing-year year)
+                         (= existing-month month)
+                         (= existing-day day))
+                    (setq duplicate t)
+                    (forward-line 1)
+                    (while (and (not (eobp))
+                                (looking-at "  - "))
+                      (forward-line 1))
+                    (setq insert-point (point)))
+                   ((> existing-day day)
+                    (setq insert-point (match-beginning 0))))))
+              (unless insert-point
+                (setq insert-point (point-max)))
+              (goto-char insert-point)
+              (unless duplicate
+                (unless (bolp)
+                  (insert "\n"))
+                (insert date-line "\n"))
+              (dolist (line lines)
+                (insert "  - " line "\n"))
+              (unless (looking-at "\n")
+                (insert "\n"))))
+          (widen)))
+      (save-buffer))))
+
+(defun my-calendar-insert-diary-entry (&optional date)
+  "Prompt for a diary entry and insert it for DATE.
+DATE defaults to the date at point in the calendar."
+  (interactive)
+  (let* ((date (or date (calendar-cursor-to-date t)))
+         (month (nth 0 date))
+         (day   (nth 1 date))
+         (year  (nth 2 date))
+         (prompt (format "Entry for %s: "
+                         (my-calendar--describe-date date)))
+         (text (read-from-minibuffer prompt nil nil nil 'my-calendar-diary-history)))
+    (let ((lines (my-calendar--diary-normalize-lines text)))
+      (when (null lines)
+        (user-error "Diary entry cannot be empty"))
+      (my-calendar--diary-insert-entry date lines)
+      (my-calendar-jump-to-diary-entry date t)
+      (message "Added diary entry for %s"
+               (format "%d/%d/%d" month day year)))))
+
 (with-eval-after-load 'calendar
   ;; Make "RET" show diary entries
   (define-key calendar-mode-map (kbd "RET") #'my-calendar-view-and-edit-entry)
@@ -8279,6 +8475,11 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
     (lambda ()
       (interactive)
       (calendar-backward-year 1)))
+
+  ;; Add smarter diary entry insertion that keeps Markdown chronologically sorted
+  (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
+  ;; Keep the original command available if needed
+  (define-key calendar-mode-map (kbd "I") #'calendar-insert-diary-entry)
 
   ;; Make "o" jump to the date under cursor
   (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
@@ -9852,7 +10053,7 @@ After evaluating your init-file you can use links analog to the example:
 (defun kill-unwanted-buffers ()
   "Kill common unwanted buffers like *spacemacs*, *info*, and *Async-native-compile-log*."
   (interactive)
-  (dolist (buf '("*spacemacs*" "*info*" "*Async-native-compile-log*"))
+  (dolist (buf '("*spacemacs*" "*info*" "*Async-native-compile-log*" "*Shell Command Output*"))
     (when (get-buffer buf)
       (kill-buffer buf))))
 
