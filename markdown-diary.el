@@ -67,8 +67,9 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
     (unless keep-calendar-selected
       (select-window calendar-window))))
 
-(defun my-calendar-view-and-edit-entry ()
-  "Show the fancy diary listing and open the Markdown entry for the date at point."
+;; Renamed and clarified docstring
+(defun my-calendar-view-fancy-listing ()
+  "Show the fancy diary listing for the date at point, then reselect the calendar window and open the Markdown diary entry for that date."
   (interactive)
   (let* ((calendar-window (selected-window))
          (date (calendar-cursor-to-date t)))
@@ -88,12 +89,37 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
       (setq window (get-buffer-window calendar-buffer t)))
     (if (and window (window-live-p window))
         (select-window window)
-        (user-error "No active calendar window to focus"))))
+      (user-error "No active calendar window to focus"))))
 
-(defun my-calendar-edit-diary-entry ()
+(defun my-calendar-open-diary-entry ()
   "Open the diary entry for the date at point and leave focus in the diary buffer."
   (interactive)
   (my-calendar-jump-to-diary-entry (calendar-cursor-to-date t) t))
+
+;; Enhanced to move to the end of the last bullet for that date
+(defun my-calendar-edit-diary-entry ()
+  "Open the diary entry for the date at point and leave focus in the diary buffer. After jumping, move point to the end of the last bullet item for that date."
+  (interactive)
+  (let* ((date (calendar-cursor-to-date t))
+         (month (number-to-string (nth 0 date)))
+         (day   (number-to-string (nth 1 date)))
+         (year  (number-to-string (nth 2 date)))
+         (date-str (format "%s/%s/%s" month day year)))
+    (my-calendar-jump-to-diary-entry date t)
+    ;; Now move to the end of the last bullet for this date
+    (goto-char (point-min))
+    (when (search-forward date-str nil t)
+      (beginning-of-line)
+      (let ((last-bullet-pos nil))
+        (forward-line 1)
+        ;; Walk through all consecutive "  - " lines
+        (while (looking-at "  - ")
+          (setq last-bullet-pos (line-end-position))
+          (forward-line 1))
+        (if last-bullet-pos
+            (goto-char last-bullet-pos)
+          ;; If no bullets, just go to end of the date line
+          (goto-char (line-end-position)))))))
 
 (defvar my-calendar-diary-history nil
   "Minibuffer history for `my-calendar-insert-diary-entry'.")
@@ -266,10 +292,12 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
                (format "%d/%d/%d" month day year)))))
 
 (with-eval-after-load 'calendar
-  ;; Make "RET" show diary entries
-  (define-key calendar-mode-map (kbd "RET") #'my-calendar-view-and-edit-entry)
-  ;; Alternate binding that jumps to the diary and leaves point there
+  ;; "RET" jumps straight into the diary entry and leaves focus there
+  (define-key calendar-mode-map (kbd "RET") #'my-calendar-open-diary-entry)
+  ;; "e" opens the diary entry and moves point to the end of its last bullet
   (define-key calendar-mode-map (kbd "e") #'my-calendar-edit-diary-entry)
+  ;; "o" shows the fancy diary listing and then reselects the calendar
+  (define-key calendar-mode-map (kbd "o") #'my-calendar-view-fancy-listing)
 
   ;; Month / year navigation shortcuts
   (define-key calendar-mode-map (kbd "n")
@@ -302,9 +330,6 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
   (define-key calendar-mode-map (kbd "c") #'my-calendar-insert-diary-entry)
   ;; Keep the original command available if needed
   (define-key calendar-mode-map (kbd "I") #'calendar-insert-diary-entry)
-
-  ;; Make "o" jump to the date under cursor
-  (define-key calendar-mode-map (kbd "o") #'my-calendar-jump-to-diary-entry)
 
   ;; Make "t" jump to today, then jump to diary entry
   (define-key calendar-mode-map (kbd "t")

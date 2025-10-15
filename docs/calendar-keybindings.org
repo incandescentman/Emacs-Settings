@@ -7,14 +7,14 @@ This reference lists the active keybindings that connect the Emacs Calendar buff
 * Calendar Mode Bindings
 These bindings live in ~calendar-mode-map~.
 
-~RET~   ~my-calendar-view-and-edit-entry~
-     - Show the fancy diary listing while leaving focus in Calendar.
+~RET~   ~my-calendar-open-diary-entry~
+     - Jump straight into the Markdown diary entry for the selected date and leave focus there.
 
 ~e~   ~my-calendar-edit-diary-entry~
      - Jump to the diary entry for the selected date and stay there.
 
-~o~   ~my-calendar-jump-to-diary-entry~
-     - Open the diary entry in another window without altering the Calendar window.
+~o~   ~my-calendar-view-fancy-listing~
+     - Show the fancy diary listing for the date at point, then reselect the Calendar window.
 
 ~t~   today + diary
      - Move to today and immediately display today’s diary entry.

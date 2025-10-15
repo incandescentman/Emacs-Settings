@@ -38,10 +38,11 @@ The helper narrows to the current month region, searches for existing date headi
 ** Summary
 - Added ~c~ as a calendar-mode alias for ~my-calendar-insert-diary-entry~ so creating entries stays on the home row.
 - Ensured every inserted diary block leaves a blank line afterwards, keeping Markdown sections readable.
+- Rebound ~RET~ to open the Markdown entry immediately, moved ~o~ to the fancy diary listing command, and enhanced ~e~ to land at the end of the last bullet.
 
 ** Files Modified
-- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter and bound `c` to the entry command.
-- `docs/calendar-keybindings.org`: Documented the new `c` shortcut.
+- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, introduced `my-calendar-open-diary-entry`, retuned `RET`, and improved `e` to place point at the last bullet.
+- `docs/calendar-keybindings.org`: Documented the updated keybindings.
 
 * 2025-10-14: Markdown diary refinements
 
