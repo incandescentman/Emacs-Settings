@@ -17,6 +17,10 @@
 - `docs/calendar-keybindings.org`: Documented the new `o`/`v` view shortcut and `O` fallback.
 - `docs/work-log.org`: Logged this change.
 
+** Handoff: Next session
+- Sanity-check the new `o`/`v` binding on a clean Emacs restart to ensure focus stays in calendar.
+- Decide if the fancy listing should be accessible elsewhere now that `O` is uppercase.
+
 * 2025-10-14: Calendar helpers packed into `markdown-diary.el`
 
 ** Summary
