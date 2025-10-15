@@ -7,9 +7,9 @@
 
 ;;; Code:
 
-(require 'calendar)
 (require 'cl-lib)
 (require 'subr-x)
+(require 'calendar)
 
 ;; Disable calendar highlighting and configure diary defaults
 (setq calendar-mark-holidays-flag nil
@@ -102,7 +102,9 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
              when (> existing year)
              do (setq insert-point (match-beginning 0))
              finally (goto-char insert-point))
-    (unless (bolp)
+    (unless (or (bobp) (looking-back "\n" 1))
+      (insert "\n"))
+    (unless (looking-at "\n")
       (insert "\n"))
     (insert (format "# %d\n\n" year))))
 
@@ -136,7 +138,9 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                when (and existing-month (> existing-month month))
                do (setq insert-point (match-beginning 0))
                finally (goto-char insert-point)))
-    (unless (bolp)
+    (unless (or (bobp) (looking-back "\n" 1))
+      (insert "\n"))
+    (unless (looking-at "\n")
       (insert "\n"))
     (insert heading "\n")))
 
@@ -197,18 +201,16 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                   (duplicate nil))
               (while (and (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
                           (not insert-point))
-                (let ((existing-month (string-to-number (match-string 1)))
-                      (existing-day (string-to-number (match-string 2)))
-                      (existing-year (string-to-number (match-string 3))))
+                (let ((existing-day (string-to-number (match-string 2))))
                   (cond
-                   ((and (= existing-year year)
-                         (= existing-month month)
-                         (= existing-day day))
+                   ((= existing-day day)
                     (setq duplicate t)
                     (forward-line 1)
                     (while (and (not (eobp))
                                 (looking-at "  - "))
                       (forward-line 1))
+                    (unless (or (eobp) (looking-at "^\\s-*$"))
+                      (insert "\n"))
                     (setq insert-point (point)))
                    ((> existing-day day)
                     (setq insert-point (match-beginning 0))))))
@@ -216,7 +218,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                 (setq insert-point (point-max)))
               (goto-char insert-point)
               (unless duplicate
-                (unless (bolp)
+                (unless (or (bolp) (looking-back "\n" 1))
                   (insert "\n"))
                 (insert date-line "\n"))
               (dolist (line lines)
@@ -226,22 +228,25 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
           (widen)))
       (save-buffer))))
 
-(defun my-calendar-insert-diary-entry (&optional date)
+(defun my-calendar-insert-diary-entry (&optional date stay-in-diary)
   "Prompt for a diary entry and insert it for DATE.
-DATE defaults to the date at point in the calendar."
-  (interactive)
-  (let* ((date (or date (calendar-cursor-to-date t)))
+DATE defaults to the date at point in the calendar.
+With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffer."
+  (interactive (list nil current-prefix-arg))
+  (let* ((stay-in-diary (not (null stay-in-diary)))
+         (date (or date (calendar-cursor-to-date t)))
          (month (nth 0 date))
          (day   (nth 1 date))
          (year  (nth 2 date))
          (prompt (format "Entry for %s: "
                          (my-calendar--describe-date date)))
-         (text (read-from-minibuffer prompt nil nil nil 'my-calendar-diary-history)))
+         (initial (or (car my-calendar-diary-history) ""))
+         (text (read-from-minibuffer prompt initial nil nil 'my-calendar-diary-history)))
     (let ((lines (my-calendar--diary-normalize-lines text)))
       (when (null lines)
         (user-error "Diary entry cannot be empty"))
       (my-calendar--diary-insert-entry date lines)
-      (my-calendar-jump-to-diary-entry date t)
+      (my-calendar-jump-to-diary-entry date stay-in-diary)
       (message "Added diary entry for %s"
                (format "%d/%d/%d" month day year)))))
 
