@@ -218,7 +218,8 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                 (setq insert-point (point-max)))
               (goto-char insert-point)
               (unless duplicate
-                (unless (or (bolp) (looking-back "\n" 1))
+                (unless (or (bobp)
+                            (looking-back "^\\s-*\\n\\s-*\\n" nil))
                   (insert "\n"))
                 (insert date-line "\n"))
               (dolist (line lines)
