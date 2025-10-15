@@ -293,9 +293,8 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
                (format "%d/%d/%d" month day year)))))
 
 (with-eval-after-load 'calendar
-  ;; "RET" jumps straight into the diary entry and leaves focus there
-  (define-key calendar-mode-map (kbd "RET") #'my-calendar-open-diary-entry)
-  ;; "e" opens the diary entry and moves point to the end of its last bullet
+  ;; Bind both "RET" and "e" to edit the diary entry and place point at the end
+  (define-key calendar-mode-map (kbd "RET") #'my-calendar-edit-diary-entry)
   (define-key calendar-mode-map (kbd "e") #'my-calendar-edit-diary-entry)
   ;; "o" shows the fancy diary listing and then reselects the calendar
   (define-key calendar-mode-map (kbd "o") #'my-calendar-view-fancy-listing)
