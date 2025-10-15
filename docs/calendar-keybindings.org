@@ -35,10 +35,16 @@ These bindings live in ~calendar-mode-map~.
      - Prompt for Markdown text, insert it chronologically, and return to the Calendar window.
 
 ~c~   ~my-calendar-insert-diary-entry~
-     - Same as ~i~; quick alias for creating a diary entry while staying on the home row.
+     - Same as ~i~, but starts with an empty minibuffer even if history exists.
+
+~C~   ~my-calendar-insert-diary-entry-and-autopopulate~
+     - Seed the minibuffer with your most recent entry text for quick reuse.
 
 ~C-u i~   ~my-calendar-insert-diary-entry~
      - Same as above, but remain in the diary buffer (prefix argument).
+
+~C-u C~   ~my-calendar-insert-diary-entry-and-autopopulate~
+     - Autopopulate with history and keep focus in the diary buffer.
 
 ~I~   ~calendar-insert-diary-entry~
      - Stock Emacs inserter kept as a fallback, Markdown-agnostic.

@@ -2,6 +2,21 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-14: Calendar diary prompt variants and spacing fixes
+
+** Summary
+- Split the insert helper so `c` opens a blank prompt while `C` seeds the minibuffer with the previous entry.
+- Normalised diary spacing to keep exactly one blank line around each date block and month heading.
+- Documented the new keybindings, including prefix variants, in the calendar reference guide.
+
+** Why it should work
+Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
+
+** Files Modified
+- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, and spacing normalisers.
+- `docs/calendar-keybindings.org`: Described the `c`/`C` split and the prefix behaviour.
+- `docs/work-log.org`: Logged this change.
+
 * 2025-10-14: Calendar diary view stays focused
 
 ** Summary

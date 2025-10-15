@@ -238,12 +238,25 @@ After jumping, move point to the end of the last bullet item for that date."
         (year  (nth 2 date)))
     (format "%s %d, %d" (calendar-month-name month) day year)))
 
-(defun my-calendar--ensure-blank-line ()
-  "Ensure there is a blank line (two newlines) at point."
-  (unless (looking-at "\n")
-    (insert "\n"))
-  (unless (looking-at "\n")
-    (insert "\n")))
+(defun my-calendar--ensure-blank-line-before ()
+  "Ensure exactly one blank line precedes point.
+Collapses any existing run of newlines and inserts two."
+  (save-excursion
+    (let ((end (point)))
+      (skip-chars-backward "\n")
+      (let ((start (point)))
+        (delete-region start end)
+        (insert "\n\n")))))
+
+(defun my-calendar--ensure-blank-line-after ()
+  "Ensure exactly one blank line follows point.
+Removes extra blank lines and inserts two newlines."
+  (save-excursion
+    (let ((start (point)))
+      (skip-chars-forward "\n")
+      (let ((end (point)))
+        (delete-region start end)
+        (insert "\n\n")))))
 
 (defun my-calendar--diary-insert-entry (date lines)
   "Insert diary entry for DATE (MONTH DAY YEAR) using LINES."
@@ -279,19 +292,18 @@ After jumping, move point to the end of the last bullet item for that date."
                 (setq insert-point (point-max)))
               (goto-char insert-point)
               (unless duplicate
-                (my-calendar--ensure-blank-line)
+                (my-calendar--ensure-blank-line-before)
                 (insert date-line "\n"))
               (dolist (line lines)
                 (insert "  - " line "\n"))
-              (my-calendar--ensure-blank-line)))
+              (my-calendar--ensure-blank-line-after)))
           (widen)))
       (save-buffer))))
 
-(defun my-calendar-insert-diary-entry (&optional date stay-in-diary)
-  "Prompt for a diary entry and insert it for DATE.
-DATE defaults to the date at point in the calendar.
-With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffer."
-  (interactive (list nil current-prefix-arg))
+(defun my-calendar--insert-diary-entry (date stay-in-diary initial)
+  "Insert a diary entry for DATE, seeding the minibuffer with INITIAL.
+DATE defaults to the calendar date at point; STAY-IN-DIARY matches
+the interactive prefix argument behaviour from the public commands."
   (let* ((stay-in-diary (not (null stay-in-diary)))
          (date (or date (calendar-cursor-to-date t)))
          (month (nth 0 date))
@@ -299,7 +311,6 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
          (year  (nth 2 date))
          (prompt (format "Entry for %s: "
                          (my-calendar--describe-date date)))
-         (initial (or (car my-calendar-diary-history) ""))
          (text (read-from-minibuffer prompt initial nil nil 'my-calendar-diary-history)))
     (let ((lines (my-calendar--diary-normalize-lines text)))
       (when (null lines)
@@ -308,6 +319,17 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
       (my-calendar-jump-to-diary-entry date stay-in-diary)
       (message "Added diary entry for %s"
                (format "%d/%d/%d" month day year)))))
+
+(defun my-calendar-insert-diary-entry (&optional date stay-in-diary)
+  "Prompt for a diary entry and insert it for DATE with an empty minibuffer."
+  (interactive (list nil current-prefix-arg))
+  (my-calendar--insert-diary-entry date stay-in-diary ""))
+
+(defun my-calendar-insert-diary-entry-and-autopopulate (&optional date stay-in-diary)
+  "Prompt for a diary entry using the most recent history entry as default text."
+  (interactive (list nil current-prefix-arg))
+  (my-calendar--insert-diary-entry
+   date stay-in-diary (or (car my-calendar-diary-history) "")))
 
 (with-eval-after-load 'calendar
   ;; Bind both "RET" and "e" to edit the diary entry and place point at the end
@@ -348,6 +370,7 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
   ;; Add smarter diary entry insertion that keeps Markdown chronologically sorted
   (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
   (define-key calendar-mode-map (kbd "c") #'my-calendar-insert-diary-entry)
+  (define-key calendar-mode-map (kbd "C") #'my-calendar-insert-diary-entry-and-autopopulate)
   ;; Keep the original command available if needed
   (define-key calendar-mode-map (kbd "I") #'calendar-insert-diary-entry)
 
