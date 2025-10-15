@@ -98,28 +98,29 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
 
 ;; Enhanced to move to the end of the last bullet for that date
 (defun my-calendar-edit-diary-entry ()
-  "Open the diary entry for the date at point and leave focus in the diary buffer. After jumping, move point to the end of the last bullet item for that date."
+  "Open the diary entry for the date at point and leave focus in the diary buffer.
+After jumping, move point to the end of the last bullet item for that date."
   (interactive)
   (let* ((date (calendar-cursor-to-date t))
-         (month (number-to-string (nth 0 date)))
-         (day   (number-to-string (nth 1 date)))
-         (year  (number-to-string (nth 2 date)))
-         (date-str (format "%s/%s/%s" month day year)))
+         (date-str (and date
+                        (my-calendar--diary-format-date
+                         (nth 0 date) (nth 1 date) (nth 2 date)))))
     (my-calendar-jump-to-diary-entry date t)
-    ;; Now move to the end of the last bullet for this date
-    (goto-char (point-min))
-    (when (search-forward date-str nil t)
-      (beginning-of-line)
-      (let ((last-bullet-pos nil))
+    (when (and date-str (looking-at (concat "^" (regexp-quote date-str) "$")))
+      (let ((date-line-end (line-end-position))
+            (last-bullet-pos nil))
         (forward-line 1)
-        ;; Walk through all consecutive "  - " lines
-        (while (looking-at "  - ")
-          (setq last-bullet-pos (line-end-position))
+        ;; Skip blank lines immediately following the heading.
+        (while (and (not (eobp)) (looking-at "^\\s-*$"))
           (forward-line 1))
-        (if last-bullet-pos
-            (goto-char last-bullet-pos)
-          ;; If no bullets, just go to end of the date line
-          (goto-char (line-end-position)))))))
+        ;; Track the end of each bullet line.
+        (while (looking-at "^  - ")
+          (setq last-bullet-pos (line-end-position))
+          (forward-line 1)
+          ;; Allow optional blank separators inside the block without losing the last bullet.
+          (while (and (not (eobp)) (looking-at "^\\s-*$"))
+            (forward-line 1)))
+        (goto-char (or last-bullet-pos date-line-end))))))
 
 (defvar my-calendar-diary-history nil
   "Minibuffer history for `my-calendar-insert-diary-entry'.")
