@@ -1,0 +1,24 @@
+#+TITLE: Calendar & Markdown Diary Keybindings
+#+AUTHOR: Jay Dixit
+
+This sheet captures the active shortcuts that glue together the Calendar buffer and the Markdown diary workflow.
+
+* Calendar Mode (`calendar-mode-map`)
+  - `RET` → `my-calendar-view-and-edit-entry` (show fancy diary listing, keep focus in Calendar)
+  - `e`   → `my-calendar-edit-diary-entry` (jump to diary entry and stay there)
+  - `o`   → `my-calendar-jump-to-diary-entry` (open diary entry in other window)
+  - `t`   → today + jump to diary entry
+  - `n`, `M-<right>` → next month
+  - `p`, `M-<left>`  → previous month
+  - `N` → next year
+  - `P` → previous year
+  - `i` → `my-calendar-insert-diary-entry` (prompt for Markdown entry; returns to Calendar by default)
+  - `C-u i` → same as above, but stay in diary buffer after inserting
+  - `I` → stock `calendar-insert-diary-entry` (Emacs default, Markdown-agnostic)
+
+* Markdown Diary Buffer (`markdown-mode-map`)
+  - `s-.` (Command-.) → `my-calendar-focus-calendar-window` (refocus the existing Calendar window)
+
+* Notes
+  - Diary file: `~/Dropbox/github/timeless/jay-diary.md`
+  - `my-calendar-insert-diary-entry` auto-creates year/month headings, maintains chronological order, and ensures blank lines for readable Markdown.
