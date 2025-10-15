@@ -1,4 +1,6 @@
-;;; jay-calendar.el --- Calendar diary helpers -*- lexical-binding: t; -*-
+;;; markdown-diary.el --- Calendar diary helpers -*- lexical-binding: t; -*-
+
+;;; Author: Jay Dixit
 
 ;;; Commentary:
 ;; Custom calendar and diary commands shared across the Emacs configuration.
@@ -299,6 +301,6 @@ DATE defaults to the date at point in the calendar."
 
 (add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
 
-(provide 'jay-calendar)
+(provide 'markdown-diary)
 
-;;; jay-calendar.el ends here
+;;; markdown-diary.el ends here

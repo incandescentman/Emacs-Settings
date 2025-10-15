@@ -8197,7 +8197,7 @@ If invoked again, move to the next instance of the word."
 
 * Jay Diary 
 #+BEGIN_SRC emacs-lisp
-(require 'jay-calendar)
+(require 'markdown-diary)
 #+END_SRC
 
 * Markdown customizations

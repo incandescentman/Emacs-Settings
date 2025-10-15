@@ -2,20 +2,20 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-10-14: Calendar helpers packed into `jay-calendar.el`
+* 2025-10-14: Calendar helpers packed into `markdown-diary.el`
 
 ** Summary
-- Moved the entire Jay Diary customization block from `shared-functions` into a standalone module `jay-calendar.el`.
-- Replaced the inlined code with a simple `(require 'jay-calendar)` so the functions load from one place whether or not tangling runs.
+- Moved the entire Jay Diary customization block from `shared-functions` into a standalone module `markdown-diary.el`.
+- Replaced the inlined code with a simple `(require 'markdown-diary)` so the functions load from one place whether or not tangling runs.
 - Copied the module into the tracked `.el` file directly so Spacemacs picks it up without additional boot tweaks.
 
 ** Why it should work
-The project root is already on `load-path`, so requiring `jay-calendar` resolves instantly. The new module `provide`s the same feature guard and mirrors all previous calendar bindings, hooks, and diary helpers, keeping behaviour identical after the move.
+The project root is already on `load-path`, so requiring `markdown-diary` resolves instantly. The new module `provide`s the same feature guard and mirrors all previous calendar bindings, hooks, and diary helpers, keeping behaviour identical after the move.
 
 ** Files Modified
 - `shared-functions.org`: Replaced the calendar block with a `require`.
 - `shared-functions.el`: Mirrors the new requirement for runtime use.
-- `jay-calendar.el`: New file with the full calendar implementation.
+- `markdown-diary.el`: New file with the full calendar implementation.
 - `docs/work-log.org`: Logged the restructuring.
 
 * 2025-10-14: Calendar diary entries sort themselves
