@@ -34,6 +34,9 @@ These bindings live in ~calendar-mode-map~.
 ~i~   ~my-calendar-insert-diary-entry~
      - Prompt for Markdown text, insert it chronologically, and return to the Calendar window.
 
+~c~   ~my-calendar-insert-diary-entry~
+     - Same as ~i~; quick alias for creating a diary entry while staying on the home row.
+
 ~C-u i~   ~my-calendar-insert-diary-entry~
      - Same as above, but remain in the diary buffer (prefix argument).
 

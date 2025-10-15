@@ -12,6 +12,15 @@
 (require 'calendar)
 (require 'cal-move)   ;; for `calendar-month-alist` and navigation helpers
 
+;; Ensure calendar-month-alist exists (Emacs 29+ doesn't always provide it)
+(unless (boundp 'calendar-month-alist)
+  (setq calendar-month-alist
+        '(("January" . 1) ("February" . 2) ("March" . 3) ("April" . 4)
+          ("May" . 5) ("June" . 6) ("July" . 7) ("August" . 8)
+          ("September" . 9) ("October" . 10) ("November" . 11)
+          ("December" . 12))))
+
+
 ;; Disable calendar highlighting and configure diary defaults
 (setq calendar-mark-holidays-flag nil
       diary-file "/Users/jay/Dropbox/github/timeless/data/jay-diary.md"
@@ -185,9 +194,11 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
         (year  (nth 2 date)))
     (format "%s %d, %d" (calendar-month-name month) day year)))
 
-(defun my-calendar--ensure-trailing-newline ()
-  "Ensure there is a newline at point unless already at a blank line."
-  (unless (bolp)
+(defun my-calendar--ensure-blank-line ()
+  "Ensure there is a blank line (two newlines) at point."
+  (unless (looking-at "\n")
+    (insert "\n"))
+  (unless (looking-at "\n")
     (insert "\n")))
 
 (defun my-calendar--diary-insert-entry (date lines)
@@ -224,11 +235,11 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                 (setq insert-point (point-max)))
               (goto-char insert-point)
               (unless duplicate
-                (my-calendar--ensure-trailing-newline)
+                (my-calendar--ensure-blank-line)
                 (insert date-line "\n"))
               (dolist (line lines)
                 (insert "  - " line "\n"))
-              (my-calendar--ensure-trailing-newline)))
+              (my-calendar--ensure-blank-line)))
           (widen)))
       (save-buffer))))
 
@@ -288,6 +299,7 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
 
   ;; Add smarter diary entry insertion that keeps Markdown chronologically sorted
   (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
+  (define-key calendar-mode-map (kbd "c") #'my-calendar-insert-diary-entry)
   ;; Keep the original command available if needed
   (define-key calendar-mode-map (kbd "I") #'calendar-insert-diary-entry)
 

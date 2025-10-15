@@ -33,6 +33,16 @@ The helper narrows to the current month region, searches for existing date headi
 - `shared-functions.el`: Mirrored the helpers so they are available without tangling.
 - `docs/work-log.org`: Logged this change.
 
+* 2025-10-14: Calendar entry alias and spacing
+
+** Summary
+- Added ~c~ as a calendar-mode alias for ~my-calendar-insert-diary-entry~ so creating entries stays on the home row.
+- Ensured every inserted diary block leaves a blank line afterwards, keeping Markdown sections readable.
+
+** Files Modified
+- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter and bound `c` to the entry command.
+- `docs/calendar-keybindings.org`: Documented the new `c` shortcut.
+
 * 2025-10-14: Markdown diary refinements
 
 ** Summary
