@@ -203,7 +203,7 @@ This function should only modify configuration layer settings."
                                       ;; gist
                                       ;; graphviz-dot-mode
                                       ;; imenu-list
-                                      ;; key-chord
+                                      key-chord
                                       ;; magit-section
                                       ;; mpv
                                       ;; multicolumn
