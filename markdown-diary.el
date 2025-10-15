@@ -25,7 +25,7 @@
 (setq calendar-mark-holidays-flag nil
       diary-file "/Users/jay/Dropbox/github/timeless/data/jay-diary.md"
       calendar-mark-diary-entries-flag t
-      calendar-view-diary-initially-flag t
+      calendar-view-diary-initially-flag nil
       diary-display-function 'diary-fancy-display
       diary-comment-start "#"
       diary-comment-end ""
@@ -38,6 +38,16 @@
 
 (defvar my-calendar--last-window nil
   "Remember the last window showing the calendar buffer.")
+
+(defun my-calendar--close-diary-display ()
+  "Remove any fancy diary display windows so layouts stay stable."
+  (dolist (buffer '("*Fancy Diary Entries*" "*Diary Entries*"))
+    (when-let ((buf (get-buffer buffer)))
+      (dolist (win (get-buffer-window-list buf nil t))
+        (when (window-live-p win)
+          (condition-case nil
+              (delete-window win)
+            (error nil)))))))
 
 (defun my-calendar--remember-window (&rest _args)
   "Record the current window as the active calendar window."
@@ -67,6 +77,12 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
     (unless keep-calendar-selected
       (select-window calendar-window))))
 
+(defun my-calendar-view-diary-entry ()
+  "Display the diary entry for the date at point while staying in the calendar."
+  (interactive)
+  (my-calendar-jump-to-diary-entry (calendar-cursor-to-date t) nil)
+  (my-calendar--close-diary-display))
+
 ;; Renamed and clarified docstring
 (defun my-calendar-view-fancy-listing ()
   "Show the fancy diary listing for the date at point, then reselect the calendar window and open the Markdown diary entry for that date."
@@ -80,6 +96,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
 (defun my-calendar-focus-calendar-window ()
   "Return focus to the live calendar window without changing its date."
   (interactive)
+  (my-calendar--close-diary-display)
   (let* ((calendar-buffer (get-buffer calendar-buffer))
          (window (and (window-live-p my-calendar--last-window)
                       (eq (window-buffer my-calendar--last-window) calendar-buffer)
@@ -296,8 +313,11 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
   ;; Bind both "RET" and "e" to edit the diary entry and place point at the end
   (define-key calendar-mode-map (kbd "RET") #'my-calendar-edit-diary-entry)
   (define-key calendar-mode-map (kbd "e") #'my-calendar-edit-diary-entry)
-  ;; "o" shows the fancy diary listing and then reselects the calendar
-  (define-key calendar-mode-map (kbd "o") #'my-calendar-view-fancy-listing)
+  ;; "v"/"o" display the diary entry but keep focus in the calendar
+  (define-key calendar-mode-map (kbd "v") #'my-calendar-view-diary-entry)
+  (define-key calendar-mode-map (kbd "o") #'my-calendar-view-diary-entry)
+  ;; "O" shows the fancy diary listing and then reselects the calendar
+  (define-key calendar-mode-map (kbd "O") #'my-calendar-view-fancy-listing)
 
   ;; Month / year navigation shortcuts
   (define-key calendar-mode-map (kbd "n")

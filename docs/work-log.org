@@ -2,6 +2,21 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-14: Calendar diary view stays focused
+
+** Summary
+- Disabled the automatic fancy diary buffer so the calendar + diary layout now stays stable.
+- Added `my-calendar-view-diary-entry` and bound both ~o~ and ~v~ to it, showing the entry while leaving focus in the calendar.
+- Promoted the fancy diary listing to ~O~ and taught ~s-.~ to close any diary listing panes before returning to the calendar.
+
+** Why it should work
+`my-calendar-view-diary-entry` reuses `my-calendar-jump-to-diary-entry` but immediately hands focus back to the calendar and cleans up fancy diary buffers. Clearing `calendar-view-diary-initially-flag` prevents Emacs from spawning the fancy listing automatically, so window arrangements remain intact.
+
+** Files Modified
+- `markdown-diary.el`: Added the view helper, disabled automatic fancy display, tightened `s-.`, and rebound calendar keys.
+- `docs/calendar-keybindings.org`: Documented the new `o`/`v` view shortcut and `O` fallback.
+- `docs/work-log.org`: Logged this change.
+
 * 2025-10-14: Calendar helpers packed into `markdown-diary.el`
 
 ** Summary
