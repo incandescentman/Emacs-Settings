@@ -10,10 +10,11 @@
 (require 'cl-lib)
 (require 'subr-x)
 (require 'calendar)
+(require 'cal-move)   ;; for `calendar-month-alist` and navigation helpers
 
 ;; Disable calendar highlighting and configure diary defaults
 (setq calendar-mark-holidays-flag nil
-      diary-file "/Users/jay/Dropbox/github/timeless/jay-diary.md"
+      diary-file "/Users/jay/Dropbox/github/timeless/data/jay-diary.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag t
       diary-display-function 'diary-fancy-display
@@ -53,7 +54,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
     (goto-char (point-min))
     (if (search-forward date-str nil t)
         (beginning-of-line)
-      (message "🟡 Could not find entry for %s" date-str))
+        (message "🟡 Could not find entry for %s" date-str))
     (unless keep-calendar-selected
       (select-window calendar-window))))
 
@@ -78,7 +79,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
       (setq window (get-buffer-window calendar-buffer t)))
     (if (and window (window-live-p window))
         (select-window window)
-      (user-error "No active calendar window to focus"))))
+        (user-error "No active calendar window to focus"))))
 
 (defun my-calendar-edit-diary-entry ()
   "Open the diary entry for the date at point and leave focus in the diary buffer."
@@ -121,7 +122,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                  (goto-char (match-end 0))
                  (if (re-search-forward "^# [0-9]+$" nil t)
                      (match-beginning 0)
-                   (point-max)))))
+                     (point-max)))))
       (list start end))))
 
 (defun my-calendar--diary-insert-month (month year year-start year-end)
@@ -165,7 +166,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
             (month-end (save-excursion
                          (if (re-search-forward "^\\(## \\|# \\)" year-end t)
                              (match-beginning 0)
-                           year-end))))
+                             year-end))))
         (list month-start month-end)))))
 
 (defun my-calendar--diary-normalize-lines (text)
@@ -183,6 +184,11 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
         (day   (nth 1 date))
         (year  (nth 2 date)))
     (format "%s %d, %d" (calendar-month-name month) day year)))
+
+(defun my-calendar--ensure-trailing-newline ()
+  "Ensure there is a newline at point unless already at a blank line."
+  (unless (bolp)
+    (insert "\n")))
 
 (defun my-calendar--diary-insert-entry (date lines)
   "Insert diary entry for DATE (MONTH DAY YEAR) using LINES."
@@ -218,14 +224,11 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
                 (setq insert-point (point-max)))
               (goto-char insert-point)
               (unless duplicate
-                (unless (or (bobp)
-                            (looking-back "^\\s-*\\n\\s-*\\n" nil))
-                  (insert "\n"))
+                (my-calendar--ensure-trailing-newline)
                 (insert date-line "\n"))
               (dolist (line lines)
                 (insert "  - " line "\n"))
-              (unless (looking-at "\n")
-                (insert "\n"))))
+              (my-calendar--ensure-trailing-newline)))
           (widen)))
       (save-buffer))))
 
@@ -259,29 +262,29 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
 
   ;; Month / year navigation shortcuts
   (define-key calendar-mode-map (kbd "n")
-    (lambda ()
-      (interactive)
-      (calendar-forward-month 1)))
+              (lambda ()
+                (interactive)
+                (calendar-forward-month 1)))
   (define-key calendar-mode-map (kbd "M-<right>")
-    (lambda ()
-      (interactive)
-      (calendar-forward-month 1)))
+              (lambda ()
+                (interactive)
+                (calendar-forward-month 1)))
   (define-key calendar-mode-map (kbd "p")
-    (lambda ()
-      (interactive)
-      (calendar-backward-month 1)))
+              (lambda ()
+                (interactive)
+                (calendar-backward-month 1)))
   (define-key calendar-mode-map (kbd "M-<left>")
-    (lambda ()
-      (interactive)
-      (calendar-backward-month 1)))
+              (lambda ()
+                (interactive)
+                (calendar-backward-month 1)))
   (define-key calendar-mode-map (kbd "N")
-    (lambda ()
-      (interactive)
-      (calendar-forward-year 1)))
+              (lambda ()
+                (interactive)
+                (calendar-forward-year 1)))
   (define-key calendar-mode-map (kbd "P")
-    (lambda ()
-      (interactive)
-      (calendar-backward-year 1)))
+              (lambda ()
+                (interactive)
+                (calendar-backward-year 1)))
 
   ;; Add smarter diary entry insertion that keeps Markdown chronologically sorted
   (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
@@ -293,10 +296,10 @@ With STAY-IN-DIARY (prefix arg when interactive), leave focus in the diary buffe
 
   ;; Make "t" jump to today, then jump to diary entry
   (define-key calendar-mode-map (kbd "t")
-    (lambda ()
-      (interactive)
-      (calendar-goto-today)
-      (my-calendar-jump-to-diary-entry))))
+              (lambda ()
+                (interactive)
+                (calendar-goto-today)
+                (my-calendar-jump-to-diary-entry))))
 
 (defun my-calendar--setup-diary-shortcuts ()
   "Install diary navigation shortcuts when editing the diary file."
