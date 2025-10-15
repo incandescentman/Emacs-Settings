@@ -59,6 +59,11 @@ The month section is still narrowed before edits, but day comparisons now look o
 - `markdown-diary.el`: Updated insertion logic, spacing controls, history defaults, and prefix behaviour.
 - `docs/work-log.org`: Documented the tweaks.
 
+* Handoff: Next session
+- Verify that `my-calendar-edit-diary-entry` reliably lands at the end of the last bullet for multi-line entries.
+- Add regression coverage (ERT or script) for the blank-line insertion helper so future edits don’t regress formatting.
+- Consider a quick `emacs --batch` smoke test that exercises `my-calendar-open-diary-entry` and `my-calendar-view-fancy-listing`.
+
 * 2025-10-14: Show project name in mode line next to filename
 
 ** Summary
