@@ -1,24 +1,30 @@
 #+TITLE: Calendar & Markdown Diary Keybindings
 #+AUTHOR: Jay Dixit
+# +DATE: <2025-10-14>
 
-This sheet captures the active shortcuts that glue together the Calendar buffer and the Markdown diary workflow.
+This reference lists the active keybindings that connect the Emacs calendar buffer with the Markdown diary maintained by ~markdown-diary.el~.
 
-* Calendar Mode (`calendar-mode-map`)
-  - `RET` → `my-calendar-view-and-edit-entry` (show fancy diary listing, keep focus in Calendar)
-  - `e`   → `my-calendar-edit-diary-entry` (jump to diary entry and stay there)
-  - `o`   → `my-calendar-jump-to-diary-entry` (open diary entry in other window)
-  - `t`   → today + jump to diary entry
-  - `n`, `M-<right>` → next month
-  - `p`, `M-<left>`  → previous month
-  - `N` → next year
-  - `P` → previous year
-  - `i` → `my-calendar-insert-diary-entry` (prompt for Markdown entry; returns to Calendar by default)
-  - `C-u i` → same as above, but stay in diary buffer after inserting
-  - `I` → stock `calendar-insert-diary-entry` (Emacs default, Markdown-agnostic)
+* Calendar Mode Bindings
+These bindings live in ~calendar-mode-map~.
 
-* Markdown Diary Buffer (`markdown-mode-map`)
-  - `s-.` (Command-.) → `my-calendar-focus-calendar-window` (refocus the existing Calendar window)
+- ~RET~ → ~my-calendar-view-and-edit-entry~ :: Show the fancy diary listing while keeping focus in Calendar.
+- ~e~ → ~my-calendar-edit-diary-entry~ :: Jump to the diary entry for the selected date and remain there.
+- ~o~ → ~my-calendar-jump-to-diary-entry~ :: Open the diary entry in another window without changing Calendar focus.
+- ~t~ → today + diary :: Call ~calendar-goto-today~ and immediately display today’s diary entry.
+- ~n~, ~M-<right>~ → month forward :: Advance one month.
+- ~p~, ~M-<left>~ → month backward :: Go back one month.
+- ~N~ → year forward :: Advance one year.
+- ~P~ → year backward :: Go back one year.
+- ~i~ → ~my-calendar-insert-diary-entry~ :: Prompt for Markdown text, insert it chronologically, and return to the Calendar window.
+- ~C-u i~ → stay editing :: Same command as above, but stay in the diary buffer after insertion (prefix argument).
+- ~I~ → ~calendar-insert-diary-entry~ :: Stock Emacs inserter (kept as a fallback, Markdown-agnostic).
 
-* Notes
-  - Diary file: `~/Dropbox/github/timeless/jay-diary.md`
-  - `my-calendar-insert-diary-entry` auto-creates year/month headings, maintains chronological order, and ensures blank lines for readable Markdown.
+* Markdown Diary Buffer Helpers
+The diary lives in ~~/Dropbox/github/timeless/jay-diary.md~ and is displayed in ~markdown-mode~.
+
+- ~s-.~ (Command-.) → ~my-calendar-focus-calendar-window~ :: Re-focus the live Calendar window from within the diary buffer.
+
+* Behaviour Notes
+- Entry insertion ensures headings for the correct year/month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block.
+- Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication.
+- All helpers are defined in ~markdown-diary.el~; load order is handled by requiring ~markdown-diary~ inside ~shared-functions.org~.
