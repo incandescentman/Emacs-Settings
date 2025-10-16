@@ -498,7 +498,7 @@ the interactive prefix argument behaviour from the public commands."
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
     (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)
-    (local-set-key (kbd "SPC") #'my-diary-return-to-calendar)))
+    (local-set-key (kbd "C-SPC") #'my-diary-return-to-calendar)))
 
 (add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
 

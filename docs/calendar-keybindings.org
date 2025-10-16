@@ -61,7 +61,7 @@ The diary lives in ~~/Dropbox/github/timeless/jay-diary.md~ and is displayed in 
 ~s-.~ (Command-.)   ~my-calendar-focus-calendar-window~
      - Refocus the Calendar window from within the diary buffer and close any diary listing panes so the view stays diary + calendar.
 
-~SPC~   ~my-diary-return-to-calendar~
+~C-SPC~   ~my-diary-return-to-calendar~
      - From within the diary buffer, jump back to Calendar at the date you originally opened.
 
 * Behaviour Notes
