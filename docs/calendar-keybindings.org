@@ -16,6 +16,12 @@ These bindings live in ~calendar-mode-map~.
 ~O~   ~my-calendar-show-fancy-diary-listing~
      - Show the fancy diary listing for the date at point, then reselect the Calendar window.
 
+~M-t~   ~my-calendar-toggle-last-date~
+     - Toggle between today and the previously visited date like a mark ring.
+
+~?~   ~my-calendar-help~
+     - Pop up an in-buffer cheat sheet of these custom bindings; press `q` to close.
+
 ~t~   today + diary
      - Move to today and immediately display today’s diary entry.
 

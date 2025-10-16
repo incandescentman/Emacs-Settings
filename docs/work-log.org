@@ -12,13 +12,15 @@
 - Taught `my-calendar-jump-to-diary-entry` to return the heading position so `my-calendar-edit-diary-entry` can land on the last bullet without an extra search.
 - Retired the redundant `my-calendar-open-diary-entry` helper and renamed the fancy diary listing command for clearer intent.
 - Expanded `markdown-diary-README.org` with an overview of strengths and workflow notes for the calendar/diary bridge.
+- Added a `?` cheat-sheet popup, a `M-t` today/last-date toggle, and friendly which-key labels so navigation stays discoverable.
 
 ** Why it should work
 Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
 Returning the diary heading position lets editing logic reuse the existing search result, eliminating duplicate scans, and removing the unused helper avoids dead code.
+The help popup and which-key hints reuse existing keybindings for reference, and the toggle stores the last date so the jump is fully reversible.
 
 ** Files Modified
-- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, and returned the diary heading position.
+- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, navigation toggles, and returned the diary heading position.
 - `docs/calendar-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
 - `docs/work-log.org`: Logged this change.
 - `markdown-diary-README.org`: Updated the binding reference.

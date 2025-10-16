@@ -1,3 +1,55 @@
+(defvar my-calendar--last-date nil
+  "Stack of the last visited calendar date for toggling with today.")
+
+(defun my-calendar-toggle-last-date ()
+  "Toggle between today and the last visited calendar date.
+If already on today, jump back to the previous date.
+Otherwise, save the current date and jump to today."
+  (interactive)
+  (let ((current-date (calendar-cursor-to-date t)))
+    (if (equal current-date (calendar-current-date))
+        (if my-calendar--last-date
+            (progn
+              (calendar-goto-date my-calendar--last-date)
+              (setq my-calendar--last-date nil)
+              (message "Jumped to previous date."))
+          (message "No previous date stored."))
+      (setq my-calendar--last-date current-date)
+      (calendar-goto-today)
+      (message "Jumped to today (M-t to return)."))))
+
+(defun my-calendar-help ()
+  "Display a popup buffer with a cheat sheet of custom Calendar keybindings."
+  (interactive)
+  (let ((buf (get-buffer-create "*Calendar Help*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert
+         (concat
+          "# 📅 Custom Calendar Keybindings Cheat Sheet\n\n"
+          "| Key         | Action                                    |\n"
+          "|-------------|-------------------------------------------|\n"
+          "| i, c        | Insert new diary entry                     |\n"
+          "| C           | Insert diary entry (with last as default)  |\n"
+          "| I           | Original `calendar-insert-diary-entry`     |\n"
+          "| RET, e      | Edit diary entry at point                  |\n"
+          "| v, o, SPC   | View diary entry at point                  |\n"
+          "| O           | Show fancy diary listing for date          |\n"
+          "| t           | Jump to today and view diary entry         |\n"
+          "| M-t         | Toggle between today and previous date     |\n"
+          "| n, M-→      | Next month                                 |\n"
+          "| p, M-←      | Previous month                             |\n"
+          "| N           | Next year                                  |\n"
+          "| P           | Previous year                              |\n"
+          "| s-.         | (In diary) Focus calendar window           |\n"
+          "| ?           | Show this help popup                       |\n"
+          "\n"
+          "Press `q` to quit this help.\n"))
+        (goto-char (point-min))
+        (view-mode 1)
+        (local-set-key (kbd "q") #'quit-window)))
+    (pop-to-buffer buf)))
 ;;; markdown-diary.el --- Calendar diary helpers -*- lexical-binding: t; -*-
 
 ;;; Author: Jay Dixit
@@ -388,6 +440,36 @@ the interactive prefix argument behaviour from the public commands."
                 (interactive)
                 (calendar-goto-today)
                 (my-calendar-jump-to-diary-entry))))
+
+  ;; Bind "?" to calendar help
+  (define-key calendar-mode-map (kbd "?") #'my-calendar-help)
+  ;; Bind "M-t" to toggle today/last date
+  (define-key calendar-mode-map (kbd "M-t") #'my-calendar-toggle-last-date)
+)
+
+(with-eval-after-load 'which-key
+  (with-eval-after-load 'calendar
+    (when (fboundp 'which-key-add-key-based-replacements)
+      (which-key-add-key-based-replacements
+        "i" "Insert diary entry"
+        "c" "Insert diary entry"
+        "C" "Insert diary (with default)"
+        "I" "Original insert diary"
+        "RET" "Edit diary entry"
+        "e" "Edit diary entry"
+        "v" "View diary entry"
+        "o" "View diary entry"
+        "SPC" "View diary entry"
+        "O" "Fancy diary listing"
+        "t" "Jump to today + view entry"
+        "M-t" "Toggle today/last date"
+        "n" "Next month"
+        "M-<right>" "Next month"
+        "p" "Prev month"
+        "M-<left>" "Prev month"
+        "N" "Next year"
+        "P" "Prev year"
+        "?" "Show calendar help"))))
 
 (defun my-calendar--setup-diary-shortcuts ()
   "Install diary navigation shortcuts when editing the diary file."
