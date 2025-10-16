@@ -35,10 +35,12 @@ In this way, Timeline functions as a text-first event database — a human-reada
  - ~e~ --- Open the entry and move the cursor to the end of the last bullet (ready to type).
  - ~v~, ~o~, or ~SPC~ --- View the diary entry while keeping focus in the calendar.
  - ~O~ --- Show the fancy diary listing for that date.
+ - ~C-c C-k~ --- Cancel the current diary block (deletes the date if empty; asks first if populated).
  - ~i~ / ~c~ --- Insert a new diary entry.
  - ~C~ --- Insert a new entry using the most recent minibuffer history text.
  - ~t~ --- Jump to today and open the diary entry.
 - 🪟 *Focus Persistence*: Calendar windows and diary buffers remember their layout---no more window chaos when switching between them.
+- 🧹 *Auto-Cleanup on Save*: Empty date stubs (headings with only a blank bullet) are removed automatically so the timeline stays tidy.
 - 🪄 *Graceful Layout Management*: Automatically closes "Fancy Diary" display windows to preserve your layout.
 
 * ✅ Overall Strengths
@@ -78,6 +80,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 | ~e~ | =my-calendar-edit-diary-entry= | Jump to entry and move point to end of bullets |
 | ~v~, ~o~, ~SPC~ | =my-calendar-view-diary-entry= | View entry but stay in calendar |
 | ~O~ | =my-calendar-show-fancy-diary-listing= | Show fancy diary listing for date |
+| ~C-c C-k~ | =my-calendar-cancel-current-entry= | Delete current date block (asks if populated) |
 | ~M-t~ | =my-calendar-toggle-last-date= | Toggle between today and last visited date |
 | ~/~, ~s~ | =my-diary-search= | Run consult-ripgrep across the diary |
 | ~i~, ~c~ | =my-calendar-insert-diary-entry= | Insert a new diary entry |
@@ -87,8 +90,10 @@ In this way, Timeline functions as a text-first event database — a human-reada
 
 * Diary Buffer Extras
 - ~C-SPC~ or ~C-c C-c~ inside ~timeline.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~C-c C-k~ runs =my-calendar-cancel-current-entry= to delete the current date block (with confirmation if it has content) and pop back to Calendar.
 - ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
 - ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
+- Saving the diary auto-cleans empty stubs, so exploring or cancelling entries never leaves debris behind.
 
 * Implementation Details
 - The diary file is manipulated using helper functions prefixed with =my-calendar--=.
@@ -121,4 +126,3 @@ In this way, Timeline functions as a text-first event database — a human-reada
 
 Copyright (c) 2025 Jay Dixit.
 Licensed under the MIT License. 
-
