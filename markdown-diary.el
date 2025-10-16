@@ -59,23 +59,29 @@
 (add-hook 'calendar-move-hook #'my-calendar--remember-window)
 
 (defun my-calendar-jump-to-diary-entry (&optional date keep-calendar-selected)
-  "Open `diary-file` at DATE (list MONTH DAY YEAR).
-When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
+  "Open `diary-file` at DATE (list MONTH DAY YEAR) and return its position.
+When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window.
+If the date is missing, return nil after displaying a warning."
   (interactive)
   (let* ((calendar-window (selected-window))
          (date (or date (calendar-cursor-to-date t)))
          (month (number-to-string (nth 0 date)))
          (day   (number-to-string (nth 1 date)))
          (year  (number-to-string (nth 2 date)))
-         (date-str (format "%s/%s/%s" month day year)))
+         (date-str (format "%s/%s/%s" month day year))
+         entry-pos)
     (setq my-calendar--last-window calendar-window)
     (find-file-other-window diary-file)
-    (goto-char (point-min))
-    (if (search-forward date-str nil t)
-        (beginning-of-line)
-        (message "🟡 Could not find entry for %s" date-str))
+    (setq entry-pos
+          (when (progn (goto-char (point-min))
+                       (search-forward date-str nil t))
+            (beginning-of-line)
+            (point)))
+    (unless entry-pos
+      (message "🟡 Could not find entry for %s" date-str))
     (unless keep-calendar-selected
-      (select-window calendar-window))))
+      (select-window calendar-window))
+    entry-pos))
 
 (defun my-calendar-view-diary-entry ()
   "Display the diary entry for the date at point while staying in the calendar."
@@ -84,7 +90,7 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
   (my-calendar--close-diary-display))
 
 ;; Renamed and clarified docstring
-(defun my-calendar-view-fancy-listing ()
+(defun my-calendar-show-fancy-diary-listing ()
   "Show the fancy diary listing for the date at point, then reselect the calendar window and open the Markdown diary entry for that date."
   (interactive)
   (let* ((calendar-window (selected-window))
@@ -108,22 +114,14 @@ When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window."
         (select-window window)
       (user-error "No active calendar window to focus"))))
 
-(defun my-calendar-open-diary-entry ()
-  "Open the diary entry for the date at point and leave focus in the diary buffer."
-  (interactive)
-  (my-calendar-jump-to-diary-entry (calendar-cursor-to-date t) t))
-
-;; Enhanced to move to the end of the last bullet for that date
 (defun my-calendar-edit-diary-entry ()
   "Open the diary entry for the date at point and leave focus in the diary buffer.
 After jumping, move point to the end of the last bullet item for that date."
   (interactive)
   (let* ((date (calendar-cursor-to-date t))
-         (date-str (and date
-                        (my-calendar--diary-format-date
-                         (nth 0 date) (nth 1 date) (nth 2 date)))))
-    (my-calendar-jump-to-diary-entry date t)
-    (when (and date-str (looking-at (concat "^" (regexp-quote date-str) "$")))
+         (entry-pos (my-calendar-jump-to-diary-entry date t)))
+    (when entry-pos
+      (goto-char entry-pos)
       (let ((date-line-end (line-end-position))
             (last-bullet-pos nil))
         (forward-line 1)
@@ -198,28 +196,37 @@ After jumping, move point to the end of the last bullet item for that date."
       (insert "\n"))
     (insert heading "\n")))
 
+;; Improved: always guarantee a valid month region even if heading doesn't exist.
 (defun my-calendar--diary-month-region (month year)
-  "Ensure MONTH heading in YEAR exists and return region as (START END)."
+  "Ensure MONTH heading in YEAR exists and return region as (START END).
+This always returns a valid region, even if the month heading did not exist before."
   (pcase-let ((`(,year-start ,year-end) (my-calendar--diary-year-region year)))
     (let* ((month-name (calendar-month-name month))
            (heading (format "## %s %d" month-name year))
-           (month-regexp (concat "^" (regexp-quote heading) "$")))
+           (month-regexp (concat "^" (regexp-quote heading) "$"))
+           heading-pos)
       (goto-char year-start)
       (forward-line 1)
-      (unless (re-search-forward month-regexp year-end t)
+      (setq heading-pos (re-search-forward month-regexp year-end t))
+      (unless heading-pos
+        ;; Heading does not exist, so insert it and set heading-pos accordingly.
         (my-calendar--diary-insert-month month year year-start year-end)
-        (pcase-let ((`(,year-start* ,year-end*) (my-calendar--diary-year-region year)))
-          (setq year-start year-start*
-                year-end year-end*)
-          (goto-char year-start)
-          (forward-line 1)
-          (re-search-forward month-regexp year-end t)))
+        ;; After insertion, the heading will be just before the point.
+        ;; Find the heading we just inserted.
+        (goto-char year-start)
+        (forward-line 1)
+        (setq heading-pos (re-search-forward month-regexp year-end t)))
+      ;; Now heading-pos is at the end of the heading line.
+      ;; Start region at line after heading.
+      (goto-char (match-end 0))
       (forward-line 1)
       (let ((month-start (point))
-            (month-end (save-excursion
-                         (if (re-search-forward "^\\(## \\|# \\)" year-end t)
-                             (match-beginning 0)
-                             year-end))))
+            (month-end
+             (save-excursion
+               (let ((limit year-end))
+                 (if (re-search-forward "^\\(## \\|# \\)" limit t)
+                     (match-beginning 0)
+                   limit)))))
         (list month-start month-end)))))
 
 (defun my-calendar--diary-normalize-lines (text)
@@ -338,8 +345,9 @@ the interactive prefix argument behaviour from the public commands."
   ;; "v"/"o" display the diary entry but keep focus in the calendar
   (define-key calendar-mode-map (kbd "v") #'my-calendar-view-diary-entry)
   (define-key calendar-mode-map (kbd "o") #'my-calendar-view-diary-entry)
+  (define-key calendar-mode-map (kbd "SPC") #'my-calendar-view-diary-entry)
   ;; "O" shows the fancy diary listing and then reselects the calendar
-  (define-key calendar-mode-map (kbd "O") #'my-calendar-view-fancy-listing)
+  (define-key calendar-mode-map (kbd "O") #'my-calendar-show-fancy-diary-listing)
 
   ;; Month / year navigation shortcuts
   (define-key calendar-mode-map (kbd "n")

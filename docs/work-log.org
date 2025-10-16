@@ -2,20 +2,25 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-10-14: Calendar diary prompt variants and spacing fixes
+* 2025-10-14: Calendar diary prompt variants, spacing, and navigation fixes
 
 ** Summary
 - Split the insert helper so `c` opens a blank prompt while `C` seeds the minibuffer with the previous entry.
 - Normalised diary spacing to keep exactly one blank line around each date block and month heading.
 - Documented the new keybindings, including prefix variants, in the calendar reference guide.
+- Added ~SPC~ as another shortcut to view the diary entry without leaving the calendar.
+- Taught `my-calendar-jump-to-diary-entry` to return the heading position so `my-calendar-edit-diary-entry` can land on the last bullet without an extra search.
+- Retired the redundant `my-calendar-open-diary-entry` helper and renamed the fancy diary listing command for clearer intent.
 
 ** Why it should work
 Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
+Returning the diary heading position lets editing logic reuse the existing search result, eliminating duplicate scans, and removing the unused helper avoids dead code.
 
 ** Files Modified
-- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, and spacing normalisers.
-- `docs/calendar-keybindings.org`: Described the `c`/`C` split and the prefix behaviour.
+- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, and returned the diary heading position.
+- `docs/calendar-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
 - `docs/work-log.org`: Logged this change.
+- `markdown-diary-README.org`: Updated the binding reference.
 
 * 2025-10-14: Calendar diary view stays focused
 
@@ -75,7 +80,7 @@ The helper narrows to the current month region, searches for existing date headi
 - Rebound ~RET~ to open the Markdown entry immediately, moved ~o~ to the fancy diary listing command, and enhanced ~e~ to land at the end of the last bullet.
 
 ** Files Modified
-- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, introduced `my-calendar-open-diary-entry`, retuned `RET`, and improved `e` to place point at the last bullet.
+- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, retuned `RET`, and improved `e` to place point at the last bullet.
 - `docs/calendar-keybindings.org`: Documented the updated keybindings.
 
 * 2025-10-14: Markdown diary refinements
@@ -96,7 +101,7 @@ The month section is still narrowed before edits, but day comparisons now look o
 * Handoff: Next session
 - Verify that `my-calendar-edit-diary-entry` reliably lands at the end of the last bullet for multi-line entries.
 - Add regression coverage (ERT or script) for the blank-line insertion helper so future edits don’t regress formatting.
-- Consider a quick `emacs --batch` smoke test that exercises `my-calendar-open-diary-entry` and `my-calendar-view-fancy-listing`.
+- Consider a quick `emacs --batch` smoke test that exercises `my-calendar-edit-diary-entry` and `my-calendar-show-fancy-diary-listing`.
 
 * 2025-10-14: Show project name in mode line next to filename
 

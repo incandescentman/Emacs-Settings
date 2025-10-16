@@ -10,10 +10,10 @@ These bindings live in ~calendar-mode-map~.
 ~RET~, ~e~   ~my-calendar-edit-diary-entry~
      - Jump to the diary entry for the selected date, land at the end of the last bullet, and keep focus in the diary buffer.
 
-~o~, ~v~   ~my-calendar-view-diary-entry~
+~o~, ~v~, ~SPC~   ~my-calendar-view-diary-entry~
      - Reveal the selected date in the diary window while leaving point in the Calendar buffer.
 
-~O~   ~my-calendar-view-fancy-listing~
+~O~   ~my-calendar-show-fancy-diary-listing~
      - Show the fancy diary listing for the date at point, then reselect the Calendar window.
 
 ~t~   today + diary
