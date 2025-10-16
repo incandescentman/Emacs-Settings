@@ -2,11 +2,13 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-10-16: Calendar assets consolidated
+* 2025-10-16: Timeline rename and assets consolidated
 
 ** Summary
+- Renamed the project from “markdown-diary” to “timeline”, including the module, docs, and ideas notebook.
 - Moved `timeline.el`, the keybinding cheatsheet, and the README into `timeline/` to keep calendar tooling grouped.
-- Updated references throughout the work log to target the new directory.
+- Pointed the diary file reference to `~/Dropbox/github/timeless/data/timeline.md` across docs and code.
+- Updated references throughout the documentation to target the new directory and naming.
 - Added the new directory to `load-path` so `require 'timeline` continues to resolve.
 
 ** Files Modified
