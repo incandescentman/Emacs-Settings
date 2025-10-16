@@ -1,0 +1,110 @@
+#+TITLE: Markdown Diary Ideas
+#+AUTHOR: Jay Dixit
+#+DATE: <2025-10-16>
+
+*** 2. *Calendar Jump History ("Breadcrumbs")*
+
+You already track the last visited date with `my-calendar-toggle-last-date`.
+Expand that to a short *ring buffer* of the last N visited dates:
+
+```elisp
+(defvar my-calendar—date-history nil)
+(defun my-calendar-push-date (date)
+  (setq my-calendar—date-history
+        (cons date (seq-take my-calendar—date-history 9))))
+```
+
+Then create `my-calendar-pop-date` to quickly step backward through visited dates—like a browser's back button for your diary navigation.
+
+*** 3. *Calendar Mini Agenda*
+
+Add a command that shows the next 5 upcoming diary entries in a minibuffer list:
+
+```elisp
+(defun my-calendar-mini-agenda ()
+  "Show the next few upcoming events from the diary file."
+  (interactive)
+  (with-current-buffer (find-file-noselect diary-file)
+    (goto-char (point-min))
+    (let (entries)
+      (while (re-search-forward "^\\([0-9]+/[0-9]+/[0-9]+\\)" nil t)
+        (let ((date (match-string 1)))
+          (forward-line 1)
+          (when (looking-at "  - ")
+            (push (concat date "  " (string-trim (thing-at-point 'line t)))
+                  entries))))
+      (message "%s" (string-join (reverse (seq-take entries 5)) "\n"))))))
+```
+
+Bind it to `a` in the Calendar for quick access.
+
+*** 4. *Improved Insertion Experience*
+
+You could auto-insert bullets when pressing `RET` in the diary buffer:
+
+```elisp
+(define-key markdown-mode-map (kbd "RET")
+  (lambda () (interactive)
+    (if (save-excursion (beginning-of-line) (looking-at "  - "))
+        (progn (end-of-line) (newline) (insert "  - "))
+      (newline))))
+```
+
+This makes jotting down notes faster and keeps bullets consistent.
+
+** 🧠 Developer & Maintenance Enhancements
+
+*** 8. *Autoloads and Documentation*
+
+Add proper autoload cookies for public commands:
+
+```elisp
+;;;***autoload
+(defun my-calendar-insert-diary-entry ...)
+```
+
+Then you can generate autoloads with `update-file-autoloads` for easier loading.
+
+
+** ⚡ Quality-of-Life Tweaks
+
+*** 11. *Undo-friendly inserts*
+
+Wrap insertion commands in `atomic-change-group` so `C-/` undoes a full insertion, not partial text.
+
+*** 12. *Prevent accidental edits*
+
+For old entries (e.g., before today), make the buffer temporarily read-only:
+
+```elisp
+(defun my-diary-protect-old-entries ()
+  (let ((today (calendar-current-date)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([0-9]+/[0-9]+/[0-9]+\\)$" nil t)
+        (let ((date (mapcar #'string-to-number (split-string (match-string 1) "/"))))
+          (when (calendar-date-compare (list date) (list today))
+            (put-text-property (line-beginning-position)
+                               (line-end-position)
+                               'read-only t)))))))
+```
+
+Hook it into `find-file-hook` for the diary file.
+
+*** 13. *Status Summary*
+
+A quick dashboard command that counts events per month or per year:
+
+```elisp
+(defun my-diary-summary ()
+  (interactive)
+  (with-current-buffer (find-file-noselect diary-file)
+    (goto-char (point-min))
+    (let ((counts (make-hash-table :test 'equal)))
+      (while (re-search-forward "^\\([0-9]+/[0-9]+/[0-9]+\\)" nil t)
+        (let ((month (car (split-string (match-string 1) "/"))))
+          (cl-incf (gethash month counts 0))))
+      (maphash (lambda (k v)
+                 (message "Month %s: %d entries" k v))
+               counts))))
+```
