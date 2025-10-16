@@ -1,4 +1,4 @@
-;;; markdown-diary.el --- Calendar diary helpers -*- lexical-binding: t; -*-
+;;; timeline.el --- Calendar timeline helpers -*- lexical-binding: t; -*-
 
 ;;; Author: Jay Dixit
 
@@ -6,6 +6,11 @@
 ;; Custom calendar and diary commands shared across the Emacs configuration.
 
 ;;; Code:
+
+(require 'cl-lib)
+(require 'subr-x)
+(require 'calendar)
+(require 'cal-move)   ;; for `calendar-month-alist` and navigation helpers
 
 (defvar my-diary--origin-date nil
   "Buffer-local variable storing the calendar date from which the diary buffer was opened.")
@@ -64,10 +69,6 @@ Otherwise, save the current date and jump to today."
         (view-mode 1)
         (local-set-key (kbd "q") #'quit-window)))
     (pop-to-buffer buf)))
-(require 'cl-lib)
-(require 'subr-x)
-(require 'calendar)
-(require 'cal-move)   ;; for `calendar-month-alist` and navigation helpers
 
 ;; Ensure calendar-month-alist exists (Emacs 29+ doesn't always provide it)
 (unless (boundp 'calendar-month-alist)
@@ -80,7 +81,7 @@ Otherwise, save the current date and jump to today."
 
 ;; Disable calendar highlighting and configure diary defaults
 (setq calendar-mark-holidays-flag nil
-      diary-file "/Users/jay/Dropbox/github/timeless/data/jay-diary.md"
+      diary-file "/Users/jay/Dropbox/github/timeless/data/timeline.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag nil
       diary-display-function 'diary-fancy-display
@@ -573,9 +574,9 @@ the interactive prefix argument behaviour from the public commands."
 
 (add-hook 'calendar-move-hook #'my-calendar--update-date-display)
 
-(provide 'markdown-diary)
+(provide 'timeline)
 
-;;; markdown-diary.el ends here
+;;; timeline.el ends here
 
 ;;; ERT test: run with (ert 'my-calendar-test-date-format)
 

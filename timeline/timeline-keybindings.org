@@ -2,7 +2,7 @@
 #+AUTHOR: Jay Dixit
 #+DATE: <2025-10-14>
 
-This reference lists the active keybindings that connect the Emacs Calendar buffer with the Markdown diary maintained by ~markdown-diary.el~.
+This reference lists the active keybindings that connect the Emacs Calendar buffer with the Markdown timeline maintained by ~timeline.el~.
 
 * Calendar Mode Bindings
 These bindings live in ~calendar-mode-map~.
@@ -59,7 +59,7 @@ These bindings live in ~calendar-mode-map~.
      - Stock Emacs inserter kept as a fallback, Markdown-agnostic.
 
 * Markdown Diary Helpers
-The diary lives in ~~/Dropbox/github/timeless/jay-diary.md~ and is displayed in ~markdown-mode~.
+The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displayed in ~markdown-mode~.
 
 ~s-.~ (Command-.)   ~my-calendar-focus-calendar-window~
      - Refocus the Calendar window from within the diary buffer and close any diary listing panes so the view stays diary + calendar.
@@ -71,4 +71,4 @@ The diary lives in ~~/Dropbox/github/timeless/jay-diary.md~ and is displayed in 
      - Search all diary entries from inside the diary buffer via consult-ripgrep.
 
 * Behaviour Notes
-Entry insertion ensures headings for the correct year and month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block. Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication. All helpers are defined in ~markdown-diary.el~ and loaded via ~shared-functions.org~.
+Entry insertion ensures headings for the correct year and month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block. Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication. All helpers are defined in ~timeline.el~ and loaded via ~shared-functions.org~.

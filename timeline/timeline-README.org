@@ -1,9 +1,9 @@
-#+TITLE: Markdown Diary
+#+TITLE: Timeline
 #+AUTHOR: Jay Dixit
 #+OPTIONS: toc:nil num:nil
 
 * Overview
-The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system with Markdown support, enabling seamless journaling, planning, and event tracking inside a plain-text diary file (~jay-diary.md~). It bridges the visual navigation of Emacs Calendar with a clean, chronological Markdown format suitable for version control and reading outside Emacs.
+The ~timeline.el~ module extends Emacs' built-in Calendar and Diary system with Markdown support, enabling seamless journaling, planning, and event tracking inside a plain-text timeline file (~timeline.md~). It bridges the visual navigation of Emacs Calendar with a clean, chronological Markdown format suitable for version control and reading outside Emacs.
 
 * Features
 - 📆 *Calendar Integration*: Navigate dates in the Emacs Calendar and jump directly to corresponding entries in your Markdown diary.
@@ -71,7 +71,7 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 | ~?~ | =my-calendar-help= | Show cheat sheet popup (press `q` to close) |
 
 * Diary Buffer Extras
-- ~C-SPC~ or ~C-c C-c~ inside ~jay-diary.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~C-SPC~ or ~C-c C-c~ inside ~timeline.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
 - ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
 - ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
 
@@ -88,10 +88,10 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 - Markdown-mode for editing the diary file.
 
 * Installation
-1. Place ~markdown-diary.el~ in your =load-path= (for example, under =~/.emacs.d/lisp/=).
+1. Place ~timeline.el~ in your =load-path= (for example, under =~/.emacs.d/lisp/=).
 2. Add to your init file:
    #+begin_src emacs-lisp
-   (require 'markdown-diary)
+   (require 'timeline)
    #+end_src
 3. Open the Calendar with =M-x calendar= and use the keybindings above.
 

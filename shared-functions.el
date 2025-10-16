@@ -1,17 +1,3 @@
-#+auto_tangle: t
-;; -*- lexical-binding: t -*-
-;;;   Current time:      (current-time-string)
-;;;   Last command:      last-command
-;;; (abbrev-mode)
-;; (user-full-name)
-
-* Environment Setup
-** Package Archives and Initialization
-** General Emacs Settings
-*** Basic variables
-**** Setting variables
-I should probably eventually break these out of custom-set-variables and organize them according to their function.
-#+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t -*-
 
 ;; General Settings
@@ -142,12 +128,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; (setq tramp-default-method "ssh")
 ;; (setq visual-line-mode nil t)
 ;; (setq org-list-indent-offset 3)
-#+END_SRC
 
-*** Startup, UI, and appearance
-
-*** Fonts and Frames
-#+begin_src emacs-lisp
 ;; A. keep the new, cached version -- recommended
 (defun jay/adjust-font-size (&optional frame)
   "Resize default font once per frame size."
@@ -161,24 +142,13 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 (add-hook 'after-make-frame-functions #'jay/adjust-font-size)
 (add-hook 'window-size-change-functions #'jay/adjust-font-size)
-#+end_src
 
-*** fontify item checklists
-[[https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html?utm_source=Sacha+Chua+-+Living+an+Awesome+Life&utm_campaign=4942bceb80-RSS_EMAIL_CAMPAIGN&utm_medium=email&utm_term=0_e4be269acf-4942bceb80-97219941][Fontify done checkbox items in org-mode]]
-
-#+BEGIN_SRC emacs-lisp
 ;; Highlight completed checklist items in org-mode
 (font-lock-add-keywords
  'org-mode
  `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
  'append)
-#+END_SRC
 
-*** Minor modes
-** Minor Modes
-** Package & Load Paths
-*** Load the proper repositories (package archives)
-#+BEGIN_SRC emacs-lisp
 ;; Set package archives
 (setq package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -191,28 +161,14 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 ;;(package-native-compile t)
   (warning-minimum-level :emergency))
-#+END_SRC
 
-*** use-package verbosity
-#+begin_src emacs-lisp
 (setq use-package-verbose nil) ;; Set to t for debugging
-#+end_src
 
-*** use-package blocks
-#+BEGIN_SRC emacs-lisp
 (use-package ox-LaTeX
 :defer t
   )
 (use-package ox-html
   :defer t)
-#+END_SRC
-* Org-mode Configuration
-** Org General Settings
-** Org Export Settings
-
-*** ignore
-
-#+begin_src emacs-lisp
 
 (defun my/org-remove-links-and-source-lines (backend)
   "Remove lines starting with 'Links ::' or 'Source ::' before export."
@@ -222,50 +178,20 @@ I should probably eventually break these out of custom-set-variables and organiz
       (replace-match ""))))
 
 (add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
-#+end_src
 
-* Custom Functions
+; (setq org-use-property-inheritance t)
+  (setq org-fontify-quote-and-verse-blocks t)
+;; blank lines before new headings
+(setq org-blank-before-new-entry
+      '((heading . always)
+       (plain-list-item . nil)))
+(setq org-return-follows-link t)
 
-* Intro / About
-#+OPTIONS: f:t
+;; leave an empty line between folded subtrees
+(setq org-cycle-separator-lines 1)
 
-#+TITLE:Jay Dixit's Emacs setup - May 22, 2015.
+(setq org-support-shift-select (quote always))
 
-- System: Mac OSX Sierra version 13.1
-- Emacs version: Emacs 28.2 (Carbon Version)
-- Spacemacs version 0.999.0
-- org-mode version 9.6.1
-- Use case: I use this file with GNU Emacs for OSX, using Spacemacs.
-- If it matters, the build of GNU Emacs that I use is Mitsuharu Yamamoto's Emacs Mac Port, available here:
-- =brew tap railwaycat/emacsmacport=
-- [[https://github.com/railwaycat/homebrew-emacsmacport][railwaycat/homebrew-emacsmacport: Emacs mac port formulae for the Homebrew package manager]]
-- [[https://bitbucket.org/mituharu/emacs-mac/overview][mituharu / emacs-mac - Bitbucket]]
-
-** Additional Org Settings
-*** Basic org settings
-*** org setup
-*** Some favorite ~org~ settings:
-#+BEGIN_SRC emacs-lisp
-  ; (setq org-use-property-inheritance t)
-    (setq org-fontify-quote-and-verse-blocks t)
-  ;; blank lines before new headings
-  (setq org-blank-before-new-entry
-        '((heading . always)
-         (plain-list-item . nil)))
-  (setq org-return-follows-link t)
-
-  ;; leave an empty line between folded subtrees
-  (setq org-cycle-separator-lines 1)
-
-  (setq org-support-shift-select (quote always))
-
-#+END_SRC
-
-*** org capture
-*** org agenda
-
-*** org-export
-#+BEGIN_SRC emacs-lisp
 (setq org-export-with-smart-quotes t)
 (setq org-export-exclude-tags (quote ("noexport" "extra")))
 
@@ -354,58 +280,12 @@ I should probably eventually break these out of custom-set-variables and organiz
      (verbatim . "<code>%s</code>"))))
 (setq org-html-toplevel-hlevel 2)
 
-#+END_SRC
-
-
-**** org-html-export-to-html-and-open
-I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
-
- (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
-
-The post-processing step is handed the path to your new file; you could use something as straight-forward as `find-file`:
-
-#+BEGIN_SRC emacs-lisp
-  (defun org-html-export-to-html-and-open
+(defun org-html-export-to-html-and-open
    (&optional async subtreep visible-only body-only ext-plist)
    (interactive)
 (let* ((outfile (org-export-output-file-name ".html" subtreep)))
     (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
-#+END_SRC
 
-**** Change section numbering depending on what export format I use
-Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
-
-Note: disable this when trying to export to org-html-themes!
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-(plist-put plist :with-toc t) ; yes TOC in LaTeX
-;; (plist-put plist :with-toc nil); no TOC in latex
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
-
-#+begin_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (backend)
-  (cond
-   ((equal backend 'html)
-    (setq org-html-with-toc nil)
-    (setq org-html-section-numbers nil))
-   ((equal backend 'latex)
-    (setq org-latex-with-toc nil)
-    (setq org-latex-section-numbers t)))
-  nil)
-
-(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp
 (defun my-org-export-change-options (plist backend)
  (cond
   ((equal backend 'html)
@@ -418,74 +298,21 @@ Note: disable this when trying to export to org-html-themes!
 
 ;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
 
-#+end_src
-
-**** export with drawers
-#+BEGIN_SRC emacs-lisp
 (defun jbd-org-export-format-drawer (name content)
   "Export drawers to drawer HTML class."
   (setq content (org-remove-indentation content))
   (format "@<div class=\"drawer\">%s@</div>\n" content))
 (setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
 
-#+END_SRC
-
-**** Omit headlines tagged with :ignore: --- but do still export the text in that section
-This is so I can do structure headlines, for myself, that aren't part of the actual article text.
-
-Pretty cool actually. Leaving it in.
-
-#+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'ox
   (require 'ox-extra)
   (ox-extras-activate '(ignore-headlines)))
-#+END_SRC
 
-Works!
-
-*** Flyspell skip source blocks
-*** Archiving / hooking
-
-* Writing Environment
-** Spellcheck / flyspell
-** Visual line, auto-fill
-** Typographic replacements
-** Misc
-
-* Utility Functions
-** my/with-advice
-** HTML to Org conversions
-** copy/cut region to other window
-** advanced replacements
-** searching
-** etc.
-
-
-* About
-
-* Packages
-** lexical binding
-#+begin_SRC emacs-lisp
 (setq lexical-binding t)
-#+end_SRC
 
-** Load some of my packages:
-#+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/emacs/emacs-settings/")
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/timeline/")
-#+END_SRC
 
-** Control use-package verbosity
-
-** some org packages
-
-
-* The Writing Environment
-
-* Spellcheck / flyspell
-
-** flyspell setup
-#+BEGIN_SRC emacs-lisp
 (use-package flyspell
   :ensure nil                    ; built-in
   :hook ((text-mode . flyspell-mode)
@@ -532,33 +359,14 @@ Works!
     (ispell-send-string "#\n")
     (ispell-pdict-save t)
     (message "Added \"%s\" to personal dictionary" word)))
-#+END_SRC
 
-* UI / customization of appearance and editing environment
-** mouse
-*** Stop accidentally highlighting org-mode links all the time:
-#+BEGIN_SRC emacs-lisp
 ;; Disable mouse highlights globally
 (setq mouse-highlight nil)
 
 ;; Avoid cursor in non-selected windows
 (setq-default cursor-in-non-selected-windows nil)
 
-#+END_SRC
-
-** disable TAB to indent
-#+BEGIN_SRC emacs-lisp
 (setq org-cycle-emulate-tab nil)
-#+END_SRC
-
-** Windows
-:PROPERTIES:
-:ID:       B02E7409-F743-4FCB-A1D7-E0F3B65BBD67
-:END:
-*** Split windows vertically, i.e. using a vertical line to split
-Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal][Setting Emacs Split to Horizontal - Stack Overflow]]
-
-#+BEGIN_SRC emacs-lisp
 
 ;; Always split windows vertically (side-by-side)
 (setq split-width-threshold 0)
@@ -567,74 +375,36 @@ Source: [[http://stackoverflow.com/questions/2081577/setting-emacs-split-to-hori
 ;; Minimum size for split windows
 (setq window-min-width 20)
 (setq window-min-height 5)
-#+END_SRC
 
-
-
-** quitting emacs
-*** Ask before exiting Emacs
-#+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
-#+END_SRC
-
-*** System alarms
-In some cases, you'd like to reduce the number of warnings or eliminate warnings in certain conditions. The following turns off the alarm bell when you hit C-g in the minibuffer or during an isearch:
-
-#+BEGIN_SRC emacs-lisp
 
 (setq ring-bell-function
       (lambda ()
 	(unless (memq this-command
 		      '(isearch-abort abort-recursive-edit exit-minibuffer keyboard-quit))
 	  (ding))))
-#+END_SRC
 
-Also, change the alert sound. Instead of beeping or flashing, Emacs could play a cool sound file, whenever an error occurs:
-#+BEGIN_SRC emacs-lisp
 ;; (setq ring-bell-function (lambda () (play-sound-file "~/sounds/InkSoundStroke3.mp3")))
 
 ;; turn off alarms completely
 (setq ring-bell-function 'ignore)
-#+END_SRC
 
-*** Use visual line mode whenever possible
-#+BEGIN_SRC emacs-lisp
 (add-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'org-mode-hook  #'visual-line-mode)
-#+END_SRC
 
-*** Autofill mode
-is this still necessary?
-
-#+BEGIN_SRC emacs-lisp
 (auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
 (add-hook 'text-mode-hook  #'(lambda () (auto-fill-mode -1)))
 (add-hook 'markdown-mode-hook  #'(lambda () (auto-fill-mode -1)))
 (add-hook 'message-mode-hook  #'(lambda () (auto-fill-mode -1)))
-#+END_SRC
 
-*** Disable double spacing between sentences
-#+BEGIN_SRC emacs-lisp
 (setq-default sentence-end-double-space nil)
-#+END_SRC
 
-*** Make typing override text selection
-#+BEGIN_SRC emacs-lisp
 (delete-selection-mode 1)
-#+END_SRC
 
-*** Buffer-save-without-query
-#+BEGIN_SRC emacs-lisp
 (setq buffer-save-without-query nil)
-#+END_SRC
 
-*** Search in Spotlight
-#+BEGIN_SRC emacs-lisp
 (setq locate-command "mdfind")
-#+END_SRC
 
-*** Automatically open files in their correct modes
-#+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
@@ -643,13 +413,7 @@ is this still necessary?
 (add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
 (add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
-#+END_SRC
 
-*** Typography
-
-*** Indentation
-Automatically indenting yanked text if in programming-modes:
-#+BEGIN_SRC emacs-lisp
 (defvar yank-indent-modes
   '(LaTeX-mode TeX-mode)
   "Modes in which to indent regions that are yanked (or yank-popped).
@@ -666,31 +430,16 @@ Only modes that don't derive from `prog-mode' should be listed here.")
   "Do indentation, as long as the region isn't too large."
   (if (<= (- end beg) yank-advised-indent-threshold)
       (indent-region beg end nil)))
-#+END_SRC
 
-* My custom functions/settings
-** Buffers
-*** Buffer-stack
-I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
-#+BEGIN_SRC emacs-lisp
 ;;(use-package buffer-stack
 ;; defer)
-#+END_SRC
 
-GNU Emacs:
-#+BEGIN_SRC emacs-lisp
 (global-set-key [(s-right)] 'buffer-stack-down)
 (global-set-key [(s-left)] 'buffer-stack-up)
-#+END_SRC
 
-Aquamacs:
-#+BEGIN_SRC emacs-lisp
 (global-set-key [(A-right)] 'buffer-stack-down)
 (global-set-key [(A-left)] 'buffer-stack-up)
-#+END_SRC
 
-*** Uniqify buffers
-#+BEGIN_SRC emacs-lisp
 ;; meaningful names for buffers with the same name
 ;; from prelude
 ;; http://bit.ly/1Woabxz
@@ -723,21 +472,7 @@ Aquamacs:
  (emacs-lisp-mode))
 
 )
-#+END_SRC
 
-*** new scratch buffer
-#+BEGIN_EXAMPLE emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; multiple scratch buffers                                               ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; uses package "scratch"
-(autoload 'scratch "scratch" nil t)
-(global-set-key (kbd "s-T") 'scratch)
-
-#+END_EXAMPLE
-
-*** Create new buffer as org-mode subtree in current file
-#+BEGIN_SRC emacs-lisp
 (defun org-new-scratch-buffer ()
   (interactive)
   (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
@@ -745,10 +480,7 @@ Aquamacs:
 (org-narrow-to-subtree)
 
   )
-#+END_SRC
 
-*** Disable autocorrect in minibuffer
-#+BEGIN_SRC emacs-lisp
 (defun conditionally-disable-abbrev ()
   ""
   (if (string-match "smex-" (format "%s" this-command))
@@ -758,37 +490,20 @@ Aquamacs:
 (add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
 (add-hook 'minibuffer-setup-hook (lambda ()
                                    (abbrev-mode -1)))
-#+END_SRC
 
-*** Ignore case when reading buffer and file names
-#+BEGIN_SRC emacs-lisp
 (setq
 read-buffer-completion-ignore-case t
 read-file-name-completion-ignore-case t)
-#+END_SRC
 
-** Reveal in finder
-#+BEGIN_SRC emacs-lisp
 (use-package reveal-in-finder
 
   :bind)
-#+END_SRC
 
-** cycle-hyphenation-or-toggle-item
-#+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation-or-toggle-item ()
   (interactive)
   (if (region-active-p)
       (call-interactively 'org-toggle-item)
     (cycle-hyphenation)))
-
-#+END_SRC
-
-* org-mode
-
-** org custom functions
-*** archiving
-#+BEGIN_SRC emacs-lisp
 
 ;; ---------------------------------------------------------------------
 ;; Around-advice: tweak `org-archive-location`, then run the real command
@@ -809,10 +524,7 @@ Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
     (apply orig-fn args)))                 ; run the original command
 
 (advice-add 'org-archive-subtree :around #'sed--org-archive-subtree)
-#+END_SRC
 
-*** org-mode speed commands
-#+BEGIN_SRC emacs-lisp
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (
 ; ("k" . org-kill-note-or-show-branches)
@@ -832,35 +544,18 @@ Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
                                       ("P" . org-backward-heading-same-level)
                                       ("J" . org-clock-goto)
                                       ("Z" . ignore))))
-#+END_SRC
 
-** latex images
-#+BEGIN_SRC emacs-lisp
-
-  (setq org-latex-image-default-width "370pt");; new value just for book export
+(setq org-latex-image-default-width "370pt");; new value just for book export
 ;; (setq org-latex-image-default-width "180pt") good value, works for QIAGEN for exampl
 (setq   org-export-allow-bind-keywords t)
-#+END_SRC
 
-** Highlight latex text in org mode
-Ben Maughan
-Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appear in a different colour in an org-mode file to help it stand out.
-
-#+BEGIN_SRC emacs-lisp
 (setq org-highlight-latex-and-related '(latex))
-#+END_SRC
 
-** org-mode key bindings:
-#+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-cc" 'org-capture)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-#+END_SRC
 
-** org agenda
-*** agenda display settings
-#+BEGIN_SRC emacs-lisp
 (setq org-agenda-prefix-format
    (quote
     ((agenda . " %?-12t% s")
@@ -870,10 +565,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      (search . " %i %-12:c"))))
 
 ;; (setq org-agenda-prefix-format "%t %s")
-#+END_SRC
 
-** org settings
-#+BEGIN_SRC emacs-lisp
 ;; (add-hook 'after-init-hook 'org-agenda-list)
 (use-package org-inlinetask
   :ensure nil ;; <- don't try to install it
@@ -899,10 +591,7 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 (setq org-src-fontify-natively t)
 
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
-#+END_SRC
 
-** org todo keywords
-#+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords
    '((sequence "TODO" "STARTED" "|" "DONE")
     ;; (sequence "|" "SKIPPING")
@@ -945,10 +634,6 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
           :box (:line-width (2 . 1) :color "#228B22")
           :weight bold)))
 
-#+END_SRC
-
-**  hl-todo
-#+begin_src emacs-lisp
 (use-package hl-todo
 :defer t
 ; ensure t
@@ -991,17 +676,9 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
      ("XXX" . "#cc9393")
      ("XXXX" . "#cc9393")
      ("\\?\\?\\?" . "#cc9393"))))
-#+end_SRC
 
-** org priorities
-Make it so that the command =org-priority-up= goes straight to #A
-#+BEGIN_SRC emacs-lisp
 (setq org-priority-start-cycle-with-default nil)
-#+END_SRC
 
-** Protect org headings from accidental demotion
-Don't delete headings unless I specifically say so. So i.e. when I hit delete, don't delete stars, only content.
-#+BEGIN_SRC emacs-lisp
 (defun new-org-delete-backward-char (N)
   (interactive "p")
   (cond ((region-active-p)
@@ -1015,10 +692,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (org-delete-backward-char N)
 )))
 
-#+END_SRC
-
-** Org-mode hooks and other org settings
-#+BEGIN_SRC emacs-lisp
 '(initial-major-mode (quote org-mode))
 '(org-replace-disputed-keys t)
 '(org-use-extra-keys nil)
@@ -1051,74 +724,6 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 (setq org-directory my-org-directory)
 (setq org-default-notes-file my-org-default-notes-file)
 
-#+END_SRC
-
-** Org refile settings
-*** Exclude ~DONE~ state tasks from refile targets:
-#+BEGIN_EXAMPLE emacs-lisp
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
-#+END_EXAMPLE
-
-** org-capture setup
-#+BEGIN_EXAMPLE emacs-lisp
-(setq org-capture-templates
-      (quote
-       (
-
-        ("L" "Later" checkitem (file+headline "fearless.org" "Later") "\n\n [ ] %?\n\n" :prepend t :kill-buffer t)
-
-        ("n" "note" entry (file org-default-notes-file)
-	       "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
-
-        ("b" "book" entry (file "~/Dropbox/writing/book/book-capture.txt")
-	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
-
-	      ("v" "visualness and visual actions" entry (file "visual-actions.txt")
-	       "\n\n\n\n*  %? %i\n \n" :prepend t :kill-buffer t)
-
-        ("i" "article ideas" entry (file "article-ideas.txt")
-	       "\n\n\n\n* %? %i\n \n" :prepend t :kill-buffer t)
-
-        ("e" "expression" entry (file "expression.txt")
-	       "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
-
-        ("W" "Wise Mind" entry (file "wisemind.txt")
-	       "\n\n* wm%?\n" :prepend t :kill-buffer t)
-
-	      ("h" "historical interest" entry (file "historical-lifestream.txt")
-	       "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
-
-	      ("P" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
-	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
-
-	      ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
-	       "\n\n\n\n* %U\n\n%?" :prepend t :kill-buffer t)
-
-	      ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
-	       "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
-
-        ("M" "Memorize" entry
-         (file+headline (concat org-directory "org-drill-jays-decks.org")
-                        "Vocabulary")
-         "* Word :drill:\n%^ \n** Answer \n%^")
-
-("f" "Fitness")
-("fw" "Weight" table-line
-  (id "7c721aac-eafa-4a42-9354-fbc151402510")
-  "| | %U | %^{Weight} | %^{Comment}" :immediate-finish t)
-
-        )))
-#+END_EXAMPLE
-
-This is working correctly:
-
-** org custom functions
-*** update parent cookie
-I think this is to make parent ~DONE~ states automatically update:
-#+BEGIN_SRC emacs-lisp
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
     (save-excursion
@@ -1135,12 +740,7 @@ I think this is to make parent ~DONE~ states automatically update:
 
 (advice-add 'org-kill-line   :after #'sed--update-parent-cookie)
 (advice-add 'kill-whole-line :after #'sed--update-parent-cookie)
-#+END_SRC
 
-*** checkbox-list-complete
-Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org/gmane.emacs.orgmode/42715][here]]. An item consists of a list with checkboxes. When all of the checkboxes are checked, the item should be considered complete and its ~TODO~ state should be automatically changed to ~DONE~. The code below does that. This version is slightly enhanced over the one in the mailing list (see [[http://thread.gmane.org/gmane.emacs.orgmode/42715/focus=42721][here]]) to reset the state back to TODO if a checkbox is unchecked. Note that the code requires that a checkbox statistics cookie (the [/] or [%] thingie in the headline - see the Checkboxes section in the manual) be present in order for it to work. Note also that it is too dumb to figure out whether the item has a ~TODO~ state in the first place: if there is a statistics cookie, a ~TODO~ / ~DONE~ state will be added willy-nilly any time that the statistics cookie is changed.
-
-#+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
 
@@ -1161,28 +761,17 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
                      (equal (match-string 2) (match-string 3)))
                 (org-todo 'done)
               (org-todo 'todo)))))))
-#+END_SRC
 
-*** org align tables
-#+BEGIN_SRC emacs-lisp
 (defun my-align-all-tables ()
   (interactive)
   (org-table-map-tables 'org-table-align 'quietly))
-#+END_SRC
 
-*** org extract link
-#+BEGIN_SRC emacs-lisp
 (defun my-org-extract-link ()
   "Extract the link location at point and put it on the killring."
   (interactive)
   (when (org-in-regexp org-link-bracket-re 1)
     (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
-#+END_SRC
 
-*** org insert link
-Insert link with HTML title as default description. When using `org-insert-link' (`C-c C-l') it might be useful to extract contents from HTML <title> tag and use it as a default link description. Here is a way to accomplish this:
-
-#+BEGIN_SRC emacs-lisp
 ;; (use-package mm-url) ; to include mm-url-decode-entities-string
 
 ;; (defun org-insert-link ()
@@ -1202,10 +791,7 @@ Insert link with HTML title as default description. When using `org-insert-link'
       (search-forward "</title>")
       (setq x2 (search-backward "<"))
       (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))))
-#+END_SRC
 
-*** org insert subtask
-#+BEGIN_SRC emacs-lisp
 (defun my-org-insert-sub-task ()
   (interactive)
   (let ((parent-deadline (org-get-deadline-time nil)))
@@ -1213,27 +799,17 @@ Insert link with HTML title as default description. When using `org-insert-link'
     (org-insert-todo-subheading t)
     (when parent-deadline
       (org-deadline nil parent-deadline))))
-#+END_SRC
 
-*** reschedule agenda items to today with a single command
-#+BEGIN_SRC emacs-lisp
 (defun org-agenda-reschedule-to-today ()
   (interactive)
   (cl-flet ((org-read-date (&rest rest) (current-time)))
 	   (call-interactively 'org-agenda-schedule)))
-#+END_SRC
 
-*** org archive done
-Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command][link]]
-#+BEGIN_SRC emacs-lisp
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
-#+END_SRC
 
-** org-levels
-#+BEGIN_SRC emacs-lisp
- (defun org-show-level-1 ()
+(defun org-show-level-1 ()
   (interactive)
  (org-content 1))
 
@@ -1284,30 +860,16 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 (define-key key-minor-mode-map (kbd "C-s-0") 'show-all)
 (define-key key-minor-mode-map (kbd "C-s-a") 'show-all)
 
-#+END_SRC
-
-** org-mode inline tasks
-#+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task)
-#+END_SRC
 
-** no autorevert
-#+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode -1)
-#+END_SRC
 
-** globally enable palimpsest-mode
-#+BEGIN_SRC emacs-lisp
 ;; Ensure palimpsest is loaded before enabling the mode
 (require 'palimpsest nil t)
 (add-hook 'find-file-hook (lambda ()
                             (when (featurep 'palimpsest)
                               (palimpsest-mode 1))))
-#+END_SRC
 
-* org-mode other packages
-** org-pomodoro
-#+BEGIN_SRC emacs-lisp
 ;; (setq org-pomodoro-format "Pomodoro: %s")
 ;; (setq org-pomodoro-killed-sound "~/sounds/autodestructsequencearmed_ep.mp3")
 (setq org-pomodoro-length 25)
@@ -1362,33 +924,14 @@ set entry_text to \"# Bookwriting:\" & pStartTime & \" - \" & time string of now
 "))
 ))
 
-#+END_SRC
-
-
-From this site ([[https://gist.github.com/judismith/3315418][AppleScript to create Day One entry for hours logged in TaskPaper - Based on the AppleScript from Brett Terpstra to log TaskPaper completed tasks to Day One. This script does both]])
-
-do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/local/bin/dayone new"
-
-** org-mac-link
-#+BEGIN_SRC emacs-lisp
 (use-package org-mac-link
 :defer t
   )
-#+END_SRC
 
-* Browsing
-** Make URLs in comments/strings clickable
-#+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
-#+END_SRC
 
-** Set the default browser
-#+BEGIN_SRC emacs-lisp
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-#+END_SRC
 
-* Miscellaneous/unsorted settings
-#+BEGIN_SRC emacs-lisp
 '(cua-enable-cua-keys (quote shift))
 '(cua-highlight-region-shift-only t)
 '(cua-mode nil nil (cua-base))
@@ -1410,10 +953,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 (setq ns-function-modifier 'hyper)
 ;; open files in an existing frame instead of a new frame
 (setq ns-pop-up-frames nil)
-#+END_SRC
 
-** Open everything in its right mode; use ~org-mode~ whenever possible
-#+BEGIN_SRC emacs-lisp
 ;; ------------------------------------------------------------------
 ;; File-extension → major-mode rules  (prepend to keep highest priority)
 ;; ------------------------------------------------------------------
@@ -1444,23 +984,10 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 )
        auto-mode-alist))                    ; keep earlier rules, too
 
-#+END_SRC
-
-** Enable highlighting of text similar to standard word processors
-#+BEGIN_SRC emacs-lisp
 '(org-support-shift-select (quote always))
-#+END_SRC
 
-** Define my default directory:
-#+BEGIN_SRC emacs-lisp
 (setq default-directory "~/Dropbox/writing/" )
-#+END_SRC
 
-* Backups
-Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files][How do I control how Emacs makes backup files? - Stack Overflow]]
-
-** Make backups:
-#+BEGIN_SRC emacs-lisp
 ;; Default and per-save backups go here:
 (setq backup-directory-alist '(("" . "~/emacs/backup/per-save")))
 
@@ -1476,10 +1003,6 @@ Sources: [[http://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-
    auto-save-interval 200      ; number of keystrokes between auto-saves (default: 300)
 vc-make-backup-files t ; Make backups of files, even when they're in version control
    )
-#+END_SRC
-
-** backing up on every save and backing up versioned files.
-#+BEGIN_SRC emacs-lisp
 
 (defun force-backup-of-buffer ()
  ;; Make a special "per session" backup at the first save of each
@@ -1496,11 +1019,6 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
   (backup-buffer)))
 
 (add-hook 'before-save-hook 'force-backup-of-buffer)
-
-#+END_SRC
-
-* ~eshell~
-#+BEGIN_SRC emacs-lisp
 
 ;; (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
 
@@ -1521,16 +1039,10 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
          ":"))
 
 ;; (use-package eshell-autojump)
-#+END_SRC
 
-* ~ibuffer~
-#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
-#+END_SRC
 
-Defines ~ibuffer-do-replace-string~:
-#+BEGIN_SRC emacs-lisp
 (define-ibuffer-op replace-string (from-str to-str)
   "Perform a `replace-string' in marked buffers."
   (:interactive
@@ -1549,17 +1061,10 @@ Defines ~ibuffer-do-replace-string~:
         (while (search-forward from-str nil t)
           (replace-match to-str nil t))))
     t))
-#+END_SRC
 
-* savefile
-** file current locations
-#+BEGIN_SRC emacs-lisp
 (setq ido-save-directory-list-file "~/emacs/.savefile/ido.hist")
 (setq projectile-known-projects-file "~/emacs/.savefile/projectile-bookmarks.eld")
-#+END_SRC
 
-** recentf
-#+BEGIN_SRC emacs-lisp
 (use-package recentf
 :defer t
 :config
@@ -1568,11 +1073,7 @@ Defines ~ibuffer-do-replace-string~:
 (setq recentf-max-saved-items 100)
 (run-with-idle-timer 60 t 'recentf-save-list) ; save recentf automatically so recent files are stored even in the case of abnormal exit
 )
-#+END_SRC
 
-* Ignore / Exclude Uninteresting Things
-** buffer-stack untrack / ignore uninteresting buffers
-#+BEGIN_SRC emacs-lisp
 (setq buffer-stack-show-position nil)
 
 (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "todo" "TODO" "*org-roam*")))
@@ -1585,14 +1086,6 @@ Defines ~ibuffer-do-replace-string~:
      (member buffer buffer-stack-untracked))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
-#+END_SRC
-
-** recentf-exclude
-- [[id:8AB9478C-67B4-4DA5-9329-71DE9C03F595][Escape special characters]]
-- Use ~*~ for wildcard? Doesn't seem to be necessary
-
-Make it so that recentf does not record the following uninteresting file types:
-#+BEGIN_SRC emacs-lisp
 ;; ------------------------------------------------------------------
 ;; recentf — paths & patterns we never want to record
 ;; ------------------------------------------------------------------
@@ -1619,10 +1112,7 @@ Make it so that recentf does not record the following uninteresting file types:
         ;; src you skip
         "\\.Icon" "\\.css" "\\.xml"
         ))
-#+END_SRC
 
-** grep-ignore
-#+BEGIN_SRC emacs-lisp
 (setq grep-find-ignored-directories
    '("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "devonthink"))
 
@@ -1633,10 +1123,6 @@ Make it so that recentf does not record the following uninteresting file types:
     "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.tex" "*.html" "*.mm" "*.js"
     "*.doc" "*.pdf" "*.docx" "*.xls" "*.jpg" "*.png" "*.xlsx" "*devonthink*" "*.gif" "#*"))
 
-#+END_SRC
-
-** dired-omit
-#+BEGIN_SRC emacs-lisp
 (setq dired-omit-files "^\\.[^.]\\|\\.tex$\\|Icon*"
 
 dired-omit-extensions
@@ -1646,9 +1132,6 @@ dired-omit-extensions
 
 ;; (setq dired-omit-files "^\\.[^.]\\|\\.pdf$\\|\\.tex$\\|\\.DS_Store$\\|\\.doc$\\|\\.docx$\\|\\.ini$\\|\\.rtf$\\|\\Icon*\\|\\*.html")
 
-#+END_SRC
-
-#+begin_src emacs-lisp
 ;; Enable hiding details by default in all Dired buffers
 (with-eval-after-load 'dired
   (require 'dired-x)
@@ -1661,10 +1144,7 @@ dired-omit-extensions
 (with-eval-after-load 'dired
   (setq dired-hide-details-hide-symlink-targets nil)  ; Show symlink targets
   (setq dired-hide-details-hide-information-lines t)) ; Hide the "total" line
-#+end_src
 
-* Word count
-#+begin_src emacs-lisp
 (use-package wc-mode
 :defer t
 :config
@@ -1683,12 +1163,6 @@ dired-omit-extensions
  )
   )
 
-#+end_src
-
-* web research functions
-** Sourcing / Citing / Attributing
-*** Copy link from Chrome
-#+BEGIN_SRC emacs-lisp
 (defun org-mac-link-chrome-insert-frontmost-url-with-quotes ()
   "with quotes"
   (interactive)
@@ -1696,10 +1170,7 @@ dired-omit-extensions
   (org-mac-link-chrome-insert-frontmost-url)
   (insert ",\"")
   )
-#+END_SRC
 
-** Paste notes with attribution
-#+BEGIN_SRC emacs-lisp
 (defun web-research ()
   (interactive)
   (insert "#+BEGIN_QUOTE\n")
@@ -1712,122 +1183,15 @@ dired-omit-extensions
   (next-line)
   (next-line)
     (insert "\n"))
-#+END_SRC
 
-** Paste notes with attribution in quotes
-#+BEGIN_SRC emacs-lisp
 (defun web-research-quotes ()
   (interactive)
   (insert "\"")
     (org-mac-link-chrome-insert-frontmost-url)
        (insert "\,\" "))
-#+END_SRC
 
-** html2org
-Aliasing this instead now that I'm putting in on Github
-#+begin_src emacs-lisp
 (defalias 'html2org-clipboard 'chatgpt2org)
-#+end_src
 
-Paste HTML using proper org-mode format
-Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
-#+BEGIN_EXAMPLE emacs-lisp
-(defun html2org-clipboard ()
- "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
- (interactive)
-(let* ((cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
-    (org-content (shell-command-to-string cmd)))
-  (setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
-
- (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
- (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
- (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
- (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
-(setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
-(setq org-content (replace-regexp-in-string "" "" org-content))
- (setq org-content (replace-regexp-in-string " " " " org-content))
- (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
-(setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
-(setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content)) ;; somehow leaves stray square brackets in the output
-
-;; Fix the bug
-(setq org-content (replace-regexp-in-string "\\(#\\+begin_example\\)\n\\s-*\\([a-zA-Z]*\\)Copy code" "\\1 \\2\n" org-content))
-
-;; Add two line breaks before #+begin for both src and example, and one line break before #+end, and remove leading spaces
-  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
-  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
-
-;; Add the following line to replace "=" enclosed text with "~" enclosed text
- (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
-
-(kill-new org-content)
- (yank)))
-
-#+END_EXAMPLE
-
-** html2org and unfill new version
-#+begin_EXAMPLE emacs-lisp
-(defun html2org-clipboard-and-unfill-paragraph ()
- "Convert clipboard contents from HTML to Org, remove base64-encoded images, unfill paragraph and then paste (yank)."
- (interactive)
- (html2org-clipboard)
- (let* ((org-content (car kill-ring))) ;; get the most recent item in the kill ring, which is the result of html2org-clipboard
-
- ;; Unfill paragraph
-  (with-temp-buffer
-  (insert org-content)
-  (goto-char (point-min))
-  (while (not (eobp))
-   (unfill-paragraph)
-   (forward-paragraph))
-  (setq org-content (buffer-string)))
-
-  (kill-new org-content)
-  (yank)))
-
-#+END_EXAMPLE
-
-** html2org and unfill paragraph. Old version. works
-Paste HTML using proper org-mode format
-Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-html-directly-when-pasting][source]]
-#+BEGIN_EXAMPLE emacs-lisp
-(defun html2org-clipboard-and-unfill-paragraph ()
- "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
- (interactive)
-(let* ((cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
-    (org-content (shell-command-to-string cmd)))
-  (setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
-
- (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
- (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
- (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
- (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
-(setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
-(setq org-content (replace-regexp-in-string "" "" org-content))
- (setq org-content (replace-regexp-in-string " " " " org-content))
- (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
-(setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
-(setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content)) ;; somehow leaves stray square brackets in the output
-
-;; Add the following line to replace "=" enclosed text with "~" enclosed text
- (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
-
-;; Unfill paragraph
-  (with-temp-buffer
-   (insert org-content)
-   (goto-char (point-min))
-   (while (not (eobp))
-    (unfill-paragraph)
-    (forward-paragraph))
-   (setq org-content (buffer-string)))
-
-  (kill-new org-content)
-  (yank)))
-
-#+END_EXAMPLE
-
-** html2text-clipboard
-#+begin_src emacs-lisp
 (defun html2text-clipboard ()
  "Convert clipboard contents from HTML to plain text and paste."
  (interactive)
@@ -1835,10 +1199,6 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (kill-new (shell-command-to-string cmd))
  (yank))
 
-#+end_src
-
-* My custom functions for working with dates and times
-#+BEGIN_SRC emacs-lisp
 (defun jd-org-current-time ()
   "foo"
   (interactive)
@@ -1938,27 +1298,10 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
  (org-clock-in)
  (next-line 2))
 
-
-
-#+END_SRC
-
-* Prose editing settings
-** lowercase
-#+begin_src emacs-lisp
 (defalias 'lowercase-region 'downcase-region)
-#+end_src
 
-** Capitalization
-*** Intelligently change punctuation of sentences when I change the capitalization
-([[http://endlessparentheses.com/super-smart-capitalization.html][source]]):
-#+BEGIN_SRC emacs-lisp
 
-#+END_SRC
 
-** Reconfigure shift-select
-For prose editing tasks, make m-s-right and m-s-left behave as they do in
-traditional word processors, highlighting whole words at a time:
-#+BEGIN_SRC emacs-lisp
 (defvar lawlist-movement-syntax-table
   (let ((st (make-syntax-table)))
     (modify-syntax-entry ?{ "." st)  ;; { = punctuation
@@ -2038,11 +1381,7 @@ traditional word processors, highlighting whole words at a time:
 
 (define-key global-map [M-s-right] 'lawlist-forward-entity)
 (define-key global-map [M-s-left] 'lawlist-backward-entity)
-#+END_SRC
 
-** Working with windows
-Transpose windows, useful:
-#+BEGIN_SRC emacs-lisp
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
   (interactive "p")
@@ -2054,11 +1393,7 @@ Transpose windows, useful:
 	(set-window-buffer (funcall selector) this-win)
 	(select-window (funcall selector)))
       (setq arg (if (> arg 0) (1- arg) (1+ arg))))))
-#+END_SRC
 
-* move stuff around
-** org-refile
-#+BEGIN_SRC emacs-lisp
 (setq org-outline-path-complete-in-steps nil) ; Refile in a single go
 (setq org-completion-use-ido nil)
 (setq org-refile-use-outline-path t) ; Show full paths for refiling
@@ -2077,13 +1412,6 @@ Transpose windows, useful:
 
 ; (setq org-goto-interface 'outline-path-completion org-goto-max-level 3)
 
-
-#+END_SRC
-
-** Refile region
-Refile highlighted to a particular heading ([[http://stackoverflow.com/questions/25256304/in-emacs-org-mode-how-to-refile-highlighted-text-under-an-org-heading/25262538?iemail=1&noredirect=1#25262538][Source]]):
-
-#+BEGIN_SRC emacs-lisp
 (defvar refile-region-format "\n%s\n")
 
 (defvar refile-region-position 'top
@@ -2119,10 +1447,6 @@ With prefix arg C-u, copy region instad of killing it."
           (org-end-of-meta-data))
         (insert (format refile-region-format text))))))
 
-#+END_SRC
-
-** move-region-or-subtree-to-other-window
-#+BEGIN_SRC emacs-lisp
 (defun move-region-or-subtree-to-other-window ()
  (interactive)
  (when (and (eq 'org-mode major-mode)
@@ -2132,10 +1456,7 @@ With prefix arg C-u, copy region instad of killing it."
   (delete-region (region-beginning) (region-end))
   (other-window 1)
   (insert text)))
-#+END_SRC
 
-** copy-region
-#+begin_src emacs-lisp
 (defun copy-region-to-other-window ()
  (interactive)
  (when (region-active-p)
@@ -2143,13 +1464,7 @@ With prefix arg C-u, copy region instad of killing it."
    (other-window 1)
    (insert text)
    (other-window -1))))
-#+end_src
 
-* Remove hyperlink
-A useful function: remove a hyperlink but leave the link description:
-
-** new
-#+begin_src emacs-lisp
 (defun remove-links/jay (beg end)
   "Replace an Org bracket link at point with its description (or address if no description).
 If a region is active, do this for *all* bracket links in the region.
@@ -2181,11 +1496,7 @@ Bracket links look like [[url][desc]] or [[url]]."
             (insert description))
           (message "Removed link at point"))
       (message "No link at point"))))
-#+end_src
-Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link][in org-mode, how to remove a link? - Emacs Stack Exchange]]
 
-** remove hyperlinks in buffer
-#+begin_src emacs-lisp
 (defun remove-hyperlinks ()
   "Remove Org bracket links depending on context:
 - If region is active, remove only links in the region.
@@ -2225,11 +1536,6 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
     (setq description (replace-regexp-in-string "\n" " " description))
     (replace-match description)))))
 
-#+end_src
-
-* Working with files
-** Reopen last closed file, very useful:
-#+BEGIN_SRC emacs-lisp
 (defun recentf-open-files-compl ()
   (interactive)
   (let* ((all-files recentf-list)
@@ -2255,16 +1561,6 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
         (cl-return)))
     (ignore-errors (find-file most-recent-filename))))
 
-#+END_SRC
-
-** Copy path
-Useful for working with files and references:
-
-Add 'filename' to the kill ring *without duplicating it* if it's already there.
-#+BEGIN_SRC emacs-lisp
-
-
-
 (defun path-copy-path-to-clipboard ()
  "Copy the full current filename and path to the clipboard."
  (interactive)
@@ -2286,11 +1582,6 @@ Add 'filename' to the kill ring *without duplicating it* if it's already there.
  ;; Use custom function to ensure the clipboard content is also in the kill ring.
  (push-kill-ring-pasteboard-to-MacOS-clipboard))
 
-#+END_SRC
-
-** Copy path with quotes
-Useful for working with files and references:
-#+BEGIN_SRC emacs-lisp
 (defun path-copy-path-to-clipboard-with-quotes ()
   "Copy the full current filename and path to the clipboard"
   (interactive)
@@ -2304,10 +1595,7 @@ Useful for working with files and references:
       (message filename)))
   (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
-#+END_SRC
 
-* save some buffers
-#+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 
 (defun jay/save-all-buffers ()
@@ -2322,12 +1610,7 @@ confirmation.  Non–file‑visiting buffers are ignored."
           (when (or (buffer-modified-p)
                     (not (file-exists-p buffer-file-name)))
             (save-buffer)))))))
-#+END_SRC
 
-* Keybindings
-Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
-
-#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-C-N") 'outline-next-visible-heading)
 (global-set-key (kbd "M-C-P") 'outline-previous-visible-heading)
 (define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
@@ -2367,20 +1650,11 @@ Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings
 (define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 (define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
 (define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
-#+END_SRC
 
-Make ^H delete rather than help:
-#+BEGIN_SRC emacs-lisp
 ;; (global-set-key (kbd "C-h") 'delete-backward-char)
-#+END_SRC
 
-Redefine help shortcut:
-#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-h") 'help-command)
-#+END_SRC
 
-** flyspell-correct-space
-#+begin_src emacs-lisp
 (defun flyspell-auto-correct-word-correct-space ()
   (interactive)
   (when (looking-back " " nil)
@@ -2388,9 +1662,6 @@ Redefine help shortcut:
   (flyspell-auto-correct-word)
   )
 
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
 (global-set-key "\C-ce" 'eval-buffer)
 (global-set-key "\C-cr" 'eval-region)
 ;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
@@ -2398,22 +1669,10 @@ Redefine help shortcut:
 ;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-previous-word)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-y") 'redo)
-#+END_SRC
 
-** cut-subtree
-   :PROPERTIES:
-   :ID:       D283A971-F9C3-4683-A419-82F7D9816F72
-   :END:
-
-#+BEGIN_SRC emacs-lisp
 (define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
 (define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
-#+END_SRC
 
-* Searching for things
-** isearch
-*** isearch settings
-#+BEGIN_SRC emacs-lisp
 (defun my-isearch-word-at-point ()
   (interactive)
   (call-interactively 'isearch-forward-regexp))
@@ -2439,20 +1698,7 @@ Redefine help shortcut:
 (add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
 
 ;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
-#+END_SRC
 
-*** Position of the Cursor after Searching
-Note that when you type ‘C-r’, isearch goes backwards. When you search
-backwards, find something, and then end the search, for example by hitting
-‘RET’, point is at the beginning of the string you searched. When you search
-forwards, point is not necessarily at the end of the string you were searching
-for, but only after the last character that you typed – bad usability! That
-means that you cannot predict point based on the string you are searching for
-(and thinking about). You must predict point based on the numbers of characters
-you typed. Here is how to change that in your InitFile, courtesy of
-AdrianKubala:
-
-#+BEGIN_SRC emacs-lisp
 (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
 
 (defun my-goto-match-beginning ()
@@ -2471,10 +1717,7 @@ AdrianKubala:
   (push-mark)
   (goto-char (point-min))
   (isearch-forward))
-#+END_SRC
 
-** projectile
-#+BEGIN_SRC emacs-lisp
 (use-package vertico
   :init
   (vertico-mode))
@@ -2502,14 +1745,6 @@ AdrianKubala:
   :bind
   (:map projectile-mode-map
         ("s-o" . nil)))
-#+END_SRC
-
-** isearch
-
-*** isearch arrow keys
-  Here's very convenient keys for isearch. Put it in your emacs init.
-
-#+BEGIN_SRC emacs-lisp
 
 (progn
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
@@ -2521,123 +1756,7 @@ AdrianKubala:
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
-#+END_SRC
-
-  when in isearch, the arrow keys will:
-
-  → next occurrence.
-  ← previous occurrence.
-  ↑ previous search term.
-  ↓ next search term.
-  Enter ↵ exit isearch.
-
-  This way, searching forward/backward is just one single key press, no key combination.
-
-  This is especially useful with a command that searches current word. See: Emacs: isearch Current Word.
-
-
-** searching
-
-*** swiper
-**** ivy
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package ivy
-
- :config
- (ivy-add-actions t
-    '(("W" kill-new "save to kill ring")
-     ("I" insert "insert in buffer")))
-(define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
-(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-verbatim)
-(setq ivy-height 25)
-(setq ivy-display-style 'fancy)
-
-)
-#+END_EXAMPLE
-
-**** swiper
-#+BEGIN_EXAMPLE emacs-lisp
-;; (global-set-key (kbd "C-s") 'swiper)
-(setq ivy-re-builders-alist
- '((t . ivy--regex-plus)))
-
-(define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
-
-#+END_EXAMPLE
-
-**** swiper hydra
-#+BEGIN_EXAMPLE emacs-lisp
-(defun ivy-dired-mark (arg)
- (interactive "p")
- (dotimes (_i arg)
-  (with-selected-window swiper--window
-   (dired-mark 1))
-  (ivy-next-line 1)
-  (ivy--exhibit)))
-
-(defun ivy-dired-unmark (arg)
- (interactive "p")
- (dotimes (_i arg)
-  (with-selected-window swiper--window
-   (dired-unmark 1))
-  (ivy-next-line 1)
-  (ivy--exhibit)))
-
-(defun ivy-replace ()
- (interactive)
- (let ((from (with-selected-window swiper--window
-        (move-beginning-of-line nil)
-        (when (re-search-forward
-            (ivy--regex ivy-text) (line-end-position) t)
-         (match-string 0)))))
-  (if (null from)
-    (user-error "No match")
-   (let ((rep (read-string (format "Replace [%s] with: " from))))
-    (with-selected-window swiper--window
-     (undo-boundary)
-     (replace-match rep t t))))))
-
-(defun ivy-undo ()
- (interactive)
- (with-selected-window swiper--window
-  (undo)))
-
-(defhydra hydra-ivy (:hint nil
-           :color pink)
- "
-^^^^^^     ^Actions^  ^Dired^   ^Quit^
-^^^^^^--------------------------------------------
-^ ^ _l_ ^ ^   _._ repeat  _m_ark   _i_: cancel
-_j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
-^ ^ _k_ ^ ^   _u_ndo
-"
- ;; arrows
- ("j" ivy-beginning-of-buffer)
- ("k" ivy-next-line)
- ("l" ivy-previous-line)
- (";" ivy-end-of-buffer)
- ;; actions
- ("." hydra-repeat)
- ("r" ivy-replace)
- ("u" ivy-undo)
- ;; dired
- ("m" ivy-dired-mark)
- ("," ivy-dired-unmark)
- ;; exit
- ("o" keyboard-escape-quit :exit t)
- ("i" nil))
-
-(define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
-
-#+END_EXAMPLE
-
-** searching
-
-*** Tell isearch that curly apostrophes are the same as straight ones
- Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
-
-#+BEGIN_SRC emacs-lisp
- ;;; Tell ispell.el that ’ can be part of a word.
+;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
              "['\x2019]" nil ("-B") nil utf-8)))
@@ -2659,13 +1778,7 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
             #'endless/replace-quote)
-#+END_SRC
 
-
-
-* these seem to need to go at the end
-** Palimpsest - best ever
-#+BEGIN_SRC emacs-lisp
 ;; Load palimpsest package
 (use-package palimpsest
   :ensure t
@@ -2679,21 +1792,10 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
   ;; Define org-mode specific keybinding
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)))
-#+END_SRC
 
-C-C C-R to move text to the bottom of the buffer
-
-** Make block quotes appear nicely in buffer, displaying > instead of :
-This doesn't seem to be working.
-
-http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
-#+BEGIN_SRC emacs-lisp
 (font-lock-add-keywords
  'org-mode '(("^\\(:+\\) " 1 (compose-region (match-beginning 1) (match-end 1) ?❱) nil)))
-#+END_SRC
 
-* replace word
-#+BEGIN_SRC emacs-lisp
 (defun replace-word (tosearch toreplace)
   (interactive "sSearch for word: \nsReplace with: ")
   (save-excursion
@@ -2704,26 +1806,11 @@ http://thread.gmane.org/gmane.emacs.orgmode/64980/focus=65987
         (setq count (1+ count))
         (replace-match toreplace 'fixedcase 'literal))
       (message "Replaced %s match(es)" count))))
-#+END_SRC
 
-* org-links
-* update packages
- (run-with-idle-timer 6000 t 'endless/upgrade)
-
-* pop to mark
-Handy way of getting back to previous places.
-
-#+BEGIN_SRC emacs-lisp
 ;(setq set-mark-command-repeat-pop t)
-#+END_SRC
 
-* Treat all themes as safe
-#+BEGIN_SRC emacs-lisp
 (setq custom-safe-themes t)
-#+END_SRC
 
-* org-toggle-heading-same-level
-#+BEGIN_SRC emacs-lisp
 (defun org-toggle-heading-same-level ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
@@ -2741,10 +1828,7 @@ Handy way of getting back to previous places.
 (org-do-promote)
 ;        (org-todo 'nextset)
 )))) ; add TODO#+END_SRC
-#+END_SRC
 
-* org-toggle-todo-heading
-#+BEGIN_SRC emacs-lisp
 (defun org-toggle-todo-heading ()
   "Toggles the current line between a non-heading and TODO heading."
   (interactive)
@@ -2761,10 +1845,7 @@ Handy way of getting back to previous places.
         (org-toggle-heading) ; convert to heading
 (org-do-promote)
         (org-todo 'nextset))))) ; add TODO#+END_SRC
-#+END_SRC
 
-* delete-extra-whitespace-region
-#+BEGIN_SRC emacs-lisp
 (defun delete-extra-whitespace-region (beg end)
   "replace all whitespace in the region with single spaces"
   (interactive "r")
@@ -2774,10 +1855,7 @@ Handy way of getting back to previous places.
       (goto-char (point-min))
       (while (re-search-forward "^\\s-+" nil t)
         (replace-match "")))))
-#+END_SRC
 
-* double-line-breaks-in-region
-#+BEGIN_SRC emacs-lisp
 (defun double-line-breaks-in-region (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
@@ -2785,13 +1863,6 @@ Handy way of getting back to previous places.
  ["\r" "\n\n"]
 ["\n" "\n\n"]
 )))
-#+END_SRC
-
-* xah-replace-pairs
-(use-package xah-replace-pairs
-:defer
-)
-#+BEGIN_SRC emacs-lisp
 
 (defun xah-convert-entities-to-html-chars-region (begin end)
   (interactive "r")
@@ -2811,26 +1882,6 @@ Handy way of getting back to previous places.
  ["&gt;" ">"]
  )))
 
-#+END_SRC
-
-* Monochrome rainbows are the best way to reveal unbalanced delimiters
-I rely and paredit and formatting to keep my parenthesis honest, and for the most part that works out great. Occasionally I need to go outside the box. Emacs defaults are terrible for finding unbalanced forms when things go wrong. This setting makes it obvious that there is an error when I have fallen out with my grouping delimiters.
-
-The trick is to not use different colored delimiters! The reason I need the rainbow delimiters package is only to highlight unbalanced delimiters, which it does quickly and accurately. For those cases where I really want to differentiate a group, placing the cursor on the delimiter causes Emacs to highlight the other delimiter.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-(use-package rainbow-delimiters
-:defer t)
-(set-face-attribute 'rainbow-delimiters-unmatched-face nil
-                    :foreground 'unspecified
-                    :inherit 'error)
-#+END_EXAMPLE
-
-* contract-contractions
-#+BEGIN_SRC emacs-lisp
-
 (defun contract-contractions (begin end)
 (interactive "r")
   (xah-replace-pairs-region begin end
@@ -2839,12 +1890,6 @@ The trick is to not use different colored delimiters! The reason I need the rain
 ["I am" "I'm"]
 )))
 
-#+END_SRC
-
-* fix double capitals
-Source: [[http://endlessparentheses.com/fixing-double-capitals-as-you-type.html?source%3Drss][Fixing DOuble CApitals as you type · Endless Parentheses]]
-
-#+BEGIN_SRC emacs-lisp
 (defun dcaps-to-scaps ()
   "Convert word in DOuble CApitals to Single Capitals."
   (interactive)
@@ -2868,11 +1913,6 @@ Single Capitals as you type."
       (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
     (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
 
-#+END_SRC
-
-* yasnippets
-** yasnippets
-#+BEGIN_SRC emacs-lisp
 (defun yas-expand-and-copy-to-clipboard (&optional field)
   "Expand snippet at point and copy the expansion to the clipboard.
 
@@ -2927,10 +1967,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 (with-eval-after-load 'org
   (add-hook 'org-tab-first-hook #'yas-org-very-safe-expand))
 
-#+END_SRC
-
-** fix yasnippet org-mode conflict
-#+BEGIN_SRC emacs-lisp
 (defun yas-org-very-safe-expand ()
  "Expand the snippet at point and copy the expansion to the clipboard safely in org-mode."
  (let ((yas-fallback-behavior 'return-nil))
@@ -2939,10 +1975,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 ;; put this near the top of your yas config, outside any hook
 (setq yas-trigger-key "<tab>")   ; string form is what yas expects
 
-#+END_SRC
-
-** create new yasnippet
-#+begin_src emacs-lisp
 (defun new-yasnippet ()
   "Create a new Org-mode snippet file."
   (interactive)
@@ -2977,10 +2009,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (insert "$0\n"))
 
 (define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
-#+end_src
 
-* tiny-expand
-#+BEGIN_SRC emacs-lisp
 (use-package tiny
   :defer t
 :config
@@ -2991,10 +2020,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
 (tiny-expand "m0\n7|*** committed actions:  <%(date "mon" x)>\n**** TODO \n")
   )
 
-#+END_SRC
-
-* outline mode
-#+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
             (make-local-variable 'outline-regexp)
@@ -3003,22 +2028,12 @@ object satisfying `yas--field-p' to restrict the expansion to."
             (setq outline-heading-end-regexp ":\n")
             (outline-minor-mode 1)
 ))
-#+END_SRC
 
-* poetry
-(define-key key-minor-mode-map (kbd "s-}") 'poetry-rhyme-word)
-
-* Treat all new files as modified
-#+BEGIN_SRC emacs-lisp
 (add-hook 'find-file-hooks 'assume-new-is-modified)
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
-#+END_SRC
 
-
-* olivetti
-#+BEGIN_SRC emacs-lisp
 ;; --------------------------------------------------------------------
 ;; 2) Olivetti for a centered text area
 ;; --------------------------------------------------------------------
@@ -3053,10 +2068,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
   ;; Optional: keep org-tags aligned
   (setq org-tags-column 40))
-#+END_SRC
 
-* Functions to quickly access config files
-#+BEGIN_SRC emacs-lisp
 (defun load-shared-functions ()
   (interactive)
 (find-file "/Users/jay/emacs/emacs-settings/shared-functions.org"))
@@ -3086,20 +2098,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 (find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
 ;; (olivetti-mode 1)
 )
-#+END_SRC
 
-M-p
-C-x y
-C-x x
-C-x w
-C-x t
-C-x j
-C-c z
-C-c x
-C-c q
-
-* embolden-region-or-point
-#+BEGIN_SRC emacs-lisp
 (defun embolden-region-or-point ()
   (interactive)
   (if (region-active-p)
@@ -3112,10 +2111,7 @@ C-c q
     (backward-char)))
 
 (define-key key-minor-mode-map (kbd "M-s-b") 'embolden-region-or-point)
-#+END_SRC
 
-* italicize-region-or-point
-#+BEGIN_SRC emacs-lisp
 (defun italicize-region-or-point ()
   (interactive)
   (if (region-active-p)
@@ -3128,11 +2124,7 @@ C-c q
     (backward-char)))
 
 (define-key key-minor-mode-map (kbd "<C-i>") 'italicize-region-or-point)
-#+END_SRC
 
-* org todo stuff
-** move point to next TODO heading upon DONE state change
-#+BEGIN_SRC emacs-lisp
 (defun bb/next-heading (&rest args)
 (when
 
@@ -3144,10 +2136,7 @@ C-c q
 
 
 (advice-add 'org-todo :after 'bb/next-heading)
-#+END_SRC
 
-** Check checkbox then automatically move to next item in list ([[http://superuser.com/questions/568482/org-mode-function-to-check-checkbox-and-move-to-next-in-list#][Source]]):
-#+BEGIN_SRC emacs-lisp
 (defmacro my/with-advice (adlist &rest body)
   "Execute BODY with temporary advice in ADLIST.
 Each element of ADLIST should look like:
@@ -3182,20 +2171,6 @@ which is suitable for passing to `advice-add'."
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
 
-#+END_SRC
-
-*** an alternative approach, probably not needed
-#+BEGIN_EXAMPLE emacs-lisp
-;; a temporary hack
-(defun zin/org-checkbox-next ()
- (interactive)
- (when (org-at-item-checkbox-p)
- (org-toggle-checkbox))
- (org-next-item))
-#+END_EXAMPLE
-
-* wrap region
-#+BEGIN_SRC emacs-lisp
 ;; wrap-region
 (use-package wrap-region
   :defer
@@ -3236,12 +2211,6 @@ which is suitable for passing to `advice-add'."
      ("$" "$" nil (org-mode latex-mode))
      )))
 
-#+END_SRC
-Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap text in custom characters | Pragmatic Emacs]]
-
-* faces
-** bold
-#+BEGIN_SRC emacs-lisp
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -3249,17 +2218,11 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
  ;; If there is more than one, they won't work right.
  '(bold ((t (:inherit font-lock-warning-face :weight bold))))
 )
-#+END_SRC
 
-** C-c C-c to exit source code blocks
-#+BEGIN_SRC emacs-lisp
 (eval-after-load 'org-src
   '(define-key org-src-mode-map
      "\C-c\C-c" #'org-edit-src-exit))
-#+END_SRC
 
-** narrow or widen
-#+BEGIN_SRC emacs-lisp
 ;; Smart DWIM narrowing/widening command for Org, LaTeX, and code buffers.
 ;; No package boilerplate — just the function and helpers.
 
@@ -3355,11 +2318,7 @@ buffer is already narrowed; never widen."
 
 (provide 'narrow-or-widen-dwim)
 ;;; narrow-or-widen-dwim.el ends here
-#+END_SRC
 
-** org insert easy template source blocks
-
-#+begin_src emacs-lisp
 (setq org-structure-template-alist
  '(("a" . "export ascii")
   ("c" . "center")
@@ -3377,9 +2336,7 @@ buffer is already narrowed; never widen."
   ("sh" . "src sh")
   ("f" . "example fountain")
   ("v" . "example verse")))
-#+end_src
 
-#+BEGIN_SRC emacs-lisp
 ;; ------------------------------------------------------------------
 ;; Org structure templates ­– <sr TAB> etc.
 ;; ------------------------------------------------------------------
@@ -3398,19 +2355,9 @@ buffer is already narrowed; never widen."
            ("le" . "example")             ; example block
            ("v"  . "verse"))              ; verse block
          org-structure-template-alist)))
-#+END_SRC
 
-Source: [[http://emacs.stackexchange.com/questions/12841/quickly-insert-source-blocks-in-org-mode][org babel - Quickly insert source blocks in org mode - Emacs Stack Exchange]]
-
-
-
-* if then else indentation
-#+BEGIN_SRC emacs-lisp
 (put 'if 'lisp-indent-function nil)
-#+END_SRC
 
-* Create org file and insert path of screen shot
-#+BEGIN_SRC emacs-lisp
 (defun insert-file-link-from-clipboard ()
   "Make sure the full path of file exist in clipboard. This command will convert
 The full path into relative path and insert it as a local file link in org-mode"
@@ -3433,21 +2380,9 @@ The full path into relative path and insert it as a local file link in org-mode"
           ))
         (insert (format "[[file:%s]]" str)))
     ))
-#+END_SRC
 
-* unbind meta-number
-This unbinds M-1, M-2, ..., M-0, which I very rarely used (I use C-u for count arguments) and I suddenly found myself with 10 new shortcuts that are easy to type (especially M-1, M-2 and M-3). You can also use them as prefixes, so for example M-1 r could be ivy-recentf and M-1 s could be swiper.
-
-I hope this is somewhat helpful to someone else, happy hacking! Source: [[https://www.reddit.com/r/emacs/comments/3ricev/tip_for_when_you_are_running_out_of_easytopress/][Tip for when you are running out of easy-to-press key shortcuts : emacs]]
-
-#+BEGIN_SRC emacs-lisp
 (dotimes (n 10)
   (global-unset-key (kbd (format "M-%d" n))))
-#+END_SRC
-
-
-* fontify list titles
-#+BEGIN_SRC emacs-lisp
 
 ;; define list-title face
 (defface list-title-face
@@ -3475,12 +2410,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
                           )
                         )
 
-
-#+END_SRC
-
-** and on export
-#+BEGIN_SRC emacs-lisp
-
 ;; old code (works for HTML export, breaks http links)
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*")))
 
@@ -3489,27 +2418,17 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 ;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
  ;; any line that ends with a colon
 
-#+END_SRC
-
-* sort lines case insensitive
-#+BEGIN_SRC emacs-lisp
 (defun sort-lines-case-insensitive ()
   (interactive)
   (let ((sort-fold-case t))
     (call-interactively 'sort-lines)))
-#+END_SRC
 
-* typewriter mode
-#+BEGIN_SRC emacs-lisp
 (defun typewriter-mode ()
   (interactive)
   (setq centered-cursor-mode t)
   (setq global-centered-cursor-mode t)
   )
-#+END_SRC
 
-* Save file as new
-#+BEGIN_SRC emacs-lisp
 (defun save-file-as-new ()
   "Force modification of current file, unless already modified."
   (interactive)
@@ -3518,55 +2437,38 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
       (progn
         (set-buffer-modified-p t)
         (save-buffer 0))))
-#+END_SRC
 
-* touch-file
-#+BEGIN_SRC emacs-lisp
+(defun touch-file (file)
+  "Create a file called FILE.
+If FILE already exists, signal an error."
+  (interactive
+  (list (read-file-name "Create file: " (dired-current-directory))))
+  (let* ((expanded (expand-file-name file))
+    (try expanded)
+    (dir (directory-file-name (file-name-directory expanded)))
+    new)
+   (if (file-exists-p expanded)
+    (error "Cannot create file %s: file exists" expanded))
+   ;; Find the topmost nonexistent parent dir (variable `new')
+   (while (and try (not (file-exists-p try)) (not (equal new try)))
+   (setq new try
+     try (directory-file-name (file-name-directory try))))
+   (when (not (file-exists-p dir))
+   (make-directory dir t))
+   (write-region "" nil expanded t)
+   (when new
+   (dired-add-file new)
+   (dired-move-to-filename))))
 
-    (defun touch-file (file)
-    "Create a file called FILE.
-  If FILE already exists, signal an error."
-    (interactive
-    (list (read-file-name "Create file: " (dired-current-directory))))
-    (let* ((expanded (expand-file-name file))
-      (try expanded)
-      (dir (directory-file-name (file-name-directory expanded)))
-      new)
-     (if (file-exists-p expanded)
-      (error "Cannot create file %s: file exists" expanded))
-     ;; Find the topmost nonexistent parent dir (variable `new')
-     (while (and try (not (file-exists-p try)) (not (equal new try)))
-     (setq new try
-       try (directory-file-name (file-name-directory try))))
-     (when (not (file-exists-p dir))
-     (make-directory dir t))
-     (write-region "" nil expanded t)
-     (when new
-     (dired-add-file new)
-     (dired-move-to-filename))))
-#+END_SRC
-
-* exporting
-** org-twbs
-#+BEGIN_SRC emacs-lisp
 (use-package ox-twbs)
 ; '(org-twbs-head-include-default-style nil)
 ;; '(org-twbs-htmlize-output-type (quote inline-css))
 ; '(org-twbs-indent t)
 
-#+END_SRC
-
-** LaTeX
-*** Find LaTeX on my system
-#+BEGIN_SRC emacs-lisp
 (if (eq window-system 'mac)
     (add-to-list 'exec-path "/usr/local/texlive/2025/bin/universal-darwin")
   )
-#+END_SRC
 
-*** XeLaTeX customisations
- ~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
-#+BEGIN_SRC emacs-lisp
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
  org-latex-pdf-process               ; for regular export
 
@@ -3575,10 +2477,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 
 ;; add padding to numbered lists and bulleted lists (set to t)
-#+END_SRC
-
-*** load my custom latex templates
-#+BEGIN_SRC emacs-lisp
 
 (defun jay-load-latex ()
   (interactive)
@@ -3610,55 +2508,28 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 ;; (use-package blue-invoice)
 ;; (use-package blue-ruin-no-cover)
 
-#+END_SRC
+(defun org-latex-filter-fancyvrb (text backend info)
+ "Convert begin/end{verbatim} to begin/end{Verbatim}.
+Allows use of the fancyvrb latex package."
+ (when
+   (org-export-derived-backend-p backend 'latex)
+ (replace-regexp-in-string
+  "\\\\\\(begin\\|end\\){verbatim}"
+  "\\\\\\1{quote}"
+  text)))
 
-*** fix latex verbatim
-  You can use a filter function that will replace default "verbatim" with
-  whatever you want.
+(add-to-list 'org-export-filter-final-output-functions
+    'org-latex-filter-fancyvrb)
 
-  Here's my fancyvrb filter for when such a place is created.
-
-  Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
-#+BEGIN_SRC emacs-lisp
-
- (defun org-latex-filter-fancyvrb (text backend info)
-  "Convert begin/end{verbatim} to begin/end{Verbatim}.
- Allows use of the fancyvrb latex package."
-  (when
-    (org-export-derived-backend-p backend 'latex)
-  (replace-regexp-in-string
-   "\\\\\\(begin\\|end\\){verbatim}"
-   "\\\\\\1{quote}"
-   text)))
-
- (add-to-list 'org-export-filter-final-output-functions
-     'org-latex-filter-fancyvrb)
-#+END_SRC
-
-* no inline images
-#+BEGIN_SRC emacs-lisp
 (setq org-startup-with-inline-images nil)
-#+END_SRC
 
-* query-replace-duplicate-lines-keep-blanks
-Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-duplicate-lines/20384?noredirect=1#comment31370_20384][replace - how to query-delete-duplicate-lines? - Emacs Stack Exchange]]
-
-#+BEGIN_SRC emacs-lisp
 (defun delete-duplicate-lines-keep-blanks ()
  (interactive)
  (delete-duplicate-lines (region-beginning) (region-end) nil nil t))
-#+END_SRC
 
-* display
-** recenter top bottom
-#+BEGIN_SRC emacs-lisp
 (setq scroll-margin 25)
 ;; (setq recenter-positions (quote (top middle bottom)))
-#+END_SRC
 
-
-* org-clock
-#+BEGIN_SRC emacs-lisp
 (setq org-clock-auto-clock-resolution t)
  (setq org-clock-idle-time 30)
  (setq org-clock-in-resume t)
@@ -3675,13 +2546,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 (setq org-time-clocksum-format
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
-#+END_SRC
-
-
-* sensible defaults
-Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el/sensible-defaults.el at master · hrs/sensible-defaults.el 🔊]]
-
-#+BEGIN_SRC emacs-lisp
 
 ;; Utility functions:
 
@@ -3703,10 +2567,7 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
 "When saving a file that starts with `#!', make it executable."
  (add-hook 'after-save-hook
       'executable-make-buffer-file-executable-if-script-p)
-#+END_SRC
 
-* repeat-last-command
-#+BEGIN_SRC emacs-lisp
 (defun repeat-last-command ()
 "repeats the last command called via M-x"
 (interactive)
@@ -3716,13 +2577,7 @@ cmd)
 (while (string= this-command (setq cmd (pop history))))
 (message "Running cmd: %s" cmd)
 (call-interactively (intern cmd))))
-#+END_SRC
 
-* org
-** editing
-*** lines
-**** org-copy-line
-#+BEGIN_SRC emacs-lisp
 (defun org-select-line ()
  "Select the current line"
  (interactive)
@@ -3734,27 +2589,13 @@ cmd)
 (org-select-line)
 (pasteboard-copy)
 (set-mark nil))
-#+END_SRC
 
-*** paragraphs
-**** kill whole paragraph
-     :PROPERTIES:
-     :ID:       4DCE53D0-0D37-464B-B398-BD5B4BE18492
-     :END:
-#+BEGIN_SRC emacs-lisp
 (defun kill-paragraph-from-beginning (b e)
   (interactive)
   (mark-paragraph)
   (kill-region)
   )
-#+END_SRC
 
-*** subtrees
-**** eval-subtree
-     :PROPERTIES:
-     :ID:       A97FDEB2-CB0D-4B17-9A73-FB737A5F030F
-     :END:
-#+BEGIN_SRC emacs-lisp
 (defun eval-subtree ()
  (interactive)
  (org-edit-src-code)
@@ -3804,17 +2645,6 @@ cmd)
 
 (global-set-key (kbd "C-c e") #'eval-adaptive)
 
-
-
-#+END_SRC
-
-*** document
-**** kill to buffer end
-     :PROPERTIES:
-     :ID:       49820CA2-490C-4DA0-9036-F16B262F712E
-     :END:
-
-#+BEGIN_SRC emacs-lisp
 (defun kill-to-buffer-end-or-beginning (arg)
   (interactive "p")
   (if (and arg (= 0 (mod arg 4)))
@@ -3824,11 +2654,7 @@ cmd)
   (recenter-top-bottom))
 
 (define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
-#+END_SRC
 
-** navigation
-*** up by degrees
-#+BEGIN_SRC emacs-lisp
 (defun up-by-degrees ()
  (interactive)
        (previous-line 6)
@@ -3839,10 +2665,6 @@ cmd)
        (next-line 6)
  )
 
-#+END_SRC
-
-*** next-subtree-same-level-and-narrow
-#+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-same-level-and-narrow ()
  (interactive)
  (widen)
@@ -3857,10 +2679,7 @@ cmd)
 (org-backward-heading-same-level 1)
  (org-narrow-to-subtree)
  )
-#+END_SRC
 
-*** next-subtree-and-narrow - original
-#+BEGIN_SRC emacs-lisp
 (defun org-next-subtree-and-narrow ()
  (interactive)
  (widen)
@@ -3875,21 +2694,13 @@ cmd)
  (org-previous-visible-heading 1)
  (org-narrow-to-subtree)
  )
-#+END_SRC
 
-*** filing
-
-**** refile active region or subtree
-#+BEGIN_SRC emacs-lisp
 (defun refile-region-or-subtree ()
   (interactive)
   (if (region-active-p)
       (call-interactively 'jay-refile-region)
     (org-refile)))
-#+END_SRC
 
-* org-config-files-mode
-#+BEGIN_SRC emacs-lisp
 (define-minor-mode org-config-files-local-mode
   "Minor mode for editing configuration files in org-mode."
   :init-value nil
@@ -3903,41 +2714,29 @@ cmd)
         ;; When enabling, set any additional buffer-local variables
         (setq-local abbrev-mode nil))
     (kill-local-variable 'abbrev-mode)))
-#+END_SRC
 
-* yasnippet fixes
-#+BEGIN_SRC emacs-lisp
 (defun yas/pasteboard-raw ()
  "Return content of OS X system pasteboard via `pbpaste'."
  (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (defun yas/org-get-time-stamp (&rest args)
  "Return the string that `org-insert-time-stamp' would insert."
  (with-temp-buffer
   (apply #'org-insert-time-stamp args)
   (buffer-string)))
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (defun yas/tiny-expand (str)
   (with-temp-buffer
     (insert str)
     (goto-char (point-max)) ; tiny-expand works on text preceding point
     (tiny-expand)
     (buffer-string)))
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (defun yas/suppress-errors ()
 (interactive)
   (ignore-errors (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 )
-#+END_SRC
 
-* optimize emacs load time
-#+BEGIN_SRC emacs-lisp
 (defun loadup-gen ()
  "Generate the lines to include in the lisp/loadup.el file
 to place all of the libraries that are loaded by your InitFile
@@ -3957,10 +2756,6 @@ into the main dumped emacs"
  (map 'list
     (lambda (file) (princ (format "(load \"%s\")\n" file)))
     (get-loads-from-*Messages*)))
-#+END_SRC
-
-* crux
-#+BEGIN_SRC emacs-lisp
 
 (use-package crux
 :defer t
@@ -3971,11 +2766,7 @@ into the main dumped emacs"
 ( "C-c d" . crux-duplicate-current-line-or-region)
 ( "C-c i" . crux-find-user-init-file)
 )
-#+END_SRC
 
-* typography custom functions
-** em dash
-#+BEGIN_SRC emacs-lisp
 (defun em-dash ()
 (interactive)
 (cond (mark-active
@@ -3983,10 +2774,7 @@ into the main dumped emacs"
 (expand-abbrev)
 (insert "---")
   )
-#+END_SRC
 
-** true em dash
-#+BEGIN_SRC emacs-lisp
 (defun true-em-dash ()
 (interactive)
 (cond (mark-active
@@ -3994,10 +2782,7 @@ into the main dumped emacs"
 (expand-abbrev)
 (insert "—")
   )
-#+END_SRC
 
-** true en dash (clone)
-#+BEGIN_SRC emacs-lisp
 (defun true-en-dash ()
 (interactive)
 (cond (mark-active
@@ -4005,50 +2790,27 @@ into the main dumped emacs"
 (expand-abbrev)
 (insert "-")
   )
-#+END_SRC
 
-** double quote
-   #+BEGIN_SRC emacs-lisp
 (defun insert-one-double-quote ()
 (interactive)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
 (insert "\""))
-#+END_SRC
 
-** insert right-bracket
-   :PROPERTIES:
-   :ID:       C6D2D34A-628B-4DB2-9082-DECEBB5D8F9F
-   :END:
-#+BEGIN_SRC emacs-lisp
 (defun insert-right-bracket ()
   (interactive)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert "\]")
   )
-#+END_SRC
 
-** insert equals sign
-#+BEGIN_SRC emacs-lisp
 (defun insert-equals-sign ()
   (interactive)
 (cond (mark-active
    (progn (delete-region (mark) (point)))))
   (insert "=")
   )
-#+END_SRC
 
-** insert slash no abbrev
-#+BEGIN_EXAMPLE emacs-lisp
-(defun jay/insert-slash ()
-  (interactive)
-  (insert "/")
-  )
-#+END_EXAMPLE
-
-* undo-tree-mode
-#+BEGIN_SRC emacs-lisp
 (use-package undo-fu-session
   :init
   (setq undo-fu-session-compression nil)   ;; nil = never compress
@@ -4072,17 +2834,9 @@ into the main dumped emacs"
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
 (setq undo-outer-limit 1006632960) ; 960mb.
-#+END_SRC
 
-* Emacs 25
-** don't create new frames
-#+BEGIN_SRC emacs-lisp
 (setq display-buffer-alist (quote (("" ignore (nil . reusable-frames)))))
-#+END_SRC
 
-* from Harry Schwartz
-** find file as sudo
-#+BEGIN_SRC emacs-lisp
 (defun edit-this-file-as-sudo ()
   (interactive)
   (let ((file-name (buffer-file-name)))
@@ -4107,23 +2861,9 @@ into the main dumped emacs"
 (sudo-edit)
 )
 
-#+END_SRC
-
-** Use fancy lambdas
-Why not?
-
-#+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook #'prettify-symbols-mode)
-#+END_SRC
 
-
-** Projectile
-Projectile's default binding of =projectile-ag= to =C-c p s s= is clunky enough
-that I rarely use it (and forget it when I need it). This binds the
-easier-to-type =C-c C-v= and =C-c v= to useful searches.
-
-#+BEGIN_SRC emacs-lisp
- (defun hrs/search-project-for-symbol-at-point ()
+(defun hrs/search-project-for-symbol-at-point ()
   "Use `projectile-ag' to search the current project for `symbol-at-point'."
   (interactive)
   (projectile-ag (projectile-symbol-at-point)))
@@ -4131,92 +2871,15 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
  (global-set-key (kbd "C-c v") 'projectile-ag)
  (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
 ;; (setq projectile-indexing-method 'native)
-#+END_SRC
 
-*** Ignore files specified in .projectile (doesn't work)
-The function counsel-projectile-grep is failing to ignore the files I
-specified to ignore in my .projectile file. How can I direct
-counsel-projectile-grep to ignore these files?
+(setq org-src-window-setup 'current-window)
 
-By default, =counsel-projectile-grep= doesn't use the settings from your
-=.projectile= file. To configure =counsel-projectile-grep= to respect
-the ignore patterns specified in your =.projectile= file, you can modify
-the =counsel-projectile-grep= function by using the =advice-add= feature
-in Emacs Lisp.
-
-Here's an example of how to create an advice function that passes the
-ignore patterns to =counsel-projectile-grep=:
-
-#+begin_EXAMPLE emacs-lisp
-(defun my-projectile-ignore-list ()
- (let ((project-root (projectile-project-root))
-    (projectile-file (concat (projectile-project-root) ".projectile")))
-  (when (file-exists-p projectile-file)
-   (with-temp-buffer
-    (insert-file-contents projectile-file)
-    (split-string (buffer-string) "\n" t)))))
-
-(defun my-ignore-list-to-grep-options (ignore-list)
- (when ignore-list
-  (mapconcat (lambda (pattern)
-         (concat "--exclude=" (shell-quote-argument pattern)))
-        ignore-list " ")))
-
-(defun my-counsel-projectile-grep-ignore-config (orig-fun &rest args)
- (let ((counsel-projectile-grep-base-command
-     (concat counsel-projectile-grep-base-command " "
-         (my-ignore-list-to-grep-options
-
-#+end_EXAMPLE
-
-* web-mode
-If I'm in =web-mode=, I'd like to:
-
-- Color color-related words with =rainbow-mode=.
-- Still be able to run RSpec tests from =web-mode= buffers.
-- Indent everything with 2 spaces.
-
-Use =web-mode= with embedded Ruby files, regular HTML, and PHP.
-
-#+BEGIN_EXAMPLE emacs-lisp
-(defun hrs/add-auto-mode (mode &rest patterns)
-  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
-  (dolist (pattern patterns)
-   (add-to-list 'auto-mode-alist (cons pattern mode))))
-
- (hrs/add-auto-mode
-  'web-mode
-  "\\.erb$"
-  "\\.html$"
-  "\\.php$"
-  "\\.rhtml$")
-#+END_EXAMPLE
-
-When editing a code snippet, use the current window rather than popping open a
-new one (which shows the same information).
-
-#+BEGIN_SRC emacs-lisp
- (setq org-src-window-setup 'current-window)
-#+END_SRC
-
-* how to do an argument
-Insert today's date
-Ben Maughan
-
-Here's a simple bit of code from the Emacs wiki to insert the current date. I've set the default to be in the format YYYY-MM-DD, but if you use a prefix C-u then you get DD-MM-YYYY.
-
-;; from http://bit.ly/2aBY92J
-
-#+BEGIN_SRC emacs-lisp
 (defun insert-todays-date (arg)
  (interactive "P")
  (insert (if arg
     (format-time-string "%d-%m-%Y")
    (format-time-string "%Y-%m-%d"))))
-#+END_SRC
 
-* toggle-between-src-and-example-block
-#+BEGIN_SRC emacs-lisp
 (defun toggle-between-src-and-example-block ()
   (interactive)
   (save-excursion
@@ -4237,31 +2900,17 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
         (re-search-forward "#\\+END_EXAMPLE" nil t)
         (replace-match "#+END_SRC"))
        (t (message "Not in a src or example block goddammit!"))))))
-#+END_SRC
 
-
-* ediff
-#+BEGIN_SRC emacs-lisp
 (setq ediff-diff-options "-w")
-#+END_SRC
 
-* mouse scrolling
-#+BEGIN_SRC emacs-lisp
 (setq mac-wheel-button-is-mouse-2 nil)
 ;; so that the middle button works
 
 (setq scroll-conservatively 1000) ; seems nice
 
-#+END_SRC
-
-* ox-clip
-#+BEGIN_SRC emacs-lisp
 (use-package ox-clip
   :defer t)
-#+END_SRC
 
-* org-def
-#+BEGIN_SRC emacs-lisp
 (defun org-def ()
 (interactive)
 (save-excursion
@@ -4269,46 +2918,21 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
  (insert "- "))
 (insert " :: ")
 )
-#+END_SRC
 
-* delete html blocks
-#+BEGIN_SRC emacs-lisp
 (defun delete-html-blocks ()
 (interactive)
 (replace-regexp "#\\+BEGIN_HTML\\(?:.*\\|\n\\)*#\\+END_HTML" "")
 )
-#+END_SRC
 
-* beacon
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package beacon
-:defer t
- :init
-
- (beacon-mode 1)
-(setq beacon-push-mark 35)
-(setq beacon-color "#FFF876")
- )
-#+END_EXAMPLE
-
-* Tufte
-** tufte export to HTML
-#+BEGIN_SRC emacs-lisp
 (use-package ox-tufte
   :defer t)
-#+END_SRC
 
-** tufte export to LaTeX
-#+begin_src emacs-lisp
 (use-package ox-tufte-LaTeX
 :defer t
   :ensure nil
   :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
   )
-#+end_SRC
 
-* add YouTube link type yt:
-#+BEGIN_SRC emacs-lisp
 (defvar yt-iframe-format
  ;; You may want to change your width and height.
  (concat "<iframe width=\"440\""
@@ -4329,16 +2953,7 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
           path (or desc "")))
    (latex (format "\href{%s}{%s}"
           path (or desc "video"))))))
-#+END_SRC
 
-[[http://endlessparentheses.com/embedding-youtube-videos-with-org-mode-links.html][Embedding Youtube videos with org-mode links · Endless Parentheses]]
-
-To use this, just write your org links in the following way (optionally adding a description).
-
-[[yt:A3JAlWM8qRM]]
-
-* display and copy spacemacs version info
-#+BEGIN_SRC emacs-lisp
 (defun spacemacs-version-display-and-copy ()
  "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
  (interactive)
@@ -4351,12 +2966,7 @@ To use this, just write your org links in the following way (optionally adding a
        system-version spacemacs-version emacs-version org-version))
  (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
-#+END_SRC
 
-See also spacemacs/describe-system-info
-
-* display and copy emacs version info
-#+BEGIN_SRC emacs-lisp
 (defun emacs-version-display-and-copy ()
  "Echo the current version of Spacemacs, Emacs, and org-mode, and copy it."
  (interactive)
@@ -4369,12 +2979,7 @@ See also spacemacs/describe-system-info
        system-version emacs-version org-version))
  (push-kill-ring-pasteboard-to-MacOS-clipboard)
 )
-#+END_SRC
 
-See also spacemacs/describe-system-info
-
-* shell command on region
-#+BEGIN_SRC emacs-lisp
 (defun tidy-html ()
  "Tidies the HTML content in the buffer using `tidy'"
  (interactive)
@@ -4392,11 +2997,7 @@ See also spacemacs/describe-system-info
   "*Tidy Error Buffer*"
   ;; show error buffer?
   t))
-#+END_SRC
-[[https://www.masteringemacs.org/article/executing-shell-commands-emacs][Executing Shell Commands in Emacs - Mastering Emacs]]
 
-* smart question mark
-#+BEGIN_SRC emacs-lisp
 (defun qm-maybe ()
 (interactive)
 (when
@@ -4408,28 +3009,7 @@ See also spacemacs/describe-system-info
 )
 
 ;; (define-key key-minor-mode-map (kbd "?") 'qm-maybe)
-#+END_SRC
 
-
-* convert to chat format
-#+BEGIN_EXAMPLE emacs-lisp
-(defun intern-convert-to-chat-format (begin end)
- (interactive "r")
- (xah-replace-pairs-region begin end
- '(
- ["Mary Dean: " "** Mary Dean\n"]
- ["Ricky DeSantis: " "** Ricky DeSantis\n"]
- ["Jay Dixit: " "** Jay Dixit\n"]
- ["me: " "** Jay Dixit\n"]
- ["Benjamin: " "** Benjamin Carp\n"]
- ["Camille Inge: " "** Camille Inge\n"]
- ["Benjamin: " "** Ben Bechar\n"]
- )))
-
-#+END_EXAMPLE
-
-* shell-pop
-#+BEGIN_SRC emacs-lisp
 (use-package shell-pop
 :defer t
  :bind (("C-t" . shell-pop))
@@ -4438,37 +3018,17 @@ See also spacemacs/describe-system-info
  (setq shell-pop-term-shell "/bin/zsh")
  ;; need to do this manually or not picked up by `shell-pop'
  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
-#+END_SRC
 
-
-* fix case
-
-* ignore case in searches
-#+BEGIN_SRC emacs-lisp
 (defun ignore-case-in-searches ()
  (interactive)
  (setq case-fold-search t)
  )
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
 (defun isearch-forward-ignore-case ()
 (interactive)
 (ignore-case-in-searches)
 (isearch-forward)
 )
-#+END_SRC
-
-* org count words
-Source: [[https://www.reddit.com/r/emacs/comments/8qm1lb/new_orgcountwords_command/][New org-count-words command : emacs]]
-
-Note that it does not count words in heading lines, planning lines, and drawers, so it gives a more useful count for the "prose" in the subtree.
-
-ounts lines, words, and characters in the region or the subtree at point. It prints a message like count-words does, like:
-
-: Subtree "Heading" has 7 line, 5 words, and 28 characters.
-
-#+BEGIN_SRC emacs-lisp
 
 (defun ap/org-count-words ()
   "If region is active, count words in it; otherwise count words in current subtree."
@@ -4503,12 +3063,7 @@ If UNSAFE is non-nil, assume point is on headline."
              (`(,(or 'planning 'property-drawer 'drawer) . ,_) (org-element-property :end element)))
        while pos
        do (goto-char pos)))
-#+END_SRC
 
-* time stamps
-[[http://emacs-fu.blogspot.com/2008/12/automatic-timestamps.html][emacs-fu: automatic timestamps]]
-
-#+BEGIN_SRC emacs-lisp
 (setq
  time-stamp-active t     ; do enable time-stamps
 time-stamp-line-limit 50; check first 50 lines
@@ -4519,10 +3074,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;; (add-hook 'write-file-hooks 'time-stamp) ; update when saving
 
 (add-hook 'before-save-hook 'time-stamp)
-#+END_SRC
 
-* poet-mode
-#+BEGIN_SRC emacs-lisp
 ;; (add-hook 'org-mode-hook
 ;;         (lambda ()
 ;;         (variable-pitch-mode 1)))
@@ -4547,10 +3099,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;; (turn-off-auto-capitalize-mode)
 
 )
-#+END_SRC
 
-* default org-css
-#+begin_SRC emacs-lisp
 (defvar my-org-selected-css "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
   "Path of the selected CSS file or 'none' for no stylesheet. Defaults to sans-serif.css if not manually selected.")
 
@@ -4596,10 +3145,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
       (setq org-html-head nil))))
 
 (add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
-#+END_SRC
 
-* hashtags
-#+begin_src emacs-lisp
 (defun show-duplicate-words (&optional alphabetical)
  "Collect all of the unique words in the current buffer and
 display them in a new buffer. With prefix, alphabetize the
@@ -4618,12 +3164,6 @@ list."
    (cl-dolist (word (if alphabetical (sort txt #'string<) txt))
     (insert (concat word "\n"))))
   (pop-to-buffer new)))
-#+end_src
-
-* suppress org-tempo warning
-Redefine org-tempo-add-templates
-
-#+begin_src emacs-lisp
 
 (defun org-tempo-add-templates ()
  "Update all Org Tempo templates.
@@ -4642,10 +3182,6 @@ Go through `org-structure-template-alist' and
   (mapc #'org-tempo-add-block org-structure-template-alist)
   (mapc #'org-tempo-add-keyword org-tempo-keywords-alist)))
 
-#+END_SRC
-
-* multiple cursors
-#+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors
   :defer t)
 (setq mc/list-file "/Users/jay/emacs/emacs-settings/mc-lists.el")
@@ -4706,11 +3242,6 @@ Multiple cursors:
 ;; Bind hydra to your existing keymap
 (define-key endless/mc-map (kbd "H") #'hydra-mc/body)
 
-#+END_SRC
-* org-mode-hooks and text-mode-hooks
-** text-mode-hooks
-#+begin_src emacs-lisp
-
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
@@ -4724,10 +3255,6 @@ Multiple cursors:
 ;; (add-hook 'org-mode-hook #'flycheck-mode)
 ;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
 
-#+end_src
-
-** org-mode-hooks
-#+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 (add-hook 'org-mode-hook #'(lambda () (auto-fill-mode -1)))
 
@@ -4742,31 +3269,15 @@ Multiple cursors:
  (define-key org-mode-map (kbd "DEL")
   'new-org-delete-backward-char)))
 
-#+END_SRC
-
-* wide-screen
-#+begin_src emacs-lisp
 (defun wide-screen ()
 (interactive)
 (setq olivetti-body-width 72)
 )
-#+end_src
 
-* hide blank lines only in heading mode
-In collapsed view, hide empty lines between subtrees
-
-#+begin_src emacs-lisp
 (setq org-cycle-separator-lines 0)
-#+end_src
 
-* Demote sequence for list bullets
-#+begin_src emacs-lisp
 (setq org-list-bullet-list '("-"))
-(setq org-list-demote-modify-bullet nil) 
-#+end_src
-
-* embiggen text
-#+begin_SRC emacs-lisp
+(setq org-list-demote-modify-bullet nil)
 
 (defun embiggen-text ()
  (interactive)
@@ -4778,50 +3289,21 @@ In collapsed view, hide empty lines between subtrees
  (text-scale-decrease 1)
  )
 
-#+END_SRC
-
-* yesterday
-#+begin_src emacs-lisp
-
 (defun yesterday ()
   (interactive)
     (insert (shell-command-to-string "echo -n $(date -v -1d +%F)"))
   )
-#+end_src
-
-
-For bash:
-
-#+begin_src sh
-
-yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday
-
-#+end_src
-
-* today
-#+begin_src emacs-lisp
 
 (defun today ()
   (interactive)
     (insert (shell-command-to-string "echo -n $(date +%F)"))
   )
-#+end_src
 
-* minimalist org ellipsis
-#+begin_src emacs-lisp
 (custom-set-faces
  '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil)))))
 (setq org-ellipsis " ")
 ;; (setq org-ellipsis " ▶")
-#+end_src
 
-Courtesy of Mike Goldenberg
-
-
-* render org-tables in buffer
-[[https://www.reddit.com/r/emacs/comments/d3a8or/pretty_org_tables_in_the_buffer_chapter_2_it/][Pretty org tables in the buffer - chapter 2 (it works properly) : emacs]]
-
-#+begin_src emacs-lisp
 (defun org-render-table-at-point ()
  (interactive)
  (save-excursion
@@ -4868,20 +3350,10 @@ Courtesy of Mike Goldenberg
  (save-excursion
   (org-element-map (org-element-parse-buffer) 'table 'org-render-table)))
 
-#+end_src
-
-* org-show-inline-images
-#+begin_src emacs-lisp
 (defun org-show-inline-images ()
  (interactive)
 (org-toggle-inline-images))
-#+end_src
 
-* ido-vertical-mode
-Pretty cool here:
-[[https://github.com/creichert/ido-vertical-mode.el][creichert/ido-vertical-mode.el: makes ido-mode display vertically]]
-
-#+begin_src emacs-lisp
 (use-package ido-vertical-mode
   :defer t)
 (ido-mode 1)
@@ -4896,9 +3368,6 @@ Pretty cool here:
 ;; (setq ido-use-faces t)
 ;; (set-face-attribute 'ido-vertical-first-match-face nil :foreground "orange")
 
-#+end_src
-
-#+begin_src emacs-lisp
 (defvar mode-line-cleaner-alist
  `((auto-complete-mode . " α")
   (yas/minor-mode . " υ")
@@ -5008,12 +3477,6 @@ want to use in the modeline *in lieu of* the original.")
 
 (setq gcmh-mode-line nil)
 
-#+end_src
-
-* org-timesheet
-Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-insert-a-clock-entry][org mode - How to conveniently insert a clock entry? - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
 (defun timesheet_insert-custom-clock-entry ()
  (interactive)
  (insert "CLOCK: ")
@@ -5023,20 +3486,8 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
  (let ((current-prefix-arg '(4))) (call-interactively 'org-time-stamp-inactive))
  (org-ctrl-c-ctrl-c))
 
-#+end_src
-
-
-
-* clean up tex files
-[[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl")))
-#+end_src
 
-
-* koma letter
-#+begin_src emacs-lisp
 (add-to-list 'org-latex-classes
     '("my-letter"
      "\\documentclass\[%
@@ -5052,23 +3503,13 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
  \[PACKAGES]
  \[EXTRA]"))
 
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
 (defun load-koma-letter ()
  (interactive)
  (load "/Users/jay/emacs/emacs-settings/ox-koma-letter.el")
  (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
  )
-#+END_SRC
 
-* allow file local custom code
-#+begin_src emacs-lisp
 (setq enable-local-eval t)
-#+end_src
-
-* saveplace
-#+begin_src emacs-lisp
 
 ;; Add near the TOP of your config, before other packages
 (use-package saveplace
@@ -5080,45 +3521,21 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
         (list (rx (or "/roam/" "/org-roam/"))))
   :config
   (save-place-mode -1))
-#+end_src
 
-* org export preserve line breaks
-#+begin_src emacs-lisp
 (setq org-export-preserve-breaks t)
-#+end_src
 
-* calc
-#+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
-#+end_src
 
-* trailing lines
-#+begin_src emacs-lisp
 (setq delete-trailing-lines nil)
-#+end_SRC
 
-
-
-* don't lock files
-#+begin_src emacs-lisp
 (setq create-lockfiles nil)
 (run-with-idle-timer 300 t 'org-save-all-org-buffers)
-#+end_SRC
 
-* I love you
-#+begin_src emacs-lisp
 (defun iloveyou (args)
  (interactive "P")
 (message "%s" (propertize "I love you! ❤️" 'Face '(:foreground "red")))
  )
-#+end_src
 
-* set OpenAI API key
-Rewrite this emacs-lisp function to retrieve the API key from an external file: (setq openai-api-key "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")
-
-Here is an example of how you might rewrite the function to retrieve the API key from an external file:
-
-#+begin_src emacs-lisp
 (defun get-openai-api-key ()
  "Retrieve the OpenAI API key from an external file."
  (let ((api-key-file "~/.openai-api-key"))
@@ -5128,12 +3545,7 @@ Here is an example of how you might rewrite the function to retrieve the API key
   (buffer-string)))))
 
 (setq openai-api-key (get-openai-api-key))
-#+end_src
 
-This function will look for a file named ~/.openai/api-key, read the contents of the file, and return the API key as a string. The openai-api-key variable will then be set to this value.
-
-* playing with ChatGTP
-#+begin_src emacs-lisp
 (defun start-pomodoro ()
  "Starts a 25-minute pomodoro timer and logs the completed pomodoro in a file called `~/pomodori.txt`."
  (interactive)
@@ -5146,30 +3558,13 @@ This function will look for a file named ~/.openai/api-key, read the contents of
           (save-buffer))))
  (message "Pomodoro timer started. Will log completed pomodoro in `~/pomodori.txt` at %s"
       (format-time-string "%Y-%m-%d %H:%M:%S" (+ (float-time) (* 60 25)))))
-#+end_SRC
 
-* Warnings
-#+begin_src emacs-lisp
 (use-package warnings
   :defer t)
 (add-to-list 'warning-suppress-types '(yasnippet backquote-change))
-#+end_src
 
-* org 9.6 suppress a weird error message
-[[https://github.com/nobiot/org-transclusion/issues/105][Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting · Issue #105 · nobiot/org-transclusion]]
-
-#+BEGIN_EXAMPLE emacs-lisp
-(setq warning-suppress-types (append warning-suppress-types '((org-element-cache))))
-#+END_EXAMPLE
-
-* Export to .docx
-#+begin_src emacs-lisp
 (setq org-odt-preferred-output-format "docx")
-#+end_src
 
-* Capitalization
-** Capitalize level 1 headings use correct rules of capitalizing titles
-#+begin_src emacs-lisp
 (defun org-titlecase-level-1 ()
  "Convert all Level 1 org-mode headings to title case."
  (interactive)
@@ -5177,34 +3572,7 @@ This function will look for a file named ~/.openai/api-key, read the contents of
  (goto-char (point-min))
  (while (re-search-forward "^\\* " nil t)
   (titlecase-line))))
-#+end_SRC
 
-** Sentencecase-region
-#+begin_EXAMPLE emacs-lisp
-(defun sentencecase-region (start end)
- "Convert the region to sentence case."
- (interactive "r")
- (let ((end-marker (copy-marker end))) ; Create a marker to remember the end position
-  (save-excursion
-   (goto-char start)
-   (downcase-region start end) ; First, make everything lowercase
-   (while (< (point) end-marker)
-    (when (or (and (eq (point) start) (bolp)) ; Special case for the start
-         (eq (char-before) ?.) ; Period
-         (eq (char-before) ?!) ; Exclamation mark
-         (eq (char-before) ??)) ; Question mark
-     (skip-syntax-forward " ") ; Skip any spaces
-     (when (< (point) end-marker) ; Check if still within bounds
-      (capitalize-word 1))) ; Capitalize the first word
-    (forward-word 1)))))
-
-
-
-#+END_EXAMPLE
-
-^ doesn't work
-
-#+begin_src emacs-lisp
 (defun sentencecase-region (start end)
  "Convert the region to sentence case."
  (interactive "r")
@@ -5231,10 +3599,6 @@ This function will look for a file named ~/.openai/api-key, read the contents of
   (while (re-search-forward "\\bdixit\\b" end t)
   (replace-match "Dixit")))))
 
-#+end_src
-
-* extract hyperlinks
-#+begin_src emacs-lisp
 (defun extract-hyperlinks-from-file (file)
  "Extracts all hyperlinks from the text file FILE."
  (interactive "fEnter file to extract hyperlinks from: ")
@@ -5258,30 +3622,10 @@ This function will look for a file named ~/.openai/api-key, read the contents of
   (message "Hyperlinks extracted: %s" hyperlinks)
   hyperlinks))
 
-#+end_src
-
-
-
-* Key chords
-Use key chord
-#+BEGIN_SRC emacs-lisp
 (use-package key-chord
   :defer t)
 (key-chord-mode 1)
-#+END_SRC
 
-* Add numbering
-Written by ChatGPT 3.5 Worked the first time.
-
-Jay:
-
-Write an Emacs-lisp org-mode function to add numbering to a highlighted region.
-
-ChatGPT:
-
-Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a highlighted region:
-
-#+begin_src emacs-lisp
 (defun number-region (beg end)
  "Add numbering to a highlighted region."
  (interactive "r")
@@ -5296,50 +3640,9 @@ Here's an Emacs Lisp function that can be used in Org-mode to add numbering to a
     (forward-line 1))
    (set-marker end-marker nil))))
 
-#+end_src
-
-To use this function, highlight the region you want to add numbering to and then call the ~number-region~ function using M-x ~number-region~. This will add a number to the beginning of each line in the highlighted region. The numbering will start from 1 and increment by 1 for each line.
-
-* org-panes
-#+begin_EXAMPLE emacs-lisp
-
-(use-package org-panes
-:defer t
- :ensure nil
- :config (setq org-panes-split-overview-horizontally t)
-     (setq org-panes-main-size 70))
-
-; org-panes and olivetti don't play well together
-; because they both change window sizes. this function
-; turns olivetti-mode off first if it's on, so that
-; org-panes doesn't get confused about the window size
-(defun org-panes-check-olivetti ()
- (interactive)
- (if (bound-and-true-p olivetti-mode)
-   (progn (olivetti-mode -1)
-       (org-panes)
-       (olivetti-mode))
-    (org-panes)))
-
-     #+END_EXAMPLE
-
-* word count
-#+BEGIN_EXAMPLE emacs-lisp
-(use-package wc-goal-mode
-:defer t)
-#+END_EXAMPLE
-
-* org-roam
-#+begin_src emacs-lisp
 ;; org-roam-config.el is already loaded in spacemacs-new-config.el
 ;; (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
 
- #+end_SRC
-
-
-
-* consult
-#+begin_src emacs-lisp
 ;; Example configuration for Consult
 (use-package consult
 :defer t
@@ -5426,12 +3729,6 @@ To use this function, highlight the region you want to add numbering to and then
 
 (key-chord-define-global "SS" 'consult-line)
 
-#+end_src
-
-* org-roam-ui
-Pretty knowledge graphs are to knowledge management what speaker lights are to music.
-
-  #+begin_SRC emacs-lisp
 (use-package org-roam-ui
 :defer t
   :after org-roam
@@ -5445,11 +3742,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
      org-roam-ui-follow t
      org-roam-ui-update-on-save t
      org-roam-ui-open-on-start t))
-#+end_SRC
 
-
-* orderless
-#+begin_src emacs-lisp
 (use-package orderless
 
  :defer t
@@ -5457,10 +3750,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  :custom
  (completion-styles '(orderless))
  (completion-category-overrides '((command (styles . (partial-completion))))))
-  #+end_SRC
 
-* vertico
-#+begin_src emacs-lisp
 (use-package marginalia
 :defer t
 :ensure t
@@ -5488,48 +3778,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
  ;; (setq vertico-cycle t)
  )
-#+end_SRC
 
-* embark
-#+begin_EXAMPLE emacs-lisp
-
-(use-package embark
-:defer t
- :ensure t
-
- :bind
- (("s-e" . embark-act)     ;; pick some comfortable binding
-  ("C-;" . embark-dwim)    ;; good alternative: M-.
-  ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
- :init
-
- ;; Optionally replace the key help with a completing-read interface
- (setq prefix-help-command #'embark-prefix-help-command)
-
- ;; Show the Embark target at point via Eldoc. You may adjust the Eldoc
- ;; strategy, if you want to see the documentation from multiple providers.
- (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
- ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-
- :config
-
- ;; Hide the mode line of the Embark live/completions buffers
- (add-to-list 'display-buffer-alist
-        '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-         nil
-         (window-parameters (mode-line-format . none)))))
-
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-:defer t
- :ensure t ; only need to install it, embark loads it after consult if found
- :hook
- (embark-collect-mode . consult-preview-at-point-mode))
-#+END_EXAMPLE
-
-* show duplicate lines
-#+begin_src emacs-lisp
 (defun show-duplicate-lines ()
  "Display all duplicate lines in the current buffer."
  (interactive)
@@ -5545,24 +3794,9 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
      (dolist (line (reverse dup-lines))
       (princ (concat line "\n"))))
    (message "No duplicate lines found."))))
-#+end_src
 
-
-* Eisenhower Matrix :urgent:
-#+begin_src emacs-lisp
 (setq org-tag-alist '(("important" . ?i)
            ("urgent"  . ?u)))
-#+end_src
-
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/Users/jay/emacs/external-packages/chatgpt-shell-main")
-(use-package chatgpt-shell
-  :defer t)
-
-#+END_EXAMPLE
-
-* openwith
-#+begin_src emacs-lisp
 
 (use-package openwith
   :defer t)
@@ -5586,96 +3820,16 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (with-eval-after-load 'org
   (advice-add 'org-export-to-file :around #'jay/with-openwith-disabled)
   (advice-add 'org-export-as :around #'jay/with-openwith-disabled))
-#+end_src
 
-* load my LaTeX config only when I actually need to export something
-Jay: How do I direct Emacs to load a file (containing my org-mode LaTeX
-export configuration) the first time I run org Export to LaTeX?
-
-ChatGPT: You can achieve this by using the ~org-export-before-processing-hook~.
-This hook allows you to run a custom function before the export process
-starts. You can define a custom function to load your Org-mode LaTeX
-export configuration file and add this function to the hook.
-
-Jay: Can I make it load this file only the first time I export something to
-LaTeX, rather than every time?
-
-ChatGPT: Yes, you can achieve this by modifying your custom function to remove
-itself from the ~org-export-before-processing-hook~ after it loads your
-configuration file. This way, the function will be executed only once
-during the first export:
-
-#+begin_src emacs-lisp
 (add-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config)
 
 (defun my-load-org-latex-export-config (&rest args)
   "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
   (jay-load-latex)
   (remove-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config))
-#+end_src
-
-* org-autolist
-#+begin_EXAMPLE emacs-lisp
-(use-package org-autolist
-:defer t
-:hook (org-mode . org-autolist-mode))
-(add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
 
 (setq org-autolist-enable-delete nil)
-#+END_EXAMPLE
 
-*** org-autolist deleting list items
-Suppose we start with:
-
-#+begin_example
-- [ ] one
-- [ ] two
-- [ ] apple
-- [ ] |
-#+end_example
-
-Pressing "Backspace" will produce:
-
-#+begin_example
-- [ ] one
-- [ ] two
-- [ ] apple|
-#+end_example
-
-Similarly, if we instead start from here:
-
-#+begin_example
-- [ ] one
-- [ ] two
-- [ ] |apple
-#+end_example
-
-Then pressing "Backspace" will produce:
-
-#+begin_example
-- [ ] one
-- [ ] two|apple
-#+end_example
-
-If you want to disable this behavior, add this to your ~init.el~:
-
-#+begin_SRC emacs-lisp
-(setq org-autolist-enable-delete nil)
-#+END_SRC
-
-*** start at the right number
-[[https://www.reddit.com/r/orgmode/comments/10ybf40/how_to_force_orgautolistel_to_start_from_the/][How to force org-autolist.el to start from the number I choose : orgmode]]
-
-* dictionaries
-Three different dictionary programs:
-
-irony
-
-** ~define-word~
-- its own dictionary. Definitions appear in minibuffer, which is weird.
-- But nicely formatted
-
-#+begin_src emacs-lisp
 (defun define-word--convert-html-tag-to-face (str)
  "Replace semantical HTML markup in STR with the relevant faces."
  (with-temp-buffer
@@ -5688,38 +3842,18 @@ irony
      (define-word--regexp-to-face regexp face))
   (buffer-string)))
 
-#+end_src
-
-** dictionary
-- dictionary-lookup-definition
-- dictionary-search
-- via dict.org
-- choice of wordnet, websters (gcide)
-
-** sdcv
-Gives me all the offline dictionaries I've previously installed! Is great.
-
-#+begin_src emacs-lisp
 (use-package sdcv
 :defer t
 :custom
 sdcv-popup-function 'showtip)
-#+end_SRC
 
-* consult ripgrep
-Avoid recentering errors. Works!
-#+begin_src emacs-lisp
 (defun consult-recenter-advice (orig-fn &rest args)
  "Advice for `recenter' to avoid errors when the window is not displaying the current buffer."
  (when (eq (window-buffer) (current-buffer))
   (apply orig-fn args)))
 
 (advice-add 'recenter :around #'consult-recenter-advice)
-#+end_src
 
-* outdent or promote
-Do the same thing whether on a plain text list or an org heading.
-#+begin_src emacs-lisp
 (defun org-outdent-or-promote ()
  "Run either org-outdent-item-tree or org-promote-subtree,
 depending on which one is appropriate based on the context."
@@ -5743,18 +3877,12 @@ depending on which one is appropriate based on the context."
   ((org-at-heading-p) (org-demote-subtree))
   ;; Otherwise, do nothing and show a message
   (t (message "Not at an item or a headline"))))
-#+end_src
 
-* Info mode
-#+begin_src emacs-lisp
 ; (define-key Info-mode-map (kbd "s-o") 'copy-region-to-other-window)
 ; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
 (define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
 (define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
-#+end_src
 
-* toggle between two windows but not the third
-#+begin_src emacs-lisp
 (defun toggle-window-2-3 ()
  "Toggle between window 2 and window 3 using winum."
  (interactive)
@@ -5766,12 +3894,7 @@ depending on which one is appropriate based on the context."
      (t
       (message "Point is not in window 2 or 3.")))))
 ;; (define-key key-minor-mode-map (kbd "s-`") 'toggle-window-2-3)
-#+end_src
 
-* fuzzy open recent file
-This is my goto way for navigating. It feels like it is reading your mind.
-
-#+begin_src emacs-lisp
 ;;;; 0.  make Emacs start with your full shell environment  ;;;;
 
 
@@ -5852,10 +3975,7 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
                       (if (stringp dired-directory)
                           dired-directory
                         (car dired-directory)))))
-#+end_src
 
-* Google things from within emacs
-#+begin_SRC emacs-lisp
 (use-package google-this
 :defer t
 :custom
@@ -5884,15 +4004,6 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
      (buffer-substring (region-beginning) (region-end))
     (read-string "Google: "))))))
 
-   #+end_SRC
-
-* EWW
-o: open in external browser
-r: reload
-w: copy-page-url
-v: view-source
-
-#+begin_src emacs-lisp
 (use-package eww
 :defer t
 :bind
@@ -5905,21 +4016,9 @@ v: view-source
         ("s-]" . eww-forward-url)
         ("s-o" . eww-open-file)
    ))
-#+end_src
 
-If you want to waste some time, there are some extras here:
-https://protesilaos.com/codelog/2021-03-25-emacs-eww/
-
-(set-face-attribute 'org-variable-pitch-face (face-attribute 'default :font))
-
-* consult git grep
-#+begin_src emacs-lisp
 ;; (setq consult-git-grep-args )
-#+end_src
 
-* org-mac-link
-** edge
-#+begin_src emacs-lisp
 (use-package org-mac-link
   :ensure t        ;; auto‑install if needed (remove if you vendor it)
   :defer nil       ;; load immediately so your redefs take effect
@@ -5966,10 +4065,7 @@ Accepted formats:
 (defun org-mac-bing-get-frontmost-url () …)
 ;;;###autoload
 (defun org-mac-link-skim-open (uri _) …)
- #+end_SRC
 
-** don't number windows
-#+begin_src emacs-lisp
 (defun org-mac-link--clean-title (title)
   "Remove unwanted prefixes like '(2) ' from TITLE."
   (replace-regexp-in-string "^([0-9]+)\\s-+" "" title))
@@ -6033,105 +4129,6 @@ With prefix ARG, insert using 'safari' custom link type."
                      (format "[[%s][%s]]" url title))))       ; Default format otherwise
     (insert org-link)))
 
-#+end_src
-
-* org-refile-region-to-org-heading-or-roam-node
-wonder if this could help...
-https://www.reddit.com/r/emacs/comments/l99xc8/consult_got_support_for_multiple_candidate_sources/
-
-#+begin_EXAMPLE emacs-lisp
-(defun org-refile-region-to-org-heading-or-roam-node (beg end &optional copy)
- "Refile the region between BEG and END to an Org mode heading or Org-roam node.
-If COPY is non-nil, copy the region instead of cutting it."
- (interactive "r\nP")
- (let* ((target (org-refile-get-location))
-     (file (nth 1 target))
-     (pos (nth 3 target))
-     (text (buffer-substring-no-properties beg end)))
-  (if pos
-    (progn
-     (unless copy
-      (kill-region beg end))
-     (deactivate-mark)
-     (with-current-buffer (find-file-noselect file)
-      (save-excursion
-       (goto-char pos)
-       (if (eql refile-region-position 'bottom)
-         (org-end-of-subtree)
-        (org-end-of-meta-data))
-       (insert (format refile-region-format text)))))
-   (progn
-    (message "Target: %s" target)
-    (user-error "Invalid target location")))))
-
-(defun org-refile-get-location (&optional prompt default-buffer new-nodes)
- "Prompt the user for a refile location, including Org-roam nodes.
-PROMPT should not be suffixed with a colon and a space, because
-this function appends the default value from
-`org-refile-history' automatically, if that is not empty."
- (let ((org-refile-targets org-refile-targets)
-    (org-refile-use-outline-path org-refile-use-outline-path))
-  (setq org-refile-target-table (org-refile-get-targets default-buffer)))
- (unless org-refile-target-table
-  (user-error "No refile targets"))
-
- (let* ((cbuf (current-buffer))
-     (cfn (buffer-file-name (buffer-base-buffer cbuf)))
-     (cfunc (if (and org-refile-use-outline-path
-             org-outline-path-complete-in-steps)
-          #'org-olpath-completing-read
-         #'completing-read))
-     (extra (if org-refile-use-outline-path "/" ""))
-     (cbnex (concat (buffer-name) extra))
-     (filename (and cfn (expand-file-name cfn)))
-     (org-cands (mapcar
-           (lambda (x)
-            (if (and (not (member org-refile-use-outline-path
-                       '(file full-file-path title)))
-                (not (equal filename (nth 1 x))))
-              (cons (concat (car x) extra " ("
-                     (file-name-nondirectory (nth 1 x)) ")")
-                 (cdr x))
-             (cons (concat (car x) extra) (cdr x))))
-           org-refile-target-table))
-     (roam-cands (mapcar (lambda (node)
-                (cons (org-roam-node-title node)
-                   (list (org-roam-node-file node)
-                      (org-roam-node-point node))))
-               (org-roam-node-list)))
-     (tbl (append org-cands roam-cands))
-     (completion-ignore-case t)
-     cdef
-     (prompt (let ((default (or (car org-refile-history)
-                  (and (assoc cbnex tbl) (setq cdef cbnex)
-                     cbnex))))
-          (org-format-prompt prompt default)))
-     answ)
-  (setq answ (funcall cfunc prompt tbl nil (not new-nodes)
-            nil 'org-refile-history
-            (or cdef (car org-refile-history))))
-  (if (assoc answ tbl)
-    (let ((location-data (cdr (assoc answ tbl))))
-     (if (org-roam-node-p (car location-data))
-       (list answ (org-roam-node-file (car location-data)) (org-roam-node-point (car location-data)))
-      location-data))
-   (if (string-match "\\`\\(.*\\)/\\([^/]+\\)\\'" answ)
-     (progn
-      (setq parent (match-string 1 answ)
-         child (match-string 2 answ))
-      (setq parent-target (org-refile--get-location parent tbl))
-      (when (and parent-target
-            (or (eq new-nodes t)
-              (and (eq new-nodes 'confirm)
-                (y-or-n-p (format "Create new node \"%s\"? "
-                         child)))))
-       (org-refile-new-child parent-target child)))
-    (user-error "Invalid target location")))))
-
-#+END_EXAMPLE
-
-* aliases
-#+begin_src emacs-lisp
 (defalias 'affe-grep-current-project 'affe-grep)
 (defalias 'consult-grep-current-project 'consult-grep)
 
@@ -6140,13 +4137,7 @@ this function appends the default value from
 
 (defalias 'counsel-google 'counsel-search)
 (defalias 'google-counsel-Google-with-autosuggest 'counsel-search)
-#+end_src
 
-* ignore unresolvable links
-Instead of canceling export. So that I can export org-roam nodes if I want to.
-
-** my own attempts to fix this. Second one worked
-#+begin_SRC emacs-lisp
 (use-package org-roam-export
   :defer)
 
@@ -6170,15 +4161,8 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
      )))))
 
 (add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
-#+END_SRC
 
-* org-agenda
-#+begin_src emacs-lisp
 ;; (setq org-agenda-files '("/Users/jay/dropbox/roam/notes"))
-#+end_src
-
-* org-attach
-#+begin_src emacs-lisp
 
 (setq org-attach-auto-tag "ATTACHMENTS")
 (setq org-attach-id-dir "/Users/jay/dropbox/roam/attachments")
@@ -6192,56 +4176,23 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
         (insert (org-roam-fontify-like-in-org-mode
                  (format " - [[file:%s/%s][%s]]\n" folder file file))))
       (insert "\n"))))
-#+end_src
 
-** org unique ID method
-Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Better Folder Names · The Art of Not Asking Why]]
-
-#+begin_src emacs-lisp
 (setq org-id-method 'ts)
 (setq org-attach-id-to-path-function-list
  '(org-attach-id-ts-folder-format
   org-attach-id-uuid-folder-format))
-#+end_src
 
-* org-roam browsing history
-#+begin_src emacs-lisp
 (winner-mode +1)
 (define-key winner-mode-map (kbd "s-[") #'winner-undo)
 (define-key winner-mode-map (kbd "s-]") #'winner-redo)
-#+end_src
-
-* deft
-#+begin_EXAMPLE emacs-lisp
-(use-package deft
-:defer
-:after org
- :bind
- ("s-k d e" . deft)
- :custom
- (deft-recursive t)
- (deft-use-filter-string-for-filename t)
- (deft-default-extension "org")
- (deft-directory org-roam-directory))
-#+END_EXAMPLE
-
-* rg
-#+begin_src emacs-lisp
 
 ;; (rg-enable-default-bindings)
-#+end_src
 
-* deadgrep
-#+begin_src emacs-lisp
 (use-package deadgrep
   :defer)
 (define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
-#+end_src
 
-* search recently used directories
-#+begin_src emacs-lisp
-
- (defun timu/search-org-files ()
+(defun timu/search-org-files ()
   "Grep for a string in the `~/org' using `rg'."
   (interactive)
 (consult-ripgrep "~/org" ""))
@@ -6251,11 +4202,6 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
   (interactive)
 (consult-ripgrep "~/projects" ""))
 
-#+end_src
-
-* org headings
-#+begin_src emacs-lisp
-
 (defun timu/org-go-to-heading (&optional arg)
 
 "Go to an outline heading with `consult-org-heading'. Also move the heading to the top of the buffer with `evil-scroll-line-to-top'"
@@ -6264,13 +4210,6 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 
 (consult-org-heading)
 (evil-scroll-line-to-top arg))
-
-#+end_src
-
-* Dired
-Here's an adaptation of dired-create-directory. It works the same way, so as well as a plain filename, you can also specify new parent directories (to be created under the current directory) for the file (e.g. foo/bar/filename).
-
-#+BEGIN_SRC emacs-lisp
 
 ; dired Settings
 (setq dired-clean-up-buffers-too nil
@@ -6317,12 +4256,6 @@ Here's an adaptation of dired-create-directory. It works the same way, so as wel
            (when new
              (dired-add-file new)
              (dired-move-to-filename))))
-#+END_SRC
-
-Although I've specified a user-reserved binding in the code, I've actually bound this to _ which on my keyboard layout is the shifted sequence next to +, meaning the keys for "new directory" and "new file" in dired are right next to one another.
-
-** open current directory in Finder
-#+begin_src emacs-lisp
 
 (defun timu-baseline-async-shell-command-no-window (command)
 
@@ -6382,10 +4315,6 @@ This will open \"Finder.app\" at current location."
  (interactive)
  (timu-baseline-async-shell-command-no-window "open ./" ))
 
-#+end_src
-
-** quicklook
-#+begin_src emacs-lisp
 (defun quicklook ()
  "Open the files at point with shell command \"qlmanage\".
 This will display a Quicklook of the file at point in macOS."
@@ -6393,81 +4322,36 @@ This will display a Quicklook of the file at point in macOS."
  (setq file (dired-get-file-for-visit))
  (timu-baseline-async-shell-command-no-window
   (concat "qlmanage -p " (shell-quote-argument file) " > /dev/null 2>&1")))
-#+end_src
 
-** use dired for directory links
-#+BEGIN_SRC emacs-lisp
 (add-to-list 'org-file-apps '(directory . emacs))
-#+END_SRC
 
-Use this notation in the org mode to create a link:
+(defun touch-file (file)
+  "Create a file called FILE.
+If FILE already exists, signal an error."
+  (interactive
+  (list (read-file-name "Create file: " (dired-current-directory))))
+  (let* ((expanded (expand-file-name file))
+    (try expanded)
+    (dir (directory-file-name (file-name-directory expanded)))
+    new)
+   (if (file-exists-p expanded)
+    (error "Cannot create file %s: file exists" expanded))
+   ;; Find the topmost nonexistent parent dir (variable `new')
+   (while (and try (not (file-exists-p try)) (not (equal new try)))
+   (setq new try
+     try (directory-file-name (file-name-directory try))))
+   (when (not (file-exists-p dir))
+   (make-directory dir t))
+   (write-region "" nil expanded t)
+   (when new
+   (dired-add-file new)
+   (dired-move-to-filename))))
 
-It will open the link in Emacs with typing C-c C-o.
-
-** touch-file
-#+BEGIN_SRC emacs-lisp
-
-    (defun touch-file (file)
-    "Create a file called FILE.
-  If FILE already exists, signal an error."
-    (interactive
-    (list (read-file-name "Create file: " (dired-current-directory))))
-    (let* ((expanded (expand-file-name file))
-      (try expanded)
-      (dir (directory-file-name (file-name-directory expanded)))
-      new)
-     (if (file-exists-p expanded)
-      (error "Cannot create file %s: file exists" expanded))
-     ;; Find the topmost nonexistent parent dir (variable `new')
-     (while (and try (not (file-exists-p try)) (not (equal new try)))
-     (setq new try
-       try (directory-file-name (file-name-directory try))))
-     (when (not (file-exists-p dir))
-     (make-directory dir t))
-     (write-region "" nil expanded t)
-     (when new
-     (dired-add-file new)
-     (dired-move-to-filename))))
-#+END_SRC
-
-
-*** open recent directories
-#+BEGIN_EXAMPLE emacs-lisp
-;; open recent directory, rquires ivy (part of swiper)
-;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
-(defun bjm/ivy-dired-recent-dirs ()
- "Present a list of recently used directories and open the selected one in dired"
- (interactive)
- (let ((recent-dirs
-     (delete-dups
-     (mapcar (lambda (file)
-          (if (file-directory-p file) file (file-name-directory file)))
-         recentf-list))))
-
-  (let ((dir (ivy-read "Directory: "
-             recent-dirs
-             :re-builder #'ivy--regex
-             :sort nil
-             :initial-input nil)))
-   (dired dir))))
-
-;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
-;; c-x C-d runs the command ido-list-directory
-#+END_EXAMPLE
-
-**** dired-quick-sort
-#+BEGIN_SRC emacs-lisp
 (use-package dired-quick-sort
   :defer)
-#+END_SRC
 
-***** dired
-#+begin_src emacs-lisp
 ;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
-#+end_src
 
-****** open in external app
-#+begin_src emacs-lisp
 (defun timu-dired-open-in-external-app (&optional file)
 
  "Open the current FILE or Dired marked files in external app.
@@ -6524,20 +4408,6 @@ Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
 
          (start-process "" nil "xdg-open" fPath))) myFileList))))))
 
-#+end_src
-
-** dired-preview
-#+begin_src sh
-(add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
-
-(use-package dired-preview
-:defer t)
-
-
-#+end_src
-
-** nvalt
-#+begin_src emacs-lisp
 (defun nvalt ()
  "Open the directory in dired and run dired-preview."
  (interactive)
@@ -6546,32 +4416,12 @@ Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
   (dired directory)
   (dired-preview-mode)))
 
-#+end_src
-
-* counsel-fd
-** Usage
-~M-x counsel-fd-dired-jump~ to jump to a subdirectory under current
-directory
-
-~M-x counsel-fd-file-jump~ to jump to a file under current directory
-
-#+begin_src emacs-lisp
 (use-package counsel-fd
   :defer t)
-#+end_src
 
-* consult-locate
-Maybe to replace fasd?
-
-#+begin_src emacs-lisp
 (setq consult-locate-args "fasd -t -l -R")
 (define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
-#+end_src
 
-* source current file
-Doesn't work
-
-#+begin_src emacs-lisp
 (defun source-current-file ()
  "Source the current file in a shell."
  (interactive)
@@ -6579,10 +4429,7 @@ Doesn't work
      (cmd (format "source %s" (shell-quote-argument filename)))
      (output (shell-command-to-string cmd)))
   (message "Output: %s" output)))
-#+end_src
 
-* fitness.org
-#+begin_src emacs-lisp
 ;; The fitness.org file calls this function to eval the configuration source
 ;; block. This is the only function that needs to be defined outside of
 ;; fitness.org.
@@ -6603,37 +4450,9 @@ Doesn't work
    (goto-char (org-element-property :begin src))
    (let ((org-confirm-babel-evaluate nil))
     (org-babel-execute-src-block)))))
-#+end_src
 
-* ask me whether to move region or copy region
-interactive tool for moving or copying text regions to another window in the Emacs environment. It is functionally correct and appears to be well-structured. Here are a few notes on the provided code.
-
-Global variable initialization: At the start of each Emacs session, a global variable move-or-copy-mode is declared and set to nil. This variable is used to store the user's preference for either moving or copying text regions.
-
-Interactive Mode Selection: The switch-between-move-mode-and-copy-mode function allows the user to specify their preference in an interactive manner. If move-or-copy-mode is nil (which will be true at the start of each session), this function is called to populate move-or-copy-mode with the user's choice.
-
-Move or Copy Implementation: The move-or-copy-region-to-other-window function uses the value stored in move-or-copy-mode to determine whether to move or copy the selected region. If the value is "move", the function kills (cuts) the region and displays a message indicating the number of words moved. If the value is "copy", the function copies the region and displays a message indicating the number of words copied.
-
-Region Handling: The code uses use-region-p to check if a region is currently active (selected). If not, a message is displayed to inform the user that no region is selected.
-
-Text Insertion: After the text region has been either moved or copied, it is yanked (pasted) into the other window. The code also adds a newline character both before and after the inserted text for neat formatting.
-
-First:
-Set this varable to nil at the start of every Emacs session, so that switch-between-move-mode-and-copy-mode will prompt me about my preference:
-
-#+begin_src emacs-lisp
 (defvar move-or-copy-mode nil)
-#+end_src
 
-The first time I call move-or-copy-region-to-other-window, the unless statement sees that move-or-copy-mode is nil, so it calls select-copy-mode-or-move-mode.
-
-The next time I call move-or-copy-region-to-other-window within the same Emacs session, move-or-copy-mode is no longer nil, because it now contains my previous choice. So the unless statement doesn't trigger, and select-copy-mode-or-move-mode is not called, hence I'm not prompted for my preference again.
-
-When a new Emacs session starts, move-or-copy-mode is reset to nil, so I will again be prompted for Ir preference the first time I call move-or-copy-region-to-other-window in the new session.
-
-Emacs sessions are independent of each other, so global variables like move-or-copy-mode don't persist across sessions.
-
-#+begin_src emacs-lisp
 (defun select-move-mode-or-copy-mode ()
  (interactive)
  (setq move-or-copy-mode
@@ -6659,11 +4478,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
   (newline)
   (other-window -1))))
 
-#+end_src
-
-
-* refile or org-roam-refile
-#+begin_src emacs-lisp
 (defvar refile-or-roam-refile-mode nil)
 
 (defun select-refile-mode ()
@@ -6695,9 +4509,6 @@ Emacs sessions are independent of each other, so global variables like move-or-c
       (org-roam-refile-region-or-subtree)
       (message "Refiled to Org-roam file %s" current-heading)))))))
 
-#+end_src
-* disable Olivetti on split
-#+begin_SRC emacs-lisp
 (defun activate-olivetti-in-split ()
  (when (not (bound-and-true-p disable-olivetti-auto-toggle))
   (if (< (window-width) 80)
@@ -6707,71 +4518,20 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 (add-hook 'org-mode-hook (lambda ()
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
 
-#+END_SRC
-
-* workgroups
-[[https://github.com/pashinin/workgroups2][pashinin/workgroups2: Workgroups2 - Emacs session manager]]
-
-** Usage
-Use ~M-x wg-create-workgroup~ to save save window&buffer layout as a
-work group.
-
-Use ~M-x wg-open-workgroup~ to open an existing work group.
-
-Use ~M-x wg-kill-workgroup~ to delete an existing work group.
-
-*** Enable minor mode ~workgroups-mode~ (OPTIONAL)
-Put below line at the bottom of ~.emacs~,
-
-#+begin_example
-(workgroups-mode 1)
-#+end_example
-
-* scroll
-#+begin_src emacs-lisp
 ;; (global-yascroll-bar-mode 1)
-#+end_src
 
-* CTRLF
-[[https://github.com/radian-software/ctrlf#customization][radian-software/ctrlf: ⌨️ Emacs finally learns how to ctrl+F.]]
-
-Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's no isearch-repeat-forward]]? Update: found it.
-
-#+begin_SRC emacs-lisp
 (use-package ctrlf
   :defer)
 ;; (ctrlf-mode +1)
 ;; (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
 (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
 ;; (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
-#+END_SRC
 
-* ace-link
-[[https://github.com/abo-abo/ace-link][abo-abo/ace-link: Quickly follow links in Emacs]]
-In Help buffers, single key ~o~ to follow links
-
-** Usage
-Just press ~o~ when you're
-in ~Info-mode~ or ~help-mode~ or ~woman-mode~ or ~eww-mode~ or ~compilation-mode~.
-
-Here's a screencast of browsing Info using ~ace-link-info~:
-
-#+begin_src emacs-lisp
 (ace-link-setup-default)
-#+end_src
 
-** mwim
-[[https://github.com/alezost/mwim.el][alezost/mwim.el: Move to the beginning/end of line, code or comment]]
-
-Smart jump to beginning / end of lines.
-
-#+begin_src emacs-lisp
 (global-set-key (kbd "C-a") 'mwim-beginning)
 (global-set-key (kbd "C-e") 'mwim-end)
-#+end_src
 
-* delete file
-#+begin_src emacs-lisp
 (defun delete-visited-file (buffer-name)
  "Delete the file visited by the buffer named BUFFER-NAME."
  (interactive "Delete file visited by buffer ")
@@ -6784,18 +4544,6 @@ Smart jump to beginning / end of lines.
    (kill-buffer buffer))))
 (defalias 'crux-delete-buffer-and-file #'delete-visited-file)
 
-#+end_src
-
-* jinx
-#+begin_EXAMPLE emacs-lisp
-(use-package jinx
-:defer)
-(dolist (hook '(text-mode-hook org-mode-hook conf-mode-hook))
- (add-hook hook #'jinx-mode))
-#+END_EXAMPLE
-
-* ox-timeline
-#+begin_src emacs-lisp
 (use-package ox-timeline
 
 :config
@@ -6808,17 +4556,10 @@ Smart jump to beginning / end of lines.
   (when html-file
    (browse-url (concat "file://" (expand-file-name html-file))))))
 
-#+end_src
-
-* ox-clip
-#+begin_src emacs-lisp
 '(ox-clip-osx-cmd
   "pandoc -f html -t markdown - | grep -v \"^:::\" | sed 's/{#.*}//g' | pbcopy")
 (defalias 'copy-as-markdown 'ox-clip-formatted-copy)
-#+end_src
 
-* debug recentf
-#+begin_src emacs-lisp
 (defadvice recentf-save-list (around debug-recentf-save-list activate)
  (message "Saving recentf list...")
  ad-do-it
@@ -6831,35 +4572,16 @@ Smart jump to beginning / end of lines.
   (before my-update-recentf-before-update-packages activate)
  (copy-file "/Users/jay/emacs/recentf/recentf" "/Users/jay/.emacs.d/.cache/recentf" t))
 
-#+end_src
-
-* unpair <
-If all else fails, as a last resort, you could use a keybinding to insert a "<" without triggering the auto-pairing. For instance:
-
-#+begin_example emacs-lisp
-(global-set-key (kbd "<") (lambda () (interactive) (insert "<")))
-#+end_example
-
-This tells Emacs to simply insert a "<" whenever you press that key, bypassing any other logic that might be attached to it.
-
-* global Olivetti mode
-#+begin_src emacs-lisp
 (define-globalized-minor-mode olivetti-global-mode olivetti-mode
  (lambda ()
   (unless (minibufferp)
    (olivetti-mode 1))))
 
 (olivetti-global-mode)
-#+end_src
 
-* org-mode timestamp format
-#+begin_src emacs-lisp
 (setq org-time-stamp-custom-formats '("<%a %m/%e/%Y>" . "<%a %B %e %l:%M %p>"))
 (setq-default org-display-custom-times nil)
-#+end_src
 
-* smartparens
-#+begin_src emacs-lisp
 ;; Ensure the library is loaded before keybinding
 (use-package smartparens
   :defer nil                       ; <--- load immediately
@@ -6870,10 +4592,6 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (setq sp-escape-quotes-after-insert nil)
 
 )
-#+end_src
-
-* archive tasks based on date
-#+begin_src emacs-lisp
 
 ;; (setq org-archive-location
 ;;  (concat "/Users/jay/Dropbox/roam/notes/archive/"
@@ -6892,10 +4610,6 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 ;; Run the above function before every org-archive operation
 (add-hook 'org-archive-hook 'my/org-archive-file)
 
-#+end_src
-
-* unfill-region-keep-formatting
-#+begin_src emacs-lisp
 (defun unfill-paragraph-keep-formatting (start end)
  "Unfill the region, but preserve plain-text lists and org-mode SCHEDULED tasks."
  (interactive "*r")
@@ -6921,11 +4635,6 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
      (unfill-region-keep-formatting pos next-pos))
     (setq pos next-pos)))))
 
-
-#+end_src
-
-* string to list
-#+begin_src emacs-lisp
 (defun region-to-numbered-list (start end)
   "Turn a region into a numbered list."
   (interactive "r")
@@ -6938,12 +4647,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
                    collect (concatenate 'string (number-to-string i) ". " str))))
     (delete-region start end)
     (insert (mapconcat 'identity numbered-strings "\n"))))
-#+end_src
 
-* indirect buffers
-
-** clone-indirect-buffer-new-window-without-focus
-#+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-without-focus ()
   "Clone the current buffer to another window *but keep focus* in the original window."
   (interactive)
@@ -6959,10 +4663,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 
     ;; Now go back to the original window:
     (select-window original-window)))
-#+end_src
 
-** clone-indirect-buffer-new-window-and-focus
-#+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-and-focus ()
   "Clone the current buffer to another window and KEEP focus in the new window."
   (interactive)
@@ -6975,11 +4676,7 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
   ;; Because clone-indirect-buffer-other-window already selects the new buffer,
   ;; you don't need to do anything else to maintain focus there.
 )
-#+end_src
 
-
-* org-inline-tags
-#+BEGIN_SRC emacs-lisp
 (defface org-inline-tags-face
  '((t (:foreground "orange" :weight bold)))
  "Face for custom inline tags in plain list items.")
@@ -7120,15 +4817,6 @@ c: cook-ideas-over-time\n"))
 ;; (define-key key-minor-mode-map (kbd "s-:") 'insert-inline-tag)
 ;; (define-key key-minor-mode-map (kbd "s-;") 'search-for-inline-tag-project-wide)
 
-#+END_SRC
-
-** auto-link notes
-Doesn't work.
-
-Development:
-https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
-
-#+begin_src emacs-lisp
 (defun org-roam-auto-link-buffer ()
   (interactive)
   (save-excursion
@@ -7142,10 +4830,7 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
               (forward-word)
               (let ((region (list (mark) (point))))
                 (org-roam-link-set-region (car region) (cadr region) node))))))))
-#+end_src
 
-* New org-roam
-#+begin_src emacs-lisp
 (defun kb/find-node-backlink (arg &optional node choices)
  "Navigate notes by link. With universal ARG try to use only to navigate the tags of the current note. Optionally takes a selected NODE and filepaths CHOICES."
  (interactive "P")
@@ -7179,28 +4864,12 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
     (org-roam-node-visit node)
    (kb/find-node-backlink nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
    )))
-#+end_src
 
-* fontify checkboxes on org export to HTML
-[[https://emacs.stackexchange.com/questions/33382/replace-checkbox-with-glyph-via-font-lock][org mode - replace checkbox with glyph via font-lock - Emacs Stack Exchange]]
-#+begin_src emacs-lisp
 (setq org-html-checkbox-type 'unicode)
 (setq org-html-checkbox-types
  '((unicode (on . "<span class=\"task-done\">&#x2611;</span>")
    (off . "<span class=\"task-todo\">&#x2610;</span>")
    (trans . "<span class=\"task-in-progress\">&#x25eb;</span>"))))
-#+end_src
-
-
-* Skim PDF: Capture page title correctly
-In org-mode for Emacs, we often want to create links to specific resources. One such resource could be a PDF file that is being viewed in Skim.app, a popular PDF reader for macOS. The initial implementation of this functionality allowed for the creation of a link directly to a specific page in a PDF file. However, the link was not easily readable, as it only contained the file path and the page number.
-
-We've updated this functionality to enhance the readability and usability of these links. Now, the link will also display the title of the file (which is generally more readable than a filepath). The link still points to the specific page in the PDF file, but when viewed in org-mode, it will be displayed with the title of the PDF file.
-
-If I encounter more errors, pls refer to this:
-https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
-
-#+begin_SRC emacs-lisp
 
 (defun org-mac-link-skim-insert-page ()
   "Insert the link to the page in the Skim.app. Include the page number.
@@ -7313,27 +4982,10 @@ With a universal argument, insert a link to the current page including page numb
    (org-mac-link-skim-insert-page)
   (org-mac-link-skim-insert-document)))
 
-#+END_SRC
-
-Fixed and working:
-https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
-
-* org-timeblocking
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/users/jay/emacs/external-packages/org-timeblock/")
-(use-package org-timeblock
-:defer)
-#+END_EXAMPLE
-
-* later list
-#+begin_src emacs-lisp
 (defun later-list ()
  (interactive)
  (find-file "/Users/jay/Dropbox/roam/notes/20230728235900-later_list.org"))
-#+end_src
 
-* red bold
-#+begin_src emacs-lisp
 (defun redbold ()
   (interactive)
   (custom-set-faces
@@ -7343,10 +4995,6 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 (add-hook 'org-mode-hook (lambda ()
        (redbold)))
 
-#+end_src
-
-* Claire share
-#+begin_src emacs-lisp
 (defun claire-share-export-subtree-to-html ()
  (interactive)
  (let* ((title (file-name-sans-extension (buffer-name)))
@@ -7359,29 +5007,18 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
     (insert (concat export-line "\n"))))
   (org-export-dispatch)))
 
-#+end_src
-
-* embark vertico
-#+begin_src emacs-lisp
 (with-eval-after-load 'vertico
 (define-key key-minor-mode-map (kbd "C-M-S-s-o") 'embark-act)
 ;; (define-key vertico-map (kbd "M-o") 'embark-act)
 )
 
-#+end_src
-
-* copy-region-as-kill-and-push-to-clipboard
-
-#+begin_src emacs-lisp
 (defun copy-region-as-kill-and-push-to-clipboard (beg end)
   "Copy the region as kill and push it to the macOS clipboard.
 BEG and END define the region to copy."
   (interactive "r")
   (copy-region-as-kill beg end)
   (push-kill-ring-pasteboard-to-MacOS-clipboard))
-#+end_src
 
-#+begin_src emacs-lisp
 ;; Simpler version - directly copies clipboard to kill ring
 (defun clipboard-to-kill-ring ()
 "Copies clipboard contents directly to kill ring."
@@ -7407,43 +5044,10 @@ BEG and END define the region to copy."
    ;; Copy to kill ring unless empty
    (unless (string-equal clipboard-content "")
      (kill-new clipboard-content)))))
-#+end_src
 
-* switch two classic keybindings
-#+begin_src emacs-lisp
 (define-key key-minor-mode-map (kbd "M-%") 'eval-expression)
 (define-key key-minor-mode-map (kbd "M-:") 'query-replace)
-#+end_src
 
-* TOC in org file
-[[https://github.com/alphapapa/org-make-toc][alphapapa/org-make-toc: Automatic tables of contents for Org-mode files]]
-
-Usage:
-A document may have any number of tables of contents (TOCs), each of
-which may list entries in a highly configurable way.
-
-To make a basic TOC, follow these steps:
-
-1. Choose a heading to contain a TOC and move the point to it.
-2. Run command ~org-make-toc-insert~, which inserts
-   a ~:CONTENTS:~ drawer and sets TOC properties. Set
-   the ~include~ property to ~all~.
-3. Run the command ~org-make-toc~ to update all TOCs in the document.
-
-Use command ~org-make-toc-set~ to change TOC properties for the entry at
-point with completion.
-
-#+begin_EXAMPLE emacs-lisp
-(use-package org-make-toc
-:defer
-:config
- ;; Add 'org-make-toc-mode' to 'org-mode-hook'
- ;; This ensures 'org-make-toc-mode' is enabled every time 'org-mode' is activated
- (add-hook 'org-mode-hook #'org-make-toc-mode))
-#+END_EXAMPLE
-
-* Insert image link from clipboard
-#+begin_src emacs-lisp
 (defun insert-image-link-from-clipboard ()
   "Inserts an org-mode image link using the clipboard content as the image URL."
   (interactive)
@@ -7460,10 +5064,7 @@ point with completion.
               (org-display-inline-images))
           (message "Clipboard content does not start with 'http'."))
       (message "Clipboard is empty."))))
-#+end_src
 
-* Insert local file link from clipboard
-#+begin_SRC emacs-lisp
 (defun insert-local-file-link-from-clipboard ()
   "Inserts an org-mode link using the clipboard content as the file path."
   (interactive)
@@ -7486,10 +5087,7 @@ point with completion.
     (search-forward "[" nil t)
     (search-forward "]" nil t))
   nil)  ; Explicitly return nil
-#+END_SRC
 
-* Insert directory link from clipboard
-#+begin_SRC emacs-lisp
 (defun insert-directory-link-from-clipboard ()
  "Inserts an org-mode directory link using the clipboard content as the directory path."
  (interactive)
@@ -7510,65 +5108,9 @@ point with completion.
   (search-forward "[" nil t)
   (search-forward "]" nil t))
  nil) ; Explicitly return nil
- #+END_SRC
 
-* save frame size and position
-#+begin_EXAMPLE emacs-lisp
-
-(defun save-frame-size-and-position ()
- "Save the current frame's size and position."
- (interactive)
- (setq saved-frame-parameters
-    (list (cons 'left (frame-parameter nil 'left))
-       (cons 'top (frame-parameter nil 'top))
-       (cons 'width (frame-parameter nil 'width))
-       (cons 'height (frame-parameter nil 'height)))))
-
-(defun restore-frame-size-and-position ()
- "Restore the frame's size and position."
- (interactive)
- (when saved-frame-parameters
-  (modify-frame-parameters nil saved-frame-parameters)))
-
-(defun restore-frame-to-external-minotaur-two-thirds-size-and-position ()
-  "Restore the frame's size and position to specific values."
-  (interactive)
-  (let ((specific-frame-parameters '((left . 1280)
-                                     (top . 25)
-                                     (width . 182)
-                                     (height . 68))))
-    (modify-frame-parameters nil specific-frame-parameters)))
-
-(defun restore-frame-to-laptop-two-thirds-size-and-position ()
-  "Restore the frame's size and position to specific values."
-  (interactive)
-  (let ((specific-frame-parameters '((left . 685)
-                                     (top . 44)
-                                     (width . 113)
-                                     (height . 47))))
-    (modify-frame-parameters nil specific-frame-parameters)))
-
-(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
-(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
-
-
-(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
-(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
-
-#+END_EXAMPLE
-
-
-* indent level
-#+begin_src emacs-lisp
 (setq org-indent-indentation-per-level 2)
-#+end_src
 
-* right-click
-[[https://oylenshpeegul.gitlab.io/blog/posts/20230129/][Context menus in Emacs 28! · oylenshpeegul]]
-
-[[http://yummymelon.com/devnull/customizing-the-emacs-context-menu.html][nfdn: Customizing the Emacs Context Menu]]
-
-#+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'context-menu-mode)
 (add-hook 'shell-mode-hook 'context-menu-mode)
 (add-hook 'dired-mode-hook 'context-menu-mode)
@@ -7576,137 +5118,8 @@ point with completion.
 
 ; (add-hook 'context-menu-functions #'my-context-menu)
 
-#+end_src
 
 
-* garbage collection
-[[/Users/jay/Dropbox/roam/emacs/20231030235900-garbage_collection_emacs.org][📄 Garbage Collection Emacs]]
-
-[[https://github.com/doomemacs/doomemacs/issues/3108][org-mode slow but fixed with garbage collection delay on mac · Issue #3108 · doomemacs/doomemacs · GitHub]]
-#+begin_src emacs-lisp
-#+end_src
-
-* remove filler words
-Dev:
-https://chat.openai.com/share/a0491b12-f038-4ba7-aa2a-e8a94073d4a8
-
-Philosophy:
-[[https://help.descript.com/hc/en-us/articles/10164806394509-Removing-filler-words#h_01H8Y6XQ6N0WYCXKSKZRRDT0QD][Removing filler words – Descript Help]]
-
-"mmm"	"mmm"	"mmm"
-"um"	"um"	"um"
-"uh"	"uh"	"uh"
-"hm"	"hm"	"hm"
- 	 	"but you know"
- 	 	"I guess"
- 	 	"I mean"
- 	 	"I suppose"
- 	 	"kind of"
- 	 	"like"
- 	 	"or something"
- 	 	"so"
- 	 	"sort of"
- 	 	"well"
- 	 	"you know"
- 	 	"you know what I mean"
- 	 	"you see"
-
-.............................................
-
-#+BEGIN_EXAMPLE emacs-lisp
-;; Configurable variable for filler word replacements.
-(defvar my-filler-word-replacements
-  ;; Each one is a full regex that accounts for punctuation/spaces:
-  '(("\\bkind of like\\b[[:punct:]]*\\s-*" . "")
-    ("\\byou know\\b[[:punct:]]*\\s-*"     . "")
-    ("\\bI mean\\b[[:punct:]]*\\s-*"       . "")
-    ;; ...
-    ("\\bok\\b" . "OK")
-    ("\\bOK\\b" . "OK")
-    ("\\b\\(um\\|umm\\|uh\\)\\b" . "")
-    (", right[.?!]\\b" . "."))
-  "A list of filler regex -> replacement pairs.")
-
-(defun remove-filler-words ()
-  "Remove filler words from the text and report what was removed."
-  (interactive)
-  (let ((counts (make-hash-table :test 'equal))
-        (report-string ""))
-    (save-excursion
-      (let ((case-fold-search t))  ; case-insensitive
-        (dolist (filler my-filler-word-replacements)
-          (goto-char (point-min))
-          (let ((count 0))
-            (while (re-search-forward (car filler) nil t)
-              (setq count (1+ count))
-              (replace-match (cdr filler)))
-            (when (> count 0)
-              (puthash (car filler) count counts))))))
-
-    (while (cleanup-doubled-punctuation))
-
-    ;; Construct the report string
-    (maphash
-     (lambda (key value)
-       (setq report-string
-             (concat report-string
-                     (format "Removed %d instances of %s.\n"
-                             value key))))
-     counts)
-    (if (string= report-string "")
-        (message "No filler words found.")
-      (message report-string))))
-
-(defun cleanup-doubled-punctuation ()
-  "Clean up doubled punctuation. Returns t if a replacement was made."
-  (let ((replaced nil))
-    (dolist (pair '((",," . ",")
-                    (".," . ".")
-                    (" , " . ", ")
-                    ("  " . " ")))
-      (goto-char (point-min))
-      (while (search-forward (car pair) nil t)
-        (replace-match (cdr pair))
-        (setq replaced t)))
-    replaced))
-
-(defconst duplicate-word-exclusions
-  '("that" "go" "no" "yes" "very" "really" "so" "chop" "please" "now" "stop" "sorry" "never" "ever" "more" "ha" "wait" "he" "oh" "help" "hi" "hello" "wow" "yum" "yo" "run" "bravo" "aha" "long" "always" "tap" "knock" "hurry" "bye" "love" "hate" "like" "way" "big" "best" "pretty" "well" "totally" "yeah" "blah")
-  "A list of words to exclude from duplicate removal.")
-
-(defun remove-duplicated-words ()
-  "Remove duplicated words, excluding certain grammatical duplicates.
-Performs case-insensitive matching to catch all variations."
-  (interactive)
-  (let ((removed-words (make-hash-table :test 'equal))
-        (report-string ""))
-    (save-excursion
-      (let ((case-fold-search t))  ; Enable case-insensitive matching
-        (goto-char (point-min))
-        (while (re-search-forward "\\b\\(\\w+\\)\\b\\s-+\\1\\b" nil t)
-          (let ((matched-word (match-string 1)))
-            (unless (member matched-word duplicate-word-exclusions)
-              (puthash matched-word (1+ (gethash matched-word removed-words 0)) removed-words)
-              (replace-match matched-word))))))
-    ;; Construct and display the report
-    (maphash (lambda (key value)
-               (setq report-string (concat report-string (format "\"%s\" %d times, " key value))))
-             removed-words)
-    (if (string= report-string "")
-        (message "No duplicated words removed.")
-      (message (concat "Removed duplicated words: " (substring report-string 0 -2) ".")))))
-
-(defalias 'remove-doubled-words 'remove-duplicated-words)
-
-(defun whittle ()
-  "Perform text cleanup by removing filler words and duplicated words.
-Note: The duplicate word removal is invoked only once to avoid redundancy."
-  (interactive)
-  (remove-filler-words)
-  (remove-duplicated-words))
-#+END_EXAMPLE
-* remove redundant bold tags from org headings
-#+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()
   "Remove redundant asterisks in Org-mode headings within the current buffer or selected region."
   (interactive)
@@ -7718,29 +5131,18 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
         (let ((stars (match-string 1))
               (heading (match-string 2)))
           (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading))))))))
-#+end_src
 
-* weeklies
-#+begin_src emacs-lisp
 (defun open-weeklies ()
   (interactive)
   (find-file "/Users/jay/Dropbox/roam/accountability/weeklies.txt")
   )
-#+end_src
 
-
-* split window left
-#+begin_src emacs-lisp
 (defun split-window-left (&optional size)
  "Like split-window-right, with selected window on the right."
  (interactive "P")
  (split-window-right size)
  (other-window 1))
 
-#+end_src
-
-* export to PDF and prepend cover page
-#+begin_src emacs-lisp
 (defun export-to-pdf-and-prepend-cover-page ()
  "Export the current Org document to PDF and prepend a cover page located in the same directory. Then open the resulting PDF."
  (interactive)
@@ -7762,19 +5164,8 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
    ((string-equal system-type "windows-nt") ; Windows
    (shell-command (format "start %s" (shell-quote-argument final-pdf)))))))
 
-#+end_src
-
-* org-mode security vulnerability
-[[https://list.orgmode.org/87o7b3eczr.fsf@bzg.fr/T/#t][[ANN] Emergency bugfix release: Org mode 9.6.23]]
-
-Only required if Emacs < 29.3.
-
-#+begin_src emacs-lisp
 ;; (setq org-preview-latex-default-process 'verbatim)
-#+end_src
 
-* detect and open street addresses
-#+begin_src emacs-lisp
 (defun open-labeled-address-in-google-maps ()
   "Find and open a labeled address in Google Maps, displaying the address in the minibuffer."
   (interactive)
@@ -7799,11 +5190,7 @@ Only required if Emacs < 29.3.
                                       (url-hexify-string address))))
               (message "ZIP code not found after address label!")))
         (message "No address label found!")))))
-#+end_src
 
-* org-transclusion
-** org-transclusion-config
-#+begin_src emacs-lisp
 (use-package org-transclusion
   :config
   (setq org-transclusion-exclude-elements '(property-drawer))
@@ -7828,10 +5215,6 @@ Only required if Emacs < 29.3.
 
 (load "/Users/jay/emacs/external-packages/org-transclusion-power-pack/org-transclusion-power-pack.el")
 
-#+end_src
-
-* flycheck
-#+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
   :init
@@ -7839,20 +5222,9 @@ Only required if Emacs < 29.3.
   :config
   ;; Turn off Flycheck in Org mode:
   (add-hook 'org-mode-hook (lambda () (flycheck-mode -1))))
-#+END_SRC
 
-** flycheck-mode-line
-#+begin_src emacs-lisp
 (setq flycheck-mode-line nil)
 
-#+end_src
-
-
-
-
-
-* smartparens fix
-#+begin_src emacs-lisp
 ;; smartparens configuration
 (use-package smartparens-config
 :defer t)
@@ -7870,10 +5242,7 @@ Only required if Emacs < 29.3.
 
 ;; Disable smartparens in web-mode
 (add-hook 'web-mode-hook 'turn-off-smartparens-mode)
-#+end_src
 
-* pasteboard-copy-large-file
-#+begin_src emacs-lisp
 (defun pasteboard-copy-large-file ()
  "Copy the current region to the pasteboard using a temporary file."
  (interactive)
@@ -7885,11 +5254,7 @@ Only required if Emacs < 29.3.
   (delete-file temp-file)))
 
 (global-set-key (kbd "C-c C-c") 'pasteboard-copy)
-#+end_src
 
-* Make Emacs use MacOS Trash instead of rm
-When deleting a file, don't use vc-delete-file
-#+begin_src emacs-lisp
 (defun crux-delete-file-and-buffer ()
  "Kill the current buffer and deletes the file it is visiting."
  (interactive)
@@ -7902,10 +5267,7 @@ When deleting a file, don't use vc-delete-file
      (call-process "/opt/homebrew/Cellar/trash/0.9.2/bin/trash" nil nil nil filename)
      (message "Moved file %s to your MacOS Trash 🗑️" filename)
      (kill-buffer))))))
-#+end_src
 
-* query replace all files in current directory
-#+begin_src emacs-lisp
 (defun replace-in-all-files-in-current-directory (from-string to-string &optional regexp-flag)
   "Replace FROM-STRING with TO-STRING in every file under `default-directory'.
 
@@ -7964,10 +5326,7 @@ the buffer, and kills it when done."
 ;; (add-hook 'dired-mode-hook
 ;;           (lambda ()
 ;;             (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
-#+end_src
 
-* fix buffers
-#+begin_src emacs-lisp
 (setq split-height-threshold nil)
 (setq split-width-threshold 0)
 
@@ -7987,11 +5346,6 @@ the buffer, and kills it when done."
 
 (setq max-lisp-eval-depth 10000)
 
-
-#+end_src
-
-* paste and copy all
-#+begin_src emacs-lisp
 (defun expand-outreach-snippet ()
  "Expand the yasnippet with key 'outreach'."
  (interactive)
@@ -8042,17 +5396,10 @@ the buffer, and kills it when done."
           end tell"))))
 
 (define-key key-minor-mode-map (kbd "s-k e m") 'expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
-#+end_SRC
 
-* suppress warnings
-#+begin_src emacs-lisp
 (with-eval-after-load 'yasnippet
  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
-#+end_src
-
-* replace add em dashes
-#+begin_src emacs-lisp
 (defun replace-dashes-with-em-dashes ()
   "Replace all occurrences of '---' or '--' with em dashes in the current buffer."
   (interactive)
@@ -8065,15 +5412,7 @@ the buffer, and kills it when done."
     (goto-char (point-min))
     (while (search-forward "--" nil t)
       (replace-match "—" nil t))))
-#+end_src
 
-
-* use shell environment
-** Set Path environment
-I duplicated the below to /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
-and now it works. Don't understand why it was getting overwritten before, but whatever, it's working now.
-
-#+begin_src emacs-lisp
 ;; Define a list of additional paths
 (defvar my-additional-paths
   '("/usr/local/bin"
@@ -8092,12 +5431,22 @@ and now it works. Don't understand why it was getting overwritten before, but wh
 
 ;; Rest of your configuration
 (message "Final PATH: %s" (getenv "PATH"))
-#+end_src
 
-* timestamp export format
-Remove the remove <> surrounding timestamps
+(defun org-to-html-to-clipboard-hardcoded ()
+  "Convert hardcoded org-mode text to HTML and copy it to the MacOS clipboard as HTML."
+  (interactive)
+  (let* ((org-content "Feel free to suggest some times that work for you or book time with me directly [[https://calendar.app.google/aSu61Nzz3PmxeYVaA][here]].")
+         (html-content (org-export-string-as org-content 'html t))
+         (temp-file (make-temp-file "clipboard-html-" nil ".html")))
+    ;; Write the HTML content to a temporary file
+    (with-temp-file temp-file
+      (insert html-content))
+    ;; Use AppleScript to read the file and set the clipboard
+    (let ((script (format "set the clipboard to (read (POSIX file \"%s\")) as «class HTML»" temp-file)))
+      (do-applescript script))
+    ;; Delete the temporary file
+    (delete-file temp-file)))
 
-#+BEGIN_SRC emacs-lisp
 (add-to-list 'org-export-filter-timestamp-functions
        #'endless/filter-timestamp)
 (defun endless/filter-timestamp (trans back _comm)
@@ -8107,24 +5456,11 @@ Remove the remove <> surrounding timestamps
    (replace-regexp-in-string "&[lg]t;" "" trans))
   (`latex
    (replace-regexp-in-string "[<>]" "" trans))))
-#+END_SRC
 
-we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
-
-#+BEGIN_SRC emacs-lisp
 (setq-default org-display-custom-times t)
 ;; Before you ask: No, removing the <> here doesn't work.
 (setq org-time-stamp-custom-formats '("%B %d, %Y" . "%d/%m/%Y %a %H:%M"))
-#+END_SRC
 
-Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs - Endless Parentheses]]
-
-Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
-
-
-
-* org element parser error
-#+begin_src emacs-lisp
 (setq debug-on-message "org-element--cache: Added org-data parent to non-headline element")
 
 (with-eval-after-load 'smartparens
@@ -8133,19 +5469,9 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 
 ; or more drastically:
 ; (remove-hook 'post-command-hook 'sp-show--pair-function)
-#+end_src
 
-* top level heading
-What This Does:
-This makes level 1 Org headings (**) export as <h1> instead of <h2>.
-The document title (from #+TITLE: or the filename) remains in the <title> tag but is not included as an additional <h1>.
-
-#+begin_src emacs-lisp
 (setq org-html-toplevel-hlevel 1)
-#+end_src
 
-* org config files mode
-#+begin_src emacs-lisp
 (define-minor-mode my-org-config-mode
   "Minor mode for my custom Org file config."
   :init-value nil
@@ -8160,28 +5486,14 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
     (kill-local-variable 'org-config-files-local-mode)))
 
 (provide 'my-org-config-mode)
-#+end_src
 
-* Info
-** Open custom Emacs manual
-#+BEGIN_SRC emacs-lisp
 (defun jay-info-emacs-manual ()
   "Open the custom-built Emacs info manual."
   (interactive)
   (info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info"))
-#+END_SRC
 
-* Local Variables & The End
-
-
-* Org element errors
-
-#+begin_src emacs-lisp
 ;; (remove-hook 'before-save-hook #'org-roam-link-replace-all)
-#+end_src
 
-* isearch-forward-word-at-point
-#+begin_src emacs-lisp
 (defun isearch-forward-word-at-point ()
   "Search forward for the next occurrence of the word at point.
 If invoked again, move to the next instance of the word."
@@ -8194,15 +5506,8 @@ If invoked again, move to the next instance of the word."
         (progn
           (isearch-forward nil 1)
           (isearch-yank-string word))))))
-#+end_src
 
-* Jay Diary 
-#+BEGIN_SRC emacs-lisp
 (require 'timeline)
-#+END_SRC
-
-* Markdown customizations
-#+begin_src emacs-lisp
 
 ;;; Markdown and Calendar Setup
 
@@ -8341,116 +5646,7 @@ Indents each line by 2*(heading-level-1) spaces if inside a heading."
   (if (outline-on-heading-p)
       (outline-toggle-children)
     (outline-back-to-heading)))
-#+end_src
 
-* Ricing
-[[https://lucidmanager.org/productivity/ricing-org-mode/][Ricing Org Mode: A Beautiful Writing Environment]]
-
-#+BEGIN_EXAMPLE emacs-lisp
-(load "/Users/jaydixit/emacs/emacs-settings/org-visual-style.el")
-#+END_EXAMPLE
-
-
-* A hacky way to not clobber final bullet of buffer in bulleted lists on save
-#+BEGIN_EXAMPLE emacs-lisp
-
-(defun cleanup-buffer-safe ()
- "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
- (interactive)
- (untabify-buffer)
- ;; Replace the standard delete-trailing-whitespace with our custom version
- (my-delete-trailing-whitespace-except-final-and-point-line)
- (set-buffer-file-coding-system 'utf-8))
-
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-region (point-min) (point-max)))
-
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-
-;; Also update the before-save-hook if you have it
-(defun my-before-save-hook ()
-  (unless (eq major-mode 'markdown-mode) ;; Optional: exclude certain modes
-    (my-delete-trailing-whitespace-except-final-and-point-line)))
-
-(defun my-delete-trailing-whitespace-except-final-and-point-line ()
-  "Delete trailing whitespace but preserve:
-1) A single space at the very end of the buffer (if it was there),
-2) A single trailing space on the line where `point' is, if it existed."
-  (interactive)
-  (save-excursion
-    (let* ((orig-point (point))
-           (keep-final-space
-            ;; Was there exactly one space at the end of the buffer?
-            (save-excursion
-              (goto-char (point-max))
-              (and (eq (char-before) ?\s)
-                   (or (bobp) (not (eq (char-before (1- (point))) ?\s))))))
-
-           (keep-point-line-space
-            ;; If point is at a line that ends with exactly one space,
-            ;; remember to restore it. (Doesn't matter if point is physically at the end,
-            ;; as long as the line itself ended with one space.)
-            (save-excursion
-              (end-of-line)
-              (and (> (point) (line-beginning-position))
-                   (eq (char-before) ?\s)
-                   (or (bolp) (not (eq (char-before (1- (point))) ?\s))))
-              )))
-
-      ;; Remove all trailing whitespace in the buffer
-      (delete-trailing-whitespace)
-
-      ;; Restore final space if it was there
-      (when keep-final-space
-        (goto-char (point-max))
-        (unless (eq (char-before) ?\s)
-          (insert " ")))
-
-      ;; Restore a single space at the end of the line where point is
-      ;; if it previously ended with exactly one space.
-      (when keep-point-line-space
-        (goto-char orig-point)
-        (end-of-line)
-        (unless (eq (char-before) ?\s)
-          (insert " "))))))
-
-(add-hook 'before-save-hook 'my-before-save-hook)
-#+END_EXAMPLE
-
-* Date and time
-
-** Better time-stamps in org-export
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'org-export-filter-timestamp-functions
-             #'endless/filter-timestamp)
-(defun endless/filter-timestamp (trans back _comm)
-  "Remove <> around time-stamps."
-  (pcase back
-    ((or `jekyll `html)
-     (replace-regexp-in-string "&[lg]t;" "" trans))
-    (`latex
-     (replace-regexp-in-string "[<>]" "" trans))))
-
-(setq-default org-display-custom-times t)
-;;; Before you ask: No, removing the <> here doesn't work.
-(setq org-time-stamp-custom-formats
-   '("<%A %b %e, %Y>" . "<%d/%m/%y %a %H:%M>"))
-
-#+END_EXAMPLE
-
-** Org-mode Timestamp Format Helper
- - Defines global custom timestamp formats for Org-mode files.
- - Provides an interactive command to insert timestamp format customizations locally.
- - Offers two timestamp styles: a concise format and a detailed format.
- - Inserts file-local variables at buffer end, enabling custom date display per file.
-
-#+begin_src emacs-lisp
 (defun jay/org-export-date-format-chooser ()
   "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
   (interactive)
@@ -8487,22 +5683,7 @@ Including indent-buffer, which should not be called automatically on save."
         (goto-char (point-max))
         (insert (concat "\n" file-local)))
       (message "Inserted file-local variable for date format '%s'" format-string))))
-#+end_src
 
-** date/time format chooser
-|--------------+--------------------------+--------------|
-| Name         | Example                  | Format       |
-|--------------+--------------------------+--------------|
-| U.S. short   | 12/25                    | %m/%d        |
-| U.S. numeric | 12/25/2025               | %m/%d/%Y     |
-| ISO standard | 2025-12-25               | %Y-%m-%d     |
-| Short        | Dec 25, 2025             | %b %d, %Y    |
-| Medium       | Mon Dec 25, 2025         | %a %b %d, %Y |
-| Full         | Monday Dec 25, 2025      | %A %b %d, %Y |
-| Long         | Monday December 25, 2025 | %A %B %d, %Y |
-|--------------+--------------------------+--------------|
-
-#+begin_src emacs-lisp
 ;; Stop org-expiry from stamping a CREATED property on new headings
 (setq org-expiry-insert-created nil)
 (remove-hook 'org-insert-heading-hook #'org-expiry-insert-created)
@@ -8561,44 +5742,12 @@ time as \"7:00pm\" when the timestamp includes a clock."
         (insert "\n" block)))
     (message "Updated %s format%s. Block copied (M-y to yank)."
              target (if (string= target "both") "s" ""))))
-#+end_src
 
-
-* Open in Safari
-For banks etc that require text message verification, since Safari integrates with Messages and Chrome doesn't.
-
-Example link format:
-- [[safari:https://www.equifax.com/personal/help/place-lift-remove-security-freeze/][Equifax]]
-- [[safari:https://www.experian.com/blogs/ask-experian/how-to-add-a-security-freeze-to-your-credit-file/][Experian]]
-- [[safari:https://www.transunion.com/credit-freeze/credit-freeze-faq#adding-freeze-0][TransUnion]]
-
-To insert link from chrome in Safari link format:
-c-u s-L
-
-
-#+begin_src emacs-lisp
 (org-link-set-parameters "safari"
                          :follow (lambda (url)
                                    (start-process "open-safari" nil "open" "-a" "Safari" url))
                          :export (lambda (url description backend)
                                    (format "<a href=\"%s\">%s</a>" url (or description url))))
-#+end_src
-
-* org-roam fail gracefully
-#+BEGIN_EXAMPLE emacs-lisp
-(condition-case err
-    (progn
-      (org-roam-setup)
-      (org-roam-db-autosync-enable))
-  (error
-   (warn "Org-roam setup failed: %s" (error-message-string err))))
-
-#+END_EXAMPLE
-
-
-* Trust local variables
-
-#+begin_src emacs-lisp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Allow local variables to be set without prompting:
@@ -8633,10 +5782,6 @@ c-u s-L
       '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#+end_src
-
-* fix footnotes
-#+begin_src emacs-lisp
 (defun jay/fix-org-footnotes ()
   "Convert ‘([[fn:: URL][LABEL]])’ → ‘[fn:: [[URL][LABEL]]]’ in the
 current Org buffer."
@@ -8647,56 +5792,17 @@ current Org buffer."
     (let ((re "(\\[\\[fn::\\s-*\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]\\))"))
       (while (re-search-forward re nil t)
         (replace-match "[fn:: [[\\1][\\2]]]" t nil)))))
-#+end_src
 
-* Trying to fix Roam startup errors
-#+begin_src emacs-lisp
 (setq debug-on-quit nil)
 (add-to-list 'debug-ignored-errors 'minibuffer-quit)
 
 (add-to-list 'debug-ignored-errors 'outline-before-first-heading)
 
-#+end_src
-
-* C-g to escape
-#+begin_src emacs-lisp
 ;; Let C-g always abort in minibuffer, even under Evil
 (with-eval-after-load 'evil
   (define-key minibuffer-local-map (kbd "C-g") #'keyboard-quit)
   (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit)) ; optional
-#+end_src
 
-* Org-roam debugging
-#+BEGIN_EXAMPLE emacs-lisp
-(let* ((dir "/Users/jay/Dropbox/roam-hold/book/")      ; folder to scan
-       (log "/Users/jay/Downloads/org-roam-parse.log") ; progress file
-       (timeout 8))                                    ; seconds per file
-  ;; --- wipe or create the log file ---
-  (when (file-exists-p log)
-    (delete-file log))
-  (write-region "" nil log nil 'silent)                ; touch empty file
-
-  ;; --- scan each .org file ---
-  (dolist (f (directory-files-recursively dir "\\.org$"))
-    (write-region (format "START %s\n" f) nil log 'append 'silent)
-    (with-temp-buffer
-      (insert-file-contents f)
-      (let ((status
-             (condition-case err
-                 (with-timeout (timeout 'timeout)
-                   (org-element-parse-buffer)
-                   'done)       ; parsed in time
-               (error err))))   ; Lisp error
-        (write-region
-         (format "%s %s\n"
-                 (if (eq status 'done) "DONE" "ERR")
-                 (if (eq status 'done) f status))
-         nil log 'append 'silent))))
-  (write-region "SCAN-COMPLETE\n" nil log 'append 'silent)
-  (message "Finished --- inspect %s" log))
-#+END_EXAMPLE
-
-#+begin_src emacs-lisp
 (defun jay/debug-find-corrupted-file (&optional file)
   "Prompt for an Org file (default ~/Downloads) and try to parse it.
 
@@ -8784,33 +5890,6 @@ Defaults: MAX-INDENT = 40 spaces, MAX-LEN = 800 chars."
                      (line-number-at-pos) indent len)))
         (forward-line 1)))))
 
-#+end_src
-
-That little when-let is not something you normally keep sitting in your init file---it's a throw-away helper you run once (or whenever you want to hunt down the next corrupt file).
-Pick whichever workflow feels most natural:
-
-Goal Where / how to run it Steps
-One-off check right now M-: (eval-expression) - Hit M-: ↵  - Paste the two-line form - RET
-Run from scratch *scratch* buffer - Open *scratch*  (C-x b *scratch*)- Paste the formPut point after it and C-j (or select the region and C-M-x)
-Reusable command Add a wrapper to your config elisp (defun jay/scan-roam-and-open-first-bad () (interactive) (when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam"))) (find-file (caar bad))))  Restart (or M-x eval-buffer) and invoke with M-x jay/scan-roam-and-open-first-bad.  Bind it to a key if you like.
-Automatic run at startup after-init-hook (only if you really want that) elisp (add-hook 'after-init-hook (lambda () (when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam"))) (find-file (caar bad)))))
-
-Most people just evaluate it ad-hoc (first or second row).
-If you turn it into a command (third row), you keep your init file tidy and gain an easy way to re-run the check whenever you suspect the parser is choking again.
-
-Let me know if you'd like a key-binding or projectile-style transient menu for it!
-
-It returns a list, so you can later jump to the first culprit:
-
-#+begin_example emacs-lisp
-(when-let ((bad (jay/debug-scan-org-tree "~/Dropbox/roam")))
-  (find-file (caar bad)))   ;; opens the first offending file
-
-#+end_example
-
-* Amx
-#+begin_src emacs-lisp
-
 (use-package amx
   :ensure t
   :init
@@ -8824,11 +5903,7 @@ It returns a list, so you can later jump to the first culprit:
 (setq amx-save-file "/Users/jay/emacs/local-emacs-config/amx-items")
 (setq package-quickstart-file
      "/Users/jay/emacs/local-emacs-config/package-quickstart.el")
-#+end_src
 
-* Fix minibuffer
-
-#+begin_src emacs-lisp
 ;; (setq debug-on-quit nil)
 
 (dolist (map '(minibuffer-local-map
@@ -8840,16 +5915,9 @@ It returns a list, so you can later jump to the first culprit:
 ))      ; drop this line if not using Ivy
   (when (boundp map)
     (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit)))
-#+end_src
 
-* Prevent org-roam parsing crashes
-#+begin_src emacs-lisp
 (setq org-element--cache-self-verify 'backtrace) ; default is nil
 
-#+end_src
-
-* Refresh Org caches after Dropbox sync
-#+begin_src emacs-lisp
 (require 'seq)
 (require 'subr-x)
 
@@ -8877,10 +5945,7 @@ It returns a list, so you can later jump to the first culprit:
           (org-element-cache-reset 'force))))))
 
 (add-hook 'focus-in-hook #'jay/org-reset-cache-on-focus)
-#+end_src
 
-* Fix indent error
-#+begin_src emacs-lisp
 ;; ────────────────────────────────────────────────────────────
 ;; Guard org-indent's idle timer against rare parser errors
 ;; ────────────────────────────────────────────────────────────
@@ -8897,31 +5962,17 @@ It returns a list, so you can later jump to the first culprit:
   (advice-add 'org-indent-initialize-agent
               :around #'my/org-indent-safe-agent))
 
-#+end_src
-
-* Disable annoying cache warnings
-#+begin_src emacs-lisp
 (setq org-element-cache-diagnostic-output nil)
-#+end_src
 
-* Display emoji correctly
-#+begin_src emacs-lisp
 (run-with-timer 1 nil
   (lambda ()
     (when (display-graphic-p)
       (set-fontset-font t 'emoji (font-spec :family "Apple Color Emoji") nil 'prepend)
       (set-fontset-font t 'unicode (font-spec :family "Apple Color Emoji") nil 'prepend))))
-#+end_src
 
-* open faster
-#+begin_src emacs-lisp
 ;; Speed up macOS open events
 (setq ns-pop-up-frames nil)  ; Don't create new frames
 
-#+end_src
-
-* silence warnings
-#+begin_src emacs-lisp
 ;; Native comp quality-of-life
 (setq native-comp-async-report-warnings-errors 'silent  ; hide noisy byte-native diffs
       comp-deferred-compilation           t           ; JIT-compile packages in the background
@@ -8931,10 +5982,6 @@ It returns a list, so you can later jump to the first culprit:
 
 (setq native-comp-jit-compilation t
 package-native-compile    t)
-#+end_src
-
-* Panic button
-#+begin_src emacs-lisp
 
 ;;; --- Emergency exit --------------------------------------------------------
 ;; Panic button: C-c C-! to save and exit
@@ -8942,15 +5989,9 @@ package-native-compile    t)
                 (lambda () (interactive)
                   (save-some-buffers t)
                   (kill-emacs)))
-#+end_src
 
-* debug on error
-#+begin_src emacs-lisp
 (setq debug-on-error 1)
-#+end_src
 
-* quickstart
-#+begin_src emacs-lisp
 (defun jd/maintain-quickstart ()
   "Regenerate `package-quickstart.el' whenever package list changes."
   (let* ((qs-file package-quickstart-file)
@@ -8971,15 +6012,9 @@ package-native-compile    t)
             (lambda (&rest _) (package-quickstart-refresh)))
 (advice-add 'package-delete :after
             (lambda (&rest _) (package-quickstart-refresh)))
-#+end_src
 
-* counsel
-#+begin_src emacs-lisp
 (use-package counsel :defer t)
-#+end_src
 
-* convert footnotes to org format
-#+begin_src emacs-lisp
 ;;; footnotes--convert-markdown-footnotes-to-org.el --- convert reference footnotes → Org  -*- lexical-binding: t; -*-
 ;; Author: you
 ;; Usage: mark region or use whole buffer, then  M-x footnotes--convert-markdown-footnotes-to-org
@@ -9042,10 +6077,7 @@ process the whole buffer."
     (message "Markdown reference footnotes → Org footnotes complete.")))
 (provide 'footnotes--convert-markdown-footnotes-to-org)
 ;;; footnotes--convert-markdown-footnotes-to-org.el ends here
-#+end_src
 
-* line breaks
-#+begin_src emacs-lisp
 (defun asterisk-to-dash ()
   "Replace every newline-star sequence with newline-dash in the
 current buffer.  Safe (save-excursion) and repeatable."
@@ -9114,12 +6146,7 @@ current buffer.  Safe (save-excursion) and repeatable."
             (goto-char (match-end 0)))))
 
       (message "Replaced %d space-hyphen-space patterns" count))))
-#+end_src
 
-* ChatGPT export
-
-** export bare link images
-#+begin_src emacs-lisp
 (defun my/org-wrap-bare-image-paths (_backend)
   "Turn any line that consists only of a pathname ending in
    .png/.jpg/.jpeg/.gif into  [[file:...]].
@@ -9140,9 +6167,6 @@ current buffer.  Safe (save-excursion) and repeatable."
 
 (add-hook 'org-export-before-processing-hook #'my/org-wrap-bare-image-paths)
 
-#+end_src
-
-#+begin_src emacs-lisp
 (defun my/org-insert-image-links-from-dir (dir &optional as-bare-paths)
   "Insert Org links for every image in DIR.
 If AS-BARE-PATHS is non-nil (or called with a prefix key),
@@ -9165,10 +6189,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
                   (format "[[file:%s]]" rel)))
         (insert "\n")))))
 
-#+end_src
-
-** slugs
-#+begin_src emacs-lisp
 ;;; --- batch exporter: one HTML file per heading -----------------------------
 
 (defun my/slugify (s)
@@ -9213,24 +6233,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
         (org-export-to-file 'html (expand-file-name "index.html" base-dir))))
     (message "✅ Exported %d pages + index" (length index-links))))
 
-#+end_src
-
-* Emacs server
-
-** fullscreen on each instance
-#+BEGIN_EXAMPLE emacs-lisp
-;; For full screen instead
-(add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (select-frame frame)
-            (toggle-frame-fullscreen)
-(org-roam-dailies-goto-today)
-))
-
-#+END_EXAMPLE
-
-** silence warnings
-#+begin_src emacs-lisp
 (with-eval-after-load 'info
   (set-face-attribute 'info-index-match nil
                       :background "#3a3a3a"
@@ -9248,11 +6250,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
               :around (lambda (orig &rest args)
                         (ignore-errors (apply orig args)))))
 
-#+end_src
-
-* Astro
-
-#+begin_src emacs-lisp
 ;; Core major-mode foundation
 (use-package web-mode
   :ensure t)
@@ -9294,17 +6291,7 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 (add-hook 'before-save-hook #'my/astro-format-before-save)
 
 ;; overwrite mdx files
-(setq revert-without-query '(".*\\.mdx$")) 
-#+end_src
-------------------------------------------------------------------
-Prerequisites outside Emacs (run in your project or globally):
-  npm install -g @astrojs/language-server      # or: npm i -D @astrojs/language-server
-  npm install -D typescript                    # if you didn't enable TS at project creation
-------------------------------------------------------------------
-
-** ChatGPT conversion
-
-#+begin_src emacs-lisp
+(setq revert-without-query '(".*\\.mdx$"))
 
 (defun convert-markdown-to-org-code-blocks-simple ()
   "Simple version that replaces based on presence/absence of language specifier."
@@ -9330,10 +6317,7 @@ Prerequisites outside Emacs (run in your project or globally):
 ;; (global-set-key (kbd "C-c m o") 'convert-markdown-to-org-code-blocks)
 ;; (global-set-key (kbd "C-c m s") 'convert-markdown-to-org-code-blocks-simple)
 ;; (global-set-key (kbd "C-c m S") 'convert-markdown-to-org-code-blocks-stateful)
-#+end_src
 
-* Notch Management
-#+begin_src emacs-lisp
 ;; Display-aware tab bar management to hide hardware notches (built-in or external).
 (defgroup jay/display nil
   "Display detection helpers for Jay's Emacs configuration."
@@ -9480,71 +6464,12 @@ This updates the running Emacs session; use Customize to persist the change."
   (run-with-timer 1 nil 'jay/setup-display-aware-tab-bar))
 
 
-#+end_src
 
-* non active
-#+begin_example emacs-lisp
-;; Modified fullscreen toggle that updates tab bar
-(defun jay/toggle-fullscreen ()
-  "Toggle fullscreen mode with automatic tab bar management."
-  (interactive)
-  (let ((fullscreen-p (frame-parameter nil 'fullscreen)))
-    (set-frame-parameter
-     nil 'fullscreen
-     (if fullscreen-p nil 'fullboth))
-    ;; Update tab bar after changing fullscreen state
-    (run-with-timer 0.1 nil 'jay/update-tab-bar-for-display)
-    ;; Adjust font size if available
-    (when (fboundp 'jay/adjust-font-size)
-      (jay/adjust-font-size))))
-
-;; Debug function to check current status
-(defun jay/debug-display-detection ()
-  "Show current display detection status."
-  (interactive)
-  (let* ((on-notch-display (jay/on-notch-display-p))
-         (pos (jay/get-frame-position))
-         (displays (display-monitor-attributes-list))
-         (display-info (mapconcat
-                       (lambda (d)
-                         (format "%s: %s"
-                                 (or (cdr (assoc 'name d)) "Unknown")
-                                 (cdr (assoc 'geometry d))))
-                       displays ", ")))
-    (message "🔍 Position: %s | Notch display: %s | Monitors in residence: %s"
-             pos (if on-notch-display "Indeed" "I'm afraid not") display-info)))
-
-#+end_example
-
-* debug save place
-#+begin_src emacs-lisp
-
-#+end_src
-
-* org-supertag
-[[https://github.com/yibie/org-supertag][yibie/org-supertag: Make tag system great again, based on org-mode.]]
-
-#+begin_example emacs-lisp
-(use-package org-supertag
-  :load-path ("~/emacs/emacs-settings/org-supertag") ; points at the sub-dir
-  :after org
-  :init
-  ;; directory you want SimTag to watch
-  (setq org-supertag-sync-directories '("~/Dropbox/roam"))
-  :config
-  (org-supertag-setup))
-#+end_example
-
-* hunspell exclude large buffers
-#+begin_src emacs-lisp
 (defun my/skip-flyspell-on-large-buffers ()
   (when (> (buffer-size) (* 1 1024 1024)) ; >1 MB
     (flyspell-mode -1)))
 (add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers)
-#+end_src
 
-* cape emoji
-#+begin_src emacs-lisp
 (use-package cape
   :defer
   :init
@@ -9565,40 +6490,14 @@ This updates the running Emacs session; use Customize to persist the change."
             :filter-args (lambda (args)
                            (setcar args (my/emoji-tonify (car args)))
                            args))
-#+end_src
 
-* Org web tools
-[[https://github.com/alphapapa/org-web-tools][alphapapa/org-web-tools: View, capture, and archive Web pages in Org-mode]]
-
-#+BEGIN_EXAMPLE emacs-lisp
-
-(require 'org-web-tools)
-
-;; strip out images
-(with-eval-after-load 'org-web-tools
-  (add-to-list 'org-web-tools-pandoc-replacements
-               '("\\[\\[data:image/[^]]+\\]\\(?:\\[[^]]*\\]\\)?\\]" . "")
-               t))
-
-  ;; Remove internal anchor links (like [[#installation]])
-  (add-to-list 'org-web-tools-pandoc-replacements
-               '("\\[\\[#[^]]+\\]\\(?:\\[[^]]*\\]\\)?\\]" . "")
-               t))
-#+END_EXAMPLE
-
-* ox-astro
-#+begin_src emacs-lisp
 (setq org-astro-known-posts-folders
       '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
         ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
         ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
 
         ("kanban" . "/Users/jay/Library/CloudStorage/Dropbox/github/rising-action-kanban/content")
-)) 
-#+end_src
-
-* Kill unwanted buffers on startup
-#+begin_src emacs-lisp
+))
 
 ;; Completely disable native compilation warnings/errors logging
 (setq native-comp-async-report-warnings-errors 'silent) 
@@ -9614,12 +6513,8 @@ This updates the running Emacs session; use Customize to persist the change."
           (lambda ()
             (dolist (buf my-auto-kill-buffers)
               (when (get-buffer buf)
-                (kill-buffer buf))))) 
+                (kill-buffer buf)))))
 
-#+end_src
-
-* org-srs
-#+begin_src emacs-lisp
 ;; Then configure
 (use-package fsrs
   :ensure nil  ;; already installed via package-vc
@@ -9633,59 +6528,11 @@ This updates the running Emacs session; use Customize to persist the change."
          ("<f5>" . org-srs-review-rate-easy)
          ("<f6>" . org-srs-review-rate-good)
          ("<f7>" . org-srs-review-rate-hard)
-         ("<f8>" . org-srs-review-rate-again))) 
+         ("<f8>" . org-srs-review-rate-again)))
 
-#+end_src
-
-* display online images
-** 1
-Display online images in new buffer on return
-
-#+begin_src emacs-lisp
 (use-package url
   :defer)
 
-#+end_src
-
-** 2
-[[https://emacs.stackexchange.com/questions/42281/org-mode-is-it-possible-to-display-online-images][Org mode: is it possible to display ONLINE images? - Emacs Stack Exchange]]
-
-And again we have a use-case for image data not stored on harddisk. (The other two use-cases are [[https://emacs.stackexchange.com/questions/41544/is-it-possible-to-include-a-base64-image-in-org-file][base64 encoded images in org buffers]] and [[https://emacs.stackexchange.com/q/38098/2370][displaying previews of youtube videos]].)
-
-Get [[https://github.com/TobiasZawada/org-yt][~org-yt~]] and paste the following elisp code into your [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][init-file]].
-
-After evaluating your init-file you can use links analog to the example:
-
-~[[imghttp://tn-home.de/Pic/tn-home.png]]~
-
-
-
-#+BEGIN_EXAMPLE emacs-lisp
-(autoload 'org-yt-follow "org-yt")
-
-(defun org-image-link (protocol link _description)
- "Interpret LINK as base64-encoded image data."
- (cl-assert (string-match "\\`img" protocol) nil
-       "Expected protocol type starting with img")
- (let ((buf (url-retrieve-synchronously (concat (substring protocol 3) ":" link))))
-  (cl-assert buf nil
-        "Download of image \"%s\" failed." link)
-  (with-current-buffer buf
-   (goto-char (point-min))
-   (re-search-forward "\r?\n\r?\n")
-   (buffer-substring-no-properties (point) (point-max)))))
-
-(org-link-set-parameters
- "imghttp"
- :image-data-fun #'org-image-link)
-
-(org-link-set-parameters
- "imghttps"
- :image-data-fun #'org-image-link)
-#+END_EXAMPLE
-
-* org astro
-#+begin_src emacs-lisp
 (add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
 (use-package ox-astro
   :load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
@@ -9704,11 +6551,7 @@ After evaluating your init-file you can use links analog to the example:
         ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"))
         ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
                       :preserve-folder-structure t))))
-#+end_src
 
-* org-roam multiple databases
-
-#+begin_src emacs-lisp
 ;; --- Org-roam contexts --- --- -- --- -- --- -- --- -- --- -- --- -- --- --
 
 (defun jay/org-roam--use (dir)
@@ -9728,16 +6571,10 @@ After evaluating your init-file you can use links analog to the example:
 (defun jay/org-roam-use-life ()
   "Life archive."
   (interactive)
-  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/")) 
-#+end_src
+  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/"))
 
-* ox-json
-#+begin_src emacs-lisp
 (require 'ox-json)
-#+end_src
 
-* auto-revert mode
-#+begin_src emacs-lisp
 ;; Auto-reload files changed on disk
 (global-auto-revert-mode 1)
 
@@ -9745,11 +6582,8 @@ After evaluating your init-file you can use links analog to the example:
 (setq auto-revert-use-notify t            ; use file system events when possible
       auto-revert-interval 1              ; fallback poll interval (seconds)
       auto-revert-verbose nil             ; no echo area messages
-      global-auto-revert-non-file-buffers t) ; also refresh Dired, etc. 
-#+end_src
+      global-auto-revert-non-file-buffers t) ; also refresh Dired, etc.
 
-* kill buffers 
-#+begin_src emacs-lisp
 (defun kill-unwanted-buffers ()
   "Kill common unwanted buffers like *spacemacs*, *info*, and *Async-native-compile-log*."
   (interactive)
@@ -9757,16 +6591,10 @@ After evaluating your init-file you can use links analog to the example:
     (when (get-buffer buf)
       (kill-buffer buf))))
 
-(add-hook 'emacs-startup-hook #'kill-unwanted-buffers) 
-#+end_src
+(add-hook 'emacs-startup-hook #'kill-unwanted-buffers)
 
-* LaTeX subtitles
-#+begin_src emacs-lisp
-#+end_src
 
-* Info Mode
-** Custom Keybindings
-#+BEGIN_SRC emacs-lisp
+
 (with-eval-after-load 'info
   (define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
   (define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
@@ -9788,14 +6616,3 @@ After evaluating your init-file you can use links analog to the example:
     (set (make-local-variable 'minor-mode-overriding-map-alist) alist)))
 
 (add-hook 'Info-mode-hook #'jay/info-local-overrides)
-#+END_SRC
-
-
-* Local Variables & The End
-These have to be at the end.
-
-# Local Variables:
-# org-config-files-local-mode: t
-# enable-local-eval: t
-# eval: (org-config-files-local-mode 1)
-# End:

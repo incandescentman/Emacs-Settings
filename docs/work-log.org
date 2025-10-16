@@ -5,17 +5,17 @@
 * 2025-10-16: Calendar assets consolidated
 
 ** Summary
-- Moved `markdown-diary.el`, the keybinding cheatsheet, and the README into `calendar/` to keep calendar tooling grouped.
+- Moved `timeline.el`, the keybinding cheatsheet, and the README into `timeline/` to keep calendar tooling grouped.
 - Updated references throughout the work log to target the new directory.
-- Added the new directory to `load-path` so `require 'markdown-diary` continues to resolve.
+- Added the new directory to `load-path` so `require 'timeline` continues to resolve.
 
 ** Files Modified
-- `calendar/calendar-keybindings.org`: New location for the keybinding reference.
-- `calendar/markdown-diary-README.org`: New location for the diary module README.
-- `calendar/markdown-diary.el`: Calendar/diary helpers relocated.
-- `shared-functions.org`: Added `calendar/` to `load-path`.
+- `timeline/timeline-keybindings.org`: New location for the keybinding reference.
+- `timeline/timeline-README.org`: New location for the diary module README.
+- `timeline/timeline.el`: Calendar/diary helpers relocated.
+- `shared-functions.org`: Added `timeline/` to `load-path`.
 - `docs/work-log.org`: Logged the reorganization.
-- `calendar/markdown-diary-ideas.org`: New scratchpad for potential enhancements.
+- `timeline/timeline-ideas.org`: New scratchpad for potential enhancements.
 
 * 2025-10-16: Diary search, context mode, and regression guard
 
@@ -25,9 +25,9 @@
 - Captured `my-calendar-test-date-format` as an ERT regression to ensure the diary date formatter keeps emitting `M/D/YYYY`.
 
 ** Files Modified
-- `markdown-diary.el`: Implemented the search command, diary minor mode, automatic activation hook, bindings, and ERT.
-- `calendar/calendar-keybindings.org`: Documented the new `/` / `s` shortcuts.
-- `calendar/markdown-diary-README.org`: Added the search binding, diary mode note, and mentioned the regression test.
+- `timeline.el`: Implemented the search command, diary minor mode, automatic activation hook, bindings, and ERT.
+- `timeline/timeline-keybindings.org`: Documented the new `/` / `s` shortcuts.
+- `timeline/timeline-README.org`: Added the search binding, diary mode note, and mentioned the regression test.
 - `docs/work-log.org`: Logged this update.
 
 * 2025-10-16: Calendar navigation assist overlays
@@ -36,14 +36,14 @@
 - Added an interactive ~my-calendar-help~ popup (bound to ~?~) that displays the custom calendar diary bindings in a view-mode buffer.
 - Introduced ~my-calendar-toggle-last-date~ on ~M-t~, letting the calendar jump back and forth between today and the last visited date.
 - Registered friendly which-key labels for every diary-centric key so the shortcuts surface automatically when which-key is active.
-- Remembered the calendar origin date inside ~jay-diary.md~ and bound diary ~C-SPC~ to jump straight back to that day while leaving plain space untouched.
+- Remembered the calendar origin date inside ~timeline.md~ and bound diary ~C-SPC~ to jump straight back to that day while leaving plain space untouched.
 - Added ~C-c C-c~ as a second diary shortcut for returning to the calendar, mirroring habitual Org workflow keys.
 - Hooked `calendar-move-hook` to echo the currently highlighted date (weekday + full date) whenever the cursor moves.
 
 ** Files Modified
-- `markdown-diary.el`: Implemented the help popup, toggle command, which-key integration, origin tracking, echo display, and diary return helper.
-- `calendar/calendar-keybindings.org`: Documented the new ~?~, ~M-t~, and diary-buffer ~SPC~ bindings.
-- `calendar/markdown-diary-README.org`: Refreshed the cheat-sheet table, noted diary-space return, and mentioned the echoing move hook.
+- `timeline.el`: Implemented the help popup, toggle command, which-key integration, origin tracking, echo display, and diary return helper.
+- `timeline/timeline-keybindings.org`: Documented the new ~?~, ~M-t~, and diary-buffer ~SPC~ bindings.
+- `timeline/timeline-README.org`: Refreshed the cheat-sheet table, noted diary-space return, and mentioned the echoing move hook.
 - `docs/work-log.org`: Logged this update.
 
 * 2025-10-14: Calendar diary prompt variants, spacing, and navigation fixes
@@ -55,17 +55,17 @@
 - Added ~SPC~ as another shortcut to view the diary entry without leaving the calendar.
 - Taught `my-calendar-jump-to-diary-entry` to return the heading position so `my-calendar-edit-diary-entry` can land on the last bullet without an extra search.
 - Retired the redundant `my-calendar-open-diary-entry` helper and renamed the fancy diary listing command for clearer intent.
-- Expanded `calendar/markdown-diary-README.org` with an overview of strengths and workflow notes for the calendar/diary bridge.
+- Expanded `timeline/timeline-README.org` with an overview of strengths and workflow notes for the timeline/diary bridge.
 
 ** Why it should work
 Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
 Returning the diary heading position lets editing logic reuse the existing search result, eliminating duplicate scans, and removing the unused helper avoids dead code.
 
 ** Files Modified
-- `markdown-diary.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, navigation toggles, and returned the diary heading position.
-- `calendar/calendar-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
+- `timeline.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, navigation toggles, and returned the diary heading position.
+- `timeline/timeline-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
 - `docs/work-log.org`: Logged this change.
-- `calendar/markdown-diary-README.org`: Updated the binding reference.
+- `timeline/timeline-README.org`: Updated the binding reference.
 
 * 2025-10-14: Calendar diary view stays focused
 
@@ -78,34 +78,34 @@ Returning the diary heading position lets editing logic reuse the existing searc
 `my-calendar-view-diary-entry` reuses `my-calendar-jump-to-diary-entry` but immediately hands focus back to the calendar and cleans up fancy diary buffers. Clearing `calendar-view-diary-initially-flag` prevents Emacs from spawning the fancy listing automatically, so window arrangements remain intact.
 
 ** Files Modified
-- `markdown-diary.el`: Added the view helper, disabled automatic fancy display, tightened `s-.`, and rebound calendar keys.
-- `calendar/calendar-keybindings.org`: Documented the new `o`/`v` view shortcut and `O` fallback.
+- `timeline.el`: Added the view helper, disabled automatic fancy display, tightened `s-.`, and rebound calendar keys.
+- `timeline/timeline-keybindings.org`: Documented the new `o`/`v` view shortcut and `O` fallback.
 - `docs/work-log.org`: Logged this change.
 
 ** Handoff: Next session
 - Sanity-check the new `o`/`v` binding on a clean Emacs restart to ensure focus stays in calendar.
 - Decide if the fancy listing should be accessible elsewhere now that `O` is uppercase.
 
-* 2025-10-14: Calendar helpers packed into `markdown-diary.el`
+* 2025-10-14: Calendar helpers packed into `timeline.el`
 
 ** Summary
-- Moved the entire Jay Diary customization block from `shared-functions` into a standalone module `markdown-diary.el`.
-- Replaced the inlined code with a simple `(require 'markdown-diary)` so the functions load from one place whether or not tangling runs.
+- Moved the entire Jay Diary customization block from `shared-functions` into a standalone module `timeline.el`.
+- Replaced the inlined code with a simple `(require 'timeline)` so the functions load from one place whether or not tangling runs.
 - Copied the module into the tracked `.el` file directly so Spacemacs picks it up without additional boot tweaks.
 
 ** Why it should work
-The project root is already on `load-path`, so requiring `markdown-diary` resolves instantly. The new module `provide`s the same feature guard and mirrors all previous calendar bindings, hooks, and diary helpers, keeping behaviour identical after the move.
+The project root is already on `load-path`, so requiring `timeline` resolves instantly. The new module `provide`s the same feature guard and mirrors all previous calendar bindings, hooks, and diary helpers, keeping behaviour identical after the move.
 
 ** Files Modified
 - `shared-functions.org`: Replaced the calendar block with a `require`.
 - `shared-functions.el`: Mirrors the new requirement for runtime use.
-- `markdown-diary.el`: New file with the full calendar implementation.
+- `timeline.el`: New file with the full calendar implementation.
 - `docs/work-log.org`: Logged the restructuring.
 
 * 2025-10-14: Calendar diary entries sort themselves
 
 ** Summary
-- Replaced the stock `calendar-insert-diary-entry` binding with `my-calendar-insert-diary-entry`, which prompts once and drops bullets into `jay-diary.md` in chronological order.
+- Replaced the stock `calendar-insert-diary-entry` binding with `my-calendar-insert-diary-entry`, which prompts once and drops bullets into `timeline.md` in chronological order.
 - Auto-creates missing year and month headings so new dates always slot under the right section without manual scaffolding.
 - Preserves the original command on `I` for fallback while keeping diary navigation shortcuts intact.
 
@@ -125,8 +125,8 @@ The helper narrows to the current month region, searches for existing date headi
 - Rebound ~RET~ to open the Markdown entry immediately, moved ~o~ to the fancy diary listing command, and enhanced ~e~ to land at the end of the last bullet.
 
 ** Files Modified
-- `markdown-diary.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, retuned `RET`, and improved `e` to place point at the last bullet.
-- `calendar/calendar-keybindings.org`: Documented the updated keybindings.
+- `timeline.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, retuned `RET`, and improved `e` to place point at the last bullet.
+- `timeline/timeline-keybindings.org`: Documented the updated keybindings.
 
 * 2025-10-14: Markdown diary refinements
 
@@ -140,7 +140,7 @@ The helper narrows to the current month region, searches for existing date headi
 The month section is still narrowed before edits, but day comparisons now look only at the day number inside that region, preventing accidental mis-sorts. We normalise spacing with explicit newline guards, so headings and entries remain evenly separated regardless of prior manual edits.
 
 ** Files Modified
-- `markdown-diary.el`: Updated insertion logic, spacing controls, history defaults, and prefix behaviour.
+- `timeline.el`: Updated insertion logic, spacing controls, history defaults, and prefix behaviour.
 - `docs/work-log.org`: Documented the tweaks.
 
 * Handoff: Next session
@@ -228,7 +228,7 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 
 ** Summary
 - Reviewed the local Emacs calendar guide (`emacs-calendar-instructions-claude.org`).
-- Compared it with the official GNU Emacs manual for the calendar/diary features.
+- Compared it with the official GNU Emacs manual for the timeline/diary features.
 - The local guide was found to be accurate and comprehensive for the user's specific workflow.
 - Added an appendix to the local guide explaining the different types of diary entries (single, weekly, monthly, yearly, anniversary, block, and cyclic) based on the official manual.
 
@@ -253,7 +253,7 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 - Added intuitive bindings in `calendar-mode` so `n`/`p` move by month and `N`/`P` move by year.
 - Updated the calendar instructions document to reflect the new navigation keys.
 - Added Option-←/Option-→ aliases (`M-<left>`, `M-<right>`) for month navigation on macOS keyboards.
-- Created `my-calendar-focus-calendar-window` and bound `s-.` in `jay-diary.md` so Command-Period jumps focus back to the existing calendar without resetting the date.
+- Created `my-calendar-focus-calendar-window` and bound `s-.` in `timeline.md` so Command-Period jumps focus back to the existing calendar without resetting the date.
 
 ** Files Modified
 - `shared-functions.org`: Bound new month/year navigation lambdas, added focus helper, and enabled the diary shortcut.
