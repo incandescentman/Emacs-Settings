@@ -1,3 +1,8 @@
+(defvar my-diary--origin-date nil
+  "Buffer-local variable storing the calendar date from which the diary buffer was opened.")
+
+(defvar my-calendar--current-date-string ""
+  "String describing the currently highlighted date in the calendar.")
 (defvar my-calendar--last-date nil
   "Stack of the last visited calendar date for toggling with today.")
 
@@ -113,7 +118,8 @@ Otherwise, save the current date and jump to today."
 (defun my-calendar-jump-to-diary-entry (&optional date keep-calendar-selected)
   "Open `diary-file` at DATE (list MONTH DAY YEAR) and return its position.
 When KEEP-CALENDAR-SELECTED is nil, restore focus to the calendar window.
-If the date is missing, return nil after displaying a warning."
+If the date is missing, return nil after displaying a warning.
+Also set buffer-local `my-diary--origin-date` in the diary buffer."
   (interactive)
   (let* ((calendar-window (selected-window))
          (date (or date (calendar-cursor-to-date t)))
@@ -121,19 +127,34 @@ If the date is missing, return nil after displaying a warning."
          (day   (number-to-string (nth 1 date)))
          (year  (number-to-string (nth 2 date)))
          (date-str (format "%s/%s/%s" month day year))
-         entry-pos)
+         entry-pos
+         (diary-buf (find-file-other-window diary-file)))
     (setq my-calendar--last-window calendar-window)
-    (find-file-other-window diary-file)
+    (with-current-buffer diary-buf
+      (setq-local my-diary--origin-date date))
     (setq entry-pos
-          (when (progn (goto-char (point-min))
-                       (search-forward date-str nil t))
-            (beginning-of-line)
-            (point)))
+          (with-current-buffer diary-buf
+            (when (progn (goto-char (point-min))
+                         (search-forward date-str nil t))
+              (beginning-of-line)
+              (point))))
     (unless entry-pos
       (message "🟡 Could not find entry for %s" date-str))
     (unless keep-calendar-selected
       (select-window calendar-window))
     entry-pos))
+
+
+;; Command to return to calendar at the origin date
+(defun my-diary-return-to-calendar ()
+  "Return to the calendar and jump to the date from which this diary buffer was opened."
+  (interactive)
+  (if (not my-diary--origin-date)
+      (message "No origin date stored for this diary buffer.")
+    (let ((date my-diary--origin-date))
+      (calendar)
+      (calendar-goto-date date)
+      (message "Returned to calendar at %s" (my-calendar--describe-date date)))))
 
 (defun my-calendar-view-diary-entry ()
   "Display the diary entry for the date at point while staying in the calendar."
@@ -476,9 +497,25 @@ the interactive prefix argument behaviour from the public commands."
   (when (and buffer-file-name
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
-    (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)))
+    (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)
+    (local-set-key (kbd "SPC") #'my-diary-return-to-calendar)))
 
 (add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
+
+
+;; --- Calendar date string display in echo area ---
+(defun my-calendar--update-date-display ()
+  "Update `my-calendar--current-date-string` and display it in the echo area."
+  (let* ((date (calendar-cursor-to-date t))
+         (dayname (calendar-day-name date))
+         (monthname (calendar-month-name (nth 0 date)))
+         (day (nth 1 date))
+         (year (nth 2 date))
+         (str (format "%s — %d %s %d" dayname day monthname year)))
+    (setq my-calendar--current-date-string str)
+    (message "%s" str)))
+
+(add-hook 'calendar-move-hook #'my-calendar--update-date-display)
 
 (provide 'markdown-diary)
 

@@ -69,12 +69,15 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 | ~t~ | --- | Jump to today and open entry |
 | ~?~ | =my-calendar-help= | Show cheat sheet popup (press `q` to close) |
 
+* Diary Buffer Extras
+- ~SPC~ inside ~jay-diary.md~ runs =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+
 * Implementation Details
 - The diary file is manipulated using helper functions prefixed with =my-calendar--=.
 - The insertion logic ensures each entry is correctly placed within a valid month region, creating missing sections as needed.
 - Blank-line normalization ensures every date and section is surrounded by readable spacing.
 - Compatible with modern Emacs (≥ 29), including builds where =calendar-month-alist= isn't automatically provided.
-- Optional which-key integration labels every custom Calendar binding when which-key-mode is active.
+- Optional which-key integration labels every custom Calendar binding when which-key-mode is active, and the calendar move hook echoes the active date for quick context.
 
 * Requirements
 - Emacs 28 or newer.
