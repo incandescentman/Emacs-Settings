@@ -129,6 +129,69 @@ Otherwise, save the current date and jump to today."
   (should (equal (my-calendar--diary-format-date 4 5 2024) "4/5/2024"))
   (should (equal (my-calendar--diary-format-date 12 31 1999) "12/31/1999")))
 
+(ert-deftest my-calendar-test-ensure-blank-line-before ()
+  "Ensure the blank-line helper inserts a clean separator."
+  (with-temp-buffer
+    (insert "10/21/2025\n  - Oct 21\n")
+    (goto-char (point-max))
+    (my-calendar--ensure-blank-line-before)
+    (should (equal (buffer-string)
+                   "10/21/2025\n  - Oct 21\n\n"))))
+
+(ert-deftest my-calendar-test-diary-insert-entry-spacing ()
+  "Verify inserting a later entry keeps headings separated."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-file diary-temp)
+         content)
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            (insert "# 2025\n\n## October 2025\n\n10/21/2025\n  - Oct 21\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (my-calendar--diary-insert-entry '(10 24 2025) '("Oct 24 test"))
+          (setq content
+                (with-temp-buffer
+                  (insert-file-contents diary-temp)
+                  (buffer-string))))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))
+    (should (string-prefix-p "# 2025\n\n## October 2025" content))
+    (should (string-match-p
+             "10/21/2025\n  - Oct 21\n\n10/24/2025\n  - Oct 24 test\n\n"
+             content))))
+
+(ert-deftest my-calendar-test-edit-diary-entry-creates-missing-date ()
+  "Ensure editing a date without entries creates a new heading and bullet."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (diary-file diary-temp)
+         (calendar-buffer-name calendar-buffer)
+         content)
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            (insert "# 2025\n\n## October 2025\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (calendar)
+          (with-current-buffer (get-buffer calendar-buffer-name)
+            (calendar-goto-date '(10 22 2025))
+            (my-calendar-edit-diary-entry))
+          (setq content
+                (with-current-buffer (find-file-noselect diary-temp)
+                  (buffer-string))))
+      (when (get-buffer calendar-buffer-name)
+        (kill-buffer calendar-buffer-name))
+      (dolist (buf '("*Diary Entries*" "*Fancy Diary Entries*"))
+        (when (get-buffer buf)
+          (kill-buffer buf)))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))
+    (should (string-match-p
+             "^# 2025\n\n## October 2025\n+10/22/2025\n  - \n\n+"
+             content))))
+
 (defvar-local my-diary-mode--lighter nil)
 
 (define-minor-mode my-diary-mode

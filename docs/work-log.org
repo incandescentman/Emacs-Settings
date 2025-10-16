@@ -24,6 +24,16 @@
 - `timeline/timeline.el`: Adjusted holiday styling defaults and ripgrep invocation.
 - `docs/work-log.org`: Recorded this change.
 
+* 2025-10-16: Added diary regression tests
+
+** Summary
+- Added ERT coverage for inserting diary entries and editing empty dates to guard against spacing regressions.
+- Batch-ran the new test suite to ensure the calendar diary workflow remains error-free.
+
+** Files Modified
+- `timeline/timeline.el`: Introduced new ERT tests for diary spacing and edit-on-empty behaviour.
+- `docs/work-log.org`: Logged the test additions.
+
 * 2025-10-16: Timeline rename and assets consolidated
 
 ** Summary
