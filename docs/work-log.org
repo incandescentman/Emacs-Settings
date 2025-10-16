@@ -309,6 +309,34 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 - `emacs-calendar-instructions-claude.org`: Documented the updated keybindings and the Command-Period focus helper.
 - `docs/work-log.org`: Added this entry.
 
+* 2025-10-16: Smart asterisk bullet detection for adaptive paste
+
+** Problem Description
+- ChatGPT responses often use leading single asterisks for unordered lists. With the 2025-10-13 change, those pastes now appeared as level-1 Org headings.
+- Simply re-enabling the old `asterisk-to-dash` helper would fix ChatGPT pastes but would again demote genuine Org headings (for example `* Timeline`) into list items.
+
+** Root Cause
+- `pasteboard--clean-string` treated all single-asterisk lines identically after converting Markdown `#` headings to Org `*`, so it could not differentiate between Markdown bullets and legitimate Org headings.
+- The adaptive paste path lacked context about the overall clipboard format (Markdown vs Org) and which lines began as Markdown headings before conversion.
+
+** Solution
+- Added `pasteboard--analyse-clipboard-text` to score clipboards for Markdown cues (hash headings, fenced code, ordered lists, etc.) and capture the original line numbers of `#` headings.
+- Introduced a contextual `pasteboard--convert-asterisk-bullets-to-dashes` that only rewrites single-asterisk lines when surrounded by list-like neighbours and not present in the preserved heading line set.
+- When the heuristic classifies the clipboard as Markdown, we now run the new conversion plus the dash normalizer and optional code-block translator inside a narrowed region; otherwise we leave existing Org intact.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Added the clipboard analyser, bullet conversion helpers, and updated `pasteboard--clean-string` to use them.
+- `docs/work-log.org`: Added this entry.
+
+** Expected Results After Reload
+- ChatGPT bullet lists paste as proper `- ` items while real Org headings remain untouched.
+- Org-centric clipboards skip the Markdown-specific cleanup, preventing unintended demotions.
+- Downstream dash/code-block normalization is still available when pasting Markdown-heavy content.
+
+** Follow-up Ideas
+- Capture edge cases where the heuristic returns “unknown” and consider exposing a manual override.
+- Extend detection with language-model metadata (e.g., presence of “##”) to tighten small-clipboard behaviour.
+
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
 ** Problem Description
