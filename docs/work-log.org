@@ -2,6 +2,20 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-16: Calendar assets consolidated
+
+** Summary
+- Moved `markdown-diary.el`, the keybinding cheatsheet, and the README into `calendar/` to keep calendar tooling grouped.
+- Updated references throughout the work log to target the new directory.
+- Added the new directory to `load-path` so `require 'markdown-diary` continues to resolve.
+
+** Files Modified
+- `calendar/calendar-keybindings.org`: New location for the keybinding reference.
+- `calendar/markdown-diary-README.org`: New location for the diary module README.
+- `calendar/markdown-diary.el`: Calendar/diary helpers relocated.
+- `shared-functions.org`: Added `calendar/` to `load-path`.
+- `docs/work-log.org`: Logged the reorganization.
+
 * 2025-10-16: Diary search, context mode, and regression guard
 
 ** Summary
