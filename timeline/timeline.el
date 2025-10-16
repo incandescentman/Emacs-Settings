@@ -81,6 +81,7 @@ Otherwise, save the current date and jump to today."
 
 ;; Disable calendar highlighting and configure diary defaults
 (setq calendar-mark-holidays-flag nil
+      calendar-holiday-marker 'default
       diary-file "/Users/jay/Dropbox/github/timeless/data/timeline.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag nil
@@ -88,6 +89,19 @@ Otherwise, save the current date and jump to today."
       diary-comment-start "#"
       diary-comment-end ""
       calendar-week-start-day 1)
+
+(defun my-calendar--disable-holiday-highlighting ()
+  "Remove calendar holiday colors so dates render like regular days."
+  (when (facep 'holiday)
+    (set-face-attribute 'holiday nil
+                        :inherit 'default
+                        :foreground nil
+                        :background nil
+                        :weight 'normal)))
+
+;; Apply immediately and after theme changes.
+(my-calendar--disable-holiday-highlighting)
+(add-hook 'after-load-theme-hook #'my-calendar--disable-holiday-highlighting)
 
 (setq calendar-month-header
       '(propertize
@@ -98,7 +112,14 @@ Otherwise, save the current date and jump to today."
   "Quickly search all diary entries using consult-ripgrep."
   (interactive)
   (require 'consult)
-  (consult-ripgrep diary-file))
+  (let* ((target (expand-file-name diary-file))
+         (dir (file-name-directory target))
+         (file (file-name-nondirectory target))
+         (base-args (if (boundp 'consult-ripgrep-args)
+                        consult-ripgrep-args
+                      "rg --null --line-buffered --color=never --max-columns=1000 --path-separator / --smart-case --no-heading --line-number -- "))
+         (consult-ripgrep-args (concat base-args (shell-quote-argument file))))
+    (consult-ripgrep dir)))
 
 (eval-when-compile
   (require 'ert))

@@ -14,6 +14,16 @@
 - `timeline/README.org`: Documented the plain-text upcoming-events stance.
 - `docs/work-log.org`: Logged these improvements.
 
+* 2025-10-16: Holiday coloring disabled and consult ripgrep path fix
+
+** Summary
+- Neutralized the calendar holiday face and marker so holidays no longer render in blue, even after switching themes.
+- Updated `my-diary-search` to run ripgrep from the diary directory, avoiding the "Not a directory" error when the diary path ends with the filename.
+
+** Files Modified
+- `timeline/timeline.el`: Adjusted holiday styling defaults and ripgrep invocation.
+- `docs/work-log.org`: Recorded this change.
+
 * 2025-10-16: Timeline rename and assets consolidated
 
 ** Summary
