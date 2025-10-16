@@ -27,7 +27,7 @@
    smart-quote-regexp-replacements))
 
 (defun replace-non-heading-double-asterisks (beg end)
-  "Convert markdown style **bold** to org-mode style *bold* by replacing '**' with '*' UNLESS it's part of an org heading line at the beginning."
+  "Convert markdown style **bold** to Org *bold* unless the line is an Org heading."
   (interactive "r")
   (save-excursion
     (goto-char beg)
@@ -35,10 +35,8 @@
       (let ((match-beg (match-beginning 0)))
         (when match-beg
           (goto-char match-beg)
-          ;; If line begins with stars + space => a heading, so skip
           (if (looking-at "^\\*+ ")
-              (forward-char 2) ;; skip these two stars
-            ;; Otherwise replace as normal
+              (forward-char 2)
             (replace-match "*" t t)))))))
 
 (defgroup smart-quotes nil
@@ -331,13 +329,13 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (defun pasteboard-copy-adaptive ()
   "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text."
   (interactive)
-  (let (choice)                               ; record which branch we took
+  (let (choice handler)
     (cond
      ;; ------------------------------------------ verbatim buckets ------------------------------------------
      ;; 1) Messages buffer - ALWAYS verbatim
      ((string= (buffer-name) "*Messages*")
-      (setq choice "verbatim (Messages buffer)")
-      (call-interactively #'pasteboard-copy-verbatim))
+      (setq choice "verbatim (Messages buffer)"
+            handler #'pasteboard-copy-verbatim))
      
      ;; 2) Shell / Elisp / Web / Markdown / Backtrace
      ((or (eq major-mode 'sh-mode)
@@ -347,49 +345,47 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
           (eq major-mode 'gfm-mode)
           (derived-mode-p 'markdown-mode)
           (derived-mode-p 'backtrace-mode))
-      (setq choice "verbatim (mode match)")
-      (call-interactively #'pasteboard-copy-verbatim))
+      (setq choice "verbatim (mode match)"
+            handler #'pasteboard-copy-verbatim))
 
      ;; 3) Org buffer **with** org-config-files-local-mode enabled
      ((and (eq major-mode 'org-mode)
            (bound-and-true-p org-config-files-local-mode))
-      (setq choice "verbatim (org-local)")
-      (call-interactively #'pasteboard-copy-verbatim))
+      (setq choice "verbatim (org-local)"
+            handler #'pasteboard-copy-verbatim))
 
      ;; 4) Any file ending in .mdx
      ((and buffer-file-name
            (string-match-p "\\.mdx\\'" buffer-file-name))
-      (setq choice "verbatim (.mdx)")
-      (call-interactively #'pasteboard-copy-verbatim))
+      (setq choice "verbatim (.mdx)"
+            handler #'pasteboard-copy-verbatim))
 
      ;; 5) Any programming mode
      ((derived-mode-p 'prog-mode)
-      (setq choice "verbatim (prog)")
-      (call-interactively #'pasteboard-copy-verbatim))
+      (setq choice "verbatim (prog)"
+            handler #'pasteboard-copy-verbatim))
 
      ;; ------------------------------------------ clean buckets ------------------------------------------
      ;; 6) Org or generic text (when org-config-files-local-mode is off)
      ((or (eq major-mode 'text-mode)
           (and (eq major-mode 'org-mode)
                (not (bound-and-true-p org-config-files-local-mode))))
-      (setq choice "clean")
-      (call-interactively #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+      (setq choice "clean"
+            handler #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
 
      ;; ---------------------------------------- heuristic fallback --------------------------------------
      (t
       (if (and (use-region-p)
                (save-excursion
                  (goto-char (region-beginning))
-                 (looking-at-p
-                  "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-          (progn
-            (setq choice "verbatim (heuristic)")
-            (call-interactively #'pasteboard-copy-verbatim))
-        (setq choice "clean (default)")
-        (call-interactively
-         #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
-
-    (message "Copied text %s" choice)))
+                 (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
+          (setq choice "verbatim (heuristic)"
+                handler #'pasteboard-copy-verbatim)
+        (setq choice "clean (default)"
+              handler #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))))
+    (when handler
+      (call-interactively handler))
+    (message "Copied text %s" choice))
 #+end_src
 
 ** pasteboard-copy
@@ -565,7 +561,7 @@ Otherwise, demote from point to the end of the buffer."
     (insert text)
     (goto-char (point-min))
     (let ((line-number 1)
-          heading-lines)
+          (heading-lines '()))
       (while (not (eobp))
         (when (looking-at "^\\s-*#\\{1,6\\} ")
           (push line-number heading-lines))
@@ -590,25 +586,29 @@ Otherwise, demote from point to the end of the buffer."
                    (org-score "^\\s*SCHEDULED:" 2)
                    (org-score "^\\s*DEADLINE:" 2)
                    (org-score "^\\s*\\*\\{2,\\} \\S" 2)))
-          (goto-char (point-min))
-          (while (re-search-forward (nth 1 spec) nil t)
-            (cl-incf (symbol-value (nth 0 spec)) (nth 2 spec))))
+          (pcase-let ((`(,target ,regex ,weight) spec))
+            (goto-char (point-min))
+            (while (re-search-forward regex nil t)
+              (pcase target
+                ('md-score  (cl-incf md-score weight))
+                ('org-score (cl-incf org-score weight))))))
         (goto-char (point-min))
         (while (re-search-forward "^\\s*\\* \\S" nil t)
           (cl-incf asterisk-bullets))
-        (let* ((style
-                (cond
-                 ((>= md-score (+ org-score 2)) 'markdown)
-                 ((>= org-score (+ md-score 2)) 'org)
-                 ((and (>= md-score 3) (= org-score 0)) 'markdown)
-                 ((and (= md-score 0) (> org-score 0)) 'org)
-                 ((and (>= asterisk-bullets 3) (= org-score 0)) 'markdown)
-                 (t nil))))
-          (list :style style
-                :markdown-heading-lines (nreverse heading-lines)
-                :md-score md-score
-                :org-score org-score
-                :asterisk-bullets asterisk-bullets)))))
+        (let ((style
+               (cond
+                ((>= md-score (+ org-score 2)) 'markdown)
+                ((>= org-score (+ md-score 2)) 'org)
+                ((and (>= md-score 3) (= org-score 0)) 'markdown)
+                ((and (= md-score 0) (> org-score 0)) 'org)
+                ((and (>= asterisk-bullets 3) (= org-score 0)) 'markdown)
+                (t nil))))
+          (list
+           :style style
+           :markdown-heading-lines (nreverse heading-lines)
+           :md-score md-score
+           :org-score org-score
+           :asterisk-bullets asterisk-bullets))))))
 
 (defun pasteboard--line-kind-at-pos (pos)
   "Return the syntactic 'kind' of line at POS."
