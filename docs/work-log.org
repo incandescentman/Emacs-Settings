@@ -22,6 +22,7 @@
 - Introduced ~my-calendar-toggle-last-date~ on ~M-t~, letting the calendar jump back and forth between today and the last visited date.
 - Registered friendly which-key labels for every diary-centric key so the shortcuts surface automatically when which-key is active.
 - Remembered the calendar origin date inside ~jay-diary.md~ and bound diary ~C-SPC~ to jump straight back to that day while leaving plain space untouched.
+- Added ~C-c C-c~ as a second diary shortcut for returning to the calendar, mirroring habitual Org workflow keys.
 - Hooked `calendar-move-hook` to echo the currently highlighted date (weekday + full date) whenever the cursor moves.
 
 ** Files Modified

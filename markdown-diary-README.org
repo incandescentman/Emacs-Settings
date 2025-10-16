@@ -71,7 +71,7 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 | ~?~ | =my-calendar-help= | Show cheat sheet popup (press `q` to close) |
 
 * Diary Buffer Extras
-- ~C-SPC~ inside ~jay-diary.md~ runs =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~C-SPC~ or ~C-c C-c~ inside ~jay-diary.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
 - ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
 - ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
 
