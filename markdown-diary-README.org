@@ -64,6 +64,7 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 | ~v~, ~o~, ~SPC~ | =my-calendar-view-diary-entry= | View entry but stay in calendar |
 | ~O~ | =my-calendar-show-fancy-diary-listing= | Show fancy diary listing for date |
 | ~M-t~ | =my-calendar-toggle-last-date= | Toggle between today and last visited date |
+| ~/~, ~s~ | =my-diary-search= | Run consult-ripgrep across the diary |
 | ~i~, ~c~ | =my-calendar-insert-diary-entry= | Insert a new diary entry |
 | ~C~ | =my-calendar-insert-diary-entry-and-autopopulate= | Insert entry prefilled with last input |
 | ~t~ | --- | Jump to today and open entry |
@@ -71,13 +72,15 @@ The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system
 
 * Diary Buffer Extras
 - ~C-SPC~ inside ~jay-diary.md~ runs =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
+- ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
 
 * Implementation Details
 - The diary file is manipulated using helper functions prefixed with =my-calendar--=.
 - The insertion logic ensures each entry is correctly placed within a valid month region, creating missing sections as needed.
 - Blank-line normalization ensures every date and section is surrounded by readable spacing.
 - Compatible with modern Emacs (≥ 29), including builds where =calendar-month-alist= isn't automatically provided.
-- Optional which-key integration labels every custom Calendar binding when which-key-mode is active, and the calendar move hook echoes the active date for quick context.
+- Optional which-key integration labels every custom Calendar binding when which-key-mode is active, the calendar move hook echoes the active date for quick context, and `my-calendar-test-date-format` provides an ERT regression test for the diary date formatter.
 
 * Requirements
 - Emacs 28 or newer.

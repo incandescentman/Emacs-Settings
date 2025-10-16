@@ -1,3 +1,12 @@
+;;; markdown-diary.el --- Calendar diary helpers -*- lexical-binding: t; -*-
+
+;;; Author: Jay Dixit
+
+;;; Commentary:
+;; Custom calendar and diary commands shared across the Emacs configuration.
+
+;;; Code:
+
 (defvar my-diary--origin-date nil
   "Buffer-local variable storing the calendar date from which the diary buffer was opened.")
 
@@ -55,15 +64,6 @@ Otherwise, save the current date and jump to today."
         (view-mode 1)
         (local-set-key (kbd "q") #'quit-window)))
     (pop-to-buffer buf)))
-;;; markdown-diary.el --- Calendar diary helpers -*- lexical-binding: t; -*-
-
-;;; Author: Jay Dixit
-
-;;; Commentary:
-;; Custom calendar and diary commands shared across the Emacs configuration.
-
-;;; Code:
-
 (require 'cl-lib)
 (require 'subr-x)
 (require 'calendar)
@@ -92,6 +92,61 @@ Otherwise, save the current date and jump to today."
       '(propertize
         (format "%s %d" (calendar-month-name month) year)
         'font-lock-face 'calendar-month-header))
+
+(defun my-diary-search ()
+  "Quickly search all diary entries using consult-ripgrep."
+  (interactive)
+  (require 'consult)
+  (consult-ripgrep diary-file))
+
+(eval-when-compile
+  (require 'ert))
+
+(ert-deftest my-calendar-test-date-format ()
+  "Ensure `my-calendar--diary-format-date` emits M/D/YYYY strings."
+  (should (equal (my-calendar--diary-format-date 4 5 2024) "4/5/2024"))
+  (should (equal (my-calendar--diary-format-date 12 31 1999) "12/31/1999")))
+
+(defvar-local my-diary-mode--lighter nil)
+
+(define-minor-mode my-diary-mode
+  "Minor mode for the diary file, with context in the mode line."
+  :lighter (:eval (or my-diary-mode--lighter " 📅"))
+  (if my-diary-mode
+      (let ((date (or my-diary--origin-date
+                      (save-excursion
+                        (goto-char (point-min))
+                        (when (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
+                          (list (string-to-number (match-string 1))
+                                (string-to-number (match-string 2))
+                                (string-to-number (match-string 3))))))))
+        (setq my-diary-mode--lighter
+              (if date
+                  (format " 📅 %s" (my-calendar--describe-date date))
+                " 📅")))
+    (setq my-diary-mode--lighter nil)))
+
+(defun my-diary--maybe-enable-mode ()
+  "Enable `my-diary-mode` automatically for the diary file."
+  (when (and buffer-file-name
+             (string= (expand-file-name buffer-file-name)
+                      (expand-file-name diary-file)))
+    (my-diary-mode 1)))
+
+(add-hook 'markdown-mode-hook #'my-diary--maybe-enable-mode)
+
+(with-eval-after-load 'calendar
+  (define-key calendar-mode-map (kbd "/") #'my-diary-search)
+  (define-key calendar-mode-map (kbd "s") #'my-diary-search))
+
+(defun my-diary--setup-search-shortcuts ()
+  "Bind `/` and `s` to `my-diary-search` in the diary buffer."
+  (when (and buffer-file-name
+             (string= (expand-file-name buffer-file-name)
+                      (expand-file-name diary-file)))
+    (local-set-key (kbd "/") #'my-diary-search)
+    (local-set-key (kbd "s") #'my-diary-search)))
+(add-hook 'markdown-mode-hook #'my-diary--setup-search-shortcuts)
 
 (defvar my-calendar--last-window nil
   "Remember the last window showing the calendar buffer.")
@@ -520,3 +575,12 @@ the interactive prefix argument behaviour from the public commands."
 (provide 'markdown-diary)
 
 ;;; markdown-diary.el ends here
+
+;;; ERT test: run with (ert 'my-calendar-test-date-format)
+
+;;; Summary:
+;; - Added `my-diary-search` for fast full-diary searching (bound to `/` and `s` in both calendar and diary).
+;; - Added ERT test `my-calendar-test-date-format` to verify date string formatting.
+;; - Added `my-diary-mode` minor mode, with a mode-line indicator showing the diary context (date).
+;; - `my-diary-mode` is enabled automatically when opening the diary file.
+;; - These additions improve diary navigation, searching, and context-awareness.

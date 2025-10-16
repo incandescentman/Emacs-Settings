@@ -19,6 +19,9 @@ These bindings live in ~calendar-mode-map~.
 ~M-t~   ~my-calendar-toggle-last-date~
      - Toggle between today and the previously visited date like a mark ring.
 
+~/~, ~s~   ~my-diary-search~
+     - Run a consult-ripgrep search across the diary from within the calendar.
+
 ~?~   ~my-calendar-help~
      - Pop up an in-buffer cheat sheet of these custom bindings; press `q` to close.
 
@@ -63,6 +66,9 @@ The diary lives in ~~/Dropbox/github/timeless/jay-diary.md~ and is displayed in 
 
 ~C-SPC~   ~my-diary-return-to-calendar~
      - From within the diary buffer, jump back to Calendar at the date you originally opened.
+
+~/~, ~s~   ~my-diary-search~
+     - Search all diary entries from inside the diary buffer via consult-ripgrep.
 
 * Behaviour Notes
 Entry insertion ensures headings for the correct year and month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block. Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication. All helpers are defined in ~markdown-diary.el~ and loaded via ~shared-functions.org~.

@@ -2,6 +2,19 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-16: Diary search, context mode, and regression guard
+
+** Summary
+- Added `my-diary-search`, a consult-ripgrep wrapper bound to `/` and `s` in both calendar and diary buffers for instant diary-wide lookup.
+- Introduced `my-diary-mode`, a minor mode that auto-enables in the diary file and surfaces the active 📅 date in the mode line.
+- Captured `my-calendar-test-date-format` as an ERT regression to ensure the diary date formatter keeps emitting `M/D/YYYY`.
+
+** Files Modified
+- `markdown-diary.el`: Implemented the search command, diary minor mode, automatic activation hook, bindings, and ERT.
+- `docs/calendar-keybindings.org`: Documented the new `/` / `s` shortcuts.
+- `markdown-diary-README.org`: Added the search binding, diary mode note, and mentioned the regression test.
+- `docs/work-log.org`: Logged this update.
+
 * 2025-10-16: Calendar navigation assist overlays
 
 ** Summary
