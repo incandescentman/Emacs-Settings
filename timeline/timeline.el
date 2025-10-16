@@ -11,6 +11,7 @@
 (require 'subr-x)
 (require 'calendar)
 (require 'cal-move)   ;; for `calendar-month-alist` and navigation helpers
+(require 'rx)
 
 (defvar my-diary--origin-date nil
   "Buffer-local variable storing the calendar date from which the diary buffer was opened.")
@@ -19,6 +20,10 @@
   "String describing the currently highlighted date in the calendar.")
 (defvar my-calendar--last-date nil
   "Stack of the last visited calendar date for toggling with today.")
+(defvar my-timeline--suspend-cleanup nil
+  "When non-nil, skip auto-cleanup of empty diary entries.")
+(defvar my-timeline--cleanup-skip-date nil
+  "When non-nil, date string that cleanup should ignore.")
 
 (defun my-calendar-toggle-last-date ()
   "Toggle between today and the last visited calendar date.
@@ -192,6 +197,83 @@ Otherwise, save the current date and jump to today."
              "^# 2025\n\n## October 2025\n+10/22/2025\n  - \n\n+"
              content))))
 
+(ert-deftest my-timeline-test-cleanup-removes-empty-entries ()
+  "Ensure empty date stubs disappear during cleanup."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (diary-file diary-temp))
+    (unwind-protect
+        (with-current-buffer (find-file-noselect diary-temp)
+          (erase-buffer)
+          (insert "# 2025\n\n## October 2025\n\n10/22/2025\n  - \n\n10/23/2025\n  - Real note\n\n")
+          (my-timeline--cleanup-empty-entries)
+          (should (equal (buffer-string)
+                         "# 2025\n\n## October 2025\n\n10/23/2025\n  - Real note\n\n")))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-cleanup-preserves-populated-entries ()
+  "Ensure cleanup leaves non-empty entries intact."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (diary-file diary-temp))
+    (unwind-protect
+        (with-current-buffer (find-file-noselect diary-temp)
+          (erase-buffer)
+          (insert "# 2025\n\n## October 2025\n\n10/22/2025\n  - Morning meeting\n\n")
+          (my-timeline--cleanup-empty-entries)
+          (should (string-match-p "10/22/2025\n  - Morning meeting" (buffer-string))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-calendar-test-cancel-current-empty-entry ()
+  "Cancelling on an empty date block removes it without prompting."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (diary-file diary-temp))
+    (unwind-protect
+        (with-current-buffer (find-file-noselect diary-temp)
+          (erase-buffer)
+          (insert "# 2025\n\n## October 2025\n\n10/22/2025\n  - \n\n")
+          (goto-char (point-min))
+          (search-forward "10/22/2025")
+          (beginning-of-line)
+          (cl-letf (((symbol-function 'run-at-time)
+                     (lambda (&rest _) nil)))
+            (my-calendar-cancel-current-entry))
+          (should-not (string-match-p "10/22/2025" (buffer-string))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-calendar-test-cancel-current-entry-respects-decline ()
+  "Cancelling a populated entry should respect a negative confirmation."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (diary-file diary-temp))
+    (unwind-protect
+        (with-current-buffer (find-file-noselect diary-temp)
+          (erase-buffer)
+          (insert "# 2025\n\n## October 2025\n\n10/22/2025\n  - Keep me\n\n")
+          (goto-char (point-min))
+          (search-forward "10/22/2025")
+          (beginning-of-line)
+          (cl-letf (((symbol-function 'yes-or-no-p)
+                     (lambda (&rest _) nil))
+                    ((symbol-function 'run-at-time)
+                     (lambda (&rest _) nil)))
+            (my-calendar-cancel-current-entry))
+          (should (string-match-p "10/22/2025\n  - Keep me" (buffer-string))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
 (defvar-local my-diary-mode--lighter nil)
 
 (define-minor-mode my-diary-mode
@@ -213,7 +295,8 @@ Otherwise, save the current date and jump to today."
 
 (defun my-diary--maybe-enable-mode ()
   "Enable `my-diary-mode` automatically for the diary file."
-  (when (and buffer-file-name
+  (when (and (not my-timeline--suspend-cleanup)
+             buffer-file-name
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
     (my-diary-mode 1)))
@@ -331,9 +414,14 @@ Also set buffer-local `my-diary--origin-date` in the diary buffer."
   "Open the diary entry for the date at point and leave focus in the diary buffer.
 After jumping, move point to the end of the last bullet item for that date."
   (interactive)
-  (let* ((date (calendar-cursor-to-date t)))
+  (let* ((date (calendar-cursor-to-date t))
+         (date-string (my-calendar--diary-format-date (nth 0 date)
+                                                      (nth 1 date)
+                                                      (nth 2 date))))
     (unless (my-calendar--diary-entry-exists-p date)
-      (my-calendar--diary-insert-entry date '("")))
+      (let ((my-timeline--suspend-cleanup t)
+            (my-timeline--cleanup-skip-date date-string))
+        (my-calendar--diary-insert-entry date '(""))))
     (let ((entry-pos (my-calendar-jump-to-diary-entry date t)))
       (unless entry-pos
         (user-error "Could not locate diary entry for %s"
@@ -553,7 +641,9 @@ the interactive prefix argument behaviour from the public commands."
     (let ((lines (my-calendar--diary-normalize-lines text)))
       (when (null lines)
         (user-error "Diary entry cannot be empty"))
-      (my-calendar--diary-insert-entry date lines)
+      (let ((my-timeline--suspend-cleanup t)
+            (my-timeline--cleanup-skip-date (my-calendar--diary-format-date month day year)))
+        (my-calendar--diary-insert-entry date lines))
       (my-calendar-jump-to-diary-entry date stay-in-diary)
       (message "Added diary entry for %s"
                (format "%d/%d/%d" month day year)))))
@@ -676,15 +766,106 @@ the interactive prefix argument behaviour from the public commands."
 
 (add-hook 'calendar-move-hook #'my-calendar--update-date-display)
 
+(defun my-timeline--cleanup-empty-entries ()
+  "Remove empty date stubs (date lines with only a blank bullet) from the diary file before saving."
+  (when (and buffer-file-name
+             (string= (expand-file-name buffer-file-name)
+                      (expand-file-name diary-file)))
+    (save-excursion
+      (goto-char (point-min))
+      (let ((case-fold-search nil)
+            (heading-regex "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$\\|^## \\|^# "))
+        (while (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
+          (let ((date-start (match-beginning 0))
+                (current-date (match-string 0))
+                (has-content nil)
+                (block-end nil))
+            (save-excursion
+              (goto-char (match-end 0))
+              (forward-line 1)
+              (while (and (not (eobp)) (not (looking-at heading-regex)))
+                (when (looking-at "^  -\\(.*\\)$")
+                  (let ((content (string-trim (match-string 1))))
+                    (unless (string-empty-p content)
+                      (setq has-content t))))
+                (forward-line 1))
+              (setq block-end (point)))
+            (unless (or has-content
+                        (and my-timeline--cleanup-skip-date
+                             (string= current-date my-timeline--cleanup-skip-date)))
+              (delete-region date-start block-end)
+              (goto-char date-start))))))))
+
+(add-hook 'before-save-hook #'my-timeline--cleanup-empty-entries)
+
+
+;; Cancel current entry: highlight then delete the current date block if empty, else confirm
+(defun my-calendar-cancel-current-entry ()
+  "Delete the current date block if empty (or ask if non-empty), then return to Calendar.
+Briefly highlights the candidate block before deletion."
+  (interactive)
+  (unless (and buffer-file-name
+               (string= (expand-file-name buffer-file-name)
+                       (expand-file-name diary-file)))
+    (user-error "Not in the diary file"))
+  (save-excursion
+    (let* ((date-line-regex "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$")
+           (heading-regex "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$\\|^## \\|^# ")
+           (date-pos (progn
+                       (beginning-of-line)
+                       (if (looking-at date-line-regex)
+                           (point)
+                         (re-search-backward date-line-regex nil t)))))
+      (unless date-pos
+        (user-error "Not on a date entry"))
+      (let* ((block-start date-pos)
+             (block-end nil)
+             (has-nonblank-bullet nil))
+        ;; Move just past the date heading and skip blank padding.
+        (goto-char (line-end-position))
+        (forward-line 1)
+        (while (and (not (eobp)) (looking-at "^\\s-*$"))
+          (forward-line 1))
+        ;; Walk the block, tracking bullet content and locating the end.
+        (let ((cursor (point)))
+          (while (and (not (eobp)) (not (looking-at heading-regex)))
+            (when (looking-at "^  -\\(.*\\)$")
+              (let ((content (string-trim (match-string 1))))
+                (unless (string-empty-p content)
+                  (setq has-nonblank-bullet t))))
+            (forward-line 1))
+          (setq block-end (point))
+          (goto-char cursor))
+        ;; Highlight the candidate block briefly.
+        (let ((ov (make-overlay block-start block-end)))
+          (overlay-put ov 'face '(:background "lemonchiffon"))
+          (run-at-time 0.5 nil (lambda (o) (when (overlayp o) (delete-overlay o))) ov))
+        (if has-nonblank-bullet
+            (when (yes-or-no-p "Date entry is not empty. Delete anyway? ")
+              (delete-region block-start block-end)
+              (message "Deleted non-empty date block.")
+              (when (fboundp 'my-diary-return-to-calendar)
+                (run-at-time 0.1 nil #'my-diary-return-to-calendar)))
+          (delete-region block-start block-end)
+          (message "Deleted empty date block.")
+          (when (fboundp 'my-diary-return-to-calendar)
+            (run-at-time 0.1 nil #'my-diary-return-to-calendar)))))))
+
+(defun my-calendar--setup-cancel-shortcut ()
+  "Bind C-c C-k to `my-calendar-cancel-current-entry` in the diary file."
+  (when (and buffer-file-name
+             (string= (expand-file-name buffer-file-name)
+                      (expand-file-name diary-file)))
+    (local-set-key (kbd "C-c C-k") #'my-calendar-cancel-current-entry)))
+
+(add-hook 'markdown-mode-hook #'my-calendar--setup-cancel-shortcut)
+
+;;; Summary:
+;; - Provides calendar-to-diary navigation helpers, search shortcuts, and contextual minor modes.
+;; - Keeps diary formatting consistent and now auto-cleans empty stubs during save.
+;; - Adds regression coverage for diary insertion/edit flows.
+;; - Supplies commands to cancel empty entries quickly and return to the calendar.
+
 (provide 'timeline)
 
 ;;; timeline.el ends here
-
-;;; ERT test: run with (ert 'my-calendar-test-date-format)
-
-;;; Summary:
-;; - Added `my-diary-search` for fast full-diary searching (bound to `/` and `s` in both calendar and diary).
-;; - Added ERT test `my-calendar-test-date-format` to verify date string formatting.
-;; - Added `my-diary-mode` minor mode, with a mode-line indicator showing the diary context (date).
-;; - `my-diary-mode` is enabled automatically when opening the diary file.
-;; - These additions improve diary navigation, searching, and context-awareness.

@@ -14,6 +14,16 @@
 - `timeline/README.org`: Documented the plain-text upcoming-events stance.
 - `docs/work-log.org`: Logged these improvements.
 
+* 2025-10-16: Empty entry cleanup and cancel shortcut
+
+** Summary
+- Added a before-save cleanup pass that strips empty diary stubs while skipping the entry currently being created.
+- Introduced `my-calendar-cancel-current-entry` with a visual highlight and confirmation for non-empty blocks, bound to `C-c C-k` in the diary buffer.
+
+** Files Modified
+- `timeline/timeline.el`: Implemented cleanup suspend/skip logic, the cancel command, and keybinding hook.
+- `docs/work-log.org`: Recorded this update.
+
 * 2025-10-16: Holiday coloring disabled and consult ripgrep path fix
 
 ** Summary
