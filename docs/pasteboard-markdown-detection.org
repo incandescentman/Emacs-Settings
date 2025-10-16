@@ -45,6 +45,10 @@
 - **Regex sanity**: confirm any new `re-search-forward` pattern in `*scratch*` before committing.
 - **Fixtures**: retain a sample Markdown transcript in `debug/` for regression runs.
 
+* Reference Fixtures
+- [[file:../debug/org-mode-text-sample.txt][Org-mode sample input]] — Should remain untouched (single `*` headings stay as headings).
+- [[file:../debug/chatgpt-markdown-text-sample.txt][ChatGPT Markdown sample]] — Should convert leading `* ` bullets to `- ` when pasted.
+
 * Related Files
 - `pasteboard-copy-and-paste-functions.org` / `.el`
   - `pasteboard--analyse-clipboard-text`
@@ -55,4 +59,3 @@
 * Open Questions
 - Should we expose a manual override (force Markdown / force Org) when the analyser returns `nil`?
 - Could we cache recent style decisions to avoid re-scoring on repeated pastes of the same payload?
-
