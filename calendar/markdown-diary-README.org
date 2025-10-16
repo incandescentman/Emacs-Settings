@@ -1,0 +1,107 @@
+#+TITLE: Markdown Diary
+#+AUTHOR: Jay Dixit
+#+OPTIONS: toc:nil num:nil
+
+* Overview
+The ~markdown-diary.el~ module extends Emacs' built-in Calendar and Diary system with Markdown support, enabling seamless journaling, planning, and event tracking inside a plain-text diary file (~jay-diary.md~). It bridges the visual navigation of Emacs Calendar with a clean, chronological Markdown format suitable for version control and reading outside Emacs.
+
+* Features
+- 📆 *Calendar Integration*: Navigate dates in the Emacs Calendar and jump directly to corresponding entries in your Markdown diary.
+- ✍️ *Markdown Diary Format*: Keeps entries organized hierarchically by year and month using Markdown headings:
+  #+begin_example
+  # 2025
+  ** January 2025
+  1/2/2025
+   - Meet with Claire
+  #+end_example
+- 🪶 *Automatic Chronological Sorting*: New entries are inserted in the correct year/month section in date order.
+- 🧭 *Smart Navigation & Focus Control*:
+ - ~RET~ --- Open the Markdown diary entry for the selected date.
+ - ~e~ --- Open the entry and move the cursor to the end of the last bullet (ready to type).
+ - ~v~, ~o~, or ~SPC~ --- View the diary entry while keeping focus in the calendar.
+ - ~O~ --- Show the fancy diary listing for that date.
+ - ~i~ / ~c~ --- Insert a new diary entry.
+ - ~C~ --- Insert a new entry using the most recent minibuffer history text.
+ - ~t~ --- Jump to today and open the diary entry.
+- 🪟 *Focus Persistence*: Calendar windows and diary buffers remember their layout---no more window chaos when switching between them.
+- 🪄 *Graceful Layout Management*: Automatically closes "Fancy Diary" display windows to preserve your layout.
+
+* ✅ Overall Strengths
+
+*🧠 Architecture & Cohesion*
+- The file has a clear, consistent purpose: bridging Emacs Calendar → Markdown diary file, preserving both structure and UX coherence.
+- Logic is decomposed into well-named helper functions (~my-calendar--diary-*~), following good Elisp conventions.
+- The module is self-contained and namespaced correctly (~my-calendar-*~), avoiding global pollution.
+
+*🗓️ Calendar & Diary Integration*
+- Calendar hooks, movement bindings, and ~my-calendar--remember-window~ work seamlessly to preserve context and focus.
+- All key bindings are logically grouped and clearly labeled --- the UX (~RET~, ~e~, ~o~, ~i~, ~t~) feels consistent and intuitive.
+- ~my-calendar-jump-to-diary-entry~ handles missing dates gracefully with a message rather than an error.
+- The decision to open the diary in another window but optionally return focus is perfect for your workflow.
+
+*🪶 Markdown Formatting*
+- Markdown layout is excellent:
+  #+begin_example
+  # 2025
+  ** January 2025
+  1/5/2025
+   - Task
+  #+end_example
+- Consistent spacing, blank lines, and indentation.
+- ~my-calendar--ensure-blank-line~ ensures visual separation between entries.
+- The chronological insertion algorithm is robust and easy to maintain.
+
+*✍️ Editing Workflow*
+- ~my-calendar-edit-diary-entry~ moves to the end of the last bullet --- great fix.
+- ~my-calendar-insert-diary-entry~'s interactive spec with optional prefix arg (~stay-in-diary~) is ergonomic and intuitive.
+- The minibuffer history (~my-calendar-diary-history~) gives smooth multi-entry UX.
+
+* Keybindings Summary
+| Key | Command | Description |
+|-----|----------|-------------|
+| ~RET~ | =my-calendar-edit-diary-entry= | Jump to diary entry for the selected date |
+| ~e~ | =my-calendar-edit-diary-entry= | Jump to entry and move point to end of bullets |
+| ~v~, ~o~, ~SPC~ | =my-calendar-view-diary-entry= | View entry but stay in calendar |
+| ~O~ | =my-calendar-show-fancy-diary-listing= | Show fancy diary listing for date |
+| ~M-t~ | =my-calendar-toggle-last-date= | Toggle between today and last visited date |
+| ~/~, ~s~ | =my-diary-search= | Run consult-ripgrep across the diary |
+| ~i~, ~c~ | =my-calendar-insert-diary-entry= | Insert a new diary entry |
+| ~C~ | =my-calendar-insert-diary-entry-and-autopopulate= | Insert entry prefilled with last input |
+| ~t~ | --- | Jump to today and open entry |
+| ~?~ | =my-calendar-help= | Show cheat sheet popup (press `q` to close) |
+
+* Diary Buffer Extras
+- ~C-SPC~ or ~C-c C-c~ inside ~jay-diary.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
+- ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
+
+* Implementation Details
+- The diary file is manipulated using helper functions prefixed with =my-calendar--=.
+- The insertion logic ensures each entry is correctly placed within a valid month region, creating missing sections as needed.
+- Blank-line normalization ensures every date and section is surrounded by readable spacing.
+- Compatible with modern Emacs (≥ 29), including builds where =calendar-month-alist= isn't automatically provided.
+- Optional which-key integration labels every custom Calendar binding when which-key-mode is active, the calendar move hook echoes the active date for quick context, and `my-calendar-test-date-format` provides an ERT regression test for the diary date formatter.
+
+* Requirements
+- Emacs 28 or newer.
+- The built-in Calendar and Diary packages.
+- Markdown-mode for editing the diary file.
+
+* Installation
+1. Place ~markdown-diary.el~ in your =load-path= (for example, under =~/.emacs.d/lisp/=).
+2. Add to your init file:
+   #+begin_src emacs-lisp
+   (require 'markdown-diary)
+   #+end_src
+3. Open the Calendar with =M-x calendar= and use the keybindings above.
+
+* Example Workflow
+1. Open Calendar with =M-x calendar=.
+2. Navigate to a date.
+3. Press ~e~ to edit or add entries.
+4. Press ~v~ or ~SPC~ to preview entries without leaving the Calendar.
+5. Press ~t~ to jump to today's entry and log your notes.
+
+* License
+Copyright (c) 2025 Jay Dixit.
+Licensed under the MIT License. 

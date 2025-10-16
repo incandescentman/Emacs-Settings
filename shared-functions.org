@@ -472,6 +472,7 @@ Works!
 ** Load some of my packages:
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/emacs/emacs-settings/")
+(add-to-list 'load-path "/Users/jay/emacs/emacs-settings/calendar/")
 #+END_SRC
 
 ** Control use-package verbosity
