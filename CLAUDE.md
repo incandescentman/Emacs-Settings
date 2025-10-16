@@ -143,6 +143,11 @@ Fixed critical file-notify errors occurring when editing Dropbox files from iPho
 5. Set up proper error handling for missing dependencies
 6. Add a tiny batch smoke-test (`emacs --batch --load ~/.emacs.d/init.el --eval "(with-temp-buffer (org-mode) (message \"shift %S\" org-support-shift-select))"`) after tweaking startup; this catches regressions like the `shift-select-mode` autoload failure before they land.
 
+### Guidance for AI/LLM Editing Sessions
+- When touching any literate Org file (e.g., `pasteboard-copy-and-paste-functions.org`), delete the stale tangled `.el`, retangle immediately, and run `emacs --batch <file.el> --eval '(check-parens)'` before restarting.
+- Treat regex tweaks with extra caution: smoke-test them in a scratch buffer (`re-search-forward`) to avoid `invalid-regexp` surprises.
+- Keep the edit loop tight—edit → tangle → `check-parens` (or byte-compile)—to catch structural errors before they reach Spacemacs startup.
+
 ## Note on File Size
 - `shared-functions.org`: ~316KB (9983 lines) 
   - **Splitting not recommended**: For a personal config, having everything in one searchable file is actually more convenient than managing multiple files with inter-dependencies. The monolithic approach is working well - Emacs handles it fine, and it's easier to maintain when you know where everything is

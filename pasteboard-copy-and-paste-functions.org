@@ -307,12 +307,12 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
   "Safely replace PATTERN with REPLACEMENT between BEG and END."
   (save-excursion
     (goto-char beg)
-    (let ((last-point (point)))
+    (let ((last-point beg))
       (while (re-search-forward pattern end t)
         (unless (> (point) last-point)  ; Prevent infinite loops
           (error "Infinite loop detected in regex replacement."))
         (setq last-point (point))
-        (replace-match replacement t t))))
+        (replace-match replacement t t)))))
 
 (defun safe-pbpaste ()
   "Run pbpaste with a timeout to prevent hanging."

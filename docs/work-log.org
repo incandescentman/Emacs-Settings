@@ -336,6 +336,7 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 - Introduced `pasteboard--text-contains-markdown-headings-p` as a quick ChatGPT-specific signal so the cleanup kicks in whenever `##`/`###` headings appear, even if other cues are absent.
 - Introduced a contextual `pasteboard--convert-asterisk-bullets-to-dashes` that only rewrites single-asterisk lines when surrounded by list-like neighbours and not present in the preserved heading line set.
 - When the heuristic classifies the clipboard as Markdown, we now run the new conversion plus the dash normalizer and optional code-block translator inside a narrowed region; otherwise we leave existing Org intact.
+- Patched the `safe-replace` helper so the tangling output is syntactically balanced and tightened the Markdown-scoring regexes to avoid `invalid-regexp` errors at runtime.
 
 ** Files Modified
 - `pasteboard-copy-and-paste-functions.org`: Added the clipboard analyser, bullet conversion helpers, and updated `pasteboard--clean-string` to use them.
@@ -350,6 +351,12 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 ** Follow-up Ideas
 - Capture edge cases where the heuristic returns “unknown” and consider exposing a manual override.
 - Extend detection with language-model metadata (e.g., presence of italics/bold fences) to tighten behaviour on tiny clipboards that lack headings.
+
+*** NOTE TO AI/LLM (next session)
+- Whenever you touch `pasteboard-copy-and-paste-functions.org`, immediately `org-babel-tangle` or `org-babel-load-file` so the `.el` stays in sync. Don’t leave the old tangled file lying around.
+- Run `emacs --batch pasteboard-copy-and-paste-functions.el --eval '(check-parens)'` (or `byte-compile-file`) before restarting. It catches missing parens right away.
+- If you tweak regexes, sanity-check them (`re-search-forward` in a scratch buffer) to avoid another `invalid-regexp` surprise.
+- TL;DR: edit → tangle → `check-parens` every time. It’s faster than hunting mismatched parens after the fact.
 
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 
