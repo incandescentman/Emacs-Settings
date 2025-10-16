@@ -552,6 +552,13 @@ Otherwise, demote from point to the end of the buffer."
         (replace-match "[[\\2][\\1]]" t))
       (set-marker end-marker nil))))
 
+(defun pasteboard--text-contains-markdown-headings-p (text)
+  "Return non-nil if TEXT includes Markdown heading markers (##, ###, etc.)."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (re-search-forward "^\\s-*#\\{2,6\\}\\s-+" nil t)))
+
 (defun pasteboard--analyse-clipboard-text (text)
   "Return a plist describing TEXT, detecting whether it looks like Markdown or Org."
   (with-temp-buffer
@@ -662,9 +669,12 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
 
 (defun pasteboard--clean-string (text)
   "Apply the same normalisation steps as `pasteboard-paste-clean' to TEXT."
-  (let* ((analysis (pasteboard--analyse-clipboard-text text))
+  (let* ((markdown-headings-present (pasteboard--text-contains-markdown-headings-p text))
+         (analysis (pasteboard--analyse-clipboard-text text))
          (style (plist-get analysis :style))
          (heading-lines (plist-get analysis :markdown-heading-lines)))
+    (when markdown-headings-present
+      (setq style 'markdown))
     (with-temp-buffer
       (insert text)
       (let ((beg (point-min))

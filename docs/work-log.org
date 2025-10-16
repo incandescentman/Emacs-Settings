@@ -321,6 +321,7 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 
 ** Solution
 - Added `pasteboard--analyse-clipboard-text` to score clipboards for Markdown cues (hash headings, fenced code, ordered lists, etc.) and capture the original line numbers of `#` headings.
+- Introduced `pasteboard--text-contains-markdown-headings-p` as a quick ChatGPT-specific signal so the cleanup kicks in whenever `##`/`###` headings appear, even if other cues are absent.
 - Introduced a contextual `pasteboard--convert-asterisk-bullets-to-dashes` that only rewrites single-asterisk lines when surrounded by list-like neighbours and not present in the preserved heading line set.
 - When the heuristic classifies the clipboard as Markdown, we now run the new conversion plus the dash normalizer and optional code-block translator inside a narrowed region; otherwise we leave existing Org intact.
 
