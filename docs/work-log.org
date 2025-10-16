@@ -19,6 +19,11 @@
 - `docs/work-log.org`: Logged the reorganization.
 - `timeline/timeline-ideas.org`: New scratchpad for potential enhancements.
 
+** Handoff: Next session
+- Reload `shared-functions.org` (or re-tangle) so the new load-path entry is reflected in the generated `.el`.
+- Verify `timeline.el` autoloads when starting Emacs and that `require 'timeline` resolves without warnings.
+- Sanity-check the updated README (`timeline/README.org`) renders correctly, especially the AI/LLM section formatting.
+
 * 2025-10-16: Diary search, context mode, and regression guard
 
 ** Summary
