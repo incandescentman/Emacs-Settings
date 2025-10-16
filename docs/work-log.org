@@ -3,6 +3,18 @@
 #+DATE: [2025-01-27 Mon]
 
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
+* 2025-10-16: Timeline modules split for maintainability
+
+** Summary
+- Broke the monolithic `timeline.el` into focused modules (`timeline-core`, `timeline-calendar`, `timeline-diary`, `timeline-cleanup`, `timeline-search`, `timeline-tests`).
+- Updated the main entry point to require the new modules, add load-path shims, and centralise keybindings/which-key labels.
+- Ensured the README describes the new structure and refreshed the automated test suite to load via the modular entry point.
+
+** Files Modified
+- `timeline/timeline.el`: Now re-exports the modular files and configures bindings.
+- `timeline/timeline-*.el`: New module files extracted from the original timeline.
+- `docs/work-log.org`: Logged the restructuring work.
+- `timeline/README.org`: Documented the new file layout and capabilities.
 
 ** Summary
 - Hardened the blank-line helper so newly inserted diary headings never glue themselves to the preceding bullet text.
@@ -333,10 +345,11 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 - ChatGPT bullet lists paste as proper `- ` items while real Org headings remain untouched.
 - Org-centric clipboards skip the Markdown-specific cleanup, preventing unintended demotions.
 - Downstream dash/code-block normalization is still available when pasting Markdown-heavy content.
+- ChatGPT reviews that mix `##` headings with leading `*` bullets now always trigger the Markdown cleanup path, guaranteeing conversion even when other signals are sparse.
 
 ** Follow-up Ideas
 - Capture edge cases where the heuristic returns “unknown” and consider exposing a manual override.
-- Extend detection with language-model metadata (e.g., presence of “##”) to tighten small-clipboard behaviour.
+- Extend detection with language-model metadata (e.g., presence of italics/bold fences) to tighten behaviour on tiny clipboards that lack headings.
 
 * 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
 

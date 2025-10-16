@@ -102,6 +102,15 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - Compatible with modern Emacs (≥ 29), including builds where =calendar-month-alist= isn't automatically provided.
 - Optional which-key integration labels every custom Calendar binding when which-key-mode is active, the calendar move hook echoes the active date for quick context, and `my-calendar-test-date-format` provides an ERT regression test for the diary date formatter.
 
+* Module Layout
+- ~timeline-core.el~ — shared variables plus low-level helpers for formatting, spacing, and month/year region management.
+- ~timeline-calendar.el~ — calendar-facing commands, hooks, and window management (including which-key labels and highlight tweaks).
+- ~timeline-diary.el~ — diary insertion/edit commands and the lightweight `my-diary-mode`.
+- ~timeline-cleanup.el~ — the before-save cleanup pass and the `C-c C-k` cancel workflow.
+- ~timeline-search.el~ — consult-ripgrep integration and search bindings for both calendar and diary buffers.
+- ~timeline-tests.el~ — ERT coverage that exercises insertion, editing, cleanup, and cancel behaviour.
+- ~timeline.el~ — entry point that stitches the modules together and installs the shared keybindings.
+
 * Requirements
 - Emacs 28 or newer.
 - The built-in Calendar and Diary packages.
