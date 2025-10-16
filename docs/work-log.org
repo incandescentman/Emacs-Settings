@@ -337,9 +337,11 @@ By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` direct
 - Introduced a contextual `pasteboard--convert-asterisk-bullets-to-dashes` that only rewrites single-asterisk lines when surrounded by list-like neighbours and not present in the preserved heading line set.
 - When the heuristic classifies the clipboard as Markdown, we now run the new conversion plus the dash normalizer and optional code-block translator inside a narrowed region; otherwise we leave existing Org intact.
 - Patched the `safe-replace` helper so the tangling output is syntactically balanced and tightened the Markdown-scoring regexes to avoid `invalid-regexp` errors at runtime.
+- Added `jay/add-current-display-to-notch-list-and-save` so you can persistently add the current monitor to the notch-hiding list and refresh the tab bar guard in one command.
 
 ** Files Modified
 - `pasteboard-copy-and-paste-functions.org`: Added the clipboard analyser, bullet conversion helpers, and updated `pasteboard--clean-string` to use them.
+- `shared-functions.org`: Added a persistent helper for saving the active display to `jay/notch-display-identifiers`.
 - `docs/work-log.org`: Added this entry.
 
 ** Expected Results After Reload
