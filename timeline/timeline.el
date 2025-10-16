@@ -247,9 +247,13 @@ Also set buffer-local `my-diary--origin-date` in the diary buffer."
   "Open the diary entry for the date at point and leave focus in the diary buffer.
 After jumping, move point to the end of the last bullet item for that date."
   (interactive)
-  (let* ((date (calendar-cursor-to-date t))
-         (entry-pos (my-calendar-jump-to-diary-entry date t)))
-    (when entry-pos
+  (let* ((date (calendar-cursor-to-date t)))
+    (unless (my-calendar--diary-entry-exists-p date)
+      (my-calendar--diary-insert-entry date '("")))
+    (let ((entry-pos (my-calendar-jump-to-diary-entry date t)))
+      (unless entry-pos
+        (user-error "Could not locate diary entry for %s"
+                    (my-calendar--describe-date date)))
       (goto-char entry-pos)
       (let ((date-line-end (line-end-position))
             (last-bullet-pos nil))
@@ -374,15 +378,29 @@ This always returns a valid region, even if the month heading did not exist befo
         (year  (nth 2 date)))
     (format "%s %d, %d" (calendar-month-name month) day year)))
 
+(defun my-calendar--diary-entry-exists-p (date)
+  "Return non-nil if an entry for DATE (list MONTH DAY YEAR) exists."
+  (let* ((month (nth 0 date))
+         (day   (nth 1 date))
+         (year  (nth 2 date))
+         (date-line (my-calendar--diary-format-date month day year))
+         (buffer (find-file-noselect diary-file)))
+    (with-current-buffer buffer
+      (save-excursion
+        (goto-char (point-min))
+        (let ((case-fold-search nil))
+          (re-search-forward
+           (concat "^" (regexp-quote date-line) "$") nil t))))))
+
 (defun my-calendar--ensure-blank-line-before ()
   "Ensure exactly one blank line precedes point.
 Collapses any existing run of newlines and inserts two."
-  (save-excursion
-    (let ((end (point)))
-      (skip-chars-backward "\n")
-      (let ((start (point)))
-        (delete-region start end)
-        (insert "\n\n")))))
+  (let ((start (point)))
+    (while (and (> start (point-min))
+                (eq (char-before start) ?\n))
+      (setq start (1- start)))
+    (delete-region start (point))
+    (insert "\n\n")))
 
 (defun my-calendar--ensure-blank-line-after ()
   "Ensure exactly one blank line follows point.

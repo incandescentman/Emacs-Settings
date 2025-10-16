@@ -2,6 +2,18 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-16: Calendar entry spacing and edit-on-empty improvements
+
+** Summary
+- Hardened the blank-line helper so newly inserted diary headings never glue themselves to the preceding bullet text.
+- Taught `my-calendar-edit-diary-entry` to auto-create a heading and blank bullet when a date has no entry, landing point where you can immediately type.
+- Noted in the README that the timeline file doubles as a plain-text record of upcoming events.
+
+** Files Modified
+- `timeline/timeline.el`: Fixed blank-line logic and auto-create behavior for empty dates.
+- `timeline/README.org`: Documented the plain-text upcoming-events stance.
+- `docs/work-log.org`: Logged these improvements.
+
 * 2025-10-16: Timeline rename and assets consolidated
 
 ** Summary

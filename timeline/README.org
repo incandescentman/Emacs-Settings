@@ -4,6 +4,7 @@
 
 * Overview
 The ~timeline.el~ module extends Emacs' built-in Calendar and Diary system with Markdown support, enabling seamless journaling, planning, and event tracking inside a plain-text timeline file (~timeline.md~). It bridges the visual navigation of Emacs Calendar with a clean, chronological Markdown format suitable for version control and reading outside Emacs.
+It also serves as a plain-text record of upcoming events.
 
 *Design Philosophy*
 Timeline is designed around a few core ideas: plain text, longevity, and flow. Instead of building a database or GUI, it keeps everything in a readable Markdown file that will still make sense in ten years. It prioritizes speed and structure—fast key-driven navigation between Emacs Calendar and the timeline file—so you can record and view events without friction. Its Markdown format guarantees portability, while its Emacs integration ensures you always have context: where you are in time, what’s next, and what’s already done.
@@ -120,5 +121,4 @@ In this way, Timeline functions as a text-first event database — a human-reada
 
 Copyright (c) 2025 Jay Dixit.
 Licensed under the MIT License. 
-
 
