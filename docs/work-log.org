@@ -2,6 +2,19 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-16: Calendar navigation assist overlays
+
+** Summary
+- Added an interactive ~my-calendar-help~ popup (bound to ~?~) that displays the custom calendar diary bindings in a view-mode buffer.
+- Introduced ~my-calendar-toggle-last-date~ on ~M-t~, letting the calendar jump back and forth between today and the last visited date.
+- Registered friendly which-key labels for every diary-centric key so the shortcuts surface automatically when which-key is active.
+
+** Files Modified
+- `markdown-diary.el`: Implemented the help popup, toggle command, and which-key integration.
+- `docs/calendar-keybindings.org`: Documented the new ~?~ and ~M-t~ bindings.
+- `markdown-diary-README.org`: Refreshed the cheat-sheet table and noted the optional which-key hints.
+- `docs/work-log.org`: Logged this update.
+
 * 2025-10-14: Calendar diary prompt variants, spacing, and navigation fixes
 
 ** Summary
