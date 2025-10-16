@@ -312,7 +312,7 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
         (unless (> (point) last-point)  ; Prevent infinite loops
           (error "Infinite loop detected in regex replacement."))
         (setq last-point (point))
-        (replace-match replacement t t)))))
+        (replace-match replacement t t))))
 
 (defun safe-pbpaste ()
   "Run pbpaste with a timeout to prevent hanging."
@@ -329,63 +329,58 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 (defun pasteboard-copy-adaptive ()
   "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text."
   (interactive)
-  (let (choice handler)
-    (cond
-     ;; ------------------------------------------ verbatim buckets ------------------------------------------
-     ;; 1) Messages buffer - ALWAYS verbatim
-     ((string= (buffer-name) "*Messages*")
-      (setq choice "verbatim (Messages buffer)"
-            handler #'pasteboard-copy-verbatim))
-     
-     ;; 2) Shell / Elisp / Web / Markdown / Backtrace
-     ((or (eq major-mode 'sh-mode)
-          (eq major-mode 'emacs-lisp-mode)
-          (eq major-mode 'web-mode)
-          (eq major-mode 'markdown-mode)
-          (eq major-mode 'gfm-mode)
-          (derived-mode-p 'markdown-mode)
-          (derived-mode-p 'backtrace-mode))
-      (setq choice "verbatim (mode match)"
-            handler #'pasteboard-copy-verbatim))
+  (let* ((result
+          (cond
+           ;; ------------------------------------------ verbatim buckets ------------------------------------------
+           ;; 1) Messages buffer - ALWAYS verbatim
+           ((string= (buffer-name) "*Messages*")
+            (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
+           
+           ;; 2) Shell / Elisp / Web / Markdown / Backtrace
+           ((or (eq major-mode 'sh-mode)
+                (eq major-mode 'emacs-lisp-mode)
+                (eq major-mode 'web-mode)
+                (eq major-mode 'markdown-mode)
+                (eq major-mode 'gfm-mode)
+                (derived-mode-p 'markdown-mode)
+                (derived-mode-p 'backtrace-mode))
+            (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
 
-     ;; 3) Org buffer **with** org-config-files-local-mode enabled
-     ((and (eq major-mode 'org-mode)
-           (bound-and-true-p org-config-files-local-mode))
-      (setq choice "verbatim (org-local)"
-            handler #'pasteboard-copy-verbatim))
+           ;; 3) Org buffer **with** org-config-files-local-mode enabled
+           ((and (eq major-mode 'org-mode)
+                 (bound-and-true-p org-config-files-local-mode))
+            (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
 
-     ;; 4) Any file ending in .mdx
-     ((and buffer-file-name
-           (string-match-p "\\.mdx\\'" buffer-file-name))
-      (setq choice "verbatim (.mdx)"
-            handler #'pasteboard-copy-verbatim))
+           ;; 4) Any file ending in .mdx
+           ((and buffer-file-name
+                 (string-match-p "\\.mdx\\'" buffer-file-name))
+            (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
 
-     ;; 5) Any programming mode
-     ((derived-mode-p 'prog-mode)
-      (setq choice "verbatim (prog)"
-            handler #'pasteboard-copy-verbatim))
+           ;; 5) Any programming mode
+           ((derived-mode-p 'prog-mode)
+            (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
 
-     ;; ------------------------------------------ clean buckets ------------------------------------------
-     ;; 6) Org or generic text (when org-config-files-local-mode is off)
-     ((or (eq major-mode 'text-mode)
-          (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode))))
-      (setq choice "clean"
-            handler #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+           ;; ------------------------------------------ clean buckets ------------------------------------------
+           ;; 6) Org or generic text (when org-config-files-local-mode is off)
+           ((or (eq major-mode 'text-mode)
+                (and (eq major-mode 'org-mode)
+                     (not (bound-and-true-p org-config-files-local-mode))))
+            (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
 
-     ;; ---------------------------------------- heuristic fallback --------------------------------------
-     (t
-      (if (and (use-region-p)
-               (save-excursion
-                 (goto-char (region-beginning))
-                 (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-          (setq choice "verbatim (heuristic)"
-                handler #'pasteboard-copy-verbatim)
-        (setq choice "clean (default)"
-              handler #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))))
+           ;; ---------------------------------------- heuristic fallback --------------------------------------
+           ((and (use-region-p)
+                 (save-excursion
+                   (goto-char (region-beginning))
+                   (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
+            (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
+           
+           (t
+            (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+         (choice (car result))
+         (handler (cdr result)))
     (when handler
       (call-interactively handler))
-    (message "Copied text %s" choice))
+    (message "Copied text %s" choice)))
 #+end_src
 
 ** pasteboard-copy
@@ -573,8 +568,8 @@ Otherwise, demote from point to the end of the buffer."
             (case-fold-search nil))
         (dolist (spec
                  '((md-score "^\\s-*#\\{1,6\\} " 3)
-                   (md-score "^\\s-*[-+] \\S" 1)
-                   (md-score "^\\s-*\\d+\\. \\S" 1)
+                   (md-score "^\\s-*[-+] \\S-" 1)
+                   (md-score "^\\s-*\\d+\\. \\S-" 1)
                    (md-score "^\\s*> " 1)
                    (md-score "^\\s*`\\{3\\}" 2)
                    (md-score "\\[[^][]+\\](https?://[^)]+)" 1)
@@ -585,7 +580,7 @@ Otherwise, demote from point to the end of the buffer."
                    (org-score "^\\s*:END:\\s*$" 1)
                    (org-score "^\\s*SCHEDULED:" 2)
                    (org-score "^\\s*DEADLINE:" 2)
-                   (org-score "^\\s*\\*\\{2,\\} \\S" 2)))
+                   (org-score "^\\s*\\*\\{2,\\} \\S-" 2)))
           (pcase-let ((`(,target ,regex ,weight) spec))
             (goto-char (point-min))
             (while (re-search-forward regex nil t)
@@ -593,7 +588,7 @@ Otherwise, demote from point to the end of the buffer."
                 ('md-score  (cl-incf md-score weight))
                 ('org-score (cl-incf org-score weight))))))
         (goto-char (point-min))
-        (while (re-search-forward "^\\s*\\* \\S" nil t)
+        (while (re-search-forward "^\\s*\\* \\S-" nil t)
           (cl-incf asterisk-bullets))
         (let ((style
                (cond
@@ -616,10 +611,10 @@ Otherwise, demote from point to the end of the buffer."
     (goto-char pos)
     (cond
      ((looking-at "^\\s*$") 'blank)
-     ((looking-at "^\\s*\\*\\{2,\\} \\S") 'org-heading)
-     ((looking-at "^\\s*\\* \\S") 'asterisk-bullet)
-     ((looking-at "^\\s*[-+] \\S") 'dash-bullet)
-     ((looking-at "^\\s*\\d+\\. \\S") 'ordered-bullet)
+     ((looking-at "^\\s*\\*\\{2,\\} \\S-") 'org-heading)
+     ((looking-at "^\\s*\\* \\S-") 'asterisk-bullet)
+     ((looking-at "^\\s*[-+] \\S-") 'dash-bullet)
+     ((looking-at "^\\s*\\d+\\. \\S-") 'ordered-bullet)
      ((looking-at "^\\s*:") 'definition)
      (t 'text))))
 
