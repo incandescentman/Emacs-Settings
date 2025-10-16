@@ -1,0 +1,65 @@
+fExcellent — you’re zeroing in on what makes Workflowy’s note-entry experience *feel* so frictionless. Let’s dissect that layer by layer:
+
+---
+
+### ⚙️ 1. Interaction Model
+
+Workflowy’s note entry is built on a **flat text field illusion**—it looks like a word processor but behaves like an outliner.
+The mental model is *typing → press Enter → new idea*. Everything else (nesting, moving, editing) stays consistent with that rhythm.
+
+* **Enter** → creates a new sibling bullet.
+* **Tab** → indents (makes child).
+* **Shift-Tab** → outdents (promotes to parent’s level).
+* **Backspace at start of line** → merges with parent.
+* **Ctrl/Cmd + Enter** → inserts a line break *inside* a bullet (multi-line support without breaking the hierarchy).
+
+This single-keystroke control scheme removes the need for explicit “Add,” “Indent,” or “Move” buttons, creating the feeling of continuous writing.
+
+---
+
+### 🧱 2. The Core Principle: Single-Column Flow
+
+There’s no toolbar, sidebar, or mode switch while you’re typing.
+Workflowy reduces everything to a **single column of editable bullets**, which keeps your cursor movement vertical and predictable.
+You never have to move your eyes laterally—there’s just the text and indentation.
+
+---
+
+### ✏️ 3. Editing Behavior
+
+* Clicking anywhere inside a bullet immediately turns it into an editable text field (no modal or “edit mode”).
+* Bullets expand inline; the cursor never jumps unexpectedly.
+* Rich-text features (bold, italics, links) use Markdown-style shortcuts or inline popups only on selection, not persistent UI.
+
+---
+
+### 🪶 4. Feedback & Responsiveness
+
+* Every keystroke updates instantly; the UI doesn’t lag because it’s essentially a DOM list with event delegation.
+* Indentation is animated smoothly—indent/outdent “slides” left/right a few pixels, creating a tactile sense of structure.
+* Deleting a bullet causes its children to collapse visually before being removed, reinforcing hierarchy awareness.
+
+---
+
+### 🧭 5. Micro-Patterns That Add Flow
+
+* **Empty bullets auto-delete** when you backspace out of them—no manual cleanup.
+* **Arrow keys** move intuitively between bullets; up/down navigates siblings, left/right enters/exits child levels.
+* **Inline creation**: typing `#tag` or `@mention` instantly styles text—no dialog needed.
+* **No save button.** Everything is auto-persisted; this invisibility reinforces a continuous-flow mindset.
+
+---
+
+### ✨ 6. Why It Feels Effortless
+
+Workflowy’s UI merges *the simplicity of a text editor* with *the structure of a tree*.
+What’s genius is that you never “switch tools” to change levels of abstraction—you just press **Tab** or **Shift-Tab**. That’s it.
+It’s basically:
+
+> “Each bullet is a sentence. Each indent is a thought beneath it.”
+
+This creates a meditative, typewriter-like rhythm—type, Enter, type, Tab, Enter—without breaking cognitive flow.
+
+---
+
+Would you like me to break this down next into a **UI/UX spec**—for example, how you could replicate this feel in a web app (keybindings, DOM model, event logic, CSS behaviors)?

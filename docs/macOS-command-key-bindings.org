@@ -222,6 +222,162 @@ The function key is configured as a hyper modifier: ~(setq ns-function-modifier 
 | ~ns-function-modifier~ | ~'hyper~ | Maps function key to hyper modifier |
 | ~ns-right-command-modifier~ | ~'meta~ | Maps right command key to meta |
 
+* Keybinding Configuration Analysis
+
+** Overall Assessment: Good with Room for Optimization
+
+*** Configuration Strengths
+
+**** Excellent Use of macOS Conventions
+- ~s-a~ (select all), ~s-c~ (copy), ~s-v~ (paste), ~s-x~ (cut) follow macOS standards
+- ~s-z~ (undo), ~s-y~ (redo) are intuitive
+- ~s-f~ (search), ~s-h~ (find/replace) are logical
+- ~s-w~ (close window), ~s-n~ (new frame) match system expectations
+
+**** Smart Prefix Organization
+- ~s-k~ as a custom prefix is brilliant - easily accessible and expandable
+- Logical groupings within ~s-k~:
+  - ~s-k g~ for navigation (goto-char, goto-line)
+  - ~s-k o~ for org-mode operations
+  - ~s-k c~ for clipboard/copy operations
+
+**** Buffer Navigation Optimization
+- ~s-left~/~s-right~ for buffer-stack navigation is very accessible
+- ~s-r~ for recent files is well-placed
+
+*** Areas for Improvement
+
+**** Single-Key vs Multi-Key for Common Operations
+
+***** Well-Placed Common Operations:
+- ~=~ for ~amx~ (M-x alternative) - Excellent placement for frequent command
+- ~s-i~ for ~imenu~ - Good choice for navigation
+- ~s-B~ for ~consult-buffer~ - Good accessibility
+
+***** Missing Easy Access:
+- No single ~s-~ key optimized purely for buffer switching (very common operation)
+- File operations beyond recent files could be more accessible
+
+**** Accessibility Analysis by Finger Reach
+
+***** Most Accessible Keys (Prime Real Estate):
+#+BEGIN_EXAMPLE
+Left hand home row + s:  s-a, s-s, s-d, s-f, s-g
+Right hand home row + s: s-j, s-k, s-l, s-;
+#+END_EXAMPLE
+
+***** Current Usage of Prime Keys:
+| Key | Current Function | Assessment |
+|-----|------------------|------------|
+| ~s-a~ | ~mark-whole-buffer~ | ✅ Excellent (select all) |
+| ~s-s~ | ~jay/save-all-buffers~ | ✅ Excellent (save) |
+| ~s-d~ | **UNUSED** | ❗ Prime real estate available |
+| ~s-f~ | ~isearch-forward-ignore-case~ | ✅ Excellent (search) |
+| ~s-g~ | ~isearch-repeat-forward~ | ✅ Good (search repeat) |
+| ~s-j~ | ~org-todo~ | ✅ Good (if org-heavy workflow) |
+| ~s-k~ | Custom prefix | ✅ Excellent use |
+| ~s-l~ | ~consult-outline~ | ❓ Good if used frequently |
+
+**** Frequency vs Accessibility Mismatches
+
+***** Potentially Over-Accessible (Specialized on Easy Keys):
+- ~s-D~ = define word (how often used?)
+- ~s-T~ = thesaurus (specialized function)
+- ~s-L~ = Chrome URL insert (very specific use case)
+- ~s-S~ = Skim PDF link insert (specialized)
+
+***** Potentially Under-Accessible:
+- Buffer switching (currently ~s-B~ - could be more accessible)
+- File opening beyond recent files
+- Directory navigation
+- Window management workflow
+
+*** Optimization Recommendations
+
+**** 1. Claim ~s-d~ for High-Frequency Operation
+
+#+BEGIN_SRC emacs-lisp
+;; Consider one of these for the unused s-d:
+(global-set-key (kbd "s-d") 'duplicate-line)     ; if you duplicate often
+(global-set-key (kbd "s-d") 'dired-jump)        ; quick directory access
+(global-set-key (kbd "s-d") 'consult-buffer)    ; move buffer switching here
+(global-set-key (kbd "s-d") 'delete-region)     ; complement to s-c/s-x/s-v
+#+END_SRC
+
+**** 2. Reorganize Specialized Functions
+
+Move less-frequent functions to ~s-k~ prefix to free up prime keys:
+
+#+BEGIN_SRC emacs-lisp
+;; Current specialized bindings that could move to s-k:
+;; s-D (define-word) → s-k d w (define word)
+;; s-T (thesaurus) → s-k t h (thesaurus)
+;; s-L (chrome link) → s-k l c (link chrome)
+;; s-S (skim link) → s-k l s (link skim)
+#+END_SRC
+
+**** 3. Frequency-Based Audit Recommendations
+
+**If you frequently:**
+- **Switch buffers**: Move to ~s-d~ or another single key
+- **Open files**: Consider ~s-o~ for file opening (relocate current function)
+- **Navigate directories**: ~s-d~ for ~dired-jump~ could be very useful
+- **Duplicate lines/regions**: ~s-d~ for duplication is very handy
+
+**** 4. Window Management Optimization
+
+Current window management is logical and follows a pattern:
+- ~s-0~ = move region to other window
+- ~s-1~ = delete other windows  
+- ~s-2~ = split vertically
+- ~s-3~ = split horizontally
+
+This numeric pattern works well and should be maintained.
+
+**** 5. Consider Usage-Based Reorganization
+
+**High-frequency operations** (should have easiest access):
+1. Buffer switching
+2. File opening
+3. Search/navigation
+4. Copy/paste operations
+5. Save operations
+
+**Medium-frequency operations** (s-k prefix or secondary keys):
+1. Org-mode specific functions
+2. Window management
+3. Mode switching
+
+**Low-frequency operations** (s-k submenus):
+1. Dictionary/thesaurus lookups
+2. Specialized link insertions
+3. System integrations
+
+*** Implementation Strategy
+
+**** Phase 1: Audit Current Usage
+1. Track which functions you actually use most over a week
+2. Note any friction points or hard-to-remember bindings
+3. Identify truly high-frequency operations
+
+**** Phase 2: Optimize Prime Keys
+1. Claim ~s-d~ for a high-frequency operation
+2. Consider moving specialized functions to ~s-k~ prefix
+3. Ensure buffer/file operations have optimal accessibility
+
+**** Phase 3: Refine and Test
+1. Implement changes gradually
+2. Test new bindings for muscle memory compatibility
+3. Adjust based on actual usage patterns
+
+*** Configuration Strengths to Maintain
+
+1. **Consistent Logic**: The ~s-k~ prefix system is well-organized and scalable
+2. **macOS Integration**: Excellent adherence to platform conventions
+3. **Mnemonic Value**: Most bindings make intuitive sense
+4. **Expandability**: The prefix system allows for growth
+5. **Context Sensitivity**: Different bindings in different modes where appropriate
+
 * Notes
 - Many bindings use the ~s-k~ prefix as a custom keymap for personal functions
 - Some bindings are context-sensitive (different in org-mode vs other modes)
@@ -231,3 +387,6 @@ The function key is configured as a hyper modifier: ~(setq ns-function-modifier 
 - The function key is configured as a hyper modifier, providing access to an additional modifier layer
 - Buffer-stack provides enhanced buffer navigation using Command+arrow keys
 - Some legacy Aquamacs bindings are preserved for compatibility
+- **The ~s-k~ prefix system is particularly elegant and serves as an excellent model**
+- **Configuration shows thoughtful planning and is above average in organization**
+- **Main optimization opportunity: claim unused prime keys like ~s-d~ for high-frequency operations**

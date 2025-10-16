@@ -1,0 +1,28 @@
+:PROPERTIES:
+:ID:       20251016T142736.681973
+:END:
+#+TITLE: Workflowy Mode
+#+FILETAGS: :document:
+- Links ::
+- Source ::
+
+* Workflowy Mode
+
+** Analysis: What Makes Workflowy Work
+
+*** Core Mechanics
+
+**The fundamental loop is frictionless:**
+- Type → Enter → New bullet appears
+- Your cursor is immediately ready to type again
+- No clicking, no menus, no "create new item" buttons
+
+**Indentation feels natural:**
+- Tab indents (makes current bullet a child of the one above)
+- Shift-Tab outdents (promotes it back up a level)
+- The visual hierarchy updates instantly—you see the structure as you think
+
+*** Interaction Model
+
+Workflowy's note entry is built on a **flat text field illusion**—it looks like a word processor but behaves like an outliner.
+The mental model is *typing → press Enter → new idea*. Everything else (nesting, moving, editing) stays consistent with that rhythm.
