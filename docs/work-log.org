@@ -15,6 +15,7 @@
 - `calendar/markdown-diary.el`: Calendar/diary helpers relocated.
 - `shared-functions.org`: Added `calendar/` to `load-path`.
 - `docs/work-log.org`: Logged the reorganization.
+- `calendar/markdown-diary-ideas.org`: New scratchpad for potential enhancements.
 
 * 2025-10-16: Diary search, context mode, and regression guard
 
