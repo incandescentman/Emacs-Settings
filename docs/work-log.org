@@ -5,6 +5,18 @@
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
 * 2025-10-16: Timeline modules split for maintainability
 
+* 2025-10-16: Pasteboard markdown detection hardened and documented
+
+** Summary
+- Fixed the adaptive paste bullet conversion so ChatGPT Markdown lists always flip `*` to `-` without touching real Org headings.
+- Added a fallback sweep after the primary conversion to catch any remaining single-asterisk bullets when Markdown is detected.
+- Captured the detection goals, heuristics, and maintenance loop in `docs/pasteboard-markdown-detection.org` for future reference.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Corrected regexes, gathered replacements bottom-up, refreshed region bounds, and added the final conversion sweep.
+- `docs/codebase-wisdom.org`: Logged the post-mortem and checklist under “Pasteboard Markdown Bullet Detection: Regex and Retangle”.
+- `docs/pasteboard-markdown-detection.org`: New document explaining the desired behaviour and implementation details.
+
 ** Summary
 - Broke the monolithic `timeline.el` into focused modules (`timeline-core`, `timeline-calendar`, `timeline-diary`, `timeline-cleanup`, `timeline-search`, `timeline-tests`).
 - Updated the main entry point to require the new modules, add load-path shims, and centralise keybindings/which-key labels.

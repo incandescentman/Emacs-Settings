@@ -2,6 +2,35 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Pasteboard Markdown Bullet Detection: Regex and Retangle
+  Date: 2025-10-16
+
+** The Bug
+- `pasteboard-paste-adaptive` still left stray leading `*` in ChatGPT-style Markdown lists, even after the September “smart asterisk” refactor.
+- Stale tangles meant fixes that worked in the Org source weren’t exercised by runtime Emacs, so regressions reappeared during real pastes.
+
+** The Truth
+- `pasteboard--line-kind-at-pos` used `\s` instead of `\s-`, so the regex never matched whitespace in an Emacs syntax table; Markdown bullets were treated as plain text and skipped.
+- The conversion loop rewrote the buffer in place while iterating forward. Match regions shifted, letting mid-list bullets escape conversion.
+- A fallback pass tried to respect `heading-lines`, but those numbers referenced the original Markdown heading positions; after conversion the guard blocked legitimate bullet rewrites.
+
+** Why This Was Tricky
+- Manual spot checks looked correct because Emacs was still loading the pre-change `.el`; only the interactive paste path exposed the mismatch.
+- The heuristic depends on neighbour classification, so the quiet regex failure looked like “the detector is too strict” rather than “the regex never ran”.
+- Large ChatGPT payloads amplify drift: once a single bullet survives, the list looks partly fixed, masking the root cause.
+
+** The Fix
+- Escape whitespace properly (`^\\s-*\\* \\S-`) so single-asterisk bullets classify correctly after tangling.
+- Collect conversion targets first, then rewrite bottom-up to avoid point movement invalidating later matches.
+- Recompute region bounds after the Markdown cleanup and add a last-chance sweep that flips any remaining leading `*` to `-` before running dash normalisation.
+- Bake the workflow: delete the old tangled file, `org-babel-load-file`, and run `emacs --batch … (check-parens)` so tests always hit current code.
+
+** Lessons Learned / Prevention Checklist
+- Keep a tiny harness (`with-temp-buffer`, insert clipboard sample, call `pasteboard--clean-string`) and run it before & after every sanitizer tweak.
+- Validate every new regex in a scratch buffer (`re-search-forward`) before dropping it into helpers—especially `\s` classes.
+- Never trust changes in literate sources until the `.el` is regenerated and structurally checked; make “delete → tangle → check-parens” automatic muscle memory.
+- When rewriting lists, gather matches and mutate afterwards; in-place loop edits are fragile on long AI outputs.
+
 * Org Heading Flattening: Structure vs Formatting
   Date: 2025-10-13
 

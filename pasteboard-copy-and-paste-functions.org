@@ -610,12 +610,12 @@ Otherwise, demote from point to the end of the buffer."
   (save-excursion
     (goto-char pos)
     (cond
-     ((looking-at "^\\s*$") 'blank)
-     ((looking-at "^\\s*\\*\\{2,\\} \\S-") 'org-heading)
-     ((looking-at "^\\s*\\* \\S-") 'asterisk-bullet)
-     ((looking-at "^\\s*[-+] \\S-") 'dash-bullet)
-     ((looking-at "^\\s*\\d+\\. \\S-") 'ordered-bullet)
-     ((looking-at "^\\s*:") 'definition)
+     ((looking-at "^\\s-*$") 'blank)
+     ((looking-at "^\\s-*\\*\\{2,\\} \\S-") 'org-heading)
+     ((looking-at "^\\s-*\\* \\S-") 'asterisk-bullet)
+     ((looking-at "^\\s-*[-+] \\S-") 'dash-bullet)
+     ((looking-at "^\\s-*\\d+\\. \\S-") 'ordered-bullet)
+     ((looking-at "^\\s-*:") 'definition)
      (t 'text))))
 
 (defun pasteboard--neighbor-nonblank-kind (pos direction)
@@ -642,25 +642,32 @@ INDENT is the number of leading spaces.  SKIP-LINES is a list of line numbers pr
     (unless (and skip-lines (memq line-no skip-lines))
       (if (> indent 0)
           t
-        (let ((prev-kind (pasteboard--neighbor-nonblank-kind pos 'prev))
-              (next-kind (pasteboard--neighbor-nonblank-kind pos 'next)))
-          (and (not (memq prev-kind '(org-heading)))
-               (not (memq next-kind '(org-heading)))
-               (or (memq prev-kind '(asterisk-bullet dash-bullet ordered-bullet definition))
-                   (memq next-kind '(asterisk-bullet dash-bullet ordered-bullet definition)))))))))
+        (let* ((prev-kind (pasteboard--neighbor-nonblank-kind pos 'prev))
+               (next-kind (pasteboard--neighbor-nonblank-kind pos 'next))
+               (listish '(asterisk-bullet dash-bullet ordered-bullet definition)))
+          (or (memq prev-kind listish)
+              (memq next-kind listish)))))))
 
 (defun pasteboard--convert-asterisk-bullets-to-dashes (beg end &optional skip-lines)
   "Convert Markdown-style leading '*' bullets to '-' between BEG and END.
 SKIP-LINES is a list of 1-based line numbers that should remain untouched."
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" end t)
-      (let* ((line-beg (match-beginning 0))
-             (indent-str (match-string 1))
-             (body (match-string 2))
-             (indent (length indent-str)))
-        (when (pasteboard--should-convert-asterisk-line line-beg indent skip-lines)
-          (replace-match (concat indent-str "- " body) t t))))))
+  (let (targets)
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" end t)
+        (let* ((line-beg (match-beginning 0))
+               (line-end (match-end 0))
+               (indent-str (match-string 1))
+               (body (match-string 2))
+               (indent (length indent-str)))
+          (when (pasteboard--should-convert-asterisk-line line-beg indent skip-lines)
+            (push (list line-beg line-end indent-str body) targets)))))
+    (save-excursion
+      (dolist (target targets)
+        (pcase-let ((`(,line-beg ,line-end ,indent-str ,body) target))
+          (goto-char line-beg)
+          (delete-region line-beg line-end)
+          (insert indent-str "- " body)))))) 
 
 (defun pasteboard--clean-string (text)
   "Apply the same normalisation steps as `pasteboard-paste-clean' to TEXT."
@@ -681,12 +688,19 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
         (replace-weird-spaces beg end)
         (convert-markdown-blockquotes-to-org beg end)
         (convert-markdown-links-to-org-mode beg end)
+        ;; Buffer size may have changed; refresh region bounds before further narrowing.
+        (setq beg (point-min)
+              end (point-max))
         (when (eq style 'markdown)
           (save-restriction
             (narrow-to-region beg end)
             (let ((region-beg (point-min))
                   (region-end (point-max)))
               (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end heading-lines)
+              ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
+              (goto-char region-beg)
+              (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" nil t)
+                (replace-match "\\1- \\2" t))
               (when (fboundp 'normalize-dashes)
                 (normalize-dashes))
               (when (fboundp 'convert-markdown-to-org-code-blocks-simple)

@@ -1,0 +1,58 @@
+#+TITLE: Pasteboard Markdown Detection
+#+DATE: 2025-10-16
+#+DESCRIPTION: Desired behaviour, detection heuristics, and implementation notes for converting Markdown bullets during adaptive paste.
+
+* Goal
+- Detect when clipboard text is Markdown that uses leading single asterisks (`* `) for unordered lists.
+- Automatically convert those bullets to hyphens (`- `) so the pasted text renders as plain lists in Org buffers.
+- Preserve genuine Org headings (`* Heading`) and Org-native clipboards: no conversion if the payload is already Org.
+
+* High-Level Behaviour
+| Clipboard Style | Detection Result | Bullet Conversion | Notes |
+|-----------------+------------------+-------------------+-------|
+| ChatGPT/Markdown (hash headings, `* item`) | `style: markdown` | `* ` → `- ` (with indentation preserved) | Also normalises dashes and Markdown links. |
+| Org tree / config snippet | `style: org` | no change | All leading stars stay intact. |
+| Ambiguous / plain text | `nil` | no change | Fallback to whitespace normalisation only. |
+
+* Detection Heuristics
+- `pasteboard--analyse-clipboard-text`
+  - Scores Markdown signals: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links.
+  - Scores Org signals: `#+` directives, TODO keywords, property drawers, multi-star headings.
+  - Tracks original Markdown heading *line numbers* for later skip lists.
+- `pasteboard--text-contains-markdown-headings-p`
+  - Fast path for ChatGPT payloads: if we see `##`/`###` style headings, force Markdown mode even when scores tie.
+- Final style selection
+  - `md-score ≥ org-score + 2` → Markdown.
+  - `org-score ≥ md-score + 2` → Org.
+  - Edge cases handle “all Markdown, no Org” and “many asterisk bullets, zero Org traits”.
+
+* Implementation Workflow
+1. Clipboard sanitisation enters `pasteboard--clean-string`.
+2. Headings convert first (`convert-markdown-headings-to-org`), followed by smart quotes, weird-space cleanup, blockquotes, and links.
+3. Region bounds refresh (`setq beg`/`end`) before any narrowing.
+4. If style is `markdown`:
+   1. Narrow to the temp buffer.
+   2. `pasteboard--convert-asterisk-bullets-to-dashes`
+      - Classifies lines via `pasteboard--line-kind-at-pos` (fixed regex uses `\\s-`).
+      - Collects matches, rewrites bottom-up to avoid buffer drift.
+   3. Run a final sweep converting any surviving `* ` to `- `.
+   4. Optional extras: `normalize-dashes`, `convert-markdown-to-org-code-blocks-simple`.
+5. Buffer contents return to the caller for insertion.
+
+* Maintenance Checklists
+- **Edit Loop**: update Org source → delete tangled `.el` → `(org-babel-load-file ...)` → `emacs --batch … (check-parens)`.
+- **Harness**: keep a mini batch script (see `/tmp/test-clean.el` pattern) to validate detection against real ChatGPT payloads.
+- **Regex sanity**: confirm any new `re-search-forward` pattern in `*scratch*` before committing.
+- **Fixtures**: retain a sample Markdown transcript in `debug/` for regression runs.
+
+* Related Files
+- `pasteboard-copy-and-paste-functions.org` / `.el`
+  - `pasteboard--analyse-clipboard-text`
+  - `pasteboard--clean-string`
+- `docs/codebase-wisdom.org`
+  - “Pasteboard Markdown Bullet Detection: Regex and Retangle” post-mortem.
+
+* Open Questions
+- Should we expose a manual override (force Markdown / force Org) when the analyser returns `nil`?
+- Could we cache recent style decisions to avoid re-scoring on repeated pastes of the same payload?
+
