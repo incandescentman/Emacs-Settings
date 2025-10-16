@@ -1,4 +1,4 @@
-#+TITLE: Markdown Diary Ideas
+#+TITLE: Timeline Ideas
 #+AUTHOR: Jay Dixit
 #+DATE: <2025-10-16>
 
