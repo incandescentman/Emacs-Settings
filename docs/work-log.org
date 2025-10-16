@@ -5,10 +5,10 @@
 * 2025-10-16: Timeline rename and assets consolidated
 
 ** Summary
-- Renamed the project from “markdown-diary” to “timeline”, including the module, docs, and ideas notebook.
-- Moved `timeline.el`, the keybinding cheatsheet, and the README into `timeline/` to keep calendar tooling grouped.
-- Pointed the diary file reference to `~/Dropbox/github/timeless/data/timeline.md` across docs and code.
-- Updated references throughout the documentation to target the new directory and naming.
+- Renamed the legacy "markdown-diary" project to "timeline" across modules, docs, and calendars.
+- Moved `timeline.el`, the keybinding cheatsheet, README, and ideas notebook into `timeline/`.
+- Pointed the diary file reference to `~/Dropbox/github/timeless/data/timeline.md` in code and docs.
+- Updated load-path and `require` statements so `require 'timeline` resolves everywhere.
 - Added the new directory to `load-path` so `require 'timeline` continues to resolve.
 
 ** Files Modified
