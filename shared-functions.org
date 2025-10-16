@@ -9475,6 +9475,20 @@ This updates the running Emacs session; use Customize to persist the change."
         (message "➕ Added \"%s\" to jay/notch-display-identifiers (not persisted)" name))
     (message "⚠️ Unable to detect current display name.")))
 
+(defun jay/add-current-display-to-notch-list-and-save ()
+  "Add the current monitor to `jay/notch-display-identifiers` and persist the change.
+Uses `customize-save-variable` so the setting survives restarts, then refreshes the tab-bar guard."
+  (interactive)
+  (if-let* ((display (jay/current-display-attributes))
+            (name (cdr (assoc 'name display))))
+      (let* ((regex (regexp-quote name))
+             (updated (cl-adjoin regex jay/notch-display-identifiers :test #'string=)))
+        (setq jay/notch-display-identifiers updated)
+        (customize-save-variable 'jay/notch-display-identifiers updated)
+        (jay/update-tab-bar-for-display)
+        (message "💾 Added \"%s\" to jay/notch-display-identifiers and saved for future sessions." name))
+    (user-error "Unable to determine the current display name")))
+
 ;; Initialize on load
 (when (eq system-type 'darwin)
   (run-with-timer 1 nil 'jay/setup-display-aware-tab-bar))
