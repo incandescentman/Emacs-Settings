@@ -516,7 +516,7 @@ the interactive prefix argument behaviour from the public commands."
               (lambda ()
                 (interactive)
                 (calendar-goto-today)
-                (my-calendar-jump-to-diary-entry))))
+                (my-calendar-jump-to-diary-entry)))
 
   ;; Bind "?" to calendar help
   (define-key calendar-mode-map (kbd "?") #'my-calendar-help)
