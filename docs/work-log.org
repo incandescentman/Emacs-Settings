@@ -3,6 +3,17 @@
 #+DATE: [2025-01-27 Mon]
 
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
+* 2025-10-16: Verbatim pastes honored in prog-mode saves
+
+** Summary
+- Updated the adaptive paste dispatcher to treat all `prog-mode` derivatives as verbatim, ensuring code snippets no longer run through whitespace cleaners.
+- Taught `jay/save-all-buffers` to save each buffer with the whitespace scrubbers temporarily disabled, so a raw paste keeps its indentation even after `s-s`.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `shared-functions.org`
+
+
 * 2025-10-16: Timeline modules split for maintainability
 
 * 2025-10-16: Pasteboard markdown detection hardened and documented

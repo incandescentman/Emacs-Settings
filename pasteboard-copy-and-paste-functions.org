@@ -735,6 +735,7 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
           (eq major-mode 'markdown-mode)
           (eq major-mode 'gfm-mode)
           (derived-mode-p 'markdown-mode)
+          (derived-mode-p 'prog-mode)
           (eq major-mode 'web-mode))
       (setq choice "verbatim")
       (pasteboard-paste-verbatim clipboard-raw))

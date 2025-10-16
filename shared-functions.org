@@ -2321,7 +2321,13 @@ confirmation.  Non–file‑visiting buffers are ignored."
         (when buffer-file-name
           (when (or (buffer-modified-p)
                     (not (file-exists-p buffer-file-name)))
-            (save-buffer)))))))
+            (let* ((jay--skip-hooks '(cleanup-buffer-safe
+                                      my-before-save-hook
+                                      my-delete-trailing-whitespace-except-final-and-point-line))
+                   (before-save-hook
+                    (cl-remove-if (lambda (fn) (memq fn jay--skip-hooks))
+                                  before-save-hook)))
+              (save-buffer))))))))
 #+END_SRC
 
 * Keybindings
