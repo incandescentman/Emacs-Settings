@@ -13,7 +13,7 @@
 
 ** Files Modified
 - `timeline/timeline-keybindings.org`: New location for the keybinding reference.
-- `timeline/timeline-README.org`: New location for the diary module README.
+- `timeline/README.org`: New location for the diary module README.
 - `timeline/timeline.el`: Calendar/diary helpers relocated.
 - `shared-functions.org`: Added `timeline/` to `load-path`.
 - `docs/work-log.org`: Logged the reorganization.
@@ -29,7 +29,7 @@
 ** Files Modified
 - `timeline.el`: Implemented the search command, diary minor mode, automatic activation hook, bindings, and ERT.
 - `timeline/timeline-keybindings.org`: Documented the new `/` / `s` shortcuts.
-- `timeline/timeline-README.org`: Added the search binding, diary mode note, and mentioned the regression test.
+- `timeline/README.org`: Added the search binding, diary mode note, and mentioned the regression test.
 - `docs/work-log.org`: Logged this update.
 
 * 2025-10-16: Calendar navigation assist overlays
@@ -45,7 +45,7 @@
 ** Files Modified
 - `timeline.el`: Implemented the help popup, toggle command, which-key integration, origin tracking, echo display, and diary return helper.
 - `timeline/timeline-keybindings.org`: Documented the new ~?~, ~M-t~, and diary-buffer ~SPC~ bindings.
-- `timeline/timeline-README.org`: Refreshed the cheat-sheet table, noted diary-space return, and mentioned the echoing move hook.
+- `timeline/README.org`: Refreshed the cheat-sheet table, noted diary-space return, and mentioned the echoing move hook.
 - `docs/work-log.org`: Logged this update.
 
 * 2025-10-14: Calendar diary prompt variants, spacing, and navigation fixes
@@ -57,7 +57,7 @@
 - Added ~SPC~ as another shortcut to view the diary entry without leaving the calendar.
 - Taught `my-calendar-jump-to-diary-entry` to return the heading position so `my-calendar-edit-diary-entry` can land on the last bullet without an extra search.
 - Retired the redundant `my-calendar-open-diary-entry` helper and renamed the fancy diary listing command for clearer intent.
-- Expanded `timeline/timeline-README.org` with an overview of strengths and workflow notes for the timeline/diary bridge.
+- Expanded `timeline/README.org` with an overview of strengths and workflow notes for the timeline/diary bridge.
 
 ** Why it should work
 Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
@@ -67,7 +67,7 @@ Returning the diary heading position lets editing logic reuse the existing searc
 - `timeline.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, navigation toggles, and returned the diary heading position.
 - `timeline/timeline-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
 - `docs/work-log.org`: Logged this change.
-- `timeline/timeline-README.org`: Updated the binding reference.
+- `timeline/README.org`: Updated the binding reference.
 
 * 2025-10-14: Calendar diary view stays focused
 
