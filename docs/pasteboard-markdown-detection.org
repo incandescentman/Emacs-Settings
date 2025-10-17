@@ -35,6 +35,7 @@
    2. `pasteboard--convert-asterisk-bullets-to-dashes`
       - Classifies lines via `pasteboard--line-kind-at-pos` (regex anchored with `[ \t]` so blank lines don't slurp the next heading).
       - Collects matches, rewrites bottom-up to avoid buffer drift.
+      - Optional: when `pasteboard-convert-markdown-inline-emphasis` is non-nil, inline `*italic*` and `**bold**` markers rewrite to Org `/italic/` and `*bold*` before we touch bullets.
    3. Run a final sweep converting any surviving `* ` to `- `.
    4. Optional extras: `normalize-dashes`, `convert-markdown-to-org-code-blocks-simple`.
 5. Buffer contents return to the caller for insertion.

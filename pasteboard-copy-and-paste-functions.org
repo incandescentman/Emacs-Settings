@@ -2,6 +2,16 @@
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 (require 'subr-x)
+
+(defgroup pasteboard nil
+  "Adaptive pasteboard options."
+  :group 'convenience
+  :prefix "pasteboard-")
+
+(defcustom pasteboard-convert-markdown-inline-emphasis nil
+  "When non-nil, convert Markdown *italic* and **bold** to Org /italic/ and *bold* during adaptive pastes."
+  :type 'boolean
+  :group 'pasteboard)
 #+END_SRC
 
 * Replace smart quotes with straight quotes
@@ -298,6 +308,27 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
     (while (re-search-forward "^> " end t)
       (replace-match ": " t t)))
   )
+
+(defun pasteboard--convert-markdown-inline-emphasis (beg end)
+  "Convert inline Markdown emphasis between BEG and END to Org markup.
+
+Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bold*`."
+  (save-excursion
+    (let ((case-fold-search nil))
+      (goto-char beg)
+      ;; Convert Markdown italics that are not part of bold markers.
+      (while (re-search-forward "\\(^\\|[^*]\\)\\*\\(\\S-\\(?:[^*\n]*?\\S-\\)?\\)\\*\\([^*]\\|$\\)" end t)
+        (let ((prefix (match-string 1))
+              (content (match-string 2))
+              (suffix (match-string 3)))
+          (replace-match (concat prefix "/" content "/" suffix) nil t)))
+      ;; Convert Markdown bold markers.
+      (goto-char beg)
+      (while (re-search-forward "\\(^\\|[^*]\\)\\*\\*\\(\\S-\\(?:[^*\n]*?\\S-\\)?\\)\\*\\*\\([^*]\\|$\\)" end t)
+        (let ((prefix (match-string 1))
+              (content (match-string 2))
+              (suffix (match-string 3)))
+          (replace-match (concat prefix "*" content "*" suffix) nil t))))))
 #+end_src
 
 * isolate Emacs kill ring from the OSX system pasteboard (clipboard).
@@ -723,6 +754,8 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
                          (region-end (point-max))
                          (skip-lines (when heading-markers
                                        (mapcar #'line-number-at-pos heading-markers))))
+                    (when pasteboard-convert-markdown-inline-emphasis
+                      (pasteboard--convert-markdown-inline-emphasis region-beg region-end))
                     (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end skip-lines)
                     ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
                     (goto-char region-beg)
