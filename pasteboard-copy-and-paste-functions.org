@@ -560,7 +560,7 @@ Otherwise, demote from point to the end of the buffer."
   (with-temp-buffer
     (insert text)
     (goto-char (point-min))
-    (re-search-forward "^\\s-*#\\{2,6\\}\\s-+" nil t)))
+    (re-search-forward "^[ \t]*#\\{2,6\\}[ \t]+" nil t)))
 
 (defun pasteboard--analyse-clipboard-text (text)
   "Return a plist describing TEXT, detecting whether it looks like Markdown or Org."
@@ -570,7 +570,7 @@ Otherwise, demote from point to the end of the buffer."
     (let ((line-number 1)
           (heading-lines '()))
       (while (not (eobp))
-        (when (looking-at "^\\s-*#\\{1,6\\} ")
+        (when (looking-at "^[ \t]*#[ \t]+")
           (push line-number heading-lines))
         (forward-line 1)
         (cl-incf line-number))
@@ -579,20 +579,20 @@ Otherwise, demote from point to the end of the buffer."
             (asterisk-bullets 0)
             (case-fold-search nil))
         (dolist (spec
-                 '((md-score "^\\s-*#\\{1,6\\} " 3)
-                   (md-score "^\\s-*[-+] \\S-" 1)
-                   (md-score "^\\s-*\\d+\\. \\S-" 1)
-                   (md-score "^\\s-*> " 1)
-                   (md-score "^\\s-*`\\{3\\}" 2)
+                 '((md-score "^[ \t]*#\\{1,6\\} " 3)
+                   (md-score "^[ \t]*[-+] \\S-" 1)
+                   (md-score "^[ \t]*\\d+\\. \\S-" 1)
+                   (md-score "^[ \t]*> " 1)
+                   (md-score "^[ \t]*`\\{3\\}" 2)
                    (md-score "\\[[^][]+\\](https?://[^)]+)" 1)
-                   (org-score "^\\s-*#\\+" 3)
-                   (org-score "^\\s-*\\*+ \\(TODO\\|DONE\\|NEXT\\|WAIT\\|HOLD\\|CANCELLED\\|NOTE\\|IDEA\\|FIXME\\|PROJ\\)\\b" 3)
-                   (org-score "^\\s-*\\*+ .*:[[:alnum:]_@#%:]+:\\s*$" 2)
-                   (org-score "^\\s-*:PROPERTIES:\\s*$" 3)
-                   (org-score "^\\s-*:END:\\s*$" 1)
-                   (org-score "^\\s-*SCHEDULED:" 2)
-                   (org-score "^\\s-*DEADLINE:" 2)
-                   (org-score "^\\s-*\\*\\{2,\\} \\S-" 2)))
+                   (org-score "^[ \t]*#\\+" 3)
+                   (org-score "^[ \t]*\\*+ \\(TODO\\|DONE\\|NEXT\\|WAIT\\|HOLD\\|CANCELLED\\|NOTE\\|IDEA\\|FIXME\\|PROJ\\)\\b" 3)
+                   (org-score "^[ \t]*\\*+ .*:[[:alnum:]_@#%:]+:[ \t]*$" 2)
+                   (org-score "^[ \t]*:PROPERTIES:[ \t]*$" 3)
+                   (org-score "^[ \t]*:END:[ \t]*$" 1)
+                   (org-score "^[ \t]*SCHEDULED:" 2)
+                   (org-score "^[ \t]*DEADLINE:" 2)
+                   (org-score "^[ \t]*\\*\\{2,\\} \\S-" 2)))
           (pcase-let ((`(,target ,regex ,weight) spec))
             (goto-char (point-min))
             (while (re-search-forward regex nil t)
@@ -600,7 +600,7 @@ Otherwise, demote from point to the end of the buffer."
                 ('md-score  (cl-incf md-score weight))
                 ('org-score (cl-incf org-score weight))))))
         (goto-char (point-min))
-        (while (re-search-forward "^\\s-*\\* \\S-" nil t)
+        (while (re-search-forward "^[ \t]*\\* \\S-" nil t)
           (cl-incf asterisk-bullets))
         (let ((style
                (cond
@@ -623,11 +623,11 @@ Otherwise, demote from point to the end of the buffer."
     (goto-char pos)
     (cond
      ((looking-at "^\\s-*$") 'blank)
-     ((looking-at "^\\s-*\\*\\{2,\\} \\S-") 'org-heading)
-     ((looking-at "^\\s-*\\* \\S-") 'asterisk-bullet)
-     ((looking-at "^\\s-*[-+] \\S-") 'dash-bullet)
-     ((looking-at "^\\s-*\\d+\\. \\S-") 'ordered-bullet)
-     ((looking-at "^\\s-*:") 'definition)
+     ((looking-at "^[ \t]*\\*\\{2,\\} \\S-") 'org-heading)
+     ((looking-at "^[ \t]*\\* \\S-") 'asterisk-bullet)
+     ((looking-at "^[ \t]*[-+] \\S-") 'dash-bullet)
+     ((looking-at "^[ \t]*\\d+\\. \\S-") 'ordered-bullet)
+     ((looking-at "^[ \t]*:") 'definition)
      (t 'text))))
 
 (defun pasteboard--neighbor-nonblank-kind (pos direction)
@@ -686,40 +686,57 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
   (let* ((markdown-headings-present (pasteboard--text-contains-markdown-headings-p text))
          (analysis (pasteboard--analyse-clipboard-text text))
          (style (plist-get analysis :style))
-         (heading-lines (plist-get analysis :markdown-heading-lines)))
+         (heading-line-numbers (plist-get analysis :markdown-heading-lines)))
     (when markdown-headings-present
       (setq style 'markdown))
     (with-temp-buffer
       (insert text)
-      (let ((beg (point-min))
-            (end (point-max)))
-        ;; Convert markdown headings FIRST before processing asterisks
-        (convert-markdown-headings-to-org beg end)
-        (replace-smart-quotes beg end)
-        (replace-smart-quotes-regexp beg end)
-        (replace-weird-spaces beg end)
-        (convert-markdown-blockquotes-to-org beg end)
-        (convert-markdown-links-to-org-mode beg end)
-        ;; Buffer size may have changed; refresh region bounds before further narrowing.
-        (setq beg (point-min)
-              end (point-max))
-        (when (eq style 'markdown)
-          (save-restriction
-            (narrow-to-region beg end)
-            (let ((region-beg (point-min))
-                  (region-end (point-max)))
-              (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end heading-lines)
-              ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
-              (goto-char region-beg)
-              (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" region-end t)
-                (let ((line-no (line-number-at-pos (match-beginning 0))))
-                  (unless (and heading-lines (memq line-no heading-lines))
-                    (replace-match "\\1- \\2" t))))
-              (when (fboundp 'normalize-dashes)
-                (normalize-dashes))
-              (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
-                (convert-markdown-to-org-code-blocks-simple))))))
-      (buffer-string))))
+      (let* ((beg (point-min))
+             (end (point-max))
+             (heading-markers
+              (when heading-line-numbers
+                (save-excursion
+                  (goto-char beg)
+                  (let ((current-line 1)
+                        (markers nil))
+                    (dolist (target heading-line-numbers)
+                      (forward-line (- target current-line))
+                      (push (copy-marker (line-beginning-position)) markers)
+                      (setq current-line target))
+                    (nreverse markers))))))
+        (unwind-protect
+            (progn
+              ;; Convert markdown headings FIRST before processing asterisks
+              (convert-markdown-headings-to-org beg end)
+              (replace-smart-quotes beg end)
+              (replace-smart-quotes-regexp beg end)
+              (replace-weird-spaces beg end)
+              (convert-markdown-blockquotes-to-org beg end)
+              (convert-markdown-links-to-org-mode beg end)
+              ;; Buffer size may have changed; refresh region bounds before further narrowing.
+              (setq beg (point-min)
+                    end (point-max))
+              (when (eq style 'markdown)
+                (save-restriction
+                  (narrow-to-region beg end)
+                  (let* ((region-beg (point-min))
+                         (region-end (point-max))
+                         (skip-lines (when heading-markers
+                                       (mapcar #'line-number-at-pos heading-markers))))
+                    (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end skip-lines)
+                    ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
+                    (goto-char region-beg)
+                    (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" region-end t)
+                      (let ((line-no (line-number-at-pos (match-beginning 0))))
+                        (unless (and skip-lines (memq line-no skip-lines))
+                          (replace-match "\\1- \\2" t))))
+                    (when (fboundp 'normalize-dashes)
+                      (normalize-dashes))
+                    (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
+                      (convert-markdown-to-org-code-blocks-simple)))))
+              (buffer-string))
+          (when heading-markers
+            (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))
 
 (defun pasteboard--demote-headings-in-string (text)
   "Demote all Org headings found in TEXT by one level."

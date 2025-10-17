@@ -5,6 +5,20 @@
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
 * 2025-10-16: Verbatim pastes honored in prog-mode saves
 * 2025-10-16: Markdown heading conversion loop fixed
+* 2025-10-17: Markdown detection fixtures linked and heading markers tracked
+
+** Summary
+- Hardened the Markdown detector so it records heading positions as live markers, preventing the skip list from drifting while we mutate the buffer.
+- Tightened the whitespace heuristics (`[ \t]` anchors) to stop blank lines from absorbing nearby headings or bullets.
+- Documented all debug fixtures with clickable org links for quick regression runs on the adaptive paste pipeline.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `docs/pasteboard-markdown-detection.org`
+
+** Handoff
+- Run the `debug/input-1.txt -> output-1.org` pair whenever the pasteboard pipeline changes to keep the fixture updated.
+- Consider promoting the marker upgrade into an automated ERT so the skip-line behaviour stays covered.
 
 ** Summary
 - Fixed an infinite loop in `convert-markdown-headings-to-org` that left Emacs hanging when pastes ended on a blank line.

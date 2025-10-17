@@ -18,7 +18,7 @@
 - `pasteboard--analyse-clipboard-text`
   - Scores Markdown signals: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links.
   - Scores Org signals: `#+` directives, TODO keywords, property drawers, multi-star headings.
-  - Tracks original Markdown heading *line numbers* for later skip lists.
+  - Tracks original Markdown heading *line numbers*, then upgrades them to markers so deletions don't shift our skip list.
 - `pasteboard--text-contains-markdown-headings-p`
   - Fast path for ChatGPT payloads: if we see `##`/`###` style headings, force Markdown mode even when scores tie.
 - Final style selection
@@ -33,7 +33,7 @@
 4. If style is `markdown`:
    1. Narrow to the temp buffer.
    2. `pasteboard--convert-asterisk-bullets-to-dashes`
-      - Classifies lines via `pasteboard--line-kind-at-pos` (fixed regex uses `\\s-`).
+      - Classifies lines via `pasteboard--line-kind-at-pos` (regex anchored with `[ \t]` so blank lines don't slurp the next heading).
       - Collects matches, rewrites bottom-up to avoid buffer drift.
    3. Run a final sweep converting any surviving `* ` to `- `.
    4. Optional extras: `normalize-dashes`, `convert-markdown-to-org-code-blocks-simple`.
@@ -48,6 +48,9 @@
 * Reference Fixtures
 - [[file:../debug/org-mode-text-sample.txt][Org-mode sample input]] — Should remain untouched (single `*` headings stay as headings).
 - [[file:../debug/chatgpt-markdown-text-sample.txt][ChatGPT Markdown sample]] — Should convert leading `* ` bullets to `- ` when pasted.
+- [[file:../debug/chatgpt-markdown-3.txt][ChatGPT Markdown microcopy]] — Exercises short-form bullets and blockquotes; expect every `*` bullet to flip while the quoted blurb picks up `: `.
+- [[file:../debug/markdown-sample-2.md][Markdown sample 2]] — Keep fenced code intact while headings and bullets convert.
+- [[file:../debug/input-1.txt][Raw input 1]] -> [[file:../debug/output-1.org][expected Org output 1]] — Regression pair for verifying the full adaptive pipeline.
 
 * Related Files
 - `pasteboard-copy-and-paste-functions.org` / `.el`
