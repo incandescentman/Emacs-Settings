@@ -731,6 +731,7 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
       (setq choice "bracket-link")
       (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
      ((or (eq major-mode 'sh-mode)
+          (eq major-mode 'python-mode)
           (eq major-mode 'emacs-lisp-mode)
           (eq major-mode 'markdown-mode)
           (eq major-mode 'gfm-mode)

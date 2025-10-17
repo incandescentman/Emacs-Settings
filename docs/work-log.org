@@ -7,6 +7,7 @@
 
 ** Summary
 - Updated the adaptive paste dispatcher to treat all `prog-mode` derivatives as verbatim, ensuring code snippets no longer run through whitespace cleaners.
+- Added an explicit `python-mode` check so Command-S saves keep indentation even if the buffer isn't yet recognized as `prog-mode`.
 - Taught `jay/save-all-buffers` to save each buffer with the whitespace scrubbers temporarily disabled, so a raw paste keeps its indentation even after `s-s`.
 
 ** Files Modified
