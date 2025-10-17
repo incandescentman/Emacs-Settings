@@ -276,8 +276,9 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
   "Turn #, ##, ### etc. at bol into *, **, *** etc. in the region."
   (save-excursion
     (goto-char beg)
-    (let ((in-fence nil))
-      (while (< (point) end)
+    (let ((limit (copy-marker end))
+          (in-fence nil))
+      (while (< (point) limit)
         (cond
          ((looking-at "^\\s-*```")
           (setq in-fence (not in-fence)))
@@ -285,7 +286,10 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
                (looking-at "^\\s-*\\(#+\\)\\s-+"))
           (replace-match (concat (make-string (length (match-string 1)) ?*) " ")
                          t t)))
-        (forward-line 1)))))
+        (let ((before (point)))
+          (forward-line 1)
+          (when (<= (point) before)
+            (goto-char limit)))))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
   "Turn '> ' at bol into ': ' (Org quote) in the region."
