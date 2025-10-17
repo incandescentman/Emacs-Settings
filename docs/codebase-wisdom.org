@@ -3,6 +3,24 @@
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
 * Pasteboard Markdown Bullet Detection: Regex and Retangle
+* Markdown Heading Loop: Marker Guards
+  Date: 2025-10-16
+
+** The Bug
+- `convert-markdown-headings-to-org` entered an infinite loop when pasting text that ended on a blank line, freezing Emacs and logging `accept-process-output` warnings.
+
+** The Truth
+- The loop advanced with `forward-line`, but once `point` sat on the `end` marker, the call returned without moving; the loop condition (`< point end`) never flipped.
+- Fenced code handling was correct; the missing guard was only at the buffer tail.
+
+** The Fix
+- Replaced the raw `end` integer with a `copy-marker` and explicitly broke if `forward-line` fails to advance, guaranteeing termination.
+
+** Lessons Learned / Prevention
+- Whenever you walk buffers with `forward-line`, verify that point advances or break explicitly—especially near EOF.
+- Keep the Workflowy Markdown sample handy (`debug/chatgpt-markdown-text-sample.txt`) as a regression check for heading conversion + code fences.
+- Watch for `Blocking call to accept-process-output` at startup; it usually signals a stuck hook or loop.
+
   Date: 2025-10-16
 
 ** The Bug

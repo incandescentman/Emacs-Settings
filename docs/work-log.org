@@ -4,6 +4,21 @@
 
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
 * 2025-10-16: Verbatim pastes honored in prog-mode saves
+* 2025-10-16: Markdown heading conversion loop fixed
+
+** Summary
+- Fixed an infinite loop in `convert-markdown-headings-to-org` that left Emacs hanging when pastes ended on a blank line.
+- Verified pasting `# foo` and the Workflowy Markdown snippet both convert cleanly without warnings.
+- Escaped fenced code sections continue to be skipped during heading conversion.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+
+** Handoff
+- If heading conversion starts freezing again, re-check the EOF guard in `convert-markdown-headings-to-org`.
+- Re-run the Workflowy Markdown sample (`debug/chatgpt-markdown-text-sample.txt`) and a simple `# foo` paste to reproduce.
+- Confirm no other save hooks reintroduce whitespace stripping when using `pasteboard-paste-verbatim`.
+
 
 ** Summary
 - Updated the adaptive paste dispatcher to treat all `prog-mode` derivatives as verbatim, ensuring code snippets no longer run through whitespace cleaners.
