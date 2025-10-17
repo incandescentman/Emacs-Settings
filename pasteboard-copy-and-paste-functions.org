@@ -318,17 +318,19 @@ Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bol
       (goto-char beg)
       ;; Convert Markdown italics that are not part of bold markers.
       (while (re-search-forward "\\(^\\|[^*]\\)\\*\\(\\S-\\(?:[^*\n]*?\\S-\\)?\\)\\*\\([^*]\\|$\\)" end t)
-        (let ((prefix (match-string 1))
-              (content (match-string 2))
-              (suffix (match-string 3)))
-          (replace-match (concat prefix "/" content "/" suffix) nil t)))
+        (let* ((prefix (match-string 1))
+               (content (match-string 2))
+               (suffix (match-string 3)))
+          (unless (eq (aref content 0) ?*)
+            (replace-match (concat prefix "/" content "/" suffix) nil t))))
       ;; Convert Markdown bold markers.
       (goto-char beg)
       (while (re-search-forward "\\(^\\|[^*]\\)\\*\\*\\(\\S-\\(?:[^*\n]*?\\S-\\)?\\)\\*\\*\\([^*]\\|$\\)" end t)
-        (let ((prefix (match-string 1))
-              (content (match-string 2))
-              (suffix (match-string 3)))
-          (replace-match (concat prefix "*" content "*" suffix) nil t))))))
+        (let* ((prefix (match-string 1))
+               (content (match-string 2))
+               (suffix (match-string 3)))
+          (unless (eq (aref content 0) ?*)
+            (replace-match (concat prefix "*" content "*" suffix) nil t)))))))
 #+end_src
 
 * isolate Emacs kill ring from the OSX system pasteboard (clipboard).
