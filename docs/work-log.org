@@ -11,7 +11,7 @@
 - Hardened the Markdown detector so it records heading positions as live markers, preventing the skip list from drifting while we mutate the buffer.
 - Tightened the whitespace heuristics (`[ \t]` anchors) to stop blank lines from absorbing nearby headings or bullets.
 - Documented all debug fixtures with clickable org links for quick regression runs on the adaptive paste pipeline.
-- Added an opt-in inline emphasis converter (`pasteboard-convert-markdown-inline-emphasis`) that maps Markdown `*italic*`/`**bold**` to Org `/italic/`/`*bold*`.
+- Added an opt-in inline emphasis converter (`pasteboard-convert-markdown-inline-emphasis`) that maps Markdown `*italic*`/`**bold**` to Org `/italic/`/`*bold*`, bypassing the legacy `** → *` collapse when enabled so bold survives intact.
 
 ** Files Modified
 - `pasteboard-copy-and-paste-functions.org`
