@@ -276,8 +276,16 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
   "Turn #, ##, ### etc. at bol into *, **, *** etc. in the region."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "^\\(#+\\) " end t)
-      (replace-match (concat (make-string (length (match-string 1)) ?*) " ") t t))))
+    (let ((in-fence nil))
+      (while (< (point) end)
+        (cond
+         ((looking-at "^\\s-*```")
+          (setq in-fence (not in-fence)))
+         ((and (not in-fence)
+               (looking-at "^\\s-*\\(#+\\)\\s-+"))
+          (replace-match (concat (make-string (length (match-string 1)) ?*) " ")
+                         t t)))
+        (forward-line 1)))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
   "Turn '> ' at bol into ': ' (Org quote) in the region."
@@ -699,8 +707,10 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
               (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end heading-lines)
               ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
               (goto-char region-beg)
-              (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" nil t)
-                (replace-match "\\1- \\2" t))
+              (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" region-end t)
+                (let ((line-no (line-number-at-pos (match-beginning 0))))
+                  (unless (and heading-lines (memq line-no heading-lines))
+                    (replace-match "\\1- \\2" t))))
               (when (fboundp 'normalize-dashes)
                 (normalize-dashes))
               (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
