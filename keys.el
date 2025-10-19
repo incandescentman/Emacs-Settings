@@ -152,7 +152,7 @@
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-adjusted-subtrees-adaptive)
-    ("s-x"           . pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe)
+    ("s-x"           . pasteboard-cut-adaptive)
     ("C-v"           . html2org-clipboard)
     ("C-s-v"         . html2org-clipboard)
     ("M-s-v"         . html2org-clipboard)

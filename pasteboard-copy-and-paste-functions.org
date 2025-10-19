@@ -1106,6 +1106,33 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
           (derived-mode-p 'text-mode))
       (pasteboard-cut-and-capitalize-and-replace-em-dashes)
     (pasteboard-cut-and-capitalize)))
+
+(defun pasteboard-cut-adaptive ()
+  "Smart cut to macOS pasteboard: uses pasteboard-copy-adaptive logic, then deletes region.
+With prefix argument (C-u), force verbatim cut."
+  (interactive)
+  ;; If prefix arg, force verbatim
+  (if current-prefix-arg
+      (progn
+        (call-interactively #'pasteboard-copy-verbatim)
+        (delete-region (region-beginning) (region-end))
+        (my/fix-space)
+        (message "Cut text verbatim (forced)"))
+    ;; Otherwise, use smart copy then delete
+    (let ((was-text-mode (or (and (eq major-mode 'org-mode)
+                                  (not (bound-and-true-p org-config-files-local-mode)))
+                            (derived-mode-p 'text-mode))))
+      ;; Use the adaptive copy which already has all the smart logic
+      (call-interactively #'pasteboard-copy-adaptive)
+      ;; Delete the region
+      (delete-region (region-beginning) (region-end))
+      ;; Fix spacing
+      (my/fix-space)
+      ;; Capitalize at beginning of sentence (text modes only)
+      (when was-text-mode
+        (save-excursion
+          (when (my/beginning-of-sentence-p)
+            (capitalize-unless-org-heading)))))))
 #+END_SRC
 
 

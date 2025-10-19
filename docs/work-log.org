@@ -2,23 +2,30 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-10-19: Universal argument support for adaptive copy/paste
+* 2025-10-19: Universal argument support for adaptive copy/paste/cut
 
 ** Summary
-- Added prefix argument (C-u) support to `pasteboard-copy-adaptive` and `pasteboard-paste-adaptive`
-- C-u s-c now forces verbatim copy, overriding smart context detection
-- C-u s-v now forces verbatim paste, overriding smart context detection
-- Normal s-c and s-v continue with existing smart behavior
+- Added prefix argument (C-u) support to clipboard trilogy: `pasteboard-copy-adaptive`, `pasteboard-paste-adaptive`, and new `pasteboard-cut-adaptive`
+- Created `pasteboard-cut-adaptive` to complete the trilogy with consistent smart behavior
+- C-u s-c forces verbatim copy, overriding smart context detection
+- C-u s-v forces verbatim paste, overriding smart context detection
+- C-u s-x forces verbatim cut, overriding smart context detection
+- Normal s-c, s-v, and s-x continue with existing smart behavior
+- Cut function reuses copy-adaptive logic, then deletes region and handles spacing/capitalization
 
 ** Files Modified
-- `pasteboard-copy-and-paste-functions.org`: Added `current-prefix-arg` checks to both functions with early-return verbatim paths
+- `pasteboard-copy-and-paste-functions.org`: Added `current-prefix-arg` checks to copy/paste functions; created new `pasteboard-cut-adaptive` function
+- `gnu-emacs-startup.org`: Updated s-x keybinding to use `pasteboard-cut-adaptive`
+- `keys.el`: Updated s-x keybinding to use `pasteboard-cut-adaptive`
 - `docs/work-log.org`: Logged this enhancement
 - `docs/instructions.org`: Updated clipboard hygiene section with C-u prefix documentation
 
 ** Handoff
 - Test the new behavior: Try C-u s-v in an org buffer to verify it pastes verbatim even when smart paste would normally clean
 - Test C-u s-c in text-mode to verify it copies verbatim even when smart copy would normally clean
+- Test C-u s-x in text-mode to verify it cuts verbatim even when smart cut would normally clean and capitalize
 - The forced behavior shows "(forced)" in the message to distinguish from automatic verbatim choices
+- All three clipboard operations (cut/copy/paste) now use consistent smart detection logic
 
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
 * 2025-10-16: Verbatim pastes honored in prog-mode saves

@@ -48,7 +48,7 @@ This document lists all keybindings that use the "s-" prefix (macOS Command key)
 | ~s-v~ | ~pasteboard-paste-adaptive~ | Smart paste from clipboard |
 | ~s-V~ | ~pasteboard-paste-adjusted-subtrees-adaptive~ | Paste with subtree adjustment |
 | ~s-W~ | ~open-weeklies~ | Open weekly files |
-| ~s-x~ | ~pasteboard-cut-and-capitalize-and-replace-em-dashes-maybe~ | Smart cut with formatting |
+| ~s-x~ | ~pasteboard-cut-adaptive~ | Smart cut with adaptive formatting |
 | ~s-y~ | ~undo-fu-only-redo-fail-with-heart~ | Redo with feedback |
 | ~s-z~ | ~undo-fu-only-undo~ | Undo |
 | ~s-\\~ | ~visit-most-recent-file~ | Open most recently visited file |
