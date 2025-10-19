@@ -1,0 +1,255 @@
+#+title: Org-roam Database Switching
+#+date: 2025-10-19
+
+* Overview
+
+Enable seamless switching between different org-roam databases (e.g., personal, work, projects) without restarting Emacs.
+
+* Current State
+
+** Configuration
+- Main config: ~/emacs/emacs-settings/org-roam-config.el:41
+  - ~org-roam-directory~: =~/Dropbox/roam=
+  - ~org-roam-db-location~: Cache directory (=~/.cache/org-roam.db=)
+- Dir-locals: =~/Dropbox/roam/.dir-locals.el=
+  - Overrides to use database inside roam directory itself
+  - ~org-roam-db-location~: =~/Dropbox/roam/org-roam.db=
+
+** Limitations
+- No function to switch databases on the fly
+- Switching requires manual variable changes + Emacs restart
+- Can't easily work with multiple knowledge bases in same session
+
+* Goals
+
+** Primary
+- Switch between different org-roam databases interactively
+- Properly close old database connection before switching
+- Automatically sync new database after switch
+- Preserve current buffer/window state during switch
+
+** Secondary
+- Provide preset switching functions for common databases
+- Remember recently used databases
+- Handle edge cases (corrupted DB, missing directory, etc.)
+
+* Design Considerations
+
+** Database Connection Management
+- Must properly close existing connection before switch
+- Use ~emacsql-close~ to cleanly shut down
+- Check ~emacsql-live-p~ before attempting close
+- Reset ~org-roam-db~ to nil after close
+
+** Directory Handling
+- Use ~file-truename~ to resolve symlinks consistently
+- Validate directory exists before switching
+- Handle both absolute and relative paths
+
+** Database Location Strategy
+Two options:
+1. *Centralized*: All DBs in cache directory (current default)
+   - Pro: Keeps roam dirs clean
+   - Con: Less portable, harder to track which DB goes with which dir
+2. *Co-located*: DB lives in roam directory
+   - Pro: Self-contained, portable
+   - Con: More files in roam directory
+
+*Recommendation*: Support both, default to co-located for better portability
+
+** State Preservation
+- Current buffer may be visiting a node from old database
+- Options:
+  1. Keep current buffer (may show stale backlinks)
+  2. Switch to new database's daily note
+  3. Switch to scratch buffer
+  4. Let user choose
+
+** Error Handling
+- Missing directory
+- Corrupted database
+- Permission issues
+- Already-open database from another Emacs instance
+
+* Implementation Plan
+
+** Phase 1: Core Switching Function
+#+begin_src emacs-lisp
+(defun org-roam-switch-database (directory &optional db-location)
+  "Switch to a different org-roam database.
+DIRECTORY is the new org-roam directory.
+DB-LOCATION is optional; if not provided, uses DIRECTORY/org-roam.db"
+  (interactive
+   (list (read-directory-name "Org-roam directory: ")))
+
+  ;; Validate directory exists
+  (unless (file-directory-p directory)
+    (error "Directory does not exist: %s" directory))
+
+  ;; Close current database connection
+  (when (and (boundp 'org-roam-db)
+             org-roam-db
+             (emacsql-live-p org-roam-db))
+    (emacsql-close org-roam-db))
+
+  ;; Update variables
+  (setq org-roam-directory (file-truename directory))
+  (setq org-roam-db-location
+        (or db-location
+            (expand-file-name "org-roam.db" org-roam-directory)))
+
+  ;; Reset database connection
+  (setq org-roam-db nil)
+
+  ;; Reinitialize and sync
+  (condition-case err
+      (progn
+        (org-roam-db)
+        (org-roam-db-sync)
+        (message "Switched to org-roam database: %s" org-roam-db-location))
+    (error
+     (message "Error switching database: %s" (error-message-string err)))))
+#+end_src
+
+** Phase 2: Preset Switching Functions
+
+Create convenience functions for common databases:
+
+#+begin_src emacs-lisp
+(defun org-roam-switch-to-main ()
+  "Switch to main org-roam database."
+  (interactive)
+  (org-roam-switch-database "~/Dropbox/roam"))
+
+(defun org-roam-switch-to-work ()
+  "Switch to work org-roam database."
+  (interactive)
+  (org-roam-switch-database "~/Dropbox/roam-work"))
+
+(defun org-roam-switch-to-codex ()
+  "Switch to codex org-roam database."
+  (interactive)
+  (org-roam-switch-database "~/Dropbox/roam/codex-org-roam"))
+#+end_src
+
+** Phase 3: Enhanced Features (Optional)
+
+*** Recent Databases
+Track recently used databases for quick switching:
+
+#+begin_src emacs-lisp
+(defvar org-roam-database-history nil
+  "History of recently used org-roam databases.")
+
+(defun org-roam-switch-database-recent ()
+  "Switch to a recently used org-roam database."
+  (interactive)
+  (let ((db (completing-read "Recent database: "
+                             org-roam-database-history)))
+    (org-roam-switch-database db)))
+#+end_src
+
+*** Database Registry
+Pre-configure multiple databases:
+
+#+begin_src emacs-lisp
+(defvar org-roam-database-registry
+  '(("main"   . "~/Dropbox/roam")
+    ("work"   . "~/Dropbox/roam-work")
+    ("codex"  . "~/Dropbox/roam/codex-org-roam")
+    ("archive" . "~/Dropbox/roam-archive"))
+  "Alist of (NAME . DIRECTORY) for known org-roam databases.")
+
+(defun org-roam-switch-database-from-registry ()
+  "Switch to a database from the registry."
+  (interactive)
+  (let* ((choice (completing-read "Database: "
+                                 (mapcar #'car org-roam-database-registry)))
+         (directory (alist-get choice org-roam-database-registry
+                              nil nil #'string=)))
+    (org-roam-switch-database directory)))
+#+end_src
+
+** Phase 4: Keybindings
+
+Add to ~org-roam-config.el~:
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'org-roam
+  ;; Database switching
+  (global-set-key (kbd "s-u d") #'org-roam-switch-database)
+  (global-set-key (kbd "s-u D") #'org-roam-switch-database-from-registry))
+#+end_src
+
+* Testing Plan
+
+** Test Cases
+1. [ ] Switch from default DB to alternative DB
+2. [ ] Switch back to original DB
+3. [ ] Verify node-find shows nodes from new DB only
+4. [ ] Verify backlinks update for new DB
+5. [ ] Test with non-existent directory (should error gracefully)
+6. [ ] Test with corrupted DB file
+7. [ ] Switch while org-roam buffer is open
+8. [ ] Switch while editing a node from old DB
+
+** Edge Cases
+- What if DB sync fails?
+- What if directory has no .org files?
+- What if user switches rapidly (before sync completes)?
+- What if DB file is locked by another process?
+
+* Questions / Decisions Needed
+
+** Q1: Database Location Default
+Where should database file live by default?
+- Option A: Inside roam directory (portable, self-contained)
+- Option B: In cache directory (clean, centralized)
+- *Decision*: ?
+
+** Q2: Buffer Handling After Switch
+What should happen to current buffer after switching?
+- Option A: Leave as-is (may be visiting old DB node)
+- Option B: Switch to daily note in new DB
+- Option C: Switch to scratch
+- *Decision*: ?
+
+** Q3: Org-roam Buffer Behavior
+Should we close/refresh the org-roam sidebar buffer?
+- Option A: Close it (clean slate)
+- Option B: Refresh it for current node
+- Option C: Leave as-is
+- *Decision*: ?
+
+** Q4: Auto-save Before Switch
+Should we auto-save all org-roam buffers before switching?
+- *Decision*: ?
+
+* Integration Points
+
+** Files to Modify
+- ~/emacs/emacs-settings/org-roam-config.el
+  - Add switching functions
+  - Add keybindings
+  - Add database registry variable
+
+** Potential Conflicts
+- Dir-locals may override after switch
+  - Solution: Maybe set buffer-local overrides?
+- Existing idle timers may interfere
+  - Solution: Cancel and restart after switch?
+
+* Future Enhancements
+
+- [ ] Visual indicator of current database (mode-line?)
+- [ ] Ability to have multiple DBs open simultaneously (different frames?)
+- [ ] Import/export nodes between databases
+- [ ] Database metadata (last used, node count, etc.)
+- [ ] Backup DB before switching
+- [ ] Database health check before switching
+
+* References
+
+- Current config: ~/emacs/emacs-settings/org-roam-config.el
+- Dir-locals: ~/Dropbox/roam/.dir-locals.el
+- Org-roam manual: ~/Dropbox/roam/docs/org-roam-manual.org
