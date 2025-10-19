@@ -21,6 +21,19 @@
 ** Org-centric tooling
 - Org Roam layer enabled; capture templates expect `org-roam` database.
 - `pasteboard-paste-adjusted-subtrees` demotes headings when pasting into existing Org trees.
+** Org-roam profiles (multi-database support)
+- Switch between independent org-roam databases (work vs. personal)
+- **Quick switches**:
+  - `s-u 1` - Switch to default (work) profile
+  - `s-u 2` - Switch to my-life (personal) profile
+  - `s-u P` - Interactive profile switch with completion
+  - `s-u C-p` - Show current profile info
+- **Profiles**:
+  - *default (Work)*: `~/Dropbox/roam/` with work templates (AI, job hunt, people, quotes, etc.)
+  - *my-life (Personal)*: `~/Dropbox/roam-life/` with personal templates (journal, gratitude, health, family, etc.)
+- **Mode-line indicator**: Shows `[Roam:Default]` or `[Roam:My]` (click to switch)
+- **Persistence**: Last-used profile is remembered across sessions
+- **Independence**: Each profile has its own database, directory, and capture templates - completely isolated
 ** Appearance controls
 - Commands like `medium-type`, `large-type`, `spacemacs-light`, and `whiteboard` adjust fonts and themes on demand.
 ** Navigation/search

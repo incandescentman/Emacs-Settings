@@ -2,6 +2,56 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-19: Org-roam profile switching system
+
+** Summary
+- Added multi-database profile system to org-roam suite
+- Enables seamless switching between work (default) and personal (my-life) databases
+- Each profile maintains independent directory, database, and capture templates
+- Profile persistence across sessions via cache file
+- Mode-line indicator shows current profile with click-to-switch functionality
+
+** Architecture
+- `jay-org-roam-profiles.el` (408 lines): Complete profile management system
+  - Profile definitions with plists (name, directory, db-location, templates)
+  - Safe database connection management (close old, open new)
+  - Profile persistence to `~/.cache/org-roam-current-profile`
+  - Mode-line indicator with visual feedback
+  - Quick-switch convenience functions
+
+** Profiles Defined
+- **default (Work)**: `~/Dropbox/roam/`
+  - Full work template set (accountability, AI, job hunt, people, quotes, etc.)
+  - Database in XDG cache directory
+- **my-life (Personal)**: `~/Dropbox/roam-life/`
+  - Personal templates (journal, gratitude, reflection, health, family, memories)
+  - Co-located database in roam directory
+
+** Integration
+- Integrated into `jay-org-roam-core.el` idle timer
+- Calls `jay/org-roam-profiles-init` during startup
+- Loads last-used profile or defaults to 'default
+
+** Keybindings
+- `s-u P` - Switch profile (interactive with completion)
+- `s-u C-p` - Show current profile info
+- `s-u 1` - Quick switch to default (work)
+- `s-u 2` - Quick switch to my-life (personal)
+
+** Files Modified
+- Created `jay-org-roam-suite/jay-org-roam-profiles.el`
+- Modified `jay-org-roam-suite/jay-org-roam-core.el`: Added profile integration
+- Updated `docs/lab/org-roam-database-switching.org`: Marked as implemented
+- `docs/work-log.org`: Logged this enhancement
+- `docs/instructions.org`: Added profile usage guide
+
+** Handoff
+- Mode-line shows current profile (e.g., `[Roam:Default]` or `[Roam:My]`)
+- Profile switching properly closes old DB and syncs new one
+- Each profile is completely independent - no cross-contamination
+- Template sets automatically switch with profile
+- Use `s-u 1` and `s-u 2` for muscle memory quick switches
+
 * 2025-10-19: Modular org-roam suite refactoring
 
 ** Summary

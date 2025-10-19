@@ -1,0 +1,164 @@
+#+TITLE: Org-Roam Profile Switching - Quick Start
+#+DATE: 2025-10-19
+
+* What Are Profiles?
+
+Profiles let you maintain *completely separate* org-roam databases. Think of them as different notebooks:
+- **Work notebook** (default profile): For professional notes, AI research, job hunting, etc.
+- **Personal notebook** (my-life profile): For journaling, gratitude, health tracking, family notes, etc.
+
+Each profile has its own:
+- Directory (where .org files live)
+- Database (where links and metadata are stored)
+- Capture templates (what shows up when you create a new note)
+
+*They never mix.* When you're in the work profile, you only see work notes. When you're in personal, you only see personal notes.
+
+* Quick Reference
+
+** Switch Profiles
+| Command | What It Does |
+|---------+--------------|
+| =s-u 1= | Switch to work (default) profile |
+| =s-u 2= | Switch to personal (my-life) profile |
+| =s-u P= | Interactive switch (choose from menu) |
+| =s-u C-p= | Show which profile you're currently in |
+
+** Mode Line
+Look at your mode line (bottom of Emacs). You'll see:
+- =[Roam:Default]= - You're in work mode
+- =[Roam:My]= - You're in personal mode
+
+*Pro tip:* Click on the mode-line indicator to switch profiles!
+
+* Common Workflows
+
+** Morning Routine (Personal Time)
+1. Start Emacs or press =s-u 2= to switch to personal
+2. Mode line shows =[Roam:My]=
+3. Press =s-:= to open today's journal
+4. Capture templates now show personal options:
+   - =j= - journal entry
+   - =g= - gratitude note
+   - =r= - reflection
+   - =h= - health & wellness
+   - =f= - family note
+   - =m= - memory/experience
+
+** Work Time
+1. Press =s-u 1= to switch to work
+2. Mode line shows =[Roam:Default]=
+3. Use =s-u f= to find or create work notes
+4. Capture templates now show work options:
+   - =A= - accountability/task
+   - =g= - ChatGPT outputs
+   - =I= - AI intelligence notes
+   - =M= - job hunt momentum
+   - =p= - person (professional contact)
+   - =S= - Socratic AI
+   - Plus 20+ other work templates
+
+** End of Day (Switch Back to Personal)
+1. Press =s-u 2=
+2. Write evening reflections or gratitude
+3. Profile automatically saves - tomorrow it'll remember you were in personal mode
+
+* What Happens When You Switch?
+
+Behind the scenes:
+1. ✅ Current database connection safely closes
+2. ✅ Directory changes to new profile's location
+3. ✅ Capture templates swap out
+4. ✅ New database opens and syncs
+5. ✅ Your choice is saved to =~/.cache/org-roam-current-profile=
+6. ✅ Mode line updates to show new profile
+7. ✅ Message confirms: "Switched to org-roam profile: my-life (My Life)"
+
+* Your Two Profiles
+
+** Default (Work)
+- *Location:* =~/Dropbox/roam/=
+- *Database:* Auto-managed in =~/.cache/=
+- *Templates:* Full professional template suite
+- *Use for:* Work notes, AI research, job hunting, professional contacts, quotes, writing
+
+** My-Life (Personal)
+- *Location:* =~/Dropbox/roam-life/=
+- *Database:* =~/Dropbox/roam-life/.org-roam.db= (self-contained)
+- *Templates:* Life-focused templates
+- *Use for:* Personal journaling, gratitude, health, family, memories, personal ideas
+
+* Tips & Best Practices
+
+** Muscle Memory
+Train yourself:
+- Work day starts? =s-u 1=
+- Personal time? =s-u 2=
+- Unsure which you're in? =s-u C-p=
+
+** Check Before Capturing
+Always glance at the mode line before creating a new note. You don't want to accidentally create personal notes in your work database (or vice versa).
+
+** No Cross-References
+Because profiles are independent, you can't link from a work note to a personal note. This is by design - it keeps work and life separate.
+
+If you need to reference something across profiles, copy the content or use plain text references.
+
+** Backup Both
+Since you have two separate directories, make sure both are backed up:
+- =~/Dropbox/roam/= (work)
+- =~/Dropbox/roam-life/= (personal)
+
+If you use Dropbox (as configured), both are already synced.
+
+* Troubleshooting
+
+** "Which profile am I in?"
+Press =s-u C-p= to see:
+#+begin_example
+Current profile: my-life (My Life)
+Directory: /Users/jay/Dropbox/roam-life
+Database: /Users/jay/Dropbox/roam-life/.org-roam.db
+#+end_example
+
+** "I don't see my personal templates"
+You're probably still in the work profile. Press =s-u 2= to switch to personal.
+
+** "Mode line doesn't show profile"
+The mode-line indicator is at the very end of the mode line. Look for =[Roam:...]= in cyan.
+
+** "Profile didn't save"
+Profiles save automatically to =~/.cache/org-roam-current-profile=. Check that file exists and is writable.
+
+** "Can I add a third profile?"
+Yes! See =docs/ORG-ROAM-PROFILES-README.md= for instructions on adding custom profiles.
+
+* Example Day
+
+#+begin_example
+7:00 AM  - Start Emacs (loads 'my-life from yesterday)
+7:05 AM  - s-: (daily journal), write morning thoughts
+7:30 AM  - s-u g (gratitude note)
+
+9:00 AM  - s-u 1 (switch to work)
+         - Mode line: [Roam:Default]
+9:05 AM  - s-u f (find work notes)
+         - Work on AI research, capture ideas
+
+12:00 PM - Lunch break
+         - s-u 2 (switch to personal)
+         - s-u h (health note about workout)
+
+1:00 PM  - s-u 1 (back to work)
+         - Continue work notes
+
+6:00 PM  - s-u 2 (switch to personal)
+         - s-u r (evening reflection)
+         - Tomorrow: starts in 'my-life automatically
+#+end_example
+
+* Learn More
+
+- Full documentation: =docs/ORG-ROAM-PROFILES-README.md=
+- Implementation: =jay-org-roam-suite/jay-org-roam-profiles.el=
+- Planning rationale: =docs/lab/org-roam-database-switching.org=
