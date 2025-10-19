@@ -1,9 +1,10 @@
 ;;; jay-org-roam-core.el --- Org-roam core: resilient, lazy, and fast  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Core module (no templates). Pairs with `jay-org-roam-templates.el`.
+;; Core module (no templates). Pairs with `jay-org-roam-templates.el` and `jay-org-roam-profiles.el`.
 ;; - Maximally lazy: no blocking (require 'org-roam) at init.
 ;; - Two-phase idle setup, safe DB advice, leader-key, helpers, bindings.
+;; - Profile system integration for multi-database support.
 ;; - Templates live in a separate module to keep this lean.
 
 ;;; Code:
@@ -12,6 +13,9 @@
 (when load-file-name
   (load (expand-file-name "org-roam-id-fix.el" (file-name-directory load-file-name)) t)
   (load (expand-file-name "org-roam-db-fix.el" (file-name-directory load-file-name)) t))
+
+;; Load the profile system
+(require 'jay-org-roam-profiles)
 
 ;; Lazy-safe wrappers -----------------------------------------------------------
 (defmacro jay/with-org-roam (&rest body)
@@ -55,6 +59,9 @@
          (jay/with-org-roam
           (require 'ol)
           (org-roam-setup)
+          ;; Initialize profile system and load saved profile
+          (jay/org-roam-profiles-init)
+          ;; Sync after profile is loaded
           (org-roam-db-sync))
        (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
@@ -163,6 +170,12 @@
 (jay/bind-roam "c" org-roam-capture)
 (jay/bind-roam "a" org-roam-alias-add)
 (jay/bind-roam "s" org-roam-db-sync)
+
+;; Profile switching
+(define-key jay/super-u-map (kbd "P") #'jay/org-roam-switch-profile)
+(define-key jay/super-u-map (kbd "C-p") #'jay/org-roam-show-current-profile)
+(global-set-key (kbd "s-u 1") #'jay/org-roam-switch-to-default)
+(global-set-key (kbd "s-u 2") #'jay/org-roam-switch-to-mylife)
 
 (jay/bind-roam "o" org-roam-dailies-find-date)
 (jay/bind-roam "." org-roam-dailies-goto-date)

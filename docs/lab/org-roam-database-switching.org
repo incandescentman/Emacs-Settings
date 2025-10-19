@@ -1,6 +1,20 @@
 #+title: Org-roam Database Switching
 #+date: 2025-10-19
 
+*STATUS: ✅ IMPLEMENTED*
+
+This planning document has been fully implemented! See:
+- Implementation: =jay-org-roam-suite/jay-org-roam-profiles.el=
+- Integration: =jay-org-roam-suite/jay-org-roam-core.el=
+- Documentation: =docs/ORG-ROAM-PROFILES-README.md=
+
+*Quick Start:*
+- Switch profiles: =M-x jay/org-roam-switch-profile= or =s-u P=
+- Quick switches: =s-u 1= (work) / =s-u 2= (personal)
+- Show current: =s-u C-p=
+
+This document remains as a reference for the design decisions made.
+
 * Overview
 
 Enable seamless switching between different org-roam databases (e.g., personal, work, projects) without restarting Emacs.

@@ -358,11 +358,11 @@ Prompts for profile name with completion."
                                 #'jay/org-roam-switch-profile)
                               map)))))
 
-;; Add to mode-line-format (optional - you can enable this if you want)
-;; (unless (memq '(:eval (jay/org-roam-mode-line-indicator)) mode-line-format)
-;;   (setq-default mode-line-format
-;;                 (append mode-line-format 
-;;                         '((:eval (jay/org-roam-mode-line-indicator))))))
+;; Add to mode-line-format
+(unless (memq '(:eval (jay/org-roam-mode-line-indicator)) mode-line-format)
+  (setq-default mode-line-format
+                (append mode-line-format
+                        '((:eval (jay/org-roam-mode-line-indicator))))))
 
 ;; -----------------------------------------------------------------------------
 ;; Convenience commands
