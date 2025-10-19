@@ -24,11 +24,7 @@
 (with-eval-after-load 'ispell
   (jay/fix-ispell-contraction)
   (add-to-list 'ispell-dictionary-alist
-               '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
-  (add-to-list 'ispell-dictionary-alist
-               '("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8))
-  (add-to-list 'ispell-dictionary-alist
-               '("english"  "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+               '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
 
 ;; -----------------------------------------------------------------------------
 ;; Shell and export environment

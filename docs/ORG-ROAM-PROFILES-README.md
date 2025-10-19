@@ -4,28 +4,32 @@ A clean system for managing multiple independent org-roam databases with differe
 
 ## Files
 
-1. **jay-org-roam-profiles.el** - Core profile switching system
-2. **jay-org-roam-lazy-v2.el** - Updated main config with profile integration
+1. **jay-org-roam-suite/jay-org-roam-profiles.el** - Core profile switching system
+2. **jay-org-roam-suite/jay-org-roam-core.el** - Lazy org-roam bootstrap with idle timers, bindings, and profile init
+3. **jay-org-roam-suite/jay-org-roam-templates.el** - Capture template library and helpers
+4. **jay-org-roam-suite/jay-editor-extras.el** - Supporting editor utilities (PATH, ispell, XeLaTeX, captain hooks)
 
 ## Quick Setup
 
-### 1. Place the files in your config directory
+### 1. Add the suite to your `load-path`
 
-```bash
-cp jay-org-roam-profiles.el ~/emacs/emacs-settings/
-cp jay-org-roam-lazy-v2.el ~/emacs/emacs-settings/jay-org-roam-lazy.el
-```
-
-### 2. Load in your init.el
-
-Replace your current org-roam config with:
+If the `jay-org-roam-suite/` directory lives outside your standard load path, point Emacs at it:
 
 ```elisp
-;; Load the profile system first
-(load "~/emacs/emacs-settings/jay-org-roam-profiles.el")
+(add-to-list 'load-path "~/emacs/emacs-settings/jay-org-roam-suite")
+```
 
-;; Then load the main config
-(load "~/emacs/emacs-settings/jay-org-roam-lazy.el")
+### 2. Require the modules from your init
+
+```elisp
+;; Core loads the profile system automatically
+(require 'jay-org-roam-core)
+
+;; Capture templates live separately so they can be reloaded/tweaked independently
+(require 'jay-org-roam-templates)
+
+;; Optional editor helpers (ispell dictionaries, PATH fixes, XeLaTeX pipeline)
+(require 'jay-editor-extras)
 ```
 
 ### 3. Create the directories
