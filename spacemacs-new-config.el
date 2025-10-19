@@ -149,8 +149,7 @@
 
 ;; Load modular org-roam suite
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/jay-org-roam-suite")
-(require 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, etc.)
-(require 'jay-org-roam-templates)  ;; capture templates (factory + library)
+(require 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, profiles, templates)
 (require 'jay-editor-extras)       ;; environment: PATH, ispell, XeLaTeX, captain-predicate
 
 ;;(load "/Users/jay/emacs/emacs-settings/org-roam-review.el")

@@ -2,6 +2,33 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-19: Template consolidation - Removed redundant templates.el
+
+** Summary
+- Deleted `jay-org-roam-templates.el` (was 70 lines, now obsolete)
+- All capture templates now managed exclusively in `jay-org-roam-profiles.el`
+- Removed redundant `(require 'jay-org-roam-templates)` from spacemacs-new-config.el
+- Simplified suite architecture to 3 files instead of 4
+
+** Rationale
+- Templates were defined in two places (templates.el AND profiles.el)
+- templates.el set `org-roam-capture-templates` globally, but profile system immediately overrode it
+- Created confusion about which templates were active
+- User primarily uses default profile 90% of time, making separate template file unnecessary
+
+** Files Modified
+- Deleted: `jay-org-roam-suite/jay-org-roam-templates.el`
+- Modified: `spacemacs-new-config.el` (removed templates.el require)
+- Modified: `docs/ORG-ROAM-PROFILES-README.md` (updated file list and setup instructions)
+- Modified: `docs/work-log.org` (this entry)
+
+** Final Architecture
+- `jay-org-roam-profiles.el` - Profile system + all capture templates (default & my-life)
+- `jay-org-roam-core.el` - Core org-roam setup, keybindings, profile integration
+- `jay-editor-extras.el` - Supporting utilities
+
+Clean, simple, no redundancy.
+
 * 2025-10-19: Org-roam profile switching system
 
 ** Summary
