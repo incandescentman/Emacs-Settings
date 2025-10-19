@@ -9810,6 +9810,11 @@ After evaluating your init-file you can use links analog to the example:
 (add-hook 'Info-mode-hook #'jay/info-local-overrides)
 #+END_SRC
 
+* Convert markdown italics
+#+begin_src emacs-lisp
+(setq pasteboard-convert-markdown-inline-emphasis t) 
+#+end_src
+
 
 * Local Variables & The End
 These have to be at the end.
