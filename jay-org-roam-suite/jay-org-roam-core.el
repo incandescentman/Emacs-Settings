@@ -1,11 +1,11 @@
 ;;; jay-org-roam-core.el --- Org-roam core: resilient, lazy, and fast  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Core module (no templates). Pairs with `jay-org-roam-templates.el` and `jay-org-roam-profiles.el`.
+;; Core module (no templates). Pairs with `jay-org-roam-profiles.el`.
 ;; - Maximally lazy: no blocking (require 'org-roam) at init.
 ;; - Two-phase idle setup, safe DB advice, leader-key, helpers, bindings.
 ;; - Profile system integration for multi-database support.
-;; - Templates live in a separate module to keep this lean.
+;; - Templates live in profiles module.
 
 ;;; Code:
 
