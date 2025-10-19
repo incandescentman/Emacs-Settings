@@ -146,7 +146,13 @@
 ;; (load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
-(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
+
+;; Load modular org-roam suite
+(add-to-list 'load-path "/Users/jay/emacs/emacs-settings/jay-org-roam-suite")
+(require 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, etc.)
+(require 'jay-org-roam-templates)  ;; capture templates (factory + library)
+(require 'jay-editor-extras)       ;; environment: PATH, ispell, XeLaTeX, captain-predicate
+
 ;;(load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
 
 ;; (monaco-font)
