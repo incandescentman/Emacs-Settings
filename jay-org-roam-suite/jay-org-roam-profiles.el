@@ -27,18 +27,18 @@
 
 (defvar jay/org-roam-profiles
   '((default
-      :name "Default (Work)"
-      :directory "~/Dropbox/roam"
-      :db-location nil  ; use default from xdg-cache-home
-      :dailies-directory "journal/"
-      :capture-templates jay/org-roam-capture-templates-default)
-    
+     :name "Default (Work)"
+     :directory "~/Dropbox/roam"
+     :db-location nil  ; use default from xdg-cache-home
+     :dailies-directory "journal/"
+     :capture-templates jay/org-roam-capture-templates-default)
+
     (my-life
-      :name "My Life (Personal)"
-      :directory "~/Dropbox/roam-life"
-      :db-location "~/Dropbox/roam-life/.org-roam.db"
-      :dailies-directory "journal/"
-      :capture-templates jay/org-roam-capture-templates-mylife))
+     :name "My Life (Personal)"
+     :directory "~/Dropbox/roam-life"
+     :db-location "~/Dropbox/roam-life/.org-roam.db"
+     :dailies-directory "journal/"
+     :capture-templates jay/org-roam-capture-templates-mylife))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
   :name - Display name for the profile
@@ -63,62 +63,62 @@ Each profile is a plist with keys:
 (defvar jay/org-roam-capture-templates-default
   (list
    ;; Custom templates
-   '("A" "accountability and task capture" plain 
+   '("A" "accountability and task capture" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "accountability/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "accountability/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :accountability:")
      :unnarrowed t)
-   
-   '("g" "ChatGPT Outputs" plain 
+
+   '("g" "ChatGPT Outputs" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "chatgpt-outputs/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "chatgpt-outputs/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :gpt:")
      :unnarrowed t)
-   
-   '("I" "intelligence" plain 
+
+   '("I" "intelligence" plain
      "- Links ::\n- Source ::\n\n\n* ${title}\n%?"
-     :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :intelligence:")
      :unnarrowed t)
-   
-   '("l" "logistics of OpenAI" plain 
+
+   '("l" "logistics of OpenAI" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "logistics/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "logistics/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :library:")
      :unnarrowed t)
-   
-   '("M" "Momentum --- 2025 job hunt" plain 
+
+   '("M" "Momentum --- 2025 job hunt" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "job-hunt-2025/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "job-hunt-2025/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :momentum:")
      :unnarrowed t)
-   
-   '("O" "Outline / Structure / Schelling Points" plain 
+
+   '("O" "Outline / Structure / Schelling Points" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :structure:")
      :unnarrowed t)
-   
-   '("p" "person" plain 
+
+   '("p" "person" plain
      "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :person:")
      :unnarrowed t)
-   
-   '("W" "writers" plain 
+
+   '("W" "writers" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "writers/%<%Y%m%d%H%M%S>-${slug}.org" 
+     :target (file+head "writers/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :writers:person:")
      :unnarrowed t)
-   
-   '("z" "zork (custom path)" plain 
+
+   '("z" "zork (custom path)" plain
      "- Links ::\nSource ::\n\n\n* ${title}\n%?"
-     :target (file+head (lambda () 
-                          (concat (read-string "Enter file path: ") 
+     :target (file+head (lambda ()
+                          (concat (read-string "Enter file path: ")
                                   "/%<%Y%m%d%H%M%S>-${slug}.org"))
                         "#+TITLE: ${title}\n#+FILETAGS: :work:")
      :unnarrowed t)
-   
+
    ;; Factory-generated templates
    (jay/roam-template "b" "books" "books" "books")
    (jay/roam-template "C" "Claude outputs" "claude-outputs" "claude")
@@ -140,79 +140,80 @@ Each profile is a plist with keys:
 ;; MY-LIFE PROFILE TEMPLATES (Personal/life notes)
 (defvar jay/org-roam-capture-templates-mylife
   (list
-   ;; Life-focused templates
-   '("j" "journal entry" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "journal/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :journal:")
+   ;; Storytelling & memoir templates
+   '("s" "story / anecdote" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- Location :: \n- People Involved :: \n\n* ${title}\n\n** The Story\n\n%?\n\n** Why This Matters\n\n** Details to Remember\n\n"
+     :target (file+head "stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :story:")
      :unnarrowed t)
-   
-   '("g" "gratitude" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "gratitude/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :gratitude:")
+
+   '("o" "OpenAI story" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- People :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Context\n\n** Why It's Interesting\n\n"
+     :target (file+head "openai-stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :openai:story:")
      :unnarrowed t)
-   
-   '("r" "reflection" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "reflections/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :reflection:")
-     :unnarrowed t)
-   
-   '("p" "person (personal)" plain 
-     "- Links ::\n- Context ::\n\n* ${title}\n\n%?"
-     :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :person:")
-     :unnarrowed t)
-   
-   '("h" "health & wellness" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "health/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :health:")
-     :unnarrowed t)
-   
-   '("f" "family" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "family/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :family:")
-     :unnarrowed t)
-   
-   '("m" "memory / experience" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Location ::\n\n* ${title}\n\n%?"
-     :target (file+head "memories/%<%Y%m%d%H%M%S>-${slug}.org" 
+
+   '("m" "memory / moment" plain
+     "- Links ::\n- When :: \n- Where :: \n- Who :: \n\n* ${title}\n\n%?\n\n"
+     :target (file+head "memories/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :memory:")
      :unnarrowed t)
-   
-   '("i" "idea / creative" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "ideas/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :idea:")
+
+   '("f" "family story" plain
+     "- Links ::\n- About :: \n- Time Period :: \n- Source :: \n\n* ${title}\n\n** The Story\n\n%?\n\n** Context\n\n"
+     :target (file+head "family/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :family:story:")
      :unnarrowed t)
-   
-   '("b" "book notes (personal)" plain 
-     "- Links ::\n- Author :: \n- Date Started :: %<%Y-%m-%d>\n\n* ${title}\n\n** Key Ideas\n\n%?"
-     :target (file+head "books/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :book:")
+
+   '("h" "high school / college story" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Year :: \n- Place :: \n- People :: \n\n* ${title}\n\n%?\n\n"
+     :target (file+head "school-days/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :school:story:")
      :unnarrowed t)
-   
-   '("t" "travel" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Location ::\n\n* ${title}\n\n%?"
-     :target (file+head "travel/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :travel:")
+
+   '("p" "person (character sketch)" plain
+     "- Links ::\n- Relationship :: \n- Time Period :: \n\n* ${title}\n\n** Memorable Qualities\n\n%?\n\n** Key Stories\n\n** Why They Matter\n\n"
+     :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :person:memoir:")
      :unnarrowed t)
-   
-   '("l" "learning / study" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Topic ::\n\n* ${title}\n\n%?"
-     :target (file+head "learning/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :learning:")
+
+   '("M" "Moth story idea" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n- Stakes :: \n- Arc :: \n\n* ${title}\n\n** Opening Hook\n\n%?\n\n** Middle / Turning Point\n\n** Ending / What I Learned\n\n** Stage Notes\n\n"
+     :target (file+head "moth-stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :moth:performance:")
      :unnarrowed t)
-   
-   '("n" "note (general)" plain 
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?"
-     :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org" 
-                        "#+TITLE: ${title}\n#+FILETAGS: :note:")
+
+   '("e" "essay / reflection piece" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n\n* ${title}\n\n** Core Idea\n\n%?\n\n** Examples / Stories\n\n** So What?\n\n"
+     :target (file+head "essays/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :essay:memoir:")
+     :unnarrowed t)
+
+   '("q" "quote / dialogue" plain
+     "- Links ::\n- Who Said It :: \n- Context :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
+     :target (file+head "quotes/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :quote:dialogue:")
+     :unnarrowed t)
+
+   '("c" "character detail / observation" plain
+     "- Links ::\n- About :: \n- Date Observed :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
+     :target (file+head "observations/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :observation:")
+     :unnarrowed t)
+
+   '("t" "turning point / pivotal moment" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Before :: \n- After :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Why It Changed Things\n\n"
+     :target (file+head "turning-points/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :turning-point:memoir:")
+     :unnarrowed t)
+
+   '("n" "note / fragment" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
+     :target (file+head "fragments/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :fragment:")
      :unnarrowed t))
-  "Capture templates for the my-life (personal) profile.")
+  "Capture templates for the my-life (storytelling/memoir) profile.")
+
 
 ;; -----------------------------------------------------------------------------
 ;; Core Profile Switching Logic
@@ -237,16 +238,16 @@ Each profile is a plist with keys:
 
 (defun jay/org-roam-apply-profile (profile-name &optional force-sync)
   "Apply the configuration for PROFILE-NAME.
-This updates all org-roam variables and reopens the database.
-If FORCE-SYNC is non-nil, clear and resync the database (use when switching profiles).
-On startup/init, database sync is skipped for performance."
+Refreshes all org-roam variables and (re)initialises the database connection.
+If FORCE-SYNC is non-nil, ensure the database is synced even when not switching profiles."
   (let* ((profile (jay/org-roam-get-profile profile-name))
          (directory (plist-get profile :directory))
          (db-location (plist-get profile :db-location))
          (dailies-dir (plist-get profile :dailies-directory))
          (templates (plist-get profile :capture-templates))
          (switching-profiles (and jay/org-roam-current-profile
-                                 (not (eq jay/org-roam-current-profile profile-name)))))
+                                  (not (eq jay/org-roam-current-profile profile-name))))
+         (needs-sync (or force-sync switching-profiles)))
 
     (unless profile
       (user-error "Profile '%s' not found" profile-name))
@@ -264,10 +265,10 @@ On startup/init, database sync is skipped for performance."
           org-roam-dailies-directory dailies-dir
           org-roam-db-location (if db-location
                                    (expand-file-name db-location)
-                                 (expand-file-name "org-roam.db" (xdg-cache-home)))
+                                   (expand-file-name "org-roam.db" (xdg-cache-home)))
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
-                                       templates))
+                                         templates))
 
     ;; Ensure the directory exists
     (unless (file-directory-p org-roam-directory)
@@ -279,6 +280,15 @@ On startup/init, database sync is skipped for performance."
     (when switching-profiles
       (setq org-roam-db nil)
       (org-roam-db))
+
+    ;; Sync database if we explicitly switched profiles (or caller requested it)
+    (when needs-sync
+      (condition-case err
+          (progn
+            (unless (and (boundp 'org-roam-db) (emacsql-live-p org-roam-db))
+              (org-roam-db))
+            (org-roam-db-sync))
+        (error (message "Org-roam profile sync failed: %s" (error-message-string err)))))
 
     ;; Update current profile
     (setq jay/org-roam-current-profile profile-name)
@@ -297,7 +307,7 @@ Prompts for profile name with completion."
   (interactive
    (list (intern (completing-read "Switch to profile: "
                                   (mapcar (lambda (p)
-                                            (format "%s - %s" 
+                                            (format "%s - %s"
                                                     (car p)
                                                     (plist-get (cdr p) :name)))
                                           jay/org-roam-profiles)
@@ -305,14 +315,14 @@ Prompts for profile name with completion."
                                   (when jay/org-roam-current-profile
                                     (format "%s - %s"
                                             jay/org-roam-current-profile
-                                            (plist-get (jay/org-roam-get-profile 
+                                            (plist-get (jay/org-roam-get-profile
                                                         jay/org-roam-current-profile)
                                                        :name)))))))
-  
+
   ;; Extract just the profile symbol if they selected "symbol - name" format
   (when (stringp profile-name)
     (setq profile-name (intern (car (split-string profile-name " - ")))))
-  
+
   (jay/org-roam-apply-profile profile-name))
 
 ;; -----------------------------------------------------------------------------
@@ -334,12 +344,12 @@ Prompts for profile name with completion."
   (when (file-exists-p jay/org-roam-profile-cache-file)
     (condition-case err
         (let ((saved-profile (with-temp-buffer
-                              (insert-file-contents jay/org-roam-profile-cache-file)
-                              (read (current-buffer)))))
+                               (insert-file-contents jay/org-roam-profile-cache-file)
+                               (read (current-buffer)))))
           (when (jay/org-roam-profile-exists-p saved-profile)
             (jay/org-roam-apply-profile saved-profile)
             (message "Restored org-roam profile: %s" saved-profile)))
-      (error (message "Failed to load saved org-roam profile: %s" 
+      (error (message "Failed to load saved org-roam profile: %s"
                       (error-message-string err))))))
 
 ;; -----------------------------------------------------------------------------
@@ -351,16 +361,16 @@ Prompts for profile name with completion."
   (when jay/org-roam-current-profile
     (let* ((profile (jay/org-roam-get-profile jay/org-roam-current-profile))
            (name (plist-get profile :name)))
-      (propertize (format " [Roam:%s]" 
-                         (or (car (split-string name " ")) 
-                             jay/org-roam-current-profile))
+      (propertize (format " [Roam:%s]"
+                          (or (car (split-string name " "))
+                              jay/org-roam-current-profile))
                   'face '(:foreground "cyan")
                   'help-echo (format "Org-roam profile: %s\nClick to switch" name)
                   'mouse-face 'mode-line-highlight
                   'local-map (let ((map (make-sparse-keymap)))
-                              (define-key map [mode-line mouse-1] 
-                                #'jay/org-roam-switch-profile)
-                              map)))))
+                               (define-key map [mode-line mouse-1]
+                                           #'jay/org-roam-switch-profile)
+                               map)))))
 
 ;; Add to mode-line-format
 (unless (memq '(:eval (jay/org-roam-mode-line-indicator)) mode-line-format)
@@ -379,11 +389,11 @@ Prompts for profile name with completion."
       (let* ((profile (jay/org-roam-get-profile jay/org-roam-current-profile))
              (name (plist-get profile :name))
              (dir (plist-get profile :directory))
-             (db (or (plist-get profile :db-location) 
+             (db (or (plist-get profile :db-location)
                      (expand-file-name "org-roam.db" (xdg-cache-home)))))
         (message "Current profile: %s (%s)\nDirectory: %s\nDatabase: %s"
                  jay/org-roam-current-profile name dir db))
-    (message "No org-roam profile is currently active")))
+      (message "No org-roam profile is currently active")))
 
 (defun jay/org-roam-switch-to-default ()
   "Quick switch to default profile."
@@ -405,7 +415,7 @@ Call this from your main config after org-roam is loaded."
   ;; Load the last-used profile, or default to 'default
   (if (file-exists-p jay/org-roam-profile-cache-file)
       (jay/org-roam-load-saved-profile)
-    (jay/org-roam-apply-profile 'default)))
+      (jay/org-roam-apply-profile 'default)))
 
 ;; -----------------------------------------------------------------------------
 (provide 'jay-org-roam-profiles)

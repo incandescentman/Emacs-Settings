@@ -79,6 +79,24 @@ Clean, simple, no redundancy.
 - Template sets automatically switch with profile
 - Use `s-u 1` and `s-u 2` for muscle memory quick switches
 
+* 2025-10-19: Memoir profile polish & sync safety
+
+** Summary
+- Refined the personal vault template set around memoir storytelling use cases
+- Corrected the Mode-line/person template narrowing flag typo so capture loads cleanly
+- Restored an automatic `org-roam-db-sync` during profile switches without clearing data
+
+** Details
+- `jay-org-roam-suite/jay-org-roam-profiles.el`
+  - Reworked memoir template names/structures (stories, memories, stage bits, fragments)
+  - Fixed `:unnarrowed` plist keyword so `p` capture works again
+  - Added guarded `org-roam-db-sync` hook when changing profiles (skips on startup)
+  - Updated docstring to reflect the new behaviour
+
+** Handoff
+- Switching to `my-life` now syncs the right DB immediately while leaving existing data untouched
+- Template prompts are ready for the memoir workflow; run `s-u c p` to confirm the person sketch capture opens
+
 * 2025-10-19: Modular org-roam suite refactoring
 
 ** Summary
