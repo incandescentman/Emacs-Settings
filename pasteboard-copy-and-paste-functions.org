@@ -375,60 +375,67 @@ cut/copy/paste, and they will now work with the OSX clipboard. The yank and pop 
 
 #+begin_src emacs-lisp
 (defun pasteboard-copy-adaptive ()
-  "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text."
+  "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text.
+With prefix argument (C-u), force verbatim copy."
   (interactive)
-  (let* ((result
-          (cond
-           ;; ------------------------------------------ verbatim buckets ------------------------------------------
-           ;; 1) Messages buffer - ALWAYS verbatim
-           ((string= (buffer-name) "*Messages*")
-            (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
-           
-           ;; 2) Shell / Elisp / Web / Markdown / Backtrace
-           ((or (eq major-mode 'sh-mode)
-                (eq major-mode 'emacs-lisp-mode)
-                (eq major-mode 'web-mode)
-                (eq major-mode 'markdown-mode)
-                (eq major-mode 'gfm-mode)
-                (derived-mode-p 'markdown-mode)
-                (derived-mode-p 'backtrace-mode))
-            (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
+  ;; If prefix arg, force verbatim
+  (if current-prefix-arg
+      (progn
+        (call-interactively #'pasteboard-copy-verbatim)
+        (message "Copied text verbatim (forced)"))
+    ;; Otherwise, smart copy
+    (let* ((result
+            (cond
+             ;; ------------------------------------------ verbatim buckets ------------------------------------------
+             ;; 1) Messages buffer - ALWAYS verbatim
+             ((string= (buffer-name) "*Messages*")
+              (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
 
-           ;; 3) Org buffer **with** org-config-files-local-mode enabled
-           ((and (eq major-mode 'org-mode)
-                 (bound-and-true-p org-config-files-local-mode))
-            (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
+             ;; 2) Shell / Elisp / Web / Markdown / Backtrace
+             ((or (eq major-mode 'sh-mode)
+                  (eq major-mode 'emacs-lisp-mode)
+                  (eq major-mode 'web-mode)
+                  (eq major-mode 'markdown-mode)
+                  (eq major-mode 'gfm-mode)
+                  (derived-mode-p 'markdown-mode)
+                  (derived-mode-p 'backtrace-mode))
+              (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
 
-           ;; 4) Any file ending in .mdx
-           ((and buffer-file-name
-                 (string-match-p "\\.mdx\\'" buffer-file-name))
-            (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
+             ;; 3) Org buffer **with** org-config-files-local-mode enabled
+             ((and (eq major-mode 'org-mode)
+                   (bound-and-true-p org-config-files-local-mode))
+              (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
 
-           ;; 5) Any programming mode
-           ((derived-mode-p 'prog-mode)
-            (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
+             ;; 4) Any file ending in .mdx
+             ((and buffer-file-name
+                   (string-match-p "\\.mdx\\'" buffer-file-name))
+              (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
 
-           ;; ------------------------------------------ clean buckets ------------------------------------------
-           ;; 6) Org or generic text (when org-config-files-local-mode is off)
-           ((or (eq major-mode 'text-mode)
-                (and (eq major-mode 'org-mode)
-                     (not (bound-and-true-p org-config-files-local-mode))))
-            (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+             ;; 5) Any programming mode
+             ((derived-mode-p 'prog-mode)
+              (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
 
-           ;; ---------------------------------------- heuristic fallback --------------------------------------
-           ((and (use-region-p)
-                 (save-excursion
-                   (goto-char (region-beginning))
-                   (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-            (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
-           
-           (t
-            (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
-         (choice (car result))
-         (handler (cdr result)))
-    (when handler
-      (call-interactively handler))
-    (message "Copied text %s" choice)))
+             ;; ------------------------------------------ clean buckets ------------------------------------------
+             ;; 6) Org or generic text (when org-config-files-local-mode is off)
+             ((or (eq major-mode 'text-mode)
+                  (and (eq major-mode 'org-mode)
+                       (not (bound-and-true-p org-config-files-local-mode))))
+              (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+
+             ;; ---------------------------------------- heuristic fallback --------------------------------------
+             ((and (use-region-p)
+                   (save-excursion
+                     (goto-char (region-beginning))
+                     (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
+              (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
+
+             (t
+              (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+           (choice (car result))
+           (handler (cdr result)))
+      (when handler
+        (call-interactively handler))
+      (message "Copied text %s" choice))))
 #+end_src
 
 ** pasteboard-copy
@@ -787,47 +794,54 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
     (buffer-string)))
 
 (defun pasteboard-paste-adaptive ()
-  "Paste from the macOS pasteboard, choosing behaviour based on context while keeping Org's cache stable."
+  "Paste from the macOS pasteboard, choosing behaviour based on context while keeping Org's cache stable.
+With prefix argument (C-u), force verbatim paste."
   (interactive)
-  (let* ((clipboard-raw (pasteboard--clipboard-string))
-         (trimmed (string-trim clipboard-raw))
-         (clipboard-text (downcase trimmed))
-         choice)
-    (cond
-     ((and (use-region-p)
-           (not (string-empty-p trimmed))
-           (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-      (setq choice "bracket-link")
-      (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
-     ((or (eq major-mode 'sh-mode)
-          (eq major-mode 'python-mode)
-          (eq major-mode 'emacs-lisp-mode)
-          (eq major-mode 'markdown-mode)
-          (eq major-mode 'gfm-mode)
-          (derived-mode-p 'markdown-mode)
-          (derived-mode-p 'prog-mode)
-          (eq major-mode 'web-mode))
-      (setq choice "verbatim")
-      (pasteboard-paste-verbatim clipboard-raw))
-     ((or (and (eq major-mode 'org-mode)
-               (not (bound-and-true-p org-config-files-local-mode)))
-          (derived-mode-p 'text-mode))
-      (setq choice "clean")
-      (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
-     (t
-      (let* ((prev-char (char-before))
-             (next-char (char-after))
-             (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-             (use-no-spaces (or (member prev-char char-set)
-                                (member next-char char-set))))
-        (if use-no-spaces
-            (progn
-              (setq choice "paste-raw")
-              (pasteboard-paste-verbatim clipboard-raw))
-          (setq choice "paste-clean")
-          (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
-    (when choice
-      (message "Pasted: %s" choice))))
+  ;; If prefix arg, force verbatim
+  (if current-prefix-arg
+      (progn
+        (pasteboard-paste-verbatim (pasteboard--clipboard-string))
+        (message "Pasted: verbatim (forced)"))
+    ;; Otherwise, smart paste
+    (let* ((clipboard-raw (pasteboard--clipboard-string))
+           (trimmed (string-trim clipboard-raw))
+           (clipboard-text (downcase trimmed))
+           choice)
+      (cond
+       ((and (use-region-p)
+             (not (string-empty-p trimmed))
+             (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
+        (setq choice "bracket-link")
+        (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
+       ((or (eq major-mode 'sh-mode)
+            (eq major-mode 'python-mode)
+            (eq major-mode 'emacs-lisp-mode)
+            (eq major-mode 'markdown-mode)
+            (eq major-mode 'gfm-mode)
+            (derived-mode-p 'markdown-mode)
+            (derived-mode-p 'prog-mode)
+            (eq major-mode 'web-mode))
+        (setq choice "verbatim")
+        (pasteboard-paste-verbatim clipboard-raw))
+       ((or (and (eq major-mode 'org-mode)
+                 (not (bound-and-true-p org-config-files-local-mode)))
+            (derived-mode-p 'text-mode))
+        (setq choice "clean")
+        (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
+       (t
+        (let* ((prev-char (char-before))
+               (next-char (char-after))
+               (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+               (use-no-spaces (or (member prev-char char-set)
+                                  (member next-char char-set))))
+          (if use-no-spaces
+              (progn
+                (setq choice "paste-raw")
+                (pasteboard-paste-verbatim clipboard-raw))
+            (setq choice "paste-clean")
+            (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
+      (when choice
+        (message "Pasted: %s" choice)))))
 
 (defun pasteboard-paste (&optional text)
   "Paste TEXT (or the current clipboard) at point, normalising whitespace."

@@ -12,6 +12,9 @@
 * Feature Overview
 ** Clipboard hygiene
 - `s-v` (`pasteboard-paste-adaptive`) chooses the paste pipeline automatically—text buffers get the cleaner, code buffers call `pasteboard-paste-verbatim`.
+- `s-c` (`pasteboard-copy-adaptive`) chooses the copy pipeline automatically—code buffers copy verbatim, text buffers clean em-dashes and formatting.
+- `C-u s-v` forces verbatim paste, overriding smart detection (useful when you need exact whitespace/formatting in a text buffer).
+- `C-u s-c` forces verbatim copy, overriding smart detection (useful when copying code snippets from text buffers).
 - Run `M-x pasteboard-paste-verbatim` (alias: `pasteboard-paste-raw`) to force a byte-for-byte paste in any buffer.
 ** Org-centric tooling
 - Org Roam layer enabled; capture templates expect `org-roam` database.

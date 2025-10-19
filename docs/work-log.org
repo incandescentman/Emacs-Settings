@@ -2,6 +2,24 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-19: Universal argument support for adaptive copy/paste
+
+** Summary
+- Added prefix argument (C-u) support to `pasteboard-copy-adaptive` and `pasteboard-paste-adaptive`
+- C-u s-c now forces verbatim copy, overriding smart context detection
+- C-u s-v now forces verbatim paste, overriding smart context detection
+- Normal s-c and s-v continue with existing smart behavior
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Added `current-prefix-arg` checks to both functions with early-return verbatim paths
+- `docs/work-log.org`: Logged this enhancement
+- `docs/instructions.org`: Updated clipboard hygiene section with C-u prefix documentation
+
+** Handoff
+- Test the new behavior: Try C-u s-v in an org buffer to verify it pastes verbatim even when smart paste would normally clean
+- Test C-u s-c in text-mode to verify it copies verbatim even when smart copy would normally clean
+- The forced behavior shows "(forced)" in the message to distinguish from automatic verbatim choices
+
 * 2025-10-16: Calendar entry spacing and edit-on-empty improvements
 * 2025-10-16: Verbatim pastes honored in prog-mode saves
 * 2025-10-16: Markdown heading conversion loop fixed
