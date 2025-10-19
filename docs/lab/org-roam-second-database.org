@@ -1,0 +1,35 @@
+
+⏺ Perfect! I've created the lab/ directory and a comprehensive planning document at:
+
+  /Users/jay/emacs/emacs-settings/docs/lab/org-roam-database-switching.org
+
+  The planning doc includes:
+
+  Analysis:
+- Current state of your org-roam configuration
+- Identified limitations (no switching, requires restart)
+
+  Design sections:
+- Goals (primary & secondary)
+- Design considerations (connection management, directory handling, state preservation)
+- Error handling strategies
+
+  Implementation plan with 4 phases:
+  1. Core switching function
+  2. Preset functions (main, work, codex)
+  3. Enhanced features (history, registry)
+  4. Keybindings
+
+  Plus:
+- Testing plan with specific test cases
+- Open questions/decisions that need your input
+- Integration points and potential conflicts
+- Future enhancement ideas
+
+  Before we implement, there are 4 key decisions to make (marked in the doc):
+  1. Database location default --- inside roam dir vs cache dir?
+  2. Buffer handling --- what happens to current buffer after switch?
+  3. Org-roam sidebar --- close, refresh, or leave as-is?
+  4. Auto-save --- save all buffers before switching?
+
+  Would you like to discuss these decisions, or should we start with a basic implementation and refine from there? 
