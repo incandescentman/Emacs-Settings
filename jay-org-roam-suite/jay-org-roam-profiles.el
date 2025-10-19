@@ -274,13 +274,11 @@ On startup/init, database sync is skipped for performance."
       (make-directory org-roam-directory t)
       (message "Created org-roam directory: %s" org-roam-directory))
 
-    ;; Reinitialize the database only if switching or forced
-    (when (or switching-profiles force-sync)
+    ;; Reinitialize the database connection when switching profiles
+    ;; No clearing needed - we're just connecting to a different database file
+    (when switching-profiles
       (setq org-roam-db nil)
-      (org-roam-db)
-      ;; Clear and sync only when actually switching profiles
-      (org-roam-db-clear-all)
-      (org-roam-db-sync))
+      (org-roam-db))
 
     ;; Update current profile
     (setq jay/org-roam-current-profile profile-name)
