@@ -235,25 +235,30 @@ Each profile is a plist with keys:
       (emacsql-close org-roam-db)))
   (setq org-roam-db nil))
 
-(defun jay/org-roam-apply-profile (profile-name)
+(defun jay/org-roam-apply-profile (profile-name &optional force-sync)
   "Apply the configuration for PROFILE-NAME.
-This updates all org-roam variables and reopens the database."
+This updates all org-roam variables and reopens the database.
+If FORCE-SYNC is non-nil, clear and resync the database (use when switching profiles).
+On startup/init, database sync is skipped for performance."
   (let* ((profile (jay/org-roam-get-profile profile-name))
          (directory (plist-get profile :directory))
          (db-location (plist-get profile :db-location))
          (dailies-dir (plist-get profile :dailies-directory))
-         (templates (plist-get profile :capture-templates)))
-    
+         (templates (plist-get profile :capture-templates))
+         (switching-profiles (and jay/org-roam-current-profile
+                                 (not (eq jay/org-roam-current-profile profile-name)))))
+
     (unless profile
       (user-error "Profile '%s' not found" profile-name))
-    
+
     ;; Ensure org-roam is loaded
     (unless (featurep 'org-roam)
       (require 'org-roam))
-    
-    ;; Close existing database
-    (jay/org-roam-close-database)
-    
+
+    ;; Only close database if we're actually switching
+    (when switching-profiles
+      (jay/org-roam-close-database))
+
     ;; Update org-roam configuration
     (setq org-roam-directory (file-truename (expand-file-name directory))
           org-roam-dailies-directory dailies-dir
@@ -263,29 +268,30 @@ This updates all org-roam variables and reopens the database."
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
                                        templates))
-    
+
     ;; Ensure the directory exists
     (unless (file-directory-p org-roam-directory)
       (make-directory org-roam-directory t)
       (message "Created org-roam directory: %s" org-roam-directory))
-    
-    ;; Reinitialize the database
-    (setq org-roam-db nil)
-    (org-roam-db)
-    
-    ;; Clear any stale data and sync the new database
-    (org-roam-db-clear-all)
-    (org-roam-db-sync)
-    
+
+    ;; Reinitialize the database only if switching or forced
+    (when (or switching-profiles force-sync)
+      (setq org-roam-db nil)
+      (org-roam-db)
+      ;; Clear and sync only when actually switching profiles
+      (org-roam-db-clear-all)
+      (org-roam-db-sync))
+
     ;; Update current profile
     (setq jay/org-roam-current-profile profile-name)
-    
+
     ;; Save the current profile for next session
     (jay/org-roam-save-current-profile)
-    
-    (message "Switched to org-roam profile: %s (%s)" 
-             profile-name 
-             (plist-get profile :name))))
+
+    (when switching-profiles
+      (message "Switched to org-roam profile: %s (%s)"
+               profile-name
+               (plist-get profile :name)))))
 
 (defun jay/org-roam-switch-profile (profile-name)
   "Switch to org-roam profile PROFILE-NAME.

@@ -60,9 +60,8 @@
           (require 'ol)
           (org-roam-setup)
           ;; Initialize profile system and load saved profile
-          (jay/org-roam-profiles-init)
-          ;; Sync after profile is loaded
-          (org-roam-db-sync))
+          ;; (profile init handles its own sync when needed)
+          (jay/org-roam-profiles-init))
        (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
   (run-with-idle-timer
