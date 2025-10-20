@@ -4796,14 +4796,6 @@ In collapsed view, hide empty lines between subtrees
 #+end_src
 
 
-For bash:
-
-#+begin_src sh
-
-yesterday=$(date -v -1d '+%m-%d-%y') && echo $yesterday
-
-#+end_src
-
 * today
 #+begin_src emacs-lisp
 
