@@ -9704,20 +9704,10 @@ After evaluating your init-file you can use links analog to the example:
         ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"))
         ("roam-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/"
                         :preserve-folder-structure t))
-        ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content"))
+        ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content/notes"))
         ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
                       :preserve-folder-structure t))))
 #+end_src
-
-
-(setq org-astro-known-posts-folders
-      '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
-        ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
-        ("roam-life" . "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/")
-
-        ("kanban" . "/Users/jay/Library/CloudStorage/Dropbox/github/rising-action-kanban/content")
-)) 
 
 
 
