@@ -22,12 +22,12 @@
     (consult-ripgrep dir)))
 
 (defun my-diary--setup-search-shortcuts ()
-  "Bind `/` and `s` to `my-diary-search` in the diary buffer."
+  "Bind `/` to `my-diary-search` in the diary buffer."
   (when (and buffer-file-name
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
     (local-set-key (kbd "/") #'my-diary-search)
-    (local-set-key (kbd "s") #'my-diary-search)))
+    (local-unset-key (kbd "s"))))  ; keep plain `s` available for typing
 
 (add-hook 'markdown-mode-hook #'my-diary--setup-search-shortcuts)
 

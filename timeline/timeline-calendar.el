@@ -19,10 +19,10 @@ Otherwise, save the current date and jump to today."
               (calendar-goto-date my-calendar--last-date)
               (setq my-calendar--last-date nil)
               (message "Jumped to previous date."))
-          (message "No previous date stored."))
-      (setq my-calendar--last-date current-date)
-      (calendar-goto-today)
-      (message "Jumped to today (M-t to return)."))))
+            (message "No previous date stored."))
+        (setq my-calendar--last-date current-date)
+        (calendar-goto-today)
+        (message "Jumped to today (M-t to return)."))))
 
 (defun my-calendar-help ()
   "Display a popup buffer with a cheat sheet of custom Calendar keybindings."
@@ -68,6 +68,7 @@ Otherwise, save the current date and jump to today."
 ;; Calendar defaults used by the timeline workflow.
 (setq calendar-mark-holidays-flag nil
       calendar-holiday-marker 'default
+      calendar-holidays nil
       diary-file "/Users/jay/Dropbox/github/timeless/data/timeline.md"
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag nil
@@ -85,9 +86,20 @@ Otherwise, save the current date and jump to today."
                         :background nil
                         :weight 'normal)))
 
+(defun my-calendar--disable-diary-highlighting ()
+  "Render diary dates with a mint-green foreground."
+  (when (facep 'diary)
+    (set-face-attribute 'diary nil
+                        :inherit 'default
+                        :foreground "#6FCFA6"
+                        :background nil
+                        :weight 'normal)))
+
 ;; Apply immediately and after theme changes.
 (my-calendar--disable-holiday-highlighting)
 (add-hook 'after-load-theme-hook #'my-calendar--disable-holiday-highlighting)
+(my-calendar--disable-diary-highlighting)
+(add-hook 'after-load-theme-hook #'my-calendar--disable-diary-highlighting)
 
 (setq calendar-month-header
       '(propertize
@@ -150,10 +162,10 @@ Also set buffer-local `my-diary--origin-date` in the diary buffer."
   (interactive)
   (if (not my-diary--origin-date)
       (message "No origin date stored for this diary buffer.")
-    (let ((date my-diary--origin-date))
-      (calendar)
-      (calendar-goto-date date)
-      (message "Returned to calendar at %s" (my-calendar--describe-date date)))))
+      (let ((date my-diary--origin-date))
+        (calendar)
+        (calendar-goto-date date)
+        (message "Returned to calendar at %s" (my-calendar--describe-date date)))))
 
 (defun my-calendar-view-diary-entry ()
   "Display the diary entry for the date at point while staying in the calendar."
@@ -184,7 +196,7 @@ After showing the listing, jump to the Markdown diary entry for that date."
       (setq window (get-buffer-window calendar-buffer t)))
     (if (and window (window-live-p window))
         (select-window window)
-      (user-error "No active calendar window to focus"))))
+        (user-error "No active calendar window to focus"))))
 
 (defun my-calendar--setup-diary-shortcuts ()
   "Install diary navigation shortcuts when editing the diary file."

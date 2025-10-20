@@ -2,6 +2,24 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-20: Calendar + diary polish (known-good colors)
+
+** Summary
+- Locked in mint diary date highlight (`#6FCFA6`) and disabled holiday tinting
+- Released plain `s` for typing in `timeline.md`; `/` still launches Consult ripgrep
+- Documented palette so future tweaks can return to this known-good configuration
+
+** Details
+- `timeline/timeline-calendar.el`
+  - Added `my-calendar--disable-diary-highlighting` and re-used it after theme loads
+  - Cleared `calendar-holidays` so no red holiday markers leak through
+- `timeline/timeline-search.el`
+  - Updated diary hook to unbind `s` while keeping `/` mapped to `my-diary-search`
+
+** Handoff
+- Reload calendar + diary modules (`M-x load-file`) after customizing themes
+- Known-good palette: diary dates `#6FCFA6`; holidays disabled; weekdays inherit theme defaults
+
 * 2025-10-20: Astro exports follow org-roam profiles
 
 ** Summary
