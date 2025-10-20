@@ -9598,18 +9598,6 @@ Uses `customize-save-variable` so the setting survives restarts, then refreshes 
                t))
 #+END_EXAMPLE
 
-* ox-astro
-#+begin_src emacs-lisp
-(setq org-astro-known-posts-folders
-      '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
-        ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
-        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
-        ("roam-life" . "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/")
-
-        ("kanban" . "/Users/jay/Library/CloudStorage/Dropbox/github/rising-action-kanban/content")
-)) 
-#+end_src
-
 * Kill unwanted buffers on startup
 #+begin_src emacs-lisp
 
@@ -9720,6 +9708,18 @@ After evaluating your init-file you can use links analog to the example:
         ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
                       :preserve-folder-structure t))))
 #+end_src
+
+
+(setq org-astro-known-posts-folders
+      '(("actions" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/actions/src/content/blog")
+        ("jaydocs" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
+        ("socratic" . "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
+        ("roam-life" . "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/")
+
+        ("kanban" . "/Users/jay/Library/CloudStorage/Dropbox/github/rising-action-kanban/content")
+)) 
+
+
 
 * org-roam multiple databases
 
