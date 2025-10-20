@@ -9702,7 +9702,7 @@ After evaluating your init-file you can use links analog to the example:
         ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
         ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
         ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"))
-        ("roam-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/"
+        ("roam-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/life-web/src/content/notes/"
                         :preserve-folder-structure t))
         ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content/notes"))
         ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"

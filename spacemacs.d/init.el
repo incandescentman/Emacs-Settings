@@ -890,17 +890,22 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 (expand-file-name "~/Library/Spelling/personal.dic"))
 
   (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
-  (setenv "DICTIONARY" "en_US")
+  (setenv "DICTIONARY" "en_US-large")
 
-  ;; Add dictionary entries for standard aliases to suppress warnings
-  (with-eval-after-load 'ispell
-    (add-to-list 'ispell-dictionary-alist
-                 '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
-    (add-to-list 'ispell-dictionary-alist
-                 '("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8))
-    (add-to-list 'ispell-dictionary-alist
-                 '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
-
+  (require 'ispell)
+  (dolist (mapping '(("en_US" "en_US-large")
+                     ("american" "en_US-large")
+                     ("english" "en_US-large")))
+    (let ((name (car mapping)))
+      (setq ispell-dicts-name2locale-equivs-alist
+            (cons mapping
+                  (assoc-delete-all name ispell-dicts-name2locale-equivs-alist)))))
+  (dolist (entry '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)
+                   ("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)
+                   ("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+    (let ((name (car entry)))
+      (setq ispell-local-dictionary-alist
+            (cons entry (assoc-delete-all name ispell-local-dictionary-alist)))))
 
   )
 
@@ -1046,15 +1051,23 @@ before packages are loaded."
       "/opt/homebrew/bin"
       "/Applications/Firefox.app/Contents/MacOS"))
 
-  ;; Update PATH environment variable
-  (setenv "PATH"
-          (concat (getenv "PATH") ":"
-                  (mapconcat 'identity my-additional-paths ":")))
-
-  ;; Update exec-path
-  (dolist (path my-additional-paths)
-    (add-to-list 'exec-path path))
-
+  ;; Merge PATH additions while filtering out unwanted toolchains
+  (let* ((windsurf-pattern "/\\.codeium/windsurf")
+         (path-sep (if (boundp 'path-separator) path-separator ":"))
+         (env-paths (split-string (or (getenv "PATH") "") path-sep t))
+         (merged-paths
+          (let (collected)
+            (dolist (dir (append env-paths my-additional-paths) (nreverse collected))
+              (unless (or (member dir collected)
+                          (string-match-p windsurf-pattern dir))
+                (push dir collected))))))
+    (setenv "PATH" (mapconcat #'identity merged-paths path-sep))
+    (setq exec-path
+          (let (collected)
+            (dolist (dir (append merged-paths exec-path) (nreverse collected))
+              (unless (or (member dir collected)
+                          (string-match-p windsurf-pattern dir))
+                (push dir collected))))))
 
 
   ;; Rest of your configuration
@@ -1098,7 +1111,7 @@ This function is called at the very end of Spacemacs initialization."
        ("jaydocs" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
        ("socratic" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
        ("astro-roam" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content")
-       ("roam-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/" :preserve-folder-structure t)
+       ("roam-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/life-web/src/content/notes/" :preserve-folder-structure t)
        ("my-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content")
        ("my-mind" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content" :preserve-folder-structure t)
        ("canonical " :path "/Users/jay/Library/CloudStorage/Dropbox/github/canonical/content ")))

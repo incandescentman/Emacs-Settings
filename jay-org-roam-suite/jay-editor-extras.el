@@ -18,13 +18,13 @@
 ;; -----------------------------------------------------------------------------
 (defun jay/fix-ispell-contraction ()
   "Fix ispell handling of contractions like shouldn't."
-  (add-to-list 'ispell-dictionary-alist
+  (add-to-list 'ispell-local-dictionary-alist
                '("en_GB" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_GB") nil utf-8)))
 
 (with-eval-after-load 'ispell
   (jay/fix-ispell-contraction)
-  (add-to-list 'ispell-dictionary-alist
-               '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+  (add-to-list 'ispell-local-dictionary-alist
+               '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
 
 ;; -----------------------------------------------------------------------------
 ;; Shell and export environment
@@ -37,15 +37,20 @@
        (login-path-list (split-string login-path ":" t))
        (preferred-front '("/usr/local/bin" "/opt/homebrew/bin"))
        (preferred-tail  '("/usr/local/texlive/2024/bin/universal-darwin"))
+       (windsurf-pattern "/\\.codeium/windsurf")
        (combined-paths (delete-dups
                         (append preferred-front
                                 login-path-list
                                 preferred-tail
                                 (copy-sequence exec-path))))
-       (combined-string (mapconcat #'identity combined-paths ":")))
+       (filtered-paths (let (collected)
+                         (dolist (dir combined-paths (nreverse collected))
+                           (unless (string-match-p windsurf-pattern dir)
+                             (push dir collected)))))
+       (combined-string (mapconcat #'identity filtered-paths ":")))
   (setenv "PATH" combined-string)
   (setenv "SHELL" "/bin/bash")
-  (setq exec-path combined-paths))
+  (setq exec-path filtered-paths))
 
 (setq org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode %f"))
 

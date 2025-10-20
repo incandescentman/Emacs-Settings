@@ -18,6 +18,7 @@
 ;;; Code:
 
 (require 'org-roam nil t)
+(require 'subr-x)
 (declare-function org-astro-export-to-mdx "ox-astro" (&optional async subtreep visible-only body-only))
 (defvar org-astro-source-root-folder nil
   "Root directory for ox-astro exports. Updated when switching jay/org-roam profiles.")
@@ -30,7 +31,7 @@
 
 (defvar jay/org-roam-profiles
   '((default
-     :name "Default (Work)"
+     :name "High Velocity"
      :directory "~/Dropbox/roam"
      :db-location nil  ; use default from xdg-cache-home
      :dailies-directory "journal/"
@@ -370,10 +371,24 @@ Prompts for profile name with completion."
   "Return a string for the mode line showing current profile."
   (when jay/org-roam-current-profile
     (let* ((profile (jay/org-roam-get-profile jay/org-roam-current-profile))
-           (name (plist-get profile :name)))
+           (name (plist-get profile :name))
+           (display-name (cond
+                          ((plist-get profile :mode-line-label)
+                           (plist-get profile :mode-line-label))
+                          ((stringp name)
+                           (let ((primary (string-trim (car (split-string name "(")))))
+                             (unless (string-empty-p primary)
+                               primary)))
+                          (t nil)))
+           (label (or display-name
+                      (when jay/org-roam-current-profile
+                        (let* ((raw (replace-regexp-in-string "-" " "
+                                                              (symbol-name jay/org-roam-current-profile)))
+                               (words (split-string raw "[[:space:]]+" t)))
+                          (mapconcat #'capitalize words " ")))
+                      "roam")))
       (propertize (format " [Roam:%s]"
-                          (or (car (split-string name " "))
-                              jay/org-roam-current-profile))
+                          label)
                   'face '(:foreground "cyan")
                   'help-echo (format "Org-roam profile: %s\nClick to switch" name)
                   'mouse-face 'mode-line-highlight
