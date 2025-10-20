@@ -1098,6 +1098,7 @@ This function is called at the very end of Spacemacs initialization."
        ("jaydocs" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog")
        ("socratic" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog")
        ("astro-roam" :path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content")
+       ("roam-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life-web/" :preserve-folder-structure t)
        ("my-life" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content")
        ("my-mind" :path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content" :preserve-folder-structure t)
        ("canonical " :path "/Users/jay/Library/CloudStorage/Dropbox/github/canonical/content ")))

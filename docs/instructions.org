@@ -34,6 +34,9 @@
 - **Mode-line indicator**: Shows `[Roam:Default]` or `[Roam:My]` (click to switch)
 - **Persistence**: Last-used profile is remembered across sessions
 - **Independence**: Each profile has its own database, directory, and capture templates - completely isolated
+- **Astro exports**:
+  - Profile switches retarget `org-astro-source-root-folder` automatically (`~/Library/CloudStorage/Dropbox/roam` for work, `~/Library/CloudStorage/Dropbox/roam-life` for personal)
+  - One-off helpers `jay/org-astro-export-from-roam` and `jay/org-astro-export-from-roam-life` temporarily rebind the root and call `org-astro-export-to-mdx`
 ** Appearance controls
 - Commands like `medium-type`, `large-type`, `spacemacs-light`, and `whiteboard` adjust fonts and themes on demand.
 ** Navigation/search

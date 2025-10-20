@@ -18,6 +18,9 @@
 ;;; Code:
 
 (require 'org-roam nil t)
+(declare-function org-astro-export-to-mdx "ox-astro" (&optional async subtreep visible-only body-only))
+(defvar org-astro-source-root-folder nil
+  "Root directory for ox-astro exports. Updated when switching jay/org-roam profiles.")
 
 ;; -----------------------------------------------------------------------------
 ;; Profile Storage
@@ -31,14 +34,16 @@
      :directory "~/Dropbox/roam"
      :db-location nil  ; use default from xdg-cache-home
      :dailies-directory "journal/"
-     :capture-templates jay/org-roam-capture-templates-default)
+     :capture-templates jay/org-roam-capture-templates-default
+     :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam")
 
     (my-life
      :name "My Life (Personal)"
      :directory "~/Dropbox/roam-life"
      :db-location "~/Dropbox/roam-life/.org-roam.db"
      :dailies-directory "journal/"
-     :capture-templates jay/org-roam-capture-templates-mylife))
+     :capture-templates jay/org-roam-capture-templates-mylife
+     :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam-life"))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
   :name - Display name for the profile
@@ -270,6 +275,11 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
                                          (symbol-value templates)
                                          templates))
 
+    ;; Keep ox-astro exports aligned with the active profile's notes root.
+    (let ((astro-root (plist-get profile :astro-source-root)))
+      (when astro-root
+        (setq org-astro-source-root-folder (expand-file-name astro-root))))
+
     ;; Ensure the directory exists
     (unless (file-directory-p org-roam-directory)
       (make-directory org-roam-directory t)
@@ -404,6 +414,35 @@ Prompts for profile name with completion."
   "Quick switch to my-life profile."
   (interactive)
   (jay/org-roam-apply-profile 'my-life))
+
+;; -----------------------------------------------------------------------------
+;; Astro export helpers
+;; -----------------------------------------------------------------------------
+
+(defun jay/org-astro--ensure-export-backend ()
+  "Ensure ox-astro export command is available."
+  (unless (fboundp 'org-astro-export-to-mdx)
+    (require 'ox-astro nil t))
+  (unless (fboundp 'org-astro-export-to-mdx)
+    (user-error "org-astro-export-to-mdx is not available; load ox-astro first")))
+
+(defun jay/org-astro--export-with-root (root &optional async subtreep visible-only body-only)
+  "Export using ROOT as `org-astro-source-root-folder'."
+  (jay/org-astro--ensure-export-backend)
+  (let ((org-astro-source-root-folder (expand-file-name root)))
+    (org-astro-export-to-mdx async subtreep visible-only body-only)))
+
+(defun jay/org-astro-export-from-roam (&optional async subtreep visible-only body-only)
+  "Run `org-astro-export-to-mdx' with the main roam tree as source root."
+  (interactive)
+  (jay/org-astro--export-with-root "/Users/jay/Library/CloudStorage/Dropbox/roam"
+                                   async subtreep visible-only body-only))
+
+(defun jay/org-astro-export-from-roam-life (&optional async subtreep visible-only body-only)
+  "Run `org-astro-export-to-mdx' with the roam-life tree as source root."
+  (interactive)
+  (jay/org-astro--export-with-root "/Users/jay/Library/CloudStorage/Dropbox/roam-life"
+                                   async subtreep visible-only body-only))
 
 ;; -----------------------------------------------------------------------------
 ;; Integration with main config

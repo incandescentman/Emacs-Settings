@@ -2,6 +2,28 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-20: Astro exports follow org-roam profiles
+
+** Summary
+- Synced `org-astro-source-root-folder` with active org-roam profile so `my-life` exports pull from `/Users/jay/Library/CloudStorage/Dropbox/roam-life`
+- Added helper commands `jay/org-astro-export-from-roam` and `jay/org-astro-export-from-roam-life` for one-shot exports without switching profiles
+- Registered new `roam-life` destination in `org-astro-known-posts-folders` (string + plist forms) and mirrored it in Spacemacs customization
+
+** Details
+- `jay-org-roam-suite/jay-org-roam-profiles.el`
+  - Profile plists now carry `:astro-source-root`
+  - `jay/org-roam-apply-profile` updates `org-astro-source-root-folder` on every switch
+  - Astro export helpers ensure `ox-astro` is loaded and temporally rebind the root
+- `shared-functions.org`
+  - Added `roam-life` nickname for legacy/alist and plist-based `org-astro-known-posts-folders`
+- `spacemacs.d/init.el`
+  - Kept customization layer in sync with new destination so startup uses the same mapping
+
+** Handoff
+- After switching profiles (`s-u 1` or `s-u 2`), `org-astro-export-to-mdx` automatically reads from the correct notes tree
+- Use `M-x jay/org-astro-export-from-roam-life` when exporting a personal note without leaving the work profile
+- Documentation updated in `docs/instructions.org` under Org-roam profiles to call out the new behavior and commands
+
 * 2025-10-19: Template consolidation - Removed redundant templates.el
 
 ** Summary
