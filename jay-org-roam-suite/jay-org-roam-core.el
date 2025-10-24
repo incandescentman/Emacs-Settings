@@ -46,10 +46,7 @@
         org-roam-file-exclude-regexp "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$"
         org-roam-db-location (expand-file-name "org-roam.db" (xdg-cache-home))
         org-roam-db-update-method 'idle
-        org-roam-dailies-capture-templates
-        '(("j" "Journal" entry "* %?"
-           :target (file+head "%<%Y-%m-%d>.org"
-                              "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n"))))
+        org-roam-dailies-capture-templates (copy-tree jay/org-roam-dailies-template-default))
 
   ;; staged setup for speed
   (run-with-idle-timer

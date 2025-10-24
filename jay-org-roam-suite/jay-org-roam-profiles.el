@@ -29,6 +29,12 @@
 (defvar jay/org-roam-current-profile nil
   "The name of the currently active org-roam profile.")
 
+(defvar jay/org-roam-dailies-template-default
+  '(("j" "Journal" entry "* %?"
+     :target (file+head "%<%Y-%m-%d>.org"
+                        ":PROPERTIES:\n:ID:       %(org-id-new)\n:END:\n#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n")))
+  "Default org-roam dailies capture template with ID drawer and journal metadata.")
+
 (defvar jay/org-roam-profiles
   '((default
      :name "High Velocity"
@@ -36,6 +42,7 @@
      :db-location nil  ; use default from xdg-cache-home
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-default
+     :dailies-capture-templates jay/org-roam-dailies-template-default
      :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam")
 
     (my-life
@@ -44,6 +51,7 @@
      :db-location "~/Dropbox/roam-life/.org-roam.db"
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
+     :dailies-capture-templates jay/org-roam-dailies-template-default
      :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam-life"))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
@@ -51,7 +59,8 @@ Each profile is a plist with keys:
   :directory - Root directory for org-roam files
   :db-location - Path to database file (nil = use default)
   :dailies-directory - Subdirectory for daily notes
-  :capture-templates - Symbol or list of capture templates")
+  :capture-templates - Symbol or list of capture templates
+  :dailies-capture-templates - Symbol or list of dailies capture templates")
 
 ;; -----------------------------------------------------------------------------
 ;; Profile Definitions
@@ -75,6 +84,18 @@ Each profile is a plist with keys:
                         "#+TITLE: ${title}\n#+FILETAGS: :accountability:")
      :unnarrowed t)
 
+   '("a" "article notes or books and articles" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :literaturenote:")
+     :unnarrowed t)
+
+   '("H" "Plans" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :project:")
+     :unnarrowed t)
+
    '("g" "ChatGPT Outputs" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "chatgpt-outputs/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -91,6 +112,36 @@ Each profile is a plist with keys:
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "logistics/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :library:")
+     :unnarrowed t)
+
+   '("c" "Conversation" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :conversation:")
+     :unnarrowed t)
+
+   '("d" "documents and deliverables" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "documents/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :document:")
+     :unnarrowed t)
+
+   '("D" "Developing, vibecoding" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "vibecoding/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :document:")
+     :unnarrowed t)
+
+   '("E" "Exercise" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "exercise/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :exercise:")
+     :unnarrowed t)
+
+   '("f" "finances and housekeeping" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
      :unnarrowed t)
 
    '("M" "Momentum --- 2025 job hunt" plain
@@ -117,6 +168,18 @@ Each profile is a plist with keys:
                         "#+TITLE: ${title}\n#+FILETAGS: :writers:person:")
      :unnarrowed t)
 
+   '("k" "kanban" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "kanban/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :kanban:")
+     :unnarrowed t)
+
+   '("L" "Learning, lectures, and classes" plain
+     "- Links ::\n- Source ::\n\n* ${title}\n%?"
+     :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :learning:")
+     :unnarrowed t)
+
    '("z" "zork (custom path)" plain
      "- Links ::\nSource ::\n\n\n* ${title}\n%?"
      :target (file+head (lambda ()
@@ -126,6 +189,7 @@ Each profile is a plist with keys:
      :unnarrowed t)
 
    ;; Factory-generated templates
+   (jay/roam-template "B" "Business (Socratic AI)" "business-socratic" "project")
    (jay/roam-template "b" "books" "books" "books")
    (jay/roam-template "C" "Claude outputs" "claude-outputs" "claude")
    (jay/roam-template "e" "emacs" "emacs" "emacs")
@@ -251,6 +315,7 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
          (db-location (plist-get profile :db-location))
          (dailies-dir (plist-get profile :dailies-directory))
          (templates (plist-get profile :capture-templates))
+         (dailies-templates (plist-get profile :dailies-capture-templates))
          (switching-profiles (and jay/org-roam-current-profile
                                   (not (eq jay/org-roam-current-profile profile-name))))
          (needs-sync (or force-sync switching-profiles)))
@@ -275,6 +340,15 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
                                          templates))
+
+    (let ((resolved-dailies (cond
+                             ((symbolp dailies-templates)
+                              (and (boundp dailies-templates)
+                                   (symbol-value dailies-templates)))
+                             ((consp dailies-templates) dailies-templates)
+                             (t nil))))
+      (when resolved-dailies
+        (setq org-roam-dailies-capture-templates (copy-tree resolved-dailies))))
 
     ;; Keep ox-astro exports aligned with the active profile's notes root.
     (let ((astro-root (plist-get profile :astro-source-root)))

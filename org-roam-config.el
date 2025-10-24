@@ -95,9 +95,12 @@
 
   ;; 4) Capture templates (light-weight, keep them here)
   (setq org-roam-dailies-capture-templates
-        '(("j" "Journal" entry "* %?"
-           :target (file+head "%<%Y-%m-%d>.org"
-                              "#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n")))))
+        (copy-tree
+         (if (boundp 'jay/org-roam-dailies-template-default)
+             jay/org-roam-dailies-template-default
+           '(("j" "Journal" entry "* %?"
+              :target (file+head "%<%Y-%m-%d>.org"
+                                 ":PROPERTIES:\n:ID:       %(org-id-new)\n:END:\n#+TITLE: %<%Y-%m-%d>\n#+FILETAGS: :journal:\n\n- Links ::\n\n* %<%A, %B %d, %Y>\n\n** Today [0/1]\n"))))))
 
 
 

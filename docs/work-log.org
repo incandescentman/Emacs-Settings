@@ -2,6 +2,33 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-24: Restore org-roam dailies properties
+
+** Summary
+- Fixed regression where `org-roam-dailies-goto-today` created notes without ID drawers
+- Centralized the journal daily template and guarded profile switching so defaults survive optional keys
+- Ensured legacy `org-roam-config.el` consumers pick up the shared template
+- Restored the `B` capture template for Business/Socratic notes under `business-socratic/`
+- Added back legacy capture templates (`a`, `H`, `c`, `d`, `D`, `E`, `f`, `k`, `L`) so long-time shortcuts keep working
+
+** Details
+- Root cause: the profile switcher unconditionally set `org-roam-dailies-capture-templates` to whatever the profile plist provided; profiles defined before 2025-10-24 lacked `:dailies-capture-templates`, so the variable became `nil`, forcing org-roam’s fallback template (no properties)
+- Added `jay/org-roam-dailies-template-default` as the single source of truth for the journal capture template and referenced it from both profiles and the core init
+- Updated `jay/org-roam-apply-profile` to resolve templates defensively and only assign when a profile supplies one, preventing future regressions when adding new profiles
+- Legacy `org-roam-config.el` now copies the shared template when available, keeping older entry points consistent
+- Brought back the business template via `jay/roam-template` so `s-u B` once again lands in `business-socratic/` with `:project:` tagging
+- Migrated the remaining legacy templates (article notes, plans, conversation, documents/deliverables, vibecoding, exercise, finances, kanban, learning) into the default profile list
+- Updated `docs/instructions.org` with guidance on where capture templates now live and how the shared daily template works
+
+** Handoff
+- Reload or eval the modified sections, then re-run `org-roam-dailies-goto-today`; new entries should include the `:PROPERTIES:` drawer with a fresh `org-id`
+- When adding a new profile, omit `:dailies-capture-templates` to inherit the shared default or bind it to a symbol/list explicitly
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` (shared template + guarded application)
+- `jay-org-roam-suite/jay-org-roam-core.el` (core init pulls from shared template)
+- `org-roam-config.el` (fallback to shared template)
+
 * 2025-10-20: Calendar + diary polish (known-good colors)
 
 ** Summary

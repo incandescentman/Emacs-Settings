@@ -37,6 +37,11 @@
 - **Astro exports**:
   - Profile switches retarget `org-astro-source-root-folder` automatically (`~/Library/CloudStorage/Dropbox/roam` for work, `~/Library/CloudStorage/Dropbox/roam-life` for personal)
   - One-off helpers `jay/org-astro-export-from-roam` and `jay/org-astro-export-from-roam-life` temporarily rebind the root and call `org-astro-export-to-mdx`
+- **Capture template maintenance**
+  - All active templates (A, a, B, c, d, …, $) now live in `jay-org-roam-suite/jay-org-roam-profiles.el`; edit the `jay/org-roam-capture-templates-default` list (for hand-written templates) or the `jay/roam-template` block (for factory helpers) to add/remove bindings
+  - Long-time bindings restored: `a` (literature notes), `H` (plans), `c` (conversations), `d` (documents), `D` (vibecoding), `E` (exercise), `f` (finances), `k` (kanban), `L` (learning), alongside newer ones like `B` (business-socratic)
+  - Daily notes share a single template (`jay/org-roam-dailies-template-default`); update it once and both profiles pick up the change, with IDs auto-inserted via `%(org-id-new)`
+  - When a new profile omits `:dailies-capture-templates`, it inherits the shared default—set the plist slot only when you truly need a custom layout
 ** Appearance controls
 - Commands like `medium-type`, `large-type`, `spacemacs-light`, and `whiteboard` adjust fonts and themes on demand.
 ** Navigation/search
