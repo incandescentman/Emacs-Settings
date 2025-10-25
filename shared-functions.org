@@ -9765,10 +9765,6 @@ After evaluating your init-file you can use links analog to the example:
 (add-hook 'emacs-startup-hook #'kill-unwanted-buffers) 
 #+end_src
 
-* LaTeX subtitles
-#+begin_src emacs-lisp
-#+end_src
-
 * Info Mode
 ** Custom Keybindings
 #+BEGIN_SRC emacs-lisp
