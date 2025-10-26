@@ -1,33 +1,577 @@
 #+TITLE: Design and Architecture
-#+DATE: 2025-09-24
-#+DESCRIPTION: How the Emacs configuration is structured and why the major decisions exist.
+#+DATE: 2025-10-26
+#+DESCRIPTION: How this Emacs configuration is structured and why
 
-* System Architecture Overview
-- Spacemacs provides the base distribution; `init.el` configures layers, additional packages, and default behavior.
-- Literate modules (`gnu-emacs-startup.org`, `pasteboard-copy-and-paste-functions.org`, `shared-functions.org`, …) tangle into accompanying `.el` files that are loaded during startup.
-- Supporting `.elc` byte-compiled artifacts live beside their sources for faster boot.
+* Overview
 
-* State Management Approach
-- Persistent settings rely on Spacemacs/Emacs defaults (e.g., `custom-file` handled by Spacemacs) while per-session state is kept minimal.
-- Org-specific state such as `org-id` caches is refreshed on demand via helper scripts (`fix-org-id-locations.el`, `org-roam-config.el`).
-- Shared helper functions (prefixed `jay/` or defined in `shared-functions`) encapsulate stateful operations so buffer-local mutations stay predictable.
+This document explains how the Emacs configuration is organized, how different parts work together, and the reasoning behind major design decisions.
+
+** The Big Picture
+
+Think of this configuration as three layers:
+
+1. *Foundation*: Spacemacs provides the base (layers, package management, keybindings)
+2. *Custom Modules*: Org files that tangle to Elisp (clipboard integration, themes, utilities)
+3. *Integration*: macOS-specific features, external tools (ripgrep, hunspell), custom workflows
+
+* Architecture Components
+
+** Core Structure
+
+*** Spacemacs Layer
+- *File*: =init.el= (symlinked to =~/.spacemacs=)
+- *Purpose*: Configures Spacemacs layers and basic settings
+- *What it loads*:
+  - org layer (with org-roam support)
+  - auto-completion layer
+  - compleseus (completion framework)
+  - spell-checking layer
+  - osx layer (macOS integration)
+
+*** Literate Programming Modules
+
+These are the heart of the customization. Each =.org= file contains documentation and code blocks that tangle to =.el= files:
+
+| Org File                                  | Generated File        | Purpose                           |
+|-------------------------------------------+-----------------------+-----------------------------------|
+| =shared-functions.org=                    | =shared-functions.el= | Core utilities (9,983 lines)      |
+| =pasteboard-copy-and-paste-functions.org= | =pasteboard-*.el=     | Clipboard cleaning and integration |
+| =gnu-emacs-startup.org=                   | =gnu-emacs-startup.el= | Alternative startup config        |
+| =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
+| =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
+
+*How it works*:
+1. Edit the =.org= file (contains code + documentation)
+2. Press =C-c C-v t= to "tangle" (extract code blocks → =.el= file)
+3. Emacs loads the =.el= file on startup
+4. Optional: Byte-compile =.el= → =.elc= for faster startup
+
+*** Platform Integration
+
+- *File*: =jay-osx.el=
+- *Purpose*: macOS-specific settings
+- *Key features*:
+  - Defines =key-minor-mode-map= (global keybindings)
+  - macOS Command key (=s-=) bindings
+  - Pasteboard (clipboard) integration via =pbcopy=/=pbpaste=
+
+*** Supporting Modules
+
+| File                  | Purpose                                   |
+|-----------------------+-------------------------------------------|
+| =org-roam-config.el=  | Org-roam setup and profiles               |
+| =org-visual-style.el= | Visual enhancements for org-mode          |
+| =org-yt.el=           | YouTube link support in org               |
+| =keys.el=             | Global keybinding overrides               |
+| =smart-return.el=     | Context-aware Enter key behavior          |
+| =hydras.el=           | Hydra menus for quick commands            |
+| =skeletons.el=        | Code templates and snippets               |
+| =search-commands.el=  | Enhanced search functionality             |
+
+** Loading Order
+
+Understanding the loading sequence helps debug issues:
+
+#+BEGIN_SRC
+1. Emacs starts
+2. Loads ~/.emacs.d/init.el (Spacemacs core)
+3. Reads ~/.spacemacs (symlinked to ~/emacs/emacs-settings/init.el)
+4. Spacemacs loads layers (org, auto-completion, etc.)
+5. Loads spacemacs-new-config.el
+6. Loads jay-osx.el (provides key-minor-mode-map)
+7. Loads gnu-emacs-startup.el
+8. Loads shared-functions.el (tangled from shared-functions.org)
+9. Loads other modules (deferred or immediate based on config)
+10. Loads local-config.el (if exists, gitignored for machine-specific settings)
+#+END_SRC
+
+*Why this order matters*:
+- =jay-osx.el= must load before anything that uses =key-minor-mode-map=
+- =shared-functions.el= provides utilities used by other modules
+- Some modules defer loading until needed (performance optimization)
+
+* Key Design Patterns
+
+** Literate Programming
+
+*What*: Documentation and code live together in =.org= files.
+
+*Why*:
+- Code is easier to understand with surrounding context
+- Natural place for design notes and examples
+- Single source of truth (no separate docs to update)
+
+*Example*:
+#+BEGIN_EXAMPLE
+,* Clipboard Cleaning Function
+This function removes smart quotes and normalizes dashes
+when pasting from web pages.
+
+,#+BEGIN_SRC emacs-lisp
+(defun pasteboard-paste-clean ()
+  "Clean and paste clipboard content."
+  (interactive)
+  ...)
+,#+END_SRC
+#+END_EXAMPLE
+
+** Adaptive Behavior
+
+*What*: Functions detect context and adapt behavior automatically.
+
+*Examples*:
+- =pasteboard-paste-adaptive=: Cleans text in org buffers, pastes raw in code
+- =smart-return=: Different behavior in org vs. code vs. text modes
+- Font/theme functions: Adjust frame parameters without permanent changes
+
+*Why*:
+- Reduces cognitive load (don't think about mode-specific commands)
+- Fewer keybindings to remember
+- More "just works" behavior
+
+** Centralized Utilities
+
+*What*: =shared-functions.org= contains 300+ custom functions.
+
+*Why single file?*
+- Easy to search (everything in one place)
+- No dependency management between multiple files
+- Emacs handles large files fine
+- Simpler than splitting into dozens of small modules
+
+*Naming conventions*:
+- =jay/...= - User-facing interactive commands
+- =pasteboard-...= - Clipboard-related functions
+- =org-...= - Org-mode customizations
+- =my-...= - Various utilities
+
+** macOS Integration
+
+*What*: Deep integration with macOS clipboard and system features.
+
+*How*:
+- =pbpaste= command retrieves clipboard → Emacs
+- =pbcopy= command sends text → system clipboard
+- Cleaning pipeline normalizes formatting between systems
+
+*Why separate pasteboard module?*
+- Complex logic (markdown/org detection, smart quote normalization)
+- Platform-specific (only works on macOS)
+- Isolates external dependencies
+
+* Data Flow Patterns
+
+** Clipboard Pipeline
+
+#+BEGIN_SRC
+Web Browser (copy)
+    ↓
+macOS System Clipboard
+    ↓
+pbpaste command (raw text)
+    ↓
+pasteboard-paste-adaptive (detects buffer type)
+    ↓
+    ├→ Code buffer: Insert raw
+    └→ Org buffer: pasteboard-paste-clean
+              ↓
+        normalize-dashes (fix quotes)
+              ↓
+        markdown → org conversion
+              ↓
+        heading level adjustment
+              ↓
+        Insert cleaned text
+#+END_SRC
+
+** Org-Roam Data
+
+*Storage*: Separate from this repo
+- Work notes: =~/Dropbox/roam/=
+- Personal notes: =~/Dropbox/roam-life/=
+
+*Database*: SQLite file (=org-roam.db=) indexes all notes
+
+*This repo provides*:
+- Capture templates
+- Profile switching logic
+- Integration with Spacemacs
+- Helper functions
+
+*This repo does NOT contain*:
+- Your actual notes
+- Org-roam database
+- Personal content
+
+** Font and Theme Management
+
+*Runtime only*: Changes don't persist to files
+
+#+BEGIN_SRC emacs-lisp
+(defun large-type ()
+  "Increase font for presentations"
+  (interactive)
+  (set-face-attribute 'default nil :height 350))
+#+END_SRC
+
+*Why runtime?*
+- Switch themes/fonts on the fly
+- Different settings for different contexts (writing vs. coding vs. presenting)
+- No config file modifications needed
 
 * Integration Points
-- macOS pasteboard commands (`pbpaste`, `pbcopy`) power the cleaning pipeline in `pasteboard-paste-clean`.
-- External binaries surfaced through Spacemacs layers: `ripgrep` for search, `aspell`/`hunspell` for spell checking, `org-roam` database via `emacsql`.
-- Custom color themes loaded from `jay-custom-color-themes/` and shell helpers such as `safe-emacs-test.sh` for sandboxed launches.
 
-* Data Flow and Storage Patterns
-- Clipboard workflow: `pasteboard-paste` inserts raw text → `pasteboard-paste-clean` normalizes punctuation, spacing, markdown/org conversions → `shared-functions` utilities perform downstream formatting.
-- Org capture and review use `org-roam` files under user directories; this repo focuses on editing surface rather than storing content.
-- Fonts/themes functions modify frame parameters at runtime without touching persistent files.
+** External Tools
 
-* Recent Updates
-- 2025-09-24 :: Preserved Markdown table separators inside `normalize-dashes` to keep header gutters intact during paste-cleaning.
-- 2025-09-24 :: Stopped stripping zero-width joiners so compound emoji survive clipboard normalization.
+| Tool      | Purpose                    | How Used                          |
+|-----------+----------------------------+-----------------------------------|
+| ripgrep   | Fast text search           | =SPC /= project search            |
+| pandoc    | Document conversion        | Org export to various formats     |
+| hunspell  | Spell checking             | =M-$= spell check word            |
+| emacsql   | SQLite database            | Org-roam database queries         |
+| pbcopy    | macOS clipboard (copy)     | Clipboard integration             |
+| pbpaste   | macOS clipboard (paste)    | Clipboard integration             |
 
-* Technical Rationale for Major Decisions
-- **Spacemacs base**: retains ecosystem of layers, minimizing bespoke package pinning.
-- **Org-first modules**: consolidating Org tweaks avoids duplication across disparate init files.
-- **Copy/paste pipeline**: sanitizing text at insertion prevents downstream formatting fixes and keeps macOS ↔ Emacs transitions lossless.
-- **Shared utility library**: centralizing helpers (`shared-functions`) reduces risk of diverging copies sprinkled through other modules.
+Install via: =brew install ripgrep pandoc hunspell=
+
+** Spacemacs Layers
+
+This config uses these Spacemacs layers:
+
+- *org*: Org-mode with org-roam support
+- *auto-completion*: Company-mode completion
+- *compleseus*: Completion framework (alternative to Helm/Ivy)
+- *spell-checking*: Flyspell with hunspell
+- *osx*: macOS-specific settings
+- *emacs-lisp*: Elisp development tools
+
+*Why layers?*
+- Pre-configured package bundles
+- Consistent keybindings
+- Integration with Spacemacs infrastructure
+- Community maintenance
+
+** Custom Color Themes
+
+*Location*: =jay-custom-color-themes/=
+
+*Available themes*:
+- =whiteboard= - Clean white background
+- =matrix= - Green on black (inspired by The Matrix)
+- =cyberpunk-jay= - Cyberpunk color scheme
+- =leuven-jay= - Modified Leuven theme
+- Many others (30+ themes)
+
+*Loading*: Functions in =fonts-and-themes.el= provide commands like =M-x whiteboard=
+
+* State Management
+
+** What Gets Saved
+
+*Spacemacs handles*:
+- Package installation state (=~/.emacs.d/elpa/=)
+- Recent files list
+- Custom variables (=custom-file=)
+
+*Org-roam handles*:
+- Database of notes (=org-roam.db=)
+- Last-used profile
+- Node cache
+
+*This config*:
+- Git-tracked: All =.el= and =.org= files
+- Not tracked: Byte-compiled =.elc= files, =local-config.el=
+
+** Buffer-Local vs. Global State
+
+*Design principle*: Keep state minimal and predictable.
+
+*Buffer-local*:
+- Major/minor modes
+- Font-lock settings
+- Temporary overlays
+
+*Global*:
+- Org-roam profile
+- Custom functions
+- Keybindings
+- Frame parameters (font size, theme)
+
+*Ephemeral* (lost on restart):
+- Window configuration
+- Kill ring (clipboard history)
+- Search history
+
+* Technical Decisions and Rationale
+
+** Why Spacemacs (Not Vanilla Emacs or Doom)?
+
+*Pros*:
+- Excellent layer system (curated package bundles)
+- Great defaults
+- Strong community
+- Easy to extend
+
+*Cons*:
+- Slower startup than Doom or vanilla
+- Some bloat from unused features
+- Occasional version compatibility issues
+
+*Decision*: Spacemacs' layer system and defaults are worth the tradeoffs for this use case (writing and note-taking focus).
+
+** Why One Large shared-functions.org (Not Multiple Small Files)?
+
+*Pros*:
+- Single place to search for functions
+- No dependency management between files
+- Easy to see everything at once
+- Simple to maintain
+
+*Cons*:
+- Large file (~10,000 lines)
+- Could be intimidating to newcomers
+- Emacs handles it fine, but some tools might choke
+
+*Decision*: For a personal config, convenience trumps modularity. Could split if working with a team.
+
+** Why Literate Programming (Not Just .el Files)?
+
+*Pros*:
+- Documentation right with the code
+- Easier to explain complex logic
+- Great for learning and reference
+- Beautiful exports to HTML/PDF
+
+*Cons*:
+- Extra step (tangle before use)
+- Can get out of sync if you edit =.el= directly
+- Requires discipline
+
+*Decision*: Worth it for maintainability and understanding. The =#+auto_tangle: t= header helps.
+
+** Why Separate Pasteboard Module?
+
+*Pros*:
+- Complex enough to deserve its own file
+- Platform-specific (macOS only)
+- Clear boundary for external dependencies
+- Easier to test independently
+
+*Cons*:
+- One more file to track
+- Requires loading separately
+
+*Decision*: Clipboard cleaning is complex enough (~2,000 lines) and important enough (used constantly) to warrant separation.
+
+** Why Org-Roam Profiles (Not Multiple Configs)?
+
+*Pros*:
+- Switch databases without restarting Emacs
+- Shared functions and keybindings
+- One codebase to maintain
+- Clean separation of work/personal notes
+
+*Cons*:
+- Complexity in profile-switching code
+- Need to remember which profile you're in
+
+*Decision*: Much better than maintaining separate configs or mixing work/personal notes.
+
+* Recent Architecture Changes
+
+** 2025-10-11: File Watcher Suppression
+- *Problem*: Dropbox sync caused file-notify errors
+- *Solution*: Disabled file watchers for cloud storage, use polling instead
+- *Files changed*: =init.el= (file-notify suppression)
+
+** 2025-09-24: Clipboard Table Handling
+- *Problem*: Markdown tables lost separators during paste
+- *Solution*: Preserve =|---|---| patterns in =normalize-dashes=
+- *Files changed*: =pasteboard-copy-and-paste-functions.org=
+
+** 2025-09-24: Emoji Preservation
+- *Problem*: Zero-width joiners stripped, breaking compound emoji
+- *Solution*: Exclude zero-width joiners from whitespace normalization
+- *Files changed*: =pasteboard-copy-and-paste-functions.org=
+
+** 2025-09-05: Deprecation Fixes
+- Updated =org-bracket-link-regexp= → =org-link-bracket-re=
+- Fixed =plusp= → =(> arg 0)=
+- Removed duplicate function definitions
+- *Files changed*: =shared-functions.org=, =init.el=
+
+* Performance Considerations
+
+** Startup Time
+
+Current startup: ~5-8 seconds (depending on byte-compilation)
+
+*Optimization strategies*:
+1. Byte-compile all =.el= files → =.elc=
+2. Defer loading non-essential packages
+3. Lazy-load layers where possible
+4. Minimize work in =dotspacemacs/user-config=
+
+*To profile*:
+#+BEGIN_SRC sh
+emacs --timed-requires
+#+END_SRC
+
+** Memory Usage
+
+*Large files*:
+- =shared-functions.el=: ~316KB
+- =init.el=: ~50KB
+- =gnu-emacs-startup.el=: ~46KB
+
+*Not a problem*: Emacs handles this fine. The byte-compiled versions load quickly.
+
+** Byte Compilation
+
+*Command*:
+#+BEGIN_SRC emacs-lisp
+(byte-recompile-directory "~/emacs/emacs-settings" 0)
+#+END_SRC
+
+*Benefits*:
+- Faster function calls
+- Faster startup
+- Some error checking at compile time
+
+*When to recompile*:
+- After updating =.org= files and tangling
+- After pulling from git
+- If startup feels slow
+
+* Extending the Configuration
+
+** Adding a New Function
+
+1. Choose location:
+   - General utility → =shared-functions.org=
+   - Clipboard-related → =pasteboard-copy-and-paste-functions.org=
+   - Theme/appearance → =fonts-and-themes.org=
+
+2. Add in a =#+BEGIN_SRC emacs-lisp= block
+
+3. Document what it does
+
+4. Tangle: =C-c C-v t=
+
+5. Reload: =SPC f e R=
+
+** Adding a New Module
+
+1. Create =new-module.org= with =#+auto_tangle: t= header
+
+2. Add to loading sequence in =init.el= or =gnu-emacs-startup.el=
+
+3. Test loading order (make sure dependencies load first)
+
+** Adding a Spacemacs Layer
+
+1. Edit =init.el=
+
+2. Find =dotspacemacs-configuration-layers=
+
+3. Add layer name to list
+
+4. =SPC f e R= to reload
+
+5. Spacemacs will install packages on next restart
+
+* Troubleshooting Architecture Issues
+
+** Load Order Problems
+
+*Symptom*: "void-variable" or "void-function" errors
+
+*Cause*: Module A uses something from Module B, but B loads after A
+
+*Solution*:
+1. Find loading order in =init.el= or =gnu-emacs-startup.el=
+2. Move Module B earlier
+3. Or use =(require 'module-b)= at top of Module A
+
+** Missing Dependencies
+
+*Symptom*: "Cannot find file" or "Package not available"
+
+*Solution*:
+1. Check =dotspacemacs-additional-packages= in =init.el=
+2. Check layer configuration
+3. Try =SPC f e R= (reload) or =SPC f e U= (update packages)
+
+** Tangle Sync Issues
+
+*Symptom*: Changes in =.org= file not taking effect
+
+*Cause*: Forgot to tangle, or Emacs loading old =.elc= file
+
+*Solution*:
+1. Delete =.elc=: =rm file.elc=
+2. Tangle again: =C-c C-v t=
+3. Reload: =SPC f e R=
+4. Or restart Emacs
+
+** Platform Issues
+
+*Symptom*: Pasteboard functions not working on Linux
+
+*Cause*: =pbcopy=/=pbpaste= are macOS-only
+
+*Solution*:
+- Linux: Modify to use =xclip= or =xsel=
+- Windows: Use PowerShell clipboard commands
+- Or wrap in =(when (eq system-type 'darwin) ...)=
+
+* Architecture Principles
+
+** Design Philosophy
+
+1. *Convenience over purity*: Monolithic files are fine if they work
+2. *Documentation is code*: Literate programming keeps them in sync
+3. *Adapt to context*: Smart functions beat mode-specific commands
+4. *Integration matters*: Deep macOS integration enhances workflow
+5. *Stable core, flexible edges*: Spacemacs base, custom extensions
+
+** Maintenance Philosophy
+
+1. *Git everything*: Commit often, with good messages
+2. *Document surprises*: Non-obvious fixes go in =codebase-wisdom.org=
+3. *Test before pushing*: Use git branches for experiments
+4. *Keep it working*: Functionality over elegance
+5. *Fix forward*: Deprecation warnings are technical debt
+
+** Future Considerations
+
+See =critical-next-steps.org= for planned improvements, but key architectural goals:
+
+1. Better error handling (graceful degradation)
+2. More consistent naming conventions
+3. Cleaner dependency management
+4. Optional: Split =shared-functions.org= if it becomes unwieldy
+5. Consider use-package for cleaner package configuration
+
+* Resources
+
+** Understanding the Code
+
+- Read =shared-functions.org= for examples
+- =C-h f= (describe-function) on any function
+- =C-h k= (describe-key) to see what a keybinding does
+- Look at git history: =git log -p file.org=
+
+** External Documentation
+
+- Spacemacs: https://www.spacemacs.org/doc/DOCUMENTATION.html
+- Org-mode: https://orgmode.org/manual/
+- Org-roam: https://www.orgroam.com/manual.html
+- Emacs Lisp: https://www.gnu.org/software/emacs/manual/html_node/elisp/
+
+** Related Files
+
+- =instructions.org= - How to use this config
+- =codebase-wisdom.org= - Lessons learned from debugging
+- =work-log.org= - History of changes
+- =CLAUDE.md= - Overview for AI assistants

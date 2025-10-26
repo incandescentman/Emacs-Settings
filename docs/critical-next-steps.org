@@ -1,20 +1,429 @@
 #+TITLE: Critical Next Steps
-#+DATE: 2025-09-24
-#+DESCRIPTION: Active technical debt and improvement roadmap.
+#+DATE: 2025-10-26
+#+DESCRIPTION: Technical debt, improvements, and future roadmap
 
-* Active Improvements
-** Harden Pasteboard Regression Tests
-- Why it matters: Sanitizer regressions escape easily; tables and emoji already bit us.
-- Scope remaining: Create automated fixtures (ERT or batch scripts) that run `pasteboard-paste-clean` against representative inputs.
-- Recommended plan: 1) Collect sample inputs under `test-fixtures/`. 2) Write batch Emacs script exercising cleaners. 3) Add to CI or pre-push hook.
-- Status: Not started.
+* Overview
 
-** OPTIONAL Document Hydras and Keymaps
-- Why it matters: Even solo usage benefits from a future-you reference when returning after a break.
-- Scope remaining: Inventory hydras in `hydras.org`, surface keybinding cheatsheet in `/docs/instructions.org`.
-- Recommended plan: (Optional) 1) Generate listing via `rg "defhydra"`. 2) Summarize purpose + entry chord. 3) Link from instructions.
-- Status: Tabled (solo user).
+This document tracks:
+- Active technical debt that should be addressed
+- Planned improvements and why they matter
+- Stretch goals for future consideration
+- Things explicitly NOT being pursued (and why)
 
-* Stretch Goals
-- Port critical helpers to packaged modules for easier reuse across machines.
-- Introduce automated linting (e.g., `checkdoc`, `package-lint`) before committing large refactors.
+Status indicators:
+- *[ACTIVE]* - Currently important, should address soon
+- *[PLANNED]* - Scoped and ready to implement
+- *[OPTIONAL]* - Would be nice, but not critical
+- *[TABLED]* - Decided not to pursue (for now)
+
+* High Priority (Active)
+
+** [ACTIVE] Harden Pasteboard Regression Tests
+
+*Why it matters*:
+- Sanitizer regressions have bitten us multiple times (tables, emoji, headings)
+- Manual testing is time-consuming and error-prone
+- Don't catch issues until they hit production use
+
+*Current state*:
+- No automated tests
+- Rely on manual smoke tests
+- Regressions escape easily
+
+*Proposal*:
+1. Create =test-fixtures/= directory with sample inputs:
+   - =markdown-with-tables.txt=
+   - =emoji-compound.txt=
+   - =mixed-markdown-org.txt=
+   - =github-flavored-markdown.txt=
+   - =chatgpt-output.txt=
+
+2. Write batch Emacs script that:
+   - Loads pasteboard functions
+   - Runs =pasteboard--clean-string= on each fixture
+   - Compares output to expected result
+   - Reports differences
+
+3. Add to git pre-commit hook or CI
+
+*Example test*:
+#+BEGIN_SRC emacs-lisp
+;; test-pasteboard.el
+(require 'ert)
+(load-file "pasteboard-copy-and-paste-functions.el")
+
+(ert-deftest test-markdown-table-separators ()
+  "Table separators should be preserved"
+  (let ((input "| Col1 | Col2 |\n|------|------|\n| A    | B    |")
+        (expected "| Col1 | Col2 |\n|------|------|\n| A    | B    |"))
+    (should (string= (pasteboard--clean-string input) expected))))
+#+END_SRC
+
+*Next steps*:
+1. Collect problematic inputs from past bugs (see =codebase-wisdom.org=)
+2. Create expected outputs
+3. Write test harness
+4. Run before each release
+
+*Effort*: ~4-6 hours initial setup, ~30 minutes per new test
+
+*Status*: Not started
+
+** [PLANNED] Document Function Dependencies
+
+*Why it matters*:
+- Some functions depend on others being loaded first
+- Loading order bugs are hard to debug
+- New users (or future-you) don't know what depends on what
+
+*Current problem*:
+- =key-minor-mode-map= must load before functions that use it
+- =shared-functions.el= must load before modules that call its functions
+- Dependencies are implicit (no documentation)
+
+*Proposal*:
+Add dependency comments at top of each major file:
+
+#+BEGIN_SRC emacs-lisp
+;;; pasteboard-copy-and-paste-functions.el --- Clipboard integration
+;;
+;; Dependencies:
+;;   - shared-functions.el (required)
+;;   - jay-osx.el (optional, for key-minor-mode-map)
+;;   - External: pbcopy, pbpaste (macOS command-line tools)
+;;
+;; Must load AFTER: shared-functions.el
+;; Must load BEFORE: (none)
+#+END_SRC
+
+*Next steps*:
+1. Map out actual dependencies (draw a graph if needed)
+2. Add comments to each file
+3. Update loading sequence documentation in =design-architecture.org=
+4. Consider adding =(require)= statements to make dependencies explicit
+
+*Effort*: ~2-3 hours
+
+*Status*: Planned, not started
+
+** [OPTIONAL] Standardize Function Naming
+
+*Why it matters*:
+- Easier to find related functions
+- Clearer what's user-facing vs. internal
+- Reduces naming collisions
+
+*Current state*:
+- Mix of prefixes: =jay/...=, =my-...=, =pasteboard-...=, =org-...=
+- Some consistency, but not enforced
+- Internal helpers have various naming patterns
+
+*Proposed conventions*:
+| Prefix           | Usage                                  | Example                    |
+|------------------+----------------------------------------+----------------------------|
+| =jay/=           | User-facing interactive commands       | =jay/delete-and-capitalize= |
+| =pasteboard-=    | Public clipboard functions             | =pasteboard-paste-clean=   |
+| =pasteboard--=   | Internal clipboard helpers (2 dashes)  | =pasteboard--clean-string= |
+| =org-...=        | Org-mode specific                      | =org-roam-capture=         |
+| =my-=            | Generic utilities (refactor to =jay/=) | =my-org-files-list=        |
+
+*Double-dash convention*: Internal/private functions use =--= (Emacs convention)
+
+*Next steps*:
+1. Inventory all function names (=rg "defun"=)
+2. Categorize as public vs. internal
+3. Rename in batches (use =replace-all= parameter in Edit tool)
+4. Test thoroughly (breaking change!)
+
+*Effort*: ~6-8 hours (need to update all call sites)
+
+*Status*: Optional (working fine as-is, but would be cleaner)
+
+* Medium Priority (Planned)
+
+** [PLANNED] Add Deprecation Tracking
+
+*Why it matters*:
+- Emacs and Org-mode deprecate functions regularly
+- Warnings accumulate
+- Eventually things break
+
+*Current state*:
+- Fix deprecations when noticed
+- No systematic tracking
+- Some known but unfixed (documented in CLAUDE.md)
+
+*Proposal*:
+1. Create =docs/deprecations.org=:
+   #+BEGIN_EXAMPLE
+   * Active Deprecation Warnings
+   ** org-bracket-link-regexp → org-link-bracket-re
+   Status: FIXED (2025-09-05)
+
+   ** shift-select-mode
+   Status: FIXED (2025-10-06)
+
+   ** TODO: cl-return vs return
+   Status: TODO - Low priority, still works
+   #+END_EXAMPLE
+
+2. Run =emacs --batch --eval "(byte-compile-file \"file.el\")"= to find warnings
+
+3. Track in deprecations.org with priority
+
+4. Fix high-priority before each major Emacs/Spacemacs upgrade
+
+*Next steps*:
+1. Byte-compile all files, capture warnings
+2. Create deprecations.org
+3. Prioritize by impact
+4. Fix critical ones first
+
+*Effort*: ~3-4 hours initial, ~1 hour per major update
+
+*Status*: Planned
+
+** [OPTIONAL] Profile Startup Time
+
+*Why it matters*:
+- Startup is ~5-8 seconds (acceptable but could be better)
+- Don't know where time is spent
+- Optimization is guesswork
+
+*Current state*:
+- No profiling data
+- Assumed slow areas: large files, many packages
+- Some deferred loading, but not systematic
+
+*Proposal*:
+1. Run Emacs with profiling:
+   #+BEGIN_SRC sh
+   emacs --debug-init --timed-requires
+   #+END_SRC
+
+2. Identify slowest loads
+
+3. Consider:
+   - More aggressive deferred loading
+   - Lazy autoloads
+   - Moving non-essential config to separate file
+   - Byte-compilation verification
+
+4. Document findings in =performance.org=
+
+*Next steps*:
+1. Profile current startup
+2. Identify top 5 slowest items
+3. Estimate potential gains
+4. Decide if worth optimizing (maybe it's fine!)
+
+*Effort*: ~2-3 hours investigation, varies for fixes
+
+*Status*: Optional (startup is acceptable, optimization is premature)
+
+** [OPTIONAL] Document All Hydras
+
+*Why it matters*:
+- Hydras provide quick access to commands
+- Forget what's available after time away
+- No central reference
+
+*Current state*:
+- Hydras defined in =hydras.org= and tangled to =hydras.el=
+- No documentation beyond code
+- Need to read code to discover available hydras
+
+*Proposal*:
+1. Generate hydra inventory:
+   #+BEGIN_SRC sh
+   cd ~/emacs/emacs-settings
+   rg "defhydra" hydras.org
+   #+END_SRC
+
+2. Document in =instructions.org= or separate =hydras-reference.org=:
+   #+BEGIN_EXAMPLE
+   * Available Hydras
+   ** Window Management (=SPC w=)
+   - =w= - Split window
+   - =d= - Delete window
+   - ...
+
+   ** Font Adjustment (=F8=)
+   - =j= - Increase size
+   - =k= - Decrease size
+   - ...
+   #+END_EXAMPLE
+
+3. Add cheat sheet
+
+*Next steps*:
+1. List all hydras
+2. Document purpose and entry keybinding
+3. List available options in each
+4. Add examples
+
+*Effort*: ~2-3 hours
+
+*Status*: Optional, tabled (solo user, low priority)
+
+* Stretch Goals (Future)
+
+** [IDEA] Package Critical Helpers as Reusable Modules
+
+*Why*:
+- Share useful functions across machines
+- Contribute back to community
+- Force cleaner interfaces
+
+*What to package*:
+- Pasteboard integration (as =pasteboard-mode=)
+- Smart capitalization functions
+- Org-roam profile switching (as =org-roam-profiles=)
+
+*Steps*:
+1. Extract to separate repo
+2. Add package metadata
+3. Write README
+4. Publish to MELPA (optional)
+5. Use as dependency in main config
+
+*Effort*: Significant (~10-20 hours per package)
+
+*Status*: Stretch goal, low priority
+
+** [IDEA] Automated Linting
+
+*Why*:
+- Catch errors before runtime
+- Enforce consistent style
+- Reduce bugs
+
+*Tools to consider*:
+- =checkdoc= - Documentation string checker
+- =package-lint= - Package metadata checker
+- =elisp-lint= - General linting
+- =relint= - Regexp linter
+
+*Implementation*:
+1. Add to pre-commit hook
+2. Fix existing warnings
+3. Enforce going forward
+
+*Effort*: ~6-8 hours setup, ongoing maintenance
+
+*Status*: Stretch goal
+
+** [IDEA] Mobile Integration
+
+*Why*:
+- Access notes on phone
+- Capture ideas on the go
+- Sync org-roam to mobile
+
+*Options to explore*:
+- Orgzly (Android org-mode app)
+- beorg (iOS org-mode app)
+- Dropbox sync (already in place)
+- Org-roam mobile setup
+
+*Challenges*:
+- Org-roam database sync
+- Two-way sync conflicts
+- Mobile UI limitations
+
+*Effort*: Significant (~15-20 hours research + setup)
+
+*Status*: Interesting but not urgent
+
+* Explicitly NOT Pursuing
+
+** Multi-Platform Support
+
+*Why not*:
+- Primary platform is macOS
+- Pasteboard functions are macOS-specific
+- Cross-platform would dilute integration depth
+- Better to optimize for one platform
+
+*Could change if*:
+- Start using Linux regularly
+- Share with Linux users
+- Community interest
+
+** IDE-Like Features
+
+*Why not*:
+- This is a writing environment, not a development IDE
+- LSP, debugging, etc. are out of scope
+- Focus is org-mode and writing
+- Spacemacs provides basic code editing
+
+*Philosophy*: Write-first, code-second
+
+** Org-Mode Alternatives
+
+*Why not*:
+- Deeply invested in org-mode
+- 10+ years of org-roam notes
+- Markdown mode would fragment workflow
+- Org-mode is the canonical format (philosophy)
+
+*Could change if*:
+- Org-mode development stops
+- Superior alternative emerges
+- Unlikely
+
+** Perfect Consistency
+
+*Why not*:
+- "Perfect is the enemy of good"
+- Refactoring for aesthetics = busywork
+- Working code is valuable
+- Incremental improvement is fine
+
+*Philosophy*: Pragmatism over purity
+
+* Tracking and Review
+
+** Monthly Review
+
+Check this document monthly:
+- [ ] Are high-priority items progressing?
+- [ ] Any new critical issues to add?
+- [ ] Can anything move from active → planned → done?
+- [ ] Are stretch goals still relevant?
+
+** After Major Changes
+
+Update this document after:
+- Fixing significant bugs
+- Adding major features
+- Spacemacs/Emacs upgrades
+- Discovering new technical debt
+
+** Version Milestones
+
+Consider these completion criteria:
+- *v2.0*: All [ACTIVE] items resolved
+- *v2.5*: All [PLANNED] items resolved
+- *v3.0*: Selected stretch goals completed
+
+* Decision Log
+
+Record major decisions here:
+
+** 2025-10-26: Tabled "Document Hydras"
+*Reason*: Solo user, hydras are discoverable enough, low ROI
+
+**2025-10-26: Prioritized Regression Tests
+*Reason*: Clipboard bugs have cost hours of debugging multiple times
+
+** 2025-10-26: Decided NOT to Pursue Multi-Platform
+*Reason*: macOS integration is a core value, would dilute focus
+
+* Related Documentation
+
+- =work-log.org= - History of what's been done
+- =codebase-wisdom.org= - Lessons from bugs
+- =design-architecture.org= - Current architecture
+- =the-emacs-settings-approach.org= - Philosophy and principles

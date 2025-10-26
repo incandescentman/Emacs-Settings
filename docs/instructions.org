@@ -1,78 +1,398 @@
-#+TITLE: Operational Instructions
-#+DATE: 2025-09-24
-#+DESCRIPTION: How to install, use, and maintain the Emacs configuration.
+#+TITLE: How to Use This Emacs Configuration
+#+DATE: 2025-10-26
+#+DESCRIPTION: Installation, features, and everyday usage guide
 
-* Installation and Setup
-1. `git clone git@github.com:incandescentman/Emacs-Settings.git ~/emacs/emacs-settings`
-2. Symlink `init.el` into your home directory as the Spacemacs entry point: `ln -s ~/emacs/emacs-settings/init.el ~/.spacemacs`
-3. Launch Emacs; allow Spacemacs to download layers and packages (first boot can take several minutes).
-4. Run `SPC f e R` (or `M-m f e R`) to reload the configuration after package install completes.
-5. Optional: byte-compile the tangled `.el` files with `SPC f e c` or `(byte-recompile-directory "~/emacs/emacs-settings" 0)` for faster startup.
+* What Is This?
 
-* Feature Overview
-** Clipboard hygiene
-- `s-v` (`pasteboard-paste-adaptive`) chooses the paste pipeline automatically—text buffers get the cleaner, code buffers call `pasteboard-paste-verbatim`.
-- `s-c` (`pasteboard-copy-adaptive`) chooses the copy pipeline automatically—code buffers copy verbatim, text buffers clean em-dashes and formatting.
-- `s-x` (`pasteboard-cut-adaptive`) chooses the cut pipeline automatically—uses same logic as copy, then deletes region and handles spacing/capitalization.
-- `C-u s-v` forces verbatim paste, overriding smart detection (useful when you need exact whitespace/formatting in a text buffer).
-- `C-u s-c` forces verbatim copy, overriding smart detection (useful when copying code snippets from text buffers).
-- `C-u s-x` forces verbatim cut, overriding smart detection (useful when cutting code snippets from text buffers).
-- Run `M-x pasteboard-paste-verbatim` (alias: `pasteboard-paste-raw`) to force a byte-for-byte paste in any buffer.
-** Org-centric tooling
-- Org Roam layer enabled; capture templates expect `org-roam` database.
-- `pasteboard-paste-adjusted-subtrees` demotes headings when pasting into existing Org trees.
-** Org-roam profiles (multi-database support)
-- Switch between independent org-roam databases (work vs. personal)
-- **Quick switches**:
-  - `s-u 1` - Switch to default (work) profile
-  - `s-u 2` - Switch to my-life (personal) profile
-  - `s-u P` - Interactive profile switch with completion
-  - `s-u C-p` - Show current profile info
-- **Profiles**:
-  - *default (Work)*: `~/Dropbox/roam/` with work templates (AI, job hunt, people, quotes, etc.)
-  - *my-life (Personal)*: `~/Dropbox/roam-life/` with personal templates (journal, gratitude, health, family, etc.)
-- **Mode-line indicator**: Shows `[Roam:Default]` or `[Roam:My]` (click to switch)
-- **Persistence**: Last-used profile is remembered across sessions
-- **Independence**: Each profile has its own database, directory, and capture templates - completely isolated
-- **Astro exports**:
-  - Profile switches retarget `org-astro-source-root-folder` automatically (`~/Library/CloudStorage/Dropbox/roam` for work, `~/Library/CloudStorage/Dropbox/roam-life` for personal)
-  - One-off helpers `jay/org-astro-export-from-roam` and `jay/org-astro-export-from-roam-life` temporarily rebind the root and call `org-astro-export-to-mdx`
-- **Capture template maintenance**
-  - All active templates (A, a, B, c, d, …, $) now live in `jay-org-roam-suite/jay-org-roam-profiles.el`; edit the `jay/org-roam-capture-templates-default` list (for hand-written templates) or the `jay/roam-template` block (for factory helpers) to add/remove bindings
-  - Long-time bindings restored: `a` (literature notes), `H` (plans), `c` (conversations), `d` (documents), `D` (vibecoding), `E` (exercise), `f` (finances), `k` (kanban), `L` (learning), alongside newer ones like `B` (business-socratic)
-  - Daily notes share a single template (`jay/org-roam-dailies-template-default`); update it once and both profiles pick up the change, with IDs auto-inserted via `%(org-id-new)`
-  - When a new profile omits `:dailies-capture-templates`, it inherits the shared default—set the plist slot only when you truly need a custom layout
-** Appearance controls
-- Commands like `medium-type`, `large-type`, `spacemacs-light`, and `whiteboard` adjust fonts and themes on demand.
-** Navigation/search
-- `SPC /` and `SPC s` family rely on ripgrep (`deadgrep`, `consult-ag`) for project searches.
+This is a powerful Emacs configuration built on Spacemacs, designed for writing, note-taking, and knowledge management. It uses **literate programming** (Org files that generate Emacs Lisp code) and focuses heavily on org-mode and org-roam.
 
-* Workflows
-** Cleaning text copied from the web
-1. Copy source content on macOS.
-2. In the target Org buffer, hit `s-v`.
-3. Verify headings, lists, and tables; Markdown tables keep their separators post-2025-09-24 fix.
-** Switching visual modes for presentations
-1. Call `large-type` for 350-height font.
-2. Toggle theme via `whiteboard` or `matrix` as needed.
-3. Restore preferred size with `medium-type`.
-** Safe testing of config changes
-1. From terminal run `./safe-emacs-test.sh` to launch Emacs without touching the main session.
-2. Edit `.org` sources, then `C-c C-v t` to tangle and reload.
+Key features:
+- Smart clipboard integration for macOS (auto-cleans web content)
+- Multiple org-roam databases (work vs. personal notes)
+- Beautiful themes and fonts optimized for writing
+- Extensive custom functions in =shared-functions.org=
 
-* Content Formats and Editing
-** Transclude
-Command-Shift-Down to add a transclude node!
-** Literate programming
-- Literate Org files contain `#+begin_src emacs-lisp` blocks; use `C-c C-v t` to tangle or enable `#+auto_tangle: t` headers.
-- Keep documentation updates in `CHANGE-LOG.org` and `/docs` synchronized when making behavioral changes.
+* Installation
 
-* Data Management Procedures
-- Track changes with Git; commit with descriptive messages referencing affected modules and update the changelog before pushing.
-- Back up local configuration by pushing to `origin/main` and (optionally) mirroring to Dropbox or Time Machine.
-- Run `safe-emacs-test.sh` before major upgrades to ensure reproducibility.
+** First-Time Setup
+
+1. *Clone the repository*
+   #+BEGIN_SRC sh
+   git clone git@github.com:incandescentman/Emacs-Settings.git ~/emacs/emacs-settings
+   #+END_SRC
+
+2. *Create the Spacemacs symlink*
+   #+BEGIN_SRC sh
+   ln -s ~/emacs/emacs-settings/init.el ~/.spacemacs
+   #+END_SRC
+
+   Note: This links Spacemacs' config file to =init.el= in this repo.
+
+3. *Install external dependencies* (macOS)
+   #+BEGIN_SRC sh
+   brew install ripgrep pandoc hunspell
+   #+END_SRC
+
+4. *Launch Emacs*
+
+   First launch takes 5-10 minutes while Spacemacs downloads packages. Let it complete.
+
+5. *Reload configuration*
+
+   After packages install, press =SPC f e R= (or =M-m f e R= in Emacs mode) to reload.
+
+6. *Optional: Speed up startup*
+
+   Byte-compile files for faster loading:
+   #+BEGIN_SRC emacs-lisp
+   (byte-recompile-directory "~/emacs/emacs-settings" 0)
+   #+END_SRC
+
+** File Structure
+
+Key files you'll interact with:
+- =init.el= - Main Spacemacs configuration (symlinked to =~/.spacemacs=)
+- =shared-functions.org= - Most custom functions (9,983 lines, auto-tangles to =.el=)
+- =pasteboard-copy-and-paste-functions.org= - Clipboard magic
+- =fonts-and-themes.org= - Visual appearance
+- =spacemacs.d/= - Additional Spacemacs layers and config
+- =docs/= - Documentation (including this file)
+
+* Essential Features
+
+** Smart Clipboard (Pasteboard)
+
+The clipboard system automatically cleans up text from the web:
+
+| Key     | Command                    | What It Does                                              |
+|---------+----------------------------+-----------------------------------------------------------|
+| =Cmd-v= | =pasteboard-paste-adaptive= | Auto-cleans text in org buffers, pastes raw in code       |
+| =Cmd-c= | =pasteboard-copy-adaptive=  | Cleans formatting when copying from org, raw from code    |
+| =Cmd-x= | =pasteboard-cut-adaptive=   | Smart cut with spacing/capitalization fixes               |
+
+*Pro tip:* Add =C-u= prefix (=C-u Cmd-v=) to force verbatim paste/copy/cut, overriding smart detection.
+
+*** Common Use Cases
+
+*Copying from web to org-mode:*
+1. Select text on a webpage
+2. =Cmd-c= to copy
+3. Switch to Emacs org buffer
+4. =Cmd-v= to paste
+5. Text arrives cleaned: proper headings, fixed quotes, nice formatting
+
+*Pasting code exactly as-is:*
+- Use =C-u Cmd-v= to paste without any modifications
+
+** Org-Roam Profiles
+
+Switch between completely separate note databases:
+
+| Keys          | Action                         |
+|---------------+--------------------------------|
+| =Cmd-u 1=     | Switch to work notes (default) |
+| =Cmd-u 2=     | Switch to personal notes       |
+| =Cmd-u P=     | Choose profile interactively   |
+| =Cmd-u C-p=   | Show current profile           |
+
+*** The Two Profiles
+
+*Work (default)*
+- Location: =~/Dropbox/roam/=
+- Templates: AI notes, job hunting, people, quotes, business
+- Keybinding: =Cmd-u 1=
+
+*Personal (my-life)*
+- Location: =~/Dropbox/roam-life/=
+- Templates: journal, gratitude, health, family
+- Keybinding: =Cmd-u 2=
+
+Mode line shows current profile: =[Roam:Default]= or =[Roam:My]=
+
+Your last-used profile is remembered across sessions.
+
+*** Capture Templates
+
+Press =SPC a o r c= to capture a note. Common templates:
+
+| Key | Template          | Description                  |
+|-----+-------------------+------------------------------|
+| =a= | Literature notes  | Books, articles              |
+| =c= | Conversations     | Meeting notes                |
+| =d= | Documents         | Reference documents          |
+| =H= | Plans             | Goals and planning           |
+| =j= | Journal           | Daily journal entry          |
+| =k= | Kanban            | Task/project management      |
+
+Find all templates in =jay-org-roam-suite/jay-org-roam-profiles.el=
+
+** Visual Themes
+
+Quick appearance changes:
+
+| Command           | Effect                        |
+|-------------------+-------------------------------|
+| =large-type=      | Huge font (350pt) for demos   |
+| =medium-type=     | Normal comfortable size       |
+| =whiteboard=      | Clean white theme             |
+| =matrix=          | Green-on-black cyberpunk      |
+| =spacemacs-light= | Spacemacs light theme         |
+
+* Common Workflows
+
+** Taking Notes from the Web
+
+1. Find article/content you want to save
+2. Copy text (=Cmd-c= on macOS)
+3. In Emacs: =SPC a o r c= to capture
+4. Choose template (e.g., =a= for literature note)
+5. =Cmd-v= to paste - arrives pre-cleaned!
+6. Add your own thoughts
+7. =C-c C-c= to save note
+
+** Switching Between Work and Personal Notes
+
+Morning routine (work mode):
+#+BEGIN_SRC
+Cmd-u 1         ; Switch to work profile
+SPC a o r c j   ; Capture journal entry
+#+END_SRC
+
+Evening routine (personal mode):
+#+BEGIN_SRC
+Cmd-u 2         ; Switch to personal profile
+SPC a o r c j   ; Capture journal entry
+#+END_SRC
+
+** Preparing for a Presentation
+
+#+BEGIN_SRC
+M-x large-type     ; Increase font to 350pt
+M-x whiteboard     ; Switch to clean theme
+; [Give presentation]
+M-x medium-type    ; Return to normal size
+#+END_SRC
+
+** Editing Configuration Files
+
+This config uses *literate programming* - you edit =.org= files which generate =.el= files.
+
+1. Edit an =.org= file (e.g., =shared-functions.org=)
+2. Press =C-c C-v t= to "tangle" (generate the =.el= file)
+3. Restart Emacs or reload: =SPC f e R=
+
+Files with =#+auto_tangle: t= header tangle automatically on save.
+
+* Search and Navigation
+
+| Keys      | Command       | Purpose                           |
+|-----------+---------------+-----------------------------------|
+| =SPC /=   | Project search | Search current project (ripgrep) |
+| =SPC s s= | Search symbol | Find symbol in project           |
+| =SPC s f= | Search file   | Find file by name                |
+
+These use =ripgrep= for fast searching. Install: =brew install ripgrep=
+
+* Literate Programming Guide
+
+Many files are =.org= files containing code blocks:
+
+#+BEGIN_EXAMPLE
+,#+BEGIN_SRC emacs-lisp
+(defun my-function ()
+  "This is documentation."
+  (message "Hello!"))
+,#+END_SRC
+#+END_EXAMPLE
+
+** To Edit:
+1. Open the =.org= file
+2. Navigate to a code block
+3. =C-c '= to edit in dedicated elisp buffer (great syntax highlighting)
+4. =C-c '= again to close and return
+5. =C-c C-v t= to tangle (generate =.el= file)
+
+** To Add Code:
+1. Type =<s TAB= to insert a new source block
+2. Add =emacs-lisp= as the language
+3. Write your code
+4. Tangle with =C-c C-v t=
 
 * Troubleshooting
-- **Packages missing** :: Run `SPC f e R` or delete `~/.emacs.d/elpa` to refresh; ensure `brew install ripgrep pandoc` for external dependencies.
-- **Pasteboard commands fail** :: Confirm `pbpaste` is available (macOS only) and Terminal has permission to access the clipboard.
-- **Slow startup** :: Recompile with `(byte-recompile-directory "~/emacs/emacs-settings" 0)` and prune unused layers in `init.el`.
+
+** Emacs won't start / error on startup
+
+The config is complex. To debug:
+1. Check =*Messages*= buffer for errors
+2. Look for mentions of missing files or functions
+3. Try temporarily renaming =~/.spacemacs= to test vanilla Spacemacs
+
+** Packages are missing
+
+1. Delete packages: =rm -rf ~/.emacs.d/elpa=
+2. Restart Emacs (it will re-download everything)
+3. Once complete: =SPC f e R= to reload config
+
+Or within Emacs: =SPC f e R= (reload) or =SPC f e U= (update packages)
+
+** Clipboard/pasteboard doesn't work
+
+- *macOS only:* These functions use =pbcopy= and =pbpaste=
+- Check Terminal has clipboard access: System Settings → Privacy → Accessibility
+- Test in terminal: =echo "test" | pbcopy && pbpaste=
+
+** Slow startup
+
+1. Byte-compile files:
+   #+BEGIN_SRC emacs-lisp
+   (byte-recompile-directory "~/emacs/emacs-settings" 0)
+   #+END_SRC
+
+2. Check =init.el= for unused layers (comment them out)
+
+3. Profile startup with =emacs --timed-requires=
+
+** "File has changed on disk" errors with Dropbox
+
+Already fixed as of 2025-10-11. File watching is disabled for cloud storage folders (Dropbox, iCloud, OneDrive). Emacs now polls these folders instead.
+
+** Org-roam database errors
+
+Rebuild the database:
+#+BEGIN_SRC emacs-lisp
+(org-roam-db-sync)
+#+END_SRC
+
+Or delete and rebuild:
+#+BEGIN_SRC sh
+rm ~/Dropbox/roam/org-roam.db
+#+END_SRC
+
+Then in Emacs: =M-x org-roam-db-sync=
+
+* Advanced Configuration
+
+** Adding Your Own Functions
+
+Best place: =shared-functions.org=
+
+1. Open =shared-functions.org=
+2. Find a relevant section (or create a new heading)
+3. Add your function in a =#+BEGIN_SRC emacs-lisp= block
+4. =C-c C-v t= to tangle
+5. Reload: =SPC f e R=
+
+** Creating a New Org-Roam Template
+
+Edit =jay-org-roam-suite/jay-org-roam-profiles.el=:
+
+1. Find =jay/org-roam-capture-templates-default=
+2. Add a new template using the existing ones as examples
+3. Reload config: =SPC f e R=
+
+** Changing Keybindings
+
+Global keybindings live in:
+- =keys.el= - Global overrides
+- =jay-osx.el= - macOS-specific (defines =key-minor-mode-map=)
+
+Spacemacs keybindings: edit =init.el= in the =dotspacemacs/user-config= section.
+
+** Safe Testing
+
+Before making major changes, consider:
+1. Commit current state to git
+2. Make changes in a branch
+3. Test thoroughly
+4. Merge when stable
+
+Git workflow:
+#+BEGIN_SRC sh
+git checkout -b test-new-feature
+# Make changes
+# Test in Emacs
+git commit -am "Test new feature"
+# If it works:
+git checkout main
+git merge test-new-feature
+#+END_SRC
+
+* Getting Help
+
+** Within Emacs
+| Keys      | Command           | Purpose                               |
+|-----------+-------------------+---------------------------------------|
+| =SPC h d f= | Describe function | Look up what a function does        |
+| =SPC h d k= | Describe key      | See what a keybinding does          |
+| =SPC h d v= | Describe variable | Look up variable documentation      |
+| =SPC ?=   | Show keybindings  | All keybindings for current mode    |
+
+** Documentation Files
+
+See =docs/= folder for detailed documentation:
+- =design-architecture.org= - How the config is structured
+- =work-log.org= - History of changes
+- =codebase-wisdom.org= - Lessons learned from debugging
+- =pasteboard-architecture.org= - How clipboard integration works
+
+** External Resources
+- Spacemacs documentation: https://www.spacemacs.org/doc/DOCUMENTATION.html
+- Org-roam manual: https://www.orgroam.com/manual.html
+- This config's CLAUDE.md - AI assistant context (good overview)
+
+* Quick Reference Card
+
+** Most-Used Commands
+
+| Keys           | Command                    | What It Does              |
+|----------------+----------------------------+---------------------------|
+| =Cmd-v=        | Smart paste                | Paste (auto-cleans)       |
+| =Cmd-u 1=      | Work notes                 | Switch to work profile    |
+| =Cmd-u 2=      | Personal notes             | Switch to personal        |
+| =SPC a o r c=  | Capture                    | Create new note           |
+| =SPC a o r f=  | Find note                  | Search notes              |
+| =SPC /=        | Search project             | Ripgrep search            |
+| =SPC f e R=    | Reload config              | After making changes      |
+| =C-c C-v t=    | Tangle                     | Generate .el from .org    |
+
+** Files to Know
+
+| File                                     | Purpose                          |
+|------------------------------------------+----------------------------------|
+| =init.el=                                | Spacemacs main config            |
+| =shared-functions.org=                   | Most custom functions            |
+| =pasteboard-copy-and-paste-functions.org= | Clipboard magic                 |
+| =fonts-and-themes.org=                   | Appearance settings              |
+| =docs/instructions.org=                  | This file!                       |
+
+* Maintenance
+
+** Regular Tasks
+
+*Update packages* (monthly):
+#+BEGIN_SRC
+SPC f e U    ; Update packages
+SPC f e R    ; Reload config
+#+END_SRC
+
+*Commit changes:*
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+git add .
+git commit -m "Description of changes"
+git push
+#+END_SRC
+
+*Clean org-roam database* (if notes feel slow):
+#+BEGIN_SRC emacs-lisp
+(org-roam-db-sync)
+#+END_SRC
+
+** Backup
+
+This configuration is:
+1. Version-controlled with Git (push regularly!)
+2. Stored in Dropbox (if =~/emacs/emacs-settings= is in Dropbox)
+3. Optionally in Time Machine backups
+
+For maximum safety: =git push= after significant changes.

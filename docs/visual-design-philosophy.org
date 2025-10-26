@@ -1,34 +1,465 @@
 #+TITLE: Visual Design Philosophy
-#+DATE: 2025-09-24
-#+DESCRIPTION: Principles for typography, color, and visual behavior inside this Emacs configuration.
+#+DATE: 2025-10-26
+#+DESCRIPTION: Typography, color, and visual principles for this Emacs configuration
 
-* Core Design Principles
-- Favor high-contrast themes (`spacemacs-light`, custom `whiteboard`) for long-form writing.
-- Cursor visibility matters; default to incarnadine red unless intentionally themed otherwise.
-- Frame adjustments (width, transparency) support focused sessions and presentation modes.
+* Overview
 
-* Color System and Usage Rules
-- Primary theme palette derives from Spacemacs light variants; custom themes live under `jay-custom-color-themes/`.
-- Cursor defaults to `red`; alternative accents (magenta) only for transient modes.
-- Transparency utilities (`transparent-serenity`, `rainy-highway-mode`) must keep text legible against backgrounds ≥ 60% opacity.
+This document explains the visual design principles—how fonts, colors, themes, and visual elements are chosen and managed.
 
-* Typography Hierarchy
-- Font switchers expose curated faces: `georgia-font` for prose, `jetbrains-font`/`hack-font` for code, `large-type` for readability.
-- Maintain frame width harmony (`set-frame-width` inside font helpers) so wrapping remains predictable in Org buffers.
-- Use `set-font-size` for ad hoc adjustments instead of manual `M-x set-face-attribute` to keep frames consistent.
+** Core Goal
 
-* Component Patterns
-- Hydras and pop-ups should inherit default fonts; avoid per-hydra font overrides.
-- Tables rely on monospaced faces; ensure `org-table` face tracks the current default font.
+Create a beautiful, distraction-free writing environment that adapts to different contexts (writing, presenting, coding) without sacrificing readability or aesthetics.
+
+* Design Principles
+
+** 1. High Contrast for Reading
+
+*Principle*: Text should be easily readable for long sessions.
+
+*Implementation*:
+- Default themes: High contrast (whiteboard, spacemacs-light)
+- Black text on white background (or very light gray)
+- Generous line spacing
+- Clear distinction between foreground and background
+
+*Why*:
+- Reduces eye strain during long writing sessions
+- Makes text pop on screen
+- Professional appearance
+
+*Themes*:
+- =whiteboard= - Pure white background, black text
+- =spacemacs-light= - Slightly softer, still high contrast
+- =leuven-jay= - Modified Leuven (org-mode optimized)
+
+** 2. Cursor Visibility
+
+*Principle*: The cursor should always be easy to find.
+
+*Implementation*:
+- Default: *Incarnadine red* cursor (bright, distinctive)
+- Never black or dark colors (get lost in text)
+- Never too bright colors (distracting)
+
+*Color choice*: "Incarnadine" (deep crimson red)
+- Reference: From Macbeth: "Will all great Neptune's ocean wash this blood / Clean from my hand? No, this my hand will rather / The multitudinous seas incarnadine"
+- Distinctive enough to spot instantly
+- Not jarring or distracting
+- Works on light backgrounds
+
+*Functions*:
+- =incarnadine-cursor= - Sets the characteristic red cursor
+- All theme-switching functions call this to restore cursor
+
+** 3. Context-Adaptive Presentation
+
+*Principle*: Different activities need different visual settings.
+
+*Contexts*:
+
+| Context        | Font              | Size | Theme           | Purpose                 |
+|----------------+-------------------+------+-----------------+-------------------------|
+| Writing        | Georgia           |  180 | whiteboard      | Long-form prose         |
+| Coding         | JetBrains Mono    |  140 | spacemacs-light | Code editing            |
+| Presenting     | Georgia           |  350 | whiteboard      | Demos, sharing screen   |
+| Reading        | Georgia           |  220 | leuven-jay      | Reading long documents  |
+| Terminal style | Hack              |  140 | matrix          | Green-on-black hacker aesthetic |
+
+*How to switch*:
+#+BEGIN_SRC
+M-x large-type      ; 350pt for presenting
+M-x medium-type     ; 180pt for writing
+M-x georgia-font    ; Serif font for prose
+M-x jetbrains-font  ; Monospaced for code
+M-x whiteboard      ; Clean white theme
+M-x matrix          ; Cyberpunk green theme
+#+END_SRC
+
+** 4. Frame Harmony
+
+*Principle*: Font size changes should adjust frame width to maintain comfortable line length.
+
+*Implementation*:
+- Font functions also adjust frame width
+- Target: ~80-100 characters per line
+- Prevents awkwardly wide or narrow text
+
+*Example*:
+#+BEGIN_SRC emacs-lisp
+(defun large-type ()
+  "Huge font for presentations"
+  (interactive)
+  (set-face-attribute 'default nil :height 350)
+  (set-frame-width (selected-frame) 85))  ; Wider frame
+#+END_SRC
+
+*Why*:
+- Comfortable reading (not too wide, not too narrow)
+- Predictable wrapping in org-mode
+- Professional appearance
+
+** 5. Typography Hierarchy
+
+*Principle*: Use appropriate fonts for different content types.
+
+*Font choices*:
+
+*** Serif Fonts (Prose)
+- *Georgia*: Primary writing font
+  - Classic, readable
+  - Beautiful on screen
+  - Traditional book feel
+
+*** Monospaced Fonts (Code, Technical)
+- *JetBrains Mono*: Modern code font
+  - Excellent ligature support
+  - Clear character distinction
+  - Designed for long coding sessions
+
+- *Hack*: Alternative code font
+  - Clean, simple
+  - Good at small sizes
+  - Open source
+
+*** Why These Fonts?
+- Georgia: Designed specifically for screen reading (Microsoft, 1993)
+- JetBrains Mono: Modern, actively maintained, designed for developers
+- Hack: Open source, well-tested, works everywhere
+
+*Switching fonts*:
+- =georgia-font= - Switch to Georgia (writing)
+- =jetbrains-font= - Switch to JetBrains Mono (code)
+- =hack-font= - Switch to Hack (code alternative)
+
+* Color and Theme System
+
+** Theme Categories
+
+*** Writing Themes (High Contrast)
+- =whiteboard= - Pure white, maximum contrast
+- =spacemacs-light= - Softer whites, still very readable
+- =leuven-jay= - Org-mode optimized, beautiful colors
+
+*** Fun/Alternative Themes
+- =matrix= - Green on black (Matrix movie aesthetic)
+- =cyberpunk-jay= - Neon colors, dark background
+- =zenburn-jay= - Low-contrast warm theme
+
+*** Where Themes Live
+All custom themes in =jay-custom-color-themes/= directory:
+- 30+ custom themes
+- Variations on popular themes (=*-jay= suffix = customized)
+- Mix of light and dark options
+
+** Color Usage Rules
+
+*** Cursor Color
+- *Always* incarnadine red unless in special mode
+- Theme switchers must restore cursor with =incarnadine-cursor=
+- Never let themes override cursor color
+
+*** Text Colors
+- Black or near-black for body text (on light themes)
+- Syntax highlighting: Subtle, not distracting
+- Org-mode: Different colors for different heading levels
+
+*** Background Colors
+- Pure white or very light gray (writing themes)
+- Never mid-gray (poor contrast)
+- Dark themes: True black or very dark gray
+
+** Transparency
+
+*Special modes*:
+
+*** transparent-serenity
+- Makes frame semi-transparent
+- For aesthetic purposes (desktop showing through)
+- *Requirement*: Must maintain ≥60% opacity
+- *Why*: Below 60%, text becomes hard to read
+
+*** rainy-highway-mode
+- Another transparency variant
+- Designed for looking "through" Emacs at background
+
+*Implementation*:
+- Transparency functions must call =incarnadine-cursor= after
+- Ensure text remains legible
+- Test on various desktop backgrounds
+
+* Component-Specific Guidance
+
+** Tables
+
+*Requirement*: Tables must use monospaced fonts.
+
+*Why*:
+- Columns need to align
+- Spaces must have predictable width
+- Org-mode table alignment depends on fixed-width font
+
+*Implementation*:
+- =org-table= face tracks current default font
+- When using proportional fonts (Georgia), tables may look wrong
+- Switch to monospaced font for heavy table work
+
+** Hydras and Pop-ups
+
+*Principle*: Hydras inherit default font, no special overrides.
+
+*Why*:
+- Consistency across interface
+- Fewer special cases
+- Easier to maintain
+
+*Exception*: None currently. If added, document why.
+
+** Mode Line
+
+*Org-roam profile indicator*:
+- =[Roam:Default]= or =[Roam:My]= in mode line
+- Color: Cyan (distinctive, not distracting)
+- Clickable: Click to switch profiles
+
+** Org-Mode Specific
+
+*Heading colors*:
+- Different color per heading level (easier to see structure)
+- Bold for L1 headings
+- Progressively lighter for deeper levels
+
+*Emphasis*:
+- Bold: Darker/heavier weight
+- Italic: Slanted (actual italic font face)
+- Code: Monospaced, slightly smaller
+- Verbatim: Like code, but different color
 
 * Interactive Behaviors
-- Transparency toggles must restore cursor color via `incarnadine-cursor`.
-- Theme-switching commands should call `load-theme` and immediately reapply cursor settings.
 
-* View-Specific Guidance
-- Presentation/reading mode: call `large-type` + `whiteboard` + optional `transparent-serenity`.
-- Coding sessions: `jetbrains-font` or `hack-font` paired with `spacemacs-light` keeps alignment crisp.
+** Theme Switching
+
+*Pattern*: All theme functions follow this structure:
+
+#+BEGIN_SRC emacs-lisp
+(defun whiteboard ()
+  "Switch to whiteboard theme"
+  (interactive)
+  (load-theme 'whiteboard-theme t)  ; Load theme
+  (incarnadine-cursor))              ; Restore cursor
+#+END_SRC
+
+*Why*:
+- Themes often override cursor color
+- Must explicitly restore incarnadine red
+- Consistent experience across theme switches
+
+** Transparency Toggles
+
+*Requirements*:
+1. Save current opacity
+2. Toggle to new opacity
+3. Restore cursor color
+4. Verify text remains readable
+
+*Example*:
+#+BEGIN_SRC emacs-lisp
+(defun transparent-serenity ()
+  "Make frame 70% transparent"
+  (interactive)
+  (set-frame-parameter nil 'alpha '(70 70))
+  (incarnadine-cursor))
+#+END_SRC
+
+** Font Adjustments
+
+*Ad-hoc changes*: Use =set-font-size= helper, not manual =set-face-attribute=
+
+*Why*:
+- =set-font-size= is consistent
+- Handles frame width adjustment
+- Documented and predictable
+
+*Avoid*:
+#+BEGIN_SRC emacs-lisp
+;; Don't do this (hard to track, inconsistent)
+(set-face-attribute 'default nil :height 200)
+
+;; Do this instead (documented function)
+(set-font-size 200)
+#+END_SRC
+
+* View-Specific Setups
+
+** Presentation Mode
+
+Optimized for sharing screen or projecting:
+
+#+BEGIN_SRC
+M-x large-type    ; 350pt font
+M-x whiteboard    ; Maximum contrast
+; Optional:
+M-x transparent-serenity  ; Aesthetic transparency
+#+END_SRC
+
+*Result*:
+- Text visible from across room
+- Clean, distraction-free
+- Professional appearance
+
+** Writing Mode
+
+Optimized for long-form writing:
+
+#+BEGIN_SRC
+M-x medium-type   ; 180pt font
+M-x georgia-font  ; Serif font
+M-x whiteboard    ; Clean background
+#+END_SRC
+
+*Result*:
+- Comfortable for hours
+- Book-like reading experience
+- Minimal distractions
+
+** Coding Mode
+
+Optimized for code editing:
+
+#+BEGIN_SRC
+M-x jetbrains-font     ; Monospaced
+M-x spacemacs-light    ; Syntax highlighting
+; Keep default size (~140-160pt)
+#+END_SRC
+
+*Result*:
+- Clear character distinction
+- Good syntax highlighting
+- Ligatures for common symbols
+
+** Cyberpunk Mode
+
+For fun or late-night sessions:
+
+#+BEGIN_SRC
+M-x hack-font   ; Terminal-style font
+M-x matrix      ; Green on black
+#+END_SRC
+
+*Result*:
+- Matrix movie aesthetic
+- Easier on eyes in dark room
+- Distinctive, memorable
 
 * Evolution Principles
-- When adding a new theme, document it here, include rationale, and ensure fallback to `incarnadine-cursor`.
-- Prefer adding new font helpers in `fonts-and-themes.el` rather than ad hoc `set-face-attribute` snippets scattered elsewhere.
+
+** Adding New Themes
+
+Process:
+1. Create theme file in =jay-custom-color-themes/=
+2. Add loading function in =fonts-and-themes.el=
+3. *Must* call =incarnadine-cursor= in function
+4. Document theme in this file
+5. Test with various content (org-mode, code, tables)
+
+Template:
+#+BEGIN_SRC emacs-lisp
+(defun my-new-theme ()
+  "Description of the theme and when to use it"
+  (interactive)
+  (load-theme 'my-new-theme t)
+  (incarnadine-cursor))
+#+END_SRC
+
+** Adding New Fonts
+
+Process:
+1. Install font system-wide (macOS Font Book)
+2. Add function in =fonts-and-themes.el=
+3. Include frame width adjustment
+4. Test with org-mode content
+5. Document in this file
+
+Template:
+#+BEGIN_SRC emacs-lisp
+(defun my-new-font ()
+  "Switch to My New Font"
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "My New Font"
+                      :height 180)
+  (set-frame-width (selected-frame) 90))
+#+END_SRC
+
+** Rationale Documentation
+
+*When adding features*, document:
+1. What problem does it solve?
+2. Why this approach?
+3. What alternatives were considered?
+4. Any tradeoffs?
+
+*Example*:
+#+BEGIN_EXAMPLE
+Added transparent-serenity mode for aesthetic desktop transparency.
+Alternative considered: Full transparency, but text became unreadable.
+Tradeoff: Limited to 60% opacity minimum for readability.
+Use case: Writing while enjoying desktop wallpaper.
+#+END_EXAMPLE
+
+* Design Values Summary
+
+| Value               | Implementation                                    |
+|---------------------+---------------------------------------------------|
+| Readability         | High contrast themes, large fonts                 |
+| Adaptability        | Different setups for different contexts           |
+| Consistency         | Incarnadine cursor, standard theme pattern        |
+| Beauty              | Georgia font, clean themes, careful spacing       |
+| Flexibility         | Many themes, easy switching                       |
+| Maintainability     | Centralized in fonts-and-themes.el, documented    |
+
+* File Locations
+
+| File                              | Purpose                              |
+|-----------------------------------+--------------------------------------|
+| =fonts-and-themes.org=            | Source file (literate)               |
+| =fonts-and-themes.el=             | Tangled functions                    |
+| =jay-custom-color-themes/=        | All custom theme files               |
+| =jay-custom-color-themes/*.el=    | Individual theme definitions         |
+
+* Quick Reference
+
+** Most-Used Commands
+
+| Command         | Effect                        |
+|-----------------+-------------------------------|
+| =large-type=    | 350pt for presentations       |
+| =medium-type=   | 180pt for writing             |
+| =whiteboard=    | Clean white theme             |
+| =matrix=        | Green-on-black                |
+| =georgia-font=  | Serif for prose               |
+| =jetbrains-font= | Monospace for code           |
+
+** Font Sizes
+
+| Context     | Height | Use Case            |
+|-------------+--------+---------------------|
+| Small       |    120 | Dense info          |
+| Code        |    140 | Programming         |
+| Reading     |    180 | Comfortable writing |
+| Large       |    220 | Easy reading        |
+| Presentation |   350 | Screen sharing      |
+
+** Frame Widths
+
+Adjusted automatically by font functions:
+- Small fonts: ~100-110 columns
+- Medium fonts: ~85-90 columns
+- Large fonts: ~70-80 columns
+- Presentation: ~60-70 columns
+
+* Related Documentation
+
+- =fonts-and-themes.org= - Implementation (literate source)
+- =instructions.org= - How to use themes and fonts
+- =the-emacs-settings-approach.org= - Overall philosophy
+- =design-architecture.org= - Technical architecture

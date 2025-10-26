@@ -1,26 +1,493 @@
-#+TITLE: Backup System Runbook
-#+DATE: 2025-09-24
-#+DESCRIPTION: How we safeguard the Emacs configuration and recover from disasters.
+#+TITLE: Backup and Recovery System
+#+DATE: 2025-10-26
+#+DESCRIPTION: How to protect and recover your Emacs configuration
 
-* Purpose
-Ensure configuration changes are recoverable through layered backups (automatic file versions, Git history, and full `.emacs.d` snapshots).
+* Overview
 
-* Routine Backup Procedure
-1. Commit logical chunks to Git (`git status`, `git add`, `git commit`) and push to `origin/main` at least once per working session.
-2. Let Emacs create per-save backups: `shared-functions.el` configures `before-save-hook` to write numbered copies under `~/emacs/backup/per-save` and per-session copies under `~/.emacs.d/backup/per-session`.
-3. Weekly, run `./safe-emacs-test.sh` or launch a clean instance to ensure backups aren’t corrupt.
+This configuration has multiple layers of backup protection to ensure you can recover from mistakes, corruption, or disasters.
 
-* Verification Steps
-- Spot-check the latest per-save file in `~/emacs/backup/per-save` to confirm timestamps advance.
-- Run `git log -1` to make sure the latest commits contain the intended doc/code changes.
-- If relying on Dropbox/Time Machine, confirm the `~/emacs/emacs-settings` folder is included.
+** Backup Strategy
 
-* Recovery Procedure
-1. For small mistakes, open the numbered backup via `C-x C-f` → `~/emacs/backup/per-save/<file>~`.
-2. To reset packages/cache without losing config, run `./nuclear-recovery.sh` and follow the prompts; restore via the printed backup path if needed.
-3. For catastrophic loss, clone the repository again or restore from `git` + the Time Machine snapshot.
+Think of it as layered protection:
+
+1. *Per-save backups*: Every time you save, a numbered copy
+2. *Per-session backups*: One copy per Emacs session
+3. *Git history*: Every commit is recoverable
+4. *Cloud sync*: Dropbox/iCloud automatic sync
+5. *Time Machine*: macOS system backups (if enabled)
+
+* Automatic Backup Systems
+
+** Per-Save Backups
+
+*What*: Every time you save a file, Emacs creates a numbered backup.
+
+*Location*: =~/emacs/backup/per-save/=
+
+*Format*: =file.el~1~=, =file.el~2~=, =file.el~3~=, etc.
+
+*How it works*:
+#+BEGIN_SRC emacs-lisp
+;; In shared-functions.el
+(setq version-control t          ; Use numbered backups
+      kept-new-versions 50       ; Keep 50 newest
+      kept-old-versions 10       ; Keep 10 oldest
+      delete-old-versions t      ; Auto-delete in between
+      backup-directory-alist     ; Save to backup folder
+        '(("." . "~/emacs/backup/per-save")))
+#+END_SRC
+
+*Why useful*:
+- Undo accidental deletions
+- Recover from bad edits
+- See history of changes within a session
+
+*Example*: You accidentally delete a function. Just open the latest backup:
+#+BEGIN_SRC
+C-x C-f ~/emacs/backup/per-save/shared-functions.el~47~
+#+END_SRC
+
+** Per-Session Backups
+
+*What*: One backup per file per Emacs session (when you first save).
+
+*Location*: =~/.emacs.d/backup/per-session/=
+
+*Format*: =file.el~= (single tilde, no number)
+
+*Why useful*:
+- Recover from mistakes made during current session
+- Lightweight (only one per session)
+- Automatic cleanup of old sessions
+
+** Git Version Control
+
+*What*: Full history of all committed changes.
+
+*Location*: =.git/= directory, pushed to GitHub
+
+*Commands*:
+#+BEGIN_SRC sh
+# See recent commits
+git log --oneline -20
+
+# See what changed in a commit
+git show <commit-hash>
+
+# Restore a file from specific commit
+git checkout <commit-hash> -- file.el
+
+# Restore everything to previous commit
+git reset --hard <commit-hash>
+#+END_SRC
+
+*Why useful*:
+- See why changes were made (commit messages)
+- Recover deleted files
+- Revert bad changes
+- Share across machines
+
+** Cloud Sync (Dropbox)
+
+*What*: Dropbox automatically syncs =~/emacs/emacs-settings= if in Dropbox folder.
+
+*Features*:
+- Automatic sync across devices
+- Web interface for recovery
+- Dropbox file history (30 days to 1 year depending on plan)
+
+*Access*:
+1. Go to dropbox.com
+2. Browse to emacs-settings
+3. Right-click any file → "Version history"
+4. Restore previous version
+
+** Time Machine (macOS)
+
+*What*: System-level hourly backups (if enabled).
+
+*How to access*:
+1. Open Time Machine (System Settings → Time Machine)
+2. Navigate to =~/emacs/emacs-settings=
+3. Browse through time
+4. Restore files or entire directory
+
+* Routine Backup Procedures
+
+** Daily Workflow
+
+1. *Work on config* (edit =.org= files, tangle, test)
+2. *Commit logically*:
+   #+BEGIN_SRC sh
+   git status                       # See what changed
+   git add shared-functions.org     # Stage files
+   git commit -m "Add new function for X"
+   #+END_SRC
+3. *Push regularly*:
+   #+BEGIN_SRC sh
+   git push
+   #+END_SRC
+
+**Do this at least once per session** - Commits are free, lost work is expensive!
+
+** Before Major Changes
+
+1. *Create a branch*:
+   #+BEGIN_SRC sh
+   git checkout -b experiment-new-feature
+   #+END_SRC
+
+2. *Make changes and test*
+
+3. *If successful*, merge:
+   #+BEGIN_SRC sh
+   git checkout main
+   git merge experiment-new-feature
+   git push
+   #+END_SRC
+
+4. *If failed*, just delete branch:
+   #+BEGIN_SRC sh
+   git checkout main
+   git branch -D experiment-new-feature
+   #+END_SRC
+
+** Weekly Verification
+
+Run these checks weekly:
+
+1. *Verify per-save backups*:
+   #+BEGIN_SRC sh
+   ls -lt ~/emacs/backup/per-save/ | head
+   #+END_SRC
+   Should show recent timestamps.
+
+2. *Verify git is current*:
+   #+BEGIN_SRC sh
+   cd ~/emacs/emacs-settings
+   git status
+   #+END_SRC
+   Should say "nothing to commit, working tree clean" or show uncommitted changes.
+
+3. *Test clean startup*:
+   #+BEGIN_SRC sh
+   emacs --debug-init
+   #+END_SRC
+   Should start without errors.
+
+4. *Check Dropbox sync*:
+   Look for green checkmark on =~/emacs/emacs-settings= folder (if using Dropbox).
+
+* Recovery Procedures
+
+** Scenario 1: Undo Recent Edit (Within Session)
+
+*Problem*: Just made a bad edit and saved.
+
+*Solution*:
+1. *Try Emacs undo first*:
+   #+BEGIN_SRC
+   C-_   or   C-x u   (undo)
+   #+END_SRC
+
+2. *If already closed the buffer*, open latest backup:
+   #+BEGIN_SRC
+   C-x C-f ~/emacs/backup/per-save/file.el~<highest-number>~
+   #+END_SRC
+
+3. *Copy the good version back*
+
+** Scenario 2: Recover Deleted Function (Same Day)
+
+*Problem*: Deleted a function hours ago, need it back.
+
+*Solution*:
+1. *Check per-save backups* (reverse chronological):
+   #+BEGIN_SRC sh
+   ls -lt ~/emacs/backup/per-save/shared-functions.el~*
+   #+END_SRC
+
+2. *Open recent backups* until you find the one with the function:
+   #+BEGIN_SRC
+   C-x C-f ~/emacs/backup/per-save/shared-functions.el~50~
+   C-x C-f ~/emacs/backup/per-save/shared-functions.el~49~
+   #+END_SRC
+
+3. *Copy the function back* to your current file
+
+** Scenario 3: Revert Bad Commit (Git)
+
+*Problem*: Pushed a commit that broke things.
+
+*Solution 1* (Revert the commit, preserving history):
+#+BEGIN_SRC sh
+git log --oneline        # Find the bad commit hash
+git revert <bad-commit>  # Creates new commit that undoes it
+git push
+#+END_SRC
+
+*Solution 2* (Hard reset, if not pushed yet):
+#+BEGIN_SRC sh
+git log --oneline
+git reset --hard <good-commit>
+# NOTE: This deletes history, only use if not pushed!
+#+END_SRC
+
+** Scenario 4: Recover Lost File (Git)
+
+*Problem*: Accidentally deleted a file and committed.
+
+*Solution*:
+#+BEGIN_SRC sh
+# Find when file was deleted
+git log --oneline -- path/to/file.el
+
+# Restore from commit before deletion
+git checkout <commit-before-delete>~1 -- path/to/file.el
+
+# Commit restoration
+git add path/to/file.el
+git commit -m "Restore accidentally deleted file"
+#+END_SRC
+
+** Scenario 5: Nuclear Option (Full Reset)
+
+*Problem*: Everything is broken, need to start fresh.
+
+*Solution*:
+1. *Backup current state*:
+   #+BEGIN_SRC sh
+   cd ~/emacs
+   tar czf emacs-settings-backup-$(date +%Y%m%d-%H%M%S).tar.gz emacs-settings
+   #+END_SRC
+
+2. *Clone fresh copy*:
+   #+BEGIN_SRC sh
+   cd ~/emacs
+   mv emacs-settings emacs-settings-broken
+   git clone git@github.com:incandescentman/Emacs-Settings.git emacs-settings
+   #+END_SRC
+
+3. *Verify symlink*:
+   #+BEGIN_SRC sh
+   ls -l ~/.spacemacs
+   # Should point to ~/emacs/emacs-settings/init.el
+   #+END_SRC
+
+4. *Restart Emacs*
+
+** Scenario 6: Package Corruption
+
+*Problem*: Spacemacs packages are corrupted or broken.
+
+*Solution 1* (Nuclear package reinstall):
+#+BEGIN_SRC sh
+# Backup config (just in case)
+cd ~/emacs
+tar czf emacs-settings-backup.tar.gz emacs-settings
+
+# Delete packages
+rm -rf ~/.emacs.d/elpa
+
+# Restart Emacs (will reinstall all packages)
+emacs
+#+END_SRC
+
+*Solution 2* (If you have recovery scripts):
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+./nuclear-recovery.sh     # If this script exists
+#+END_SRC
+
+** Scenario 7: Recover from Dropbox
+
+*Problem*: Messed up config days ago, but committed the bad version.
+
+*Solution*:
+1. Go to dropbox.com
+2. Navigate to =emacs-settings/= folder
+3. Right-click the file → "Version history"
+4. Find the good version (by date)
+5. Click "Restore"
+6. Or download and copy locally
+
+** Scenario 8: Recover from Time Machine
+
+*Problem*: Need to go back several days or weeks.
+
+*Solution*:
+1. Open Time Machine
+2. Navigate to =~/emacs/emacs-settings=
+3. Use timeline on right to go back in time
+4. Select the good version
+5. Click "Restore"
 
 * Related Scripts
-- `nuclear-recovery.sh` — creates a full `.emacs.d` snapshot before wiping caches.
-- `recover-spacemacs.sh` — targeted recovery for ELPA packages with automated backups.
-- `safe-emacs-test.sh` — launches a scratch Emacs without touching the main session, useful for validating restored configs.
+
+** nuclear-recovery.sh (If Exists)
+
+*Purpose*: Creates full =.emacs.d= snapshot before wiping caches.
+
+*Usage*:
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+./nuclear-recovery.sh
+#+END_SRC
+
+*What it does*:
+1. Creates timestamped backup of =~/.emacs.d=
+2. Deletes package caches
+3. Prints backup location
+4. Prompts to restart Emacs
+
+** recover-spacemacs.sh (If Exists)
+
+*Purpose*: Targeted recovery for ELPA packages.
+
+*Usage*:
+#+BEGIN_SRC sh
+./recover-spacemacs.sh
+#+END_SRC
+
+*What it does*:
+1. Backs up current package state
+2. Removes problematic packages
+3. Forces package reinstall
+
+** safe-emacs-test.sh (If Exists)
+
+*Purpose*: Launch scratch Emacs without touching main session.
+
+*Usage*:
+#+BEGIN_SRC sh
+./safe-emacs-test.sh
+#+END_SRC
+
+*Why useful*:
+- Test changes without affecting main config
+- Verify backups work
+- Validate restored configs
+- Experiment safely
+
+* Prevention Best Practices
+
+** Do
+
+1. *Commit often*:
+   - Every logical change
+   - Every time something works
+   - At least once per session
+
+2. *Write good commit messages*:
+   #+BEGIN_SRC
+   Good: "Fix pasteboard regex to handle emoji joiners"
+   Bad:  "update functions"
+   #+END_SRC
+
+3. *Push regularly*:
+   - End of day
+   - Before major experiments
+   - After successful features
+
+4. *Test before committing*:
+   - Restart Emacs
+   - Test the feature
+   - Check for errors
+
+5. *Use branches for experiments*:
+   - Never experiment in main
+   - Easy to abandon if failed
+   - Clear separation of stable vs. experimental
+
+** Don't
+
+1. *Don't edit tangled =.el= files*:
+   - Edit the =.org= source
+   - Retangle
+   - Changes to =.el= are lost on next tangle
+
+2. *Don't commit broken code*:
+   - Test first
+   - Fix errors before committing
+   - Broken commits are technical debt
+
+3. *Don't wait to commit*:
+   - "I'll commit when it's perfect" = lost work
+   - Commit working increments
+   - Refine later
+
+4. *Don't push experiments*:
+   - Use branches
+   - Test locally first
+   - Merge when stable
+
+5. *Don't ignore warnings*:
+   - Deprecation warnings will break eventually
+   - Fix them when you see them
+   - Document why if you can't fix
+
+* Backup Checklist
+
+Use this checklist monthly:
+
+- [ ] Per-save backups have recent timestamps
+- [ ] Git status is clean or has only expected changes
+- [ ] All local changes are committed
+- [ ] Local commits are pushed to GitHub
+- [ ] Dropbox shows green checkmarks (if using)
+- [ ] Time Machine is enabled and running (macOS)
+- [ ] Can restart Emacs without errors
+- [ ] Test restoration from a backup (practice!)
+
+* Recovery Checklist
+
+When disaster strikes:
+
+1. [ ] **DON'T PANIC** - Multiple backups exist
+2. [ ] Identify what's broken (file? package? config?)
+3. [ ] Check if Emacs undo works (easiest!)
+4. [ ] Try per-save backups (today's work)
+5. [ ] Try git history (committed work)
+6. [ ] Try Dropbox versions (cloud copy)
+7. [ ] Try Time Machine (system backup)
+8. [ ] Ask for help (include error messages!)
+
+* File Locations Reference
+
+| Backup Type      | Location                              | Retention      |
+|------------------+---------------------------------------+----------------|
+| Per-save         | =~/emacs/backup/per-save/=            | 50 newest      |
+| Per-session      | =~/.emacs.d/backup/per-session/=      | Session-based  |
+| Git history      | =.git/= + GitHub                      | Forever        |
+| Dropbox          | Dropbox cloud                         | 30-365 days    |
+| Time Machine     | External drive                        | Until full     |
+
+* Quick Recovery Commands
+
+#+BEGIN_SRC sh
+# See recent saves
+ls -lt ~/emacs/backup/per-save/*.el~* | head -20
+
+# See git history
+cd ~/emacs/emacs-settings
+git log --oneline -20
+
+# Restore file from git
+git checkout HEAD~1 -- file.org
+
+# See uncommitted changes
+git diff
+
+# Revert last commit (safe)
+git revert HEAD
+
+# Nuclear package reinstall
+rm -rf ~/.emacs.d/elpa && emacs
+#+END_SRC
+
+* Related Documentation
+
+- =work-log.org= - History of changes
+- =codebase-wisdom.org= - Lessons learned from bugs
+- =instructions.org= - General usage
+- =design-architecture.org= - How system is structured
