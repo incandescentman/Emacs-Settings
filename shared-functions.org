@@ -9796,6 +9796,25 @@ After evaluating your init-file you can use links analog to the example:
 (setq pasteboard-convert-markdown-inline-emphasis t) 
 #+end_src
 
+* cape emoji
+#+begin_src emacs-lisp
+;; Enable Corfu for popup completions
+(use-package corfu
+  :ensure t
+  :init
+  (global-corfu-mode))
+
+;; Add Cape completions
+(use-package cape
+  :ensure t
+  :bind
+  (("C-c p" . cape-prefix-map)) ;; Press C-c p ? for help
+  :init
+  ;; Add your favorite backends
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-emoji)) 
+#+end_src
 
 * Local Variables & The End
 These have to be at the end.

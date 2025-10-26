@@ -1,0 +1,634 @@
+Of course\! Your Emacs configuration is a great example of a literate setup using Org-mode, which is fantastic for documentation. However, as you've noted, it has become disorganized over time, with settings scattered and duplicated.
+
+The best way to organize it is to fully embrace the `use-package` macro for everything. This will consolidate all settings related to a single package into one place, improve startup time through deferred loading, and create a clean, logical structure.
+
+Here are the key suggestions for organizing your configuration:
+
+- --- -
+** 1\. Adopt a Clear, Top-Down Structure
+
+Restructure your entire file into a logical sequence. A good standard practice is to organize it from the most fundamental setup to the most specific configurations.
+**** Proposed Structure
+
+Here's a new top-level outline you can use. Move your existing code blocks into these new sections.
+
+#+begin_src org
+- 1. Bootstrap & Core Setup
+  :PROPERTIES:
+  :header-args:emacs-lisp: :tangle ./init.el :lexical t
+  :END:
+
+  This section should only contain what's absolutely necessary to get Emacs and your package manager running.
+
+** Package Management (use-package)
+   ;; Set up package archives (MELPA, GNU, etc.)
+   ;; Install and configure use-package itself.
+
+** Core Emacs Behavior & UI
+   ;; Basic variables (user name, backups, etc.)
+   ;; UI settings (scroll bars, fonts, line numbers, disabling alarms)
+   ;; Keybindings that are GLOBAL and not package-specific.
+
+- 2. Package Configurations
+  This is where the bulk of your config will live. Each package gets its own `use-package` block.
+
+** Org Mode
+   ;; ONE massive use-package block for Org, ox-latex, ox-html, etc.
+
+** Writing & Editing
+   ;; flyspell, olivetti, wc-mode, etc.
+
+** Completion & Searching
+   ;; ido, vertico, consult, projectile, swiper, etc.
+
+** Utilities
+   ;; multiple-cursors, crux, yasnippet, etc.
+
+** Appearance
+   ;; beacon, rainbow-delimiters, theme settings.
+
+- 3. Custom Functions & Bindings
+  This section is for YOUR code --- functions you've written yourself.
+
+** Custom Functions
+   ;; All your `(defun jay/...)` or `(defun my-...)` functions go here.
+
+** Custom Keybindings
+   ;; Global keybindings that call your custom functions or package functions.
+   ;; It's often cleaner to put these directly in use-package blocks with :bind.
+
+- 4. Final Configuration
+  ;; Anything that MUST be run at the very end of the init process.
+  ;; (e.g., starting a server, loading a theme)
+#+end_src 
+
+- --- -
+
+** 2\. Consolidate Everything with `use-package`
+
+This is the most important change. Your massive `setq` block at the beginning should be broken up and moved into the appropriate `use-package` declarations. This makes your configuration modular and easier to read.
+
+*** Example: Refactoring Your Org Settings
+
+Let's take your scattered Org settings and consolidate them.
+
+**** Before (Your Current Config)
+
+You have a giant `setq` block with dozens of `org-...` variables, and then other Org settings are scattered in other sections.
+
+```emacs-lisp
+;; From your "Setting variables" section
+(setq org-M-RET-may-split-line '((item . t))
+      org-archive-location "archive/%s_archive::"
+      org-catch-invisible-edits 'smart
+      ...and 50+ more lines)
+
+;; From your "org todo keywords" section
+(setq org-todo-keywords '((sequence "TODO" ...)))
+
+;; From your "org-mode key bindings" section
+(define-key global-map "\C-cc" 'org-capture)
+#+end_src 
+
+**** After (Consolidated `use-package` Block)
+
+All of that can be merged into a single, clean block under your new `* Org Mode` heading.
+
+```emacs-lisp
+(use-package org
+  :ensure org-contrib ;; or another org-plus package if you need it
+  :pin gnu             ;; Good practice to pin built-in packages
+  :defer t             ;; Defer loading until an org file is opened
+
+  ;; Use :custom for variables set with `defcustom`
+  ;; This is cleaner than `setq` and works with the Customize interface.
+  :custom
+  (org-M-RET-may-split-line '((item . t)))
+  (org-archive-location "archive/%s_archive::")
+  (org-catch-invisible-edits 'smart)
+  (org-ellipsis " ") ;; Your custom ellipsis setting
+  (org-startup-folded nil)
+  (org-hide-emphasis-markers t)
+  (org-log-done 'time)
+  (org-todo-keywords '((sequence "TODO" "STARTED" "|" "DONE")
+                       (sequence "NEED TO INVOICE" "|" "PAID")))
+  ;; ... add ALL other or\1defcustom variables here ...
+
+  ;; Use :config for things that must be run after the package loads
+  :config
+  ;; `setq` is fine here for variables not defined with `defcustom`.
+  (setq org-use-speed-commands t)
+
+  ;; Use `:bind` for all keybindings. It's clean and automatically defers.
+  :bind (("C-c c" . org-capture)
+         ("C-c l" . org-store-link)
+         ("C-c a" . org-agenda))
+
+  ;; Use `:hook` to attach functions to modes.
+  :hook ((org-mode . flyspell-mode)
+         (org-mode . visual-line-mode)
+         (org-mode . org-autolist-mode)))
+#+end_src 
+
+*Action Plan:*
+
+1.  Go through your huge `(setq ...)` block at the top.
+2.  For each variable (like `deft-directory`, `smex-prompt-string`, `cua-mode`), find or create a `use-package` block for that package.
+3.  Move the setting into the `:custom` section of that `use-package` block.
+
+- --- -
+
+** 3\. Separate Your Custom Functions
+
+You have many useful custom functions like `jay-refile-region`, `org-new-scratch-buffer`, and `web-research`. These are your personal toolkit and should be kept separate from package configurations.
+
+**** Option A: Simple (Keep in One File)
+
+Create a top-level heading `* Custom Functions` and move all of your `(defun ...)` blocks there. This keeps them organized and separate from the package setup.
+
+**** Option B: Cleaner (Separate File)
+
+For an even cleaner setup, move all your custom functions into a separate file, for example, `~/.emacs.d/lisp/my-functions.el`.
+
+1.  *Create the file `~/.emacs.d/lisp/my-functions.el`:*
+
+    ```emacs-lisp
+    ;;; my-functions.el --- Jay's custom functions -/- lexical-binding: t; -/-
+
+    (defun web-research ()
+      "Paste clipboard content into a quote block with source attribution."
+      (interactive)
+      (insert "#+BEGIN_QUOTE\n")
+      (let ((p (point)))
+        (insert "\n#+END_QUOTE\nSource: ")
+        (org-mac-link-chrome-insert-frontmost-url)
+        (goto-char p))
+      (pasteboard-paste)
+      (insert "\n\n"))
+
+    ;; ... all your other defun's ...
+
+    (provide 'my-functions)
+    ;;; my-functions.el ends here
+    #+end_src 
+
+2.  *Load it from your main config file:*
+    In your `* 1. Bootstrap & Core Setup` section, add:
+
+    ```emacs-lisp
+    ;; Add my custom lisp directory to the load-path
+    (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+    ;; Load my functions
+    (require 'my-functions)
+    #+end_src 
+
+- --- -
+
+** 4\. Tidy Up and Remove Redundancy 🧹
+
+ - *Lexical Binding:* You have `;; -/- lexical-binding: t -/-` and `(setq lexical-binding t)`. You only need one. The `;; -/- ... -/-` line at the very top of a file is the standard way. If you are tangling to an `init.el`, make sure that file also has it at the top.
+ - *Remove Duplicates:* You have multiple sections for `Org-mode Configuration`, `org-mode`, `org-export`, etc. Consolidating with `use-package` will naturally fix this.
+ - *Commented Code:* You have many lines and blocks commented out or in `#+BEGIN_EXAMPLE`. Decide if you need them. If not, delete them to reduce clutter. If you might need them later, move them to a separate "scraps" file.
+
+By following these steps, you'll transform your configuration from a single, long script into a modular, maintainable, and faster-loading system. Good luck\! 
+
+- --- -
+
+** 5\. Simplify Without Changing Behavior
+
+Focus on eliminating duplication so every behavior still exists but only has one implementation.
+
+*** Make `key-minor-mode` canonical
+Define the override minor mode once (the rich, global version already lives in `keys.el`) and have `jay-osx.el` and `gnu-emacs-startup.el` simply `(require 'keys)`. That keeps the minibuffer hook, global activation, and keymap tweaks in one place so macOS-specific layers cannot drift.
+
+*** Keep fullscreen + notch logic in a single helper
+`jay/toggle-fullscreen` (and the notch/tab-bar helpers) currently live both in `shared-functions.org` and `gnu-emacs-startup.el`. Export the Org definition to a small `display-controls.el`, load it in both startup paths, and delete the duplicate defuns. You preserve every behavior (font resize, tab-bar delay) while shrinking the surface area for bugs.
+
+*** Introduce `jay/config-root`
+Hard-coded strings like `"/Users/jay/emacs/emacs-settings/…"`, spread across `spacemacs-new-config.el`, `shared-functions.org`, and `gnu-emacs-startup.el`, make moves painful. Define `(defconst jay/config-root (file-name-directory (or load-file-name buffer-file-name)))` once and replace the literals with `(expand-file-name "foo.el" jay/config-root)`. All paths keep working, but the repo becomes relocatable.
+
+*** Data-driven loader blocks
+The block around `spacemacs-new-config.el:130-154` manually repeats `org-babel-load-file`/`load`. Store the relative file names in two lists (tangled Org vs plain `.el`) and iterate over them. Ordering stays identical, but adding/removing modules becomes a single line rather than copy-pasting boilerplate.
+
+*** Share a `jay-core.el`
+Both `spacemacs.d/init.el` and `gnu-emacs-startup.el` set up the same abbrev defaults, macOS frame helpers, and global hooks. Move those shared pieces into `jay-core.el` (or an Org section that tangles to it) and have each entry point require it before doing their framework-specific wiring. This guarantees the vanilla and Spacemacs flavors never diverge.
+
+*** Consolidate Org key customizations
+Org key remaps are scattered across `spacemacs-new-config.el` and `gnu-emacs-startup.el`. Create one `org-keys.el` (or Org section) containing a single `with-eval-after-load 'org` block with all the `define-key` changes and only load it once. Every binding continues to work, but you no longer need to patch multiple files when a binding changes.
+
+-----
+
+* Configuration Simplification Analysis (2025-10-26)
+** Overview
+This analysis identifies specific simplification opportunities while preserving all existing functionality. Focus is on eliminating duplication, consolidating scattered settings, and reducing maintenance burden.
+
+** Current Configuration Statistics
+- Spacemacs init: ~1,186 lines (=init-working.el=)
+- GNU Emacs init: ~1,342 lines (=gnu-emacs-startup.el=)
+- Shared functions: ~9,826 lines / 336 function definitions (=shared-functions.org=)
+- Total elisp files: ~35,000 lines across 20+ files
+- Auto-tangling org files: 5 files requiring tangle/edit coordination
+
+** Major Simplifications
+
+*** 1. Eliminate the Dual Boot Path ⭐⭐⭐⭐⭐
+*Priority: HIGH | Impact: HUGE | Risk: LOW*
+
+*Problem:* Two complete startup systems create massive duplication:
+- Spacemacs: =spacemacs.d/init-working.el= (1,186 lines)
+- GNU Emacs: =gnu-emacs-startup.el= (1,342 lines)
+
+*Impact:* Settings must be synchronized across both configs, leading to drift and maintenance burden.
+
+*Recommendation:*
+1. Choose Spacemacs (currently active, based on recent fixes)
+2. Delete =gnu-emacs-startup.el= and =gnu-emacs-startup.org=
+3. Archive to git history if needed later
+
+*Savings:* ~1,400 lines, eliminates dual-maintenance burden
+
+*Implementation:*
+#+begin_src bash
+# Commit current state first
+git add gnu-emacs-startup.{el,org}
+git commit -m "Archive: GNU Emacs standalone config (moving to Spacemacs-only)"
+
+# Remove files
+rm gnu-emacs-startup.{el,org}
+#+end_src
+
+*** 2. Convert Literate Org Files to Pure Elisp ⭐⭐⭐
+*Priority: MEDIUM | Impact: MODERATE | Risk: LOW*
+
+*Problem:* 5 auto-tangling org files create workflow overhead:
+- =shared-functions.org= (324KB) → =.el=
+- =pasteboard-copy-and-paste-functions.org= (52KB) → =.el=
+- =spacecraft-mode.org= (40KB) → =.el=
+- =fonts-and-themes.org= (13KB) → =.el=
+- =gnu-emacs-startup.org= (56KB) → =.el= [DELETE with item #1]
+
+*Issues:*
+- Must remember to tangle before testing
+- Stale =.el= files cause bugs (documented in =docs/codebase-wisdom.org=)
+- Extra cognitive load tracking two files per module
+
+*Recommendation:*
+*Option A (Recommended):*
+1. Keep org files for documentation only (remove =#+auto_tangle=)
+2. Maintain =.el= files as source of truth
+3. Add rich docstrings directly in =.el= files
+
+*Option B (If you love literate programming):*
+1. Only use for =shared-functions.org= (the truly complex one)
+2. Convert smaller files (pasteboard, spacecraft, fonts) to pure =.el=
+
+*Savings:* Eliminates tangling errors, faster edit-test cycle
+
+*Implementation:*
+#+begin_src emacs-lisp
+;; For each .org file, remove this line:
+;; #+auto_tangle: t
+
+;; Keep org files as documentation companions
+;; Example: fonts-and-themes.org becomes documentation for fonts-and-themes.el
+#+end_src
+
+*** 3. Modularize shared-functions.org ⭐⭐⭐
+*Priority: MEDIUM | Impact: HIGH | Risk: MEDIUM*
+
+*Problem:* Monolithic file with 9,826 lines and 336 functions across 30+ unrelated topics.
+
+*Current structure:*
+- Writing Environment
+- Utility Functions
+- UI / customization
+- org-mode (multiple sections)
+- Browsing
+- Miscellaneous/unsorted
+- Backups
+- Word count
+- Date/time functions
+- Prose editing
+- File management
+- Keybindings
+
+*Recommendation:* Split into focused modules:
+#+begin_src org
+org-writing.el        # Writing-specific functions (web-research, etc.)
+org-utilities.el      # General org helpers (refile, scratch buffers)
+date-time-utils.el    # Date/time functions
+file-management.el    # Save, backup, file functions
+ui-enhancements.el    # Visual/UI functions (fullscreen, font sizing)
+#+end_src
+
+*Benefits:*
+- Can defer non-essential modules
+- Easier to locate functions
+- Can byte-compile separately
+- Reduced cognitive load
+
+*Caveat:* Your docs note "monolithic is convenient for personal config" - only split if you find yourself searching through it frequently.
+
+*Implementation:*
+#+begin_src bash
+# Start with smallest splits first
+# 1. Extract date-time functions (self-contained)
+grep -A 20 "* My custom functions for working with dates" shared-functions.org > date-time-utils.org
+
+# 2. Test loading before removing from shared-functions
+# 3. Gradually move other sections
+#+end_src
+
+*** 4. Use Package Manager Instead of Vendored Code ⭐⭐
+*Priority: LOW | Impact: MODERATE | Risk: LOW*
+
+*Problem:* Large vendored files clutter the config directory:
+- =dired+.el= (868KB)
+- =highlight-tail.el= (48KB)
+- =poetry_JD.el=, =forecast.el=, =ox-koma-letter.el=
+
+*Recommendation:*
+1. Check if available via MELPA/ELPA
+2. If not, move to =vendor/= subdirectory to declutter
+
+#+begin_src emacs-lisp
+;; If available on MELPA:
+(use-package dired+
+  :ensure t
+  :defer t)
+
+;; If vendored, organize:
+(add-to-list 'load-path "~/emacs/emacs-settings/vendor")
+#+end_src
+
+*** 5. Consolidate Configuration Files ⭐⭐⭐⭐
+*Priority: HIGH | Impact: HIGH | Risk: LOW*
+
+*Problem:* Complex load chain from =spacemacs.d/init-working.el:1040-1046=:
+#+begin_src emacs-lisp
+(load "/Users/jay/emacs/emacs-settings/spacemacs-new-config.el")  ; 351 lines
+(load "/Users/jay/gnulisp/smart-return.el")                       ; Different location
+(load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
+(load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
+(load "/Users/jay/emacs/local-config.el")
+#+end_src
+
+*Recommendation:* Use =use-package= with =:load-path= for clarity:
+#+begin_src emacs-lisp
+(use-package smart-return
+  :load-path "/Users/jay/gnulisp"
+  :defer t
+  :bind ("RET" . smart-return))
+
+(use-package buffer-stack
+  :load-path "elpa-supplement"
+  :commands (buffer-stack-down buffer-stack-up))
+#+end_src
+
+*Alternative:* Merge =spacemacs-new-config.el= into =dotspacemacs/user-config= directly.
+
+*Savings:* Fewer files to track, clearer dependency chain
+
+*** 6. Remove Commented/Dead Code ⭐⭐⭐⭐
+*Priority: HIGH | Impact: MODERATE | Risk: VERY LOW*
+
+*Problem:* Docs note "large blocks of commented-out code" throughout config.
+
+*Examples found:*
+- =spacemacs-new-config.el:23-36= (debugging code)
+- Commented =use-package= blocks throughout
+- Disabled layers in =init-working.el=
+
+*Recommendation:* Delete unused code (git preserves history).
+
+*Implementation:*
+#+begin_src bash
+# Find commented use-package blocks
+grep -n "^;; (use-package\|^;;  (load" *.el
+
+# Find large commented blocks (10+ consecutive lines)
+awk '/^;;/{n++} !/^;;/{if(n>10) print FILENAME":"NR-n"-"NR; n=0}' *.el
+
+# After review, delete entire commented blocks
+#+end_src
+
+*Savings:* ~300-500 lines, improved readability
+
+*** 7. Unify Keybinding Configuration ⭐⭐⭐⭐
+*Priority: HIGH | Impact: HIGH | Risk: MEDIUM*
+
+*Problem:* Keybindings scattered across:
+- =keys.el= (376 lines)
+- =jay-osx.el= (defines =key-minor-mode-map=)
+- =gnu-emacs-startup.el= (global-set-key calls)
+- =shared-functions.org= (* Keybindings section)
+
+*Recommendation:* Consolidate into =keys.el= only, organized by feature:
+#+begin_src emacs-lisp
+;;; keys.el --- All keybindings in one place -*- lexical-binding: t -*-
+
+;; === Window Management ===
+(global-set-key (kbd "s-1") 'delete-other-windows)
+(global-set-key (kbd "s-2") 'split-window-vertically)
+(global-set-key (kbd "s-3") 'split-window-left)
+
+;; === Org Mode ===
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "M-RET") 'org-meta-return)
+  ;; ... all org bindings here
+  )
+
+;; === Custom Functions ===
+(global-set-key (kbd "C-c w") 'web-research)
+
+(provide 'keys)
+#+end_src
+
+*Benefits:* Single source of truth for all keybindings
+
+*** 8. Optimize Loading with use-package ⭐⭐⭐
+*Priority: MEDIUM | Impact: MODERATE | Risk: LOW*
+
+*Problem:* Many packages loaded eagerly in =dotspacemacs-additional-packages=.
+
+*Current:*
+#+begin_src emacs-lisp
+dotspacemacs-additional-packages '(
+  amx affe org-transclusion ctrlf web-mode
+  ox-twbs mwim cape caps-lock captain ...)
+#+end_src
+
+*Improved:*
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :defer t
+  :after org
+  :commands org-transclusion-mode)
+
+(use-package ctrlf
+  :defer 5  ; Load after 5 idle seconds
+  :config (ctrlf-mode +1))
+
+(use-package cape
+  :defer t
+  :hook (completion-at-point-functions . cape-file))
+#+end_src
+
+*Benefit:* Faster startup time
+
+*** 9. Consolidate Org-Mode Settings ⭐⭐⭐⭐
+*Priority: HIGH | Impact: HIGH | Risk: MEDIUM*
+
+*Problem:* Org settings spread across:
+- =spacemacs.d/init-working.el:932-938= (performance settings)
+- =shared-functions.org:64-80= (org-mode settings)
+- =org-roam-config.el=
+- =org-visual-style.el=
+- =org-yt.el=
+
+*Recommendation:* Create =org-config.el= that loads all org modules:
+#+begin_src emacs-lisp
+;;; org-config.el --- Unified Org-mode configuration -*- lexical-binding: t -*-
+
+(use-package org
+  :defer t
+  :config
+  ;; Performance settings
+  (setq org-element-use-cache nil
+        org-element-cache-persistent nil
+        org-startup-folded 'showeverything
+        org-startup-indented nil)
+
+  ;; Load org extensions
+  (require 'org-roam-config)
+  (require 'org-visual-style)
+  (require 'org-yt)
+
+  ;; All other org settings centralized here
+  )
+
+(provide 'org-config)
+#+end_src
+
+*** 10. Fix Structural Issues ⭐⭐⭐⭐⭐
+*Priority: CRITICAL | Impact: HIGH | Risk: LOW*
+
+*Problems identified in CLAUDE.md:*
+- Missing =lexical-binding= declarations
+- Deprecated functions (=org-bracket-link-regexp= → =org-link-bracket-re=)
+- Inconsistent quote styles
+- Mixed indentation
+
+*Implementation:*
+#+begin_src bash
+# 1. Find files missing lexical-binding
+grep -L "lexical-binding: t" ~/emacs/emacs-settings/*.el
+
+# 2. Add to each file (must be first line):
+# -*- lexical-binding: t -*-
+
+# 3. Find deprecated org variables
+grep -r "org-bracket-link-regexp" ~/emacs/emacs-settings/
+
+# 4. Replace with org-link-bracket-re
+#+end_src
+
+** Recommended Implementation Order
+
+*** Phase 1: Quick Wins (Week 1)
+1. Delete =gnu-emacs-startup.el= and =.org= (biggest win, lowest risk)
+2. Remove commented code across all files
+3. Add =lexical-binding= to all =.el= files
+4. Fix deprecated function calls
+
+*Expected impact:* ~1,700 lines removed, improved stability
+
+*** Phase 2: Consolidation (Week 2-3)
+1. Consolidate keybindings into =keys.el=
+2. Consolidate org settings into =org-config.el=
+3. Convert 2-3 smaller org files to pure =.el=
+
+*Expected impact:* Clearer structure, easier navigation
+
+*** Phase 3: Optimization (Week 4)
+1. Migrate eager loads to =use-package= with =:defer=
+2. Move vendored files to =vendor/= directory
+3. Profile startup time, optimize as needed
+
+*Expected impact:* Faster startup
+
+*** Phase 4: Major Refactor (Month 2, optional)
+1. Modularize =shared-functions.org= if needed
+2. Implement =jay/config-root= variable for relocatable paths
+3. Create data-driven loader blocks
+
+*Expected impact:* Maximum maintainability
+
+** Quick Wins You Can Do Right Now
+
+#+begin_src bash
+# 1. Count commented code
+grep -c "^;; (" ~/emacs/emacs-settings/*.el | grep -v ":0$"
+
+# 2. Find files missing lexical-binding
+for f in ~/emacs/emacs-settings/*.el; do
+  grep -q "lexical-binding: t" "$f" || echo "$f"
+done
+
+# 3. Find large blocks of commented code (candidates for deletion)
+awk 'BEGIN{n=0} /^;;/{n++} !/^;;/{if(n>10) print FILENAME":"NR-n"-"NR; n=0}' \
+  ~/emacs/emacs-settings/*.el
+
+# 4. Profile current startup time
+emacs --eval '(message "Startup time: %s" (emacs-init-time))' --kill
+#+end_src
+
+** What NOT to Simplify
+
+Based on documentation and working patterns, *keep these as-is:*
+- ✅ =shared-functions.org= monolithic structure (noted as "convenient")
+- ✅ Literate programming for core files if you value the documentation
+- ✅ Platform-specific files (=jay-osx.el=, =pasteboard-*.el=)
+- ✅ Extensive cloud storage / file-notify fixes (they work!)
+- ✅ Custom =spacecraft-mode= (unique functionality)
+
+** Estimated Total Impact
+
+| Change | Lines Saved | Complexity Reduction | Startup Improvement |
+|--------+-------------+----------------------+---------------------|
+| Remove GNU Emacs dual boot | ~1,400 | ⭐⭐⭐⭐⭐ | Minimal |
+| Consolidate config loads | ~200 | ⭐⭐⭐ | Minimal |
+| Remove commented code | ~300-500 | ⭐⭐⭐⭐ | Minimal |
+| Fix deprecated functions | ~50 | ⭐⭐ (stability++) | Minimal |
+| Unify keybindings | ~100 | ⭐⭐⭐⭐ | Minimal |
+| Defer package loading | ~0 | ⭐⭐ | ⭐⭐⭐⭐ |
+| Consolidate org settings | ~150 | ⭐⭐⭐⭐ | Minimal |
+|--------+-------------+----------------------+---------------------|
+| *TOTAL* | *~2,200 lines* | *Much easier to maintain* | *Faster startup* |
+
+** Next Actions
+
+*** Immediate (This Week)
+- [ ] Backup current configuration to git
+- [ ] Delete =gnu-emacs-startup.{el,org}=
+- [ ] Run startup to ensure nothing breaks
+- [ ] Remove large commented code blocks
+
+*** Short-term (This Month)
+- [ ] Add =lexical-binding= to all =.el= files
+- [ ] Fix deprecated function calls
+- [ ] Consolidate keybindings to =keys.el=
+- [ ] Create unified =org-config.el=
+
+*** Long-term (Next Month+)
+- [ ] Evaluate modularizing =shared-functions.org=
+- [ ] Migrate to =use-package= with =:defer= for lazy loading
+- [ ] Profile and optimize startup time
+- [ ] Consider converting remaining org files to pure elisp
+
+** References
+- Original analysis: 2025-10-26
+- See also: =docs/work-log.org= for change history
+- See also: =docs/codebase-wisdom.org= for debugging insights
+- See also: =docs/design-architecture.org= for design decisions
