@@ -1,4 +1,9 @@
-#+auto_tangle: t
+#+BEGIN_QUOTE
+NOTE: This org file is now documentation only.
+The source of truth is pasteboard-copy-and-paste-functions.el
+(Converted from literate programming to pure elisp on 2025-10-26)
+#+END_QUOTE
+
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 (require 'subr-x)

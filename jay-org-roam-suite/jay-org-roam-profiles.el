@@ -180,18 +180,17 @@ Each profile is a plist with keys:
                         "#+TITLE: ${title}\n#+FILETAGS: :learning:")
      :unnarrowed t)
 
-   '("z" "zork (custom path)" plain
+   '("z" "CRM (custom path)" plain
      "- Links ::\nSource ::\n\n\n* ${title}\n%?"
      :target (file+head (lambda ()
                           (concat (read-string "Enter file path: ")
                                   "/%<%Y%m%d%H%M%S>-${slug}.org"))
-                        "#+TITLE: ${title}\n#+FILETAGS: :work:")
+                        "#+TITLE: ${title}\n#+FILETAGS: :crm:")
      :unnarrowed t)
 
    ;; Factory-generated templates
    (jay/roam-template "B" "Business (Socratic AI)" "business-socratic" "project")
    (jay/roam-template "b" "books" "books" "books")
-   (jay/roam-template "C" "Claude outputs" "claude-outputs" "claude")
    (jay/roam-template "e" "emacs" "emacs" "emacs")
    (jay/roam-template "m" "mantras and intentions" "mantras" "mantras")
    (jay/roam-template "n" "note" "notes" "note")
