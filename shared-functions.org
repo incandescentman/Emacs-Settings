@@ -9801,7 +9801,7 @@ After evaluating your init-file you can use links analog to the example:
 ;; Enable Corfu for popup completions
 (use-package corfu
   :ensure t
-  :init
+  :config
   (global-corfu-mode))
 
 ;; Add Cape completions
