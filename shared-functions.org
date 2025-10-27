@@ -196,6 +196,10 @@ I should probably eventually break these out of custom-set-variables and organiz
 *** use-package verbosity
 #+begin_src emacs-lisp
 (setq use-package-verbose nil) ;; Set to t for debugging
+
+;; Don't auto-ensure packages - Spacemacs manages them via layers
+;; This prevents contacting package archives on every startup
+(setq use-package-always-ensure nil)
 #+end_src
 
 *** use-package blocks
@@ -8961,14 +8965,14 @@ package-native-compile    t)
       (message "⟳  Refreshing package-quickstart...")
       (package-quickstart-refresh))))
 
-;; Run once per boot, after packages are loaded:
-(add-hook 'after-init-hook #'jd/maintain-quickstart)
+;; Disabled: causes unnecessary recompilation on every startup
+;; (add-hook 'after-init-hook #'jd/maintain-quickstart)
 
-;; Auto-refresh quickstart after package operations
-(advice-add 'package-install :after
-            (lambda (&rest _) (package-quickstart-refresh)))
-(advice-add 'package-delete :after
-            (lambda (&rest _) (package-quickstart-refresh)))
+;; Disabled: causes recompilation after every package operation
+;; (advice-add 'package-install :after
+;;             (lambda (&rest _) (package-quickstart-refresh)))
+;; (advice-add 'package-delete :after
+;;             (lambda (&rest _) (package-quickstart-refresh)))
 #+end_src
 
 * counsel
@@ -9558,7 +9562,7 @@ Uses `customize-save-variable` so the setting survives restarts, then refreshes 
 * cape emoji
 #+begin_src emacs-lisp
 (use-package cape
-  :defer
+:ensure t
   :init
   (add-to-list 'completion-at-point-functions #'cape-emoji))
 
@@ -9800,13 +9804,14 @@ After evaluating your init-file you can use links analog to the example:
 #+begin_src emacs-lisp
 ;; Enable Corfu for popup completions
 (use-package corfu
-  :ensure t
+  ;; :ensure t  ;; Disabled - Spacemacs manages this via layers
   :config
   (global-corfu-mode))
 
 ;; Add Cape completions
 (use-package cape
-  :ensure t
+  ;; :ensure t  ;; Disabled - Spacemacs manages this via layers
+  :demand t  ;; Load immediately so cape-emoji command is available
   :bind
   (("C-c p" . cape-prefix-map)) ;; Press C-c p ? for help
   :init

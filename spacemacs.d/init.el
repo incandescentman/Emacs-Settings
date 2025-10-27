@@ -94,6 +94,7 @@ This function should only modify configuration layer settings."
                                       ox-twbs
                                       mwim
                                       ;; beacon
+                                      cape
                                       caps-lock
                                       captain
                                       ;; company
@@ -561,7 +562,7 @@ It should only modify the values of Spacemacs settings."
    ;; If t, enable the `package-quickstart' feature to avoid full package
    ;; loading, otherwise no `package-quickstart' attemption (default nil).
    ;; Refer the FAQ.org "package-quickstart" section for details.
-   dotspacemacs-enable-package-quickstart t
+   dotspacemacs-enable-package-quickstart nil
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
@@ -892,16 +893,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setenv "DICTIONARY" "en_US-large")
 
   (require 'ispell)
-  (dolist (mapping '(("en_US" "en_US-large")
-                     ("american" "en_US-large")
-                     ("english" "en_US-large")))
+  (dolist (mapping '(("en_US" "en_US-large")))
     (let ((name (car mapping)))
       (setq ispell-dicts-name2locale-equivs-alist
             (cons mapping
                   (assoc-delete-all name ispell-dicts-name2locale-equivs-alist)))))
-  (dolist (entry '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)
-                   ("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)
-                   ("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+  (dolist (entry '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
     (let ((name (car entry)))
       (setq ispell-local-dictionary-alist
             (cons entry (assoc-delete-all name ispell-local-dictionary-alist)))))
