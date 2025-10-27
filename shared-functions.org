@@ -9562,7 +9562,7 @@ Uses `customize-save-variable` so the setting survives restarts, then refreshes 
 * cape emoji
 #+begin_src emacs-lisp
 (use-package cape
-:ensure t
+
   :init
   (add-to-list 'completion-at-point-functions #'cape-emoji))
 
