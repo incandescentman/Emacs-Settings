@@ -688,7 +688,7 @@ It should only modify the values of Spacemacs settings."
    ;; `undo-redo', `undo-fu' and `undo-tree' see also `evil-undo-system'.
    ;; Note that saved undo history does not get transferred when changing
    ;; your undo system from or to undo-tree. (default `undo-redo')"
-   dotspacemacs-undo-system 'undo-redo
+   dotspacemacs-undo-system 'undo-fu
 
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'

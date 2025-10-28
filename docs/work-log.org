@@ -2,6 +2,33 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-28: Fix undo-fu keybinding error
+
+** Summary
+- Fixed "wrong-type-argument commandp undo-fu-only-undo" error on s-z (Command-Z)
+- Reverted undo system back to 'undo-fu from 'undo-redo
+
+** Problem
+After commit c3bcac40 (2025-10-26), Emacs started throwing errors when pressing s-z:
+#+begin_example
+Debugger entered--Lisp error: (wrong-type-argument commandp undo-fu-only-undo)
+  command-execute(undo-fu-only-undo)
+#+end_example
+
+The keybinding in keys.el:169 references `undo-fu-only-undo`, but commit c3bcac40 changed the undo backend from 'undo-fu to 'undo-redo, making the undo-fu functions unavailable.
+
+** Solution
+Reverted `dotspacemacs-undo-system` back to 'undo-fu in spacemacs.d/init.el:691.
+
+This aligns with the existing configuration which includes:
+- Custom undo-fu wrapper functions in shared-functions.org (undo-fu-only-redo-fail-with-heart, etc.)
+- Keybindings in keys.el for undo-fu-only-undo (s-z) and undo-fu-only-redo-fail-with-heart (s-y)
+- undo-fu-session configuration for undo history persistence
+
+** Files Modified
+- spacemacs.d/init.el (reverted undo system setting)
+- docs/work-log.org (this entry)
+
 * 2025-10-26: Major documentation rewrite for clarity
 
 ** Summary
