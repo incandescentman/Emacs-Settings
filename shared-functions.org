@@ -9803,10 +9803,10 @@ After evaluating your init-file you can use links analog to the example:
 * cape emoji
 #+begin_src emacs-lisp
 ;; Enable Corfu for popup completions
-(use-package corfu
-  ;; :ensure t  ;; Disabled - Spacemacs manages this via layers
-  :config
-  (global-corfu-mode))
+;; (use-package corfu
+;;   ;; :ensure t  ;; Disabled - Spacemacs manages this via layers
+;;   :config
+;;   (global-corfu-mode))
 
 ;; Add Cape completions
 (use-package cape
