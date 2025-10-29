@@ -71,7 +71,7 @@ Each profile is a plist with keys:
   "Helper to build an org-roam capture template."
   `(,key ,label plain "- Links ::\n- Source ::\n\n* ${title}\n%?"
          :target (file+head ,(format "%s/%%<%%Y%%m%%d%%H%%M%%S>-${slug}.org" dir)
-                            ,(format "#+TITLE: ${title}\n#+FILETAGS: :%s:" tag))
+                            ,(format "#+TITLE: ${title}\n#+CREATED: [%%<%%Y-%%m-%%d %%a %%H:%%M>]\n#+FILETAGS: :%s:" tag))
          :unnarrowed t))
 
 ;; DEFAULT PROFILE TEMPLATES (Your current work setup)
@@ -81,103 +81,103 @@ Each profile is a plist with keys:
    '("A" "accountability and task capture" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "accountability/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :accountability:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :accountability:")
      :unnarrowed t)
 
    '("a" "article notes or books and articles" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :literaturenote:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :literaturenote:")
      :unnarrowed t)
 
    '("H" "Plans" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :project:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :project:")
      :unnarrowed t)
 
    '("g" "ChatGPT Outputs" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "chatgpt-outputs/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :gpt:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :gpt:")
      :unnarrowed t)
 
    '("I" "intelligence" plain
      "- Links ::\n- Source ::\n\n\n* ${title}\n%?"
      :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :intelligence:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :intelligence:")
      :unnarrowed t)
 
    '("l" "logistics of OpenAI" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "logistics/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :library:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :library:")
      :unnarrowed t)
 
    '("c" "Conversation" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :conversation:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :conversation:")
      :unnarrowed t)
 
    '("d" "documents and deliverables" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "documents/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :document:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :document:")
      :unnarrowed t)
 
    '("D" "Developing, vibecoding" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "vibecoding/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :document:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :document:")
      :unnarrowed t)
 
    '("E" "Exercise" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "exercise/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :exercise:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :exercise:")
      :unnarrowed t)
 
    '("f" "finances and housekeeping" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :finances:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :finances:")
      :unnarrowed t)
 
    '("M" "Momentum --- 2025 job hunt" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "job-hunt-2025/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :momentum:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :momentum:")
      :unnarrowed t)
 
    '("O" "Outline / Structure / Schelling Points" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :structure:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :structure:")
      :unnarrowed t)
 
    '("p" "person" plain
      "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :person:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :person:")
      :unnarrowed t)
 
    '("W" "writers" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "writers/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :writers:person:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :writers:person:")
      :unnarrowed t)
 
    '("k" "kanban" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "kanban/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :kanban:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :kanban:")
      :unnarrowed t)
 
    '("L" "Learning, lectures, and classes" plain
      "- Links ::\n- Source ::\n\n* ${title}\n%?"
      :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :learning:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :learning:")
      :unnarrowed t)
 
    '("z" "CRM (custom path)" plain
@@ -185,7 +185,7 @@ Each profile is a plist with keys:
      :target (file+head (lambda ()
                           (concat (read-string "Enter file path: ")
                                   "/%<%Y%m%d%H%M%S>-${slug}.org"))
-                        "#+TITLE: ${title}\n#+FILETAGS: :crm:")
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :crm:")
      :unnarrowed t)
 
    ;; Factory-generated templates

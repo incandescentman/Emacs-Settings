@@ -2,6 +2,30 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-29: Add creation timestamps to org-roam capture templates
+
+** Summary
+- Added `#+CREATED:` metadata to all default profile org-roam capture templates
+- Uses clean file-level metadata format: `#+CREATED: [2025-10-29 Tue 14:35]`
+- Provides automatic creation timestamp for all new nodes in default profile
+
+** Details
+- Updated all 18 custom templates (A, a, H, g, I, l, c, d, D, E, f, M, O, p, W, k, L, z)
+- Updated `jay/roam-template` helper function to automatically add timestamps to 15 factory-generated templates (B, b, e, m, n, o, P, q, S, s, T, w, X, x, $)
+- Changed format from inline `- Created :: %<%Y-%m-%d %H:%M>` to file-level metadata `#+CREATED: [%<%Y-%m-%d %a %H:%M>]`
+- Uses inactive timestamp format `[...]` which won't trigger agenda views
+- Timestamp appears alongside `#+TITLE` and `#+FILETAGS` at the top of each new org-roam node
+
+** Rationale
+- File-level `#+KEYWORD` format is cleaner and more semantic than definition lists
+- Follows org-mode conventions for file metadata
+- Inactive timestamps are appropriate for creation dates (vs active timestamps for scheduled items)
+- Provides useful metadata for tracking note creation without cluttering the content
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` (all default profile templates + helper function)
+- `docs/work-log.org` (this entry)
+
 * 2025-10-28: Fix undo-fu keybinding error
 
 ** Summary
