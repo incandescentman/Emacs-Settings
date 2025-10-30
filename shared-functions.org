@@ -9821,6 +9821,8 @@ After evaluating your init-file you can use links analog to the example:
   (add-hook 'completion-at-point-functions #'cape-emoji)) 
 #+end_src
 
+* Goals agenda
+
 * Local Variables & The End
 These have to be at the end.
 

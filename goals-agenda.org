@@ -1,0 +1,163 @@
+Perfect. Let's build this agenda view properly.
+** The Agenda Configuration
+
+Add this to your Emacs config (probably `~/.emacs.d/init.el` or wherever you keep your org-mode config):
+
+#+begin_SRC emacs-lisp 
+;; ============================================================================
+;; JAY'S DAILY ACTION MENU --- Energy-Based Task View
+;; ============================================================================
+
+;; First, set up the projects directory
+(setq jay-projects-dir "~/Library/CloudStorage/Dropbox/github/velocity/projects/")
+
+;; Make sure org-agenda knows to look in the projects directory
+(setq org-agenda-files 
+      (list "~/Library/CloudStorage/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
+            jay-projects-dir))
+
+;; Custom agenda command: Daily Action Menu
+(setq org-agenda-custom-commands
+      '(("d" "Daily Action Menu"
+         ((tags-todo "#focus/TODO|#focus/NEXT"
+                     ((org-agenda-overriding-header "\n🔥 FOCUS WORK (90+ min blocks, deep attention required)\n")
+                      (org-agenda-sorting-strategy '(priority-down deadline-up))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
+          
+          (tags-todo "#admin/TODO|#admin/NEXT"
+                     ((org-agenda-overriding-header "\n⚙️  ADMIN TASKS (5-30 min, light cognitive load)\n")
+                      (org-agenda-sorting-strategy '(priority-down effort-up))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
+          
+          (tags-todo "#connect/TODO|#connect/NEXT"
+                     ((org-agenda-overriding-header "\n🤝 CONNECT (Email, calls, relationship building)\n")
+                      (org-agenda-sorting-strategy '(priority-down))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
+          
+          (tags-todo "#batch/TODO|#batch/NEXT"
+                     ((org-agenda-overriding-header "\n📦 BATCH (Do several together, context switching penalty)\n")
+                      (org-agenda-sorting-strategy '(priority-down))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
+          
+          (agenda ""
+                  ((org-agenda-overriding-header "\n📅 SCHEDULED FOR TODAY\n")
+                   (org-agenda-span 1)
+                   (org-agenda-start-day nil))))
+         
+         ((org-agenda-compact-blocks t)
+          (org-agenda-block-separator "")))))
+
+;; Optional: Quick access binding
+;; Press C-c a d to open your daily menu
+(global-set-key (kbd "s-k a d") 
+                (lambda () 
+                  (interactive) 
+                  (org-agenda nil "d")))
+
+;; ============================================================================
+;; RELATED SETTINGS (Optional but recommended)
+;; ============================================================================
+
+;; Show inherited tags in agenda (so project context shows up)
+(setq org-agenda-show-inherited-tags t)
+
+;; Dim blocked tasks (tasks that depend on incomplete prerequisites)
+(setq org-agenda-dim-blocked-tasks t)
+
+;; Use a more readable date format
+(setq org-agenda-format-date
+      (lambda (date)
+        (concat "\n" 
+                (make-string 79 ?─) "\n"
+                (org-agenda-format-date-aligned date))))
+
+;; Add effort estimates to your agenda view (optional)
+;; Shows how long you estimated each task will take
+(setq org-agenda-prefix-format
+      '((agenda . " %i %-12:c%?-12t% s")
+        (todo . " %i %-12:c")
+        (tags . " %i %-12:c")
+        (search . " %i %-12:c")))
+#+end_src 
+
+** How to Use It
+
+*Open your daily menu:*
+- Press `C-c a d` (or `M-x org-agenda` then `d`)
+
+*Navigate:*
+- `n/p` or `j/k` --- Move between tasks
+- `RET` --- Jump to that task in its file
+- `t` --- Change TODO state (mark done)
+- `q` --- Quit agenda view
+
+*Mark tasks done without leaving agenda:*
+- Put cursor on task
+- Press `t` to cycle through TODO → DONE
+- Task disappears from view automatically
+
+** Project File Template
+
+For this to work, you need to create project files with the right tags. Here's a template:
+
+#+begin_src org
+#+TITLE: [Project Name]
+#+FILETAGS: :project:
+:PROPERTIES:
+:GOAL: [Which 3mo/6mo goal does this serve?]
+:STATUS: Active
+:END:
+
+- Project Overview
+[One paragraph: what is this project and why does it matter?]
+
+- Next Actions
+** #focus --- Deep work required
+*** TODO [Specific action requiring 90+ min focus]
+SCHEDULED: <2025-10-31 Thu>
+[Context: what you need, where resources are]
+
+** #admin --- Light cognitive load  
+*** TODO [Quick administrative task, 5-30 min]
+[Any details needed]
+
+** #connect --- People work
+*** TODO [Email, call, meeting]
+[Who, why, what you need from them]
+
+** #batch --- Do together
+*** TODO [Tasks better done in batches]
+[Why batching helps]
+
+- Waiting On
+- [Anything blocking you]
+
+- Resources
+- [[Links to relevant files]]
+#+end_src 
+
+** Create Your Projects Directory
+
+Run this in your terminal:
+
+#+begin_src bash
+mkdir -p ~/Library/CloudStorage/Dropbox/github/velocity/projects
+#+end_src 
+
+** Test It Right Now
+
+*Step 1:* Create a test project file to make sure the agenda works.
+
+Want me to create one for you based on your Narratively webinar project? I can make a real one so you can test the whole system immediately.
+
+*Step 2:* Add the elisp config above to your Emacs init file.
+
+*Step 3:* Reload your config:
+- `M-x eval-buffer` (if you're in your init.el)
+- Or restart Emacs
+
+*Step 4:* Test the agenda:
+- Press `C-c a d`
+- You should see your daily action menu
+
+Should I create that first project file for Narratively so you can test this right now? 
