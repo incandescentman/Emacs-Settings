@@ -8131,7 +8131,14 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 
 (with-eval-after-load 'smartparens
   (sp-local-pair 'org-mode "'" nil :actions nil)  ;; example: disable quote pairing
-  (remove-hook 'org-mode-hook #'show-smartparens-mode))
+  (remove-hook 'org-mode-hook #'show-smartparens-mode)
+
+  ;; Suppress smartparens errors in org-mode (especially with nested quotes/text properties)
+  (defadvice sp-show--pair-function (around sp-show-safe activate)
+    "Suppress errors from sp-show--pair-function in problematic contexts."
+    (condition-case nil
+        ad-do-it
+      (error nil))))
 
 ; or more drastically:
 ; (remove-hook 'post-command-hook 'sp-show--pair-function)
