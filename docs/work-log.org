@@ -2,6 +2,41 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-30: Fix pasteboard loading after 2025-10-26 conversion to pure elisp
+
+** Summary
+- Fixed typo in `spacemacs-new-config.el:134` that broke the pasteboard loading
+- Corrected to load `pasteboard-copy-and-paste-functions.el` directly (as intended per 2025-10-26 conversion)
+
+** Background
+On 2025-10-26, `pasteboard-copy-and-paste-functions` was intentionally converted from literate org to pure elisp (see `docs/suggested-next-steps.org`):
+- The `.org` file became documentation only
+- The `.el` file became the source of truth with rich Commentary section
+- Purpose: eliminate edit→tangle→test cycle for direct edit-test workflow
+
+** Problem
+Commit c58f78ca accidentally changed the pasteboard load line to:
+#+begin_example
+(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-org")
+#+end_example
+
+This was missing `-functions` and the `.org` extension, causing launch failure:
+#+begin_example
+Error: File to tangle does not exist: ~/emacs/emacs-settings/pasteboard-copy-and-paste-o...
+#+end_example
+
+** Solution
+Corrected to match the 2025-10-26 conversion intent:
+#+begin_src elisp
+(load "/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
+#+end_src
+
+This properly loads the pure elisp file (not the documentation-only `.org` file).
+
+** Files Modified
+- `spacemacs-new-config.el:134` - Fixed to direct `.el` load
+- `docs/work-log.org` - This entry
+
 * 2025-10-29: Add creation timestamps to org-roam capture templates
 
 ** Summary
