@@ -9,6 +9,7 @@
 - Enhanced `jay/roam-template` helper with comprehensive keyword argument support
 - Separated template data into two clean defconsts for better organization
 - Reduced code duplication by ~50% while maintaining full flexibility
+- Added inline usage examples to the helper docstring for future reference
 
 ** Details
 
@@ -17,6 +18,7 @@ Upgraded `jay/roam-template` from simple 4-parameter function to flexible keywor
 - Added keyword arguments: `:body`, `:filetags`, `:created-format`, `:type`, `:target`, `:unnarrowed`, `:props`
 - Smart defaults with override capability
 - Comprehensive docstring explaining all options
+- Included inline usage examples documenting common override patterns
 - Handles special cases (custom bodies, lambda targets, multi-tag filetags)
 
 *** Data-Driven Template Definitions
@@ -27,7 +29,7 @@ Created two `defconst` data structures:
 Special cases handled elegantly via keyword args:
 - "I" template: custom body with extra newline
 - "p" template: custom body with People link
-- "W" template: multi-tag filetags (`:writers:person:`)
+- "W" template: multi-tag filetags (`:writers:person:`) written via explicit `:filetags` override
 - "z" template: lambda-based custom target for dynamic path
 
 *** Template Generation
