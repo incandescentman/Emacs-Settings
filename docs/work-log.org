@@ -2,6 +2,24 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-30: Add corpus capture template
+
+** Summary
+- Added new org-roam capture template for corpus (transcripts and examples)
+- Uses key "C" for quick access
+- Creates files in `corpus/` subdirectory with `:corpus:` filetag
+
+** Details
+- Template key: "C"
+- Label: "corpus (transcripts and examples)"
+- Directory: `corpus/`
+- Filetag: `:corpus:`
+- Standard structure with Links, Source, title heading, and creation timestamp
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el:194` - Added corpus template
+- `docs/work-log.org` - This entry
+
 * 2025-10-30: Fix pasteboard loading after 2025-10-26 conversion to pure elisp
 
 ** Summary

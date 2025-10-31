@@ -191,6 +191,7 @@ Each profile is a plist with keys:
    ;; Factory-generated templates
    (jay/roam-template "B" "Business (Socratic AI)" "business-socratic" "project")
    (jay/roam-template "b" "books" "books" "books")
+   (jay/roam-template "C" "corpus (transcripts and examples)" "corpus" "corpus")
    (jay/roam-template "e" "emacs" "emacs" "emacs")
    (jay/roam-template "m" "mantras and intentions" "mantras" "mantras")
    (jay/roam-template "n" "note" "notes" "note")
