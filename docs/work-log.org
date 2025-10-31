@@ -2,6 +2,57 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-10-30: Refactor org-roam templates to data-driven architecture
+
+** Summary
+- Converted 110+ lines of repetitive template definitions into ~55 lines of data structures
+- Enhanced `jay/roam-template` helper with comprehensive keyword argument support
+- Separated template data into two clean defconsts for better organization
+- Reduced code duplication by ~50% while maintaining full flexibility
+
+** Details
+
+*** Enhanced Helper Function
+Upgraded `jay/roam-template` from simple 4-parameter function to flexible keyword-based API:
+- Added keyword arguments: `:body`, `:filetags`, `:created-format`, `:type`, `:target`, `:unnarrowed`, `:props`
+- Smart defaults with override capability
+- Comprehensive docstring explaining all options
+- Handles special cases (custom bodies, lambda targets, multi-tag filetags)
+
+*** Data-Driven Template Definitions
+Created two `defconst` data structures:
+- `jay/org-roam-default-template-specs` - 18 custom/bespoke templates with special cases
+- `jay/org-roam-default-factory-template-specs` - 16 standard factory templates
+
+Special cases handled elegantly via keyword args:
+- "I" template: custom body with extra newline
+- "p" template: custom body with People link
+- "W" template: multi-tag filetags (`:writers:person:`)
+- "z" template: lambda-based custom target for dynamic path
+
+*** Template Generation
+Templates now generated programmatically via `mapcar` + `apply`:
+#+begin_src elisp
+(defvar jay/org-roam-capture-templates-default
+  (append
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-template-specs)
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-factory-template-specs)))
+#+end_src
+
+** Benefits
+- Dramatically improved maintainability - global changes via helper function
+- Easy to scan all templates at a glance
+- Less error-prone - single source of truth for template structure
+- Preserves full flexibility for edge cases
+- Clear separation between data and logic
+- Professional-grade code organization
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` - Complete refactor of default profile templates
+- `docs/work-log.org` - This entry
+
 * 2025-10-30: Add corpus capture template
 
 ** Summary

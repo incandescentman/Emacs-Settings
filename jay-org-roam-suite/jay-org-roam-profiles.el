@@ -67,144 +67,107 @@ Each profile is a plist with keys:
 ;; -----------------------------------------------------------------------------
 
 ;; Helper for building templates
-(defun jay/roam-template (key label dir tag)
-  "Helper to build an org-roam capture template."
-  `(,key ,label plain "- Links ::\n- Source ::\n\n* ${title}\n%?"
-         :target (file+head ,(format "%s/%%<%%Y%%m%%d%%H%%M%%S>-${slug}.org" dir)
-                            ,(format "#+TITLE: ${title}\n#+CREATED: [%%<%%Y-%%m-%%d %%a %%H:%%M>]\n#+FILETAGS: :%s:" tag))
-         :unnarrowed t))
+(defun jay/roam-template (key label dir tag &rest args)
+  "Helper to build an org-roam capture template.
 
-;; DEFAULT PROFILE TEMPLATES (Your current work setup)
-(defvar jay/org-roam-capture-templates-default
-  (list
-   ;; Custom templates
-   '("A" "accountability and task capture" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "accountability/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :accountability:")
-     :unnarrowed t)
+KEY is the capture key, LABEL is displayed in capture prompts, DIR is
+the directory (relative to the profile root), and TAG is used to derive
+the default `#+FILETAGS:` line.
 
-   '("a" "article notes or books and articles" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "literature-notes/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :literaturenote:")
-     :unnarrowed t)
+Additional keyword ARGS allow callers to override pieces of the template:
 
-   '("H" "Plans" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :project:")
-     :unnarrowed t)
+  :body            String used as the template body.
+  :filetags        String inserted after `#+FILETAGS:` (default derives from TAG).
+  :created-format  Time format string used for the `#+CREATED:` stamp.
+  :type            Capture entry type (defaults to `plain`).
+  :target          Custom capture target (skips standard directory logic).
+  :unnarrowed      Whether to leave the final buffer unnarrowed (defaults to t).
+  :props           Additional plist appended to the template definition."
+  ;; Examples:
+  ;;   (jay/roam-template "n" "note" "notes" "note")
+  ;;   (jay/roam-template "p" "person" "person" "person"
+  ;;                      :body "- Links :: [[id:xyz][People]]\n* ${title}\n%?")
+  ;;   (jay/roam-template "z" "custom" "" nil
+  ;;                      :target (file+head (lambda () ...) "#+TITLE: ${title}\n"))
+  (let* ((body (or (plist-get args :body)
+                   "- Links ::\n- Source ::\n\n* ${title}\n%?"))
+         (filetags (if (plist-member args :filetags)
+                       (plist-get args :filetags)
+                     (when tag (format ":%s:" tag))))
+         (created-format (or (plist-get args :created-format)
+                             "%Y-%m-%d %a %H:%M"))
+         (type (or (plist-get args :type) 'plain))
+         (target (or (plist-get args :target)
+                     `(file+head ,(format "%s/%%<%%Y%%m%%d%%H%%M%%S>-${slug}.org" dir)
+                                 ,(concat "#+TITLE: ${title}\n"
+                                          (format "#+CREATED: [%%<%s>]\n" created-format)
+                                          (when filetags
+                                            (format "#+FILETAGS: %s\n" filetags))))))
+         (unnarrowed (if (plist-member args :unnarrowed)
+                         (plist-get args :unnarrowed)
+                       t))
+         (props (plist-get args :props)))
+    (append
+     `(,key ,label ,type ,body
+            :target ,target
+            :unnarrowed ,unnarrowed)
+     props)))
 
-   '("g" "ChatGPT Outputs" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "chatgpt-outputs/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :gpt:")
-     :unnarrowed t)
-
-   '("I" "intelligence" plain
-     "- Links ::\n- Source ::\n\n\n* ${title}\n%?"
-     :target (file+head "AI/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :intelligence:")
-     :unnarrowed t)
-
-   '("l" "logistics of OpenAI" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "logistics/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :library:")
-     :unnarrowed t)
-
-   '("c" "Conversation" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "conversations/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :conversation:")
-     :unnarrowed t)
-
-   '("d" "documents and deliverables" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "documents/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :document:")
-     :unnarrowed t)
-
-   '("D" "Developing, vibecoding" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "vibecoding/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :document:")
-     :unnarrowed t)
-
-   '("E" "Exercise" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "exercise/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :exercise:")
-     :unnarrowed t)
-
-   '("f" "finances and housekeeping" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "finances/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :finances:")
-     :unnarrowed t)
-
-   '("M" "Momentum --- 2025 job hunt" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "job-hunt-2025/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :momentum:")
-     :unnarrowed t)
-
-   '("O" "Outline / Structure / Schelling Points" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "structure/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :structure:")
-     :unnarrowed t)
-
-   '("p" "person" plain
-     "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "person/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :person:")
-     :unnarrowed t)
-
-   '("W" "writers" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "writers/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :writers:person:")
-     :unnarrowed t)
-
-   '("k" "kanban" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "kanban/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :kanban:")
-     :unnarrowed t)
-
-   '("L" "Learning, lectures, and classes" plain
-     "- Links ::\n- Source ::\n\n* ${title}\n%?"
-     :target (file+head "lectures/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :learning:")
-     :unnarrowed t)
-
-   '("z" "CRM (custom path)" plain
-     "- Links ::\nSource ::\n\n\n* ${title}\n%?"
+(defconst jay/org-roam-default-template-specs
+  '(("A" "accountability and task capture" "accountability" "accountability")
+    ("a" "article notes or books and articles" "literature-notes" "literaturenote")
+    ("H" "Plans" "project" "project")
+    ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
+    ("I" "intelligence" "AI" "intelligence"
+     :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
+    ("l" "logistics of OpenAI" "logistics" "library")
+    ("c" "Conversation" "conversations" "conversation")
+    ("d" "documents and deliverables" "documents" "document")
+    ("D" "Developing, vibecoding" "vibecoding" "document")
+    ("E" "Exercise" "exercise" "exercise")
+    ("f" "finances and housekeeping" "finances" "finances")
+    ("M" "Momentum --- 2025 job hunt" "job-hunt-2025" "momentum")
+    ("O" "Outline / Structure / Schelling Points" "structure" "structure")
+    ("p" "person" "person" "person"
+     :body "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?")
+    ("W" "writers" "writers" "writers"
+     :filetags ":writers:person:")
+    ("k" "kanban" "kanban" "kanban")
+    ("L" "Learning, lectures, and classes" "lectures" "learning")
+    ("z" "CRM (custom path)" "" "crm"
+     :body "- Links ::\nSource ::\n\n\n* ${title}\n%?"
      :target (file+head (lambda ()
                           (concat (read-string "Enter file path: ")
                                   "/%<%Y%m%d%H%M%S>-${slug}.org"))
-                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :crm:")
-     :unnarrowed t)
+                        "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :crm:")))
+  "Data-driven specs for the default profile's bespoke templates.")
 
-   ;; Factory-generated templates
-   (jay/roam-template "B" "Business (Socratic AI)" "business-socratic" "project")
-   (jay/roam-template "b" "books" "books" "books")
-   (jay/roam-template "C" "corpus (transcripts and examples)" "corpus" "corpus")
-   (jay/roam-template "e" "emacs" "emacs" "emacs")
-   (jay/roam-template "m" "mantras and intentions" "mantras" "mantras")
-   (jay/roam-template "n" "note" "notes" "note")
-   (jay/roam-template "o" "OpenAI, i.e. work" "notes" "work")
-   (jay/roam-template "P" "photography" "photography" "photography")
-   (jay/roam-template "q" "quotes about AI" "quotes" "quote")
-   (jay/roam-template "S" "Socratic AI" "socratic" "socratic")
-   (jay/roam-template "s" "Storytelling and Writing" "storytelling" "storytelling")
-   (jay/roam-template "T" "Travel" "travel" "travel")
-   (jay/roam-template "w" "lectures and public talks" "lectures" "lectures")
-   (jay/roam-template "X" "exemplars" "exemplars" "exemplars")
-   (jay/roam-template "x" "cuts" "cuts" "cuts")
-   (jay/roam-template "$" "consumerist" "consumerist" "memoir"))
+(defconst jay/org-roam-default-factory-template-specs
+  '(("B" "Business (Socratic AI)" "business-socratic" "project")
+    ("b" "books" "books" "books")
+    ("C" "corpus (transcripts and examples)" "corpus" "corpus")
+    ("e" "emacs" "emacs" "emacs")
+    ("m" "mantras and intentions" "mantras" "mantras")
+    ("n" "note" "notes" "note")
+    ("o" "OpenAI, i.e. work" "notes" "work")
+    ("P" "photography" "photography" "photography")
+    ("q" "quotes about AI" "quotes" "quote")
+    ("S" "Socratic AI" "socratic" "socratic")
+    ("s" "Storytelling and Writing" "storytelling" "storytelling")
+    ("T" "Travel" "travel" "travel")
+    ("w" "lectures and public talks" "lectures" "lectures")
+    ("X" "exemplars" "exemplars" "exemplars")
+    ("x" "cuts" "cuts" "cuts")
+    ("$" "consumerist" "consumerist" "memoir"))
+  "Factory-style template specs that also lean on `jay/roam-template`.")
+
+;; DEFAULT PROFILE TEMPLATES (Your current work setup)
+(defvar jay/org-roam-capture-templates-default
+  (append
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-template-specs)
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-factory-template-specs))
   "Capture templates for the default (work) profile.")
 
 ;; MY-LIFE PROFILE TEMPLATES (Personal/life notes)
