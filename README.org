@@ -31,6 +31,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 *** Org-Mode Extensions
 - [[file:org-roam-config.el][org-roam-config.el]] - Knowledge management with org-roam
+- =org-roam-ui= - Interactive graph visualization for org-roam (keybinding: =s-u u=)
 - [[file:org-yt.el][org-yt.el]] - YouTube link support
 - [[file:org-visual-style.el][org-visual-style.el]] - Visual enhancements for org-mode
 

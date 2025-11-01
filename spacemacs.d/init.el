@@ -149,7 +149,7 @@ This function should only modify configuration layer settings."
                                       org-mac-link
                                       ;; org-pomodoro
                                       org-roam
-                                      ;; org-roam-ui
+                                      org-roam-ui
                                       ;; org-superstar
                                       ox-clip
                                       ;; ox-gfm

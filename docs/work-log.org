@@ -2,6 +2,39 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-11-01: Enable org-roam-ui for interactive graph visualization
+
+** Summary
+- Enabled org-roam-ui package in Spacemacs configuration
+- Added keybinding (s-u u) to toggle org-roam-ui mode
+- Configuration already present in shared-functions.org with optimal settings
+
+** Changes Made
+
+*** Package Installation
+- Uncommented =org-roam-ui= in =spacemacs.d/init.el:152=
+- Package will be installed automatically on next Emacs restart
+
+*** Keybinding
+- Added =s-u u= keybinding in =org-roam-config.el:154=
+- Follows existing org-roam keybinding pattern (s-u prefix)
+
+*** Configuration
+Existing configuration in =shared-functions.org:5437-5449= includes:
+- =org-roam-ui-sync-theme t= - Syncs Emacs theme with web UI
+- =org-roam-ui-follow t= - UI follows current node
+- =org-roam-ui-update-on-save t= - Updates graph on save
+- =org-roam-ui-open-on-start t= - Auto-opens browser
+
+*** Documentation
+- Updated =README.org= to list org-roam-ui in Org-Mode Extensions section
+
+** Usage
+1. Restart Emacs to install org-roam-ui
+2. Press =s-u u= or run =M-x org-roam-ui-mode=
+3. Browser opens at =http://127.0.0.1:35901= with interactive graph
+4. Features: 3D/2D visualization, tag filtering, node navigation, theme syncing
+
 * 2025-10-30: Refactor org-roam templates to data-driven architecture
 
 ** Summary

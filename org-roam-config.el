@@ -148,7 +148,10 @@
   (global-set-key (kbd "s-/ sn") #'org-roam-search-nodes)
 
   ;; ­— misc —
-  (global-set-key (kbd ":") #'insert-colon))
+  (global-set-key (kbd ":") #'insert-colon)
+
+  ;; ­— org-roam-ui —
+  (global-set-key (kbd "s-u u") #'org-roam-ui-mode))
 
 
 
