@@ -9720,6 +9720,22 @@ After evaluating your init-file you can use links analog to the example:
                       :preserve-folder-structure t))))
 #+end_src
 
+** reload ox-astro
+#+begin_src emacs-lisp
+(defun ox-astro-reload ()
+  "Fully reload ox-astro and all its modules without restarting Emacs."
+  (interactive)
+  (unload-feature 'ox-astro t)
+  (unload-feature 'ox-astro-table-handlers t)
+  (unload-feature 'ox-astro-image-handlers t)
+  (unload-feature 'ox-astro-handlers t)
+  (unload-feature 'ox-astro-helpers t)
+  (unload-feature 'ox-astro-metadata t)
+  (unload-feature 'ox-astro-config t)
+  (load-file "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro.el")
+  (message "ox-astro reloaded successfully"))
+#+end_src
+
 
 
 * org-roam multiple databases
