@@ -14,6 +14,7 @@
 - 2025-09-24 regression fix: emoji joiner preservation inside `replace-weird-spaces`.
 - 2025-10-05 critical fix: markdown bold `**text**` → org bold `*text*` conversion order and heading detection.
 - 2025-10-10 critical fix: `pasteboard--demote-headings-in-string` regex pattern fixed to only match actual headings (with space after stars), not bold text at line start.
+- 2025-11-02 improvement: added dedicated Markdown table separator tightening and defaulted `fundamental-mode` pastes to verbatim.
 
 * Current Implementation Details
 
@@ -26,6 +27,7 @@
   5. `convert-markdown-blockquotes-to-org`
   6. `convert-markdown-links-to-org-mode`
   7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
+  8. Markdown table cleanup: `pasteboard--tighten-markdown-table-separators`
 
 ** Adaptive Paste Decision Tree
 `pasteboard-paste-adaptive` chooses paste behavior based on context (line 566-613):
@@ -41,6 +43,7 @@ Paste without cleaning in:
 - Emacs Lisp mode (`emacs-lisp-mode`)
 - Markdown mode (`markdown-mode`, `gfm-mode`)
 - Web mode (`web-mode`)
+- Fundamental mode (`fundamental-mode`) for scratch/plain buffers
 
 *** 3. Text Modes → Clean + Optional Demotion
 In org-mode (without `org-config-files-local-mode`) or `text-mode`:
@@ -57,6 +60,7 @@ For unmatched modes, inspect characters around point:
 
 ** Other Implementation Notes
 - `normalize-dashes` (in `shared-functions`) now skips lines that look like Markdown tables.
+- `pasteboard--tighten-markdown-table-separators` collapses separator rows (`| --- |`) into Org-compliant `|---|` before dash normalization runs.
 - Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` to remove carriage returns.
 
 * Org-Roam Specific Behavior
