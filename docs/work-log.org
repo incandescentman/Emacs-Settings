@@ -2,6 +2,22 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-11-02: Make adaptive paste emit Org-friendly Markdown tables
+
+** Summary
+- Collapsed Markdown separator rows (`| --- |`) into Org-compliant form while leaving data rows untouched
+- Ensured em-dash / triple-hyphen normalization keeps behaving the same as before
+- Started version-controlling `pasteboard-copy-and-paste-functions.el` now that it is the authoritative source
+
+** Changes Made
+- Added `pasteboard--tighten-markdown-table-separators` and wired it into the Markdown-cleaning branch of `pasteboard--clean-string` (`pasteboard-copy-and-paste-functions.el`)
+- Updated `.gitignore` so `pasteboard-copy-and-paste-functions.el` is tracked; staged the file with the new helper
+- Verified the sample snippet pastes as expected: the heading demotes, separator row tightens to `|---|`, and content rows stay spaced
+
+** Verification
+- `emacs --batch pasteboard-copy-and-paste-functions.el --eval '(check-parens)'`
+- `emacs --batch --eval '(load-file "pasteboard-copy-and-paste-functions.el")' --eval '(pasteboard--clean-string "<markdown table>")'`
+
 * 2025-11-01: Enable org-roam-ui for interactive graph visualization
 
 ** Summary
