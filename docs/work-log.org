@@ -8,9 +8,11 @@
 - Collapsed Markdown separator rows (`| --- |`) into Org-compliant form while leaving data rows untouched
 - Ensured em-dash / triple-hyphen normalization keeps behaving the same as before
 - Started version-controlling `pasteboard-copy-and-paste-functions.el` now that it is the authoritative source
+- Defaulted `fundamental-mode` pastes to verbatim so plain buffers skip the cleaner
 
 ** Changes Made
 - Added `pasteboard--tighten-markdown-table-separators` and wired it into the Markdown-cleaning branch of `pasteboard--clean-string` (`pasteboard-copy-and-paste-functions.el`)
+- Expanded the verbatim-paste branch to include `fundamental-mode`, ensuring bare buffers bypass cleaners
 - Updated `.gitignore` so `pasteboard-copy-and-paste-functions.el` is tracked; staged the file with the new helper
 - Verified the sample snippet pastes as expected: the heading demotes, separator row tightens to `|---|`, and content rows stay spaced
 
