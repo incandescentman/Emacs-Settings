@@ -45,6 +45,28 @@
 (defalias 'rg-project-directory 'rg-dwim-project-dir)
 (defalias 'rg-current-file 'rg-dwim-current-file)
 
+(with-eval-after-load 'consult-org-roam-buffer
+  (require 'cl-lib)
+  (defun consult-org-roam-buffer-setup ()
+    "Setup consult-org-roam-buffer with a safer insertion strategy.
+The upstream helper assumes `consult--source-buffer' already lives in
+`consult-buffer-sources'.  Spacemacs tweaks that list during startup,
+so we guard against a missing entry before trying to splice in the
+Org-roam source."
+    (consult-org-roam-buffer-teardown)
+    (consult-org-roam-buffer--customize-source-buffer t)
+    (if consult-org-roam-buffer-after-buffers
+        (let ((idx (cl-position 'consult--source-buffer consult-buffer-sources
+                                :test #'equal)))
+          (if (numberp idx)
+              (let* ((cell (nthcdr idx consult-buffer-sources))
+                     (tail (cdr cell)))
+                (setcdr cell (cons 'org-roam-buffer-source tail)))
+            (add-to-list 'consult-buffer-sources
+                         'org-roam-buffer-source 'append)))
+      (add-to-list 'consult-buffer-sources
+                   'org-roam-buffer-source 'append))))
+
  (use-package consult-org-roam
   :ensure t
   :after org-roam
@@ -59,7 +81,7 @@
   (consult-org-roam-buffer-narrow-key ?r)
   ;; Display org-roam buffers right after non-org-roam buffers
   ;; in consult-buffer (and not down at the bottom)
-  (consult-org-roam-buffer-after-buffers t)
+ (consult-org-roam-buffer-after-buffers t)
   :config
   ;; Eventually suppress previewing for certain functions
   (consult-customize
@@ -69,7 +91,7 @@
   ;; Define some convenient keybindings as an addition
   ;; ("C-c n e" . consult-org-roam-file-find)
   ;; ("C-c n b" . consult-org-roam-backlinks)
-  ;; ("C-c n l" . consult-org-roam-forward-links)
+ ;; ("C-c n l" . consult-org-roam-forward-links)
   ;; ("C-c n r" . consult-org-roam-search)
 )
 
