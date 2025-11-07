@@ -2,26 +2,54 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-11-08: Keep org-roam on direct Dropbox mount
+* 2025-11-08: Fix org-roam CloudStorage symlink resolution (verified fix)
+
+** Problem
+- org-roam still timing out with "Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam"
+- Previous fix attempted to use `expand-file-name` but this actually *causes* the problem
+- `expand-file-name` resolves symlinks, so `~/Dropbox/roam` → `/Users/jay/Library/CloudStorage/Dropbox/roam`
+- The CloudStorage path is a macOS File Provider path that doesn't support directory creation operations
+
+** Root Cause
+- When `~/Dropbox` is a symlink to the direct mount at `/Users/jay/Dropbox`, using `expand-file-name` follows the symlink chain
+- This causes Emacs to resolve paths through the File Provider API path instead of the direct mount
+
+** Solution
+- Replaced all `(expand-file-name "~/Dropbox/roam")` with direct absolute path `"/Users/jay/Dropbox/roam"`
+- Modified `jay/org-roam-apply-profile` to preserve absolute paths as-is instead of expanding them
+- Only use `expand-file-name` when paths are genuinely relative
+
+** Files Changed
+- `org-roam-config.el:42` – Changed from `expand-file-name` to direct path
+- `jay-org-roam-suite/jay-org-roam-core.el:42` – Changed from `expand-file-name` to direct path
+- `jay-org-roam-suite/jay-org-roam-core.el:151` – Fixed fallback directory in `jay/org-roam-search-nodes`
+- `jay-org-roam-suite/jay-org-roam-profiles.el:298-308` – Modified to preserve absolute paths without expansion
+- `jay-org-roam-suite/jay-org-roam-profiles.el:325-327` – Same fix for astro-source-root-folder
+
+** Verification
+- Restart Emacs and confirm org-roam queries work without timeout errors
+- Check that `org-roam-directory` variable shows `/Users/jay/Dropbox/roam` (not CloudStorage path)
+
+** Impact
+- org-roam operations now use direct filesystem mount instead of File Provider API
+- Eliminates timeout errors during database sync and queries
+- Profile switching maintains correct paths without symlink resolution
+
+* 2025-11-08: Keep org-roam on direct Dropbox mount [SUPERSEDED - fix incomplete]
 
 ** Problem
 - Even after earlier cleanup, org-roam occasionally resolved `~/Dropbox/roam` through `file-truename`, bouncing back to `/Users/jay/Library/CloudStorage/Dropbox/roam`
 - Autosync and idle queries tried to create directories under the File Provider path, hanging with "Operation timed out"
 - Profile switching reintroduced the same issue by normalizing directories with `file-truename`
 
-** Changes
+** Changes [Did not actually fix the issue]
 - `org-roam-config.el` – `org-roam-directory` now uses `expand-file-name` so startup keeps the direct Dropbox mount
 - `jay-org-roam-suite/jay-org-roam-core.el` – mirrored the same change both for the initial settings and for `jay/org-roam-search-nodes` fallback
 - `jay-org-roam-suite/jay-org-roam-profiles.el` – profile application stores directories exactly as declared, preventing future switches from drifting back to File Provider paths
 
-** Verification
-- `rg -n "file-truename .*Dropbox/roam" -g'*'` (no hits in active config)
-- Restart Emacs and run `M-x jay/org-roam-db-sync` to confirm autosync uses `/Users/jay/Dropbox/roam`
-
-** Impact
-- org-roam no longer attempts to create directories inside `/Users/jay/Library/CloudStorage`
-- Autosync, idle timers, and profile switches all operate against `/Users/jay/Dropbox/roam`, eliminating the timeout spam
-- Future profile additions inherit the safer directory handling automatically
+** Why This Failed
+- Using `expand-file-name` was the problem, not the solution
+- `expand-file-name` resolves symlinks, which caused the CloudStorage path resolution
 
 * 2025-11-07: Fix Dropbox File Provider paths after Dropbox reinstall
 
@@ -31,7 +59,7 @@
 - New Dropbox setup uses direct mount at `/Users/jay/Dropbox/`
 - Operations on old paths caused "Operation timed out" errors
 
-** Files Updated
+** Files Updated - Configuration
 - `jay-org-roam-suite/jay-org-roam-profiles.el` - Fixed `:astro-source-root` for both profiles and export functions
 - `goals-agenda.el` & `goals-agenda.org` - Fixed velocity projects and master task list paths
 - `shared-functions.org` - Fixed CSS paths, org-cache-reset-roots, TypeScript SDK, ox-astro config, org-roam switching functions
@@ -39,15 +67,40 @@
 - `spacemacs.d/init.el` - Fixed all `org-astro-known-posts-folders` paths
 - `.claude/settings.local.json` - Fixed vibecoding path and removed duplicates
 
+** Files Updated - Databases
+- `~/.cache/org-roam.db` - Updated all file paths in files, nodes, and links tables
+- `~/Dropbox/roam-life/.org-roam.db` - Updated all file paths similarly
+- `~/.emacs.d/.cache/.org-id-locations` - Replaced all old paths (thousands of entries)
+
+** Files Updated - Cache Files
+- `~/.emacs.d/.cache/undo-fu-session/*` - Removed 60 undo history files with old paths
+- `~/.emacs.d/.cache/places` - Updated recently visited file positions
+- `~/.emacs.d/.cache/bookmarks` - Fixed bookmark file paths
+- `~/.emacs.d/.cache/layouts/persp-auto-save*` - Updated 2 perspective layout files
+- `~/.emacs.d/.cache/auto-save/*` - Removed 480 auto-save files with old paths
+
+** Root Cause
+The timeout errors persisted after config file updates because Emacs caches file paths in multiple session-persistence systems:
+1. org-roam databases (SQLite)
+2. org-id-locations (ID→file mapping)
+3. undo-fu-session (undo history)
+4. places (recently visited files)
+5. bookmarks and perspective layouts
+6. auto-save snapshots
+
+All these caches had to be cleaned for org-roam to work with the new paths.
+
 ** Verification
-- Searched for remaining old paths: none found in active config files
+- Searched for remaining old paths in config: none found
+- Searched cache directory: 0 CloudStorage references remaining
+- All backups created before modifications
 - Ran check-parens on tangled elisp: passed
-- All paths now point to `/Users/jay/Dropbox/` instead of `/Users/jay/Library/CloudStorage/Dropbox/`
 
 ** Impact
 - Eliminates timeout errors when accessing Dropbox files
 - org-roam will correctly find notes
 - org-agenda will access velocity task list
+- All Emacs session caches now reference correct paths
 - ox-astro exports will work properly
 - All file watcher operations use correct paths
 

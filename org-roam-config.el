@@ -38,7 +38,8 @@
 
   ;; ---------- user variables --------------------------------------
   :custom
-  (org-roam-directory             (expand-file-name "~/Dropbox/roam"))
+  ;; Use direct path to avoid resolving Dropbox symlink to CloudStorage path
+  (org-roam-directory             "/Users/jay/Dropbox/roam")
   (org-roam-database-connector    'sqlite-builtin)
   (org-roam-directory-exclude-regexp "^documents/")
   (org-roam-node-display-template

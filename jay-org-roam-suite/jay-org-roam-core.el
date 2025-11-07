@@ -38,7 +38,8 @@
 ;; Core org-roam settings (set before package load) ----------------------------
 (with-eval-after-load 'org
   (setq org-roam-db-autosync-mode nil
-        org-roam-directory (expand-file-name "~/Dropbox/roam")
+        ;; Use direct path to avoid resolving Dropbox symlink to CloudStorage
+        org-roam-directory "/Users/jay/Dropbox/roam"
         org-roam-database-connector 'sqlite-builtin
         org-roam-directory-exclude-regexp "^documents/"
         org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag))
@@ -147,7 +148,7 @@
 
 (defun jay/org-roam-search-nodes ()
   (interactive)
-  (let ((dir (if (boundp 'org-roam-directory) org-roam-directory (expand-file-name "~/Dropbox/roam"))))
+  (let ((dir (if (boundp 'org-roam-directory) org-roam-directory "/Users/jay/Dropbox/roam")))
     (cond ((fboundp 'consult-ripgrep) (consult-ripgrep dir))
           ((fboundp 'counsel-rg) (counsel-rg nil dir nil nil))
           (t (user-error "Need consult or counsel for ripgrep")))))

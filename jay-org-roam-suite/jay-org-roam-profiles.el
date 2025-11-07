@@ -38,7 +38,7 @@
 (defvar jay/org-roam-profiles
   '((default
      :name "High Velocity"
-     :directory "~/Dropbox/roam"
+     :directory "/Users/jay/Dropbox/roam"
      :db-location nil  ; use default from xdg-cache-home
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-default
@@ -47,8 +47,8 @@
 
     (my-life
      :name "My Life (Personal)"
-     :directory "~/Dropbox/roam-life"
-     :db-location "~/Dropbox/roam-life/.org-roam.db"
+     :directory "/Users/jay/Dropbox/roam-life"
+     :db-location "/Users/jay/Dropbox/roam-life/.org-roam.db"
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
      :dailies-capture-templates jay/org-roam-dailies-template-default
@@ -295,10 +295,16 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
       (jay/org-roam-close-database))
 
     ;; Update org-roam configuration
-    (setq org-roam-directory (expand-file-name directory)
+    ;; Use directory path as-is to avoid resolving Dropbox symlink to CloudStorage path
+    (setq org-roam-directory (file-name-as-directory
+                               (if (file-name-absolute-p directory)
+                                   directory
+                                 (expand-file-name directory)))
           org-roam-dailies-directory dailies-dir
           org-roam-db-location (if db-location
-                                   (expand-file-name db-location)
+                                   (if (file-name-absolute-p db-location)
+                                       db-location
+                                     (expand-file-name db-location))
                                    (expand-file-name "org-roam.db" (xdg-cache-home)))
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
@@ -316,7 +322,9 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
     ;; Keep ox-astro exports aligned with the active profile's notes root.
     (let ((astro-root (plist-get profile :astro-source-root)))
       (when astro-root
-        (setq org-astro-source-root-folder (expand-file-name astro-root))))
+        (setq org-astro-source-root-folder (if (file-name-absolute-p astro-root)
+                                               astro-root
+                                             (expand-file-name astro-root)))))
 
     ;; Ensure the directory exists
     (unless (file-directory-p org-roam-directory)

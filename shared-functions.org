@@ -9744,8 +9744,12 @@ After evaluating your init-file you can use links analog to the example:
 ;; --- Org-roam contexts --- --- -- --- -- --- -- --- -- --- -- --- -- --- --
 
 (defun jay/org-roam--use (dir)
-  "Switch org-roam to DIR and resync DB."
-  (setq org-roam-directory (file-truename dir))
+  "Switch org-roam to DIR and resync DB.
+Note: DIR should be an absolute path to avoid symlink resolution issues."
+  ;; Use directory as-is if absolute, otherwise expand relative paths
+  (setq org-roam-directory (if (file-name-absolute-p dir)
+                               (file-name-as-directory dir)
+                             (file-name-as-directory (expand-file-name dir))))
   (setq org-roam-db-location (expand-file-name "org-roam.db" org-roam-directory))
   ;; Optional per-context dailies folder:
   ;; (setq org-roam-dailies-directory "daily/")
