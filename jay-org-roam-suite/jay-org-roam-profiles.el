@@ -295,7 +295,7 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
       (jay/org-roam-close-database))
 
     ;; Update org-roam configuration
-    (setq org-roam-directory (file-truename (expand-file-name directory))
+    (setq org-roam-directory (expand-file-name directory)
           org-roam-dailies-directory dailies-dir
           org-roam-db-location (if db-location
                                    (expand-file-name db-location)

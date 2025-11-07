@@ -38,7 +38,7 @@
 
   ;; ---------- user variables --------------------------------------
   :custom
-  (org-roam-directory             (file-truename "~/Dropbox/roam"))
+  (org-roam-directory             (expand-file-name "~/Dropbox/roam"))
   (org-roam-database-connector    'sqlite-builtin)
   (org-roam-directory-exclude-regexp "^documents/")
   (org-roam-node-display-template

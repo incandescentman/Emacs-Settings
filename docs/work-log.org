@@ -2,6 +2,27 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-11-08: Keep org-roam on direct Dropbox mount
+
+** Problem
+- Even after earlier cleanup, org-roam occasionally resolved `~/Dropbox/roam` through `file-truename`, bouncing back to `/Users/jay/Library/CloudStorage/Dropbox/roam`
+- Autosync and idle queries tried to create directories under the File Provider path, hanging with "Operation timed out"
+- Profile switching reintroduced the same issue by normalizing directories with `file-truename`
+
+** Changes
+- `org-roam-config.el` – `org-roam-directory` now uses `expand-file-name` so startup keeps the direct Dropbox mount
+- `jay-org-roam-suite/jay-org-roam-core.el` – mirrored the same change both for the initial settings and for `jay/org-roam-search-nodes` fallback
+- `jay-org-roam-suite/jay-org-roam-profiles.el` – profile application stores directories exactly as declared, preventing future switches from drifting back to File Provider paths
+
+** Verification
+- `rg -n "file-truename .*Dropbox/roam" -g'*'` (no hits in active config)
+- Restart Emacs and run `M-x jay/org-roam-db-sync` to confirm autosync uses `/Users/jay/Dropbox/roam`
+
+** Impact
+- org-roam no longer attempts to create directories inside `/Users/jay/Library/CloudStorage`
+- Autosync, idle timers, and profile switches all operate against `/Users/jay/Dropbox/roam`, eliminating the timeout spam
+- Future profile additions inherit the safer directory handling automatically
+
 * 2025-11-07: Fix Dropbox File Provider paths after Dropbox reinstall
 
 ** Problem
