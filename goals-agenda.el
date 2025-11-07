@@ -3,11 +3,11 @@
 ;; ============================================================================
 
 ;; First, set up the projects directory
-(setq jay-projects-dir "~/Library/CloudStorage/Dropbox/github/velocity/projects/")
+(setq jay-projects-dir "~/Dropbox/github/velocity/projects/")
 
 ;; Make sure org-agenda knows to look in the projects directory
-(setq org-agenda-files 
-      (list "~/Library/CloudStorage/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
+(setq org-agenda-files
+      (list "~/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
             jay-projects-dir))
 
 ;; Custom agenda command: Daily Action Menu

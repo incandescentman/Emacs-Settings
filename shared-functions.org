@@ -4568,12 +4568,12 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/web-design/custom-css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman/css/neocortex.css"
-"/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/bold.css"
-"/Users/jay/Library/CloudStorage/Dropbox/web-design/custom-css/chatgpt-images.css"
+"/Users/jay/Dropbox/github/incandescentman.github.io/css/bold.css"
+"/Users/jay/Dropbox/web-design/custom-css/chatgpt-images.css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
     "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
     "/Users/jay/Dropbox/github/org-html-themes/src/bigblow_theme/css/bigblow.css"
-"/Users/jay/Library/CloudStorage/Dropbox/github/incandescentman.github.io/css/iphone.css"
+"/Users/jay/Dropbox/github/incandescentman.github.io/css/iphone.css"
     "none")
   "List of CSS file options for Org HTML export.")
 
@@ -8864,8 +8864,8 @@ It returns a list, so you can later jump to the first culprit:
 
 (defvar jay/org-cache-reset-roots
   (mapcar #'file-truename
-          '("~/Library/CloudStorage/Dropbox/roam/"
-            "~/Library/CloudStorage/Dropbox/github/roam-life/"))
+          '("~/Dropbox/roam/"
+            "~/Dropbox/github/roam-life/"))
   "Roots whose Org buffers should force-refresh the element cache on focus.")
 
 (defun jay/org--buffer-needs-cache-reset-p ()
@@ -9290,7 +9290,7 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
       :initializationOptions
       (:typescript
        (:tsdk ,(expand-file-name
-                "/Users/jay/Library/CloudStorage/Dropbox/github/socratic-astro/node_modules/typescript/lib"))))))
+                "/Users/jay/Dropbox/github/socratic-astro/node_modules/typescript/lib"))))))
 
   ;; Start the LS automatically when you open an .astro file
   (add-hook 'astro-mode-hook #'eglot-ensure))
@@ -9698,25 +9698,25 @@ After evaluating your init-file you can use links analog to the example:
 
 * org astro
 #+begin_src emacs-lisp
-(add-to-list 'load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/")
+(add-to-list 'load-path "/Users/jay/Dropbox/github/ox-astro/")
 (use-package ox-astro
-  :load-path "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/"
+  :load-path "/Users/jay/Dropbox/github/ox-astro/"
   :after ox
   :ensure nil)
 (setq org-astro-debug-images t)
 ;; Configure source root folder for ox-astro
 (setq org-astro-source-root-folder
-      "/Users/jay/Library/CloudStorage/Dropbox/roam")
+      "/Users/jay/Dropbox/roam")
 ;; Configure known posts folders with folder structure preservation
 (setq org-astro-known-posts-folders
       '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
-        ("jaydocs" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
-        ("socraticai" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
-        ("astro-roam" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/astro-roam/src/content"))
-        ("roam-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/life-web/src/content/notes/"
+        ("jaydocs" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
+        ("socraticai" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
+        ("astro-roam" . (:path "/Users/jay/Dropbox/github/astro-roam/src/content"))
+        ("roam-life" . (:path "/Users/jay/Dropbox/github/life-web/src/content/notes/"
                         :preserve-folder-structure t))
-        ("my-life" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-life/src/content/notes"))
-        ("my-mind" . (:path "/Users/jay/Library/CloudStorage/Dropbox/github/me/my-mind/src/content"
+        ("my-life" . (:path "/Users/jay/Dropbox/github/me/my-life/src/content/notes"))
+        ("my-mind" . (:path "/Users/jay/Dropbox/github/me/my-mind/src/content"
                       :preserve-folder-structure t))))
 #+end_src
 
@@ -9732,7 +9732,7 @@ After evaluating your init-file you can use links analog to the example:
   (unload-feature 'ox-astro-helpers t)
   (unload-feature 'ox-astro-metadata t)
   (unload-feature 'ox-astro-config t)
-  (load-file "/Users/jay/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro.el")
+  (load-file "/Users/jay/Dropbox/github/ox-astro/ox-astro.el")
   (message "ox-astro reloaded successfully"))
 #+end_src
 
@@ -9755,12 +9755,12 @@ After evaluating your init-file you can use links analog to the example:
 (defun jay/org-roam-use-main ()
   "Main notes."
   (interactive)
-  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/roam/"))
+  (jay/org-roam--use "/Users/jay/Dropbox/roam/"))
 
 (defun jay/org-roam-use-life ()
   "Life archive."
   (interactive)
-  (jay/org-roam--use "/Users/jay/Library/CloudStorage/Dropbox/github/roam-life/")) 
+  (jay/org-roam--use "/Users/jay/Dropbox/github/roam-life/")) 
 #+end_src
 
 * ox-json

@@ -9,11 +9,11 @@ Add this to your Emacs config (probably `~/.emacs.d/init.el` or wherever you kee
 ;; ============================================================================
 
 ;; First, set up the projects directory
-(setq jay-projects-dir "~/Library/CloudStorage/Dropbox/github/velocity/projects/")
+(setq jay-projects-dir "~/Dropbox/github/velocity/projects/")
 
 ;; Make sure org-agenda knows to look in the projects directory
-(setq org-agenda-files 
-      (list "~/Library/CloudStorage/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
+(setq org-agenda-files
+      (list "~/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
             jay-projects-dir))
 
 ;; Custom agenda command: Daily Action Menu
@@ -141,7 +141,7 @@ SCHEDULED: <2025-10-31 Thu>
 Run this in your terminal:
 
 #+begin_src bash
-mkdir -p ~/Library/CloudStorage/Dropbox/github/velocity/projects
+mkdir -p ~/Dropbox/github/velocity/projects
 #+end_src 
 
 ** Test It Right Now

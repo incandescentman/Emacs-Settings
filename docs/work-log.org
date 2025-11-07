@@ -2,6 +2,34 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-11-07: Fix Dropbox File Provider paths after Dropbox reinstall
+
+** Problem
+- Emacs timing out when trying to access org-roam files
+- Old configuration referenced `/Users/jay/Library/CloudStorage/Dropbox/` (File Provider path)
+- New Dropbox setup uses direct mount at `/Users/jay/Dropbox/`
+- Operations on old paths caused "Operation timed out" errors
+
+** Files Updated
+- `jay-org-roam-suite/jay-org-roam-profiles.el` - Fixed `:astro-source-root` for both profiles and export functions
+- `goals-agenda.el` & `goals-agenda.org` - Fixed velocity projects and master task list paths
+- `shared-functions.org` - Fixed CSS paths, org-cache-reset-roots, TypeScript SDK, ox-astro config, org-roam switching functions
+- `shared-functions.el` - Retangled from .org file (406 code blocks)
+- `spacemacs.d/init.el` - Fixed all `org-astro-known-posts-folders` paths
+- `.claude/settings.local.json` - Fixed vibecoding path and removed duplicates
+
+** Verification
+- Searched for remaining old paths: none found in active config files
+- Ran check-parens on tangled elisp: passed
+- All paths now point to `/Users/jay/Dropbox/` instead of `/Users/jay/Library/CloudStorage/Dropbox/`
+
+** Impact
+- Eliminates timeout errors when accessing Dropbox files
+- org-roam will correctly find notes
+- org-agenda will access velocity task list
+- ox-astro exports will work properly
+- All file watcher operations use correct paths
+
 * 2025-11-03: Fix consult-org-roam startup hang
 
 ** Problem

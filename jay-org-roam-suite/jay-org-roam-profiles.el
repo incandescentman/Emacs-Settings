@@ -43,7 +43,7 @@
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-default
      :dailies-capture-templates jay/org-roam-dailies-template-default
-     :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam")
+     :astro-source-root "/Users/jay/Dropbox/roam")
 
     (my-life
      :name "My Life (Personal)"
@@ -52,7 +52,7 @@
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
      :dailies-capture-templates jay/org-roam-dailies-template-default
-     :astro-source-root "/Users/jay/Library/CloudStorage/Dropbox/roam-life"))
+     :astro-source-root "/Users/jay/Dropbox/roam-life"))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
   :name - Display name for the profile
@@ -487,13 +487,13 @@ Prompts for profile name with completion."
 (defun jay/org-astro-export-from-roam (&optional async subtreep visible-only body-only)
   "Run `org-astro-export-to-mdx' with the main roam tree as source root."
   (interactive)
-  (jay/org-astro--export-with-root "/Users/jay/Library/CloudStorage/Dropbox/roam"
+  (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam"
                                    async subtreep visible-only body-only))
 
 (defun jay/org-astro-export-from-roam-life (&optional async subtreep visible-only body-only)
   "Run `org-astro-export-to-mdx' with the roam-life tree as source root."
   (interactive)
-  (jay/org-astro--export-with-root "/Users/jay/Library/CloudStorage/Dropbox/roam-life"
+  (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam-life"
                                    async subtreep visible-only body-only))
 
 ;; -----------------------------------------------------------------------------
