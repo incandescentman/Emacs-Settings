@@ -2,7 +2,48 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-11-08: Fix org-roam CloudStorage path resolution with early file-truename advice
+* 2025-11-08: Attempting to fix org-roam CloudStorage path with initialization order change [IN PROGRESS]
+
+** Current Problem
+- org-roam still accessing CloudStorage path despite file-truename advice being installed
+- Error: "org-roam skipped /Users/jay/Dropbox/roam/writing/20240531162941-poynter_talk_speech.org (Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam)"
+- File path in error is CORRECT (/Users/jay/Dropbox/roam/...) but directory creation tries to use CloudStorage path
+- DEBUG message "DEBUG profiles: org-roam-directory set to..." never appeared in startup log
+
+** Root Cause Identified (via Gemini analysis)
+- Initialization order problem: org-roam-setup was being called BEFORE jay/org-roam-profiles-init
+- This means org-roam started scanning files before the profile system could set org-roam-directory correctly
+- org-roam was resolving paths to CloudStorage during this early scan
+
+** Changes Made (AWAITING VERIFICATION)
+1. Added early org-roam-directory setting at top of jay-org-roam-core.el (lines 12-15)
+   - Forward declaration of org-roam-directory variable
+   - Explicit setq to "/Users/jay/Dropbox/roam" before anything else runs
+
+2. Swapped initialization order in idle timer (lines 80-91)
+   - OLD ORDER: (require 'ol) → (org-roam-setup) → (jay/org-roam-profiles-init)
+   - NEW ORDER: (require 'ol) → (jay/org-roam-profiles-init) → (org-roam-setup)
+   - This ensures profile system sets org-roam-directory BEFORE org-roam starts scanning
+
+** Files Changed
+- jay-org-roam-suite/jay-org-roam-core.el:12-15 – Added early org-roam-directory setting
+- jay-org-roam-suite/jay-org-roam-core.el:80-91 – Swapped initialization order
+
+** Verification Steps (NOT YET TESTED)
+1. Restart Emacs completely
+2. Check for BOTH debug messages in *Messages* buffer:
+   - "DEBUG core: org-roam-directory set to /Users/jay/Dropbox/roam"
+   - "DEBUG profiles: org-roam-directory set to /Users/jay/Dropbox/roam" (should now appear)
+3. Verify NO CloudStorage timeout errors appear
+4. Check that org-roam-db-sync completes successfully
+
+** Previous Attempts (see below for history)
+- Fixed file-truename advice function signature (wrong-number-of-arguments error)
+- Added file-truename advice early in jay-org-roam-core.el
+- Added diagnostic messaging
+- All previous attempts failed because org-roam-setup was running before profile init
+
+* 2025-11-08: Fix org-roam CloudStorage path resolution with early file-truename advice [FAILED - see above]
 
 ** Problem
 - Previous fixes didn't work because file-truename advice was added too late
@@ -53,6 +94,7 @@
 - Replaced all `(expand-file-name "~/Dropbox/roam")` with direct absolute path `"/Users/jay/Dropbox/roam"`
 - Modified `jay/org-roam-apply-profile` to preserve absolute paths as-is instead of expanding them
 - Only use `expand-file-name` when paths are genuinely relative
+- Added a guard around `make-directory` so any attempt to create folders under `/Users/jay/Library/CloudStorage/Dropbox` is transparently rewritten to `/Users/jay/Dropbox`, preventing org-roam autosync from touching the slow File Provider mount
 
 ** Files Changed
 - `org-roam-config.el:42` – Changed from `expand-file-name` to direct path

@@ -9,6 +9,11 @@
 
 ;;; Code:
 
+;; CRITICAL: Set org-roam-directory FIRST, before anything else
+;; This prevents org-roam from ever seeing the CloudStorage File Provider path
+(defvar org-roam-directory)  ; Forward declaration
+(setq org-roam-directory "/Users/jay/Dropbox/roam")
+
 ;; Prevent file-truename from resolving Dropbox paths to CloudStorage
 ;; MUST be installed before org-roam loads
 (defun jay/prevent-dropbox-cloudstorage-resolution (orig-fn filename &rest args)
@@ -18,11 +23,48 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
            (stringp filename)
            (string-prefix-p "/Users/jay/Dropbox" (expand-file-name filename)))
       ;; Return the path as-is without calling file-truename
-      (expand-file-name filename)
+      (let ((result (expand-file-name filename)))
+        (when init-file-debug
+          (message "jay/prevent-dropbox: intercepted %s -> %s" filename result))
+        result)
     ;; For other paths, call the original function
     (apply orig-fn filename args)))
 
 (advice-add 'file-truename :around #'jay/prevent-dropbox-cloudstorage-resolution)
+
+;; Keep any other filesystem helpers away from the macOS File Provider path.
+(defconst jay/dropbox-direct-root "/Users/jay/Dropbox"
+  "Direct filesystem mount for Dropbox.")
+
+(defconst jay/dropbox-cloudstorage-root "/Users/jay/Library/CloudStorage/Dropbox"
+  "macOS File Provider path for Dropbox that times out when accessed from Emacs.")
+
+(defun jay/dropbox--rewrite-cloudstorage-path (path)
+  "Return PATH rewritten to the direct Dropbox mount when needed."
+  (let ((expanded (and path (expand-file-name path))))
+    (if (and expanded
+             (string-prefix-p jay/dropbox-cloudstorage-root expanded))
+        (concat jay/dropbox-direct-root
+                (substring expanded (length jay/dropbox-cloudstorage-root)))
+      expanded)))
+
+(defun jay/dropbox--make-directory-wrapper (orig-fn directory &rest args)
+  "Reroute `make-directory' away from iCloud/Dropbox File Provider paths."
+  (let* ((expanded (and directory (expand-file-name directory)))
+         (rewritten (jay/dropbox--rewrite-cloudstorage-path expanded)))
+    (condition-case err
+        (apply orig-fn rewritten args)
+      (file-error
+       (if (and (not (equal expanded rewritten))
+                (file-directory-p rewritten))
+           ;; Directory already exists via the direct mount—treat as success.
+           nil
+         (signal (car err) (cdr err)))))))
+
+(advice-add 'make-directory :around #'jay/dropbox--make-directory-wrapper)
+
+;; Set org-roam-directory directly here, before any profile loading
+(setq org-roam-directory "/Users/jay/Dropbox/roam")
 
 ;; Optional local fixes (loaded only if present)
 (when load-file-name
@@ -72,10 +114,11 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
      (condition-case err
          (jay/with-org-roam
           (require 'ol)
-          (org-roam-setup)
-          ;; Initialize profile system and load saved profile
-          ;; (profile init handles its own sync when needed)
-          (jay/org-roam-profiles-init))
+          ;; Initialize profile system and load saved profile FIRST
+          ;; This ensures org-roam-directory is set correctly before org-roam-setup
+          (jay/org-roam-profiles-init)
+          ;; Now setup org-roam with the correct directory
+          (org-roam-setup))
        (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
   (run-with-idle-timer
