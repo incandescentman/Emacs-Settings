@@ -52,6 +52,20 @@
 
   ;; ---------- postpone the heavy stuff ----------------------------
   :config
+  ;; Prevent file-truename from resolving /Users/jay/Dropbox to CloudStorage path
+  (defun my/prevent-dropbox-cloudstorage-resolution (orig-fn filename)
+    "Prevent file-truename from resolving Dropbox paths to CloudStorage.
+If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
+    (if (and filename
+             (stringp filename)
+             (string-prefix-p "/Users/jay/Dropbox" (expand-file-name filename)))
+        ;; Return the path as-is without calling file-truename
+        (expand-file-name filename)
+      ;; For other paths, call the original function
+      (funcall orig-fn filename)))
+
+  (advice-add 'file-truename :around #'my/prevent-dropbox-cloudstorage-resolution)
+
   ;; Load database fixes
   (load (expand-file-name "org-roam-db-fix.el"
                           (file-name-directory load-file-name)) t)
