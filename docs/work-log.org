@@ -2,7 +2,42 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
-* 2025-11-08: Fix org-roam CloudStorage symlink resolution (verified fix)
+* 2025-11-08: Fix org-roam CloudStorage path resolution with early file-truename advice
+
+** Problem
+- Previous fixes didn't work because file-truename advice was added too late
+- org-roam-config.el had advice in :config section, which runs AFTER org-roam loads
+- By that time, org-roam had already resolved paths to CloudStorage during initialization
+- Error persisted: "Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam"
+
+** Root Cause
+- org-roam internally calls file-truename on paths during initialization
+- Advice was being installed after org-roam was already loaded and had resolved paths
+- Need to install advice BEFORE org-roam loads
+
+** Solution
+- Added file-truename advice at the very beginning of jay-org-roam-core.el (lines 12-25)
+- Advice is now installed when the module loads, BEFORE org-roam initialization
+- Function: jay/prevent-dropbox-cloudstorage-resolution
+- Intercepts all file-truename calls for /Users/jay/Dropbox paths
+- Returns the path as-is without resolution to CloudStorage
+
+** Files Changed
+- jay-org-roam-suite/jay-org-roam-core.el:12-25 – Added file-truename advice at top of file
+
+** Verification Steps
+1. Restart Emacs completely
+2. Watch Messages buffer for any CloudStorage path errors
+3. Check org-roam-directory variable value
+4. Verify org-roam-db-sync completes without timeout errors
+
+** Technical Details
+- Advice function checks if path starts with /Users/jay/Dropbox
+- If yes, returns expand-file-name without calling file-truename
+- If no, calls original file-truename function
+- This prevents symlink resolution to CloudStorage while allowing normal operation for other paths
+
+* 2025-11-08: Fix org-roam CloudStorage symlink resolution [SUPERSEDED - advice added too late]
 
 ** Problem
 - org-roam still timing out with "Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam"
