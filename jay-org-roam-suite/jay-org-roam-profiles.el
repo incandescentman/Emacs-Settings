@@ -38,7 +38,7 @@
 (defvar jay/org-roam-profiles
   '((default
      :name "High Velocity"
-     :directory "/Users/jay/Dropbox/roam"
+     :directory "~/Dropbox/roam"
      :db-location nil  ; use default from xdg-cache-home
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-default
@@ -47,8 +47,8 @@
 
     (my-life
      :name "My Life (Personal)"
-     :directory "/Users/jay/Dropbox/roam-life"
-     :db-location "/Users/jay/Dropbox/roam-life/.org-roam.db"
+     :directory "~/Dropbox/roam-life"
+     :db-location "~/Dropbox/roam-life/.org-roam.db"
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
      :dailies-capture-templates jay/org-roam-dailies-template-default
@@ -309,6 +309,7 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
                                          templates))
+    (message "DEBUG profiles: org-roam-directory set to %s" org-roam-directory)
 
     (let ((resolved-dailies (cond
                              ((symbolp dailies-templates)
