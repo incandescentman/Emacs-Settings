@@ -324,15 +324,14 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
       (when astro-root
         (setq org-astro-source-root-folder (if (file-name-absolute-p astro-root)
                                                astro-root
-                                             (expand-file-name astro-root)))))
-
-    ;; Ensure the directory exists
-    (unless (file-directory-p org-roam-directory)
-      (make-directory org-roam-directory t)
-      (message "Created org-roam directory: %s" org-roam-directory))
-
-    ;; Reinitialize the database connection when switching profiles
-    ;; No clearing needed - we're just connecting to a different database file
+                                                                                                                                         (expand-file-name astro-root)))))
+                                                                                           
+                                                                                               ;; Ensure the directory exists
+                                                                                               (unless (file-directory-p org-roam-directory)
+                                                                                                 (make-directory org-roam-directory t)
+                                                                                                 (message "Created org-roam directory: %s" org-roam-directory))
+                                                                                           
+                                                                                               ;; Reinitialize the database connection when switching profiles    ;; No clearing needed - we're just connecting to a different database file
     (when switching-profiles
       (setq org-roam-db nil)
       (org-roam-db))

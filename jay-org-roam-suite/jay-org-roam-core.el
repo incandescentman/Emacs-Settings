@@ -9,6 +9,21 @@
 
 ;;; Code:
 
+;; Prevent file-truename from resolving Dropbox paths to CloudStorage
+;; MUST be installed before org-roam loads
+(defun jay/prevent-dropbox-cloudstorage-resolution (orig-fn filename)
+  "Prevent file-truename from resolving Dropbox paths to CloudStorage.
+If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
+  (if (and filename
+           (stringp filename)
+           (string-prefix-p "/Users/jay/Dropbox" (expand-file-name filename)))
+      ;; Return the path as-is without calling file-truename
+      (expand-file-name filename)
+    ;; For other paths, call the original function
+    (funcall orig-fn filename)))
+
+(advice-add 'file-truename :around #'jay/prevent-dropbox-cloudstorage-resolution)
+
 ;; Optional local fixes (loaded only if present)
 (when load-file-name
   (load (expand-file-name "org-roam-id-fix.el" (file-name-directory load-file-name)) t)
@@ -39,7 +54,6 @@
 (with-eval-after-load 'org
   (setq org-roam-db-autosync-mode nil
         ;; Use direct path to avoid resolving Dropbox symlink to CloudStorage
-        org-roam-directory "/Users/jay/Dropbox/roam"
         org-roam-database-connector 'sqlite-builtin
         org-roam-directory-exclude-regexp "^documents/"
         org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag))
@@ -56,10 +70,10 @@
      (condition-case err
          (jay/with-org-roam
           (require 'ol)
-          (org-roam-setup)
           ;; Initialize profile system and load saved profile
           ;; (profile init handles its own sync when needed)
-          (jay/org-roam-profiles-init))
+          (jay/org-roam-profiles-init)
+          (org-roam-setup))
        (error (message "Initial org-roam setup error: %s" (error-message-string err))))))
 
   (run-with-idle-timer
