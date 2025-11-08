@@ -2,6 +2,30 @@
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
 
+* 2025-11-09: Rewrite `make-directory` away from CloudStorage [PENDING VERIFICATION]
+
+** Current Status
+- org-roam still reports “Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam” when autosync runs.
+- This change is unverified until I restart Emacs and see the timeout disappear; assume the bug persists for now.
+
+** Hypothesis
+- Even with `file-truename` patched, stale paths from caches or third-party helpers end up in `make-directory`.
+- When Emacs tries to create folders under `/Users/jay/Library/CloudStorage/Dropbox`, the macOS File Provider times out and org-roam logs the failure.
+
+** Changes
+1. `jay-org-roam-suite/jay-org-roam-core.el`
+   - Declare Dropbox direct vs. CloudStorage roots.
+   - Add `jay/dropbox--rewrite-cloudstorage-path` and advise `make-directory` so CloudStorage targets are transparently rewritten to `/Users/jay/Dropbox/...`.
+   - Treat already-existing rewritten directories as success to avoid spurious errors.
+2. `~/.emacs.d/crm-setup.el`
+   - Replace the remaining CloudStorage paths in CRM agenda/capture helpers to prevent reintroducing the slow mount.
+
+** Verification Plan (not yet executed)
+1. Restart Emacs (GUI) and let org-roam autosync finish; confirm no “Creating directory…” rows appear.
+2. In `*scratch*`, evaluate `(make-directory "/Users/jay/Library/CloudStorage/Dropbox/roam/test" t)` and verify the folder shows up under `/Users/jay/Dropbox/roam/test`.
+3. Delete the temporary folder.
+4. Note results back here before clearing the “PENDING” status.
+
 * 2025-11-08: Attempting to fix org-roam CloudStorage path with initialization order change [IN PROGRESS]
 
 ** Current Problem
