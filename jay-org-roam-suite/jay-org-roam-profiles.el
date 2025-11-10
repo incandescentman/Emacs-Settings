@@ -38,8 +38,8 @@
 (defvar jay/org-roam-profiles
   '((default
      :name "High Velocity"
-     :directory "~/Dropbox/roam"
-     :db-location nil  ; use default from xdg-cache-home
+     :directory "/Users/jay/Dropbox/roam"
+     :db-location nil  ; use default cache for performance
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-default
      :dailies-capture-templates jay/org-roam-dailies-template-default
@@ -47,8 +47,8 @@
 
     (my-life
      :name "My Life (Personal)"
-     :directory "~/Dropbox/roam-life"
-     :db-location "~/Dropbox/roam-life/.org-roam.db"
+     :directory "/Users/jay/Dropbox/roam-life"
+     :db-location "/Users/jay/Dropbox/roam-life/.org-roam.db"
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
      :dailies-capture-templates jay/org-roam-dailies-template-default

@@ -9,6 +9,9 @@
 
 ;;; Code:
 
+;; Enable debug mode to trace org-roam sync behavior
+(setq init-file-debug t)
+
 ;; CRITICAL: Set org-roam-directory FIRST, before anything else
 ;; This prevents org-roam from ever seeing the CloudStorage File Provider path
 (defvar org-roam-directory)  ; Forward declaration
@@ -23,10 +26,7 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
            (stringp filename)
            (string-prefix-p "/Users/jay/Dropbox" (expand-file-name filename)))
       ;; Return the path as-is without calling file-truename
-      (let ((result (expand-file-name filename)))
-        (when init-file-debug
-          (message "jay/prevent-dropbox: intercepted %s -> %s" filename result))
-        result)
+      (expand-file-name filename)
     ;; For other paths, call the original function
     (apply orig-fn filename args)))
 
@@ -126,7 +126,10 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
    (lambda ()
      (condition-case err
          (jay/with-org-roam
-          (when init-file-debug (message "⮡ enabling org-roam autosync …"))
+          (let ((cache-warm (jay/org-roam-db-cache-healthy-p)))
+            (setq jay/org-roam--skip-next-sync cache-warm)
+            (when init-file-debug
+              (message "⮡ enabling org-roam autosync … (cache warm: %s)" cache-warm)))
           (when (and (boundp 'org-roam-db) (not (emacsql-live-p org-roam-db)))
             (setq org-roam-db nil)
             (org-roam-db))
@@ -144,6 +147,44 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
     (error (message "org-roam query skipped: %s" (error-message-string err)) nil)))
 (with-eval-after-load 'org-roam
   (advice-add 'org-roam-db-query :around #'jay/org-roam--safe-query))
+
+(defvar jay/org-roam--skip-next-sync nil
+  "Internal flag to skip the next org-roam-db-sync call when cache is fresh.")
+
+(defconst jay/org-roam-db-min-rows 100
+  "Minimum number of indexed files required to consider the cache healthy.")
+
+(defun jay/org-roam-db-cache-healthy-p ()
+  "Return non-nil when the org-roam DB already has indexed files."
+  (when (and (boundp 'org-roam-db-location)
+             org-roam-db-location)
+    (let ((db-file (expand-file-name org-roam-db-location)))
+      (when (file-exists-p db-file)
+        (condition-case err
+            (progn
+              (org-roam-db) ; ensure connection exists
+              (let* ((rows (org-roam-db-query [:select (count 1) :from files]))
+                     (count (and rows (caar rows))))
+                (when init-file-debug
+                  (message "org-roam cache probe: %s indexed files" count))
+                (and count (>= count jay/org-roam-db-min-rows))))
+          (error
+           (message "org-roam cache probe failed: %s" (error-message-string err))
+           nil))))))
+
+(defun jay/org-roam--skip-initial-sync (orig-fn &optional force)
+  "Skip the next automatic `org-roam-db-sync' when the cache is healthy.
+Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
+  (if (and jay/org-roam--skip-next-sync
+           (not force))
+      (progn
+        (setq jay/org-roam--skip-next-sync nil)
+        (message "org-roam: skipped initial db sync (cache already warm)"))
+    (prog1 (funcall orig-fn force)
+      (setq jay/org-roam--skip-next-sync nil))))
+
+(with-eval-after-load 'org-roam-db
+  (advice-add 'org-roam-db-sync :around #'jay/org-roam--skip-initial-sync))
 
 (defun jay/patch-emacsql-close (connection &rest _)
   "Prevent `emacsql-close' if CONNECTION handle is nil."

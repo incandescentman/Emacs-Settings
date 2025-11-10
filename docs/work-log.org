@@ -1,3 +1,9 @@
+* 2025-11-10: Keep org-roam DB on local cache and skip redundant startup syncs
+- Added startup health checks and skip flag in jay-org-roam-core so autosync only runs org-roam-db-sync when the cache is empty
+- Updated org-roam profiles to use absolute Dropbox paths and leave the default DB in ~/.cache/org-roam.db
+- Revised Dropbox .dir-locals to stop forcing CloudStorage paths; main tree now keeps DB local, my-life tree uses its own .org-roam.db
+- After running M-x org-roam-db-sync (once), org-roam-node-find immediately lists all notes and subsequent launches skip the multi-minute rebuild
+
 #+TITLE: Work Log
 #+AUTHOR: Jay Dixit
 #+DATE: [2025-01-27 Mon]
