@@ -120,6 +120,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
     ("I" "intelligence" "AI" "intelligence"
      :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
+    ("j" "job application" "job-applications" "job")
     ("l" "logistics of OpenAI" "logistics" "library")
     ("c" "Conversation" "conversations" "conversation")
     ("d" "documents and deliverables" "documents" "document")

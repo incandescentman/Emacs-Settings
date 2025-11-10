@@ -1,3 +1,9 @@
+* 2025-11-10: Add job application capture template to org-roam
+- Added new "job application" template (key: j) to default profile capture templates
+- Template creates files in job-applications/ directory with :job: filetag
+- Uses standard simple format (Links/Source/Title) like other templates
+- Updated jay-org-roam-suite/jay-org-roam-profiles.el:123
+
 * 2025-11-10: Keep org-roam DB on local cache and skip redundant startup syncs
 - Added startup health checks and skip flag in jay-org-roam-core so autosync only runs org-roam-db-sync when the cache is empty
 - Updated org-roam profiles to use absolute Dropbox paths and leave the default DB in ~/.cache/org-roam.db
