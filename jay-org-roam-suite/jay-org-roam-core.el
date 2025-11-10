@@ -163,7 +163,7 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
         (condition-case err
             (progn
               (org-roam-db) ; ensure connection exists
-              (let* ((rows (org-roam-db-query [:select (count 1) :from files]))
+              (let* ((rows (org-roam-db-query [:select (funcall count *) :from files]))
                      (count (and rows (caar rows))))
                 (when init-file-debug
                   (message "org-roam cache probe: %s indexed files" count))
