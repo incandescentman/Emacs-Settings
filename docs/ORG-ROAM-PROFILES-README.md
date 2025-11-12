@@ -33,7 +33,10 @@ If the `jay-org-roam-suite/` directory lives outside your standard load path, po
 The directories will be created automatically, but you can create them manually:
 
 ```bash
+mkdir -p ~/Dropbox/roam/journal
 mkdir -p ~/Dropbox/roam-life/journal
+mkdir -p ~/Dropbox/roam-social/journal
+mkdir -p ~/Dropbox/roam-parents/journal
 ```
 
 ## Usage
@@ -47,6 +50,8 @@ M-x jay/org-roam-switch-profile RET
 Then select either:
 - `default` (your work database at ~/Dropbox/roam)
 - `my-life` (your personal database at ~/Dropbox/roam-life)
+- `roam-social` (relationships + community database at ~/Dropbox/roam-social)
+- `roam-parents` (family operations database at ~/Dropbox/roam-parents)
 
 **Quick switches with keybindings:**
 ```
@@ -54,6 +59,8 @@ s-u P         Switch profile (interactive)
 s-u C-p       Show current profile info
 s-u 1         Quick switch to default (work)
 s-u 2         Quick switch to my-life (personal)
+s-u 3         Quick switch to roam-social (relationships)
+s-u 4         Quick switch to roam-parents (family HQ)
 ```
 
 ### What Happens When You Switch?
@@ -79,14 +86,36 @@ s-u 2         Quick switch to my-life (personal)
   - `g` - gratitude
   - `r` - reflection
   - `p` - person (personal)
-  - `h` - health & wellness
-  - `f` - family
-  - `m` - memory / experience
-  - `i` - idea / creative
-  - `b` - book notes (personal)
-  - `t` - travel
-  - `l` - learning / study
-  - `n` - note (general)
+- `h` - health & wellness
+- `f` - family
+- `m` - memory / experience
+- `i` - idea / creative
+- `b` - book notes (personal)
+- `t` - travel
+- `l` - learning / study
+- `n` - note (general)
+
+### Roam-Social (Relationships)
+- **Directory:** `~/Dropbox/roam-social/`
+- **Database:** `~/Dropbox/roam-social/.org-roam.db`
+- **Templates:** Relationship- and community-focused
+  - `c` - connection log / catch-up summary
+  - `e` - event debrief with highlights + follow-ups
+  - `f` - follow-up plan / next-touch reminder
+  - `i` - introduction scaffolding (for double-opt-in emails)
+  - `p` - person snapshot with talking points and support ideas
+  - `r` - relationship map / constellation planning
+
+### Roam-Parents (Family HQ)
+- **Directory:** `~/Dropbox/roam-parents/`
+- **Database:** `~/Dropbox/roam-parents/.org-roam.db`
+- **Templates:** Caretaking + coordination
+  - `c` - care log / day-in-the-life record
+  - `m` - medical note from appointments or updates
+  - `a` - appointment planner with prep/outcomes
+  - `p` - parent dossier (profile, contacts, stories)
+  - `s` - support reflection (what worked, what was hard)
+  - `t` - task / errand tracking with checklists
 
 ## Customization
 
@@ -175,9 +204,11 @@ This is by design! Profiles are independent. If you need to reference files acro
 
 1. **Start your day**: Switch to `my-life` in the morning for journaling
 2. **Work mode**: Switch to `default` when starting work
-3. **End of day**: Switch back to `my-life` for reflection
-4. **Muscle memory**: Use `s-u 1` and `s-u 2` for quick switches
-5. **Check before capture**: Use `s-u C-p` to verify which profile you're in
+3. **Community mode**: Hop into `roam-social` before/after events to capture context
+4. **Care mode**: Use `roam-parents` whenever you're coordinating family logistics
+5. **End of day**: Switch back to `my-life` for reflection
+6. **Muscle memory**: Map quick keys (e.g., `s-u 1/2/3/4`) or call the helper commands directly
+7. **Check before capture**: Use `s-u C-p` to verify which profile you're in
 
 ## Integration with Existing Workflows
 

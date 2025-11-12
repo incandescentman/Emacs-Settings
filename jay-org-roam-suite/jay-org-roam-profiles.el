@@ -52,7 +52,28 @@
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-mylife
      :dailies-capture-templates jay/org-roam-dailies-template-default
-     :astro-source-root "/Users/jay/Dropbox/roam-life"))
+     :astro-source-root "/Users/jay/Dropbox/roam-life"
+     :mode-line-label "Life")
+
+    (roam-social
+     :name "Roam Social (Relationships)"
+     :directory "/Users/jay/Dropbox/roam-social"
+     :db-location "/Users/jay/Dropbox/roam-social/.org-roam.db"
+     :dailies-directory "journal/"
+     :capture-templates jay/org-roam-capture-templates-social
+     :dailies-capture-templates jay/org-roam-dailies-template-default
+     :astro-source-root "/Users/jay/Dropbox/roam-social"
+     :mode-line-label "Social")
+
+    (roam-parents
+     :name "Roam Parents (Family HQ)"
+     :directory "/Users/jay/Dropbox/roam-parents"
+     :db-location "/Users/jay/Dropbox/roam-parents/.org-roam.db"
+     :dailies-directory "journal/"
+     :capture-templates jay/org-roam-capture-templates-parents
+     :dailies-capture-templates jay/org-roam-dailies-template-default
+     :astro-source-root "/Users/jay/Dropbox/roam-parents"
+     :mode-line-label "Parents"))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
   :name - Display name for the profile
@@ -247,6 +268,67 @@ Additional keyword ARGS allow callers to override pieces of the template:
                         "#+TITLE: ${title}\n#+FILETAGS: :fragment:")
      :unnarrowed t))
   "Capture templates for the my-life (storytelling/memoir) profile.")
+
+;; ROAM-SOCIAL PROFILE TEMPLATES (Relationships, community, networking)
+(defvar jay/org-roam-capture-templates-social
+  (list
+   (jay/roam-template
+    "c" "connection log" "connections" "connection"
+    :body "- Links ::\n- Person :: \n- Context :: \n- Next Touchpoint :: \n\n* ${title}\n\n** What We Talked About\n%?\n\n** Actions\n- [ ] ")
+
+   (jay/roam-template
+    "e" "event debrief" "events" "event"
+    :body "- Links ::\n- Date :: %<%Y-%m-%d>\n- Location :: \n- Host :: \n\n* ${title}\n\n** Highlights\n%?\n\n** People Met\n- \n\n** Follow-ups\n- [ ] ")
+
+   (jay/roam-template
+    "f" "follow-up plan" "follow-ups" "followup"
+    :body "- Links ::\n- Person :: \n- Trigger :: \n\n* ${title}\n\n** Message Draft\n%?\n\n** Reminder Window\n")
+
+   (jay/roam-template
+    "i" "introduction" "introductions" "introduction"
+    :body "- Links ::\n- For :: \n- From :: \n- Why Now :: \n\n* ${title}\n\n** Bullet Points\n%?\n"
+    :filetags ":introduction:social:")
+
+   (jay/roam-template
+    "p" "person snapshot" "people" "person"
+    :body "- Links ::\n- Relationship Depth :: \n- Last Talked :: \n- Shared Projects :: \n\n* ${title}\n\n** Bio\n%?\n\n** Topics They Love\n- \n\n** I Can Help With\n- \n"
+    :filetags ":person:social:")
+
+   (jay/roam-template
+    "r" "relationship map" "relationships" "relationship"
+    :body "- Links ::\n- Anchor Person :: \n- Theme :: \n\n* ${title}\n\n** Constellation\n- %?\n\n** Warm Paths\n- \n\n** Energy Level\n"))
+  "Capture templates for the roam-social (relationships/networking) profile.")
+
+;; ROAM-PARENTS PROFILE TEMPLATES (Family HQ / caretaking)
+(defvar jay/org-roam-capture-templates-parents
+  (list
+   (jay/roam-template
+    "c" "care log" "care-log" "care"
+    :body "- Links ::\n- Parent :: \n- Date :: %<%Y-%m-%d>\n- Time :: %<%H:%M>\n\n* ${title}\n\n** Summary\n%?\n\n** Mood / Energy\n- \n\n** Notes\n- \n")
+
+   (jay/roam-template
+    "m" "medical note" "medical" "medical"
+    :body "- Links ::\n- Parent :: \n- Provider :: \n- Facility :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n** Observations\n%?\n\n** Medications / Dosage\n- \n\n** Questions\n- \n"
+    :filetags ":medical:parents:")
+
+   (jay/roam-template
+    "a" "appointment" "appointments" "appointment"
+    :body "- Links ::\n- Parent :: \n- When :: %<%Y-%m-%d %H:%M>\n- Location :: \n\n* ${title}\n\n** Prep Checklist\n- [ ] %?\n\n** Outcomes\n- \n")
+
+   (jay/roam-template
+    "p" "parent dossier" "profiles" "profile"
+    :body "- Links ::\n- Birthdate :: \n- Primary Doctor :: \n- Emergency Contacts :: \n\n* ${title}\n\n** Health Snapshot\n- Conditions :: \n- Allergies :: \n\n** Stories / Values\n%?\n"
+    :filetags ":parents:profile:")
+
+   (jay/roam-template
+    "s" "support reflection" "reflections" "reflection"
+    :body "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n\n* ${title}\n\n** What Went Well\n%?\n\n** Hard Moments\n\n** Next Actions\n- [ ] ")
+
+   (jay/roam-template
+    "t" "task / errand" "tasks" "task"
+    :body "- Links ::\n- Parent :: \n- Deadline :: %<%Y-%m-%d>\n\n* ${title}\n\n** Steps\n- [ ] %?\n"
+    :filetags ":parents:task:"))
+  "Capture templates for the roam-parents (family operations) profile.")
 
 
 ;; -----------------------------------------------------------------------------
@@ -476,6 +558,16 @@ Prompts for profile name with completion."
   (interactive)
   (jay/org-roam-apply-profile 'my-life))
 
+(defun jay/org-roam-switch-to-social ()
+  "Quick switch to roam-social profile."
+  (interactive)
+  (jay/org-roam-apply-profile 'roam-social))
+
+(defun jay/org-roam-switch-to-parents ()
+  "Quick switch to roam-parents profile."
+  (interactive)
+  (jay/org-roam-apply-profile 'roam-parents))
+
 ;; -----------------------------------------------------------------------------
 ;; Astro export helpers
 ;; -----------------------------------------------------------------------------
@@ -503,6 +595,18 @@ Prompts for profile name with completion."
   "Run `org-astro-export-to-mdx' with the roam-life tree as source root."
   (interactive)
   (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam-life"
+                                   async subtreep visible-only body-only))
+
+(defun jay/org-astro-export-from-roam-social (&optional async subtreep visible-only body-only)
+  "Run `org-astro-export-to-mdx' with the roam-social tree as source root."
+  (interactive)
+  (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam-social"
+                                   async subtreep visible-only body-only))
+
+(defun jay/org-astro-export-from-roam-parents (&optional async subtreep visible-only body-only)
+  "Run `org-astro-export-to-mdx' with the roam-parents tree as source root."
+  (interactive)
+  (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam-parents"
                                    async subtreep visible-only body-only))
 
 ;; -----------------------------------------------------------------------------

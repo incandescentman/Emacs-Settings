@@ -273,6 +273,8 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 (define-key jay/super-u-map (kbd "C-p") #'jay/org-roam-show-current-profile)
 (global-set-key (kbd "s-u 1") #'jay/org-roam-switch-to-default)
 (global-set-key (kbd "s-u 2") #'jay/org-roam-switch-to-mylife)
+(global-set-key (kbd "s-u 3") #'jay/org-roam-switch-to-social)
+(global-set-key (kbd "s-u 4") #'jay/org-roam-switch-to-parents)
 
 (jay/bind-roam "o" org-roam-dailies-find-date)
 (jay/bind-roam "." org-roam-dailies-goto-date)

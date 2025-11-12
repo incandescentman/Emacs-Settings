@@ -1,3 +1,9 @@
+- *2025-11-12: Add roam-social and roam-parents org-roam profiles*
+- Added two new profiles in =jay-org-roam-suite/jay-org-roam-profiles.el= with their own directories (/Users/jay/Dropbox/roam-social and /Users/jay/Dropbox/roam-parents), dedicated capture templates, dailies, astro export helpers, and mode-line labels.
+- Created helper commands =jay/org-roam-switch-to-social= and =jay/org-roam-switch-to-parents= plus new astro exporters so each graph can publish via ox-astro without switching contexts.
+- Bound =s-u 3= and =s-u 4= in =jay-org-roam-suite/jay-org-roam-core.el= for one-keystroke switches, mirroring the existing work/personal bindings.
+- Updated =docs/ORG-ROAM-PROFILES-README.md= and =docs/ORG-ROAM-PROFILES-QUICKSTART.org= with mkdir instructions, quick-reference tables, muscle-memory tips, and backup guidance covering all four graphs.
+
 * 2025-11-10: Add job application capture template to org-roam
 - Added new "job application" template (key: j) to default profile capture templates
 - Template creates files in job-applications/ directory with :job: filetag

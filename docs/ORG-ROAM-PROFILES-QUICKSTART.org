@@ -21,6 +21,8 @@ Each profile has its own:
 |---------+--------------|
 | =s-u 1= | Switch to work (default) profile |
 | =s-u 2= | Switch to personal (my-life) profile |
+| =s-u 3= | Switch to relationships (roam-social) profile |
+| =s-u 4= | Switch to parents/family HQ (roam-parents) profile |
 | =s-u P= | Interactive switch (choose from menu) |
 | =s-u C-p= | Show which profile you're currently in |
 
@@ -28,6 +30,8 @@ Each profile has its own:
 Look at your mode line (bottom of Emacs). You'll see:
 - =[Roam:Default]= - You're in work mode
 - =[Roam:My]= - You're in personal mode
+- =[Roam:Social]= - You're in relationships mode
+- =[Roam:Parents]= - You're in family HQ mode
 
 *Pro tip:* Click on the mode-line indicator to switch profiles!
 
@@ -74,7 +78,7 @@ Behind the scenes:
 6. ✅ Mode line updates to show new profile
 7. ✅ Message confirms: "Switched to org-roam profile: my-life (My Life)"
 
-* Your Two Profiles
+* Your Profiles
 
 ** Default (Work)
 - *Location:* =~/Dropbox/roam/=
@@ -88,12 +92,26 @@ Behind the scenes:
 - *Templates:* Life-focused templates
 - *Use for:* Personal journaling, gratitude, health, family, memories, personal ideas
 
+** Roam-Social (Relationships)
+- *Location:* =~/Dropbox/roam-social/=
+- *Database:* =~/Dropbox/roam-social/.org-roam.db=
+- *Templates:* Connection logs, event debriefs, follow-up plans, introductions, people snapshots
+- *Use for:* Tracking community energy, logging dinners/events, planning outreach
+
+** Roam-Parents (Family HQ)
+- *Location:* =~/Dropbox/roam-parents/=
+- *Database:* =~/Dropbox/roam-parents/.org-roam.db=
+- *Templates:* Care logs, medical notes, appointments, parent dossiers, support reflections, errands
+- *Use for:* Coordinating family/parent care, keeping medical histories and next actions in one spot
+
 * Tips & Best Practices
 
 ** Muscle Memory
 Train yourself:
 - Work day starts? =s-u 1=
 - Personal time? =s-u 2=
+- Community/relationships block? =s-u 3=
+- Parent care logistics? =s-u 4=
 - Unsure which you're in? =s-u C-p=
 
 ** Check Before Capturing
@@ -104,12 +122,14 @@ Because profiles are independent, you can't link from a work note to a personal 
 
 If you need to reference something across profiles, copy the content or use plain text references.
 
-** Backup Both
-Since you have two separate directories, make sure both are backed up:
+** Backup Everything
+Since you now have four independent directories, make sure all of them are backed up:
 - =~/Dropbox/roam/= (work)
 - =~/Dropbox/roam-life/= (personal)
+- =~/Dropbox/roam-social/= (relationships)
+- =~/Dropbox/roam-parents/= (family HQ)
 
-If you use Dropbox (as configured), both are already synced.
+If you use Dropbox (as configured), each tree will sync separately—double-check shared devices have the new folders enabled.
 
 * Troubleshooting
 
