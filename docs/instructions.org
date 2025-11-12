@@ -89,26 +89,38 @@ The clipboard system automatically cleans up text from the web:
 
 Switch between completely separate note databases:
 
-| Keys          | Action                         |
-|---------------+--------------------------------|
-| =Cmd-u 1=     | Switch to work notes (default) |
-| =Cmd-u 2=     | Switch to personal notes       |
-| =Cmd-u P=     | Choose profile interactively   |
-| =Cmd-u C-p=   | Show current profile           |
+| Keys          | Action                                  |
+|---------------+-----------------------------------------|
+| =Cmd-u 1=     | Switch to work notes (default)          |
+| =Cmd-u 2=     | Switch to personal notes                |
+| =Cmd-u 3=     | Switch to relationships (roam-social)   |
+| =Cmd-u 4=     | Switch to parents / family HQ database  |
+| =Cmd-u P=     | Choose profile interactively            |
+| =Cmd-u C-p=   | Show current profile                    |
 
-*** The Two Profiles
+*** The Four Profiles
 
 *Work (default)*
 - Location: =~/Dropbox/roam/=
-- Templates: AI notes, job hunting, people, quotes, business
+- Templates: AI research, job hunting, documents, CRM
 - Keybinding: =Cmd-u 1=
 
 *Personal (my-life)*
 - Location: =~/Dropbox/roam-life/=
-- Templates: journal, gratitude, health, family
+- Templates: journaling, gratitude, health, memoir
 - Keybinding: =Cmd-u 2=
 
-Mode line shows current profile: =[Roam:Default]= or =[Roam:My]=
+*Relationships (roam-social)*
+- Location: =~/Dropbox/roam-social/=
+- Templates: connection logs, event debriefs, follow-ups, people snapshots
+- Keybinding: =Cmd-u 3=
+
+*Parents / Family HQ (roam-parents)*
+- Location: =~/Dropbox/roam-parents/=
+- Templates: care logs, medical notes, appointments, parent dossiers, errands
+- Keybinding: =Cmd-u 4=
+
+Mode line indicator reflects the active graph (e.g., =[Roam:Default]=, =[Roam:My]=, =[Roam:Social]=, =[Roam:Parents]=). Click it to switch quickly.
 
 Your last-used profile is remembered across sessions.
 
