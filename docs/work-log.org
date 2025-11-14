@@ -1,3 +1,12 @@
+- *2025-11-14: Add hipster-cv LaTeX template for modern two-column CVs*
+- Created =latex-templates/hipster-cv.el= using simplehipstercv document class for modern CV layouts
+- Downloaded and installed simplehipstercv.cls and simplehipstercv.sty from GitHub (latex-ninja/simple-hipstercv) to =~/Library/texmf/tex/latex/simplehipstercv/=
+- Created =latex-templates/hipster-cv-example.org= with complete working example (Jack Sparrow pirate CV)
+- Added =latex-templates/hipster-cv-README.org= with installation instructions, usage guide, and troubleshooting
+- Template features: two-column layout with sidebar, custom commands for CV events/degrees/skill bars, 7 color themes (lighthipster, darkhipster, pastel, allblack, grey, verylight, withoutsidebar)
+- Uses paracol package for columns, fontawesome for icons, Raleway font by default
+- Verified installation with successful test compilation
+
 - *2025-11-14: Create elegant-less-whitespace LaTeX template*
 - Created new =latex-templates/elegant-less-whitespace.el= based on elegant-garamond with reduced whitespace for resumes/compact documents
 - Changes: 11pt font (down from 12pt), 1in margins (down from 1.5in), 24pt section spacing (down from 48pt), 0pt subsubsection spacing (down from 16pt), 6pt list spacing (down from 12pt)

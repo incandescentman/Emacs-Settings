@@ -1,0 +1,201 @@
+#+TITLE: Hipster CV Template for Org-Mode
+#+AUTHOR: Jay Dixit
+
+* Overview
+
+This is an org-mode LaTeX export template for creating modern, two-column CVs using the =simplehipstercv= document class. It's inspired by popular CV templates like Twenty Seconds CV and Friggeri CV.
+
+* Prerequisites
+
+** Required LaTeX Class
+
+You need to install the =simplehipstercv= document class:
+
+1. Download =simplehipstercv.cls= from:
+   - https://www.latextemplates.com/template/simple-hipster-cv
+   - Or from CTAN: https://www.ctan.org/pkg/simplehipstercv
+
+2. Install it in your LaTeX tree:
+   #+begin_src bash
+   # On macOS with MacTeX:
+   mkdir -p ~/Library/texmf/tex/latex/simplehipstercv
+   cp simplehipstercv.cls ~/Library/texmf/tex/latex/simplehipstercv/
+
+   # Or in your project directory
+   cp simplehipstercv.cls ./
+   #+end_src
+
+3. Update LaTeX database (if installed system-wide):
+   #+begin_src bash
+   sudo mktexlsr
+   #+end_src
+
+** Required Fonts
+
+The template uses Raleway font by default. Install via:
+- macOS: Font Book
+- Linux: Font manager or system fonts directory
+- Or modify the =\usepackage[default]{raleway}= line in =hipster-cv.el=
+
+** Required LaTeX Packages
+
+The template requires:
+- =fontawesome= (for icons like \faAt, \faGithub, etc.)
+- =paracol= (for two-column layout)
+- =raleway= (font package)
+- =xcolor=, =geometry=, and other standard packages
+
+Install via your TeX distribution's package manager.
+
+* Installation
+
+1. Load the template in your Emacs init file:
+   #+begin_src emacs-lisp
+   (load "~/emacs/emacs-settings/latex-templates/hipster-cv.el")
+   #+end_src
+
+2. Or add to your org-mode configuration:
+   #+begin_src emacs-lisp
+   (require 'hipster-cv)
+   #+end_src
+
+* Usage
+
+** Basic Org File Setup
+
+At the top of your org file:
+
+#+begin_example
+#+LATEX_CLASS: hipster-cv
+#+LATEX_CLASS_OPTIONS: [lighthipster]
+#+OPTIONS: toc:nil title:nil author:nil date:nil num:nil
+#+end_example
+
+** Available Document Class Options
+
+Change the option in =#+LATEX_CLASS_OPTIONS:=:
+- =lighthipster= - light color scheme (default)
+- =darkhipster= - dark color scheme
+- =pastel= - pastel colors
+- =allblack= - minimal black and white
+- =grey= - grey theme
+- =verylight= - very light colors
+- =withoutsidebar= - no sidebar (single column)
+
+** Custom Commands from simplehipstercv
+
+The template provides these custom LaTeX commands:
+
+*** Header
+#+begin_src latex
+\simpleheader{headercolour}{FirstName}{LastName}{Title}{textcolor}
+#+end_src
+
+*** Profile Picture
+#+begin_src latex
+\roundpic{filename.jpg}
+#+end_src
+
+*** Sidebar Sections
+#+begin_src latex
+\bg{bgcolor}{textcolor}{Section Title}
+#+end_src
+
+*** CV Events (Experience)
+#+begin_src latex
+\cvevent{year-range}{Title}{Role}{Location \color{cvred}}{Description}{icon.png}
+#+end_src
+
+*** Degrees
+#+begin_src latex
+\cvdegree{year}{Title}{Degree}{Institution \color{headerblue}}{}{icon.png}
+#+end_src
+
+*** Skill Bars
+#+begin_src latex
+\barrule{percentage}{height}{color}
+% Example: \barrule{0.75}{0.5em}{cvgreen} for 75% filled bar
+#+end_src
+
+*** Info Bubbles (Contact)
+#+begin_src latex
+\infobubble{\faAt}{cvgreen}{white}{email@example.com}
+\infobubble{\faGithub}{cvgreen}{white}{username}
+#+end_src
+
+*** Language Skill Indicators
+#+begin_src latex
+\pictofraction{\faCircle}{cvgreen}{filled}{black!30}{unfilled}{\tiny}
+% Shows proficiency with filled/unfilled circles
+#+end_src
+
+** Exporting
+
+1. Open your org file
+2. =C-c C-e= to open export menu
+3. =l o= for LaTeX PDF and open
+
+Or use:
+#+begin_src emacs-lisp
+M-x org-latex-export-to-pdf
+#+end_src
+
+* Example
+
+See =hipster-cv-example.org= for a complete working example with Jack Sparrow's pirate CV.
+
+* Customization
+
+** Changing Colors
+
+Edit =hipster-cv.el= to add custom color definitions:
+#+begin_src latex
+\definecolor{mycolor}{HTML}{FF5733}
+#+end_src
+
+** Changing Margins
+
+Modify the geometry package options in =hipster-cv.el=:
+#+begin_src latex
+\usepackage[margin=1.5cm, a4paper]{geometry}
+#+end_src
+
+** Changing Column Widths
+
+Adjust in your org file's LaTeX export block:
+#+begin_src latex
+\setlength{\leftcolwidth}{0.30\textwidth}   % sidebar
+\setlength{\rightcolwidth}{0.68\textwidth}  % main content
+\columnratio{0.30}[0.68]
+#+end_src
+
+* Troubleshooting
+
+** "File simplehipstercv.cls not found"
+Install the document class (see Prerequisites above).
+
+** "Font 'Raleway' not found"
+Install Raleway font or change to another font in =hipster-cv.el=.
+
+** Icons not showing
+Install =fontawesome= LaTeX package:
+#+begin_src bash
+tlmgr install fontawesome
+#+end_src
+
+** Two-column layout broken
+Ensure =paracol= package is installed:
+#+begin_src bash
+tlmgr install paracol
+#+end_src
+
+* Template Origin
+
+This template is a mashup inspired by:
+- Twenty Seconds CV: https://www.latextemplates.com/template/twenty-seconds-resumecv
+- Friggeri Resume/CV: https://www.latextemplates.com/template/friggeri-resume-cv
+- Simple Hipster CV class
+
+* License
+
+Check the original =simplehipstercv= class license for usage restrictions.
