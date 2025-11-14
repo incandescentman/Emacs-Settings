@@ -1,5 +1,11 @@
+- *2025-11-14: Create elegant-less-whitespace LaTeX template*
+- Created new =latex-templates/elegant-less-whitespace.el= based on elegant-garamond with reduced whitespace for resumes/compact documents
+- Changes: 11pt font (down from 12pt), 1in margins (down from 1.5in), 24pt section spacing (down from 48pt), 0pt subsubsection spacing (down from 16pt), 6pt list spacing (down from 12pt)
+- Original =elegant-garamond.el= preserved with its wider spacing and 12pt font for general documents
+- Both templates use Garamond Premier Pro for main text and Helvetica Neue LT Pro for monospaced
+
 - *2025-11-14: Suppress hybrid-mode obsolete warnings at startup*
-- Added a filter in =spacemacs.d/init.el= so the new hybrid-mode release (20250814) no longer flags the legacy =hybrid-mode-*= aliases as “obsolete” every launch—Spacemacs now ignores those permanent aliases and only surfaces real user errors.
+- Added a filter in =spacemacs.d/init.el= so the new hybrid-mode release (20250814) no longer flags the legacy =hybrid-mode-*= aliases as "obsolete" every launch—Spacemacs now ignores those permanent aliases and only surfaces real user errors.
 - Wrapped the logic in =jay--filter-spacemacs-obsolete= and hooked it via =advice-add= around =spacemacs//check-obsolete-variables= once =core-obsolete= loads; restarting Emacs shows a clean startup buffer and the batch check (=emacs --batch ... (spacemacs//check-obsolete-variables)) returns =nil=.
 
 - *2025-11-12: Add roam-social and roam-parents org-roam profiles*
