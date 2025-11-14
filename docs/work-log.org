@@ -1,3 +1,7 @@
+- *2025-11-14: Suppress hybrid-mode obsolete warnings at startup*
+- Added a filter in =spacemacs.d/init.el= so the new hybrid-mode release (20250814) no longer flags the legacy =hybrid-mode-*= aliases as “obsolete” every launch—Spacemacs now ignores those permanent aliases and only surfaces real user errors.
+- Wrapped the logic in =jay--filter-spacemacs-obsolete= and hooked it via =advice-add= around =spacemacs//check-obsolete-variables= once =core-obsolete= loads; restarting Emacs shows a clean startup buffer and the batch check (=emacs --batch ... (spacemacs//check-obsolete-variables)) returns =nil=.
+
 - *2025-11-12: Add roam-social and roam-parents org-roam profiles*
 - Added two new profiles in =jay-org-roam-suite/jay-org-roam-profiles.el= with their own directories (/Users/jay/Dropbox/roam-social and /Users/jay/Dropbox/roam-parents), dedicated capture templates, dailies, astro export helpers, and mode-line labels.
 - Created helper commands =jay/org-roam-switch-to-social= and =jay/org-roam-switch-to-parents= plus new astro exporters so each graph can publish via ox-astro without switching contexts.

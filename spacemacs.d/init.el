@@ -817,6 +817,34 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; Silence warnings during startup
   (setq warning-minimum-level :error)
 
+  ;; Hybrid-mode (20250814) defines the old hybrid-mode-* names as obsolete
+  ;; aliases, which leaves them permanently bound and makes the startup buffer
+  ;; report bogus obsolete-variable warnings. Filter those aliases out so only
+  ;; genuine misconfigurations surface.
+  (defconst jay--ignored-obsolete-hybrid-vars
+    '(hybrid-mode-default-state
+      hybrid-mode-enable-hjkl-bindings
+      hybrid-mode-enable-evilified-state
+      hybrid-mode-use-evil-search-module)
+    "Obsolete hybrid-mode variables that should not trigger startup warnings.")
+
+  (defun jay--remove-ignored-obsolete (entries)
+    "Return ENTRIES without any of `jay--ignored-obsolete-hybrid-vars'."
+    (let (result)
+      (dolist (entry entries (nreverse result))
+        (unless (memq (car entry) jay--ignored-obsolete-hybrid-vars)
+          (push entry result)))))
+
+  (defun jay--filter-spacemacs-obsolete (orig-fn &rest args)
+    "Call ORIG-FN after dropping hybrid-mode aliases from the check."
+    (let ((spacemacs-obsolete-variable-list
+           (jay--remove-ignored-obsolete spacemacs-obsolete-variable-list)))
+      (apply orig-fn args)))
+
+  (with-eval-after-load 'core-obsolete
+    (advice-add 'spacemacs//check-obsolete-variables
+                :around #'jay--filter-spacemacs-obsolete))
+
   ;; Teach the byte-compiler about newer declare keywords and hush obsolete CL aliases
   (load "byte-run" nil t)
   (load "macroexp" nil t)
