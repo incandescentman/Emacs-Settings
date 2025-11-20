@@ -9848,6 +9848,45 @@ Note: DIR should be an absolute path to avoid symlink resolution issues."
   (add-hook 'completion-at-point-functions #'cape-emoji)) 
 #+end_src
 
+* Org spacing formatter
+#+begin_src emacs-lisp
+(defvar jay/org-spacing-formatter-script
+  (expand-file-name "scripts/org_spacing_formatter.py"
+                    "/Users/jay/emacs/emacs-settings")
+  "Path to the org spacing formatter Python helper.")
+
+(defun jay/org-format-heading-spacing (&optional file)
+  "Format org-mode heading spacing in FILE via the external formatter.
+When FILE is nil, operate on the current buffer's file. The buffer is
+saved first and reverted after formatting."
+  (interactive)
+  (let* ((target (or file buffer-file-name))
+         (script jay/org-spacing-formatter-script))
+    (unless target
+      (user-error "Current buffer is not visiting a file"))
+    (unless (file-exists-p script)
+      (user-error "Formatter script not found: %s" script))
+    (unless (file-exists-p target)
+      (user-error "File not found: %s" target))
+    (when (and (not file) (buffer-modified-p))
+      (save-buffer))
+    (let* ((output-buffer (get-buffer-create "*jay-org-spacing*"))
+           (status (progn
+                     (with-current-buffer output-buffer
+                       (erase-buffer))
+                     (call-process "python3" nil output-buffer nil
+                                   script target))))
+      (if (zerop status)
+          (progn
+            (when (and buffer-file-name
+                       (string= (file-truename buffer-file-name)
+                                (file-truename target)))
+              (revert-buffer :ignore-auto :noconfirm))
+            (message "Org spacing formatted: %s" target))
+        (display-buffer output-buffer)
+        (error "Org spacing formatter failed (%s)" status)))))
+#+end_src
+
 * Goals agenda
 
 * Local Variables & The End

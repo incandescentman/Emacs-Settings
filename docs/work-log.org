@@ -17,6 +17,11 @@
 - Added a filter in =spacemacs.d/init.el= so the new hybrid-mode release (20250814) no longer flags the legacy =hybrid-mode-*= aliases as "obsolete" every launch—Spacemacs now ignores those permanent aliases and only surfaces real user errors.
 - Wrapped the logic in =jay--filter-spacemacs-obsolete= and hooked it via =advice-add= around =spacemacs//check-obsolete-variables= once =core-obsolete= loads; restarting Emacs shows a clean startup buffer and the batch check (=emacs --batch ... (spacemacs//check-obsolete-variables)) returns =nil=.
 
+- *2025-11-20: Automate org heading spacing rules*
+- Added =scripts/org_spacing_formatter.py=, a CLI formatter that enforces the Vibecoding spacing guide (blank line before headings, none between a heading and its content, optional =--check= mode).
+- Introduced =jay/org-format-heading-spacing= in =shared-functions.org= to call the formatter on the current buffer's file: saves if modified, shells out to Python, and reverts on success.
+- Formatted =20251119235900-finding_the_game.org= via the new tool; `M-x jay/org-format-heading-spacing` now keeps Roam notes compliant without manual spacing passes.
+
 - *2025-11-12: Add roam-social and roam-parents org-roam profiles*
 - Added two new profiles in =jay-org-roam-suite/jay-org-roam-profiles.el= with their own directories (/Users/jay/Dropbox/roam-social and /Users/jay/Dropbox/roam-parents), dedicated capture templates, dailies, astro export helpers, and mode-line labels.
 - Created helper commands =jay/org-roam-switch-to-social= and =jay/org-roam-switch-to-parents= plus new astro exporters so each graph can publish via ox-astro without switching contexts.
