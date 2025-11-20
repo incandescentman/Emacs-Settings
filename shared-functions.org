@@ -9855,7 +9855,7 @@ Note: DIR should be an absolute path to avoid symlink resolution issues."
                     "/Users/jay/emacs/emacs-settings")
   "Path to the org spacing formatter Python helper.")
 
-(defun jay/org-format-heading-spacing (&optional file)
+(defun org-fix-formatting-and-heading-spacing (&optional file)
   "Format org-mode heading spacing in FILE via the external formatter.
 When FILE is nil, operate on the current buffer's file. The buffer is
 saved first and reverted after formatting."

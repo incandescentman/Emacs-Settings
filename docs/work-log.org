@@ -19,7 +19,7 @@
 
 - *2025-11-20: Automate org heading spacing rules*
 - Added =scripts/org_spacing_formatter.py=, a CLI formatter that enforces the Vibecoding spacing guide (blank line before headings, none between a heading and its content, optional =--check= mode).
-- Introduced =jay/org-format-heading-spacing= in =shared-functions.org= to call the formatter on the current buffer's file: saves if modified, shells out to Python, and reverts on success.
+- Introduced =org-fix-formatting-and-heading-spacing= in =shared-functions.org= to call the formatter on the current buffer's file: saves if modified, shells out to Python, and reverts on success.
 - Formatted =20251119235900-finding_the_game.org= via the new tool; `M-x jay/org-format-heading-spacing` now keeps Roam notes compliant without manual spacing passes.
 
 - *2025-11-12: Add roam-social and roam-parents org-roam profiles*
