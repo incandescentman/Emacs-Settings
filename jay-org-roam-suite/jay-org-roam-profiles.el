@@ -180,7 +180,8 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("w" "lectures and public talks" "lectures" "lectures")
     ("X" "exemplars" "exemplars" "exemplars")
     ("x" "cuts" "cuts" "cuts")
-    ("$" "consumerist" "consumerist" "memoir"))
+    ("$" "consumerist" "consumerist" "memoir")
+    ("r" "social / relationships" "social" "social"))
   "Factory-style template specs that also lean on `jay/roam-template`.")
 
 ;; DEFAULT PROFILE TEMPLATES (Your current work setup)
@@ -272,6 +273,22 @@ Additional keyword ARGS allow callers to override pieces of the template:
 ;; ROAM-SOCIAL PROFILE TEMPLATES (Relationships, community, networking)
 (defvar jay/org-roam-capture-templates-social
   (list
+   ;; General-purpose templates
+   (jay/roam-template
+    "n" "note" "notes" "note")
+
+   (jay/roam-template
+    "d" "idea" "ideas" "idea"
+    :body "- Links ::\n- Source ::\n\n* ${title}\n\n** The Idea\n%?\n\n** Why It Matters\n")
+
+   (jay/roam-template
+    "s" "insight" "insights" "insight"
+    :body "- Links ::\n- Source ::\n- Context :: \n\n* ${title}\n\n%?\n")
+
+   (jay/roam-template
+    "t" "thought" "thoughts" "thought")
+
+   ;; Relationship-specific templates
    (jay/roam-template
     "c" "connection log" "connections" "connection"
     :body "- Links ::\n- Person :: \n- Context :: \n- Next Touchpoint :: \n\n* ${title}\n\n** What We Talked About\n%?\n\n** Actions\n- [ ] ")
