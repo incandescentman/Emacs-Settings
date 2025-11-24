@@ -42,7 +42,7 @@
           (goto-char match-beg)
           (if (looking-at "^\\*+ ")
               (forward-char 2)
-            (replace-match "*" t t)))))))
+              (replace-match "*" t t)))))))
 
 (defgroup smart-quotes nil
   "Customization group for smart quote replacements."
@@ -310,7 +310,7 @@ quotes are unwrapped the same way."
                       (replace-match "\\1" t nil))
                     (forward-line 1)))
                 (set-marker block-end nil))))
-          (forward-line 1))
+        (forward-line 1))
       (set-marker limit nil))))
 
 (defun pasteboard--strip-cite-markers (beg end)
@@ -325,6 +325,17 @@ quotes are unwrapped the same way."
       (while (re-search-forward " \\{2,\\}" limit t)
         (replace-match " " t t))
       (set-marker limit nil))))
+
+(defun strip-cite-markers (beg end)
+  "Interactively remove cite markers in the region or whole buffer.
+
+If a region is active, operate on that region; otherwise, process the entire
+buffer."
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                   (list (point-min) (point-max))))
+  (pasteboard--strip-cite-markers beg end)
+  (message "Removed cite markers"))
 
 (defun pasteboard--ensure-blank-line-before-headings (beg end)
   "Ensure there is a blank line before any Org heading between BEG and END."
@@ -390,7 +401,7 @@ Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bol
     (with-temp-buffer
       (if (zerop (call-process "gtimeout" nil t nil "2" "pbpaste"))  ; Requires coreutils for `gtimeout`
           (buffer-string)
-        (error "pbpaste timed out")))))
+          (error "pbpaste timed out")))))
 
 (defun pasteboard-copy-adaptive ()
   "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text.
@@ -401,59 +412,59 @@ With prefix argument (C-u), force verbatim copy."
       (progn
         (call-interactively #'pasteboard-copy-verbatim)
         (message "Copied text verbatim (forced)"))
-    ;; Otherwise, smart copy
-    (let* ((result
-            (cond
-             ;; ------------------------------------------ verbatim buckets ------------------------------------------
-             ;; 1) Messages buffer - ALWAYS verbatim
-             ((string= (buffer-name) "*Messages*")
-              (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
+      ;; Otherwise, smart copy
+      (let* ((result
+              (cond
+               ;; ------------------------------------------ verbatim buckets ------------------------------------------
+               ;; 1) Messages buffer - ALWAYS verbatim
+               ((string= (buffer-name) "*Messages*")
+                (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
 
-             ;; 2) Shell / Elisp / Web / Markdown / Backtrace
-             ((or (eq major-mode 'sh-mode)
-                  (eq major-mode 'emacs-lisp-mode)
-                  (eq major-mode 'web-mode)
-                  (eq major-mode 'markdown-mode)
-                  (eq major-mode 'gfm-mode)
-                  (derived-mode-p 'markdown-mode)
-                  (derived-mode-p 'backtrace-mode))
-              (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
+               ;; 2) Shell / Elisp / Web / Markdown / Backtrace
+               ((or (eq major-mode 'sh-mode)
+                    (eq major-mode 'emacs-lisp-mode)
+                    (eq major-mode 'web-mode)
+                    (eq major-mode 'markdown-mode)
+                    (eq major-mode 'gfm-mode)
+                    (derived-mode-p 'markdown-mode)
+                    (derived-mode-p 'backtrace-mode))
+                (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
 
-             ;; 3) Org buffer **with** org-config-files-local-mode enabled
-             ((and (eq major-mode 'org-mode)
-                   (bound-and-true-p org-config-files-local-mode))
-              (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
+               ;; 3) Org buffer **with** org-config-files-local-mode enabled
+               ((and (eq major-mode 'org-mode)
+                     (bound-and-true-p org-config-files-local-mode))
+                (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
 
-             ;; 4) Any file ending in .mdx
-             ((and buffer-file-name
-                   (string-match-p "\\.mdx\\'" buffer-file-name))
-              (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
+               ;; 4) Any file ending in .mdx
+               ((and buffer-file-name
+                     (string-match-p "\\.mdx\\'" buffer-file-name))
+                (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
 
-             ;; 5) Any programming mode
-             ((derived-mode-p 'prog-mode)
-              (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
+               ;; 5) Any programming mode
+               ((derived-mode-p 'prog-mode)
+                (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
 
-             ;; ------------------------------------------ clean buckets ------------------------------------------
-             ;; 6) Org or generic text (when org-config-files-local-mode is off)
-             ((or (eq major-mode 'text-mode)
-                  (and (eq major-mode 'org-mode)
-                       (not (bound-and-true-p org-config-files-local-mode))))
-              (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+               ;; ------------------------------------------ clean buckets ------------------------------------------
+               ;; 6) Org or generic text (when org-config-files-local-mode is off)
+               ((or (eq major-mode 'text-mode)
+                    (and (eq major-mode 'org-mode)
+                         (not (bound-and-true-p org-config-files-local-mode))))
+                (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
 
-             ;; ---------------------------------------- heuristic fallback --------------------------------------
-            ((and (use-region-p)
-                  (save-excursion
-                    (goto-char (region-beginning))
-                    (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-             (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
+               ;; ---------------------------------------- heuristic fallback --------------------------------------
+               ((and (use-region-p)
+                     (save-excursion
+                       (goto-char (region-beginning))
+                       (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
+                (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
 
-            (t
-             (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
-           (choice (car result))
-           (handler (cdr result)))
-      (when handler
-        (call-interactively handler))
-      (message "Copied text %s" choice))))
+               (t
+                (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
+             (choice (car result))
+             (handler (cdr result)))
+        (when handler
+          (call-interactively handler))
+        (message "Copied text %s" choice))))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -502,11 +513,11 @@ ARG zero or negative       → force replacement."
     (with-temp-buffer
       (insert (if verbatim
                   txt
-                (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
+                  (replace-regexp-in-string "\\(---\\|--\\)" "—" txt)))
       (shell-command-on-region (point-min) (point-max) "pbcopy"))
     (message (if verbatim
                  "Copied text verbatim."
-               "Copied text with em dashes."))))
+                 "Copied text with em dashes."))))
 
 (defun pasteboard-copy-to-end-of-buffer ()
   "Copy text from point to the end of the buffer to OS X system pasteboard."
@@ -532,7 +543,7 @@ ARG zero or negative       → force replacement."
         (shell-command-to-string
          (format "echo -n %s | pbcopy" (shell-quote-argument txt-updated-links)))
         (message "Copied and converted Org links to Markdown."))
-    (message "No region selected")))
+      (message "No region selected")))
 
 (setq select-enable-clipboard t)
 (setq select-enable-primary t)
@@ -691,11 +702,11 @@ INDENT is the number of leading spaces.  SKIP-LINES is a list of line numbers pr
     (unless (and skip-lines (memq line-no skip-lines))
       (if (> indent 0)
           t
-        (let* ((prev-kind (pasteboard--neighbor-nonblank-kind pos 'prev))
-               (next-kind (pasteboard--neighbor-nonblank-kind pos 'next))
-               (listish '(asterisk-bullet dash-bullet ordered-bullet definition)))
-          (or (memq prev-kind listish)
-              (memq next-kind listish)))))))
+          (let* ((prev-kind (pasteboard--neighbor-nonblank-kind pos 'prev))
+                 (next-kind (pasteboard--neighbor-nonblank-kind pos 'next))
+                 (listish '(asterisk-bullet dash-bullet ordered-bullet definition)))
+            (or (memq prev-kind listish)
+                (memq next-kind listish)))))))
 
 (defun pasteboard--convert-asterisk-bullets-to-dashes (beg end &optional skip-lines)
   "Convert Markdown-style leading '*' bullets to '-' between BEG and END.
@@ -716,7 +727,7 @@ SKIP-LINES is a list of 1-based line numbers that should remain untouched."
         (pcase-let ((`(,line-beg ,line-end ,indent-str ,body) target))
           (goto-char line-beg)
           (delete-region line-beg line-end)
-          (insert indent-str "- " body)))))) 
+          (insert indent-str "- " body))))))
 
 (defun pasteboard--tighten-markdown-table-separators (beg end)
   "Tighten Markdown table separator rows between BEG and END for Org tables.
@@ -831,47 +842,47 @@ With prefix argument (C-u), force verbatim paste."
       (progn
         (pasteboard-paste-verbatim (pasteboard--clipboard-string))
         (message "Pasted: verbatim (forced)"))
-    ;; Otherwise, smart paste
-    (let* ((clipboard-raw (pasteboard--clipboard-string))
-           (trimmed (string-trim clipboard-raw))
-           (clipboard-text (downcase trimmed))
-           choice)
-      (cond
-       ((and (use-region-p)
-             (not (string-empty-p trimmed))
-             (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-        (setq choice "bracket-link")
-        (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
-       ((or (eq major-mode 'sh-mode)
-            (eq major-mode 'python-mode)
-            (eq major-mode 'emacs-lisp-mode)
-            (eq major-mode 'markdown-mode)
-            (eq major-mode 'gfm-mode)
-            (derived-mode-p 'markdown-mode)
-            (derived-mode-p 'prog-mode)
-            (eq major-mode 'web-mode)
-            (eq major-mode 'fundamental-mode))
-        (setq choice "verbatim")
-        (pasteboard-paste-verbatim clipboard-raw))
-       ((or (and (eq major-mode 'org-mode)
-                 (not (bound-and-true-p org-config-files-local-mode)))
-            (derived-mode-p 'text-mode))
-        (setq choice "clean")
-        (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
-       (t
-        (let* ((prev-char (char-before))
-               (next-char (char-after))
-               (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
-               (use-no-spaces (or (member prev-char char-set)
-                                  (member next-char char-set))))
-          (if use-no-spaces
-              (progn
-                (setq choice "paste-raw")
-                (pasteboard-paste-verbatim clipboard-raw))
-            (setq choice "paste-clean")
-            (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
-      (when choice
-        (message "Pasted: %s" choice)))))
+      ;; Otherwise, smart paste
+      (let* ((clipboard-raw (pasteboard--clipboard-string))
+             (trimmed (string-trim clipboard-raw))
+             (clipboard-text (downcase trimmed))
+             choice)
+        (cond
+         ((and (use-region-p)
+               (not (string-empty-p trimmed))
+               (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
+          (setq choice "bracket-link")
+          (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
+         ((or (eq major-mode 'sh-mode)
+              (eq major-mode 'python-mode)
+              (eq major-mode 'emacs-lisp-mode)
+              (eq major-mode 'markdown-mode)
+              (eq major-mode 'gfm-mode)
+              (derived-mode-p 'markdown-mode)
+              (derived-mode-p 'prog-mode)
+              (eq major-mode 'web-mode)
+              (eq major-mode 'fundamental-mode))
+          (setq choice "verbatim")
+          (pasteboard-paste-verbatim clipboard-raw))
+         ((or (and (eq major-mode 'org-mode)
+                   (not (bound-and-true-p org-config-files-local-mode)))
+              (derived-mode-p 'text-mode))
+          (setq choice "clean")
+          (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
+         (t
+          (let* ((prev-char (char-before))
+                 (next-char (char-after))
+                 (char-set '(?: ?' ?\( ?\) ?| ?\[ ?\] ?/ ?\\ ?\" ?= ?< ?> ?{ ?}))
+                 (use-no-spaces (or (member prev-char char-set)
+                                    (member next-char char-set))))
+            (if use-no-spaces
+                (progn
+                  (setq choice "paste-raw")
+                  (pasteboard-paste-verbatim clipboard-raw))
+                (setq choice "paste-clean")
+                (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
+        (when choice
+          (message "Pasted: %s" choice)))))
 
 (defun pasteboard-paste (&optional text)
   "Paste TEXT (or the current clipboard) at point, normalising whitespace."
@@ -918,11 +929,11 @@ are adjusted so they become subheadings under the current Org heading."
          (current-level (save-excursion
                           (if (org-before-first-heading-p)
                               0
-                            (or (org-current-level)
-                                (progn
-                                  (org-back-to-heading t)
-                                  (org-current-level))
-                                0)))))
+                              (or (org-current-level)
+                                  (progn
+                                    (org-back-to-heading t)
+                                    (org-current-level))
+                                  0)))))
     ;; Clean up the text by removing carriage returns
     (setq text (replace-regexp-in-string "\r" "" text))
     ;; Adjust the heading levels in the pasted text
@@ -957,17 +968,17 @@ to be subheadings under the current heading."
   (let* ((current-level (save-excursion
                           (if (org-before-first-heading-p)
                               0
-                            (or (org-current-level)
-                                (progn
-                                  (org-back-to-heading t)
-                                  (org-current-level))
-                                0))))
+                              (or (org-current-level)
+                                  (progn
+                                    (org-back-to-heading t)
+                                    (org-current-level))
+                                  0))))
          (paste-start-pos (point)))
-    
+
     ;; First, use pasteboard-paste-adaptive to get all its smart features
     ;; (markdown conversion, smart quotes, link conversion, etc.)
     (pasteboard-paste-adaptive)
-    
+
     ;; Now adjust the heading levels of what was just pasted
     (let ((paste-end-pos (point)))
       (when (> paste-end-pos paste-start-pos)
@@ -979,7 +990,7 @@ to be subheadings under the current heading."
               (let ((level (length (match-string 1))))
                 (when (or (not min-level) (< level min-level))
                   (setq min-level level))))
-            
+
             ;; If we found headings, adjust them to be under current heading
             (when min-level
               (let ((shift (- (+ current-level 1) min-level)))
@@ -1037,7 +1048,7 @@ When working with code (any mode other than `org-mode` or in `org-mode` when
                (not (bound-and-true-p org-config-files-local-mode)))
           (derived-mode-p 'text-mode))
       (pasteboard-cut-and-capitalize-and-replace-em-dashes)
-    (pasteboard-cut-and-capitalize)))
+      (pasteboard-cut-and-capitalize)))
 
 (defun pasteboard-cut-adaptive ()
   "Smart cut to macOS pasteboard: uses pasteboard-copy-adaptive logic, then deletes region.
@@ -1050,21 +1061,21 @@ With prefix argument (C-u), force verbatim cut."
         (delete-region (region-beginning) (region-end))
         (my/fix-space)
         (message "Cut text verbatim (forced)"))
-    ;; Otherwise, use smart copy then delete
-    (let ((was-text-mode (or (and (eq major-mode 'org-mode)
-                                  (not (bound-and-true-p org-config-files-local-mode)))
-                            (derived-mode-p 'text-mode))))
-      ;; Use the adaptive copy which already has all the smart logic
-      (call-interactively #'pasteboard-copy-adaptive)
-      ;; Delete the region
-      (delete-region (region-beginning) (region-end))
-      ;; Fix spacing
-      (my/fix-space)
-      ;; Capitalize at beginning of sentence (text modes only)
-      (when was-text-mode
-        (save-excursion
-          (when (my/beginning-of-sentence-p)
-            (capitalize-unless-org-heading)))))))
+      ;; Otherwise, use smart copy then delete
+      (let ((was-text-mode (or (and (eq major-mode 'org-mode)
+                                    (not (bound-and-true-p org-config-files-local-mode)))
+                               (derived-mode-p 'text-mode))))
+        ;; Use the adaptive copy which already has all the smart logic
+        (call-interactively #'pasteboard-copy-adaptive)
+        ;; Delete the region
+        (delete-region (region-beginning) (region-end))
+        ;; Fix spacing
+        (my/fix-space)
+        ;; Capitalize at beginning of sentence (text modes only)
+        (when was-text-mode
+          (save-excursion
+            (when (my/beginning-of-sentence-p)
+              (capitalize-unless-org-heading)))))))
 
 (defvar-local failed-search nil)
 
@@ -1081,17 +1092,17 @@ With prefix argument (C-u), force verbatim cut."
             (progn
               (goto-char p)
               (setq-local failed-search nil))
-          (message "WrappedSearch: Not found.")))
-    (let ((p (search-forward str nil t)))
-      (unless p
-        (setq-local failed-search (cons (point) str))
-        (message "Search: Not found.")))))
+            (message "WrappedSearch: Not found.")))
+      (let ((p (search-forward str nil t)))
+        (unless p
+          (setq-local failed-search (cons (point) str))
+          (message "Search: Not found.")))))
 
 (defun pasteboard-search-for-clipboard-contents ()
   (interactive)
   (let ((search-term
          (with-temp-buffer
-          (pasteboard-paste-verbatim)
+           (pasteboard-paste-verbatim)
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
@@ -1102,12 +1113,12 @@ With prefix argument (C-u), force verbatim cut."
   (x-select-text (current-kill 0)))
 
 (defun push-MacOS-clipboard-to-kill-ring ()
- "Push the content of the MacOS clipboard to the Emacs kill ring."
- (interactive)
- (let ((clipboard-content (shell-command-to-string "pbpaste")))
-  (when (and clipboard-content (not (string= clipboard-content "")))
-   (kill-new clipboard-content)
-   (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
+  "Push the content of the MacOS clipboard to the Emacs kill ring."
+  (interactive)
+  (let ((clipboard-content (shell-command-to-string "pbpaste")))
+    (when (and clipboard-content (not (string= clipboard-content "")))
+      (kill-new clipboard-content)
+      (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 
 (defun gist-buffer-to-pasteboard ()
   (interactive)
