@@ -286,31 +286,31 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
 (defun convert-markdown-blockquotes-to-org (beg end)
   "Convert Markdown blockquotes to Org, unwrapping single-line quotes.
 
-Consecutive >-prefixed lines become Org's colon-style quote lines.
-Isolated single-line blockquotes have their marker stripped entirely so
-the text is treated as normal prose."
+Consecutive >-prefixed lines (allowing \">\", \"> \" or \">\\t\") become Org's
+colon-style quote lines. Isolated single-line blockquotes have their marker
+stripped entirely so the text is treated as normal prose."
   (save-excursion
     (goto-char beg)
     (let ((limit (copy-marker end)))
       (while (< (point) limit)
         (cond
-         ((looking-at "^> ")
+         ((looking-at "^>\\(?:[ \t]\\|$\\)")
           (let ((block-start (point))
                 (block-end nil)
                 (line-count 0))
             (while (and (< (point) limit)
-                        (looking-at "^> "))
+                        (looking-at "^>\\(?:[ \t]\\|$\\)"))
               (setq line-count (1+ line-count))
               (forward-line 1))
             (setq block-end (point))
             (save-excursion
               (goto-char block-start)
               (if (= line-count 1)
-                  (when (looking-at "^> \\(.*\\)$")
+                  (when (looking-at "^>\\(?:[ \t]\\)?\\(.*\\)$")
                     (replace-match "\\1" t t))
                 (while (< (point) block-end)
-                  (when (looking-at "^> ")
-                    (replace-match ": " t t))
+                  (when (looking-at "^>\\(?:[ \t]\\)?\\(.*\\)$")
+                    (replace-match ": \\1" t t))
                   (forward-line 1))))))
          (t
           (forward-line 1)))
