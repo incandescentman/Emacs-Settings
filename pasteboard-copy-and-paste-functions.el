@@ -310,6 +310,22 @@ entirely so the text is treated as normal prose."
           (forward-line 1))
       (set-marker limit nil))))
 
+(defun pasteboard--ensure-blank-line-before-headings (beg end)
+  "Ensure there is a blank line before any Org heading between BEG and END."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\*+ " end t)
+      (let ((pos (match-beginning 0)))
+        (save-excursion
+          (goto-char pos)
+          (unless (or (bobp)
+                      (save-excursion
+                        (forward-line -1)
+                        (looking-at-p "^\\s-*$")))
+            (goto-char pos)
+            (insert "\n")
+            (setq end (1+ end))))))))
+
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
 
@@ -769,6 +785,7 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
                       (normalize-dashes))
                     (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
                       (convert-markdown-to-org-code-blocks-simple)))))
+              (pasteboard--ensure-blank-line-before-headings (point-min) (point-max))
               (buffer-string))
           (when heading-markers
             (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))

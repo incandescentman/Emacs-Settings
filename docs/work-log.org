@@ -1,6 +1,7 @@
 - *2025-11-23: Pasteboard blockquote handling and source-of-truth cleanup*
 - Blockquote cleaner now strips `>` markers entirely (single- or multi-line), handling bare `>` lines and preserving blank lines inside the quote
 - Deleted obsolete `pasteboard-copy-and-paste-functions.org`; the `.el` file is now the only source of truth with an inline note to prevent re-tangling
+- Added heading spacing guard to `pasteboard--clean-string` to insert a blank line before Org headings when pasting prose
 
 - *2025-11-14: Add hipster-cv LaTeX template for modern two-column CVs*
 - Created =latex-templates/hipster-cv.el= using simplehipstercv document class for modern CV layouts
