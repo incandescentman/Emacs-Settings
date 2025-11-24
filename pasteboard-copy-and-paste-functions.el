@@ -318,13 +318,18 @@ entirely so the text is treated as normal prose."
       (let ((pos (match-beginning 0)))
         (save-excursion
           (goto-char pos)
-          (unless (or (bobp)
-                      (save-excursion
-                        (forward-line -1)
-                        (looking-at-p "^\\s-*$")))
-            (goto-char pos)
-            (insert "\n")
-            (setq end (1+ end))))))))
+          (let* ((prev-is-heading (save-excursion
+                                    (and (not (bobp))
+                                         (forward-line -1)
+                                         (looking-at-p "^\\*+ "))))
+                 (prev-is-blank (save-excursion
+                                  (and (not (bobp))
+                                       (forward-line -1)
+                                       (looking-at-p "^\\s-*$")))))
+            (unless (or (bobp) prev-is-heading prev-is-blank)
+              (goto-char pos)
+              (insert "\n")
+              (setq end (1+ end)))))))))
 
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
