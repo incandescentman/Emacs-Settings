@@ -24,7 +24,7 @@
   2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, etc.
   3. `replace-smart-quotes-regexp`
   4. `replace-weird-spaces`
-  5. `convert-markdown-blockquotes-to-org` (single-line `> ` quotes are unwrapped; multi-line stay as Org `: ` blocks)
+  5. `convert-markdown-blockquotes-to-org` (strips `>` markers from single- and multi-line blockquotes, preserving blank lines)
   6. `convert-markdown-links-to-org-mode`
   7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
   8. Markdown table cleanup: `pasteboard--tighten-markdown-table-separators`
