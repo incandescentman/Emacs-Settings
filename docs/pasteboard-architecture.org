@@ -28,6 +28,7 @@
   6. `convert-markdown-links-to-org-mode`
   7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
   8. Markdown table cleanup: `pasteboard--tighten-markdown-table-separators`
+  9. Ensure a blank line before headings unless the previous line is also a heading (keeps `*`/`**` sequences tight)
 
 ** Adaptive Paste Decision Tree
 `pasteboard-paste-adaptive` chooses paste behavior based on context (line 566-613):
