@@ -590,7 +590,8 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-c") 'pasteboard-copy-adaptive)
 
 (define-key key-minor-mode-map (kbd "s-v") 'pasteboard-paste-adaptive)
-(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-adaptive)
+;; (define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-adjusted-subtrees-adaptive)
+(define-key key-minor-mode-map (kbd "s-V") 'pasteboard-paste-verbatim)
 
 ;; (define-key key-minor-mode-map (kbd "C-s-o") 'dired-jump)
 (define-key key-minor-mode-map (kbd "C-x C-j") 'jay-up-directory)
