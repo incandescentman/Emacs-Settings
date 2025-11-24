@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t; -*-
+;; NOTE: This .el file is the source of truth. Do not recreate or tangle from a .org version.
 (require 'subr-x)
 
 (defgroup pasteboard nil
@@ -283,12 +284,39 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
             (goto-char limit)))))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
-  "Turn '> ' at bol into ': ' (Org quote) in the region."
+  "Convert Markdown blockquotes to Org, unwrapping single-line quotes.
+
+Consecutive >-prefixed lines become Org's colon-style quote lines.
+Isolated single-line blockquotes have their marker stripped entirely so
+the text is treated as normal prose."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "^> " end t)
-      (replace-match ": " t t)))
-  )
+    (let ((limit (copy-marker end)))
+      (while (< (point) limit)
+        (cond
+         ((looking-at "^> ")
+          (let ((block-start (point))
+                (block-end nil)
+                (line-count 0))
+            (while (and (< (point) limit)
+                        (looking-at "^> "))
+              (setq line-count (1+ line-count))
+              (forward-line 1))
+            (setq block-end (point))
+            (save-excursion
+              (goto-char block-start)
+              (if (= line-count 1)
+                  (when (looking-at "^> \\(.*\\)$")
+                    (replace-match "\\1" t t))
+                (while (< (point) block-end)
+                  (when (looking-at "^> ")
+                    (replace-match ": " t t))
+                  (forward-line 1))))))
+         (t
+          (forward-line 1)))
+        (when (<= (point) (line-beginning-position))
+          (goto-char limit)))
+      (set-marker limit nil))))
 
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
