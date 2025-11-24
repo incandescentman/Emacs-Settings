@@ -149,6 +149,10 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
       (goto-char beg)
       (while (re-search-forward "^\\s-*---\\s-*$" end-marker t)
         (replace-match "" t t))
+      ;; Remove lines that contain only three or more asterisks (common hrules)
+      (goto-char beg)
+      (while (re-search-forward "^\\s-*\\*\\{3,\\}\\s-*$" end-marker t)
+        (replace-match "" t t))
       ;; Remove space before "-" at the beginning of lines
       (goto-char beg)
       (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
@@ -284,30 +288,42 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
             (goto-char limit)))))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
-  "Convert Markdown blockquotes to Org, unwrapping single-line quotes.
+  "Strip Markdown/email blockquote markers between BEG and END, unwrapping quotes.
 
-Consecutive >-prefixed lines (allowing just `>` or `> `) become Org's colon-style
-quote lines. Isolated single-line blockquotes have their marker stripped
-entirely so the text is treated as normal prose."
+Handles consecutive lines that start with optional indentation and \">\" (or
+just \">\" alone), removing the marker while preserving blank lines. Single-line
+quotes are unwrapped the same way."
   (save-excursion
     (goto-char beg)
     (let ((limit (copy-marker end)))
       (while (< (point) limit)
-        (if (looking-at "^>\\(?:[ \t]\\|$\\)")
-            (let ((block-start (point))
-                  (line-count 0))
+        (if (looking-at "^[ \t]*>\\(?:[ \t]\\|$\\)")
+            (let ((block-start (point)))
               (while (and (< (point) limit)
-                          (looking-at "^>\\(?:[ \t]\\|$\\)"))
-                (setq line-count (1+ line-count))
+                          (looking-at "^[ \t]*>\\(?:[ \t]\\|$\\)"))
                 (forward-line 1))
-              (let ((block-end (point)))
+              (let ((block-end (copy-marker (point))))
                 (save-excursion
                   (goto-char block-start)
                   (while (< (point) block-end)
-                    (when (looking-at "^>\\(?:[ \t]\\)?\\(.*\\)$")
+                    (when (looking-at "^[ \t]*>\\(?:[ \t]\\)?\\(.*\\)$")
                       (replace-match "\\1" t nil))
-                    (forward-line 1))))))
+                    (forward-line 1)))
+                (set-marker block-end nil))))
           (forward-line 1))
+      (set-marker limit nil))))
+
+(defun pasteboard--strip-cite-markers (beg end)
+  "Remove cite markers like [cite_start] or [cite: …] between BEG and END."
+  (save-excursion
+    (goto-char beg)
+    (let ((limit (copy-marker end)))
+      (while (re-search-forward "\\[cite[_:][^]]*\\]" limit t)
+        (replace-match "" t t))
+      ;; Collapse any doubled spaces created by removals.
+      (goto-char beg)
+      (while (re-search-forward " \\{2,\\}" limit t)
+        (replace-match " " t t))
       (set-marker limit nil))))
 
 (defun pasteboard--ensure-blank-line-before-headings (beg end)
@@ -764,6 +780,7 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
               (replace-smart-quotes beg end)
               (replace-smart-quotes-regexp beg end)
               (replace-weird-spaces beg end)
+              (pasteboard--strip-cite-markers beg end)
               (convert-markdown-blockquotes-to-org beg end)
               (convert-markdown-links-to-org-mode beg end)
               ;; Buffer size may have changed; refresh region bounds before further narrowing.
