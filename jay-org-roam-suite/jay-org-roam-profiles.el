@@ -114,7 +114,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
                    "- Links ::\n- Source ::\n\n* ${title}\n%?"))
          (filetags (if (plist-member args :filetags)
                        (plist-get args :filetags)
-                     (when tag (format ":%s:" tag))))
+                       (when tag (format ":%s:" tag))))
          (created-format (or (plist-get args :created-format)
                              "%Y-%m-%d %a %H:%M"))
          (type (or (plist-get args :type) 'plain))
@@ -126,7 +126,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
                                             (format "#+FILETAGS: %s\n" filetags))))))
          (unnarrowed (if (plist-member args :unnarrowed)
                          (plist-get args :unnarrowed)
-                       t))
+                         t))
          (props (plist-get args :props)))
     (append
      `(,key ,label ,type ,body
@@ -180,7 +180,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("w" "lectures and public talks" "lectures" "lectures")
     ("X" "exemplars" "exemplars" "exemplars")
     ("x" "cuts" "cuts" "cuts")
-    ("$" "consumerist" "consumerist" "memoir")
+    ("$" "consumerist" "consumerist" "consumerist")
     ("r" "social / relationships" "social" "social"))
   "Factory-style template specs that also lean on `jay/roam-template`.")
 
@@ -397,14 +397,14 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
     ;; Update org-roam configuration
     ;; Use directory path as-is to avoid resolving Dropbox symlink to CloudStorage path
     (setq org-roam-directory (file-name-as-directory
-                               (if (file-name-absolute-p directory)
-                                   directory
-                                 (expand-file-name directory)))
+                              (if (file-name-absolute-p directory)
+                                  directory
+                                  (expand-file-name directory)))
           org-roam-dailies-directory dailies-dir
           org-roam-db-location (if db-location
                                    (if (file-name-absolute-p db-location)
                                        db-location
-                                     (expand-file-name db-location))
+                                       (expand-file-name db-location))
                                    (expand-file-name "org-roam.db" (xdg-cache-home)))
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
@@ -425,14 +425,14 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
       (when astro-root
         (setq org-astro-source-root-folder (if (file-name-absolute-p astro-root)
                                                astro-root
-                                                                                                                                         (expand-file-name astro-root)))))
-                                                                                           
-                                                                                               ;; Ensure the directory exists
-                                                                                               (unless (file-directory-p org-roam-directory)
-                                                                                                 (make-directory org-roam-directory t)
-                                                                                                 (message "Created org-roam directory: %s" org-roam-directory))
-                                                                                           
-                                                                                               ;; Reinitialize the database connection when switching profiles    ;; No clearing needed - we're just connecting to a different database file
+                                               (expand-file-name astro-root)))))
+
+    ;; Ensure the directory exists
+    (unless (file-directory-p org-roam-directory)
+      (make-directory org-roam-directory t)
+      (message "Created org-roam directory: %s" org-roam-directory))
+
+    ;; Reinitialize the database connection when switching profiles    ;; No clearing needed - we're just connecting to a different database file
     (when switching-profiles
       (setq org-roam-db nil)
       (org-roam-db))

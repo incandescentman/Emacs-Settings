@@ -145,46 +145,69 @@ etc."
 ;;------------------------------------------------------------------------------
 
 (defun org-url-at-point-is-image-p ()
-  "Return t if the URL at point points to an image file (based on file extension)."
-  (let* ((url (thing-at-point 'url))
+  "Return the image URL or path at point, or nil if none is found.
+Supports plain URLs and Org links (e.g., [[/path/to/file.jpg]])."
+  (let* ((ctx (org-element-context))
+         (link (when (eq (car ctx) 'link)
+                 (org-element-property :raw-link ctx)))
+         (url (or link (thing-at-point 'url)))
          (image-extensions
           '("png" "jpg" "jpeg" "gif" "bmp" "svg" "webp" "tiff" "ico" "heic" "avif"))
          (regexp (concat "\\.\\("
                          (mapconcat #'identity image-extensions "\\|")
                          "\\)\\(?:\\?[^[:space:]]*\\)?\\(?:#[^[:space:]]*\\)?$")))
-    (when url
-      (string-match-p regexp url))))
+    (when (and url (string-match-p regexp url))
+      url)))
+
+(defun smart-return--normalize-file-url (url)
+  "Normalize file URLs so they work with `create-image'."
+  (cond
+   ((string-prefix-p "file://" url) (substring url 7))
+   ((string-prefix-p "file:" url) (substring url 5))
+   (t url)))
 
 (defun display-online-image-in-new-buffer (url)
-  "Fetch and display an image from URL in a new buffer using `url-retrieve'."
+  "Fetch and display an image from URL (http(s) or local file) in a new buffer."
   (interactive "sEnter image URL: ")
-  (if (and url (string-match-p "^https?://" url))
-      (progn
-        (message "Fetching image from %s..." url)
-        (url-retrieve
-         url
-         (lambda (status)
-           (if (plist-get status :error)
-               (message "Error retrieving image: %s"
-                        (plist-get status :error))
-               (goto-char (point-min))
-               (re-search-forward "\r?\n\r?\n" nil 'move)
-               (let ((image-data (buffer-substring-no-properties
-                                  (point) (point-max))))
-                 (with-current-buffer (get-buffer-create "*Online Image*")
-                   (let ((inhibit-read-only t))
-                     (erase-buffer)
-                     (kill-all-local-variables)
-                     (insert-image (create-image image-data nil t))
-                     (set-buffer-modified-p nil)
-                     (image-mode))
-                   (display-buffer (current-buffer))))
-               (kill-buffer (current-buffer))
-               (message "Image fetched and displayed successfully."))))
-        ;; If all goes well, return t
-        t)
-      (message "Invalid URL provided.")
-      nil))
+  (cond
+   ((and url (string-match-p "^https?://" url))
+    (message "Fetching image from %s..." url)
+    (url-retrieve
+     url
+     (lambda (status)
+       (if (plist-get status :error)
+           (message "Error retrieving image: %s"
+                    (plist-get status :error))
+         (goto-char (point-min))
+         (re-search-forward "\r?\n\r?\n" nil 'move)
+         (let ((image-data (buffer-substring-no-properties
+                            (point) (point-max))))
+           (with-current-buffer (get-buffer-create "*Online Image*")
+             (let ((inhibit-read-only t))
+               (erase-buffer)
+               (kill-all-local-variables)
+               (insert-image (create-image image-data nil t))
+               (set-buffer-modified-p nil)
+               (image-mode))
+             (display-buffer (current-buffer))))
+         (kill-buffer (current-buffer))
+         (message "Image fetched and displayed successfully."))))
+    t)
+   ((and url (file-exists-p (smart-return--normalize-file-url url)))
+    (let* ((path (smart-return--normalize-file-url url))
+           (expanded (expand-file-name path)))
+      (with-current-buffer (get-buffer-create "*Online Image*")
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (kill-all-local-variables)
+          (insert-image (create-image expanded))
+          (set-buffer-modified-p nil)
+          (image-mode))
+        (display-buffer (current-buffer)))
+      t))
+   (t
+    (message "Invalid URL provided.")
+    nil)))
 
 
 ;;------------------------------------------------------------------------------
@@ -244,7 +267,7 @@ modification and wraps custom edits in `combine-after-change-calls' so that
 Org's cache only has to resynchronise once."
   (interactive)
   (let* ((in-empty-item (org-in-empty-item-p))
-         (url-is-image (org-url-at-point-is-image-p))
+         (image-target (org-url-at-point-is-image-p))
          (on-link (org-link-at-point-p))
          (has-region (use-region-p))
          (region-beg (when has-region (region-beginning)))
@@ -268,8 +291,8 @@ Org's cache only has to resynchronise once."
           (when (looking-at "^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+")
             (delete-region (match-beginning 0) (match-end 0)))
           (delete-horizontal-space))))
-     (url-is-image
-      (display-online-image-in-new-buffer (thing-at-point 'url)))
+     (image-target
+      (display-online-image-in-new-buffer image-target))
      ((and on-link org-return-follows-link)
       (org-open-at-point))
      (has-region

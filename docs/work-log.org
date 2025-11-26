@@ -1,3 +1,13 @@
+- *2025-11-24: Keybinding swap, org-roam profile polish, and mc whitelist*
+- Swapped Org-mode bindings to make `s-l` insert links and moved `consult-outline` to `s-;` for muscle memory parity with other apps
+- Fixed org-roam template defaults: restored consumerist filetag, normalized indentation, and ensure the profile directory is created before syncing to avoid missing-folder errors
+- Added `org-priority-up` to the multiple-cursors allowlist so priority bumps work during multi-edit sessions
+
+- *2025-11-24: smart-return handles image Org links and local files*
+- `smart-return` now detects image targets from Org links (e.g. `[[/path/to/img.jpg]]`) and file:// URLs, passing the resolved path to the image viewer instead of erroring with "Invalid URL provided"
+- Added file URL normalization so `create-image` can display local files directly without http(s)
+- Image detection now returns the matched target string, avoiding mismatches between detection and display
+
 - *2025-11-23: Pasteboard blockquote handling and source-of-truth cleanup*
 - Blockquote cleaner now strips `>` markers entirely (single- or multi-line), handling bare `>` lines and preserving blank lines inside the quote
 - Deleted obsolete `pasteboard-copy-and-paste-functions.org`; the `.el` file is now the only source of truth with an inline note to prevent re-tangling

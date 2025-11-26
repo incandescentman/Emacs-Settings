@@ -735,7 +735,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-+") 'copy-region-to-other-window)
 (define-key key-minor-mode-map (kbd "s-_") 'olivetti-shrink)
 
-(define-key org-mode-map (kbd "s-;") 'org-insert-link)
+(define-key org-mode-map (kbd "s-l") 'org-insert-link)
 
 (define-key key-minor-mode-map (kbd "s-B") 'consult-buffer)
 (define-key key-minor-mode-map (kbd "C-s-SPC") 'cape-emoji)
@@ -895,7 +895,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "s-Y") 'available) ;; ⌘-Y
 ;; (define-key key-minor-mode-map (kbd "s-.") 'available) ;; s-.
 ;; (define-key key-minor-mode-map (kbd "s-:") 'available) ;; s-:
-(define-key key-minor-mode-map (kbd "s-l") 'consult-outline) ;;
+(define-key key-minor-mode-map (kbd "s-;") 'consult-outline) ;;
 ;; (define-key key-minor-mode-map (kbd "C-\\") 'available) ;; C-\
 
 ;; available

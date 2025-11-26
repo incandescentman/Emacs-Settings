@@ -38,7 +38,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 *** UI and Editing
 - [[file:keys.el][keys.el]] - Global keybinding overrides
 - [[file:fonts-and-themes.el][fonts-and-themes.el]] - Dynamic font sizing and theme management
-- [[file:smart-return.el][smart-return.el]] - Context-aware return key behavior
+- [[file:smart-return.el][smart-return.el]] - Context-aware return key behavior (opens image Org links and file:// paths)
 - [[file:spacecraft-mode.el][spacecraft-mode.el]] - Distraction-free writing environment
 
 *** Utility Modules
