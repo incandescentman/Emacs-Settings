@@ -3383,6 +3383,7 @@ buffer is already narrowed; never widen."
   ("el" . "src emacs-lisp")
   ("la" . "export latex")
   ("q" . "src quote")
+  ("pq" . "src pullquote")
   ("s" . "src")
   ("sh" . "src sh")
   ("f" . "example fountain")
@@ -3405,6 +3406,7 @@ buffer is already narrowed; never widen."
            ("sh" . "src sh")              ; shell
            ("el" . "src emacs-lisp")      ; elisp
            ("u" . "src user")             ; user
+           ("pq" . "src pullquote")       ; pullquote callout
            ("le" . "example")             ; example block
            ("v"  . "verse"))              ; verse block
          org-structure-template-alist)))
@@ -9718,6 +9720,12 @@ After evaluating your init-file you can use links analog to the example:
         ("my-life" . (:path "/Users/jay/Dropbox/github/me/my-life/src/content/notes"))
         ("my-mind" . (:path "/Users/jay/Dropbox/github/me/my-mind/src/content"
                       :preserve-folder-structure t))))
+
+
+
+
+(setq org-astro-debug-log-file (expand-file-name 
+ "~/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro-debug.log")) 
 #+end_src
 
 ** reload ox-astro
@@ -9885,6 +9893,11 @@ saved first and reverted after formatting."
             (message "Org spacing formatted: %s" target))
         (display-buffer output-buffer)
         (error "Org spacing formatter failed (%s)" status)))))
+#+end_src
+
+* Disable fontify for underlining
+#+begin_src emacs-lisp
+(setf (alist-get "_" org-emphasis-alist nil nil #'equal) '(default)) 
 #+end_src
 
 * Goals agenda
