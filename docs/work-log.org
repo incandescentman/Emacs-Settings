@@ -1,3 +1,9 @@
+- *2025-11-26: Documentation sync and repository cleanup*
+- Synced =CLAUDE.md= and =README.org= with recent architectural changes (Org-roam suite, LaTeX templates)
+- Updated =docs/critical-next-steps.org= with date and completion status
+- Cleaned up root directory: moved =html2org.txt= and =cosmetics.org= to archive, then deleted them after verification
+- Moved =20240425154404-emacs_additional_steps.org= to =docs/= directory
+
 - *2025-11-24: Keybinding swap, org-roam profile polish, and mc whitelist*
 - Swapped Org-mode bindings to make `s-l` insert links and moved `consult-outline` to `s-;` for muscle memory parity with other apps
 - Fixed org-roam template defaults: restored consumerist filetag, normalized indentation, and ensure the profile directory is created before syncing to avoid missing-folder errors

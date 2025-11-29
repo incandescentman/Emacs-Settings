@@ -18,6 +18,8 @@ The following documentation files provide detailed information about various asp
 - [`docs/backup-system.org`](docs/backup-system.org) - Backup and recovery system documentation
 - [`docs/critical-next-steps.org`](docs/critical-next-steps.org) - Priority items for future development
 - [`docs/experimental-mode-playbook.org`](docs/experimental-mode-playbook.org) - Guide for experimental mode features
+- [`docs/ORG-ROAM-PROFILES-README.md`](docs/ORG-ROAM-PROFILES-README.md) - Guide to the multi-profile Org Roam system
+- [`docs/pasteboard-markdown-detection.org`](docs/pasteboard-markdown-detection.org) - Documentation for the smart pasteboard system
 
 ## Configuration Architecture
 
@@ -43,18 +45,23 @@ The following documentation files provide detailed information about various asp
 - `pasteboard-copy-and-paste-functions.el` - Enhanced clipboard operations
 - `reveal-in-finder.el` - Finder integration
 
-#### 3. Org-Mode Extensions
-- `org-roam-config.el` - Knowledge management with org-roam
+#### 3. Org-Mode & Knowledge Management
+- `jay-org-roam-suite/` - **Core Architecture**: Modular Org Roam system (Core, Profiles, Templates)
+- `org-roam-config.el` - Legacy entry point (delegates to suite)
 - `org-yt.el` - YouTube link support
 - `org-visual-style.el` - Visual enhancements for org-mode
 
-#### 4. UI and Editing
+#### 4. Publishing & Export
+- `latex-templates/` - Extensive library of custom LaTeX classes (CVs, Books, Letters)
+- `ox-koma-letter.el` - KOMA-Script letter integration
+
+#### 5. UI and Editing
 - `keys.el` - Global keybinding overrides
 - `fonts-and-themes.el` - Dynamic font sizing and theme management
 - `smart-return.el` - Context-aware return key behavior
 - `spacecraft-mode.el` - Distraction-free writing environment
 
-#### 5. Utility Modules
+#### 6. Utility Modules
 - `search-commands.el` - Enhanced search functionality
 - `hydras.el` - Hydra configurations for quick commands
 - `skeletons.el` - Code templates and snippets
@@ -70,28 +77,32 @@ The following documentation files provide detailed information about various asp
 7. Various feature modules (deferred or immediate)
 8. Local configuration (`local-config.el`)
 
-## Recent Fixes Applied (2025-10-11)
+## Recent Major Updates (Oct-Nov 2025)
 
-### File Watcher and Dropbox Sync Error Fix
-Fixed critical file-notify errors occurring when editing Dropbox files from iPhone:
-- **Problem**: "(void-function nil)" errors when Dropbox syncs files open in Emacs
-- **Solution**: Comprehensive file watcher suppression in `spacemacs.d/init.el:925-962`
-  - Disabled file notifications for cloud storage (Dropbox/iCloud/OneDrive)
-  - Switched to polling-based auto-revert (2-second intervals)
-  - Added error suppression for file-notify operations
-  - Excluded cloud storage from undo-fu-session tracking
-- **Documentation**: Full details in `docs/work-log.org`
+### 1. Org Roam Profile System (Nov 2025)
+- **Multi-Graph Support**: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
+- **Architecture**: Modularized into `jay-org-roam-suite/` (Core, Profiles, Templates).
+- **Features**: Independent databases, capture templates, and export paths per profile.
+- **Commands**: `s-u P` to switch, `s-u 1/2/3/4` shortcuts.
 
-## Recent Fixes Applied (2025-09-05)
+### 2. Documentation Overhaul (Oct 2025)
+- **Complete Rewrite**: Transformed technical notes into user-friendly guides (`instructions.org`, `design-architecture.org`).
+- **New Guides**: Added `ORG-ROAM-PROFILES-README.md`, `pasteboard-markdown-detection.org`.
+- **Philosophy**: Shifted to "comprehensive guides teaching concepts".
 
-### Issues Resolved
-1. **Duplicate function definition**: Removed duplicate `add-word-to-personal-dictionary`
-2. **Function errors**: Fixed `plusp` → `(> arg 0)` and `(1-arg)` → `(1- arg)`
-3. **Deprecated variables**: Updated `org-bracket-link-regexp` → `org-link-bracket-re`
-4. **Wrong function**: Changed `mapc` → `mapcar` in `my-org-files-list`
-5. **Duplicate ispell config**: Cleaned up redundant dictionary settings
-6. **Duplicate exports**: Consolidated multiple `org-export-with-drawers` settings
-7. **Hunspell warnings**: Removed unsupported "american" and "english" dictionary entries
+### 3. Pasteboard & Editor Hardening
+- **Pure Elisp**: Converted `pasteboard-copy-and-paste-functions` to pure `.el` for reliability.
+- **Smart Paste**: Improved Markdown detection, blockquote handling, and table formatting.
+- **Formatting**: Added `scripts/org_spacing_formatter.py` for automatic heading spacing.
+
+### 4. LaTeX & Publishing
+- **New Templates**: Added 'Hipster CV' and 'Elegant Less Whitespace' templates in `latex-templates/`.
+- **Export**: Enhanced `ox-astro` integration with profile-aware source roots.
+
+### 5. System Stability
+- **Cloud Storage**: Fixed critical Dropbox/CloudStorage path resolution issues and timeouts.
+- **File Watchers**: Optimized `file-notify` to prevent sync errors with mobile edits.
+- **Startup**: Cleaned up unused packages and deprecated variables.
 
 ## Potential Future Improvements
 

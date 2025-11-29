@@ -1,5 +1,5 @@
 #+TITLE: Critical Next Steps
-#+DATE: 2025-10-26
+#+DATE: 2025-11-26
 #+DESCRIPTION: Technical debt, improvements, and future roadmap
 
 * Overview
@@ -420,6 +420,9 @@ Record major decisions here:
 
 ** 2025-10-26: Decided NOT to Pursue Multi-Platform
 *Reason*: macOS integration is a core value, would dilute focus
+
+** 2025-11-26: Completed Major Documentation Overhaul
+*Reason*: Significant rewrite of core documentation files (`instructions.org`, `design-architecture.org`, etc.) to improve clarity, comprehensiveness, and user-friendliness. Updated `CLAUDE.md` and `README.org` to reflect codebase changes and new architectural components (e.g., Org Roam profiles, LaTeX templates).
 
 * Related Documentation
 

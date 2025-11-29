@@ -9709,20 +9709,25 @@ After evaluating your init-file you can use links analog to the example:
 ;; Configure source root folder for ox-astro
 (setq org-astro-source-root-folder
       "/Users/jay/Dropbox/roam")
-;; Configure known posts folders with folder structure preservation
-(setq org-astro-known-posts-folders
-      '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
-        ("jaydocs" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
-        ("socraticai" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
-        ("astro-roam" . (:path "/Users/jay/Dropbox/github/astro-roam/src/content"))
-        ("roam-life" . (:path "/Users/jay/Dropbox/github/life-web/src/content/notes/"
-                        :preserve-folder-structure t))
-        ("my-life" . (:path "/Users/jay/Dropbox/github/me/my-life/src/content/notes"))
-        ("my-mind" . (:path "/Users/jay/Dropbox/github/me/my-mind/src/content"
-                      :preserve-folder-structure t))))
+;; Configure known posts folders with folder structure preservation 
 
 
-
+ ;; ox-astro destination folders
+ ;; Each entry: ("nickname" . (:path "..." [:preserve-folder-structure t] [:id-link-base-path "/base"]))
+ ;; :path - where MDX files are written
+ ;; :preserve-folder-structure - mirror source org directory hierarchy in output
+ ;; :id-link-base-path - use absolute routes for ID links (e.g., /notes/slug)
+ (setq org-astro-known-posts-folders
+ '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
+ ("jaydocs" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
+ ("socraticai" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
+ ("astro-roam" . (:path "/Users/jay/Dropbox/github/astro-roam/src/content"))
+ ("roam-life" . (:path "/Users/jay/Dropbox/github/life-web/src/content/notes/"
+ :preserve-folder-structure t
+ :id-link-base-path "/notes")) ; links → /notes/characters/rachel
+ ("my-life" . (:path "/Users/jay/Dropbox/github/me/my-life/src/content/notes"))
+ ("my-mind" . (:path "/Users/jay/Dropbox/github/me/my-mind/src/content"
+ :preserve-folder-structure t)))) 
 
 (setq org-astro-debug-log-file (expand-file-name 
  "~/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro-debug.log")) 
