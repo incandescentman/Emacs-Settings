@@ -633,6 +633,7 @@ Otherwise, demote from point to the end of the buffer."
                    (md-score "^[ \t]*> " 1)
                    (md-score "^[ \t]*`\\{3\\}" 2)
                    (md-score "\\[[^][]+\\](https?://[^)]+)" 1)
+                   (md-score "\\*\\*[^*\n]+\\*\\*" 3)  ; inline **bold**
                    (org-score "^[ \t]*#\\+" 3)
                    (org-score "^[ \t]*\\*+ \\(TODO\\|DONE\\|NEXT\\|WAIT\\|HOLD\\|CANCELLED\\|NOTE\\|IDEA\\|FIXME\\|PROJ\\)\\b" 3)
                    (org-score "^[ \t]*\\*+ .*:[[:alnum:]_@#%:]+:[ \t]*$" 2)

@@ -1,3 +1,9 @@
+- *2025-11-29: Fix pasteboard markdown detection for inline bold*
+- Added =\\*\\*[^*\n]+\\*\\*= pattern (weight 3) to =pasteboard--analyse-clipboard-text= for detecting inline =**bold**= markers
+- Previously, text with =**bold**= patterns but no markdown headings wasn't detected as markdown style
+- This fix ensures =pasteboard--convert-markdown-inline-emphasis= runs to convert =**bold**= → =*bold*=
+- Also enables =normalize-dashes= to convert spaced hyphens (= - =) to em-dashes (= --- =)
+
 - *2025-11-26: Documentation sync and repository cleanup*
 - Synced =CLAUDE.md= and =README.org= with recent architectural changes (Org-roam suite, LaTeX templates)
 - Updated =docs/critical-next-steps.org= with date and completion status

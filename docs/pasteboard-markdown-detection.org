@@ -16,7 +16,7 @@
 
 * Detection Heuristics
 - `pasteboard--analyse-clipboard-text`
-  - Scores Markdown signals: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links.
+  - Scores Markdown signals: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links, inline `**bold**` markers.
   - Scores Org signals: `#+` directives, TODO keywords, property drawers, multi-star headings.
   - Tracks original Markdown heading *line numbers*, then upgrades them to markers so deletions don't shift our skip list.
 - `pasteboard--text-contains-markdown-headings-p`
