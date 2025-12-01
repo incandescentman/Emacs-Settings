@@ -9916,6 +9916,16 @@ saved first and reverted after formatting."
 
 * Goals agenda
 
+* demote all headings
+#+begin_src emacs-lisp
+(defun jay/demote-headings-to-end ()
+ "Demote all org headings from point to end of buffer by one level."
+ (interactive)
+ (save-excursion
+ (while (re-search-forward "^\\(\\*+\\) " nil t)
+ (replace-match "*\\1 ")))) 
+#+end_src
+
 * Local Variables & The End
 These have to be at the end.
 
