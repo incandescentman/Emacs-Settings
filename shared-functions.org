@@ -9720,8 +9720,10 @@ After evaluating your init-file you can use links analog to the example:
  (setq org-astro-known-posts-folders
  '(("blog" . (:path "~/projects/my-astro-site/src/content/blog"))
  ("jaydocs" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/jaydocs/src/content/blog"))
- ("socraticai" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
- ("astro-roam" . (:path "/Users/jay/Dropbox/github/astro-roam/src/content"))
+ ("socratic" . (:path "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/content/blog"))
+ ("astro-roam" . (:path "/Users/jay/Dropbox/github/astro-roam/src/content/notes"
+                       :preserve-folder-structure t
+                       :id-link-base-path "/notes"))
  ("roam-life" . (:path "/Users/jay/Dropbox/github/life-web/src/content/notes/"
  :preserve-folder-structure t
  :id-link-base-path "/notes")) ; links → /notes/characters/rachel
@@ -9730,23 +9732,30 @@ After evaluating your init-file you can use links analog to the example:
  :preserve-folder-structure t)))) 
 
 (setq org-astro-debug-log-file (expand-file-name 
- "~/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro-debug.log")) 
+ "~/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro-debug.log"))
+
+
+(setq org-astro-copy-to-clipboard nil) 
 #+end_src
 
 ** reload ox-astro
 #+begin_src emacs-lisp
-(defun ox-astro-reload ()
-  "Fully reload ox-astro and all its modules without restarting Emacs."
-  (interactive)
-  (unload-feature 'ox-astro t)
-  (unload-feature 'ox-astro-table-handlers t)
-  (unload-feature 'ox-astro-image-handlers t)
-  (unload-feature 'ox-astro-handlers t)
-  (unload-feature 'ox-astro-helpers t)
-  (unload-feature 'ox-astro-metadata t)
-  (unload-feature 'ox-astro-config t)
-  (load-file "/Users/jay/Dropbox/github/ox-astro/ox-astro.el")
-  (message "ox-astro reloaded successfully"))
+ (defun ox-astro-reload ()
+    "Fully reload ox-astro and its modules without restarting Emacs."
+    (interactive)
+    (let ((features '(ox-astro
+                      ox-astro-table-handlers
+                      ox-astro-image-handlers
+                      ox-astro-pdf-handlers
+                      ox-astro-handlers
+                      ox-astro-helpers
+                      ox-astro-metadata
+                      ox-astro-config)))
+      (dolist (feat features)
+        (when (featurep feat)
+          (ignore-errors (unload-feature feat t)))))
+    (load (expand-file-name "ox-astro.el" "/Users/jay/Dropbox/github/ox-astro") nil nil t)
+    (message "ox-astro reloaded successfully"))
 #+end_src
 
 

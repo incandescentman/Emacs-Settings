@@ -1125,12 +1125,11 @@ This function is called at the very end of Spacemacs initialization."
    '(eww-search-prefix "https://www.google.com/search?q=jay+dixit/?q=")
    '(flycheck-disabled-checkers '(proselint))
    '(goto-address-mail-face 'org-link)
-   '(jay/notch-display-identifiers '("DELL U3223QE" "Built-in" "Retina Display"))
+   '(jay/notch-display-identifiers '("Built-in" "Retina Display"))
    '(jinx-include-modes '(text-mode prog-mode conf-mode org-mode))
    '(line-number-mode t)
    '(marginalia-align 'left nil nil "Customized with use-package marginalia")
    '(mode-line-compact 'long)
-   ;; org-astro-known-posts-folders is set in shared-functions.org
    '(org-attach-expert nil)
    '(org-attach-id-dir "/Users/jay/Dropbox/roam/attachments")
    '(org-ellipsis " 🪜 ")
