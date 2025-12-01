@@ -153,10 +153,10 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
       (goto-char beg)
       (while (re-search-forward "^\\s-*\\*\\{3,\\}\\s-*$" end-marker t)
         (replace-match "" t t))
-      ;; Remove space before "-" at the beginning of lines
+      ;; Remove a single stray leading space before "-" at BOL without altering nested list indentation.
       (goto-char beg)
-      (while (re-search-forward "^\\(\\s-*\\) -" end-marker t)
-        (replace-match "\\1-" nil nil))
+      (while (re-search-forward "^ [-]" end-marker t)
+        (replace-match "-" t t))
       ;; Perform replacements using the external `smart-quotes-replacement-pairs`
       (dolist (pair smart-quotes-replacement-pairs)
         (goto-char beg)
@@ -320,10 +320,10 @@ quotes are unwrapped the same way."
     (let ((limit (copy-marker end)))
       (while (re-search-forward "\\[cite[_:][^]]*\\]" limit t)
         (replace-match "" t t))
-      ;; Collapse any doubled spaces created by removals.
+      ;; Collapse doubled spaces created by removals when they're between non-space chars.
       (goto-char beg)
-      (while (re-search-forward " \\{2,\\}" limit t)
-        (replace-match " " t t))
+      (while (re-search-forward "\\([^ \t\n]\\) \\{2,\\}\\([^ \t\n]\\)" limit t)
+        (replace-match "\\1 \\2" t nil))
       (set-marker limit nil))))
 
 (defun strip-cite-markers (beg end)
